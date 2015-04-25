@@ -35,6 +35,7 @@ import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
+import mx.com.gseguros.portal.rehabilitacion.dao.RehabilitacionDAO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.utils.Utils;
@@ -83,6 +84,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	
 	@Autowired
 	private CancelacionDAO      cancelacionDAO;
+	
+	@Autowired
+	private RehabilitacionDAO   rehabilitacionDAO;
 	
 	@Autowired
 	@Qualifier("emisionAutosServiceImpl")
@@ -368,8 +372,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				List<Map<String,String>> lista = new ArrayList<Map<String,String>>();
 				Map<String,String>       mapa  = new HashMap<String,String>();
 				mapa.put("CDTIPSUP"        , "57");
-				mapa.put("DSTIPSUP"        , "REHABILITACI&Oacute;N");
-				mapa.put("LIGA"            , "/endosos/includes/endosoRehabilitacionAuto.action");
+				mapa.put("DSTIPSUP"        , "REHABILITACI&Oacute;N DE P&Oacute;LIZA");
+				mapa.put("LIGA"            , "/endosos/includes/endosoRehabilitacionPolAuto.action");
 				mapa.put("TIPO_VALIDACION" , "");
 				lista.add(mapa);
 				resp.setSlist(lista);
@@ -4017,6 +4021,201 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		logger.info(Utilerias.join(
 				 "\n@@@@@@ confirmarEndosoValositFormsAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	public Map<String,Item> confirmarEndosoRehabilitacionPolAuto(String cdsisrol, String cdramo) throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ confirmarEndosoRehabilitacionPolAuto @@@@@@"
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdramo="   , cdramo
+				));
+		
+		Map<String,Item> items = new HashMap<String,Item>();
+		String           paso  = null;
+		
+		try
+		{
+			paso = "Construyendo componentes de pantalla";
+			logger.info(paso);
+			ThreadCounter tc = new ThreadCounter(ServletActionContext.getServletContext().getServletContextName(),pantallasDAO);
+			tc.agregarConstructor(new ConstructorComponentesAsync(
+					"panelLectura" //llaveGenerador
+					,null          //cdtiptra
+					,null          //cdunieco
+					,cdramo
+					,null          //cdtipsit
+					,null          //estado
+					,cdsisrol
+					,"ENDOSO_REHABILITACION_POLIZA"
+					,"PANEL_LECTURA"
+					,null          //orden
+					,true          //parcial
+					,false         //fields
+					,true          //items
+					,false         //columns
+					,false         //editor
+					,false         //buttons
+					)
+			);
+			
+			tc.agregarConstructor(new ConstructorComponentesAsync(
+					"formEndoso" //llaveGenerador
+					,null        //cdtiptra
+					,null        //cdunieco
+					,cdramo
+					,null        //cdtipsit
+					,null        //estado
+					,cdsisrol
+					,"ENDOSO_REHABILITACION_POLIZA"
+					,"FORM_ENDOSO"
+					,null        //orden
+					,true        //parcial
+					,false       //fields
+					,true        //items
+					,false       //columns
+					,false       //editor
+					,false       //buttons
+					)
+			);
+			
+			Map<String,GeneradorCampos>mapaGc = tc.run();
+			
+			items.put("panelLecturaItems" , mapaGc.get("panelLectura").getItems());
+			items.put("formEndosoItems"   , mapaGc.get("formEndoso").getItems());
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ confirmarEndosoRehabilitacionPolAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return items;
+	}
+	
+	@Override
+	public Map<String,String> marcarPolizaParaRehabilitar(String cdunieco,String cdramo,String nmpoliza) throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ marcarPolizaParaRehabilitar @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				));
+		
+		Map<String,String> poliza = null;
+		String             paso   = "Marcando poliza para rehabilitar";
+		
+		logger.info(paso);
+		
+		try
+		{
+			List<Map<String,String>> polizas = rehabilitacionDAO.buscarPolizas(
+					null //asegurado
+					,cdunieco
+					,cdramo
+					,nmpoliza
+					,null //nmsituac
+					);
+			
+			if(polizas.size()==0)
+			{
+				throw new ApplicationException("Esta poliza no se puede rehabilitar");
+			}
+			else if(polizas.size()>1)
+			{
+				throw new ApplicationException("Esta poliza se duplica al marcarse y no se puede rehabilitar");
+			}
+			
+			poliza = polizas.get(0);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ poliza=",poliza
+				,"\n@@@@@@ marcarPolizaParaRehabilitar @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return poliza;
+	}
+	
+	@Override
+	public void confirmarEndosoRehabilitacionPolAuto(
+			String cdtipsup
+			,String cdunieco
+			,String cdramo 
+			,String estado
+			,String nmpoliza
+			,Date feefecto
+			,Date feproren
+			,Date fecancel
+			,Date feinival
+			,String cdrazon
+			,String cdperson
+			,String cdmoneda
+			,String nmcancel
+			,String comments
+			,String nmsuplem
+			) throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ confirmarEndosoRehabilitacionPolAuto @@@@@@"
+				,"\n@@@@@@ cdtipsup=" , cdtipsup
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ feefecto=" , feefecto
+				,"\n@@@@@@ feproren=" , feproren
+				,"\n@@@@@@ fecancel=" , fecancel
+				,"\n@@@@@@ feinival=" , feinival
+				,"\n@@@@@@ cdrazon="  , cdrazon
+				,"\n@@@@@@ cdperson=" , cdperson
+				,"\n@@@@@@ cdmoneda=" , cdmoneda
+				,"\n@@@@@@ nmcancel=" , nmcancel
+				,"\n@@@@@@ comments=" , comments
+				,"\n@@@@@@ nmsuplem=" , nmsuplem
+				));
+		
+		String paso = "Rehabilitando poliza";
+		try
+		{
+			rehabilitacionDAO.rehabilitarPoliza(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,feefecto
+					,feproren
+					,fecancel
+					,feinival
+					,cdrazon
+					,cdperson
+					,cdmoneda
+					,nmcancel
+					,comments
+					,nmsuplem
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ confirmarEndosoRehabilitacionPolAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
 }

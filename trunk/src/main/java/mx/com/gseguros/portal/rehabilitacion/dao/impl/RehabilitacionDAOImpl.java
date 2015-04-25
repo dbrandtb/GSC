@@ -1,5 +1,8 @@
 package mx.com.gseguros.portal.rehabilitacion.dao.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,13 +15,49 @@ import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
 
 public class RehabilitacionDAOImpl extends AbstractManagerDAO implements RehabilitacionDAO
 {
-
+	private static Logger logger = Logger.getLogger(RehabilitacionDAOImpl.class);
+	
+	@Deprecated
+	@Override
+	public List<Map<String, String>> buscarPolizas(Map<String,String> params) throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new BuscarPolizas(this.getDataSource()), params);
+		return (List<Map<String, String>>) resultadoMap.get("pv_registro_o");
+	}
+	
+	@Override
+	public List<Map<String, String>> buscarPolizas(
+			String asegurado
+			,String cdunieco
+			,String cdramo
+			,String nmpoliza
+			,String nmsituac
+			) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("pv_asegurado_i" , asegurado);
+		params.put("pv_cdunieco_i"  , cdunieco);
+		params.put("pv_cdramo_i"    , cdramo);
+		params.put("pv_nmpoliza_i"  , nmpoliza);
+		params.put("pv_nmsituac_i"  , nmsituac);
+		Utilerias.debugProcedure(logger, "pkg_cancela.p_polizas_canc_a_rehabilitar", params);
+		Map<String,Object> resultadoMap = this.ejecutaSP(new BuscarPolizas(this.getDataSource()), params);
+		List<Map<String,String>> lista  = (List<Map<String, String>>) resultadoMap.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		Utilerias.debugProcedure(logger, "pkg_cancela.p_polizas_canc_a_rehabilitar", params, lista);
+		return lista;
+	}
+	
 	protected class BuscarPolizas extends StoredProcedure
 	{
 		protected BuscarPolizas(DataSource dataSource) {
@@ -42,17 +81,49 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 		}
 	}
 	
-	@Override
-	public List<Map<String, String>> buscarPolizas(Map<String,String> params) throws Exception
-	{
-		Map<String,Object> resultadoMap=this.ejecutaSP(new BuscarPolizas(this.getDataSource()), params);
-		return (List<Map<String, String>>) resultadoMap.get("pv_registro_o");
-	}
-	
+	@Deprecated
 	@Override
 	public Map<String,Object> rehabilitarPoliza(Map<String,String>params) throws Exception
 	{
 		return this.ejecutaSP(new RehabilitarPoliza(this.getDataSource()), Utilerias.ponFechas(params));
+	}
+	
+	@Override
+	public Map<String,Object> rehabilitarPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,Date feefecto
+			,Date fevencim
+			,Date fecancel
+			,Date fereinst
+			,String cdrazon
+			,String cdperson
+			,String cdmoneda
+			,String nmcancel
+			,String comments
+			,String nmsuplem
+			)throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_feefecto_i" , feefecto);
+		params.put("pv_fevencim_i" , fevencim);
+		params.put("pv_fecancel_i" , fecancel);
+		params.put("pv_fereinst_i" , fereinst);
+		params.put("pv_cdrazon_i"  , cdrazon);
+		params.put("pv_cdperson_i" , cdperson);
+		params.put("pv_cdmoneda_i" , cdmoneda);
+		params.put("pv_nmcancel_i" , nmcancel);
+		params.put("pv_comments_i" , comments);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		Utilerias.debugProcedure(logger, "pkg_cancela.p_rehabilita_poliza", params);
+		Map<String,Object> procResult = ejecutaSP(new RehabilitarPoliza(getDataSource()),params);
+		return procResult;
 	}
 	
 	protected class RehabilitarPoliza extends StoredProcedure

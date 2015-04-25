@@ -334,4 +334,26 @@ public interface EndososAutoManager
 			,List<Map<String,String>> incisos
 			,UserVO usuarioSesion
 			)throws Exception;
+	
+	public Map<String,Item> confirmarEndosoRehabilitacionPolAuto(String cdsisrol, String cdramo) throws Exception;
+	
+	public Map<String,String> marcarPolizaParaRehabilitar(String cdunieco,String cdramo,String nmpoliza) throws Exception;
+	
+	public void confirmarEndosoRehabilitacionPolAuto(
+			String cdtipsup
+			,String cdunieco
+			,String cdramo 
+			,String estado
+			,String nmpoliza
+			,Date feefecto
+			,Date feproren
+			,Date fecancel
+			,Date feinival
+			,String cdrazon
+			,String cdperson
+			,String cdmoneda
+			,String nmcancel
+			,String comments
+			,String nmsuplem
+			) throws Exception;
 }
