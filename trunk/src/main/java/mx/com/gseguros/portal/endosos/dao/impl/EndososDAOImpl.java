@@ -1522,6 +1522,34 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+
+	@Override
+	public void cancelaRecibosCambioCliente(Map<String, String> params) throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************")
+				.append("\n****** P_CANC_RECIBOS_X_CAM_CLIENTE ******")
+				.append("\n****** params=").append(params)
+				.append("\n******************************************")
+				.toString()
+				);
+		this.ejecutaSP(new CancelaRecibosCambioCliente(this.getDataSource()), params);
+	}
+	
+	protected class CancelaRecibosCambioCliente extends StoredProcedure
+	{
+		protected CancelaRecibosCambioCliente(DataSource dataSource)
+		{
+			super(dataSource, "P_CANC_RECIBOS_X_CAM_CLIENTE");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	/**
 	 * P_CALCULA_COMISION_BASE

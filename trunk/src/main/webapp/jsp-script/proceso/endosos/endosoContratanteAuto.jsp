@@ -42,6 +42,7 @@ debug('_35_smap1:',_35_smap1);
 
 var _cdpersonActual;
 var _cdpersonNuevo = '';
+var _cdpostalNuevo = '';
 ////// variables //////
 ///////////////////////
 
@@ -281,6 +282,7 @@ Ext.onReady(function()
 					                                }
 					                                
 													_cdpersonNuevo = record.raw.CLAVECLI;
+													_cdpostalNuevo = record.raw.CODPOSTAL;
 													
 													_35_formContratante.down('[name=nuevoContratante]').setValue( record.raw.NOMBRECLI);
 					                                
@@ -486,7 +488,8 @@ function _35_confirmar()
             ,smap2  :
             {
                 'fecha_endoso'     : Ext.Date.format(_35_fieldFechaEndoso.getValue(),'d/m/Y'),
-                'cdpersonNvoContr' : _cdpersonNuevo
+                'cdpersonNvoContr' : _cdpersonNuevo,
+                'cdpostalNuevo'    : _cdpostalNuevo
             }
             ,slist1 : slist1
         }

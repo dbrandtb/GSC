@@ -8370,7 +8370,100 @@ public class EndososAction extends PrincipalCoreAction
 		
 		kernelManager.movMpoliper(paramsMpopliper);
 		
-		endososManager.calcularRecibosCambioContratante(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+		
+		boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
+		
+		if(esProductoSalud){
+			endososManager.calcularRecibosCambioContratante(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+		}else{
+			
+			//PKG_CONSULTA.P_OBT_VALOSIT_ULTIMA_IMAGEN
+			List<Map<String,String>>valositsPoliza=endososManager.obtenerValositUltimaImagen(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+			/*
+			CDUNIECO,CDRAMO,ESTADO,NMPOLIZA,NMSITUAC,NMSUPLEM,STATUS,CDTIPSIT,OTVALOR01,OTVALOR02
+			,OTVALOR03,OTVALOR04,OTVALOR05,OTVALOR06,OTVALOR07,OTVALOR08,OTVALOR09,OTVALOR10,OTVALOR11
+			,OTVALOR12,OTVALOR13,OTVALOR14,OTVALOR15,OTVALOR16,OTVALOR17,OTVALOR18,OTVALOR19,OTVALOR20
+			,OTVALOR21,OTVALOR22,OTVALOR23,OTVALOR24,OTVALOR25,OTVALOR26,OTVALOR27,OTVALOR28,OTVALOR29
+			,OTVALOR30,OTVALOR31,OTVALOR32,OTVALOR33,OTVALOR34,OTVALOR35,OTVALOR36,OTVALOR37,OTVALOR38
+			,OTVALOR39,OTVALOR40,OTVALOR41,OTVALOR42,OTVALOR43,OTVALOR44,OTVALOR45,OTVALOR46,OTVALOR47
+			,OTVALOR48,OTVALOR49,OTVALOR50
+			 */
+			
+			for(Map<String,String>valositIte:valositsPoliza) {
+				String nmsituacIte=valositIte.get("NMSITUAC");
+				String keyCodPostal = "pv_otvalor"+valositIte.get("CDATRIBU");
+				logger.debug("OTvalor encontrado para CP: "  +keyCodPostal);
+				
+				//otvalor05 -> pv_otvalor05
+				Map<String,String>otvalorValositIte=new HashMap<String,String>();
+				for(Entry<String,String>en:valositIte.entrySet()) {
+					String key   = en.getKey();
+					String value = en.getValue();
+					
+					if(key.substring(0,5).equalsIgnoreCase("otval")) {
+						otvalorValositIte.put("pv_"+(key.toLowerCase()),value);
+					}
+				}
+				
+				otvalorValositIte.put(keyCodPostal , smap2.get("cdpostalNuevo"));
+				
+				//PKG_SATELITES2.P_MOV_TVALOSIT
+				kernelManager.insertaValoresSituaciones(cdunieco, cdramo, estado, nmpoliza
+						,nmsituacIte, nmsuplem, Constantes.STATUS_VIVO, valositIte.get("CDTIPSIT"), Constantes.INSERT_MODE, otvalorValositIte);
+			}
+			
+			
+			//////////////////////////////
+			////// inserta tworksup //////
+			Map<String,String>mapaTworksupEnd=new LinkedHashMap<String,String>(0);
+			mapaTworksupEnd.put("pv_cdunieco_i" , cdunieco);
+			mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
+			mapaTworksupEnd.put("pv_estado_i"   , estado);
+			mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
+			mapaTworksupEnd.put("pv_cdtipsup_i" , cdtipsup);
+			mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
+			endososManager.insertarTworksupSitTodas(mapaTworksupEnd);
+			////// inserta tworksup //////
+			//////////////////////////////
+			
+			//////////////////////////
+			////// tarificacion //////
+			Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
+			mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
+			mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemento);
+			mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
+			mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
+			mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
+			mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
+			mapaSigsvalipolEnd.put("pv_nmsituac_i" , "0");
+			mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
+			//mapaSigsvalipolEnd.put("pv_cdtipsit_i" , null);
+			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , cdtipsup);
+			endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
+			////// tarificacion //////
+			//////////////////////////
+			
+			/*
+			 * Cancela Recibos Cambio Cliente.
+			 */
+			endososManager.cancelaRecibosCambioCliente(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+			
+			//////////////////////////
+			////// valor endoso //////
+			Map<String,Object>mapaValorEndoso=new LinkedHashMap<String,Object>(0);
+			mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
+			mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
+			mapaValorEndoso.put("pv_estado_i"   , estado);
+			mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
+			mapaValorEndoso.put("pv_nmsituac_i" , "1");
+			mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
+			mapaValorEndoso.put("pv_feinival_i" , dFecha);
+			mapaValorEndoso.put("pv_cdtipsup_i" , cdtipsup);
+			endososManager.calcularValorEndoso(mapaValorEndoso);
+			////// valor endoso //////
+			//////////////////////////
+		}
+		
 		
 		//// Se confirma el endoso si cumple la validacion de fechas: 
 		RespuestaConfirmacionEndosoVO respConfirmacionEndoso = confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, comentariosEndoso, dFecha, cdtipsit);
@@ -8382,7 +8475,7 @@ public class EndososAction extends PrincipalCoreAction
 			String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
 			String sucursal = cdunieco;
 			
-			boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
+			
 			
 			if(!esProductoSalud){
 
@@ -8474,6 +8567,7 @@ public class EndososAction extends PrincipalCoreAction
 			+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
 			+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
 		}
+		
 		success=true;
 		
 		} catch(Exception ex) {

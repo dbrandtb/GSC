@@ -655,6 +655,22 @@ public class EndososManagerImpl implements EndososManager
 		endososDAO.calcularRecibosEndosoFormaPago(params);
 		logger.debug("EndososManager calcularRecibosEndosoFormaPago fin");
 	}
+
+	
+	@Override
+	public void cancelaRecibosCambioCliente(String cdunieco,String cdramo,
+			String estado,String nmpoliza,String nmsuplem) throws Exception
+			{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		logger.debug("EndososManager cancelaRecibosCambioCliente params: "+params);
+		endososDAO.cancelaRecibosCambioCliente(params);
+		logger.debug("EndososManager cancelaRecibosCambioCliente fin");
+			}
 	
 	/**
 	 * P_CALCULA_COMISION_BASE
