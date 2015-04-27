@@ -1459,7 +1459,7 @@ Ext.onReady(function()
                 
                 tipoUsoCmp.on(
                 {
-                    change : function(me,val)
+                    change : function(me,val,old)
                     {
                         var record     = _p30_selectedRecord;
                         var cdtipsit   = record.get('cdtipsit');
@@ -1468,7 +1468,10 @@ Ext.onReady(function()
                         if(!Ext.isEmpty(claveCmp))
                         {
                             claveCmp.store.proxy.extraParams['params.uso'] = val;
-                            if(!Ext.isEmpty(record.get(claveCmp.name))&&!Ext.isEmpty(record.get(modeloName)))
+                            if(!Ext.isEmpty(record.get(claveCmp.name))
+                                &&!Ext.isEmpty(record.get(modeloName))
+                                &&!Ext.isEmpty(old)
+                            )
                             {
                                 record.set(claveCmp.name  , '');
                                 record.set(modeloCmp.name , '');
