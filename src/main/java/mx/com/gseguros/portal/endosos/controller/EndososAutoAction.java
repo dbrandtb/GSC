@@ -1295,6 +1295,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
 			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
 			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
 			
 			Utils.validate(smap1  , "No se recibieron datos de poliza");
 			Utils.validate(smap2  , "No se recibieron datos nuevos de inciso");
@@ -1326,6 +1327,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,feefecto
 					,smap2
 					,slist1.get(0)
+					,usuarioSesion
 					);
 			
 			success = true;
@@ -1399,6 +1401,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(slist1 , "No se recibieron incisos");
 			
 			UserVO user = Utils.validateSession(session);
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
 			
 			String cdunieco = smap1.get("CDUNIECO");
 			String cdramo   = smap1.get("CDRAMO");
@@ -1428,6 +1431,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,tstamp
 					,renderFechas.parse(fechaEnd)
 					,slist1
+					,usuarioSesion
 					);
 			
 			success = true;
@@ -2049,6 +2053,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String comments = smap1.get("comments");
 			String nmsuplem = smap1.get("nmsuplem");
 			
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
+			
 			Utils.validate(
 					cdtipsup  , "No se recibio el codigo de endoso"
 					,cdunieco , "No se recibio la sucursal"
@@ -2082,6 +2088,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,nmcancel
 					,comments
 					,nmsuplem
+					,usuarioSesion
 					);
 			
 			success = true;

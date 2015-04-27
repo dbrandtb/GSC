@@ -366,7 +366,7 @@ public interface EndososDAO
 			,String fechaProceso
 			)throws Exception;
 	
-	public void guardarEndosoClaveAuto(
+	public Map<String,Object> guardarEndosoClaveAuto(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -461,7 +461,7 @@ public interface EndososDAO
 			,Date   feinicio
 			)throws Exception;
 	
-	public void guardarEndosoDevolucionPrimas(
+	public Map<String,Object> guardarEndosoDevolucionPrimas(
 			String cdusuari
 			,String cdsisrol
 			,String cdelemen

@@ -204,6 +204,7 @@ public interface EndososAutoManager
 			,String feefecto
 			,Map<String,String> valores
 			,Map<String,String> incisoAnterior
+			,UserVO usuarioSesion
 			)throws Exception;
 	
 	public List<Map<String,String>> obtenerRetroactividad(
@@ -287,6 +288,7 @@ public interface EndososAutoManager
 			,String tstamp
 			,Date   feefecto
 			,List<Map<String,String>> incisos
+			,UserVO usuarioSesion
 			)throws Exception;
 	
 	public Map<String,Item> endosoCancelacionPolAuto(String cdsisrol, String cdramo) throws Exception;
@@ -355,5 +357,6 @@ public interface EndososAutoManager
 			,String nmcancel
 			,String comments
 			,String nmsuplem
+			,UserVO usuarioSesion
 			) throws Exception;
 }
