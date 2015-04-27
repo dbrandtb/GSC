@@ -200,6 +200,12 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				resp.setSmap(new HashMap<String,String>());
 				resp.getSmap().put("permiso" , consultasDAO.recuperarPermisoDevolucionPrimasUsuario(cdusuari) ? "S" : "N");
 			}
+			else if(proc.equals(RecuperacionSimple.RECUPERAR_VALOR_MAXIMO_SITUACION_POR_ROL))
+			{
+				String cdtipsit = params.get("cdtipsit");
+				resp.setSmap(new HashMap<String,String>());
+				resp.getSmap().put("VALOR" , consultasDAO.recuperarValorMaximoSituacionPorRol(cdtipsit,cdsisrol));
+			}
 			
 			setCheckpoint("0");
 		}

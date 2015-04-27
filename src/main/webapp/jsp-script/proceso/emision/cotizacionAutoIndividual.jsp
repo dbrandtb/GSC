@@ -925,6 +925,48 @@ Ext.onReady(function()
 	
 	////// loaders //////
 	_p28_cargarConfig();
+	
+	if('|AR|CR|PC|PP|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')!=-1)
+	{
+	    debug('@CUSTOM valor max');
+	    var valorCmp = _fieldLikeLabel('VALOR VEH');
+	    Ext.Ajax.request(
+	    {
+	        url     : _p28_urlRecuperacionSimple
+	        ,params :
+	        {
+	            'smap1.procedimiento' : 'RECUPERAR_VALOR_MAXIMO_SITUACION_POR_ROL'
+	            ,'smap1.cdtipsit'     : _p28_smap1.cdtipsit
+	        }
+	        ,success : function(response)
+	        {
+	            var json = Ext.decode(response.responseText);
+	            debug('### valor maximo por rol:',json);
+	            if(json.exito)
+	            {
+	                valorCmp.maximoTotal = json.smap1.VALOR;
+	                valorCmp.validator = function(val)
+	                {
+	                    var me = _fieldLikeLabel('VALOR VEH');
+	                    debug('validar contra ',me.maximoTotal);
+	                    if(Number(val)>Number(me.maximoTotal))
+	                    {
+	                        return 'El valor m&aacute;ximo es '+me.maximoTotal;
+	                    }
+	                    return true;
+	                };
+	            }
+	            else
+	            {
+	                mensajeError(json.respuesta);
+	            }
+	        }
+	        ,failure : function()
+	        {
+	            errorComunicacion();
+	        }
+	    });
+	}
 	////// loaders //////
 });
 
