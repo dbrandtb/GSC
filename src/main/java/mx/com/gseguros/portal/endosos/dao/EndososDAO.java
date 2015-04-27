@@ -114,6 +114,14 @@ public interface EndososDAO
 	 * P_CALC_RECIBOS_SUB_ENDOSO_FP
 	 */
 	public void                     calcularRecibosEndosoFormaPago(Map<String, String> params) throws Exception;
+
+	/**
+	 * cancela Recibos Cambio Cliente
+	 * @param params
+	 * @throws Exception
+	 */
+	public void                     cancelaRecibosCambioCliente(Map<String, String> params) throws Exception;
+	
 	/**
 	 * P_CALCULA_COMISION_BASE
 	 */

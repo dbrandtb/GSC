@@ -206,6 +206,19 @@ public interface EndososManager
 	 */
 	public void calcularRecibosEndosoFormaPago(String cdunieco,String cdramo,
 			String estado,String nmpoliza,String nmsuplem) throws Exception;
+
+	/**
+	 * Cancela recibos endoso cliente
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @throws Exception
+	 */
+	public void cancelaRecibosCambioCliente(String cdunieco,String cdramo,
+			String estado,String nmpoliza,String nmsuplem) throws Exception;
+	
 	/**
 	 * P_CALCULA_COMISION_BASE
 	 */
