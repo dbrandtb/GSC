@@ -683,7 +683,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		try {
 			porcentajePenalizacion = siniestrosManager.validaPorcentajePenalizacion(params.get("zonaContratada"), params.get("zonaAtencion"), params.get("cdRamo"));
 		}catch( Exception e){
-			logger.error("Error al consultar al metodo de porcentaje de penalizaci�n ",e);
+			logger.error("Error al consultar al metodo de porcentaje de penalizacion : ",e);
 			return SUCCESS;
 		}
 		success = true;
@@ -1180,6 +1180,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("Error al modificar la Mesa de control",e);
 		}
 	}
+	
 	public String guardaFacturasTramite(){
 		logger.debug(" **** Entrando al guardado de alta de tramite ****");
 		logger.debug(params);
@@ -1187,17 +1188,28 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		try{
 			this.session=ActionContext.getContext().getSession();
 			UserVO usuario=(UserVO) session.get("USUARIO");
-			//1.- tenemos que actualizar la informacion te tmesacontrol
+			
+			slist1 = siniestrosManager.obtenerFacturasTramite(params.get("nmtramite"));
+			logger.debug("Total de Facturas -->"+slist1.size());
+			
+			String valorFactura = params.get("nmtramite");
+			String cdramo = params.get("cmbRamos");
+			String tipoPago = params.get("cmbTipoPago");
+					
+			if((cdramo.equalsIgnoreCase("1") || cdramo.equalsIgnoreCase("7")) && tipoPago.equalsIgnoreCase("3")) {
+				valorFactura = params.get("nmtramite")+""+(slist1.size());
+			}
+			logger.debug("VALORES  Factura :"+valorFactura+" Ramo : "+cdramo+" Tipo Pago : "+tipoPago);
 			for(int i=0;i<datosTablas.size();i++) {
 				siniestrosManager.guardaListaFacMesaControl(
 					params.get("nmtramite"),
-					datosTablas.get(i).get("nfactura"),
+					valorFactura,
 					renderFechas.parse(datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4)),
 					datosTablas.get(i).get("cdtipser"),
 					datosTablas.get(i).get("cdpresta"),
 					datosTablas.get(i).get("ptimport"),
-					null,
-					null,
+					((cdramo.equalsIgnoreCase("7") && tipoPago.equalsIgnoreCase("3"))?"7RDH":null),
+					((cdramo.equalsIgnoreCase("7") && tipoPago.equalsIgnoreCase("3"))?"7RDH001":null),
 					null,
 					null,
 					datosTablas.get(i).get("cdmoneda"),
