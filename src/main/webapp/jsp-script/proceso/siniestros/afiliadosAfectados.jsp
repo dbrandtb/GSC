@@ -4426,11 +4426,12 @@
 				,scripts  : true
 				,autoLoad : true
 				,params   : {
-					'params.ntramite'   :  _11_params.NTRAMITE,
-					'params.cdTipoPago' : _11_params.OTVALOR02,
-					'params.cdTipoAtencion'  : _11_params.OTVALOR07,
-					'params.cdpresta'  : _11_params.OTVALOR11,
-					'params.cdramo'  : _11_params.CDRAMO
+					'params.ntramite'		: _11_params.NTRAMITE,
+					'params.cdTipoPago'		: _11_params.OTVALOR02,
+					'params.cdTipoAtencion'	: _11_params.OTVALOR07,
+					'params.cdpresta'		: _11_params.OTVALOR11,
+					'params.cdramo'			: _11_params.CDRAMO,
+					'params.feOcurrencia'	: _11_params.OTVALOR10
 				}
 			},
 			listeners:{

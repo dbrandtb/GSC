@@ -223,8 +223,13 @@ Ext.onReady(function() {
 	 			width: 750,
 	 			height: 250
 	 			,plugins  : [
-		            Ext.create('Ext.grid.plugin.CellEditing', {
-		                clicksToEdit: 1
+					Ext.create('Ext.grid.plugin.CellEditing', {
+					clicksToEdit: 1
+					,listeners : {
+						beforeedit : function() {
+							valorIndexSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
+						}
+					}
 		            })
 		        ],
 	 			store: storeFacturaDirecto,
@@ -270,10 +275,15 @@ Ext.onReady(function() {
 				 	{ 	header: 'Importe Factura', 			dataIndex: 'importeFactura',	flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false		},
 				 	{	header: 'Importe MXN', 				dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false
 					 	,editor: {
-				                xtype: 'textfield',
-				                allowBlank: false,
-				                editable : true,
-				                minValue: 1
+							xtype: 'textfield',
+							allowBlank: false,
+							editable : true,
+							minValue: 1,
+							listeners : {
+								change:function(e){
+									validarFacturaPagada(panelInicialPral.down('combo[name=cmbProveedor]').getValue(),valorIndexSeleccionado.get('noFactura'), e.getValue());
+								}
+							}
 			            }
 				 	},
 				 	{	xtype: 'actioncolumn',			width: 30,		sortable: false,		menuDisabled: true,
@@ -406,6 +416,7 @@ Ext.onReady(function() {
 											var importeFactura = valorIndexSeleccionado.get('importeFactura');
 											var importeMxn = +tasaCambio * +importeFactura;
 											valorIndexSeleccionado.set('importe',importeMxn);
+											validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 										}
 									}
 						        }
@@ -427,6 +438,7 @@ Ext.onReady(function() {
 											var importeFactura = e.getValue();
 											var importeMxn = +tasaCambio * +importeFactura;
 											valorIndexSeleccionado.set('importe',importeMxn);
+											validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 										}
 									}
 						        }
@@ -434,8 +446,13 @@ Ext.onReady(function() {
 				 	},
 				 	{	header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney
 					 	,editor: {
-				                xtype: 'textfield',
-				                allowBlank: false
+							xtype: 'textfield',
+							allowBlank: false,
+							listeners : {
+								change:function(e){
+									validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), e.getValue());
+								}
+							}
 			            }
 				 	}
 		 		],
@@ -554,6 +571,7 @@ Ext.onReady(function() {
 											var importeFactura = valorIndexSeleccionado.get('importeFactura');
 											var importeMxn = +tasaCambio * +importeFactura;
 											valorIndexSeleccionado.set('importe',importeMxn);
+											validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 										}
 									}
 						        }
@@ -575,6 +593,7 @@ Ext.onReady(function() {
 											var importeFactura = e.getValue();
 											var importeMxn = +tasaCambio * +importeFactura;
 											valorIndexSeleccionado.set('importe',importeMxn);
+											validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 										}
 									}
 						        }
@@ -582,8 +601,13 @@ Ext.onReady(function() {
 				 	},
 				 	{ 	header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney
 					 	,editor: {
-				                xtype: 'textfield',
-				                allowBlank: false
+							xtype: 'textfield',
+							allowBlank: false,
+							listeners : {
+								change:function(e){
+									validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), e.getValue());
+								}
+							}
 			            }
 				 	}
 		 		],
@@ -625,7 +649,8 @@ Ext.onReady(function() {
 	            	tipoPago,
 	            	comboTipoAte,
 	        		{	xtype	   : 'datefield',			fieldLabel  : 'Fecha ocurrencia',		name		: 'dtFechaOcurrencia',		maxValue   :  new Date(),
-	            		format	   : 'd/m/Y',				editable    : true,						width		: 300,						allowBlank : false
+	            		format	   : 'd/m/Y',				editable    : true,						width		: 300,						allowBlank : false,
+	            		value 	   : valorAction.feOcurrencia,	hidden:true
                     },
             		cmbProveedor,
 					{	colspan:2
@@ -910,7 +935,7 @@ Ext.onReady(function() {
 		    panelInicialPral.down('[name=editorPagoIndemnizatorio]').show();
 		    panelInicialPral.down('combo[name=cmbProveedor]').hide();
 		    panelInicialPral.down('combo[name=cmbProveedor]').setValue('');
-		    panelInicialPral.down('[name=dtFechaOcurrencia]').show();
+		    panelInicialPral.down('[name=dtFechaOcurrencia]').hide();
 		}
 		panelInicialPral.down('[name=dtFechaOcurrencia]').allowBlank = pagoReembolso;
 		panelInicialPral.down('combo[name=cmbProveedor]').allowBlank = pagoDirecto;
@@ -925,7 +950,6 @@ Ext.onReady(function() {
 			});
 			if(obtener.length > 0){
 				//Realizamos la validacion de la ultima factura que vayan agregando
-				validarFacturaPagada(panelInicialPral.down('combo[name=cmbProveedor]').getValue() ,obtener[obtener.length -1].noFactura, obtener[obtener.length -1].importe);
 				storeFacturaDirecto.add(new modelFacturaSiniestro({tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
 			}else{
 				storeFacturaDirecto.add(new modelFacturaSiniestro({tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
@@ -938,7 +962,7 @@ Ext.onReady(function() {
 			if(fechaOcurrencia == null){
 				centrarVentanaInterna(mensajeError('Para agregar un documento se requiere la fecha de ocurrencia'));
 			}else{
-				storePagoIndemnizatorio.add(new modelFacturaSiniestro({noFactura:'500',fechaFactura:fechaOcurrencia,tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
+				storePagoIndemnizatorio.add(new modelFacturaSiniestro({noFactura:'0',fechaFactura:fechaOcurrencia,tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
 			}
 		}
 	}

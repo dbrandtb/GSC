@@ -1,7 +1,6 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
 Ext.onReady(function() {
 	var valorIndexSeleccionado= null;
-	
 	Ext.selection.CheckboxModel.override( {
 	    mode: 'SINGLE',
 	    allowDeselect: true
@@ -396,6 +395,12 @@ Ext.onReady(function() {
 	 			,plugins  : [
 		            Ext.create('Ext.grid.plugin.CellEditing', {
 		                clicksToEdit: 1
+		                ,listeners : {
+							beforeedit : function() {
+								valorIndexSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
+								debug('valorIndexSeleccionado:',valorIndexSeleccionado);
+							}
+						}
 		            })
 		        ],
 	 			store: storeFacturaDirecto,
@@ -404,9 +409,9 @@ Ext.onReady(function() {
 				 	{	header: 'No. de Factura',			dataIndex: 'noFactura',			flex:2,  allowBlank: false
 				 		,editor: {		
 				 				xtype: 'textfield',
-				                editable : true,
-				                allowBlank: false
-			            }
+								editable : true,
+								allowBlank: false
+						}
 				 	},
 				 	{
 				 		header: 'Fecha de Factura',			dataIndex: 'fechaFactura',		flex:2,			 	renderer: Ext.util.Format.dateRenderer('d/m/Y'),  allowBlank: false
@@ -440,12 +445,14 @@ Ext.onReady(function() {
 				 	{ 	header: 'Tasa cambio', 				dataIndex: 'tasaCambio',		flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false	 	},
 				 	{ 	header: 'Importe Factura', 			dataIndex: 'importeFactura',	flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false		},
 				 	{	header: 'Importe MXN', 				dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney,  allowBlank: false
-					 	,editor: {
-				                xtype: 'textfield',
-				                allowBlank: false,
-				                editable : true,
-				                minValue: 1
-			            }
+						,editor: {
+							xtype: 'textfield',				allowBlank: false,				editable : true,	minValue: 1,
+							listeners : {
+								change:function(e){
+									validarFacturaPagada(panelInicialPral.down('combo[name=cmbProveedor]').getValue() ,valorIndexSeleccionado.get('noFactura'), e.getValue());
+								}
+							}
+						}
 				 	},
 				 	{	xtype: 'actioncolumn',			width: 30,		sortable: false,		menuDisabled: true,
 					 	items: [{
@@ -489,11 +496,11 @@ Ext.onReady(function() {
 		            Ext.create('Ext.grid.plugin.CellEditing', {
 		                clicksToEdit: 1
 		                ,listeners : {
-								beforeedit : function() {
-									valorIndexSeleccionado = gridFacturaReembolso.getView().getSelectionModel().getSelection()[0];
-									debug('valorIndexSeleccionado:',valorIndexSeleccionado);
-								}
+							beforeedit : function() {
+								valorIndexSeleccionado = gridFacturaReembolso.getView().getSelectionModel().getSelection()[0];
+								debug('valorIndexSeleccionado:',valorIndexSeleccionado);
 							}
+						}
 		            })
 		        ],
 	 			store: storeFacturaReembolso,
@@ -577,6 +584,7 @@ Ext.onReady(function() {
 											var importeFactura = valorIndexSeleccionado.get('importeFactura');
 											var importeMxn = +tasaCambio * +importeFactura;
 											valorIndexSeleccionado.set('importe',importeMxn);
+											validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 										}
 									}
 						        }
@@ -598,6 +606,7 @@ Ext.onReady(function() {
 											var importeFactura = e.getValue();
 											var importeMxn = +tasaCambio * +importeFactura;
 											valorIndexSeleccionado.set('importe',importeMxn);
+											validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 										}
 									}
 						        }
@@ -605,9 +614,14 @@ Ext.onReady(function() {
 				 	},
 				 	{	header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney
 					 	,editor: {
-				                xtype: 'textfield',
-				                allowBlank: false
-			            }
+							xtype: 'textfield',
+							allowBlank: false,
+							listeners : {
+								change:function(e){
+									validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), e.getValue());
+								}
+							}
+						}
 				 	}
 		 		],
 		 		tbar: [
@@ -725,6 +739,7 @@ Ext.onReady(function() {
 											var importeFactura = valorIndexSeleccionado.get('importeFactura');
 											var importeMxn = +tasaCambio * +importeFactura;
 											valorIndexSeleccionado.set('importe',importeMxn);
+											validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 										}
 									}
 						        }
@@ -746,6 +761,7 @@ Ext.onReady(function() {
 											var importeFactura = e.getValue();
 											var importeMxn = +tasaCambio * +importeFactura;
 											valorIndexSeleccionado.set('importe',importeMxn);
+											validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 										}
 									}
 						        }
@@ -753,9 +769,14 @@ Ext.onReady(function() {
 				 	},
 				 	{ 	header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney
 					 	,editor: {
-				                xtype: 'textfield',
-				                allowBlank: false
-			            }
+							xtype: 'textfield',
+							allowBlank: false,
+							listeners : {
+								change:function(e){
+									validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), e.getValue());
+								}
+							}
+						}
 				 	}
 		 		],
 		 		tbar: [
@@ -1400,16 +1421,13 @@ Ext.onReady(function() {
     	return true;
 	}
 	
-	function _p21_agregarGrupoClic()
-	{
+	function _p21_agregarGrupoClic(){
 		if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
 			var obtener = [];
 			storeFacturaDirecto.each(function(record) {
 				obtener.push(record.data);
 			});
 			if(obtener.length > 0){
-				//Realizamos la validacion de la ultima factura que vayan agregando
-				validarFacturaPagada(panelInicialPral.down('combo[name=cmbProveedor]').getValue() ,obtener[obtener.length -1].noFactura, obtener[obtener.length -1].importe);
 				storeFacturaDirecto.add(new modelFacturaSiniestro({tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
 			}else{
 				storeFacturaDirecto.add(new modelFacturaSiniestro({tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
@@ -1422,7 +1440,7 @@ Ext.onReady(function() {
 			if(fechaOcurrencia == null){
 				mensajeError('Para agregar un documento se requiere la fecha de ocurrencia');
 			}else{
-				storePagoIndemnizatorio.add(new modelFacturaSiniestro({noFactura:'500',fechaFactura:fechaOcurrencia,tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
+				storePagoIndemnizatorio.add(new modelFacturaSiniestro({noFactura:'0',fechaFactura:fechaOcurrencia,tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
 			}
 		}
 	}
@@ -1436,24 +1454,24 @@ Ext.onReady(function() {
 				'params.ptimport' : totalImporte
 			}
 			,success : function (response) {
-		    	if(Ext.decode(response.responseText).factPagada !=null){
-		    		centrarVentanaInterna(Ext.Msg.show({
- 		               title: 'Aviso',
- 		               msg: 'La factura '+ nfactura +' ya se encuentra procesado en el tr&aacute;mite '+Ext.decode(response.responseText).factPagada,
- 		               buttons: Ext.Msg.OK,
- 		               icon: Ext.Msg.WARNING
- 		           }));
-		    	}
-		    },
-		    failure : function (){
-		        me.up().up().setLoading(false);
-		        centrarVentanaInterna(Ext.Msg.show({
-		            title:'Error',
-		            msg: 'Error de comunicaci&oacute;n',
-		            buttons: Ext.Msg.OK,
-		            icon: Ext.Msg.ERROR
-		        }));
-		    }
+				if(Ext.decode(response.responseText).factPagada !=null){
+					centrarVentanaInterna(Ext.Msg.show({
+						title: 'Aviso',
+						msg: 'La factura '+ nfactura +' ya se encuentra procesado en el tr&aacute;mite '+Ext.decode(response.responseText).factPagada,
+						buttons: Ext.Msg.OK,
+						icon: Ext.Msg.WARNING
+					}));
+				}
+			},
+			failure : function (){
+				me.up().up().setLoading(false);
+				centrarVentanaInterna(Ext.Msg.show({
+					title:'Error',
+					msg: 'Error de comunicaci&oacute;n',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				}));
+			}
 		});
 	}
 });

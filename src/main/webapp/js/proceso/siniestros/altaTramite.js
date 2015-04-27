@@ -5,6 +5,7 @@ Ext.onReady(function() {
 	var banderaAsegurado = "0";
 	var retornaMC = "0";
 	var facturaTemporal =null;
+	var _11_aseguradoSeleccionado = null;
 	Ext.selection.CheckboxModel.override( {
 		mode: 'SINGLE',
 		allowDeselect: true
@@ -664,7 +665,14 @@ Ext.onReady(function() {
 			height: 250,
 			plugins  :
 			[
-				Ext.create('Ext.grid.plugin.CellEditing',{	clicksToEdit: 1	})
+				Ext.create('Ext.grid.plugin.CellEditing',{	
+					clicksToEdit: 1
+					,listeners : {
+						beforeedit : function() {
+							valorIndexSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
+						}
+					}
+				})
 			],
 			store: storeFacturaDirecto,
 			columns: 
@@ -711,10 +719,15 @@ Ext.onReady(function() {
 				},
 				{	header: 'Tasa cambio', 				dataIndex: 'tasaCambio',		flex:2,				renderer: Ext.util.Format.usMoney		},
 				{	header: 'Importe Factura', 			dataIndex: 'importeFactura',	flex:2,				renderer: Ext.util.Format.usMoney		},
-				{   header: 'Importe MXN', 				dataIndex: 'importe',		flex:2,				renderer: Ext.util.Format.usMoney
+				{   header: 'Importe MXN', 				dataIndex: 'importe',			flex:2,				renderer: Ext.util.Format.usMoney
 					,editor: {
 							xtype: 'textfield',
-							allowBlank: false
+							allowBlank: false,
+							listeners : {
+								change:function(e){
+									validarFacturaPagada(panelInicialPral.down('combo[name=cmbProveedor]').getValue(),valorIndexSeleccionado.get('noFactura'), e.getValue());
+								}
+							}
 						}
 				}
 			],
@@ -1005,6 +1018,7 @@ Ext.onReady(function() {
 										var importeFactura = valorIndexSeleccionado.get('importeFactura');
 										var importeMxn = +tasaCambio * +importeFactura;
 										valorIndexSeleccionado.set('importe',importeMxn);
+										validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 									}
 								}
 					        }
@@ -1027,6 +1041,7 @@ Ext.onReady(function() {
 										var importeFactura = e.getValue();
 										var importeMxn = +tasaCambio * +importeFactura;
 										valorIndexSeleccionado.set('importe',importeMxn);
+										validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 									}
 								}
 					        }
@@ -1036,7 +1051,12 @@ Ext.onReady(function() {
 						header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney
 						,editor: {
 							xtype: 'textfield',
-							allowBlank: false
+							allowBlank: false,
+							listeners : {
+								change:function(e){
+									validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), e.getValue());
+								}
+							}
 						}
 					}
 				],
@@ -1181,6 +1201,7 @@ Ext.onReady(function() {
 											var importeFactura = valorIndexSeleccionado.get('importeFactura');
 											var importeMxn = +tasaCambio * +importeFactura;
 											valorIndexSeleccionado.set('importe',importeMxn);
+											validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 										}
 									}
 						        }
@@ -1203,6 +1224,7 @@ Ext.onReady(function() {
 											var importeFactura = e.getValue();
 											var importeMxn = +tasaCambio * +importeFactura;
 											valorIndexSeleccionado.set('importe',importeMxn);
+											validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 										}
 									}
 						        }
@@ -1211,9 +1233,14 @@ Ext.onReady(function() {
 				 	{
 					 	header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney
 					 	,editor: {
-				                xtype: 'textfield',
-				                allowBlank: false
-			            }
+							xtype: 'textfield',
+							allowBlank: false,
+							listeners : {
+								change:function(e){
+									validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), e.getValue());
+								}
+							}
+						}
 				 	}
 		 		],
 		 		tbar: [
@@ -2617,7 +2644,7 @@ Ext.onReady(function() {
 				mensajeError('Para agregar un documento se requiere la fecha de ocurrencia');
 			}else{
 				banderaFactura = "1";
-				storePagoIndemnizatorio.add(new modelFacturaSiniestro({noFactura:'500',fechaFactura:fechaOcurrencia,tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
+				storePagoIndemnizatorio.add(new modelFacturaSiniestro({noFactura:'0',fechaFactura:fechaOcurrencia,tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
 			}
 		}
 	}
@@ -2658,7 +2685,38 @@ Ext.onReady(function() {
 			centrarVentanaInterna(mensajeWarning("Debe seleccionar una factura para poder agregar los asegurados."));
 		}
 	}
-	function validarFacturaPagada(cdpresta,nfactura){
+	
+	
+	function validarFacturaPagada(cdpresta,nfactura, totalImporte){
+		Ext.Ajax.request({
+			url     : _URL_CONSULTA_FACTURA_PAGADA
+			,params:{
+				'params.nfactura' : nfactura,
+				'params.cdpresta' : cdpresta,
+				'params.ptimport' : totalImporte
+			}
+			,success : function (response) {
+				if(Ext.decode(response.responseText).factPagada !=null){
+					centrarVentanaInterna(Ext.Msg.show({
+						title: 'Aviso',
+						msg: 'La factura '+ nfactura +' ya se encuentra procesado en el tr&aacute;mite '+Ext.decode(response.responseText).factPagada,
+						buttons: Ext.Msg.OK,
+						icon: Ext.Msg.WARNING
+					}));
+				}
+			},
+			failure : function (){
+				me.up().up().setLoading(false);
+				centrarVentanaInterna(Ext.Msg.show({
+					title:'Error',
+					msg: 'Error de comunicaci&oacute;n',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				}));
+			}
+		});
+	}
+	/*function validarFacturaPagada(cdpresta,nfactura){
 		Ext.Ajax.request(
 		{
 			url     : _URL_CONSULTA_FACTURA_PAGADA
@@ -2689,7 +2747,7 @@ Ext.onReady(function() {
 				}));
 			}
 		});
-	}
+	}*/
 	
 	function verificarFacturaAsegurado(){
 		if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
