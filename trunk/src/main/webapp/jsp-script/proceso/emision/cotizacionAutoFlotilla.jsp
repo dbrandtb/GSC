@@ -2227,6 +2227,15 @@ Ext.onReady(function()
             {
                 var tipovalorCmp = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=TIPO VALOR]');
                 debug('@CUSTOM tipovalor:',tipovalorCmp);
+                
+                tipovalorCmp.store.load(
+                {
+                    params :
+                    {
+                        'params.cdtipsit' : cdtipsit
+                    }
+                });
+                
                 tipovalorCmp.on(
                 {
                     select : function(me)

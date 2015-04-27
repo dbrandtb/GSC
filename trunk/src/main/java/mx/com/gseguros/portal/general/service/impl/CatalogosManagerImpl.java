@@ -930,4 +930,23 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		return lista;
 		
 	}
+	
+	@Override
+	public List<GenericVO> recuperarListaTiposValorRamo5PorRol(String cdtipsit,String cdsisrol) throws Exception
+	{
+		logger.info(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarListaTiposValorRamo5PorRol @@@@@@"
+				,"\n@@@@@@ cdtipsit=" , cdtipsit
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				));
+		
+		List<GenericVO> lista = catalogosDAO.recuperarListaTiposValorRamo5PorRol(cdtipsit, cdsisrol);
+		
+		logger.info(Utilerias.join(
+				 "\n@@@@@@ recuperarListaTiposValorRamo5PorRol @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
 }

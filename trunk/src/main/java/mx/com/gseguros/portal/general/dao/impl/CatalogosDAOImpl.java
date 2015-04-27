@@ -1483,4 +1483,43 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<GenericVO> recuperarListaTiposValorRamo5PorRol(String cdtipsit,String cdsisrol) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdsisrol" , cdsisrol);
+		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_TIPOVALOR_ROL_RAMO5", params);
+		Map<String,Object>procResult  = ejecutaSP(new RecuperarListaTiposValorRamo5PorRol(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
+		if(lista!=null)
+		{
+			for(Map<String,String>tiposit:lista)
+			{
+				listaGen.add(new GenericVO(tiposit.get("OTCLAVE"),tiposit.get("OTVALOR")));
+			}
+		}
+		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_TIPOVALOR_ROL_RAMO5", params, listaGen);
+		return listaGen;
+	}
+	
+	protected class RecuperarListaTiposValorRamo5PorRol extends StoredProcedure
+	{
+		protected RecuperarListaTiposValorRamo5PorRol(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_TIPOVALOR_ROL_RAMO5");
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"OTCLAVE"
+					,"OTVALOR"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

@@ -654,6 +654,20 @@ public class CatalogosAction extends PrincipalCoreAction {
 							,params.get("nmsuplem")
 							);
 					break;
+				case RAMO_5_TIPOS_VALOR_X_ROL:
+					if(params==null)
+					{
+						params = new HashMap<String,String>();
+					}
+					if(session!=null
+							&&session.get("USUARIO")!=null)
+					{
+						lista = catalogosManager.recuperarListaTiposValorRamo5PorRol(
+								params.get("cdtipsit")
+								,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+								);
+					}
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;
