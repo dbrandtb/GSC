@@ -134,4 +134,6 @@ public interface CatalogosManager {
 			,String nmsituac
 			,String nmsuplem
 			)throws Exception;
+    
+    public List<GenericVO> recuperarListaTiposValorRamo5PorRol(String cdtipsit,String cdsisrol) throws Exception;
 }
