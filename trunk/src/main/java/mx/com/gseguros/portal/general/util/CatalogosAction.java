@@ -514,10 +514,18 @@ public class CatalogosAction extends PrincipalCoreAction {
 					String cdtipsit2 = params.get("cdtipsit");
 					String servicio  = params.get("servicio");
 					String uso       = params.get("uso");
-					if(StringUtils.isBlank(cadena)
+					if(
+							StringUtils.isBlank(cadena)
 							||StringUtils.isBlank(cdtipsit2)
-							||StringUtils.isBlank(servicio)
-							||StringUtils.isBlank(uso))
+							||(
+									!"@".equals(cadena.substring(0, 1))
+									&&
+									(
+											StringUtils.isBlank(servicio)
+											||StringUtils.isBlank(uso)
+									)
+							)
+					)
 					{
 						logger.error("No estan todos los datos");
 						lista = new ArrayList<GenericVO>();
