@@ -1636,4 +1636,35 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+    
+    @Override
+    public String recuperarValorMaximoSituacionPorRol(String cdtipsit,String cdsisrol) throws Exception
+    {
+    	Map<String,String> params = new LinkedHashMap<String,String>();
+    	params.put("cdtipsit" , cdtipsit);
+    	params.put("cdsisrol" , cdsisrol);
+    	Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_VALMAX_X_ROL", params);
+    	Map<String,Object> procResult = ejecutaSP(new RecuperarValorMaximoSituacionPorRol(getDataSource()),params);
+    	String valor = (String)procResult.get("pv_valor_o");
+    	if(valor==null)
+    	{
+    		valor = "9999999";
+    	}
+    	logger.debug(Utilerias.join("\n****** PKG_CONSULTA.P_GET_VALMAX_X_ROL valor=",valor));
+    	return valor;
+    }
+    
+    protected class RecuperarValorMaximoSituacionPorRol extends StoredProcedure
+    {
+    	protected RecuperarValorMaximoSituacionPorRol(DataSource dataSource)
+    	{
+    		super(dataSource , "PKG_CONSULTA.P_GET_VALMAX_X_ROL");
+            declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_valor_o"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

@@ -2023,6 +2023,45 @@ Ext.onReady(function()
                         _fieldById('_p30_tatrisitAutoForm'+_p30_selectedRecord.get('cdtipsit')).down('[fieldLabel*=VALOR VEH]').heredar(false);
                     }
                 });
+                
+                //maximo total
+                Ext.Ajax.request(
+                {
+                    url      : _p30_urlRecuperacionSimple
+                    ,params  :
+                    {
+                        'smap1.procedimiento' : 'RECUPERAR_VALOR_MAXIMO_SITUACION_POR_ROL'
+                        ,'smap1.cdtipsit'     : cdtipsit
+                    }
+                    ,success : function(response)
+                    {
+                        var jsonValmax = Ext.decode(response.responseText);
+                        debug('### valor maximo total por rol:',jsonValmax);
+                        if(jsonValmax.exito)
+                        {
+                            var valorValmaxCmp         = _fieldById('_p30_tatrisitAutoForm'+jsonValmax.smap1.cdtipsit).down('[fieldLabel*=VALOR VEH]');
+                            valorValmaxCmp.maximoTotal = jsonValmax.smap1.VALOR;
+                            valorValmaxCmp.validator   = function(val)
+                            {
+                                var me = this;
+                                if(Number(val)>Number(me.maximoTotal))
+                                {
+                                    return 'El valor m&aacute;ximo es '+me.maximoTotal;
+                                }
+                                return true;
+                            };
+                        }
+                        else
+                        {
+                            mensajeWarning(jsonValmax.respuesta);
+                        }
+                    }
+                    ,failure : function()
+                    {
+                        errorComunicacion();
+                    }
+                });
+                //maximo total
             }
             else if('|AF|PU|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
             {
