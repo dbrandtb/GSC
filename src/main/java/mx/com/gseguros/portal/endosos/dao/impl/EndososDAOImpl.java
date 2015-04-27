@@ -3959,7 +3959,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("pv_nmpoliza_i" , nmpoliza);
 		params.put("pv_nmsuplem_i" , nmsuplemOriginal);
 		params.put("pv_feefecto_i" , feEfecto);
-		params.put("pv_feproren_i" , nmpoliza);
+		params.put("pv_feproren_i" , feproren);
 		logger.debug(
 				new StringBuilder()
 				.append("\n*********************************************************")
