@@ -147,6 +147,8 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
             
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

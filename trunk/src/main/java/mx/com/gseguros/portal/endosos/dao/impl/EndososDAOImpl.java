@@ -3332,7 +3332,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public void guardarEndosoClaveAuto(
+	public Map<String,Object> guardarEndosoClaveAuto(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -3356,7 +3356,8 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdtipsup" , cdtipsup);
 		params.put("idproces" , Utils.generaTimestamp());
 		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_CLAVE_AUTO", params);
-		ejecutaSP(new GuardarEndosoClaveAuto(getDataSource()),params);
+		Map<String,Object> resParams = ejecutaSP(new GuardarEndosoClaveAuto(getDataSource()),params);
+		return resParams;
 	}
 	
 	protected class GuardarEndosoClaveAuto extends StoredProcedure
@@ -3818,7 +3819,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public void guardarEndosoDevolucionPrimas(
+	public Map<String,Object> guardarEndosoDevolucionPrimas(
 			String cdusuari
 			,String cdsisrol
 			,String cdelemen
@@ -3844,7 +3845,8 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("feefecto" , feefecto);
 		params.put("idproces" , Utils.generaTimestamp());
 		Utilerias.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_DEVOLUCION_PRIMAS", params);
-		ejecutaSP(new GuardarEndosoDevolucionPrimas(getDataSource()),params);
+		Map<String,Object> resParams = ejecutaSP(new GuardarEndosoDevolucionPrimas(getDataSource()),params);
+		return resParams;
 	}
 	
 	protected class GuardarEndosoDevolucionPrimas extends StoredProcedure
@@ -3863,6 +3865,10 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("tstamp"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("feefecto" , OracleTypes.DATE));
 			declareParameter(new SqlParameter("idproces" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
