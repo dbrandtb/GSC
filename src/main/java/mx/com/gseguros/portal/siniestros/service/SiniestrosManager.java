@@ -73,6 +73,8 @@ public interface SiniestrosManager {
 	
 	public List<GenericVO> getConsultaListaCPTICD(String cdtabla, String otclave) throws Exception;
 	
+	public List<GenericVO> getConsultaListaTipoPago(String cdramo) throws Exception;
+	
 	//public List<GenericVO> getConsultaListaMotivoRechazo(String cdmotRechazo) throws Exception;
 	
 	public List<ConsultaTDETAUTSVO> getConsultaListaTDeTauts(String nmautser) throws Exception;

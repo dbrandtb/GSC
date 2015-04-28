@@ -2,43 +2,43 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.grid.Panel','Ext.layout.container
 Ext.onReady(function() {
 	var valorIndexSeleccionado= null;
 	Ext.selection.CheckboxModel.override( {
-	    mode: 'SINGLE',
-	    allowDeselect: true
+		mode: 'SINGLE',
+		allowDeselect: true
 	});
 
 	//Models:
 	Ext.define('modelFacturaSiniestro', {
-	    extend:'Ext.data.Model',
-	    fields:['noFactura','fechaFactura','tipoServicio','tipoServicioName','proveedor','proveedorName','importe','tipoMoneda','tipoMonedaName','tasaCambio','importeFactura']
+		extend:'Ext.data.Model',
+		fields:['noFactura','fechaFactura','tipoServicio','tipoServicioName','proveedor','proveedorName','importe','tipoMoneda','tipoMonedaName','tasaCambio','importeFactura']
 	});
 	
 	Ext.define('modelListadoProvMedico',{
-	    extend: 'Ext.data.Model',
-		    fields: [
-					{type:'string', 	name:'cdpresta'},	{type:'string', name:'nombre'},		{type:'string', name:'cdespeci'},	{type:'string',		name:'descesp'}
-			]
+		extend: 'Ext.data.Model',
+		fields: [
+			{type:'string', 	name:'cdpresta'},	{type:'string', name:'nombre'},		{type:'string', name:'cdespeci'},	{type:'string',		name:'descesp'}
+		]
 	});
 	
 	Ext.define('modelListadoPoliza',{
-	    extend: 'Ext.data.Model',
-	    fields: [	{type:'string',    name:'cdramo'},				{type:'string',    name:'cdunieco'},				{type:'string',    name:'estado'},
-					{type:'string',    name:'nmpoliza'},			{type:'string',    name:'nmsituac'},				{type:'string',    name:'mtoBase'},
-					{type:'string',    name:'feinicio'},			{type:'string',    name:'fefinal'},					{type:'string',    name:'dssucursal'},
-					{type:'string',    name:'dsramo'},				{type:'string',    name:'estatus'},					{type:'string',    name:'dsestatus'},
-					{type:'string',    name:'nmsolici'},			{type:'string',    name:'nmsuplem'},				{type:'string',    name:'cdtipsit'},
-					{type:'string',    name:'dsestatus'},			{type:'string',    name:'vigenciaPoliza'},			{type:'string',    name:'faltaAsegurado'},
-					{type:'string',    name:'fcancelacionAfiliado'},{type:'string',    name:'desEstatusCliente'},		{type:'string',    name:'numPoliza'}]
+		extend: 'Ext.data.Model',
+		fields: [	{type:'string',    name:'cdramo'},				{type:'string',    name:'cdunieco'},				{type:'string',    name:'estado'},
+			{type:'string',    name:'nmpoliza'},			{type:'string',    name:'nmsituac'},				{type:'string',    name:'mtoBase'},
+			{type:'string',    name:'feinicio'},			{type:'string',    name:'fefinal'},					{type:'string',    name:'dssucursal'},
+			{type:'string',    name:'dsramo'},				{type:'string',    name:'estatus'},					{type:'string',    name:'dsestatus'},
+			{type:'string',    name:'nmsolici'},			{type:'string',    name:'nmsuplem'},				{type:'string',    name:'cdtipsit'},
+			{type:'string',    name:'dsestatus'},			{type:'string',    name:'vigenciaPoliza'},			{type:'string',    name:'faltaAsegurado'},
+			{type:'string',    name:'fcancelacionAfiliado'},{type:'string',    name:'desEstatusCliente'},		{type:'string',    name:'numPoliza'}]
 	});
 	
 	Ext.define('modelListAsegPagDirecto',{
-	    extend: 'Ext.data.Model',
-	    fields: [
-	                {type:'string',    name:'modUnieco'},		{type:'string',    name:'modEstado'},		    {type:'string',    name:'modRamo'},
-	                {type:'string',    name:'modNmsituac'},		{type:'string',    name:'modPolizaAfectada'},	{type:'string',    name:'modCdpersondesc'},
-	                {type:'string',    name:'modNmsolici'},		{type:'string',    name:'modNmsuplem'},		    {type:'string',    name:'modCdtipsit'},
-	                {type:'string',    name:'modNmautserv'},	{type:'string',    name:'modFechaOcurrencia'},	{type:'string',    name:'modCdperson'},
-	                {type:'string',    name:'modnumPoliza'}
-	            ]
+		extend: 'Ext.data.Model',
+		fields: [
+			{type:'string',    name:'modUnieco'},		{type:'string',    name:'modEstado'},		    {type:'string',    name:'modRamo'},
+			{type:'string',    name:'modNmsituac'},		{type:'string',    name:'modPolizaAfectada'},	{type:'string',    name:'modCdpersondesc'},
+			{type:'string',    name:'modNmsolici'},		{type:'string',    name:'modNmsuplem'},		    {type:'string',    name:'modCdtipsit'},
+			{type:'string',    name:'modNmautserv'},	{type:'string',    name:'modFechaOcurrencia'},	{type:'string',    name:'modCdperson'},
+			{type:'string',    name:'modnumPoliza'}
+		]
 	});
 	
 	//Stores:
@@ -147,7 +147,7 @@ Ext.onReady(function() {
         }
     });
 	
-	var storeTipoPago = Ext.create('Ext.data.JsonStore', {
+    var storeTipoPago = Ext.create('Ext.data.JsonStore', {
 		model:'Generic',
 		proxy: {
 			type: 'ajax',
@@ -159,7 +159,6 @@ Ext.onReady(function() {
 			}
 		}
 	});
-    storeTipoPago.load();
     
     var storeProveedor = Ext.create('Ext.data.Store', {
         model:'modelListadoProvMedico',
@@ -212,6 +211,14 @@ Ext.onReady(function() {
 		listeners : {
     		'select':function(e){
     			panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
+    			panelInicialPral.down('combo[name=cmbTipoPago]').setValue(null);
+    			storeTipoPago.removeAll();
+    			storeTipoPago.load({
+					params:{
+						'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue()
+					}
+				});
+				
     			storeTipoAtencion.load({
 					params:{
 						'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue(),
@@ -985,6 +992,7 @@ Ext.onReady(function() {
 		            },
 		            cmbRamos,
 	            	tipoPago,
+	            	//tipoPago2,
 	            	comboTipoAte,
 	        		cmbOficinaReceptora,
 		            cmbOficinaEmisora,
@@ -1348,8 +1356,25 @@ Ext.onReady(function() {
     	/*Oficina Receptora*/
     	oficinaReceptora.load();
     	panelInicialPral.down('combo[name=cmbOficReceptora]').setValue(valorAction.cdunieco);
+    	/*Seleccionamos el producto Salud vital*/
+    	panelInicialPral.down('combo[name=cmbRamos]').setValue("2");
     	/*Tipo de pago*/
+    	storeTipoPago.removeAll();
+		storeTipoPago.load({
+			params:{
+				'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue()
+			}
+		});
     	panelInicialPral.down('combo[name=cmbTipoPago]').setValue(_TIPO_PAGO_DIRECTO);
+    	/*Tipo de atencion*/
+    	storeTipoAtencion.load({
+			params:{
+				'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+				'params.tipoPago':panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+			}
+		});
+    	
+    	
     	limpiarRegistrosTipoPago(panelInicialPral.down('combo[name=cmbTipoPago]').getValue());
     	/*Oficina Emisora*/
     	oficinaEmisora.load();

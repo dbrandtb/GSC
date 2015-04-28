@@ -403,6 +403,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 						}
 					}
 					break;
+				case TTIPOPAGO:
+					lista = siniestrosManager.getConsultaListaTipoPago(params.get("cdramo"));
+					break;
 				case ICD:
 					lista = siniestrosManager.getConsultaListaCPTICD(cat.getCdTabla(),params.get("otclave"));
 					break;
