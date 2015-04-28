@@ -213,7 +213,6 @@ Ext.onReady(function() {
 			}
 		}
 	});
-	storeTipoPago.load();
 	
 	var storeProveedorReembolsoRender = Ext.create('Ext.data.Store',{
 		model:'modelListadoProvMedico',
@@ -1908,12 +1907,21 @@ Ext.onReady(function() {
 							'params.idPadre':panelInicialPral.down('combo[name=cmbOficEmisora]').getValue()
 						}
 					});
-					limpiarRegistrosTipoPago(panelInicialPral.down('combo[name=cmbTipoPago]').getValue());
+					
 					if(json.otvalor20mc == null || json.otvalor20mc==''){
 						panelInicialPral.down('combo[name=cmbRamos]').setValue("2");
 					}else{
 						panelInicialPral.down('combo[name=cmbRamos]').setValue(json.otvalor20mc);
 					}
+					
+					storeTipoPago.load({
+						params:{
+							'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue()
+						}
+					});
+					
+					limpiarRegistrosTipoPago(panelInicialPral.down('combo[name=cmbTipoPago]').getValue());
+					
 					storeTipoAtencion.load({
 						params:{
 							'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue(),

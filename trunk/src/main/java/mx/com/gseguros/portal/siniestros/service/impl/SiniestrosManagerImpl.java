@@ -154,6 +154,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 
 	@Override
+	public List<GenericVO> getConsultaListaTipoPago(String cdramo) throws Exception {
+		try {
+			return siniestrosDAO.obtieneListadoTipoPago(cdramo);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	@Override
 	public List<HashMap<String, String>> loadListaDocumentos(HashMap<String, String> params)
 			throws Exception {
 		try {
