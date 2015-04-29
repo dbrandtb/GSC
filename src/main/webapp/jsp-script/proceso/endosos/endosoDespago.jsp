@@ -72,7 +72,7 @@
 				,buttonAlign : 'center',
 				handler: function() {
 					
-					var model =  gridMenus.getSelectionModel();
+					var model =  gridRecibos.getSelectionModel();
 	            	if(model.hasSelection()){
 	            		var record = model.getLastSelected();
 	            		var submitValues={};
