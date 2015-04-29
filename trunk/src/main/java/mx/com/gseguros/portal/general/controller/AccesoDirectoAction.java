@@ -38,11 +38,14 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
     public static final String DEFAULT_DECIMAL_SEPARATOR_PARAM = "defaultDecimalSeparator";
     public static final String DEFAULT_DECIMAL_PRECISION_PARAM = "decimalPrecision";
     
-    public static final String ACCESO_COTIZADOR = "cotizador";
-    public static final String ACCESO_CONSULTA_POLIZAS = "consultaPolizas";
-    public static final String ACCESO_CONSULTA_ASEGURADOS = "consultaAsegurados";
-    public static final String ACCESO_CATALOGO_PERSONAS = "catalogoPersonas";
-    public static final String MENU_PRINCIPAL = "menuPrincipal";
+    public static final String ACCESO_COTIZADOR                 = "cotizador";
+    public static final String ACCESO_COTIZADOR_AUTO_INDIVIDUAL = "cotizadorAutoIndividual";
+    public static final String ACCESO_COTIZADOR_AUTO_FLOTILLA   = "cotizadorAutoFlotilla";
+    public static final String ACCESO_CONSULTA_POLIZAS          = "consultaPolizas";
+    public static final String ACCESO_CONSULTA_ASEGURADOS       = "consultaAsegurados";
+    public static final String ACCESO_CLIENTE_UNICO             = "clienteUnico";
+    public static final String ENDOSOS_AUTOS                    = "endososAutos";
+    public static final String MENU_PRINCIPAL                   = "menuPrincipal";
     
     
     /**
@@ -131,10 +134,13 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
     	String acceso = (String)params.get("acceso");
     	logger.info(new StringBuilder(">>>> Entrando a Acceso Directo: ").append(acceso).append(" con usuario: ").append(user).toString());
     	
-		if (ACCESO_COTIZADOR.equals(acceso)
+		if (       ACCESO_COTIZADOR.equals(acceso)
+				|| ACCESO_COTIZADOR_AUTO_INDIVIDUAL.equals(acceso)
+				|| ACCESO_COTIZADOR_AUTO_FLOTILLA.equals(acceso)
 				|| ACCESO_CONSULTA_POLIZAS.equals(acceso)
 				|| ACCESO_CONSULTA_ASEGURADOS.equals(acceso)
-				|| ACCESO_CATALOGO_PERSONAS.equals(acceso)
+				|| ACCESO_CLIENTE_UNICO.equals(acceso)
+				|| ENDOSOS_AUTOS.equals(acceso)
 				|| MENU_PRINCIPAL.equals(acceso)) {
     		instanciaUsuarioLigaDirecta();
     		logger.info(new StringBuilder(">>>> Redirigiendo a Acceso Directo: ").append(acceso));
