@@ -1024,23 +1024,25 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String cdtipsup      = TipoEndoso.AMPLIACION_DE_VIGENCIA.getCdTipSup().toString();
 			String fechaEndoso   = smap1.get("FEINIVAL");
 			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
-			endososAutoManager.guardarEndosoVigenciaPoliza(
-					cdunieco,
-					cdramo,
-					estado,
-					nmpoliza,
-					ntramite,
-					cdelemen,
-					cdusuari,
-					cdtipsup,
-					status,
-					fechaEndoso,
-					dFechaEndoso,
-					feefecto,
-					feproren,
-					nmsuplemOriginal);
-			respuesta = "Endoso generado correctamente";
-			success   = true;
+//			endososAutoManager.guardarEndosoVigenciaPoliza(
+//					cdunieco,
+//					cdramo,
+//					estado,
+//					nmpoliza,
+//					ntramite,
+//					cdelemen,
+//					cdusuari,
+//					cdtipsup,
+//					status,
+//					fechaEndoso,
+//					dFechaEndoso,
+//					feefecto,
+//					feproren,
+//					nmsuplemOriginal);
+//			respuesta = "Endoso generado correctamente";
+			
+			respuesta = "Endoso Inactivo.";
+			success   = false;
 		}
 		catch(Exception ex)
 		{

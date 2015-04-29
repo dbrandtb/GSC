@@ -51,7 +51,7 @@
     	});
 		
 		var panelInicialPral = Ext.create('Ext.form.Panel', {
-		    renderTo  : 'maindivHist',
+		    renderTo  : 'mainDivDespago',
 		    bodyPadding: 5,
 		    defaultType: 'textfield',
 		    
@@ -80,17 +80,21 @@
 	        				paramsEntrada.NMRECIBO = record.get('NMRECIBO');
 	        				paramsEntrada.NMIMPRES = record.get('NMIMPRES');
 	        				submitValues['smap1']= paramsEntrada;
+	        				
+	        				var panelMask = new Ext.LoadMask('mainDivDespago', {msg:"Confirmando..."});
+							panelMask.show();
+		
 	        				Ext.Ajax.request( {
 	   						    url: guarda_Despago,
 	   						    jsonData: Ext.encode(submitValues),
 	   						    success:function(response,opts){
-	   						    	 panelInicialPral.setLoading(false);
+	   						    	 panelMask.hide();
 	   						         var jsonResp = Ext.decode(response.responseText);
 	   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,null);
 	   						      	 marendNavegacion(2);
 	   						    },
 	   						    failure:function(response,opts){
-	   						        panelInicialPral.setLoading(false);
+	   						        panelMask.hide();
 	   						        Ext.Msg.show({
 	   						            title:'Error',
 	   						            msg: 'Error de comunicaci&oacute;n',
@@ -119,4 +123,4 @@
 
     });
 </script>
-<div id="maindivHist" style="height:1000px;"></div>
+<div id="mainDivDespago" style="height:1000px;"></div>
