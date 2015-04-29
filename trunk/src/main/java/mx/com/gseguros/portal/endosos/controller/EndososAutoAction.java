@@ -810,11 +810,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 				,"\n###### smap1="  , smap1
 				,"\n######                             ######"));
 		try {
-			String cdunieco = smap1.get("CDUNIECO");
-			String cdramo   = smap1.get("CDRAMO");
-			String estado   = smap1.get("ESTADO");
-			String nmpoliza = smap1.get("NMPOLIZA");
-			String cdtipsup      = TipoEndoso.DESPAGO.getCdTipSup().toString();
 			
 			Utils.validate(session                , "No hay sesion");
 			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
@@ -823,34 +818,17 @@ public class EndososAutoAction extends PrincipalCoreAction
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			String fechaProceso   = sdf.format(new Date());
-			//1.Obtenemos los n�meros de d�as Maximo y Minimo
-			List<Map<String,String>> retroactividad = endososAutoManager.obtenerRetroactividad(cdsisrol,cdramo,cdtipsup, fechaProceso);
-			endososAutoManager.validarEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
-			endososAutoManager.validarEndosoPagados(cdunieco, cdramo, estado, nmpoliza);
-			success   = true;
+			
 			
 			smap1.put("pv_cdunieco", smap1.get("CDUNIECO"));
 			smap1.put("pv_cdramo", smap1.get("CDRAMO"));
 			smap1.put("pv_estado", smap1.get("ESTADO"));
 			smap1.put("pv_nmpoliza", smap1.get("NMPOLIZA"));
 			smap1.put("pv_cdperson", smap1.get("CDPERSON"));
-			smap1.put("pv_diasMinimo", retroactividad.get(0).get("DIASMINIMO"));
-			smap1.put("pv_diasMaximo", retroactividad.get(0).get("DIASMAXIMO"));
-			smap1.put("FEINIVAL", null);
+			smap1.put("FEINIVAL", fechaProceso);
 			
-			String FEEFECTO[] = smap1.get("FEEFECTO").toString().split("\\/");
-			String FEPROREN[] = smap1.get("FEPROREN").toString().split("\\/");
-			Calendar cal1 = Calendar.getInstance();
-			Calendar cal2 = Calendar.getInstance();
-			// Establecer las fechas
-			cal1.set(Integer.parseInt(FEEFECTO[2].toString()), Integer.parseInt(FEEFECTO[1].toString()) , Integer.parseInt(FEEFECTO[0].toString()));
-			cal2.set(Integer.parseInt(FEPROREN[2].toString()), Integer.parseInt(FEPROREN[1].toString()) , Integer.parseInt(FEPROREN[0].toString()));
-			long milis1 = cal1.getTimeInMillis();
-			long milis2 = cal2.getTimeInMillis();
-			long diff = milis2 - milis1;
-			long diffDays = diff / (24 * 60 * 60 * 1000);
+			success = true;
 			
-			smap1.put("pv_difDate",diffDays+"");
 			logger.debug(new StringBuilder()
 			.append("\n######                         ######")
 			.append("\n######  endosoVigenciaPoliza   ######")
@@ -1081,7 +1059,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		logger.info(Utilerias.join(
 				"\n############################################"
 				,"\n###########################################"
-				,"\n######  guardarEndosoDespago  ######"
+				,"\n######  guardarEndosoDespago         ######"
 				,"\n###### smap1="  , smap1
 				,"\n######                               ######"));
 		try
@@ -1094,46 +1072,38 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String estado   = smap1.get("ESTADO");
 			String nmpoliza = smap1.get("NMPOLIZA");
 			String status   = smap1.get("STATUS");
-			String feefecto = smap1.get("FEEFECTO");
-			String feproren = smap1.get("FEPROREN");
 			String ntramite = smap1.get("NTRAMITE");
 			String nmsuplemOriginal = smap1.get("NMSUPLEM");
+			String nmrecibo = smap1.get("NMRECIBO");
+			String nmimpres = smap1.get("NMIMPRES");
 			
 			Utils.validate(cdunieco , "No se recibio la sucursal");
 			Utils.validate(cdramo   , "No se recibio el producto");
 			Utils.validate(estado   , "No se recibio el estado de la poliza");
 			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
 			Utils.validate(status   , "No se recibio el status");
-			Utils.validate(feefecto , "No se recibio la fecha feproren");
-			Utils.validate(feproren , "No se recibio la fecha feproren");
 			
 			
 			Utils.validate(session                , "No hay sesion");
 			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
 			
-			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
-			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
-			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
 			
 			String cdtipsup      = TipoEndoso.DESPAGO.getCdTipSup().toString();
 			String fechaEndoso   = smap1.get("FEINIVAL");
 			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
 			
-			endososAutoManager.guardarEndosoVigenciaPoliza(
+			endososAutoManager.guardarEndosoDespago(
 					cdunieco,
 					cdramo,
 					estado,
 					nmpoliza,
-					ntramite,
-					cdelemen,
-					cdusuari,
+					nmsuplemOriginal,
+					nmrecibo,
+					nmimpres,
 					cdtipsup,
-					status,
-					fechaEndoso,
-					dFechaEndoso,
-					feefecto,
-					feproren,
-					nmsuplemOriginal);
+					usuarioSesion
+					);
 			respuesta = "Endoso generado correctamente";
 			success   = true;
 		}
@@ -2111,7 +2081,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	{
 		logger.info(Utilerias.join(
 				 "\n##########################################"
-				,"\n###### obtieneRecibosPagados ######"
+				,"\n###### obtieneRecibosPagados        ######"
 				,"\n###### smap1="  , smap1
 				));
 		
