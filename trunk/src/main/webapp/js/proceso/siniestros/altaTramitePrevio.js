@@ -1063,34 +1063,7 @@ Ext.onReady(function() {
     						            });
     						            return false;
                 				}else{
-	                				var mensaje = '';
-	                				for(i = 0; i < obtener.length;i++){
-	                					var facturaProcesada = obtener[i].noFactura;
-	                					Ext.Ajax.request( {
-											url     : _URL_CONSULTA_FACTURA_PAGADA
-											,params:{
-												'params.nfactura' : facturaProcesada,
-												'params.cdpresta' : panelInicialPral.down('combo[name=cmbProveedor]').getValue(),
-												'params.ptimport' : obtener[i].importe
-											}
-											,success : function (response) {
-										    	if(Ext.decode(response.responseText).factPagada !=null) {
-										    		mensaje = mensaje + 'La factura '+ facturaProcesada +' ya se encuentra procesado en el tr&aacute;mite '+Ext.decode(response.responseText).factPagada;
-										    	}
-										    },
-										    failure : function (){
-										        me.up().up().setLoading(false);
-										        centrarVentanaInterna(Ext.Msg.show({
-										            title:'Error',
-										            msg: 'Error de comunicaci&oacute;n',
-										            buttons: Ext.Msg.OK,
-										            icon: Ext.Msg.ERROR
-										        }));
-										    }
-										});	                					
-	                				}
-									
-									if(obtener.length == 1){
+	                				if(obtener.length == 1){
 	                					panelInicialPral.down('[name=ImporteIndFactura]').setValue(obtener[0].importe);
 										panelInicialPral.down('[name=fechaIndFactura]').setValue(obtener[0].fechaFactura);
 										panelInicialPral.down('[name=numIndFactura]').setValue(obtener[0].noFactura);

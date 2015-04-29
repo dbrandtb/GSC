@@ -819,6 +819,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setNumPoliza(rs.getString("NUMPOLIZA"));
         	consulta.setDsplan(rs.getString("DSPLAN"));
         	consulta.setMesesAsegurado(rs.getString("MESESASEGURADO"));
+        	consulta.setDiasAsegurado(rs.getString("DIASASEGURADO"));
             return consulta;
         }
     }
@@ -4008,6 +4009,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"NMPOLIZA"
 					,"NMSITUAC"
 					,"CDTIPSIT"
+					,"CDPERSON"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

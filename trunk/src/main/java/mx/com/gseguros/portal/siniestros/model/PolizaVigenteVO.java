@@ -36,6 +36,7 @@ public class PolizaVigenteVO implements Serializable {
 	private String numPoliza;
 	private String dsplan;
 	private String mesesAsegurado;
+	private String diasAsegurado;
 	
 	 
 	
@@ -331,6 +332,16 @@ public class PolizaVigenteVO implements Serializable {
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
+
+	public String getDiasAsegurado() {
+		return diasAsegurado;
+	}
+
+
+	public void setDiasAsegurado(String diasAsegurado) {
+		this.diasAsegurado = diasAsegurado;
 	}
 	
 }
