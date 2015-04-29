@@ -3,7 +3,7 @@
 <script>
 	var _CONTEXT = '${ctx}';
 	var paramsEntrada          = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
-	var guarda_Despago = '<s:url namespace="/endosos" action=" guardarEndosoDespago"       />';
+	var guarda_Despago = '<s:url namespace="/endosos" action="guardarEndosoDespago"       />';
 	
 	var _URL_CONSULTA_RECIBOS_PAGADOS = '<s:url namespace="/endosos" action="obtieneRecibosPagados" />';
 	
@@ -34,19 +34,19 @@
 	    var gridRecibos = Ext.create('Ext.grid.Panel',{
 	    	title : 'Recibos Pagados, Seleccione el Recibo a Despagar.',
 	    	height : 250,
-	    	selType: 'checkboxmodel',
+	    	selModel: { selType: 'checkboxmodel', mode: 'SINGLE'},
 	    	store : recibosStore,
 	    	columns :[
-	    	  { text: 'No. Recibo', dataIndex : 'NMRECIBO'},
-	    	  { text: 'Suplemento',    dataIndex : 'NMSUPLEM', hidden: true},
-	    	  { text: 'NMIMPRES',    dataIndex : 'NMIMPRES'},
-	    	  { text: 'CDDEVCIA',    dataIndex : 'CDDEVCIA'},
-	    	  { text: 'CDGESTOR',    dataIndex : 'CDGESTOR'},
-	    	  { text: 'PTIMPORT',    dataIndex : 'PTIMPORT'},
-	    	  { text: 'FEEMISIO',    dataIndex : 'FEEMISIO'},
-	    	  { text: 'FEINICIO',    dataIndex : 'FEINICIO'},
-	    	  { text: 'FEFINAL',    dataIndex : 'FEFINAL'},
-	    	  { text: 'FEESTADO',    dataIndex : 'FEESTADO'}
+	    	  { text: 'NMRECIBO'            , dataIndex : 'NMRECIBO', hidden: true},
+	    	  { text: 'Suplemento'          , dataIndex : 'NMSUPLEM', hidden: true},
+	    	  { text: 'No. Recibo'          , dataIndex : 'NMIMPRES'},
+	    	  { text: 'Tipo Endoso'         , dataIndex : 'CDDEVCIA'},
+	    	  { text: 'N&uacute;mero Endoso', dataIndex : 'CDGESTOR'},
+	    	  { text: 'Importe'             , dataIndex : 'PTIMPORT'},
+	    	  { text: 'Emisi&oacute;n'      , dataIndex : 'FEEMISIO'},
+	    	  { text: 'Inicio Vig.'         , dataIndex : 'FEINICIO'},
+	    	  { text: 'Fin Vig.'            , dataIndex : 'FEFINAL'},
+	    	  { text: 'FEESTADO'            , dataIndex : 'FEESTADO', hidden: true}
 			]
     	});
 		
