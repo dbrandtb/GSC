@@ -566,6 +566,12 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 							
 							if(resultWSEmi != null && resultWSEmi.getResultadoWS() != null){
 								polizaEmiRes = (SDTPoliza)resultWSEmi.getResultadoWS();
+								
+								if(polizaEmiRes.getNumpol() == 0){
+									logger.error("Numero de Poliza de Emision en 0 para la Cotizacion: " + numSolicitud);
+									return null;
+								}
+								
 								emisionAutoRes = new EmisionAutosVO();
 								emisionAutoRes.setNmpoliex(Long.toString(polizaEmiRes.getNumpol()));
 								emisionAutoRes.setSubramo(Short.toString(polizaEmiRes.getRamos()));
