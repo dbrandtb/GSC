@@ -4226,17 +4226,21 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					double beneficioMax = Double.parseDouble(copagoDeducibleFacturaIte.get("BENEFMAX").replace("%",""));
 					//OBTENEMOS EL VALOR Y SE REALIZA UN REEMPLA
 					Calendar fechas = Calendar.getInstance();
+					
+					int diasPantalla = 0;
+					String fechaEgreso  = facturaIte.get("FFACTURA");
+					if(facturaIte.get("FEEGRESO").length() > 0){
+						diasPantalla = Integer.parseInt(facturaIte.get("DIASDEDU"));
+						fechaEgreso = facturaIte.get("FEEGRESO");
+					}
 					//fecha inicio
 					Calendar fechaInicio = new GregorianCalendar();
 					fechaInicio.set(Integer.parseInt(facturaIte.get("FFACTURA").substring(6,10)), Integer.parseInt(facturaIte.get("FFACTURA").substring(3,5)), Integer.parseInt(facturaIte.get("FFACTURA").substring(0,2)));
 					Calendar fechaFin = new GregorianCalendar();
-					fechaFin.set(Integer.parseInt(facturaIte.get("FEEGRESO").substring(6,10)), Integer.parseInt(facturaIte.get("FEEGRESO").substring(3,5)), Integer.parseInt(facturaIte.get("FEEGRESO").substring(0,2)));
+					fechaFin.set(Integer.parseInt(fechaEgreso.substring(6,10)), Integer.parseInt(fechaEgreso.substring(3,5)), Integer.parseInt(fechaEgreso.substring(0,2)));
 					fechas.setTimeInMillis(fechaFin.getTime().getTime() - fechaInicio.getTime().getTime());
 					int totalDias = fechas.get(Calendar.DAY_OF_YEAR);
-					int diasPantalla = 0;
-					if(facturaIte.get("FEEGRESO").length() > 0){
-						diasPantalla = Integer.parseInt(facturaIte.get("DIASDEDU"));
-					}
+					
 					double totalFactura = sumaAsegurada * (beneficioMax/100d) * (totalDias - diasPantalla);
 					facturaObj.put("TOTALFACTURAIND",totalFactura+"");
 					importeSiniestroUnico += totalFactura;	
