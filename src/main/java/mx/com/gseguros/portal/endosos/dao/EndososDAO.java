@@ -358,6 +358,17 @@ public interface EndososDAO
 			,String cdtipsup
 			,Date   fechaEfecto
 			)throws Exception;
+
+	public Map<String,Object> guardaEndosoDespago(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmrecibo
+			,String nmimpres
+			,String cdusuari
+			)throws Exception;
 	
 	public List<Map<String,String>> obtenerRetroactividad(
 			String cdsisrol

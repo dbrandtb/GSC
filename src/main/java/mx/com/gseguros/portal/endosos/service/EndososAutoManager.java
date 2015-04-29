@@ -126,6 +126,18 @@ public interface EndososAutoManager
 			,boolean devolver
 			)throws Exception;
 
+	public void guardarEndosoDespago(
+			 String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmrecibo
+			,String nmimpres
+			,String cdtipsup
+			,UserVO usuarioSesion
+			)throws Exception;
+
 	public void guardarEndosoAseguradoAlterno(
 			String cdunieco
 			,String cdramo

@@ -13,80 +13,56 @@
 		
 		
 		Ext.define('gridRecibosModel',{
-			extend : 'Ext.data.Model'
-			,fields :
-			['NMRECIBO','NMSUPLEM','NMIMPRES','CDDEVCIA','CDGESTOR','PTIMPORT','FEEMISIO','FEINICIO','FEFINAL','FEESTADO']
+			extend : 'Ext.data.Model',
+			fields : ['NMRECIBO','NMSUPLEM','NMIMPRES','CDDEVCIA','CDGESTOR','PTIMPORT','FEEMISIO','FEINICIO','FEFINAL','FEESTADO']
 		});
 		
-		var recibosStore = Ext.create('Ext.data.Store',
-	    {
+		var recibosStore = Ext.create('Ext.data.Store',{
 			pageSize : 20,
-	        autoLoad : true
-	        ,model   : 'gridRecibosModel'
-	        ,proxy   :
-	        {
-	            type: 'ajax',
-	            url : _URL_CONSULTA_RECIBOS_PAGADOS,
-	            reader: {
-	                type: 'json',
-	                root: 'slist1'
-	            }
-        	}
+	        model   : 'gridRecibosModel',
+	        proxy   :
+				{
+		            type: 'ajax',
+		            url : _URL_CONSULTA_RECIBOS_PAGADOS,
+		            reader: {
+		                type: 'json',
+		                root: 'slist1'
+		            }
+	        	}
 	    });
 	    
-	    var gridRecibos = Ext.create('Ext.grid.Panel',
-	    {
-    	title : 'Recibos Pagados'
-    	,height : 250
-    	,selType: 'checkboxmodel'
-    	,store : recibosStore
-    	,columns :
-    	[ { text: 'No. Recibo', dataIndex : 'NMRECIBO', hidden: true},
-    	  { text: 'Importe',    dataIndex : 'PTIMPORT', hidden: true}
-		]
-    	,bbar     :
-        {
-            displayInfo : true,
-            store       : recibosStore,
-            xtype       : 'pagingtoolbar'
-            
-        },
-        tbar: [{
-            icon    : '${ctx}/resources/fam3icons/icons/pencil.png',
-            text    : 'Despagar',
-            handler : function()
-            {
-            	var model =  gridMenus.getSelectionModel();
-            	if(model.hasSelection()){
-            		var record = model.getLastSelected();
-            		despagarRecibo(record);
-            		
-            	}else{
-            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
-            	}
-            }
-        }]
-    });
+	    var gridRecibos = Ext.create('Ext.grid.Panel',{
+	    	title : 'Recibos Pagados, Seleccione el Recibo a Despagar.',
+	    	height : 250,
+	    	selType: 'checkboxmodel',
+	    	store : recibosStore,
+	    	columns :[
+	    	  { text: 'No. Recibo', dataIndex : 'NMRECIBO'},
+	    	  { text: 'Suplemento',    dataIndex : 'NMSUPLEM', hidden: true},
+	    	  { text: 'NMIMPRES',    dataIndex : 'NMIMPRES'},
+	    	  { text: 'CDDEVCIA',    dataIndex : 'CDDEVCIA'},
+	    	  { text: 'CDGESTOR',    dataIndex : 'CDGESTOR'},
+	    	  { text: 'PTIMPORT',    dataIndex : 'PTIMPORT'},
+	    	  { text: 'FEEMISIO',    dataIndex : 'FEEMISIO'},
+	    	  { text: 'FEINICIO',    dataIndex : 'FEINICIO'},
+	    	  { text: 'FEFINAL',    dataIndex : 'FEFINAL'},
+	    	  { text: 'FEESTADO',    dataIndex : 'FEESTADO'}
+			]
+    	});
 		
 		var panelInicialPral = Ext.create('Ext.form.Panel', {
-		    title: 'Vigencia P&oacute;liza',
 		    renderTo  : 'maindivHist',
 		    bodyPadding: 5,
 		    defaultType: 'textfield',
-		    layout     :
-			{
-				type     : 'table'
-				,columns : 2
-			}
-			,defaults 	:
+		    
+			defaults 	:
 			{
 				style : 'margin:5px;'
 			}
 			,
 		    items: [
 				{	xtype		: 'datefield',	fieldLabel	: 'Fecha Inicio Endoso',	name	: 'feInival',			labelWidth	: 150,
-					format		: 'd/m/Y',		editable	: true, 					value   : new Date(),			allowBlank	: false,
-					colspan		:2
+					format		: 'd/m/Y', value: paramsEntrada.FEINIVAL, readOnly: true
 				},gridRecibos
 	    	]
 			,buttonAlign:'center'
@@ -95,11 +71,14 @@
 				,icon:_CONTEXT+'/resources/fam3icons/icons/key.png'
 				,buttonAlign : 'center',
 				handler: function() {
-					var formPanel = this.up().up();
-					if (formPanel.form.isValid()) {
-						
-							var submitValues={};
+					
+					var model =  gridMenus.getSelectionModel();
+	            	if(model.hasSelection()){
+	            		var record = model.getLastSelected();
+	            		var submitValues={};
 	        				paramsEntrada.FEINIVAL = Ext.Date.format(panelInicialPral.down('[name="feInival"]').getValue(),'d/m/Y');
+	        				paramsEntrada.NMRECIBO = record.get('NMRECIBO');
+	        				paramsEntrada.NMIMPRES = record.get('NMIMPRES');
 	        				submitValues['smap1']= paramsEntrada;
 	        				Ext.Ajax.request( {
 	   						    url: guarda_Despago,
@@ -120,15 +99,10 @@
 	   						        });
 	   						    }
 	   						});
-						    
-					}else {
-						Ext.Msg.show({
-							title: 'Aviso',
-							msg: 'Complete la informaci&oacute;n requerida',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.WARNING
-						});
-					}
+	            		
+	            	}else{
+	            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+	            	}
 				}
 			}]
 		});
@@ -140,9 +114,8 @@
 		                'smap1.ESTADO' : paramsEntrada.ESTADO,
 		                'smap1.NMPOLIZA' : paramsEntrada.NMPOLIZA
 		            }
-		        });
-            }
-        });
+		 });
+            
 
     });
 </script>

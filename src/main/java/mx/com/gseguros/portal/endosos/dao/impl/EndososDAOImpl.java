@@ -3287,6 +3287,55 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 
 	@Override
+	public Map<String,Object> guardaEndosoDespago(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmrecibo
+			,String nmimpres
+			,String cdusuari
+			)throws Exception
+			{
+		Map<String,Object>params = new LinkedHashMap<String,Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i"  , cdramo);
+		params.put("pv_estado_i"  , estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_nmrecibo_i", nmrecibo);
+		params.put("pv_nmimpres_i", nmimpres);
+		params.put("pv_cduser_i"  , cdusuari);
+		Utilerias.debugProcedure(logger, "P_CALC_RECIBOS_DESPAGOS", params);
+		Map<String,Object> resParams = ejecutaSP(new GuardaEndosoDespago(getDataSource()),params);
+		
+		return resParams;
+			}
+	
+	protected class GuardaEndosoDespago extends StoredProcedure
+	{
+		protected GuardaEndosoDespago(DataSource dataSource)
+		{
+			super(dataSource,"P_CALC_RECIBOS_DESPAGOS");
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmrecibo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmimpres_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cduser_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_tipoflot_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
 	public List<Map<String, String>> obtenerRetroactividad(String cdsisrol, String cdramo,
 			String cdtipsup, String fechaProceso) throws Exception
 	{
