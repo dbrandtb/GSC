@@ -99,12 +99,29 @@
                 <param name="smap1.cdramo">${params.cdramo}</param>
                 <param name="smap1.cdtipsit">${params.cdtipsit}</param>
             </result>
+            <result name="cotizadorAutoIndividual" type="redirectAction">
+                <param name="actionName">cotizacionAutoIndividual</param>
+                <param name="namespace">/emision</param>
+                <param name="smap1.cdramo">${params.cdramo}</param>
+                <param name="smap1.cdtipsit">${params.cdtipsit}</param>
+            </result>
+            <result name="cotizadorAutoFlotilla" type="redirectAction">
+                <param name="actionName">cotizacionAutoFlotilla</param>
+                <param name="namespace">/emision</param>
+                <param name="smap1.cdramo">${params.cdramo}</param>
+                <param name="smap1.cdtipsit">${params.cdtipsit}</param>
+                <param name="smap1.tipoflot">${params.tipoflot}</param>
+            </result>
 		    <result name="consultaPolizas">/jsp/consultas/containerConsultasPolizas.jsp</result>
 		    <result name="consultaAsegurados">/jsp/consultas/consultasAsegurados.jsp</result>
-		    <result name="catalogoPersonas" type="redirectAction">
+		    <result name="clienteUnico" type="redirectAction">
 		        <param name="actionName">personas</param>
                 <param name="namespace">/catalogos</param>
 		    </result>
+		    <result name="endososAutos" type="redirectAction">
+                <param name="actionName">marcoEndosos</param>
+                <param name="namespace">/endosos</param>
+            </result>
 		    <result name="menuPrincipal" type="redirectAction">
                 <param name="actionName">login</param>
                 <param name="namespace">/seguridad</param>
