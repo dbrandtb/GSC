@@ -208,7 +208,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 			//override del tstamp
 			smap1.put("tstamp" , Utils.generaTimestamp());
 			
-			imap = endososAutoManager.pantallaEndosoValosit(cdtipsup,cdramo);
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			imap = endososAutoManager.pantallaEndosoValosit(cdtipsup,cdramo, cdsisrol);
 			
 			result = SUCCESS;
 		}

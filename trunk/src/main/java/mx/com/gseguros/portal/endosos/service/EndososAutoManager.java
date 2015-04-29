@@ -24,10 +24,15 @@ public interface EndososAutoManager
 			,String cancelada
 			)throws Exception;
 	
-	public Map<String,Item>pantallaEndosoValosit(
-			String cdtipsup
-			,String cdramo
-			)throws Exception;
+	/**
+	 * 
+	 * @param cdtipsup
+	 * @param cdramo
+	 * @param cdsisrol
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String,Item>pantallaEndosoValosit(String cdtipsup, String cdramo, String cdsisrol) throws Exception;
 	
 	public void guardarTvalositEndoso(
 			String cdunieco
