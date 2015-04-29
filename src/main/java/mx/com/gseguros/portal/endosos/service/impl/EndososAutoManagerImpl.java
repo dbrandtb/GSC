@@ -393,10 +393,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	}
 	
 	@Override
-	public Map<String,Item>pantallaEndosoValosit(
-			String cdtipsup
-			,String cdramo
-			)throws Exception
+	public Map<String,Item>pantallaEndosoValosit(String cdtipsup, String cdramo, String cdsisrol) throws Exception 
 	{
 		logger.info(Utilerias.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -419,7 +416,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,cdramo
 					,null    //cdtipsit
 					,null    //estado
-					,null    //cdsisrol
+					,cdsisrol//cdsisrol
 					,"ENDOSO_VALOSIT_AUTO"
 					,"COLUMNAS_LECTURA"
 					,null    //orden
@@ -434,7 +431,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,cdramo
 					,null    //cdtipsit
 					,null    //estado
-					,null    //cdsisrol
+					,cdsisrol//cdsisrol
 					,"ENDOSO_VALOSIT_AUTO"
 					,"COLUMNAS_EDITABLES"
 					,null    //orden
