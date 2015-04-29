@@ -116,7 +116,7 @@
             <result name="success" type="json" />
         </action>
 
-        <action name="guardarEndosoDespago" class="EndososAction" method="guardarEndosoDespago">
+        <action name="guardarEndosoDespago" class="endososAutoAction" method="guardarEndosoDespago">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
