@@ -790,6 +790,10 @@
             <result type="json" />
         </action>
         
+        <action name="obtieneRecibosPagados" class="endososAutoAction" method="obtieneRecibosPagados">
+            <result name="success" type="json" />
+        </action>
+        
     </package>
 
 </struts>

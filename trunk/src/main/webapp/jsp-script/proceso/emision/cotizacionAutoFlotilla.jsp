@@ -1419,6 +1419,7 @@ Ext.onReady(function()
                                 for(var i in claveCmps)
                                 {
                                     claveCmps[i].store.proxy.extraParams['params.uso'] = me.getValue();
+                                    claveCmps[i].store.proxy.extraParams['params.servicio'] = servicioVal;
                                 }
                                 if(!Ext.isEmpty(callback))
                                 {

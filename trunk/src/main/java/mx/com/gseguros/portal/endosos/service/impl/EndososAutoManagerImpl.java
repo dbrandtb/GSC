@@ -2155,7 +2155,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			PolizaDTO polRes = listaPolizas.get(0);
 			
 			String parametros = null;
-			parametros = "?"+polRes.getCduniext()+","+polRes.getCdramoext()+","+polRes.getNmpoliex()+","+ numEndoso;
+			parametros = "?"+polRes.getCduniext()+","+polRes.getCdramoext()+","+polRes.getNmpoliex()+",,0,"+ numEndoso+",0";
 			logger.debug("URL Generada para Caratula: "+ urlImpresionCaratulaEndosoB + parametros);
 			mesaControlDAO.guardarDocumento(cdunieco, cdramo, estado, nmpoliza,
 					nmsuplem, new Date(), urlImpresionCaratulaEndosoB + parametros, 
@@ -2770,6 +2770,11 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				));
 		
 		return respRetroActividad;
+	}
+
+	@Override
+	public List<Map<String,String>> obtieneRecibosPagados(String cdunieco, String cdramo ,String estado ,String nmpoliza) throws Exception {
+		return endososDAO.obtieneRecibosPagados(cdunieco, cdramo, estado, nmpoliza);
 	}
 	
 	@Override

@@ -9762,7 +9762,7 @@ public class EndososAction extends PrincipalCoreAction
 			String parametros = null;
 			String urlCaratula =  this.getText("caratula.impresion.autos.endosob.url");
 	
-			parametros = "?"+polRes.getCduniext()+","+polRes.getCdramoext()+","+polRes.getNmpoliex()+","+ numEnd;
+			parametros = "?"+polRes.getCduniext()+","+polRes.getCdramoext()+","+polRes.getNmpoliex()+",,0,"+ numEnd+",0";
 			logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
 	
 			HashMap<String, Object> paramsR =  new HashMap<String, Object>();

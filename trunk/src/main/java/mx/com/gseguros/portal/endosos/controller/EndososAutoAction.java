@@ -2104,6 +2104,38 @@ public class EndososAutoAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
+	
+	
+	public String obtieneRecibosPagados()
+	{
+		logger.info(Utilerias.join(
+				 "\n##########################################"
+				,"\n###### obtieneRecibosPagados ######"
+				,"\n###### smap1="  , smap1
+				));
+		
+		try
+		{
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+			
+			slist1 = endososAutoManager.obtieneRecibosPagados(cdunieco, cdramo,estado, nmpoliza);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta=Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### obtieneRecibosPagados ######"
+				,"\n##########################################"
+				));
+		return SUCCESS;
+	}
 
 	/*
 	 * Getters y setters

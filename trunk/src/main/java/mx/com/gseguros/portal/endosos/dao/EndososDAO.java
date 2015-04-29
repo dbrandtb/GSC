@@ -365,6 +365,13 @@ public interface EndososDAO
 			,String cdtipsup
 			,String fechaProceso
 			)throws Exception;
+
+	public List<Map<String,String>> obtieneRecibosPagados(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 	
 	public Map<String,Object> guardarEndosoClaveAuto(
 			String cdunieco
