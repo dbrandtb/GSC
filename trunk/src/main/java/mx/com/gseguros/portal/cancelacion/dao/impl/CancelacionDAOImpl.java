@@ -457,5 +457,36 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
         }
     }
 
+	@Override
+	public void validaCancelacionAProrrata(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES.P_VALIDA_CANC_A_PRORRATA", params);
+		ejecutaSP(new ValidaCancelacionAProrrata(getDataSource()),params);
+	}
 	
+	protected class ValidaCancelacionAProrrata extends StoredProcedure
+	{
+    	protected ValidaCancelacionAProrrata(DataSource dataSource)
+    	{
+            super(dataSource , "PKG_SATELITES.P_VALIDA_CANC_A_PRORRATA");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{})));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

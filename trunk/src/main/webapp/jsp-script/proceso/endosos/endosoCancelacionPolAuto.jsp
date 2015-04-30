@@ -6,8 +6,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// urls //////
-var _p43_urlMarcarPolizaCancelar = '<s:url namespace="/endosos" action="marcarPolizaCancelarPorEndoso"     />';
-var _p43_urlConfirmar            = '<s:url namespace="/endosos" action="confirmarEndosoCancelacionPolAuto" />';
+var _p43_urlMarcarPolizaCancelar = '<s:url namespace="/endosos"     action="marcarPolizaCancelarPorEndoso"     />';
+var _p43_urlConfirmar            = '<s:url namespace="/endosos"     action="confirmarEndosoCancelacionPolAuto" />';
+var _p43_urlValidaCancProrrata   = '<s:url namespace="/cancelacion" action="validaCancelacionAProrrata"        />';
 ////// urls //////
 
 ////// variables //////
@@ -127,6 +128,44 @@ Ext.onReady(function()
     ////// contenido //////
     
     ////// custom //////
+    _fieldByName('cdrazon').on(
+    {
+        select : function(me,rec)
+        {
+            debug('rec:',rec);
+            if(Number(rec[0].get('key'))==25)
+            {
+	            Ext.Ajax.request(
+	            {
+	                url     : _p43_urlValidaCancProrrata
+	                ,params :
+	                {
+	                    'smap1.cdunieco'  : _p43_smap1.CDUNIECO
+	                    ,'smap1.cdramo'   : _p43_smap1.CDRAMO
+	                    ,'smap1.estado'   : _p43_smap1.ESTADO
+	                    ,'smap1.nmpoliza' : _p43_smap1.NMPOLIZA
+	                }
+	                ,success : function(response)
+	                {
+	                    var json = Ext.decode(response.responseText);
+	                    if(json.success)
+	                    {
+	                    }
+	                    else
+	                    {
+	                        me.reset();
+	                        mensajeError(json.respuesta);
+	                    }
+	                }
+	                ,failure : function()
+	                {
+	                    me.reset();
+	                    errorComunicacion();
+	                }
+	            });
+            }
+        }
+    });
     ////// custom //////
     
     ////// loaders //////

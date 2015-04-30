@@ -63,4 +63,11 @@ public interface CancelacionDAO
 			,String cdusuari
 			,String cdtipsup
 			)throws Exception;
+	
+	public void validaCancelacionAProrrata(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }
