@@ -77,6 +77,33 @@ public class Utilerias {
 		
 		return cal;
 	}
+	
+	/**
+	 * Convierte una fecha String a Calendar con el TimeZone que ya trae el Server
+	 * @param fecha String
+	 * @return devuelve objeto Calendar
+	 */
+	public static Calendar getCalendarServerTimeZone(String fecha, String dateFormat) {
+		
+		Calendar  cal = null;
+		
+		try {
+			//Asumimos que tiene formato dd/MM/YYYY
+			//TODO:preparar este metodo  para otros formatos
+			if(Utilerias.esFechaValida(fecha, dateFormat)){
+				String [] fechaArr = fecha.split("/");   
+				int dia  =  Integer.parseInt(fechaArr[0]);
+				int mes  =  Integer.parseInt(fechaArr[1])-1;
+				int anio =  Integer.parseInt(fechaArr[2]);
+				cal = Calendar.getInstance();
+				cal.set(anio, mes, dia);
+			}
+		} catch (Exception e) {
+			logger.error("Error al formatear la fecha", e);
+		}
+		
+		return cal;
+	}
 
 	/**
 	 * Convierte una fecha String a XMLGregorianCalendar
