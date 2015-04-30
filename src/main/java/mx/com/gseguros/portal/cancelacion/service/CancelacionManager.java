@@ -48,4 +48,11 @@ public interface CancelacionManager
 			,String estado
 			,String nmpoliza
 			,String tipmov) throws Exception;
+	
+	public void validaCancelacionAProrrata(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }

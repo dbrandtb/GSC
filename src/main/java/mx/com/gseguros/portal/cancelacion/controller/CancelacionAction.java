@@ -16,6 +16,8 @@ import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +37,7 @@ public class CancelacionAction extends PrincipalCoreAction
 	private List<Map<String,String>> slist1;
 	private Map<String,Item>         imap;
 	private String                   error;
+	private String                   respuesta;
 	
 	//////////////////////////////////
 	////// marco de cancelacion //////
@@ -486,6 +489,47 @@ public class CancelacionAction extends PrincipalCoreAction
 	////// obtener detalles de cancelacion //////
 	/////////////////////////////////////////////
 	
+	public String validaCancelacionAProrrata()
+	{
+		logger.info(Utilerias.join(
+				 "\n########################################"
+				,"\n###### validaCancelacionAProrrata ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			Utils.validate(smap1 , "No se recibieron datos");
+			
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			
+			Utils.validate(
+					cdunieco  , "No se recibio la sucursal"
+					,cdramo   , "No se recibio el producto"
+					,estado   , "No se recibio el estado de la poliza"
+					,nmpoliza , "No se recibio el numero de poliza"
+					);
+			
+			cancelacionManager.validaCancelacionAProrrata(cdunieco,cdramo,estado,nmpoliza);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utilerias.join(
+				 "\n###### respuesta=",respuesta
+				,"\n###### validaCancelacionAProrrata ######"
+				,"\n########################################"
+				));
+		return SUCCESS;
+	}
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/
@@ -538,6 +582,14 @@ public class CancelacionAction extends PrincipalCoreAction
 
 	public void setIce2sigsService(Ice2sigsService ice2sigsService) {
 		this.ice2sigsService = ice2sigsService;
+	}
+
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
 	}
 	
 }

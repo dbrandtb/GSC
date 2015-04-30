@@ -41,6 +41,10 @@
             <result name="success" type="json" />
         </action>
         
+        <action name="validaCancelacionAProrrata" class="CancelacionAction" method="validaCancelacionAProrrata">
+            <result name="success" type="json" />
+        </action>
+        
     </package>
 
 </struts>
