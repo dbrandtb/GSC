@@ -16,7 +16,7 @@
 	
 	<!-- Developer Appender -->
 	<appender name="dev" class="org.apache.log4j.RollingFileAppender">
-		<param name="Threshold" value="TRACE" />
+		<param name="Threshold" value="DEBUG" />
         <param name="File" value="/u01/wlserver/wlapplogs/gseguros/dev.log" />
 		<param name="Append" value="true" />
 		<param name="MaxFileSize" value="50MB"/>
