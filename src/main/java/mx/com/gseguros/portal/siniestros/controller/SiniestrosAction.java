@@ -1007,7 +1007,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Lista AutorizaServiciosVO con la informacion de los asegurados
 	*/
 	public String guardaAltaTramite(){
-		logger.debug(" **** Entrando al guardado de alta de tramite ****");
+		logger.debug("** Entrando a la funcion 'guardaAltaTramite' : ");
 		logger.debug(params);
 		logger.debug(datosTablas);
 		try{
@@ -1061,7 +1061,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				}else{
 					msgResult = (String) res.getItemMap().get("ntramite");
 					logger.debug("Entra a proceso 1");
-					ProcesoAltaTramite(msgResult);
+					ProcesoAltaTramite(msgResult, params.get("cmbRamos"));
 				}
 			}else{
 				//Existe el trámite y solo lo vamos a actualizar
@@ -1111,7 +1111,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				//2.- Verificamos Si el tipo de pago es: 1.- Reembolso y  2.- Indemnizacion
 				if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo())||params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo())){
 					logger.debug("Entra a proceso 2 : REEMBOLSO E INDEMIZACION"); 
-					ProcesoAltaTramite(params.get("idNumTramite"));
+					ProcesoAltaTramite(params.get("idNumTramite"), params.get("cmbRamos"));
 				}
 			}
 		}catch( Exception e){
@@ -1234,7 +1234,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @param Json con todos los valores del formulario y los grid
 	* @return Lista AutorizaServiciosVO con la informacion de los asegurados
 	*/
-	public String ProcesoAltaTramite(String msgResult) throws Exception {
+	public String ProcesoAltaTramite(String msgResult, String cdramo) throws Exception {
 		// si tipo de pago es Directo
 		if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.DIRECTO.getCodigo())){
 			for(int i=0;i<datosTablas.size();i++) {
@@ -1282,12 +1282,12 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				}else{
 					nfactura= msgResult+""+i;
 				}
-				siniestrosManager.guardaListaFacMesaControl(
+				siniestrosManager.guardaListaFacMesaControl2(
 					msgResult, 
 					nfactura,
 					renderFechas.parse(datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4)),
 					datosTablas.get(i).get("cdtipser"),
-					datosTablas.get(i).get("cdpresta"),
+					(cdramo.equalsIgnoreCase("1"))?"0":datosTablas.get(i).get("cdpresta"),
 					datosTablas.get(i).get("ptimport"),
 					cobertura,
 					subcobertura,
@@ -1299,7 +1299,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					null,
 					null,
 					null,
-					null
+					null,
+					(cdramo.equalsIgnoreCase("1"))?datosTablas.get(i).get("nombprov"):null
 				);
 			}
 	

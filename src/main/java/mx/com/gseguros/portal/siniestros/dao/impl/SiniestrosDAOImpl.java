@@ -1048,6 +1048,40 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				compile();
 			}
 		}
+		
+		@Override
+		public String guardaFacMesaControl2(HashMap<String, Object> paramsFacMesaCtrl) throws Exception {
+				Map<String, Object> mapResult = ejecutaSP(new guardaFacMesaControl2SP(getDataSource()), paramsFacMesaCtrl);
+				return (String) mapResult.get("pv_msg_id_o");
+		}
+		
+		protected class guardaFacMesaControl2SP extends StoredProcedure {
+			protected guardaFacMesaControl2SP(DataSource dataSource) {
+				super(dataSource, "PKG_SATELITES.P_MOV_TFACMESCTRLMOD");
+				//super(dataSource, "PKG_SATELITES.P_MOV_TFACMESCTRL");
+				declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_ffactura_i", OracleTypes.DATE));
+				declareParameter(new SqlParameter("pv_cdtipser_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdpresta_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_ptimport_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdconval_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_descporc_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_descnume_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdmoneda_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_tasacamb_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_ptimporta_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_dctonuex_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_feegreso_i", OracleTypes.DATE));
+				declareParameter(new SqlParameter("pv_diasdedu_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_nombprov_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				compile();
+			}
+		}
 
 
 	@Override
@@ -3061,6 +3095,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setDesTipomoneda(rs.getString("DESTIPOMONEDA"));
         	consulta.setTasacamb(rs.getString("TASACAMB"));
         	consulta.setPtimporta(rs.getString("PTIMPORTA"));
+        	consulta.setNombProv(rs.getString("NOMBPROV"));
             return consulta;
         }
     }
