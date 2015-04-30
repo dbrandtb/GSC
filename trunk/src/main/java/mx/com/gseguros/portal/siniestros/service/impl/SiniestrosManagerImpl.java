@@ -391,6 +391,64 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	public String guardaListaFacMesaControl2(
+			String ntramite,
+			String nfactura,
+			Date fefactura,
+			String cdtipser,
+			String cdpresta,
+			String ptimport,
+			String cdgarant,
+			String cdconval,
+			String descporc,
+			String descnume,
+			String cdmoneda,
+			String tasacamb,
+			String ptimporta,
+			String dctonuex,
+			Date feegreso,
+			String diasdedu,
+			String tipoAccion,
+			String nombProv) throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			String accion = null;
+			log.debug("Entra a esta parte --> : "+feegreso);
+			if(tipoAccion == null || tipoAccion == ""){
+				accion = Constantes.INSERT_MODE;
+			}else{
+				accion = Constantes.UPDATE_MODE;
+			}
+			
+			HashMap<String,Object> paramsFacMesaCtrl=new HashMap<String,Object>();
+			paramsFacMesaCtrl.put("pv_accion_i", accion);
+			paramsFacMesaCtrl.put("pv_ntramite_i",ntramite);
+			paramsFacMesaCtrl.put("pv_nfactura_i",nfactura);
+			paramsFacMesaCtrl.put("pv_ffactura_i",fefactura);
+			paramsFacMesaCtrl.put("pv_cdtipser_i",cdtipser);
+			paramsFacMesaCtrl.put("pv_cdpresta_i",cdpresta);
+			paramsFacMesaCtrl.put("pv_ptimport_i",ptimport);
+			paramsFacMesaCtrl.put("pv_cdgarant_i",cdgarant);
+			paramsFacMesaCtrl.put("pv_cdconval_i",cdconval);
+			paramsFacMesaCtrl.put("pv_descporc_i",descporc);
+			paramsFacMesaCtrl.put("pv_descnume_i",descnume);
+			paramsFacMesaCtrl.put("pv_cdmoneda_i",cdmoneda);
+			paramsFacMesaCtrl.put("pv_tasacamb_i",tasacamb);
+			paramsFacMesaCtrl.put("pv_ptimporta_i",ptimporta);
+			paramsFacMesaCtrl.put("pv_dctonuex_i",dctonuex);
+			paramsFacMesaCtrl.put("pv_feegreso_i", feegreso);
+			paramsFacMesaCtrl.put("pv_diasdedu_i",diasdedu);
+			paramsFacMesaCtrl.put("pv_nombprov_i",nombProv);
+			log.debug("guardaListaFacMesaControl params: "+paramsFacMesaCtrl);
+			return siniestrosDAO.guardaFacMesaControl2(paramsFacMesaCtrl);
+		} catch (ParseException parseExc) {
+			throw new Exception(parseExc.getMessage(), parseExc);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
 
 	@Override
 	public String movFacMesaControl(

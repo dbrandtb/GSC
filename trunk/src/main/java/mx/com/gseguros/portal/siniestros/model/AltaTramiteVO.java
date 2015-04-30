@@ -43,6 +43,7 @@ public class AltaTramiteVO implements Serializable{
 	private String tasacamb;
 	private String ptimporta;
 	private String nombreAsegurado;
+	private String nombProv;
 	
 	
 
@@ -358,6 +359,16 @@ public class AltaTramiteVO implements Serializable{
 
 	public void setPtimporta(String ptimporta) {
 		this.ptimporta = ptimporta;
+	}
+
+
+	public String getNombProv() {
+		return nombProv;
+	}
+
+
+	public void setNombProv(String nombProv) {
+		this.nombProv = nombProv;
 	}	
 	
 }

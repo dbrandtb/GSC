@@ -81,6 +81,8 @@ public interface SiniestrosDAO {
 	public List<GenericVO> obtieneListadoPlaza() throws Exception;
 
 	public String guardaFacMesaControl(HashMap<String, Object> paramsFacMesaCtrl) throws Exception;
+	
+	public String guardaFacMesaControl2(HashMap<String, Object> paramsFacMesaCtrl) throws Exception;
 
 	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws Exception;
 

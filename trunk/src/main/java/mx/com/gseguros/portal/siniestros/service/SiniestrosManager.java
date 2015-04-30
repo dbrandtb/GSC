@@ -129,7 +129,29 @@ public interface SiniestrosManager {
 			String dctonuex,
 			Date feegreso,
 			String diasdedu,
-			String tipoAccion
+			String tipoAccion//,
+			//String nomProv
+			) throws Exception;
+	
+	public String guardaListaFacMesaControl2(
+			String ntramite,
+			String nfactura,
+			Date fefactura,
+			String cdtipser,
+			String cdpresta,
+			String ptimport,
+			String cdgarant,
+			String cdconval,
+			String descporc,
+			String descnume,
+			String cdmoneda,
+			String tasacamb,
+			String ptimporta,
+			String dctonuex,
+			Date feegreso,
+			String diasdedu,
+			String tipoAccion,
+			String nombProv
 			) throws Exception;
 
 	public String movFacMesaControl(
@@ -546,4 +568,5 @@ public interface SiniestrosManager {
 	public List<Map<String, String>> listaSumaAseguradaPeriodoEsperaRec(String  cdramo, String cobertura, String subcobertura, Date feEfecto) throws Exception;
 	
 	public List<Map<String, String>> listaEsquemaSumaAseguradaRec(String cdunieco,String cdramo, String estado, String nmpoliza, String nmsituac) throws Exception;
+	
 }
