@@ -1407,10 +1407,9 @@ function _p22_guardarClic(callback, autosave)
             {
                 smap1  : _p22_formDatosGenerales().getValues()
                 ,smap2 : _p22_formDomicilio().getValues()
-                /*,params: {
-                	esSalud: _esSaludDanios,
-                	
-                }*/
+                ,smap3: {
+                	'AUTOSAVE': autosave?'S':'N'
+                }
             }
             ,success : function(response)
             {

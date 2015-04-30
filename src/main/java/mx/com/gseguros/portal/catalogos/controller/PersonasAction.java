@@ -15,6 +15,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
@@ -395,6 +396,7 @@ public class PersonasAction extends PrincipalCoreAction
 						,munycol.get("CDCOLONI")//colonia
 						,cliImport.getNumeroCli()
 						,null//numero int
+						,false
 						,timestamp);
 				
 				
@@ -492,7 +494,7 @@ public class PersonasAction extends PrincipalCoreAction
 				+ "\n###### guardarPantallaPersonas ######"
 				+ "\nsmap1: "+smap1
 				+ "\nsmap2: "+smap2
-				+ "\nsmap2: "+smap3
+				+ "\nsmap3: "+smap3
 				);
 		try
 		{
@@ -535,6 +537,7 @@ public class PersonasAction extends PrincipalCoreAction
 					,smap2.get("CDCOLONI")
 					,smap2.get("NMNUMERO")
 					,smap2.get("NMNUMINT")
+					,Constantes.SI.equalsIgnoreCase(smap3.get("AUTOSAVE"))?true:false
 					,timestamp
 					);
 			exito                = (Boolean)managerResult.get("exito");
