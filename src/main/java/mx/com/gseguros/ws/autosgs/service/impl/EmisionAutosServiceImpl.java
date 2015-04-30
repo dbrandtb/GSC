@@ -145,7 +145,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						datosCotizacionAuto.setIdBanco(Integer.valueOf(m.get("IDBANCO")));
 						datosCotizacionAuto.setMesesSinIntereses(Integer.valueOf(m.get("MESESSININTERESES")));
 						datosCotizacionAuto.setIdOrigenSolicitud(Integer.valueOf(m.get("IDORIGENSOLICITUD")));
-						datosCotizacionAuto.setFinVigencia(Utilerias.getCalendar(m.get("FINVIGENCIA"), Constantes.FORMATO_FECHA));
+						datosCotizacionAuto.setFinVigencia(Utilerias.getCalendarServerTimeZone(m.get("FINVIGENCIA"), Constantes.FORMATO_FECHA));
 						datosCotizacionAuto.setClaveGS(Integer.valueOf(m.get("CLAVEGS")));
 		
 						datosCotizacionAuto.setPolizaTracto(m.get("POLIZATRACTO"));
@@ -281,7 +281,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						datosCotizacionAuto.setVersionTarifa(Integer.valueOf(m.get("VERSIONTARIFA")));
 						
 						//inicioVigencia
-						datosCotizacionAuto.setInicioVigencia(Utilerias.getCalendar(m.get("INICIOVIGENCIA"), Constantes.FORMATO_FECHA));
+						datosCotizacionAuto.setInicioVigencia(Utilerias.getCalendarServerTimeZone(m.get("INICIOVIGENCIA"), Constantes.FORMATO_FECHA));
 						
 						//moneda
 						datosCotizacionAuto.setMoneda(Integer.valueOf(m.get("MONEDA")));
