@@ -5237,4 +5237,125 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		}
 	}
 	
+	@Override
+	public void movimientoMpoliagr(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdagrupa
+			,String nmsuplem
+			,String status
+			,String cdperson
+			,String nmorddom
+			,String cdforpag
+			,String cdbanco
+			,String cdsucurs
+			,String cdcuenta
+			,String cdrazon
+			,String swregula
+			,String cdperreg
+			,Date feultreg
+			,String cdgestor
+			,String cdrol
+			,String cdbanco2
+			,String cdsucurs2
+			,String cdcuenta2
+			,String cdtipcta
+			,String cdtipcta2
+			,String cdpagcom
+			,String nmpresta
+			,String nmpresta2
+			,String cdbanco3
+			,String cdsucurs3
+			,String cdcuenta3
+			,String cdtipcta3
+			,String nmpresta3
+			,String nmcuenta
+			,String accion
+			)throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("cdunieco"  , cdunieco);
+		params.put("cdramo"    , cdramo);
+		params.put("estado"    , estado);
+		params.put("nmpoliza"  , nmpoliza);
+		params.put("cdagrupa"  , cdagrupa);
+		params.put("nmsuplem"  , nmsuplem);
+		params.put("status"    , status);
+		params.put("cdperson"  , cdperson);
+		params.put("nmorddom"  , nmorddom);
+		params.put("cdforpag"  , cdforpag);
+		params.put("cdbanco"   , cdbanco);
+		params.put("cdsucurs"  , cdsucurs);
+		params.put("cdcuenta"  , cdcuenta);
+		params.put("cdrazon"   , cdrazon);
+		params.put("swregula"  , swregula);
+		params.put("cdperreg"  , cdperreg);
+		params.put("feultreg"  , feultreg);
+		params.put("cdgestor"  , cdgestor);
+		params.put("cdrol"     , cdrol);
+		params.put("cdbanco2"  , cdbanco2);
+		params.put("cdsucurs2" , cdsucurs2);
+		params.put("cdcuenta2" , cdcuenta2);
+		params.put("cdtipcta"  , cdtipcta);
+		params.put("cdtipcta2" , cdtipcta2);
+		params.put("cdpagcom"  , cdpagcom);
+		params.put("nmpresta"  , nmpresta);
+		params.put("nmpresta2" , nmpresta2);
+		params.put("cdbanco3"  , cdbanco3);
+		params.put("cdsucurs3" , cdsucurs3);
+		params.put("cdcuenta3" , cdcuenta3);
+		params.put("cdtipcta3" , cdtipcta3);
+		params.put("nmpresta3" , nmpresta3);
+		params.put("nmcuenta"  , nmcuenta);
+		params.put("accion"    , accion);
+		Utilerias.debugProcedure(logger, "PKG_SATELITES.P_MOV_MPOLIAGR", params);
+		ejecutaSP(new MovimientoMpoliagr(getDataSource()),params);
+	}
+	
+	protected class MovimientoMpoliagr extends StoredProcedure
+	{
+		protected MovimientoMpoliagr(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES.P_MOV_MPOLIAGR");
+			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("cdramo"    , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("cdagrupa"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("nmsuplem"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdperson"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("nmorddom"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("cdforpag"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdbanco"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsucurs"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdcuenta"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdrazon"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("swregula"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdperreg"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("feultreg"  , OracleTypes.DATE));
+			declareParameter(new SqlParameter("cdgestor"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdrol"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdbanco2"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsucurs2" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdcuenta2" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipcta"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipcta2" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdpagcom"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("nmpresta"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpresta2" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdbanco3"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsucurs3" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdcuenta3" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipcta3" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpresta3" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmcuenta"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("accion"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
