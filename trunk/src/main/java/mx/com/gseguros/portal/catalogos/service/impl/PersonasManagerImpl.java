@@ -287,6 +287,7 @@ public class PersonasManagerImpl implements PersonasManager
 			,String cdcoloni
 			,String nmnumero
 			,String nmnumint
+			,boolean autosave
 			,long   timestamp) throws Exception
 	{
 		Map<String,Object>result=new HashMap<String,Object>();
@@ -323,6 +324,7 @@ public class PersonasManagerImpl implements PersonasManager
 				+ "\n cdcoloni:"+cdcoloni
 				+ "\n nmnumero:"+nmnumero
 				+ "\n nmnumint:"+nmnumint
+				+ "\n autosave:"+autosave
 				);
 		
 		boolean exito           = true;
@@ -388,7 +390,7 @@ public class PersonasManagerImpl implements PersonasManager
 			}
 		}
 		
-		if(exito)
+		if(exito && !autosave)
 		{
 			try
 			{
