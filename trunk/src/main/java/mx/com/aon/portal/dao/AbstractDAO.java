@@ -4,10 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mx.com.gseguros.exception.DaoException;
+import mx.com.gseguros.utils.Utilerias;
 
+import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 @Deprecated
 public abstract class AbstractDAO  extends JdbcDaoSupport {
+	
+	private static Logger logger = Logger.getLogger(AbstractDAO.class);
 
 	/**
 	 * Mapa donde se introducen y extraen los managers para utilizarlos como servicios
@@ -43,7 +47,12 @@ public abstract class AbstractDAO  extends JdbcDaoSupport {
     public Object invoke(String storeProcedureName, Object parameters) throws DaoException {
 		try {
 			CustomStoredProcedure storedProcedure = getStoredProcedure(storeProcedureName);
+			long inicio = System.currentTimeMillis();
+			logger.info(Utilerias.join("***** CALLING SP ", storedProcedure.getSql(), " ", parameters));
 			Map result = storedProcedure.execute((Map) parameters);
+    		long tfinal = System.currentTimeMillis();
+    		logger.info(Utilerias.join("***** FINISH SP IN ", (tfinal - inicio) / 1000d, " SEC ", storedProcedure.getSql()));
+			
 			return storedProcedure.mapWrapperResultados(result);
 		} catch (Exception ex) {
 			throw new DaoException("Error inesperado en el acceso a los datos", ex);

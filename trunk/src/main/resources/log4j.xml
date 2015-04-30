@@ -40,7 +40,7 @@
 	
 	<!-- Console Appender -->
 	<appender name="stdout" class="org.apache.log4j.ConsoleAppender">
-        <param name="Threshold" value="TRACE" />
+        <param name="Threshold" value="DEBUG" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
         </layout>
@@ -68,8 +68,8 @@
         <appender-ref ref="stdout" />
     </logger>
 	
-	<logger name="org.springframework.jdbc.core">
-		<level value="TRACE" />
+	<logger name="org.springframework.jdbc">
+		<level value="INFO" />
 		<appender-ref ref="app" />
 		<appender-ref ref="dev" />
 		<appender-ref ref="sql" />
