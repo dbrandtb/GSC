@@ -32,10 +32,13 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	public Map<String, Object> ejecutaSP(StoredProcedure storedProcedure, Map parameters) throws Exception {
     	
+    	logger.info(Utilerias.join("***** CALLING SP ", storedProcedure.getSql(), " ", parameters));
     	long inicio = System.currentTimeMillis();
 		Map<String, Object> mapResult = storedProcedure.execute(parameters);
 		long tfinal = System.currentTimeMillis();
-		logger.debug(Utilerias.join(
+		logger.info(Utilerias.join("***** FINISH SP IN ", (tfinal - inicio) / 1000d, " SEC ", storedProcedure.getSql()));
+		/*
+		logger.info(Utilerias.join(
 				"****** PROC-LOG seg="
 				,(tfinal-inicio)/1000d
 				,", proc="
@@ -43,6 +46,7 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
 				,", params="
 				,parameters
 				));
+		*/
 		
         BaseVO mensajeRespuesta = traduceMensaje(mapResult);
         mapResult.put("msg_id", mensajeRespuesta.getKey());

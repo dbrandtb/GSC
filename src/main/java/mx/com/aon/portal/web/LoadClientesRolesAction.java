@@ -149,7 +149,7 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
     private void complementaUsuario(UserVO usuario) throws Exception
     {
         IsoVO isoLocal = navigationManagerNuevo.getVariablesIso(usuario.getUser());
-        logger.debug("isoLocal=====" + isoLocal);
+        //logger.debug("isoLocal=====" + isoLocal);
         BaseObjectVO languague = new BaseObjectVO();
         languague.setValue(isoLocal.getCdIdioma());
         languague.setLabel(isoLocal.getLanguague());
@@ -157,12 +157,12 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
         pais.setValue(isoLocal.getPais());
         usuario.setPais(pais);
         String cdPais = usuario.getPais().getValue();
-        logger.debug("El pa�s del usuario es : " + cdPais);
+        //logger.debug("El pais del usuario es : " + cdPais);
         usuario.setFormatoFecha(isoLocal.getFormatoFecha());
         usuario.setFormatoNumerico(isoLocal.getFormatoNumerico());
         usuario.setIdioma(languague);
         usuario.setTamagnoPaginacionGrid(numReg);
-        logger.debug("En seleccionaRolCliente: " + isoLocal.getClientDateFormat());
+        //logger.debug("En seleccionaRolCliente: " + isoLocal.getClientDateFormat());
         usuario.setClientFormatDate(isoLocal.getClientDateFormat());
         //Agregados c�digos de Idioma y Regi�n
         //languague.setValue(iso.getCdIdioma());
