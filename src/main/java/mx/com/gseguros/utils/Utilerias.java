@@ -54,7 +54,7 @@ public class Utilerias {
 	 * @param fecha String
 	 * @return devuelve objeto Calendar
 	 */
-	public static Calendar getCalendar(String fecha, String dateFormat) {
+	public static Calendar getCalendarTimeZone0(String fecha, String dateFormat) {
 		
 		Calendar  cal = null;
 		
@@ -155,7 +155,7 @@ public class Utilerias {
 	public static void main(String[] args) {
 		
 		
-		System.out.println(Utilerias.getCalendar("11/25/2014", "dd/MM/yyyy"));
+		System.out.println(Utilerias.getCalendarServerTimeZone("11/25/2014", "dd/MM/yyyy"));
 		System.out.println(Utilerias.esFechaValida("11/25/2014", "dd/MM/yyyy"));
 		
 	}
@@ -214,7 +214,7 @@ public class Utilerias {
 					if(fecha!=null&&fecha.length()>0)
 					{
 //						omap.put(llave,renderFechas.parse(fecha));
-						omap.put( llave, getCalendar(fecha, stringDateFormat).getTime() );
+						omap.put( llave, getCalendarServerTimeZone(fecha, stringDateFormat).getTime() );
 					}
 					else
 					{

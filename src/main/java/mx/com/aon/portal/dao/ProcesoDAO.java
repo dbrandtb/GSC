@@ -3395,36 +3395,36 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
         	recibo.setComRec(rs.getDouble("comRec"));
         	recibo.setDerecho(rs.getDouble("derecho"));
         	
-        	cal = Utilerias.getCalendar(rs.getString("fecEmi"), Constantes.FORMATO_FECHA);
+        	cal = Utilerias.getCalendarTimeZone0(rs.getString("fecEmi"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		recibo.setFecEmi(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA fecEmi !!! " + rs.getString("fecEmi"));
         	}
         	
-        	cal = Utilerias.getCalendar(rs.getString("fecIni"), Constantes.FORMATO_FECHA);
+        	cal = Utilerias.getCalendarTimeZone0(rs.getString("fecIni"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		recibo.setFecIni(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA fecIni !!! " + rs.getString("fecIni"));
         	}
         
-        	cal = Utilerias.getCalendar(rs.getString("fecPag"), Constantes.FORMATO_FECHA);
+        	cal = Utilerias.getCalendarTimeZone0(rs.getString("fecPag"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		recibo.setFecPag(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA fecPag se envia 01/01/1900 !!! " + rs.getString("fecPag"));
-        		recibo.setFecPag(Utilerias.getCalendar("01/01/1900", Constantes.FORMATO_FECHA));
+        		recibo.setFecPag(Utilerias.getCalendarTimeZone0("01/01/1900", Constantes.FORMATO_FECHA));
         	}
         	
-        	cal = Utilerias.getCalendar(rs.getString("fecSta"), Constantes.FORMATO_FECHA);
+        	cal = Utilerias.getCalendarTimeZone0(rs.getString("fecSta"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		recibo.setFecSta(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA fecSta !!! " + rs.getString("fecSta"));
         	}
 	        
-        	cal = Utilerias.getCalendar(rs.getString("fecTer"), Constantes.FORMATO_FECHA);
+        	cal = Utilerias.getCalendarTimeZone0(rs.getString("fecTer"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		recibo.setFecTer(cal);
         	}else{
@@ -3718,14 +3718,14 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setFaxCli(rs.getString("faxCli"));
 
     		
-    		cal = Utilerias.getCalendar(rs.getString("fecaltaCli"), Constantes.FORMATO_FECHA);
+    		cal = Utilerias.getCalendarTimeZone0(rs.getString("fecaltaCli"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		cliente.setFecaltaCli(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA fecaltaCli !!! " + rs.getString("fecaltaCli"));
         	}
         	
-        	cal = Utilerias.getCalendar(rs.getString("fecnacCli"), Constantes.FORMATO_FECHA);
+        	cal = Utilerias.getCalendarTimeZone0(rs.getString("fecnacCli"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		cliente.setFecnacCli(cal);
         	}else{
@@ -3832,14 +3832,14 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setFaxCli(rs.getString("faxCli"));
     		
     		
-    		cal = Utilerias.getCalendar(rs.getString("fecaltaCli"), Constantes.FORMATO_FECHA);
+    		cal = Utilerias.getCalendarTimeZone0(rs.getString("fecaltaCli"), Constantes.FORMATO_FECHA);
     		if(cal != null){
     			cliente.setFecaltaCli(cal);
     		}else{
     			logger.error("NO SE PUDO PARSEAR LA FECHA fecaltaCli !!! " + rs.getString("fecaltaCli"));
     		}
     		
-    		cal = Utilerias.getCalendar(rs.getString("fecnacCli"), Constantes.FORMATO_FECHA);
+    		cal = Utilerias.getCalendarTimeZone0(rs.getString("fecnacCli"), Constantes.FORMATO_FECHA);
     		if(cal != null){
     			cliente.setFecnacCli(cal);
     		}else{
@@ -3888,7 +3888,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		
     		cliente.setStatusCli(rs.getString("STATUSCLI"));
     		
-    		cal = Utilerias.getCalendar(rs.getString("fecstaCli"), Constantes.FORMATO_FECHA);
+    		cal = Utilerias.getCalendarTimeZone0(rs.getString("fecstaCli"), Constantes.FORMATO_FECHA);
     		if(cal != null){
     			cliente.setFecstaCli(cal);
     		}else{

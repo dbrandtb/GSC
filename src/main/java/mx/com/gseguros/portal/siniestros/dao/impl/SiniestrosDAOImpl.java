@@ -2915,35 +2915,35 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	reclamo.setEdoOcu(rs.getInt("EDO_OCU"));
         	reclamo.setEstReg(rs.getString("EST_REG"));
         	
-        	cal = Utilerias.getCalendar(rs.getString("FEC_FAC"), Constantes.FORMATO_FECHA);
+        	cal = Utilerias.getCalendarTimeZone0(rs.getString("FEC_FAC"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		reclamo.setFecFac(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_FAC !!! " + rs.getString("FEC_FAC"));
         	}
         	
-        	cal = Utilerias.getCalendar(rs.getString("FEC_OCU"), Constantes.FORMATO_FECHA);
+        	cal = Utilerias.getCalendarTimeZone0(rs.getString("FEC_OCU"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		reclamo.setFecOcu(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_OCU !!! " + rs.getString("FEC_OCU"));
         	}
 
-        	cal = Utilerias.getCalendar(rs.getString("FEC_PRO"), Constantes.FORMATO_FECHA);
+        	cal = Utilerias.getCalendarTimeZone0(rs.getString("FEC_PRO"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		reclamo.setFecPro(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_PRO !!! " + rs.getString("FEC_PRO"));
         	}
 
-        	cal = Utilerias.getCalendar(rs.getString("FEC_REG"), Constantes.FORMATO_FECHA);
+        	cal = Utilerias.getCalendarTimeZone0(rs.getString("FEC_REG"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		reclamo.setFecReg(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_REG !!! " + rs.getString("FEC_REG"));
         	}
 
-        	cal = Utilerias.getCalendar(rs.getString("FIN_VIG"), Constantes.FORMATO_FECHA);
+        	cal = Utilerias.getCalendarTimeZone0(rs.getString("FIN_VIG"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		reclamo.setFinVig(cal);
         	}else{
@@ -2979,7 +2979,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	reclamo.setIncPol(rs.getInt("INC_POL"));
         	
         	
-        	cal = Utilerias.getCalendar(rs.getString("INI_VIG"), Constantes.FORMATO_FECHA);
+        	cal = Utilerias.getCalendarTimeZone0(rs.getString("INI_VIG"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		reclamo.setIniVig(cal);
         	}else{
