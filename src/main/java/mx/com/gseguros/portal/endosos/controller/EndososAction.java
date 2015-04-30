@@ -5406,7 +5406,7 @@ public class EndososAction extends PrincipalCoreAction
 			paramsValues.put("param2", smap1.get("CDRAMO"));
 			paramsValues.put("param3", smap1.get("ESTADO"));
 			paramsValues.put("param4", smap1.get("NMPOLIZA"));
-			paramsValues.put("param5", "1");//nmsituac contrantante auto
+			paramsValues.put("param5", "0");//nmsituac contrantante auto
 			paramsValues.put("param6", null);
 			paramsValues.put("param7", null);
 			
@@ -5415,7 +5415,7 @@ public class EndososAction extends PrincipalCoreAction
 			if(datosContr!=null && !datosContr.isEmpty() && datosContr.get(0) != null)
 			{
 				Map<String,String> datos = datosContr.get(0);
-				smap1.put("nmsituac", "1");
+				smap1.put("nmsituac", "0");
 				smap1.put("cdperson", datos.get("CDPERSON"));
 				smap1.put("cdrol", datos.get("CDROL"));
 			}else{
