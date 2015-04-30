@@ -1539,7 +1539,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					paramsValidaAut.put("pv_cdramo_i",   cdramo);
 					paramsValidaAut.put("pv_estado_i",   "W");
 					paramsValidaAut.put("pv_nmpoliza_i", panel1.get("nmpoliza"));
-					paramsValidaAut.put("pv_nmsituac_i", "1");
+					paramsValidaAut.put("pv_nmsituac_i", "0");
 					paramsValidaAut.put("pv_nmsuplem_i", "0");
 					kernelManager.validaDatosAutos(paramsValidaAut);
 					

@@ -1248,7 +1248,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     				parametros.put("pv_cdramo_i"   , comprarCdramo);
     				parametros.put("pv_estado_i"   , "W");
     				parametros.put("pv_nmpoliza_i" , comprarNmpoliza);
-    				parametros.put("pv_nmsituac_i" , "1");
+    				parametros.put("pv_nmsituac_i" , "0");
     				parametros.put("pv_cdrol_i"    , "1");
     				parametros.put("pv_cdperson_i" , cdpersonCli);
     				parametros.put("pv_nmsuplem_i" , "0");
@@ -1488,7 +1488,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				    			paramsMpoliper.put("pv_cdramo_i"   , comprarCdramo);
 				    			paramsMpoliper.put("pv_estado_i"   , "W");
 				    			paramsMpoliper.put("pv_nmpoliza_i" , comprarNmpoliza);
-				    			paramsMpoliper.put("pv_nmsituac_i" , "1");
+				    			paramsMpoliper.put("pv_nmsituac_i" , "0");
 								paramsMpoliper.put("pv_cdrol_i"    , "1");
 								paramsMpoliper.put("pv_cdperson_i" , newCdPerson);
 								paramsMpoliper.put("pv_nmsuplem_i" , "0");
