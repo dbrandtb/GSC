@@ -1810,6 +1810,44 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						,"V" //status
 						,tvalopol);
 				
+				setCheckpoint("Insertando maestro de agrupadores de poliza");
+				cotizacionDAO.movimientoMpoliagr(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,"1"  //cdagrupa
+						,"0"  //nmsuplem
+						,"V"  //status
+						,"0"  //cdperson
+						,"1"  //nmorddom
+						,"1"  //cdforpag
+						,null //cdbanco
+						,null //cdsucurs
+						,null //cdcuenta
+						,null //cdrazon
+						,null //swregula
+						,null //cdperreg
+						,null //feultreg
+						,null //cdgestor
+						,null //cdrol
+						,null //cdbanco2
+						,null //cdsucurs2
+						,null //cdcuenta2
+						,null //cdtipcta
+						,null //cdtipcta2
+						,"1"  //cdpagcom
+						,null //nmpresta
+						,null //nmpresta2
+						,null //cdbanco3
+						,null //cdsucurs3
+						,null //cdcuenta3
+						,null //cdtipcta3
+						,null //nmpresta3
+						,null //nmcuenta
+						,"I"  //accion
+						);
+				
 				setCheckpoint("Construyendo lote de maestros de situacion");
 				long                  inicioMpolisit    = System.currentTimeMillis();
 				List<PMovMpolisitDTO> listaPMovMpolisit = new ArrayList<PMovMpolisitDTO>();
@@ -2563,26 +2601,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						,nmsuplem
 						,"0"//nmsituac
 						);
-				Map<String,String>relContratante1=consultasDAO.cargarMpoliperSituac(
-						cdunieco
-						,cdramo
-						,estado
-						,nmpoliza
-						,nmsuplem
-						,"1"//nmsituac
-						);
 				
-				if(relContratante0!=null||relContratante1!=null)
+				if(relContratante0!=null)
 				{
 					setCheckpoint("Recuperando contratante");
-					if(relContratante0!=null)
-					{
-						cdperson = relContratante0.get("CDPERSON");
-					}
-					else
-					{
-						cdperson = relContratante1.get("CDPERSON");
-					}
+					cdperson = relContratante0.get("CDPERSON");
 					Map<String,String>contratante = personasDAO.cargarPersonaPorCdperson(cdperson);
 					cdideper = contratante.get("CDIDEPER");
 				}

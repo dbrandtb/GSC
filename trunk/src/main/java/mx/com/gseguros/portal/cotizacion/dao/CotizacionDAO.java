@@ -619,4 +619,40 @@ public interface CotizacionDAO
 	
 	public void movimientoTconvalsitLote(List<PInsertaTconvalsitDTO> lista)throws Exception;
 	
+	public void movimientoMpoliagr(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdagrupa
+			,String nmsuplem
+			,String status
+			,String cdperson
+			,String nmorddom
+			,String cdforpag
+			,String cdbanco
+			,String cdsucurs
+			,String cdcuenta
+			,String cdrazon
+			,String swregula
+			,String cdperreg
+			,Date feultreg
+			,String cdgestor
+			,String cdrol
+			,String cdbanco2
+			,String cdsucurs2
+			,String cdcuenta2
+			,String cdtipcta
+			,String cdtipcta2
+			,String cdpagcom
+			,String nmpresta
+			,String nmpresta2
+			,String cdbanco3
+			,String cdsucurs3
+			,String cdcuenta3
+			,String cdtipcta3
+			,String nmpresta3
+			,String nmcuenta
+			,String accion
+			)throws Exception;
 }

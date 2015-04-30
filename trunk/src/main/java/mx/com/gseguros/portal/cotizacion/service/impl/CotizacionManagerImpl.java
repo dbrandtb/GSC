@@ -5461,7 +5461,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            			,cdramo
 	            			,"W"
 	            			,nmpoliza
-	            			,"0"         //nmsuplem
+	            			,"0"         //nmsituac
 	            			,"1"         //cdrol
 	            			,cdpersonCli //cdperson
 	            			,"0"         //nmsuplem
