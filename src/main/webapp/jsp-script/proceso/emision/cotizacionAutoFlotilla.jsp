@@ -1518,7 +1518,23 @@ Ext.onReady(function()
                     debug('negocioVal:'  , negocioVal);
                     debug('servicioVal:' , servicioVal);
                     
-                    if(Ext.isEmpty(modeloVal)||Ext.isEmpty(marcaVal)||Ext.isEmpty(negocioVal)||Ext.isEmpty(servicioVal))
+                    if(
+                        (
+                            '|AR|CR|PC|PP|'.lastIndexOf('|'+cdtipsit+'|')!=-1
+                            &&
+                            (
+                                Ext.isEmpty(modeloVal)||Ext.isEmpty(marcaVal)||Ext.isEmpty(negocioVal)||Ext.isEmpty(servicioVal)
+                            )
+                        )
+                        ||
+                        (
+                            '|MO|TC|RQ|'.lastIndexOf('|'+cdtipsit+'|')!=-1
+                            &&
+                            (
+                                Ext.isEmpty(modeloVal)||Ext.isEmpty(negocioVal)||Ext.isEmpty(servicioVal)
+                            )
+                        )
+                    )
                     {
                         me.allowBlank=true;
                         me.setFieldLabel('PAQUETE (Seleccionar veh&iacute;culo primero)');
