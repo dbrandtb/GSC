@@ -949,7 +949,7 @@ Ext.onReady(function() {
     function cargaInformacionTab(){
     	tabDatosGeneralesPoliza.remove(tabDatosGeneralesPoliza.getComponent(0));
         tabDatosGeneralesPoliza.insert(0,{
-        	title: 'Informaci&oacute;n General :)',
+        	title: 'Informaci&oacute;n General',
             loader: {
 	        	url: _URL_LOADER_INFO_GRAL_RECLAMACION,
 	        	scripts: true,
