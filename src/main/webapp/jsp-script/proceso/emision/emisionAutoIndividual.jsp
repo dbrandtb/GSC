@@ -741,7 +741,17 @@ function _p29_mostrarVistaPrevia()
                                         }
                                     ]
                                     ,ftype          : 'groupingsummary'
-                                    ,startCollapsed : true
+                                    ,startCollapsed : _p29_smap1.cdsisrol!='SUSCRIAUTO'
+                                    ,listeners      :
+                                    {
+                                        groupexpand : function(view,node,group)
+                                        {
+                                            if(_p29_smap1.cdsisrol!='SUSCRIAUTO')
+                                            {
+                                                this.collapseAll();
+                                            }
+                                        }
+                                    }
                                 }
                             ]
                         })
