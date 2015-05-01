@@ -4264,7 +4264,7 @@ function _p30_detalles()
                 {
                     title       : 'Detalles de cotizaci&oacute;n'
                     ,width      : 600
-                    ,maxHeight  : 500
+                    ,maxHeight  : 600
                     ,autoScroll : true
                     ,modal      : true
                     ,items      :
@@ -4402,7 +4402,7 @@ function _p30_coberturas()
                 {
                     title       : 'Coberturas'
                     ,width      : 600
-                    ,maxHeight  : 500
+                    ,maxHeight  : 600
                     ,autoScroll : true
                     ,modal      : true
                     ,items      :
