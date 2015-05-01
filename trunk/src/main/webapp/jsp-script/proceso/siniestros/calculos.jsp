@@ -135,6 +135,9 @@ Ext.onReady(function()
                             	xtype       : 'displayfield'
                             	,fieldLabel : 'FECHA'
                             	,name       : 'FFACTURA'
+                            	,valueToRaw : function(value){
+									return Ext.Date.format(value,'d M Y');
+								}
                             },
                             {
                             	xtype       : 'displayfield'
