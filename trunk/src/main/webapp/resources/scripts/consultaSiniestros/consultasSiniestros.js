@@ -900,6 +900,7 @@ Ext.onReady(function() {
 	                _AAAPERTU = json.params.aaapertu;
 	                _NMSINIES = json.params.nmsinies;
 	                _NTRAMITE = json.params.ntramite;
+	                _CDTIPSIT = json.params.cdtipsit;
 	                cargaInformacionTab();
 
 			    },
