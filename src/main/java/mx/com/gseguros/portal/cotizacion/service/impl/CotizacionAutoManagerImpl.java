@@ -2145,6 +2145,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					String[] splited     = null;
 					String   cdtabla1    = conf.get("CDTABLA1");
 					String   tipoatri    = conf.get("TIPOATRI");
+					String   valorStat   = conf.get("VALOR");
 					if(!isBlank(decode))
 					{
 						splited = decode.split(",");
@@ -2153,7 +2154,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					sb.append("@").append(propiedad)
 					.append("[").append(cdtipsitCol).append("]")
 					.append("*").append(tipo)
-					.append("#").append(tipoatri);
+					.append("#").append(tipoatri)
+					.append("~").append(valorStat);
 					
 					Cell cell = row.getCell(col);
 					if(propiedad.equals("cdtipsit"))
@@ -2202,9 +2204,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						if(cdtipsitCol.equals("*")||("|"+cdtipsitCol+"|").lastIndexOf("|"+cdtipsitRecord+"|")!=-1)
 						{
 							sb.append(">").append(cdtipsitRecord);
-							if(isBlank(decode)&&isBlank(cdtabla1))
+							if(StringUtils.isNotBlank(valorStat))
 							{
-								if(tipo.equals("string"))
+								sb.append(">valorStat");
+								record.put(propiedad , valorStat);
+							}
+							else if(isBlank(decode)&&isBlank(cdtabla1))
+							{
+							    if(tipo.equals("string"))
 								{
 									sb.append(">string");
 									String valor = null;
