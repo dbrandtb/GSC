@@ -375,6 +375,9 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 							//idtipovalor
 							incisoIterado.setIdTipoValor(Integer.valueOf(row.get("IDTIPOVALOR")));
 							
+							//menorDeTreinta JTEZVA JTEZVA JTEZVA JTEZVA JTEZVA 1 MAYO 2015
+							incisoIterado.setMenorDeTreinta("S".equals(row.get("MENORDETREINTA")));
+							
 							//modelo
 							incisoIterado.setModelo(Integer.valueOf(row.get("MODELO")));
 							
