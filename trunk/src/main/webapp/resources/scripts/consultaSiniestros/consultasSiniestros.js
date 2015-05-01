@@ -489,9 +489,9 @@ Ext.onReady(function() {
 	            title: 'Informaci&oacute;n General'
     	    }, {
     	        title: 'Revisi&oacute;n Administrativa'
-    	    }/*, {
-    	        title: 'C&aacute;lculos'
     	    }, {
+    	        title: 'C&aacute;lculos'
+    	    }/*, {
     	        title: 'Documentaci&oacute;n'
     	    }*/]
 	});
@@ -932,12 +932,12 @@ Ext.onReady(function() {
         	title: 'Revisi&oacute;n Administrativa'
 		});
         
-        /*tabDatosGeneralesPoliza.remove(tabDatosGeneralesPoliza.getComponent(2));
+        tabDatosGeneralesPoliza.remove(tabDatosGeneralesPoliza.getComponent(2));
 	    tabDatosGeneralesPoliza.insert(2,{
         	title: 'C&aacute;lculos'
         });
         
-        tabDatosGeneralesPoliza.remove(tabDatosGeneralesPoliza.getComponent(3));
+        /*tabDatosGeneralesPoliza.remove(tabDatosGeneralesPoliza.getComponent(3));
 	    tabDatosGeneralesPoliza.insert(3,{
         	title: 'Documentaci&oacute;n'
         });*/
@@ -949,7 +949,7 @@ Ext.onReady(function() {
     function cargaInformacionTab(){
     	tabDatosGeneralesPoliza.remove(tabDatosGeneralesPoliza.getComponent(0));
         tabDatosGeneralesPoliza.insert(0,{
-        	title: 'Informaci&oacute;n General',
+        	title: 'Informaci&oacute;n General :)',
             loader: {
 	        	url: _URL_LOADER_INFO_GRAL_RECLAMACION,
 	        	scripts: true,
@@ -991,7 +991,7 @@ Ext.onReady(function() {
 		    }
 		});
         
-        /*tabDatosGeneralesPoliza.remove(tabDatosGeneralesPoliza.getComponent(2));
+        tabDatosGeneralesPoliza.remove(tabDatosGeneralesPoliza.getComponent(2));
 	    tabDatosGeneralesPoliza.insert(2,{
         	title: 'C&aacute;lculos',
             loader: {
@@ -1013,7 +1013,7 @@ Ext.onReady(function() {
             }
         });
         
-        tabDatosGeneralesPoliza.remove(tabDatosGeneralesPoliza.getComponent(3));
+        /*tabDatosGeneralesPoliza.remove(tabDatosGeneralesPoliza.getComponent(3));
 	    tabDatosGeneralesPoliza.insert(3,{
         	title: 'Documentaci&oacute;n',
             loader: {
