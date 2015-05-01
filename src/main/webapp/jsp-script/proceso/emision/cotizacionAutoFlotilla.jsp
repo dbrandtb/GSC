@@ -405,6 +405,7 @@ Ext.onReady(function()
                 ,type : 'float'
             }
             ,'TITULO'
+            ,'ORDEN'
         ]
     });
     
@@ -416,6 +417,7 @@ Ext.onReady(function()
             'COBERTURA'
             ,'SUMASEG'
             ,'TITULO'
+            ,'ORDEN'
         ]
     });
     ////// modelos //////
@@ -4281,11 +4283,11 @@ function _p30_detalles()
                                         sorterFn : function(o1,o2)
                                         {
                                             debug('sorting:',o1,o2);
-                                            if (o1.get('COBERTURA') == o2.get('COBERTURA'))
+                                            if (Number(o1.get('ORDEN')) == Number(o2.get('ORDEN')))
                                             {
                                                 return 0;
                                             }
-                                            return o1.get('COBERTURA') < o2.get('COBERTURA') ? -1 : 1;
+                                            return Number(o1.get('ORDEN')) < Number(o2.get('ORDEN')) ? -1 : 1;
                                         }
                                     }
                                 ]
@@ -4419,11 +4421,11 @@ function _p30_coberturas()
                                         sorterFn : function(o1,o2)
                                         {
                                             debug('sorting:',o1,o2);
-                                            if (o1.get('COBERTURA') == o2.get('COBERTURA'))
+                                            if (Number(o1.get('ORDEN')) == Number(o2.get('ORDEN')))
                                             {
                                                 return 0;
                                             }
-                                            return o1.get('COBERTURA') < o2.get('COBERTURA') ? -1 : 1;
+                                            return Number(o1.get('ORDEN')) < Number(o2.get('ORDEN')) ? -1 : 1;
                                         }
                                     }
                                 ]

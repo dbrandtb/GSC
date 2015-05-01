@@ -4482,6 +4482,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             		 ,"CDPLAN"*/
             		 ,"COBERTURA"
             		 ,"TITULO"
+            		 ,"ORDEN"
             		 };
              declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
              declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -4538,6 +4539,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             		 ,"COBERTURA"
             		 ,"SUMASEG"
             		 ,"TITULO"
+            		 ,"ORDEN"
             		 };
              declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
              declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
