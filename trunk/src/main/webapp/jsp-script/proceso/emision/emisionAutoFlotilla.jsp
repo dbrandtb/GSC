@@ -904,7 +904,17 @@ function _p31_mostrarVistaPrevia()
                                         }
                                     ]
                                     ,ftype          : 'groupingsummary'
-                                    ,startCollapsed : false
+                                    ,startCollapsed : _p31_smap1.cdsisrol!='SUSCRIAUTO'
+                                    ,listeners      :
+                                    {
+                                        groupexpand : function(view,node,group)
+                                        {
+                                            if(_p31_smap1.cdsisrol!='SUSCRIAUTO')
+                                            {
+                                                this.collapseAll();
+                                            }
+                                        }
+                                    }                                    
                                 }
                             ]
                         })

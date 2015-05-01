@@ -1262,6 +1262,7 @@ function _p28_cotizar(sinTarificar)
                                         ,icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
                                         ,disabled : true
                                         ,handler  : _p28_detalles
+                                        ,hidden   : _p28_smap1.cdsisrol!='SUSCRIAUTO'
                                     }
                                     ,{
                                         itemId    : '_p28_botonCoberturas'

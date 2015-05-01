@@ -350,6 +350,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			checkNull(session,"No hay sesion");
 			checkNull(session.get("USUARIO"), "No hay usuario en la sesion");
 			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 			
 			ManagerRespuestaImapSmapVO resp=cotizacionAutoManager.emisionAutoIndividual(cdunieco,cdramo,cdtipsit,estado,nmpoliza,ntramite,cdusuari);
 			exito           = resp.isExito();
@@ -358,6 +359,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			if(exito)
 			{
 				smap1.putAll(resp.getSmap());
+				smap1.put("cdsisrol" , cdsisrol);
 				imap = resp.getImap();
 			}
 		}
@@ -1118,6 +1120,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			checkNull(session,"No hay sesion");
 			checkNull(session.get("USUARIO"), "No hay usuario en la sesion");
 			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 			
 			ManagerRespuestaImapSmapVO resp=cotizacionAutoManager.emisionAutoFlotilla(cdunieco, cdramo, cdtipsit, estado, nmpoliza, ntramite, cdusuari);
 			exito           = resp.isExito();
@@ -1126,6 +1129,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			if(exito)
 			{
 				smap1.putAll(resp.getSmap());
+				smap1.put("cdsisrol" , cdsisrol);
 				imap = resp.getImap();
 			}
 		}
