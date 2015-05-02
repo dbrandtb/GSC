@@ -703,8 +703,15 @@ Ext.onReady(function()
                     var fs = _fieldById('_p28_fieldsetVehiculo');
                     for(var i in fs.items.items)
                     {
-                        fs.items.items[i].setValue();
-                        fs.items.items[i].clearValue();
+                        try
+                        {
+                            fs.items.items[i].setValue();
+                            fs.items.items[i].clearValue();
+                        }
+                        catch(e)
+                        {
+                            debugError(e);
+                        }
                     }
                 }
             }
@@ -2097,7 +2104,7 @@ function _p28_cargar(boton)
                                                     text     : 'Duplicar'
                                                     ,handler : function(bot)
                                                     {
-                                                        bot.up('window').destroy();
+                                                        bot.up('window').close();
                                                         _fieldByName('nmpoliza').setValue('');
                                                         _fieldById('_p28_form').formOculto.getForm().reset();
                                                     }
