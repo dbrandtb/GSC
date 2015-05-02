@@ -41,7 +41,6 @@ import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
-import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.infovehiculo.client.axis2.VehiculoWSServiceStub.ResponseValor;
 import mx.com.gseguros.ws.autosgs.infovehiculo.service.InfoVehiculoService;
 import mx.com.gseguros.ws.autosgs.tractocamiones.service.TractoCamionService;
@@ -1615,6 +1614,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						);
 				for(ComponenteVO tatri:listaAdicionales)
 				{
+					logger.debug("se puso adicional");
+					tatri.setAuxiliar("adicional");
 					tatrisitPanel.add(tatri);
 				}
 				
@@ -1722,9 +1723,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.append("\n@@@@@@ cdagente=")     .append(cdagente)
 				.append("\n@@@@@@ cdpersonCli=")  .append(cdpersonCli)
 				.append("\n@@@@@@ cdideperCli=")  .append(cdideperCli)
-				.append("\n@@@@@@ tvalosit=")     .append(Utils.size(tvalosit))
-				.append("\n@@@@@@ baseTvalosit=") .append(Utils.size(baseTvalosit))
-				.append("\n@@@@@@ confTvalosit=") .append(Utils.size(confTvalosit))
+				.append("\n@@@@@@ tvalosit=")     .append(tvalosit)
+				.append("\n@@@@@@ baseTvalosit=") .append(baseTvalosit)
+				.append("\n@@@@@@ confTvalosit=") .append(confTvalosit)
 				.append("\n@@@@@@ noTarificar=")  .append(noTarificar)
 				.append("\n@@@@@@ tipoflot=")     .append(tipoflot)
 				.append("\n@@@@@@ tvalopol=")     .append(tvalopol)

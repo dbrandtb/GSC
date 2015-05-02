@@ -347,6 +347,10 @@ public class GeneradorCampos
         item.add("readOnly"        , comp.isSoloLectura());
         item.add("swobligaflot"    , comp.isObligatorioFlot());
         item.add("swobligaemiflot" , comp.isObligatorioEmiFlot());
+        if(StringUtils.isNotBlank(comp.getAuxiliar()))
+        {
+        	item.add("auxiliar"        , comp.getAuxiliar());
+        }
         if(StringUtils.isNotBlank(value))
         {
         	item.add(Item.crear("valorInicial" , value).setQuotes(""));
