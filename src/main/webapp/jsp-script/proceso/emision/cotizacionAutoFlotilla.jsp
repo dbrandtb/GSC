@@ -2901,22 +2901,146 @@ function _p30_gridBotonConfigClic(view,row,col,item,e,record)
     {
         var cdtipsitPanel = _p30_smap1['destino_'+cdtipsit];
         debug('cdtipsit:',cdtipsit,'cdtipsitPanel:',cdtipsitPanel);
-        var panel = _p30_paneles[cdtipsitPanel];
+        var panel    = _p30_paneles[cdtipsitPanel];
+        var itemDesc = panel.down('[fieldLabel*=DESCUENTO]');
+        if(_p30_smap1.cdsisrol=='SUSCRIAUTO'&&!Ext.isEmpty(itemDesc))
+        {
+            Ext.Ajax.request(
+            {
+                url     : _p30_urlRecuperacionSimple
+                ,params :
+                {
+                    'smap1.procedimiento' : 'RECUPERAR_DESCUENTO_RECARGO_RAMO_5'
+                    ,'smap1.cdtipsit'     : _p30_smap1.cdtipsit
+                    ,'smap1.cdagente'     : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
+                    ,'smap1.negocio'      : _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue()
+                    ,'smap1.tipocot'      : _p30_smap1.tipoflot
+                    ,'smap1.cdsisrol'     : _p30_smap1.cdsisrol
+                    ,'smap1.cdusuari'     : _p30_smap1.cdusuari
+                }
+                ,success : function(response)
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### cargar rango descuento ramo 5:',json);
+                    if(json.exito)
+                    {
+                        itemDesc.minValue=100*(json.smap1.min-0);
+                        itemDesc.maxValue=100*(json.smap1.max-0);
+                        itemDesc.isValid();
+                        debug('min:',itemDesc.minValue);
+                        debug('max:',itemDesc.maxValue);
+                        itemDesc.setReadOnly(false);
+                    }
+                    else
+                    {
+                        itemDesc.minValue=0;
+                        itemDesc.maxValue=0;
+                        itemDesc.setValue(0);
+                        itemDesc.isValid();
+                        itemDesc.setReadOnly(true);
+                        mensajeError(json.respuesta);
+                    }
+                }
+                ,failure : function()
+                {
+                    itemDesc.minValue=0;
+                    itemDesc.maxValue=0;
+                    itemDesc.setValue(0);
+                    itemDesc.isValid();
+                    itemDesc.setReadOnly(true);
+                    errorComunicacion();
+                }
+            });
+        }
+        
         var form  = panel.down('form');
         var valoresExtras = false;
         for(var prop in form.getValues())
         {
-            if(!Ext.isEmpty(record.get(prop)))
+            if(cdtipsitPanel==cdtipsit)
             {
-                debug('el valor ',record.get(prop),' encendio la carga del record en el formulario');
-                valoresExtras = true;
-                break;
+                if(!Ext.isEmpty(record.get(prop)))
+                {
+                    debug('el valor ',record.get(prop),' encendio la carga del record en el formulario');
+                    valoresExtras = true;
+                    break;
+                }
+            }
+            else
+            {
+                var cmpPanel = panel.down('[name='+prop+']');
+                debug('cmpPanel:',cmpPanel);
+                var fieldLabel = cmpPanel.fieldLabel;
+                debug('fieldLabel:',fieldLabel);
+                if(cmpPanel.auxiliar=='adicional'&&!Ext.isEmpty(record.get(prop)))
+                {
+                    //alert('ADIC!-'+fieldLabel+'-'+prop);
+                    valoresExtras = true;
+                    break;
+                }
+                else
+                {
+                    var cmpByLabel = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel='+fieldLabel+']');
+                    if(!Ext.isEmpty(cmpByLabel))
+                    {
+                        var nameByLabel = cmpByLabel.name;
+                        debug('buscando valores en nameByLabel:',nameByLabel,'.');
+                        if(!Ext.isEmpty(record.get(nameByLabel)))
+                        {
+                            //alert('SI!-'+fieldLabel+'-'+nameByLabel);
+                            valoresExtras = true;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        //alert('NO!-'+fieldLabel+'-'+cdtipsit);
+                        debug('No existe el dsatribu en el cdtipsit:',fieldLabel,cdtipsit,'.');
+                    }
+                }
             }
         }
         if(record.get('personalizado')=='si'||valoresExtras)
         {
             panel.setTitle('CONFIGURACI&Oacute;N DE PAQUETE (PERSONALIZADA)');
-            form.loadRecord(record);
+            if(cdtipsitPanel==cdtipsit)
+            {
+                form.loadRecord(record);
+            }
+            else
+            {
+                form.getForm().reset();
+                var values = form.getValues();
+	            for(var prop in values)
+	            {	            
+	                var cmpPanel = panel.down('[name='+prop+']');
+	                debug('cmpPanel:',cmpPanel);
+	                var fieldLabel = cmpPanel.fieldLabel;
+	                debug('fieldLabel:',fieldLabel);
+	                if(cmpPanel.auxiliar=='adicional')
+                    {
+                        debug('set normal, porque es adicional');
+                        //alert('ADIC!-'+fieldLabel+'-'+prop);
+                        cmpPanel.setValue(record.get(prop));
+                    }
+                    else
+                    {
+                        var cmpByLabel = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel='+fieldLabel+']');
+                        if(!Ext.isEmpty(cmpByLabel))
+                        {
+                            var nameByLabel = cmpByLabel.name;
+                            debug('setValue en nameByLabel:',nameByLabel,'.');
+                            cmpPanel.setValue(record.get(nameByLabel));
+                            //alert('SI!-'+fieldLabel+'-'+nameByLabel);
+                        }
+                        else
+                        {
+                            //alert('NO!-'+fieldLabel+'-'+cdtipsit);
+                            debug('No existe el dsatribu en el cdtipsit:',fieldLabel,cdtipsit,'.');
+                        }
+                    }
+	            }
+            }
         }
         else if(panel.valores!=false)
         {
@@ -2933,7 +3057,40 @@ function _p30_gridBotonConfigClic(view,row,col,item,e,record)
             var values = form.getValues();
             for(var prop in values)
             {
-                record.set(prop,values[prop]);
+                if(cdtipsitPanel==cdtipsit)
+                {
+                    record.set(prop,values[prop]);
+                }
+                else
+                {
+                    var cmpOriginal = _p30_paneles[cdtipsitPanel].down('[name='+prop+']');
+                    debug('cmpOriginal:',cmpOriginal);
+                    debug('cmpOriginal.auxiliar:',cmpOriginal.auxiliar,'.');
+                    var fieldLabel = cmpOriginal.fieldLabel;
+                    debug('fieldLabel:',fieldLabel);
+                    if(cmpOriginal.auxiliar=='adicional')
+                    {
+                        debug('set normal, porque es adicional');
+                        //alert('ADIC!-'+fieldLabel+'-'+prop);
+                        record.set(prop,values[prop]);
+                    }
+                    else
+                    {
+                        var cmpByLabel  = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel='+fieldLabel+']');
+                        if(!Ext.isEmpty(cmpByLabel))
+                        {
+                            var nameByLabel = cmpByLabel.name;
+                            debug('set en nameByLabel para cdtipsit:',nameByLabel,cdtipsit,'.');
+                            record.set(nameByLabel,values[prop]);
+                            //alert('SI!-'+fieldLabel+'-'+nameByLabel);
+                        }
+                        else
+                        {
+                            //alert('NO!-'+fieldLabel+'-'+cdtipsit);
+                            debug('No existe el dsatribu en el cdtipsit:',fieldLabel,cdtipsit,'.');
+                        }
+                    }
+                }
             }
             record.set('personalizado','si');
             debug('record:',record);
@@ -3364,9 +3521,42 @@ function _p30_cotizar(sinTarificar)
             {
                 var valor = recordTvalosit.get(prop);
                 var base  = recordBase.get(prop);
-                if(valor+'x'=='x'&&base+'x'!='x')
+                if(Ext.isEmpty(valor)&&!Ext.isEmpty(base))
                 {
-                    recordTvalosit.set(prop,base);
+                    if(cdtipsitPanel==cdtipsit)
+                    {
+                        recordTvalosit.set(prop,base);
+                    }
+                    else
+                    {
+                        var cmpOriginal = _p30_paneles[cdtipsitPanel].down('[name='+prop+']');
+                        debug('cmpOriginal:',cmpOriginal);
+                        debug('cmpOriginal.auxiliar:',cmpOriginal.auxiliar,'.');
+                        var fieldLabel = cmpOriginal.fieldLabel;
+                        debug('fieldLabel:',fieldLabel);
+                        if(cmpOriginal.auxiliar=='adicional')
+                        {
+                            debug('set normal, porque es adicional');
+                            //alert('ADIC!-'+fieldLabel+'-'+prop);
+                            recordTvalosit.set(prop,base);
+                        }
+                        else
+                        {
+                            var cmpByLabel  = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel='+fieldLabel+']');
+                            if(!Ext.isEmpty(cmpByLabel))
+                            {
+                                var nameByLabel = cmpByLabel.name;
+                                debug('set en nameByLabel para cdtipsit:',nameByLabel,cdtipsit,'.');
+                                recordTvalosit.set(nameByLabel,base);
+                                //alert('SI!-'+fieldLabel+'-'+nameByLabel);
+                            }
+                            else
+                            {
+                                //alert('NO!-'+fieldLabel+'-'+cdtipsit);
+                                debug('No existe el dsatribu en el cdtipsit:',fieldLabel,cdtipsit,'.');
+                            }
+                        }
+                    }
                 }
             }
             

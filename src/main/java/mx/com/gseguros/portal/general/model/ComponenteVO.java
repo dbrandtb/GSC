@@ -91,6 +91,7 @@ public class ComponenteVO
 	private String  swpresemi          = null;
 	private String  swpresemiflot      = null;
 	private int     orden              = 0;
+	private String  auxiliar           = null;
 	
 	public ComponenteVO(){}
 	
@@ -663,5 +664,13 @@ public class ComponenteVO
 
 	public void setOrden(int orden) {
 		this.orden = orden;
+	}
+
+	public String getAuxiliar() {
+		return auxiliar;
+	}
+
+	public void setAuxiliar(String auxiliar) {
+		this.auxiliar = auxiliar;
 	}
 }
