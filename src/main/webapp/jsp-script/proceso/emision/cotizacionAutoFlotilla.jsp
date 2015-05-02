@@ -3531,30 +3531,33 @@ function _p30_cotizar(sinTarificar)
                     {
                         var cmpOriginal = _p30_paneles[cdtipsitPanel].down('[name='+prop+']');
                         debug('cmpOriginal:',cmpOriginal);
-                        debug('cmpOriginal.auxiliar:',cmpOriginal.auxiliar,'.');
-                        var fieldLabel = cmpOriginal.fieldLabel;
-                        debug('fieldLabel:',fieldLabel);
-                        if(cmpOriginal.auxiliar=='adicional')
+                        if(!Ext.isEmpty(cmpOriginal))
                         {
-                            debug('set normal, porque es adicional');
-                            //alert('ADIC!-'+fieldLabel+'-'+prop);
-                            recordTvalosit.set(prop,base);
-                        }
-                        else
-                        {
-                            var cmpByLabel  = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel='+fieldLabel+']');
-                            if(!Ext.isEmpty(cmpByLabel))
-                            {
-                                var nameByLabel = cmpByLabel.name;
-                                debug('set en nameByLabel para cdtipsit:',nameByLabel,cdtipsit,'.');
-                                recordTvalosit.set(nameByLabel,base);
-                                //alert('SI!-'+fieldLabel+'-'+nameByLabel);
-                            }
-                            else
-                            {
-                                //alert('NO!-'+fieldLabel+'-'+cdtipsit);
-                                debug('No existe el dsatribu en el cdtipsit:',fieldLabel,cdtipsit,'.');
-                            }
+	                        debug('cmpOriginal.auxiliar:',cmpOriginal.auxiliar,'.');
+	                        var fieldLabel = cmpOriginal.fieldLabel;
+	                        debug('fieldLabel:',fieldLabel);
+	                        if(cmpOriginal.auxiliar=='adicional')
+	                        {
+	                            debug('set normal, porque es adicional');
+	                            //alert('ADIC!-'+fieldLabel+'-'+prop);
+	                            recordTvalosit.set(prop,base);
+	                        }
+	                        else
+	                        {
+	                            var cmpByLabel  = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel='+fieldLabel+']');
+	                            if(!Ext.isEmpty(cmpByLabel))
+	                            {
+	                                var nameByLabel = cmpByLabel.name;
+	                                debug('set en nameByLabel para cdtipsit:',nameByLabel,cdtipsit,'.');
+	                                recordTvalosit.set(nameByLabel,base);
+	                                //alert('SI!-'+fieldLabel+'-'+nameByLabel);
+	                            }
+	                            else
+	                            {
+	                                //alert('NO!-'+fieldLabel+'-'+cdtipsit);
+	                                debug('No existe el dsatribu en el cdtipsit:',fieldLabel,cdtipsit,'.');
+	                            }
+	                        }
                         }
                     }
                 }
