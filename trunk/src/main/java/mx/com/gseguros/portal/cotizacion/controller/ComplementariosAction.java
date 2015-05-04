@@ -2290,7 +2290,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					/**
 					 * Para AP inciso 1
 					 */
-					parametros = "?14,0,"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",1";
+					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
 					logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
 					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAp + parametros+"\">Anexo cobertura de AP</a>";
 					
@@ -2302,7 +2302,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					/**
 					 * Para CAIC inciso 1
 					 */
-					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,1";
+					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
 					logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
 					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaic + parametros+"\">Anexo de cobertura RC USA</a>";
 					
@@ -2988,7 +2988,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						/**
 						 * Para AP inciso 1
 						 */
-						parametros = "?14,0,"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",1";
+						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
 						logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAp + parametros+"\">Anexo cobertura de AP</a>";
 						
@@ -3000,7 +3000,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						/**
 						 * Para CAIC inciso 1
 						 */
-						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,1";
+						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
 						logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaic + parametros+"\">Anexo de cobertura RC USA</a>";
 						
