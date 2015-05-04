@@ -2982,7 +2982,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			/**
 			 * Para AP inciso 1
 			 */
-			parametros = "?14,0,"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",1";
+			parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+emisionWS.getTipoEndoso()+","+ (StringUtils.isBlank(emisionWS.getNumeroEndoso())?"0":emisionWS.getNumeroEndoso())+",0";
 			logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
 			mesaControlDAO.guardarDocumento(
 					cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
@@ -2992,7 +2992,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			/**
 			 * Para CAIC inciso 1
 			 */
-			parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+emisionWS.getTipoEndoso()+","+ (StringUtils.isBlank(emisionWS.getNumeroEndoso())?"0":emisionWS.getNumeroEndoso())+",1";
+			parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+emisionWS.getTipoEndoso()+","+ (StringUtils.isBlank(emisionWS.getNumeroEndoso())?"0":emisionWS.getNumeroEndoso())+",0";
 			logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
 			mesaControlDAO.guardarDocumento(
 					cdunieco, cdramo, estado, nmpoliza, nmsuplem, 

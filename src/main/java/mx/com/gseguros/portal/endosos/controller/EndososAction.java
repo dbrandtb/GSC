@@ -9856,7 +9856,7 @@ public class EndososAction extends PrincipalCoreAction
 			/**
 			 * Para AP inciso 1
 			 */
-			parametros = "?14,0,"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",1";
+			parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+emisionWS.getTipoEndoso()+","+ (StringUtils.isBlank(emisionWS.getNumeroEndoso())?"0":emisionWS.getNumeroEndoso())+",0";
 			logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
 			
 			paramsR.put("pv_cddocume_i", urlAp + parametros);
@@ -9867,7 +9867,7 @@ public class EndososAction extends PrincipalCoreAction
 			/**
 			 * Para CAIC inciso 1
 			 */
-			parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+emisionWS.getTipoEndoso()+","+ (StringUtils.isBlank(emisionWS.getNumeroEndoso())?"0":emisionWS.getNumeroEndoso())+",1";
+			parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+emisionWS.getTipoEndoso()+","+ (StringUtils.isBlank(emisionWS.getNumeroEndoso())?"0":emisionWS.getNumeroEndoso())+",0";
 			logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
 			
 			paramsR.put("pv_cddocume_i", urlCaic + parametros);
