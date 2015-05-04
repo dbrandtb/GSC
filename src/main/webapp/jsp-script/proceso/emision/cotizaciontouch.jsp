@@ -86,6 +86,8 @@ var _mcotiza_modeloExtraFields = [
 var _mcotiza_incisoTpl;
 var _mcotiza_validacion_custom;
 
+var _g_storeSino;
+
 debug('_mcotiza_smap1:',_mcotiza_smap1);
 ////// variables //////
 
@@ -307,7 +309,7 @@ function _mcotiza_enviarPorCorreo()
                                          + '&p_plan='        + _mcotiza_selectedCdplan
                                          + '&p_perpag='      + _mcotiza_selectedCdperpag
                                          + '&p_ntramite='    + _mcotiza_smap1.ntramite            
-                                         + '&p_cdusuari='    + _mcotiza_smap1.user
+                                         + '&p_cdusuari='    + _mcotiza_smap1.cdusuari
                                          + '&destype=cache'
                                          + "&desformat=PDF"
                                          + "&userid="        + _mcotiza_reportsServerUser
@@ -386,14 +388,14 @@ function _mcotiza_comprar()
             {
                 if(_mcotiza_smap1.cdtipsit=='AF'||_mcotiza_smap1.cdtipsit=='PU')
                 {
-                    Ext.Msg.alert('Tr&aacute;mite generado','Se ha generado el tr&aacute;mite '+json.comprarNmpoliza,function()
+                    Ext.Msg.alert('Tr&aacute;mite generado','Se ha generado el tr&aacute;mite '+json.smap1.ntramite,function()
                     {
                         $(['<form action="'+_mcotiza_urlDatosComplementarios+'" >'
                           ,'<input type="text" name="cdunieco"      value="'+_mcotiza_smap1.cdunieco+'"                />'
                           ,'<input type="text" name="cdramo"        value="'+_mcotiza_smap1.cdramo+'"                  />'
                           ,'<input type="text" name="estado"        value="W"                                          />'
                           ,'<input type="text" name="nmpoliza"      value="'+_mcotiza_getFieldNmpoliza().getValue()+'" />'
-                          ,'<input type="text" name="map1.ntramite" value="'+json.comprarNmpoliza+'"                   />'
+                          ,'<input type="text" name="map1.ntramite" value="'+json.smap1.ntramite+'"                    />'
                           ,'<input type="text" name="cdtipsit"      value="'+_mcotiza_smap1.cdtipsit+'"                />'
                           ,'</form>'].join("")
                         )
@@ -402,13 +404,13 @@ function _mcotiza_comprar()
                 }
                 else
                 {
-           		    _mcotiza_getBotonLectura().setText('Tr&aacute;mite '+json.comprarNmpoliza+' generado para '+_mcotiza_selectedDsplan);
+           		    _mcotiza_getBotonLectura().setText('Tr&aacute;mite '+json.smap1.ntramite+' generado para '+_mcotiza_selectedDsplan);
            		    _mcotiza_getBotonLectura().show();
            		    _mcotiza_getBotonPlan().hide();
                     _mcotiza_getBotonComprar().hide();
 				    _mcotiza_getBotonCorreo().hide();
                     _mcotiza_getBotonImprimir().hide();
-            	    Ext.Msg.alert('Tr&aacute;mite generado','Se ha generado el tr&aacute;mite '+json.comprarNmpoliza);
+            	    Ext.Msg.alert('Tr&aacute;mite generado','Se ha generado el tr&aacute;mite '+json.smap1.ntramite);
             	}
             }
             else
@@ -439,7 +441,7 @@ function _mcotiza_imprimir()
             + '&p_plan='        + _mcotiza_selectedCdplan
             + '&p_perpag='      + _mcotiza_selectedCdperpag
             + '&p_ntramite='    + _mcotiza_smap1.ntramite            
-            + '&p_cdusuari='    + _mcotiza_smap1.user
+            + '&p_cdusuari='    + _mcotiza_smap1.cdusuari
             + '&destype=cache'
             + "&desformat=PDF"
             + "&userid="        + _mcotiza_reportsServerUser
@@ -1139,6 +1141,22 @@ Ext.setup({onReady:function()
     {
         model     : '_mcotiza_Inciso'
     });
+    
+    _g_storeSino = Ext.create('Ext.data.Store',
+	{
+	    model : 'Generic'
+	    ,data :
+	    [
+	        {
+	            key    : 'S'
+	            ,value : 'Si'
+	        }
+	        ,{
+	            key    : 'N'
+	            ,value : 'No'
+	        }
+	    ]
+	});
 	////// stores //////
 	
 	_mcotiza_navView = Ext.create('Ext.NavigationView',
