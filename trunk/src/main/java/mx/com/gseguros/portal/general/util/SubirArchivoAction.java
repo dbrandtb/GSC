@@ -29,6 +29,7 @@ import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utilerias;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
@@ -110,21 +111,30 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
             File carpeta = new File(rutaCarpeta);
             if(!carpeta.exists())
             {
-            	log.debug("no existe la carpeta::: "+rutaCarpeta);
+            	log.info("no existe la carpeta::: "+rutaCarpeta);
             	carpeta.mkdir();
             	if(carpeta.exists())
             	{
-            		log.debug("carpeta creada");
+            		log.info("carpeta creada");
             	}
             	else
             	{
-            		log.debug("carpeta NO creada");
+            		log.info("carpeta NO creada");
             	}
             }
             else
             {
             	log.debug("existe la carpeta   ::: "+rutaCarpeta);
             }
+            
+            try {
+            	FileUtils.copyFile(file, new File(nuevaRuta));
+            	log.info("archivo movido");
+			} catch (Exception e) {
+				log.error("archivo NO movido", e);
+			}
+            
+            /*
             if(file.renameTo(new File(nuevaRuta)))
     		{
     			log.debug("archivo movido");	
@@ -133,6 +143,8 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     		{
     			log.debug("archivo NO movido");
     		}
+    		*/
+            
             /*
             pv_cdunieco_i
             pv_cdramo_i
@@ -203,6 +215,14 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
             {
             	log.debug("existe la carpeta   ::: "+rutaCarpeta);
             }
+            
+            try {
+            	FileUtils.copyFile(file, new File(nuevaRuta));
+            	log.info("archivo movido");
+			} catch (Exception e) {
+				log.error("archivo NO movido", e);
+			}
+            /*
             if(file.renameTo(new File(nuevaRuta)))
     		{
     			log.debug("archivo movido");	
@@ -211,7 +231,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     		{
     			log.debug("archivo NO movido");
     		}
-            
+            */
             kernelManager.guardarArchivoPersona(smap1.get("cdperson"),renderFechas.parse(smap1.get("fecha")),nombreArchivo,smap1.get("descripcion"),smap1.get("codidocu"));
         }
         

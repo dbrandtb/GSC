@@ -54,6 +54,7 @@ import mx.com.gseguros.ws.nada.service.NadaService;
 import mx.com.gseguros.ws.tipocambio.client.axis2.TipoCambioWSServiceStub.ResponseTipoCambio;
 import mx.com.gseguros.ws.tipocambio.service.TipoCambioDolarGSService;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -3544,7 +3545,14 @@ public class CotizacionAction extends PrincipalCoreAction
 		if(StringUtils.isBlank(ntramite))
 		{
 			String timestamp = smap1.get("timestamp");
-			censo.renameTo(new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp));
+			//censo.renameTo(new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp));
+			try {
+            	FileUtils.copyFile(censo, new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp));
+            	logger.info("archivo movido");
+			} catch (Exception e) {
+				logger.error("archivo NO movido", e);
+			}
+			
 			logger.info("censo renamed to: "+this.getText("ruta.documentos.temporal")+"/censo_"+timestamp);
 		}
 		
