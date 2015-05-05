@@ -470,6 +470,9 @@ Ext.onReady(function()
 								    		_p22_principalDatosAdicionales().hide();
 //								    		_fieldByName('CDMUNICI').setFieldLabel("MUNICIPIO");
 //											_fieldByName('CDCOLONI').setFieldLabel("COLONIA");
+								    		
+								    		_fieldByName('CDMUNICI').forceSelection = false;
+        									_fieldByName('CDEDO').forceSelection = false;
 											
 											_p22_cdperson = _p22_cdpersonTMP;
 											_p22_tipoPersona = _p22_tipoPersonaTMP;
@@ -479,7 +482,6 @@ Ext.onReady(function()
 											_esSaludDanios = _esSaludDaniosTMP;
 											municipioImportarTMP = '';
 											coloniaImportarTMP = '';
-//											_fieldByName('CDMUNICI').forceSelection = false;
 											
 								    		//Si el la persona es proveniente de WS, primero se genera la persona y se inserta los datos del WS para luego ser editada
 								    		if("1" == _p22_cdperson){
@@ -506,6 +508,9 @@ Ext.onReady(function()
 											_p22_formDatosGenerales().hide();
 						    				_p22_formDomicilio().hide();
 										    _p22_principalDatosAdicionales().hide();
+										    
+										    _fieldByName('CDMUNICI').forceSelection = false;
+        									_fieldByName('CDEDO').forceSelection = false;
 											
 										    if(form.down('[name=smap1.rfc]').getStore().count() > 0){
 										    	
@@ -523,7 +528,6 @@ Ext.onReady(function()
 															_CDIDEEXTsel = '';
 															municipioImportarTMP = '';
 															coloniaImportarTMP = '';
-				//											_fieldByName('CDMUNICI').forceSelection = false;
 															
 															form.down('[name=smap1.rfc]').reset();
 															form.down('[name=smap1.nombre]').reset();
@@ -551,8 +555,10 @@ Ext.onReady(function()
 												_CDIDEEXTsel = '';
 												municipioImportarTMP = '';
 												coloniaImportarTMP = '';
-	//											_fieldByName('CDMUNICI').forceSelection = false;
-												
+
+												_fieldByName('CDMUNICI').forceSelection = true;
+        										_fieldByName('CDEDO').forceSelection = true;
+        									
 												form.down('[name=smap1.rfc]').reset();
 												form.down('[name=smap1.nombre]').reset();
 												form.down('[name=smap1.rfc]').getStore().removeAll();
@@ -1388,13 +1394,28 @@ function _p22_guardarClic(callback, autosave)
     {
         _p22_fieldConsecutivo().setValue(1);
     }
+
+    if(valido)
+    {
+    	_fieldByName('CDMUNICI').forceSelection = true;
+        _fieldByName('CDEDO').forceSelection = true;
+        
+    	var edoMunValido = (_fieldByName('CDEDO').getStore().getCount()>0) && (_fieldByName('CDMUNICI').getStore().getCount()>0) && _fieldByName('CDEDO').isValid() && _fieldByName('CDMUNICI').isValid();
+    	
+        valido = autosave || edoMunValido;
+        
+        if(!valido)
+        {
+            mensajeWarning('Favor de verificar el estado y municipio.');
+        }
+    }
     
     if(valido)
     {
         valido = autosave || _p22_formDomicilio().isValid();
         if(!valido)
         {
-            mensajeWarning('Favor de verificar los datos del domicilio');
+            mensajeWarning('Favor de verificar los datos del domicilio.');
         }
     }
     
