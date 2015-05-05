@@ -992,7 +992,7 @@
 					selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true },
 					initComponent: function(){
 						Ext.apply(this, {
-						height: 300,
+						height: 450,
 						plugins  :
 						[
 							Ext.create('Ext.grid.plugin.CellEditing',
@@ -1076,7 +1076,7 @@
 								header: 'Id<br/>Sini.',				dataIndex: 'NMSINIES',		width: 50 
 							},
 							{
-								header: '# Auto.',					dataIndex: 'NMAUTSER',		width: 50
+								header: '# Auto.',					dataIndex: 'NMAUTSER',		width: 70
 								,editor: {
 									xtype: 'numberfield',
 									listeners : {
@@ -1089,6 +1089,9 @@
 							},
 							{
 								header: 'Id<br/>Sini. Existente',	dataIndex: 'NMSINREF',		width: 90
+							},
+							{
+								header: 'Fecha<br/>Ocurrencia',		dataIndex: 'FEOCURRE'
 							},
 							{
 								header: 'Clave<br/>asegu.',			dataIndex: 'CDPERSON'
@@ -1260,9 +1263,6 @@
 									}
 									return leyenda;
 								}
-							},
-							{
-								header: 'Fecha<br/>Ocurrencia',		dataIndex: 'FEOCURRE'
 							},
 							{
 								header: 'P&oacute;liza',			dataIndex: 'NMPOLIZA'
@@ -1484,7 +1484,7 @@
 								hidden: true
 							},
 							{
-								header: 'Tipo Concepto', 				dataIndex: 'IDCONCEP',	width : 150		,  allowBlank: false
+								header: 'Tipo Concepto', 				dataIndex: 'IDCONCEP',	width : 90		,  allowBlank: false
 								,editor : cmbCveTipoConcepto
 								,renderer : function(v) {
 								var leyenda = '';
@@ -1542,7 +1542,7 @@
 								}
 							},
 							{
-								header: 'Valor Arancel', 				dataIndex: 'PTMTOARA',	width : 150,				renderer: Ext.util.Format.usMoney
+								header: 'Valor Arancel', 				dataIndex: 'PTMTOARA',	width : 100,				renderer: Ext.util.Format.usMoney
 								,editor: {
 									xtype: 'numberfield',
 									decimalSeparator :'.',
@@ -1568,7 +1568,7 @@
 								}
 							},
 							{
-								header: 'Precio Concepto', 				dataIndex: 'PTPRECIO',	width : 150,				renderer: Ext.util.Format.usMoney
+								header: 'Precio Concepto', 				dataIndex: 'PTPRECIO',	width : 100,				renderer: Ext.util.Format.usMoney
 								,editor: {
 									xtype: 'numberfield',
 									decimalSeparator :'.',
@@ -1593,7 +1593,7 @@
 							}
 							,
 							{
-								header: 'Cantidad', 				dataIndex: 'CANTIDAD',		width : 150//,				renderer: Ext.util.Format.usMoney
+								header: 'Cantidad', 				dataIndex: 'CANTIDAD',		width : 60//,				renderer: Ext.util.Format.usMoney
 								,editor: {
 									xtype: 'numberfield',
 									allowBlank: false,
@@ -1616,7 +1616,7 @@
 								}
 							},
 							{
-								header : 'Descuento (%)',			dataIndex : 'DESTOPOR',		width : 150
+								header : 'Descuento (%)',			dataIndex : 'DESTOPOR',		width : 100
 								,editor: {
 									xtype: 'numberfield',
 									decimalSeparator :'.',
@@ -1640,7 +1640,7 @@
 								}
 							},
 							{
-								header : 'Descuento ($)',			dataIndex : 'DESTOIMP',		width : 150
+								header : 'Descuento ($)',			dataIndex : 'DESTOIMP',		width : 100
 								,editor: {
 									xtype: 'numberfield',
 									decimalSeparator :'.',
@@ -1665,17 +1665,17 @@
 							},{
 								header : 'Ajuste M&eacute;dico',
 								dataIndex : 'TOTAJUSMED',
-								width : 150,
+								width : 120,
 								renderer : Ext.util.Format.usMoney
 							},{
 								header : 'Subtotal Factura',
 								dataIndex : 'PTIMPORT',
-								width : 150,
+								width : 120,
 								renderer : Ext.util.Format.usMoney
 							},{
 								header : 'Subtotal Ajustado',
 								dataIndex : 'SUBTAJUSTADO',
-								width : 150,
+								width : 120,
 								renderer : Ext.util.Format.usMoney
 							}/*,{
 								header : 'Cobertura',
