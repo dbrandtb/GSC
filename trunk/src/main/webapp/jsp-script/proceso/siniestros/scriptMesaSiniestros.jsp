@@ -609,6 +609,7 @@ var msgWindow;
 												params['params.nmsituac']  = json.NMSITUAC;
 												params['params.estado']    = json.ESTADO;
 												params['params.periodoEspera']    = jsonValorAsegurado.diasAsegurado;
+												params['params.feocurre']    = json.FEOCURRE;
 												debug('urlDestino_4 :',urlDestino);
 												debug('params_4 :',params);
 												Ext.create('Ext.form.Panel').submit(
