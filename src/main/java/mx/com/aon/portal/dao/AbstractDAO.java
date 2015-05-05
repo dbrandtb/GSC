@@ -48,10 +48,10 @@ public abstract class AbstractDAO  extends JdbcDaoSupport {
 		try {
 			CustomStoredProcedure storedProcedure = getStoredProcedure(storeProcedureName);
 			long inicio = System.currentTimeMillis();
-			logger.info(Utilerias.join("***** CALLING SP ", storedProcedure.getSql(), " ", parameters));
+			logger.info(Utilerias.join("##### CALLING SP ", storedProcedure.getSql(), " ", parameters));
 			Map result = storedProcedure.execute((Map) parameters);
     		long tfinal = System.currentTimeMillis();
-    		logger.info(Utilerias.join("***** FINISH SP IN ", (tfinal - inicio) / 1000d, " SEC ", storedProcedure.getSql()));
+    		logger.info(Utilerias.join("##### FINISH  SP ", storedProcedure.getSql(), " IN ", (tfinal - inicio) / 1000d, " SECS "));
 			
 			return storedProcedure.mapWrapperResultados(result);
 		} catch (Exception ex) {
