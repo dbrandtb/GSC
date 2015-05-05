@@ -1067,8 +1067,11 @@ function _p22_heredarColonia(callbackload)
             {
                 comboColonias.setValue('');
             }
-            if(callbackload){
+            
+            try{
             	callbackload();	
+            }catch(e){
+            	debug("Excepcion al ejecutar callback");
             }
             
         }
@@ -1306,9 +1309,12 @@ function _p22_loadRecordCdperson(callbackload)
 	                        _fieldByName('CDEDO').validate();
 	                        _fieldByName('CDMUNICI').validate();
 			                
-			                if(callbackload){
+			                try{
 			                	callbackload();
+			                }catch(e){
+			                	debug("Excepcion al ejecutar callback");
 			                }
+			                	
 			            }
 			            else
 			            {
@@ -1431,14 +1437,14 @@ function _p22_guardarClic(callback, autosave)
 //						},500);
 					}
 		
-                    if(callback)
-                    {
+
+					try{
                         callback();
+                    }catch(e){
+                    	debug("Excepcion al ejecutar callback");
+                    	mensajeCorrecto('Datos guardados',json.respuesta);
                     }
-                    else
-                    {
-                        mensajeCorrecto('Datos guardados',json.respuesta);
-                    }
+
                     try{
                     	if(_p22_cdperson!=false && !autosave && _p22_parentCallback){
                         	_p22_parentCallback(json);
