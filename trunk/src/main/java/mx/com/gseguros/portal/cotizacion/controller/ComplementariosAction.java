@@ -3183,10 +3183,39 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String operacion = map1.get("operacion");
 		if(StringUtils.isBlank(operacion)) operacion = "INSERTA";
 		Ice2sigsService.Operacion operation = Ice2sigsService.Operacion.valueOf(operacion);
+		
+		String cdIdeperRes = null;
 
 		// Ejecutamos el Web Service de Cliente Salud:
 		//ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmtramite, operation, (UserVO) session.get("USUARIO"));
-		ice2sigsService.ejecutaWSclienteGeneral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmtramite, null,operation, null, (UserVO) session.get("USUARIO"), true);
+		ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmtramite, null,operation, null, (UserVO) session.get("USUARIO"), true);
+		
+		if(resCli != null && Ice2sigsService.Estatus.EXITO.getCodigo() == resCli.getCodigo() && ArrayUtils.isNotEmpty(resCli.getClientesGeneral())){
+			cdIdeperRes = resCli.getClientesGeneral()[0].getNumeroExterno();
+			if(StringUtils.isNotBlank(cdIdeperRes) && !cdIdeperRes.equalsIgnoreCase("0") && !cdIdeperRes.equalsIgnoreCase("0L")){
+			
+				HashMap<String, String> paramsIdeper =  new HashMap<String, String>();
+				paramsIdeper.put("pv_cdunieco_i", cdunieco);
+				paramsIdeper.put("pv_cdramo_i",   cdramo);
+				paramsIdeper.put("pv_estado_i",   estado);
+				paramsIdeper.put("pv_nmpoliza_i", nmpoliza);
+				paramsIdeper.put("pv_nmsuplem_i", nmsuplem);
+				paramsIdeper.put("pv_cdideper_i", cdIdeperRes);
+				
+				kernelManager.actualizaCdIdeper(paramsIdeper);
+				
+				this.cdIdeper = cdIdeperRes;
+						
+			}else {
+				success = false;
+				mensajeRespuesta = "Error al crear Cliente en WS, no se pudo obtener el numero de Cliente";
+				logger.error("Error al crear Cliente en WS, no se pudo obtener el numero de Cliente, respondio: "+ cdIdeperRes);
+			} 
+		}else{
+			success = false;
+			mensajeRespuesta = "Error al crear Cliente en WS.";
+			logger.error("Error al Crear el cliente en WS!, Datos Nulos");
+		}
 		
 		success = true;
 		return SUCCESS;
