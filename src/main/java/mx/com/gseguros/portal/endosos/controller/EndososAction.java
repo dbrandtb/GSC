@@ -9899,6 +9899,44 @@ public class EndososAction extends PrincipalCoreAction
 				kernelManager.guardarArchivo(paramsR);
 				
 			}
+			
+			/**
+			 * TODO: Datos Temporales, quitar cuando las caratulas de autos ya tengan la informacion completa
+			 */
+			
+			PolizaAseguradoVO datosPol = new PolizaAseguradoVO();
+			
+			datosPol.setCdunieco(cdunieco);
+			datosPol.setCdramo(cdramo);
+			datosPol.setEstado(estado);
+			datosPol.setNmpoliza(nmpoliza);
+	
+			List<PolizaDTO> listaPolizas = consultasPolizaManager.obtieneDatosPoliza(datosPol);
+			PolizaDTO polRes = listaPolizas.get(0);
+			
+			boolean reduceGS = (StringUtils.isNotBlank(polRes.getReduceGS()) && Constantes.SI.equalsIgnoreCase(polRes.getReduceGS()))?true:false;
+			boolean gestoria = (StringUtils.isNotBlank(polRes.getGestoria()) && Constantes.SI.equalsIgnoreCase(polRes.getGestoria()))?true:false;
+			
+			if(reduceGS){
+				/**
+				 * Para cobertura de reduce GS
+				 */
+				paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
+				paramsR.put("pv_dsdocume_i", "Reduce GS");
+				
+				kernelManager.guardarArchivo(paramsR);
+			}
+			if(gestoria){
+				/**
+				 * Para cobertura de gestoria GS
+				 */
+				paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
+				paramsR.put("pv_dsdocume_i", "Gestoria GS");
+				
+				kernelManager.guardarArchivo(paramsR);
+			}
+			
+			
 		} catch (Exception e) {
 			logger.error("Error al generar las Caratulas de endoso: " + cdtipsup, e);
 			return false;

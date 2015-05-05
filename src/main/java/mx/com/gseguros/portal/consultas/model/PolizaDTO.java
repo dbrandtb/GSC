@@ -51,6 +51,14 @@ public class PolizaDTO implements Serializable{
 	private String cdunieco;
 	private String dsunieco;
 	private String nmpolant;
+	
+	/**
+	 * TODO: Datos Temporales, quitar cuando las caratulas de autos ya tengan la informacion completa
+	 */
+	private String reduceGS;
+	private String gestoria;
+	
+	
 	/**
 	 * Modalidad
 	 */
@@ -493,6 +501,26 @@ public class PolizaDTO implements Serializable{
 
 	public void setCduniext(String cduniext) {
 		this.cduniext = cduniext;
+	}
+
+
+	public String getReduceGS() {
+		return reduceGS;
+	}
+
+
+	public void setReduceGS(String reduceGS) {
+		this.reduceGS = reduceGS;
+	}
+
+
+	public String getGestoria() {
+		return gestoria;
+	}
+
+
+	public void setGestoria(String gestoria) {
+		this.gestoria = gestoria;
 	}
 	
 	

@@ -28,7 +28,10 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
+import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
@@ -59,6 +62,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -131,6 +135,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private String respuestaOculta;
 	private CotizacionManager cotizacionManager;
 	private EmisionManager    emisionManager;
+	
+	@Autowired
+	private ConsultasPolizaManager   consultasPolizaManager;
 
 	public String mostrarPantalla()
 	{
@@ -2338,6 +2345,48 @@ public class ComplementariosAction extends PrincipalCoreAction
 						
 					}
 					
+					/**
+					 * TODO: Datos Temporales, quitar cuando las caratulas de autos ya tengan la informacion completa
+					 */
+					
+					PolizaAseguradoVO datosPol = new PolizaAseguradoVO();
+					
+					datosPol.setCdunieco(cdunieco);
+					datosPol.setCdramo(cdramo);
+					datosPol.setEstado("M");
+					datosPol.setNmpoliza(nmpolizaEmitida);
+			
+					List<PolizaDTO> listaPolizas = consultasPolizaManager.obtieneDatosPoliza(datosPol);
+					PolizaDTO polRes = listaPolizas.get(0);
+					
+					boolean reduceGS = (StringUtils.isNotBlank(polRes.getReduceGS()) && Constantes.SI.equalsIgnoreCase(polRes.getReduceGS()))?true:false;
+					boolean gestoria = (StringUtils.isNotBlank(polRes.getGestoria()) && Constantes.SI.equalsIgnoreCase(polRes.getGestoria()))?true:false;
+					
+					if(reduceGS){
+						/**
+						 * Para cobertura de reduce GS
+						 */
+						
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf\">Reduce GS</a>";
+						
+						paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
+						paramsR.put("pv_dsdocume_i", "Reduce GS");
+						
+						kernelManager.guardarArchivo(paramsR);
+					}
+					if(gestoria){
+						/**
+						 * Para cobertura de gestoria GS
+						 */
+						
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf\">Gestoria GS</a>";
+						
+						paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
+						paramsR.put("pv_dsdocume_i", "Gestoria GS");
+						
+						kernelManager.guardarArchivo(paramsR);
+					}
+					
 					this.mensajeEmail += "<br/><br/><br/>Agradecemos su preferencia.<br/>"+
 										 "General de Seguros<br/>"+
 										 "</span>";
@@ -3035,6 +3084,48 @@ public class ComplementariosAction extends PrincipalCoreAction
 							
 							kernelManager.guardarArchivo(paramsR);
 							
+						}
+						
+						/**
+						 * TODO: Datos Temporales, quitar cuando las caratulas de autos ya tengan la informacion completa
+						 */
+						
+						PolizaAseguradoVO datosPol = new PolizaAseguradoVO();
+						
+						datosPol.setCdunieco(_cdunieco);
+						datosPol.setCdramo(_cdramo);
+						datosPol.setEstado("M");
+						datosPol.setNmpoliza(_nmpoliza);
+				
+						List<PolizaDTO> listaPolizas = consultasPolizaManager.obtieneDatosPoliza(datosPol);
+						PolizaDTO polRes = listaPolizas.get(0);
+						
+						boolean reduceGS = (StringUtils.isNotBlank(polRes.getReduceGS()) && Constantes.SI.equalsIgnoreCase(polRes.getReduceGS()))?true:false;
+						boolean gestoria = (StringUtils.isNotBlank(polRes.getGestoria()) && Constantes.SI.equalsIgnoreCase(polRes.getGestoria()))?true:false;
+						
+						if(reduceGS){
+							/**
+							 * Para cobertura de reduce GS
+							 */
+							
+							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf\">Reduce GS</a>";
+							
+							paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
+							paramsR.put("pv_dsdocume_i", "Reduce GS");
+							
+							kernelManager.guardarArchivo(paramsR);
+						}
+						if(gestoria){
+							/**
+							 * Para cobertura de gestoria GS
+							 */
+							
+							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf\">Gestoria GS</a>";
+							
+							paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
+							paramsR.put("pv_dsdocume_i", "Gestoria GS");
+							
+							kernelManager.guardarArchivo(paramsR);
 						}
 
 						this.mensajeEmail += "<br/><br/><br/>Agradecemos su preferencia.<br/>"+

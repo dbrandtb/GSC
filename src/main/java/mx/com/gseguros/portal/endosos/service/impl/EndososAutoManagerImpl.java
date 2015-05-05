@@ -3020,6 +3020,42 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						new Date(), urlTarjIdent + parametros, "Tarjeta de Identificacion", nmpoliza, 
 						ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
 			}
+			
+			
+			/**
+			 * TODO: Datos Temporales, quitar cuando las caratulas de autos ya tengan la informacion completa
+			 */
+			PolizaAseguradoVO datosPol = new PolizaAseguradoVO();
+			
+			datosPol.setCdunieco(cdunieco);
+			datosPol.setCdramo(cdramo);
+			datosPol.setEstado(estado);
+			datosPol.setNmpoliza(nmpoliza);
+	
+			List<PolizaDTO> listaPolizas = consultasPolizaDAO.obtieneDatosPoliza(datosPol);
+			PolizaDTO polRes = listaPolizas.get(0);
+			
+			boolean reduceGS = (StringUtils.isNotBlank(polRes.getReduceGS()) && Constantes.SI.equalsIgnoreCase(polRes.getReduceGS()))?true:false;
+			boolean gestoria = (StringUtils.isNotBlank(polRes.getGestoria()) && Constantes.SI.equalsIgnoreCase(polRes.getGestoria()))?true:false;
+			
+			if(reduceGS){
+				/**
+				 * Para cobertura de reduce GS
+				 */
+				mesaControlDAO.guardarDocumento(
+						cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
+						new Date(), "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf", "Reduce GS", nmpoliza, 
+						ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
+			}
+			if(gestoria){
+				/**
+				 * Para cobertura de gestoria GS
+				 */
+				mesaControlDAO.guardarDocumento(
+						cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
+						new Date(), "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf", "Gestoria GS", nmpoliza, 
+						ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
+			}
 		}catch(Exception ex){
 			logger.error("Error al ejecutar caratula endoso con tarifa", ex);
 			return false;
