@@ -5991,6 +5991,58 @@ public class SiniestrosAction extends PrincipalCoreAction {
     }
    
 
+    public String obtenerPeriodoEspera(){
+		logger.debug(""
+			+ "\n###############################################"
+			+ "\n###############################################"
+			+ "\n###### 		obtenerPeriodoEspera 	  ######"
+			+ "\n######                           		  ######"
+		);
+		logger.debug("params: "+params);
+		try{
+			
+			PolizaAseguradoVO datosPol = new PolizaAseguradoVO();
+			datosPol.setCdunieco(params.get("cdunieco"));
+			datosPol.setCdramo(params.get("cdramo"));
+			datosPol.setEstado(params.get("estado"));
+			datosPol.setNmpoliza(params.get("nmpoliza"));
+			
+			List<ConsultaDatosGeneralesPolizaVO> lista = consultasAseguradoManager.obtieneDatosPoliza(datosPol);
+			String feEfecto = lista.get(0).getFeefecto();
+			logger.debug("Paso 1.- Obtenemos la fecha Efecto de la Poliza : "+feEfecto);
+			
+			List<Map<String,String>> datosAdicionales = siniestrosManager.listaSumaAseguradaPeriodoEsperaRec(params.get("cdramo"),params.get("cdgarant"),params.get("cdconval"),renderFechas.parse(feEfecto));
+			double plazoEsperaCobertura = Double.parseDouble(datosAdicionales.get(0).get("PLAZOESPERA"));
+			logger.debug("Paso 2.- Obtenemos el plazo de espera : "+plazoEsperaCobertura);
+			
+			List<Map<String,String>> periodoEsperaAsegurado = siniestrosManager.listaPeriodoEsperaAsegurado(params.get("cdunieco"), params.get("cdramo"),params.get("estado"),
+															params.get("nmpoliza"), params.get("nmsituac"),renderFechas.parse(params.get("feocurre")));
+			double diasAsegurado = Double.parseDouble(periodoEsperaAsegurado.get(0).get("DIAS"));
+			logger.debug("Paso 3.- Obtenemos el plazo de espera Asegurado : "+diasAsegurado);
+			
+			if(diasAsegurado >= plazoEsperaCobertura){
+				mensaje = null;
+				success = true;
+			}else{
+				mensaje = "El periodo de espera es menor al establecido : "+datosAdicionales.get(0).get("PLAZOESPERA")+" d&iacute;as";
+				success = false;
+			}
+			logger.debug("Paso 4.- Mesaje : "+mensaje);
+			
+		}
+		catch(Exception ex){
+			success=false;
+			logger.error("error al obtener el periodo de espera : ",ex);
+			mensaje = ex.getMessage();
+		}
+		logger.debug(""
+			+ "\n######                           		  ######"
+			+ "\n######			obtenerPeriodoEspera	  ######"
+			+ "\n###############################################"
+			+ "\n###############################################"
+		);
+		return SUCCESS;
+	}
 //...Ge
 /****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {

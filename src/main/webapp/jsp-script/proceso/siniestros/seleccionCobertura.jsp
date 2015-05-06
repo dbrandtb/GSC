@@ -20,6 +20,9 @@
             //var _selDetalleSiniestoDatos    = '<s:url namespace="/siniestros" action="detalleSiniestroDatos"/>';
             var _URL_LoadFacturasxTramite     = '<s:url namespace="/siniestros" action="obtenerFacturasTramite"/>';
             var _URL_guardarCoberturaxFactura = '<s:url namespace="/siniestros" action="guardarCoberturaxFactura"/>';
+            var _PeriodoEspera                = '<s:url namespace="/siniestros" action="obtenerPeriodoEspera"/>';
+            var _UrlRechazarTramiteWindwow    = '<s:url namespace="/siniestros" 	action="includes/rechazoReclamaciones" />';
+            var _URL_MESACONTROL			  = '<s:url namespace="/mesacontrol" 		action="mcdinamica" />';
             var ntramite= null;
             var nfactura = null;
             var ffactura = null;
@@ -267,60 +270,121 @@
                         text: 'Continuar',
                         icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
                         handler: function() {
-                        // Verificamos que todas las facturas tengan coberturas y subcoberturas
-                            var obtener = [];
-                            storeFacturasTramite.each(function(record) {
-                                obtener.push(record.data);
-                            });
-                            var  bande=true;
-                            var coberturaInt = null;
-                            var subcoberInt = null;
-                            for(var i=0;i < obtener.length;i++)
-                            {
-                                if(obtener[i].CDGARANT == null ||obtener[i].CDGARANT.length <= 0  )
-                                {
-                                    bande=false;
-                                    break;
-                                }else{
-                                    coberturaInt= obtener[i].CDGARANT;
-                                    subcoberInt = obtener[i].CDCONVAL;
-                                }
-                            }
-                            if(bande)
-                            {
-                                _selCobForm.setLoading(true);
-                                var json = _selCobForm.getValues();
-                                json['ntramite'] = _selCobParams.ntramite;
-                                json['cdgarant'] = coberturaInt;
-                                json['cdconval'] = subcoberInt;
-                                Ext.Ajax.request(
-                                {
-                                    url       : _selCobUrlSavexTramite
-                                    ,jsonData :
-                                    {
-                                        params : json
-                                    }
-                                    ,success  : function(response)
-                                    {
-                                        _selCobForm.setLoading(false);
-                                        json = Ext.decode(response.responseText);
-                                        debug('respuesta:',json);
-                                        _selCobAvanza();
-                                    }
-                                    ,failure  : function(response)
-                                    {
-                                        _selCobForm.setLoading(false);
-                                        json = Ext.decode(response.responseText);
-                                        debug('respuesta:',json);
-                                        centrarVentanaInterna(mensajeError(json.mensaje));
-                                    }
-                                });
-                            }else{
-                                centrarVentanaInterna(mensajeError("Verificar la Cobertura - Subcobertura de las factura"));
-                            }
-                        }
-                    }]
-                });
+							//SE REALIZA LA VALIDACION PARA RECUPERA
+							debug("Valores de entrada validacion -->",_selCobParams);
+							
+							var obtener = [];
+							storeFacturasTramite.each(function(record) {
+								obtener.push(record.data);
+							});
+							var  bande=true;
+							var coberturaInt = null;
+							var subcoberInt = null;
+							for(var i=0;i < obtener.length;i++){
+								if(obtener[i].CDGARANT == null ||obtener[i].CDGARANT.length <= 0  ){
+									bande=false;
+									break;
+								}else{
+									coberturaInt= obtener[i].CDGARANT;
+									subcoberInt = obtener[i].CDCONVAL;
+								}
+							}
+							if(bande){
+								_selCobForm.setLoading(true);
+								var json = _selCobForm.getValues();
+								json['ntramite'] = _selCobParams.ntramite;
+								json['cdgarant'] = coberturaInt;
+								json['cdconval'] = subcoberInt;
+								
+								
+								if(_selCobParams.cdramo =="1"){
+									Ext.Ajax.request(
+									{
+										url		:	_PeriodoEspera
+										,params	:	{
+											'params.cdunieco'  : _selCobParams.cdunieco,
+											'params.cdramo'    : _selCobParams.cdramo,
+											'params.estado'    : _selCobParams.estado,
+											'params.nmpoliza'  : _selCobParams.nmpoliza,
+											'params.nmsituac'  : _selCobParams.nmsituac,
+											'params.feocurre'  : _selCobParams.feocurre,
+											'params.cdgarant'  : coberturaInt,
+											'params.cdconval'  : subcoberInt
+										}
+										,success : function (response)
+										{
+											var json = Ext.decode(response.responseText);
+											debug("Valor de Respuesta ===>",json.success);
+											if(json.success =="true"){
+												Ext.Ajax.request({
+													url       : _selCobUrlSavexTramite
+													,jsonData : {
+														params : json
+													}
+													,success  : function(response){
+														_selCobForm.setLoading(false);
+														json = Ext.decode(response.responseText);
+														debug('respuesta:',json);
+														_selCobAvanza();
+													}
+													,failure  : function(response){
+														_selCobForm.setLoading(false);
+														json = Ext.decode(response.responseText);
+														debug('respuesta:',json);
+														centrarVentanaInterna(mensajeError(json.mensaje));
+													}
+												});
+											}else{
+												centrarVentanaInterna(Ext.Msg.show({
+													title:'Error',
+													msg: json.mensaje,
+													buttons: Ext.Msg.OK,
+													icon: Ext.Msg.ERROR
+												}));
+											}
+										},
+										failure : function ()
+										{
+											me.up().up().setLoading(false);
+											centrarVentanaInterna(Ext.Msg.show({
+												title:'Error',
+												msg: 'Error de comunicaci&oacute;n',
+												buttons: Ext.Msg.OK,
+												icon: Ext.Msg.ERROR
+											}));
+										}
+									});
+								}else{
+									Ext.Ajax.request({
+										url       : _selCobUrlSavexTramite
+										,jsonData : {
+											params : json
+										}
+										,success  : function(response){
+											_selCobForm.setLoading(false);
+											json = Ext.decode(response.responseText);
+											debug('respuesta:',json);
+											_selCobAvanza();
+										}
+										,failure  : function(response){
+											_selCobForm.setLoading(false);
+											json = Ext.decode(response.responseText);
+											debug('respuesta:',json);
+											centrarVentanaInterna(mensajeError(json.mensaje));
+										}
+									});
+								}
+							}else{
+								centrarVentanaInterna(mensajeError("Verificar la Cobertura - Subcobertura de las factura"));
+							}
+						}
+					},
+					{
+						text     : 'Regresar'
+							,icon    : _CONTEXT+'/resources/fam3icons/icons/book_previous.png'
+							,handler : _11_regresarMC
+					}]
+				});
                 gridFacturasTramite = new EditorFacturasTramite();
                 
                 ventanaDetalleCobertura = Ext.create('Ext.window.Window', {
@@ -427,8 +491,21 @@
                     });
                 }
             });
-
             ////// funciones //////
+            	function _11_regresarMC()
+				{
+					debug('_11_regresarMC');
+					Ext.create('Ext.form.Panel').submit({
+						url				: _URL_MESACONTROL
+						,standardSubmit	:true
+						,params			:
+						{
+							'smap1.gridTitle'		: 'Siniestros'
+							,'smap2.pv_cdtiptra_i'	: 16
+						}
+					});
+				}
+            
             function _selCobGuardar()
             {
                 var valido = true;
