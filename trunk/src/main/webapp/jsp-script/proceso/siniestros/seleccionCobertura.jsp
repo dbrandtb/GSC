@@ -313,13 +313,22 @@
 										}
 										,success : function (response)
 										{
-											var json = Ext.decode(response.responseText);
-											debug("Valor de Respuesta ===>",json.success);
-											if(json.success =="true"){
+											var jsonRes = Ext.decode(response.responseText);
+											debug("Valor de Respuesta ===>",jsonRes.success);
+											if(jsonRes.success == true){
 												Ext.Ajax.request({
 													url       : _selCobUrlSavexTramite
 													,jsonData : {
 														params : json
+													}
+													,params	:	{
+														'params.cdramo'    : _selCobParams.cdramo,
+														'params.cdgarant'    : _selCobParams.estado,
+														'params.nmpoliza'  : _selCobParams.nmpoliza,
+														'params.nmsituac'  : _selCobParams.nmsituac,
+														'params.feocurre'  : _selCobParams.feocurre,
+														'params.cdgarant'  : coberturaInt,
+														'params.cdconval'  : subcoberInt
 													}
 													,success  : function(response){
 														_selCobForm.setLoading(false);
