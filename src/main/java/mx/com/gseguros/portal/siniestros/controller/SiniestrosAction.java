@@ -6024,7 +6024,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				mensaje = null;
 				success = true;
 			}else{
-				mensaje = "El periodo de espera es menor al establecido : "+datosAdicionales.get(0).get("PLAZOESPERA")+" d&iacute;as";
+				mensaje = "La intervenci&oacute;n quir&uacute;rgica  no cubre con el periodo de espera : "+datosAdicionales.get(0).get("PLAZOESPERA")+" d&iacute;as";
 				success = false;
 			}
 			logger.debug("Paso 4.- Mesaje : "+mensaje);
