@@ -915,7 +915,7 @@ function _0_cargar()
                     debug('json response:',json);
                     if(json.success)
                     {
-                        if(!json.smap1.CDUNIECO)
+                        if(!json.smap1.NTRAMITE)
                         {
                     	    _0_limpiar();
                             for(var i=0;i<json.slist1.length;i++)
