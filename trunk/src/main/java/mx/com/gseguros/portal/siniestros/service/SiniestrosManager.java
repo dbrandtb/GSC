@@ -568,5 +568,7 @@ public interface SiniestrosManager {
 	public List<Map<String, String>> listaSumaAseguradaPeriodoEsperaRec(String  cdramo, String cobertura, String subcobertura, Date feEfecto) throws Exception;
 	
 	public List<Map<String, String>> listaEsquemaSumaAseguradaRec(String cdunieco,String cdramo, String estado, String nmpoliza, String nmsituac) throws Exception;
+
+	public List<Map<String, String>> listaPeriodoEsperaAsegurado(String cdunieco,String cdramo, String estado, String nmpoliza, String nmsituac,  Date feOcurre) throws Exception;
 	
 }

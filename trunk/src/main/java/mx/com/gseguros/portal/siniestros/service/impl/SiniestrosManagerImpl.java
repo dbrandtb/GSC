@@ -1711,4 +1711,18 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		log.debug("Valor Esquema Suma Asegurada : "+params);
 		return siniestrosDAO.obtieneEsquemaSumaAseguradaRec(params);
 	}
+
+	@Override
+	public List<Map<String, String>> listaPeriodoEsperaAsegurado(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, Date feOcurre) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i"  , cdramo);
+		params.put("pv_estado_i"  , estado);
+		params.put("pv_nmpoliza_i",   nmpoliza);
+		params.put("pv_nmsituac_i",   nmsituac);
+		params.put("pv_feocurre_i",   feOcurre);
+		log.debug("Valores de entrada Asegurado Recupera : "+params);
+		return siniestrosDAO.obtienePeriodoEsperaAsegurado(params);
+	}
 }
