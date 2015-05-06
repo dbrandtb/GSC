@@ -353,7 +353,7 @@ Ext.onReady(function() {
 		,style         : 'margin:5px'
 		,selType	   : 'checkboxmodel'
 		,width   	   : 600
-		,height		   : 200
+		,height		   : 280
 		,columns       : [
 			{	header	: 'N&uacute;mero <br/> Autorizaci&oacute;n',			dataIndex : 'nmautser',			width	   : 100 },
 			{	header  : 'N&uacute;mero <br/> Autorizaci&oacute;n Anterior',	dataIndex : 'nmautant',			width      : 200 },
@@ -395,9 +395,9 @@ Ext.onReady(function() {
 		}
 	});
 
-	gridDatos.store.sort([{
+	/*gridDatos.store.sort([{
 		property    : 'nmautser',			direction   : 'DESC'
-	}]);
+	}]);*/
 
 	panelbusquedas = Ext.create('Ext.panel.Panel',{
 		border  : 0,		id     : 'panelbusqueda',				width	: 600,		style  : 'margin:5px'
@@ -554,6 +554,7 @@ Ext.onReady(function() {
 		,listeners : {
 			'select' : function(combo, record) {
 				Ext.getCmp('idAsegurado').setValue('');
+				panelInicialPrincipal.down('[name="cdperson"]').setReadOnly(false);
 				Ext.getCmp('polizaAfectadaCom').setValue('');
 			}
 		}
@@ -640,7 +641,7 @@ Ext.onReady(function() {
 		id     :'idAsegurado',			labelWidth 	   : 170,				valueField     : 'key',			queryParam   : 'params.cdperson',
 		width  :500,					forceSelection : true,				matchFieldWidth: false,			queryMode    :'remote',
 		minChars  : 2,					store 		   : storeAsegurados,	triggerAction  : 'all',			name:'cdperson',
-		hideTrigger:true,
+		hideTrigger:true,				readOnly	   : true,
 		listeners : {
 			'select' : function(combo, record) {
 			obtieneCDPerson = this.getValue();

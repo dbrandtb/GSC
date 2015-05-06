@@ -2017,11 +2017,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	public String consultaListaTipoAtencion(){
 		logger.debug(" **** consultaListaTipoAtencion ****");
 		try {
-			if(params!=null)
-			{
-				listaTipoAtencion= siniestrosManager.getconsultaListaTipoAtencion(params.get("cdramo"), params.get("tipoPago"));
-				logger.debug(listaTipoAtencion);
-			}
+			listaTipoAtencion= siniestrosManager.getconsultaListaTipoAtencion(params.get("cdramo"), params.get("tipoPago"));
+			logger.debug(listaTipoAtencion);
 		}catch( Exception e){
 			logger.error("Error al consultar la Lista de los asegurados ",e);
 			return SUCCESS;

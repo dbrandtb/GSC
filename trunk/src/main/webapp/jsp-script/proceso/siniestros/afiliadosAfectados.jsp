@@ -471,7 +471,7 @@
 // STORE PARA EL LISTADO DE LAS AUTORIZACIONES DE SERVICIO
 				storeListadoAutorizacion = new Ext.data.Store(
 				{
-					pageSize : 5
+					pageSize : 10
 					,model	  : 'modelListadoAutorizacion'
 					,autoLoad  : false
 					,proxy	 :
@@ -1726,7 +1726,7 @@
 					,style		 : 'margin:5px'
 					,selType: 'checkboxmodel'
 					,width   : 600
-					,height: 200
+					,height: 400
 					,selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true }
 					,columns	   :
 					[
@@ -1768,11 +1768,11 @@
 					
 						
 				});
-				gridAutorizacion.store.sort([
+				/*gridAutorizacion.store.sort([
 					{
 						property	: 'nmautser',			direction   : 'DESC'
 					}
-				]);
+				]);*/
 
 				gridMsiniestMaestro = Ext.create('Ext.grid.Panel',
 				{
@@ -1839,11 +1839,11 @@
 						}
 					}	
 				});
-				gridMsiniestMaestro.store.sort([
+				/*gridMsiniestMaestro.store.sort([
 					{
 						property	: 'nmautser',			direction   : 'DESC'
 					}
-				]);
+				]);*/
 				panelComplementos = Ext.create('Ext.form.Panel',
 				{
 					border	: 0
