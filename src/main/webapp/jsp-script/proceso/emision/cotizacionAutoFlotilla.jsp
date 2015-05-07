@@ -797,7 +797,17 @@ Ext.onReady(function()
             ,tbar       : _p30_gridTbarItems
             ,bbar       :
             [
-                '->'
+                {
+                    xtype    : 'button'
+                    ,hidden  : _p30_smap1.tipoflot+'x'!='Fx'
+                    ,text    : 'Limpiar'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
+                    ,handler : function()
+                    {
+                        _p30_store.removeAll();
+                    }
+                }
+                ,'->'
                 ,{
                     xtype   : 'form'
                     ,hidden : _p30_smap1.tipoflot+'x'!='Fx'

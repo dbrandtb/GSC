@@ -2326,7 +2326,16 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 								catch(Exception ex)
 								{
 									sb.append("(E)");
-									valor="";
+									try
+									{
+										Double num = cell.getNumericCellValue();
+										valor      = String.format("%d",num.intValue());
+									}
+									catch(Exception ex2)
+									{
+										sb.append("(E)");
+										valor="";
+									}
 								}
 								sb.append("!").append(valor);
 								if(requerido&&isBlank(valor))
@@ -2358,15 +2367,28 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							else if(!isBlank(decode))
 							{
 								sb.append(">decode");
-								String valor = null;
+								String original = null;
+								String valor    = null;
 								try
 								{
-									valor=cell.getStringCellValue();
+									valor    = cell.getStringCellValue();
+									original = cell.getStringCellValue();
 								}
 								catch(Exception ex)
 								{
 									sb.append("(E)");
-									valor="";
+									try
+									{
+										Double num = cell.getNumericCellValue();
+										valor      = String.format("%d",num.intValue());
+										original   = String.format("%d",num.intValue());
+									}
+									catch(Exception ex2)
+									{
+										sb.append("(E)");
+										valor    = "";
+										original = "";
+									}
 								}
 								sb.append("!").append(valor);
 								if(requerido&&isBlank(valor))
@@ -2386,7 +2408,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 											break;
 										}
 									}
-									if(valor.equals(cell.getStringCellValue()))
+									if(valor.equals(original))
 									{
 										throw new ApplicationException(Utilerias.join(
 												"La descripcion "
