@@ -79,6 +79,9 @@
             var _paramsRetryWS;
             var _mensajeEmail;
             
+            var _nombreContratante;
+            var _numeroPolizaExt;
+            
             var panDatComUpdateFerenova = function(field,value)
             {
                 try
@@ -1073,9 +1076,11 @@ function _datComTurnarSuscripcion()
 										                                                            	    		datComPolizaMaestra=json.panel2.nmpoliza;
 										                                                            	    		debug("datComPolizaMaestra",datComPolizaMaestra);
 										                                                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.panel2.nmpoliex);
+										                                                            	    		_numeroPolizaExt = json.panel2.nmpoliex;
 										                                                            	    		Ext.getCmp('botonEmitirPolizaFinal').hide();
 										                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
 										                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
+										                                                            	    		Ext.getCmp('botonPagar').setDisabled(false);
 										                                                            	    		
                                 	    																			Ext.getCmp('botonReenvioWS').hide();
                                 	    																			
@@ -1325,6 +1330,44 @@ function _datComTurnarSuscripcion()
 								                                                                                ,autoLoad : true
 								                                                                            }
 								                                                                        }).show();
+										                                                            }
+										                                                        }
+										                                                        ,{
+										                                                            xtype     : 'button'
+										                                                            ,id       : 'botonPagar'
+										                                                            ,text     : 'Pagar'
+										                                                            ,icon     : contexto+'/resources/fam3icons/icons/money.png'
+										                                                            ,disabled : true
+										                                                            ,hidden  : inputCdramo!='2'
+										                                                            ,handler  : function()
+										                                                            {
+										                                                            	if(Ext.isEmpty(_numeroPolizaExt)){
+											                                                            	mensajeWarning('Error al cargar el n&uacute;mero de p&oacute;liza.');
+											                                                            	return;
+										                                                            	}
+										                                                            		
+										                                                            	var nombreCompCont = '';
+										                                                            	try{
+											                                                            	var datosCont = obtDatLoaderContratante();
+											                                                            	debug(datosCont);
+											                                                            	nombreCompCont = datosCont.nombre +" "+ datosCont.snombre +" "+ datosCont.appat +" "+ datosCont.apmat;
+										                                                            	}
+										                                                            	catch(e){
+										                                                            		debug('Sin datos de contratante.');
+										                                                            		nombreCompCont = '';
+										                                                            	}
+										                                                            	
+										                                                            	var IDventana = window.open("http://www.biosnettcs.com/", "IDventana", "width=610,height=725,top=0,left=190");
+																			        	    			    var parametrosPago = {
+																			        	    			    		'etiqueta': 'USERADM1',
+																			        	    			    		'etiquetaSys': 'lorant',
+																			        	    			    		'mensajeExito': '16168',
+																			        	    			    		'asegPago' : '906',//qualitas
+																			        	    			    		'contratante' : nombreCompCont,//qualitas
+																			        	    			    		'polext' : _numeroPolizaExt
+																			        	    			    };
+																			        	    			    
+																			        	    				creaWindowPay("http://www.ibseguros.com/securepayment/Validate.action", parametrosPago, "IDventana");
 										                                                            }
 										                                                        }
 										                                                        ,{
@@ -1946,6 +1989,35 @@ function _datComTurnarSuscripcion()
                     }
                 });
                 
+                
+                function creaWindowPay(url, params, tarjet )
+			    {
+			             var form = document.createElement("form");
+			             form.setAttribute("method", "post");
+			             form.setAttribute("action", url);
+			             form.setAttribute("target", "IDventana");
+			  
+			             for (var i in params) {
+			                 if (params.hasOwnProperty(i)) {
+			                     var input = document.createElement('input');
+			                     input.type = 'hidden';
+			                     input.name = i;
+			                     input.value = params[i];
+			                     form.appendChild(input);
+			                 }
+			             }
+			             
+			             document.body.appendChild(form);
+			  
+			             //note I am using a post.htm page since I did not want to make double request to the page 
+			            //it might have some Page_Load call which might screw things up.
+			//             window.open("post.htm", name, windowoption);
+			  
+			             form.submit();
+			  
+			             document.body.removeChild(form);
+			     }
+                
                 //funcion para reintentar WS auto
                 
                 function reintentarWSAuto(loading, params){
@@ -1974,7 +2046,9 @@ function _datComTurnarSuscripcion()
 	                            	    	{
 	                            	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Web Services. P&oacute;liza Emitida: ' + json.nmpolAlt);
 	                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.nmpolAlt);
+	                            	    		_numeroPolizaExt = json.nmpolAlt;
                                 	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
+                                	    		Ext.getCmp('botonPagar').setDisabled(false);
                                 	    		Ext.getCmp('botonReenvioWS').setDisabled(true);
                                 	    		Ext.getCmp('botonReenvioWS').hide();
                                 	    		
