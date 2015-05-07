@@ -284,6 +284,43 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
             compile();
     	}
     }
+
+	
+	@Override
+	public void actualizaFactoresArt140(String cdperson, String cdnacion, String otfisjur,String residencia, String ptcumupr) throws Exception
+	{
+		Map<String,Object>params=new LinkedHashMap<String,Object>();
+		params.put("pv_cdperson_i"    , cdperson);
+		params.put("pv_cdnacion_i"    , cdnacion);
+		params.put("pv_otfisjur_i"    , otfisjur);
+		params.put("pv_residencia_i"  , residencia);
+		params.put("pv_ptcumupr_i"    , ptcumupr);
+		
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************")
+				.append("\n****** PKG_SATELITES2.P_ACT_DAT_OBLIG_PARAM_ART140 ******")
+				.append("\n****** params=").append(params)
+				.append("\n******************************************")
+				.toString()
+				);
+		ejecutaSP(new ActualizaFactoresArt140(getDataSource()), params);
+			}
+	
+	protected class ActualizaFactoresArt140 extends StoredProcedure
+	{
+		protected ActualizaFactoresArt140(DataSource dataSource) {
+			super(dataSource,"PKG_SATELITES2.P_ACT_DAT_OBLIG_PARAM_ART140");
+			declareParameter(new SqlParameter("pv_cdperson_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdnacion_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otfisjur_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_residencia_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptcumupr_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	/**
 	 * obtener domicilio por cdperson desde PKG_CONSULTA.P_GET_MDOMICIL

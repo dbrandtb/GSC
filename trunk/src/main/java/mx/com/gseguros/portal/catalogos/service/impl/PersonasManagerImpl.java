@@ -368,7 +368,24 @@ public class PersonasManagerImpl implements PersonasManager
 			}
 		}
 		
-		if(exito)
+		if(exito && autosave)
+		{
+			try
+			{
+				personasDAO.actualizaFactoresArt140(
+						cdperson, cdnacion, otfisjur,
+						residencia, ptcumupr);
+			}
+			catch(Exception ex)
+			{
+				logger.error(timestamp+" error en el movimiento de persona",ex);
+				exito           = false;
+				respuesta       = ex.getMessage()+" #"+timestamp;
+				respuestaOculta = "sin respuesta oculta";
+			}
+		}
+		
+		if(exito && !autosave)
 		{
 			try
 			{
