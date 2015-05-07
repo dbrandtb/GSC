@@ -4,6 +4,5 @@
     <bean id="reexpedicionDocumentosAction" class="mx.com.gseguros.portal.reexpedicionDocumentos.controller.ReexpedicionDocumentosAction" scope="prototype">
         <property name="consultasManager"              ref="consultasManagerImpl"/>
         <property name="pantallasManager"              ref="pantallasManagerImpl"/>
-        <property name="reexpedicionDocumentosManager" ref="reexpedicionDocumentosManagerImpl"/>
     </bean>
 </beans>
