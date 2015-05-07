@@ -868,7 +868,11 @@ Ext.onReady(function()
 		    if(_ocultaBusqueda){
 				_p22_formBusqueda().hide();
 			}
-		    _p22_loadRecordCdperson(function(){_p22_guardarClic(_p22_datosAdicionalesClic, true);});
+			
+			/**
+			 * Autosave en true para auto guardado cuando carga la pantalla o cuando cambian los factores de art 140
+			 */
+		    _p22_loadRecordCdperson(function(){_p22_guardarClic(_p22_datosAdicionalesClic, true);},true);
 		    
 		}else{
 			mensajeWarning('Error al cargar datos.');
@@ -1225,7 +1229,7 @@ function _p22_formDatosGenerales()
 }
 
 /* PARA EL LOADER */
-function _p22_loadRecordCdperson(callbackload)
+function _p22_loadRecordCdperson(callbackload,autosave)
 {
     debug('>_p22_loadRecordCdperson');
     _p22_PanelPrincipal().setLoading(true);
@@ -1262,7 +1266,8 @@ function _p22_loadRecordCdperson(callbackload)
 			        url      : _p22_urlObtenerDomicilio
 			        ,params  :
 			        {
-			            'smap1.cdperson' : record.get('CDPERSON')
+			            'smap1.cdperson' : record.get('CDPERSON'),
+			            'smap1.AUTOSAVE' : autosave?'S':'N'
 			        }
 			        ,success : function(response)
 			        {
@@ -1324,7 +1329,15 @@ function _p22_loadRecordCdperson(callbackload)
 			            }
 			            else
 			            {
-			                mensajeError(json.respuesta);
+			            	if(autosave){
+			            		try{
+				                	callbackload();
+				                }catch(e){
+				                	debug("Excepcion al ejecutar callback EN AUTOSAVE");
+				                }
+			            	}else{
+			            		mensajeError(json.respuesta);
+			            	}
 			            }
 			        }
 			        ,failure : function()
@@ -2042,30 +2055,7 @@ function _p22_guardarDatosAdicionalesClic()
 							_CDIDEPERsel = json.smap1.codigoExterno;
 	                	}
 	                	
-	                	_p22_loadRecordCdperson(/*function(){
-								var valor = _fieldByName('CDCOLONI').getValue();
-			                    _p22_heredarColonia(function(){
-                    				_fieldByName('CDCOLONI').setValue(valor);
-                    				
-                    				debug('valor de codigo colonia: ' , valor);
-                    				debug('valor de coloniaImportarTMP: ' , coloniaImportarTMP);
-                    				debug('valor de municipioImportarTMP: ' , municipioImportarTMP);
-                    				
-                    				if(Ext.isEmpty(valor)){
-                    					_fieldByName('CDCOLONI').setValue(coloniaImportarTMP);
-                    				}
-                    				if(Ext.isEmpty(_fieldByName('CDMUNICI').getValue())){
-                    					_fieldByName('CDMUNICI').forceSelection = false;
-                    					_fieldByName('CDMUNICI').setValue(municipioImportarTMP);
-                    					
-                    					setTimeout(function(){
-											_fieldByName('CDMUNICI').forceSelection = true;
-										},500);
-                    				}
-                    			}
-			                    );	                		
-	                		}
-	                	*/);
+	                	_p22_loadRecordCdperson(function(){debug('Sin Callback');},true);
                 }
                 else
                 {

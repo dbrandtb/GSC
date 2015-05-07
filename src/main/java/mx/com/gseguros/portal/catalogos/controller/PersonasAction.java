@@ -585,7 +585,13 @@ public class PersonasAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			logger.error(timestamp+" error inesperado al obtener domicilio por cdperson",ex);
+			if(smap1!=null && smap1.containsKey("AUTOSAVE") && Constantes.SI.equalsIgnoreCase(smap1.get("AUTOSAVE"))){
+				logger.error(timestamp+"Persona sin domicilio, error sin impacto");
+			}else{
+				logger.error(timestamp+" error inesperado al obtener domicilio por cdperson",ex);
+			}
+			
+			
 			exito           = false;
 			respuesta       = "Error inesperado #"+timestamp;
 			respuestaOculta = ex.getMessage();

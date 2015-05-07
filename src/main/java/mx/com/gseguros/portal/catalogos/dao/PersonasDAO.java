@@ -42,6 +42,11 @@ public interface PersonasDAO
 			,String cdestcivil
 			,String cdsucemi
 			,String accion) throws Exception;
+
+	/**
+	 * Actualiza factores para determinar campos de Personas en Articulo 140
+	 */
+	public void actualizaFactoresArt140(String cdperson, String cdnacion, String otfisjur,String residencia, String ptcumupr) throws Exception;
 	/**
 	 * obtener domicilio por cdperson desde PKG_CONSULTA.P_GET_MDOMICIL
 	 */
