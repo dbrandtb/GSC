@@ -2609,6 +2609,27 @@ obtieneDatosClienteContratante = function(){
 	return datosPersona;
 };
 
+function obtDatLoaderContratante(){
+	var datosPersona = {
+		cdperson: (_p22_cdperson != false && !Ext.isEmpty(_p22_cdperson))? _p22_cdperson : '',
+		fenacimi: _fieldByName('FENACIMI').getValue(),
+		sexo:     _p22_fieldSexo().getValue(),
+		tipoper:  _p22_fieldTipoPersona().getValue(),
+		naciona:  _p22_fielCdNacion().getValue(),
+		nombre:   _fieldByName('DSNOMBRE').getValue(),
+		snombre:  _p22_fieldSegundoNombre().getValue(),
+		appat:    _p22_fieldApat().getValue(),
+		apmat:    _p22_fieldAmat().getValue(),
+		rfc:      _p22_fieldRFC().getValue(),
+		cdideper: _fieldByName('CDIDEPER').getValue(),
+		cdideext: _fieldByName('CDIDEEXT').getValue(),
+		codpos:   _p22_comboCodPostal().getValue()
+		
+	}
+	
+	return datosPersona;
+};
+
 ////// funciones //////
 </script>
 </head>
