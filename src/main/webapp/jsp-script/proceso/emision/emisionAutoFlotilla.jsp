@@ -1217,6 +1217,10 @@ function _p31_emitirFinal(me)
             else
             {
                 if(json.retryWS){
+                	
+                	_p31_smap1.nmpolizaEmitida=json.panel2.nmpoliza;
+                	debug("_p29_smap1.nmpolizaEmitida, en reintento WS:" , _p31_smap1.nmpolizaEmitida);
+                	
                     _fieldById('_p31_botonEmitirPolizaFinal').hide();
                     _fieldById('_p31_botonCancelarEmision').setDisabled(true);
                     _fieldById('_p31_botonNueva').setDisabled(false);
@@ -1287,7 +1291,7 @@ function reintentarWSAuto(loading, params){
                             debug(json);
                             if(json.success==true)
                             {
-                                mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Web Services. P&oacute;liza Emitida: ' + json.nmpolAlt);
+                                mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Reintento. P&oacute;liza Emitida: ' + json.nmpolAlt);
                                 _fieldById('_p31_numerofinalpoliza').setValue(json.nmpolAlt);
                                 _fieldById('_p31_botonDocumentosPolizaEmitida').setDisabled(false);
                                 _p31_ventanaDocs.destroy();
