@@ -1852,7 +1852,7 @@ Ext.onReady(function() {
 			},//6.- Fecha de Ingreso
 			{	id: 'fechaIngreso'						,xtype		: 'datefield'								,fieldLabel	: 'Fecha de Ingreso',
 				labelWidth : 170						,format		: 'd/m/Y',									name:'feingres',
-				editable: true
+				editable: true							,allowBlank : false
 			},
 			{	colspan:2								,border: false
 				,layout      : {
