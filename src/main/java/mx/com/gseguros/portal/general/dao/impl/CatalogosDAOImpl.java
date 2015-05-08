@@ -1224,6 +1224,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			,String negocio
 			,String clavegs
 			,String servicio
+			,String tipoflot
 			)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
@@ -1233,6 +1234,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		params.put("negocio"  , negocio);
 		params.put("clavegs"  , clavegs);
 		params.put("servicio" , servicio);
+		params.put("tipoflot" , tipoflot);
 		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_PLANES_CUSTOM_RAMO5", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargarPlanesPorNegocioModeloClavegsRamo5(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
@@ -1256,6 +1258,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			declareParameter(new SqlParameter("negocio"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("clavegs"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("servicio" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipoflot" , OracleTypes.VARCHAR));
 			String[] cols=new String[]{
 					"CDPLAN"
 					,"DSPLAN"

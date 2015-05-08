@@ -115,6 +115,7 @@ public interface CatalogosManager {
     		,String negocio
     		,String clavegs
     		,String servicio
+    		,String tipoflot
     		)throws Exception;
     public List<GenericVO>cargarNegociosPorTipoSituacionAgenteRamo5(
     		String cdtipsit

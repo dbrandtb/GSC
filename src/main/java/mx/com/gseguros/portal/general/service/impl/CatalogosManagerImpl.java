@@ -763,6 +763,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
     		,String negocio
     		,String clavegs
     		,String servicio
+    		,String tipoflot
 			)throws Exception
     {
 		logger.info(Utilerias.join(
@@ -773,11 +774,12 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				,"\n@@@@@@ negocio="  , negocio
 				,"\n@@@@@@ clavegs="  , clavegs
 				,"\n@@@@@@ servicio=" , servicio
+				,"\n@@@@@@ tipoflot=" , tipoflot
 				));
 		List<GenericVO>lista=new ArrayList<GenericVO>();
 		if(StringUtils.isNotBlank(modelo))
 		{
-			lista=catalogosDAO.cargarPlanesPorNegocioModeloClavegsRamo5(cdtipsit,modelo,negocio,clavegs,servicio);
+			lista=catalogosDAO.cargarPlanesPorNegocioModeloClavegsRamo5(cdtipsit,modelo,negocio,clavegs,servicio,tipoflot);
 		}
 		logger.info(Utilerias.join(
 				 "\n@@@@@@ lista=",lista
