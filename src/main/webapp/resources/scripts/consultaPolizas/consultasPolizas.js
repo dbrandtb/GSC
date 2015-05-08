@@ -725,6 +725,7 @@ Ext.onReady(function() {
         }, {
             itemId: 'tbDocumentos',
             title : 'DOCUMENTACION',
+            autoScroll  : true,
             width: '350',
             loader : {
                 url : _URL_CONSULTA_DOCUMENTOS,
