@@ -855,6 +855,15 @@ Ext.onReady(function()
                                             me.reset();
                                         }
                                     }
+                                    if(valido&&_p30_smap1.cdramo+'x'=='5x')
+                                    {
+                                        valido = _fieldLikeLabel('CIRCULACI',_fieldById('_p30_panel3Fieldset')).isValid();
+                                        if(!valido)
+                                        {
+                                            mensajeWarning('Seleccione el c&oacute;digo postal');
+                                            me.reset();
+                                        }
+                                    }
                                     
                                     if(valido)
                                     {
@@ -4956,7 +4965,8 @@ function _p30_editarAutoBuscar()
         combos[i].forceSelection=false;
     }
     form.loadRecord(record);
-    heredarPanel(form,true);
+    debug('record cargando en emergente:',record.data);
+    //heredarPanel(form,true);
     form.micallback = function(me)
     {
         debug('>callback:');
