@@ -163,14 +163,14 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				{
 					if(primero)
 					{
-						sb.append(Utilerias.join("CVE_",nombre));
-						sb.append(Utilerias.join("DES_",nombre));
+						sb.append(Utilerias.join("CVE_"    , nombre));
+						sb.append(Utilerias.join("@#@DES_" , nombre));
 						primero = false;
 					}
 					else
 					{
-						sb.append(Utilerias.join("@#@CVE_",nombre));
-						sb.append(Utilerias.join("@#@DES_",nombre));
+						sb.append(Utilerias.join("@#@CVE_" , nombre));
+						sb.append(Utilerias.join("@#@DES_" , nombre));
 					}
 				}
 				resp.setSmap(new HashMap<String,String>());

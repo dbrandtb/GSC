@@ -1284,6 +1284,8 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             		,"DSATRIBU71" , "DSATRIBU72" , "DSATRIBU73" , "DSATRIBU74" , "DSATRIBU75" , "DSATRIBU76" , "DSATRIBU77" , "DSATRIBU78" , "DSATRIBU79" , "DSATRIBU80"
             		,"DSATRIBU81" , "DSATRIBU82" , "DSATRIBU83" , "DSATRIBU84" , "DSATRIBU85" , "DSATRIBU86" , "DSATRIBU87" , "DSATRIBU88" , "DSATRIBU89" , "DSATRIBU90"
             		,"DSATRIBU91" , "DSATRIBU92" , "DSATRIBU93" , "DSATRIBU94" , "DSATRIBU95" , "DSATRIBU96" , "DSATRIBU97" , "DSATRIBU98" , "DSATRIBU99"
+            		//MPLANES
+            		,"DSPLAN"
     	            };
     		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

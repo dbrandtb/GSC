@@ -769,6 +769,8 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
                     ,"CDROL" , "NMORDDOM" , "SWRECLAM" , "SWEXIPER" , "CDPARENT" , "PORBENEF"
                     //CUSTOM
                     ,'ATRIBUTOS','NOMBRECOMPLETO'
+                    //MPLANES
+                    ,'DSPLAN'
                 ];
                 var splited = json.smap1.listaNombres.split('@#@');
                 for(var i in splited)
