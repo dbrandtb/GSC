@@ -985,7 +985,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		List<GenericVO>listaGen = new ArrayList<GenericVO>();
 		for(Map<String,String>item:lista)
 		{
-			listaGen.add(new GenericVO(item.get("otclave"),item.get("otvalor")));
+			listaGen.add(new GenericVO(item.get("OTCLAVE"),item.get("OTVALOR"),item.get("RELACION")));
 		}
 		return listaGen;
 	}
@@ -996,7 +996,17 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		{
 			super(dataSource,"PKG_CONSULTA.P_GET_TTAPVAT1");
 			declareParameter(new SqlParameter("cdtabla" , OracleTypes.VARCHAR));
-			String[] cols=new String[]{ "otclave" , "otvalor" };
+			String[] cols=new String[]{
+					"CDRELACION"
+					,"RELACION"
+					,"NMTABLA_EQUAL"
+					,"CDPADRE"
+					,"DSPADRE"
+					,"CDHIJO"
+					,"NMTABLA"
+					,"OTCLAVE"
+					,"OTVALOR"
+					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

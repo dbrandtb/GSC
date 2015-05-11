@@ -952,9 +952,9 @@ Ext.onReady(function()
 	                                                                            var encontrado = claveCmp.getStore().getAt(index);
 	                                                                            var splited    = encontrado.get('value').split(' - ');
 	                                                                            debug('splited:',splited);
-	                                                                            var marca      = _p30_storeMarcasRamo5   .getAt(_p30_storeMarcasRamo5   .find('value',splited[1],0,false,false,true)).get('key');
-	                                                                            var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('value',splited[2],0,false,false,true)).get('key');
-	                                                                            var version    = _p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('value',splited[4],0,false,false,true)).get('key');
+	                                                                            var marca      = _p30_storeMarcasRamo5   .getAt(_p30_storeMarcasRamo5   .find('value' , splited[1],0,false,false,true)).get('key');
+	                                                                            var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('aux'   , splited[1]+'@'+splited[2],0,false,false,true)).get('key');
+	                                                                            var version    = _p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('value' , splited[4],0,false,false,true)).get('key');
 	                                                                            record.set(marcaName    , marca);
 	                                                                            record.set(submarcaName , submarca);
 	                                                                            record.set(versionName  , version);
@@ -981,7 +981,7 @@ Ext.onReady(function()
 	                                                                 var splited    = encontrado.get('value').split(' - ');
 	                                                                 debug('splited:',splited);
 	                                                                 var marca      = _p30_storeMarcasRamo5   .getAt(_p30_storeMarcasRamo5   .find('value',splited[1],0,false,false,true)).get('key');
-	                                                                 var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('value',splited[2],0,false,false,true)).get('key');
+	                                                                 var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('aux'  ,splited[1]+'@'+splited[2],0,false,false,true)).get('key');
 	                                                                 var version    = _p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('value',splited[4],0,false,false,true)).get('key');
 	                                                                 record.set(marcaName    , marca);
 	                                                                 record.set(submarcaName , submarca);
@@ -1984,7 +1984,8 @@ Ext.onReady(function()
                                 {
                                     if(!Ext.isEmpty(json.respuesta))
                                     {
-                                        mensajeWarning(json.respuesta);
+                                        //comentado porque rafa no quiere avisos
+                                        //mensajeWarning(json.respuesta);
                                     }
                                     if(!conservar||Ext.isEmpty(me.getValue()))
                                     {
@@ -4966,7 +4967,7 @@ function _p30_editarAutoBuscar()
     }
     form.loadRecord(record);
     debug('record cargando en emergente:',record.data);
-    //heredarPanel(form,true);
+    heredarPanel(form,true);
     form.micallback = function(me)
     {
         debug('>callback:');
