@@ -12,13 +12,21 @@ public class GenericVO implements Serializable {
 	
 	private String key;
     private String value;
+    private String aux;
     
     public GenericVO(){}
     
     public GenericVO(String key,String value)
     {
-        this.key=key;
-        this.value=value;
+        this.key   = key;
+        this.value = value;
+    }
+    
+    public GenericVO(String key,String value,String aux)
+    {
+        this.key   = key;
+        this.value = value;
+        this.aux   = aux;
     }
 
     public String getKey() {
@@ -42,5 +50,13 @@ public class GenericVO implements Serializable {
     {
     	return new StringBuilder(this.key).append(" - ").append(this.value).toString();
     }
+
+	public String getAux() {
+		return aux;
+	}
+
+	public void setAux(String aux) {
+		this.aux = aux;
+	}
     
 }
