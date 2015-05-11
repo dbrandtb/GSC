@@ -1725,4 +1725,12 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		log.debug("Valores de entrada Asegurado Recupera : "+params);
 		return siniestrosDAO.obtienePeriodoEsperaAsegurado(params);
 	}
+
+	@Override
+	public List<Map<String, String>> obtieneMontoPagoSiniestro(String ntramite) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_ntramite_i", ntramite);
+		log.debug("obtieneMontoPagoSiniestro params: "+params);
+		return siniestrosDAO.obtieneMontoPagoSiniestro(params);
+	}
 }

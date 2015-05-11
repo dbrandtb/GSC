@@ -909,7 +909,29 @@
             <result type="json"></result>
         </action>
         
-        
+        <action name="obtieneMontoPagoSiniestro" class="siniestrosAction" method="obtieneMontoPagoSiniestro">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					mensaje
+				</param>
+			</result>
+		</action>
+		
+        <!-- CONSULTA PROVEEDORES -->
+        <!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
+    		<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>
+		</action>-->
+		
+		<!--<action name="includes/expedienteMedico" class="siniestrosAction"  method="altaCitasMedica">
+    		<result>/jsp-script/proceso/asegurados/expedienteMedico.jsp</result>
+		</action>-->
+		
+		<!--<action name="complementoCitasMedicas" class="siniestrosAction"  method="altaCitasMedica">
+    		<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>
+		</action>-->
+		
     </package>
 
 </struts>

@@ -22,10 +22,6 @@
             <result>/jsp/consultas/siniestros/includes/informacionGeneral.jsp</result>
         </action>
         
-       <!--<action name="includes/calculoSiniestros" class="siniestrosAction" method="consultaCalculoSiniestros">
-            <result name="success">/jsp/consultas/siniestros/includes/calculos.jsp</result>
-        </action>-->
-        
         <action name="includes/calculoSiniestros" class="siniestrosAction" method="calculoSiniestros"> <!-- consultasSiniestros.jsp y detalleReclamion.jsp -->
             <result name="success">/jsp-script/proceso/siniestros/calculos.jsp</result>
         </action>

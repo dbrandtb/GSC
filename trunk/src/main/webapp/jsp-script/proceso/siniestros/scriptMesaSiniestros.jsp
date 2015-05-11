@@ -60,7 +60,7 @@ var _urlSeleccionCobertura      		= '<s:url namespace="/siniestros" 	action="sel
 var _URL_VAL_AJUSTADOR_MEDICO			= '<s:url namespace="/siniestros" 	action="consultaDatosValidacionAjustadorMed"/>';
 var _URL_INF_ASEGURADO					= '<s:url namespace="/siniestros" 	action="consultaDatosAseguradoSiniestro"/>';
 var _URL_POLIZA_UNICA					= '<s:url namespace="/siniestros"  action="consultaPolizaUnica"/>';
-
+var _URL_MONTO_PAGO_SINIESTRO			= '<s:url namespace="/siniestros"  action="obtieneMontoPagoSiniestro"/>';
 var windowLoader;
 var msgWindow;
 
@@ -528,7 +528,7 @@ var msgWindow;
 	{
 		var record = grid.getStore().getAt(rowIndex);
 		debug('record Valor de respuesta :',record.data);
-		
+		debug("Valor de Respuesta -->",record.get('cdunieco'));
 		Ext.Ajax.request({
 			url	 : _URL_INF_ASEGURADO
 			,params:{
@@ -589,7 +589,7 @@ var msgWindow;
 									Ext.Ajax.request( {
 										url     : _URL_POLIZA_UNICA
 										,params : {
-											'params.cdunieco': json.CDSUCDOC,
+											'params.cdunieco': record.get('cdunieco'),
 											'params.cdramo'  : json.CDRAMO,
 											'params.estado'  : json.ESTADO,
 											'params.nmpoliza': json.NMPOLIZA,
@@ -601,7 +601,7 @@ var msgWindow;
 												debug("Valor de respuesta ---> : ",jsonValorAsegurado);
 												
 												urlDestino = _urlSeleccionCobertura;
-												params['params.cdunieco']  = json.CDSUCDOC;//record.get('cdsucdoc');
+												params['params.cdunieco']  = record.get('cdunieco');//record.get('cdsucdoc');
 												params['params.otvalor02'] = json.OTVALOR02;//record.get('parametros.pv_otvalor02');
 												params['params.cdramo']    = json.CDRAMO;//record.get('cdramo');
 												params['params.cdtipsit']  = json.CDTIPSIT;//record.get('cdtipsit');
@@ -968,58 +968,83 @@ var msgWindow;
 	
 	function solicitarPago(grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);
-		
+		debug("Valor del record :",record);
 		if(record.get('status') == _STATUS_TRAMITE_CONFIRMADO){
 			mensajeWarning('Ya se ha solicitado el pago para este tr&aacute;mite.');	
 			return;
 		}else{
-			if( record.get('parametros.pv_otvalor02') ==_PAGO_DIRECTO){
-				mostrarSolicitudPago(grid,rowIndex,colIndex);
-			}else{
-				Ext.Ajax.request({
-					url	 : _URL_VAL_AJUSTADOR_MEDICO
-					,params:{
-						'params.ntramite': record.get('ntramite')
-					}
-					,success : function (response)
-					{
-						if(Ext.decode(response.responseText).datosValidacion != null){
-							var autAM = null;
-							var result ="";
-							banderaValidacion = "0";
-							var json = Ext.decode(response.responseText).datosValidacion;
-							if(json.length > 0){
-								for(var i = 0; i < json.length; i++){
-									if(json[i].AREAAUTO =="ME"){
-										var valorValidacion = json[i].SWAUTORI+"";
-										if(valorValidacion == null || valorValidacion == ''|| valorValidacion == 'null'){
-											banderaValidacion = "1";
-											result = result + 'El m&eacute;dico no autoriza la factura ' + json[i].NFACTURA + '<br/>';
+			//validamos los montos 
+			Ext.Ajax.request({
+				url	: _URL_MONTO_PAGO_SINIESTRO
+				,params:{
+					'params.ntramite' : record.get('ntramite'),
+					'params.cdramo'   : record.get('cdramo'),
+					'params.tipoPago' : record.get('parametros.pv_otvalor02')
+				}
+				,success : function (response){
+					var jsonRespuesta =Ext.decode(response.responseText);//.datosInformacionAdicional[0];
+					debug("Valor de Respuesta", jsonRespuesta);
+					
+					if(jsonRespuesta.success == true){
+						if( record.get('parametros.pv_otvalor02') ==_PAGO_DIRECTO){
+							mostrarSolicitudPago(grid,rowIndex,colIndex);
+						}else{
+							Ext.Ajax.request({
+								url	 : _URL_VAL_AJUSTADOR_MEDICO
+								,params:{
+									'params.ntramite': record.get('ntramite')
+								}
+								,success : function (response)
+								{
+									if(Ext.decode(response.responseText).datosValidacion != null){
+										var autAM = null;
+										var result ="";
+										banderaValidacion = "0";
+										var json = Ext.decode(response.responseText).datosValidacion;
+										if(json.length > 0){
+											for(var i = 0; i < json.length; i++){
+												if(json[i].AREAAUTO =="ME"){
+													var valorValidacion = json[i].SWAUTORI+"";
+													if(valorValidacion == null || valorValidacion == ''|| valorValidacion == 'null'){
+														banderaValidacion = "1";
+														result = result + 'El m&eacute;dico no autoriza la factura ' + json[i].NFACTURA + '<br/>';
+													}
+												}
+											}
+											if(banderaValidacion == "1"){
+												centrarVentanaInterna(mensajeWarning(result));
+											}else{
+												mostrarSolicitudPago(grid,rowIndex,colIndex);
+											}
+										}else{
+											centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
 										}
 									}
+								},
+								failure : function (){
+									me.up().up().setLoading(false);
+									Ext.Msg.show({
+										title:'Error',
+										msg: 'Error de comunicaci&oacute;n',
+										buttons: Ext.Msg.OK,
+										icon: Ext.Msg.ERROR
+									});
 								}
-								if(banderaValidacion == "1"){
-									centrarVentanaInterna(mensajeWarning(result));
-								}else{
-									mostrarSolicitudPago(grid,rowIndex,colIndex);
-								}
-							}else{
-								centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
-							}
+							});
 						}
-					},
-					failure : function (){
-						me.up().up().setLoading(false);
-						Ext.Msg.show({
-							title:'Error',
-							msg: 'Error de comunicaci&oacute;n',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.ERROR
-						});
+					}else {
+						centrarVentanaInterna(mensajeWarning(jsonRespuesta.mensaje));
 					}
-				});
-				
-			}
+				},
+				failure : function (){
+					Ext.Msg.show({
+						title:'Error',
+						msg: 'Error de comunicaci&oacute;n',
+						buttons: Ext.Msg.OK,
+						icon: Ext.Msg.ERROR
+					});
+				}
+			});
 		}
 	}
 	
@@ -1143,14 +1168,20 @@ var msgWindow;
 			        	            				Ext.Ajax.request({
 			        	        	        			url     : _URL_CONCEPTODESTINO
 			        	        	        			,jsonData: {
-			        	        	        				params:{ntramite:record.get('ntramite'),cdtipsit:cdtipsitTramite,destinoPago:datos.destinoPago,concepPago:datos.concepPago}
+			        	        	        				params:{
+			        	        	        					ntramite:record.get('ntramite'),
+			        	        	        					cdtipsit:cdtipsitTramite,
+			        	        	        					destinoPago:datos.destinoPago,
+			        	        	        					concepPago:datos.concepPago
+			        	        	        				}
 	        	                                        }
 			        	        	        			,success : function (response)
 			        	        	        			{
 			        	        		        			 	
 			        	        	        				windowCvePago.close();
 			        	        	        				mcdinGrid.setLoading(true);
-			        	        	     	        		Ext.Ajax.request({
+			        	        	        				
+			        	        	     	        		/*Ext.Ajax.request({
 			        	        	     						url: _UrlSolicitarPago,
 			        	        	     						params: {
 			        	        	     				    		'params.pv_ntramite_i' : record.get('ntramite'),
@@ -1170,7 +1201,7 @@ var msgWindow;
 			        	        	     							mcdinGrid.setLoading(false);
 			        	        	     							mensajeError('No se pudo solicitar el pago.');
 			        	        	     						}
-			        	        	     					});
+			        	        	     					});*/
 			        	        	     	        		
 			        	        	        			    },
 			        	        	        			    failure : function ()

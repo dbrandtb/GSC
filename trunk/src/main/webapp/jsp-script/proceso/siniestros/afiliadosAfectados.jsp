@@ -74,7 +74,7 @@
 			var _VER_ALTA_FACTURAS 						= '<s:url namespace="/siniestros"  		action="includes/altaFacturas" />';
 			var _URL_GUARDA_FACTURAS_TRAMITE  			= '<s:url namespace="/siniestros"       action="guardaFacturasTramite" />';
 			var _URL_ELIMINAR_FACT_ASEG					= '<s:url namespace="/siniestros" 		action="eliminarFactAsegurado" />';
-            
+			var _URL_MONTO_PAGO_SINIESTRO				= '<s:url namespace="/siniestros"  action="obtieneMontoPagoSiniestro"/>';
 			
 			var _URL_TABBEDPANEL						= '<s:url namespace="/siniestros"  		action="includes/detalleSiniestro" />';
 			
@@ -4487,54 +4487,80 @@
 			mensajeWarning('Ya se ha solicitado el pago para este tr&aacute;mite.');
 			return;
 		}else{
-			if( _11_params.OTVALOR02 ==_TIPO_PAGO_DIRECTO){
-				_11_mostrarSolicitudPago();
-			}else{
-				//Verificamos si tiene la validacion del dictaminador medico
-				Ext.Ajax.request({
-					url	 : _URL_VAL_AJUSTADOR_MEDICO
-					,params:{
-						'params.ntramite': _11_params.NTRAMITE
-					}
-					,success : function (response)
-					{
-						if(Ext.decode(response.responseText).datosValidacion != null){
-							var autAM = null;
-							var result ="";
-							banderaValidacion = "0";
-							var json = Ext.decode(response.responseText).datosValidacion;
-							if(json.length > 0){
-								for(var i = 0; i < json.length; i++){
-									if(json[i].AREAAUTO =="ME"){
-										var valorValidacion = json[i].SWAUTORI+"";
-										if(valorValidacion == null || valorValidacion == ''|| valorValidacion == 'null'){
-											banderaValidacion = "1";
-											result = result + 'El m&eacute;dico no autoriza la factura ' + json[i].NFACTURA + '<br/>';
+			debug("VALORES DE ENTRADA ===> ",_11_params);
+			Ext.Ajax.request({
+				url	: _URL_MONTO_PAGO_SINIESTRO
+				,params:{
+					'params.ntramite' : _11_params.NTRAMITE,
+					'params.cdramo'   : _11_params.CDRAMO,
+					'params.tipoPago' : _11_params.OTVALOR02
+				}
+				,success : function (response){
+					var jsonRespuesta =Ext.decode(response.responseText);
+					debug("Valor de Respuesta", jsonRespuesta);
+					
+					if(jsonRespuesta.success == true){
+						if( _11_params.OTVALOR02 ==_TIPO_PAGO_DIRECTO){
+							_11_mostrarSolicitudPago();
+						}else{
+							//Verificamos si tiene la validacion del dictaminador medico
+							Ext.Ajax.request({
+								url	 : _URL_VAL_AJUSTADOR_MEDICO
+								,params:{
+									'params.ntramite': _11_params.NTRAMITE
+								}
+								,success : function (response)
+								{
+									if(Ext.decode(response.responseText).datosValidacion != null){
+										var autAM = null;
+										var result ="";
+										banderaValidacion = "0";
+										var json = Ext.decode(response.responseText).datosValidacion;
+										if(json.length > 0){
+											for(var i = 0; i < json.length; i++){
+												if(json[i].AREAAUTO =="ME"){
+													var valorValidacion = json[i].SWAUTORI+"";
+													if(valorValidacion == null || valorValidacion == ''|| valorValidacion == 'null'){
+														banderaValidacion = "1";
+														result = result + 'El m&eacute;dico no autoriza la factura ' + json[i].NFACTURA + '<br/>';
+													}
+													
+												}
+											}
+											if(banderaValidacion == "1"){
+												centrarVentanaInterna(mensajeWarning(result));
+											}else{
+												_11_mostrarSolicitudPago();
+											}
+										}else{
+											centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
 										}
-										
 									}
+								},
+								failure : function (){
+									me.up().up().setLoading(false);
+									Ext.Msg.show({
+										title:'Error',
+										msg: 'Error de comunicaci&oacute;n',
+										buttons: Ext.Msg.OK,
+										icon: Ext.Msg.ERROR
+									});
 								}
-								if(banderaValidacion == "1"){
-									centrarVentanaInterna(mensajeWarning(result));
-								}else{
-									_11_mostrarSolicitudPago();
-								}
-							}else{
-								centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
-							}
+							});
 						}
-					},
-					failure : function (){
-						me.up().up().setLoading(false);
-						Ext.Msg.show({
-							title:'Error',
-							msg: 'Error de comunicaci&oacute;n',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.ERROR
-						});
+					}else {
+						centrarVentanaInterna(mensajeWarning(jsonRespuesta.mensaje));
 					}
-				});
-			}
+				},
+				failure : function (){
+					Ext.Msg.show({
+						title:'Error',
+						msg: 'Error de comunicaci&oacute;n',
+						buttons: Ext.Msg.OK,
+						icon: Ext.Msg.ERROR
+					});
+				}
+			});
 		}
 	}
 	
