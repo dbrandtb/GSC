@@ -1858,7 +1858,8 @@ function _p28_cargarSumaAseguradaRamo5(clave,modelo,callback)
             {
                 if(!Ext.isEmpty(json.respuesta))
                 {
-                    mensajeWarning(json.respuesta);
+                    //comentado porque rafa no quiere avisos
+                    //mensajeWarning(json.respuesta);
                 }
                 var sumaseg = _fieldByName('parametros.pv_otvalor13');
                 sumaseg.setValue(json.smap1.sumaseg);
