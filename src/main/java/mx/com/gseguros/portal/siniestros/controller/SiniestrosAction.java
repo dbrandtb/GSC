@@ -983,6 +983,25 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	/*public String altaCitasMedica(){
+		logger.debug(" **** Entrando al metodo de alta de altaCitasMedica ****");
+		try {
+			String cdperson = null;
+			UserVO usuario  = (UserVO)session.get("USUARIO");
+			if(params != null){
+				cdperson  = params.get("cdperson");
+			}
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("cdperson",cdperson);
+			setParamsJson(params);
+			logger.debug("params=" + params);
+		}catch( Exception e){
+			logger.error(e.getMessage(), e);
+		}
+		success = true;
+		return SUCCESS;
+	}*/
+	
 	/**
 	* Funcion para obtener el listado del alta del tramite
 	* @param ntramite
@@ -1192,15 +1211,17 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			slist1 = siniestrosManager.obtenerFacturasTramite(params.get("nmtramite"));
 			logger.debug("Total de Facturas -->"+slist1.size());
 			
-			String valorFactura = params.get("nmtramite");
+			String valorFactura ="";
 			String cdramo = params.get("cmbRamos");
 			String tipoPago = params.get("cmbTipoPago");
-					
-			if((cdramo.equalsIgnoreCase("1") || cdramo.equalsIgnoreCase("7")) && tipoPago.equalsIgnoreCase("3")) {
-				valorFactura = params.get("nmtramite")+""+(slist1.size());
-			}
-			logger.debug("VALORES  Factura :"+valorFactura+" Ramo : "+cdramo+" Tipo Pago : "+tipoPago);
 			for(int i=0;i<datosTablas.size();i++) {
+				
+				if((cdramo.equalsIgnoreCase("1") || cdramo.equalsIgnoreCase("7")) && tipoPago.equalsIgnoreCase("3")) {
+					valorFactura = params.get("nmtramite")+""+(slist1.size());
+				}else{
+					valorFactura = datosTablas.get(i).get("nfactura");
+				}
+				
 				siniestrosManager.guardaListaFacMesaControl(
 					params.get("nmtramite"),
 					valorFactura,
@@ -4333,41 +4354,58 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
-    //... Fin de siniestros
 	
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	public String afiliadosAfectadosConsulta(){
-		logger.info(""
-			+ "\n################################"
-			+ "\n################################"
-			+ "\n###### afiliadosAfectados ######"
-			+ "\n######                    ######"
+	/**
+	* Funcion para guardar la cobertura  x factura
+	* @param params
+	* @return Exito se guarda la cobertura para la factura en especifica
+	*/
+	public String guardarCoberturaxFactura(){
+		logger.debug(""
+			+ "\n#######################################"
+			+ "\n#######################################"
+			+ "\n###### guardarCoberturaxFactura  ######"
+			+ "\n######                           ######"
 		);
-		logger.info("params: "+params);
+		logger.debug("params: "+params);
 		try{
-			slist1 = siniestrosManager.listaAseguradosTramite(params.get("ntramite"), params.get("nfactura"), params.get("tipoProceso"));
-			logger.debug("#####VALOR DE ASEGURADOS#####");
-			logger.debug("VALORES DE LOS REGISTROS --->>>"+slist1.size());
-		}catch(Exception ex){
-			logger.error("error al cargar pantalla de asegurados afectados",ex);
+			String                   ntramite  = params.get("ntramite");
+			String                   nfactura  = params.get("nfactura");
+			Date                     fefactura = renderFechas.parse(params.get("ffactura"));
+			String                   cdtipser  = params.get("cdtipser");
+			String                   cdpresta  = params.get("cdpresta");
+			String                   ptimport  = params.get("ptimport");
+			String                   descporc  = params.get("descporc");
+			String                   descnume  = params.get("descnume");
+			String                   cdmoneda  = params.get("cdmoneda");
+			String                   tasacamb  = params.get("tasacamb");
+			String                   ptimporta = params.get("ptimporta");
+			String                   dctonuex =  params.get("dctonuex");
+			String                   cdgarant =  params.get("cdgarant");
+			String                   cdconval =  params.get("cdconval");
+			String                   tipoAccion =  params.get("tipoAccion");
+			siniestrosManager.guardaListaFacMesaControl(ntramite, nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume,cdmoneda,tasacamb,ptimporta,dctonuex,null,null,tipoAccion);
+			success = true;
+			mensaje = "Cobertura y subcobertura modificada";
 		}
-		logger.info(""
-			+ "\n######                    ######"
-			+ "\n###### afiliadosAfectados ######"
-			+ "\n################################"
-			+ "\n################################"
+		catch(Exception ex){
+			success=false;
+			logger.error("error al seleccionar la cobertura",ex);
+			mensaje = ex.getMessage();
+		}
+		logger.debug(""
+			+ "\n######                           ######"
+			+ "\n###### guardarCoberturaxFactura  ######"
+			+ "\n#######################################"
+			+ "\n#######################################"
 		);
 		return SUCCESS;
 	}
-	/*
-	params:
-	cdramo   = 2,
-	cdgarant = 18HO,
-	cdtipsit = SL,
-	cdconval = 18HO001,
-	cdunieco = 1006,
-	ntramite = 1010
+	
+	/**
+	* Funcion para guardar la cobertura
+	* @param params
+	* @return Exito se guarda la cobertura
 	*/
 	public String guardarSeleccionCobertura(){
 		logger.debug(""
@@ -4425,7 +4463,11 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 
-
+	/**
+	* Funcion para guardar la cobertura en especifico de acuerdo al tramite
+	* @param params
+	* @return Exito se guarda la cobertura para la factura en especifica
+	*/
 	public String guardarSeleccionCoberturaxTramite(){
 		logger.debug(""
 			+ "\n###############################################"
@@ -4464,48 +4506,158 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 
-	public String guardarCoberturaxFactura(){
-		logger.debug(""
-			+ "\n#######################################"
-			+ "\n#######################################"
-			+ "\n###### guardarCoberturaxFactura  ######"
-			+ "\n######                           ######"
+	/**
+	* Funcion para obtener los afiliados afectados
+	* @param params
+	* @return listado de los afiliados afectados
+	*/
+	public String afiliadosAfectadosConsulta(){
+		logger.info(""
+			+ "\n################################"
+			+ "\n################################"
+			+ "\n###### afiliadosAfectados ######"
+			+ "\n######                    ######"
 		);
-		logger.debug("params: "+params);
+		logger.info("params: "+params);
 		try{
-			String                   ntramite  = params.get("ntramite");
-			String                   nfactura  = params.get("nfactura");
-			Date                     fefactura = renderFechas.parse(params.get("ffactura"));
-			String                   cdtipser  = params.get("cdtipser");
-			String                   cdpresta  = params.get("cdpresta");
-			String                   ptimport  = params.get("ptimport");
-			String                   descporc  = params.get("descporc");
-			String                   descnume  = params.get("descnume");
-			String                   cdmoneda  = params.get("cdmoneda");
-			String                   tasacamb  = params.get("tasacamb");
-			String                   ptimporta = params.get("ptimporta");
-			String                   dctonuex =  params.get("dctonuex");
-			String                   cdgarant =  params.get("cdgarant");
-			String                   cdconval =  params.get("cdconval");
-			String                   tipoAccion =  params.get("tipoAccion");
-			siniestrosManager.guardaListaFacMesaControl(ntramite, nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume,cdmoneda,tasacamb,ptimporta,dctonuex,null,null,tipoAccion);
-			success = true;
-			mensaje = "Cobertura y subcobertura modificada";
+			slist1 = siniestrosManager.listaAseguradosTramite(params.get("ntramite"), params.get("nfactura"), params.get("tipoProceso"));
+			logger.debug("VALORES DE LOS REGISTROS --->>>"+slist1.size());
+		}catch(Exception ex){
+			logger.error("error al cargar pantalla de asegurados afectados",ex);
 		}
-		catch(Exception ex){
-			success=false;
-			logger.error("error al seleccionar la cobertura",ex);
-			mensaje = ex.getMessage();
-		}
-		logger.debug(""
-			+ "\n######                           ######"
-			+ "\n###### guardarCoberturaxFactura  ######"
-			+ "\n#######################################"
-			+ "\n#######################################"
+		logger.info(""
+			+ "\n######                    ######"
+			+ "\n###### afiliadosAfectados ######"
+			+ "\n################################"
+			+ "\n################################"
 		);
 		return SUCCESS;
 	}
 	
+	/**
+	 * Funcion para obtener el periodo de espera
+	 * @param params
+	 * @return Exito los periodo de espera en dias 
+	 */
+	public String obtenerPeriodoEspera(){
+		logger.debug(""
+			+ "\n###############################################"
+			+ "\n###############################################"
+			+ "\n###### 		obtenerPeriodoEspera 	  ######"
+			+ "\n######                           		  ######"
+		);
+		logger.debug("params: "+params);
+		try{
+			
+			PolizaAseguradoVO datosPol = new PolizaAseguradoVO();
+			datosPol.setCdunieco(params.get("cdunieco"));
+			datosPol.setCdramo(params.get("cdramo"));
+			datosPol.setEstado(params.get("estado"));
+			datosPol.setNmpoliza(params.get("nmpoliza"));
+			
+			List<ConsultaDatosGeneralesPolizaVO> lista = consultasAseguradoManager.obtieneDatosPoliza(datosPol);
+			String feEfecto = lista.get(0).getFeefecto();
+			logger.debug("Paso 1.- Obtenemos la fecha Efecto de la Poliza : "+feEfecto);
+			
+			List<Map<String,String>> datosAdicionales = siniestrosManager.listaSumaAseguradaPeriodoEsperaRec(params.get("cdramo"),params.get("cdgarant"),params.get("cdconval"),renderFechas.parse(feEfecto));
+			double plazoEsperaCobertura = Double.parseDouble(datosAdicionales.get(0).get("PLAZOESPERA"));
+			logger.debug("Paso 2.- Obtenemos el plazo de espera : "+plazoEsperaCobertura);
+			
+			List<Map<String,String>> periodoEsperaAsegurado = siniestrosManager.listaPeriodoEsperaAsegurado(params.get("cdunieco"), params.get("cdramo"),params.get("estado"),
+															params.get("nmpoliza"), params.get("nmsituac"),renderFechas.parse(params.get("feocurre")));
+			double diasAsegurado = Double.parseDouble(periodoEsperaAsegurado.get(0).get("DIAS"));
+			logger.debug("Paso 3.- Obtenemos el plazo de espera Asegurado : "+diasAsegurado);
+			
+			if(diasAsegurado >= plazoEsperaCobertura){
+				mensaje = null;
+				success = true;
+			}else{
+				mensaje = "La intervenci&oacute;n quir&uacute;rgica  no cubre con el periodo de espera : "+datosAdicionales.get(0).get("PLAZOESPERA")+" d&iacute;as";
+				success = false;
+			}
+			logger.debug("Paso 4.- Mesaje : "+mensaje);
+			
+		}
+		catch(Exception ex){
+			success=false;
+			logger.error("error al obtener el periodo de espera : ",ex);
+			mensaje = ex.getMessage();
+		}
+		logger.debug(""
+			+ "\n######                           		  ######"
+			+ "\n######			obtenerPeriodoEspera	  ######"
+			+ "\n###############################################"
+			+ "\n###############################################"
+		);
+		return SUCCESS;
+	}
+	
+	/**
+	* Funcion para obtener los montos de los pagos del siniestro
+	* @param ntramite
+	* @return el monto total de las facturas y el monto de los pagos del Siniestro
+	*/
+	public String obtieneMontoPagoSiniestro(){
+		logger.debug(" **** Entrando al metodo obtieneMontoPagoSiniestro****");
+		logger.debug(params);
+		try {
+			mensaje ="";
+			double impFactura = 0d;
+			double impxpagar = 0d;
+			
+			String ntramite = params.get("ntramite");
+			String cdramo = params.get("cdramo");
+			String tipoPago = params.get("tipoPago");
+			if(cdramo.equalsIgnoreCase("1")){ // Recupera
+				mensaje = "";
+				success = true;
+			}else{
+				if(!tipoPago.equalsIgnoreCase("3")){
+					datosInformacionAdicional = siniestrosManager.obtieneMontoPagoSiniestro(params.get("ntramite"));
+					logger.debug("Montos : "+datosInformacionAdicional);
+					if(datosInformacionAdicional.get(0).get("IMPORTEFACTURA")!=null){
+						impFactura = Double.parseDouble(datosInformacionAdicional.get(0).get("IMPORTEFACTURA"));
+					}
+					if(datosInformacionAdicional.get(0).get("MONTOXPAGAR")!=null){
+						impxpagar = Double.parseDouble(datosInformacionAdicional.get(0).get("MONTOXPAGAR"));
+					}
+				}
+				if(impFactura >= impxpagar){
+					//validamos la información del cdpresta
+					List<Map<String,String>> facturasAux = siniestrosManager.obtenerFacturasTramite(params.get("ntramite"));
+					boolean provPendiente = true;
+					logger.debug("Valor : "+provPendiente);
+					for(int i = 0; i < facturasAux.size(); i++)
+	    			{
+						if(facturasAux.get(i).get("CDPRESTA").equalsIgnoreCase("0")){
+							provPendiente = false;
+						}
+	    			}
+					
+					if(provPendiente){ //true
+						mensaje = "";
+						success = true;
+					}else{
+						mensaje = "Proveedor Pendiente - Favor de configurar la informaci&oacute;n.";
+						success = false;
+					}
+				}else{
+					mensaje = "Verifica los C&aacute;lculos - El importe total de las facturas es menor al total a pagar.";
+					success = false;
+				}
+			}
+		}catch( Exception e){
+			logger.error("Error en el metodo obtieneMontoPagoSiniestro : ",e);
+			return SUCCESS;
+		}
+		//success = true;
+		return SUCCESS;
+	}
+    //... Fin de siniestros
+	
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+
     public String calculoSiniestros()
     {
     	logger.debug(""
@@ -5980,6 +6132,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
     	catch(Exception ex)
     	{
     		logger.error("Error al guardaar calculos",ex);
+
     		success = false;
     		mensaje = ex.getMessage();
     	}
@@ -5991,58 +6144,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
     }
    
 
-    public String obtenerPeriodoEspera(){
-		logger.debug(""
-			+ "\n###############################################"
-			+ "\n###############################################"
-			+ "\n###### 		obtenerPeriodoEspera 	  ######"
-			+ "\n######                           		  ######"
-		);
-		logger.debug("params: "+params);
-		try{
-			
-			PolizaAseguradoVO datosPol = new PolizaAseguradoVO();
-			datosPol.setCdunieco(params.get("cdunieco"));
-			datosPol.setCdramo(params.get("cdramo"));
-			datosPol.setEstado(params.get("estado"));
-			datosPol.setNmpoliza(params.get("nmpoliza"));
-			
-			List<ConsultaDatosGeneralesPolizaVO> lista = consultasAseguradoManager.obtieneDatosPoliza(datosPol);
-			String feEfecto = lista.get(0).getFeefecto();
-			logger.debug("Paso 1.- Obtenemos la fecha Efecto de la Poliza : "+feEfecto);
-			
-			List<Map<String,String>> datosAdicionales = siniestrosManager.listaSumaAseguradaPeriodoEsperaRec(params.get("cdramo"),params.get("cdgarant"),params.get("cdconval"),renderFechas.parse(feEfecto));
-			double plazoEsperaCobertura = Double.parseDouble(datosAdicionales.get(0).get("PLAZOESPERA"));
-			logger.debug("Paso 2.- Obtenemos el plazo de espera : "+plazoEsperaCobertura);
-			
-			List<Map<String,String>> periodoEsperaAsegurado = siniestrosManager.listaPeriodoEsperaAsegurado(params.get("cdunieco"), params.get("cdramo"),params.get("estado"),
-															params.get("nmpoliza"), params.get("nmsituac"),renderFechas.parse(params.get("feocurre")));
-			double diasAsegurado = Double.parseDouble(periodoEsperaAsegurado.get(0).get("DIAS"));
-			logger.debug("Paso 3.- Obtenemos el plazo de espera Asegurado : "+diasAsegurado);
-			
-			if(diasAsegurado >= plazoEsperaCobertura){
-				mensaje = null;
-				success = true;
-			}else{
-				mensaje = "La intervenci&oacute;n quir&uacute;rgica  no cubre con el periodo de espera : "+datosAdicionales.get(0).get("PLAZOESPERA")+" d&iacute;as";
-				success = false;
-			}
-			logger.debug("Paso 4.- Mesaje : "+mensaje);
-			
-		}
-		catch(Exception ex){
-			success=false;
-			logger.error("error al obtener el periodo de espera : ",ex);
-			mensaje = ex.getMessage();
-		}
-		logger.debug(""
-			+ "\n######                           		  ######"
-			+ "\n######			obtenerPeriodoEspera	  ######"
-			+ "\n###############################################"
-			+ "\n###############################################"
-		);
-		return SUCCESS;
-	}
+
 //...Ge
 /****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {

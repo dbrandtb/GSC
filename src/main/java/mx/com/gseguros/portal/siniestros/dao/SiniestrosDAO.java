@@ -458,5 +458,7 @@ public interface SiniestrosDAO {
 	public List<Map<String, String>> obtieneEsquemaSumaAseguradaRec(HashMap<String, Object> params) throws Exception;
 	
 	public List<Map<String, String>> obtienePeriodoEsperaAsegurado(HashMap<String, Object> params) throws Exception;
+	
+	public List<Map<String, String>> obtieneMontoPagoSiniestro(HashMap<String, Object> params) throws Exception;
 
 }
