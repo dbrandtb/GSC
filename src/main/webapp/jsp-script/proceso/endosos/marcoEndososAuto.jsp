@@ -839,16 +839,18 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                    ,closeAction : 'destroy'
 			                    ,modal       : true
 			                    ,width       : 950
-			                    ,maxHheight  : 400
+			                    ,maxHeight   : 400
 			                    ,autoScroll  : true
 			                    ,items       :
 			                    [
 			                        Ext.create('Ext.grid.Panel',
 			                        {
-			                            itemId    : '_p34_gridIncisos'
-			                            ,columns  : cols
-			                            ,width    : 910
-			                            ,selModel :
+			                            itemId      : '_p34_gridIncisos'
+			                            ,columns    : cols
+			                            ,width      : 910
+			                            ,height     : 330
+			                            ,autoScroll : true
+			                            ,selModel   :
 			                            {
 			                                selType    : 'checkboxmodel'
 			                                ,mode      : 'SIMPLE'
