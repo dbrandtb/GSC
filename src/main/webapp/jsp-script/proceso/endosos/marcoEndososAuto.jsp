@@ -725,7 +725,8 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
                 var arrayAtributos = [
                     //MPOLISIT
                     "CDUNIECO"    , "CDRAMO"   , "ESTADO"     , "NMPOLIZA"
-                    ,"NMSITUAC"   , "NMSUPLEM" , "STATUS"     , "CDTIPSIT"
+                    ,{name:'NMSITUAC',type:'int'}
+                    , "NMSUPLEM" , "STATUS"     , "CDTIPSIT"
                     ,"SWREDUCI"   , "CDAGRUPA" , "CDESTADO"   , "CDGRUPO"
                     ,"NMSITUAEXT" , "NMSITAUX" , "NMSBSITEXT" , "CDPLAN"
                     ,"CDASEGUR"   , "DSGRUPO"
