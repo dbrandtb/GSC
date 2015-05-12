@@ -106,7 +106,11 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 				for (String pag : paginas) {
 					String nombrePDF = pag;
 					// Si el documento no es un endoso de EMISION, agregamos el nmsumplem al nombre:
-					if( cdtipsup != null && Integer.parseInt(cdtipsup) != TipoEndoso.EMISION_POLIZA.getCdTipSup()) {
+					if( cdtipsup != null
+							&&Integer.parseInt(cdtipsup)!=TipoEndoso.EMISION_POLIZA.getCdTipSup()
+							&&Integer.parseInt(cdtipsup)!=TipoEndoso.RENOVACION.getCdTipSup()
+							)
+					{
 						nombrePDF = nombrePDF += "_"+ nmsuplem;
 					}
 					String url = new StringBuilder()
@@ -173,7 +177,11 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 				for (String pag : paginas) {
 					String nombrePDF = pag;
 					// Si el documento no es un endoso de EMISION, agregamos el nmsumplem al nombre:
-					if( cdtipsup != null && Integer.parseInt(cdtipsup) != TipoEndoso.EMISION_POLIZA.getCdTipSup()) {
+					if( cdtipsup != null
+							&&Integer.parseInt(cdtipsup)!=TipoEndoso.EMISION_POLIZA.getCdTipSup()
+							&&Integer.parseInt(cdtipsup)!=TipoEndoso.RENOVACION.getCdTipSup()
+							)
+					{
 						nombrePDF = nombrePDF += "_"+ nmsuplem;
 					}
 					String url = new StringBuilder()
