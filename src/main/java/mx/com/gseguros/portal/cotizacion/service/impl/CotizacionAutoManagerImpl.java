@@ -1504,6 +1504,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				
 				for(ComponenteVO tatri:tatrisitSitIteParcial)
 				{
+					tatri.setObligatorio(tatri.isObligatorioFlot());
 					tatri.setLabelTop(true);
 					tatri.setWidth(150);
 					tatri.setComboVacio(true);
