@@ -45,13 +45,12 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 //	@Qualifier("consultasDAOSISAImpl")
 //	private ConsultasPolizaDAO consultasPolizaDAOSISA;
 	
-	
 	@Override
-	public List<PolizaAseguradoVO> obtienePolizasAsegurado(String rfc,
-			String cdperson, String nombre) throws Exception {
+	public List<PolizaAseguradoVO> obtienePolizasAsegurado(String user,
+			String rfc, String cdperson, String nombre) throws Exception {
 		
-		List<PolizaAseguradoVO> polizasICE  = consultasPolizaDAOICE.obtienePolizasAsegurado(rfc, cdperson, nombre);
-//		List<PolizaAseguradoVO> polizasSISA = consultasPolizaDAOSISA.obtienePolizasAsegurado(rfc, cdperson, nombre);
+		List<PolizaAseguradoVO> polizasICE  = consultasPolizaDAOICE.obtienePolizasAsegurado(user, rfc, cdperson, nombre);
+//		List<PolizaAseguradoVO> polizasSISA = consultasPolizaDAOSISA.obtienePolizasAsegurado(user, rfc, cdperson, nombre);
 		
 		// Fusionamos las listas:
         List<PolizaAseguradoVO> polizasFusionadas = polizasICE;
@@ -62,7 +61,6 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
         
 		return polizasFusionadas;
 	}
-	
 	
 	@Override
 	public List<SuplementoVO> obtieneHistoricoPoliza(
@@ -354,5 +352,6 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	public List<TarifaVO> obtieneTarifasPoliza(PolizaVO poliza) throws Exception {
 		return consultasPolizaDAOICE.obtieneTarifasPoliza(poliza);
 	}
+
 
 }

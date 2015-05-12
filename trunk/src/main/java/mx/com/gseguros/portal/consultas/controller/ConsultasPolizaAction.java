@@ -428,19 +428,44 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	 * @return String result
 	 */
 	public String consultaPolizasAsegurado() {
+		
+		UserVO usuario = (UserVO)session.get("USUARIO");
+		String cdusuari = usuario.getUser();
+		String cdsisrol = usuario.getRolActivo().getClave();
+		
 		logger.debug(" **** Entrando a obtienePolizasAsegurado ****");
-		try {
-			polizasAsegurado = consultasPolizaManager.obtienePolizasAsegurado(
-					params.get("rfc"), params.get("cdperson"),
-					params.get("nombre"));
+		
+		if(RolSistema.AGENTE.getCdsisrol().equals(cdsisrol)) {
+			try {
+				polizasAsegurado = consultasPolizaManager.obtienePolizasAsegurado(
+						cdusuari,
+						params.get("rfc"), params.get("cdperson"),
+						params.get("nombre"));
 
-			if (polizasAsegurado != null) {
-				logger.debug("Polizas por asegurado encontradas: " + polizasAsegurado.size());
+				if (polizasAsegurado != null) {
+					logger.debug("Polizas por asegurado encontradas: " + polizasAsegurado.size());
+				}
+			} catch (Exception e) {
+				logger.error("Error al obtener los obtienePolizasAsegurado ", e);
+				return SUCCESS;
 			}
-		} catch (Exception e) {
-			logger.error("Error al obtener los obtienePolizasAsegurado ", e);
-			return SUCCESS;
+
+		} else {
+			
+			try {
+				polizasAsegurado = consultasPolizaManager.obtienePolizasAsegurado("",
+						params.get("rfc"), params.get("cdperson"),
+						params.get("nombre"));
+
+				if (polizasAsegurado != null) {
+					logger.debug("Polizas por asegurado encontradas: " + polizasAsegurado.size());
+				}
+			} catch (Exception e) {
+				logger.error("Error al obtener los obtienePolizasAsegurado ", e);
+				return SUCCESS;
+			}
 		}
+		
 		success = true;
 		return SUCCESS;
 	}

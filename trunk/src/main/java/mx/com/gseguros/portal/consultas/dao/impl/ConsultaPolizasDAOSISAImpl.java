@@ -31,6 +31,7 @@ import mx.com.gseguros.portal.general.model.ClausulaVO;
 import mx.com.gseguros.portal.general.model.DetalleReciboVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.ReciboVO;
+import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
@@ -43,11 +44,13 @@ public class ConsultaPolizasDAOSISAImpl extends AbstractManagerDAO implements Co
 	
 	// Coincidencias del asegurado según criterios: RFC, código de asegurado y
 	// nombre.
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PolizaAseguradoVO> obtienePolizasAsegurado(String rfc,
+	public List<PolizaAseguradoVO> obtienePolizasAsegurado(String user, String rfc,
 			String cdperson, String nombre) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_user_i",user); //Agrego parametro user: campo cdusurari de la tabla TUSUARIO
 		params.put("pv_cdrfc_i", rfc);
 		params.put("pv_cdperson_i", cdperson);
 		params.put("pv_nombre_i", nombre);
@@ -59,6 +62,7 @@ public class ConsultaPolizasDAOSISAImpl extends AbstractManagerDAO implements Co
 	protected class ConsultaPolizasAseguradoSP extends StoredProcedure {
 		protected ConsultaPolizasAseguradoSP(DataSource dataSource) {
 			super(dataSource, "P_Get_Polizas_Asegurado");
+			declareParameter(new SqlParameter("pv_user_i", OracleTypes.VARCHAR)); //Agrego parametro user: campo cdusurari de la tabla TUSUARIO
 			declareParameter(new SqlParameter("pv_cdrfc_i", Types.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdperson_i", Types.VARCHAR));
 			declareParameter(new SqlParameter("pv_nombre_i", Types.VARCHAR));
