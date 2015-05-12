@@ -832,10 +832,8 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                centrarVentanaInterna(Ext.create('Ext.window.Window',
 			                {
 			                    itemId       : '_p34_windowIncisos'
-			                    ,title       : 'Incisos de la p&oacute;liza - Sucursal '
-			                                   +recordPoliza.get('CDUNIECO')+' - producto '
-			                                   +recordPoliza.get('CDRAMO')  +' - p&oacuteliza '
-			                                   +recordPoliza.get('NMPOLIZA')
+			                    ,title       : 'Incisos de la p&oacute;liza - '
+			                                   +recordPoliza.get('NMPOLIEX')
 			                                   +(nivel=='GRUPO'  ?(' - grupo ' +recordNivel.get('CDGRUPO' )):'')
 			                                   +(nivel=='FAMILIA'?(' - familia'+recordNivel.get('NMSITAUX')):'')
 			                    ,_p34_window : 'si'
