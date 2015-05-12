@@ -56,6 +56,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 			.getLogger(Ice2sigsServiceImpl.class);
 
 	private static final long WS_TIMEOUT =  20000;
+	private static final long WS_TIMEOUT_EXTENDED =  35000;
 	
 	private String endpoint;
 	
@@ -131,7 +132,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 			throw new Exception("Error de preparacion de Axis2: "
 					+ e.getMessage());
 		}
-		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
+		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT_EXTENDED);
 		
 		ClienteGeneralGSResponseE RespuestaGS = null;
 		
