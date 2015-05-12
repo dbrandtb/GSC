@@ -1181,7 +1181,7 @@ var msgWindow;
 			        	        	        				windowCvePago.close();
 			        	        	        				mcdinGrid.setLoading(true);
 			        	        	        				
-			        	        	     	        		/*Ext.Ajax.request({
+			        	        	     	        		Ext.Ajax.request({
 			        	        	     						url: _UrlSolicitarPago,
 			        	        	     						params: {
 			        	        	     				    		'params.pv_ntramite_i' : record.get('ntramite'),
@@ -1201,7 +1201,7 @@ var msgWindow;
 			        	        	     							mcdinGrid.setLoading(false);
 			        	        	     							mensajeError('No se pudo solicitar el pago.');
 			        	        	     						}
-			        	        	     					});*/
+			        	        	     					});
 			        	        	     	        		
 			        	        	        			    },
 			        	        	        			    failure : function ()
