@@ -23,6 +23,21 @@ public class PolizaAseguradoVO implements Serializable {
 	private String nmpoliex;
 	
 	/**
+	 * Descripci&oacute;n del Tipo de Producto
+	 */
+	private String dstipsit;
+	
+	/**
+	 * C&oacute;digo del Tipo de Producto
+	 */
+	private String cdtipsit;
+	
+	/**
+	 * C&oacute;digo del Subramo
+	 */
+	private String cdsubram;
+	
+	/**
 	 * C&oacute;digo de la p&oacute;liza usado en SISA 
 	 */
 	private String icodpoliza;
@@ -138,6 +153,30 @@ public class PolizaAseguradoVO implements Serializable {
 
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
+	}
+
+	public String getCdtipsit() {
+		return cdtipsit;
+	}
+
+	public void setCdtipsit(String cdtipsit) {
+		this.cdtipsit = cdtipsit;
+	}
+
+	public String getCdsubram() {
+		return cdsubram;
+	}
+
+	public void setCdsubram(String cdsubram) {
+		this.cdsubram = cdsubram;
+	}
+
+	public String getDstipsit() {
+		return dstipsit;
+	}
+
+	public void setDstipsit(String dstipsit) {
+		this.dstipsit = dstipsit;
 	}	
 		
 }

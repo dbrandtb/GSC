@@ -608,11 +608,14 @@ Ext.onReady(function() {
             {type:'string', name:'cdunieco'},
             {type:'string', name:'dsramo'},
             {type:'string', name:'dsunieco'},
+            {type:'string', name:'dstipsit'},
+            {type:'string', name:'cdsubram'},
             {type:'string', name:'estado'},
             {type:'string', name:'nmpoliex'},
             {type:'string', name:'nmpoliza'},
-            {type:'string', name:'nombreAsegurado'}
-            
+            {type:'string', name:'nombreAsegurado'},
+            {name:'feinivigencia', dateFormat: 'd/m/Y'},
+            {name:'fefinvigencia', dateFormat: 'd/m/Y'}
         ]
     });
     
@@ -633,7 +636,7 @@ Ext.onReady(function() {
     var gridPolizasAsegurado= Ext.create('Ext.grid.Panel', {
         store : storePolizaAsegurado,
         selType: 'checkboxmodel',
-        width : 850,
+        width : 1380,
         bbar     :
         {
             displayInfo : true,
@@ -645,9 +648,14 @@ Ext.onReady(function() {
         }],
         columns: [
             {text: 'P&oacute;liza', dataIndex: 'nmpoliex', width: 160},
+            {text: '# P&oacute;liza en sistema', dataIndex: 'nmpoliza', width: 160},
             {text: 'Nombre del asegurado', dataIndex: 'nombreAsegurado', width: 220},
             {text: 'Sucursal', dataIndex: 'dsunieco', width: 180},
-            {text: 'Producto', dataIndex: 'dsramo', width:180},
+            //{text: 'Producto', dataIndex: 'dsramo', width:180},
+            {text: 'Descripci&oacute;n de producto', dataIndex: 'dstipsit', width:180},
+            {text: 'Subramo', dataIndex: 'cdsubram', width:80},
+            {text: 'Fecha inicio vigencia', dataIndex: 'feinivigencia', format: 'd M Y', width:150},
+            {text: 'Fecha final vigencia', dataIndex: 'fefinvigencia', format: 'd M Y', width:150},
             {text: 'Estado', dataIndex: 'estado', width: 100}
             //,{text: '# poliza', dataIndex: 'nmpoliza', width: 70}
         ]
@@ -656,9 +664,10 @@ Ext.onReady(function() {
     
     var windowPolizas= Ext.create('Ext.window.Window', {
         title : 'Elija una p&oacute;liza:',
-        //height: 400,
+        height: 455,
         modal:true,
-        //width : 660,
+        autoScroll : true,
+        width : 680,
         closeAction: 'hide',
         items:[gridPolizasAsegurado],
         buttons:[{

@@ -26,16 +26,17 @@ import mx.com.gseguros.portal.general.model.ReciboVO;
 
 public interface ConsultasPolizaManager {
 		
-    /**
+	/**
      * Obtiene las polizas asociadas al asegurado
+     * @param user Usuario actual activo
      * @param rfc RFC del asegurado
      * @param cdperson C&oacute;digo de persona del asegurado
      * @param nombre Nombre del asegurado
      * @return Polizas asociadas al asegurado
      * @throws Exception
      */
-	public List<PolizaAseguradoVO> obtienePolizasAsegurado(String rfc, String cdperson, String nombre) throws Exception;
 	
+	public List<PolizaAseguradoVO> obtienePolizasAsegurado(String user, String rfc, String cdperson, String nombre) throws Exception;
 	
 	/**
 	 * 

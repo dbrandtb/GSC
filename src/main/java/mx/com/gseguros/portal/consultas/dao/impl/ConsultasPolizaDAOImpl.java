@@ -12,17 +12,17 @@ import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
-import mx.com.gseguros.portal.consultas.model.DatosComplementariosVO;
 import mx.com.gseguros.portal.consultas.model.ContratanteVO;
-import mx.com.gseguros.portal.consultas.model.HistoricoVO;
-import mx.com.gseguros.portal.consultas.model.PlanVO;
-import mx.com.gseguros.portal.consultas.model.PolizaDTO;
-import mx.com.gseguros.portal.consultas.model.SuplementoVO;
-import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
-import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
+import mx.com.gseguros.portal.consultas.model.DatosComplementariosVO;
 import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
+import mx.com.gseguros.portal.consultas.model.HistoricoVO;
+import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
+import mx.com.gseguros.portal.consultas.model.PlanVO;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.consultas.model.ReciboAgenteVO;
+import mx.com.gseguros.portal.consultas.model.SuplementoVO;
 import mx.com.gseguros.portal.consultas.model.TarifaVO;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
@@ -34,7 +34,6 @@ import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
-import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
@@ -123,23 +122,25 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
             return consulta;
         }
     }
-    
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PolizaAseguradoVO> obtienePolizasAsegurado(String rfc, String cdperson, String nombre) throws Exception {
+	public List<PolizaAseguradoVO> obtienePolizasAsegurado(String user, String rfc, String cdperson, String nombre) throws Exception {
 		
 		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_user_i",user); //Agrego parametro user: campo cdusurari de la tabla TUSUARIO
 		params.put("pv_cdrfc_i", rfc);
 		params.put("pv_cdperson_i", cdperson);
 		params.put("pv_nombre_i", nombre);
 		Map<String, Object> mapResult = ejecutaSP(new ConsultaPolizasAseguradoSP(getDataSource()), params);
 		return (List<PolizaAseguradoVO>) mapResult.get("pv_registro_o");
+		
 	}
 	
 	protected class ConsultaPolizasAseguradoSP extends StoredProcedure {
 		protected ConsultaPolizasAseguradoSP(DataSource dataSource) {
 			super(dataSource, "PKG_CONSULTA.P_Get_Polizas_Asegurado");
+			declareParameter(new SqlParameter("pv_user_i", OracleTypes.VARCHAR)); //Agrego parametro user: campo cdusurari de la tabla TUSUARIO
     		declareParameter(new SqlParameter("pv_cdrfc_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_nombre_i", OracleTypes.VARCHAR));
@@ -157,13 +158,17 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     		polizaAsegurado.setCdramo(rs.getString("codigo_ramo"));
     		polizaAsegurado.setCdunieco(rs.getString("compania"));
     		polizaAsegurado.setDsramo(rs.getString("descripcion_ramo"));
+    		polizaAsegurado.setDstipsit(rs.getString("dstipsit"));
+    		polizaAsegurado.setCdsubram(rs.getString("cdsubram"));
     		polizaAsegurado.setDsunieco(rs.getString("descripcion"));
     		polizaAsegurado.setEstado(rs.getString("estado"));
     		polizaAsegurado.setNmpoliex(rs.getString("nmpoliex"));
     		polizaAsegurado.setNmpoliza(rs.getString("nmpoliza"));
     		polizaAsegurado.setNombreAsegurado(rs.getString("nombre"));
-    		polizaAsegurado.setIcodpoliza(null); // No utilizado para ICE
+    		polizaAsegurado.setIcodpoliza(null); // No utilizado para ICE		
     		polizaAsegurado.setOrigen(rs.getString("origen"));
+    		polizaAsegurado.setFeinivigencia(Utilerias.formateaFecha(rs.getString("feefecto")));// Sera el valor que posea la columna
+    		polizaAsegurado.setFefinvigencia(Utilerias.formateaFecha(rs.getString("feproren")));// Sera el valor que posea la columna
     		return polizaAsegurado;
     	}
     }
