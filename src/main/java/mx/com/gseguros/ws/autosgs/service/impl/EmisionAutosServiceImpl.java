@@ -64,7 +64,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 
 	private static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EmisionAutosServiceImpl.class);
 	
-	private static final long WS_TIMEOUT =  20000;
+	private static final long WS_TIMEOUT =  220000;
 	
 	@Value("${ws.cotizacion.autos.url}")
 	private String endpointCotiza;
