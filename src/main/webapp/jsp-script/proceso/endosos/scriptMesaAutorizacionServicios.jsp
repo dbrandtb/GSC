@@ -478,6 +478,7 @@ function turnarCoordinaMedMultiregional(grid,rowIndex,colIndex){
 									,width: 600
 									,name:'smap1.comments'
 									,height: 250
+									,allowBlank : false
 								});
 								windowLoader = Ext.create('Ext.window.Window',{
 									modal       : true,
@@ -607,6 +608,7 @@ function activarTramiteAutorizacionServ (grid,rowIndex,colIndex){
 					,width: 600
 					,name:'smap1.comments'
 					,height: 250
+					,allowBlank : false
 				});
 				windowLoader = Ext.create('Ext.window.Window',{
 					modal       : true,
@@ -717,6 +719,7 @@ function turnarGerenteMedMultiregional(grid,rowIndex,colIndex){
 											,width: 600
 											,name:'smap1.comments'
 											,height: 250
+											,allowBlank : false
 										});
 										windowLoader = Ext.create('Ext.window.Window',{
 											modal       : true,

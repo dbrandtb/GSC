@@ -23,6 +23,7 @@ import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoPago;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
+import mx.com.gseguros.portal.siniestros.model.MesaControlVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
@@ -209,6 +210,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 						Constantes.MAUTSINI_AREA_MEDICA, params.get("autmedic"), Constantes.MAUTSINI_FACTURA, params.get("commenme"), Constantes.INSERT_MODE);
 				}
 			}
+			actualizaMesaControlSiniestro(params.get("ntramite"));
 		}catch( Exception e){
 			logger.error("Error en guardaListaTramites",e);
 			success =  false;
@@ -229,6 +231,58 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	
 	
 	
+	public void actualizaMesaControlSiniestro (String ntramiteProceso){
+		//obtenemos el total de facturas por el tramite
+		try{
+			List<Map<String,String>> slist1;
+			slist1 = siniestrosManager.obtenerFacturasTramite(ntramiteProceso);
+			double SumaTotal = 0d;
+			String nfacturaInd = null;
+			for(int i=0; i< slist1.size();i++){
+				SumaTotal += Double.parseDouble(slist1.get(i).get("PTIMPORT"));
+				nfacturaInd = slist1.get(i).get("NFACTURA");
+			}
+			logger.debug("Valor de Suma Total ---> "+SumaTotal);
+			logger.debug("Total de Facturas  ---> "+slist1.size());
+			//modificamos la mesa de control valores ot
+			List<MesaControlVO> lista = siniestrosManager.getConsultaListaMesaControl(ntramiteProceso);
+			logger.debug("Valores de TMESACONTROL --> : "+lista);
+			
+			HashMap<String, Object> modMesaControl = new HashMap<String, Object>();
+			modMesaControl.put("pv_ntramite_i",ntramiteProceso);
+			modMesaControl.put("pv_cdunieco_i",lista.get(0).getCduniecomc());
+			modMesaControl.put("pv_cdramo_i",lista.get(0).getCdramomc());
+			modMesaControl.put("pv_estado_i",lista.get(0).getEstadomc());
+			modMesaControl.put("pv_nmpoliza_i",lista.get(0).getNmpolizamc());
+			modMesaControl.put("pv_nmsuplem_i",lista.get(0).getNmsuplemmc());
+			modMesaControl.put("pv_nmsolici_i",lista.get(0).getNmsolicimc());
+			modMesaControl.put("pv_cdtipsit_i",lista.get(0).getCdtipsitmc());
+			modMesaControl.put("pv_cdsucadm_i",lista.get(0).getCdsucadmmc());
+			modMesaControl.put("pv_cdsucdoc_i",lista.get(0).getCdsucdocmc());
+			modMesaControl.put("pv_cdtiptra_i",lista.get(0).getCdtiptramc());
+			modMesaControl.put("pv_ferecepc_i",renderFechas.parse(lista.get(0).getFerecepcmc()));
+			modMesaControl.put("pv_nombre_i",lista.get(0).getNombremc());
+			modMesaControl.put("pv_festatus_i",renderFechas.parse(lista.get(0).getFecstatumc()));
+			modMesaControl.put("pv_status_i",lista.get(0).getStatusmc());
+			modMesaControl.put("pv_otvalor01_i",lista.get(0).getOtvalor01mc());
+			modMesaControl.put("pv_otvalor02_i",lista.get(0).getOtvalor02mc());
+			modMesaControl.put("pv_otvalor03_i",SumaTotal+"");
+			modMesaControl.put("pv_otvalor04_i",lista.get(0).getOtvalor04mc());
+			modMesaControl.put("pv_otvalor05_i",lista.get(0).getOtvalor05mc());
+			modMesaControl.put("pv_otvalor06_i",lista.get(0).getOtvalor06mc());
+			modMesaControl.put("pv_otvalor07_i",lista.get(0).getOtvalor07mc());
+			modMesaControl.put("pv_otvalor08_i",(slist1.size()>1)?null:nfacturaInd);
+			modMesaControl.put("pv_otvalor09_i",lista.get(0).getOtvalor09mc());
+			modMesaControl.put("pv_otvalor10_i",lista.get(0).getOtvalor10mc());
+			modMesaControl.put("pv_otvalor11_i",lista.get(0).getOtvalor11mc());
+			modMesaControl.put("pv_otvalor15_i",lista.get(0).getOtvalor15mc());
+			modMesaControl.put("pv_otvalor20_i",lista.get(0).getOtvalor20mc());
+			siniestrosManager.actualizaValorMC(modMesaControl);
+		}catch( Exception e){
+			logger.error("Error al modificar la Mesa de control",e);
+		}
+	}
+
 	public String detalleSiniestro() throws Exception
 	{
 		logger.debug(""
