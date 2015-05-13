@@ -3044,6 +3044,7 @@ Ext.onReady(function() {
 								,width: 600
 								,name:'smap1.comments'
 								,height: 250
+								,allowBlank : false
 							});
 							
 							windowLoader = Ext.create('Ext.window.Window',{

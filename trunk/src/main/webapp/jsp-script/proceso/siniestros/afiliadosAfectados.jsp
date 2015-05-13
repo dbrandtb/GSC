@@ -3970,6 +3970,7 @@
     		,width: 600
     		,name:'smap1.comments'
 			,height: 250
+			,allowBlank : false
         });
 		
 		windowLoader = Ext.create('Ext.window.Window',{
@@ -4053,12 +4054,12 @@
         	            					}
         	            				});
         	            			} else {
-        	            				Ext.Msg.show({
+        	            				centrarVentanaInterna(Ext.Msg.show({
         	            	                   title: 'Aviso',
         	            	                   msg: 'Complete la informaci&oacute;n requerida',
         	            	                   buttons: Ext.Msg.OK,
         	            	                   icon: Ext.Msg.WARNING
-        	            	               });
+        	            	               }));
         	            			}
         	            		}
         	            	},{
@@ -4200,6 +4201,7 @@
 			,width: 600
 			,name:'smap1.comments'
 			,height: 250
+			,allowBlank : false
 		});
 		
 		windowLoader = Ext.create('Ext.window.Window',{
@@ -4251,12 +4253,12 @@
 									}
 								});
 							}else {
-								Ext.Msg.show({
+								centrarVentanaInterna(Ext.Msg.show({
 									title: 'Aviso',
 									msg: 'Complete la informaci&oacute;n requerida',
 									buttons: Ext.Msg.OK,
 									icon: Ext.Msg.WARNING
-								});
+								}));
 							}
 						}
 					},{
@@ -4292,6 +4294,7 @@
 	            		,width: 600
 	            		,name:'smap1.comments'
 	        			,height: 250
+	        			,allowBlank : false
 	                });
 	        		
 	        		windowLoader = Ext.create('Ext.window.Window',{
@@ -4382,12 +4385,12 @@
 							        	            					}
 						        	            					});
 			        	            			} else {
-			        	            				Ext.Msg.show({
+			        	            				centrarVentanaInterna(Ext.Msg.show({
 			        	            	                   title: 'Aviso',
 			        	            	                   msg: 'Complete la informaci&oacute;n requerida',
 			        	            	                   buttons: Ext.Msg.OK,
 			        	            	                   icon: Ext.Msg.WARNING
-			        	            	               });
+			        	            	               }));
 			        	            			}
 			        	            		}
 			        	            	},{
@@ -4402,13 +4405,13 @@
 			        	            })  
 	        	            	]
 	        	    	}).show();
-	        			centrarVentana(windowLoader);
+	        			centrarVentanaInterna(windowLoader);
 					}else {
-						mensajeError(jsonRes.msgResult);
+						centrarVentanaInterna(mensajeError(jsonRes.msgResult));
 					}
 			},
 			failure: function(){
-				mensajeError('Error al turnar.');
+				centrarVentanaInterna(mensajeError('Error al turnar.'));
 			}
 		});
 	}

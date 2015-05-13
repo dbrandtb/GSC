@@ -297,6 +297,7 @@ var msgWindow;
 									,width: 600
 									,name:'smap1.comments'
 									,height: 250
+									,allowBlank : false
 								});
 								
 								windowLoader = Ext.create('Ext.window.Window',{
@@ -656,6 +657,7 @@ var msgWindow;
     		,width: 600
     		,name:'smap1.comments'
 			,height: 250
+			,allowBlank : false
         });
 		
 		windowLoader = Ext.create('Ext.window.Window',{
@@ -749,9 +751,7 @@ var msgWindow;
         	            })  
 	            	]
 	    }).show();
-		
 		centrarVentana(windowLoader);
-		
 	}
 	
 	function turnarAreclamacionesMedAjustador(grid,rowIndex,colIndex){
@@ -775,6 +775,7 @@ var msgWindow;
 	            		,width: 600
 	            		,name:'smap1.comments'
 	        			,height: 250
+	        			,allowBlank : false
 	                });
 	        		
 	        		windowLoader = Ext.create('Ext.window.Window',{
@@ -868,6 +869,7 @@ var msgWindow;
     		,width: 600
     		,name:'smap1.comments'
 			,height: 250
+			,allowBlank : false
         });
 		
 		windowLoader = Ext.create('Ext.window.Window',{
@@ -1583,6 +1585,7 @@ function turnarDevolucionTramite(grid,rowIndex,colIndex){
 		,width: 600
 		,name:'smap1.comments'
 		,height: 250
+		,allowBlank : false
 	});
 	
 	windowLoader = Ext.create('Ext.window.Window',{
