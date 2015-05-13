@@ -419,7 +419,7 @@ function reintentarWSAuto(loading, params){
                 	    	debug(json);
                 	    	if(json.success==true)
                 	    	{
-                	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Web Services. P&oacute;liza Emitida: ' + json.nmpolAlt);
+                	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Reintento. P&oacute;liza Emitida: ' + json.nmpolAlt);
                 	    	}
                 	    	else
                 	    	{

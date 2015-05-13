@@ -2044,7 +2044,7 @@ function _datComTurnarSuscripcion()
 	                            	    	debug(json);
 	                            	    	if(json.success==true)
 	                            	    	{
-	                            	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Web Services. P&oacute;liza Emitida: ' + json.nmpolAlt);
+	                            	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Reintento. P&oacute;liza Emitida: ' + json.nmpolAlt);
 	                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.nmpolAlt);
 	                            	    		_numeroPolizaExt = json.nmpolAlt;
                                 	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
