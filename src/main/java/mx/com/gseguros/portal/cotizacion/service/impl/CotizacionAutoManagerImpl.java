@@ -2590,10 +2590,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			{
 				String nmsituac    = incisoBase.get("NMSITUAC");
 				String cdtipsitAnt = incisoBase.get("CDTIPSIT");
-				if(!nmsituac.equals("-1"))
+				//YA NO ES NECESARIO PORQUE YA VIENE EN P_GET_TBASVALSIT
+				/*if(!nmsituac.equals("-1"))
 				{
 				    incisoBase.putAll(consultasDAO.cargarMpolisitSituac(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac));
-				}
+				}*/
 				incisoBase.put("CDTIPSIT" , cdtipsitAnt);
 				incisoBase.put("cdtipsit" , cdtipsitAnt);
 				incisoBase.put("cdplan"   , incisoBase.get("CDPLAN"));
