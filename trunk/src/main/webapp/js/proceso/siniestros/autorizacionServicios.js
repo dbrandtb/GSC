@@ -394,11 +394,7 @@ Ext.onReady(function() {
 			}
 		}
 	});
-
-	/*gridDatos.store.sort([{
-		property    : 'nmautser',			direction   : 'DESC'
-	}]);*/
-
+	
 	panelbusquedas = Ext.create('Ext.panel.Panel',{
 		border  : 0,		id     : 'panelbusqueda',				width	: 600,		style  : 'margin:5px'
 		,items : [
@@ -1304,7 +1300,11 @@ Ext.onReady(function() {
 							Ext.getCmp('idCopagoFin').setValue("0");
 						}else{
 							if(Ext.getCmp('idValSesiones').getValue() =="1"){
-								var copagoPrevio = +Ext.getCmp('idCopagoPrevio').getValue() + (+Ext.getCmp('idCopago').getValue() * datos.cantidadConAutorizado);
+								var importe = 0;
+								if(+TotalRegistros(storeConceptoAutorizados) > 0){
+									importe = +Ext.getCmp('idCopagoPrevio').getValue();
+								}
+								var copagoPrevio = +importe + (+Ext.getCmp('idCopago').getValue() * datos.cantidadConAutorizado);
 								Ext.getCmp('idCopagoPrevio').setValue(copagoPrevio);
 								Ext.getCmp('idCopagoFin').setValue(copagoPrevio);
 							}
@@ -1510,9 +1510,16 @@ Ext.onReady(function() {
 				Ext.getCmp('idCopagoFin').setValue("0");
 			}else{
 				if(Ext.getCmp('idValSesiones').getValue() =="1"){
-					var copagoPrevio = +Ext.getCmp('idCopagoPrevio').getValue() - (+Ext.getCmp('idCopago').getValue() * cantidad);
-					Ext.getCmp('idCopagoPrevio').setValue(copagoPrevio);
-					Ext.getCmp('idCopagoFin').setValue(copagoPrevio);
+					//Se realiza la validacion si ya no hay ninguno entonces se coloca el valor original de la poliza
+					if(+TotalRegistros(storeConceptoAutorizados) > 0){
+						var copagoPrevio = +Ext.getCmp('idCopagoPrevio').getValue() - (+Ext.getCmp('idCopago').getValue() * cantidad);
+						Ext.getCmp('idCopagoPrevio').setValue(copagoPrevio);
+						Ext.getCmp('idCopagoFin').setValue(copagoPrevio);
+					}else{
+						var copagoPrevio = +Ext.getCmp('idCopago').getValue();
+						Ext.getCmp('idCopagoPrevio').setValue(copagoPrevio);
+						Ext.getCmp('idCopagoFin').setValue(copagoPrevio);
+					}
 				}
 			}
 			this.getStore().removeAt(rowIndex);
@@ -2594,8 +2601,6 @@ Ext.onReady(function() {
 					Ext.getCmp('idDeducible').setValue(json.deducible);
 					Ext.getCmp('idTipoCopago').setValue(json.tipoCopago);
 					Ext.getCmp('idCopago').setValue(json.copago);
-					//debug("====> 2850 - VALOR DE REQUIERE PENALIZACION ", Ext.getCmp('idReqPenalizacion').getValue());
-					//debug("====> 2851 - VALOR DE cveTipoAutorizaG ", Ext.getCmp('cveTipoAutorizaG').getValue());
 					if(Ext.getCmp('idReqPenalizacion').getValue() == "1" && Ext.getCmp('cveTipoAutorizaG').getValue() != "3"){
 						var idProv = ""+Ext.getCmp('idProveedor').getValue();
 						if(idProv !="undefined"){
@@ -2627,16 +2632,12 @@ Ext.onReady(function() {
 							});
 						}
 					}else{
-						debug("=====> VALOR DE cveTipoAutorizaG : ",Ext.getCmp('cveTipoAutorizaG').getValue());
-						debug("=====> VALOR DE idEstatusTramite : ",Ext.getCmp('idEstatusTramite').getValue());
 						if(Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_ACCIDENTE || Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_MATERNIDAD){
 							Ext.getCmp('idCopagoFin').setValue('0');
 							Ext.getCmp('idCopagoPrevio').setValue('0');
 							Ext.getCmp('idPenalCircHospitalario').setValue('0');
 							Ext.getCmp('idPenalCambioZona').setValue('0');
 						}else{
-							debug("====> 2897 - VALOR DE cveTipoAutorizaG : ",Ext.getCmp('cveTipoAutorizaG').getValue());
-							debug("====> 2898 - VALOR DE idEstatusTramite : ",Ext.getCmp('idEstatusTramite').getValue());
 							if(Ext.getCmp('cveTipoAutorizaG').getValue() == "3"){
 								debug("Entra a la validacion if");
 								Ext.getCmp('idCopagoFin').setValue('0');
@@ -2886,6 +2887,19 @@ Ext.onReady(function() {
 		Ext.getCmp('idValorBase').setValue(valorBase);
 		return true;
 	}
+	
+	function TotalRegistros(storeRecibido){
+		var arr = [];
+		var totalRegistro = 0;
+		var valorBase=0;
+		storeRecibido.each(function(record) {
+			arr.push(record.data);
+		});
+		for(var i = 0; i < arr.length; i++){
+			totalRegistro = i;
+		}
+		return totalRegistro;
+	}
 
 	function ModificarEquipoQuirurguico(storeQuirurgico){
 		var arr = [];
@@ -2918,10 +2932,7 @@ Ext.onReady(function() {
 	function  guardadoAutorizacionServicio(valor){
 		var respuesta=true;
 		var submitValues={};
-		//Validamos la información de CopagoFinal y Copago Previo
-		if(Ext.getCmp('idValSesiones').getValue() =="1"){
-			Ext.getCmp('idCopagoFin').setValue(Ext.getCmp('idCopagoPrevio').getValue());
-		}
+		
 		var formulario=panelInicialPrincipal.form.getValues();
 		submitValues['params']=formulario;
 
