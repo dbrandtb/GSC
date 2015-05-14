@@ -1670,7 +1670,7 @@ Ext.onReady(function() {
 		,renderTo : 'div_clau'
 		,id : 'panelInicialPrincipal'
 		,bodyPadding: 5
-		,width: 750
+		,width: 850
 		,url: _URL_GUARDA_AUTORIZACION
 		,layout     :{
 			type     : 'table'
@@ -2581,6 +2581,14 @@ Ext.onReady(function() {
 		Ext.getCmp('idTipoCopago').setValue('');
 		Ext.getCmp('idPenalCircHospitalario').setValue('');
 		Ext.getCmp('idPenalCambioZona').setValue('');
+		
+		if(+Ext.getCmp('idValSesiones').getValue() > 0){
+			Ext.getCmp('idCopagoPrevio').show();
+			Ext.getCmp('idCopagoFin').hide();
+		}else{
+			Ext.getCmp('idCopagoPrevio').hide();
+			Ext.getCmp('idCopagoFin').show();
+		}
 		Ext.Ajax.request({
 			url     : _URL_CONSULTA_DEDUCIBLE_COPAGO
 			,params : {
@@ -2601,6 +2609,8 @@ Ext.onReady(function() {
 					Ext.getCmp('idDeducible').setValue(json.deducible);
 					Ext.getCmp('idTipoCopago').setValue(json.tipoCopago);
 					Ext.getCmp('idCopago').setValue(json.copago);
+					debug("VALOR idReqPenalizacion :",Ext.getCmp('idReqPenalizacion').getValue(),"cveTipoAutorizaG : ",Ext.getCmp('cveTipoAutorizaG').getValue());
+					
 					if(Ext.getCmp('idReqPenalizacion').getValue() == "1" && Ext.getCmp('cveTipoAutorizaG').getValue() != "3"){
 						var idProv = ""+Ext.getCmp('idProveedor').getValue();
 						if(idProv !="undefined"){
