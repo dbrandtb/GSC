@@ -988,8 +988,8 @@
 					title: 'Asegurados',
 					icon		: '${ctx}/resources/fam3icons/icons/user.png',
 					frame: true,
-					//selType  : 'rowmodel',
-					selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true },
+					selType  : 'rowmodel',
+					//selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true },
 					initComponent: function(){
 						Ext.apply(this, {
 						height: 450,
@@ -3217,7 +3217,8 @@
 		var idCdgarant = record.data.CDGARANT;
 		var idConval = record.data.CDCONVAL;
 		var idcausa = record.data.CDCAUSA;
-		if(idICD.length > 0 && idCdgarant.length > 0 && idConval.length > 0 && idcausa.length > 0){
+		//if(idICD.length > 0 && idCdgarant.length > 0 && idConval.length > 0 && idcausa.length > 0){
+		if(idCdgarant.length > 0 && idConval.length > 0 && idcausa.length > 0){
 			Ext.Ajax.request(
 			{
 				url	 : _URL_ACTUALIZA_INFO_GRAL_SIN
