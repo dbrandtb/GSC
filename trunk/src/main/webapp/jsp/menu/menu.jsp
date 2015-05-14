@@ -19,7 +19,7 @@
                     Usuario: 
                     <s:if test="%{#session.containsKey('USUARIO')}">
                         <strong><s:property value="%{#session['USUARIO'].name}" /></strong>
-                        Rol: <strong><s:property value="%{#session['USUARIO'].rolActivo.clave}" /></strong>
+                        Rol: <strong><s:property value="%{#session['USUARIO'].rolActivo.descripcion}" /></strong>
                         Sucursal: <strong><s:property value="%{#session['USUARIO'].cdUnieco}" /></strong>
                     </s:if>
                 </font>
