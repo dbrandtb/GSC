@@ -142,7 +142,13 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 				|| ACCESO_CLIENTE_UNICO.equals(acceso)
 				|| ENDOSOS_AUTOS.equals(acceso)
 				|| MENU_PRINCIPAL.equals(acceso)) {
-    		instanciaUsuarioLigaDirecta();
+    		
+			boolean sesionExitosa  = instanciaUsuarioLigaDirecta();
+			if(!sesionExitosa){
+				session.put("MsgLigaDirecta", "El usuario no existe o no tiene un rol asociado.");
+			}
+			
+    		
     		logger.info(new StringBuilder(">>>> Redirigiendo a Acceso Directo: ").append(acceso));
     	} else {
     		logger.warn(new StringBuilder(">>>> No está definido el Acceso Directo: ").append(acceso));

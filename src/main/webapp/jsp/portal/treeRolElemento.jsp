@@ -33,6 +33,7 @@
     var _ACTION_PORTAL                         = "<s:url namespace='/'          action='load' />";
     var _ACTION_REGRESA                        = "<s:url namespace='/seguridad' action='regresaCodigo' />";
     var _ACTION_VALIDAR_CONFIGURACION_COMPLETA = "<s:url namespace='/principal' action='validaConfiguracionCompleta' />";
+    var _MensajeLigaDirecta = '<s:property value="%{#session['MsgLigaDirecta']}" />';
 </script>
 <script type="text/javascript">
 Ext.onReady(function(){
@@ -53,6 +54,18 @@ Ext.onReady(function(){
         {
     %>
     
+    /*
+    *	PARA MENSAJE DE LIGA DIRECTA, Cuando no existe el usuario o no hay Roles
+    */
+    if(!Ext.isEmpty(_MensajeLigaDirecta)){
+    	Ext.Msg.show({
+            title:'Error',
+            msg: _MensajeLigaDirecta,
+            buttons: Ext.Msg.OK,
+            icon: Ext.Msg.ERROR
+        });
+    }
+            
     Ext.define('RamaVO',
     {
         extend   : 'Ext.data.Model',
