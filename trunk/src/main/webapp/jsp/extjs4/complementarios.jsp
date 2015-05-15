@@ -601,7 +601,8 @@ function _datComTurnarSuscripcion()
 		                                    editable:false,
 		                                    queryMode:'local',
 		                                    style:'margin:5px;',
-		                                    allowBlank:false
+		                                    allowBlank:false,
+		                                    readOnly : Number(inputCdramo)==16
 		                                },
 		                                {
                                             xtype:'textfield',
@@ -898,10 +899,11 @@ function _datComTurnarSuscripcion()
 									                                    url     : urlRecotizar
 									                                    ,params :
 									                                    {
-									                                        'panel1.nmpoliza' : inputNmpoliza
-									                                        ,cdunieco         : inputCdunieco
-									                                        ,cdramo           : inputCdramo
-									                                        ,cdtipsit         : inputCdtipsit
+									                                        'panel1.nmpoliza'    : inputNmpoliza
+									                                        ,cdunieco            : inputCdunieco
+									                                        ,cdramo              : inputCdramo
+									                                        ,cdtipsit            : inputCdtipsit
+									                                        ,'panel1.notarifica' : Number(inputCdramo)==16 ? 'si' : ''
 									                                    }
 									                                    ,success : function(response)
 									                                    {
