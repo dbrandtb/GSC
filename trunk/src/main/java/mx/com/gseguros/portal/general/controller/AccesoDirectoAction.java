@@ -132,6 +132,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
     public String accesoDirecto() throws Exception {
     	
     	String acceso = (String)params.get("acceso");
+    	String tipoUsuario = (String)params.get("tipoUsuario");
     	logger.info(new StringBuilder(">>>> Entrando a Acceso Directo: ").append(acceso).append(" con usuario: ").append(user).toString());
     	
 		if (       ACCESO_COTIZADOR.equals(acceso)
@@ -142,7 +143,16 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 				|| ACCESO_CLIENTE_UNICO.equals(acceso)
 				|| ENDOSOS_AUTOS.equals(acceso)
 				|| MENU_PRINCIPAL.equals(acceso)) {
-    		
+			
+			if(ACCESO_CONSULTA_POLIZAS.equals(acceso)) {
+				// logica para asignar rol en base al parametro tipoUsuario:
+				if("2".equals(tipoUsuario)) {
+					codigoRol = "EJECUTIVOCUENTA";
+				} else if("7".equals(tipoUsuario)) {
+					codigoRol = "PROMOTORAUTO";
+				}
+			}
+			
 			boolean sesionExitosa  = instanciaUsuarioLigaDirecta();
 			if(!sesionExitosa){
 				session.put("MsgLigaDirecta", "El usuario no existe o no tiene un rol asociado.");
