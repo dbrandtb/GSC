@@ -412,7 +412,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					//3.- Se guarda la informacion en PKG_PRESINIESTRO.P_GUARDA_TDETAUTS
 					siniestrosManager.guardaListaTDeTauts(paramsTDeTauts);
 				}
-
+				
 				if(params.get("claveTipoAutoriza").trim().equalsIgnoreCase("1") || params.get("claveTipoAutoriza").trim().equalsIgnoreCase("3")){
 					//Cambios de TMESACONTROL
 					HashMap<String, Object> paramsMCAut = new HashMap<String, Object>();
