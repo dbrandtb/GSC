@@ -6171,9 +6171,44 @@ public class EndososAction extends PrincipalCoreAction
 					
 				}else if(aux.isExitoRecibos()){
 					
-					String tipoGrupoInciso = smap1.get("TIPOFLOT");
+					/**
+					 * PARA WS ENDOSO CAMBIO DE DOMICILIO CON TARIFICACION, ACTUALIZA DOMICILIO CON SP ESPECIFICO PARA CODIGO POSTAL
+					 */
+					numEndRes = emisionAutosService.actualizaDatosCambioDomicilCP(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 					
-					ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
+					if(numEndRes == 0){
+						mensaje = "Error al generar el endoso, sigs. Consulte a Soporte.";
+						error = "Error al generar el endoso, sigs. Consulte a Soporte.";
+						logger.error("Error al ejecutar SP de endoso DOMICILIO CP sigs, ENDOSO EN 0");
+						
+						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+						
+						if(endosoRevertido){
+							
+							Map<String,String> paramRevDom = new HashMap<String, String>();
+							paramRevDom.put("pv_cdperson_i" , smap3.get("cdperson"));
+							paramRevDom.put("pv_dsdomici_i" , smap3.get("calle"));
+							paramRevDom.put("pv_cdpostal_i" , smap3.get("cp"));
+							paramRevDom.put("pv_nmnumero_i" , smap3.get("numext"));
+							paramRevDom.put("pv_nmnumint_i" , smap3.get("numint"));
+							paramRevDom.put("pv_cdedo_i"    , smap3.get("cdedo"));
+							paramRevDom.put("pv_cdmunici_i" , smap3.get("cdmunici"));
+							paramRevDom.put("pv_cdcoloni_i" , smap3.get("cdcoloni"));
+							endososManager.revierteDomicilio(paramRevDom);
+							
+							logger.error("Endoso revertido exitosamente.");
+							error+=" Favor de volver a itentar.";
+						}else{
+							logger.error("Error al revertir el endoso");
+							error+=" No se ha revertido el endoso.";
+						}
+						
+						success = false;
+						return SUCCESS;
+					}else{
+						String tipoGrupoInciso = smap1.get("TIPOFLOT");
+						ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
+					}
 					
 				}else{
 					mensaje = "Error al generar el endoso, sigs. Consulte a Soporte.";
