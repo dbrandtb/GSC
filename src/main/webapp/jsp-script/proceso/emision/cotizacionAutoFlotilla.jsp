@@ -802,6 +802,7 @@ Ext.onReady(function()
                     ,hidden  : _p30_smap1.tipoflot+'x'!='Fx'
                     ,text    : 'Limpiar'
                     ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
+                    ,hidden  : true
                     ,handler : function()
                     {
                         _p30_store.removeAll();
@@ -889,16 +890,20 @@ Ext.onReady(function()
                                                     for(var i in json.slist1)
                                                     {
                                                         var record=new _p30_modelo(json.slist1[i]);
-                                                        _p30_store.add(record);
                                                         mrecords.push(record);
                                                         debug('record.data:',record.data);
                                                     }
+                                                    
+                                                    _p30_store.removeAll();
+                                                    _p30_numerarIncisos(mrecords);
                                                     
                                                     if(_p30_smap1.cdramo+'x'=='5x')
                                                     {
                                                         //recuperar
                                                         var len = json.slist1.length;
                                                         panelpri.setLoading(true);
+                                                        var errores    = [];
+                                                        var procesados = 0;
                                                         var recupera = function(i)
                                                         {
                                                             var record       = mrecords[i];
@@ -924,55 +929,88 @@ Ext.onReady(function()
                                                                 if(Ext.isEmpty(_p30_bufferAutos[llaveAuto]))
                                                                 {
                                                                     debug('llaveAuto en base de datos');
-	                                                                claveCmp.getStore().load(
-	                                                                {
-	                                                                    params    :
-	                                                                    {
-	                                                                        'params.cadena'    : llaveAuto
-	                                                                        ,'params.cdtipsit' : cdtipsit
-	                                                                    }
-	                                                                    ,callback : function(records,op)
-	                                                                    {
-	                                                                        var index=claveCmp.getStore().findBy(function(irecord)
-	                                                                        {
-	                                                                            var splited=irecord.get('value').split(' - ');
-	                                                                            if(splited[0]==record.get(claveName)
-	                                                                                &&splited[3]==record.get(modeloName)
-	                                                                                )
-	                                                                            {
-	                                                                                return true;
-	                                                                            }
-	                                                                        });
-	                                                                        if(index==-1)
-	                                                                        {
-	                                                                            mensajeError('No se pudo recuperar el auto '+record.get(claveName)+' en modelo '+record.get(modeloName));
-	                                                                        }
-	                                                                        else
-	                                                                        {
-	                                                                            var encontrado = claveCmp.getStore().getAt(index);
-	                                                                            var splited    = encontrado.get('value').split(' - ');
-	                                                                            debug('splited:',splited);
-	                                                                            var marca      = _p30_storeMarcasRamo5   .getAt(_p30_storeMarcasRamo5   .find('value' , splited[1],0,false,false,true)).get('key');
-	                                                                            var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('aux'   , splited[1]+'@'+splited[2],0,false,false,true)).get('key');
-	                                                                            var version    = _p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('value' , splited[4],0,false,false,true)).get('key');
-	                                                                            record.set(marcaName    , marca);
-	                                                                            record.set(submarcaName , submarca);
-	                                                                            record.set(versionName  , version);
-	                                                                            
-	                                                                            _p30_bufferAutos[llaveAuto]=encontrado;
-	                                                                        }
-	                                                                        i=i+1;
-	                                                                        if(i<len)
-	                                                                        {
-	                                                                            recupera(i);
-	                                                                        }
-	                                                                        else
-	                                                                        {
-	                                                                            panelpri.setLoading(false);
-	                                                                            _p30_numerarIncisos();
-	                                                                        }
-	                                                                    }
-	                                                                });
+                                                                    var params = claveCmp.getStore().proxy.extraParams;
+                                                                    params['params.cadena']       = llaveAuto;
+                                                                    params['params.cdtipsit']     = cdtipsit;
+                                                                    params['params.indice']       = i-0;
+                                                                    params['params.claveName']    = claveName;
+                                                                    params['params.marcaName']    = marcaName;
+                                                                    params['params.submarcaName'] = submarcaName;
+                                                                    params['params.modeloName']   = modeloName;
+                                                                    params['params.versionName']  = versionName;
+                                                                    Ext.Ajax.request(
+                                                                    {
+                                                                        url      : claveCmp.getStore().proxy.url
+                                                                        ,params  : params
+                                                                        ,success : function(response)
+                                                                        {
+                                                                            var json = Ext.decode(response.responseText);
+                                                                            var indice = json.params.indice-0;
+                                                                            debug('### recuperar:',indice,json);
+                                                                            var record = mrecords[indice];
+                                                                            if(json.success==true&&json.lista.length>0)
+                                                                            {
+                                                                                var indiceRecuperado = -1;
+                                                                                for(var j in json.lista)
+                                                                                {
+                                                                                    var jsplit = json.lista[j].value.split(' - ');
+                                                                                    if(jsplit[0]==record.get(json.params.claveName)
+                                                                                        &&jsplit[3]==record.get(json.params.modeloName)
+                                                                                    )
+                                                                                    {
+                                                                                        indiceRecuperado = j-0;
+                                                                                        break;
+                                                                                    }
+                                                                                }
+                                                                                if(indiceRecuperado!=-1)
+                                                                                {
+                                                                                    var encontrado = new Generic(json.lista[indiceRecuperado]);
+                                                                                    var splited    = encontrado.get('value').split(' - ');
+                                                                                    debug('splited:',splited);
+                                                                                    var marca      = _p30_storeMarcasRamo5   .getAt(_p30_storeMarcasRamo5   .find('value' , splited[1],0,false,false,true)).get('key');
+                                                                                    var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('aux'   , splited[1]+'@'+splited[2],0,false,false,true)).get('key');
+                                                                                    var version    = _p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('value' , splited[4],0,false,false,true)).get('key');
+                                                                                    record.set(json.params.marcaName    , marca);
+                                                                                    record.set(json.params.submarcaName , submarca);
+                                                                                    record.set(json.params.versionName  , version);
+                                                                                
+                                                                                    _p30_bufferAutos[llaveAuto]=encontrado;
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    errores.push('No se pudo encontrar el auto '+record.get(json.params.claveName)+' en modelo '+record.get(json.params.modeloName)+' (inciso '+record.get('nmsituac')+')');
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                errores.push('No se pudo recuperar el auto '+record.get(json.params.claveName)+' en modelo '+record.get(json.params.modeloName)+' (inciso '+record.get('nmsituac')+')');
+                                                                            }
+                                                                            procesados=procesados+1;
+                                                                            if(procesados==len)
+                                                                            {
+                                                                                panelpri.setLoading(false);
+                                                                                _p30_store.add(mrecords);
+                                                                                if(errores.length>0)
+                                                                                {
+                                                                                    mensajeWarning(errores.join('<BR/>'));
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        ,failure : function()
+                                                                        {
+                                                                            errores.push('Error de comunicaci&oacute;n');
+                                                                            procesados=procesados+1;
+                                                                            if(procesados==len)
+                                                                            {
+                                                                                panelpri.setLoading(false);
+                                                                                _p30_store.add(mrecords);
+                                                                                if(errores.length>0)
+                                                                                {
+                                                                                    mensajeWarning(errores.join('<BR/>'));
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    });
 	                                                             }
 	                                                             else
 	                                                             {
@@ -986,33 +1024,40 @@ Ext.onReady(function()
 	                                                                 record.set(marcaName    , marca);
 	                                                                 record.set(submarcaName , submarca);
 	                                                                 record.set(versionName  , version);
-	                                                                 i=i+1;
-                                                                     if(i<len)
-                                                                     {
-                                                                         recupera(i);
-                                                                     }
-                                                                     else
-                                                                     {
-                                                                         panelpri.setLoading(false);
-                                                                         _p30_numerarIncisos();
-                                                                     }
+	                                                                 procesados=procesados+1;
+		                                                             if(procesados==len)
+		                                                             {
+		                                                                 panelpri.setLoading(false);
+		                                                                 _p30_store.add(mrecords);
+		                                                                 if(errores.length>0)
+		                                                                 {
+		                                                                     mensajeWarning(errores.join('<BR/>'));
+		                                                                 }
+		                                                             }
 	                                                             }
                                                             }
                                                             else
                                                             {
-                                                                i=i+1;
-                                                                if(i<len)
-                                                                {
-                                                                    recupera(i);
-                                                                }
-                                                                else
-                                                                {
-                                                                    panelpri.setLoading(false);
-                                                                    _p30_numerarIncisos();
-                                                                }
+                                                                procesados=procesados+1;
+	                                                            if(procesados==len)
+	                                                            {
+	                                                                panelpri.setLoading(false);
+	                                                                _p30_store.add(mrecords);
+	                                                                if(errores.length>0)
+	                                                                {
+	                                                                    mensajeWarning(errores.join('<BR/>'));
+	                                                                }
+	                                                            }
                                                             }
                                                         };
-                                                        recupera(0);
+                                                        for(var i=0;i<len;i++)
+                                                        {
+                                                            recupera(i);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        _p30_store.add(mrecords);
                                                     }
                                                 }
                                                 else
@@ -4255,10 +4300,12 @@ function _p30_cargarClic()
                     _p30_cargarIncisoXpolxTvalopolTconvalsit(json);
                     
                     ck='Recuperando incisos base';
+                    var recordsAux = [];
                     for(var i in json.slist2)
                     {
-                        _p30_store.add(new _p30_modelo(json.slist2[i]));
+                        recordsAux.push(new _p30_modelo(json.slist2[i]));
                     }
+                    _p30_store.add(recordsAux);
                     
                     if(maestra||vencida)
                     {
@@ -4773,13 +4820,23 @@ function _p30_comprar()
     });
 }
 
-function _p30_numerarIncisos()
+function _p30_numerarIncisos(arreglo)
 {
     var i=1;
-    _p30_store.each(function(record)
+    if(Ext.isEmpty(arreglo))
     {
-        record.set('nmsituac',i++);
-    });
+        _p30_store.each(function(record)
+        {
+            record.set('nmsituac',i++);
+        });
+    }
+    else
+    {
+        for(var j in arreglo)
+        {
+            arreglo[j].set('nmsituac',i++);
+        }
+    }
 }
 
 function _p30_editarAuto()
