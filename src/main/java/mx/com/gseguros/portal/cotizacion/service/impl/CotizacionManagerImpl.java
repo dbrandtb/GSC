@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,13 +33,18 @@ import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -46,6 +52,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CotizacionManagerImpl implements CotizacionManager 
 {
@@ -58,6 +65,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 	private PersonasDAO    personasDAO;
 	private MesaControlDAO mesaControlDAO;
 	private ConsultasDAO   consultasDAO;
+	
+	@Autowired
+	private transient Ice2sigsService ice2sigsService;
 	
 	private Map<String,Object> session;
 	
@@ -5175,7 +5185,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 						,null     //swabrido
 						,renderFechas.format(fechaHoy) //feemisio
 						,"12"     //cdperpag
-						,cdideperCli //nmpoliex
+						,null //nmpoliex
 						,"P1"     //nmcuadro
 						,"100"    //porredau
 						,"S"      //swconsol
@@ -5453,6 +5463,148 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            ////// clonar personas //////
 	            /////////////////////////////
 	
+				/**
+				 * TODO: EVALUAR E IMPLEMENTAR CDPERSON TEMPORAL
+				 */
+
+				if (!consultasDAO.esProductoSalud(cdramo) && StringUtils.isBlank(cdpersonCli) && StringUtils.isNotBlank(cdideperCli)) {
+					logger.debug("Persona proveniente de WS, Se importará, Valor de cdperson en blanco, valor de cdIdeper: " + cdideperCli);
+					
+					
+					/**
+					 * TODO: EVALUAR E IMPLEMENTAR CDPERSON TEMPORAL
+					 * PARA GUARDAR CLIENTE EN BASE DE DATOS DEL WS, se traslada codigo de comprar cotizacion a cotizacion pues pierde el mpersona cuando se recuperan cotizaciones
+					 */
+						if (Ramo.AUTOS_FRONTERIZOS.getCdramo()
+								.equalsIgnoreCase(cdramo)
+								|| Ramo.SERVICIO_PUBLICO.getCdramo()
+										.equalsIgnoreCase(cdramo)
+								|| Ramo.AUTOS_RESIDENTES.getCdramo()
+										.equalsIgnoreCase(cdramo)) {
+
+							String cdtipsitGS = consultasDAO.obtieneSubramoGS(cdramo, cdtipsit);
+
+							ClienteGeneral clienteGeneral = new ClienteGeneral();
+							// clienteGeneral.setRfcCli((String)aseg.get("cdrfc"));
+							clienteGeneral.setRamoCli(Integer
+									.parseInt(cdtipsitGS));
+							clienteGeneral.setNumeroExterno(cdideperCli);
+
+							ClienteGeneralRespuesta clientesRes = ice2sigsService
+									.ejecutaWSclienteGeneral(
+											null,
+											null,
+											null,
+											null,
+											null,
+											null,
+											null,
+											Ice2sigsService.Operacion.CONSULTA_GENERAL,
+											clienteGeneral, null, false);
+
+							if (clientesRes != null
+									&& ArrayUtils.isNotEmpty(clientesRes
+											.getClientesGeneral())) {
+								ClienteGeneral cli = null;
+
+								if (clientesRes.getClientesGeneral().length == 1) {
+									logger.debug("Cliente unico encontrado en WS, guardando informacion del WS...");
+									cli = clientesRes.getClientesGeneral()[0];
+								} else {
+									logger.error("Error, No se pudo obtener el cliente del WS. Se ha encontrado mas de Un elemento!");
+								}
+
+								if (cli != null) {
+
+									/**
+									 * TODO: EVALUAR E IMPLEMENTAR CDPERSON TEMPORAL
+									 */
+									
+									// IR POR NUEVO CDPERSON:
+									String newCdPerson = personasDAO.obtenerNuevoCdperson();
+
+									logger.debug("Insertando nueva persona, cdperson generado: " +newCdPerson);
+						    		
+						    		String apellidoPat = "";
+							    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
+							    		apellidoPat = cli.getApellidopCli();
+							    	}
+							    	
+							    	String apellidoMat = "";
+							    	if(StringUtils.isNotBlank(cli.getApellidomCli()) && !cli.getApellidomCli().trim().equalsIgnoreCase("null")){
+							    		apellidoMat = cli.getApellidomCli();
+							    	}
+							    	
+						    		Calendar calendar =  Calendar.getInstance();
+						    		
+						    		String sexo = "H"; //Hombre
+							    	if(cli.getSexoCli() > 0){
+							    		if(cli.getSexoCli() == 2) sexo = "M";
+							    	}
+							    	
+							    	String tipoPersona = "F"; //Fisica
+							    	if(cli.getFismorCli() > 0){
+							    		if(cli.getFismorCli() == 2){
+							    			tipoPersona = "M";
+							    		}else if(cli.getFismorCli() == 3){
+							    			tipoPersona = "S";
+							    		}
+							    	}
+							    	
+							    	if(cli.getFecnacCli()!= null){
+							    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
+							    	}
+							    	
+							    	
+							    	Calendar calendarIngreso =  Calendar.getInstance();
+							    	if(cli.getFecaltaCli() != null){
+							    		calendarIngreso.set(cli.getFecaltaCli().get(Calendar.YEAR), cli.getFecaltaCli().get(Calendar.MONTH), cli.getFecaltaCli().get(Calendar.DAY_OF_MONTH));
+							    	}
+							    	
+							    	String nacionalidad = "001";// Nacional
+							    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
+							    		nacionalidad = "002";
+							    	}
+							    	
+						    		//GUARDAR MPERSONA
+						    		
+									personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(), (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc()
+											, "1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(), null
+											, apellidoPat, apellidoMat, calendarIngreso.getTime(), nacionalidad, cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli()))
+											, null, null, null, null, null, null, Integer.toString(cli.getSucursalCli()), "I");
+									
+									String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
+					    			if(edoAdosPos2.length() ==  1){
+					    				edoAdosPos2 = "0"+edoAdosPos2;
+					    			}
+						    		
+						    		//GUARDAR DOMICILIO
+					    			
+					    			personasDAO.movimientosMdomicil(newCdPerson, "1", cli.getCalleCli(), cli.getTelefonoCli()
+						    				, cli.getCodposCli(), cli.getCodposCli()+edoAdosPos2, null/*cliDom.getMunicipioCli()*/, null/*cliDom.getColoniaCli()*/
+						    				, cli.getNumeroCli(), null, "I");
+
+					    			//GUARDAR TVALOPER
+					    			
+					    			personasDAO.movimientosTvaloper("1", newCdPerson, cli.getCveEle(), cli.getPasaporteCli(), null, null, null,
+					    				null, null, cli.getOrirecCli(), null, null,
+					    				cli.getNacCli(), null, null, null, null, 
+					    				null, null, null, null, (cli.getOcuPro() > 0) ? Integer.toString(cli.getOcuPro()) : "0", 
+					    				null, null, null, null, cli.getCurpCli(), 
+					    				null, null, null, null, null, 
+					    				null, null, null, null, null, 
+					    				null, null, cli.getTelefonoCli(), cli.getMailCli(), null, 
+					    				null, null, null, null, null, 
+					    				null, null, null, null, null);
+					    			
+					    			
+					    			cdpersonCli = newCdPerson;
+
+								}
+							}
+						}
+				}
+	            
 	            ////// mpoliper contratante recuperado //////
 	            if(StringUtils.isNotBlank(cdpersonCli))
 	            {
