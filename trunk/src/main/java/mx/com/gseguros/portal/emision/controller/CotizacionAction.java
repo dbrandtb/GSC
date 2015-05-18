@@ -2622,7 +2622,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							    			HashMap<String,String> paramDomicil = new HashMap<String, String>();
 							    			paramDomicil.put("pv_cdperson_i", (String)aseg.get("cdperson"));
 							    			paramDomicil.put("pv_nmorddom_i", "1");
-							    			paramDomicil.put("pv_msdomici_i", cliDom.getCalleCli() +" "+ cliDom.getNumeroCli());
+							    			paramDomicil.put("pv_msdomici_i", cliDom.getCalleCli());
 							    			paramDomicil.put("pv_nmtelefo_i", cliDom.getTelefonoCli());
 							    			paramDomicil.put("pv_cdpostal_i", cliDom.getCodposCli());
 							    			

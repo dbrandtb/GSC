@@ -388,7 +388,7 @@ public class PersonasAction extends PrincipalCoreAction
 						,cliImport.getEdocivilCli()<=0 ?"0" : Integer.toString(cliImport.getEdocivilCli())
 						,Integer.toString(cliImport.getSucursalCli())
 						,"1"//nmorddom
-						,cliImport.getCalleCli() +" "+ cliImport.getNumeroCli()
+						,cliImport.getCalleCli()
 						,cliImport.getTelefonoCli()
 						,cliImport.getCodposCli()
 						,cliImport.getCodposCli()+edoAdosPos2

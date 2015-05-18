@@ -210,4 +210,6 @@ public interface ConsultasDAO
 	public boolean recuperarPermisoDevolucionPrimasUsuario(String cdusuari) throws Exception;
 	
 	public String recuperarValorMaximoSituacionPorRol(String cdtipsit,String cdsisrol) throws Exception;
+
+	public String obtieneSubramoGS(String cdramo,String cdtipsit) throws Exception;
 }

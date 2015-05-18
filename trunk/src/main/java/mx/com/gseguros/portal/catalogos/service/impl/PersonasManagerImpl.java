@@ -354,6 +354,10 @@ public class PersonasManagerImpl implements PersonasManager
 		
 		if(exito&&StringUtils.isBlank(cdperson))
 		{
+			
+			/**
+			 * TODO: EVALUAR E IMPLEMENTAR CDPERSON TEMPORAL
+			 */
 			try
 			{
 				cdperson      = personasDAO.obtenerNuevoCdperson();

@@ -1672,4 +1672,31 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+    
+    @Override
+    public String obtieneSubramoGS(String cdramo,String cdtipsit) throws Exception{
+    	
+    	Map<String,String> params = new LinkedHashMap<String,String>();
+    	params.put("pv_cdramo_i" , cdramo);
+    	params.put("pv_cdtipsit_i" , cdtipsit);
+    	Utilerias.debugProcedure(logger, "Pkg_Consulta.P_OBTIENE_SUBRAMO_X_CDTIPSIT", params);
+    	Map<String,Object> procResult = ejecutaSP(new ObtieneSubramoGS(getDataSource()),params);
+    	String valor = (String)procResult.get("pv_cdsubram_o");
+    	logger.debug(Utilerias.join("\n****** Pkg_Consulta.P_OBTIENE_SUBRAMO_X_CDTIPSIT=",valor));
+    	return valor;
+	}
+    
+    protected class ObtieneSubramoGS extends StoredProcedure
+    {
+    	protected ObtieneSubramoGS(DataSource dataSource)
+    	{
+    		super(dataSource , "Pkg_Consulta.P_OBTIENE_SUBRAMO_X_CDTIPSIT");
+            declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_cdsubram_o"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }
