@@ -31,5 +31,10 @@ public class ValidationDataException extends ApplicationException {
 	 */
 	public ValidationDataException(String message, Throwable cause) {
 		super(message, cause);
-	}	
+	}
+	
+	public ValidationDataException(String message, String traza) {
+		super(message);
+		this.traza=traza;
+	}
 }

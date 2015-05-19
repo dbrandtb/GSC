@@ -655,4 +655,6 @@ public interface CotizacionDAO
 			,String nmcuenta
 			,String accion
 			)throws Exception;
+	
+	public Map<String,String>validarReemplazoDocumentoCotizacion(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception;
 }
