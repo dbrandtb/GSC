@@ -37,7 +37,6 @@ import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
-import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
@@ -2003,7 +2002,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				 */
 
 				if (StringUtils.isBlank(cdpersonCli) && StringUtils.isNotBlank(cdideperCli)) {
-					logger.debug("Persona proveniente de WS, Se importar·, Valor de cdperson en blanco, valor de cdIdeper: " + cdideperCli);
+					logger.debug("Persona proveniente de WS, Se importar√°, Valor de cdperson en blanco, valor de cdIdeper: " + cdideperCli);
 					
 					
 					/**
@@ -2737,11 +2736,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			{
 				String nmsituac    = incisoBase.get("NMSITUAC");
 				String cdtipsitAnt = incisoBase.get("CDTIPSIT");
-				//YA NO ES NECESARIO PORQUE YA VIENE EN P_GET_TBASVALSIT
-				/*if(!nmsituac.equals("-1"))
+				if(!nmsituac.equals("-1"))
 				{
 				    incisoBase.putAll(consultasDAO.cargarMpolisitSituac(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac));
-				}*/
+				}
 				incisoBase.put("CDTIPSIT" , cdtipsitAnt);
 				incisoBase.put("cdtipsit" , cdtipsitAnt);
 				incisoBase.put("cdplan"   , incisoBase.get("CDPLAN"));
