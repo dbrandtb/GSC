@@ -21,6 +21,7 @@ var _STATUS_TRAMITE_CONFIRMADO              = '<s:property value="@mx.com.gsegur
 var _CAT_DESTINOPAGO                        = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@DESTINOPAGO"/>';
 var _CAT_CONCEPTO                           = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CATCONCEPTO"/>';
 var _STATUS_DEVOLVER_TRAMITE				= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@TRAMITE_EN_DEVOLUCION.codigo" />';
+var _CATALOGO_CONCEPTOPAGO					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CONCEPTOPAGO"/>';
 
 
 // Catalogo Tipos de tramite a utilizar:
@@ -1071,7 +1072,6 @@ var msgWindow;
 	function mostrarSolicitudPago(grid,rowIndex,colIndex){
 		storeDestinoPago = Ext.create('Ext.data.JsonStore', {
 		    model:'Generic',
-	        //autoLoad:true,
 	        proxy:
 	        {
 	            type: 'ajax',
@@ -1085,7 +1085,22 @@ var msgWindow;
 	        }
 	    });
 		storeDestinoPago.load();
-		storeCatConcepto = Ext.create('Ext.data.JsonStore', {
+		
+		storeConceptoPago = Ext.create('Ext.data.JsonStore', {
+			model:'Generic',
+			autoLoad:true,
+			proxy: {
+				type: 'ajax',
+				url: _URL_CATALOGOS,
+				extraParams : {catalogo:_CATALOGO_CONCEPTOPAGO},
+				reader: {
+					type: 'json',
+					root: 'lista'
+				}
+			}
+		});
+		
+		/*storeCatConcepto = Ext.create('Ext.data.JsonStore', {
 	        model:'Generic',
 	        proxy:
 	        {
@@ -1099,7 +1114,8 @@ var msgWindow;
 	            }
 	        }
 	    });
-		storeCatConcepto.load();
+		storeCatConcepto.load();*/
+		
 		msgWindow = Ext.Msg.show({
 	        title: 'Aviso',
 	        msg: '&iquest;Esta seguro que desea solicitar el pago?',
@@ -1108,6 +1124,11 @@ var msgWindow;
 	        fn: function(buttonId, text, opt){
 	        	if(buttonId == 'yes'){
 	        		var record = grid.getStore().getAt(rowIndex);
+	        		storeConceptoPago.load({
+						params : {
+							'params.cdramo': record.get('cdramo')
+						}
+					});
 	        		
 	        		var pagocheque = Ext.create('Ext.form.field.ComboBox',
    		    	    {
@@ -1122,7 +1143,7 @@ var msgWindow;
    		    	        colspan	   :2,				fieldLabel   	: 'Concepto Pago', 	name			:'concepPago',
    		    	        allowBlank : false,			editable     	: true,			displayField    : 'value',
    		    	        valueField:'key',			forceSelection  : true,			width			:350,
-   		    	        queryMode    :'local',		store 			: storeCatConcepto
+   		    	        queryMode    :'local',		store 			: storeConceptoPago
    		    	    });
 	        		
    		    		var cdramoTramite="";

@@ -198,13 +198,13 @@ Ext.onReady(function() {
 		autoLoad:false,
 		proxy: {
 			type: 'ajax',
-			url : _URL_LISTADO_ASEGURADO,
+			url : _URL_LISTADO_ASEGURADO_POLIZA,
 			reader: {
 				type: 'json',
 				root: 'listaAsegurado'
 			}
 		}
-	});
+    });
 
 	var storeTipoPago = Ext.create('Ext.data.JsonStore', {
 		model:'Generic',
@@ -540,15 +540,47 @@ Ext.onReady(function() {
 		]
 	});
 
-	var cmbBeneficiario = Ext.create('Ext.form.ComboBox', {
-		name:'cmbBeneficiario',				fieldLabel: 'Beneficiario',			queryMode:'remote',
-		displayField: 'value',				valueField: 'key',					editable:true,
-		width		 : 350,					forceSelection : true,				matchFieldWidth: false,
-		queryParam: 'params.cdperson',		minChars  : 2,						triggerAction: 'all',
-		hideTrigger:true,					allowBlank:false,					store : storeAsegurados2,
+	var cmbBeneficiario= Ext.create('Ext.form.ComboBox',{
+		name:'cmbBeneficiario',			fieldLabel: 'Beneficiario',			queryMode: 'local'/*'remote'*/,			displayField: 'value',
+		valueField: 'key',				editable:true,						forceSelection : true,		matchFieldWidth: false,
+		queryParam: 'params.cdperson',	minChars  : 2, 						store : storeAsegurados2,	triggerAction: 'all',
+		width		 : 350,				allowBlank:false,
 		listeners : {
-			'select' : function(combo, record) {
+			'select' : function(e) {
 				panelInicialPral.down('[name=idnombreBeneficiarioProv]').setValue(cmbBeneficiario.rawValue);
+				// Realizamos la validacion si es menor de edad
+				Ext.Ajax.request({
+					url     : _URL_CONSULTA_BENEFICIARIO
+					,params:{
+						'params.cdunieco'  : panelInicialPral.down('[name="cdunieco"]').getValue(),
+						'params.cdramo'    : panelInicialPral.down('[name="cdramo"]').getValue(),
+						'params.estado'    : panelInicialPral.down('[name="estado"]').getValue(),
+						'params.nmpoliza'  : panelInicialPral.down('[name="polizaAfectada"]').getValue(),
+						'params.nmsuplem'  : panelInicialPral.down('[name="idNmsuplem"]').getValue(),
+						'params.cdperson'  : e.getValue()
+					}
+					,success : function (response) {
+						json = Ext.decode(response.responseText);
+						if(json.success==false){
+							Ext.Msg.show({
+								title:'Beneficiario',
+								msg: json.mensaje,
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.WARNING
+							});
+							panelInicialPral.down('combo[name=cmbBeneficiario]').setValue('')
+						}
+					},
+					failure : function (){
+						me.up().up().setLoading(false);
+						centrarVentanaInterna(Ext.Msg.show({
+							title:'Error',
+							msg: 'Error de comunicaci&oacute;n',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+						}));
+					}
+				});
 			}
 		}
 	});
@@ -2129,9 +2161,13 @@ Ext.onReady(function() {
 						panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue(json.otvalor09mc);
 						storeAsegurados2.load({
 							params:{
-								'params.cdperson':json.otvalor04mc
+								'params.cdunieco': json.cduniecomc,
+								'params.cdramo':   json.cdramomc,
+								'params.estado':   json.estadomc,
+								'params.nmpoliza': json.nmpolizamc
 							}
 						});
+						
 						panelInicialPral.down('combo[name=cmbBeneficiario]').setValue(json.otvalor04mc);
 					}
 					
@@ -2279,7 +2315,7 @@ Ext.onReady(function() {
 							etiqueta = "Modificaci&oacute;n";
 							mensaje = "Se modific&oacute; el n&uacute;mero de tr&aacute;mite "+ valorAction.ntramite;
 						}
-						mensajeCorrecto(etiqueta,mensaje,function(){
+						/*mensajeCorrecto(etiqueta,mensaje,function(){
 							Ext.create('Ext.form.Panel').submit(
 							{
 								url		: _p12_urlMesaControl
@@ -2293,7 +2329,7 @@ Ext.onReady(function() {
 						});
 						panelInicialPral.getForm().reset();
 						storeFacturaDirecto.removeAll();
-						windowLoader.close();
+						windowLoader.close();*/
 					}else{
 						if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_REEMBOLSO){
 							banderaFactura = "0";

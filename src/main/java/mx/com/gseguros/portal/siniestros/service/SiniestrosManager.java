@@ -573,4 +573,10 @@ public interface SiniestrosManager {
 
 	public List<Map<String, String>> obtieneMontoPagoSiniestro(String ntramite) throws Exception;
 	
+	public List<GenericVO> getConsultaListaConceptoPago(String cdramo) throws Exception;
+	
+	public List<GenericVO> getConsultaListaAseguradoPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
+
+	public List<Map<String, String>> obtieneDatosBeneficiario(String cdunieco,String cdramo, String estado, String nmpoliza, String cdperson) throws Exception;
+	
 }

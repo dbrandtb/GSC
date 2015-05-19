@@ -1733,4 +1733,35 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		log.debug("obtieneMontoPagoSiniestro params: "+params);
 		return siniestrosDAO.obtieneMontoPagoSiniestro(params);
 	}
+	
+	@Override
+	public List<GenericVO> getConsultaListaConceptoPago(String cdramo) throws Exception {
+		try {
+			return siniestrosDAO.obtieneListadoConceptoPago(cdramo);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public List<GenericVO> getConsultaListaAseguradoPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception {
+		try {
+			return siniestrosDAO.obtieneListadoAseguradoPoliza(cdunieco,cdramo,estado, nmpoliza);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneDatosBeneficiario(String cdunieco,String cdramo, 
+					String estado, String nmpoliza,String cdperson) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_cdperson_i", cdperson);
+		log.debug("obtieneDatosBeneficiario params: "+params);
+		return siniestrosDAO.obtieneDatosBeneficiario(params);
+	}
 }

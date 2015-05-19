@@ -460,5 +460,11 @@ public interface SiniestrosDAO {
 	public List<Map<String, String>> obtienePeriodoEsperaAsegurado(HashMap<String, Object> params) throws Exception;
 	
 	public List<Map<String, String>> obtieneMontoPagoSiniestro(HashMap<String, Object> params) throws Exception;
+	
+	public List<GenericVO> obtieneListadoConceptoPago(String cdramo) throws Exception;
+	
+	public List<GenericVO> obtieneListadoAseguradoPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
+	
+	public List<Map<String, String>> obtieneDatosBeneficiario(HashMap<String, Object> params) throws Exception;
 
 }

@@ -1815,6 +1815,23 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	}
 	
 	/**
+	* Funcion que obtiene la lista del asegurado
+	* @param void sin parametros de entrada
+	* @return Lista GenericVO con la informacion de los asegurados
+	*/    
+	public String consultaListaAseguradoPoliza(){
+		logger.debug(" **** Entrando al metodo de Lista de Asegurado por la poliza en especifico ****");
+		try {
+			listaAsegurado= siniestrosManager.getConsultaListaAseguradoPoliza(params.get("cdunieco"),params.get("cdramo"),params.get("estado"),params.get("nmpoliza"));
+		}catch( Exception e){
+			logger.error("Error al consultar la Lista de los asegurados ",e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	/**
 	* Funcion que obtiene el listado de Ramos de Salud vital
 	* @param void sin parametros de entrada
 	* @return Lista GenericVO - Informacion de los ramos
@@ -4144,7 +4161,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.debug("mapa WS siniestro unico: "+importesWSSiniestroUnico);
 			logger.debug("<<WS del siniestro unico");
 			
-		}else{ 
+		}else{
 			/***************************** 		P A G O		I N D E M N I Z A C I O N 		*************************/
 			logger.debug("Paso 5.- EL PROCESO DE PAGO DE INDEMNIZACION");
 			
@@ -4656,6 +4673,37 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			return SUCCESS;
 		}
 		//success = true;
+		return SUCCESS;
+	}
+	
+	/**
+	* Funcion que obtiene el listado de la factura en proceso
+	* @param nfactura, cdpresta, ptimport
+	* @return factPagada - ntramite en donde se encuentra la factura
+	*/ 
+	public String consultaDatosBeneficiario(){
+		logger.debug(" **** Entrando para la validacion de los datos del Beneficiario ****");
+		logger.debug("params de entrada : "+params);
+		try {
+			List<Map<String,String>> datosAsegurado = siniestrosManager.obtieneDatosBeneficiario(params.get("cdunieco"), params.get("cdramo"), params.get("estado"),
+									params.get("nmpoliza"), params.get("cdperson"));
+			logger.debug("VALORES DE EDAD ==>"+datosAsegurado.get(0).get("EDAD"));
+			int edad = Integer.parseInt("34");
+			int edadMinima = Integer.parseInt("18");
+			if(Integer.parseInt(datosAsegurado.get(0).get("EDAD")) >= edadMinima){
+				mensaje = "";
+				success = true;
+			}else{
+				mensaje = "El Beneficiario es un menor de edad."+"\n"+"Elegir otro.";
+				success = false;
+			}
+			
+			
+		}catch( Exception e){
+			logger.error("Error al consultar el metodo para consulta si la factura ya se encuentra en proceso  ",e);
+			return SUCCESS;
+		}
+		
 		return SUCCESS;
 	}
     //... Fin de siniestros

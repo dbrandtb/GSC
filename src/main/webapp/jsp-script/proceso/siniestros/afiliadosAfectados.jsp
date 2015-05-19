@@ -78,7 +78,8 @@
 			var _URL_P_MOV_MAUTSINI						= '<s:url namespace="/siniestros"		action="obtieneMensajeMautSini"/>';
 			var _URL_TABBEDPANEL						= '<s:url namespace="/siniestros"  		action="includes/detalleSiniestro" />';
 			var _URL_CONSULTA_AUTORIZACION_ESP			= '<s:url namespace="/siniestros"		action="consultaAutorizacionServicio" />';
-			
+			var _CATALOGO_CONCEPTOPAGO					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CONCEPTOPAGO"/>';
+
 			
 			debug("VALOR DE _11_params --->",_11_params);
 			debug("VALOR DEL ROL ACTIVO --->",_CDROL);
@@ -133,7 +134,7 @@
 			var storeRechazos;
 			var storeIncisosRechazos;
 			var storeDestinoPago;
-			var storeCatConcepto;
+			var storeConceptoPago;
 			var ventanaAgregarAsegurado;
 			
 			<s:set name="contadorFactura" value="0" />
@@ -758,17 +759,15 @@
 						}
 					}
 				});
-
-				storeCatConcepto = Ext.create('Ext.data.JsonStore', {
+				
+				storeConceptoPago = Ext.create('Ext.data.JsonStore', {
 					model:'Generic',
 					autoLoad:true,
-					proxy:
-					{
+					proxy: {
 						type: 'ajax',
 						url: _URL_CATALOGOS,
-						extraParams : {catalogo:_CAT_CONCEPTO},
-						reader:
-						{
+						extraParams : {catalogo:_CATALOGO_CONCEPTOPAGO},
+						reader: {
 							type: 'json',
 							root: 'lista'
 						}
@@ -4776,6 +4775,12 @@
 				icon: Ext.Msg.QUESTION,
 				fn: function(buttonId, text, opt){
 					if(buttonId == 'yes'){
+						storeConceptoPago.load({
+							params : {
+								'params.cdramo': _tipoProducto
+							}
+						});
+									
 						var pagocheque = Ext.create('Ext.form.field.ComboBox',
 						{
 							colspan	   :2,				fieldLabel   	: 'Destino Pago', 	name			:'destinoPago',
@@ -4787,11 +4792,11 @@
 						var concepPago = Ext.create('Ext.form.field.ComboBox',
 						{
 							colspan	   :2,				fieldLabel   	: 'Concepto Pago', 	name			:'concepPago',
-							allowBlank : false,			editable     	: true,			displayField    : 'value',
-							valueField:'key',			forceSelection  : true,			width			:350,
-							queryMode    :'local',		store 			: storeCatConcepto
+							allowBlank : false,			editable     	: true,				displayField    : 'value',
+							valueField:'key',			forceSelection  : true,				width			:350,
+							queryMode    :'local',		store 			: storeConceptoPago
 						});
-
+						
 						var cdramoTramite="";
 						var cdtipsitTramite ="";
 						//3.- Obtenemos los valores de TMESACONTROL  el destino y concepto de pago si es que existen
@@ -4807,6 +4812,7 @@
 									var json=Ext.decode(response.responseText).listaMesaControl[0];
 									cdramoTramite = json.cdramomc;
 									cdtipsitTramite = json.cdtipsitmc;
+									
 									if(json.otvalor18mc !=null)
 									{
 										panelModificacion.query('combo[name=destinoPago]')[0].setValue(json.otvalor18mc);

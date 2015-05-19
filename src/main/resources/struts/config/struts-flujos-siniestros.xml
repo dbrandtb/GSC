@@ -273,14 +273,22 @@
 	        <result name="success" type="json"/>
 		</action>
 		
-		
-		
 		<action name="consultaFacturaPagada" class="siniestrosAction" method="consultaFacturaPagada">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
 					success,
 					factPagada
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaDatosBeneficiario" class="siniestrosAction" method="consultaDatosBeneficiario">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					mensaje
 				</param>
 			</result>
 		</action>
@@ -568,6 +576,16 @@
 		</action>
 		
 		<action name="consultaListaAsegurado" class="siniestrosAction" method="consultaListaAsegurado">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaAsegurado.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaListaAseguradoPoliza" class="siniestrosAction" method="consultaListaAseguradoPoliza">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
