@@ -919,6 +919,16 @@
 			</result>
 		</action>
 		
+		<action name="obtieneMensajeMautSini" class="detalleSiniestroAction" method="obtieneMensajeMautSini">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					mensaje
+				</param>
+			</result>
+		</action>
+		
         <!-- CONSULTA PROVEEDORES -->
         <!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
     		<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>

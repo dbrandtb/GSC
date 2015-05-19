@@ -55,6 +55,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
     private Map<String, String> parametros;
 	private HashMap<String, String> params;
 	private HashMap<String,Object> paramsO;
+	private String                   mensaje;
 	
 	private Map<String,Item> imap;
 	
@@ -217,9 +218,53 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			return SUCCESS;
 		}
 	   	
+		
 		logger.debug(""
 		+ "\n######                           ######"
 		+ "\n###### GUARDA FACTURA X TRAMITE  ######"
+		+ "\n#######################################"
+		+ "\n#######################################"
+		);
+		success = true;
+		return SUCCESS;
+	}
+	
+	/**
+	* Funcion para guardar la informacion de la factura
+	* @param params y parametros
+	* @return guardamos la informacion en TVALOSIN, MAUTSINI
+	*/
+	public String obtieneMensajeMautSini() throws ApplicationException{
+		logger.debug(""
+		+ "\n######################################"
+		+ "\n######################################"
+		+ "\n######  obtieneMensajeMautSini  ######"
+		+ "\n######                          ######"
+		);
+		logger.debug("parametros de entrada PARAMS : "+ params);
+		try {
+			loadList = siniestrosManager.obtenerFacturasTramite(params.get("ntramite"));
+			String mensajeRespuesta ="";
+			for(int i=0; i< loadList.size();i++){
+				List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(params.get("ntramite"), loadList.get(i).get("NFACTURA"),null);
+				for(int j =0; j < asegurados.size();j++){
+					Map<String,String>autorizacionesFactura = siniestrosManager.obtenerAutorizacionesFactura(
+							asegurados.get(j).get("CDUNIECO"), asegurados.get(j).get("CDRAMO"), asegurados.get(j).get("ESTADO"),
+							asegurados.get(j).get("NMPOLIZA"), asegurados.get(j).get("NMSUPLEM"),asegurados.get(j).get("NMSITUAC"),
+							asegurados.get(j).get("AAAPERTU"), asegurados.get(j).get("STATUS"), asegurados.get(j).get("NMSINIES"), loadList.get(i).get("NFACTURA"));
+					String respuesta = "Factura "+loadList.get(i).get("NFACTURA")+ " "+autorizacionesFactura.get("COMMENME")+"\n";
+					mensajeRespuesta = mensajeRespuesta + respuesta;
+				}
+			}
+			mensaje = mensajeRespuesta;
+		}catch( Exception e){
+			logger.error("Error en guardaListaTramites",e);
+			success =  false;
+			return SUCCESS;
+		}
+		logger.debug(""
+		+ "\n######                           ######"
+		+ "\n######   obtieneMensajeMautSini  ######"
 		+ "\n#######################################"
 		+ "\n#######################################"
 		);
@@ -596,6 +641,14 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 
 	public void setKernelManager(KernelManagerSustituto kernelManager) {
 		this.kernelManager = kernelManager;
+	}
+	
+	public String getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
 	}
 	
 }
