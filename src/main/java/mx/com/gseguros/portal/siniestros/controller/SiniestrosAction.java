@@ -544,11 +544,16 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			UserVO usuario=(UserVO)session.get("USUARIO");
 			//urlContrareciboSiniestro
 			String reporteSeleccion = null;
-			if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase("4")){
-				reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.MS");
-			}else{
+			if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase("2")){
 				reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre");
 			}
+			if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase("4")){
+				reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.MS");
+			}
+			if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase("7")){
+				reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.GMMI");
+			}
+			
 			String urlAutorizacionServicio = ""
 				+ getText("ruta.servidor.reports")
 				+ "?p_unieco=" +  paramsO.get("pv_cdunieco_i")
