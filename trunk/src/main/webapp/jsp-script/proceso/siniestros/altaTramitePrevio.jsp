@@ -23,6 +23,7 @@
 			var _UR_TIPO_ATENCION					= '<s:url namespace="/siniestros"  		action="consultaListaTipoAtencion"/>';
 			var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
 			var _URL_LISTADO_ASEGURADO          	= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
+			var _URL_LISTADO_ASEGURADO_POLIZA		= '<s:url namespace="/siniestros"       action="consultaListaAseguradoPoliza" />';
 			var _URL_LISTADO_ALTATRAMITE          	= '<s:url namespace="/siniestros"       action="consultaListadoAltaTramite" />';
 			var _URL_GUARDA_ALTA_TRAMITE     		= '<s:url namespace="/siniestros"       action="guardaAltaTramite" />';
 			var _URL_CONSULTA_ALTA_TRAMITE     		= '<s:url namespace="/siniestros"       action="consultaListadoMesaControl" />';
@@ -30,6 +31,7 @@
 			var _URL_CONSULTA_FACTURA_PAGADA        = '<s:url namespace="/siniestros"       action="consultaFacturaPagada" />';
 			var _p12_urlMesaControl                 = '<s:url namespace="/mesacontrol" 		action="mcdinamica"               />';
 			var _UR_LISTA_RAMO_SALUD				= '<s:url namespace="/siniestros"  		action="consultaRamosSalud"/>';
+			var _URL_CONSULTA_BENEFICIARIO          = '<s:url namespace="/siniestros"       action="consultaDatosBeneficiario" />';
 			
 			var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
 		</script>

@@ -113,6 +113,8 @@ public class CatalogosAction extends PrincipalCoreAction {
         		case ANIOS_RENOVACION:
         		case CATCONCEPTO:
         		case CAUSA_SINIESTRO:
+        		//case CAUSA_SINIESTROC:
+        		//case TIPO_CONSULTA:
         		case DESTINOPAGO:
         		case FORMAS_ASEGURAMIENTO:
         		case GIROS:
@@ -675,6 +677,11 @@ public class CatalogosAction extends PrincipalCoreAction {
 								,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
 								);
 					}
+					break;
+				case CONCEPTOPAGO:
+					logger.debug("Entra a concepto de Pago");
+					lista = siniestrosManager.getConsultaListaConceptoPago(params.get("cdramo"));
+					logger.debug("Salida : "+lista.size() +" : "+lista);
 					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);

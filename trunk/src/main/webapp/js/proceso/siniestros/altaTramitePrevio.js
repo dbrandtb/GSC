@@ -144,7 +144,7 @@ Ext.onReady(function() {
         autoLoad:false,
         proxy: {
             type: 'ajax',
-            url : _URL_LISTADO_ASEGURADO,
+            url : _URL_LISTADO_ASEGURADO_POLIZA,
             reader: {
                 type: 'json',
                 root: 'listaAsegurado'
@@ -333,24 +333,58 @@ Ext.onReady(function() {
             }
     });
     
-    var cmbBeneficiario= Ext.create('Ext.form.ComboBox',{
-        name:'cmbBeneficiario',			fieldLabel: 'Beneficiario',			queryMode:'remote',			displayField: 'value',
-        valueField: 'key',				editable:true,						forceSelection : true,		matchFieldWidth: false,
-        queryParam: 'params.cdperson',	minChars  : 2, 						store : storeAsegurados2,	triggerAction: 'all',
-        width		 : 300,				hideTrigger:true,	allowBlank:false,
-    	listeners : {
-			'select' : function(combo, record) {
+	var cmbBeneficiario= Ext.create('Ext.form.ComboBox',{
+		name:'cmbBeneficiario',			fieldLabel: 'Beneficiario',			queryMode: 'local'/*'remote'*/,			displayField: 'value',
+		valueField: 'key',				editable:true,						forceSelection : true,		matchFieldWidth: false,
+		queryParam: 'params.cdperson',	minChars  : 2, 						store : storeAsegurados2,	triggerAction: 'all',
+		width		 : 300,				allowBlank:false,
+		listeners : {
+			'select' : function(e) {
 				panelInicialPral.down('[name=idnombreBeneficiarioProv]').setValue(cmbBeneficiario.rawValue);
+				// Realizamos la validacion si es menor de edad
+				Ext.Ajax.request({
+					url     : _URL_CONSULTA_BENEFICIARIO
+					,params:{
+						'params.cdunieco'  : panelInicialPral.down('[name="cdunieco"]').getValue(),
+						'params.cdramo'    : panelInicialPral.down('[name="cdramo"]').getValue(),
+						'params.estado'    : panelInicialPral.down('[name="estado"]').getValue(),
+						'params.nmpoliza'  : panelInicialPral.down('[name="polizaAfectada"]').getValue(),
+						'params.nmsuplem'  : panelInicialPral.down('[name="idNmsuplem"]').getValue(),
+						'params.cdperson'  : e.getValue()
+					}
+					,success : function (response) {
+						json = Ext.decode(response.responseText);
+						if(json.success==false){
+							Ext.Msg.show({
+								title:'Beneficiario',
+								msg: json.mensaje,
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.WARNING
+							});
+							panelInicialPral.down('combo[name=cmbBeneficiario]').setValue('')
+						}
+					},
+					failure : function (){
+						me.up().up().setLoading(false);
+						centrarVentanaInterna(Ext.Msg.show({
+							title:'Error',
+							msg: 'Error de comunicaci&oacute;n',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+						}));
+					}
+				});
 			}
-    	}
-    });
-    
-    cmbProveedor = Ext.create('Ext.form.field.ComboBox', {
-    	fieldLabel : 'Proveedor',		displayField : 'nombre',		name:'cmbProveedor',		valueField   : 'cdpresta',
-    	forceSelection : true,			matchFieldWidth: false,			queryMode :'remote',		queryParam: 'params.cdpresta',
-    	minChars	: 2,				store : storeProveedor,			triggerAction: 'all',		hideTrigger:true,	allowBlank:false,
-    	width		: 300,
-    	listeners : {
+		}
+	});
+	
+	
+	cmbProveedor = Ext.create('Ext.form.field.ComboBox', {
+		fieldLabel : 'Proveedor',		displayField : 'nombre',		name:'cmbProveedor',		valueField   : 'cdpresta',
+		forceSelection : true,			matchFieldWidth: false,			queryMode :'remote',		queryParam: 'params.cdpresta',
+		minChars	: 2,				store : storeProveedor,			triggerAction: 'all',		hideTrigger:true,	allowBlank:false,
+		width		: 300,
+		listeners : {
 			'select' : function(combo, record) {
 				if(this.getValue() =='0'){
 					panelInicialPral.down('[name=idnombreBeneficiarioProv]').setValue('');
@@ -360,8 +394,8 @@ Ext.onReady(function() {
 					panelInicialPral.down('[name=idnombreBeneficiarioProv]').hide();
 				}
 			}
-    	}
-    }); 
+		}
+	}); 
 	
 	cmbTipoMoneda = Ext.create('Ext.form.ComboBox',{
         id:'cmbTipoMoneda',			store: storeTipoMoneda,		value:'001',		queryMode:'local',
@@ -599,7 +633,7 @@ Ext.onReady(function() {
 											validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 										}
 									}
-						        }
+								}
 			            }
 				 	},
 				 	{ 	header: 'Importe Factura', 				dataIndex: 'importeFactura',		 	flex:2,				renderer: Ext.util.Format.usMoney
@@ -1001,6 +1035,16 @@ Ext.onReady(function() {
 	            					panelInicialPral.down('[name="idNmsuplem"]').setValue(record.get('nmsuplem'));
 	            					panelInicialPral.down('[name="idCdtipsit"]').setValue(record.get('cdtipsit'));
 	            					panelInicialPral.down('[name="idNumPolizaInt"]').setValue(record.get('numPoliza'));
+	            					
+	            					storeAsegurados2.load({
+										params:{
+											'params.cdunieco': record.get('cdunieco'),
+											'params.cdramo': record.get('cdramo'),
+											'params.estado': record.get('estado'),
+											'params.nmpoliza': record.get('nmpoliza')
+										}
+									});
+	            					
 	            					modPolizasAltaTramite.hide();
                 			}else{
                 				// No se cumple la condición la fecha de ocurrencia es mayor a la fecha de alta de tramite
