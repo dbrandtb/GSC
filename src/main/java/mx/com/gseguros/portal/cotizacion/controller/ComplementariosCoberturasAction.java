@@ -717,7 +717,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
             pv_status_i    #V    QUITADO X(
             pv_cdtipsit_i  session
             */
-			smap1.put("pv_nmsuplem_i" , "99999999999999999999");
+			smap1.put("pv_nmsuplem_i" , "999999999999999999");
 			//smap1.put("pv_status_i"   , "V");
 			//smap1.put("pv_cdtipsit_i" ,  datUsu.getCdtipsit());
 			Map<String,Object>parametrosCargados=null;
