@@ -27,11 +27,11 @@ import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.Rango;
-import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
@@ -810,11 +810,11 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     --pv_cdperpag   input
     */
     {
-    	logger.debug(""
-    			+ "\n################################"
-    			+ "\n###### comprar cotizacion ######"
-    			);
-    	logger.debug("smap1: "+smap1);
+    	logger.info(Utilerias.join(
+    			 "\n################################"
+    			,"\n###### comprar cotizacion ######"
+    			,"\n###### smap1=",smap1
+    			));
     	
     	exito   = true;
     	success = true;
@@ -832,6 +832,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	String cdideperCli = null;
     	String cdagenteExt = null;
     	boolean esFlotilla = false;
+    	String tipoflot    = null;
     	
     	//sesion valida
     	if(exito)
@@ -877,6 +878,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     				completos   = StringUtils.isNotBlank(fechaInicio)
     						&&StringUtils.isNotBlank(fechaFin);
     				esFlotilla  = StringUtils.isNotBlank(smap1.get("flotilla"))&&smap1.get("flotilla").equalsIgnoreCase("si");
+    				tipoflot    = smap1.get("tipoflot");
     			}
     			
     			if(!completos)
@@ -1163,7 +1165,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	//generar cotizacion
     	if(exito
     			&&!comprarCdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo())
-    			&&!esFlotilla
+    			&&(!esFlotilla||"P".equals(tipoflot))
     			)
     	{
             try
@@ -1177,7 +1179,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            	}
 	            }
 	            
-	            String urlReporteCotizacion=new StringBuilder()
+	            StringBuilder urlReporteCotizacion=new StringBuilder()
 	                   .append(getText("ruta.servidor.reports"))
 	                   .append("?p_unieco=")  .append(comprarCdunieco)
 	                   .append("&p_ramo=")    .append(comprarCdramo)
@@ -1190,13 +1192,22 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	                   .append("&p_perpag=")  .append(comprarCdperpag)
 	                   .append("&p_ntramite=").append(ntramite)
 	                   .append("&p_cdusuari=").append(cdusuari)
-	                   .append("&userid=")    .append(getText("pass.servidor.reports"))
-	                   .append("&report=")    .append(getText("rdf.cotizacion.nombre."+cdtipsit))
-	                   .append("&destype=cache")
-	                   .append("&desformat=PDF")
-	                   .append("&ACCESSIBLE=YES")
-	                   .append("&paramform=no")
-	                   .toString();
+	                   .append("&userid=")    .append(getText("pass.servidor.reports"));
+	            
+	            if(!esFlotilla)
+	            {
+	            	urlReporteCotizacion.append("&report=").append(getText("rdf.cotizacion.nombre."+cdtipsit));
+	            }
+	            else
+	            {
+	            	urlReporteCotizacion.append("&report=").append(getText("rdf.cotizacion.flot.nombre."+cdtipsit));
+	            }
+	            
+	            urlReporteCotizacion
+	            	.append("&destype=cache")
+	                .append("&desformat=PDF")
+	                .append("&ACCESSIBLE=YES")
+	                .append("&paramform=no");
 	            
 	            String nombreArchivoCotizacion="cotizacion.pdf";
 	            String pathArchivoCotizacion=new StringBuilder()
@@ -1204,7 +1215,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             					.append("/").append(ntramite)
             					.append("/").append(nombreArchivoCotizacion)
             					.toString();
-	            HttpUtil.generaArchivo(urlReporteCotizacion, pathArchivoCotizacion);
+	            HttpUtil.generaArchivo(urlReporteCotizacion.toString(), pathArchivoCotizacion);
             
 	            Map<String,Object>mapArchivo=new LinkedHashMap<String,Object>(0);
 	            mapArchivo.put("pv_cdunieco_i"  , comprarCdunieco);
@@ -1516,10 +1527,10 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     		
     	}
     	
-        logger.info(""
-    			+ "\n###### comprar cotizacion ######"
-    			+ "\n################################"
-    			);
+        logger.info(Utilerias.join(
+    			 "\n###### comprar cotizacion ######"
+        		,"\n################################"
+    			));
         return SUCCESS;
     }
     

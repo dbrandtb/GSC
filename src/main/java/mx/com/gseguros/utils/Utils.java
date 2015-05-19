@@ -100,15 +100,26 @@ public class Utils {
 	 * @param e
 	 * @return
 	 */
-	public static String manejaExcepcion(Exception e) {
-		
+	public static String manejaExcepcion(Exception e)
+	{		
 		String respuesta;
-		if(e instanceof ApplicationException) {
+		if(e instanceof ApplicationException)
+		{
 			respuesta = new StringBuilder(e.getMessage()).append(" #").append(System.currentTimeMillis()).toString();
-		} else {
-			respuesta = new StringBuilder("Error del sistema #").append(System.currentTimeMillis()).toString();
+			if(StringUtils.isNotBlank(((ApplicationException)e).getTraza()))
+			{
+				logger.error(StringUtils.join((((ApplicationException) e).getTraza()),"\n",respuesta),e);
+			}
+			else
+			{
+				logger.error(respuesta, e);
+			}
 		}
-		logger.error(respuesta, e);
+		else
+		{
+			respuesta = new StringBuilder("Error del sistema #").append(System.currentTimeMillis()).toString();
+			logger.error(respuesta, e);
+		}
 		return respuesta;
 	}
 	
@@ -208,6 +219,39 @@ public class Utils {
 		for(int i=0;i<args.length;i=i+2)
 		{
 			Utils.validate(args[i],args[i+1]);
+		}
+	}
+	
+	public static ApplicationException generaExcepcion(Exception e,String paso,String traza) throws Exception
+	{		
+		if(e.getClass().equals(ApplicationException.class))
+		{
+			((ApplicationException)e).setTraza(traza);
+			throw e;
+		}
+		else
+		{
+			throw new ApplicationException(Utilerias.join("Error en el proceso: ",paso), e, traza);
+		}
+	}
+
+	public static void validate(StringBuilder sb, String cadena, String mensaje) throws ValidationDataException {
+		if(StringUtils.isBlank(cadena)) {
+			throw new ValidationDataException(mensaje,sb.toString());
+		}
+	}
+	
+	public static void validate(StringBuilder sb, String... args) throws ValidationDataException
+	{
+		for(int i=0;i<args.length;i=i+2)
+		{
+			Utils.validate(sb, args[i] , args[i+1]);
+		}
+	}
+	
+	public static void validate(StringBuilder sb, Map<?,?> map, String mensaje) throws ValidationDataException {
+		if(MapUtils.isEmpty(map)) {
+			throw new ValidationDataException(mensaje,sb.toString());
 		}
 	}
 }

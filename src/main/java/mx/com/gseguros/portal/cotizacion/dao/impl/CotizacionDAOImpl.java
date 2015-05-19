@@ -5361,4 +5361,46 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public Map<String,String>validarReemplazoDocumentoCotizacion(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Map<String,Object> procResult = ejecutaSP(new ValidarReemplazoDocumentoCotizacion(getDataSource()),params);
+		Map<String,String> result     = new LinkedHashMap<String,String>();
+		result.put("cdtipsit" , (String)procResult.get("pv_cdtipsit_o"));
+		result.put("cdplan"   , (String)procResult.get("pv_cdplan_o"));
+		result.put("cdperpag" , (String)procResult.get("pv_cdperpag_o"));
+		result.put("tipoflot" , (String)procResult.get("pv_tipoflot_o"));
+		result.put("ntramite" , (String)procResult.get("pv_ntramite_o"));
+		result.put("cdusuari" , (String)procResult.get("pv_cdusuari_o"));
+		result.put("reporte"  , (String)procResult.get("pv_reporte_o"));
+		return result;
+	}
+	
+	protected class ValidarReemplazoDocumentoCotizacion extends StoredProcedure
+	{
+		protected ValidarReemplazoDocumentoCotizacion(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES2.P_VALIDA_REMPLAZO_DOC_COTI");
+			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdtipsit_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdplan_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdperpag_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdusuari_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_reporte_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

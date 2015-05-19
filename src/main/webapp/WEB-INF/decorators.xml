@@ -47,6 +47,8 @@
         
         <pattern>/*/includes/*.action*</pattern>
         
+        <pattern>/*/servicios/*.action*</pattern>
+        
 	</excludes>
 
 
