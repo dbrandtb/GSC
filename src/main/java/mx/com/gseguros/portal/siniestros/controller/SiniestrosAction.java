@@ -4144,7 +4144,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.debug("mapa WS siniestro unico: "+importesWSSiniestroUnico);
 			logger.debug("<<WS del siniestro unico");
 			
-		}else{
+		}else{ 
 			/***************************** 		P A G O		I N D E M N I Z A C I O N 		*************************/
 			logger.debug("Paso 5.- EL PROCESO DE PAGO DE INDEMNIZACION");
 			
