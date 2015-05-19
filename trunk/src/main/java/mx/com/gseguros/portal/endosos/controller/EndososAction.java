@@ -1721,8 +1721,6 @@ public class EndososAction extends PrincipalCoreAction
 					String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
 					
 					logger.debug("docu iterado: "+docu);
-					String nmsolici=docu.get("nmsolici");
-					String nmsituac=docu.get("nmsituac");
 					String descripc=docu.get("descripc");
 					String descripl=docu.get("descripl");
 					String url=this.getText("ruta.servidor.reports")
@@ -5415,7 +5413,7 @@ public class EndososAction extends PrincipalCoreAction
 			if(datosContr!=null && !datosContr.isEmpty() && datosContr.get(0) != null)
 			{
 				Map<String,String> datos = datosContr.get(0);
-				smap1.put("nmsituac", "0");
+				smap1.put("nmsituac", "1");
 				smap1.put("cdperson", datos.get("CDPERSON"));
 				smap1.put("cdrol", datos.get("CDROL"));
 			}else{
@@ -5447,10 +5445,7 @@ public class EndososAction extends PrincipalCoreAction
 				String cdramo   = smap1.get("CDRAMO");
 				String cdtipsit = smap1.get("CDTIPSIT");
 				String estado   = smap1.get("ESTADO");
-				String nmpoliza = smap1.get("NMPOLIZA");
-				String nmsuplem = smap1.get("NMSUPLEM");
 				String rol      = usuario.getRolActivo().getClave();
-				String rolAsegu = smap1.get("cdrol");
 				
 				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				
@@ -5549,12 +5544,9 @@ public class EndososAction extends PrincipalCoreAction
 			String cdramo       = smap1.get("CDRAMO");
 			String estado       = smap1.get("ESTADO");
 			String nmpoliza     = smap1.get("NMPOLIZA");
-			String nmsituac     = smap1.get("nmsituac");
 			String sFechaEndoso = smap3.get("fecha_endoso");
 			Date   dFechaEndoso = renderFechas.parse(sFechaEndoso);
 			String cdtipsit     = smap1.get("CDTIPSIT");
-			String cdperson     = smap1.get("cdperson");
-			String cdrol        = smap1.get("cdrol");
 			String nmordom      = smap2.get("NMORDDOM");
 			String dsdomici     = smap2.get("DSDOMICI");
 			String nmtelefo     = smap2.get("NMTELEFO");
