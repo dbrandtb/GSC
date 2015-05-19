@@ -433,7 +433,7 @@ Ext.onReady(function(){
                 'smap1.pv_cdramo_i'     : inputCdramop4,
                 'smap1.pv_estado_i'     : inputEstadop4,
                 'smap1.pv_nmpoliza_i'   : inputNmpolizap4,
-                'smap1.pv_nmsituac_i'   : '0',
+                'smap1.pv_nmsituac_i'   : '1',
                 'smap1.pv_cdperson_i'   : inputCdpersonp4,
                 'smap1.pv_cdrol_i'      : '1',
                 'smap1.nombreAsegurado' : '',
