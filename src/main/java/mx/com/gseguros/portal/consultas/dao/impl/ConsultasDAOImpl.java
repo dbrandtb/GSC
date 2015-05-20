@@ -1699,4 +1699,44 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+    
+    @Override
+    public String recuperarCdtipsitExtraExcel(
+			int fila
+			,String proc
+			,String param1
+			,String param2
+			,String param3
+			)throws Exception
+    {
+    	Map<String,String> params = new LinkedHashMap<String,String>();
+    	params.put("param1" , param1);
+    	params.put("param2" , param2);
+    	params.put("param3" , param3);
+    	Map<String,Object> procResult = ejecutaSP(new RecuperarCdtipsitExtraExcel(getDataSource(),proc),params);
+    	logger.debug(Utilerias.join("\n****** procedimiento=",proc,"resultado=",procResult));
+    	String valor = (String) procResult.get("pv_cdtipsit_o");
+    	if(StringUtils.isBlank(valor))
+    	{
+    		throw new ApplicationException(
+    				Utilerias.join("No se encuentra tipo de situacion con ",param1,", ",param2," y ",param3," en la fila ",fila)
+    				);
+    	}
+    	return valor;
+    }
+    
+    protected class RecuperarCdtipsitExtraExcel extends StoredProcedure
+    {
+    	protected RecuperarCdtipsitExtraExcel(DataSource dataSource, String proc)
+    	{
+    		super(dataSource , proc);
+            declareParameter(new SqlParameter("param1" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("param2" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("param3" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_cdtipsit_o" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }    
 }

@@ -2683,23 +2683,6 @@ function _p25_turnar(status,titulo,closable)
                 ,handler : function(button)
                 {
                     ventana.setLoading(true);
-                    if(status+'x'=='17x')
-                    {
-                        Ext.Ajax.request(
-                        {
-                            url     : _p25_guardarReporteCotizacion
-                            ,params :
-                            {
-                                'smap1.cdunieco'  : _p25_smap1.cdunieco
-                                ,'smap1.cdramo'   : _p25_smap1.cdramo
-                                ,'smap1.estado'   : _p25_smap1.estado
-                                ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
-                                ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
-                                ,'smap1.cdtipsit' : _p25_smap1.cdtipsit
-                                ,'smap1.ntramite' : _p25_smap1.ntramite
-                            }
-                        });
-                    }
                     Ext.Ajax.request(
                     {
                         url     : _p25_urlActualizarStatus
@@ -2717,6 +2700,23 @@ function _p25_turnar(status,titulo,closable)
                             if(json.success)
                             {
                                 ventana.setLoading(true);
+                                if(status+'x'=='17x')
+			                    {
+			                        Ext.Ajax.request(
+			                        {
+			                            url     : _p25_guardarReporteCotizacion
+			                            ,params :
+			                            {
+			                                'smap1.cdunieco'  : _p25_smap1.cdunieco
+			                                ,'smap1.cdramo'   : _p25_smap1.cdramo
+			                                ,'smap1.estado'   : _p25_smap1.estado
+			                                ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+			                                ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
+			                                ,'smap1.cdtipsit' : _p25_smap1.cdtipsit
+			                                ,'smap1.ntramite' : _p25_smap1.ntramite
+			                            }
+			                        });
+			                    }
                                 Ext.Ajax.request(
                                 {
                                     url      : _p25_urlCargarParametros

@@ -2002,7 +2002,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				 */
 
 				if (StringUtils.isBlank(cdpersonCli) && StringUtils.isNotBlank(cdideperCli)) {
-					logger.debug("Persona proveniente de WS, Se importará, Valor de cdperson en blanco, valor de cdIdeper: " + cdideperCli);
+					logger.debug("Persona proveniente de WS, Se importarï¿½, Valor de cdperson en blanco, valor de cdIdeper: " + cdideperCli);
 					
 					
 					/**
@@ -2294,6 +2294,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					String   cdtabla1    = conf.get("CDTABLA1");
 					String   tipoatri    = conf.get("TIPOATRI");
 					String   valorStat   = conf.get("VALOR");
+					String   orCdtipsit  = conf.get("ORIGEN_CDTIPSIT");
 					if(!isBlank(decode))
 					{
 						splited = decode.split(",");
@@ -2303,7 +2304,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					.append("[").append(cdtipsitCol).append("]")
 					.append("*").append(tipo)
 					.append("#").append(tipoatri)
-					.append("~").append(valorStat);
+					.append("~").append(valorStat)
+					.append("{").append(orCdtipsit).append("}");
 					
 					Cell cell = row.getCell(col);
 					if(propiedad.equals("cdtipsit"))
@@ -2347,7 +2349,85 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					}
 					else if("S".equals(respetar)||tipoatri.equals("SITUACION"))
 					{
-						//logger.debug(Utilerias.join(">>",propiedad));
+						//nuevo para recuperar cdtipsit
+						if(StringUtils.isNotBlank(orCdtipsit))
+						{
+							setCheckpoint(Utilerias.join("Recuperando tipo de situacion de la fila ",fila));
+							
+							sb.append(">").append(orCdtipsit);
+							String cellValue         = null;
+							Cell   nextCell          = row.getCell(col+1);
+							String nextCellValue     = null;
+							Cell   nextNextCell      = row.getCell(col+2);
+							String nextNextCellValue = null;
+							try
+							{
+								cellValue = cell.getStringCellValue();
+							}
+							catch(Exception ex)
+							{
+								sb.append("(E)");
+								try
+								{
+									double num = cell.getNumericCellValue();
+									cellValue  = String.format("%.0f",num);
+								}
+								catch(Exception ex2)
+								{
+									sb.append("(E)");
+									throwExc(Utilerias.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+								}
+							}
+							try
+							{
+								nextCellValue = nextCell.getStringCellValue();
+							}
+							catch(Exception ex)
+							{
+								sb.append("(E)");
+								try
+								{
+									double num    = nextCell.getNumericCellValue();
+									nextCellValue = String.format("%.0f",num);
+								}
+								catch(Exception ex2)
+								{
+									sb.append("(E)");
+									nextCellValue = "";
+								}
+							}
+							try
+							{
+								nextNextCellValue = nextNextCell.getStringCellValue();
+							}
+							catch(Exception ex)
+							{
+								sb.append("(E)");
+								try
+								{
+									double num    = nextNextCell.getNumericCellValue();
+									nextNextCellValue = String.format("%.0f",num);
+								}
+								catch(Exception ex2)
+								{
+									sb.append("(E)");
+									nextNextCellValue = "";
+								}
+							}
+							String cdtipsitProc = consultasDAO.recuperarCdtipsitExtraExcel(
+									fila
+									,orCdtipsit
+									,cellValue
+									,nextCellValue
+									,nextNextCellValue
+									);
+							sb.append("==").append(cdtipsitProc);
+							record.put("cdtipsit" , cdtipsitProc);
+							
+							setCheckpoint(Utilerias.join("Iterando fila ",fila));
+						}
+						//nuevo para recuperar cdtipsit
+						
 						String cdtipsitRecord = record.get("cdtipsit");
 						if(cdtipsitCol.equals("*")||("|"+cdtipsitCol+"|").lastIndexOf("|"+cdtipsitRecord+"|")!=-1)
 						{
@@ -2495,6 +2575,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									try
 									{
 									    clave=cotizacionDAO.cargarClaveTtapvat1(cdtabla1, valor, buffer);
+									    if(StringUtils.isNotBlank(clave)
+									    		&&clave.length()>"num".length()
+									    		&&clave.substring(0, "num".length()).equals("num")
+									    		)
+									    {
+									    	//rebanamos cuando viene "num1" a "1"
+									    	clave=clave.substring("num".length());
+									    }
 									}
 									catch(Exception ex)
 									{
