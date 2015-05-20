@@ -3219,7 +3219,9 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_cdrol_i",       OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtiptra_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_contrarecibo_i",OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_tipoPago_i",OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipoPago_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdpresta_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtenerMesaControlMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
@@ -3290,6 +3292,8 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_cdusuari_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_contrarecibo_i",  OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_tipoPago_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdpresta_i",      OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerMesaControlMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
