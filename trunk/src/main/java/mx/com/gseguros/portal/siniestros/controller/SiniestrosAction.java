@@ -2325,7 +2325,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			String cdtipsit = params.get("cdtipsit");
 			String cdDestinoPago = params.get("destinoPago");
 			String cdConceptoPago = params.get("concepPago");
+			String beneficiario = params.get("beneficiario");
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			String tipoPago = params.get("tipoPago");
 			String fechaSiniestro   = sdf.format(new Date());
 			
 			Map<String,Object> otvalor = new HashMap<String,Object>();
@@ -2334,6 +2336,10 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			otvalor.put("pv_otvalor18_i"  , cdDestinoPago);
 			otvalor.put("pv_otvalor19_i"  , cdConceptoPago);
 			otvalor.put("pv_otvalor21_i"  , fechaSiniestro); // Guardaremos la fecha cuando se solicito el pago del siniestro
+			
+			if(!tipoPago.equalsIgnoreCase("1")){
+				otvalor.put("pv_otvalor04_i"  , beneficiario);
+			}
 			siniestrosManager.actualizaOTValorMesaControl(otvalor);
 			
 			success = true;

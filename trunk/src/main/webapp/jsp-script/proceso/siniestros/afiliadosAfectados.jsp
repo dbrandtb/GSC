@@ -79,8 +79,8 @@
 			var _URL_TABBEDPANEL						= '<s:url namespace="/siniestros"  		action="includes/detalleSiniestro" />';
 			var _URL_CONSULTA_AUTORIZACION_ESP			= '<s:url namespace="/siniestros"		action="consultaAutorizacionServicio" />';
 			var _CATALOGO_CONCEPTOPAGO					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CONCEPTOPAGO"/>';
-
-			
+			var _URL_LISTADO_ASEGURADO_POLIZA			= '<s:url namespace="/siniestros"       action="consultaListaAseguradoPoliza" />';
+			var _URL_CONSULTA_BENEFICIARIO				= '<s:url namespace="/siniestros"		action="consultaDatosBeneficiario" />';
 			debug("VALOR DE _11_params --->",_11_params);
 			debug("VALOR DEL ROL ACTIVO --->",_CDROL);
 			var _11_itemsForm	=
@@ -135,6 +135,7 @@
 			var storeIncisosRechazos;
 			var storeDestinoPago;
 			var storeConceptoPago;
+			var storeAsegurados2;
 			var ventanaAgregarAsegurado;
 			
 			<s:set name="contadorFactura" value="0" />
@@ -770,6 +771,19 @@
 						reader: {
 							type: 'json',
 							root: 'lista'
+						}
+					}
+				});
+				
+				storeAsegurados2 = Ext.create('Ext.data.Store', {
+					model:'Generic',
+					autoLoad:false,
+					proxy: {
+						type: 'ajax',
+						url : _URL_LISTADO_ASEGURADO_POLIZA,
+						reader: {
+							type: 'json',
+							root: 'listaAsegurado'
 						}
 					}
 				});
@@ -4470,8 +4484,6 @@
 		centrarVentana(windowLoader);
 	}
 	function _11_retornarMedAjustadorAOperador(grid,rowIndex,colIndex){
-		alert("Numero de Tramite "+_11_params.NTRAMITE);
-		
 		Ext.Ajax.request({
 			url     : _URL_P_MOV_MAUTSINI
 			,params : {
@@ -4780,7 +4792,16 @@
 								'params.cdramo': _tipoProducto
 							}
 						});
-									
+						
+						storeAsegurados2.load({
+							params:{
+								'params.cdunieco': _11_params.CDUNIECO,
+								'params.cdramo': _tipoProducto,
+								'params.estado': _11_params.ESTADO,
+								'params.nmpoliza': _11_params.NMPOLIZA
+							}
+						});
+						
 						var pagocheque = Ext.create('Ext.form.field.ComboBox',
 						{
 							colspan	   :2,				fieldLabel   	: 'Destino Pago', 	name			:'destinoPago',
@@ -4797,9 +4818,54 @@
 							queryMode    :'local',		store 			: storeConceptoPago
 						});
 						
+						var cmbBeneficiario= Ext.create('Ext.form.ComboBox',{
+							name:'cmbBeneficiario',			fieldLabel: 'Beneficiario',			queryMode: 'local'/*'remote'*/,			displayField: 'value',
+							valueField: 'key',				editable:true,						forceSelection : true,		matchFieldWidth: false,
+							queryParam: 'params.cdperson',	minChars  : 2, 						store : storeAsegurados2,	triggerAction: 'all',
+							width		 : 350,
+							allowBlank: _tipoPago == _TIPO_PAGO_DIRECTO,
+							hidden : _tipoPago == _TIPO_PAGO_DIRECTO,
+							listeners : {
+								'select' : function(e) {
+									Ext.Ajax.request({
+										url     : _URL_CONSULTA_BENEFICIARIO
+										,params:{
+											'params.cdunieco'  : _11_params.CDUNIECO,
+											'params.cdramo'    : _11_params.CDRAMO,
+											'params.estado'    : _11_params.ESTADO,
+											'params.nmpoliza'  : _11_params.NMPOLIZA,
+											'params.cdperson'  : e.getValue()
+										}
+										,success : function (response) {
+											json = Ext.decode(response.responseText);
+											if(json.success==false){
+												Ext.Msg.show({
+													title:'Beneficiario',
+													msg: json.mensaje,
+													buttons: Ext.Msg.OK,
+													icon: Ext.Msg.WARNING
+												});
+												panelModificacion.query('combo[name=cmbBeneficiario]')[0].setValue('')
+											}
+										},
+										failure : function (){
+											me.up().up().setLoading(false);
+											centrarVentanaInterna(Ext.Msg.show({
+												title:'Error',
+												msg: 'Error de comunicaci&oacute;n',
+												buttons: Ext.Msg.OK,
+												icon: Ext.Msg.ERROR
+											}));
+										}
+									});
+								}
+							}
+						});
+						
 						var cdramoTramite="";
 						var cdtipsitTramite ="";
 						//3.- Obtenemos los valores de TMESACONTROL  el destino y concepto de pago si es que existen
+						
 						Ext.Ajax.request({
 							url     : _URL_CONSULTA_TRAMITE
 							,params:{
@@ -4812,7 +4878,7 @@
 									var json=Ext.decode(response.responseText).listaMesaControl[0];
 									cdramoTramite = json.cdramomc;
 									cdtipsitTramite = json.cdtipsitmc;
-									
+									panelModificacion.query('combo[name=cmbBeneficiario]')[0].setValue(json.otvalor04mc);
 									if(json.otvalor18mc !=null)
 									{
 										panelModificacion.query('combo[name=destinoPago]')[0].setValue(json.otvalor18mc);
@@ -4845,7 +4911,8 @@
 									title: 'Destino de Pago',
 									bodyPadding: 5,
 									items: [pagocheque,
-											concepPago],
+											concepPago,
+											cmbBeneficiario],
 									buttonAlign:'center',
 									buttons: [
 									{
@@ -4855,6 +4922,7 @@
 										,handler: function() { 
 											if (panelModificacion.form.isValid()) {
 												var datos=panelModificacion.form.getValues();
+												debug("VALOR DEL DATO ")
 												//4.- Guardamos la informacion del destino y el tipo de concepto
 												Ext.Ajax.request({
 													url     : _URL_CONCEPTODESTINO
@@ -4863,7 +4931,9 @@
 															ntramite:_11_params.NTRAMITE,
 															cdtipsit:cdtipsitTramite,
 															destinoPago:datos.destinoPago,
-															concepPago:datos.concepPago
+															concepPago:datos.concepPago,
+															beneficiario : datos.cmbBeneficiario,
+															tipoPago : _11_params.OTVALOR02
 														}
 													}
 													,success : function (response)

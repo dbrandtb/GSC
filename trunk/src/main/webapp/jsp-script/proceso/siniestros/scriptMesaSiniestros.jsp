@@ -22,6 +22,9 @@ var _CAT_DESTINOPAGO                        = '<s:property value="@mx.com.gsegur
 var _CAT_CONCEPTO                           = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CATCONCEPTO"/>';
 var _STATUS_DEVOLVER_TRAMITE				= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@TRAMITE_EN_DEVOLUCION.codigo" />';
 var _CATALOGO_CONCEPTOPAGO					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CONCEPTOPAGO"/>';
+var _URL_LISTADO_ASEGURADO_POLIZA			= '<s:url namespace="/siniestros"       action="consultaListaAseguradoPoliza" />';
+var _URL_CONSULTA_BENEFICIARIO				= '<s:url namespace="/siniestros"		action="consultaDatosBeneficiario" />';
+
 
 
 // Catalogo Tipos de tramite a utilizar:
@@ -1100,21 +1103,18 @@ var msgWindow;
 			}
 		});
 		
-		/*storeCatConcepto = Ext.create('Ext.data.JsonStore', {
-	        model:'Generic',
-	        proxy:
-	        {
-	            type: 'ajax',
-	            url: _URL_CATALOGOS,
-	            extraParams : {catalogo:_CAT_CONCEPTO},
-	            reader:
-	            {
-	                type: 'json',
-	                root: 'lista'
-	            }
-	        }
-	    });
-		storeCatConcepto.load();*/
+		storeAsegurados2 = Ext.create('Ext.data.Store', {
+			model:'Generic',
+			autoLoad:false,
+			proxy: {
+				type: 'ajax',
+				url : _URL_LISTADO_ASEGURADO_POLIZA,
+				reader: {
+					type: 'json',
+					root: 'listaAsegurado'
+				}
+			}
+		});
 		
 		msgWindow = Ext.Msg.show({
 	        title: 'Aviso',
@@ -1124,9 +1124,23 @@ var msgWindow;
 	        fn: function(buttonId, text, opt){
 	        	if(buttonId == 'yes'){
 	        		var record = grid.getStore().getAt(rowIndex);
+	        		var recordAdicional = grid.getStore().getAt(rowIndex);
+	        		
+	        		debug("VALOR DEL RECORD :",record);
+	        		debug("VALOR DEL RECORD :",record.raw);
+	        		
 	        		storeConceptoPago.load({
 						params : {
 							'params.cdramo': record.get('cdramo')
+						}
+					});
+	        		
+	        		storeAsegurados2.load({
+						params:{
+							'params.cdunieco': record.raw.cdunieco,
+							'params.cdramo': record.raw.cdramo,
+							'params.estado': record.raw.estado,
+							'params.nmpoliza': record.raw.nmpoliza
 						}
 					});
 	        		
@@ -1146,6 +1160,50 @@ var msgWindow;
    		    	        queryMode    :'local',		store 			: storeConceptoPago
    		    	    });
 	        		
+   		    		var cmbBeneficiario= Ext.create('Ext.form.ComboBox',{
+						name:'cmbBeneficiario',			fieldLabel: 'Beneficiario',			queryMode: 'local'/*'remote'*/,			displayField: 'value',
+						valueField: 'key',				editable:true,						forceSelection : true,		matchFieldWidth: false,
+						queryParam: 'params.cdperson',	minChars  : 2, 						store : storeAsegurados2,	triggerAction: 'all',
+						width		 : 350,
+						allowBlank: record.get('parametros.pv_otvalor02') == _PAGO_DIRECTO,
+						hidden : record.get('parametros.pv_otvalor02') == _PAGO_DIRECTO,
+						listeners : {
+							'select' : function(e) {
+								Ext.Ajax.request({
+									url     : _URL_CONSULTA_BENEFICIARIO
+									,params:{
+										'params.cdunieco'  : record.raw.cdunieco,
+										'params.cdramo'    : record.raw.cdramo,
+										'params.estado'    : record.raw.estado,
+										'params.nmpoliza'  : record.raw.nmpoliza,
+										'params.cdperson'  : e.getValue()
+									}
+									,success : function (response) {
+										json = Ext.decode(response.responseText);
+										if(json.success==false){
+											Ext.Msg.show({
+												title:'Beneficiario',
+												msg: json.mensaje,
+												buttons: Ext.Msg.OK,
+												icon: Ext.Msg.WARNING
+											});
+											panelModificacion.query('combo[name=cmbBeneficiario]')[0].setValue('')
+										}
+									},
+									failure : function (){
+										me.up().up().setLoading(false);
+										centrarVentanaInterna(Ext.Msg.show({
+											title:'Error',
+											msg: 'Error de comunicaci&oacute;n',
+											buttons: Ext.Msg.OK,
+											icon: Ext.Msg.ERROR
+										}));
+									}
+								});
+							}
+						}
+					});
+   		    		
    		    		var cdramoTramite="";
    		    		var cdtipsitTramite ="";
 	        		//LLAMADA A LA MESA DE CONTROL PARA VERIFICAR LOS CAMPOS OTVALOR18 Y OTVALOR19
@@ -1161,7 +1219,7 @@ var msgWindow;
 		        			    	var json=Ext.decode(response.responseText).listaMesaControl[0];
 		        			    	cdramoTramite = json.cdramomc;
 		           		    		cdtipsitTramite = json.cdtipsitmc;
-		        			    	
+		           		    		panelModificacion.query('combo[name=cmbBeneficiario]')[0].setValue(json.otvalor04mc);
 		        			    	if(json.otvalor18mc !=null)
 	        			    		{
 		        			    		panelModificacion.query('combo[name=destinoPago]')[0].setValue(json.otvalor18mc);
@@ -1196,7 +1254,8 @@ var msgWindow;
 			        	                title: 'Destino de Pago',
 			        	                bodyPadding: 5,
 			        	                items: [pagocheque,
-			        	                        concepPago],
+			        	                        concepPago,
+												cmbBeneficiario],
 			        	        	    buttonAlign:'center',
 			        	        	    buttons: [{
 			        	            		text: 'Solicitar'
@@ -1213,7 +1272,9 @@ var msgWindow;
 			        	        	        					ntramite:record.get('ntramite'),
 			        	        	        					cdtipsit:cdtipsitTramite,
 			        	        	        					destinoPago:datos.destinoPago,
-			        	        	        					concepPago:datos.concepPago
+			        	        	        					concepPago:datos.concepPago,
+			        	        	        					beneficiario : datos.cmbBeneficiario,
+																tipoPago : record.get('parametros.pv_otvalor02')
 			        	        	        				}
 	        	                                        }
 			        	        	        			,success : function (response)
@@ -1221,7 +1282,6 @@ var msgWindow;
 			        	        		        			 	
 			        	        	        				windowCvePago.close();
 			        	        	        				mcdinGrid.setLoading(true);
-			        	        	        				
 			        	        	     	        		Ext.Ajax.request({
 			        	        	     						url: _UrlSolicitarPago,
 			        	        	     						params: {
@@ -1243,7 +1303,6 @@ var msgWindow;
 			        	        	     							mensajeError('No se pudo solicitar el pago.');
 			        	        	     						}
 			        	        	     					});
-			        	        	     	        		
 			        	        	        			    },
 			        	        	        			    failure : function ()
 			        	        	        			    {
