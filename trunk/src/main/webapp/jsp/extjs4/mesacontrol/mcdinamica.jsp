@@ -37,6 +37,8 @@ mcdinInput['fehasta']  = '<s:property value="smap2.pv_fehasta_i"  />';
 mcdinInput['tiptra']   = '<s:property value="smap2.pv_cdtiptra_i" />';
 mcdinInput['contrarecibo']   = '<s:property value="smap2.pv_contrarecibo_i" />';
 mcdinInput['tipoPago']   = '<s:property value="smap2.pv_tipoPago_i" />';
+mcdinInput['nfactura']   = '<s:property value="smap2.pv_nfactura_i" />';
+mcdinInput['cdpresta']   = '<s:property value="smap2.pv_cdpresta_i" />';
 debug('mcdinInput: ',mcdinInput);
 
 mcdinSesion['username'] = '<s:property value="username" />';
@@ -453,6 +455,8 @@ Ext.onReady(function()
 		    	                    ,'smap1.pv_cdtiptra_i' : mcdinInput['tiptra']
 		    	    				,'smap1.pv_contrarecibo_i'	: Ext.isEmpty(_fieldByName('smap2.pv_contrarecibo_i').getValue())?'':_fieldByName('smap2.pv_contrarecibo_i').getValue()
 		    	    				,'smap1.pv_tipoPago_i'	: Ext.isEmpty(_fieldByName('smap2.pv_tipoPago_i').getValue())?'':_fieldByName('smap2.pv_tipoPago_i').getValue()
+		    	    				,'smap1.pv_nfactura_i'	: Ext.isEmpty(_fieldByName('smap2.pv_nfactura_i').getValue())?'':_fieldByName('smap2.pv_nfactura_i').getValue()
+		    	    				,'smap1.pv_cdpresta_i'	: Ext.isEmpty(_fieldByName('smap2.pv_cdpresta_i').getValue())?'':_fieldByName('smap2.pv_cdpresta_i').getValue()
 		    	    			};
 		    	    			cargaStorePaginadoLocal(mcdinStore, mcdinUrlCargar, 'olist1', params, function (options, success, response){
 		    	    	            if(success){
@@ -592,6 +596,8 @@ Ext.onReady(function()
 		        ,'smap1.pv_cdtiptra_i' : mcdinInput['tiptra']
     			,'smap1.pv_contrarecibo_i': mcdinInput['contrarecibo']
     			,'smap1.pv_tipoPago_i'	:mcdinInput['tipoPago']
+		    	,'smap1.pv_nfactura_i'	:mcdinInput['nfactura']
+		    	,'smap1.pv_cdpresta_i'	:mcdinInput['cdpresta']
 		   };
     	
     	cargaStorePaginadoLocal(mcdinStore, mcdinUrlCargar, 'olist1', params, function (options, success, response){
