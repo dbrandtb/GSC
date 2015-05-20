@@ -212,4 +212,12 @@ public interface ConsultasDAO
 	public String recuperarValorMaximoSituacionPorRol(String cdtipsit,String cdsisrol) throws Exception;
 
 	public String obtieneSubramoGS(String cdramo,String cdtipsit) throws Exception;
+	
+	public String recuperarCdtipsitExtraExcel(
+			int fila
+			,String proc
+			,String param1
+			,String param2
+			,String param3
+			)throws Exception;
 }
