@@ -6,7 +6,7 @@
         <title>Consulta de asegurados</title>
         <script type="text/javascript">
         Ext.onReady(function() {
-        	Ext.Msg.alert('Aviso', 'No posee rol Promotor en el sistema, por favor p&oacute;ngase en contacto con el Administrador.');
+        	Ext.Msg.alert('Aviso', 'No posee rol con el que intenta acceder al sistema, por favor p&oacute;ngase en contacto con el Administrador.');
         });
         
         </script>
