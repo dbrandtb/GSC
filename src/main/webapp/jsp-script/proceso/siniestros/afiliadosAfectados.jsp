@@ -247,7 +247,8 @@
 						{type:'string',	name:'NMSINREF'},		{type:'string',	name:'IMPORTEASEG'},
 						{type:'string',	name:'PTIVAASEG'},		{type:'string',	name:'PTIVARETASEG'},
 						{type:'string',	name:'PTISRASEG'},		{type:'string',	name:'PTIMPCEDASEG'},
-						{type:'string',	name:'DEDUCIBLE'},		{type:'string',	name:'IMPORTETOTALPAGO'}
+						{type:'string',	name:'DEDUCIBLE'},		{type:'string',	name:'IMPORTETOTALPAGO'},
+						{type:'string',	name:'COMPLEMENTO'}
 					]
 				});
 //MODELO DE LOS CONCEPTOS
@@ -279,7 +280,9 @@
 				Ext.define('modelListadoAutorizacion',{
 					extend: 'Ext.data.Model',
 					fields: [  	{type:'string',	name:'NMAUTSER'},	   		{type:'string',	name:'CDPROVEE'},
-								{type:'string',	name:'FESOLICI'},			{type:'string',	name:'NOMPROV'}]
+								{type:'string',	name:'FESOLICI'},			{type:'string',	name:'NOMPROV'},
+								{type:'string',	name:'CDCAUSA'},			{type:'string',	name:'DSCAUSA'},
+								{type:'string',	name:'CDICD'},				{type:'string',	name:'DSICD'}]
 				});
 //MODELO PARA EL LISTADO DE LA ASOCIACION
 				Ext.define('modelListadoSiniestroMaestro',{
@@ -1077,12 +1080,12 @@
 										icon	 : '${ctx}/resources/fam3icons/icons/accept.png'
 										,tooltip : 'Guardar'
 										,handler : guardarDatosComplementarios
-									},
+									}/*,
 									{
 										icon	 : '${ctx}/resources/fam3icons/icons/folder.png'
 										,tooltip : 'Siniestro'
 										,handler : _11_pedirMsiniestMaestro
-									},
+									}*/,
 									{
 										icon	 : '${ctx}/resources/fam3icons/icons/user_delete.png'
 										,tooltip : 'Eliminar Asegurado'
@@ -1108,6 +1111,9 @@
 							},
 							{
 								header: 'Id<br/>Sini. Existente',	dataIndex: 'NMSINREF',		width: 90
+							},
+							{
+								header: 'Complemento',	dataIndex: 'COMPLEMENTO',		width: 90
 							},
 							{
 								header: 'Fecha<br/>Ocurrencia',		dataIndex: 'FEOCURRE'
@@ -1750,28 +1756,26 @@
 					,selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true }
 					,columns	   :
 					[
-						 {
+						{
 							 header	 : 'N&uacute;mero <br/> Autorizaci&oacute;n'
 							 ,dataIndex : 'NMAUTSER'
 							 ,width	 	: 100
-						 },
-						 {
+						},
+						{
 							 header	 : 'Fecha Solicitud'
 							 ,dataIndex : 'FESOLICI'
 							 ,width	 : 100
-						 }
-						 ,
-						 {
+						},
+						{
 							 header	 : 'clave Proveedor'
 							 ,dataIndex : 'CDPROVEE'
 							 ,width	 : 100
-						 }
-						 ,
-						 {
+						 },
+						{
 							 header	 : 'Nombre Proveedor'
 							 ,dataIndex : 'NOMPROV'
 							 ,width	 : 300
-						 }
+						}
 					 ],
 					 bbar	 :
 					 {
@@ -1802,28 +1806,32 @@
 					,selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true }
 					,columns	   :
 					[
-						 {
+						{
 							 header	 : 'N&uacute;mero <br/> Autorizaci&oacute;n'
 							 ,dataIndex : 'NMAUTSER'
 							 ,width	 	: 100
-						 },
-						 {
+						},
+						{
 							 header	 : 'Fecha Solicitud'
 							 ,dataIndex : 'FESOLICI'
 							 ,width	 : 100
-						 }
-						 ,
-						 {
-							 header	 : 'clave Proveedor'
-							 ,dataIndex : 'CDPROVEE'
-							 ,width	 : 100
-						 }
-						 ,
-						 {
+						}
+						,
+						{
 							 header	 : 'Nombre Proveedor'
 							 ,dataIndex : 'NOMPROV'
 							 ,width	 : 300
-						 }
+						},
+						{
+							 header	 : 'Causa Siniestro'
+							 ,dataIndex : 'DSCAUSA'
+							 ,width	 : 100
+						},
+						{
+							 header	 : 'Diagn&oacute;stico'
+							 ,dataIndex : 'DSICD'
+							 ,width	 : 300
+						}
 					 ],
 					 bbar	 :
 					 {
