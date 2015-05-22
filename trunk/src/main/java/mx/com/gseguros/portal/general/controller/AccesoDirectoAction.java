@@ -131,6 +131,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
      */
     public String accesoDirecto() throws Exception {
     	
+    	Boolean rolExistente = false;
     	String acceso = (String)params.get("acceso");
     	String tipoUsuario = (String)params.get("tipoUsuario");
     	logger.info(new StringBuilder(">>>> Entrando a Acceso Directo: ").append(acceso).append(" con usuario: ").append(user).toString());
@@ -154,7 +155,6 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 				// Invocar servicio para obtener los roles:
 			    listaRolCliente = usuarioManager.getClientesRoles(user);
 			    // si el usuario no tiene el rol solicitado, redirigir a pagina de rol invalido
-			    Boolean rolExistente = false;
 			    for (RamaVO ramaVO : listaRolCliente) {
 			    	for (Object obj : ramaVO.getChildren()) {
 			    		if( ((RamaVO)obj).getCodigoObjeto().equals(codigoRol)) {
@@ -168,13 +168,15 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 			    }
 			}
 			
+			if(rolExistente)
+			{
 			boolean sesionExitosa  = instanciaUsuarioLigaDirecta();
 			if(!sesionExitosa){
 				session.put("MsgLigaDirecta", "El usuario no existe o no tiene un rol asociado.");
 			}
-			
+			logger.info(new StringBuilder(">>>> Redirigiendo a Acceso Directo: ").append(acceso));
+			}
     		
-    		logger.info(new StringBuilder(">>>> Redirigiendo a Acceso Directo: ").append(acceso));
     	} else {
     		logger.warn(new StringBuilder(">>>> No está definido el Acceso Directo: ").append(acceso));
     		acceso= "login";
