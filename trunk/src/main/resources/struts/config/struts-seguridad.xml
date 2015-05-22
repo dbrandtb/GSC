@@ -114,7 +114,7 @@
             </result>
 		    <result name="consultaPolizas">/jsp/consultas/containerConsultasPolizas.jsp</result>
 		    <result name="consultaAsegurados">/jsp/consultas/consultasAsegurados.jsp</result>
-		    <result name="rolInvalido">/jsp/portal/rolInvalido.jsp</result>
+		    <result name="rolInvalido">/jsp-script/general/rolInvalido.jsp</result>
 		    <result name="clienteUnico" type="redirectAction">
 		        <param name="actionName">personas</param>
                 <param name="namespace">/catalogos</param>
