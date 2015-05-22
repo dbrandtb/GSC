@@ -35,8 +35,8 @@
 					name:       'textoEndoso',
 					width: 600,
 					height: 200,
-					maxLength: 2000,
-					maxLengthText: 'No se permite mas de 2000 caracteres'
+					maxLength: 10000,
+					maxLengthText: 'No se permite mas de 10000 caracteres'
 				}
 	    	]
 			,buttonAlign:'center'
