@@ -123,6 +123,57 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
         }
     }
 	
+    @SuppressWarnings("unchecked")
+	@Override
+	public List<PolizaAseguradoVO> obtienePolizasAsegPromotor(String user, String rfc, String cdperson, String nombre) throws Exception {
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_user_i",user); //Agrego parametro user: campo cdusurari de la tabla TUSUARIO
+		params.put("pv_cdrfc_i", rfc);
+		params.put("pv_cdperson_i", cdperson);
+		params.put("pv_nombre_i", nombre);
+		Map<String, Object> mapResult = ejecutaSP(new ConsultaPolizasAsegPromotorSP(getDataSource()), params);
+		return (List<PolizaAseguradoVO>) mapResult.get("pv_registro_o");
+		
+	}
+    
+    protected class ConsultaPolizasAsegPromotorSP extends StoredProcedure {
+		protected ConsultaPolizasAsegPromotorSP(DataSource dataSource) {
+			super(dataSource, "PKG_CONSULTA.P_Get_Polizas_Aseg_Promotor");
+			declareParameter(new SqlParameter("pv_user_i", OracleTypes.VARCHAR)); //Agrego parametro user: campo cdusurari de la tabla TUSUARIO
+    		declareParameter(new SqlParameter("pv_cdrfc_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nombre_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new PolizaAsegPromotorMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+		}
+	}
+    
+    protected class PolizaAsegPromotorMapper  implements RowMapper<PolizaAseguradoVO> {
+    	
+    	public PolizaAseguradoVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		PolizaAseguradoVO polizaAsegurado = new PolizaAseguradoVO();
+    		polizaAsegurado.setCdramo(rs.getString("codigo_ramo"));
+    		polizaAsegurado.setCdunieco(rs.getString("compania"));
+    		polizaAsegurado.setDsramo(rs.getString("descripcion_ramo"));
+    		polizaAsegurado.setDstipsit(rs.getString("dstipsit"));
+    		polizaAsegurado.setCdsubram(rs.getString("cdsubram"));
+    		polizaAsegurado.setDsunieco(rs.getString("descripcion"));
+    		polizaAsegurado.setNombreAgente(rs.getString("cdagente"));
+    		polizaAsegurado.setEstado(rs.getString("estado"));
+    		polizaAsegurado.setNmpoliex(rs.getString("nmpoliex"));
+    		polizaAsegurado.setNmpoliza(rs.getString("nmpoliza"));
+    		polizaAsegurado.setNombreAsegurado(rs.getString("nombre"));
+    		polizaAsegurado.setIcodpoliza(null); // No utilizado para ICE		
+    		polizaAsegurado.setOrigen(rs.getString("origen"));
+    		polizaAsegurado.setFeinivigencia(Utilerias.formateaFecha(rs.getString("feefecto")));// Sera el valor que posea la columna
+    		polizaAsegurado.setFefinvigencia(Utilerias.formateaFecha(rs.getString("feproren")));// Sera el valor que posea la columna
+    		return polizaAsegurado;
+    	}
+    }
+    
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PolizaAseguradoVO> obtienePolizasAsegurado(String user, String rfc, String cdperson, String nombre) throws Exception {

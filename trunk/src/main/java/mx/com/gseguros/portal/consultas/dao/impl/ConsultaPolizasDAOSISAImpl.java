@@ -47,6 +47,20 @@ public class ConsultaPolizasDAOSISAImpl extends AbstractManagerDAO implements Co
 	
 	@SuppressWarnings("unchecked")
 	@Override
+	public List<PolizaAseguradoVO> obtienePolizasAsegPromotor(String user, String rfc, String cdperson, String nombre) throws Exception {
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_user_i",user); //Agrego parametro user: campo cdusurari de la tabla TUSUARIO
+		params.put("pv_cdrfc_i", rfc);
+		params.put("pv_cdperson_i", cdperson);
+		params.put("pv_nombre_i", nombre);
+		Map<String, Object> mapResult = ejecutaSP(new ConsultaPolizasAseguradoSP(getDataSource()), params);
+		return (List<PolizaAseguradoVO>) mapResult.get("rs");
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<PolizaAseguradoVO> obtienePolizasAsegurado(String user, String rfc,
 			String cdperson, String nombre) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();

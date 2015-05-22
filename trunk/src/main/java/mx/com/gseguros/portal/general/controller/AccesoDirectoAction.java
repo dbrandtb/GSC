@@ -147,10 +147,25 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 			if(ACCESO_CONSULTA_POLIZAS.equals(acceso)) {
 				// logica para asignar rol en base al parametro tipoUsuario:
 				if("2".equals(tipoUsuario)) {
-					codigoRol = "EJECUTIVOCUENTA";
+					codigoRol = RolSistema.AGENTE.getCdsisrol();
 				} else if("7".equals(tipoUsuario)) {
-					codigoRol = "PROMOTORAUTO";
+					codigoRol = RolSistema.PROMOTOR_AUTO.getCdsisrol();
 				}
+				// Invocar servicio para obtener los roles:
+			    listaRolCliente = usuarioManager.getClientesRoles(user);
+			    // si el usuario no tiene el rol solicitado, redirigir a pagina de rol invalido
+			    Boolean rolExistente = false;
+			    for (RamaVO ramaVO : listaRolCliente) {
+			    	for (Object obj : ramaVO.getChildren()) {
+			    		if( ((RamaVO)obj).getCodigoObjeto().equals(codigoRol)) {
+							rolExistente = true;
+							break;
+						}
+					}
+				}
+			    if(!rolExistente) {
+			    	acceso = "rolInvalido";	
+			    }
 			}
 			
 			boolean sesionExitosa  = instanciaUsuarioLigaDirecta();

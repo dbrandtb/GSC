@@ -20,6 +20,7 @@ public class PolizaAseguradoVO implements Serializable {
 	private String estado;
 	private String nmpoliza;
 	private String nombreAsegurado;
+	private String nombreAgente;
 	private String nmpoliex;
 	
 	/**
@@ -177,6 +178,14 @@ public class PolizaAseguradoVO implements Serializable {
 
 	public void setDstipsit(String dstipsit) {
 		this.dstipsit = dstipsit;
+	}
+
+	public String getNombreAgente() {
+		return nombreAgente;
+	}
+
+	public void setNombreAgente(String nombreAgente) {
+		this.nombreAgente = nombreAgente;
 	}	
 		
 }

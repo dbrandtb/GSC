@@ -614,6 +614,7 @@ Ext.onReady(function() {
             {type:'string', name:'nmpoliex'},
             {type:'string', name:'nmpoliza'},
             {type:'string', name:'nombreAsegurado'},
+            {type:'string', name:'nombreAgente'},
             {name:'feinivigencia', dateFormat: 'd/m/Y'},
             {name:'fefinvigencia', dateFormat: 'd/m/Y'}
         ]
@@ -633,10 +634,24 @@ Ext.onReady(function() {
     
     
     // GRID PARA LOS DATOS DEL ASEGURADO
+    
+    var oculto;
+    var anchoGridPolizas;
+    if(cdSisRolActivo=='PROMOTORAUTO')
+    {
+    	anchoGridPolizas = 1387;
+    	oculto = false;
+    }
+    else
+    {
+    	oculto = true;
+    	anchoGridPolizas = 1307;
+    }
+    
     var gridPolizasAsegurado= Ext.create('Ext.grid.Panel', {
         store : storePolizaAsegurado,
         selType: 'checkboxmodel',
-        width : 1380,
+        width : anchoGridPolizas,
         bbar     :
         {
             displayInfo : true,
@@ -648,14 +663,15 @@ Ext.onReady(function() {
         }],
         columns: [
             {text: 'P&oacute;liza', dataIndex: 'nmpoliex', width: 160},
-            {text: '# P&oacute;liza en sistema', dataIndex: 'nmpoliza', width: 160},
-            {text: 'Nombre del asegurado', dataIndex: 'nombreAsegurado', width: 220},
-            {text: 'Sucursal', dataIndex: 'dsunieco', width: 180},
+            {text: '# P&oacute;liza en sistema', dataIndex: 'nmpoliza', width: 140},
+            {text: 'Nombre del asegurado', dataIndex: 'nombreAsegurado', width: 200},
+            {text: 'Sucursal', dataIndex: 'dsunieco', width: 140},
             //{text: 'Producto', dataIndex: 'dsramo', width:180},
             {text: 'Descripci&oacute;n de producto', dataIndex: 'dstipsit', width:180},
             {text: 'Subramo', dataIndex: 'cdsubram', width:80},
-            {text: 'Fecha inicio vigencia', dataIndex: 'feinivigencia', format: 'd M Y', width:150},
-            {text: 'Fecha final vigencia', dataIndex: 'fefinvigencia', format: 'd M Y', width:150},
+            {text: 'Agente', dataIndex: 'nombreAgente', width:80, hidden:oculto},
+            {text: 'Fecha inicio vigencia', dataIndex: 'feinivigencia', format: 'd M Y', width:140},
+            {text: 'Fecha final vigencia', dataIndex: 'fefinvigencia', format: 'd M Y', width:140},
             {text: 'Estado', dataIndex: 'estado', width: 100}
             //,{text: '# poliza', dataIndex: 'nmpoliza', width: 70}
         ]

@@ -46,6 +46,23 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 //	private ConsultasPolizaDAO consultasPolizaDAOSISA;
 	
 	@Override
+	public List<PolizaAseguradoVO> obtienePolizasAsegPromotor(String user,
+			String rfc, String cdperson, String nombre) throws Exception {
+		
+		List<PolizaAseguradoVO> polizasICE  = consultasPolizaDAOICE.obtienePolizasAsegPromotor(user, rfc, cdperson, nombre);
+//		List<PolizaAseguradoVO> polizasSISA = consultasPolizaDAOSISA.obtienePolizasAsegurado(user, rfc, cdperson, nombre);
+		
+		// Fusionamos las listas:
+        List<PolizaAseguradoVO> polizasFusionadas = polizasICE;
+//        if(polizasFusionadas == null) {
+//        	polizasFusionadas = new ArrayList<PolizaAseguradoVO>();
+//        }
+//        polizasFusionadas.addAll(polizasSISA);
+        
+		return polizasFusionadas;
+	}
+	
+	@Override
 	public List<PolizaAseguradoVO> obtienePolizasAsegurado(String user,
 			String rfc, String cdperson, String nombre) throws Exception {
 		
