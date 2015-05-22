@@ -31,6 +31,9 @@
             var _MSG_NMPOLIEX_INVALIDO           = 'Ingrese un numero de poliza';
             var _MSG_CDPERSON_INVALIDO           = 'Ingrese un c\u00F3digo de persona';
             var _MSG_NOMBRE_INVALIDO             = 'Ingrese el nombre';
+            
+            //Variable para conocer el rol activo del sistema.
+            var cdSisRolActivo = '<s:property value="%{#session['USUARIO'].rolActivo.clave}" />';
         </script>
         <script type="text/javascript" src="${ctx}/resources/scripts/consultaPolizas/consultasPolizas.js?${now}"></script>
         

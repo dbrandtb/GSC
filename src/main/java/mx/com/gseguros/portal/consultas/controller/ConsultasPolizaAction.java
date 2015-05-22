@@ -450,10 +450,29 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 				return SUCCESS;
 			}
 
-		} else {
+		} 
+		
+		else if(RolSistema.PROMOTOR_AUTO.getCdsisrol().equals(cdsisrol)) {
+			try {
+				polizasAsegurado = consultasPolizaManager.obtienePolizasAsegPromotor(
+						cdusuari,
+						params.get("rfc"), params.get("cdperson"),
+						params.get("nombre"));
+
+				if (polizasAsegurado != null) {
+					logger.debug("Polizas por asegurado encontradas: " + polizasAsegurado.size());
+				}
+			} catch (Exception e) {
+				logger.error("Error al obtener los obtienePolizasAsegurado ", e);
+				return SUCCESS;
+			}
+
+		}
+		
+		else {
 			
 			try {
-				polizasAsegurado = consultasPolizaManager.obtienePolizasAsegurado("",
+				polizasAsegurado = consultasPolizaManager.obtienePolizasAsegurado(null,
 						params.get("rfc"), params.get("cdperson"),
 						params.get("nombre"));
 
