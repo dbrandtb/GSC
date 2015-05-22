@@ -8,7 +8,7 @@
         
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';
-            var _URL_INSERTA_PERSONA = '<s:url namespace="/catalogos" action="guardaUsuario" />';
+            var _URL_INSERTA_USUARIO = '<s:url namespace="/catalogos" action="guardaUsuario" />';
             var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
             
             var _URL_ROLES_SISTEMA_X_PRIVILEGIOS = '<s:url namespace="/catalogos" action="obtienerRolesPorPrivilegio" />';

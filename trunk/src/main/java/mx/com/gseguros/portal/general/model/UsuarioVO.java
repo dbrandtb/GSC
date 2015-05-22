@@ -44,7 +44,18 @@ public class UsuarioVO implements Serializable {
     private String fefinlic;
     
     private String swActivo;
-
+    
+    /**
+     * Para Agente: Clase y Estatus
+     * claseag
+     * statusag
+     * Beto 19mayo15
+     */
+    private String claseag; 
+    private String statusag;
+    private String cdoficin;
+    private String cdbroker;
+    
     /**
      * @return the cdUsuario
      */
@@ -214,5 +225,37 @@ public class UsuarioVO implements Serializable {
 
 	public void setSwActivo(String swActivo) {
 		this.swActivo = swActivo;
+	}
+	
+	public String getClaseag() {
+		return claseag;
+	}
+
+	public void setClaseag(String claseag) {
+		this.claseag = claseag;
+	}
+
+	public String getStatusag() {
+		return statusag;
+	}
+
+	public void setStatusag(String statusag) {
+		this.statusag = statusag;
+	}
+
+	public String getCdoficin() {
+		return cdoficin;
+	}
+
+	public void setCdoficin(String cdoficin) {
+		this.cdoficin = cdoficin;
+	}
+
+	public String getCdbroker() {
+		return cdbroker;
+	}
+
+	public void setCdbroker(String cdbroker) {
+		this.cdbroker = cdbroker;
 	}
 }

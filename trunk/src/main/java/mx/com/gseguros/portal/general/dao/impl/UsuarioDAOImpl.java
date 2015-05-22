@@ -72,6 +72,10 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			parametros.put("PV_CDRAMO_I", params.get("cdramo"));
 			parametros.put("PV_FEDESDE_I", params.get("feini"));
 			parametros.put("PV_FEVENLICV_I", params.get("fefin"));
+			parametros.put("PV_CLASEAG_I", params.get("claseag"));
+			parametros.put("PV_STATUSAG_I", params.get("statusag"));
+			parametros.put("PV_CDOFICIN_I", params.get("cdoficin"));
+			parametros.put("PV_CDBROKER_I", params.get("cdbroker"));
 			parametros.put("PV_ACCION_I", params.get("accion"));
 			
 			Map<String, Object> result = ejecutaSP(new GuardaUsuario(getDataSource()), parametros);
@@ -89,6 +93,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 		
 		protected GuardaUsuario(DataSource dataSource){
 			super(dataSource, "PKG_GENERA_USUARIO.P_MOV_USUARIO");
+			// Respetar el orden de declaracion de los parametros:
 			declareParameter(new SqlParameter("PV_CDUSUARI_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_DSNOMBRE_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_DSNOMBRE1_I", OracleTypes.VARCHAR));
@@ -96,17 +101,21 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			declareParameter(new SqlParameter("PV_DSAPELLIDO1_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDSISROL_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_OTSEXO_I", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("PV_FENACIMI_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_FENACIMI_I", OracleTypes.VARCHAR));// DEBE SER TIPO DATE
 			declareParameter(new SqlParameter("PV_CDRFC_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_DSEMAIL_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CURP_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDMODGRA_I", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("PV_CDUNIECO_I", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("PV_CDRAMO_I", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("PV_FEDESDE_I", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("PV_FEVENLICV_I", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("PV_ACCION_I", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDUNIECO_I", OracleTypes.VARCHAR));//DEBE SER NUMBER(4)
+			declareParameter(new SqlParameter("PV_CDRAMO_I", OracleTypes.VARCHAR));//DEBE SER NUMBER(3)
+			declareParameter(new SqlParameter("PV_FEDESDE_I", OracleTypes.VARCHAR));// DEBE SER TIPO DATE
+			declareParameter(new SqlParameter("PV_FEVENLICV_I", OracleTypes.VARCHAR));//DEBE SER DE TIPO DATE
+			declareParameter(new SqlParameter("PV_CLASEAG_I", OracleTypes.VARCHAR));//DEBE SER 
+			declareParameter(new SqlParameter("PV_STATUSAG_I", OracleTypes.VARCHAR));//DEBE SER
+			declareParameter(new SqlParameter("PV_CDOFICIN_I", OracleTypes.VARCHAR));//DEBE SER
+			declareParameter(new SqlParameter("PV_CDBROKER_I", OracleTypes.VARCHAR));//DEBE SER
+			declareParameter(new SqlParameter("PV_ACCION_I", OracleTypes.VARCHAR));//DEBE SER TIPO VARCHAR, ASI SE DEFINE EN EL PROCEDURE
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));//DEBE SER TIPO NUMBER
 			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
 			compile();
 		}
@@ -272,7 +281,18 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			usuarioVO.setFeini(rs.getString("FEDESDE"));
 			usuarioVO.setFefinlic(rs.getString("FEVENLICV"));
 			usuarioVO.setSwActivo(rs.getString("SWACTIVO"));
-			
+			/*
+			Se agregan los campos de las modificaciones
+			 * statusag
+			 * claseag
+			 * cdoficin
+			 * cdbroker
+			  *
+			*/
+			usuarioVO.setClaseag(rs.getString("CLASEAG"));			
+			usuarioVO.setStatusag(rs.getString("STATUSAG"));
+			usuarioVO.setCdoficin(rs.getString("CDOFICIN"));
+			usuarioVO.setCdbroker(rs.getString("CDBROKER"));
 			return usuarioVO;
         }
     }
