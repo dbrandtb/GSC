@@ -97,8 +97,10 @@
 			var _11_form;
 			var recordsStoreFactura = [];
 			var _11_textfieldAsegurado;
-			var _11_textfieldNmautserv;
 			var _11_textfieldAseguradoMod;
+			
+			var _11_textfieldNmautserv;
+			var _11_textfieldNmautservMod;
 			
 			var _11_textfieldAseguradoMsiniest;
 			var _11_textfieldNmSiniest;
@@ -110,6 +112,7 @@
 			var modPolizasAltaTramite;
 			//var storeFacturaDirectoNva;
 			var gridAutorizacion;
+			var gridAutorizacionMod;
 			var gridMsiniestMaestro;
 			var storeListadoAutorizacion;
 			var storeListadoSiniestMaestro;
@@ -1734,6 +1737,58 @@
 				});
 				gridEditorConceptos = new EditorConceptos();
 
+				gridAutorizacionMod = Ext.create('Ext.grid.Panel',
+				{
+					id			 : 'clausulasGridId'
+					,store		 :  storeListadoAutorizacion
+					//,collapsible   : true
+					//,titleCollapse : true
+					,style		 : 'margin:5px'
+					,selType: 'checkboxmodel'
+					,width   : 600
+					,height: 400
+					,selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true }
+					,columns	   :
+					[
+						 {
+							 header	 : 'N&uacute;mero <br/> Autorizaci&oacute;n'
+							 ,dataIndex : 'NMAUTSER'
+							 ,width	 	: 100
+						 },
+						 {
+							 header	 : 'Fecha Solicitud'
+							 ,dataIndex : 'FESOLICI'
+							 ,width	 : 100
+						 }
+						 ,
+						 {
+							 header	 : 'clave Proveedor'
+							 ,dataIndex : 'CDPROVEE'
+							 ,width	 : 100
+						 }
+						 ,
+						 {
+							 header	 : 'Nombre Proveedor'
+							 ,dataIndex : 'NOMPROV'
+							 ,width	 : 300
+						 }
+					 ],
+					 bbar	 :
+					 {
+						 displayInfo : true,
+						 store	   : storeListadoAutorizacion,
+						 xtype	   : 'pagingtoolbar'
+					 },
+					//aqui va el listener
+					listeners: {
+						itemclick: function(dv, record, item, index, e) {
+							_11_textfieldNmautservMod.setValue(record.get('NMAUTSER'));
+						}
+					}
+					
+						
+				});
+				
 				gridAutorizacion= Ext.create('Ext.grid.Panel',
 				{
 					id			 : 'clausulasGridId'
@@ -1785,11 +1840,6 @@
 					
 						
 				});
-				/*gridAutorizacion.store.sort([
-					{
-						property	: 'nmautser',			direction   : 'DESC'
-					}
-				]);*/
 
 				gridMsiniestMaestro = Ext.create('Ext.grid.Panel',
 				{
@@ -2571,8 +2621,8 @@
 									,text : 'Se requiere el número de autorización para continuar'
 								}
 								,_11_textfieldAseguradoMod
-								,_11_textfieldNmautserv
-								,gridAutorizacion
+								,_11_textfieldNmautservMod
+								,gridAutorizacionMod
 							]
 						});
 						this.callParent();
@@ -2686,6 +2736,15 @@
 					,readOnly  : true
 				});
 				_11_textfieldNmautserv = Ext.create('Ext.form.NumberField',
+				{
+					fieldLabel  : 'No. de autorizaci&oacute;n'
+					,readOnly   : false
+					,allowBlank : false
+					,hidden : true
+					,minLength  : 1
+				});
+				
+				_11_textfieldNmautservMod = Ext.create('Ext.form.NumberField',
 				{
 					fieldLabel  : 'No. de autorizaci&oacute;n'
 					,readOnly   : false
@@ -3753,7 +3812,7 @@
 					}));
 				}else{
 					_11_windowModificarAut.show();
-					_11_textfieldNmautserv.setValue('');
+					_11_textfieldNmautservMod.setValue('');
 					centrarVentanaInterna(_11_windowModificarAut);
 				}
 			}else{
@@ -4110,7 +4169,7 @@
 			datosIncompletos();
 		}else{
 			_11_windowModificarAut.close();
-			guardaCambiosAutorizacionServ(_11_aseguradoSeleccionado, _11_textfieldNmautserv.getValue());
+			guardaCambiosAutorizacionServ(_11_aseguradoSeleccionado, _11_textfieldNmautservMod.getValue());
 		}
 	}
 	
@@ -4147,6 +4206,7 @@
 					if(json.success==true)
 					{
 						_11_guardarInformacionAdicional();
+						
 						mensajeCorrecto('Autorizaci&oacute;n Servicio',json.mensaje,function(){
 							storeAseguradoFactura.removeAll();
 							storeAseguradoFactura.load({
