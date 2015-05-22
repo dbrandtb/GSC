@@ -1425,7 +1425,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			try
 			{
-				consultasManager.validarDatosObligatoriosPrevex(cdunieco, auxiliarProductoCdramo, "W", panel1.get("nmpoliza"));
+				consultasManager.validarDatosObligatoriosPrevex(cdunieco, cdramo, "W", panel1.get("nmpoliza"));
 			}
 			catch(Exception ex)
 			{
