@@ -793,9 +793,7 @@ function _datComTurnarSuscripcion()
 						                                        	    	text     : 'Guardar y enviar a revisión médica'
 						                                                    ,icon    : '${ctx}/resources/fam3icons/icons/heart_add.png'
 						                                        	    	,handler : function()
-						                                        	    	{
-						                                        	    		 if(form.isValid())
-						                                                        {                                         	    			
+						                                        	    	{                                   	    			
 						                                        	    			var window=this.up().up();
 						                                                            window.setLoading(true);
 						                                                            form.submit({
@@ -864,16 +862,6 @@ function _datComTurnarSuscripcion()
 						                                                                    });
 						                                                                }
 						                                                            });
-						                                                        }
-						                                                         else
-						                                                        {
-						                                                            Ext.Msg.show({
-						                                                                title:'Datos incompletos',
-						                                                                msg: 'Favor de introducir todos los campos requeridos',
-						                                                                buttons: Ext.Msg.OK,
-						                                                                icon: Ext.Msg.WARNING
-						                                                            });
-						                                                        } 
 						                                        	    	}
 						                                        	    }
 						                                        	    ,{
@@ -1532,8 +1520,6 @@ function _datComTurnarSuscripcion()
 					                                        var form=Ext.getCmp('formPanel');
 					                                        var window=this.up().up();
 					                                        //console.log(form.getValues());
-					                                        if(form.isValid())
-					                                        {
 					                                        	window.setLoading(true);
 					                                            form.submit({
 					                                                params:{
@@ -1602,16 +1588,6 @@ function _datComTurnarSuscripcion()
 					                                                    });
 					                                                }
 					                                            });
-					                                        }
-					                                        else
-					                                        {
-					                                            Ext.Msg.show({
-					                                                title:'Datos incompletos',
-					                                                msg: 'Favor de introducir todos los campos requeridos',
-					                                                buttons: Ext.Msg.OK,
-					                                                icon: Ext.Msg.WARNING
-					                                            });
-					                                        }
 	                                                    }
 	                                                }
 	                                                ,
