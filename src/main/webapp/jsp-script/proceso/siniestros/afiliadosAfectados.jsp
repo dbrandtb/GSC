@@ -1110,10 +1110,10 @@
 								}
 							},
 							{
-								header: 'Id<br/>Sini. Existente',	dataIndex: 'NMSINREF',		width: 90
+								header: 'Id<br/>Sini. Existente',	dataIndex: 'NMSINREF',		width: 90, hidden : _tipoProducto != '7'
 							},
 							{
-								header: 'Complemento',	dataIndex: 'COMPLEMENTO',		width: 90
+								header: 'Complemento',	dataIndex: 'COMPLEMENTO',		width: 90, hidden : _tipoProducto != '7'
 							},
 							{
 								header: 'Fecha<br/>Ocurrencia',		dataIndex: 'FEOCURRE'
