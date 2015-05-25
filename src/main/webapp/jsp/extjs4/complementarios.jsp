@@ -672,7 +672,7 @@ function _datComTurnarSuscripcion()
 		                            {
 		                                var form=Ext.getCmp('formPanel');
 		                                //console.log(form.getValues());
-		                                if(form.isValid())
+		                                if(form.isValid())//Modificación para advertir que no se han llegnado los campos
 		                                {
 		                                    form.setLoading(true);
 		                                    form.submit({
