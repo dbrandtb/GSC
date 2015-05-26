@@ -131,7 +131,8 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				params.get("nmreclamo"), params.get("cdicd"),
 				params.get("cdicd2"), params.get("cdcausa"),
 				params.get("cdgarant"), params.get("cdconval"),
-				valor);
+				valor, params.get("cdperson"), params.get("tipoProceso"),
+				params.get("complemento"));
 			
 			String formatoFeEgreso;
 			if(params.get("feegreso").length() > 0){
