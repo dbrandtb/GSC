@@ -411,6 +411,17 @@
 			</result>
 		</action>
 		
+		<action name="solicitarComplemento" class="siniestrosAction" method="solicitarComplemento">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					mensaje
+				</param>
+			</result>
+		</action>
+		
+		
         <action name="generarCalculoSiniestros" class="siniestrosAction" method="generarCalculoSiniestros">
             <result type="json"></result>
         </action>

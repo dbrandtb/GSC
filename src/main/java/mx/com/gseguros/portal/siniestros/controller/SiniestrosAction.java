@@ -1025,6 +1025,243 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	public String solicitarComplemento(){
+		try{
+			logger.debug("** Entrando al metodo de generar Complemento de Siniestro  : ");
+			logger.debug(params);
+			logger.debug("Valor del tramite : "+params.get("pv_ntramite_i"));
+			
+			List<MesaControlVO> listaMesaControl = siniestrosManager.getConsultaListaMesaControl(params.get("pv_ntramite_i"));
+			//String valorTipoAtencion = listaMesaControl.get(0).getOtvalor07mc();
+			logger.debug("=========>");
+			// 1.- Guardar en TMESACONTROL 
+			this.session=ActionContext.getContext().getSession();
+			UserVO usuario=(UserVO) session.get("USUARIO");
+			HashMap<String, Object> parMesCon = new HashMap<String, Object>();
+			parMesCon.put("pv_cdunieco_i",params.get("cdunieco"));
+			
+			parMesCon.put("pv_cdunieco_i", 		listaMesaControl.get(0).getCduniecomc());
+			parMesCon.put("pv_cdramo_i", 		listaMesaControl.get(0).getCdramomc());
+			parMesCon.put("pv_estado_i", 		listaMesaControl.get(0).getEstadomc());
+			parMesCon.put("pv_nmpoliza_i", 		listaMesaControl.get(0).getNmpolizamc());
+			parMesCon.put("pv_nmsuplem_i", 		listaMesaControl.get(0).getNmsuplemmc());
+			parMesCon.put("pv_cdsucadm_i", 		listaMesaControl.get(0).getCdsucadmmc());
+			parMesCon.put("pv_cdsucdoc_i", 		listaMesaControl.get(0).getCdsucdocmc());
+			parMesCon.put("pv_cdtiptra_i", 		listaMesaControl.get(0).getCdtiptramc());
+			parMesCon.put("pv_ferecepc_i", 		getDate(listaMesaControl.get(0).getFerecepcmc()));
+			parMesCon.put("pv_cdagente_i", 		listaMesaControl.get(0).getCdagentemc());
+			parMesCon.put("pv_referencia_i", 	listaMesaControl.get(0).getReferenciamc());
+			parMesCon.put("pv_nombre_i", 		listaMesaControl.get(0).getNombremc());
+			parMesCon.put("pv_festatus_i",      getDate(listaMesaControl.get(0).getFecstatumc()));
+			parMesCon.put("pv_status_i",        EstatusTramite.EN_CAPTURA.getCodigo());
+			parMesCon.put("pv_comments_i",      listaMesaControl.get(0).getCommentsmc());
+			parMesCon.put("pv_nmsolici_i",      listaMesaControl.get(0).getNmsolicimc());
+			parMesCon.put("pv_cdtipsit_i",      listaMesaControl.get(0).getCdtipsitmc());
+			parMesCon.put("pv_otvalor01"    , 	listaMesaControl.get(0).getOtvalor01mc());
+			parMesCon.put("pv_otvalor02"    , 	listaMesaControl.get(0).getOtvalor02mc());
+			parMesCon.put("pv_otvalor03"    , 	listaMesaControl.get(0).getOtvalor03mc());
+			parMesCon.put("pv_otvalor04"    , 	listaMesaControl.get(0).getOtvalor04mc());
+			parMesCon.put("pv_otvalor05"    , 	listaMesaControl.get(0).getOtvalor05mc());
+			parMesCon.put("pv_otvalor06"    , 	listaMesaControl.get(0).getOtvalor06mc());
+			parMesCon.put("pv_otvalor07"    , 	listaMesaControl.get(0).getOtvalor07mc());
+			parMesCon.put("pv_otvalor08"    , 	listaMesaControl.get(0).getOtvalor08mc());
+			parMesCon.put("pv_otvalor09"    , 	listaMesaControl.get(0).getOtvalor09mc());
+			parMesCon.put("pv_otvalor10"    , 	listaMesaControl.get(0).getOtvalor10mc());
+			parMesCon.put("pv_otvalor11"    , 	listaMesaControl.get(0).getOtvalor11mc());
+			parMesCon.put("pv_otvalor12"    , 	listaMesaControl.get(0).getOtvalor12mc());
+			parMesCon.put("pv_otvalor13"    , 	listaMesaControl.get(0).getOtvalor13mc());
+			parMesCon.put("pv_otvalor14"    , 	listaMesaControl.get(0).getOtvalor14mc());
+			parMesCon.put("pv_otvalor15"    , 	listaMesaControl.get(0).getOtvalor15mc());
+			parMesCon.put("pv_otvalor16"    , 	listaMesaControl.get(0).getOtvalor16mc());
+			parMesCon.put("pv_otvalor17"    , 	listaMesaControl.get(0).getOtvalor17mc());
+			parMesCon.put("pv_otvalor18"    , 	listaMesaControl.get(0).getOtvalor18mc());
+			parMesCon.put("pv_otvalor19"    , 	listaMesaControl.get(0).getOtvalor19mc());
+			parMesCon.put("pv_otvalor20"    , 	listaMesaControl.get(0).getOtvalor20mc());
+			parMesCon.put("pv_otvalor21"    , 	listaMesaControl.get(0).getOtvalor21mc());
+			parMesCon.put("pv_otvalor22"    , 	listaMesaControl.get(0).getOtvalor22mc());
+			parMesCon.put("pv_otvalor23"    , 	listaMesaControl.get(0).getOtvalor23mc());
+			parMesCon.put("pv_otvalor24"    , 	listaMesaControl.get(0).getOtvalor24mc());
+			parMesCon.put("pv_otvalor25"    , 	listaMesaControl.get(0).getOtvalor25mc());
+			parMesCon.put("pv_otvalor26"    , 	listaMesaControl.get(0).getOtvalor26mc());
+			parMesCon.put("pv_otvalor27"    , 	listaMesaControl.get(0).getOtvalor27mc());
+			parMesCon.put("pv_otvalor28"    , 	listaMesaControl.get(0).getOtvalor28mc());
+			parMesCon.put("pv_otvalor29"    , 	listaMesaControl.get(0).getOtvalor29mc());
+			parMesCon.put("pv_otvalor30"    , 	listaMesaControl.get(0).getOtvalor30mc());
+			parMesCon.put("pv_otvalor31"    , 	listaMesaControl.get(0).getOtvalor31mc());
+			parMesCon.put("pv_otvalor32"    , 	listaMesaControl.get(0).getOtvalor32mc());
+			parMesCon.put("pv_otvalor33"    , 	listaMesaControl.get(0).getOtvalor33mc());
+			parMesCon.put("pv_otvalor34"    , 	listaMesaControl.get(0).getOtvalor34mc());
+			parMesCon.put("pv_otvalor35"    , 	listaMesaControl.get(0).getOtvalor35mc());
+			parMesCon.put("pv_otvalor36"    , 	listaMesaControl.get(0).getOtvalor36mc());
+			parMesCon.put("pv_otvalor37"    , 	listaMesaControl.get(0).getOtvalor37mc());
+			parMesCon.put("pv_otvalor38"    , 	listaMesaControl.get(0).getOtvalor38mc());
+			parMesCon.put("pv_otvalor39"    , 	listaMesaControl.get(0).getOtvalor39mc());
+			parMesCon.put("pv_otvalor40"    , 	listaMesaControl.get(0).getOtvalor40mc());
+			parMesCon.put("pv_otvalor41"    , 	listaMesaControl.get(0).getOtvalor41mc());
+			parMesCon.put("pv_otvalor42"    , 	listaMesaControl.get(0).getOtvalor42mc());
+			parMesCon.put("pv_otvalor43"    , 	listaMesaControl.get(0).getOtvalor43mc());
+			parMesCon.put("pv_otvalor44"    , 	listaMesaControl.get(0).getOtvalor44mc());
+			parMesCon.put("pv_otvalor45"    , 	listaMesaControl.get(0).getOtvalor45mc());
+			parMesCon.put("pv_otvalor46"    , 	listaMesaControl.get(0).getOtvalor46mc());
+			parMesCon.put("pv_otvalor47"    , 	listaMesaControl.get(0).getOtvalor47mc());
+			parMesCon.put("pv_otvalor48"    , 	listaMesaControl.get(0).getOtvalor48mc());
+			parMesCon.put("pv_otvalor49"    , 	listaMesaControl.get(0).getOtvalor49mc());
+			parMesCon.put("pv_otvalor50"    , 	listaMesaControl.get(0).getOtvalor50mc());
+			WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
+			if(res.getItemMap() == null){
+				logger.error("Sin mensaje respuesta de nmtramite!!");
+			}else{
+				msgResult = (String) res.getItemMap().get("ntramite");
+				logger.debug("Entra a proceso 1");
+				logger.debug("VALOR DEL NUEVO TRAMITE : "+msgResult);
+				slist1 = siniestrosManager.obtenerFacturasTramite(params.get("pv_ntramite_i"));
+				logger.debug("VALOR DE REGISTROS : "+slist1.size());
+				for(int i=0; i< slist1.size();i++){
+					siniestrosManager.guardaListaFacMesaControl2(
+						msgResult, 
+						slist1.get(i).get("NFACTURA"),
+						renderFechas.parse(slist1.get(i).get("FFACTURA")),
+						slist1.get(i).get("CDTIPSER"),
+						slist1.get(i).get("CDPRESTA"),
+						slist1.get(i).get("PTIMPORT"),
+						slist1.get(i).get("CDGARANT"),
+						slist1.get(i).get("CDCONVAL"),
+						slist1.get(i).get("DESCPORC"),
+						slist1.get(i).get("DESCNUME"),
+						slist1.get(i).get("CDMONEDA"),
+						slist1.get(i).get("TASACAMB"),
+						slist1.get(i).get("PTIMPORTA"),
+						slist1.get(i).get("DCTONUEX"),
+						renderFechas.parse(slist1.get(i).get("FEEGRESO")),
+						slist1.get(i).get("DIASDEDU"),
+						null,
+						slist1.get(i).get("NOMBPROV")
+					);
+				}
+			}
+			
+			logger.debug(listaMesaControl);
+			logger.debug("<=========");
+			
+			/*			// 1.- Guardar en TMESACONTROL 
+			this.session=ActionContext.getContext().getSession();
+			UserVO usuario=(UserVO) session.get("USUARIO");
+			HashMap<String, Object> parMesCon = new HashMap<String, Object>();
+			parMesCon.put("pv_cdunieco_i",params.get("cdunieco"));
+			parMesCon.put("pv_cdramo_i",params.get("cmbRamos"));
+			parMesCon.put("pv_estado_i",params.get("estado"));
+			parMesCon.put("pv_nmpoliza_i",params.get("polizaAfectada"));
+			parMesCon.put("pv_nmsuplem_i",params.get("idNmsuplem"));
+			parMesCon.put("pv_nmsolici_i",params.get("idNmsolici"));
+			parMesCon.put("pv_cdtipsit_i",params.get("idCdtipsit"));
+			parMesCon.put("pv_cdsucadm_i",params.get("cmbOficEmisora"));
+			parMesCon.put("pv_cdsucdoc_i",params.get("cmbOficReceptora"));
+			parMesCon.put("pv_cdtiptra_i",TipoTramite.SINIESTRO.getCdtiptra());
+			parMesCon.put("pv_ferecepc_i",getDate(params.get("dtFechaRecepcion")));
+			parMesCon.put("pv_cdagente_i",null);
+			parMesCon.put("pv_referencia_i",null);
+			parMesCon.put("pv_nombre_i",params.get("idnombreAsegurado"));
+			parMesCon.put("pv_festatus_i",getDate(params.get("dtFechaRecepcion")));
+			parMesCon.put("pv_status_i",EstatusTramite.PENDIENTE.getCodigo());
+			parMesCon.put("pv_comments_i",null);
+			parMesCon.put("pv_otvalor02",params.get("cmbTipoPago"));
+			parMesCon.put("pv_otvalor03",params.get("ImporteIndFactura"));
+			parMesCon.put("pv_otvalor04",params.get("cmbBeneficiario"));
+			parMesCon.put("pv_otvalor15",params.get("idnombreBeneficiarioProv"));
+			parMesCon.put("pv_otvalor05",usuario.getUser());
+			parMesCon.put("pv_otvalor06",params.get("fechaIndFactura"));
+			parMesCon.put("pv_otvalor07",params.get("cmbTipoAtencion"));
+			parMesCon.put("pv_otvalor08",params.get("numIndFactura"));
+			parMesCon.put("pv_otvalor09",params.get("cmbAseguradoAfectado"));
+			parMesCon.put("pv_otvalor10",params.get("dtFechaOcurrencia"));
+			parMesCon.put("pv_otvalor20",params.get("cmbRamos"));
+			parMesCon.put("pv_otvalor11",params.get("cmbProveedor"));
+			if(params.get("cmbProveedor").toString().length() > 0){
+				parMesCon.put("pv_otvalor13",Rol.CLINICA.getCdrol());
+			}
+	
+			if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase("7")){
+				parMesCon.put("pv_otvalor12","7RDH");
+				parMesCon.put("pv_otvalor14","7RDH001");
+			}
+	
+			//Si el tr&aacute;mite es nuevo
+			if(params.get("idNumTramite").toString().length() <= 0){
+				WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
+				if(res.getItemMap() == null){
+					logger.error("Sin mensaje respuesta de nmtramite!!");
+				}else{
+					msgResult = (String) res.getItemMap().get("ntramite");
+					logger.debug("Entra a proceso 1");
+					ProcesoAltaTramite(msgResult, params.get("cmbRamos"));
+				}
+			}else{
+				//Existe el trámite y solo lo vamos a actualizar
+				HashMap<String, Object> modMesaControl = new HashMap<String, Object>();
+				//1.- Verificamos si cambio el tipo de atención
+				List<MesaControlVO> lista = siniestrosManager.getConsultaListaMesaControl(params.get("idNumTramite").toString());
+				String valorTipoAtencion = lista.get(0).getOtvalor07mc();
+				if(!valorTipoAtencion.equalsIgnoreCase(params.get("cmbTipoAtencion"))){
+					siniestrosManager.eliminaDocumentosxTramite(params.get("idNumTramite").toString());
+					modMesaControl.put("pv_otvalor01_i",null);
+				}else{
+					modMesaControl.put("pv_otvalor01_i",lista.get(0).getOtvalor01mc());
+				}
+				modMesaControl.put("pv_ntramite_i",params.get("idNumTramite"));
+				modMesaControl.put("pv_cdunieco_i",params.get("cdunieco"));
+				modMesaControl.put("pv_cdramo_i",params.get("cmbRamos"));
+				modMesaControl.put("pv_estado_i",params.get("estado"));
+				modMesaControl.put("pv_nmpoliza_i",params.get("polizaAfectada"));
+				modMesaControl.put("pv_nmsuplem_i",params.get("idNmsuplem"));
+				modMesaControl.put("pv_nmsolici_i",params.get("idNmsolici"));
+				modMesaControl.put("pv_cdtipsit_i",params.get("idCdtipsit"));
+				modMesaControl.put("pv_cdsucadm_i",params.get("cmbOficEmisora"));
+				modMesaControl.put("pv_cdsucdoc_i",params.get("cmbOficReceptora"));
+				modMesaControl.put("pv_cdtiptra_i",TipoTramite.SINIESTRO.getCdtiptra());
+				modMesaControl.put("pv_ferecepc_i",renderFechas.parse(params.get("dtFechaRecepcion")));
+				modMesaControl.put("pv_nombre_i",params.get("idnombreAsegurado"));
+				modMesaControl.put("pv_festatus_i",renderFechas.parse(params.get("dtFechaRecepcion")));
+				modMesaControl.put("pv_status_i",EstatusTramite.PENDIENTE.getCodigo());
+				modMesaControl.put("pv_otvalor02_i",params.get("cmbTipoPago"));
+				modMesaControl.put("pv_otvalor03_i",params.get("ImporteIndFactura"));
+				modMesaControl.put("pv_otvalor04_i",params.get("cmbBeneficiario"));
+				modMesaControl.put("pv_otvalor05_i",usuario.getUser());
+				modMesaControl.put("pv_otvalor06_i",params.get("fechaIndFactura"));
+				modMesaControl.put("pv_otvalor07_i",params.get("cmbTipoAtencion"));
+				modMesaControl.put("pv_otvalor08_i",params.get("numIndFactura"));
+				modMesaControl.put("pv_otvalor09_i",params.get("cmbAseguradoAfectado"));
+				modMesaControl.put("pv_otvalor10_i",params.get("dtFechaOcurrencia"));
+				modMesaControl.put("pv_otvalor11_i",params.get("cmbProveedor"));
+				modMesaControl.put("pv_otvalor15_i",params.get("idnombreBeneficiarioProv"));
+				modMesaControl.put("pv_otvalor20_i",params.get("cmbRamos"));
+	
+				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase("7")){
+					modMesaControl.put("pv_otvalor12","7RDH");
+					modMesaControl.put("pv_otvalor14","7RDH001");
+				}
+				siniestrosManager.actualizaValorMC(modMesaControl);
+				//2.- Verificamos Si el tipo de pago es: 1.- Reembolso y  2.- Indemnizacion
+				if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo())||params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo())){
+					logger.debug("Entra a proceso 2 : REEMBOLSO E INDEMIZACION"); 
+					ProcesoAltaTramite(params.get("idNumTramite"), params.get("cmbRamos"));
+				}
+			}
+		}catch( Exception e){
+			logger.error("Error en el guardado de alta de tramite ",e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;*/
+			
+		}catch( Exception e){
+			logger.error("Error al generar el complemento del tramite : ",e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	
 	/**
 	* metodo para el guardado del alta del tramite
 	* @param Json con todos los valores del formulario y los grid
