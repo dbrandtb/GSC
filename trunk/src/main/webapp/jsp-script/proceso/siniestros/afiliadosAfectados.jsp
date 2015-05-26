@@ -1914,11 +1914,7 @@
 						}
 					}	
 				});
-				/*gridMsiniestMaestro.store.sort([
-					{
-						property	: 'nmautser',			direction   : 'DESC'
-					}
-				]);*/
+				
 				panelComplementos = Ext.create('Ext.form.Panel',
 				{
 					border	: 0

@@ -57,6 +57,7 @@ var _UrlRechazarTramiteWindwow  		= '<s:url namespace="/siniestros" 	action="inc
 var _UrlDetalleSiniestro        		= '<s:url namespace="/siniestros" 	action="detalleSiniestro" />';
 var _UrlDetalleSiniestroDirecto 		= '<s:url namespace="/siniestros" 	action="afiliadosAfectados"        />';
 var _UrlSolicitarPago           		= '<s:url namespace="/siniestros" 	action="solicitarPago"             />';
+var _UrlSolicitarComplemento			= '<s:url namespace="/siniestros" 	action="solicitarComplemento"      />';
 var _URL_CONCEPTODESTINO        		= '<s:url namespace="/siniestros"   action="guardarConceptoDestino" />';
 var _mesasin_url_lista_reasignacion 	= '<s:url namespace="/siniestros" 	action="obtenerUsuariosPorRol" />';
 var _selCobUrlAvanza              		= '<s:url namespace="/siniestros" 	action="afiliadosAfectados"/>';
@@ -1071,6 +1072,52 @@ var msgWindow;
 			});
 		}
 	}
+	
+
+	function generarComplementoSiniestro (grid,rowIndex,colIndex){
+		var record = grid.getStore().getAt(rowIndex);
+		/*debug("VALOR DEL RECORD -->>>",record);
+		debug("VALOR DEL record.get('status')");
+		debug(record.get('status'));
+		if(record.get('status') == _STATUS_EN_CAPTURA || record.get('status') == _STATUS_EN_CAPTURA_CMM || record.get('status') ==_STATUS_PENDIENTE){
+		mensajeWarning('El tr&aacute;mite se encuentra activo');
+		return;
+		}else{*/
+		msgWindow = Ext.Msg.show({
+			title: 'Aviso',
+			msg: '&iquest; Deseas generar el complemento del tr&aacute;mite '+record.get('ntramite')+'?',
+			buttons: Ext.Msg.YESNO,
+			icon: Ext.Msg.QUESTION,
+			fn: function(buttonId, text, opt){
+				if(buttonId == 'yes'){
+					Ext.Ajax.request({
+						url: _UrlSolicitarComplemento,
+						params: {
+							'params.pv_ntramite_i' : record.get('ntramite')
+						},
+						success: function(response, opts) {
+							//mcdinGrid.setLoading(false);
+							var respuesta = Ext.decode(response.responseText);
+							debug("VALOR DE RESPUESTA ", respuesta);
+							/*if(respuesta.success){
+								mensajeCorrecto('Aviso','El pago se ha solicitado con &eacute;xito.');	
+							}else {
+								mensajeError(respuesta.mensaje);
+							}*/
+						},
+						failure: function(){
+							mcdinGrid.setLoading(false);
+							mensajeError('No se pudo solicitar el pago.');
+						}
+					});
+
+				}
+			}
+		});
+		centrarVentana(msgWindow);
+		//}
+	}
+	
 	
 	function mostrarSolicitudPago(grid,rowIndex,colIndex){
 		storeDestinoPago = Ext.create('Ext.data.JsonStore', {
