@@ -1617,6 +1617,7 @@ function _p25_rfcBlur(field)
         Ext.Ajax.request
         ({
             url     : _p25_urlBuscarPersonas
+            ,timeout: 240000
             ,params :
             {
                 'map1.pv_rfc_i'       : value

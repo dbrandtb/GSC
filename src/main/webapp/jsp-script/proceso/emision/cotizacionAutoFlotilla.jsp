@@ -3373,6 +3373,7 @@ function _p30_ramo5ClienteChange()
                         {
                             type    : 'ajax'
                             ,url    : _p30_urlRecuperarCliente
+                            ,timeout: 240000
                             ,reader :
                             {
                                 type  : 'json'

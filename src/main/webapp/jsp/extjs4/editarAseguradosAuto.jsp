@@ -541,6 +541,7 @@ function _p20_buscarRFC()
 	Ext.Ajax.request(
 	{
         url     : _p20_urlBuscarRFC
+        ,timeout: 240000
         ,params :
         {
             'map1.pv_rfc_i' : _p20_gridAsegurados.getView().getSelectionModel().getSelection()[0].get('cdrfc'),

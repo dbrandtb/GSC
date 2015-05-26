@@ -308,6 +308,7 @@ Ext.onReady(function()
 					                        {
 					                            type    : 'ajax'
 					                            ,url    : _p35_urlRecuperarCliente
+					                            ,timeout: 240000
 					                            ,reader :
 					                            {
 					                                type  : 'json'

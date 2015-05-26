@@ -2588,6 +2588,31 @@ destruirContLoaderPersona = function(){
 	}
 };
 
+function destruirLoaderContratante(){
+	
+	debug("DESTRUYENDO!!!");
+	
+	_p22_PanelPrincipal().query().forEach(function(element){
+		try{
+			element.destroy();
+		}catch(e){
+			debug('Error al destruir en Pantalla de Clientes',e);
+		}
+	});
+	
+	try{
+		_p22_PanelPrincipal().destroy();	
+	}catch(e){
+		debug('Error al destruir Panel Principal en Pantalla de Clientes',e);
+	}
+	
+	try{
+		windowAccionistas.destroy();	
+	}catch(e){
+		debug('Error al destruir Window accionistas en Pantalla de Clientes',e);
+	}
+}
+
 obtieneDatosClienteContratante = function(){
 	var datosPersona = {
 		cdperson: (_p22_cdperson != false && !Ext.isEmpty(_p22_cdperson))? _p22_cdperson : '',
