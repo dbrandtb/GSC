@@ -1300,7 +1300,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					
 					try
 					{
-						Map<String,String>atributos=consultasManager.cargarAtributosBaseCotizacion(cdtipsit);
+						Map<String,String>atributos=consultasManager.cargarAtributosBaseCotizacion(map1.get("cdtipsit"));
 					
 						String cdatribuFenacimi = atributos.get("FENACIMI");
 						if(cdatribuFenacimi.length()==1)
