@@ -1465,7 +1465,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				logger.error("Error sin impacto funcional al validar extraprimas: ",ex);
+				logger.warn("Error sin impacto funcional al validar extraprimas: ",ex);
 				statusValidacionExtraprimas="S";
 			}
 			if(statusValidacionExtraprimas.equalsIgnoreCase("N"))
@@ -1491,7 +1491,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				logger.error("Error sin impacto funcional al validar domicilios: ",ex);
+				logger.warn("Error sin impacto funcional al validar domicilios: ",ex);
 				lisUsuSinDir=null;
 			}
 			
@@ -1531,7 +1531,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				logger.error("Error sin impacto funcional al validar Titular menor de edad: ",ex);
+				logger.warn("Error sin impacto funcional al validar Titular menor de edad: ",ex);
 			}
 			
 			////// validar que tengan direccion //1548

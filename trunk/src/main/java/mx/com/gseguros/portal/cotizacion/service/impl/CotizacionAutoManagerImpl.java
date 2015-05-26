@@ -2914,7 +2914,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			catch(Exception ex)
 			{
-				logger.error("error sin impacto funcional al recuperar dias validos de cotizacion, se cargan 15 dias",ex);
+				logger.warn("error sin impacto funcional al recuperar dias validos de cotizacion, se cargan 15 dias",ex);
 				resp.getSmap().put("diasValidos" , "15");
 			}
 			

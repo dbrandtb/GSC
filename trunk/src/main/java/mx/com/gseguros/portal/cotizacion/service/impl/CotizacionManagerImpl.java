@@ -5395,7 +5395,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             	}
             	catch(Exception ex)
             	{
-            		logger.error("Error sin impacto funcional al cotizar",ex);
+            		logger.warn("Error sin impacto funcional al cotizar",ex);
             	}
                 	
             	if(cdtipsit.equals(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit()))
@@ -5468,7 +5468,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				 */
 
 				if (!consultasDAO.esProductoSalud(cdramo) && StringUtils.isBlank(cdpersonCli) && StringUtils.isNotBlank(cdideperCli)) {
-					logger.debug("Persona proveniente de WS, Se importará, Valor de cdperson en blanco, valor de cdIdeper: " + cdideperCli);
+					logger.debug("Persona proveniente de WS, Se importarï¿½, Valor de cdperson en blanco, valor de cdIdeper: " + cdideperCli);
 					
 					
 					/**
