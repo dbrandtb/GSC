@@ -722,7 +722,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			catch(Exception ex)
 			{
-				logger.error("error SIN IMPACTO FUNCIONAL al obtener factor convenido o el factor no se encuentra",ex);
+				logger.warn("error SIN IMPACTO FUNCIONAL al obtener factor convenido o el factor no se encuentra",ex);
 				smap1.put("FACTOR_MIN","0");
 				smap1.put("FACTOR_MAX","0");
 			}
@@ -849,7 +849,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 				catch(Exception ex)
 				{
-					logger.error("Error sin impacto funcional al validar domicilios: ",ex);
+					logger.warn("Error sin impacto funcional al validar domicilios: ",ex);
 					lisUsuSinDir=null;
 				}
 				

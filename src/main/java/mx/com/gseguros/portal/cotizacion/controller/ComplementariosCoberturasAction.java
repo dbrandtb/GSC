@@ -1332,7 +1332,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 						}
 						catch(Exception ex)
 						{
-							logger.error("Error sin impacto funcional al comparar codigos postales",ex);
+							logger.warn("Error sin impacto funcional al comparar codigos postales",ex);
 						}
 						
 						//agregar los del form a los leidos
