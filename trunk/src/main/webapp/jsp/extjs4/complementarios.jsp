@@ -2162,6 +2162,38 @@ function _datComTurnarSuscripcion()
                     success: function(resp) {
                         //console.log(resp);
                         Ext.getCmp('formPanel').loadRecord(resp);
+                        if(inputCdramo+'x'=='1x')
+                        {
+                            var cuadro20 = function()
+                            {
+                                if(!_fieldByName('panel2.nmcuadro').isValid())
+                                {
+                                    _fieldByName('panel2.nmcuadro').setValue('RE20');
+                                    _fieldByName('panel2.nmcuadro').isValid();
+                                    //alert('reemplazo');
+                                }
+                                else
+                                {
+                                    //alert('ya viene');
+                                }
+                            };
+                            if(_fieldByName('panel2.nmcuadro').store.getCount()>0)
+                            {
+                                //alert('cargado');
+                                cuadro20();
+                            }
+                            else
+                            {
+                                //alert('no cargado');
+                                _fieldByName('panel2.nmcuadro').store.on(
+                                {
+                                    load : function()
+                                    {
+                                        cuadro20();
+                                    }
+                                });
+                            }
+                        }
                         panDatComAux1=panDatComAux1+1;
                         if(panDatComAux1==2&&inputCdramo+'x'=='6x')
                         {
