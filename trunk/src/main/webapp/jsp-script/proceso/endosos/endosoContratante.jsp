@@ -178,6 +178,7 @@ Ext.onReady(function()
                 title       : 'Nuevo Contratante'
                 ,height     : 400
                 ,autoScroll : true
+                ,buttonAlign : 'center'
 				,loader     :
                 {
                     url       : _p35_urlPantallaCliente
@@ -197,7 +198,42 @@ Ext.onReady(function()
 					                'smap1.cargaTipoPersona' : '',
 					                'smap1.cargaSucursalEmi' : ''
 					            }
-                }
+                }, 
+                buttons:[{
+			            icon    : '${ctx}/resources/fam3icons/icons/user_delete.png',
+			            text    : 'Quitar/Cambiar Contratante',
+			            handler : function(){
+							destruirLoaderContratante();	 
+							
+                            _35_formContratante.getLoader().destroy();
+                            
+                            _35_formContratante.loader = new Ext.ComponentLoader({
+			                    url       : _p35_urlPantallaCliente
+			                    ,scripts  : true
+			                    ,autoLoad : false
+			                    ,ajaxOptions: {
+			                            method: 'POST'
+			                     }
+			                });
+			                
+                            _35_formContratante.getLoader().load({
+						            params: {
+						                'smap1.cdperson' : '',
+						                'smap1.cdideper' : '',
+						                'smap1.cdideext' : '',
+						                'smap1.esSaludDanios' : 'S',
+						                'smap1.esCargaClienteNvo' : 'N' ,
+						                'smap1.ocultaBusqueda' : 'S' ,
+						                'smap1.cargaCP' : '',
+						                'smap1.cargaTipoPersona' : '',
+						                'smap1.cargaSucursalEmi' : ''
+						            }
+						     });
+						     _p22_parentCallback = contratanteGuardado;
+						     _contratanteSaved = false;
+						     
+			            }
+			        }]
             });
             _p22_parentCallback = contratanteGuardado;
             this.callParent();
@@ -379,6 +415,7 @@ function _35_confirmar()
         Ext.Ajax.request(
         {
             url       : _35_urlGuardar
+            ,timeout  : 240000
             ,jsonData : json
             ,success  : function(response)
             {

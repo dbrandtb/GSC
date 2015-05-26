@@ -1028,6 +1028,7 @@ debug("validarYGuardar flag:2");
                             Ext.Ajax.request
                             ({
                                 url     : urlAutoRFCp2
+                                ,timeout: 240000
                                 ,params :
                                 {
                                     'map1.pv_rfc_i'     : field.getValue(),
@@ -1164,6 +1165,7 @@ debug("validarYGuardar flag:2");
 		            		Ext.Ajax.request
 		            		({
 		            			url     : urlAutoRFCp2
+		            			,timeout: 240000
 		            			,params :
 		            			{
 		            				'map1.pv_rfc_i'     : field.getValue(),

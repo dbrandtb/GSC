@@ -3316,6 +3316,7 @@ function _p21_rfcBlur(field)
         Ext.Ajax.request
         ({
             url     : _p21_urlBuscarPersonas
+            ,timeout: 240000
             ,params :
             {
                 'map1.pv_rfc_i'       : value

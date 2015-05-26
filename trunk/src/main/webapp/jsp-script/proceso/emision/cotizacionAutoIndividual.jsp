@@ -1667,6 +1667,7 @@ function _p28_ramo5ClienteChange(combcl)
                         {
                             type    : 'ajax'
                             ,url    : _p28_urlRecuperarCliente
+                            ,timeout: 240000
                             ,reader :
                             {
                                 type  : 'json'

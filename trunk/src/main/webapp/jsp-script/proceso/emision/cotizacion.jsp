@@ -2876,6 +2876,7 @@ Ext.onReady(function()
                                 {
                                     type    : 'ajax'
                                     ,url    : _0_urlRecuperarCliente
+                                    ,timeout: 240000
                                     ,reader :
                                     {
                                         type  : 'json'
