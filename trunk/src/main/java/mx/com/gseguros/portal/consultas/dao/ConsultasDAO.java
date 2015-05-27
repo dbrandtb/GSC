@@ -220,4 +220,6 @@ public interface ConsultasDAO
 			,String param2
 			,String param3
 			)throws Exception;
+	
+	public Map<String,String>recuperarCotizacionFlotillas(String cdramo,String nmpoliza,String cdusuari,String cdsisrol) throws Exception;
 }

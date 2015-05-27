@@ -2738,72 +2738,28 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			
 			setCheckpoint("Buscando cotizacion del usuario");
-			listaCotizaciones=consultasDAO.cargarMpolizasPorParametrosVariables(
-					null      //cdunieco
-					,cdramo
-					,"W"      //estado
+			Map<String,String>cotizacionEmision = consultasDAO.recuperarCotizacionFlotillas(
+					cdramo
 					,nmpoliza
-					,null     //nmsuplem
-					,null     //nmsolici
-					,RolSistema.SUSCRIPTOR_AUTO.getCdsisrol().equals(cdsisrol)?"*":cdusuari //cdramant
+					,cdusuari
+					,cdsisrol
 					);
-			listaEmisiones=consultasDAO.cargarMpolizasPorParametrosVariables(
-					null      //cdunieco
-					,cdramo
-					,"M"      //estado
-					,null     //nmpoliza
-					,null     //nmsuplem
-					,nmpoliza //nmsolici
-					,RolSistema.SUSCRIPTOR_AUTO.getCdsisrol().equals(cdsisrol)?"*":cdusuari //cdramant
-					);
-			if(listaCotizaciones.size()+listaEmisiones.size()==0)
-			{
-				throwExc("No tiene permisos para recuperar esta cotizacion");
-			}
-			if(listaCotizaciones.size()+listaEmisiones.size()>1)
-			{
-				throwExc("Cotizacion duplicada");
-			}
 			
-			boolean maestra = false;
-			if(listaEmisiones.size()==1)
-			{
-				maestra=true;
-			}
+			String cdunieco = cotizacionEmision.get("cdunieco");
+			String estado   = cotizacionEmision.get("estado");
+			       nmpoliza = cotizacionEmision.get("nmpoliza");
+			String nmsuplem = cotizacionEmision.get("nmsuplem");
+			String tipoflot = cotizacionEmision.get("tipoflot");
+			String fesolici = cotizacionEmision.get("fesolici");
+			String feini    = cotizacionEmision.get("feini");
+			String fefin    = cotizacionEmision.get("fefin");
 			
-			setCheckpoint("Recuperando llave de cotizacion");
-			String cdunieco = null;
-			String estado   = null;
-			String nmsuplem = null;
-			String tipoflot = null;
-			String fesolici = null;
-			String feini    = null;
-			String fefin    = null;
-			if(maestra)
-			{
-				cdunieco = listaEmisiones.get(0).get("CDUNIECO");
-				estado   = listaEmisiones.get(0).get("ESTADO");
-				nmpoliza = listaEmisiones.get(0).get("NMPOLIZA");
-				nmsuplem = listaEmisiones.get(0).get("NMSUPLEM");
-				tipoflot = listaEmisiones.get(0).get("TIPOFLOT");
-				fesolici = listaEmisiones.get(0).get("FESOLICI");
-				feini    = listaEmisiones.get(0).get("FEEFECTO");
-				fefin    = listaEmisiones.get(0).get("FEPROREN");
-			}
-			else
-			{
-				cdunieco = listaCotizaciones.get(0).get("CDUNIECO");
-				estado   = listaCotizaciones.get(0).get("ESTADO");
-				nmsuplem = listaCotizaciones.get(0).get("NMSUPLEM");
-				tipoflot = listaCotizaciones.get(0).get("TIPOFLOT");
-				fesolici = listaCotizaciones.get(0).get("FESOLICI");
-				feini    = listaCotizaciones.get(0).get("FEEFECTO");
-				fefin    = listaCotizaciones.get(0).get("FEPROREN");
-			}
+			boolean maestra = "M".equals(estado);
+			
 			checkBlank(cdunieco , "No se recupero la sucursal de la cotizacion");
 			checkBlank(estado   , "No se recupero el estado de la cotizacion");
 			checkBlank(nmpoliza , "No se recupero el numero de cotizacion");
-			checkBlank(nmpoliza , "No se recupero el suplemento de la cotizacion");
+			checkBlank(nmsuplem , "No se recupero el suplemento de la cotizacion");
 			
 			resp.getSmap().put("CDUNIECO" , cdunieco);
 			resp.getSmap().put("ESTADO"   , estado);

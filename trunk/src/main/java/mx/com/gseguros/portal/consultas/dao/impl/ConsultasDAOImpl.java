@@ -1738,5 +1738,50 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
             compile();
     	}
-    }    
+    }
+    
+    @Override
+    public Map<String,String>recuperarCotizacionFlotillas(String cdramo,String nmpoliza,String cdusuari,String cdsisrol) throws Exception
+    {
+    	Map<String,String> params = new LinkedHashMap<String,String>();
+    	params.put("cdramo"   , cdramo);
+    	params.put("nmpoliza" , nmpoliza);
+    	params.put("cdusuari" , cdusuari);
+    	params.put("cdsisrol" , cdsisrol);
+    	Map<String,Object> procResult = ejecutaSP(new RecuperarCotizacionFlotillas(getDataSource()),params);
+    	Map<String,String> result     = new LinkedHashMap<String,String>();
+    	result.put("cdunieco" , (String)procResult.get("pv_cdunieco_o"));
+    	result.put("estado"   , (String)procResult.get("pv_estado_o"));
+    	result.put("nmpoliza" , (String)procResult.get("pv_nmpoliza_o"));
+    	result.put("nmsuplem" , (String)procResult.get("pv_nmsuplem_o"));
+    	result.put("tipoflot" , (String)procResult.get("pv_tipoflot_o"));
+    	result.put("fesolici" , (String)procResult.get("pv_fesolici_o"));
+    	result.put("feini"    , (String)procResult.get("pv_feini_o"));
+    	result.put("fefin"    , (String)procResult.get("pv_fefin_o"));
+    	logger.debug(Utilerias.join("\npoliza=",result));
+    	return result;
+    }
+    
+    protected class RecuperarCotizacionFlotillas extends StoredProcedure
+    {
+    	protected RecuperarCotizacionFlotillas(DataSource dataSource)
+    	{
+    		super(dataSource , "PKG_CONSULTA.P_GET_DATOS_POLIZA_FLOTILLAS");
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_cdunieco_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_estado_o"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_nmpoliza_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_fesolici_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_feini_o"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_fefin_o"    , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }
