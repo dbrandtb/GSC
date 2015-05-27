@@ -262,6 +262,16 @@
 	                        buttons: Ext.Msg.OK
 	                    }));
 	                	expande(1);
+	                	
+	                	try
+                        {
+                            var boton = _fieldById('panDatComBotonRetarificar');
+                            boton.mensajeInvalido = '';
+                        }
+                        catch(e)
+                        {
+                            debugError(e);
+                        }
                 	}
                 }
                 else
@@ -274,6 +284,19 @@
                     });
                     
                 	timeoutflagp2=2;
+                	
+                	if(!Ext.isEmpty(jsonResp.mensajeRespuesta))
+                	{
+	               	    try
+	               	    {
+	               	        var boton = _fieldById('panDatComBotonRetarificar');
+	               	        boton.mensajeInvalido = jsonResp.mensajeRespuesta+'<br/>Corrija y guarde nuevamente los datos de la pesta&ntilde;a "Editar asegurados" secci&oacute;n "Asegurados".';
+	               	    }
+	               	    catch(e)
+	               	    {
+	               	        debugError(e);
+	               	    }
+	               	}
                	}
             },
             failure:function(response,opts)
