@@ -462,7 +462,7 @@
                         ,titleCollapse : true
                         ,collapsible   : false
                         ,height        : 250
-                        ,width         : 370
+                        ,width         : 455
                         ,tools         :
                         [
                            {
@@ -475,7 +475,7 @@
                             {
                                 header     : 'Cobertura'
                                 ,dataIndex : 'NOMBRE_GARANTIA'
-                                ,width     : 180
+                                ,width     : 265
                             }
                             ,{
                                 header     : 'Suma asegurada'
@@ -542,13 +542,13 @@
                             }
                         ]
                         ,height        : 250
-                        ,width         : 370
+                        ,width         : 455
                         ,columns       :
                         [
                             {
                                 header     : 'Cobertura'
                                 ,dataIndex : 'NOMBRE_GARANTIA'
-                                ,width     : 180
+                                ,width     : 265
                             }
                             ,{
                                 header     : 'Suma asegurada'
@@ -599,19 +599,19 @@
                         ]
                         ,store         : storeCoberturasDisponibles_p3
                         ,height        : 250
-                        ,width         : 370
+                        ,width         : 455
                         ,columns       :
                         [
                             {
                                 header     : 'Cobertura'
                                 ,dataIndex : 'NOMBRE_GARANTIA'
-                                ,width     : 180
+                                ,width     : 265
                             }
-                            ,{
+                            /*,{
                                 header     : 'Suma asegurada'
                                 ,dataIndex : 'SUMA_ASEGURADA'
                                 ,width     : 110
-                            }
+                            }*/
                             ,{
                                 menuDisabled : true
                                 ,width       : 30
@@ -733,7 +733,7 @@
                         ,collapsible   : false
                         ,hidden        : inputAltabajap3=='baja'
                         ,height        : 250
-                        ,width         : 370
+                        ,width         : 455
                         ,tools         :
                         [
                            {
@@ -746,13 +746,13 @@
                             {
                                 header     : 'Cobertura'
                                 ,dataIndex : 'NOMBRE_GARANTIA'
-                                ,width     : 180
+                                ,width     : 265
                             }
-                            ,{
+                            /*,{
                                 header     : 'Suma asegurada'
                                 ,dataIndex : 'SUMA_ASEGURADA'
                                 ,width     : 110
-                            }
+                            }*/
                             ,{
                                 menuDisabled : true
                                 ,width       : 30
