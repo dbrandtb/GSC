@@ -13,7 +13,7 @@ public interface UsuarioDAO {
 
 	public String creaEditaRolSistema(Map params) throws Exception;
 	
-	public GenericVO guardaUsuario(Map params) throws Exception;
+	public GenericVO guardaUsuario(Map<String, String> params) throws Exception;
 
 	public void cambiaEstatusUsuario(Map params) throws Exception;
 
