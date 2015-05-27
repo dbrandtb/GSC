@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.general.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import mx.com.gseguros.portal.general.dao.UsuarioDAO;
 import mx.com.gseguros.portal.general.model.UsuarioVO;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -27,6 +29,7 @@ import org.springframework.jdbc.object.StoredProcedure;
 public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 
 	private Logger logger = Logger.getLogger(UsuarioDAOImpl.class);
+	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	
 	@Override
@@ -53,7 +56,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	}
 	
 	@Override
-	public GenericVO guardaUsuario(Map params) throws Exception {
+	public GenericVO guardaUsuario(Map<String, String> params) throws Exception {
 		try {
 			HashMap<String, Object> parametros = new HashMap<String, Object>();
 			parametros.put("PV_CDUSUARI_I", params.get("cdusuari"));
@@ -63,15 +66,15 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			parametros.put("PV_DSAPELLIDO1_I", params.get("dsapellido1"));
 			parametros.put("PV_CDSISROL_I", params.get("cdsisrol"));
 			parametros.put("PV_OTSEXO_I", params.get("otsexo"));
-			parametros.put("PV_FENACIMI_I", params.get("fenacimi"));
+			parametros.put("PV_FENACIMI_I", StringUtils.isBlank(params.get("fenacimi")) ? null : renderFechas.parse(params.get("fenacimi")));
 			parametros.put("PV_CDRFC_I", params.get("cdrfc"));
 			parametros.put("PV_DSEMAIL_I", params.get("dsemail"));
 			parametros.put("PV_CURP_I", params.get("curp"));
 			parametros.put("PV_CDMODGRA_I", params.get("cdmodgra"));
 			parametros.put("PV_CDUNIECO_I", params.get("cdunieco"));
 			parametros.put("PV_CDRAMO_I", params.get("cdramo"));
-			parametros.put("PV_FEDESDE_I", params.get("feini"));
-			parametros.put("PV_FEVENLICV_I", params.get("fefin"));
+			parametros.put("PV_FEDESDE_I", StringUtils.isBlank(params.get("feini")) ? null : renderFechas.parse(params.get("feini")));
+			parametros.put("PV_FEVENLICV_I", StringUtils.isBlank(params.get("fefin")) ? null : renderFechas.parse(params.get("fefin")));
 			parametros.put("PV_CLASEAG_I", params.get("claseag"));
 			parametros.put("PV_STATUSAG_I", params.get("statusag"));
 			parametros.put("PV_CDOFICIN_I", params.get("cdoficin"));
@@ -101,19 +104,19 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			declareParameter(new SqlParameter("PV_DSAPELLIDO1_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDSISROL_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_OTSEXO_I", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("PV_FENACIMI_I", OracleTypes.VARCHAR));// DEBE SER TIPO DATE
+			declareParameter(new SqlParameter("PV_FENACIMI_I", OracleTypes.DATE));// DEBE SER TIPO DATE ( PV_FENACIMI_I IN  MPERSONA.FENACIMI%TYPE es tipo DATE)
 			declareParameter(new SqlParameter("PV_CDRFC_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_DSEMAIL_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CURP_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDMODGRA_I", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("PV_CDUNIECO_I", OracleTypes.VARCHAR));//DEBE SER NUMBER(4)
-			declareParameter(new SqlParameter("PV_CDRAMO_I", OracleTypes.VARCHAR));//DEBE SER NUMBER(3)
-			declareParameter(new SqlParameter("PV_FEDESDE_I", OracleTypes.VARCHAR));// DEBE SER TIPO DATE
-			declareParameter(new SqlParameter("PV_FEVENLICV_I", OracleTypes.VARCHAR));//DEBE SER DE TIPO DATE
-			declareParameter(new SqlParameter("PV_CLASEAG_I", OracleTypes.VARCHAR));//DEBE SER 
-			declareParameter(new SqlParameter("PV_STATUSAG_I", OracleTypes.VARCHAR));//DEBE SER
-			declareParameter(new SqlParameter("PV_CDOFICIN_I", OracleTypes.VARCHAR));//DEBE SER
-			declareParameter(new SqlParameter("PV_CDBROKER_I", OracleTypes.VARCHAR));//DEBE SER
+			declareParameter(new SqlParameter("PV_CDUNIECO_I", OracleTypes.VARCHAR));//DEBE SER NUMBER(4) (PV_CDUNIECO_I IN  TUSUARIO.CDUNIECO%TYPE es tipo NUMBER (4))
+			declareParameter(new SqlParameter("PV_CDRAMO_I", OracleTypes.VARCHAR));//DEBE SER NUMBER(3) pero se queda como VARCHAR
+			declareParameter(new SqlParameter("PV_FEDESDE_I", OracleTypes.DATE));// DEBE SER TIPO DATE
+			declareParameter(new SqlParameter("PV_FEVENLICV_I", OracleTypes.DATE));//DEBE SER DE TIPO DATE
+			declareParameter(new SqlParameter("PV_CLASEAG_I", OracleTypes.VARCHAR));//DEBE SER VARCHAR
+			declareParameter(new SqlParameter("PV_STATUSAG_I", OracleTypes.VARCHAR));//DEBE SER VARCHAR
+			declareParameter(new SqlParameter("PV_CDOFICIN_I", OracleTypes.VARCHAR));//DEBE SER NUMBER (6)
+			declareParameter(new SqlParameter("PV_CDBROKER_I", OracleTypes.VARCHAR));//DEBE SER NUMBER (6)
 			declareParameter(new SqlParameter("PV_ACCION_I", OracleTypes.VARCHAR));//DEBE SER TIPO VARCHAR, ASI SE DEFINE EN EL PROCEDURE
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));//DEBE SER TIPO NUMBER
 			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
