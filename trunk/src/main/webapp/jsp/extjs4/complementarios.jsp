@@ -886,10 +886,17 @@ function _datComTurnarSuscripcion()
                                 }
 		                        ,{
 		                            text     : 'Emitir'
-		                            ,icon    : contexto+'/resources/fam3icons/icons/key.png'
-		                            ,hidden  : ((!sesionDsrol)||sesionDsrol!='SUSCRIPTOR')&&panDatComMap1.SITUACION!='AUTO'
-		                            ,handler : function()
-		                            {
+                                    ,itemId  : 'panDatComBotonRetarificar'
+                                    ,icon    : contexto+'/resources/fam3icons/icons/key.png'
+                                    ,hidden  : ((!sesionDsrol)||sesionDsrol!='SUSCRIPTOR')&&panDatComMap1.SITUACION!='AUTO'
+                                    ,handler : function(me)
+                                    {
+                                        if(!Ext.isEmpty(me.mensajeInvalido))
+                                        {
+                                            mensajeWarning(me.mensajeInvalido);
+                                            expande(2);
+                                            return;
+                                        }
 		                                var form=Ext.getCmp('formPanel');
 		                                if(form.isValid())
 		                                {
