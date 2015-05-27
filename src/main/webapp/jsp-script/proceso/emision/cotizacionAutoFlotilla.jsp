@@ -4313,7 +4313,7 @@ function _p30_cargarClic()
                         _fieldById('_p30_form').formOculto.getForm().reset();
                     }
            
-                    if(Ext.isEmpty(json.smap1.NTRAMITE)||vencida)
+                    if(Ext.isEmpty(json.smap1.NTRAMITE)||vencida||maestra)
                     {
                         _p30_cotizar(!maestra&&!vencida);
                     }

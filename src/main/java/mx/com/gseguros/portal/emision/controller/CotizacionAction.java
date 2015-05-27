@@ -2225,14 +2225,8 @@ public class CotizacionAction extends PrincipalCoreAction
 				paramsObtenerTvalosit.put("param3" , estado);
 				paramsObtenerTvalosit.put("param4" , cdtipsit);
 				paramsObtenerTvalosit.put("param5" , nmpoliza);
-				if(RolSistema.SUSCRIPTOR_AUTO.getCdsisrol().equals(cdsisrol))
-				{
-					paramsObtenerTvalosit.put("param6" , "*");
-				}
-				else
-				{
-					paramsObtenerTvalosit.put("param6" , cdusuari);
-				}
+				paramsObtenerTvalosit.put("param6" , cdusuari);
+				paramsObtenerTvalosit.put("param7" , cdsisrol);
 				slist1 = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_TVALOSIT_COTIZACION.getNombre(), paramsObtenerTvalosit, null);
 				if(slist1==null||slist1.size()==0)
 				{
