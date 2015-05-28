@@ -196,7 +196,7 @@ Ext.onReady(function()
 					                'smap1.ocultaBusqueda' : 'S' ,
 					                'smap1.cargaCP' : '',
 					                'smap1.cargaTipoPersona' : '',
-					                'smap1.cargaSucursalEmi' : ''
+					                'smap1.cargaSucursalEmi' : _35_smap1.CDUNIECO
 					            }
                 }, 
                 buttons:[{
@@ -226,7 +226,7 @@ Ext.onReady(function()
 						                'smap1.ocultaBusqueda' : 'S' ,
 						                'smap1.cargaCP' : '',
 						                'smap1.cargaTipoPersona' : '',
-						                'smap1.cargaSucursalEmi' : ''
+						                'smap1.cargaSucursalEmi' : _35_smap1.CDUNIECO
 						            }
 						     });
 						     _p22_parentCallback = contratanteGuardado;

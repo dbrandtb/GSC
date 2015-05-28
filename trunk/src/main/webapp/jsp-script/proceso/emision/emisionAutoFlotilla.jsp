@@ -519,7 +519,8 @@ Ext.onReady(function()
                         'smap1.esSaludDanios' : 'D',
                         'smap1.esCargaClienteNvo' :(Ext.isEmpty(json.smap1.cdperson)? 'S' : 'N' ),
                         'smap1.cargaCP' : json.smap1.cdpostal,
-                        'smap1.cargaTipoPersona' : json.smap1.otfisjur
+                        'smap1.cargaTipoPersona' : json.smap1.otfisjur,
+                        'smap1.cargaSucursalEmi' : _p31_smap1.cdunieco
                     }
                 });
                 
