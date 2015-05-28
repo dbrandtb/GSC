@@ -1356,7 +1356,7 @@ function _datComTurnarSuscripcion()
 										                                                            ,text     : 'Pagar'
 										                                                            ,icon     : contexto+'/resources/fam3icons/icons/money.png'
 										                                                            ,disabled : true
-										                                                            ,hidden  : inputCdramo!='2'
+										                                                            ,hidden  : true//inputCdramo!='2'
 										                                                            ,handler  : function()
 										                                                            {
 										                                                            	if(Ext.isEmpty(_numeroPolizaExt)){
