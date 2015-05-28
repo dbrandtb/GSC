@@ -494,11 +494,11 @@ Ext.onReady(function()
 								    		form.down('[name=smap1.rfc]').getStore().removeAll();
 								    		form.down('[name=smap1.nombre]').getStore().removeAll();
 								    		
-								    		if( !Ext.isEmpty(_CDIDEEXTsel) || _esSaludDanios == 'S' ){
-									        	_fieldByName('CDSUCEMI').allowBlank = false;
-									        }else {
-									        	_fieldByName('CDSUCEMI').allowBlank = true;
-									        }
+//								    		if( !Ext.isEmpty(_CDIDEEXTsel) || _esSaludDanios == 'S' ){
+//									        	_fieldByName('CDSUCEMI').allowBlank = false;
+//									        }else {
+//									        	_fieldByName('CDSUCEMI').allowBlank = true;
+//									        }
 								    		
 											irModoEdicion();
 											
@@ -831,11 +831,6 @@ Ext.onReady(function()
 							_p22_heredarColonia();
 						}
 
-						if(!Ext.isEmpty(_cargaSucursalEmi)){
-							_fieldByName('CDSUCEMI').setValue(_cargaSucursalEmi);
-						}
-						
-						
 						if(_ocultaBusqueda){
 							_p22_formBusqueda().hide();
 						}
@@ -926,7 +921,12 @@ function importaPersonaWS(esSaludD, codigoCliExt){
     }
     
     _fieldByName('CDSUCEMI').editable = true;
-    _fieldByName('CDSUCEMI').forceSelection = true;
+    _fieldByName('CDSUCEMI').forceSelection = false;
+    _fieldByName('CDSUCEMI').setReadOnly(true);
+
+    if(!Ext.isEmpty(_cargaSucursalEmi)){
+		_fieldByName('CDSUCEMI').setValue(_cargaSucursalEmi);
+	}
 
     _fieldByName('CDEDO').editable = true;
     _fieldByName('CDEDO').forceSelection = false;
@@ -1260,6 +1260,10 @@ function _p22_loadRecordCdperson(callbackload,autosave)
 			    if(!Ext.isEmpty(valMail) && Ext.isEmpty(_fieldByName('EMAIL').getValue())){
 			    	_fieldByName('EMAIL').setValue(valMail);
 			    }
+			    
+			    if(!Ext.isEmpty(_cargaSucursalEmi)){
+					_fieldByName('CDSUCEMI').setValue(_cargaSucursalEmi);
+				}
 			    
 			    Ext.Ajax.request(
 			    {
