@@ -1768,4 +1768,12 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		log.debug("obtieneDatosBeneficiario params: "+params);
 		return siniestrosDAO.obtieneDatosBeneficiario(params);
 	}
+	
+	@Override
+	public List<Map<String, String>> obtenerDatoMsiniper(String ntramite) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_ntramite_i", ntramite);
+		log.debug("obtieneMontoPagoSiniestro params: "+params);
+		return siniestrosDAO.obtieneDatoMsiniper(params);
+	}
 }

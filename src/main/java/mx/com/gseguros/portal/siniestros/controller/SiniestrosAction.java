@@ -1029,17 +1029,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		try{
 			logger.debug("** Entrando al metodo de generar Complemento de Siniestro  : ");
 			logger.debug(params);
-			logger.debug("Valor del tramite : "+params.get("pv_ntramite_i"));
-			
 			List<MesaControlVO> listaMesaControl = siniestrosManager.getConsultaListaMesaControl(params.get("pv_ntramite_i"));
-			//String valorTipoAtencion = listaMesaControl.get(0).getOtvalor07mc();
 			logger.debug("=========>");
 			// 1.- Guardar en TMESACONTROL 
 			this.session=ActionContext.getContext().getSession();
 			UserVO usuario=(UserVO) session.get("USUARIO");
 			HashMap<String, Object> parMesCon = new HashMap<String, Object>();
-			parMesCon.put("pv_cdunieco_i",params.get("cdunieco"));
-			
+			parMesCon.put("pv_cdunieco_i",		params.get("cdunieco"));
 			parMesCon.put("pv_cdunieco_i", 		listaMesaControl.get(0).getCduniecomc());
 			parMesCon.put("pv_cdramo_i", 		listaMesaControl.get(0).getCdramomc());
 			parMesCon.put("pv_estado_i", 		listaMesaControl.get(0).getEstadomc());
@@ -1112,147 +1108,209 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				logger.error("Sin mensaje respuesta de nmtramite!!");
 			}else{
 				msgResult = (String) res.getItemMap().get("ntramite");
-				logger.debug("Entra a proceso 1");
-				logger.debug("VALOR DEL NUEVO TRAMITE : "+msgResult);
-				slist1 = siniestrosManager.obtenerFacturasTramite(params.get("pv_ntramite_i"));
-				logger.debug("VALOR DE REGISTROS : "+slist1.size());
-				for(int i=0; i< slist1.size();i++){
+				logger.debug("<== VALOR DEL NUEVO TRAMITE ====> "+msgResult);
+				//2.- Obtenemos los valores de las facturas anteriores y lo guardamos a TFACMESCTRL
+				List<Map<String,String>> facturas = siniestrosManager.obtenerFacturasTramite(params.get("pv_ntramite_i"));
+				/*
+					"NTRAMITE"       , "NFACTURA"        , "FFACTURA"  , "CDTIPSER" , "DESCSERVICIO"
+					,"CDPRESTA"      , "NOMBREPROVEEDOR" , "PTIMPORT"  , "CDGARANT" , "DSGARANT"
+					,"DESCPORC"      , "DESCNUME"        , "CDCONVAL"  , "DSSUBGAR" , "CDMONEDA"
+					,"DESTIPOMONEDA" , "TASACAMB"        , "PTIMPORTA" , "DCTONUEX" , "CODRECLAM"
+					,"FEEGRESO" 	 , "DIASDEDU"        , "NOMBPROV"
+				*/
+				for(int i=0; i< facturas.size();i++){
 					siniestrosManager.guardaListaFacMesaControl2(
-						msgResult, 
-						slist1.get(i).get("NFACTURA"),
-						renderFechas.parse(slist1.get(i).get("FFACTURA")),
-						slist1.get(i).get("CDTIPSER"),
-						slist1.get(i).get("CDPRESTA"),
-						slist1.get(i).get("PTIMPORT"),
-						slist1.get(i).get("CDGARANT"),
-						slist1.get(i).get("CDCONVAL"),
-						slist1.get(i).get("DESCPORC"),
-						slist1.get(i).get("DESCNUME"),
-						slist1.get(i).get("CDMONEDA"),
-						slist1.get(i).get("TASACAMB"),
-						slist1.get(i).get("PTIMPORTA"),
-						slist1.get(i).get("DCTONUEX"),
-						renderFechas.parse(slist1.get(i).get("FEEGRESO")),
-						slist1.get(i).get("DIASDEDU"),
-						null,
-						slist1.get(i).get("NOMBPROV")
+						msgResult,							facturas.get(i).get("NFACTURA"),		renderFechas.parse(facturas.get(i).get("FFACTURA")),
+						facturas.get(i).get("CDTIPSER"),	facturas.get(i).get("CDPRESTA"),		facturas.get(i).get("PTIMPORT"),
+						facturas.get(i).get("CDGARANT"),	facturas.get(i).get("CDCONVAL"),		facturas.get(i).get("DESCPORC"),
+						facturas.get(i).get("DESCNUME"),	facturas.get(i).get("CDMONEDA"),		facturas.get(i).get("TASACAMB"),
+						facturas.get(i).get("PTIMPORTA"),	facturas.get(i).get("DCTONUEX"),		renderFechas.parse(facturas.get(i).get("FEEGRESO")),
+						facturas.get(i).get("DIASDEDU"),	null,									facturas.get(i).get("NOMBPROV")
 					);
 				}
+				//3.- Obtenemos los valores de MSINIEST y MSINIPER para llenar la tabla de TWORKSIN
+				List<Map<String,String>> msiniper = siniestrosManager.obtenerDatoMsiniper(params.get("pv_ntramite_i"));
+				/*
+					"NTRAMITE",			"CDUNIECO",			"CDRAMO",		"ESTADO",
+					"NMPOLIZA",			"NMSOLICI",			"NMSUPLEM",		"NMSITUAC",
+					"CDTIPSIT",			"CDPERSON",			"FEOCURRE",		"NMAUTSER",
+					"NFACTURA"
+				*/
+				for(int i=0;i<msiniper.size();i++) {
+					HashMap<String, Object> paramsTworkSin = new HashMap<String, Object>();
+					paramsTworkSin.put("pv_nmtramite_i",msgResult);												paramsTworkSin.put("pv_cdunieco_i",	msiniper.get(i).get("CDUNIECO"));
+					paramsTworkSin.put("pv_cdramo_i",	msiniper.get(i).get("CDRAMO"));							paramsTworkSin.put("pv_estado_i",	msiniper.get(i).get("ESTADO"));
+					paramsTworkSin.put("pv_nmpoliza_i",	msiniper.get(i).get("NMPOLIZA"));						paramsTworkSin.put("pv_nmsolici_i",	msiniper.get(i).get("NMSOLICI"));
+					paramsTworkSin.put("pv_nmsuplem_i",	msiniper.get(i).get("NMSUPLEM"));						paramsTworkSin.put("pv_nmsituac_i",	msiniper.get(i).get("NMSITUAC"));
+					paramsTworkSin.put("pv_cdtipsit_i",	msiniper.get(i).get("CDTIPSIT"));						paramsTworkSin.put("pv_cdperson_i",	msiniper.get(i).get("CDPERSON"));
+					paramsTworkSin.put("pv_feocurre_i",	renderFechas.parse(msiniper.get(i).get("FEOCURRE")));	paramsTworkSin.put("pv_nmautser_i",	msiniper.get(i).get("NMAUTSER"));
+					paramsTworkSin.put("pv_nfactura_i",	msiniper.get(i).get("NFACTURA"));
+					siniestrosManager.guardaListaTworkSin(paramsTworkSin);
+				}
+				//3.- Se gnera el nuevo Siniestro de dicho tramite.
+				siniestrosManager.getAltaSiniestroAltaTramite(msgResult);
+				
+				//4.- Obtenemos los valores del siniestro Anterior
+				List<Map<String,String>> siniestros = siniestrosManager.listaSiniestrosMsiniesTramite(params.get("pv_ntramite_i"),null,null);
+				List<Map<String,String>> siniestroNuevo = siniestrosManager.listaSiniestrosMsiniesTramite(msgResult,null,null);
+				/*
+					"NMSINIES"			,"NMAUTSER"			,"CDPERSON"				,"NOMBRE"
+					,"FEOCURRE"			,"CDUNIECO"			,"DSUNIECO"				,"AAAPERTU"
+					,"ESTADO"			,"NMSITUAC"			,"NMSUPLEM"				,"CDRAMO"
+					,"DSRAMO"			,"CDTIPSIT"			,"DSTIPSIT"				,"STATUS"
+					,"ESTADO"			,"NMPOLIZA"			,"VOBOAUTO"				,"CDICD"
+					,"DSICD"			,"CDICD2"			,"DSICD2"				,"DESCPORC"
+					,"DESCNUME"			,"COPAGO"			,"PTIMPORT"				,"AUTRECLA"
+					,"NMRECLAMO"		,"COMMENAR"			,"COMMENME"				,"AUTMEDIC"
+					,"CDCAUSA"			,"CDGARANT"			,"CDCONVAL"				,"NMSINREF"
+				 */
+				//5.- Actualizamos los valores de MSINIEST
+				siniestrosManager.actualizaDatosGeneralesSiniestro(
+						siniestroNuevo.get(0).get("CDUNIECO"),siniestroNuevo.get(0).get("CDRAMO"),
+						siniestroNuevo.get(0).get("ESTADO"),siniestroNuevo.get(0).get("NMPOLIZA"),
+						siniestroNuevo.get(0).get("NMSUPLEM"),siniestroNuevo.get(0).get("AAAPERTU"),
+						siniestroNuevo.get(0).get("NMSINIES"),renderFechas.parse(siniestroNuevo.get(0).get("FEOCURRE")),
+						siniestros.get(0).get("NMSINREF"),siniestros.get(0).get("CDICD"),
+						siniestros.get(0).get("CDICD2"),siniestros.get(0).get("CDCAUSA"),
+						siniestros.get(0).get("CDGARANT"),siniestros.get(0).get("CDCONVAL"),
+						siniestros.get(0).get("NMAUTSER"),siniestroNuevo.get(0).get("CDPERSON"),"1",
+						siniestroNuevo.get(0).get("NMRECLAMO"));
+				
+				for(int i=0; i< facturas.size();i++){
+					//6.- Obtenemos los valores de MSINIVAL por facturas
+					List<Map<String,String>>lista = siniestrosManager.P_GET_MSINIVAL(
+						msiniper.get(0).get("CDUNIECO"), msiniper.get(0).get("CDRAMO"), 
+						msiniper.get(0).get("ESTADO"),msiniper.get(0).get("NMPOLIZA"), 
+						msiniper.get(0).get("NMSUPLEM"), msiniper.get(0).get("NMSITUAC"),
+						siniestros.get(0).get("AAAPERTU"), siniestros.get(0).get("STATUS"), 
+						siniestros.get(0).get("NMSINIES"), facturas.get(i).get("NFACTURA"));
+						/*
+							"CDUNIECO"    , "CDRAMO"       , "ESTADO"   , "NMPOLIZA"
+							,"NMSUPLEM"   , "NMSITUAC"     , "AAAPERTU" , "STATUS"
+							,"NMSINIES"   , "NFACTURA"     , "CDGARANT" , "DSGARANT"
+							,"CDCONVAL"   , "DSSUBGAR"     , "CDCONCEP" , "DESCONCEP"
+							,"IDCONCEP"   , "DESIDCONCEP"  , "CDCAPITA" , "NMORDINA"
+							,"FEMOVIMI"   , "CDMONEDA"     , "PTPRECIO" , "CANTIDAD"
+							,"DESTOPOR"   , "DESTOIMP"     , "PTIMPORT" , "PTRECOBR"
+							,"NMANNO"     , "NMAPUNTE"     , "USERREGI" , "FEREGIST"
+							,"PTPCIOEX"   , "DCTOIMEX"     , "PTIMPOEX" , "PTMTOARA"
+							,"TOTAJUSMED" , "SUBTAJUSTADO"
+						*/
+					loadList = new ArrayList<HashMap<String,String>>();
+					for(Map<String,String>map:lista) {
+						loadList.add((HashMap<String,String>)map);
+					}
+					logger.debug("<==== VALOR DE MSINIES NUEVO ====> "+siniestroNuevo.get(0).get("NMSINIES"));
+					for(int j=0;j<loadList.size();j++){
+						Date   dFemovimi = new Date();
+						Date   dFeregist = new Date();
+						String nmanno    = Calendar.getInstance().get(Calendar.YEAR)+"";
+						//6.- Se realiza el guardado en MSINIVAL
+						siniestrosManager.P_MOV_MSINIVAL(
+							loadList.get(j).get("CDUNIECO"),		loadList.get(j).get("CDRAMO"),			loadList.get(j).get("ESTADO"),				loadList.get(j).get("NMPOLIZA"),
+							loadList.get(j).get("NMSUPLEM"),		loadList.get(j).get("NMSITUAC"),		siniestroNuevo.get(0).get("AAAPERTU"),		siniestroNuevo.get(0).get("STATUS"),
+							siniestroNuevo.get(0).get("NMSINIES"),	loadList.get(j).get("NFACTURA"),		loadList.get(j).get("CDGARANT"),			loadList.get(j).get("CDCONVAL"),
+							loadList.get(j).get("CDCONCEP"),		loadList.get(j).get("IDCONCEP"),		loadList.get(j).get("CDCAPITA"),			loadList.get(j).get("NMORDINA"),
+							dFemovimi,								loadList.get(j).get("CDMONEDA"),		loadList.get(j).get("PTPRECIO"),			loadList.get(j).get("CANTIDAD"),
+							loadList.get(j).get("DESTOPOR"),		loadList.get(j).get("DESTOIMP"),		loadList.get(j).get("PTIMPORT"),			loadList.get(j).get("PTRECOBR"),
+							nmanno,									loadList.get(j).get("NMAPUNTE"),		loadList.get(j).get("USERREGI"),			dFeregist,
+							"I",									loadList.get(j).get("PTIMPOEX"),		loadList.get(j).get("DCTOIMEX"),			loadList.get(j).get("PTIMPOEX"),	
+							loadList.get(j).get("PTMTOARA"));
+						
+						//7.- Obtenemos los valores de TDSINIVAL para ver si tiene Ajuste Medico
+						List<Map<String,String>> ajusteMedico = siniestrosManager.P_GET_TDSINIVAL(
+								loadList.get(j).get("CDUNIECO"),		loadList.get(j).get("CDRAMO"),			loadList.get(j).get("ESTADO"),				loadList.get(j).get("NMPOLIZA"),
+								loadList.get(j).get("NMSUPLEM"),		loadList.get(j).get("NMSITUAC"),		loadList.get(j).get("AAAPERTU"),			loadList.get(j).get("STATUS"),
+								loadList.get(j).get("NMSINIES"),		loadList.get(j).get("NFACTURA"),		loadList.get(j).get("CDGARANT"),			loadList.get(j).get("CDCONVAL"),
+								loadList.get(j).get("CDCONCEP"),		loadList.get(j).get("IDCONCEP"),		loadList.get(j).get("NMORDINA"));
+						/*
+							"CDUNIECO"  , "CDRAMO"   , "ESTADO"   , "NMPOLIZA" , "NMSUPLEM"
+							,"NMSITUAC" , "AAAPERTU" , "STATUS"   , "NMSINIES" , "NFACTURA"
+							,"CDGARANT" , "CDCONVAL" , "CDCONCEP" , "IDCONCEP" , "NMORDINA"
+							,"NMORDMOV" , "PTIMPORT" , "COMMENTS" , "USERREGI" , "FEREGIST"
+						*/
+						
+						for(int t=0;t<ajusteMedico.size();t++){
+							String userregi  = usuario.getUser();
+				    		Date   fechaRegistro = new Date();
+				    		//8.- Guaramos la informacion de del Ajuste Medico
+				    		siniestrosManager.P_MOV_TDSINIVAL(
+				    				loadList.get(j).get("CDUNIECO"), loadList.get(j).get("CDRAMO"), loadList.get(j).get("ESTADO"), loadList.get(j).get("NMPOLIZA"),
+				    				loadList.get(j).get("NMSUPLEM"), loadList.get(j).get("NMSITUAC"), siniestroNuevo.get(0).get("AAAPERTU"), siniestroNuevo.get(0).get("STATUS"),
+				    				siniestroNuevo.get(0).get("NMSINIES"), loadList.get(j).get("NFACTURA"),loadList.get(j).get("CDGARANT"), loadList.get(j).get("CDCONVAL"),
+				    				loadList.get(j).get("CDCONCEP"), loadList.get(j).get("IDCONCEP"),loadList.get(j).get("NMORDINA"),loadList.get(j).get("NMORDMOV"),
+				    				ajusteMedico.get(t).get("PTIMPORT"), ajusteMedico.get(t).get("COMMENTS"), userregi, fechaRegistro,
+				    				Constantes.INSERT_MODE);
+						}
+					}
+				}
+				
+				//9.- Obtenemos los valores para realizar el guardado de TVALOSIN
+				List<Map<String, String>> validacionFacturas = siniestrosManager.P_GET_FACTURAS_SINIESTRO(msiniper.get(0).get("CDUNIECO"), msiniper.get(0).get("CDRAMO"),
+						msiniper.get(0).get("ESTADO"),msiniper.get(0).get("NMPOLIZA"),msiniper.get(0).get("NMSUPLEM"), msiniper.get(0).get("NMSITUAC"),
+						siniestros.get(0).get("AAAPERTU"), siniestros.get(0).get("STATUS"),siniestros.get(0).get("NMSINIES"), siniestros.get(0).get("CDTIPSIT"));
+				/*
+					"NFACTURA"			,"FFACTURA"				,"CDGARANT"				,"DSGARANT"				,"CDCONVAL"				,"DSSUBGAR"
+					,"PTIMPORT"			,"CDMONEDA"				,"DESTIPOMONEDA"		,"TASACAMB"				,"PTIMPORTA"			,"DCTONUEX"
+					,"CODRECLAM"		,"DEDUCIBLE"			,"COPAGO"				,"AUTRECLA"				,"COMMENAR"				,"AUTMEDIC"
+					,"COMMENME"			,"CDTIPSER"				,"DESCRIPC"				,"CDPRESTA"				,"NOM_PRESTA"			,"DESCPORC"
+					,"DESCNUME"			,"APLICA_IVA"			,"ANTES_DESPUES"		,"IVARETENIDO"
+				*/
+				for(int k=0; k < validacionFacturas.size();k++){
+					//10.- Obtenemos la informacion de Siniestro por tramite
+					List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(msgResult, validacionFacturas.get(k).get("NFACTURA"),null);
+					/*	
+						"NMSINIES",			"NMAUTSER",			"CDPERSON",			"NOMBRE"
+						,"FEOCURRE",		"CDUNIECO",			"DSUNIECO",			"AAAPERTU"
+						,"ESTADO",			"NMSITUAC",			"NMSUPLEM",			"CDRAMO"
+						,"DSRAMO",			"CDTIPSIT",			"DSTIPSIT",			"STATUS"
+						,"ESTADO",			"NMPOLIZA",			"VOBOAUTO",			"CDICD"
+						,"DSICD",			"CDICD2",			"DSICD2",			"DESCPORC"
+						,"DESCNUME",		"COPAGO",			"PTIMPORT",			"AUTRECLA"
+						,"NMRECLAMO",		"COMMENAR",			"COMMENME",			"AUTMEDIC"
+						,"CDCAUSA",			"CDGARANT",			"CDCONVAL",			"NMSINREF"
+						,"IMPORTEASEG",		"PTIVAASEG",		"PTIVARETASEG",		"PTISRASEG"
+						,"PTIMPCEDASEG",	"DEDUCIBLE",		"IMPORTETOTALPAGO",	"COMPLEMENTO"
+					*/
+					for(int h =0; h < asegurados.size();h++){
+						String munSiniestro=asegurados.get(h).get("NMSINIES")+"";
+						if(!munSiniestro.equalsIgnoreCase("null")){
+							//11.- Guardamos la informacion en TVALOSIN
+							Map<String,Object>paramsTvalosin = new HashMap<String,Object>();
+							paramsTvalosin.put("pv_cdunieco"  , asegurados.get(h).get("CDUNIECO"));
+							paramsTvalosin.put("pv_cdramo"    , asegurados.get(h).get("CDRAMO"));
+							paramsTvalosin.put("pv_aaapertu"  , asegurados.get(h).get("AAAPERTU"));
+							paramsTvalosin.put("pv_status"    , asegurados.get(h).get("STATUS"));
+							paramsTvalosin.put("pv_nmsinies"  , asegurados.get(h).get("NMSINIES"));
+							paramsTvalosin.put("pv_cdtipsit"  , asegurados.get(h).get("CDTIPSIT"));
+							paramsTvalosin.put("pv_nmsuplem"  , asegurados.get(h).get("NMSUPLEM"));
+							paramsTvalosin.put("pv_cdusuari"  , null);
+							paramsTvalosin.put("pv_feregist"  , null);
+							paramsTvalosin.put("pv_otvalor01" , validacionFacturas.get(k).get("APLICA_IVA"));
+							paramsTvalosin.put("pv_otvalor02" , validacionFacturas.get(k).get("ANTES_DESPUES"));
+							paramsTvalosin.put("pv_otvalor03" , validacionFacturas.get(k).get("IVARETENIDO"));
+							paramsTvalosin.put("pv_otvalor04" , msgResult);
+							paramsTvalosin.put("pv_otvalor05" , validacionFacturas.get(k).get("NFACTURA"));
+							paramsTvalosin.put("pv_accion_i"  , "I");
+							kernelManagerSustituto.PMovTvalosin(paramsTvalosin);
+							
+							//11.- Guardamos la informacion en MAUTSINI
+							siniestrosManager.P_MOV_MAUTSINI(asegurados.get(h).get("CDUNIECO"), asegurados.get(h).get("CDRAMO"), asegurados.get(h).get("ESTADO"), 
+								asegurados.get(h).get("NMPOLIZA"), asegurados.get(h).get("NMSUPLEM"), asegurados.get(h).get("NMSITUAC"), asegurados.get(h).get("AAAPERTU"), 
+								asegurados.get(h).get("STATUS"), asegurados.get(h).get("NMSINIES"),validacionFacturas.get(k).get("NFACTURA"),
+								null,null,null,null,null,
+								Constantes.MAUTSINI_AREA_RECLAMACIONES,validacionFacturas.get(k).get("AUTRECLA"), Constantes.MAUTSINI_FACTURA, validacionFacturas.get(k).get("COMMENAR"), Constantes.INSERT_MODE);
+							
+							siniestrosManager.P_MOV_MAUTSINI(asegurados.get(h).get("CDUNIECO"), asegurados.get(h).get("CDRAMO"), asegurados.get(h).get("ESTADO"), 
+								asegurados.get(h).get("NMPOLIZA"), asegurados.get(h).get("NMSUPLEM"), asegurados.get(h).get("NMSITUAC"), asegurados.get(h).get("AAAPERTU"), 
+								asegurados.get(h).get("STATUS"), asegurados.get(h).get("NMSINIES"), validacionFacturas.get(k).get("NFACTURA"),
+								null,null,null,null,null,
+								Constantes.MAUTSINI_AREA_MEDICA, validacionFacturas.get(k).get("AUTMEDIC"), Constantes.MAUTSINI_FACTURA, validacionFacturas.get(k).get("COMMENME"), Constantes.INSERT_MODE);
+						}
+					}	
+				}
 			}
-			
-			logger.debug(listaMesaControl);
 			logger.debug("<=========");
-			
-			/*			// 1.- Guardar en TMESACONTROL 
-			this.session=ActionContext.getContext().getSession();
-			UserVO usuario=(UserVO) session.get("USUARIO");
-			HashMap<String, Object> parMesCon = new HashMap<String, Object>();
-			parMesCon.put("pv_cdunieco_i",params.get("cdunieco"));
-			parMesCon.put("pv_cdramo_i",params.get("cmbRamos"));
-			parMesCon.put("pv_estado_i",params.get("estado"));
-			parMesCon.put("pv_nmpoliza_i",params.get("polizaAfectada"));
-			parMesCon.put("pv_nmsuplem_i",params.get("idNmsuplem"));
-			parMesCon.put("pv_nmsolici_i",params.get("idNmsolici"));
-			parMesCon.put("pv_cdtipsit_i",params.get("idCdtipsit"));
-			parMesCon.put("pv_cdsucadm_i",params.get("cmbOficEmisora"));
-			parMesCon.put("pv_cdsucdoc_i",params.get("cmbOficReceptora"));
-			parMesCon.put("pv_cdtiptra_i",TipoTramite.SINIESTRO.getCdtiptra());
-			parMesCon.put("pv_ferecepc_i",getDate(params.get("dtFechaRecepcion")));
-			parMesCon.put("pv_cdagente_i",null);
-			parMesCon.put("pv_referencia_i",null);
-			parMesCon.put("pv_nombre_i",params.get("idnombreAsegurado"));
-			parMesCon.put("pv_festatus_i",getDate(params.get("dtFechaRecepcion")));
-			parMesCon.put("pv_status_i",EstatusTramite.PENDIENTE.getCodigo());
-			parMesCon.put("pv_comments_i",null);
-			parMesCon.put("pv_otvalor02",params.get("cmbTipoPago"));
-			parMesCon.put("pv_otvalor03",params.get("ImporteIndFactura"));
-			parMesCon.put("pv_otvalor04",params.get("cmbBeneficiario"));
-			parMesCon.put("pv_otvalor15",params.get("idnombreBeneficiarioProv"));
-			parMesCon.put("pv_otvalor05",usuario.getUser());
-			parMesCon.put("pv_otvalor06",params.get("fechaIndFactura"));
-			parMesCon.put("pv_otvalor07",params.get("cmbTipoAtencion"));
-			parMesCon.put("pv_otvalor08",params.get("numIndFactura"));
-			parMesCon.put("pv_otvalor09",params.get("cmbAseguradoAfectado"));
-			parMesCon.put("pv_otvalor10",params.get("dtFechaOcurrencia"));
-			parMesCon.put("pv_otvalor20",params.get("cmbRamos"));
-			parMesCon.put("pv_otvalor11",params.get("cmbProveedor"));
-			if(params.get("cmbProveedor").toString().length() > 0){
-				parMesCon.put("pv_otvalor13",Rol.CLINICA.getCdrol());
-			}
-	
-			if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase("7")){
-				parMesCon.put("pv_otvalor12","7RDH");
-				parMesCon.put("pv_otvalor14","7RDH001");
-			}
-	
-			//Si el tr&aacute;mite es nuevo
-			if(params.get("idNumTramite").toString().length() <= 0){
-				WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
-				if(res.getItemMap() == null){
-					logger.error("Sin mensaje respuesta de nmtramite!!");
-				}else{
-					msgResult = (String) res.getItemMap().get("ntramite");
-					logger.debug("Entra a proceso 1");
-					ProcesoAltaTramite(msgResult, params.get("cmbRamos"));
-				}
-			}else{
-				//Existe el trámite y solo lo vamos a actualizar
-				HashMap<String, Object> modMesaControl = new HashMap<String, Object>();
-				//1.- Verificamos si cambio el tipo de atención
-				List<MesaControlVO> lista = siniestrosManager.getConsultaListaMesaControl(params.get("idNumTramite").toString());
-				String valorTipoAtencion = lista.get(0).getOtvalor07mc();
-				if(!valorTipoAtencion.equalsIgnoreCase(params.get("cmbTipoAtencion"))){
-					siniestrosManager.eliminaDocumentosxTramite(params.get("idNumTramite").toString());
-					modMesaControl.put("pv_otvalor01_i",null);
-				}else{
-					modMesaControl.put("pv_otvalor01_i",lista.get(0).getOtvalor01mc());
-				}
-				modMesaControl.put("pv_ntramite_i",params.get("idNumTramite"));
-				modMesaControl.put("pv_cdunieco_i",params.get("cdunieco"));
-				modMesaControl.put("pv_cdramo_i",params.get("cmbRamos"));
-				modMesaControl.put("pv_estado_i",params.get("estado"));
-				modMesaControl.put("pv_nmpoliza_i",params.get("polizaAfectada"));
-				modMesaControl.put("pv_nmsuplem_i",params.get("idNmsuplem"));
-				modMesaControl.put("pv_nmsolici_i",params.get("idNmsolici"));
-				modMesaControl.put("pv_cdtipsit_i",params.get("idCdtipsit"));
-				modMesaControl.put("pv_cdsucadm_i",params.get("cmbOficEmisora"));
-				modMesaControl.put("pv_cdsucdoc_i",params.get("cmbOficReceptora"));
-				modMesaControl.put("pv_cdtiptra_i",TipoTramite.SINIESTRO.getCdtiptra());
-				modMesaControl.put("pv_ferecepc_i",renderFechas.parse(params.get("dtFechaRecepcion")));
-				modMesaControl.put("pv_nombre_i",params.get("idnombreAsegurado"));
-				modMesaControl.put("pv_festatus_i",renderFechas.parse(params.get("dtFechaRecepcion")));
-				modMesaControl.put("pv_status_i",EstatusTramite.PENDIENTE.getCodigo());
-				modMesaControl.put("pv_otvalor02_i",params.get("cmbTipoPago"));
-				modMesaControl.put("pv_otvalor03_i",params.get("ImporteIndFactura"));
-				modMesaControl.put("pv_otvalor04_i",params.get("cmbBeneficiario"));
-				modMesaControl.put("pv_otvalor05_i",usuario.getUser());
-				modMesaControl.put("pv_otvalor06_i",params.get("fechaIndFactura"));
-				modMesaControl.put("pv_otvalor07_i",params.get("cmbTipoAtencion"));
-				modMesaControl.put("pv_otvalor08_i",params.get("numIndFactura"));
-				modMesaControl.put("pv_otvalor09_i",params.get("cmbAseguradoAfectado"));
-				modMesaControl.put("pv_otvalor10_i",params.get("dtFechaOcurrencia"));
-				modMesaControl.put("pv_otvalor11_i",params.get("cmbProveedor"));
-				modMesaControl.put("pv_otvalor15_i",params.get("idnombreBeneficiarioProv"));
-				modMesaControl.put("pv_otvalor20_i",params.get("cmbRamos"));
-	
-				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase("7")){
-					modMesaControl.put("pv_otvalor12","7RDH");
-					modMesaControl.put("pv_otvalor14","7RDH001");
-				}
-				siniestrosManager.actualizaValorMC(modMesaControl);
-				//2.- Verificamos Si el tipo de pago es: 1.- Reembolso y  2.- Indemnizacion
-				if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo())||params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo())){
-					logger.debug("Entra a proceso 2 : REEMBOLSO E INDEMIZACION"); 
-					ProcesoAltaTramite(params.get("idNumTramite"), params.get("cmbRamos"));
-				}
-			}
-		}catch( Exception e){
-			logger.error("Error en el guardado de alta de tramite ",e);
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;*/
-			
 		}catch( Exception e){
 			logger.error("Error al generar el complemento del tramite : ",e);
 			return SUCCESS;

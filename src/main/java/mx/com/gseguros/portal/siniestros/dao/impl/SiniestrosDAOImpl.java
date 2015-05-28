@@ -1533,6 +1533,10 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"COMMENAR"
 					,"COMMENME"
 					,"AUTMEDIC"
+					,"CDCAUSA"
+					,"CDGARANT"
+					,"CDCONVAL"
+					,"NMSINREF"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -4504,6 +4508,31 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_cdperson_i",   OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"EDAD"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneDatoMsiniper(
+			HashMap<String, Object> params) throws Exception {
+		// TODO Auto-generated method stub
+		Map<String, Object> result = ejecutaSP(new ObtieneDatoMsiniper(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneDatoMsiniper extends StoredProcedure {
+		protected ObtieneDatoMsiniper(DataSource dataSource) {
+			super(dataSource, "PKG_SINIESTRO.P_GET_DATOS_MSINIPER");
+			declareParameter(new SqlParameter("pv_ntramite_i",   OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NTRAMITE",			"CDUNIECO",			"CDRAMO",		"ESTADO",
+					"NMPOLIZA",			"NMSOLICI",			"NMSUPLEM",		"NMSITUAC",
+					"CDTIPSIT",			"CDPERSON",			"FEOCURRE",		"NMAUTSER",
+					"NFACTURA"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
