@@ -4305,9 +4305,9 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
              declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
              declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
              String[] cols = new String[]{
-             		"COLUMNA"    , "CDTIPSIT" , "PROPIEDAD" , "TIPO"
-             		,"REQUERIDO" , "DECODE"   , "CDTABLA1"  , "TIPOATRI"
-             		,"VALOR"     , "ORIGEN_CDTIPSIT"
+             		"COLUMNA"    , "CDTIPSIT"        , "PROPIEDAD"  , "TIPO"
+             		,"REQUERIDO" , "DECODE"          , "CDTABLA1"   , "TIPOATRI"
+             		,"VALOR"     , "ORIGEN_CDTIPSIT" , "OTRA_PROP1" , "OTRO_VAL1"
              };
              declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
              declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

@@ -2295,6 +2295,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					String   tipoatri    = conf.get("TIPOATRI");
 					String   valorStat   = conf.get("VALOR");
 					String   orCdtipsit  = conf.get("ORIGEN_CDTIPSIT");
+					String   otraProp1   = conf.get("OTRA_PROP1");
+					String   otroVal1    = conf.get("OTRO_VAL1");
 					if(!isBlank(decode))
 					{
 						splited = decode.split(",");
@@ -2305,7 +2307,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					.append("*").append(tipo)
 					.append("#").append(tipoatri)
 					.append("~").append(valorStat)
-					.append("{").append(orCdtipsit).append("}");
+					.append("{").append(orCdtipsit).append("}")
+					.append("&").append(otraProp1).append("=").append(otroVal1);
 					
 					Cell cell = row.getCell(col);
 					if(propiedad.equals("cdtipsit"))
@@ -2450,7 +2453,16 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									catch(Exception ex)
 									{
 										sb.append("(E)");
-										valor="";
+										try
+										{
+											double num = cell.getNumericCellValue();
+											valor = String.format("%.0f",num);
+										}
+										catch(Exception ex2)
+										{
+											sb.append("(E)");
+											valor="";
+										}
 									}
 									sb.append("==").append(valor);
 									if(requerido&&isBlank(valor))
@@ -2536,6 +2548,29 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									}
 									sb.append("==").append(valor);
 									record.put(propiedad,valor);
+									
+									//nuevo para "OTRA PROPIEDAD ESTATICA"
+									if(!isBlank(otraProp1)&&!isBlank(otroVal1)&&!isBlank(valor))
+									{
+										sb.append("(>otraProp1");
+										String[] val1Splited = otroVal1.split(","); //B+,S,C,S,N
+										String valorEncontrado = null;
+										for(int i=0;i<val1Splited.length-1;i=i+2)
+										{
+											if(valor.equals(val1Splited[i]))
+											{
+												valorEncontrado=val1Splited[i+1];
+												break;
+											}
+										}
+										if(valorEncontrado==null)
+										{
+											valorEncontrado=val1Splited[val1Splited.length-1];
+										}
+										sb.append("&").append(otraProp1).append("==").append(valorEncontrado).append(")");
+										record.put(otraProp1,valorEncontrado);
+									}
+									//nuevo para "OTRA PROPIEDAD ESTATICA"
 								}
 								else
 								{
@@ -2595,6 +2630,29 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 											throw ex;
 										}
 									}
+									
+									//nuevo para "OTRA PROPIEDAD ESTATICA"
+									if(!isBlank(otraProp1)&&!isBlank(otroVal1))
+									{
+										sb.append("(>otraProp1");
+										String[] val1Splited = otroVal1.split(","); //B+,S,C,S,N
+										String valorEncontrado = null;
+										for(int i=0;i<val1Splited.length-1;i=i+2)
+										{
+											if(valor.equals(val1Splited[i]))
+											{
+												valorEncontrado=val1Splited[i+1];
+												break;
+											}
+										}
+										if(valorEncontrado==null)
+										{
+											valorEncontrado=val1Splited[val1Splited.length-1];
+										}
+										sb.append("&").append(otraProp1).append("==").append(valorEncontrado).append(")");
+										record.put(otraProp1,valorEncontrado);
+									}
+									//nuevo para "OTRA PROPIEDAD ESTATICA"
 								}
 								sb.append("==").append(clave);
 								record.put(propiedad,clave);
