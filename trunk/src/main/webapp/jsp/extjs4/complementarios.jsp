@@ -950,9 +950,18 @@ function _datComTurnarSuscripcion()
 															                        }
 															                        json.slist1[i].orden_parentesco=orden+'_'+json.slist1[i].parentesco;
 															                    }
+															                    try
+															                    {
+															                        _fieldById('panDatComVentanaTarifaFinal',true).destroy();
+															                    }
+															                    catch(e)
+															                    {
+															                        debugError(e);
+															                    }
 										                                        Ext.create('Ext.window.Window',
 										                                        {
 										                                            title: 'Tarifa final',
+										                                            itemId: 'panDatComVentanaTarifaFinal',
 										                                            //maxHeight: 400,
 										                                            autoScroll:true,
 										                                            width: 660,
