@@ -1076,4 +1076,4 @@ Ext.onReady(function()
     //////////////////////////
 });
 </script>
-<div id="pan_doc_maindiv" style="height:340px;"></div>
+<div id="pan_doc_maindiv" style="height:1000px;border:1px solid #999999;"></div>
