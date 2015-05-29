@@ -416,7 +416,8 @@
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
 					success,
-					mensaje
+					mensaje,
+					msgResult
 				</param>
 			</result>
 		</action>

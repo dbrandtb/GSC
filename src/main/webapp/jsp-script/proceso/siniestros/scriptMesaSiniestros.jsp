@@ -1076,46 +1076,49 @@ var msgWindow;
 
 	function generarComplementoSiniestro (grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);
-		/*debug("VALOR DEL RECORD -->>>",record);
+		debug("VALOR DEL RECORD -->>>",record);
 		debug("VALOR DEL record.get('status')");
 		debug(record.get('status'));
-		if(record.get('status') == _STATUS_EN_CAPTURA || record.get('status') == _STATUS_EN_CAPTURA_CMM || record.get('status') ==_STATUS_PENDIENTE){
-		mensajeWarning('El tr&aacute;mite se encuentra activo');
+		if(record.get('status') != _STATUS_TRAMITE_CONFIRMADO){
+		mensajeWarning('El tr&aacute;mite debe estar confirmado.');
 		return;
-		}else{*/
-		msgWindow = Ext.Msg.show({
-			title: 'Aviso',
-			msg: '&iquest; Deseas generar el complemento del tr&aacute;mite '+record.get('ntramite')+'?',
-			buttons: Ext.Msg.YESNO,
-			icon: Ext.Msg.QUESTION,
-			fn: function(buttonId, text, opt){
-				if(buttonId == 'yes'){
-					Ext.Ajax.request({
-						url: _UrlSolicitarComplemento,
-						params: {
-							'params.pv_ntramite_i' : record.get('ntramite')
-						},
-						success: function(response, opts) {
-							//mcdinGrid.setLoading(false);
-							var respuesta = Ext.decode(response.responseText);
-							debug("VALOR DE RESPUESTA ", respuesta);
-							/*if(respuesta.success){
-								mensajeCorrecto('Aviso','El pago se ha solicitado con &eacute;xito.');	
-							}else {
-								mensajeError(respuesta.mensaje);
-							}*/
-						},
-						failure: function(){
-							mcdinGrid.setLoading(false);
-							mensajeError('No se pudo solicitar el pago.');
-						}
-					});
-
+		}else{
+			msgWindow = Ext.Msg.show({
+				title: 'Aviso',
+				msg: '&iquest; Deseas generar el complemento del tr&aacute;mite '+record.get('ntramite')+'?',
+				buttons: Ext.Msg.YESNO,
+				icon: Ext.Msg.QUESTION,
+				fn: function(buttonId, text, opt){
+					if(buttonId == 'yes'){
+						mcdinGrid.setLoading(true);
+						Ext.Ajax.request({
+							url: _UrlSolicitarComplemento,
+							params: {
+								'params.pv_ntramite_i' : record.get('ntramite')
+							},
+							success: function(response, opts) {
+								//mcdinGrid.setLoading(false);
+								var respuesta = Ext.decode(response.responseText);
+								debug("VALOR DE RESPUESTA ", respuesta);
+								if(respuesta.success==true){
+									mcdinGrid.setLoading(false);
+									mensajeCorrecto('Aviso','Se ha generado el complemento  del tr&aacute;mite');//+respuesta.msgResult);
+								}else {
+									mcdinGrid.setLoading(false);
+									mensajeError("Error al generar el complemento");
+								}
+							},
+							failure: function(){
+								mcdinGrid.setLoading(false);
+								mensajeError('No se pudo solicitar el pago.');
+							}
+						});
+	
+					}
 				}
-			}
-		});
-		centrarVentana(msgWindow);
-		//}
+			});
+			centrarVentana(msgWindow);
+		}
 	}
 	
 	
