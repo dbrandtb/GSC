@@ -351,7 +351,18 @@ Ext.onReady(function() {
                 {xtype: 'textfield', name: 'dstempot', fieldLabel: 'Tipo de P&oacute;liza', readOnly: true, labelWidth: 120, width: 290, labelAlign: 'right'}
             ]
         }
-        ]
+        ],
+		buttonAlign : 'center',
+		buttons:[
+			{
+				text: 'Siniestralidad',
+				icon:_CONTEXT+'/resources/fam3icons/icons/application_view_list.png',
+				handler: function(){
+					siniestralidad(panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(), panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
+                    	null,panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue());
+				}
+			}
+		]
     });
     
     
@@ -545,7 +556,7 @@ Ext.onReady(function() {
                 xtype        : 'actioncolumn',
                 icon         : _CONTEXT+'/resources/fam3icons/icons/lock.png',
                 tooltip      : 'Ver endosos',
-                width        : 30,
+                width        : 20,
                 menuDisabled : true,
                 sortable     : false,
                 handler      : function(grid,rowIndex)
@@ -575,7 +586,7 @@ Ext.onReady(function() {
                 xtype        : 'actioncolumn',
                 icon         : _CONTEXT+'/resources/fam3icons/icons/information.png',
                 tooltip      : 'Ver detalle del asegurado',
-                width        : 30,
+                width        : 20,
                 menuDisabled : true,
                 sortable     : false,
                 handler      : function(gridView, rowIndex, colIndex, item, e, record, row) {
@@ -591,6 +602,23 @@ Ext.onReady(function() {
                         params: values
                     });
                     pnlDatosTatrisit.setTitle('Detalle de ' + record.get('nombre') + ':');
+                }
+            },{
+                xtype        : 'actioncolumn',
+                icon         : _CONTEXT+'/resources/fam3icons/icons/application_view_list.png',
+                tooltip      : 'Siniestralidad',
+                width        : 20,
+                menuDisabled : true,
+                sortable     : false,
+                handler      : function(grid,rowIndex)
+                {
+                    var record = grid.getStore().getAt(rowIndex);
+                    debug('record cdperson ==> :',record,record.get('cdperson'));
+                    var values = panelBusqueda.down('form').getForm().getValues();
+                    debug('values ===>',values);
+                    siniestralidad(panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(), panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
+                    	record.get('cdperson'),panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue());//cdunieco,cdramo, cdperson, nmpoliza
+
                 }
             }
         ]
@@ -1265,7 +1293,7 @@ Ext.onReady(function() {
         }, gridSuplementos);
         
     }
-
+	
     // FUNCION PARA OBTENER RECIBOS DEL AGENTE
     function obtieneMontosRecibo(records) {
         var sum=0;
@@ -1324,6 +1352,40 @@ Ext.onReady(function() {
             'polizasAsegurado', 
             formBusqueda.getValues(), 
             callbackGetPolizasAsegurado);
+    }
+    
+    function siniestralidad(cdunieco,cdramo, cdperson, nmpoliza){
+		var windowHistSinies = Ext.create('Ext.window.Window',{
+			modal       : true,
+			buttonAlign : 'center',
+			width       : 800,
+			height      : 500,
+			autoScroll  : true,
+			loader      : {
+				url     : _URL_LOADER_HISTORIAL_RECLAMACIONES,
+				params  : {
+					'params.cdperson'  : cdperson,
+					'params.cdramo'    : cdramo,
+					'params.nmpoliza'  : nmpoliza,
+					'params.cdunieco'  : cdunieco
+					
+				},
+				scripts  : true,
+				loadMask : true,
+				autoLoad : true,
+				ajaxOptions: {
+					method: 'POST'
+				}
+			},
+			buttons: [{
+				icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+				text: 'Cerrar',
+				handler: function() {
+					windowHistSinies.close();
+				}
+			}]
+		}).show();
+		centrarVentana(windowHistSinies);
     }
     
     

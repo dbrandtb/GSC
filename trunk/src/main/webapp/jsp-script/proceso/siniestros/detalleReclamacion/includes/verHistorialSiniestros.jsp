@@ -12,6 +12,9 @@
 		    var _CONTEXT = '${ctx}';
             
             var _cdPerson =  '<s:property value="params.cdperson" />';
+            var _cdramo =  '<s:property value="params.cdramo" />';
+            var _nmpoliza =  '<s:property value="params.nmpoliza" />';
+            var _cdunieco =  '<s:property value="params.cdunieco" />';
             
             var _URL_cargaHistorialSinies = '<s:url namespace="/siniestros" action="cargaHistorialSiniestros" />';
 		            
@@ -19,112 +22,89 @@
 		
 				Ext.define('ModelHistorial', {
 				    extend:'Ext.data.Model',
-				    fields:['TRAMITE',		'CONTRARECIBO',		'TIPOPAGO',				'CDTIPATE',
-							'TIPOATENCION',	'STATUS',			'FACTURA',				'POLIZA',
-							'NOSINIES',		'DSPROVEED',		'DESCICD',				'DESCICD2',
-							'IMPFACTURA',	'IMPORTEPAGADO']
+				    fields:[
+						'NTRAMITE',			'CONTRARECIBO',		'ASEGSINIESTRO',	'ASEGURADO',	'EDADASEG',
+						'ANTIGUEDAD',		'CONTRATANTE',		'TIPOPAGO',			'ESTATUS',		'SUCURSAL',
+						'POLIZA',			'FACTURA',			'FECHAFACT',		'PROVEEDOR',	'SINIESTRO',
+						'DIAGNOSTICO',		'CAUSASIN',			'FECHAOCURRE',		'SUBTOTAL',		'IVA',
+						'IVARETENIDO',		'ISR',				'IMPCEDULAR',		'PAGADO'
+					]
+				});
+
+				var storeHistorial = new Ext.data.Store({
+					pageSize	: 10
+					,model		: 'ModelHistorial'
+					,autoLoad	: false
+					,proxy		: {
+						enablePaging	: true,
+						reader			: 'json',
+						type			: 'memory',
+						data			: []
+					}
 				});
 				
-				var storeHistorial = new Ext.data.Store({
-			        model      : 'ModelHistorial',
-			        //autoLoad: true,
-			        proxy     : {
-			        	type        : 'ajax',
-			            url         : _URL_cargaHistorialSinies,
-			            extraParams : {
-			                'params.pv_cdperson_i' : _cdPerson
-			            },
-			            reader : {
-			                type : 'json',
-			                root : 'loadList'
-			            }
-			        }
-			    });
-				
 				// Cargar store
-				storeHistorial.load({
-                    callback: function(records, operation, success) {
-                    	if (!success) {
-                            showMessage('Error', 'Error en la consulta, intente m&aacute;s tarde', Ext.Msg.OK, Ext.Msg.ERROR);
-                            return;
-                        }
-                        if(records.length == 0){
-                            showMessage('Aviso', 'No se encontraron Siniestros', Ext.Msg.OK, Ext.Msg.INFO);
-                            return;
-                        }
-                    }
-                });
-				
+				var params = {	'params.pv_cdperson_i' : _cdPerson,
+								'params.pv_cdramo_i'   : _cdramo,
+								'params.pv_nmpoliza_i' : _nmpoliza,
+								'params.pv_cdunieco_i' : _cdunieco
+				};
+				cargaStorePaginadoLocal(storeHistorial, _URL_cargaHistorialSinies, 'loadList', params, function(options, success, response){
+					if(success){
+						var jsonResponse = Ext.decode(response.responseText);
+						debug("Valor del Response ===> ",jsonResponse);
+						if(jsonResponse.loadList == null || jsonResponse.loadList.length == 0) {
+							showMessage("Aviso", "No tiene siniestralidad", Ext.Msg.OK, Ext.Msg.INFO);
+						}
+					}else{
+						Ext.Msg.show({
+							title: 'Aviso',
+							msg: 'Error al obtener los datos.',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+							});
+					}
+				});
+
 				Ext.create('Ext.grid.Panel', {
 					title      : 'Historial de Reclamaciones',
                 	renderTo  : 'maindivHist',
-                	height: 200,
+                	height: 400,
                 	border: false,
                 	defaults  : {
 						style : 'margin:5px'
 					},
 				    store       : storeHistorial,
 				    autoScroll: true,
-				    collapsible: true,
+				    //collapsible: true,
 				    titleCollapse: true,
 				    buttonAlign : 'center',
-				    columns     : [{
-							        header    : 'Tr&aacute;mite',
-							        dataIndex : 'TRAMITE'
-							        
-				    			},{
-							        header    : 'Contra Recibo',
-							        dataIndex : 'CONTRARECIBO'
+				    columns     : [
+									{	header    : 'Tr&aacute;mite',		dataIndex : 'NTRAMITE',		width: 70	},
+									{	header    : 'Contra Recibo',		dataIndex : 'CONTRARECIBO',	width: 90	},
+									{	header    : 'Siniestro',			dataIndex : 'SINIESTRO',	width: 70	},
+									{	header    : 'Sucursal',				dataIndex : 'SUCURSAL',		width: 70	},
+									{	header    : 'P&oacute;liza',		dataIndex : 'POLIZA',		width: 70	},
+									{	header    : 'Estatus',				dataIndex : 'ESTATUS',		width: 100	},
+									{	header    : 'Tipo Pago',			dataIndex : 'TIPOPAGO',		width: 150	},
+									{	header    : 'Factura',				dataIndex : 'FACTURA',		width: 70	},
+									{	header    : 'Fecha Factura',		dataIndex : 'FECHAFACT',	width: 90	},
+									{	header    : 'Causa Siniestro',		dataIndex : 'CAUSASIN',		width: 95	},
+									{	header    : 'Fecha Ocurrencia',		dataIndex : 'FECHAOCURRE',	width: 110	},
+									{	header    : 'Proveedor',			dataIndex : 'PROVEEDOR',	width: 200	},
+									{	header    : 'Diagn&oacute;stico',	dataIndex : 'DIAGNOSTICO',	width: 200	},
+									{	header    : 'Subtotal',				dataIndex : 'SUBTOTAL',		width: 90,	renderer: Ext.util.Format.usMoney	},
+									{	header    : 'IVA',					dataIndex : 'IVA',			width: 90,	renderer: Ext.util.Format.usMoney	},
+									{	header    : 'IVA Retenido',			dataIndex : 'IVARETENIDO',	width: 90,	renderer: Ext.util.Format.usMoney	},
+									{	header    : 'ISR',					dataIndex : 'ISR',			width: 90,	renderer: Ext.util.Format.usMoney	},
+									{	header    : 'Impuesto Cedular',		dataIndex : 'IMPCEDULAR',	width: 120,	renderer: Ext.util.Format.usMoney	},
+									{	header    : 'Total Pagado',			dataIndex : 'PAGADO',		width: 120,	renderer: Ext.util.Format.usMoney	}
+				    			],
+				    			bbar : {
+				    				displayInfo	: true,
+				    				store		: storeHistorial,
+				    				xtype		: 'pagingtoolbar'
 				    			}
-				    			,{
-							        header    : 'Estatus',
-							        dataIndex : 'STATUS'
-				    			}
-				    			,
-				    			{
-							        header    : 'Tipo Pago',
-							        dataIndex : 'TIPOPAGO'
-				    			},
-				    			{
-							        header    : 'Tipo atenci&oacute;n',
-							        dataIndex : 'TIPOATENCION'
-				    			},
-				    			{
-							        header    : 'Factura',
-							        dataIndex : 'FACTURA'
-				    			},
-				    			{
-							        header    : 'P&oacute;liza',
-							        dataIndex : 'POLIZA'
-				    			},
-				    			{
-							        header    : 'No. Siniestro',
-							        dataIndex : 'NOSINIES'
-				    			},
-				    			{
-							        header    : 'Proveedor',
-							        dataIndex : 'DSPROVEED'
-				    			},
-				    			{
-							        header    : 'Diagn&oacute;stico',
-							        dataIndex : 'DESCICD'
-				    			},
-				    			{
-							        header    : 'Diagn&oacute;stico',
-							        dataIndex : 'DESCICD2'
-				    			},
-				    			{
-							        header    : 'Importe Factura',
-							        dataIndex : 'IMPFACTURA',
-							        renderer  : Ext.util.Format.usMoney
-				    			},
-				    			{
-							        header    : 'Importe Pagado',
-							        dataIndex : 'IMPORTEPAGADO',
-							        renderer  : Ext.util.Format.usMoney
-				    			}
-				    			
-				    			]
 				});
 		            	
 		    });
