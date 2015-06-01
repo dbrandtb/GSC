@@ -1495,7 +1495,7 @@ Ext.onReady(function() {
 		onAddClick: function(btn, e){
 			Ext.getCmp('medicoExt').hide();
 			ventanaConceptosAutorizado.animateTarget=btn;
-			ventanaConceptosAutorizado.showAt(150,750);
+			ventanaConceptosAutorizado.showAt(150,1100);
 		},
 		onRemoveClick: function(grid, rowIndex){
 			var record=this.getStore().getAt(rowIndex);
@@ -1581,7 +1581,7 @@ Ext.onReady(function() {
 		},
 		onAddClick: function(btn, e){
 			ventanaEqQuirurgicoBase.animateTarget=btn;
-			ventanaEqQuirurgicoBase.showAt(150,970);
+			ventanaEqQuirurgicoBase.showAt(150,1300);
 		},
 		onRemoveClick: function(grid, rowIndex){
 			var record=this.getStore().getAt(rowIndex);
@@ -1647,7 +1647,7 @@ Ext.onReady(function() {
 		onAddClick: function(btn, e){
 			Ext.getCmp('medicoExtEqQ').hide();
 			ventanaEqQuirurgico.animateTarget=btn;
-			ventanaEqQuirurgico.showAt(150,1220);
+			ventanaEqQuirurgico.showAt(150,1550);
 		},
 		onRemoveClick: function(grid, rowIndex){
 			var record=this.getStore().getAt(rowIndex);
