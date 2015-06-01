@@ -7,6 +7,7 @@ var _CONTEXT = '${ctx}';
 
 var _cdUsuario = '<s:property value="params.cdusuario" />';
 var _esAgente = '<s:property value="params.esAgente" />';
+var CD_ROL_AGENTE = 'EJECUTIVOCUENTA';
 
 var _URL_LoadRolesUsuario   = '<s:url namespace="/catalogos" action="obtieneRolesUsuario" />';
 var _URL_GuardaRolesUsuario = '<s:url namespace="/catalogos" action="guardaRolesUsuario" />';
@@ -49,7 +50,17 @@ Ext.onReady(function() {
 		style: 'margin:0px',
 		height: 300,
 		columns       :[ { dataIndex  : 'CDSISROL', hidden: true},
-		                 { header     : 'Seleccione' ,dataIndex  : 'EXISTE_ROL', xtype: 'checkcolumn', menuDisabled : true },
+		                 { header     : 'Seleccione' ,dataIndex  : 'EXISTE_ROL', xtype: 'checkcolumn', menuDisabled : true,
+                                       listeners: {
+                                            beforecheckchange: function (check, rowIndex,checked)
+                                            {
+                                            	if(storeRoles.getAt(rowIndex).get('CDSISROL')==CD_ROL_AGENTE){
+                                            		mensajeWarning('No se puede quitar el rol de AGENTE');
+                                            		return false;
+                                            	}
+                                            }
+                                       }
+		                 },
 		                 { header     : 'Rol del Sistema' ,dataIndex : 'DSSISROL', flex: 1 }
 		 			   ],
 		buttonAlign: 'center', 
