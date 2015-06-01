@@ -1099,6 +1099,8 @@ Ext.onReady(function() {
 		editable:false,						triggerAction: 'all',				name:'idTipoMedico',
 		listeners : {
 			'select' : function(combo, record) {
+				Ext.getCmp('porcentajeEqQuirurg').setValue('');
+				Ext.getCmp('importeEqQuirurg').setValue('');
 				Ext.Ajax.request({
 					url     : _URL_PORCENTAJE_QUIRURGICO
 					,params : {
