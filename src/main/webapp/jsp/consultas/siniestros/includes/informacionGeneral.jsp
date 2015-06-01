@@ -431,7 +431,7 @@
 	            	        modal       : true,
 	            	        buttonAlign : 'center',
 	            	        width       : 800,
-	            	        height      : 300,
+	            	        height      : 500,
 	            	        autoScroll  : true,
 	            	        loader      : {
 	            	            url     : _URL_LOADER_HISTORIAL_RECLAMACIONES,

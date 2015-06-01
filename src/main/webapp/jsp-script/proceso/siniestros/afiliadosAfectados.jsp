@@ -214,7 +214,7 @@
 				},{
 					text	:'Importe Factura',			dataIndex	:'ptimporta',		renderer: Ext.util.Format.usMoney
 				},{
-					text	:'Fecha Egreso',			dataIndex	:'feegreso'	,		hidden : _tipoPago != _TIPO_PAGO_INDEMNIZACION
+					text	:'Fecha Egreso',			dataIndex	:'feegreso'//	,		hidden : _tipoPago != _TIPO_PAGO_INDEMNIZACION
 				},{
 					text	:'Dias Deducible',			dataIndex	:'diasdedu'	,		hidden : _tipoPago != _TIPO_PAGO_INDEMNIZACION
 				}
@@ -3071,11 +3071,11 @@
 					panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();
 					panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();
 					if(_11_params.CDRAMO =="1"){
-						panelInicialPral.down('[name=params.feegreso]').hide(); 
+						//panelInicialPral.down('[name=params.feegreso]').hide(); 
 						panelInicialPral.down('[name=params.diasdedu]').hide();
 						valorRequerido = true;
 					}else{
-						panelInicialPral.down('[name=params.feegreso]').show(); 
+						//panelInicialPral.down('[name=params.feegreso]').show(); 
 						panelInicialPral.down('[name=params.diasdedu]').show();
 						valorRequerido = false;
 					}
@@ -3085,7 +3085,7 @@
 					panelInicialPral.down('[name="parametros.pv_otvalor01"]').hide();
 					panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();
 					panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();
-					panelInicialPral.down('[name=params.feegreso]').hide(); 
+					//panelInicialPral.down('[name=params.feegreso]').hide(); 
 					panelInicialPral.down('[name=params.diasdedu]').hide();
 					valorRequerido = true;
 				}else{
@@ -3093,11 +3093,11 @@
 					panelInicialPral.down('[name="parametros.pv_otvalor01"]').show();
 					panelInicialPral.down('[name="parametros.pv_otvalor02"]').show();
 					panelInicialPral.down('[name="parametros.pv_otvalor03"]').show();
-					panelInicialPral.down('[name=params.feegreso]').hide(); 
+					//panelInicialPral.down('[name=params.feegreso]').hide(); 
 					panelInicialPral.down('[name=params.diasdedu]').hide();
 					valorRequerido = true;
 				}
-				panelInicialPral.down('[name=params.feegreso]').allowBlank = valorRequerido;
+				//panelInicialPral.down('[name=params.feegreso]').allowBlank = valorRequerido;
 				panelInicialPral.down('[name=params.diasdedu]').allowBlank = valorRequerido;
 				storeProveedor.load();
 				

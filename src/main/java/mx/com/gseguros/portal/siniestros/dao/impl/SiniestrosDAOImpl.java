@@ -2347,11 +2347,15 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		{
 			super(dataSource, "PKG_SINIESTRO.P_GET_HIST_STROS");
 			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
-					"TRAMITE",		"CONTRARECIBO",		"TIPOPAGO",				"CDTIPATE",
-					"TIPOATENCION",	"STATUS",			"FACTURA",				"POLIZA",
-					"NOSINIES",		"DSPROVEED",		"DESCICD",				"DESCICD2",
-					"IMPFACTURA",	"IMPORTEPAGADO"			};
+					"NTRAMITE",			"CONTRARECIBO",		"ASEGSINIESTRO",	"ASEGURADO",	"EDADASEG",
+					"ANTIGUEDAD",		"CONTRATANTE",		"TIPOPAGO",			"ESTATUS",		"SUCURSAL",
+					"POLIZA",			"FACTURA",			"FECHAFACT",		"PROVEEDOR",	"SINIESTRO",
+					"DIAGNOSTICO",		"CAUSASIN",			"FECHAOCURRE",		"SUBTOTAL",		"IVA",
+					"IVARETENIDO",		"ISR",				"IMPCEDULAR",		"PAGADO"};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

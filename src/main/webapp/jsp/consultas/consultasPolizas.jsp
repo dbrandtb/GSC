@@ -21,6 +21,7 @@
             var _URL_LOADER_RECIBOS               = '<s:url namespace="/general"         action="includes/loadRecibos" />';
             var _URL_LOADER_VER_EXCLUSIONES       = '<s:url namespace="/consultasPoliza" action="includes/verClausulas" />';
             var _URL_LOADER_VER_TATRISIT          = '<s:url namespace="/consultasPoliza" action="includes/verDatosTatrisit" />';
+            var _URL_LOADER_HISTORIAL_RECLAMACIONES= '<s:url namespace="/siniestros"	 action="includes/historialReclamaciones" />';
             
             var _MSG_ERROR                       = 'Error';
             var _MSG_INFO                        = 'Info';
