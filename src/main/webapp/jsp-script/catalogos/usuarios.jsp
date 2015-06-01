@@ -475,11 +475,11 @@ Ext.apply(Ext.form.field.VTypes, {
                 var model =  gridUsuarios.getSelectionModel();
                 if(model.hasSelection()){
                     var record = model.getLastSelected();
-                    
+                    /*
                     if('EJECUTIVOCUENTA' == record.get('cdrol')){
                         mensajeWarning('No se pueden editar los roles para un Agente.');
                         return;
-                    }
+                    }*/
                     windowLoader = Ext.create('Ext.window.Window',
                             {
                                 title        : 'Ver/Editar Roles del usuario: ' + record.get('cdUsuario')
