@@ -1478,7 +1478,7 @@ Ext.onReady(function() {
 							handler: this.onRemoveClick
 						},
 						{
-							icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
+							icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/application_view_list.png',
 							tooltip: 'Historial Siniestro',
 							scope: this,
 							handler: this.onHistorialClick
@@ -1524,12 +1524,15 @@ Ext.onReady(function() {
 	        modal       : true,
 	        buttonAlign : 'center',
 	        width       : 800,
-	        height      : 300,
+	        height      : 500,
 	        autoScroll  : true,
 	        loader      : {
 	            url     : _URL_LOADER_HISTORIAL_RECLAMACIONES,
 	            params  : {
-	                'params.cdperson'  : record.get('modCdperson')
+	                'params.cdperson'  : record.get('modCdperson'),
+	                'params.cdramo'    : panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+	                'params.nmpoliza'    : null,
+	                'params.cdunieco'  : null
 	            },
 	            scripts  : true,
 	            loadMask : true,
