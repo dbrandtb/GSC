@@ -25,6 +25,7 @@ import mx.com.aon.portal.web.model.IncisoSaludVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
+import mx.com.gseguros.portal.general.service.ServiciosManager;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoTramite;
@@ -40,6 +41,7 @@ import net.sf.json.JSONArray;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -148,6 +150,9 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     private List<Map<String,String>>slist1;
     
     private String edadMaximaCotizacion;
+    
+    @Autowired
+    private ServiciosManager serviciosManager;
     
     public String entrar()
     {
@@ -1150,6 +1155,29 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 	            	parDmesCon.put("pv_cdmotivo_i"   , null);
 	            	kernelManagerSustituto.movDmesacontrol(parDmesCon);
+	            	
+	            	try
+		            {
+		            	serviciosManager.grabarEvento(new StringBuilder("\nCotizar tramite grupo")
+		            	    ,"EMISION"     //cdmodulo
+		            	    ,"COMTRAMITMC" //cdevento
+		            	    ,new Date()    //fecha
+		            	    ,cdusuari
+		            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+		            	    ,ntramite
+		            	    ,comprarCdunieco
+		            	    ,comprarCdramo
+		            	    ,"W"
+		            	    ,comprarNmpoliza
+		            	    ,comprarNmpoliza
+		            	    ,cdagente
+		            	    ,null
+		            	    ,null);
+		            }
+		            catch(Exception ex)
+		            {
+		            	logger.error("Error al grabar evento, sin impacto",ex);
+		            }
             	}
 	    		catch(Exception ex)
 	    		{
@@ -1998,6 +2026,10 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 
 	public void setIce2sigsService(Ice2sigsService ice2sigsService) {
 		this.ice2sigsService = ice2sigsService;
+	}
+
+	public void setServiciosManager(ServiciosManager serviciosManager) {
+		this.serviciosManager = serviciosManager;
 	}
     
 }
