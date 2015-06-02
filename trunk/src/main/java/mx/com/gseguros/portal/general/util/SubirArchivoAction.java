@@ -5,7 +5,6 @@
 package mx.com.gseguros.portal.general.util;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -21,8 +20,6 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.portal.consultas.service.ConsultasManager;
-import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
@@ -39,7 +36,9 @@ import org.apache.struts2.interceptor.ServletRequestAware;
  */
 public class SubirArchivoAction extends PrincipalCoreAction implements ServletRequestAware{
 
-    private HttpServletRequest servletRequest;
+	private static final long serialVersionUID = 8283714363561378583L;
+	
+	private HttpServletRequest servletRequest;
     private File file;
     private String fileFileName;
     private String fileContentType;
@@ -101,13 +100,13 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         try
         {
         	String nombreArchivo=System.currentTimeMillis()+"_"+((long)(Math.random()*10000l))+"."+fileFileName.substring(fileFileName.indexOf(".")+1);
-        	String nuevaRuta=this.getText("ruta.documentos.poliza")+"/"+smap1.get("ntramite")+"/"
+        	String nuevaRuta=this.getText("ruta.documentos.poliza")+Constantes.SEPARADOR_ARCHIVO+smap1.get("ntramite")+Constantes.SEPARADOR_ARCHIVO
                 +nombreArchivo;
         	String antiguaRuta=file.getAbsolutePath();
         	log.debug("se movera desde::: "+antiguaRuta);
             log.debug("se movera a    ::: "+nuevaRuta);
             
-            String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+smap1.get("ntramite");
+            String rutaCarpeta=this.getText("ruta.documentos.poliza")+Constantes.SEPARADOR_ARCHIVO+smap1.get("ntramite");
             File carpeta = new File(rutaCarpeta);
             if(!carpeta.exists())
             {
@@ -190,13 +189,13 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         try
         {
         	String nombreArchivo=System.currentTimeMillis()+"_"+((long)(Math.random()*10000l))+"."+fileFileName.substring(fileFileName.indexOf(".")+1);
-        	String nuevaRuta=this.getText("ruta.documentos.persona")+"/"+smap1.get("cdperson")+"/"
+        	String nuevaRuta=this.getText("ruta.documentos.persona")+Constantes.SEPARADOR_ARCHIVO+smap1.get("cdperson")+Constantes.SEPARADOR_ARCHIVO
                 +nombreArchivo;
         	String antiguaRuta=file.getAbsolutePath();
         	log.debug("se movera desde::: "+antiguaRuta);
             log.debug("se movera a    ::: "+nuevaRuta);
             
-            String rutaCarpeta=this.getText("ruta.documentos.persona")+"/"+smap1.get("cdperson");
+            String rutaCarpeta=this.getText("ruta.documentos.persona")+Constantes.SEPARADOR_ARCHIVO+smap1.get("cdperson");
             File carpeta = new File(rutaCarpeta);
             if(!carpeta.exists())
             {
@@ -254,7 +253,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         			this.getText("user.server.layouts"), 
         			this.getText("pass.server.layouts"), 
         			file.getAbsolutePath(),
-        			this.getText("directorio.server.layouts")+"/"+fileFileName);
+        			this.getText("directorio.server.layouts")+Constantes.SEPARADOR_ARCHIVO+fileFileName);
         	
         	if(!success) {
         		mensajeRespuesta = "Error al subir archivo.";
@@ -408,7 +407,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 				docu.put("pv_cdconrec_i",claveReciboTabla);
 				kernelManager.preparaContrarecibo(docu);
 			}*/
-			String filePath=this.getText("ruta.documentos.poliza")+"/"+smap1.get("ntramite")+"/contrarecibo_"+timestamp+"_"+random+".pdf";
+			String filePath=this.getText("ruta.documentos.temporal")+Constantes.SEPARADOR_ARCHIVO+smap1.get("ntramite")+Constantes.SEPARADOR_ARCHIVO+"contrarecibo_"+timestamp+"_"+random+".pdf";
 			String requestUrl=this.getText("ruta.servidor.reports")
 					+ "?destype=cache"
 					+ "&desformat=PDF"
