@@ -44,7 +44,7 @@ import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.utils.HttpUtil;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.folioserviciopublico.client.axis2.FolioWSServiceStub.EmAdmfolId;
 import mx.com.gseguros.ws.folioserviciopublico.service.AgentePorFolioService;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
@@ -1381,7 +1381,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	/*/////////////////*/
 	public String cotizar()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n#####################"
 				,"\n###### cotizar ######"
 				,"\n###### smap1=",smap1
@@ -1466,7 +1466,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			error   = respuesta;
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### cotizar ######"
 				,"\n#####################"
 				));
@@ -1754,13 +1754,13 @@ public class CotizacionAction extends PrincipalCoreAction
                 	{
                 		for(int i=1;i<=13;i++)
                 		{
-                			String key = respTvalositConst.getSmap().get(Utilerias.join("P",i,"CLAVE"));
-                			String val = respTvalositConst.getSmap().get(Utilerias.join("P",i,"VALOR"));
+                			String key = respTvalositConst.getSmap().get(Utils.join("P",i,"CLAVE"));
+                			String val = respTvalositConst.getSmap().get(Utils.join("P",i,"VALOR"));
                 			if(StringUtils.isNotBlank(key)&&StringUtils.isNotBlank(val))
                 			{
 	                			mapaValositIterado.put
 	                			(
-	                					Utilerias.join
+	                					Utils.join
 	                					(
 	                							"pv_otvalor"
 	                							,StringUtils.leftPad(key,2,"0")
@@ -2359,7 +2359,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						);
 				for(Entry<String,String>en:tvalopol.entrySet())
 				{
-					smap1.put(Utilerias.join("aux.",en.getKey().substring("parametros.pv_".length())),en.getValue());
+					smap1.put(Utils.join("aux.",en.getKey().substring("parametros.pv_".length())),en.getValue());
 				}
 			}
 			catch(Exception ex)
@@ -5194,7 +5194,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						{
 							long timestamp  = System.currentTimeMillis();
 							exito           = false;
-							respuesta       = Utilerias.join("No se permiten mas de 49 asegurados #",timestamp);
+							respuesta       = Utils.join("No se permiten mas de 49 asegurados #",timestamp);
 							respuestaOculta = respuesta;
 							logger.error(respuesta);
 						}
@@ -5202,7 +5202,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						{
 							long timestamp  = System.currentTimeMillis();
 							exito           = false;
-							respuesta       = Utilerias.join("No se permiten menos de 50 asegurados #",timestamp);
+							respuesta       = Utils.join("No se permiten menos de 50 asegurados #",timestamp);
 							respuestaOculta = respuesta;
 							logger.error(respuesta);
 						}
@@ -5223,7 +5223,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						{
 							long etimestamp = System.currentTimeMillis();
 		                	exito           = false;
-		                	respuesta       = Utilerias.join("No hay asegurados para el grupo ",cdgrupoVacio," #"+etimestamp);
+		                	respuesta       = Utils.join("No hay asegurados para el grupo ",cdgrupoVacio," #"+etimestamp);
 		                	logger.error(respuesta);
 						}
 					}
@@ -6778,7 +6778,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			String cdtipsit = smap1.get("cdtipsit");
 			String ntramite = smap1.get("ntramite");
 			
-			String urlReporteCotizacion=Utilerias.join(
+			String urlReporteCotizacion=Utils.join(
 					  getText("ruta.servidor.reports")
 					, "?p_unieco="      , cdunieco
 					, "&p_ramo="        , cdramo
@@ -6817,7 +6817,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			mapArchivo.put("pv_swvisible_i" , null);
 			kernelManager.guardarArchivo(mapArchivo);
 			
-			String urlReporteCotizacion2=Utilerias.join(
+			String urlReporteCotizacion2=Utils.join(
 					  getText("ruta.servidor.reports")
 					, "?p_unieco="      , cdunieco
 					, "&p_ramo="        , cdramo
@@ -8114,7 +8114,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String guardarContratanteColectivo()
 	{
-		logger.debug(Utilerias.join(
+		logger.debug(Utils.join(
 				 "\n#########################################"
 				,"\n###### guardarContratanteColectivo ######"
 				,"\n###### smap1=",smap1
@@ -8173,7 +8173,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.debug(Utilerias.join(
+		logger.debug(Utils.join(
 				 "\n###### guardarContratanteColectivo ######"
 				,"\n#########################################"
 				));
@@ -8182,7 +8182,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarTramite()
 	{
-		logger.debug(Utilerias.join(
+		logger.debug(Utils.join(
 				 "\n###########################"
 				,"\n###### cargarTramite ######"
 				,"\n###### smap1=",smap1
@@ -8209,7 +8209,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.debug(Utilerias.join(
+		logger.debug(Utils.join(
 				 "\n###### cargarTramite ######"
 				,"\n###########################"
 				));
@@ -8218,7 +8218,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarTipoCambioWS()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n################################"
 				,"\n###### cargarTipoCambioWS ######"
 				));
@@ -8232,7 +8232,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			smap1.put("dolar" , rtc.getTipoCambio().getVenCam().toString());
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### smap1=",smap1
 				,"\n###### cargarTipoCambioWS ######"
 				,"\n################################"

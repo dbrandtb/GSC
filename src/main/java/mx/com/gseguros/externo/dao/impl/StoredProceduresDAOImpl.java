@@ -12,7 +12,7 @@ import javax.sql.DataSource;
 
 import mx.com.gseguros.externo.dao.StoredProceduresDAO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
@@ -390,7 +390,7 @@ public class StoredProceduresDAOImpl extends AbstractManagerDAO implements Store
 				}
 				if(col!=null&&(col.substring(0,2).equalsIgnoreCase("fe")||col.substring(0,2).equalsIgnoreCase("ff")))
 				{
-					map.put(col,Utilerias.formateaFecha(rs.getString(col)));
+					map.put(col,Utils.formateaFecha(rs.getString(col)));
 				}
 				else
 				{

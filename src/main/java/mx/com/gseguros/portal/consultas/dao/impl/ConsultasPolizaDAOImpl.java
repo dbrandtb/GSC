@@ -31,7 +31,7 @@ import mx.com.gseguros.portal.general.model.DetalleReciboVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.ReciboVO;
 import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.springframework.jdbc.core.RowMapper;
@@ -77,17 +77,17 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
         	
         	PolizaDTO consulta = new PolizaDTO();
         	consulta.setNmsolici(rs.getString("nmsolici"));
-        	consulta.setFeefecto(Utilerias.formateaFecha(rs.getString("feefecto")));
+        	consulta.setFeefecto(Utils.formateaFecha(rs.getString("feefecto")));
         	consulta.setNmpoliex(rs.getString("nmpoliex"));
         	consulta.setCduniext(rs.getString("cduniext"));
         	consulta.setCdramoext(rs.getString("ramo"));
-        	consulta.setFeemisio(Utilerias.formateaFecha(rs.getString("feemisio")));
+        	consulta.setFeemisio(Utils.formateaFecha(rs.getString("feemisio")));
         	consulta.setCdmoneda(rs.getString("cdmoneda"));
         	consulta.setDsmoneda(rs.getString("dsmoneda"));
         	consulta.setOttempot(rs.getString("ottempot"));
         	consulta.setDstempot(rs.getString("dstempot"));
-        	consulta.setFeproren(Utilerias.formateaFecha(rs.getString("feproren")));
-        	consulta.setFevencim(Utilerias.formateaFecha(rs.getString("fevencim")));
+        	consulta.setFeproren(Utils.formateaFecha(rs.getString("feproren")));
+        	consulta.setFevencim(Utils.formateaFecha(rs.getString("fevencim")));
         	consulta.setNmrenova(rs.getString("nmrenova"));
         	consulta.setCdperpag(rs.getString("cdperpag"));
         	consulta.setDsperpag(rs.getString("dsperpag"));
@@ -168,8 +168,8 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     		polizaAsegurado.setNombreAsegurado(rs.getString("nombre"));
     		polizaAsegurado.setIcodpoliza(null); // No utilizado para ICE		
     		polizaAsegurado.setOrigen(rs.getString("origen"));
-    		polizaAsegurado.setFeinivigencia(Utilerias.formateaFecha(rs.getString("feefecto")));// Sera el valor que posea la columna
-    		polizaAsegurado.setFefinvigencia(Utilerias.formateaFecha(rs.getString("feproren")));// Sera el valor que posea la columna
+    		polizaAsegurado.setFeinivigencia(Utils.formateaFecha(rs.getString("feefecto")));// Sera el valor que posea la columna
+    		polizaAsegurado.setFefinvigencia(Utils.formateaFecha(rs.getString("feproren")));// Sera el valor que posea la columna
     		return polizaAsegurado;
     	}
     }
@@ -218,8 +218,8 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     		polizaAsegurado.setNombreAsegurado(rs.getString("nombre"));
     		polizaAsegurado.setIcodpoliza(null); // No utilizado para ICE		
     		polizaAsegurado.setOrigen(rs.getString("origen"));
-    		polizaAsegurado.setFeinivigencia(Utilerias.formateaFecha(rs.getString("feefecto")));// Sera el valor que posea la columna
-    		polizaAsegurado.setFefinvigencia(Utilerias.formateaFecha(rs.getString("feproren")));// Sera el valor que posea la columna
+    		polizaAsegurado.setFeinivigencia(Utils.formateaFecha(rs.getString("feefecto")));// Sera el valor que posea la columna
+    		polizaAsegurado.setFefinvigencia(Utils.formateaFecha(rs.getString("feproren")));// Sera el valor que posea la columna
     		return polizaAsegurado;
     	}
     }
@@ -254,9 +254,9 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     		suplemento.setCdramo(rs.getString("cdramo"));
     		suplemento.setEstado(rs.getString("estado"));
     		suplemento.setNmpoliza(rs.getString("nmpoliza"));
-    		suplemento.setFeinival(Utilerias.formateaFecha(rs.getString("feinival")));
+    		suplemento.setFeinival(Utils.formateaFecha(rs.getString("feinival")));
     		suplemento.setNsuplogi(rs.getString("nsuplogi"));
-    		suplemento.setFeemisio(Utilerias.formateaFecha(rs.getString("feemisio")));
+    		suplemento.setFeemisio(Utils.formateaFecha(rs.getString("feemisio")));
     		suplemento.setNlogisus(rs.getString("nlogisus"));
     		suplemento.setDstipsup(rs.getString("dstipsup"));
     		suplemento.setPtpritot(rs.getString("ptpritot"));
@@ -356,7 +356,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     		consulta.setNmsituac(rs.getString("nmsituac"));
     		consulta.setCdtipsit(rs.getString("cdtipsit"));
     		consulta.setNombre(rs.getString("titular"));
-    		consulta.setFenacimi(Utilerias.formateaFecha(rs.getString("fenacimi")));
+    		consulta.setFenacimi(Utils.formateaFecha(rs.getString("fenacimi")));
     		consulta.setSexo(rs.getString("Sexo"));
     		consulta.setStatus(rs.getString("status"));
     		consulta.setParentesco(rs.getString("parentesco"));
@@ -575,8 +575,8 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     	public ReciboAgenteVO mapRow(ResultSet rs, int rowNum) throws SQLException {
     		ReciboAgenteVO consulta = new ReciboAgenteVO();
     		consulta.setNmrecibo(rs.getString("NMRECIBO"));
-    		consulta.setFeinicio(Utilerias.formateaFecha(rs.getString("Fecha_inicio")));
-    		consulta.setFefin(Utilerias.formateaFecha(rs.getString("Fecha_fin")));
+    		consulta.setFeinicio(Utils.formateaFecha(rs.getString("Fecha_inicio")));
+    		consulta.setFefin(Utils.formateaFecha(rs.getString("Fecha_fin")));
     		consulta.setDsgarant(rs.getString("DSGARANT"));
     		consulta.setPtimport(rs.getString("PTIMPORT"));
     		return consulta;

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
@@ -83,7 +83,7 @@ public class ObtieneTatrigarMapper implements RowMapper
 		{
 			if(StringUtils.isNotBlank(result.getCatalogo()))
 			{
-				result.setValue(Utilerias.join("'"+valor+"'"));
+				result.setValue(Utils.join("'"+valor+"'"));
 			}
 			else
 			{

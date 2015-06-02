@@ -43,7 +43,6 @@ import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
-import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
 import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
@@ -9706,7 +9705,7 @@ public class EndososAction extends PrincipalCoreAction
 	
 	public String guardarEndosoBeneficiarios()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n########################################"
 				,"\n###### guardarEndosoBeneficiarios ######"
 				,"\n###### smap1="  , smap1
@@ -9759,7 +9758,7 @@ public class EndososAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### guardarEndosoBeneficiarios ######"
 				,"\n########################################"
 				));

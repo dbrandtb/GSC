@@ -6,24 +6,24 @@ import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
-import mx.com.gseguros.portal.consultas.model.ContratanteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
-import mx.com.gseguros.portal.consultas.model.HistoricoVO;
-import mx.com.gseguros.portal.consultas.model.PlanVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosTitularVO;
-import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaActualVO;
-import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaResultadosAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.ContratanteVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.consultas.model.EndosoVO;
 import mx.com.gseguros.portal.consultas.model.EnfermedadVO;
 import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
+import mx.com.gseguros.portal.consultas.model.HistoricoVO;
+import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
+import mx.com.gseguros.portal.consultas.model.PlanVO;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 
 public interface IConsultasAseguradoDAO {
 	/**
-     * Obtiene los asegurados asociados a un criterio de búsqueda
+     * Obtiene los asegurados asociados a un criterio de bï¿½squeda
      * @param rfc RFC del asegurado
      * @param cdperson C&oacute;digo de persona del asegurado
      * @param nombre Nombre del asegurado
@@ -98,7 +98,7 @@ public interface IConsultasAseguradoDAO {
     public List<EndosoVO> obtieneEndososPoliza(PolizaVO poliza, AseguradoVO asegurado) throws Exception;
     
     /**
-     * Obtiene las enfermedades crónicas del asegurado
+     * Obtiene las enfermedades crï¿½nicas del asegurado
      * @param poliza
      * @param asegurado
      * @return
@@ -129,7 +129,7 @@ public interface IConsultasAseguradoDAO {
     public List<CoberturaBasicaVO> obtieneCoberturasPoliza(PolizaVO poliza) throws Exception;
     
     /**
-     * Obtiene las coberturas básicas
+     * Obtiene las coberturas bï¿½sicas
      * @param poliza
      * @return
      */
@@ -144,7 +144,7 @@ public interface IConsultasAseguradoDAO {
 	public List<HistoricoVO> obtieneHistoricoAsegurado(PolizaAseguradoVO polizaAsegurado, AseguradoVO asegurado) throws Exception;
 	
 	/**
-     * Obtiene histórico de farmacia
+     * Obtiene histï¿½rico de farmacia
      * @param poliza
      * @return
      * @throws Exception

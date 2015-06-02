@@ -9,7 +9,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -97,7 +97,7 @@ public class EmisionAction extends PrincipalCoreAction
 	
 	public String pantallaClausulasPoliza()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n#####################################"
 				,"\n###### pantallaClausulasPoliza ######"
 				,"\n###### smap1=",smap1
@@ -130,7 +130,7 @@ public class EmisionAction extends PrincipalCoreAction
 			result=ERROR;
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### result=",result
 				,"\n###### pantallaClausulasPoliza ######"
 				,"\n#####################################"
@@ -140,7 +140,7 @@ public class EmisionAction extends PrincipalCoreAction
 	
 	public String guardarClausulasPoliza()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n####################################"
 				,"\n###### guardarClausulasPoliza ######"
 				,"\n###### slist1=",slist1
@@ -160,7 +160,7 @@ public class EmisionAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### guardarClausulasPoliza ######"
 				,"\n####################################"
 				));

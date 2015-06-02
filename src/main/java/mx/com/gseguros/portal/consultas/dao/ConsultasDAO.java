@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.consultas.dao;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -222,4 +223,13 @@ public interface ConsultasDAO
 			)throws Exception;
 	
 	public Map<String,String>recuperarCotizacionFlotillas(String cdramo,String nmpoliza,String cdusuari,String cdsisrol) throws Exception;
+	
+	public Map<String,List<Map<String,String>>> recuperarEstadisticasCotizacionEmision(
+			Date feinicio
+			,Date fefin
+			,String cdunieco
+			,String cdramo
+			,String cdusuari
+			,String cdagente
+			) throws Exception;
 }

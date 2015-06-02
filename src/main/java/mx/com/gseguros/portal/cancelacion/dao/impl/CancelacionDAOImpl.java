@@ -15,7 +15,7 @@ import mx.com.gseguros.portal.cancelacion.dao.CancelacionDAO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.PolizaVO;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
@@ -137,14 +137,14 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 		params.put("pv_dsramo_i"    , cdramo);
 		params.put("pv_nmpoliza_i"  , nmpoliza);
 		params.put("pv_nmsituac_i"  , nmsituac);
-		Utilerias.debugProcedure(logger, "pkg_cancela.p_obtiene_poliza_a_cancelar", params);
+		Utils.debugProcedure(logger, "pkg_cancela.p_obtiene_poliza_a_cancelar", params);
 		Map<String,Object> procResult  = ejecutaSP(new ObtenerPolizasCandidatas(this.getDataSource()), params);
 		List<Map<String,String>> lista = (List<Map<String, String>>)procResult.get("pv_registro_o");
 		if(lista==null)
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
-		Utilerias.debugProcedure(logger, "pkg_cancela.p_obtiene_poliza_a_cancelar", params, lista);
+		Utils.debugProcedure(logger, "pkg_cancela.p_obtiene_poliza_a_cancelar", params, lista);
 		return lista;
 	}
 	
@@ -207,7 +207,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	@Deprecated
 	public String cancelaPoliza (Map<String,String> params) throws Exception
 	{
-		Map<String,Object> resultadoMap = ejecutaSP(new CancelaPoliza(getDataSource()),Utilerias.ponFechas(params));
+		Map<String,Object> resultadoMap = ejecutaSP(new CancelaPoliza(getDataSource()),Utils.ponFechas(params));
 		return (String) resultadoMap.get("pv_nmsuplem_o");
 	}
 	
@@ -242,7 +242,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 		params.put("pv_fecancel_i" , fecancel);
 		params.put("pv_usuario_i"  , cdusuari);
 		params.put("pv_cdtipsup_i" , cdtipsup);
-		Utilerias.debugProcedure(logger, "pkg_cancela.p_cancela_poliza", params);
+		Utils.debugProcedure(logger, "pkg_cancela.p_cancela_poliza", params);
 		Map<String,Object> resParams = ejecutaSP(new CancelaPoliza(getDataSource()),params);
 		
 		return resParams;
@@ -305,7 +305,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 		params.put("pv_nmpoliza_i" , nmpoliza);
 		params.put("pv_agencia_i"  , agencia);
 		params.put("pv_fechapro_i" , fechapro);
-		Utilerias.debugProcedure(logger, "pkg_cancela.p_selecciona_poliza_unica", params);
+		Utils.debugProcedure(logger, "pkg_cancela.p_selecciona_poliza_unica", params);
 		ejecutaSP(new SeleccionaPolizaUnica(this.getDataSource()), params);
 	}
 	
@@ -470,7 +470,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 		params.put("cdramo"   , cdramo);
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
-		Utilerias.debugProcedure(logger, "PKG_SATELITES.P_VALIDA_CANC_A_PRORRATA", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES.P_VALIDA_CANC_A_PRORRATA", params);
 		ejecutaSP(new ValidaCancelacionAProrrata(getDataSource()),params);
 	}
 	

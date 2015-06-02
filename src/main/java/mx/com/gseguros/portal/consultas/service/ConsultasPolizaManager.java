@@ -5,17 +5,17 @@ import java.util.List;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
-import mx.com.gseguros.portal.consultas.model.DatosComplementariosVO;
 import mx.com.gseguros.portal.consultas.model.ContratanteVO;
-import mx.com.gseguros.portal.consultas.model.HistoricoVO;
-import mx.com.gseguros.portal.consultas.model.PlanVO;
-import mx.com.gseguros.portal.consultas.model.PolizaDTO;
-import mx.com.gseguros.portal.consultas.model.SuplementoVO;
-import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
-import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
+import mx.com.gseguros.portal.consultas.model.DatosComplementariosVO;
 import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
+import mx.com.gseguros.portal.consultas.model.HistoricoVO;
+import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
+import mx.com.gseguros.portal.consultas.model.PlanVO;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.consultas.model.ReciboAgenteVO;
+import mx.com.gseguros.portal.consultas.model.SuplementoVO;
 import mx.com.gseguros.portal.consultas.model.TarifaVO;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.general.model.ClausulaVO;
@@ -101,7 +101,7 @@ public interface ConsultasPolizaManager {
     public List<CoberturaBasicaVO> obtieneCoberturasPoliza(PolizaVO poliza) throws Exception;
     
     /**
-     * Obtiene las coberturas básicas
+     * Obtiene las coberturas bï¿½sicas
      * @param poliza
      * @return
      */
@@ -165,7 +165,7 @@ public interface ConsultasPolizaManager {
     public List<TarifaVO> obtieneTarifasPoliza(PolizaVO poliza) throws Exception;
     
     /**
-     * Obtiene histórico de farmacia
+     * Obtiene histï¿½rico de farmacia
      * @param poliza
      * @return
      * @throws Exception

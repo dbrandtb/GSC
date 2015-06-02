@@ -10,7 +10,7 @@ import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
 import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.log4j.Logger;
 
@@ -38,7 +38,7 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 	 */
 	private void setCheckpoint(String checkpoint)
 	{
-		logger.debug(Utilerias.join("checkpoint-->",checkpoint));
+		logger.debug(Utils.join("checkpoint-->",checkpoint));
 		session.put("checkpoint",checkpoint);
 	}
 	
@@ -62,11 +62,11 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 		
 		if(ex instanceof ApplicationException)
 		{
-			respuesta = Utilerias.join(ex.getMessage()," #",timestamp);
+			respuesta = Utils.join(ex.getMessage()," #",timestamp);
 		}
 		else
 		{
-			respuesta = Utilerias.join("Error ",getCheckpoint().toLowerCase()," #",timestamp);
+			respuesta = Utils.join("Error ",getCheckpoint().toLowerCase()," #",timestamp);
 		}
 		
 		logger.error(respuesta,ex);
@@ -78,7 +78,7 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 	
 	public String recuperacionSimple()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n################################"
 				,"\n###### recuperacionSimple ######"
 				,"\n###### smap1=",smap1
@@ -117,7 +117,7 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### recuperacionSimple ######"
 				,"\n################################"
 				));
@@ -126,7 +126,7 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 	
 	public String recuperacionSimpleLista()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n#####################################"
 				,"\n###### recuperacionSimpleLista ######"
 				,"\n###### smap1=" , smap1
@@ -165,7 +165,7 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### recuperacionSimpleLista ######"
 				,"\n#####################################"
 				));

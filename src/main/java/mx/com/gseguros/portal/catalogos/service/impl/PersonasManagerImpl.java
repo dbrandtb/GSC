@@ -20,7 +20,7 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -770,7 +770,7 @@ public class PersonasManagerImpl implements PersonasManager
 	@Override
 	public ManagerRespuestaImapVO pantallaBeneficiarios(String cdunieco,String cdramo,String estado,String cdsisrol,String cdtipsup)
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ pantallaBeneficiarios @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -851,7 +851,7 @@ public class PersonasManagerImpl implements PersonasManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ ",resp
 				,"\n@@@@@@ pantallaBeneficiarios @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

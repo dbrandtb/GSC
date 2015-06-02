@@ -14,7 +14,7 @@ import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
@@ -124,7 +124,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("pv_cdperson_i" , cdperson);
-		logger.debug(Utilerias.join(
+		logger.debug(Utils.join(
 				 "\n****************************************************"
 				,"\n****** PKG_CONSULTA.P_GET_MPERSONA_X_CDPERSON ******"
 				,"\n****** params=",params
@@ -140,7 +140,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		{
 			throw new ApplicationException("Persona duplicada");
 		}
-		logger.debug(Utilerias.join(
+		logger.debug(Utils.join(
 				 "\n****************************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , registro.get(0)

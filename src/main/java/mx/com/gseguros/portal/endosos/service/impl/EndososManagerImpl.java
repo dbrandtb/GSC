@@ -33,7 +33,7 @@ import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.HttpUtil;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 import org.apache.commons.lang3.StringUtils;
@@ -1730,7 +1730,7 @@ public class EndososManagerImpl implements EndososManager
 			,String ntramite
 			)
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
 				,"\n@@@@@@ cdunieco="         , cdunieco
@@ -1977,7 +1977,7 @@ public class EndososManagerImpl implements EndososManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

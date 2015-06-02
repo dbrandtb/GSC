@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.StrutsStatics;
@@ -42,7 +42,7 @@ public class DeviceInterceptor implements Interceptor {
 		if(session != null) {
 			String ua = request.getHeader("User-Agent").toLowerCase();
 			//logger.debug(new StringBuilder("USER-AGENT = ").append(ua));
-			if(Utilerias.esSesionMovil(ua)) {
+			if(Utils.esSesionMovil(ua)) {
 			    //logger.info("Peticion desde MOVIL");
 			    session.put("ES_MOVIL", true);
 			} else {

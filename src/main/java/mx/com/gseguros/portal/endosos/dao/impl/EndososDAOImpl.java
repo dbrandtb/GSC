@@ -21,7 +21,6 @@ import mx.com.gseguros.portal.endosos.model.PropiedadesDeEndosoParaWS;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -102,7 +101,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			String col=(String) en.getKey();
 			if(col!=null&&col.substring(0,5).equalsIgnoreCase("pv_fe"))
 			{
-				map.put(col,Utilerias.formateaFecha(en.getValue()+""));
+				map.put(col,Utils.formateaFecha(en.getValue()+""));
 			}
 			else
 			{
@@ -130,7 +129,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			String col=(String) en.getKey();
 			if(col!=null&&col.substring(0,5).equalsIgnoreCase("pv_fe"))
 			{
-				map.put(col,Utilerias.formateaFecha(en.getValue()+""));
+				map.put(col,Utils.formateaFecha(en.getValue()+""));
 			}
 			else
 			{
@@ -222,7 +221,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			String col=(String) en.getKey();
 			if(col!=null&&col.substring(0,5).equalsIgnoreCase("pv_fe"))
 			{
-				map.put(col,Utilerias.formateaFecha(en.getValue()+""));
+				map.put(col,Utils.formateaFecha(en.getValue()+""));
 			}
 			else
 			{
@@ -364,7 +363,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			String col=(String) en.getKey();
 			if(col!=null&&col.substring(0,5).equalsIgnoreCase("pv_fe"))
 			{
-				map.put(col,Utilerias.formateaFecha(en.getValue()+""));
+				map.put(col,Utils.formateaFecha(en.getValue()+""));
 			}
 			else
 			{
@@ -482,7 +481,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			String col=(String) en.getKey();
 			if(col!=null&&col.substring(0,5).equalsIgnoreCase("pv_fe"))
 			{
-				map.put(col,Utilerias.formateaFecha(en.getValue()+""));
+				map.put(col,Utils.formateaFecha(en.getValue()+""));
 			}
 			else
 			{
@@ -510,7 +509,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			String col=(String) en.getKey();
 			if(col!=null&&col.substring(0,5).equalsIgnoreCase("pv_fe"))
 			{
-				map.put(col,Utilerias.formateaFecha(en.getValue()+""));
+				map.put(col,Utils.formateaFecha(en.getValue()+""));
 			}
 			else
 			{
@@ -552,14 +551,14 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				.append("\n*****************************************")
 				.toString()
 				);
-		Map<String,Object> resultadoMap=this.ejecutaSP(new IniciarEndoso(this.getDataSource()), Utilerias.ponFechas(params));
+		Map<String,Object> resultadoMap=this.ejecutaSP(new IniciarEndoso(this.getDataSource()), Utils.ponFechas(params));
 		Map<String,String>map=new LinkedHashMap<String,String>(0);
 		for(Entry en:resultadoMap.entrySet())
 		{
 			String col=(String) en.getKey();
 			if(col!=null&&col.substring(0,5).equalsIgnoreCase("pv_fe"))
 			{
-				map.put(col,Utilerias.formateaFecha(en.getValue()+""));
+				map.put(col,Utils.formateaFecha(en.getValue()+""));
 			}
 			else
 			{
@@ -614,7 +613,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			String col=(String) en.getKey();
 			if(col!=null&&col.substring(0,5).equalsIgnoreCase("pv_fe"))
 			{
-				map.put(col,Utilerias.formateaFecha(en.getValue()+""));
+				map.put(col,Utils.formateaFecha(en.getValue()+""));
 			}
 			else
 			{
@@ -668,7 +667,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				.append("\n**************************************************")
 				.toString()
 				);
-		this.ejecutaSP(new InsertarTworksupEnd(this.getDataSource()), Utilerias.ponFechas(params));
+		this.ejecutaSP(new InsertarTworksupEnd(this.getDataSource()), Utils.ponFechas(params));
 	}
 	
 	protected class InsertarTworksupEnd extends StoredProcedure
@@ -701,7 +700,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				.append("\n********************************************************")
 				.toString()
 				);
-		this.ejecutaSP(new InsertarTworksupSitTodas(this.getDataSource()), Utilerias.ponFechas(params));
+		this.ejecutaSP(new InsertarTworksupSitTodas(this.getDataSource()), Utils.ponFechas(params));
 	}
 	
 	protected class InsertarTworksupSitTodas extends StoredProcedure
@@ -740,7 +739,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			String col=(String) en.getKey();
 			if(col!=null&&col.substring(0,5).equalsIgnoreCase("pv_fe"))
 			{
-				map.put(col,Utilerias.formateaFecha(en.getValue()+""));
+				map.put(col,Utils.formateaFecha(en.getValue()+""));
 			}
 			else
 			{
@@ -844,7 +843,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				.toString()
 				);
 		this.ejecutaSP(new ActualizaNombreCliente
-				(this.getDataSource()), Utilerias.ponFechas(params));
+				(this.getDataSource()), Utils.ponFechas(params));
 	}
 	
 	protected class ActualizaNombreCliente extends StoredProcedure
@@ -874,7 +873,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				.append("\n****************************************************")
 				.toString()
 				);
-		this.ejecutaSP(new ActualizaRfcCliente(this.getDataSource()), Utilerias.ponFechas(params));
+		this.ejecutaSP(new ActualizaRfcCliente(this.getDataSource()), Utils.ponFechas(params));
 	}
 	
 	protected class ActualizaRfcCliente extends StoredProcedure
@@ -901,7 +900,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				.append("\n****************************************")
 				.toString()
 				);
-		this.ejecutaSP(new ActualizarFenacimi(this.getDataSource()), Utilerias.ponFechas(params));
+		this.ejecutaSP(new ActualizarFenacimi(this.getDataSource()), Utils.ponFechas(params));
 	}
 	
 	protected class ActualizarFenacimi extends StoredProcedure
@@ -1286,14 +1285,14 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				.append("\n*************************************")
 				.toString()
 				);
-		Map<String,Object> resultadoMap=this.ejecutaSP(new PClonarPolizaReexped(this.getDataSource()), Utilerias.ponFechas(params));
+		Map<String,Object> resultadoMap=this.ejecutaSP(new PClonarPolizaReexped(this.getDataSource()), Utils.ponFechas(params));
 		Map<String,String>map=new LinkedHashMap<String,String>(0);
 		for(Entry en:resultadoMap.entrySet())
 		{
 			String col=(String) en.getKey();
 			if(col!=null&&col.substring(0,5).equalsIgnoreCase("pv_fe"))
 			{
-				map.put(col,Utilerias.formateaFecha(en.getValue()+""));
+				map.put(col,Utils.formateaFecha(en.getValue()+""));
 			}
 			else
 			{
@@ -1472,7 +1471,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				);
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerFechaEndosoFormaPago(this.getDataSource()), params);
 		SimpleDateFormat renderFechas=new SimpleDateFormat("dd/MM/yyyy");
-		Date fecha=renderFechas.parse(Utilerias.formateaFecha((String)resultadoMap.get("pv_feinival_o")));
+		Date fecha=renderFechas.parse(Utils.formateaFecha((String)resultadoMap.get("pv_feinival_o")));
 		return fecha;
 	}
 	
@@ -1737,7 +1736,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				);
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtieneFechaInicioVigenciaPoliza(this.getDataSource()), params);
 		String sfecha = (String)resultadoMap.get("pv_fecha_o");
-		sfecha = Utilerias.formateaFecha(sfecha);
+		sfecha = Utils.formateaFecha(sfecha);
 		logger.debug("obtieneFechaInicioVigenciaPoliza resultado: "+sfecha);
 		return sfecha;
 	}
@@ -1826,7 +1825,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsituac" , nmsituac);
 		params.put("cdgarant" , cdgarant);
-		Utilerias.debugProcedure(logger, "PKG_ENDOSOS.P_VALIDA_FEC_ENDOSO", params);
+		Utils.debugProcedure(logger, "PKG_ENDOSOS.P_VALIDA_FEC_ENDOSO", params);
 		ejecutaSP(new ValidaNuevaCobertura(getDataSource()),params);
 	}
 	
@@ -2370,7 +2369,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdparent" , cdparent);
 		params.put("porbenef" , porbenef);
 		params.put("accion"   , accion);
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_MOV_MPOLIPER_BENEFIC", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_MOV_MPOLIPER_BENEFIC", params);
 		ejecutaSP(new MovimientoMpoliperBeneficiario(getDataSource()),params);
 	}
 	
@@ -2451,7 +2450,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("nmsituac" , nmsituac);
 		params.put("nmsuplem" , nmsuplem);
 		params.put("cdtipsit" , cdtipsit);
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_INS_INCISO_EVAL_ENDOSO", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_INS_INCISO_EVAL_ENDOSO", params);
 		ejecutaSP(new InsertarIncisoEvaluacion(this.getDataSource()), params);
 	}
 	
@@ -2490,14 +2489,14 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("multiple" , multiple);
 		params.put("tipoflot" , tipoflot);
 		params.put("cdsisrol" , cdsisrol);
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_ENDOSOS_CLASIFICADOS", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_ENDOSOS_CLASIFICADOS", params);
 		Map<String,Object>procResult  = ejecutaSP(new RecuperarEndososClasificados(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
 		{
 			lista=new ArrayList<Map<String,String>>();
 		}
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_ENDOSOS_CLASIFICADOS", params, lista);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_ENDOSOS_CLASIFICADOS", params, lista);
 		return lista;
 	}
 	
@@ -2666,7 +2665,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("otvalor98" , otvalor98);
 		params.put("otvalor99" , otvalor99);
 		params.put("tstamp"    , tstamp);
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_INS_TVALOSIT_ENDOSO", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_INS_TVALOSIT_ENDOSO", params);
 		ejecutaSP(new GuardarTvalositEndoso(getDataSource()),params);
 	}
 	
@@ -2815,7 +2814,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdsisrol" , cdsisrol);
 		params.put("cdelemen" , cdelemen);
 		params.put("idproces" , Utils.generaTimestamp());
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_ATRIBUTOS_AUTO", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_ATRIBUTOS_AUTO", params);
 		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoTvalositAuto(getDataSource()),params);
 		
 		return resParams;
@@ -2850,10 +2849,10 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	public List<Map<String,String>> obtieneDatosEndPlacasMotor(Map<String, String> params)throws Exception
 	{
 		List<Map<String,String>>lista = null;
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DAT_SP_SIGS_CAM_PLAC_MOT", params);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DAT_SP_SIGS_CAM_PLAC_MOT", params);
 		Map<String,Object>procResult  = ejecutaSP(new ObtieneDatosEndPlacasMotor(getDataSource()),params);
 		lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DAT_SP_SIGS_CAM_PLAC_MOT", params, lista);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DAT_SP_SIGS_CAM_PLAC_MOT", params, lista);
 		return lista;
 	}
 	
@@ -2891,10 +2890,10 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	public List<Map<String,String>> obtieneDatosEndVigenciaPol(Map<String, String> params)throws Exception
 	{
 		List<Map<String,String>>lista = null;
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_VIG", params);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_VIG", params);
 		Map<String,Object>procResult  = ejecutaSP(new ObtieneDatosEndVigenciaPol(getDataSource()),params);
 		lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_VIG", params, lista);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_VIG", params, lista);
 		return lista;
 	}
 	
@@ -2935,10 +2934,10 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	public List<Map<String,String>> obtieneDatosEndSerie(Map<String, String> params)throws Exception
 	{
 		List<Map<String,String>>lista = null;
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_SERIE", params);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_SERIE", params);
 		Map<String,Object>procResult  = ejecutaSP(new ObtieneDatosEndSerie(getDataSource()),params);
 		lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_SERIE", params, lista);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_SERIE", params, lista);
 		return lista;
 	}
 	
@@ -2975,10 +2974,10 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	public List<Map<String,String>> obtieneDatosEndBeneficiario(Map<String, String> params)throws Exception
 	{
 		List<Map<String,String>>lista = null;
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_BENEF", params);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_BENEF", params);
 		Map<String,Object>procResult  = ejecutaSP(new ObtieneDatosEndBeneficiario(getDataSource()),params);
 		lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_BENEF", params, lista);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_BENEF", params, lista);
 		return lista;
 	}
 	
@@ -3012,10 +3011,10 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	public List<Map<String,String>> obtieneDatosEndAseguradoAlterno(Map<String, String> params)throws Exception
 	{
 		List<Map<String,String>>lista = null;
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_ASEG_ALTER", params);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_ASEG_ALTER", params);
 		Map<String,Object>procResult  = ejecutaSP(new ObtieneDatosEndAseguradoAlterno(getDataSource()),params);
 		lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_ASEG_ALTER", params, lista);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_ASEG_ALTER", params, lista);
 		return lista;
 	}
 	
@@ -3048,10 +3047,10 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	public List<Map<String,String>> obtieneDatosEndAdaptacionesRC(Map<String, String> params)throws Exception
 	{
 		List<Map<String,String>>lista = null;
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_ADAPTAC_RC", params);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_ADAPTAC_RC", params);
 		Map<String,Object>procResult  = ejecutaSP(new ObtieneDatosEndAdaptacionesRC(getDataSource()),params);
 		lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_ADAPTAC_RC", params, lista);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_SP_SIGS_ADAPTAC_RC", params, lista);
 		return lista;
 	}
 	
@@ -3085,10 +3084,10 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	public List<Map<String,String>> obtieneDatosEndVigencia(Map<String, String> params)throws Exception
 	{
 		List<Map<String,String>>lista = null;
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.", params);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.", params);
 		Map<String,Object>procResult  = ejecutaSP(new ObtieneDatosEndVigencia(getDataSource()),params);
 		lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.", params, lista);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.", params, lista);
 		return lista;
 	}
 	
@@ -3120,10 +3119,10 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	public List<Map<String,String>> obtieneDatosEndTextoLibre(Map<String, String> params)throws Exception
 	{
 		List<Map<String,String>>lista = null;
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DAT_SP_SIGS_TEXTO_LIBRE", params);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DAT_SP_SIGS_TEXTO_LIBRE", params);
 		Map<String,Object>procResult  = ejecutaSP(new ObtieneDatosEndTextoLibre(getDataSource()),params);
 		lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DAT_SP_SIGS_TEXTO_LIBRE", params, lista);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DAT_SP_SIGS_TEXTO_LIBRE", params, lista);
 		return lista;
 	}
 	
@@ -3156,9 +3155,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	public void actualizaNumeroEndosSigs(Map<String, String> params)throws Exception
 	{
 		List<Map<String,String>>lista = null;
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ACTUALIZA_NUM_ENDOSOB_SIGS", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_ACTUALIZA_NUM_ENDOSOB_SIGS", params);
 		ejecutaSP(new ActualizaNumeroEndosSigs(getDataSource()),params);
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ACTUALIZA_NUM_ENDOSOB_SIGS", params, lista);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_ACTUALIZA_NUM_ENDOSOB_SIGS", params, lista);
 		return;
 	}
 	
@@ -3203,7 +3202,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdtipsup" , cdtipsup);
 		params.put("feefecto" , fechaEfecto);
 		params.put("idproces" , Utils.generaTimestamp());
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_ALTA_AUTO", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_ALTA_AUTO", params);
 		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoAltaIncisoAuto(getDataSource()),params);
 		
 		return resParams;
@@ -3257,7 +3256,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdtipsup" , cdtipsup);
 		params.put("feefecto" , fechaEfecto);
 		params.put("idproces" , Utils.generaTimestamp());
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_BAJA_INCISOS", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_BAJA_INCISOS", params);
 		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoBajaIncisos(getDataSource()),params);
 		
 		return resParams;
@@ -3308,7 +3307,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("pv_nmrecibo_i", nmrecibo);
 		params.put("pv_nmimpres_i", nmimpres);
 		params.put("pv_cduser_i"  , cdusuari);
-		Utilerias.debugProcedure(logger, "P_CALC_RECIBOS_DESPAGOS", params);
+		Utils.debugProcedure(logger, "P_CALC_RECIBOS_DESPAGOS", params);
 		Map<String,Object> resParams = ejecutaSP(new GuardaEndosoDespago(getDataSource()),params);
 		
 		return resParams;
@@ -3437,7 +3436,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdelemen" , cdelemen);
 		params.put("cdtipsup" , cdtipsup);
 		params.put("idproces" , Utils.generaTimestamp());
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_CLAVE_AUTO", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_CLAVE_AUTO", params);
 		Map<String,Object> resParams = ejecutaSP(new GuardarEndosoClaveAuto(getDataSource()),params);
 		return resParams;
 	}
@@ -3483,14 +3482,14 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsituac" , nmsituac);
 		params.put("tstamp"   , tstamp);
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_COBER_ENDOSO_DEV_PRI", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_COBER_ENDOSO_DEV_PRI", params);
 		Map<String,Object>procResult   = ejecutaSP(new RecuperarCoberturasEndosoDevolucionPrimas(getDataSource()),params);
 		List<Map<String,String>> lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
 		{
 			throw new ApplicationException("No se encontraron coberturas");
 		}
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_COBER_ENDOSO_DEV_PRI", params, lista);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_COBER_ENDOSO_DEV_PRI", params, lista);
 		return lista;
 	}
 	
@@ -3528,10 +3527,10 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdramo"   , cdramo);
 		params.put("cdtipsup" , cdtipsup);
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_DIAS_ENDOSO_AUTORIZA", params);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DIAS_ENDOSO_AUTORIZA", params);
 		Map<String,Object> procResult = ejecutaSP(new RecuperarDiasDiferenciaEndosoValidos(getDataSource()),params);
 		int dias = Integer.parseInt((String)procResult.get("pv_dias_endoso_o"));
-		logger.debug(Utilerias.join("PKG_CONSULTA.P_GET_DIAS_ENDOSO_AUTORIZA dias=",dias));
+		logger.debug(Utils.join("PKG_CONSULTA.P_GET_DIAS_ENDOSO_AUTORIZA dias=",dias));
 		return dias;
 	}
 	
@@ -3567,9 +3566,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 					params.put("p_NMPOLIZA" , nmpoliza);
 					params.put("p_NSUPLOGI" , nsuplogi);
 					params.put("p_NMSUPLEM" , nmsuplem);
-					Utilerias.debugProcedure(logger, "P_SACAENDOSO", params);
+					Utils.debugProcedure(logger, "P_SACAENDOSO", params);
 					ejecutaSP(new RevierteEndosoFallido(getDataSource()),params);
-					Utilerias.debugProcedure(logger, "P_SACAENDOSO", params);
+					Utils.debugProcedure(logger, "P_SACAENDOSO", params);
 				} catch (Exception e) {
 					logger.error("Error al revertir el endoso. " ,e);
 					return false;
@@ -3596,9 +3595,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	public boolean revierteDomicilio(Map<String, String> params)
 	{
 		try {
-			Utilerias.debugProcedure(logger, "P_SACAENDOSO_DAT_MDOMICIL", params);
+			Utils.debugProcedure(logger, "P_SACAENDOSO_DAT_MDOMICIL", params);
 			ejecutaSP(new RevierteDomicilio(getDataSource()),params);
-			Utilerias.debugProcedure(logger, "P_SACAENDOSO_DAT_MDOMICIL", params);
+			Utils.debugProcedure(logger, "P_SACAENDOSO_DAT_MDOMICIL", params);
 		} catch (Exception e) {
 			logger.error("Error al revertir el domicilio. " ,e);
 			return false;
@@ -3630,9 +3629,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	public boolean revierteNombrePersona(Map<String, String> params)
 	{
 		try {
-			Utilerias.debugProcedure(logger, "P_SACAENDOSO_DAT_MPERSONA", params);
+			Utils.debugProcedure(logger, "P_SACAENDOSO_DAT_MPERSONA", params);
 			ejecutaSP(new RevierteNombrePersona(getDataSource()),params);
-			Utilerias.debugProcedure(logger, "P_SACAENDOSO_DAT_MPERSONA", params);
+			Utils.debugProcedure(logger, "P_SACAENDOSO_DAT_MPERSONA", params);
 		} catch (Exception e) {
 			logger.error("Error al revertir el nombre de persona. " ,e);
 			return false;
@@ -3677,7 +3676,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("pv_swmodi_i"  , swmodi);
 		params.put("pv_dslinea_i" , dslinea);
 		params.put("pv_accion_i"  , accion);
-		Utilerias.debugProcedure(logger, "PKG_SATELITES.P_MOV_MPOLICOT", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES.P_MOV_MPOLICOT", params);
 		ejecutaSP(new PMovMpolicot(getDataSource()),params);
 	}
 	
@@ -3745,7 +3744,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("nmsuplem" , nmsuplem);
 		params.put("cdelemen" , cdelemen);
 		params.put("idproces" , Utils.generaTimestamp());
-		Utilerias.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_REHABILITA_AUTO", params);
+		Utils.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_REHABILITA_AUTO", params);
 		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoRehabilitacionAuto(getDataSource()),params);
 		
 		return resParams;
@@ -3860,7 +3859,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdelemen" , cdelemen);
 		params.put("feinicio" , feinicio);
 		params.put("idproces" , Utils.generaTimestamp());
-		Utilerias.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_CANCELA_AUTO", params);
+		Utils.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_CANCELA_AUTO", params);
 		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoCancelacionAuto(getDataSource()),params);
 		
 		return resParams;
@@ -3926,7 +3925,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("tstamp"   , tstamp);
 		params.put("feefecto" , feefecto);
 		params.put("idproces" , Utils.generaTimestamp());
-		Utilerias.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_DEVOLUCION_PRIMAS", params);
+		Utils.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_DEVOLUCION_PRIMAS", params);
 		Map<String,Object> resParams = ejecutaSP(new GuardarEndosoDevolucionPrimas(getDataSource()),params);
 		return resParams;
 	}
@@ -4021,7 +4020,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("feinival" , feinival);
 		params.put("tstamp"   , tstamp);
 		params.put("idproces" , tstamp);
-		Utilerias.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_VALOSIT_FORM", params);
+		Utils.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_VALOSIT_FORM", params);
 		Map<String,Object> procResult = ejecutaSP(new ConfirmarEndosoValositFormsAuto(getDataSource()),params);
 		String tipoflot = (String)procResult.get("pv_tipoflot_o");
 		String ntramite = (String)procResult.get("pv_ntramite_o");

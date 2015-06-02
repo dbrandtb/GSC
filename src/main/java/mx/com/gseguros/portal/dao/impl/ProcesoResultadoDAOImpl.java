@@ -8,7 +8,6 @@ import javax.sql.DataSource;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.ProcesoResultadoDAO;
-import mx.com.gseguros.portal.general.model.BaseVO;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;

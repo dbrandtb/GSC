@@ -9,7 +9,6 @@ import java.util.Map;
 import mx.com.gseguros.portal.cancelacion.dao.CancelacionDAO;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.general.model.PolizaVO;
-import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.utils.Utils;
 
 public class CancelacionManagerImpl implements CancelacionManager
@@ -187,7 +186,7 @@ public class CancelacionManagerImpl implements CancelacionManager
 			,String nmpoliza
 			)throws Exception
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ validaCancelacionAProrrata @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -206,7 +205,7 @@ public class CancelacionManagerImpl implements CancelacionManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ validaCancelacionAProrrata @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
