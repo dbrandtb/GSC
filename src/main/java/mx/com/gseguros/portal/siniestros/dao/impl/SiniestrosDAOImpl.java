@@ -2355,7 +2355,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					"ANTIGUEDAD",		"CONTRATANTE",		"TIPOPAGO",			"ESTATUS",		"SUCURSAL",
 					"POLIZA",			"FACTURA",			"FECHAFACT",		"PROVEEDOR",	"SINIESTRO",
 					"DIAGNOSTICO",		"CAUSASIN",			"FECHAOCURRE",		"SUBTOTAL",		"IVA",
-					"IVARETENIDO",		"ISR",				"IMPCEDULAR",		"PAGADO"};
+					"IVARETENIDO",		"ISR",				"IMPCEDULAR",		"PAGADO",		"NMPOLIEX"};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

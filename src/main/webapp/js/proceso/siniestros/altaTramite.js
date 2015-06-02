@@ -1530,8 +1530,8 @@ Ext.onReady(function() {
 	            url     : _URL_LOADER_HISTORIAL_RECLAMACIONES,
 	            params  : {
 	                'params.cdperson'  : record.get('modCdperson'),
-	                'params.cdramo'    : panelInicialPral.down('combo[name=cmbRamos]').getValue(),
-	                'params.nmpoliza'    : null,
+	                'params.cdramo'    : null,
+	                'params.nmpoliza'  : null,
 	                'params.cdunieco'  : null
 	            },
 	            scripts  : true,
