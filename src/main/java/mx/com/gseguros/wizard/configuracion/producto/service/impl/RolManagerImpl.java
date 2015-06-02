@@ -5,19 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.rol.model.RolAtributoVariableVO;
 import mx.com.gseguros.wizard.configuracion.producto.rol.model.RolVO;
 import mx.com.gseguros.wizard.configuracion.producto.service.RolManager;
 import mx.com.gseguros.wizard.dao.WizardDAO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.model.MensajesVO;
-import mx.com.aon.portal.util.WrapperResultados;
-
-import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
-import org.springframework.jdbc.core.SqlParameter;
 
 
 public class RolManagerImpl implements RolManager {

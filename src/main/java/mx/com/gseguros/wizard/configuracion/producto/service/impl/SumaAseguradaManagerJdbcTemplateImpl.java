@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
+import mx.com.aon.portal.util.ConvertUtil;
+import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.service.SumaAseguradaManagerJdbcTemplate;
 import mx.com.gseguros.wizard.configuracion.producto.sumaAsegurada.model.SumaAseguradaIncisoVO;
 import mx.com.gseguros.wizard.configuracion.producto.sumaAsegurada.model.SumaAseguradaVO;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
-import mx.com.aon.portal.util.ConvertUtil;
-import mx.com.aon.portal.util.WrapperResultados;
 
 public class SumaAseguradaManagerJdbcTemplateImpl extends AbstractManagerJdbcTemplateInvoke implements SumaAseguradaManagerJdbcTemplate {
 

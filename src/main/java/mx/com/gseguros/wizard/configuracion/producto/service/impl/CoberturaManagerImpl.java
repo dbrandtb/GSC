@@ -7,10 +7,10 @@ import java.util.Map;
 
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.coberturas.model.CoberturaVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.service.CoberturaManager;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.dao.CatalogosWizardDAO;
 
 import org.apache.log4j.Logger;

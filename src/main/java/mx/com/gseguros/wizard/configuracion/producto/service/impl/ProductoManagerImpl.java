@@ -10,7 +10,6 @@
  */
 package mx.com.gseguros.wizard.configuracion.producto.service.impl;
 
-import mx.com.gseguros.wizard.configuracion.producto.dao.ProductoDAO;
 import static mx.com.gseguros.wizard.configuracion.producto.dao.ProductoDAO.AGREGAR_CLAUSULA;
 import static mx.com.gseguros.wizard.configuracion.producto.dao.ProductoDAO.CLONAR_PRODUCTO;
 import static mx.com.gseguros.wizard.configuracion.producto.dao.ProductoDAO.GENERAR_PRODUCTO;
@@ -23,6 +22,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//import mx.com.aon.kernel.cache.CacheSistema;
+import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
+import mx.com.aon.portal.util.ConvertUtil;
+import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.wizard.configuracion.producto.dao.ProductoDAO;
 import mx.com.gseguros.wizard.configuracion.producto.definicion.model.ClausulaVO;
 import mx.com.gseguros.wizard.configuracion.producto.definicion.model.PeriodoVO;
 import mx.com.gseguros.wizard.configuracion.producto.definicion.model.ProductoVO;
@@ -30,11 +35,6 @@ import mx.com.gseguros.wizard.configuracion.producto.definicion.model.TipoPoliza
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.service.ProductoManager;
 import mx.com.gseguros.wizard.configuracion.producto.util.WizardUtils;
-import mx.com.gseguros.exception.ApplicationException;
-//import mx.com.aon.kernel.cache.CacheSistema;
-import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
-import mx.com.aon.portal.util.ConvertUtil;
-import mx.com.aon.portal.util.WrapperResultados;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
@@ -120,8 +120,8 @@ public class ProductoManagerImpl extends AbstractManagerJdbcTemplateInvoke imple
 	 *            identificador del producto.
 	 * @return ProductoVO - Bean generado apartir de la consulta.
 	 * @throws ApplicationException -
-	 *             Excepcion con la informacion y descripción del problema en la
-	 *             ejecución.
+	 *             Excepcion con la informacion y descripciï¿½n del problema en la
+	 *             ejecuciï¿½n.
 	 */
 	public ProductoVO editarProducto(String idProducto) throws ApplicationException {
 		List<ProductoVO> productos = null;
@@ -184,8 +184,8 @@ public class ProductoManagerImpl extends AbstractManagerJdbcTemplateInvoke imple
 	 * @return boolean - boleano indica si ocurrio algun problema durante la
 	 *         ejecucion el metodo.
 	 * @throws ApplicationException -
-	 *             Excepcion con la informacion y descripción del problema en la
-	 *             ejecución.
+	 *             Excepcion con la informacion y descripciï¿½n del problema en la
+	 *             ejecuciï¿½n.
 	 * @throws Exception
 	 */
 	public String insertarProducto(ProductoVO productoVO, boolean success) throws ApplicationException {
@@ -270,8 +270,8 @@ public class ProductoManagerImpl extends AbstractManagerJdbcTemplateInvoke imple
 	 * 
 	 * @return Lista de Bean's generados a partir de la consulta.
 	 * @throws ApplicationException -
-	 *             Excepcion con la informacion y descripción del problema en la
-	 *             ejecución.
+	 *             Excepcion con la informacion y descripciï¿½n del problema en la
+	 *             ejecuciï¿½n.
 	 */
 	public List<ProductoVO> validarProductos() throws ApplicationException {
 		Map<String, String> mapa = new HashMap<String, String>();
@@ -319,8 +319,8 @@ public class ProductoManagerImpl extends AbstractManagerJdbcTemplateInvoke imple
 	 *            identificador del Periodo.
 	 * @return PeriodoVO - Bean generado a partir de la consulta.
 	 * @throws ApplicationException -
-	 *             Excepcion con la informacion y descripción del problema en la
-	 *             ejecución.
+	 *             Excepcion con la informacion y descripciï¿½n del problema en la
+	 *             ejecuciï¿½n.
 	 */
 	public PeriodoVO editarPeriodo(String idPeriodo)
 			throws ApplicationException {
@@ -363,8 +363,8 @@ public class ProductoManagerImpl extends AbstractManagerJdbcTemplateInvoke imple
 	 * @return boolean - boleano indica si ocurrio algun problema durante la
 	 *         ejecucion el metodo.
 	 * @throws ApplicationException -
-	 *             Excepcion con la informacion y descripción del problema en la
-	 *             ejecución.
+	 *             Excepcion con la informacion y descripciï¿½n del problema en la
+	 *             ejecuciï¿½n.
 	 */
 	public void agregarPeriodos(List<PeriodoVO> periodos, int idProducto,
 			boolean success) throws ApplicationException {
@@ -476,8 +476,8 @@ public class ProductoManagerImpl extends AbstractManagerJdbcTemplateInvoke imple
 	 *            identificador de la Clausula
 	 * @return ClausulaVO - Bean generado apartir de la consulta.
 	 * @throws ApplicationException -
-	 *             Excepcion con la informacion y descripción del problema en la
-	 *             ejecución.
+	 *             Excepcion con la informacion y descripciï¿½n del problema en la
+	 *             ejecuciï¿½n.
 	 */
 	public List<ClausulaVO> editarClausula(String idClausula)
 			throws ApplicationException {
@@ -520,8 +520,8 @@ public class ProductoManagerImpl extends AbstractManagerJdbcTemplateInvoke imple
 	 * @return boolean - boleano indica si ocurrio algun problema durante la
 	 *         ejecucion el metodo.
 	 * @throws ApplicationException -
-	 *             Excepcion con la informacion y descripción del problema en la
-	 *             ejecución.
+	 *             Excepcion con la informacion y descripciï¿½n del problema en la
+	 *             ejecuciï¿½n.
 	 */
 	public WrapperResultados agregarClausula(ClausulaVO clausula, boolean success) throws ApplicationException {
 		
@@ -553,8 +553,8 @@ public class ProductoManagerImpl extends AbstractManagerJdbcTemplateInvoke imple
 	 * @return boolean - boleano indica si ocurrio algun problema durante la
 	 *         ejecucion el metodo.
 	 * @throws ApplicationException -
-	 *             Excepcion con la informacion y descripción del problema en la
-	 *             ejecución.
+	 *             Excepcion con la informacion y descripciï¿½n del problema en la
+	 *             ejecuciï¿½n.
 	 */
 	public void asociarClausulas(List<ClausulaVO> clausulas, int idProducto,
 			boolean success) throws ApplicationException {
