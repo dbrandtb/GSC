@@ -2,11 +2,11 @@ package mx.com.gseguros.wizard.configuracion.producto.service;
 
 import java.util.List;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.tipoObjeto.model.DatoVariableObjetoVO;
 import mx.com.gseguros.wizard.configuracion.producto.tipoObjeto.model.TipoObjetoVO;
 import mx.com.gseguros.wizard.model.MensajesVO;
-import mx.com.gseguros.exception.ApplicationException;
 
 
 public interface TipoObjetoManager {

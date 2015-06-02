@@ -14,18 +14,18 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.definicion.model.ClausulaVO;
 import mx.com.gseguros.wizard.configuracion.producto.definicion.model.PeriodoVO;
 import mx.com.gseguros.wizard.configuracion.producto.definicion.model.ProductoVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.aon.portal.util.WrapperResultados;
 
 /**
  * ProductManager
  * 
  * <pre>
- *    Interfaz para petición de información de producto
+ *    Interfaz para peticiï¿½n de informaciï¿½n de producto
  * &lt;Pre&gt;
  * 
  * &#064;author   &lt;a href=&quot;mailto:alfonso.marquez@biosnetmx.com&quot;&gt;Alfonso M&amp;aacuterquez&lt;/a&gt;
@@ -43,8 +43,8 @@ public interface ProductoManager {
 	 *            identificador del producto.
 	 * @return Bean generado apartir de la consulta.
 	 * @throws ApplicationException -
-	 *             Excepcion con la informacion y descripción del problema en la
-	 *             ejecución.
+	 *             Excepcion con la informacion y descripciï¿½n del problema en la
+	 *             ejecuciï¿½n.
 	 */
 	public abstract ProductoVO editarProducto(String idProducto)
 			throws ApplicationException;
@@ -57,8 +57,8 @@ public interface ProductoManager {
 	 * @return boleano indica si ocurrio algun problema durante la ejecucion el
 	 *         metodo.
 	 * @throws ApplicationException -
-	 *             Excepcion con la informacion y descripción del problema en la
-	 *             ejecución.
+	 *             Excepcion con la informacion y descripciï¿½n del problema en la
+	 *             ejecuciï¿½n.
 	 */
 	public abstract String insertarProducto(ProductoVO productoVO, boolean success)
 			throws ApplicationException;
@@ -69,8 +69,8 @@ public interface ProductoManager {
 	 * 
 	 * @return Lista de Bean's generados a partir de la consulta.
 	 * @throws ApplicationException -
-	 *             Excepcion con la informacion y descripción del problema en la
-	 *             ejecución.
+	 *             Excepcion con la informacion y descripciï¿½n del problema en la
+	 *             ejecuciï¿½n.
 	 */
 	public abstract List<ProductoVO> validarProductos()
 			throws ApplicationException;
@@ -94,8 +94,8 @@ public interface ProductoManager {
 	 * @return boleano indica si ocurrio algun problema durante la ejecucion el
 	 *         metodo.
 	 * @throws ApplicationException -
-	 *             Excepcion con la informacion y descripción del problema en la
-	 *             ejecución.
+	 *             Excepcion con la informacion y descripciï¿½n del problema en la
+	 *             ejecuciï¿½n.
 	 */
 	public abstract void agregarPeriodos(List<PeriodoVO> periodos,
 			int idProducto, boolean success) throws ApplicationException;
@@ -122,8 +122,8 @@ public interface ProductoManager {
 	 * @return boleano indica si ocurrio algun problema durante la ejecucion el
 	 *         metodo.
 	 * @throws ApplicationException -
-	 *             Excepcion con la informacion y descripción del problema en la
-	 *             ejecución.
+	 *             Excepcion con la informacion y descripciï¿½n del problema en la
+	 *             ejecuciï¿½n.
 	 */
 	public abstract WrapperResultados agregarClausula(ClausulaVO clausula, boolean success)
 			throws ApplicationException;
@@ -140,8 +140,8 @@ public interface ProductoManager {
 	 * @return boleano indica si ocurrio algun problema durante la ejecucion el
 	 *         metodo.
 	 * @throws ApplicationException -
-	 *             Excepcion con la informacion y descripción del problema en la
-	 *             ejecución.
+	 *             Excepcion con la informacion y descripciï¿½n del problema en la
+	 *             ejecuciï¿½n.
 	 */
 	public abstract void asociarClausulas(List<ClausulaVO> clausulas,
 			int idProducto, boolean success) throws ApplicationException;

@@ -2,12 +2,12 @@ package mx.com.gseguros.wizard.configuracion.producto.service;
 
 import java.util.List;
 
+import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.rol.model.RolAtributoVariableVO;
 import mx.com.gseguros.wizard.configuracion.producto.rol.model.RolVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.model.MensajesVO;
-import mx.com.aon.portal.util.WrapperResultados;
 
 public interface RolManager {
 	public abstract List<RolAtributoVariableVO> atributosVariablesJson(
