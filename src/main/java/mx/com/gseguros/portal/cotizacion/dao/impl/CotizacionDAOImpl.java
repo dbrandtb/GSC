@@ -5403,4 +5403,75 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public void grabarEvento(
+			StringBuilder sb
+			,String cdmodulo
+			,String cdevento
+			,Date fecha
+			,String cdusuari
+			,String cdsisrol
+			,String ntramite
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsolici
+			,String cdagente
+			,String cdusuariDes
+			,String cdsisrolDes
+			,String status
+			)throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("cdmodulo"    , cdmodulo);
+		params.put("cdevento"    , cdevento);
+		params.put("fecha"       , fecha);
+		params.put("cdusuari"    , cdusuari);
+		params.put("cdsisrol"    , cdsisrol);
+		params.put("ntramite"    , ntramite);
+		params.put("cdunieco"    , cdunieco);
+		params.put("cdramo"      , cdramo);
+		params.put("estado"      , estado);
+		params.put("nmpoliza"    , nmpoliza);
+		params.put("nmsolici"    , nmsolici);
+		params.put("cdagente"    , cdagente);
+		params.put("cdusuariDes" , cdusuariDes);
+		params.put("cdsisrolDes" , cdsisrolDes);
+		params.put("status"      , status);
+		sb.append(Utilerias.join(
+				 "\n********************************************"
+				,"\n****** PKG_ESTADISTICA.P_GRABA_EVENTO ******"
+				,"\n****** params=" , params
+				,"\n********************************************"
+				));
+		ejecutaSP(new GrabarEvento(getDataSource()),params);
+	}
+	
+	protected class GrabarEvento extends StoredProcedure
+	{
+		protected GrabarEvento(DataSource dataSource)
+		{
+			super(dataSource, "PKG_ESTADISTICA.P_GRABA_EVENTO");
+			declareParameter(new SqlParameter("cdmodulo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdevento"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fecha"       , OracleTypes.TIMESTAMP));
+			declareParameter(new SqlParameter("cdusuari"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ntramite"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsolici"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdagente"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuariDes" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrolDes" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

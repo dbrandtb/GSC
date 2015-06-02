@@ -37,7 +37,7 @@ public class EmisionAction extends PrincipalCoreAction
 		long timestamp  = System.currentTimeMillis();
 		exito           = false;
 		
-		if(ex.getClass().equals(ApplicationException.class))
+		if(ex instanceof ApplicationException)
 		{
 			respuesta = new StringBuilder(ex.getMessage()).append(" #").append(timestamp).toString();
 		}

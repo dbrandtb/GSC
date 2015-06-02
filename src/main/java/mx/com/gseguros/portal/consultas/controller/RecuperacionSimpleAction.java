@@ -60,7 +60,7 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 		long timestamp  = System.currentTimeMillis();
 		exito           = false;
 		
-		if(ex.getClass().equals(ApplicationException.class))
+		if(ex instanceof ApplicationException)
 		{
 			respuesta = Utilerias.join(ex.getMessage()," #",timestamp);
 		}

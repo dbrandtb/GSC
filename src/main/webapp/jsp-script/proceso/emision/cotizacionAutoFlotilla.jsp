@@ -340,6 +340,7 @@ debug('_p30_tatrisitAutoWindows:'  , _p30_tatrisitAutoWindows);
 
 Ext.onReady(function()
 {
+    _grabarEvento('COTIZACION','ACCCOTIZA',null,null,_p30_smap1.cdramo);
 
     Ext.Ajax.timeout = 30*60*1000;
 
@@ -3802,6 +3803,21 @@ function _p30_cotizar(sinTarificar)
                     _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=true;
                     _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue(json.smap1.nmpoliza);
                     _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=false;
+                    
+                    if(Ext.isEmpty(sinTarificar)||false==sinTarificar)
+                    {
+                        _grabarEvento('COTIZACION'
+                                      ,'COTIZA'
+                                      ,_p30_smap1.ntramite
+                                      ,_p30_smap1.cdunieco
+                                      ,_p30_smap1.cdramo
+                                      ,'W'
+                                      ,json.smap1.nmpoliza
+                                      ,json.smap1.nmpoliza
+                                      ,'buscar'
+                                      ,_fieldById('_p30_form')
+                                      );
+                    }
                     
                     var itemsDescuento =
                     [

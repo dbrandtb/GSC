@@ -9979,7 +9979,7 @@ public class EndososAction extends PrincipalCoreAction
 		exito           = false;
 		respuestaOculta = ex.getMessage();
 		
-		if(ex.getClass().equals(ApplicationException.class))
+		if(ex instanceof ApplicationException)
 		{
 			respuesta = new StringBuilder(ex.getMessage()).append(" #").append(timestamp).toString();
 		}

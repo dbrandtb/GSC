@@ -19,6 +19,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.general.service.ServiciosManager;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
@@ -26,6 +27,7 @@ import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -55,6 +57,9 @@ public class MesaControlAction extends PrincipalCoreAction
 	
 	private Map<String,Object>             params;
 	private String						   tmpNtramite;
+	
+	@Autowired
+	private ServiciosManager serviciosManager;
 	
 	public String principal()
 	{
@@ -876,7 +881,31 @@ public class MesaControlAction extends PrincipalCoreAction
         	kernelManager.movDmesacontrol(parDmesCon);
 			////// se guarda el detalle //////
         	//////////////////////////////////
-					
+        	
+        	try
+            {
+            	serviciosManager.grabarEvento(new StringBuilder("\nNuevo tramite")
+            	    ,"GENERAL"
+            	    ,"NUETRAMITMC"
+            	    ,new Date()
+            	    ,((UserVO)session.get("USUARIO")).getUser()
+            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+            	    ,(String)res.getItemMap().get("ntramite")
+            	    ,smap1.get("pv_cdsucdoc_i")
+            	    ,(String)omap.get("pv_cdramo_i")
+            	    ,null
+            	    ,null
+            	    ,null
+            	    ,(String)omap.get("pv_cdagente_i")
+            	    ,null
+            	    ,null
+            	    );
+            }
+            catch(Exception ex)
+            {
+            	logger.error("Error al grabar evento, sin impacto",ex);
+            }
+        	
 			success=true;
 			
 		} catch(ApplicationException ae) {
@@ -1085,6 +1114,10 @@ public class MesaControlAction extends PrincipalCoreAction
 
 	public void setMesaControlManager(MesaControlManager mesaControlManager) {
 		this.mesaControlManager = mesaControlManager;
+	}
+
+	public void setServiciosManager(ServiciosManager serviciosManager) {
+		this.serviciosManager = serviciosManager;
 	}
 	
 }

@@ -210,7 +210,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		{
 			super(dataSource,"PKG_SATELITES.P_MOV_DMESACONTROL");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("feinicio" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("feinicio" , OracleTypes.TIMESTAMP));
 			declareParameter(new SqlParameter("cdclausu" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("comments" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));

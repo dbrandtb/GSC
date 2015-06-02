@@ -310,6 +310,27 @@
 	</div>
 
 	<script language="javascript"> 	
+		var _grabarEvento = function (cdmodulo,cdevento)
+	    {
+	        try
+	        {
+	            Ext.Ajax.request(
+	            {
+	                url     : '<s:url namespace="/servicios" action="grabarEvento" />'
+	                ,params :
+	                {
+	                    'params.cdmodulo'  : cdmodulo
+	                    ,'params.cdevento' : cdevento
+	                }
+	            });
+	        }
+	        catch(e)
+	        {
+	            debugError('Error al grabar evento',cdmodulo,cdevento,e);
+	        }
+	    };
+	    _grabarEvento('GENERAL','INICIO');
+	
 		LoadPage('/jsp/portal/mainBody.jsp');
 	</script>
 

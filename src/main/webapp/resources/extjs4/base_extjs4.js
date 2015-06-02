@@ -604,6 +604,46 @@ function parseaFechas(recordData)
     return datos;
 }
 
+function _grabarEvento(cdmodulo,cdevento,ntramite,cdunieco,cdramo,estado,nmpoliza,nmsolici,cdagente,parentCdagente)
+{
+    var micdagente = cdagente;
+    if('buscar'==micdagente)
+    {
+        try
+        {
+            micdagente = _fieldLikeLabel('AGENTE',parentCdagente,true).getValue();
+        }
+        catch(e)
+        {
+            micdagente='';
+            debugError('Error al buscar agente para grabar evento:',e);
+        }
+    }
+    try
+    {
+        Ext.Ajax.request(
+        {
+            url     : _GLOBAL_URL_GRABAR_EVENTO
+            ,params :
+            {
+                'params.cdmodulo'  : cdmodulo
+                ,'params.cdevento' : cdevento
+                ,'params.ntramite' : ntramite
+                ,'params.cdunieco' : cdunieco
+                ,'params.cdramo'   : cdramo
+                ,'params.estado'   : estado
+                ,'params.nmpoliza' : nmpoliza
+                ,'params.nmsolici' : nmsolici
+                ,'params.cdagente' : micdagente
+            }
+        });
+    }
+    catch(e)
+    {
+        debugError('Error al grabar evento:',cdmodulo,cdevento,e);
+    }
+}
+
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////

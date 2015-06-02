@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.general.service.impl;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Map;
 
 import mx.com.gseguros.exception.ApplicationException;
@@ -145,6 +146,71 @@ public class ServiciosManagerImpl implements ServiciosManager
 		}
 		
 		return paso;
+	}
+	
+	@Override
+	public void grabarEvento(
+			StringBuilder sb
+			,String cdmodulo
+			,String cdevento
+			,Date fecha
+			,String cdusuari
+			,String cdsisrol
+			,String ntramite
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsolici
+			,String cdagente
+			,String cdusuariDes
+			,String cdsisrolDes
+			)throws Exception
+	{
+		sb.append(Utilerias.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ grabarEvento @@@@@@"
+				,"\n@@@@@@ cdmodulo="    , cdmodulo
+				,"\n@@@@@@ cdevento="    , cdevento
+				,"\n@@@@@@ fecha="       , fecha
+				,"\n@@@@@@ cdusuari="    , cdusuari
+				,"\n@@@@@@ cdsisrol="    , cdsisrol
+				,"\n@@@@@@ ntramite="    , ntramite
+				,"\n@@@@@@ cdunieco="    , cdunieco
+				,"\n@@@@@@ cdramo="      , cdramo
+				,"\n@@@@@@ estado="      , estado
+				,"\n@@@@@@ nmpoliza="    , nmpoliza
+				,"\n@@@@@@ nmsolici="    , nmsolici
+				,"\n@@@@@@ cdagente="    , cdagente
+				,"\n@@@@@@ cdusuariDes=" , cdusuariDes
+				,"\n@@@@@@ cdsisrolDes=" , cdsisrolDes
+				));
+		
+		String paso = "Grabando evento";
+		try
+		{
+			cotizacionDAO.grabarEvento(
+					sb
+					,cdmodulo
+					,cdevento
+					,fecha
+					,cdusuari
+					,cdsisrol
+					,ntramite
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsolici
+					,cdagente
+					,cdusuariDes
+					,cdsisrolDes, null
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
 	}
 	
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO)

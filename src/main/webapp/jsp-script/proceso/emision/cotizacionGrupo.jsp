@@ -217,6 +217,9 @@ var _p21_TARIFA_MODIFICADA = 2;
 Ext.onReady(function()
 {
 
+    _grabarEvento('COTIZACION','ACCCOTIZA'
+                  ,_p21_ntramiteVacio?_p21_ntramiteVacio:(_p21_ntramite?_p21_ntramite:''),_p21_smap1.cdunieco,_p21_smap1.cdramo);
+
     Ext.Ajax.timeout = 30*60*1000;
 
     ////// modelos //////

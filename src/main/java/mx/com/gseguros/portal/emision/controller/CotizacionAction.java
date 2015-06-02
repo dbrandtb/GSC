@@ -32,6 +32,7 @@ import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.general.service.ServiciosManager;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
@@ -66,6 +67,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -103,6 +105,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	private CotizacionManager                cotizacionManager;
 	private SiniestrosManager                siniestrosManager;
 	
+	@Autowired
+	private ServiciosManager serviciosManager;
+	
 	public CotizacionAction()
 	{
 		logger.debug("new CotizacionAction");
@@ -139,7 +144,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		exito           = false;
 		respuestaOculta = ex.getMessage();
 		
-		if(ex.getClass().equals(ApplicationException.class))
+		if(ex instanceof ApplicationException)
 		{
 			respuesta = new StringBuilder(ex.getMessage()).append(" #").append(timestamp).toString();
 		}
@@ -992,6 +997,29 @@ public class CotizacionAction extends PrincipalCoreAction
 				smap1.put("nmpolizaEmi" , nmpolizaEmi);
 				smap1.put("nmpoliexEmi" , nmpoliexEmi);
 				smap1.put("nmsuplemEmi" , nmsuplemEmi);
+				
+				try
+	            {
+	            	serviciosManager.grabarEvento(new StringBuilder("\nEmision")
+	            	    ,"EMISION"  //cdmodulo
+	            	    ,"EMISION"  //cdevento
+	            	    ,new Date() //fecha
+	            	    ,cdusuari
+	            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+	            	    ,ntramite
+	            	    ,cdunieco
+	            	    ,cdramo
+	            	    ,"M"
+	            	    ,nmpolizaEmi
+	            	    ,nmpoliza
+	            	    ,null
+	            	    ,null
+	            	    ,null);
+	            }
+	            catch(Exception ex)
+	            {
+	            	logger.error("Error al grabar evento, sin impacto",ex);
+	            }
 			}
 			catch(Exception ex)
 			{
@@ -5473,6 +5501,29 @@ public class CotizacionAction extends PrincipalCoreAction
 	            mapCoberturas.put("pv_cdgarant_i" , "TODO");
 	            mapCoberturas.put("pv_cdtipsup_i" , "1");
 	            kernelManager.coberturas(mapCoberturas);
+	            
+	            try
+	            {
+	            	serviciosManager.grabarEvento(new StringBuilder("\nCotizacion grupo")
+	            	    ,"COTIZACION" //cdmodulo
+	            	    ,"COTIZA"     //cdevento
+	            	    ,new Date()   //fecha
+	            	    ,cdusuari
+	            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+	            	    ,ntramite
+	            	    ,cdunieco
+	            	    ,cdramo
+	            	    ,"W"
+	            	    ,nmpoliza
+	            	    ,nmpoliza
+	            	    ,cdagente
+	            	    ,null
+	            	    ,null);
+	            }
+	            catch(Exception ex)
+	            {
+	            	logger.error("Error al grabar evento, sin impacto",ex);
+	            }
 			}
 			catch(Exception ex)
 			{
@@ -5734,6 +5785,29 @@ public class CotizacionAction extends PrincipalCoreAction
 	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 	            	parDmesCon.put("pv_cdmotivo_i"   , null);
 	            	kernelManager.movDmesacontrol(parDmesCon);
+	            	
+	            	try
+		            {
+		            	serviciosManager.grabarEvento(new StringBuilder("\nNuevo tramite grupo")
+		            	    ,"EMISION"    //cdmodulo
+		            	    ,"GENTRAGRUP" //cdevento
+		            	    ,new Date()   //fecha
+		            	    ,cdusuari
+		            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+		            	    ,ntramiteNew
+		            	    ,cdunieco
+		            	    ,cdramo
+		            	    ,"W"
+		            	    ,nmpoliza
+		            	    ,nmpoliza
+		            	    ,cdagente
+		            	    ,null
+		            	    ,null);
+		            }
+		            catch(Exception ex)
+		            {
+		            	logger.error("Error al grabar evento, sin impacto",ex);
+		            }
 				}
 				else
 				{
@@ -8320,6 +8394,10 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public void setAgentePorFolioService(AgentePorFolioService agentePorFolioService) {
 		this.agentePorFolioService = agentePorFolioService;
+	}
+
+	public void setServiciosManager(ServiciosManager serviciosManager) {
+		this.serviciosManager = serviciosManager;
 	}
 
 }

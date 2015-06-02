@@ -2698,7 +2698,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		protected PMovDmesacontrol(DataSource dataSource) {
 			super(dataSource,"PKG_SATELITES.P_MOV_DMESACONTROL");
 			declareParameter(new SqlParameter("pv_ntramite_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_feinicio_i", 		OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_feinicio_i", 		OracleTypes.TIMESTAMP));
 			declareParameter(new SqlParameter("pv_cdclausu_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_comments_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdusuari_i", 		OracleTypes.VARCHAR));

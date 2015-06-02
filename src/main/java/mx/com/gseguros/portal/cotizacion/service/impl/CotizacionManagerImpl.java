@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
@@ -104,7 +105,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		resp.setExito(false);
 		resp.setRespuestaOculta(ex.getMessage());
 		
-		if(ex.getClass().equals(ApplicationException.class))
+		if(ex instanceof ApplicationException)
 		{
 			resp.setRespuesta(
 					new StringBuilder()
@@ -3333,6 +3334,29 @@ public class CotizacionManagerImpl implements CotizacionManager
 						,"TODO" //cdgarant
 						,"1"    //cdtipsup
 						);
+				
+				try
+	            {
+	            	cotizacionDAO.grabarEvento(new StringBuilder("\nCotizacion grupo")
+	            	    ,"COTIZACION" //cdmodulo
+	            	    ,"COTIZA"     //cdevento
+	            	    ,new Date()   //fecha
+	            	    ,cdusuari
+	            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+	            	    ,ntramite
+	            	    ,cdunieco
+	            	    ,cdramo
+	            	    ,"W"
+	            	    ,nmpoliza
+	            	    ,nmpoliza
+	            	    ,cdagente
+	            	    ,null
+	            	    ,null, null);
+	            }
+	            catch(Exception ex)
+	            {
+	            	logger.error("Error al grabar evento, sin impacto",ex);
+	            }
 			}
             catch(Exception ex)
             {
@@ -3546,6 +3570,29 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,cdusuari
 							,null       //cdmotivo
 							);
+					
+					try
+		            {
+						cotizacionDAO.grabarEvento(new StringBuilder("\nNuevo tramite grupo")
+		            	    ,"EMISION"    //cdmodulo
+		            	    ,"GENTRAGRUP" //cdevento
+		            	    ,new Date()   //fecha
+		            	    ,cdusuari
+		            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+		            	    ,ntramite
+		            	    ,cdunieco
+		            	    ,cdramo
+		            	    ,"W"
+		            	    ,nmpoliza
+		            	    ,nmpoliza
+		            	    ,cdagente
+		            	    ,null
+		            	    ,null, null);
+		            }
+		            catch(Exception ex)
+		            {
+		            	logger.error("Error al grabar evento, sin impacto",ex);
+		            }
 				}
 				else
 				{
