@@ -64,7 +64,9 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
         	msgTitle = mapResult.get("PV_TITLE_O")  != null ? mapResult.get("PV_TITLE_O").toString()  : "";  
         }
         
-        logger.info(new StringBuilder("MsgId=").append(msgId).append(" ").append("MsgTitle=").append(msgTitle).toString());
+        if( StringUtils.isNotBlank(msgId) || StringUtils.isNotBlank(msgTitle) ) {
+        	logger.info(new StringBuilder("MsgId=").append(msgId).append(" ").append("MsgTitle=").append(msgTitle).toString());
+        }
         
         // Obtenemos el msgText a partir del msgId:
         boolean esMensajePersonalizado= false;
