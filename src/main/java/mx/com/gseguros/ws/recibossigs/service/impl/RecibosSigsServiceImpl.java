@@ -1,6 +1,5 @@
 package mx.com.gseguros.ws.recibossigs.service.impl;
 
-import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,7 +32,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- * Implementación de los métodos para invocar al WS recibossigs
+ * Implementaciï¿½n de los mï¿½todos para invocar al WS recibossigs
  * @author Ricardo
  *
  */

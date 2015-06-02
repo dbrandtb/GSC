@@ -3,10 +3,10 @@ package mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model;
 import java.io.Serializable;
 import java.util.List;
 
+import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 
 
 /**

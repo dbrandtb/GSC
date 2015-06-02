@@ -1,6 +1,5 @@
 package mx.com.gseguros.wizard.dao;
 
-import java.util.List;
 import java.util.Map;
 
 

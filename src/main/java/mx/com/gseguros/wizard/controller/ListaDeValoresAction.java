@@ -14,7 +14,6 @@ import mx.com.gseguros.wizard.configuracion.producto.service.ListaDeValoresManag
 import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.DatosClaveAtributoVO;
 import mx.com.gseguros.wizard.configuracion.producto.web.Padre;
 
-
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -236,7 +235,7 @@ public class ListaDeValoresAction extends Padre {
     
 	/**
 	 * Metodo <code>execute</code> con el que es llamado desde Struts para
-	 * atender la petición web.
+	 * atender la peticiï¿½n web.
 	 * 
 	 * @return INPUT
 	 * @throws Exception
@@ -362,7 +361,7 @@ public class ListaDeValoresAction extends Padre {
         ////////////////////////////////Se valida tamanio de las claves y las descripciones
         if(StringUtils.isNotBlank(minimoClave) && StringUtils.isNotBlank(maximoClave)){
         	if (Integer.parseInt(minimoClave) > Integer.parseInt(maximoClave)) {
-        		mensajeRespuesta = "El tamaño mínimo de la Clave no puede ser mayor al máximo";
+        		mensajeRespuesta = "El tamaï¿½o mï¿½nimo de la Clave no puede ser mayor al mï¿½ximo";
         		success = false;
         		return SUCCESS;
         	}
@@ -370,7 +369,7 @@ public class ListaDeValoresAction extends Padre {
         
         if(StringUtils.isNotBlank(minimoDescripcion) && StringUtils.isNotBlank(maximoDescripcion)){
         	if (Integer.parseInt(minimoDescripcion) > Integer.parseInt(maximoDescripcion)) {
-        		mensajeRespuesta = "El tamaño mínimo de la Descripción no puede ser mayor al máximo";
+        		mensajeRespuesta = "El tamaï¿½o mï¿½nimo de la Descripciï¿½n no puede ser mayor al mï¿½ximo";
         		success = false;
         		return SUCCESS;
         	}
@@ -649,7 +648,7 @@ public class ListaDeValoresAction extends Padre {
 			} 
 			
 			/*
-			 * Cuando se agrega un elemento (valor y clave) más a la lista 
+			 * Cuando se agrega un elemento (valor y clave) mï¿½s a la lista 
 			 */
 			
 			else {
@@ -662,7 +661,7 @@ public class ListaDeValoresAction extends Padre {
 					log.debug("temporal.isEmpty() = " + temporal.isEmpty());
 				}
 				/*
-				 * Se aseguran que el ArrayList<LlaveValorVO> no esté vacío 
+				 * Se aseguran que el ArrayList<LlaveValorVO> no estï¿½ vacï¿½o 
 				 */
 				if (!temporal.isEmpty()) {
 					for (LlaveValorVO temp : temporal) {

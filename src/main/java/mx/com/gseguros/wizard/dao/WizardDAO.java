@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.wizard.configuracion.producto.conceptosCobertura.model.ConceptosCoberturaVO;
 import mx.com.gseguros.wizard.configuracion.producto.datosFijos.model.DatoFijoVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
@@ -15,7 +12,6 @@ import mx.com.gseguros.wizard.configuracion.producto.reglanegocio.model.ReglaNeg
 import mx.com.gseguros.wizard.configuracion.producto.rol.model.RolAtributoVariableVO;
 import mx.com.gseguros.wizard.configuracion.producto.rol.model.RolVO;
 import mx.com.gseguros.wizard.configuracion.producto.tipoObjeto.model.DatoVariableObjetoVO;
-import mx.com.gseguros.wizard.configuracion.producto.util.ReglaNegocio;
 import mx.com.gseguros.wizard.model.MensajesVO;
 
 public interface WizardDAO {
