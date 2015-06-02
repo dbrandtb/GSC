@@ -4,16 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import net.sf.json.JSONArray;
+import mx.com.gseguros.confpantallas.base.dao.DinamicDaoInterface;
+import mx.com.gseguros.confpantallas.model.DinamicColumnaAttrVo;
+import mx.com.gseguros.confpantallas.model.DinamicPanelAttrVo;
 
 import org.apache.struts2.ServletActionContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import mx.com.gseguros.confpantallas.base.dao.DinamicDaoInterface;
-import mx.com.gseguros.confpantallas.model.DinamicColumnaAttrVo;
-import mx.com.gseguros.confpantallas.model.DinamicComboVo;
-import mx.com.gseguros.confpantallas.model.DinamicPanelAttrVo;
 
 public class CargaColumnasManager{
 	

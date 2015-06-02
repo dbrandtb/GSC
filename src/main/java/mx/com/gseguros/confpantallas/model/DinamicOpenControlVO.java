@@ -1,7 +1,6 @@
 package mx.com.gseguros.confpantallas.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DinamicOpenControlVO implements Serializable {

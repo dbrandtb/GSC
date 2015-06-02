@@ -1,11 +1,11 @@
 package mx.com.aon.portal.util;
 
-import org.apache.log4j.Logger;
-import org.apache.commons.beanutils.Converter;
-
-import java.text.SimpleDateFormat;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
+import org.apache.commons.beanutils.Converter;
+import org.apache.log4j.Logger;
 
 
 public class UserStringConverter implements Converter, Serializable {

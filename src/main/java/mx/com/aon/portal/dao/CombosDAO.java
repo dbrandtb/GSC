@@ -15,7 +15,6 @@ import mx.com.aon.portal.model.FuncionalidadVO;
 import mx.com.aon.portal.model.ItemVO;
 import mx.com.aon.portal.model.Tabla_EquivalenciaVO;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.portal2.web.GenericVO;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;

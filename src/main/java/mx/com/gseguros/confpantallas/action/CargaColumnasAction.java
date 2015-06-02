@@ -5,8 +5,6 @@ import java.util.List;
 import mx.com.gseguros.confpantallas.delegate.CargaColumnasManager;
 import mx.com.gseguros.confpantallas.model.DinamicColumnaAttrVo;
 
-import org.apache.log4j.Logger;
-
 import com.opensymphony.xwork2.ActionSupport;
 
 public class CargaColumnasAction extends ActionSupport {

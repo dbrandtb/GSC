@@ -2,9 +2,9 @@ package mx.com.gseguros.cotizacionautos.base.dao;
 
 import java.util.HashMap;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import mx.com.gseguros.confpantallas.bd.ConnectDB;
+
+import org.springframework.jdbc.core.JdbcTemplate;
 
 public class ComparaDao {
 	private ConnectDB conn=null;

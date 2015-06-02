@@ -1,14 +1,11 @@
 package mx.com.aon.portal.util;
 
-import org.apache.commons.beanutils.Converter;
-
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 import org.apache.commons.beanutils.ConversionException;
+import org.apache.commons.beanutils.Converter;
 import org.apache.log4j.Logger;
 
 /**
@@ -117,12 +114,12 @@ public class SQLDateConverter implements Converter {
           return (defaultValue);
         }
       }
-      // Modificó MAP el 23-06-2004
+      // Modificï¿½ MAP el 23-06-2004
       // Si es SQLDate, debe devolver el mismo valor
       if (value instanceof java.sql.Date){
           return value;
       }
-      // Fin modificación MAP
+      // Fin modificaciï¿½n MAP
 
       return null;
     }

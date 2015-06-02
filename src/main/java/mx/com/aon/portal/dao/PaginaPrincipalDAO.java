@@ -2,15 +2,12 @@ package mx.com.aon.portal.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
-import mx.com.aon.portal.model.IsoVO;
 import mx.com.aon.portal.model.PortalVO;
-import mx.com.aon.portal.model.UsuarioRolEmpresaVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import oracle.jdbc.driver.OracleTypes;
 
