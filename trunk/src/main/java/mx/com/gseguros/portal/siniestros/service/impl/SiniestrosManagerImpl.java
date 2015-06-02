@@ -1,8 +1,6 @@
 package mx.com.gseguros.portal.siniestros.service.impl;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,6 +9,7 @@ import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.DaoException;
+import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
 import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
@@ -22,7 +21,6 @@ import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
-import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.MesaControlVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
@@ -33,10 +31,17 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.jcraft.jsch.Logger;
-public class SiniestrosManagerImpl implements SiniestrosManager {
+public class SiniestrosManagerImpl implements SiniestrosManager
+{
+	private static Logger logger = Logger.getLogger(SiniestrosManagerImpl.class);
+	
 	private SiniestrosDAO siniestrosDAO;
+	
+	@Autowired
+	private CotizacionDAO cotizacionDAO;
 	
 	private static org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(SiniestrosManagerImpl.class);
 	
@@ -1423,6 +1428,31 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 				+ "\n###### moverTramite ######"
 				);
 		siniestrosDAO.moverTramite(ntramite,nuevoStatus,comments,cdusuariSesion,cdsisrolSesion,cdusuariDestino,cdsisrolDestino,cdmotivo,cdclausu);
+		
+		try
+        {
+			cotizacionDAO.grabarEvento(new StringBuilder("\nTurnar tramite")
+        	    ,"GENERAL"    //cdmodulo
+        	    ,"TURNATRA"   //cdevento
+        	    ,new Date()   //fecha
+        	    ,cdusuariSesion
+        	    ,cdsisrolSesion
+        	    ,ntramite
+        	    ,"-1"
+        	    ,null
+        	    ,null
+        	    ,null
+        	    ,null
+        	    ,null
+        	    ,cdusuariDestino
+        	    ,cdsisrolDestino
+        	    ,nuevoStatus);
+        }
+        catch(Exception ex)
+        {
+        	logger.error("Error al grabar evento, sin impacto",ex);
+        }
+		
 		log.info(""
 				+ "\n###### moverTramite ######"
 				+ "\n##########################"
@@ -1775,5 +1805,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		params.put("pv_ntramite_i", ntramite);
 		log.debug("obtieneMontoPagoSiniestro params: "+params);
 		return siniestrosDAO.obtieneDatoMsiniper(params);
+	}
+
+	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
+		this.cotizacionDAO = cotizacionDAO;
 	}
 }

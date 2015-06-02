@@ -11,5 +11,6 @@
 	var _GLOBAL_URL_MANTENER_SESION_ACTIVA = '<s:url namespace="/seguridad" action="mantenerSesionActiva" />';
 	var _GLOBAL_MUESTRA_EXTENSION_TIMEOUT  = '<s:text name="sesion.muestra.extension.timeout"/>';
 	var _GLOBAL_OCULTA_EXTENSION_TIMEOUT   = '<s:text name="sesion.oculta.extension.timeout"/>';
+	var _GLOBAL_URL_GRABAR_EVENTO          = '<s:url namespace="/servicios" action="grabarEvento" />';
 	
 </script>

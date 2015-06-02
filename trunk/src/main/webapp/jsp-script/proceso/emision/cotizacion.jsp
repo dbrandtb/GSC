@@ -1220,7 +1220,7 @@ function _0_cotizar(boton)
 			,jsonData : json
 			,success  : function(response)
 			{
-				_0_bloquear(true);
+			    _0_bloquear(true);
 				_0_panelPri.setLoading(false);
 				json=Ext.decode(response.responseText);
 				if(json.success==true)
@@ -1230,6 +1230,17 @@ function _0_cotizar(boton)
 					debug(json.slist2);
 					
 					_0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
+					
+					_grabarEvento('COTIZACION'
+					              ,'COTIZA'
+					              ,_0_smap1.ntramite
+					              ,_0_smap1.cdunieco
+					              ,_0_smap1.cdramo
+					              ,'W'
+					              ,json.smap1.nmpoliza
+					              ,json.smap1.nmpoliza
+					              ,'buscar'
+					              );
 					
 					Ext.define('_0_modeloTarifa',
 					{
@@ -1544,6 +1555,8 @@ function agregaValidacionCPvsEstado() {
     
 Ext.onReady(function()
 {
+    
+    _grabarEvento('COTIZACION','ACCCOTIZA',_0_smap1.ntramite,_0_smap1.cdunieco,_0_smap1.cdramo);
     
     Ext.Ajax.timeout = 5*60*1000;
     

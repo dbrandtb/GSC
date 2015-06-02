@@ -657,4 +657,23 @@ public interface CotizacionDAO
 			)throws Exception;
 	
 	public Map<String,String>validarReemplazoDocumentoCotizacion(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception;
+	
+	public void grabarEvento(
+			StringBuilder sb
+			,String cdmodulo
+			,String cdevento
+			,Date fecha
+			,String cdusuari
+			,String cdsisrol
+			,String ntramite
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsolici
+			,String cdagente
+			,String cdusuariDes
+			,String cdsisrolDes
+			,String status
+			)throws Exception;
 }

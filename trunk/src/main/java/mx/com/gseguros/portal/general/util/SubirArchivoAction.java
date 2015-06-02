@@ -507,7 +507,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 		{
 			long timestamp  = System.currentTimeMillis();
 			exito           = false;
-			if(ex.getClass().equals(ApplicationException.class))
+			if(ex instanceof ApplicationException)
 			{
 				respuesta = ex.getMessage()+" #"+timestamp;
 			}
@@ -562,7 +562,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 		{
 			long timestamp  = System.currentTimeMillis();
 			exito           = false;
-			if(ex.getClass().equals(ApplicationException.class))
+			if(ex instanceof ApplicationException)
 			{
 				respuesta = ex.getMessage()+" #"+timestamp;
 			}

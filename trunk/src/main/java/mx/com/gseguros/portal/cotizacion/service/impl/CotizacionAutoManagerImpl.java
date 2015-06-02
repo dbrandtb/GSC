@@ -109,7 +109,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		resp.setExito(false);
 		resp.setRespuestaOculta(ex.getMessage());
 		
-		if(ex.getClass().equals(ApplicationException.class))
+		if(ex instanceof ApplicationException)
 		{
 			resp.setRespuesta(
 					new StringBuilder()
@@ -2621,7 +2621,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									}
 									catch(Exception ex)
 									{
-										if(ex.getClass().equals(ApplicationException.class))
+										if(ex instanceof ApplicationException)
 										{
 											throwExc(Utilerias.join(columnas[col],fila,": ",ex.getMessage()));
 										}

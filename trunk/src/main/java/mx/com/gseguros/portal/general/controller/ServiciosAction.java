@@ -1,8 +1,10 @@
 package mx.com.gseguros.portal.general.controller;
 
+import java.util.Date;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.utils.Utils;
@@ -68,6 +70,92 @@ public class ServiciosAction extends PrincipalCoreAction
 					 "\n###########################################"
 					,"\n@@@*** reemplazarDocumentoCotizacion ***@@@"
 					,"\n###########################################"
+					));
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
+	
+	@Action(value   = "grabarEvento",
+		    results = {
+		        @Result(name="success" , location="/jsp-script/servicios/respuesta.jsp")
+		    })
+	public String grabarEvento()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(Utilerias.join(
+				 "\n##########################"
+				,"\n###### grabarEvento ######"
+				,"\n###### params=" , params
+				));
+		try
+		{
+			Utils.validate(sb,params,"No se recibieron datos");
+			
+			String cdmodulo    = params.get("cdmodulo");
+			String cdevento    = params.get("cdevento");
+			String ntramite    = params.get("ntramite");
+			String cdunieco    = params.get("cdunieco");
+			String cdramo      = params.get("cdramo");
+			String estado      = params.get("estado");
+			String nmpoliza    = params.get("nmpoliza");
+			String nmsolici    = params.get("nmsolici");
+			String cdagente    = params.get("cdagente");
+			String cdusuariDes = params.get("cdusuariDes");
+			String cdsisrolDes = params.get("cdsisrolDes");
+			
+			Utils.validate(sb
+					,cdmodulo , "No se recibio el modulo"
+					,cdevento , "No se recibio el evento"
+					);
+			
+			String cdusuari = null;
+			String cdsisrol = null;
+			if(session!=null && session.get("USUARIO")!=null)
+			{
+				try
+				{
+					UserVO user = (UserVO)session.get("USUARIO");
+					cdusuari = user.getUser();
+					cdsisrol = user.getRolActivo().getClave();
+				}
+				catch(Exception ex)
+				{
+					sb.append("\nException al obtener usuario, no afecta el flujo");
+				}
+			}
+			
+			Date fecha = new Date();
+			
+			serviciosManager.grabarEvento(
+					sb
+					,cdmodulo
+					,cdevento
+					,fecha
+					,cdusuari
+					,cdsisrol
+					,ntramite
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsolici
+					,cdagente
+					,cdusuariDes
+					,cdsisrolDes
+					);
+			
+			logger.info(Utilerias.join(
+					 "\n##########################"
+					,"\n@@@*** grabarEvento ***@@@"
+					,"\n@@@*** cdmodulo=" , cdmodulo , ", cdevento=" , cdevento , ", fecha="    , fecha
+					,"\n@@@*** cdusuari=" , cdusuari , ", cdsisrol=" , cdsisrol , ", ntramite=" , ntramite
+					,"\n@@@*** cdunieco=" , cdunieco , ", cdramo="   , cdramo   , ", estado="   , estado
+					,"\n@@@*** nmpoliza=" , nmpoliza , ", nmsolici=" , nmsolici , ", cdagente=" , cdagente
+					,"\n##########################"
 					));
 		}
 		catch(Exception ex)

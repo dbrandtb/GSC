@@ -119,6 +119,8 @@ var _p28_precioDolarDia          = null;
 
 Ext.onReady(function()
 {
+    _grabarEvento('COTIZACION','ACCCOTIZA',null,null,_p28_smap1.cdramo);
+
     Ext.Ajax.timeout = 3*60*1000;
 
 	////// modelos //////
@@ -1070,6 +1072,20 @@ function _p28_cotizar(sinTarificar)
                     _fieldByName('nmpoliza').semaforo=true;
                     _fieldByName('nmpoliza').setValue(json.smap1.nmpoliza);
                     _fieldByName('nmpoliza').semaforo=false;
+                    
+                    if(Ext.isEmpty(sinTarificar)||false==sinTarificar)
+                    {
+                        _grabarEvento('COTIZACION'
+                                      ,'COTIZA'
+                                      ,_p28_smap1.ntramite
+                                      ,_p28_smap1.cdunieco
+                                      ,_p28_smap1.cdramo
+                                      ,'W'
+                                      ,json.smap1.nmpoliza
+                                      ,json.smap1.nmpoliza
+                                      ,'buscar'
+                                      );
+                    }
                     
                     Ext.define('_p28_modeloTarifa',
                     {

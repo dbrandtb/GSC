@@ -131,7 +131,7 @@ public class Utils {
 	 */
 	public static ApplicationException generaExcepcion(Exception e,String paso) throws Exception {
 		
-		if(e.getClass().equals(ApplicationException.class)) {
+		if(e instanceof ApplicationException) {
 			throw e;
 		} else {
 			throw new ApplicationException(Utilerias.join("Error en el proceso: ",paso), e);
@@ -224,7 +224,7 @@ public class Utils {
 	
 	public static ApplicationException generaExcepcion(Exception e,String paso,String traza) throws Exception
 	{		
-		if(e.getClass().equals(ApplicationException.class))
+		if(e instanceof ApplicationException)
 		{
 			((ApplicationException)e).setTraza(traza);
 			throw e;

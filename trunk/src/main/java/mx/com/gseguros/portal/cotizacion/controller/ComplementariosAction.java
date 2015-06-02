@@ -39,6 +39,7 @@ import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.general.service.ServiciosManager;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
@@ -137,7 +138,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private EmisionManager    emisionManager;
 	
 	@Autowired
-	private ConsultasPolizaManager   consultasPolizaManager;
+	private ConsultasPolizaManager consultasPolizaManager;
+	
+	@Autowired
+	private ServiciosManager serviciosManager;
 
 	public String mostrarPantalla()
 	{
@@ -1980,6 +1984,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 				
 				panel2.put("nmpoliza",nmpolizaEmitida);
 				panel2.put("nmpoliex",nmpoliexEmitida);
+				
+				try
+	            {
+	            	serviciosManager.grabarEvento(new StringBuilder("\nEmision")
+	            	    ,"EMISION"  //cdmodulo
+	            	    ,"EMISION"  //cdevento
+	            	    ,new Date() //fecha
+	            	    ,cdusuari
+	            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+	            	    ,ntramite
+	            	    ,cdunieco
+	            	    ,cdramo
+	            	    ,"M"
+	            	    ,nmpolizaEmitida
+	            	    ,nmpoliza
+	            	    ,null
+	            	    ,null
+	            	    ,null);
+	            }
+	            catch(Exception ex)
+	            {
+	            	logger.error("Error al grabar evento, sin impacto",ex);
+	            }
 			}
 			catch(Exception ex)
 			{
@@ -4127,6 +4154,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setSucursalGS(String sucursalGS) {
 		this.sucursalGS = sucursalGS;
+	}
+
+	public void setServiciosManager(ServiciosManager serviciosManager) {
+		this.serviciosManager = serviciosManager;
 	}
 
 }

@@ -34,9 +34,31 @@
     var _ACTION_REGRESA                        = "<s:url namespace='/seguridad' action='regresaCodigo' />";
     var _ACTION_VALIDAR_CONFIGURACION_COMPLETA = "<s:url namespace='/principal' action='validaConfiguracionCompleta' />";
     var _MensajeLigaDirecta = '<s:property value="%{#session['MsgLigaDirecta']}" />';
+    var _grabarEvento = function (cdmodulo,cdevento)
+    {
+        try
+        {
+            Ext.Ajax.request(
+            {
+                url     : '<s:url namespace="/servicios" action="grabarEvento" />'
+                ,params :
+                {
+                    'params.cdmodulo'  : cdmodulo
+                    ,'params.cdevento' : cdevento
+                }
+            });
+        }
+        catch(e)
+        {
+            debugError('Error al grabar evento',cdmodulo,cdevento,e);
+        }
+    };
 </script>
 <script type="text/javascript">
 Ext.onReady(function(){
+	
+	_grabarEvento('SEGURIDAD','ACCTREE');
+	
     /*
     *	Si viene en sesión MessageConf != null, es porque tiene un único rol y no está completa la configuración para esa cuenta.
     *	Ver issue ACW-693
@@ -142,6 +164,7 @@ Ext.onReady(function(){
                                         waitConfig:{interval:100}
                                     }
                                 );
+                                _grabarEvento('SEGURIDAD','TREESELECT');
                                 window.location.replace(_ACTION_PORTAL);
                             }
                             else

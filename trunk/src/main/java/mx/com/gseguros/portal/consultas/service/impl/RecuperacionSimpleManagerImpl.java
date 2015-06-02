@@ -48,7 +48,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 		resp.setExito(false);
 		resp.setRespuestaOculta(ex.getMessage());
 		
-		if(ex.getClass().equals(ApplicationException.class))
+		if(ex instanceof ApplicationException)
 		{
 			resp.setRespuesta(Utilerias.join(ex.getMessage()," #",timestamp));
 		}

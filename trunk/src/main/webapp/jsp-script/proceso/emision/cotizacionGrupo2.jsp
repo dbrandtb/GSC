@@ -191,6 +191,9 @@ debug('_p25_itemsRiesgo:',_p25_itemsRiesgo);
 Ext.onReady(function()
 {
 
+    _grabarEvento('COTIZACION','ACCCOTIZA'
+                  ,_p25_ntramiteVacio?_p25_ntramiteVacio:(_p25_ntramite?_p25_ntramite:''),_p25_smap1.cdunieco,_p25_smap1.cdramo);
+
     Ext.Ajax.timeout = 30*60*1000;
 
     ////// modelos //////

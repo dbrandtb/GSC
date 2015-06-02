@@ -1,5 +1,7 @@
 Ext.onReady(function(){
 
+    _grabarEvento('SEGURIDAD','ACCLOGIN');
+
 	Ext.apply(Ext.form.field.VTypes, {
         
         password: function(val, field) {
@@ -10,7 +12,7 @@ Ext.onReady(function(){
             return true;
         },
 
-        passwordText: 'Las contraseñas no coinciden.'
+        passwordText: 'Las contraseï¿½as no coinciden.'
     });
 
 	var dsUser = new Ext.form.TextField({
@@ -31,11 +33,11 @@ Ext.onReady(function(){
 	
 	var dsPassword = new Ext.form.TextField({
 		id:'password',
-    	fieldLabel: 'Contraseña',
+    	fieldLabel: 'Contraseï¿½a',
     	inputType: 'password',
     	name: 'password',
         allowBlank: false,
-        blankText:'La contraseña es un dato requerido',
+        blankText:'La contraseï¿½a es un dato requerido',
         listeners:{
             scope:this,
             specialkey: function(f,e){
@@ -52,12 +54,12 @@ Ext.onReady(function(){
 
 	var confirmPassword = new Ext.form.TextField({
 		id:'confirmPassword',
-		fieldLabel: 'Confirme su Contraseña',
+		fieldLabel: 'Confirme su Contraseï¿½a',
 		inputType: 'password',
 		vtype: 'password',
 		name: 'passwordConfirm',
 		allowBlank: false,
-		blankText:'La confirmaci&oacute;n de la contraseña es un dato requerido',
+		blankText:'La confirmaci&oacute;n de la contraseï¿½a es un dato requerido',
 		initialPassField: 'password',
 		hidden: true,
 		disabled: true,
@@ -74,7 +76,7 @@ Ext.onReady(function(){
 	var loginForm = new Ext.form.FormPanel({
 	    el:'formLogin',
 	    id: 'loginForm',
-	    title: 'AUTENTICACIÓN DE USUARIO',	    
+	    title: 'AUTENTICACIï¿½N DE USUARIO',	    
 	    labelAlign: 'top',	    
 	    frame:true,
 	    //height: 200,
@@ -107,7 +109,7 @@ Ext.onReady(function(){
         			url: _URL_VALIDA_EXISTE_USUARIO,
     	        	waitMsg:'Procesando...',
     	        	failure: function(form, action) {
-    	        		// Si hay un mensaje de error lo mostramos, sino solicitamos renovar la contraseña:
+    	        		// Si hay un mensaje de error lo mostramos, sino solicitamos renovar la contraseï¿½a:
     	        		if(!Ext.isEmpty(action.result.errorMessage)) {
     	        			Ext.Msg.show({title: 'Error', msg: action.result.errorMessage, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
     	        		} else {
@@ -117,7 +119,7 @@ Ext.onReady(function(){
                             Ext.Msg.show({
                                 title    : 'Aviso'
                                 ,icon    : Ext.Msg.INFO
-                                ,msg     : 'Por motivos de seguridad y como &uacute;nica ocasi&oacute;n debe de renovar su contraseña.'
+                                ,msg     : 'Por motivos de seguridad y como &uacute;nica ocasi&oacute;n debe de renovar su contraseï¿½a.'
                                 ,buttons : Ext.Msg.OK
                             });
     	        		}
@@ -158,6 +160,7 @@ Ext.onReady(function(){
                 }
 			},
 			success: function(form, action) {
+			    _grabarEvento('SEGURIDAD','LOGIN');
 				self.location.href = _CONTEXT+'/seleccionaRolCliente.action';
 			}
 		});
