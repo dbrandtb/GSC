@@ -5,6 +5,7 @@
 package test.model;
 
 import java.util.Date;
+
 import mx.com.aon.portal2.web.GenericVO;
 
 /**
