@@ -1,8 +1,6 @@
 package mx.com.gseguros.wizard.configuracion.producto.planes.web;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.RamaVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
@@ -11,7 +9,6 @@ import mx.com.gseguros.wizard.configuracion.producto.web.Padre;
 import mx.com.gseguros.wizard.model.MensajesVO;
 import mx.com.gseguros.wizard.model.PlanesMPlanProVO;
 import mx.com.gseguros.wizard.service.CatalogService;
-import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;

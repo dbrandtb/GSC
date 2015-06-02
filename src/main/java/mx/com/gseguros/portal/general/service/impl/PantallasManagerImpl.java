@@ -10,7 +10,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.log4j.Logger;
 
@@ -36,7 +36,7 @@ public class PantallasManagerImpl implements PantallasManager
 			,String orden
 			) throws Exception
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ obtenerComponentes @@@@@@"
 				,"\n@@@@@@ cdtiptra=" , cdtiptra
@@ -51,7 +51,7 @@ public class PantallasManagerImpl implements PantallasManager
 				));
 		List<ComponenteVO> lista=pantallasDAO.obtenerComponentes(cdtiptra, cdunieco, cdramo, cdtipsit, estado, cdsisrol, pantalla, seccion, orden);
 		lista=lista!=null?lista:new ArrayList<ComponenteVO>(0);
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ lista size=",lista.size()
 				,"\n@@@@@@ obtenerComponentes @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -75,7 +75,7 @@ public class PantallasManagerImpl implements PantallasManager
 			,String orden
 			) throws Exception
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ obtenerParametros @@@@@@"
 				,"\n@@@@@@ cdtiptra=" , cdtiptra
@@ -90,7 +90,7 @@ public class PantallasManagerImpl implements PantallasManager
 				));
 		List<Map<String,String>> lista=pantallasDAO.obtenerParametros(cdtiptra, cdunieco, cdramo, cdtipsit, estado, cdsisrol, pantalla, seccion, orden);
 		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ lista size=",lista.size()
 				,"\n@@@@@@ obtenerParametros @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

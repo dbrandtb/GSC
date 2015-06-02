@@ -11,8 +11,6 @@ import mx.com.aon.portal.dao.AbstractDAO;
 import mx.com.aon.portal.dao.CustomStoredProcedure;
 import mx.com.aon.portal.dao.WrapperResultadosGeneric;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.gseguros.wizard.configuracion.producto.dao.ProductoDAO.ListaPeriodoMapper;
-import mx.com.gseguros.wizard.configuracion.producto.definicion.model.PeriodoVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.sumaAsegurada.model.SumaAseguradaIncisoVO;
 import mx.com.gseguros.wizard.configuracion.producto.sumaAsegurada.model.SumaAseguradaVO;

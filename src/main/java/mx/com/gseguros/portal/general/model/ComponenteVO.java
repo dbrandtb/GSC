@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 public class ComponenteVO
 {
@@ -435,7 +435,7 @@ public class ComponenteVO
 	@Override
 	public String toString()
 	{
-		return Utilerias.join("NAME/CDATRIBU=",this.nameCdatribu
+		return Utils.join("NAME/CDATRIBU=",this.nameCdatribu
 				,",LABEL=",this.label
 				,",CATALOGO=",this.catalogo
 				,",SWPRESEN=",this.swpresen

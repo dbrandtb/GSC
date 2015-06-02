@@ -2,11 +2,11 @@ package mx.com.gseguros.wizard.configuracion.producto.reglanegocio.model;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.ExpresionVO;
 import mx.com.gseguros.wizard.configuracion.producto.util.ReglaNegocio;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 
 /**

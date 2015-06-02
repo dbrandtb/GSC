@@ -3,6 +3,7 @@ package mx.com.gseguros.wizard.configuracion.producto.rol.web;
 import java.util.ArrayList;
 import java.util.List;
 
+import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.RamaVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
@@ -11,8 +12,6 @@ import mx.com.gseguros.wizard.configuracion.producto.rol.model.RolVO;
 import mx.com.gseguros.wizard.configuracion.producto.service.RolManager;
 import mx.com.gseguros.wizard.configuracion.producto.web.Padre;
 import mx.com.gseguros.wizard.model.MensajesVO;
-import mx.com.aon.portal.util.WrapperResultados;
-
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -232,7 +231,7 @@ public class RolAction extends Padre {
 	
 	/**
 	 * Metodo <code>execute</code> con el que es llamado desde Struts para
-	 * atender la petición web.
+	 * atender la peticiï¿½n web.
 	 * 
 	 * @return INPUT
 	 * @throws Exception
@@ -670,13 +669,13 @@ public class RolAction extends Padre {
     		log.debug("MSG_ID:" + mensajeVO.getMsgId());
     		
     		//ELIMINAR DE SESION
-    		//Si se borró en BD  ó  no se borro porque el registro aún no existe en BD(solo estaba en sesión) será success:
+    		//Si se borrï¿½ en BD  ï¿½  no se borro porque el registro aï¿½n no existe en BD(solo estaba en sesiï¿½n) serï¿½ success:
     		if(mensajeVO.getMsgId().equals("200012") || mensajeVO.getMsgId().equals("500")){
     			if(isDebugEnabled && mensajeVO.getMsgId().equals("200012")){
-    				log.debug("Se eliminó Atributo Variable de Rol en BD y se va a borrar de sesión" );
+    				log.debug("Se eliminï¿½ Atributo Variable de Rol en BD y se va a borrar de sesiï¿½n" );
     			}
     			if(isDebugEnabled && mensajeVO.getMsgId().equals("500")){
-    				log.debug("No existía el Atributo Variable de Rol en BD, pero se va a borrar de sesion" );
+    				log.debug("No existï¿½a el Atributo Variable de Rol en BD, pero se va a borrar de sesion" );
     			}
     			
     			boolean valorLista = false;
@@ -844,7 +843,7 @@ public class RolAction extends Padre {
     	resultado = rolManager.eliminaRol(Integer.parseInt(codigoRamo), codigoRol, codigoNivel);
     	mensajeRespuesta = resultado.getMsgText();
     	
-    	//Se recargan los datos del árbol para que tomen los cambios anteriores 
+    	//Se recargan los datos del ï¿½rbol para que tomen los cambios anteriores 
     	List<RamaVO> temporalTree=(List<RamaVO>) session.get("ARBOL_PRODUCTOS");
 		session.put("ARBOL_PRODUCTOS_RECARGAR", temporalTree);
 		session.remove("ARBOL_PRODUCTOS");

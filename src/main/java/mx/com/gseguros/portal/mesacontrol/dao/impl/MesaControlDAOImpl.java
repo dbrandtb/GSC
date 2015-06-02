@@ -12,7 +12,7 @@ import javax.sql.DataSource;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
@@ -376,7 +376,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
 		params.put("nmsolici" , nmsolici);
-		logger.debug(Utilerias.join(
+		logger.debug(Utils.join(
 				 "\n*********************************************************"
 				,"\n****** PKG_SATELITES2.P_GET_TMESACONTROL_X_PAR_VAR ******"
 				,"\n****** params=",params
@@ -388,7 +388,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		{
 			registro=new ArrayList<Map<String,String>>();
 		}
-		logger.debug(Utilerias.join(
+		logger.debug(Utils.join(
 				 "\n*********************************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , registro
@@ -434,7 +434,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("ntramite" , ntramite);
 		params.put("cdusuari" , cdusuari);
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_INSERTA_CONTRARECIBO", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_INSERTA_CONTRARECIBO", params);
 		ejecutaSP(new GuardarRegistroContrarecibo(getDataSource()),params);
 	}
 	
@@ -458,7 +458,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("ntramite" , ntramite);
 		params.put("cddocume" , cddocume);
 		params.put("nuevo"    , nuevo);
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_UPD_TDOCUPOL_DSDOCUME", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_UPD_TDOCUPOL_DSDOCUME", params);
 		ejecutaSP(new ActualizarNombreDocumento(getDataSource()),params);
 	}
 	
@@ -482,7 +482,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("ntramite" , ntramite);
 		params.put("cddocume" , cddocume);
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_BORRAR_TDOCUPOL", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_BORRAR_TDOCUPOL", params);
 		ejecutaSP(new BorrarDocumento(getDataSource()),params);
 	}
 	
@@ -520,7 +520,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("pv_swvisible_i",swvisible);
 		params.put("pv_codidocu_i", codidocu);
 		params.put("pv_cdtiptra_i", cdtiptra);
-		Utilerias.debugProcedure(logger, "PKG_SATELITES.P_MOV_DOCUMENTOS", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES.P_MOV_DOCUMENTOS", params);
 		ejecutaSP(new GuardarDocumentoPolizaSP(getDataSource()), params);
 	}
 	

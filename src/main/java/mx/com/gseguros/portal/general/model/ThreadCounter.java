@@ -8,7 +8,7 @@ import java.util.Map;
 import mx.com.gseguros.portal.endosos.service.impl.ConstructorComponentesAsync;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.log4j.Logger;
 
@@ -64,7 +64,7 @@ public class ThreadCounter
 		{
 			generadores.put(key,gc);
 			contador--;
-			logger.debug(Utilerias.join("async ciclo ",contador));
+			logger.debug(Utils.join("async ciclo ",contador));
 		}
 	}
 	
