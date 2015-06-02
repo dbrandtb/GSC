@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 import mx.com.gseguros.portal.consultas.dao.ConsultasSiniestroDAO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSiniestrosVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.springframework.jdbc.core.RowMapper;
@@ -49,8 +49,8 @@ public class ConsultasSiniestroDAOImpl extends AbstractManagerDAO implements Con
         	consulta.setNtramite(rs.getString("NTRAMITE"));
         	consulta.setNmautser(rs.getString("NMAUTSER"));
         	consulta.setNmsinies(rs.getString("NMSINIES"));
-        	consulta.setFeocurre(Utilerias.formateaFecha(rs.getString("FEOCURRE")));
-        	consulta.setFeapertu(Utilerias.formateaFecha(rs.getString("FEAPERTU")));
+        	consulta.setFeocurre(Utils.formateaFecha(rs.getString("FEOCURRE")));
+        	consulta.setFeapertu(Utils.formateaFecha(rs.getString("FEAPERTU")));
         	consulta.setAsegurado(rs.getString("CDPERSON")+" "+rs.getString("NOMBRE"));
         	consulta.setProveedor(rs.getString("CDPRESTA")+" "+rs.getString("DSPRESTA"));
         	consulta.setFactura(rs.getString("NFACTURA"));

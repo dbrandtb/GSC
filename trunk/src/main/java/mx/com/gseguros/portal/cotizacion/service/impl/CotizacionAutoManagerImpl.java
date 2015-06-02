@@ -41,7 +41,7 @@ import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.infovehiculo.client.axis2.VehiculoWSServiceStub.ResponseValor;
 import mx.com.gseguros.ws.autosgs.infovehiculo.service.InfoVehiculoService;
 import mx.com.gseguros.ws.autosgs.tractocamiones.service.TractoCamionService;
@@ -1418,7 +1418,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				
 				setCheckpoint("Recuperando atributos de situaciones");
 				String cdtipsitIte = situacion.get("CDTIPSIT");
-				situacionesCSV=Utilerias.join(situacionesCSV,",",cdtipsitIte);
+				situacionesCSV=Utils.join(situacionesCSV,",",cdtipsitIte);
 				List<ComponenteVO>tatrisitSitIte        = cotizacionDAO.cargarTatrisit(cdtipsitIte, cdusuari);
 				List<ComponenteVO>tatrisitSitIteParcial = new ArrayList<ComponenteVO>();
 				List<ComponenteVO>tatrisitSitIteAuto    = new ArrayList<ComponenteVO>();
@@ -1508,7 +1508,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				gcIte.setCdtipsit(cdtipsitIte);
 				
 				gcIte.generaComponentes(tatrisitSitIte, true, false, true, false, false, false);
-				resp.getImap().put(Utilerias.join("tatrisit_full_items_",cdtipsitIte),gcIte.getItems());
+				resp.getImap().put(Utils.join("tatrisit_full_items_",cdtipsitIte),gcIte.getItems());
 				
 				for(ComponenteVO tatri:tatrisitSitIteParcial)
 				{
@@ -1519,7 +1519,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				
 				gcIte.generaComponentes(tatrisitSitIteParcial,true,false,true,false,false,false);
-				resp.getImap().put(Utilerias.join("tatrisit_parcial_items_",cdtipsitIte),gcIte.getItems());
+				resp.getImap().put(Utils.join("tatrisit_parcial_items_",cdtipsitIte),gcIte.getItems());
 				
 				for(ComponenteVO tatri:tatrisitSitIteAuto)
 				{
@@ -1527,11 +1527,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				
 				gcIte.generaComponentes(tatrisitSitIteAuto,true,false,true,false,false,false);
-				resp.getImap().put(Utilerias.join("tatrisit_auto_items_",cdtipsitIte),gcIte.getItems());
+				resp.getImap().put(Utils.join("tatrisit_auto_items_",cdtipsitIte),gcIte.getItems());
 				
 			}
 			situacionesCSV=situacionesCSV.substring(1);
-			logger.debug(Utilerias.join("situacionesCSV=",situacionesCSV));
+			logger.debug(Utils.join("situacionesCSV=",situacionesCSV));
 			resp.getSmap().put("situacionesCSV",situacionesCSV);
 			
 			setCheckpoint("Recuperando agrupacion de situaciones");
@@ -1583,7 +1583,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				tatrisitPanel=tatrisitPanelAux;
 				
-				setCheckpoint(Utilerias.join("Ordenando atributos de panel dinamico ",situacionPanel));
+				setCheckpoint(Utils.join("Ordenando atributos de panel dinamico ",situacionPanel));
 				ComponenteVO auxOrd = null;
 				for(int i=0;i<tatrisitPanel.size()-1;i++)
 				{
@@ -1661,7 +1661,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			tatripol=tatripolAux;
 			resp.getSmap().put("tatripolItemsLength" , String.valueOf(tatripol.size()));
-			logger.debug(Utilerias.join("tatripolItems=",tatripol));
+			logger.debug(Utils.join("tatripolItems=",tatripol));
 			
 			if(tatripol.size()>0)
 			{
@@ -1888,7 +1888,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				setCheckpoint("Insertando maestros de situacion en lote");
 				cotizacionDAO.movimientoMpolisitLote(listaPMovMpolisit);
-				logger.debug(Utilerias.join("Tiempo en mpolisit=",(System.currentTimeMillis()-inicioMpolisit)/1000d));
+				logger.debug(Utils.join("Tiempo en mpolisit=",(System.currentTimeMillis()-inicioMpolisit)/1000d));
 			}
 				
 			setCheckpoint("Construyendo lote de atributos de situacion");
@@ -1921,7 +1921,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			setCheckpoint("Insertando atributos de situacion en lote");
 			cotizacionDAO.movimientoTvalositLote(listaPMovTvalosit);
-			logger.debug(Utilerias.join("Tiempo en tvalosit=",(System.currentTimeMillis()-inicioTvalosit)/1000d));
+			logger.debug(Utils.join("Tiempo en tvalosit=",(System.currentTimeMillis()-inicioTvalosit)/1000d));
 				
 			setCheckpoint("Borrando situaciones base anteriores");
 			cotizacionDAO.borrarTbasvalsit(cdunieco, cdramo, estado, nmpoliza);
@@ -1955,7 +1955,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			setCheckpoint("Insertando situaciones base en lote");
 			cotizacionDAO.movimientoTbasvalsitLote(listaPInsertaTbasvalsit);
-			logger.debug(Utilerias.join("Tiempo en tbasvalsit=",(System.currentTimeMillis()-inicioTbasvalsit)/1000d));
+			logger.debug(Utils.join("Tiempo en tbasvalsit=",(System.currentTimeMillis()-inicioTbasvalsit)/1000d));
 			
 			if(noTarificar==false)
 			{
@@ -1994,7 +1994,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				setCheckpoint("Insertando configuracion de situaciones en lote");
 				cotizacionDAO.movimientoTconvalsitLote(listaPInsertaTconvalsit);
-				logger.debug(Utilerias.join("Tiempo en tconvalsit=",(System.currentTimeMillis()-inicioTconvalsit)/1000d));
+				logger.debug(Utils.join("Tiempo en tconvalsit=",(System.currentTimeMillis()-inicioTconvalsit)/1000d));
 				
 				
 				/**
@@ -2320,13 +2320,13 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						}
 						catch(NullPointerException ex)
 						{
-							throwExc(Utilerias.join("La fila ",fila," tiene valores pero no tiene TIPO VEHICULO"));
+							throwExc(Utils.join("La fila ",fila," tiene valores pero no tiene TIPO VEHICULO"));
 						}
 						sb.append(">cdtipsit!").append(valor);						
 						for(int i=0;i<splited.length/2;i++)
 						{
 							String splitedUsado=splited[i*2];
-							//logger.debug(Utilerias.join("valor=",valor,", contra=",splitedUsado,", lastIndexOf=",valor.lastIndexOf(splitedUsado)));
+							//logger.debug(Utils.join("valor=",valor,", contra=",splitedUsado,", lastIndexOf=",valor.lastIndexOf(splitedUsado)));
 							if(valor.lastIndexOf(splitedUsado)!=-1)
 							{
 								valor=splited[(i*2)+1];
@@ -2355,7 +2355,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						//nuevo para recuperar cdtipsit
 						if(StringUtils.isNotBlank(orCdtipsit))
 						{
-							setCheckpoint(Utilerias.join("Recuperando tipo de situacion de la fila ",fila));
+							setCheckpoint(Utils.join("Recuperando tipo de situacion de la fila ",fila));
 							
 							sb.append(">").append(orCdtipsit);
 							String cellValue         = null;
@@ -2378,7 +2378,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 								catch(Exception ex2)
 								{
 									sb.append("(E)");
-									throwExc(Utilerias.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+									throwExc(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
 								}
 							}
 							try
@@ -2427,7 +2427,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							sb.append("==").append(cdtipsitProc);
 							record.put("cdtipsit" , cdtipsitProc);
 							
-							setCheckpoint(Utilerias.join("Iterando fila ",fila));
+							setCheckpoint(Utils.join("Iterando fila ",fila));
 						}
 						//nuevo para recuperar cdtipsit
 						
@@ -2467,7 +2467,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									sb.append("==").append(valor);
 									if(requerido&&isBlank(valor))
 									{
-										throwExc(Utilerias.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+										throwExc(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
 									}
 									record.put(propiedad,valor);
 								}
@@ -2486,7 +2486,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									}
 									if(requerido&&num==null)
 									{
-										throwExc(Utilerias.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+										throwExc(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
 									}
 									String valor="";
 									if(num!=null)
@@ -2511,7 +2511,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									}
 									if(requerido&&num==null)
 									{
-										throwExc(Utilerias.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+										throwExc(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
 									}
 									String valor="";
 									if(num!=null)
@@ -2538,13 +2538,13 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									}
 									if(requerido&&num==null)
 									{
-										throwExc(Utilerias.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+										throwExc(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
 									}
 									String valor="";
 									if(num!=null)
 									{
 										int len = Integer.valueOf(tipo.split("_")[1]);
-										valor=String.format(Utilerias.join("%0",len,"d"),num.intValue());
+										valor=String.format(Utils.join("%0",len,"d"),num.intValue());
 									}
 									sb.append("==").append(valor);
 									record.put(propiedad,valor);
@@ -2574,7 +2574,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 								}
 								else
 								{
-									throwExc(Utilerias.join("Error de parametrizacion: tipo de valor incorrecto para la columna ",col));
+									throwExc(Utils.join("Error de parametrizacion: tipo de valor incorrecto para la columna ",col));
 								}
 							}
 							else if(!isBlank(cdtabla1))
@@ -2602,7 +2602,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 								sb.append("!").append(valor);
 								if(requerido&&isBlank(valor))
 								{
-									throwExc(Utilerias.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+									throwExc(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
 								}
 								String clave = "";
 								if(!isBlank(valor))
@@ -2623,7 +2623,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									{
 										if(ex instanceof ApplicationException)
 										{
-											throwExc(Utilerias.join(columnas[col],fila,": ",ex.getMessage()));
+											throwExc(Utils.join(columnas[col],fila,": ",ex.getMessage()));
 										}
 										else
 										{
@@ -2686,14 +2686,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 								sb.append("!").append(valor);
 								if(requerido&&isBlank(valor))
 								{
-									throwExc(Utilerias.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+									throwExc(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
 								}
 								if(!isBlank(valor))
 								{
 									for(int i=0;i<splited.length/2;i++)
 									{
 										String splitedUsado=splited[i*2];
-										//logger.debug(Utilerias.join("valor=",valor,", contra=",splitedUsado,", lastIndexOf=",valor.lastIndexOf(splitedUsado)));
+										//logger.debug(Utils.join("valor=",valor,", contra=",splitedUsado,", lastIndexOf=",valor.lastIndexOf(splitedUsado)));
 										if(valor.lastIndexOf(splitedUsado)!=-1)
 										{
 											valor=splited[(i*2)+1];
@@ -2703,7 +2703,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									}
 									if(valor.equals(original))
 									{
-										throw new ApplicationException(Utilerias.join(
+										throw new ApplicationException(Utils.join(
 												"La descripcion "
 												,valor
 												," no viene dentro de '"
@@ -2757,7 +2757,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String cdsisrol
 			)
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarCotizacionAutoFlotilla @@@@@@"
 				,"\n@@@@@@ cdramo="   , cdramo
@@ -2828,7 +2828,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.getSmap().put("FEFIN"    , fefin);
 			
 			setCheckpoint("Recuperando configuracion de incisos");
-			resp.setSlist1(Utilerias.concatenarParametros(consultasDAO.cargarTconvalsit(cdunieco,cdramo,estado,nmpoliza,nmsuplem),false));
+			resp.setSlist1(Utils.concatenarParametros(consultasDAO.cargarTconvalsit(cdunieco,cdramo,estado,nmpoliza,nmsuplem),false));
 			
 			setCheckpoint("Recuperando incisos base");
 			List<Map<String,String>>incisosBase    = consultasDAO.cargarTbasvalsit(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
@@ -2849,7 +2849,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				incisoBase.put("nmsituac" , incisoBase.get("NMSITUAC"));
 				if(incisoBase.get("CDTIPSIT").equals("XPOLX"))
 				{
-					logger.debug(Utilerias.join("Es XPOLX",incisoBase));
+					logger.debug(Utils.join("Es XPOLX",incisoBase));
 					for(Entry<String,String>en:incisoBase.entrySet())
 					{
 						incisoPoliza.put("parametros.pv_"+en.getKey().toLowerCase(),en.getValue());
@@ -2857,12 +2857,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				else
 				{
-					logger.debug(Utilerias.join("No es XPOLX",incisoBase));
+					logger.debug(Utils.join("No es XPOLX",incisoBase));
 					incisosBaseAux.add(incisoBase);
 				}
 			}
 			incisosBase=incisosBaseAux;
-			resp.setSlist2(Utilerias.concatenarParametros(incisosBase,false));
+			resp.setSlist2(Utils.concatenarParametros(incisosBase,false));
 			
 			setCheckpoint("Recuperando datos generales");
 			resp.getSmap().putAll(incisoPoliza);
@@ -2941,7 +2941,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					);
 			for(Entry<String,String>en:tvalopol.entrySet())
 			{
-				resp.getSmap().put(Utilerias.join("aux.",en.getKey().substring("parametros.pv_".length())),en.getValue());
+				resp.getSmap().put(Utils.join("aux.",en.getKey().substring("parametros.pv_".length())),en.getValue());
 			}
 			
 			setCheckpoint("0");
@@ -2951,7 +2951,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ ",resp
 				,"\n@@@@@@ cargarCotizacionAutoFlotilla @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3031,7 +3031,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				gc.setCdtipsit(cdtipsitIte);
 				
 				gc.generaComponentes(tatrisitIte, true, false, true, false, false, false);
-				resp.getImap().put(Utilerias.join("tatrisit_full_items_",cdtipsitIte),gc.getItems());
+				resp.getImap().put(Utils.join("tatrisit_full_items_",cdtipsitIte),gc.getItems());
 				
 				for(ComponenteVO comp:editablesIte)
 				{
@@ -3042,7 +3042,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				
 				gc.generaComponentes(editablesIte, true, false, true, false, false, false);
-				resp.getImap().put(Utilerias.join("tatrisit_parcial_items_",cdtipsitIte),gc.getItems());
+				resp.getImap().put(Utils.join("tatrisit_parcial_items_",cdtipsitIte),gc.getItems());
 			}
 			
 			setCheckpoint("Recuperando componentes de pantalla");
@@ -3105,7 +3105,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String ntramite
 			)
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarComplementariosAutoFlotilla @@@@@@"
 				,"\n@@@@@@ cdunieco="    , cdunieco
@@ -3275,7 +3275,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ guardarComplementariosAutoIndividual @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3297,7 +3297,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String cdperpag
 			)
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recotizarAutoFlotilla @@@@@@"
 				,"\n@@@@@@ cdunieco="   , cdunieco
@@ -3357,7 +3357,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ ",resp
 				,"\n@@@@@@ recotizarAutoFlotilla @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3368,7 +3368,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	@Override
 	public ManagerRespuestaSmapVO cargarObligatorioTractocamionRamo5(String clave)
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarObligatorioTractocamionRamo5 @@@@@@"
 				,"\n@@@@@@ clave=",clave
@@ -3389,7 +3389,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ ",resp
 				,"\n@@@@@@ cargarObligatorioTractocamionRamo5 @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3400,7 +3400,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	@Override
 	public ManagerRespuestaSmapVO cargarDetalleNegocioRamo5(String negocio)
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarDetalleNegocioRamo5 @@@@@@"
 				,"\n@@@@@@ negocio=",negocio
@@ -3421,7 +3421,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ cargarDetalleNegocioRamo5 @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -3438,7 +3438,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String nmsituac
 			,List<Map<String,String>>mpoliperMpersona)
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarPantallaBeneficiarios @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -3625,7 +3625,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			manejaException(ex, resp);
 		}	
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ ",resp
 				,"\n@@@@@@ guardarPantallaBeneficiarios @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

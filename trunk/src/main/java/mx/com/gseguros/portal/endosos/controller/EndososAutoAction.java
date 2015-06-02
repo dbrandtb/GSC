@@ -15,7 +15,6 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
-import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -56,7 +55,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String marcoEndosos()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n##########################"
 				,"\n###### marcoEndosos ######"
 				));
@@ -87,7 +86,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### result=",result
 				,"\n###### marcoEndosos ######"
 				,"\n##########################"
@@ -97,7 +96,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String recuperarColumnasIncisoRamo()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n#########################################"
 				,"\n###### recuperarColumnasIncisoRamo ######"
 				,"\n###### smap1=",smap1
@@ -118,7 +117,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta=Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### recuperarColumnasIncisoRamo ######"
 				,"\n#########################################"
 				));
@@ -127,7 +126,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String recuperarEndososClasificados()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n##########################################"
 				,"\n###### recuperarEndososClasificados ######"
 				,"\n###### smap1="  , smap1
@@ -178,7 +177,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta=Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### recuperarEndososClasificados ######"
 				,"\n##########################################"
 				));
@@ -187,7 +186,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String pantallaEndosoValosit()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###################################"
 				,"\n###### pantallaEndosoValosit ######"
 				,"\n###### smap1="  , smap1
@@ -218,7 +217,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### result="    , result
 				,"\n###### respuesta=" , respuesta
 				,"\n###### pantallaEndosoValosit ######"
@@ -229,7 +228,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String guardarTvalositEndoso()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###################################"
 				,"\n###### guardarTvalositEndoso ######"
 				,"\n###### smap1=",smap1
@@ -278,7 +277,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta=Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### guardarTvalositEndoso ######"
 				,"\n###################################"
 				));
@@ -287,7 +286,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String confirmarEndosoTvalositAuto()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n#########################################"
 				,"\n###### confirmarEndosoTvalositAuto ######"
 				,"\n###### smap1="  , smap1
@@ -345,7 +344,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### success="   , success
 				,"\n###### respuesta=" , respuesta
 				,"\n###### confirmarEndosoTvalositAuto ######"
@@ -356,7 +355,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String recuperarDatosEndosoAltaIncisoAuto()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n################################################"
 				,"\n###### recuperarDatosEndosoAltaIncisoAuto ######"
 				,"\n###### smap1=",smap1
@@ -399,7 +398,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### success="   , success
 				,"\n###### respuesta=" , respuesta
 				,"\n###### recuperarDatosEndosoAltaIncisoAuto ######"
@@ -410,7 +409,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String confirmarEndosoAltaIncisoAuto()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###########################################"
 				,"\n###### confirmarEndosoAltaIncisoAuto ######"
 				,"\n###### smap1="  , smap1
@@ -464,7 +463,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### success="   , success
 				,"\n###### respuesta=" , respuesta
 				,"\n###### confirmarEndosoAltaIncisoAuto ######"
@@ -475,7 +474,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String endosoBajaIncisos()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###############################"
 				,"\n###### endosoBajaIncisos ######"
 				,"\n###### smap1(poliza)="   , smap1
@@ -500,7 +499,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### success="   , success
 				,"\n###### respuesta=" , respuesta
 				,"\n###### endosoBajaIncisos ######"
@@ -511,7 +510,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String confirmarEndosoBajaIncisos()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n########################################"
 				,"\n###### confirmarEndosoBajaIncisos ######"
 				,"\n###### smap1="  , smap1
@@ -568,7 +567,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### success="   , success
 				,"\n###### respuesta=" , respuesta
 				,"\n###### confirmarEndosoBajaIncisos ######"
@@ -605,7 +604,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 
 	public String endosoTextoLibre()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				"\n###########################################"
 				,"\n###########################################"
 				,"\n###### 		endosoTextoLibre 	     ######"
@@ -666,7 +665,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String endosoVigenciaPoliza()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				"\n###########################################"
 				,"\n###########################################"
 				,"\n###### 		endosoVigenciaPoliza 	 ######"
@@ -742,7 +741,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String endosoAmpliacionVigencia()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				"\n###########################################"
 				,"\n###########################################"
 				,"\n###### 		endosoAmpliacionVigencia 	 ######"
@@ -803,7 +802,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String endosoDespago()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				"\n##########################################"
 				,"\n#########################################"
 				,"\n###### 		endosoDespago 	       ######"
@@ -843,7 +842,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 		public String guardarEndosoAseguradoAlterno() {
         
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				"\n###########################################"
 				,"\n###########################################"
 				,"\n###### guardarEndosoAseguradoAlterno ######"
@@ -902,7 +901,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### guardarEndosoAseguradoAlterno ######"
 				,"\n###########################################"
 				));
@@ -911,7 +910,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String guardarEndosoVigenciaPoliza() {
         
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				"\n############################################"
 				,"\n###########################################"
 				,"\n######  guardarEndosoCambioVigencia  ######"
@@ -975,7 +974,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### guardarEndosoCambioVigencia ######"
 				,"\n#########################################"
 				));
@@ -984,7 +983,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String guardarEndosoAmpliacionVigencia() {
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				"\n############################################"
 				,"\n###########################################"
 				,"\n######  guardarEndosoAmpliacionVigencia  ######"
@@ -1049,7 +1048,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				"\n###### guardarEndosoAmpliacionVigencia ######"
 				,"\n#########################################"
 				));
@@ -1058,7 +1057,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String guardarEndosoDespago() {
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				"\n############################################"
 				,"\n###########################################"
 				,"\n######  guardarEndosoDespago         ######"
@@ -1114,7 +1113,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				"\n###### guardarEndosoDespago ######"
 				,"\n#########################################"
 				));
@@ -1123,7 +1122,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 
 	public String guardarEndosoTextoLibre() {
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				"\n############################################"
 				,"\n###########################################"
 				,"\n######  guardarEndosoTextoLibre  ######"
@@ -1201,7 +1200,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				"\n###### guardarEndosoTextoLibre ######"
 				,"\n#########################################"
 				));
@@ -1210,7 +1209,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String endosoClaveAuto()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n#############################"
 				,"\n###### endosoClaveAuto ######"
 				,"\n###### smap1="  , smap1
@@ -1241,7 +1240,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### result="    , result
 				,"\n###### respuesta=" , respuesta
 				,"\n###### endosoClaveAuto ######"
@@ -1252,7 +1251,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String guardarEndosoClaveAuto()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n####################################"
 				,"\n###### guardarEndosoClaveAuto ######"
 				,"\n###### smap1="  , smap1 
@@ -1310,7 +1309,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### guardarEndosoClaveAuto ######"
 				,"\n####################################"
 				));
@@ -1319,7 +1318,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String endosoDevolucionPrimas()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n####################################"
 				,"\n###### endosoDevolucionPrimas ######"
 				,"\n###### smap1="  , smap1
@@ -1350,7 +1349,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				"\n###### endosoDevolucionPrimas ######"
 				,"\n####################################"
 				));
@@ -1359,7 +1358,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String guardarEndosoDevolucionPrimas()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###########################################"
 				,"\n###### guardarEndosoDevolucionPrimas ######"
 				,"\n###### smap1="  , smap1
@@ -1414,7 +1413,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### guardarEndosoDevolucionPrimas ######"
 				,"\n###########################################"
 				));
@@ -1423,7 +1422,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String endosoRehabilitacionAuto()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n######################################"
 				,"\n###### endosoRehabilitacionAuto ######"
 				,"\n###### smap1=",smap1
@@ -1449,7 +1448,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### result=",result
 				,"\n###### endosoRehabilitacionAuto ######"
 				,"\n######################################"
@@ -1459,7 +1458,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String confirmarEndosoRehabilitacionAuto()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###############################################"
 				,"\n###### confirmarEndosoRehabilitacionAuto ######"
 				,"\n###### smap1=",smap1
@@ -1534,7 +1533,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### confirmarEndosoRehabilitacionAuto ######"
 				,"\n###############################################"
 				));
@@ -1543,7 +1542,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String endosoCancelacionAuto()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###################################"
 				,"\n###### endosoCancelacionAuto ######"
 				,"\n###### smap1=",smap1
@@ -1569,7 +1568,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### result=",result
 				,"\n###### endosoCancelacionAuto ######"
 				,"\n###################################"
@@ -1579,7 +1578,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String buscarError()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n#########################"
 				,"\n###### buscarError ######"
 				,"\n###### smap1=",smap1
@@ -1599,7 +1598,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### buscarError ######"
 				,"\n#########################"
 				));
@@ -1608,7 +1607,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String confirmarEndosoCancelacionAuto()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n############################################"
 				,"\n###### confirmarEndosoCancelacionAuto ######"
 				,"\n###### smap1=",smap1
@@ -1685,7 +1684,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### confirmarEndosoCancelacionAuto ######"
 				,"\n############################################"
 				));
@@ -1694,7 +1693,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String endosoCancelacionPolAuto()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n######################################"
 				,"\n###### endosoCancelacionPolAuto ######"
 				,"\n###### smap1=",smap1
@@ -1720,7 +1719,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### endosoCancelacionPolAuto ######"
 				,"\n######################################"
 				));
@@ -1729,7 +1728,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String marcarPolizaCancelarPorEndoso()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###########################################"
 				,"\n###### marcarPolizaCancelarPorEndoso ######"
 				,"\n###### smap1=",smap1
@@ -1751,7 +1750,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### marcarPolizaCancelarPorEndoso ######"
 				,"\n###########################################"
 				));
@@ -1760,7 +1759,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String confirmarEndosoCancelacionPolAuto()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###############################################"
 				,"\n###### confirmarEndosoCancelacionPolAuto ######"
 				,"\n###### smap1=",smap1
@@ -1815,7 +1814,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### confirmarEndosoCancelacionPolAuto ######"
 				,"\n###############################################"
 				));
@@ -1824,7 +1823,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String endosoValositFormsAuto()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n####################################"
 				,"\n###### endosoValositFormsAuto ######"
 				,"\n###### smap1="  , smap1
@@ -1859,7 +1858,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### endosoValositFormsAuto ######"
 				,"\n####################################"
 				));
@@ -1868,7 +1867,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String confirmarEndosoValositFormsAuto()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n#############################################"
 				,"\n###### confirmarEndosoValositFormsAuto ######"
 				,"\n###### smap1="  , smap1
@@ -1919,7 +1918,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### confirmarEndosoValositFormsAuto ######"
 				,"\n#############################################"
 				));
@@ -1928,7 +1927,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String endosoRehabilitacionPolAuto()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n#########################################"
 				,"\n###### endosoRehabilitacionPolAuto ######"
 				,"\n###### smap1=",smap1
@@ -1954,7 +1953,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### endosoRehabilitacionPolAuto ######"
 				,"\n#########################################"
 				));
@@ -1963,7 +1962,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String marcarPolizaParaRehabilitar()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n#########################################"
 				,"\n###### marcarPolizaParaRehabilitar ######"
 				,"\n###### smap1=",smap1
@@ -1991,7 +1990,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### marcarPolizaParaRehabilitar ######"
 				,"\n#########################################"
 				));
@@ -2000,7 +1999,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String confirmarEndosoRehabilitacionPolAuto()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n##################################################"
 				,"\n###### confirmarEndosoRehabilitacionPolAuto ######"
 				,"\n###### smap1=",smap1
@@ -2071,7 +2070,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### confirmarEndosoRehabilitacionPolAuto ######"
 				,"\n##################################################"
 				));
@@ -2081,7 +2080,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	public String obtieneRecibosPagados()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n##########################################"
 				,"\n###### obtieneRecibosPagados        ######"
 				,"\n###### smap1="  , smap1
@@ -2103,7 +2102,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			respuesta=Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### obtieneRecibosPagados ######"
 				,"\n##########################################"
 				));

@@ -6,7 +6,6 @@ import java.util.Map;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
-import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.log4j.Logger;
@@ -43,7 +42,7 @@ public class ServiciosAction extends PrincipalCoreAction
 	public String reemplazarDocumentoCotizacion()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append(Utilerias.join(
+		sb.append(Utils.join(
 				 "\n###########################################"
 				,"\n###### reemplazarDocumentoCotizacion ######"
 				,"\n###### params=",params
@@ -66,7 +65,7 @@ public class ServiciosAction extends PrincipalCoreAction
 			
 			respuesta = serviciosManager.reemplazarDocumentoCotizacion(sb,cdunieco, cdramo, estado, nmpoliza);
 			
-			logger.info(Utilerias.join(
+			logger.info(Utils.join(
 					 "\n###########################################"
 					,"\n@@@*** reemplazarDocumentoCotizacion ***@@@"
 					,"\n###########################################"
@@ -86,7 +85,7 @@ public class ServiciosAction extends PrincipalCoreAction
 	public String grabarEvento()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append(Utilerias.join(
+		sb.append(Utils.join(
 				 "\n##########################"
 				,"\n###### grabarEvento ######"
 				,"\n###### params=" , params
@@ -148,7 +147,7 @@ public class ServiciosAction extends PrincipalCoreAction
 					,cdsisrolDes
 					);
 			
-			logger.info(Utilerias.join(
+			logger.info(Utils.join(
 					 "\n##########################"
 					,"\n@@@*** grabarEvento ***@@@"
 					,"\n@@@*** cdmodulo=" , cdmodulo , ", cdevento=" , cdevento , ", fecha="    , fecha

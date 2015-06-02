@@ -13,7 +13,7 @@ import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -114,7 +114,7 @@ public class EmisionManagerImpl implements EmisionManager
 	@Override
 	public ManagerRespuestaImapVO construirPantallaClausulasPoliza()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ construirPantallaClausulasPoliza @@@@@@"
 				));
@@ -146,7 +146,7 @@ public class EmisionManagerImpl implements EmisionManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ ",resp
 				,"\n@@@@@@ construirPantallaClausulasPoliza @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -157,7 +157,7 @@ public class EmisionManagerImpl implements EmisionManager
 	@Override
 	public ManagerRespuestaVoidVO guardarClausulasPoliza(List<Map<String,String>>clausulas)
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarClausulasPoliza @@@@@@"
 				,"\n@@@@@@ clausulas=",clausulas
@@ -165,7 +165,7 @@ public class EmisionManagerImpl implements EmisionManager
 		
 		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ ",resp
 				,"\n@@@@@@ guardarClausulasPoliza @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

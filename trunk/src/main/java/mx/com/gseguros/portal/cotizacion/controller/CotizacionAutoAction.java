@@ -17,7 +17,6 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
-import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -911,7 +910,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 						&&key.substring(0,"tvalopol_".length()).equals("tvalopol_")
 						)
 				{
-					tvalopol.put(Utilerias.join("otvalor",StringUtils.leftPad(key.substring("tvalopol_".length()),2,"0")),en.getValue());
+					tvalopol.put(Utils.join("otvalor",StringUtils.leftPad(key.substring("tvalopol_".length()),2,"0")),en.getValue());
 				}
 			}
 			
@@ -1045,7 +1044,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cargarCotizacionAutoFlotilla()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n##########################################"
 				,"\n###### cargarCotizacionAutoFlotilla ######"
 				,"\n###### smap1=",smap1
@@ -1081,7 +1080,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### cargarCotizacionAutoFlotilla ######"
 				,"\n##########################################"
 				));
@@ -1156,7 +1155,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String guardarComplementariosAutoFlotilla()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n################################################"
 				,"\n###### guardarComplementariosAutoFlotilla ######"
 				,"\n###### smap1="  , smap1
@@ -1209,7 +1208,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### guardarComplementariosAutoFlotilla ######"
 				,"\n################################################"
 				));
@@ -1218,7 +1217,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String recotizarAutoFlotilla()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###################################"
 				,"\n###### recotizarAutoFlotilla ######"
 				,"\n###### smap1=",smap1
@@ -1273,7 +1272,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### recotizarAutoFlotilla ######"
 				,"\n###################################"
 				));
@@ -1282,7 +1281,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cargarObligatorioTractocamionRamo5()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n################################################"
 				,"\n###### cargarObligatorioTractocamionRamo5 ######"
 				,"\n###### smap1=",smap1
@@ -1310,7 +1309,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### cargarObligatorioTractocamionRamo5 ######"
 				,"\n################################################"
 				));
@@ -1319,7 +1318,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cargarDetalleNegocioRamo5()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n#######################################"
 				,"\n###### cargarDetalleNegocioRamo5 ######"
 				,"\n###### smap1=",smap1
@@ -1346,7 +1345,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### cargarDetalleNegocioRamo5 ######"
 				,"\n#######################################"
 				));
@@ -1355,7 +1354,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String guardarPantallaBeneficiarios()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n##########################################"
 				,"\n###### guardarPantallaBeneficiarios ######"
 				,"\n###### smap1="  , smap1
@@ -1398,7 +1397,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### guardarPantallaBeneficiarios ######"
 				,"\n##########################################"
 				));

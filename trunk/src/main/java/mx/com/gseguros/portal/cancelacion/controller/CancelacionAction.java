@@ -16,7 +16,6 @@ import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.utils.HttpUtil;
-import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
@@ -491,7 +490,7 @@ public class CancelacionAction extends PrincipalCoreAction
 	
 	public String validaCancelacionAProrrata()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n########################################"
 				,"\n###### validaCancelacionAProrrata ######"
 				,"\n###### smap1=",smap1
@@ -522,7 +521,7 @@ public class CancelacionAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### respuesta=",respuesta
 				,"\n###### validaCancelacionAProrrata ######"
 				,"\n########################################"

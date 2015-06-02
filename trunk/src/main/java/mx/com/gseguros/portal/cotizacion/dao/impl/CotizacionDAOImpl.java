@@ -25,7 +25,7 @@ import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
@@ -1430,14 +1430,14 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdtipsit" , cdtipsit);
 		params.put("cdusuari" , cdusuari);
-		Utilerias.debugProcedure(logger, "PKG_LISTAS.P_GET_ATRI_SITUACION", params);
+		Utils.debugProcedure(logger, "PKG_LISTAS.P_GET_ATRI_SITUACION", params);
 		Map<String,Object>procResult = ejecutaSP(new CargarTatrisit(getDataSource()),params);
 		List<ComponenteVO>lista      = (List<ComponenteVO>)procResult.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
 		{
 			throw new Exception("No hay tatrisit");
 		}
-		Utilerias.debugProcedure(logger, "PKG_LISTAS.P_GET_ATRI_SITUACION", params,lista);
+		Utils.debugProcedure(logger, "PKG_LISTAS.P_GET_ATRI_SITUACION", params,lista);
 		return lista;
 	}
 	
@@ -4166,7 +4166,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("sexo"       , sexo);
 		params.put("fenacimi"   , fenacimi);
 		params.put("parentesco" , parentesco);
-		Utilerias.debugProcedure(logger, "PKG_COTIZA.P_CLONAR_PERSONAS", params);
+		Utils.debugProcedure(logger, "PKG_COTIZA.P_CLONAR_PERSONAS", params);
 		ejecutaSP(new ClonarPersonas(getDataSource()),params);
 	}
     
@@ -4327,7 +4327,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	 if(buffer!=null&&buffer.containsKey(cdtabla))
     	 {
     		 lista = buffer.get(cdtabla);
-    		 logger.debug(Utilerias.join(
+    		 logger.debug(Utils.join(
     				  "\n*****************************************"
     				 ,"\n****** P_GET_CLAVE_TTAPVAT1 buffer ******"
     				 ,"\n****** lista="    , lista
@@ -4339,7 +4339,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	 {
     		 Map<String,String>params=new LinkedHashMap<String,String>();
         	 params.put("cdtabla" , cdtabla);
-        	 logger.debug(Utilerias.join(
+        	 logger.debug(Utils.join(
         			  "\n*************************************************"
         			 ,"\n****** PKG_SATELITES2.P_GET_CLAVE_TTAPVAT1 ******"
         			 ,"\n****** params=",params
@@ -4347,7 +4347,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
         	 ));
         	 Map<String,Object> procResult = ejecutaSP(new CargarClaveTtapvat1(getDataSource()),params);
         	 lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-        	 Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_CLAVE_TTAPVAT1", params, lista);
+        	 Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_CLAVE_TTAPVAT1", params, lista);
         	 if(buffer!=null&&lista!=null&&lista.size()>0)
         	 {
         		 buffer.put(cdtabla,lista);
@@ -4355,7 +4355,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	 }
     	 if(lista==null||lista.size()==0)
     	 {
-    		 throw new ApplicationException(Utilerias.join(
+    		 throw new ApplicationException(Utils.join(
     				 "No hay registros en la(s) tabla(s) de apoyo"
     				 ));
     	 }
@@ -4399,14 +4399,14 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	 params.put("cdramo"   , cdramo);
     	 params.put("estado"   , estado);
     	 params.put("nmpoliza" , nmpoliza);
-    	 Utilerias.debugProcedure(logger,"PKG_SATELITES2.P_GEN_TARIFICA_AUTO_FLOT",params);
+    	 Utils.debugProcedure(logger,"PKG_SATELITES2.P_GEN_TARIFICA_AUTO_FLOT",params);
     	 Map<String,Object>procResult  = ejecutaSP(new CargarResultadosCotizacionAutoFlotilla(getDataSource()),params);
     	 List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	 if(lista==null||lista.size()==0)
     	 {
     		 throw new ApplicationException("No hay resultados de cotizacion");
     	 }
-    	 Utilerias.debugProcedure(logger,"PKG_SATELITES2.P_GEN_TARIFICA_AUTO_FLOT",params,lista);
+    	 Utils.debugProcedure(logger,"PKG_SATELITES2.P_GEN_TARIFICA_AUTO_FLOT",params,lista);
     	 return lista;
  	}
      
@@ -4442,14 +4442,14 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	 params.put("estado"   , estado);
     	 params.put("nmpoliza" , nmpoliza);
     	 params.put("cdperpag" , cdperpag);
-    	 Utilerias.debugProcedure(logger,"PKG_SATELITES2.P_GET_DETALLE_COTI_AUTO_FLOT", params);
+    	 Utils.debugProcedure(logger,"PKG_SATELITES2.P_GET_DETALLE_COTI_AUTO_FLOT", params);
     	 Map<String,Object>procResult  = ejecutaSP(new CargarDetallesCotizacionAutoFlotilla(getDataSource()),params);
     	 List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	 if(lista==null||lista.size()==0)
     	 {
     		 throw new ApplicationException("No hay detalles de cotizacion");
     	 }
-    	 Utilerias.debugProcedure(logger,"PKG_SATELITES2.P_GET_DETALLE_COTI_AUTO_FLOT", params,lista);
+    	 Utils.debugProcedure(logger,"PKG_SATELITES2.P_GET_DETALLE_COTI_AUTO_FLOT", params,lista);
     	 return lista;
  	}
      
@@ -4506,14 +4506,14 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	 params.put("estado"   , estado);
     	 params.put("nmpoliza" , nmpoliza);
     	 params.put("cdperpag" , cdperpag);
-    	 Utilerias.debugProcedure(logger,"PKG_SATELITES2.P_GET_DETALLE_COBER_AUTO_FLOT", params);
+    	 Utils.debugProcedure(logger,"PKG_SATELITES2.P_GET_DETALLE_COBER_AUTO_FLOT", params);
     	 Map<String,Object>procResult  = ejecutaSP(new CargarDetallesCoberturasCotizacionAutoFlotilla(getDataSource()),params);
     	 List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	 if(lista==null||lista.size()==0)
     	 {
     		 throw new ApplicationException("No hay detalles de cotizacion");
     	 }
-    	 Utilerias.debugProcedure(logger,"PKG_SATELITES2.P_GET_DETALLE_COBER_AUTO_FLOT", params,lista);
+    	 Utils.debugProcedure(logger,"PKG_SATELITES2.P_GET_DETALLE_COBER_AUTO_FLOT", params,lista);
     	 return lista;
  	}
      
@@ -4556,7 +4556,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("circulo"  , circulo);
     	params.put("cdatribu" , cdatribu);
-    	Utilerias.debugProcedure(logger, "PKG_LISTAS.P_RECUPERA_TABULADORES", params);
+    	Utils.debugProcedure(logger, "PKG_LISTAS.P_RECUPERA_TABULADORES", params);
     	Map<String,Object>procResult     = ejecutaSP(new CargarTabuladoresGMIParche(getDataSource()),params);
     	List<Map<String,String>>listaAux = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(listaAux==null||listaAux.size()==0)
@@ -4604,7 +4604,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	params.put("nmsuplem" , nmsuplem);
     	params.put("cdgarant" , cdgarant);
     	params.put("cdtipsup" , cdtipsup);
-    	Utilerias.debugProcedure(logger, "P_EXEC_SIGSVDEFEND", params);
+    	Utils.debugProcedure(logger, "P_EXEC_SIGSVDEFEND", params);
     	ejecutaSP(new SigsvdefEnd(getDataSource()),params);
 	}
     
@@ -4649,7 +4649,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	params.put("nmorddom" , null);
     	params.put("swreclam" , null);
     	params.put("accion"   , null);
-    	Utilerias.debugProcedure(logger, "PKG_SATELITES.P_BORRA_MPOLIPER", params);
+    	Utils.debugProcedure(logger, "PKG_SATELITES.P_BORRA_MPOLIPER", params);
     	ejecutaSP(new BorrarMpoliperSituac0(getDataSource()),params);
     }
     
@@ -4681,7 +4681,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     {
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("clave" , clave);
-    	Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_TIPOVEHI_RAMO5", params);
+    	Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_TIPOVEHI_RAMO5", params);
     	Map<String,Object>procResult  = ejecutaSP(new CargarTipoVehiculoRamo5(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null||lista.size()==0)
@@ -4713,7 +4713,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     {
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("negocio" , negocio);
-    	Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_DETALLE_NEGOCIO_RAMO5", params);
+    	Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_DETALLE_NEGOCIO_RAMO5", params);
     	Map<String,Object>procResult  = ejecutaSP(new CargarDetalleNegocioRamo5(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null||lista.size()==0)
@@ -4762,13 +4762,13 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	params.put("cdramo"   , cdramo);
     	params.put("cdtipsit" , cdtipsit);
     	params.put("negocio"  , negocio);
-    	Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_CONFIG_VALOSIT_FLOTILLAS", params);
+    	Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_CONFIG_VALOSIT_FLOTILLAS", params);
     	Map<String,Object>procResult  = ejecutaSP(new CargarConfiguracionTvalositFlotillas(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-    	Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_CONFIG_VALOSIT_FLOTILLAS", params, lista);
+    	Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_CONFIG_VALOSIT_FLOTILLAS", params, lista);
     	if(lista==null||lista.size()==0)
     	{
-    		throw new ApplicationException(Utilerias.join("No hay configuracion para los valores del ramo ",cdramo," y subramo ",cdtipsit));
+    		throw new ApplicationException(Utils.join("No hay configuracion para los valores del ramo ",cdramo," y subramo ",cdtipsit));
     	}
     	return lista;
     }
@@ -4797,7 +4797,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     {
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("cdramo" , cdramo);
-    	Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_BANDERA_CAMBIO_CUACOM", params);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_BANDERA_CAMBIO_CUACOM", params);
     	Map<String,Object>procResult  = ejecutaSP(new CargarBanderaCambioCuadroPorProducto(getDataSource()),params);
     	String bandera                = (String)procResult.get("pv_bandera_o");
     	return StringUtils.isNotBlank(bandera)&&bandera.equals("S");
@@ -4829,7 +4829,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	params.put("negocio"  , negocio);
     	params.put("cdsisrol" , cdsisrol);
     	params.put("cdusuari" , cdusuari);
-    	Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_DESCUENTO_RAMO5_TODAS",params);
+    	Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_DESCUENTO_RAMO5_TODAS",params);
     	Map<String,Object>procResult  = ejecutaSP(new CargarRangoDescuentoRamo5TodasSituaciones(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null||lista.size()==0)
@@ -4840,7 +4840,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		{
 			throw new ApplicationException("Descuento/recargo para el agente duplicado");
 		}
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_GET_DESCUENTO_RAMO5_TODAS",params,lista);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_DESCUENTO_RAMO5_TODAS",params,lista);
 		return lista.get(0);
     }
 	
@@ -4867,7 +4867,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("codpostal" , codpostal);
 		params.put("cdtipsit"  , cdtipsit);
-		Utilerias.debugProcedure(logger, "PKG_SATELITES.P_VALIDA_TARIFA",params);
+		Utils.debugProcedure(logger, "PKG_SATELITES.P_VALIDA_TARIFA",params);
 		ejecutaSP(new ValidarCodpostalTarifa(getDataSource()),params);
 	}
 	
@@ -4886,14 +4886,14 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	
 	@Override
 	public boolean validaDomicilioCotizacionTitular(Map<String,String> params)throws Exception{
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_VALIDA_DOMICILIO_TITULAR",params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_VALIDA_DOMICILIO_TITULAR",params);
 		
 		Map<String,Object>procResult=ejecutaSP(new ValidaDomicilCotTitular(getDataSource()),params);
 		String resVal = (String)procResult.get("pv_swdomici_o");
 		
 		boolean resValidacion =(StringUtils.isNotBlank(resVal)&&resVal.equalsIgnoreCase("S"));
 		
-		logger.debug(Utilerias.join("PKG_SATELITES2.P_VALIDA_DOMICILIO_TITULAR result=",resValidacion));
+		logger.debug(Utils.join("PKG_SATELITES2.P_VALIDA_DOMICILIO_TITULAR result=",resValidacion));
 		return resValidacion;
 	}
 	
@@ -4927,11 +4927,11 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("cdramo"   , cdramo);
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_VALIDA_CUADRO_COM_NATURAL",params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_VALIDA_CUADRO_COM_NATURAL",params);
 		Map<String,Object>procResult=ejecutaSP(new ValidarCuadroComisionNatural(getDataSource()),params);
 		String cuadroNatural=(String)procResult.get("pv_swcamcua_o");
 		boolean cuadroNaturalBol=StringUtils.isNotBlank(cuadroNatural)&&cuadroNatural.equalsIgnoreCase("S");
-		logger.debug(Utilerias.join("PKG_SATELITES2.P_VALIDA_CUADRO_COM_NATURAL result=",cuadroNatural));
+		logger.debug(Utils.join("PKG_SATELITES2.P_VALIDA_CUADRO_COM_NATURAL result=",cuadroNatural));
 		return cuadroNaturalBol;
 	}
 	
@@ -4968,7 +4968,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("nmpoliza" , nmpoliza);
 		params.put("cdtipsit" , cdtipsit);
 		params.put("tipocot"  , tipocot);
-		Utilerias.debugProcedure(logger, "PKG_SATELITES2.P_AJUSTES_COTIZACION_PRODUCTO", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_AJUSTES_COTIZACION_PRODUCTO", params);
 		ejecutaSP(new AplicarAjustesCotizacionPorProducto(getDataSource()),params);
 	}
 	
@@ -5061,14 +5061,14 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("cdramo"   , cdramo);
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
-		Utilerias.debugProcedure(logger, "PKG_CONSULTA.P_GET_PORC_CESION_COMISION", params);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_PORC_CESION_COMISION", params);
 		Map<String,Object>procResult = ejecutaSP(new CargarPorcentajeCesionComisionAutos(getDataSource()),params);
 		String cesion                = (String)procResult.get("pv_porreadu_o");
 		if(StringUtils.isBlank(cesion))
 		{
 			throw new ApplicationException("No se recupero cesion de comision para la poliza");
 		}
-		logger.debug(Utilerias.join("****** PKG_CONSULTA.P_GET_PORC_CESION_COMISION recupera: ",cesion));
+		logger.debug(Utils.join("****** PKG_CONSULTA.P_GET_PORC_CESION_COMISION recupera: ",cesion));
 		return cesion;
 	}
 	
@@ -5109,7 +5109,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("nmsituac" , nmsituac);
 		params.put("tipotari" , tipotari);
 		params.put("cdperpag" , cdperpag);
-		Utilerias.debugProcedure(logger, "P_EJECUTA_LANZATARI", params);
+		Utils.debugProcedure(logger, "P_EJECUTA_LANZATARI", params);
 		ejecutaSP(new EjecutaTarificacionConcurrente(getDataSource()),params);
 	}
 	
@@ -5143,7 +5143,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		}
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
 		params.put("array" , new SqlArrayValue(array));
-		Utilerias.debugProcedure(logger, "PKG_PROCESA_XML.PR_PROC_MPOLISIT_LISTA", params);
+		Utils.debugProcedure(logger, "PKG_PROCESA_XML.PR_PROC_MPOLISIT_LISTA", params);
 		ejecutaSP(new MovimientoMpolisitArray(getDataSource()),params);
 	}
 	
@@ -5170,7 +5170,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		}
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
 		params.put("array" , new SqlArrayValue(array));
-		Utilerias.debugProcedure(logger, "PKG_PROCESA_XML.PR_PROC_TVALOSIT_LISTA", params);
+		Utils.debugProcedure(logger, "PKG_PROCESA_XML.PR_PROC_TVALOSIT_LISTA", params);
 		ejecutaSP(new MovimientoTvalositArray(getDataSource()),params);
 	}
 	
@@ -5197,7 +5197,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		}
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
 		params.put("array" , new SqlArrayValue(array));
-		Utilerias.debugProcedure(logger, "PKG_PROCESA_XML.PR_PROC_TBASVALSIT_LISTA", params);
+		Utils.debugProcedure(logger, "PKG_PROCESA_XML.PR_PROC_TBASVALSIT_LISTA", params);
 		ejecutaSP(new MovimientoTbasvalsitArray(getDataSource()),params);
 	}
 	
@@ -5224,7 +5224,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		}
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
 		params.put("array" , new SqlArrayValue(array));
-		Utilerias.debugProcedure(logger, "PKG_PROCESA_XML.PR_PROC_TCONVALSIT_LISTA", params);
+		Utils.debugProcedure(logger, "PKG_PROCESA_XML.PR_PROC_TCONVALSIT_LISTA", params);
 		ejecutaSP(new MovimientoTconvalsitArray(getDataSource()),params);
 	}
 	
@@ -5313,7 +5313,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("nmpresta3" , nmpresta3);
 		params.put("nmcuenta"  , nmcuenta);
 		params.put("accion"    , accion);
-		Utilerias.debugProcedure(logger, "PKG_SATELITES.P_MOV_MPOLIAGR", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES.P_MOV_MPOLIAGR", params);
 		ejecutaSP(new MovimientoMpoliagr(getDataSource()),params);
 	}
 	
@@ -5440,7 +5440,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("cdusuariDes" , cdusuariDes);
 		params.put("cdsisrolDes" , cdsisrolDes);
 		params.put("status"      , status);
-		sb.append(Utilerias.join(
+		sb.append(Utils.join(
 				 "\n********************************************"
 				,"\n****** PKG_ESTADISTICA.P_GRABA_EVENTO ******"
 				,"\n****** params=" , params

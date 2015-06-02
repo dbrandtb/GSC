@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
@@ -47,7 +47,7 @@ public class GenericMapper implements RowMapper
     				}
     				if(!found)
     				{
-    					throw new SQLException(Utilerias.join("No se encuentra la columna ",col));
+    					throw new SQLException(Utils.join("No se encuentra la columna ",col));
     				}
     			}
     		}
@@ -66,7 +66,7 @@ public class GenericMapper implements RowMapper
     				}
     				if(!found)
     				{
-    					throw new SQLException(Utilerias.join("No se encuentra la columna ",col));
+    					throw new SQLException(Utils.join("No se encuentra la columna ",col));
     				}
     			}
     		}
@@ -78,7 +78,7 @@ public class GenericMapper implements RowMapper
 			{
 				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe")||col!=null&&col.substring(0,2).equalsIgnoreCase("ff"))
 				{
-					map.put(col,Utilerias.formateaFecha(rs.getString(col)));
+					map.put(col,Utils.formateaFecha(rs.getString(col)));
 				}
 				else
 				{
@@ -92,7 +92,7 @@ public class GenericMapper implements RowMapper
 			{
 				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe"))
 				{
-					map.put(col,Utilerias.formateaFecha(rs.getString(col)));
+					map.put(col,Utils.formateaFecha(rs.getString(col)));
 				}
 				else
 				{

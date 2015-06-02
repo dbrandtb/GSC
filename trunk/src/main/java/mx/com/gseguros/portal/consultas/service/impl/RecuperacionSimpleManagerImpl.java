@@ -14,7 +14,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.log4j.Logger;
 
@@ -33,7 +33,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 	 */
 	private void setCheckpoint(String checkpoint)
 	{
-		logger.debug(Utilerias.join("checkpoint-->",checkpoint));
+		logger.debug(Utils.join("checkpoint-->",checkpoint));
 		session.put("checkpoint",checkpoint);
 	}
 	
@@ -50,11 +50,11 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 		
 		if(ex instanceof ApplicationException)
 		{
-			resp.setRespuesta(Utilerias.join(ex.getMessage()," #",timestamp));
+			resp.setRespuesta(Utils.join(ex.getMessage()," #",timestamp));
 		}
 		else
 		{
-			resp.setRespuesta(Utilerias.join("Error ",getCheckpoint().toLowerCase()," #",timestamp));
+			resp.setRespuesta(Utils.join("Error ",getCheckpoint().toLowerCase()," #",timestamp));
 		}
 		
 		logger.error(resp.getRespuesta(),ex);
@@ -78,7 +78,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			,String cdusuari
 			)
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperacionSimple @@@@@@"
 				,"\n@@@@@@ procedimiento=" , proc
@@ -136,7 +136,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			{
 				String cdclausu = params.get("cdclausu");
 				resp.setSmap(new HashMap<String,String>());
-				resp.getSmap().put("dsclausu" , Utilerias.join("Texto de la clausula ",cdclausu));
+				resp.getSmap().put("dsclausu" , Utils.join("Texto de la clausula ",cdclausu));
 			}
 			else if(proc.equals(RecuperacionSimple.RECUPERAR_PORCENTAJE_RECARGO_POR_PRODUCTO))
 			{
@@ -163,14 +163,14 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				{
 					if(primero)
 					{
-						sb.append(Utilerias.join("CVE_"    , nombre));
-						sb.append(Utilerias.join("@#@DES_" , nombre));
+						sb.append(Utils.join("CVE_"    , nombre));
+						sb.append(Utils.join("@#@DES_" , nombre));
 						primero = false;
 					}
 					else
 					{
-						sb.append(Utilerias.join("@#@CVE_" , nombre));
-						sb.append(Utilerias.join("@#@DES_" , nombre));
+						sb.append(Utils.join("@#@CVE_" , nombre));
+						sb.append(Utils.join("@#@DES_" , nombre));
 					}
 				}
 				resp.setSmap(new HashMap<String,String>());
@@ -214,7 +214,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ recuperacionSimple @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -230,7 +230,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			,String cdusuari
 			)
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperacionSimpleLista @@@@@@"
 				,"\n@@@@@@ proc="     , proc
@@ -269,7 +269,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String estado   = params.get("estado");
 				String nmpoliza = params.get("nmpoliza");
 				String nmsuplem = params.get("nmsuplem");
-				resp.setSlist(Utilerias.concatenarParametros(consultasDAO.cargarTvalosit(cdunieco, cdramo, estado, nmpoliza, nmsuplem),false));
+				resp.setSlist(Utils.concatenarParametros(consultasDAO.cargarTvalosit(cdunieco, cdramo, estado, nmpoliza, nmsuplem),false));
 			}
 			else if(proc.equals(RecuperacionSimple.RECUPERAR_CONFIGURACION_VALOSIT_FLOTILLAS))
 			{
@@ -418,7 +418,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String nmpoliza = params.get("nmpoliza");
 				resp.setSlist(consultasDAO.recuperarEndososCancelables(cdunieco, cdramo, estado, nmpoliza));
 			}
-			
 			setCheckpoint("0");
 		}
 		catch(Exception ex)
@@ -426,7 +425,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ recuperacionSimpleLista @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

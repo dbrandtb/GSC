@@ -40,7 +40,7 @@ import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
@@ -2790,7 +2790,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				                {
 				                	long timestamp = System.currentTimeMillis();
 				                	resp.setExito(false);
-				                	resp.setRespuesta(Utilerias.join("No existe el grupo (","M",") de la fila ",fila," #",timestamp));
+				                	resp.setRespuesta(Utils.join("No existe el grupo (","M",") de la fila ",fila," #",timestamp));
 				                	logger.error(resp.getRespuesta());
 				                }
 				                else
@@ -2959,7 +2959,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				                {
 				                	long timestamp = System.currentTimeMillis();
 				                	resp.setExito(false);
-				                	resp.setRespuesta(Utilerias.join("No existe el grupo (","D",") de la fila ",fila," #",timestamp));
+				                	resp.setRespuesta(Utils.join("No existe el grupo (","D",") de la fila ",fila," #",timestamp));
 				                	logger.error(resp.getRespuesta());
 				                }
 				                else
@@ -3016,7 +3016,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					{
 						long timestamp  = System.currentTimeMillis();
 						resp.setExito(false);
-						resp.setRespuesta(Utilerias.join("No se permiten mas de 49 asegurados #",timestamp));
+						resp.setRespuesta(Utils.join("No se permiten mas de 49 asegurados #",timestamp));
 						resp.setRespuestaOculta(resp.getRespuesta());
 						logger.error(resp.getRespuesta());
 					}
@@ -3024,7 +3024,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					{
 						long timestamp  = System.currentTimeMillis();
 						resp.setExito(false);
-						resp.setRespuesta(Utilerias.join("No se permiten menos de 50 asegurados #",timestamp));
+						resp.setRespuesta(Utils.join("No se permiten menos de 50 asegurados #",timestamp));
 						resp.setRespuestaOculta(resp.getRespuesta());
 						logger.error(resp.getRespuesta());
 					}
@@ -3045,7 +3045,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					{	                	
 	                	long timestamp = System.currentTimeMillis();
 						resp.setExito(false);
-						resp.setRespuesta(Utilerias.join("No hay asegurados para el grupo ",cdgrupoVacio," #"+timestamp));
+						resp.setRespuesta(Utils.join("No hay asegurados para el grupo ",cdgrupoVacio," #"+timestamp));
 						resp.setRespuestaOculta(resp.getRespuesta());
 						logger.error(resp.getRespuesta());
 					}
@@ -4343,11 +4343,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                	logger.error("error al leer codigo postal como numero, se intentara como string:",ex2);
 		                	try
 		                	{
-		                		logger.debug(Utilerias.join("COD POSTAL: "
+		                		logger.debug(Utils.join("COD POSTAL: "
 		                				,row.getCell(8).getStringCellValue()
 				                		,"|"
 				                		));
-				                output.print(Utilerias.join(
+				                output.print(Utils.join(
 				                		row.getCell(8).getStringCellValue()
 				                		,"|"
 				                		));
@@ -4945,7 +4945,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String nmnumero
 			,String nmnumint)
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarContratanteColectivo @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -5038,7 +5038,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ guardarContratanteColectivo @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -5050,7 +5050,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	@Override
 	public ManagerRespuestaSmapVO cargarTramite(String ntramite)
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarTramite @@@@@@"
 				,"\n@@@@@@ ntramite=" , ntramite
@@ -5090,7 +5090,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ cargarTramite @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -5101,7 +5101,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     @Override
     public boolean cargarBanderaCambioCuadroPorProducto(String cdramo)
     {
-    	logger.info(Utilerias.join(
+    	logger.info(Utils.join(
     			 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     			,"\n@@@@@@ cargarBanderaCambioCuadroPorProducto @@@@@@"
     			,"\n@@@@@@ cdramo=",cdramo
@@ -5119,7 +5119,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     		bandera=false;
     	}
     	
-    	logger.info(Utilerias.join(
+    	logger.info(Utils.join(
     		 "\n@@@@@@ bandera=",bandera
    			,"\n@@@@@@ cargarBanderaCambioCuadroPorProducto @@@@@@"
    			,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -5147,7 +5147,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdagente
 			)
     {
-    	logger.info(Utilerias.join(
+    	logger.info(Utils.join(
     			 "\n@@@@@@@@@@@@@@@@@@@@@"
     			,"\n@@@@@@ cotizar @@@@@@"
     			,"\n@@@@@@ cdunieco="    , cdunieco
@@ -5423,13 +5423,13 @@ public class CotizacionManagerImpl implements CotizacionManager
                 	{
                 		for(int i=1;i<=13;i++)
                 		{
-                			String key = tvalositConst.get(Utilerias.join("P",i,"CLAVE"));
-                			String val = tvalositConst.get(Utilerias.join("P",i,"VALOR"));
+                			String key = tvalositConst.get(Utils.join("P",i,"CLAVE"));
+                			String val = tvalositConst.get(Utils.join("P",i,"VALOR"));
                 			if(StringUtils.isNotBlank(key)&&StringUtils.isNotBlank(val))
                 			{
 	                			mapaValositIterado.put
 	                			(
-	                					Utilerias.join
+	                					Utils.join
 	                					(
 	                							"otvalor"
 	                							,StringUtils.leftPad(key,2,"0")
@@ -5965,7 +5965,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     		manejaException(ex, resp);
     	}
     	
-    	logger.info(Utilerias.join(
+    	logger.info(Utils.join(
     		 "\n@@@@@@ ",resp
     		,"\n@@@@@@ cotizar @@@@@@"
    			,"\n@@@@@@@@@@@@@@@@@@@@@"

@@ -8,7 +8,7 @@ import java.util.Map;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.log4j.Logger;
 
@@ -78,7 +78,7 @@ public class ConsultasManagerImpl implements ConsultasManager
 			,String cdusuari
 			)throws Exception
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarInformacionPoliza @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -90,7 +90,7 @@ public class ConsultasManagerImpl implements ConsultasManager
 		
 		Map<String,String>datos=consultasDAO.cargarInformacionPoliza(cdunieco,cdramo,estado,nmpoliza,cdusuari);
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ " , datos
 				,"\n@@@@@@ cargarInformacionPoliza @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -110,7 +110,7 @@ public class ConsultasManagerImpl implements ConsultasManager
 			,String cdramant
 			)throws Exception
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarMpolizasPorParametrosVariables @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -132,7 +132,7 @@ public class ConsultasManagerImpl implements ConsultasManager
 				,cdramant
 				);
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n@@@@@@ lista=" , lista
 				,"\n@@@@@@ cargarMpolizasPorParametrosVariables @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -151,7 +151,7 @@ public class ConsultasManagerImpl implements ConsultasManager
 			,String cdperson
 			)throws Exception
 			{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ obtieneContratantePoliza @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -173,7 +173,7 @@ public class ConsultasManagerImpl implements ConsultasManager
 				, cdperson
 				);
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				"\n@@@@@@ lista=" , lista
 				,"\n@@@@@@ obtieneContratantePoliza @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

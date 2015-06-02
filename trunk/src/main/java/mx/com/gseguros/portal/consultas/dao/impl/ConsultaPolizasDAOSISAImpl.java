@@ -13,17 +13,17 @@ import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
-import mx.com.gseguros.portal.consultas.model.DatosComplementariosVO;
 import mx.com.gseguros.portal.consultas.model.ContratanteVO;
-import mx.com.gseguros.portal.consultas.model.HistoricoVO;
-import mx.com.gseguros.portal.consultas.model.PlanVO;
-import mx.com.gseguros.portal.consultas.model.PolizaDTO;
-import mx.com.gseguros.portal.consultas.model.SuplementoVO;
-import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
-import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
+import mx.com.gseguros.portal.consultas.model.DatosComplementariosVO;
 import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
+import mx.com.gseguros.portal.consultas.model.HistoricoVO;
+import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
+import mx.com.gseguros.portal.consultas.model.PlanVO;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.consultas.model.ReciboAgenteVO;
+import mx.com.gseguros.portal.consultas.model.SuplementoVO;
 import mx.com.gseguros.portal.consultas.model.TarifaVO;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
@@ -42,7 +42,7 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 public class ConsultaPolizasDAOSISAImpl extends AbstractManagerDAO implements ConsultasPolizaDAO {
 	
-	// Coincidencias del asegurado según criterios: RFC, código de asegurado y
+	// Coincidencias del asegurado segï¿½n criterios: RFC, cï¿½digo de asegurado y
 	// nombre.
 	
 	@SuppressWarnings("unchecked")
@@ -111,7 +111,7 @@ public class ConsultaPolizasDAOSISAImpl extends AbstractManagerDAO implements Co
 		}
 	}
 
-	// Histórico de la póliza seleccionada.
+	// Histï¿½rico de la pï¿½liza seleccionada.
 	@Override
 	public List<SuplementoVO> obtieneHistoricoPoliza(
 			PolizaAseguradoVO polizaAsegurado) throws Exception {
@@ -157,7 +157,7 @@ public class ConsultaPolizasDAOSISAImpl extends AbstractManagerDAO implements Co
 		}
 	}
 		
-	// Histórico de la póliza seleccionada para SISA.
+	// Histï¿½rico de la pï¿½liza seleccionada para SISA.
 	@Override
 	public List<HistoricoVO> obtieneHistoricoPolizaSISA(
 			PolizaAseguradoVO polizaAsegurado) throws Exception {
@@ -208,7 +208,7 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 }
 	
 			
-	// Datos generales de la póliza.
+	// Datos generales de la pï¿½liza.
 	@Override
 	public List<PolizaDTO> obtieneDatosPoliza(
 			PolizaAseguradoVO polizaAsegurado) throws Exception {
@@ -280,7 +280,7 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		}
 	}
 	
-	//Datos complementarios de la póliza
+	//Datos complementarios de la pï¿½liza
 	@Override
 	public List<DatosComplementariosVO> obtieneDatosComplementarios(PolizaVO poliza,
 			AseguradoVO asegurado) throws Exception {
@@ -317,7 +317,7 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		}
 	}
 
-	// Copagos de la póliza.
+	// Copagos de la pï¿½liza.
 	@Override
 	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza)
 			throws Exception {
@@ -352,7 +352,7 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		}
 	}
 	
-	// Coberturas póliza.
+	// Coberturas pï¿½liza.
 	@Override
 	public List<CoberturaBasicaVO> obtieneCoberturasPoliza(PolizaVO poliza)
 			throws Exception {
@@ -383,7 +383,7 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		}
 	}
 	
-	// Coberturas básicas.
+	// Coberturas bï¿½sicas.
 		@Override
 		public List<CoberturaBasicaVO> obtieneCoberturasBasicas(PolizaVO poliza)
 				throws Exception {
@@ -506,7 +506,7 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 			}
 		}
 
-	// Asegurados de la póliza.
+	// Asegurados de la pï¿½liza.
 	@Override
 	public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza)
 			throws Exception {
@@ -581,7 +581,7 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		}
 	}
 	
-	//Histórico de Farmacia
+	//Histï¿½rico de Farmacia
 	@Override
 	public List<HistoricoFarmaciaVO> obtieneHistoricoFarmacia(PolizaVO poliza,
 			AseguradoVO asegurado) throws Exception {
@@ -713,7 +713,7 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		
 	}
 	
-	// Recibos de la póliza.
+	// Recibos de la pï¿½liza.
 	@Override
 	public List<ReciboVO> obtieneRecibosPoliza(PolizaVO poliza)
 			throws Exception {
@@ -752,13 +752,13 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		}
 	}
 
-	// Detalle de los recibos de la póliza
+	// Detalle de los recibos de la pï¿½liza
 	@Override
 	public List<DetalleReciboVO> obtieneDetalleRecibo(PolizaVO poliza,
 			ReciboVO recibo) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_NmPoliza_i", poliza.getIcodpoliza());
-		params.put("pv_cdRecibo_i", recibo.getNmrecibo()); // Debería ser
+		params.put("pv_cdRecibo_i", recibo.getNmrecibo()); // Deberï¿½a ser
 															// icodrecibo
 		Map<String, Object> mapResult = ejecutaSP(new ConsultaDetalleReciboSP(
 				getDataSource()), params);
@@ -790,7 +790,7 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		}
 	}
 
-	// Agentes de la póliza.
+	// Agentes de la pï¿½liza.
 	@Override
 	public List<AgentePolizaVO> obtieneAgentesPoliza(PolizaVO poliza)
 			throws Exception {

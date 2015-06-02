@@ -6,7 +6,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -32,11 +32,11 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	public Map<String, Object> ejecutaSP(StoredProcedure storedProcedure, Map parameters) throws Exception {
     	
-    	logger.info(Utilerias.join("##### CALLING SP ", storedProcedure.getSql(), " ", parameters));
+    	logger.info(Utils.join("##### CALLING SP ", storedProcedure.getSql(), " ", parameters));
     	long inicio = System.currentTimeMillis();
 		Map<String, Object> mapResult = storedProcedure.execute(parameters);
 		long tfinal = System.currentTimeMillis();
-		logger.info(Utilerias.join("##### FINISH  SP ", storedProcedure.getSql(), " IN ", (tfinal - inicio) / 1000d, " SECS "));
+		logger.info(Utils.join("##### FINISH  SP ", storedProcedure.getSql(), " IN ", (tfinal - inicio) / 1000d, " SECS "));
 		
         BaseVO mensajeRespuesta = traduceMensaje(mapResult);
         mapResult.put("msg_id", mensajeRespuesta.getKey());

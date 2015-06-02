@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 public class EnvironmentAction extends PrincipalCoreAction {
 
@@ -144,7 +144,7 @@ public class EnvironmentAction extends PrincipalCoreAction {
         params.put("pv_proceso_i" , "END");
         params.put("pv_cdramo_i"  , "2");
         logger.debug("map IN="+ params);
-        props = Utilerias.ponFechas(params);
+        props = Utils.ponFechas(params);
         logger.debug("map OUT="+ props);
         return SUCCESS;
     }

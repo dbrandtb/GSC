@@ -15,7 +15,7 @@ import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
@@ -55,14 +55,14 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 		params.put("PV_CDTIPTRA_I" , cdtiptra);
 		params.put("PV_ORDEN_I"    , orden);
 		params.put("PV_SECCION_I"  , seccion);
-		Utilerias.debugProcedure(logger, "PKG_CONF_PANTALLAS.P_GET_TCONFCMP", params);
+		Utils.debugProcedure(logger, "PKG_CONF_PANTALLAS.P_GET_TCONFCMP", params);
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerComponentes(this.getDataSource()), params);
 		List<ComponenteVO>lista=(List<ComponenteVO>) resultadoMap.get("PV_REGISTRO_O");
 		if(lista==null)
 		{
 			lista=new ArrayList<ComponenteVO>();
 		}
-		Utilerias.debugProcedure(logger, "PKG_CONF_PANTALLAS.P_GET_TCONFCMP", params, lista);
+		Utils.debugProcedure(logger, "PKG_CONF_PANTALLAS.P_GET_TCONFCMP", params, lista);
 		return lista;
 	}
 	
