@@ -3,18 +3,18 @@ package mx.com.gseguros.wizard.configuracion.producto.service;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.model.ClavesVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.ListaDeValoresVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.DatosClaveAtributoVO;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.aon.portal.service.PagedList;
 
 /**
  * ListaDeValoresManager
  * 
  * <pre>
- *    Interfaz para petición de información de lista de valores
+ *    Interfaz para peticiï¿½n de informaciï¿½n de lista de valores
  * &lt;Pre&gt;
  * 
  * &#064;author   &lt;a href=&quot;mailto:edgar.perez@biosnetmx.com&quot;&gt;Edgar P&amp;erez&lt;/a&gt;

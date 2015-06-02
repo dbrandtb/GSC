@@ -3,8 +3,8 @@ package mx.com.gseguros.wizard.configuracion.producto.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.RamaVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.RamaVO;
 
 public interface TreeManager {
 

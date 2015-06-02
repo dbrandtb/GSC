@@ -2,17 +2,17 @@ package mx.com.gseguros.wizard.configuracion.producto.service;
 
 import java.util.List;
 
+import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.atributosVariables.model.AtributosVariablesVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.model.MensajesVO;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.aon.portal.service.PagedList;
 
 /**
  * AtributosVariablesManager
  * 
  * <pre>
- *    Interfaz para petición de información de atributos variables
+ *    Interfaz para peticiï¿½n de informaciï¿½n de atributos variables
  * </pre>
  * 
  * @author   &lt;a href=&quot;mailto:edgar.perez@biosnetmx.com&quot;&gt;Edgar P&eacute;rez&lt;/a&gt;

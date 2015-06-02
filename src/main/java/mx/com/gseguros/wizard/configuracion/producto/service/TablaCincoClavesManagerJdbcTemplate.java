@@ -2,19 +2,17 @@ package mx.com.gseguros.wizard.configuracion.producto.service;
 
 import java.util.List;
 
-import mx.com.gseguros.wizard.configuracion.producto.model.ClavesVO;
-import mx.com.gseguros.wizard.configuracion.producto.model.ListaDeValoresVO;
+import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.DatosClaveAtributoVO;
 import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.DescripcionCincoClavesVO;
 import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.DescripcionVeinticincoAtributosVO;
 import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.ValoresCincoClavesVO;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.aon.portal.service.PagedList;
 
 /**
  * Metodo paraq 
- * Interfaz para petición de información valores para la tabla de cinco claves para el uso de JdbcTemplate
+ * Interfaz para peticiï¿½n de informaciï¿½n valores para la tabla de cinco claves para el uso de JdbcTemplate
  *
  */
 public interface TablaCincoClavesManagerJdbcTemplate {

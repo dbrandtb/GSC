@@ -2,6 +2,7 @@ package mx.com.gseguros.wizard.configuracion.producto.service;
 
 import java.util.List;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.model.ClavesVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.ListaDeValoresVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
@@ -9,13 +10,12 @@ import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.Dato
 import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.DescripcionCincoClavesVO;
 import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.DescripcionVeinticincoAtributosVO;
 import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.ValoresCincoClavesVO;
-import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * TablaCincoClavesManager
  * 
  * <pre>
- *    Interfaz para petición de información valores para la tabla de cinco claves
+ *    Interfaz para peticiï¿½n de informaciï¿½n valores para la tabla de cinco claves
  * &lt;Pre&gt;
  * 
  * &#064;author   &lt;a href=&quot;mailto:edgar.perez@biosnetmx.com&quot;&gt;Edgar P&amp;erez&lt;/a&gt;

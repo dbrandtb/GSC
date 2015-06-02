@@ -2,10 +2,10 @@ package mx.com.gseguros.wizard.configuracion.producto.service;
 
 import java.util.List;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.coberturas.model.CoberturaVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.service.impl.CoberturaManagerImpl;
-import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * CoberturaManager

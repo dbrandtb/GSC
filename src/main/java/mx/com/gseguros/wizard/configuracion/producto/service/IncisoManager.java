@@ -2,15 +2,15 @@ package mx.com.gseguros.wizard.configuracion.producto.service;
 
 import java.util.List;
 
-import mx.com.gseguros.wizard.configuracion.producto.incisos.model.IncisoVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.wizard.configuracion.producto.incisos.model.IncisoVO;
 
 /**
  * IncisoManager
  * 
  * <pre>
- *    Interfaz para petición de información de inciso
+ *    Interfaz para peticiï¿½n de informaciï¿½n de inciso
  * &lt;Pre&gt;
  * 
  * &#064;author   &lt;a href=&quot;mailto:edgar.perez@biosnetmx.com&quot;&gt;Edgar P&amp;erez&lt;/a&gt;
