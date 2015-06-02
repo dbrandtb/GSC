@@ -44,7 +44,9 @@ public class ProcessResultManagerJdbcTemplate {
     	String msgId    = res.getMsgId();
     	String msgTitle = res.getMsgTitle();
     	
-    	logger.info(new StringBuilder("MsgId=").append(msgId).append(" ").append("MsgTitle=").append(msgTitle));
+    	if( StringUtils.isNotBlank(msgId) || StringUtils.isNotBlank(msgTitle) ) {
+    		logger.info(new StringBuilder("MsgId=").append(msgId).append(" ").append("MsgTitle=").append(msgTitle));
+    	}
     	
     	// Obtenemos el msgText a partir del msgId:
     	String msgText  = "";
