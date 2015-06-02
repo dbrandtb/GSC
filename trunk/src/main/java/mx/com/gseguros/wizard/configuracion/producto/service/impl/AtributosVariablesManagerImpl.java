@@ -1,26 +1,26 @@
 package mx.com.gseguros.wizard.configuracion.producto.service.impl;
 
 import static mx.com.gseguros.wizard.configuracion.producto.dao.AtributoDAO.ATRIBUTO_PADRE_COBERTURA;
-import static mx.com.gseguros.wizard.configuracion.producto.dao.AtributoDAO.OBTIENE_PADRES;
 import static mx.com.gseguros.wizard.configuracion.producto.dao.AtributoDAO.ATRIBUTO_PADRE_OBJETO;
 import static mx.com.gseguros.wizard.configuracion.producto.dao.AtributoDAO.ATRIBUTO_PADRE_PRODUCTO;
 import static mx.com.gseguros.wizard.configuracion.producto.dao.AtributoDAO.ATRIBUTO_PADRE_ROL;
 import static mx.com.gseguros.wizard.configuracion.producto.dao.AtributoDAO.GUARDA_ATRIBUTOS_VARIABLES;
+import static mx.com.gseguros.wizard.configuracion.producto.dao.AtributoDAO.OBTIENE_PADRES;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.gseguros.wizard.configuracion.producto.atributosVariables.model.AtributosVariablesVO;
-import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
-import mx.com.gseguros.wizard.configuracion.producto.service.AtributosVariablesManager;
-import mx.com.gseguros.wizard.model.MensajesVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.ConvertUtil;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.wizard.configuracion.producto.atributosVariables.model.AtributosVariablesVO;
+import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
+import mx.com.gseguros.wizard.configuracion.producto.service.AtributosVariablesManager;
+import mx.com.gseguros.wizard.model.MensajesVO;
 
 import org.apache.log4j.Logger;
 

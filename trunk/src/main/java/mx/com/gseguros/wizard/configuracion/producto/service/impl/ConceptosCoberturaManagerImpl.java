@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.conceptosCobertura.model.ConceptosCoberturaVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.service.ConceptosCoberturaManager;
 import mx.com.gseguros.wizard.dao.WizardDAO;
-import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 
@@ -30,7 +30,7 @@ public class ConceptosCoberturaManagerImpl implements ConceptosCoberturaManager 
 	private WizardDAO wizardDAO;
 	
 	/**
-	 * Asigna al Map de objetos de tipo {@link Endpoint} con los vm que se
+	 * Asigna al Map de objetos de tipo {link Endpoint} con los vm que se
 	 * pueden invocar.
 	 * 
 	 * @param endpoints
