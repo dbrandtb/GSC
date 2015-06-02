@@ -4,6 +4,9 @@
     ///////////////////////
     //////variables //////
     /*///////////////////*/
+    var CD_ROL_SUSCRIPTOR      = 'SUSCRIPTOR';
+    var CD_ROL_SUSCRIPTOR_AUTO = 'SUSCRIAUTO';
+    var CD_ROL_ACTUAL          = '<s:property value="%{#session['USUARIO'].rolActivo.clave}" />';
     var storeCoberturasActuales_p3;
     var storeCoberturasEditadas_p3;
     var storeCoberturasDisponibles_p3;
@@ -310,7 +313,8 @@
                     'smap1.pv_cdunieco_i' : inputCduniecop3,
                     'smap1.pv_cdramo_i' : inputCdramop3,
                     'smap1.pv_estado_i' : inputEstadop3,
-                    'smap1.pv_nmpoliza_i' : inputNmpolizap3
+                    'smap1.pv_nmpoliza_i' : inputNmpolizap3,
+                    'smap1.pv_cdsisrol_i' : CD_ROL_ACTUAL
                 },
                 reader : {
                     type : 'json',
@@ -342,8 +346,19 @@
             	// Cargamos todas las coberturas actuales y disponibles para esos incisos:
                 storeCoberturasActuales_p3.load({
                     addRecords: true,
-                    params: {'smap1.pv_nmsituac_i' : record.get("NMSITUAC")}
+                    params: {'smap1.pv_nmsituac_i' : record.get("NMSITUAC")},
+                    callback: function(records, operation, success) {
+                    	
+                        // VALIDACION: Si es Suscriptor y es un Endoso de Baja, permitimos eliminar todas las coberturas (SWOBLIGA='N'):
+                        if(inputAltabajap3 == 'baja' && CD_ROL_ACTUAL == CD_ROL_SUSCRIPTOR || CD_ROL_ACTUAL == CD_ROL_SUSCRIPTOR_AUTO) {
+                            Ext.Array.each(records, function(item, index, allItems) {
+                                item.set('SWOBLIGA','N');
+                            });
+                            storeCoberturasActuales_p3.commitChanges();
+                        }
+                    }
                 });
+                
                 storeCoberturasDisponibles_p3.load({
                     addRecords: true,
                     params: {'smap1.pv_nmsituac_i' : record.get("NMSITUAC")}
@@ -382,8 +397,19 @@
                         	// Cargamos todas las coberturas actuales y disponibles para esos incisos:
                             storeCoberturasActuales_p3.load({
                                 addRecords: true,
-                                params: {'smap1.pv_nmsituac_i' : record.get("NMSITUAC")}
+                                params: {'smap1.pv_nmsituac_i' : record.get("NMSITUAC")},
+                                callback: function(records, operation, success) {
+                                    
+                                    // VALIDACION: Si es Suscriptor y es un Endoso de Baja, permitimos eliminar todas las coberturas (SWOBLIGA='N'):
+                                	if(inputAltabajap3 == 'baja' && CD_ROL_ACTUAL == CD_ROL_SUSCRIPTOR || CD_ROL_ACTUAL == CD_ROL_SUSCRIPTOR_AUTO) {
+                                		Ext.Array.each(records, function(item, index, allItems) {
+                                            item.set('SWOBLIGA','N');
+                                        });
+                                        storeCoberturasActuales_p3.commitChanges();
+                                	}
+                                }
                             });
+                            
                             storeCoberturasDisponibles_p3.load({
                                 addRecords: true,
                                 params: {'smap1.pv_nmsituac_i' : record.get("NMSITUAC")}
@@ -607,11 +633,12 @@
                                 ,dataIndex : 'NOMBRE_GARANTIA'
                                 ,width     : 265
                             }
-                            /*,{
+                            ,{
                                 header     : 'Suma asegurada'
                                 ,dataIndex : 'SUMA_ASEGURADA'
                                 ,width     : 110
-                            }*/
+                                ,hidden    : true
+                            }
                             ,{
                                 menuDisabled : true
                                 ,width       : 30
@@ -748,11 +775,12 @@
                                 ,dataIndex : 'NOMBRE_GARANTIA'
                                 ,width     : 265
                             }
-                            /*,{
+                            ,{
                                 header     : 'Suma asegurada'
                                 ,dataIndex : 'SUMA_ASEGURADA'
                                 ,width     : 110
-                            }*/
+                                ,hidden    : true
+                            }
                             ,{
                                 menuDisabled : true
                                 ,width       : 30
