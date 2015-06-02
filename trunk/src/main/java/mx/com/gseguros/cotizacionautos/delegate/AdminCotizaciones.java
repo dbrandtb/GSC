@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import net.sf.json.JSONArray;
 import mx.com.gseguros.cotizacionautos.base.dao.ComparaDao;
 import mx.com.gseguros.cotizacionautos.model.AseguradoraVO;
 import mx.com.gseguros.cotizacionautos.model.Contenedor;
@@ -300,7 +299,7 @@ public String CreaHTML (ArrayList<Serializable>lista, String navegador){
 			html.append("<table border=\"1\" rules=\"none\"><tr>")
 			.append("<td>").append(p.getColImagen().getUrl()).append("</td>");
 			//Se mete parche para cambiar el orden, si se quiere quitar habra que meter la 
-			//información del los planes desde el origen.
+			//informaciï¿½n del los planes desde el origen.
 			List<Contenedor> pnlsTemp = p.getPanelTotales();
 			List<ContenedorC> pnlsC = p.getPanelCompra();
 			for(int j = 0; j<pnlsC.size(); j++){
@@ -314,7 +313,7 @@ public String CreaHTML (ArrayList<Serializable>lista, String navegador){
 					tipoNA = "disabled";
 				}else{
 					tipoNA = "";
-					tta = "<SPAN title=\"Selecciona los paquetes que deseas Comparar ó selecciona uno si deseas Comprar.\">";
+					tta = "<SPAN title=\"Selecciona los paquetes que deseas Comparar ï¿½ selecciona uno si deseas Comprar.\">";
 					ttc = "</SPAN>";
 				}
 				int wMon = Integer.parseInt(cont.getColMoneda().getWidth());

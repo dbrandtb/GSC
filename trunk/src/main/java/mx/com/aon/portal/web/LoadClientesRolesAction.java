@@ -15,7 +15,7 @@ import mx.com.aon.portal.service.UsuarioManager;
 import mx.com.aon.portal.service.principal.PrincipalManager;
 import mx.com.gseguros.portal.general.model.RolVO;
 import mx.com.gseguros.portal.general.util.RolSistema;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -99,7 +99,7 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
                         			userVO.getUser(),
                         			rolActivo.getClave(),
                         			userAgent,
-                        			Utilerias.esSesionMovil(userAgent),
+                        			Utils.esSesionMovil(userAgent),
                         			new Date());
                         }
                         catch(Exception ex)

@@ -32,7 +32,7 @@ import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
@@ -815,7 +815,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     --pv_cdperpag   input
     */
     {
-    	logger.info(Utilerias.join(
+    	logger.info(Utils.join(
     			 "\n################################"
     			,"\n###### comprar cotizacion ######"
     			,"\n###### smap1=",smap1
@@ -1555,7 +1555,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     		
     	}
     	
-        logger.info(Utilerias.join(
+        logger.info(Utils.join(
     			 "\n###### comprar cotizacion ######"
         		,"\n################################"
     			));

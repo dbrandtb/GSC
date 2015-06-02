@@ -2,11 +2,11 @@ package mx.com.gseguros.confpantallas.action;
 
 import java.util.HashMap;
 
+import mx.com.gseguros.confpantallas.delegate.AdminPanelesDelegate;
+
 import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork2.ActionSupport;
-
-import mx.com.gseguros.confpantallas.delegate.AdminPanelesDelegate;
 
 public class GrabaPanel extends ActionSupport {
 	

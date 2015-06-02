@@ -13,7 +13,6 @@ package mx.com.aon.portal.service;
 import java.util.Hashtable;
 
 import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * LoginManager

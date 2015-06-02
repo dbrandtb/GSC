@@ -16,7 +16,6 @@ import mx.com.gseguros.confpantallas.model.DinamicPanelVo;
 import mx.com.gseguros.confpantallas.model.ViewBean;
 import net.sf.json.JSONArray;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.web.context.WebApplicationContext;

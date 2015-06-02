@@ -28,7 +28,7 @@ import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Ccomision;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSalud;
@@ -3255,7 +3255,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			{
 				if(col!=null&&col.substring(0,2).equals("fe"))
 				{
-					map.put(col,Utilerias.formateaFecha(rs.getString(col)));
+					map.put(col,Utils.formateaFecha(rs.getString(col)));
 				}
 				else
 				{
@@ -3345,7 +3345,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			{
 				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe"))
 				{
-					map.put(col,Utilerias.formateaFecha(rs.getString(col)));
+					map.put(col,Utils.formateaFecha(rs.getString(col)));
 				}
 				else
 				{
@@ -3399,36 +3399,36 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
         	recibo.setComRec(rs.getDouble("comRec"));
         	recibo.setDerecho(rs.getDouble("derecho"));
         	
-        	cal = Utilerias.getCalendarTimeZone0(rs.getString("fecEmi"), Constantes.FORMATO_FECHA);
+        	cal = Utils.getCalendarTimeZone0(rs.getString("fecEmi"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		recibo.setFecEmi(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA fecEmi !!! " + rs.getString("fecEmi"));
         	}
         	
-        	cal = Utilerias.getCalendarTimeZone0(rs.getString("fecIni"), Constantes.FORMATO_FECHA);
+        	cal = Utils.getCalendarTimeZone0(rs.getString("fecIni"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		recibo.setFecIni(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA fecIni !!! " + rs.getString("fecIni"));
         	}
         
-        	cal = Utilerias.getCalendarTimeZone0(rs.getString("fecPag"), Constantes.FORMATO_FECHA);
+        	cal = Utils.getCalendarTimeZone0(rs.getString("fecPag"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		recibo.setFecPag(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA fecPag se envia 01/01/1900 !!! " + rs.getString("fecPag"));
-        		recibo.setFecPag(Utilerias.getCalendarTimeZone0("01/01/1900", Constantes.FORMATO_FECHA));
+        		recibo.setFecPag(Utils.getCalendarTimeZone0("01/01/1900", Constantes.FORMATO_FECHA));
         	}
         	
-        	cal = Utilerias.getCalendarTimeZone0(rs.getString("fecSta"), Constantes.FORMATO_FECHA);
+        	cal = Utils.getCalendarTimeZone0(rs.getString("fecSta"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		recibo.setFecSta(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA fecSta !!! " + rs.getString("fecSta"));
         	}
 	        
-        	cal = Utilerias.getCalendarTimeZone0(rs.getString("fecTer"), Constantes.FORMATO_FECHA);
+        	cal = Utils.getCalendarTimeZone0(rs.getString("fecTer"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		recibo.setFecTer(cal);
         	}else{
@@ -3722,14 +3722,14 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setFaxCli(rs.getString("faxCli"));
 
     		
-    		cal = Utilerias.getCalendarTimeZone0(rs.getString("fecaltaCli"), Constantes.FORMATO_FECHA);
+    		cal = Utils.getCalendarTimeZone0(rs.getString("fecaltaCli"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		cliente.setFecaltaCli(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA fecaltaCli !!! " + rs.getString("fecaltaCli"));
         	}
         	
-        	cal = Utilerias.getCalendarTimeZone0(rs.getString("fecnacCli"), Constantes.FORMATO_FECHA);
+        	cal = Utils.getCalendarTimeZone0(rs.getString("fecnacCli"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		cliente.setFecnacCli(cal);
         	}else{
@@ -3836,14 +3836,14 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setFaxCli(rs.getString("faxCli"));
     		
     		
-    		cal = Utilerias.getCalendarTimeZone0(rs.getString("fecaltaCli"), Constantes.FORMATO_FECHA);
+    		cal = Utils.getCalendarTimeZone0(rs.getString("fecaltaCli"), Constantes.FORMATO_FECHA);
     		if(cal != null){
     			cliente.setFecaltaCli(cal);
     		}else{
     			logger.error("NO SE PUDO PARSEAR LA FECHA fecaltaCli !!! " + rs.getString("fecaltaCli"));
     		}
     		
-    		cal = Utilerias.getCalendarTimeZone0(rs.getString("fecnacCli"), Constantes.FORMATO_FECHA);
+    		cal = Utils.getCalendarTimeZone0(rs.getString("fecnacCli"), Constantes.FORMATO_FECHA);
     		if(cal != null){
     			cliente.setFecnacCli(cal);
     		}else{
@@ -3892,7 +3892,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		
     		cliente.setStatusCli(rs.getString("STATUSCLI"));
     		
-    		cal = Utilerias.getCalendarTimeZone0(rs.getString("fecstaCli"), Constantes.FORMATO_FECHA);
+    		cal = Utils.getCalendarTimeZone0(rs.getString("fecstaCli"), Constantes.FORMATO_FECHA);
     		if(cal != null){
     			cliente.setFecstaCli(cal);
     		}else{
@@ -4070,7 +4070,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			{
 				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe"))
 				{
-					map.put(col,Utilerias.formateaFecha(rs.getString(col)));
+					map.put(col,Utils.formateaFecha(rs.getString(col)));
 				}
 				else
 				{
@@ -4146,7 +4146,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			{
 				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe"))
 				{
-					map.put(col,Utilerias.formateaFecha(rs.getString(col)));
+					map.put(col,Utils.formateaFecha(rs.getString(col)));
 				}
 				else
 				{
@@ -4193,7 +4193,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			{
 				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe"))
 				{
-					map.put(col,Utilerias.formateaFecha(rs.getString(col)));
+					map.put(col,Utils.formateaFecha(rs.getString(col)));
 				}
 				else
 				{
@@ -4282,7 +4282,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			{
 				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe"))
 				{
-					map.put(col,Utilerias.formateaFecha(rs.getString(col)));
+					map.put(col,Utils.formateaFecha(rs.getString(col)));
 				}
 				else
 				{

@@ -6,13 +6,10 @@ package mx.com.aon.configurador.pantallas.model.components;
 import java.io.Serializable;
 import java.util.List;
 
+import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import mx.com.aon.configurador.pantallas.model.components.RecordVO;
-import mx.com.aon.configurador.pantallas.model.components.ColumnGridVO;
-import mx.com.aon.configurador.pantallas.model.components.ItemVO;
-import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
 
 /**
  *  Clase Value Object con los atributos necesarios

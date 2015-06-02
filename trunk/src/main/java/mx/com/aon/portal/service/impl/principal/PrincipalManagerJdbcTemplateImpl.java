@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import mx.com.aon.portal.dao.WrapperResultadosGeneric;
 import mx.com.aon.portal.model.principal.ClienteVO;
 import mx.com.aon.portal.model.principal.ConfiguracionVO;
 import mx.com.aon.portal.model.principal.PaginaVO;
