@@ -359,7 +359,7 @@ Ext.onReady(function() {
 				icon:_CONTEXT+'/resources/fam3icons/icons/application_view_list.png',
 				handler: function(){
 					siniestralidad(panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(), panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
-                    	null,panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue());
+                    	null,panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),"1");
 				}
 			}
 		]
@@ -615,10 +615,7 @@ Ext.onReady(function() {
                     var record = grid.getStore().getAt(rowIndex);
                     debug('record cdperson ==> :',record,record.get('cdperson'));
                     var values = panelBusqueda.down('form').getForm().getValues();
-                    debug('values ===>',values);
-                    siniestralidad(panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(), panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
-                    	record.get('cdperson'),panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue());//cdunieco,cdramo, cdperson, nmpoliza
-
+                    siniestralidad(null, null,record.get('cdperson'),null,"0");//cdunieco,cdramo, cdperson, nmpoliza
                 }
             }
         ]
@@ -1354,7 +1351,7 @@ Ext.onReady(function() {
             callbackGetPolizasAsegurado);
     }
     
-    function siniestralidad(cdunieco,cdramo, cdperson, nmpoliza){
+    function siniestralidad(cdunieco,cdramo, cdperson, nmpoliza, proceso){
 		var windowHistSinies = Ext.create('Ext.window.Window',{
 			modal       : true,
 			buttonAlign : 'center',
@@ -1367,7 +1364,8 @@ Ext.onReady(function() {
 					'params.cdperson'  : cdperson,
 					'params.cdramo'    : cdramo,
 					'params.nmpoliza'  : nmpoliza,
-					'params.cdunieco'  : cdunieco
+					'params.cdunieco'  : cdunieco,
+					'params.proceso'  : proceso
 					
 				},
 				scripts  : true,

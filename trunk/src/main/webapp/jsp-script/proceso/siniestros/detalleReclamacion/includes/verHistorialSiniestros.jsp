@@ -15,6 +15,7 @@
             var _cdramo =  '<s:property value="params.cdramo" />';
             var _nmpoliza =  '<s:property value="params.nmpoliza" />';
             var _cdunieco =  '<s:property value="params.cdunieco" />';
+            var _proceso  =  '<s:property value="params.proceso" />';
             
             var _URL_cargaHistorialSinies = '<s:url namespace="/siniestros" action="cargaHistorialSiniestros" />';
 		            
@@ -27,7 +28,7 @@
 						'ANTIGUEDAD',		'CONTRATANTE',		'TIPOPAGO',			'ESTATUS',		'SUCURSAL',
 						'POLIZA',			'FACTURA',			'FECHAFACT',		'PROVEEDOR',	'SINIESTRO',
 						'DIAGNOSTICO',		'CAUSASIN',			'FECHAOCURRE',		'SUBTOTAL',		'IVA',
-						'IVARETENIDO',		'ISR',				'IMPCEDULAR',		'PAGADO'
+						'IVARETENIDO',		'ISR',				'IMPCEDULAR',		'PAGADO',		'NMPOLIEX'
 					]
 				});
 
@@ -54,7 +55,13 @@
 						var jsonResponse = Ext.decode(response.responseText);
 						debug("Valor del Response ===> ",jsonResponse);
 						if(jsonResponse.loadList == null || jsonResponse.loadList.length == 0) {
-							showMessage("Aviso", "No tiene siniestralidad", Ext.Msg.OK, Ext.Msg.INFO);
+							var respuesta ="";
+							if(_proceso =='1'){
+								showMessage("Aviso", "La p&oacute;liza no tiene siniestralidad.", Ext.Msg.OK, Ext.Msg.INFO);
+							}else{
+								showMessage("Aviso", "Este asegurado no cuenta con siniestralidad.", Ext.Msg.OK, Ext.Msg.INFO);
+							}
+							
 						}
 					}else{
 						Ext.Msg.show({
@@ -80,11 +87,12 @@
 				    titleCollapse: true,
 				    buttonAlign : 'center',
 				    columns     : [
+									{	header    : 'P&oacute;liza',		dataIndex : 'NMPOLIEX',		width: 150	},
+									{	header    : 'Asegurado',			dataIndex : 'ASEGURADO',	width: 200, hidden : _proceso != '1'	},
 									{	header    : 'Tr&aacute;mite',		dataIndex : 'NTRAMITE',		width: 70	},
 									{	header    : 'Contra Recibo',		dataIndex : 'CONTRARECIBO',	width: 90	},
 									{	header    : 'Siniestro',			dataIndex : 'SINIESTRO',	width: 70	},
-									{	header    : 'Sucursal',				dataIndex : 'SUCURSAL',		width: 70	},
-									{	header    : 'P&oacute;liza',		dataIndex : 'POLIZA',		width: 70	},
+									//{	header    : 'Sucursal',				dataIndex : 'SUCURSAL',		width: 70	},
 									{	header    : 'Estatus',				dataIndex : 'ESTATUS',		width: 100	},
 									{	header    : 'Tipo Pago',			dataIndex : 'TIPOPAGO',		width: 150	},
 									{	header    : 'Factura',				dataIndex : 'FACTURA',		width: 70	},
