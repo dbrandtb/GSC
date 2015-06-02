@@ -537,7 +537,7 @@ function manejaException(e,ck,compLoading)
 {
     if(typeof e == 'string')
     {
-        mensajeError(e);
+        mensajeWarning(e);
     }
     else
     {
