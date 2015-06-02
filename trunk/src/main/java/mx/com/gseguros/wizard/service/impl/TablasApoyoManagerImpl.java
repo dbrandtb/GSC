@@ -3,12 +3,12 @@ package mx.com.gseguros.wizard.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.wizard.dao.TablasApoyoDAO;
 import mx.com.gseguros.wizard.service.TablasApoyoManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class TablasApoyoManagerImpl implements TablasApoyoManager {

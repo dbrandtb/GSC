@@ -16,7 +16,7 @@ import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.Agente;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.Cobertura;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.jaxws.CodigoPostal;
@@ -113,7 +113,7 @@ public class EmisionAutosServiceJAXWSImpl implements EmisionAutosService {
 				datosCotizacionAuto.setIdBanco(Integer.valueOf(m.get("IDBANCO")));
 				datosCotizacionAuto.setMesesSinIntereses(Integer.valueOf(m.get("MESESSININTERESES")));
 				datosCotizacionAuto.setIdOrigenSolicitud(Integer.valueOf(m.get("IDORIGENSOLICITUD")));
-				datosCotizacionAuto.setFinVigencia(Utilerias.getXmlGregCalendar(m.get("FINVIGENCIA"), Constantes.FORMATO_FECHA));
+				datosCotizacionAuto.setFinVigencia(Utils.getXmlGregCalendar(m.get("FINVIGENCIA"), Constantes.FORMATO_FECHA));
 				datosCotizacionAuto.setClaveGS(Integer.valueOf(m.get("CLAVEGS")));
 				
 				//idagente y sucursal
@@ -209,7 +209,7 @@ public class EmisionAutosServiceJAXWSImpl implements EmisionAutosService {
 				datosCotizacionAuto.setVersionTarifa(Integer.valueOf(m.get("VERSIONTARIFA")));
 				
 				//inicioVigencia
-				datosCotizacionAuto.setInicioVigencia(Utilerias.getXmlGregCalendar(m.get("INICIOVIGENCIA"), Constantes.FORMATO_FECHA));
+				datosCotizacionAuto.setInicioVigencia(Utils.getXmlGregCalendar(m.get("INICIOVIGENCIA"), Constantes.FORMATO_FECHA));
 				
 				//moneda
 				datosCotizacionAuto.setMoneda(Integer.valueOf(m.get("MONEDA")));

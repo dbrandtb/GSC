@@ -3,7 +3,6 @@ package mx.com.gseguros.ws.ice2sigs.client.axis2.callback.impl;
 import java.util.HashMap;
 
 import mx.com.aon.kernel.service.KernelManagerSustituto;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.CcomisionRespuesta;

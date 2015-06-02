@@ -2,28 +2,8 @@ package mx.com.gseguros.ws.ice2sigs.service;
 
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Agente;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSalud;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AseguradoRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Ccomision;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.CcomisionRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Cliente;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Poliza;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaMovimiento;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaMovimientoAgente;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaMovimientoAsegurado;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaMovimientoAseguradoCobertura;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaMovimientoAseguradoEndoso;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaRespuesta;
 
 public interface Ice2sigsService {
 

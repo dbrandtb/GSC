@@ -8,7 +8,6 @@
 
     package mx.com.gseguros.ws.folioserviciopublico.client.axis2;
 
-import mx.com.gseguros.ws.folioserviciopublico.client.axis2.FolioWSServiceStub.ValidarFolioResponseE;
 
     /**
      *  FolioWSServiceCallbackHandler Callback class, Users can extend this class and implement

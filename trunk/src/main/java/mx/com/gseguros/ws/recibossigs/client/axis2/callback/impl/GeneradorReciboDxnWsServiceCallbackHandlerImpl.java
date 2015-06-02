@@ -3,7 +3,6 @@ package mx.com.gseguros.ws.recibossigs.client.axis2.callback.impl;
 import java.util.HashMap;
 
 import mx.com.aon.kernel.service.KernelManagerSustituto;
-import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceCallbackHandler;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub;

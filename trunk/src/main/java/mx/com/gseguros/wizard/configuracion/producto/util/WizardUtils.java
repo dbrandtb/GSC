@@ -8,8 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import mx.com.gseguros.wizard.configuracion.producto.definicion.web.PrincipalProductosAction;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -33,9 +31,9 @@ public class WizardUtils{
      * Metodo que verifica dos fechas, valida que la fechaIni sea menor a la fechaFin, los posibles resultados son los soguintes:
      * regresa [0] cuando fechaIni = fechaFin regresa [-1] cuando fechaIni > fechaFin regresa [1] cuando fechaIni < fechaFIn
      * 
-     * @param finAnterior Date Fecha de In’cio
+     * @param finAnterior Date Fecha de Inï¿½cio
      * @param fechaFinal date Fecha de termino
-     * @return int indicador de la comparaci—n
+     * @return int indicador de la comparaciï¿½n
      */
     public static boolean validarRangoFechas(Date finAnterior, Date fechaFinal) {
         boolean indicador=false;
@@ -237,7 +235,7 @@ public class WizardUtils{
 //    	return extDate;
 //    }
     /**
-     * MŽtodo que valida si la cadena es valida para una fecha, de acuerdo a la constante de fechas FormatConstants.DATE_FORMAT,
+     * Mï¿½todo que valida si la cadena es valida para una fecha, de acuerdo a la constante de fechas FormatConstants.DATE_FORMAT,
      * que es "dd/MM/yyyy"
      * 
      * @param cadena con los caracteres de la fecha
