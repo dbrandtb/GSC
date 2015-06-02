@@ -142,7 +142,7 @@ Ext.onReady(function()
                         ,value          : 'N'
                         ,hidden         : true
                         ,name           : 'devoPrim'
-                        ,fieldLabel     : 'Devoluci&oacute;n prima'
+                        ,fieldLabel     : 'Devoluci&oacute;n derechos'
                     })
                     ,{
                         xtype    : 'button'
