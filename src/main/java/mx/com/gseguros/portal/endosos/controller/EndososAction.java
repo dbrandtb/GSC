@@ -2038,7 +2038,7 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			logger.error("error al cargar las coberturas disponibles");
+			logger.error("Error al cargar las coberturas disponibles", ex);
 		}
 		success=true;
 		logger.debug(""
