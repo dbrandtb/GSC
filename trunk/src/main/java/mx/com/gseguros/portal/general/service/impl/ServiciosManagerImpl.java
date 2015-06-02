@@ -8,7 +8,6 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
 import mx.com.gseguros.utils.HttpUtil;
-import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +36,7 @@ public class ServiciosManagerImpl implements ServiciosManager
 	@Override
 	public String reemplazarDocumentoCotizacion(StringBuilder sb, String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception
 	{
-		sb.append(Utilerias.join(
+		sb.append(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ reemplazarDocumentoCotizacion @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -51,10 +50,10 @@ public class ServiciosManagerImpl implements ServiciosManager
 		try
 		{
 			paso = "Validando operacion y recuperando datos para el reporte";
-			sb.append(Utilerias.join("\n",paso));
+			sb.append(Utils.join("\n",paso));
 			
 			Map<String,String> datos = cotizacionDAO.validarReemplazoDocumentoCotizacion(cdunieco,cdramo,estado,nmpoliza);
-			sb.append(Utilerias.join("\ndatos recuperados=",datos));
+			sb.append(Utils.join("\ndatos recuperados=",datos));
 			
 			String cdtipsit = datos.get("cdtipsit");
 			String cdplan   = datos.get("cdplan");
@@ -71,9 +70,9 @@ public class ServiciosManagerImpl implements ServiciosManager
 					,reporte  , "No se recupero el reporte");
 			
 			paso = "Verificando carpeta del tramite";
-			sb.append(Utilerias.join("\n",paso));
+			sb.append(Utils.join("\n",paso));
 			
-			String rutaCarpeta = Utilerias.join(rutaDocumentosPoliza,"/",ntramite);
+			String rutaCarpeta = Utils.join(rutaDocumentosPoliza,"/",ntramite);
 			File   carpeta     = new File(rutaCarpeta);
             if(!carpeta.exists())
             {
@@ -85,7 +84,7 @@ public class ServiciosManagerImpl implements ServiciosManager
             }
 			
             paso = "Construyendo url de reporte";
-			sb.append(Utilerias.join("\n",paso));
+			sb.append(Utils.join("\n",paso));
             String url = null;
 			
 			if(StringUtils.isBlank(tipoflot))
@@ -131,7 +130,7 @@ public class ServiciosManagerImpl implements ServiciosManager
 			}
 			
 			paso = "Generando cotizacion";
-			sb.append(Utilerias.join("\n",paso,"\nurl=",url));
+			sb.append(Utils.join("\n",paso,"\nurl=",url));
 			
 			if(!HttpUtil.generaArchivo(url,rutaCarpeta+"/cotizacion.pdf"))
 			{
@@ -167,7 +166,7 @@ public class ServiciosManagerImpl implements ServiciosManager
 			,String cdsisrolDes
 			)throws Exception
 	{
-		sb.append(Utilerias.join(
+		sb.append(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ grabarEvento @@@@@@"
 				,"\n@@@@@@ cdmodulo="    , cdmodulo

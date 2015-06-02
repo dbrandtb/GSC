@@ -25,13 +25,12 @@ import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
-import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.MesaControlVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.model.SiniestroVO;
 import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -76,10 +75,10 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setNmautant(rs.getString("NMAUTANT"));
         	consulta.setCdperson(rs.getString("CDPERSON"));
         	consulta.setNombreCliente(rs.getString("NOMBRECLIENTE"));
-        	consulta.setFesolici(Utilerias.formateaFecha(rs.getString("FESOLICI")));
-        	consulta.setFeautori(Utilerias.formateaFecha(rs.getString("FEAUTORI")));
-        	consulta.setFevencim(Utilerias.formateaFecha(rs.getString("FEVENCIM")));
-        	consulta.setFeingres(Utilerias.formateaFecha(rs.getString("FEINGRES")));
+        	consulta.setFesolici(Utils.formateaFecha(rs.getString("FESOLICI")));
+        	consulta.setFeautori(Utils.formateaFecha(rs.getString("FEAUTORI")));
+        	consulta.setFevencim(Utils.formateaFecha(rs.getString("FEVENCIM")));
+        	consulta.setFeingres(Utils.formateaFecha(rs.getString("FEINGRES")));
         	consulta.setCdunieco(rs.getString("CDUNIECO"));
         	consulta.setEstado(rs.getString("ESTADO"));
         	consulta.setCdramo(rs.getString("CDRAMO"));
@@ -106,7 +105,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setDstratam(rs.getString("DSTRATAM"));
         	consulta.setDsobserv(rs.getString("DSOBSERV"));
         	consulta.setDsnotas(rs.getString("DSNOTAS"));
-        	consulta.setFesistem(Utilerias.formateaFecha(rs.getString("FESISTEM")));
+        	consulta.setFesistem(Utils.formateaFecha(rs.getString("FESISTEM")));
         	consulta.setCduser(rs.getString("CDUSER"));
         	consulta.setEspecialidadMedico(rs.getString("ESPECMED"));
         	consulta.setCveTipoAutorizaG(rs.getString("TPAUTORI"));
@@ -180,7 +179,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	AutorizaServiciosVO consulta = new AutorizaServiciosVO();
         	consulta.setNmautser(rs.getString("NMAUTSER"));
         	consulta.setNmautant(rs.getString("NMAUTANT"));
-        	consulta.setFesolici(Utilerias.formateaFecha(rs.getString("FESOLICI")));
+        	consulta.setFesolici(Utils.formateaFecha(rs.getString("FESOLICI")));
         	consulta.setPolizaafectada(rs.getString("POLIZAAFECTADA"));
         	consulta.setCdprovee(rs.getString("CDPROVEE"));
         	consulta.setNombreProveedor(rs.getString("NOMBREPROVEEDOR"));
@@ -794,8 +793,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setNmpoliza(rs.getString("NMPOLIZA"));
         	consulta.setNmsituac(rs.getString("NMSITUAC"));
         	consulta.setMtoBase(rs.getString("MTOBASE"));
-        	consulta.setFeinicio(Utilerias.formateaFecha(rs.getString("FEINICIO")));
-        	consulta.setFefinal(Utilerias.formateaFecha(rs.getString("FEFINAL")));
+        	consulta.setFeinicio(Utils.formateaFecha(rs.getString("FEINICIO")));
+        	consulta.setFefinal(Utils.formateaFecha(rs.getString("FEFINAL")));
         	consulta.setDssucursal(rs.getString("DSUNIECO"));
         	consulta.setDsramo(rs.getString("DSRAMO"));
         	consulta.setEstatus(rs.getString("STATUS"));
@@ -812,10 +811,10 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	}
         	
         	consulta.setFcancelacionAfiliado(rs.getString("FCANCEL_AFILIADO"));
-        	consulta.setFaltaAsegurado(Utilerias.formateaFecha(rs.getString("FALTA_ASEGURADO")));
+        	consulta.setFaltaAsegurado(Utils.formateaFecha(rs.getString("FALTA_ASEGURADO")));
         	consulta.setMtoBeneficioMax(rs.getString("BENEFICIO_MAXIMO"));
         	consulta.setZonaContratada(rs.getString("ZONA_CONTRATADA"));
-        	consulta.setVigenciaPoliza(Utilerias.formateaFecha(rs.getString("FEINICIO"))+"\t\t|\t\t"+Utilerias.formateaFecha(rs.getString("FEFINAL")));
+        	consulta.setVigenciaPoliza(Utils.formateaFecha(rs.getString("FEINICIO"))+"\t\t|\t\t"+Utils.formateaFecha(rs.getString("FEFINAL")));
         	consulta.setNumPoliza(rs.getString("NUMPOLIZA"));
         	consulta.setDsplan(rs.getString("DSPLAN"));
         	consulta.setMesesAsegurado(rs.getString("MESESASEGURADO"));
@@ -2790,11 +2789,11 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		List<Map<String,String>> lista = (List<Map<String,String>>) mapResult.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
 		{
-			throw new Exception("No se encuentra la Renta Diaria x hospitalización ");
+			throw new Exception("No se encuentra la Renta Diaria x hospitalizaciï¿½n ");
 		}
 		if(lista.size()>1)
 		{
-			throw new Exception("Renta Diaria x hospitalización duplicado");
+			throw new Exception("Renta Diaria x hospitalizaciï¿½n duplicado");
 		}
 		Map<String,String>rentaDiaria = lista.get(0);
 		logger.debug("Renta Diaria x hospitalizacion: "+rentaDiaria);
@@ -2926,35 +2925,35 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	reclamo.setEdoOcu(rs.getInt("EDO_OCU"));
         	reclamo.setEstReg(rs.getString("EST_REG"));
         	
-        	cal = Utilerias.getCalendarTimeZone0(rs.getString("FEC_FAC"), Constantes.FORMATO_FECHA);
+        	cal = Utils.getCalendarTimeZone0(rs.getString("FEC_FAC"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		reclamo.setFecFac(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_FAC !!! " + rs.getString("FEC_FAC"));
         	}
         	
-        	cal = Utilerias.getCalendarTimeZone0(rs.getString("FEC_OCU"), Constantes.FORMATO_FECHA);
+        	cal = Utils.getCalendarTimeZone0(rs.getString("FEC_OCU"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		reclamo.setFecOcu(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_OCU !!! " + rs.getString("FEC_OCU"));
         	}
 
-        	cal = Utilerias.getCalendarTimeZone0(rs.getString("FEC_PRO"), Constantes.FORMATO_FECHA);
+        	cal = Utils.getCalendarTimeZone0(rs.getString("FEC_PRO"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		reclamo.setFecPro(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_PRO !!! " + rs.getString("FEC_PRO"));
         	}
 
-        	cal = Utilerias.getCalendarTimeZone0(rs.getString("FEC_REG"), Constantes.FORMATO_FECHA);
+        	cal = Utils.getCalendarTimeZone0(rs.getString("FEC_REG"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		reclamo.setFecReg(cal);
         	}else{
         		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_REG !!! " + rs.getString("FEC_REG"));
         	}
 
-        	cal = Utilerias.getCalendarTimeZone0(rs.getString("FIN_VIG"), Constantes.FORMATO_FECHA);
+        	cal = Utils.getCalendarTimeZone0(rs.getString("FIN_VIG"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		reclamo.setFinVig(cal);
         	}else{
@@ -2990,7 +2989,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	reclamo.setIncPol(rs.getInt("INC_POL"));
         	
         	
-        	cal = Utilerias.getCalendarTimeZone0(rs.getString("INI_VIG"), Constantes.FORMATO_FECHA);
+        	cal = Utils.getCalendarTimeZone0(rs.getString("INI_VIG"), Constantes.FORMATO_FECHA);
         	if(cal != null){
         		reclamo.setIniVig(cal);
         	}else{
@@ -3078,7 +3077,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	//rs.getString("")
         	consulta.setNtramite(rs.getString("NTRAMITE"));
         	consulta.setNfactura(rs.getString("NFACTURA"));
-        	consulta.setFfactura(Utilerias.formateaFecha(rs.getString("FFACTURA")));
+        	consulta.setFfactura(Utils.formateaFecha(rs.getString("FFACTURA")));
         	consulta.setCdtipser(rs.getString("CDTIPSER"));
         	consulta.setDstipser(rs.getString("DSTIPSER"));
         	consulta.setDspresta(rs.getString("DSPRESTA"));
@@ -3098,7 +3097,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setCdtipsit(rs.getString("CDTIPSIT"));
         	consulta.setNombre(rs.getString("NOMBRE"));
         	consulta.setCdperson(rs.getString("CDPERSON"));
-        	consulta.setFeocurre(Utilerias.formateaFecha(rs.getString("FEOCURRE")));
+        	consulta.setFeocurre(Utils.formateaFecha(rs.getString("FEOCURRE")));
         	consulta.setNmautser(rs.getString("NMAUTSER"));
         	consulta.setNmpoliex(rs.getString("NMPOLIEX"));
         	consulta.setNombreAsegurado(rs.getString("CDPERSON")+" "+ rs.getString("NOMBRE"));
@@ -3147,11 +3146,11 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setCdsucdocmc(rs.getString("CDSUCDOC"));
         	consulta.setCdsubrammc(rs.getString("CDSUBRAM"));
         	consulta.setCdtiptramc(rs.getString("CDTIPTRA"));
-        	consulta.setFerecepcmc(Utilerias.formateaFecha(rs.getString("FERECEPC")));
+        	consulta.setFerecepcmc(Utils.formateaFecha(rs.getString("FERECEPC")));
         	consulta.setCdagentemc(rs.getString("CDAGENTE"));
         	consulta.setReferenciamc(rs.getString("REFERENCIA"));
         	consulta.setNombremc(rs.getString("NOMBRE"));
-        	consulta.setFecstatumc(Utilerias.formateaFecha(rs.getString("FECSTATU")));
+        	consulta.setFecstatumc(Utils.formateaFecha(rs.getString("FECSTATU")));
         	consulta.setStatusmc(rs.getString("STATUS"));
         	consulta.setCommentsmc(rs.getString("COMMENTS"));
         	consulta.setCdtipsitmc(rs.getString("CDTIPSIT"));
@@ -3160,11 +3159,11 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setOtvalor03mc(rs.getString("OTVALOR03"));
         	consulta.setOtvalor04mc(rs.getString("OTVALOR04"));
         	consulta.setOtvalor05mc(rs.getString("OTVALOR05"));
-        	consulta.setOtvalor06mc(Utilerias.formateaFecha(rs.getString("OTVALOR06")));
+        	consulta.setOtvalor06mc(Utils.formateaFecha(rs.getString("OTVALOR06")));
         	consulta.setOtvalor07mc(rs.getString("OTVALOR07"));
         	consulta.setOtvalor08mc(rs.getString("OTVALOR08"));
         	consulta.setOtvalor09mc(rs.getString("OTVALOR09"));
-        	consulta.setOtvalor10mc(Utilerias.formateaFecha(rs.getString("OTVALOR10")));
+        	consulta.setOtvalor10mc(Utils.formateaFecha(rs.getString("OTVALOR10")));
         	consulta.setOtvalor11mc(rs.getString("OTVALOR11"));
         	consulta.setOtvalor12mc(rs.getString("OTVALOR12"));
         	consulta.setOtvalor13mc(rs.getString("OTVALOR13"));

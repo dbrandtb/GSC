@@ -7,7 +7,6 @@ import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.portal.general.model.BaseVO;
-import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.reclamoExpress.model.ReclamoExpressDetalleVO;
 import mx.com.gseguros.portal.reclamoExpress.model.ReclamoExpressVO;
 import mx.com.gseguros.portal.reclamoExpress.service.ReclamoExpressManager;

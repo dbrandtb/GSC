@@ -24,7 +24,7 @@ import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.utils.HttpUtil;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -473,7 +473,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 	
 	public String actualizarNombreDocumento()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n#######################################"
 				,"\n###### actualizarNombreDocumento ######"
 				,"\n###### smap1=",smap1
@@ -518,7 +518,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 			logger.error(respuesta,ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### actualizarNombreDocumento ######"
 				,"\n#######################################"
 				));
@@ -529,7 +529,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 	
 	public String borrarDocumento()
 	{
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n#############################"
 				,"\n###### borrarDocumento ######"
 				,"\n###### smap1=",smap1
@@ -573,7 +573,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 			logger.error(respuesta,ex);
 		}
 		
-		logger.info(Utilerias.join(
+		logger.info(Utils.join(
 				 "\n###### borrarDocumento ######"
 				,"\n#############################"
 				));

@@ -12,7 +12,7 @@ import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.rehabilitacion.dao.RehabilitacionDAO;
 import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
@@ -47,14 +47,14 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 		params.put("pv_cdramo_i"    , cdramo);
 		params.put("pv_nmpoliza_i"  , nmpoliza);
 		params.put("pv_nmsituac_i"  , nmsituac);
-		Utilerias.debugProcedure(logger, "pkg_cancela.p_polizas_canc_a_rehabilitar", params);
+		Utils.debugProcedure(logger, "pkg_cancela.p_polizas_canc_a_rehabilitar", params);
 		Map<String,Object> resultadoMap = this.ejecutaSP(new BuscarPolizas(this.getDataSource()), params);
 		List<Map<String,String>> lista  = (List<Map<String, String>>) resultadoMap.get("pv_registro_o");
 		if(lista==null)
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
-		Utilerias.debugProcedure(logger, "pkg_cancela.p_polizas_canc_a_rehabilitar", params, lista);
+		Utils.debugProcedure(logger, "pkg_cancela.p_polizas_canc_a_rehabilitar", params, lista);
 		return lista;
 	}
 	
@@ -85,7 +85,7 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 	@Override
 	public Map<String,Object> rehabilitarPoliza(Map<String,String>params) throws Exception
 	{
-		return this.ejecutaSP(new RehabilitarPoliza(this.getDataSource()), Utilerias.ponFechas(params));
+		return this.ejecutaSP(new RehabilitarPoliza(this.getDataSource()), Utils.ponFechas(params));
 	}
 	
 	@Override
@@ -121,7 +121,7 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 		params.put("pv_nmcancel_i" , nmcancel);
 		params.put("pv_comments_i" , comments);
 		params.put("pv_nmsuplem_i" , nmsuplem);
-		Utilerias.debugProcedure(logger, "pkg_cancela.p_rehabilita_poliza", params);
+		Utils.debugProcedure(logger, "pkg_cancela.p_rehabilita_poliza", params);
 		Map<String,Object> procResult = ejecutaSP(new RehabilitarPoliza(getDataSource()),params);
 		return procResult;
 	}
@@ -162,7 +162,7 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 	public boolean validaAntiguedad(Map<String,String>params) throws Exception
 	{
 		boolean validacion = false; 
-		Map<String,Object>mapa=this.ejecutaSP(new ValidaAntiguedad(this.getDataSource()), Utilerias.ponFechas(params));
+		Map<String,Object>mapa=this.ejecutaSP(new ValidaAntiguedad(this.getDataSource()), Utils.ponFechas(params));
 		validacion = mapa!=null && mapa.containsKey("pv_valor_o") 
 				&& mapa.get("pv_valor_o")!=null && ((String)mapa.get("pv_valor_o")).equalsIgnoreCase(Constantes.SI);
 		return validacion;
@@ -191,7 +191,7 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 	@Override
 	public void borraAntiguedad(Map<String,String>params) throws Exception
 	{
-		this.ejecutaSP(new BorraAntiguedad(this.getDataSource()), Utilerias.ponFechas(params));
+		this.ejecutaSP(new BorraAntiguedad(this.getDataSource()), Utils.ponFechas(params));
 	}
 	
 	protected class BorraAntiguedad extends StoredProcedure

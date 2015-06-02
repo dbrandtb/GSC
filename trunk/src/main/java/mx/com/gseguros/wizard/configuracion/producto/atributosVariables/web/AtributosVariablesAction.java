@@ -1,10 +1,11 @@
 package mx.com.gseguros.wizard.configuracion.producto.atributosVariables.web;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.wizard.configuracion.producto.atributosVariables.model.AtributosVariablesVO;
 import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.RamaVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
@@ -13,9 +14,6 @@ import mx.com.gseguros.wizard.configuracion.producto.service.AtributosVariablesM
 import mx.com.gseguros.wizard.configuracion.producto.web.ExpresionesPadre;
 import mx.com.gseguros.wizard.model.MensajesVO;
 import mx.com.gseguros.wizard.service.CatalogService;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.aon.portal.service.PagedList;
-import mx.com.gseguros.utils.Constantes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;

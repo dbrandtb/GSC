@@ -2,12 +2,12 @@ package mx.com.gseguros.wizard.configuracion.producto.incisos.web;
 
 import java.util.List;
 
+import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.RamaVO;
 import mx.com.gseguros.wizard.configuracion.producto.incisos.model.IncisoVO;
 import mx.com.gseguros.wizard.configuracion.producto.service.IncisoManager;
 import mx.com.gseguros.wizard.configuracion.producto.web.Padre;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.aon.portal.util.WrapperResultados;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -124,7 +124,7 @@ public class PrincipalIncisosAction extends Padre{
 	
 	/**
 	 * Metodo <code>execute</code> con el que es llamado desde Struts para
-	 * atender la petición web.
+	 * atender la peticiï¿½n web.
 	 * 
 	 * @return INPUT
 	 * @throws Exception

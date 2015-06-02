@@ -17,8 +17,8 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasAseguradoManager;
 import mx.com.gseguros.portal.cotizacion.controller.MesaControlAction;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -54,7 +54,6 @@ import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Operacion;
-import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -63,7 +62,6 @@ import org.apache.struts2.json.JSONException;
 import org.apache.struts2.json.JSONUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.SqlParameter;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -878,18 +876,18 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		String comments    = map1.get("comments");
 		logger.debug(comments);
 		String commentsM   = comments.replaceAll("\n", "%0A").
-								replaceAll("á", "%C3%A1").
-								replaceAll("é", "%C3%A9").
-								replaceAll("í", "%C3%AD").
-								replaceAll("ó", "%C3%B3").
-								replaceAll("ú", "%C3%BA").
-								replaceAll("ñ", "%C3%B1").
-								replaceAll("Á", "%C3%81").
-								replaceAll("É", "%C3%89").
-								replaceAll("Í", "%C3%8D").
-								replaceAll("Ó", "%C3%93").
-								replaceAll("Ú", "%C3%9A").
-								replaceAll("Ñ", "%C3%91");
+								replaceAll("ï¿½", "%C3%A1").
+								replaceAll("ï¿½", "%C3%A9").
+								replaceAll("ï¿½", "%C3%AD").
+								replaceAll("ï¿½", "%C3%B3").
+								replaceAll("ï¿½", "%C3%BA").
+								replaceAll("ï¿½", "%C3%B1").
+								replaceAll("ï¿½", "%C3%81").
+								replaceAll("ï¿½", "%C3%89").
+								replaceAll("ï¿½", "%C3%8D").
+								replaceAll("ï¿½", "%C3%93").
+								replaceAll("ï¿½", "%C3%9A").
+								replaceAll("ï¿½", "%C3%91");
 		String cdsisrol    = map1.get("cdsisrol");
 		String cdunieco    = map1.get("cdunieco");
 		String cdramo      = map1.get("cdramo");
@@ -1575,9 +1573,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					ProcesoAltaTramite(msgResult, params.get("cmbRamos"));
 				}
 			}else{
-				//Existe el trámite y solo lo vamos a actualizar
+				//Existe el trï¿½mite y solo lo vamos a actualizar
 				HashMap<String, Object> modMesaControl = new HashMap<String, Object>();
-				//1.- Verificamos si cambio el tipo de atención
+				//1.- Verificamos si cambio el tipo de atenciï¿½n
 				List<MesaControlVO> lista = siniestrosManager.getConsultaListaMesaControl(params.get("idNumTramite").toString());
 				String valorTipoAtencion = lista.get(0).getOtvalor07mc();
 				if(!valorTipoAtencion.equalsIgnoreCase(params.get("cmbTipoAtencion"))){
@@ -1772,7 +1770,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				);
 			}
 		}else{
-			/*Se agrega la información de las facturas*/
+			/*Se agrega la informaciï¿½n de las facturas*/
 			if(params.get("idNumTramite").toString().length() > 0){
 				try {
 					// Se realiza la eliminacion de las facturas
@@ -1878,7 +1876,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		logger.debug(datosTablas);
 		logger.debug(params);
 		try {
-			//Realizamos la eliminación de las facturas
+			//Realizamos la eliminaciï¿½n de las facturas
 			siniestrosManager.getEliminacionFacturaTramite(params.get("idNumTramite"), null, "0");
 			for(int i=0;i<datosTablas.size();i++) {
 				siniestrosManager.guardaListaFacMesaControl(
@@ -2481,7 +2479,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return datosInformacionAdicional informacion adicional
 	*/
 	public String obtieneRequiereAutServ(){
-		logger.debug(" **** Entrando al metodo para verificar si requiere autorización de servicio****");
+		logger.debug(" **** Entrando al metodo para verificar si requiere autorizaciï¿½n de servicio****");
 		try {
 			datosInformacionAdicional = siniestrosManager.requiereInformacionAdicional(params.get("cobertura"),params.get("subcobertura"),params.get("cdramo"),params.get("cdtipsit"));
 		}catch( Exception e){
@@ -4119,7 +4117,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						aseguradoObj.put("conceptosAsegurado", conceptosxSiniestro);
 						
 						//hospitalizacion
-						//	logger.debug("######  HOSPITALIZACIÓN Y AYUDA DE MATERNIDAD WS ######");
+						//	logger.debug("######  HOSPITALIZACIï¿½N Y AYUDA DE MATERNIDAD WS ######");
 						if(tipoFormatoCalculo.equalsIgnoreCase("1")){
 							logger.debug("--->>>> WS del siniestro iterado Hospitalizacion y Ayuda de Maternidad");
 							logger.debug("deducible siniestro iterado    : "+sDeducibleSiniestroIte);
@@ -4361,7 +4359,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				if(StringUtils.isBlank(destoimp)  || destoimp  == null){
 					facturaObj.put("DESCNUME","0");
 				}
-				//Asignación de las variables principales
+				//Asignaciï¿½n de las variables principales
 				String cdunieco = siniestro.get("CDUNIECO");
 				String cdramo   = siniestro.get("CDRAMO");
 				String estado   = siniestro.get("ESTADO");
@@ -4379,7 +4377,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				Map<String,String>copagoDeducibleFacturaIte =siniestrosManager.obtenerCopagoDeducible(
 					cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,tramite.get("OTVALOR02"),cdtipsit);
 				
-				//1.- Obtenemos la información de Autorización de Factura
+				//1.- Obtenemos la informaciï¿½n de Autorizaciï¿½n de Factura
 				Map<String,String>autorizacionesFacturaIte = siniestrosManager.obtenerAutorizacionesFactura(
 					siniestro.get("CDUNIECO"),
 					siniestro.get("CDRAMO"),
@@ -4445,12 +4443,12 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						paramExclusion.put("pv_nmsituac_i",siniestro.get("NMSITUAC"));
 						if(siniestro.get("CDRAMO").toString().equalsIgnoreCase("2")){
 							//--> SALUD VITAL
-							//	1.- Verificamos si existe exclusión de penalización
+							//	1.- Verificamos si existe exclusiï¿½n de penalizaciï¿½n
 							existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
-							//2.- Obtenemos la penalización por cambio de Zona
+							//2.- Obtenemos la penalizaciï¿½n por cambio de Zona
 							penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
 							informacionGral.get(0).get("DSZONAT"),facturaIte.get("CDPRESTA"),siniestro.get("CDRAMO"));
-							//3.- Obtenemos la penalización por circulo Hospitalario
+							//3.- Obtenemos la penalizaciï¿½n por circulo Hospitalario
 							List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(),facturaIte.get("CDPRESTA"));
 							penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), medicos.get(0).getCirculo(),informacionGral.get(0).get("CDCAUSA"),siniestro.get("CDRAMO"));
 						}else{
@@ -4464,7 +4462,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				penalizacion.put("penalizacionCambioZona",""+penalizacionCambioZona);
 				penalizacion.put("penalizacionCirculoHosp",""+penalizacionCirculoHosp);
 				
-				//3.- Obtenemos el total de penalización
+				//3.- Obtenemos el total de penalizaciï¿½n
 				String calcularTotalPenalizacion = calcularTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),
 				copagoDeducibleFacturaIte.get("COPAGO"),copagoDeducibleFacturaIte.get("TIPOCOPAGO"),
 				informacionGral.get(0).get("CDPROVEE"),siniestro.get("CDRAMO"), informacionGral.get(0).get("FEOCURRE"));
@@ -4560,7 +4558,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					}
 				}
 				
-				//Verificamos la información del deducible
+				//Verificamos la informaciï¿½n del deducible
 				//if(facturaIte.get("CDGARANT").equalsIgnoreCase("18HO")||facturaIte.get("CDGARANT").equalsIgnoreCase("18MA"))
 				if(tipoFormatoCalculo.equalsIgnoreCase("1")){
 					//verificamos la causa del siniestro
@@ -4624,7 +4622,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							copagoAplicadoFacturaIte = 0d;
 						}
 					}else{
-						//COBERTURA DIFERENTE HOSPITALIZACIÓN Y AYUDA DE MATERNIDAD
+						//COBERTURA DIFERENTE HOSPITALIZACIï¿½N Y AYUDA DE MATERNIDAD
 						if(!causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
 							if(tipoCopagoFacturaIte.equalsIgnoreCase("$")){
 								copagoAplicadoFacturaIte = cantidadCopagoFacturaIte;
@@ -4797,7 +4795,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		if(conceptos!=null&&conceptos.size()>0){
 			logger.debug("conceptos[0]: "+conceptos);
 		}
-		//aqui verificamos toda la información del WS
+		//aqui verificamos toda la informaciï¿½n del WS
 		logger.debug("###VALOR A IMPRIMIR#####");
 		logger.debug(listaImportesWS);
 		logger.debug(esPagoDirecto);
@@ -5138,7 +5136,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					}
 				}
 				if(impFactura >= impxpagar){
-					//validamos la información del cdpresta
+					//validamos la informaciï¿½n del cdpresta
 					List<Map<String,String>> facturasAux = siniestrosManager.obtenerFacturasTramite(params.get("ntramite"));
 					boolean provPendiente = true;
 					logger.debug("Valor : "+provPendiente);
@@ -5381,7 +5379,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
         				facturaObj.put("CALCULOSPENALIZACIONES",""+calculosPenalizaciones);
         				
         				if(calculosPenalizaciones.equalsIgnoreCase("1")){
-        		   			//4.1.- Verificamos si existe exclusión de penalización
+        		   			//4.1.- Verificamos si existe exclusiï¿½n de penalizaciï¿½n
         		   			HashMap<String, Object> paramExclusion = new HashMap<String, Object>();
             		   		paramExclusion.put("pv_cdunieco_i",cdunieco);
             		   		paramExclusion.put("pv_estado_i",estado);
@@ -5397,7 +5395,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 									penalizacionCambioZona = 0d;
 								}else{
 									existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
-	                		   		//4.2.- Obtenemos la penalización por cambio de Zona
+	                		   		//4.2.- Obtenemos la penalizaciï¿½n por cambio de Zona
 	                		   		penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
 	                						informacionGral.get(0).get("DSZONAT"),informacionGral.get(0).get("CDPROVEE"), cdramo);
 	                		   		
@@ -5405,7 +5403,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								if(aplicaPenalCircHosp.equalsIgnoreCase("N")){
 									penalizacionCirculoHosp = 0d;
 								}else{
-									//4.3.- Obtenemos la penalización por circulo Hospitalario
+									//4.3.- Obtenemos la penalizaciï¿½n por circulo Hospitalario
 	                				penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), informacionGral.get(0).get("CIRHOPROV"),informacionGral.get(0).get("CDCAUSA"), cdramo);
 								}
 								
@@ -5417,13 +5415,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
             		   		}
             				
         		   		}else{
-        		   			//4.2.- Obtenemos la penalización por cambio de Zona
+        		   			//4.2.- Obtenemos la penalizaciï¿½n por cambio de Zona
         		   			aseguradoObj.put("PENALIZACIONCAMBIOZONA",""+penalizacionCambioZona);
-        		   			//4.3.- Obtenemos la penalización por circulo Hospitalario
+        		   			//4.3.- Obtenemos la penalizaciï¿½n por circulo Hospitalario
         		   			aseguradoObj.put("PENALIZACIONCIRCULOHOSP",""+penalizacionCirculoHosp);
         		   		}
         				
-        				//4.4.- Obtenemos el total de penalización
+        				//4.4.- Obtenemos el total de penalizaciï¿½n
         				String calcularTotalPenalizacion = calcularTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),
         																			 copagoDeducibleSiniestroIte.get("COPAGO"),copagoDeducibleSiniestroIte.get("TIPOCOPAGO"),
         																			 informacionGral.get(0).get("CDPROVEE"),cdramo, informacionGral.get(0).get("FEOCURRE"));
@@ -5435,7 +5433,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
         				aseguradoObj.put("COPAGOPORCENTAJES",penalizacionPorcentaje);
         				aseguradoObj.put("COPAGOPESOS",penalizacionPesos);
         				
-    					//5.- Obtenemos información adicional de las facturas, para realizar la validación de aplica IVA o No
+    					//5.- Obtenemos informaciï¿½n adicional de las facturas, para realizar la validaciï¿½n de aplica IVA o No
         				List<Map<String, String>> listaFactura = siniestrosManager.P_GET_FACTURAS_SINIESTRO(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies,cdtipsit);
         				logger.debug("VALOR DE listaFactura -->"+listaFactura);
         				
@@ -5452,7 +5450,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
         				String sCopagoSiniestroIte        = copagoDeducibleSiniestroIte.get("COPAGO").replace(",", "");
         				String tipoCopagoSiniestroIte     = copagoDeducibleSiniestroIte.get("TIPOCOPAGO");
         				
-        				//Verificacación de la información de Deducible
+        				//Verificacaciï¿½n de la informaciï¿½n de Deducible
         				if(StringUtils.isNotBlank(sDeducibleSiniestroIte)
         						&&(!sDeducibleSiniestroIte.equalsIgnoreCase("na"))
         						&&(!sDeducibleSiniestroIte.equalsIgnoreCase("no"))
@@ -5472,7 +5470,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
         						deducibleSiniestroIte = 0d;
         					}
         				}
-        				//Verificacación de la información de copago
+        				//Verificacaciï¿½n de la informaciï¿½n de copago
         				if(StringUtils.isNotBlank(sCopagoSiniestroIte)
         						&&(!sCopagoSiniestroIte.equalsIgnoreCase("na"))
         						&&(!sCopagoSiniestroIte.equalsIgnoreCase("no"))
@@ -5559,7 +5557,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
         						//---> listaConceptosSiniestro.add(concepto);
         						if(tipoFormatoCalculo.equalsIgnoreCase("1"))
         						{
-        							// CALCULOS PARA CUANDO ES HOSPITALIZACIÓN Y AYUDA DE MATERNIDAD
+        							// CALCULOS PARA CUANDO ES HOSPITALIZACIï¿½N Y AYUDA DE MATERNIDAD
         							logger.debug(">>HOSPITALIZACION");
         							double PTIMPORT    = Double.parseDouble(concepto.get("PTIMPORT"));
         							double DESTOPOR    = Double.parseDouble(concepto.get("DESTOPOR"));
@@ -5634,7 +5632,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
         						}
         						else
         						{
-        							//logger.debug("######  COBERTURA DIFERENTE DE HOSPITALIZACIÓN Y AYUDA DE MATERNIDAD  ######");
+        							//logger.debug("######  COBERTURA DIFERENTE DE HOSPITALIZACIï¿½N Y AYUDA DE MATERNIDAD  ######");
         							logger.debug(">>PAGO DIRECTO DIFERENTE A HOSPITALIZACION");
         							Map<String,String>row=new HashMap<String,String>();
         							row.putAll(concepto);
@@ -5829,7 +5827,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
         				
         				//hospitalizacion
         				//if(factura.get("CDGARANT").equalsIgnoreCase("18HO")||factura.get("CDGARANT").equalsIgnoreCase("18MA"))
-        				//logger.debug("######  HOSPITALIZACIÓN Y AYUDA DE MATERNIDAD WS ######");
+        				//logger.debug("######  HOSPITALIZACIï¿½N Y AYUDA DE MATERNIDAD WS ######");
         				if(tipoFormatoCalculo.equalsIgnoreCase("1"))
     					{
     						logger.debug(">>WS del siniestro iterado");
@@ -5918,7 +5916,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
     					}
     					else//pago directo
     					{
-    						//logger.debug("######  COBERTURA DIFERENTE DE HOSPITALIZACIÓN Y AYUDA DE MATERNIDAD  ######");
+    						//logger.debug("######  COBERTURA DIFERENTE DE HOSPITALIZACIï¿½N Y AYUDA DE MATERNIDAD  ######");
     						logger.debug(">>WS del siniestro iterado");
     						logger.debug("deducible siniestro iterado: "+sDeducibleSiniestroIte);
     						logger.debug("copago siniestro iterado: "+sCopagoSiniestroIte);
@@ -5982,7 +5980,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
     						importesWSSiniestroIte.put(IMPORTE_WS_CEDULAR , (new Double(cedSiniestroIte)    ).toString());
     						logger.debug("mapa WS siniestro iterado: "+importesWSSiniestroIte);
     						logger.debug("<<WS del siniestro iterado");
-    						//logger.debug("###### COBERTURA DIFERENTE DE HOSPITALIZACIÓN Y AYUDA DE MATERNIDA ######");
+    						//logger.debug("###### COBERTURA DIFERENTE DE HOSPITALIZACIï¿½N Y AYUDA DE MATERNIDA ######");
     					}
     				}
     				facturaObj.put("siniestroPD", aseguradosxSiniestro);
@@ -6086,7 +6084,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
     				{
     					facturaObj.put("DESCNUME","0");
     				}
-    				//Asignación de las variables principales
+    				//Asignaciï¿½n de las variables principales
     				String cdunieco = siniestro.get("CDUNIECO");
     				String cdramo   = siniestro.get("CDRAMO");
     				String estado   = siniestro.get("ESTADO");
@@ -6102,7 +6100,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
     				Map<String,String>copagoDeducibleFacturaIte =siniestrosManager.obtenerCopagoDeducible(
     						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,tramite.get("OTVALOR02"),cdtipsit);
     				
-    				//1.- Obtenemos la información de Autorización de Factura
+    				//1.- Obtenemos la informaciï¿½n de Autorizaciï¿½n de Factura
     				Map<String,String>autorizacionesFacturaIte = siniestrosManager.obtenerAutorizacionesFactura(
     						siniestro.get("CDUNIECO"),
     						siniestro.get("CDRAMO"),
@@ -6148,12 +6146,12 @@ public class SiniestrosAction extends PrincipalCoreAction {
     						paramExclusion.put("pv_nmsituac_i",siniestro.get("NMSITUAC"));
     						if(siniestro.get("CDRAMO").toString().equalsIgnoreCase("2")){
     							//--> SALUD VITAL
-    							//1.- Verificamos si existe exclusión de penalización
+    							//1.- Verificamos si existe exclusiï¿½n de penalizaciï¿½n
         						existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
-        						//2.- Obtenemos la penalización por cambio de Zona
+        						//2.- Obtenemos la penalizaciï¿½n por cambio de Zona
         						penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
         								informacionGral.get(0).get("DSZONAT"),facturaIte.get("CDPRESTA"),siniestro.get("CDRAMO"));
-        						//3.- Obtenemos la penalización por circulo Hospitalario
+        						//3.- Obtenemos la penalizaciï¿½n por circulo Hospitalario
         						List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(),facturaIte.get("CDPRESTA"));
         						penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), medicos.get(0).getCirculo(),informacionGral.get(0).get("CDCAUSA"),siniestro.get("CDRAMO"));
     						}else{
@@ -6166,7 +6164,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
     				penalizacion.put("penalizacionCambioZona",""+penalizacionCambioZona);
     				penalizacion.put("penalizacionCirculoHosp",""+penalizacionCirculoHosp);
     				
-    				//3.- Obtenemos el total de penalización
+    				//3.- Obtenemos el total de penalizaciï¿½n
     				String calcularTotalPenalizacion = calcularTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),
     																			 copagoDeducibleFacturaIte.get("COPAGO"),copagoDeducibleFacturaIte.get("TIPOCOPAGO"),
     																			 informacionGral.get(0).get("CDPROVEE"),siniestro.get("CDRAMO"), informacionGral.get(0).get("FEOCURRE"));
@@ -6271,7 +6269,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
     					}
     				}
     				
-    				//Verificamos la información del deducible
+    				//Verificamos la informaciï¿½n del deducible
     				//if(facturaIte.get("CDGARANT").equalsIgnoreCase("18HO")||facturaIte.get("CDGARANT").equalsIgnoreCase("18MA"))
     				if(tipoFormatoCalculo.equalsIgnoreCase("1")){
     					//verificamos la causa del siniestro
@@ -6325,7 +6323,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
     							copagoAplicadoFacturaIte = 0d;
     						}
     					}else{
-    						//COBERTURA DIFERENTE HOSPITALIZACIÓN Y AYUDA DE MATERNIDAD
+    						//COBERTURA DIFERENTE HOSPITALIZACIï¿½N Y AYUDA DE MATERNIDAD
     						if(!causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
     							if(tipoCopagoFacturaIte.equalsIgnoreCase("$")){
     								copagoAplicadoFacturaIte = cantidadCopagoFacturaIte;
@@ -6521,7 +6519,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
     			mca.actualizarStatusTramite();
     			if(!mca.isSuccess())
     			{
-    				throw new Exception("Error al cancelar el trámite");
+    				throw new Exception("Error al cancelar el trï¿½mite");
     			}
     			
     			String nombreReporte = null;

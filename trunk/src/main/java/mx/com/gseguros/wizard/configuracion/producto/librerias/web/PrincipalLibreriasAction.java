@@ -1,10 +1,9 @@
 package mx.com.gseguros.wizard.configuracion.producto.librerias.web;
 
-import static mx.com.gseguros.utils.Constantes.UPDATE_MODE;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import mx.com.aon.portal.service.PagedList;
 import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.ExpresionVO;
 import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.VariableVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
@@ -16,7 +15,6 @@ import mx.com.gseguros.wizard.configuracion.producto.web.ExpresionesPadre;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import mx.com.aon.portal.service.PagedList;
 
 /**
  * 

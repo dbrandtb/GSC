@@ -13,6 +13,9 @@ package mx.com.gseguros.wizard.configuracion.producto.definicion.web;
 import java.util.ArrayList;
 import java.util.List;
 
+import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.definicion.model.ClausulaVO;
 import mx.com.gseguros.wizard.configuracion.producto.definicion.model.PeriodoVO;
 import mx.com.gseguros.wizard.configuracion.producto.definicion.model.ProductoVO;
@@ -24,9 +27,6 @@ import mx.com.gseguros.wizard.configuracion.producto.service.ProductoManager;
 import mx.com.gseguros.wizard.configuracion.producto.service.TreeManager;
 import mx.com.gseguros.wizard.configuracion.producto.util.WizardUtils;
 import mx.com.gseguros.wizard.configuracion.producto.web.Padre;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.aon.portal.model.UserVO;
-import mx.com.aon.portal.util.WrapperResultados;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -69,7 +69,7 @@ public class PrincipalProductosAction extends Padre {
 	private String banderaEditar;
 	private String codigoRamoEditar;
 	/**
-	 * Atributo agregado como parametro de la petición por struts que indica si
+	 * Atributo agregado como parametro de la peticiï¿½n por struts que indica si
 	 * el metodo debe ejecutar creacion o modificacion del Producto.
 	 */
 	private String idProducto;
@@ -125,7 +125,7 @@ public class PrincipalProductosAction extends Padre {
 	
 	// clausula
 	/**
-	 * Atributo agregado como parametro de la petición por struts que indica si
+	 * Atributo agregado como parametro de la peticiï¿½n por struts que indica si
 	 * el metodo debe ejecutar creacion o modificacion de la Clausula.
 	 */
 	private String idClausula;
@@ -154,7 +154,7 @@ public class PrincipalProductosAction extends Padre {
 	private String claveCatalogoClausulas;
 	// periodo
 	/**
-	 * Atributo agregado como parametro de la petición por struts que indica si
+	 * Atributo agregado como parametro de la peticiï¿½n por struts que indica si
 	 * el metodo debe ejecutar creacion o modificacion del Periodo.
 	 */
 	private String codigoPeriodo;
@@ -207,7 +207,7 @@ public class PrincipalProductosAction extends Padre {
 
 	/**
 	 * Metodo <code>execute</code> con el que es llamado desde Struts para
-	 * atender la petición web.
+	 * atender la peticiï¿½n web.
 	 * 
 	 * @return success
 	 * @throws Exception
@@ -887,7 +887,7 @@ public class PrincipalProductosAction extends Padre {
                             log.debug("!!!!!!!!!!!!!!! Se repite la clausula");
                             log.debug("clausula" + clausula.getCodigoClausula());
                         } 
-                        mensaje = "La Clausula seleccionada ya está asociada";
+                        mensaje = "La Clausula seleccionada ya estï¿½ asociada";
                         
                         success = false;
                         return SUCCESS;

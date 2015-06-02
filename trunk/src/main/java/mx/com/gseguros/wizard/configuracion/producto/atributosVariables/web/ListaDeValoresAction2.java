@@ -5,16 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.model.ClavesVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.ListaDeValoresVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.service.ListaDeValoresManager;
-import mx.com.gseguros.wizard.configuracion.producto.service.impl.ListaDeValoresManagerJdbcTemplateImpl;
 import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.DatosClaveAtributoVO;
-import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.DescripcionCincoClavesVO;
 import mx.com.gseguros.wizard.configuracion.producto.web.Padre;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.aon.portal.service.PagedList;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -237,7 +235,7 @@ public class ListaDeValoresAction2 extends Padre {
     
 	/**
 	 * Metodo <code>execute</code> con el que es llamado desde Struts para
-	 * atender la petición web.
+	 * atender la peticiï¿½n web.
 	 * 
 	 * @return INPUT
 	 * @throws Exception
@@ -363,7 +361,7 @@ public class ListaDeValoresAction2 extends Padre {
         ////////////////////////////////Se valida tamanio de las claves y las descripciones
         if(StringUtils.isNotBlank(minimoClave) && StringUtils.isNotBlank(maximoClave)){
         	if (Integer.parseInt(minimoClave) > Integer.parseInt(maximoClave)) {
-        		mensajeRespuesta = "El tamaño mínimo de la Clave no puede ser mayor al máximo";
+        		mensajeRespuesta = "El tamaï¿½o mï¿½nimo de la Clave no puede ser mayor al mï¿½ximo";
         		success = false;
         		return SUCCESS;
         	}
@@ -371,7 +369,7 @@ public class ListaDeValoresAction2 extends Padre {
         
         if(StringUtils.isNotBlank(minimoDescripcion) && StringUtils.isNotBlank(maximoDescripcion)){
         	if (Integer.parseInt(minimoDescripcion) > Integer.parseInt(maximoDescripcion)) {
-        		mensajeRespuesta = "El tamaño mínimo de la Descripción no puede ser mayor al máximo";
+        		mensajeRespuesta = "El tamaï¿½o mï¿½nimo de la Descripciï¿½n no puede ser mayor al mï¿½ximo";
         		success = false;
         		return SUCCESS;
         	}
@@ -650,7 +648,7 @@ public class ListaDeValoresAction2 extends Padre {
 			} 
 			
 			/*
-			 * Cuando se agrega un elemento (valor y clave) más a la lista 
+			 * Cuando se agrega un elemento (valor y clave) mï¿½s a la lista 
 			 */
 			
 			else {
@@ -663,7 +661,7 @@ public class ListaDeValoresAction2 extends Padre {
 					log.debug("temporal.isEmpty() = " + temporal.isEmpty());
 				}
 				/*
-				 * Se aseguran que el ArrayList<LlaveValorVO> no esté vacío 
+				 * Se aseguran que el ArrayList<LlaveValorVO> no estï¿½ vacï¿½o 
 				 */
 				if (!temporal.isEmpty()) {
 					for (LlaveValorVO temp : temporal) {

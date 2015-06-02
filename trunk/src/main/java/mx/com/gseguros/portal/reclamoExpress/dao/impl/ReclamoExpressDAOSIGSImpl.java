@@ -4,29 +4,24 @@ package mx.com.gseguros.portal.reclamoExpress.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.SqlReturnResultSet;
-import org.springframework.jdbc.object.StoredProcedure;
-
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.portal.reclamoExpress.dao.ReclamoExpressDAO;
 import mx.com.gseguros.portal.reclamoExpress.model.ReclamoExpressDetalleVO;
 import mx.com.gseguros.portal.reclamoExpress.model.ReclamoExpressVO;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.SqlReturnResultSet;
+import org.springframework.jdbc.object.StoredProcedure;
 
 public class ReclamoExpressDAOSIGSImpl extends AbstractManagerDAO implements ReclamoExpressDAO {
 
@@ -151,7 +146,7 @@ public class ReclamoExpressDAOSIGSImpl extends AbstractManagerDAO implements Rec
 			return reclamoExpress;
 		}
 		
-		//Método para generar la clave de la póliza
+		//Mï¿½todo para generar la clave de la pï¿½liza
 		public void generaClavePoliza(ReclamoExpressVO recla){
 			String clavePoliza = "";
 			//Sucursal
@@ -172,13 +167,13 @@ public class ReclamoExpressDAOSIGSImpl extends AbstractManagerDAO implements Rec
 			} else {
 				clavePoliza += "000000";
 			}
-			//Renovación
+			//Renovaciï¿½n
 			clavePoliza += "000";
 			
 			recla.setClavePoliza(clavePoliza);
 		}
 		
-		//Método para generar la clave del reclamo
+		//Mï¿½todo para generar la clave del reclamo
 		public void generaClaveReclamo(ReclamoExpressVO recla){
 			String claveReclamo = "";
 			//Reclamo
