@@ -18,4 +18,18 @@ public interface EstadisticasManager
 			,String cdusuari
 			,String cdagente
 			)throws Exception;
+	
+	public Map<String,Item> tareas(StringBuilder sb, String cdsisrol) throws Exception;
+	
+	public Map<String,Object> recuperarTareas(
+			StringBuilder sb
+			,Date fedesde
+			,Date fehasta
+			,String cdmodulo
+			,String cdtarea
+			,String cdunieco
+			,String cdramo
+			,String cdusuari
+			,String cdsisrol
+			)throws Exception;
 }

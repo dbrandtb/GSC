@@ -117,7 +117,109 @@ public class EstadisticasManagerImpl implements EstadisticasManager
 		
 		return (Map<String,Object>)listas;
 	}
+	
+	@Override
+	public Map<String,Item> tareas(StringBuilder sb, String cdsisrol) throws Exception
+	{
+		sb.append(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ tareas @@@@@@"
+				,"\n@@@@@@ cdsisrol=",cdsisrol
+				));
+		Map<String,Item> items = new HashMap<String,Item>();
+		String           paso  = null;
+		try
+		{
+			paso = "Recuperando items del filtro";
+			sb.append(Utils.join("\n",paso));
+			
+			List<ComponenteVO> itemsFiltro = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,null //cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"ESTADISTICAS"
+					,"FILTRO_1"
+					,null //orden
+					);
+			
+			paso = "Generando componentes del filtro";
+			sb.append(Utils.join("\n",paso));
+			
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.generaComponentes(itemsFiltro, true, false, true, false, false, false);
+			
+			items.put("itemsFiltro" , gc.getItems());
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		return items;
+	}
+	
+	@Override
+	public Map<String,Object> recuperarTareas(
+			StringBuilder sb
+			,Date fedesde
+			,Date fehasta
+			,String cdmodulo
+			,String cdtarea
+			,String cdunieco
+			,String cdramo
+			,String cdusuari
+			,String cdsisrol
+			)throws Exception
+	{
+		sb.append(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarTareas @@@@@@"
+				,"\n@@@@@@ fedesde="  , fedesde
+				,"\n@@@@@@ fehasta="  , fehasta
+				,"\n@@@@@@ cdmodulo=" , cdmodulo
+				,"\n@@@@@@ cdtarea="  , cdtarea
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				));
+		
+		Object listas = null;
+		String paso   = null;
+		
+		try
+		{
+			paso = "Recuperando indicadores";
+			sb.append(Utils.join("\n",paso));
+			
+			listas = consultasDAO.recuperarEstadisticasTareas(
+					fedesde
+					,fehasta
+					,cdmodulo
+					,cdtarea
+					,cdunieco
+					,cdramo
+					,cdusuari
+					,cdsisrol
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		return (Map<String,Object>)listas;
+	}
 
+	//////////////////////////////////////////////////////////////////////////////////
+	//////////// GETTERS Y SETTERS ///////////////////////////////////////////////////
+	////////////////////// GETTERS Y SETTERS /////////////////////////////////////////
+	//////////////////////////////// GETTERS Y SETTERS ///////////////////////////////
+	////////////////////////////////////////// GETTERS Y SETTERS /////////////////////
+	//////////////////////////////////////////////////// GETTERS Y SETTERS ///////////
+	//////////////////////////////////////////////////////////////////////////////////
 	public void setPantallasDAO(PantallasDAO pantallasDAO) {
 		this.pantallasDAO = pantallasDAO;
 	}

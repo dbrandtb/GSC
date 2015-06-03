@@ -106,7 +106,10 @@ public enum Catalogos {
 	TRAZCANAU("TRAZCANAU"),
 	TIPO_SERVICIO_X_AUTO(""),
 	TTIPOPAGO(""),
-	CONCEPTOPAGO("");
+	CONCEPTOPAGO(""),
+	ESTD_MODULOS(""),
+	ESTD_TAREAS("")
+	;
 
 	private String cdTabla;
 

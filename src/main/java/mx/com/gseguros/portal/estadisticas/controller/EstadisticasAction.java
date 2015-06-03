@@ -119,7 +119,102 @@ public class EstadisticasAction extends PrincipalCoreAction
 		
 		return SUCCESS;
 	}
+	
+	@Action(value   = "tareas",
+		    results = {
+		        @Result(name="error"   , location="/jsp-script/general/errorPantalla.jsp"),
+		        @Result(name="success" , location="/jsp-script/proceso/estadisticas/tareas.jsp")
+		    })
+	public String tareas()
+	{
+		StringBuilder sb = new StringBuilder(Utils.join(
+				 "\n####################"
+				,"\n###### tareas ######"
+				));
+		try
+		{
+			UserVO user = Utils.validateSession(session);
+			
+			items = estadisticasManager.tareas(sb,user.getRolActivo().getClave());
+			
+			logger.info(Utils.join(
+					 "\n####################"
+					,"\n@@@*** tareas ***@@@"
+					,"\n####################"
+					));
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
+	
+	@Action(value   = "recuperarTareas",
+			results = { @Result(name="success", type="json") }
+			)
+	public String recuperarTareas()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(Utils.join(
+				 "\n#############################"
+				,"\n###### recuperarTareas ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			Utils.validate(sb, params , "No se recibieron datos");
+			
+			String feinicio = params.get("feinicio");
+			String fefin    = params.get("fefin");
+			String cdmodulo = params.get("cdmodulo");
+			String cdtarea  = params.get("cdtarea");
+			String cdunieco = params.get("cdunieco");
+			String cdramo   = params.get("cdramo");
+			String cdusuari = params.get("cdusuari");
+			String cdsisrol = params.get("cdsisrol");
+			
+			Utils.validate(sb
+					,feinicio , "No se recibio la fecha de inicio"
+					,fefin    , "No se recibio la fecha de fin"
+					);
+			
+			objetos = estadisticasManager.recuperarTareas(
+					sb
+					,Utils.render(feinicio)
+					,Utils.render(fefin)
+					,cdmodulo
+					,cdtarea
+					,cdunieco
+					,cdramo
+					,cdusuari
+					,cdsisrol
+					);
+			
+			success = true;
+			
+			logger.info(Utils.join(
+					 "\n#############################"
+					,"\n@@@*** recuperarTareas ***@@@"
+					,"\n#############################"
+					));
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
 
+	//////////////////////////////////////////////////////////////////////////////////
+	//////////// GETTERS Y SETTERS ///////////////////////////////////////////////////
+	////////////////////// GETTERS Y SETTERS /////////////////////////////////////////
+	//////////////////////////////// GETTERS Y SETTERS ///////////////////////////////
+	////////////////////////////////////////// GETTERS Y SETTERS /////////////////////
+	//////////////////////////////////////////////////// GETTERS Y SETTERS ///////////
+	//////////////////////////////////////////////////////////////////////////////////
 	public Map<String, String> getParams() {
 		return params;
 	}
