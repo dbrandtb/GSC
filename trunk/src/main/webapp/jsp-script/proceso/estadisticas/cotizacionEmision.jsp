@@ -118,7 +118,231 @@ function _p46_buscar(me)
                     debug('### filtros:',json);
                     if(json.success)
                     {
-                        alert('richi');
+                        //alert('richi');
+                        
+                        var storeUnieco = Ext.create('Ext.data.JsonStore', {
+                            fields: ['SUCURSAL', 'COTIZACIONES', 'EMISIONES'],
+                            data: json.objetos.unieco
+                        });
+                        
+                        var storeRamo = Ext.create('Ext.data.JsonStore', {
+                            fields: ['PRODUCTO', 'COTIZACIONES', 'EMISIONES'],
+                            data: json.objetos.ramo
+                        });
+                        
+                        var storeUsuario = Ext.create('Ext.data.JsonStore', {
+                            fields: ['USUARIO', 'COTIZACIONES', 'EMISIONES'],
+                            data: json.objetos.usuario
+                        });
+                        
+                        var storeAgente = Ext.create('Ext.data.JsonStore', {
+                            fields: ['AGENTE', 'COTIZACIONES', 'EMISIONES'],
+                            data: json.objetos.agente
+                        });
+                        
+                        Ext.create('Ext.window.Window', {
+                            title: 'Por Sucursales',
+                            titleCollapse: true,
+                            collapsible: true,
+                            height: 400,
+                            width: 450,
+                            layout: 'fit',
+                            items: {  
+                                xtype: 'chart',
+                                width:  450,  //width: 600,
+                                height: 400, //height: 700,
+                                animate: true,
+                                store: storeUnieco,
+                                legend: {
+                                  position: 'right'  
+                                },
+                                axes: [{
+                                    type: 'Numeric',
+                                    position: 'bottom', //position: 'left',
+                                    fields: ['COTIZACIONES', 'EMISIONES'],
+                                    minimum: 0,
+                                    label: {
+                                        renderer: Ext.util.Format.numberRenderer('0,0')
+                                    },
+                                    grid: true,
+                                    title: 'Pólizas emitidas'
+                                }, {
+                                    type: 'Category',
+                                    position: 'left', //position: 'bottom',
+                                    fields: ['SUCURSAL'],
+                                    title: 'Sucursales'
+                                }],
+                                series: [{
+                                    type: 'bar', //type: 'column',
+                                    highlight: true,
+                                    axis: 'bottom',
+                                    xField: 'SUCURSAL',
+                                    yField: ['COTIZACIONES', 'EMISIONES'],
+                                    title:['Cotizaciones','Emisiones'],
+                                    label: {
+                                        display: 'insideEnd',
+                                        field: ['COTIZACIONES', 'EMISIONES'],
+                                        renderer: Ext.util.Format.numberRenderer('0')
+                                        //orientation: 'horizontal',
+                                        //color: '#333',
+                                       //'text-anchor': 'middle'
+                                    }
+                                }]
+                            }
+                        }).showAt(20,200);
+                        
+                        Ext.create('Ext.window.Window', {
+                            title: 'Por Producto',
+                            titleCollapse: true,
+                            collapsible: true,
+                            height: 400,
+                            width: 450,
+                            layout: 'fit',
+                            items: {  
+                                xtype: 'chart',
+                                width:  450,  //width: 600,
+                                height: 400, //height: 700,
+                                animate: true,
+                                store: storeRamo,
+                                legend: {
+                                  position: 'right'  
+                                },
+                                axes: [{
+                                    type: 'Numeric',
+                                    position: 'bottom', //position: 'left',
+                                    fields: ['COTIZACIONES', 'EMISIONES'],
+                                    minimum: 0,
+                                    label: {
+                                        renderer: Ext.util.Format.numberRenderer('0,0')
+                                    },
+                                    grid: true,
+                                    title: 'Pólizas emitidas'
+                                }, {
+                                    type: 'Category',
+                                    position: 'left', //position: 'bottom',
+                                    fields: ['PRODUCTO'],
+                                    title: 'Productos'
+                                }],
+                                series: [{
+                                    type: 'bar', //type: 'column',
+                                    highlight: true,
+                                    axis: 'bottom',
+                                    xField: 'PRODUCTO',
+                                    yField: ['COTIZACIONES', 'EMISIONES'],
+                                    title:['Cotizaciones','Emisiones'],
+                                    label: {
+                                        display: 'insideEnd',
+                                        field: ['COTIZACIONES', 'EMISIONES'],
+                                        renderer: Ext.util.Format.numberRenderer('0')
+                                        //orientation: 'horizontal',
+                                        //color: '#333',
+                                       //'text-anchor': 'middle'
+                                    }
+                                }]
+                            }
+                        }).showAt(500, 200);
+                        
+                        Ext.create('Ext.window.Window', {
+                            title: 'Por Usuario',
+                            titleCollapse: true,
+                            collapsible: true,
+                            height: 400,
+                            width: 450,
+                            layout: 'fit',
+                            items: {  
+                                xtype: 'chart',
+                                width:  450,  //width: 600,
+                                height: 400, //height: 700,
+                                animate: true,
+                                store: storeUsuario,
+                                legend: {
+                                  position: 'right'  
+                                },
+                                axes: [{
+                                    type: 'Numeric',
+                                    position: 'bottom', //position: 'left',
+                                    fields: ['COTIZACIONES', 'EMISIONES'],
+                                    minimum: 0,
+                                    label: {
+                                        renderer: Ext.util.Format.numberRenderer('0,0')
+                                    },
+                                    grid: true,
+                                    title: 'Pólizas emitidas'
+                                }, {
+                                    type: 'Category',
+                                    position: 'left', //position: 'bottom',
+                                    fields: ['USUARIO'],
+                                    title: 'Usuarios'
+                                }],
+                                series: [{
+                                    type: 'bar', //type: 'column',
+                                    highlight: true,
+                                    axis: 'bottom',
+                                    xField: 'USUARIO',
+                                    yField: ['COTIZACIONES', 'EMISIONES'],
+                                    title:['Cotizaciones','Emisiones'],
+                                    label: {
+                                        display: 'insideEnd',
+                                        field: ['COTIZACIONES', 'EMISIONES'],
+                                        renderer: Ext.util.Format.numberRenderer('0')
+                                        //orientation: 'horizontal',
+                                        //color: '#333',
+                                       //'text-anchor': 'middle'
+                                    }
+                                }]
+                            }
+                        }).showAt(20, 620);
+                        
+                        Ext.create('Ext.window.Window', {
+                            title: 'Por Agente',
+                            titleCollapse: true,
+                            collapsible: true,
+                            height: 400,
+                            width: 450,
+                            layout: 'fit',
+                            items: {  
+                                xtype: 'chart',
+                                width:  450,  //width: 600,
+                                height: 400, //height: 700,
+                                animate: true,
+                                store: storeAgente,
+                                legend: {
+                                  position: 'right'  
+                                },
+                                axes: [{
+                                    type: 'Numeric',
+                                    position: 'bottom', //position: 'left',
+                                    fields: ['COTIZACIONES', 'EMISIONES'],
+                                    minimum: 0,
+                                    label: {
+                                        renderer: Ext.util.Format.numberRenderer('0,0')
+                                    },
+                                    grid: true,
+                                    title: 'Pólizas emitidas'
+                                }, {
+                                    type: 'Category',
+                                    position: 'left', //position: 'bottom',
+                                    fields: ['AGENTE'],
+                                    title: 'Agentes'
+                                }],
+                                series: [{
+                                    type: 'bar', //type: 'column',
+                                    highlight: true,
+                                    axis: 'bottom',
+                                    xField: 'AGENTE',
+                                    yField: ['COTIZACIONES', 'EMISIONES'],
+                                    title:['Cotizaciones','Emisiones'],
+                                    label: {
+                                        display: 'insideEnd',
+                                        field: ['COTIZACIONES', 'EMISIONES'],
+                                        renderer: Ext.util.Format.numberRenderer('0')
+                                        //orientation: 'horizontal',
+                                        //color: '#333',
+                                       //'text-anchor': 'middle'
+                                    }
+                                }]
+                            }
+                        }).showAt(500,620);
                     }
                     else
                     {
@@ -127,6 +351,7 @@ function _p46_buscar(me)
                 }
                 catch(e)
                 {
+                	console.log(e);
                     manejaException(e,ck);
                 }
             }
@@ -145,5 +370,5 @@ function _p46_buscar(me)
 ////// funciones //////
 </script>
 </head>
-<body><div id="_p46_divpri" style="height:600px; border:1px solid #CCCCCC;"></div></body>
+<body><div id="_p46_divpri" style="height:2000px; border:1px solid #CCCCCC;"></div></body>
 </html>
