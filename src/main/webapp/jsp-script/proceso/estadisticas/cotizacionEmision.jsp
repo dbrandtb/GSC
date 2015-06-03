@@ -141,7 +141,7 @@ function _p46_buscar(me)
                         });
                         
                         Ext.create('Ext.window.Window', {
-                            title: 'Por Sucursales',
+                            title: 'Por Sucursal',
                             titleCollapse: true,
                             collapsible: true,
                             height: 400,
