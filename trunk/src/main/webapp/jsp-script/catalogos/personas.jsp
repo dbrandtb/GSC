@@ -93,6 +93,9 @@ var _cargaCP;
 var _cargaTipoPersona;
 var _cargaSucursalEmi;
 
+var _activaCveFamiliar = false;
+var _PanelPrincipalPersonas;
+
 if(!Ext.isEmpty(_p22_smap1)){
 	
 	_cargaCdPerson = _p22_smap1.cdperson;
@@ -102,7 +105,9 @@ if(!Ext.isEmpty(_p22_smap1)){
 	_cargaCompania = _p22_smap1.esSaludDanios;	
 	_cargaCP = _p22_smap1.cargaCP;	
 	_cargaTipoPersona = _p22_smap1.cargaTipoPersona;	
-	_cargaSucursalEmi = _p22_smap1.cargaSucursalEmi;	
+	_cargaSucursalEmi = _p22_smap1.cargaSucursalEmi;
+	
+	_activaCveFamiliar = !Ext.isEmpty(_p22_smap1.activaCveFamiliar) && _p22_smap1.activaCveFamiliar == "S" ? true : false ;
 }
 
 ////// variables //////
@@ -127,8 +132,7 @@ Ext.onReady(function()
 	////// componentes //////
 	
 	////// contenido //////
-	Ext.create('Ext.panel.Panel',
-	{
+	_PanelPrincipalPersonas = Ext.create('Ext.panel.Panel',{
 		renderTo  : '_p22_divpri'
 		,defaults : { style : 'margin:5px;' }
 	    ,border   : 0
@@ -1036,7 +1040,6 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 			
 		},1000);
     }
-    
     
 });
 
@@ -1973,6 +1976,15 @@ function _p22_datosAdicionalesClic()
 				}
 				
 				recargaTelefonoEmail();
+				
+				
+				if(!_activaCveFamiliar){
+			    	//Clave familiar
+			    	_fieldByName('parametros.pv_otvalor49', _PanelPrincipalPersonas, true).hide();
+			    	
+			    	//Numero socio
+			    	_fieldByName('parametros.pv_otvalor50', _PanelPrincipalPersonas, true).hide();
+			    }
 				
             }
             else
