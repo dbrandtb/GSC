@@ -40,7 +40,7 @@ Ext.onReady(function()
             Ext.create('Ext.form.Panel',
             {
                 itemId       : '_p46_form'
-                ,title       : 'Filtros'
+                ,title       : 'INDICADORES DE COTIZACI&Oacute;N / EMISI&Oacute;N'
                 ,defaults    : { style : 'margin:5px;' }
                 ,layout      :
                 {
