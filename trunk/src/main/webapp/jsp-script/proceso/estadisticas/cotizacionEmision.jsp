@@ -67,6 +67,25 @@ Ext.onReady(function()
                             me.up('form').getForm().reset();
                         }
                     }
+                    ,{
+                        text     : 'Cerrar ventanas'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+                        ,handler : function()
+                        {
+                            try
+                            {
+                                var ven = Ext.ComponentQuery.query('window');
+                                for(var i in ven)
+                                {
+                                    ven[i].destroy();
+                                }
+                            }
+                            catch(e)
+                            {
+                                manejaException(e,'Cerrando ventanas');
+                            }
+                        }
+                    }
                 ]
             })
         ]
