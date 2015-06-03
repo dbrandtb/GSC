@@ -116,4 +116,8 @@ public interface CatalogosDAO {
 			)throws Exception;
 	
 	public List<GenericVO> recuperarListaTiposValorRamo5PorRol(String cdtipsit,String cdsisrol) throws Exception;
+	
+	public List<GenericVO> recuperarModulosEstadisticas() throws Exception;
+	
+	public List<GenericVO> recuperarTareasEstadisticas(String cdmodulo) throws Exception;
 }

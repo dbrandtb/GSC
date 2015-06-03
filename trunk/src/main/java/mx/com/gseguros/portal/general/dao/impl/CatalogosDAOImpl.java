@@ -1535,4 +1535,75 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+	
+	public List<GenericVO> recuperarModulosEstadisticas() throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		Utils.debugProcedure(logger, "PKG_ESTADISTICA.P_GET_MODULOS", params);
+		Map<String,Object>procResult  = ejecutaSP(new RecuperarModulosEstadisticas(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
+		if(lista!=null)
+		{
+			for(Map<String,String>tiposit:lista)
+			{
+				listaGen.add(new GenericVO(tiposit.get("OTCLAVE"),tiposit.get("OTVALOR")));
+			}
+		}
+		Utils.debugProcedure(logger, "PKG_ESTADISTICA.P_GET_MODULOS", params, listaGen);
+		return listaGen;
+	}
+	
+	protected class RecuperarModulosEstadisticas extends StoredProcedure
+	{
+		protected RecuperarModulosEstadisticas(DataSource dataSource)
+		{
+			super(dataSource,"PKG_ESTADISTICA.P_GET_MODULOS");
+			String[] cols=new String[]{
+					"OTCLAVE"
+					,"OTVALOR"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<GenericVO> recuperarTareasEstadisticas(String cdmodulo) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdmodulo" , cdmodulo);
+		Utils.debugProcedure(logger, "PKG_ESTADISTICA.P_GET_TAREAS", params);
+		Map<String,Object>procResult  = ejecutaSP(new RecuperarTareasEstadisticas(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
+		if(lista!=null)
+		{
+			for(Map<String,String>tiposit:lista)
+			{
+				listaGen.add(new GenericVO(tiposit.get("CDTAREA"),tiposit.get("DSTAREA")));
+			}
+		}
+		Utils.debugProcedure(logger, "PKG_ESTADISTICA.P_GET_TAREAS", params, listaGen);
+		return listaGen;
+	}
+	
+	protected class RecuperarTareasEstadisticas extends StoredProcedure
+	{
+		protected RecuperarTareasEstadisticas(DataSource dataSource)
+		{
+			super(dataSource,"PKG_ESTADISTICA.P_GET_TAREAS");
+			declareParameter(new SqlParameter("cdmodulo" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"CDTAREA"
+					,"DSTAREA"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

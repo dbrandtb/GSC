@@ -683,6 +683,16 @@ public class CatalogosAction extends PrincipalCoreAction {
 					lista = siniestrosManager.getConsultaListaConceptoPago(params.get("cdramo"));
 					logger.debug("Salida : "+lista.size() +" : "+lista);
 					break;
+				case ESTD_MODULOS:
+					lista = catalogosManager.recuperarModulosEstadisticas();
+					break;
+				case ESTD_TAREAS:
+					if(params==null)
+					{
+						params=new HashMap<String,String>();
+					}
+					lista = catalogosManager.recuperarTareasEstadisticas(params.get("idPadre"));
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

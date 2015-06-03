@@ -951,4 +951,39 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO> recuperarModulosEstadisticas() throws Exception
+	{
+		logger.info(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarModulosEstadisticas @@@@@@"
+				));
+		
+		List<GenericVO> lista = catalogosDAO.recuperarModulosEstadisticas();
+		
+		logger.info(Utils.join(
+				 "\n@@@@@@ recuperarModulosEstadisticas @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
+	
+	@Override
+	public List<GenericVO> recuperarTareasEstadisticas(String cdmodulo) throws Exception
+	{
+		logger.info(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarTareasEstadisticas @@@@@@"
+				,"\n@@@@@@ cdmodulo=",cdmodulo
+				));
+		
+		List<GenericVO> lista = catalogosDAO.recuperarTareasEstadisticas(cdmodulo);
+		
+		logger.info(Utils.join(
+				 "\n@@@@@@ recuperarTareasEstadisticas @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
 }

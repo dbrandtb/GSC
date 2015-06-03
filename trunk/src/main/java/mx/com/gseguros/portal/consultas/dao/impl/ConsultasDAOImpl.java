@@ -1868,4 +1868,102 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+    
+    @Override
+    public Map<String,List<Map<String,String>>> recuperarEstadisticasTareas(
+			Date feinicio
+			,Date fefin
+			,String cdmodulo
+			,String cdtarea
+			,String cdunieco
+			,String cdramo
+			,String cdusuari
+			,String cdsisrol
+			) throws Exception
+	{
+    	Map<String,Object> params = new LinkedHashMap<String,Object>();
+    	params.put("feinicio" , feinicio);
+    	params.put("fefin"    , fefin);
+    	params.put("cdmodulo" , cdmodulo);
+    	params.put("cdtarea"  , cdtarea);
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("cdsisrol" , cdsisrol);
+    	params.put("cdusuari" , cdusuari);
+    	Utils.debugProcedure(logger, "pkg_estadistica.P_GET_ESTADISTICA_TAREAS", params);
+    	Map<String,Object> procResult = ejecutaSP(new RecuperarEstadisticasTareas(getDataSource()),params);
+    	
+    	Map<String,List<Map<String,String>>> mapa = new HashMap<String,List<Map<String,String>>>();
+    	
+    	List<Map<String,String>> listaTarea = (List<Map<String,String>>)procResult.get("pv_reg_tarea_o");
+    	if(listaTarea==null)
+    	{
+    		listaTarea=new ArrayList<Map<String,String>>();
+    	}
+    	logger.debug(Utils.join("\nlista tarea=",listaTarea));
+    	mapa.put("tarea",listaTarea);
+    	
+    	List<Map<String,String>> listaUnieco = (List<Map<String,String>>)procResult.get("pv_reg_unieco_o");
+    	if(listaUnieco==null)
+    	{
+    		listaUnieco=new ArrayList<Map<String,String>>();
+    	}
+    	logger.debug(Utils.join("\nlista unieco=",listaUnieco));
+    	mapa.put("unieco",listaUnieco);
+    	
+    	List<Map<String,String>> listaRamo = (List<Map<String,String>>)procResult.get("pv_reg_ramo_o");
+    	if(listaRamo==null)
+    	{
+    		listaRamo=new ArrayList<Map<String,String>>();
+    	}
+    	logger.debug(Utils.join("\nlista ramo=",listaRamo));
+    	mapa.put("ramo",listaRamo);
+    	
+    	List<Map<String,String>> listaUsuario = (List<Map<String,String>>)procResult.get("pv_reg_usuari_o");
+    	if(listaUsuario==null)
+    	{
+    		listaUsuario=new ArrayList<Map<String,String>>();
+    	}
+    	logger.debug(Utils.join("\nlista usuario=",listaUsuario));
+    	mapa.put("usuario",listaUsuario);
+    	
+    	List<Map<String,String>> listaRol = (List<Map<String,String>>)procResult.get("pv_reg_sisrol_o");
+    	if(listaRol==null)
+    	{
+    		listaRol=new ArrayList<Map<String,String>>();
+    	}
+    	logger.debug(Utils.join("\nlista rol=",listaRol));
+    	mapa.put("rol",listaRol);
+    	
+    	return mapa;
+	}
+    
+    protected class RecuperarEstadisticasTareas extends StoredProcedure
+    {
+    	protected RecuperarEstadisticasTareas(DataSource dataSource)
+    	{
+    		super(dataSource , "pkg_estadistica.P_GET_ESTADISTICA_TAREAS");
+            declareParameter(new SqlParameter("feinicio" , OracleTypes.TIMESTAMP));
+            declareParameter(new SqlParameter("fefin"    , OracleTypes.TIMESTAMP));
+            declareParameter(new SqlParameter("cdmodulo" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtarea"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_reg_tarea_o"  , OracleTypes.CURSOR
+            		,new GenericMapper(new String[]{"CDTAREA" , "TAREA" , "TODAS" , "TIEMPO" , "ESCALA"})));
+            declareParameter(new SqlOutParameter("pv_reg_unieco_o" , OracleTypes.CURSOR
+            		,new GenericMapper(new String[]{"SUCURSAL" , "TODAS" , "TIEMPO" , "ESCALA"})));
+            declareParameter(new SqlOutParameter("pv_reg_ramo_o"   , OracleTypes.CURSOR
+            		,new GenericMapper(new String[]{"PRODUCTO" , "TODAS" , "TIEMPO" , "ESCALA"})));
+            declareParameter(new SqlOutParameter("pv_reg_sisrol_o" , OracleTypes.CURSOR
+            		,new GenericMapper(new String[]{"CDSISROL" , "ROL" , "TODAS" , "TIEMPO" , "ESCALA"})));
+            declareParameter(new SqlOutParameter("pv_reg_usuari_o" , OracleTypes.CURSOR
+            		,new GenericMapper(new String[]{"USUARIO" , "TODAS" , "TIEMPO" , "ESCALA"})));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"     , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"      , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

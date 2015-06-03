@@ -232,4 +232,15 @@ public interface ConsultasDAO
 			,String cdusuari
 			,String cdagente
 			) throws Exception;
+	
+	public Map<String,List<Map<String,String>>> recuperarEstadisticasTareas(
+			Date feinicio
+			,Date fefin
+			,String cdmodulo
+			,String cdtarea
+			,String cdunieco
+			,String cdramo
+			,String cdusuari
+			,String cdsisrol
+			) throws Exception;
 }
