@@ -306,9 +306,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 
 	@Override
-	public List<ConsultaManteniVO> getConsultaListaManteni(String cdtabla, String codigo) throws Exception {
+	public List<ConsultaManteniVO> getConsultaListaTipoMedico(String codigo) throws Exception {
 		try {
-			return siniestrosDAO.obtieneListadoManteni(cdtabla,codigo);
+			return siniestrosDAO.obtieneListadoTipoMedico(codigo);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
@@ -1540,15 +1540,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}*/
-	
-	@Override
-	public List<Map<String,String>> obtieneFormatoCalculo(String cobertura, String cdramo) throws Exception {
-		HashMap<String,Object> params = new HashMap<String,Object>();
-		params.put("pv_cobertura_i", cobertura);
-		params.put("pv_ramo_i",   cdramo);
-		log.debug("obtieneFormatoCalculo params: "+params);
-		return siniestrosDAO.obtieneFormatoCalculo(params);
-	}
 	
 	@Override
 	public List<GenericVO> getConsultaListaRamoSalud() throws Exception {

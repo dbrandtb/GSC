@@ -57,7 +57,7 @@
 			</result>
 		</action>
 		
-		<action name="consultaListaManteni" class="siniestrosAction" method="consultaListaManteni">
+		<action name="consultaTipoMedico" class="siniestrosAction" method="consultaTipoMedico">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">

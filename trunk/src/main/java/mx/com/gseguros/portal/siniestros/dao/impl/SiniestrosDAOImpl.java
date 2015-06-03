@@ -681,24 +681,21 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 
 	@Override
-	public List<ConsultaManteniVO> obtieneListadoManteni(
-			String cdtabla, String codigo) throws Exception {
+	public List<ConsultaManteniVO> obtieneListadoTipoMedico(String codigo) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdtabla_i", cdtabla);
 		params.put("pv_codigo_i", codigo);
 		
-		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoManteniSP(getDataSource()), params);
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTipoMedico(getDataSource()), params);
 		
 		@SuppressWarnings("unchecked")
 		List<ConsultaManteniVO> listaDatosPoliza = (List<ConsultaManteniVO>)mapResult.get("pv_registro_o");
 		return listaDatosPoliza;
 	}
 	
-	protected class ObtieneListadoManteniSP extends StoredProcedure {
+	protected class ObtieneListadoTipoMedico extends StoredProcedure {
 
-		protected ObtieneListadoManteniSP(DataSource dataSource) {
-			super(dataSource, "PKG_PRESINIESTRO.P_LISTA_TMANTENI");
-			declareParameter(new SqlParameter("pv_cdtabla_i", OracleTypes.VARCHAR));
+		protected ObtieneListadoTipoMedico(DataSource dataSource) {
+			super(dataSource, "PKG_PRESINIESTRO.P_LISTA_TIPOMEDICO");
 			declareParameter(new SqlParameter("pv_codigo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosListadoMantenimientoMapper()));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
@@ -3816,28 +3813,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     	}
     }
 
-	@Override
-	public List<Map<String,String>> obtieneFormatoCalculo(Map<String, Object> params) throws Exception {
-		Map<String, Object> result = ejecutaSP(new ObtieneFormatoCalculo(this.getDataSource()), params);
-		return (List<Map<String,String>>)result.get("pv_registro_o");
-	}
-	
-	protected class ObtieneFormatoCalculo extends StoredProcedure {
-		protected ObtieneFormatoCalculo(DataSource dataSource) {
-			// TODO: Terminar cuando este listo el SP
-			super(dataSource, "PKG_SINIESTRO.P_GET_COBERXCALC");
-			declareParameter(new SqlParameter("pv_cobertura_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_ramo_i" , OracleTypes.NUMERIC));
-			String[] cols = new String[]{
-					"OTVALOR01" , "OTVALOR02"
-			};
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
 	@Override
 	public List<GenericVO> obtieneListadoRamoSalud() throws Exception {
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerListadoRamoSalud(this.getDataSource()), new HashMap<String,String>());

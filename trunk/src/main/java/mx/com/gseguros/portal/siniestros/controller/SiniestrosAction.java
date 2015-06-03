@@ -310,11 +310,14 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 
-	@Deprecated	
-	public String consultaListaManteni(){
+	/**
+	* Funcion que obtiene el listado de tipo Medico
+	* @param String codigo del tipo 
+	* @return Lista ConsultaTDETAUTSVO con la informacion
+	*/public String consultaTipoMedico(){
 		logger.debug(" **** Entrando a consulta de lista de Mantenimiento****");
 		try {
-			List<ConsultaManteniVO> lista = siniestrosManager.getConsultaListaManteni(params.get("cdtabla"),params.get("codigo"));
+			List<ConsultaManteniVO> lista = siniestrosManager.getConsultaListaTipoMedico(params.get("codigo"));
 			if(lista!=null && !lista.isEmpty())	listaConsultaManteni = lista;
 		}catch( Exception e){
 			logger.error("Error al obtener los datos de la poliza ",e);
