@@ -879,7 +879,8 @@ debug("validarYGuardar flag:2");
 					                'smap1.ocultaBusqueda' : 'S' ,
 					                'smap1.cargaCP' : '',
 					                'smap1.cargaTipoPersona' : '',
-					                'smap1.cargaSucursalEmi' : inputCduniecop2
+					                'smap1.cargaSucursalEmi' : inputCduniecop2,
+					                'smap1.activaCveFamiliar': inputCduniecop2 == '1403'?'S':'N'
 					            }
 					     });
 					     _p22_parentCallback = _p29_personaSaved;
@@ -915,7 +916,8 @@ debug("validarYGuardar flag:2");
 					                'smap1.ocultaBusqueda' : 'S' ,
 					                'smap1.cargaCP' : '',
 					                'smap1.cargaTipoPersona' : '',
-					                'smap1.cargaSucursalEmi' : inputCduniecop2
+					                'smap1.cargaSucursalEmi' : inputCduniecop2,
+					                'smap1.activaCveFamiliar': inputCduniecop2 == '1403'?'S':'N'
 					            }
 					     });
 					     _p22_parentCallback = _p29_personaSaved;
@@ -1516,7 +1518,8 @@ debug("validarYGuardar flag:2");
 						                'smap1.ocultaBusqueda' : 'S' ,
 						                'smap1.cargaCP' : '',
 						                'smap1.cargaTipoPersona' : '',
-						                'smap1.cargaSucursalEmi' : inputCduniecop2
+						                'smap1.cargaSucursalEmi' : inputCduniecop2,
+						                'smap1.activaCveFamiliar': inputCduniecop2 == '1403'?'S':'N'
 						            }
 						     });
 						     _p22_parentCallback = _p29_personaSaved;

@@ -196,7 +196,8 @@ Ext.onReady(function()
 					                'smap1.ocultaBusqueda' : 'S' ,
 					                'smap1.cargaCP' : '',
 					                'smap1.cargaTipoPersona' : '',
-					                'smap1.cargaSucursalEmi' : _35_smap1.CDUNIECO
+					                'smap1.cargaSucursalEmi' : _35_smap1.CDUNIECO,
+					                'smap1.activaCveFamiliar': _35_smap1.CDUNIECO == '1403'?'S':'N'
 					            }
                 }, 
                 buttons:[{
@@ -226,7 +227,8 @@ Ext.onReady(function()
 						                'smap1.ocultaBusqueda' : 'S' ,
 						                'smap1.cargaCP' : '',
 						                'smap1.cargaTipoPersona' : '',
-						                'smap1.cargaSucursalEmi' : _35_smap1.CDUNIECO
+						                'smap1.cargaSucursalEmi' : _35_smap1.CDUNIECO,
+						                'smap1.activaCveFamiliar': _35_smap1.CDUNIECO == '1403'?'S':'N'
 						            }
 						     });
 						     _p22_parentCallback = contratanteGuardado;
