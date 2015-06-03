@@ -38,7 +38,7 @@
             var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros"  action="consultaListaPoliza" />';
             
             var _URL_LISTA_TABULADOR				= '<s:url namespace="/siniestros"  action="consultaListaPorcentaje" />';
-            var _URL_LISTA_TMANTENI					= '<s:url namespace="/siniestros"  action="consultaListaManteni" />';
+            var _URL_TIPO_MEDICO					= '<s:url namespace="/siniestros"  action="consultaTipoMedico" />';
             var _URL_LISTADO_CONCEP_EQUIP    		= '<s:url namespace="/siniestros"  action="consultaListaTDeTauts" />';
             
             var _URL_GUARDA_AUTORIZACION			= '<s:url namespace="/siniestros"  action="guardaAutorizacionServicio" />';

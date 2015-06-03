@@ -78,7 +78,7 @@ public interface SiniestrosManager {
 	
 	public List<ConsultaTDETAUTSVO> getConsultaListaTDeTauts(String nmautser) throws Exception;
 	
-	public List<ConsultaManteniVO> getConsultaListaManteni(String cdtabla, String codigo) throws Exception;
+	public List<ConsultaManteniVO> getConsultaListaTipoMedico(String codigo) throws Exception;
 	
 	public String guardaListaTDeTauts(HashMap<String, Object> paramsTDeTauts) throws Exception;
 	
@@ -532,8 +532,6 @@ public interface SiniestrosManager {
 	
 	public String obtieneUsuarioTurnadoSiniestro(String ntramite, String rolDestino) throws Exception;
 	//public String requiereAutorizacionServ(String cobertura, String subcobertura)throws Exception;
-	
-	public List<Map<String,String>> obtieneFormatoCalculo(String cobertura,String cdramo) throws Exception;
 	
 	public List<GenericVO> getConsultaListaRamoSalud() throws Exception;
 

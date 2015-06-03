@@ -222,10 +222,7 @@ Ext.onReady(function() {
 		autoLoad:false,
 		proxy: {
 			type: 'ajax',
-			url : _URL_LISTA_TMANTENI,
-			extraParams:{
-				'params.cdtabla' : 'TIPOMEDICO'
-			},
+			url : _URL_TIPO_MEDICO,
 			reader: {
 				type: 'json',
 				root: 'listaConsultaManteni'

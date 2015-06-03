@@ -71,7 +71,7 @@ public interface SiniestrosDAO {
 
 	public List<ConsultaTTAPVAATVO> obtieneListadoTTAPVAAT(HashMap<String, Object> paramTTAPVAAT) throws Exception;
 
-	public List<ConsultaManteniVO> obtieneListadoManteni(String cdtabla, String codigo) throws Exception;
+	public List<ConsultaManteniVO> obtieneListadoTipoMedico(String codigo) throws Exception;
 
 	public List<ConsultaPorcentajeVO> obtieneListadoPorcentaje(String cdcpt, String cdtipmed,String mtobase) throws Exception;
 
@@ -416,8 +416,6 @@ public interface SiniestrosDAO {
 	
 	public String obtieneUsuarioTurnadoSiniestro(String ntramite, String rolDestino) throws Exception;
 
-	public List<Map<String,String>> obtieneFormatoCalculo(Map<String, Object> params) throws Exception;
-	
 	public List<GenericVO> obtieneListadoRamoSalud()  throws Exception;
 
 	public List<Map<String, String>> obtieneDatosAdicionales(Map<String, Object> params) throws Exception;
