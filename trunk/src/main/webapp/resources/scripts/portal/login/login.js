@@ -12,7 +12,7 @@ Ext.onReady(function(){
             return true;
         },
 
-        passwordText: 'Las contrase�as no coinciden.'
+        passwordText: 'Las contrase&ntilde;as no coinciden.'
     });
 
 	var dsUser = new Ext.form.TextField({
@@ -33,11 +33,11 @@ Ext.onReady(function(){
 	
 	var dsPassword = new Ext.form.TextField({
 		id:'password',
-    	fieldLabel: 'Contrase�a',
+    	fieldLabel: 'Contrase&ntilde;a',
     	inputType: 'password',
     	name: 'password',
         allowBlank: false,
-        blankText:'La contrase�a es un dato requerido',
+        blankText:'La contrase&ntilde;a es un dato requerido',
         listeners:{
             scope:this,
             specialkey: function(f,e){
@@ -54,12 +54,12 @@ Ext.onReady(function(){
 
 	var confirmPassword = new Ext.form.TextField({
 		id:'confirmPassword',
-		fieldLabel: 'Confirme su Contrase�a',
+		fieldLabel: 'Confirme su Contrase&ntilde;a',
 		inputType: 'password',
 		vtype: 'password',
 		name: 'passwordConfirm',
 		allowBlank: false,
-		blankText:'La confirmaci&oacute;n de la contrase�a es un dato requerido',
+		blankText:'La confirmaci&oacute;n de la contrase&ntilde;a es un dato requerido',
 		initialPassField: 'password',
 		hidden: true,
 		disabled: true,
@@ -109,7 +109,7 @@ Ext.onReady(function(){
         			url: _URL_VALIDA_EXISTE_USUARIO,
     	        	waitMsg:'Procesando...',
     	        	failure: function(form, action) {
-    	        		// Si hay un mensaje de error lo mostramos, sino solicitamos renovar la contrase�a:
+    	        		// Si hay un mensaje de error lo mostramos, sino solicitamos renovar la contrase&ntilde;a:
     	        		if(!Ext.isEmpty(action.result.errorMessage)) {
     	        			Ext.Msg.show({title: 'Error', msg: action.result.errorMessage, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
     	        		} else {
@@ -119,7 +119,7 @@ Ext.onReady(function(){
                             Ext.Msg.show({
                                 title    : 'Aviso'
                                 ,icon    : Ext.Msg.INFO
-                                ,msg     : 'Por motivos de seguridad y como &uacute;nica ocasi&oacute;n debe de renovar su contrase�a.'
+                                ,msg     : 'Por motivos de seguridad y como &uacute;nica ocasi&oacute;n debe de renovar su contrase&ntilde;a.'
                                 ,buttons : Ext.Msg.OK
                             });
     	        		}
