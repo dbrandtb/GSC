@@ -89,6 +89,7 @@ Ext.onReady(function()
                     },
                     {
                         text  : 'Exportar',
+                        icon    : '${ctx}/resources/fam3icons/icons/printer.png',
                         handler: function(btn, e) {
                             
                             var formCmpRep = this.up('form').getForm();
