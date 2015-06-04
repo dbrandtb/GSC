@@ -206,6 +206,28 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				resp.setSmap(new HashMap<String,String>());
 				resp.getSmap().put("VALOR" , consultasDAO.recuperarValorMaximoSituacionPorRol(cdtipsit,cdsisrol));
 			}
+			else if(proc.equals(RecuperacionSimple.RECUPERAR_TATRISIT_AMPARADO))
+			{
+				String cdunieco = params.get("cdunieco");
+				String cdramo   = params.get("cdramo");
+				String estado   = params.get("estado");
+				String nmpoliza   = params.get("nmpoliza");
+				String nmsituac = params.get("nmsituac");
+				String nmsuplem = params.get("nmsuplem");
+				String cdtipsit = params.get("cdtipsit");
+				String cdatribu = params.get("cdatribu");
+				resp.setSmap(new HashMap<String,String>());
+				resp.getSmap().put("CONTEO" , consultasDAO.obtieneConteoSituacionCoberturaAmparada(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,nmsituac
+						,nmsuplem
+						,cdtipsit
+						,cdatribu
+						));
+			}
 			
 			setCheckpoint("0");
 		}

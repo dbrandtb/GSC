@@ -243,4 +243,15 @@ public interface ConsultasDAO
 			,String cdusuari
 			,String cdsisrol
 			) throws Exception;
+	
+	public String obtieneConteoSituacionCoberturaAmparada(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdtipsit
+			,String cdatribu
+			)throws Exception;
 }

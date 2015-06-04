@@ -11,10 +11,10 @@ var _p44_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperaci
 ////// urls //////
 
 ////// variables //////
-var _p44_smap1 = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
+var _p44_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('_p44_smap1:',_p44_smap1);
 
-var _p44_slist1 = <s:property value="%{convertToJSON('slist1')}"  escapeHtml="false" />;
+var _p44_slist1 = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
 debug('_p44_slist1:',_p44_slist1);
 ////// variables //////
 
@@ -137,7 +137,17 @@ Ext.onReady(function()
 		                        for(var j in items)
 		                        {
 		                            var item = items[j];
+		                            var dis  = false;
+		                            if(item.isDisabled())
+		                            {
+		                                dis=true;
+		                                item.enable();
+		                            }
 		                            inciso['OTVALOR'+item.orden] = item.getValue();
+		                            if(dis)
+		                            {
+		                                item.disable();
+		                            }
 		                        }
 		                        
 		                        json.slist1.push(inciso);
@@ -159,6 +169,7 @@ Ext.onReady(function()
 		                            debug('### confirmar:',json2);
 		                            if(json2.success)
 		                            {
+		                                marendNavegacion(2);
 		                                mensajeCorrecto('Endoso generado','Endoso generado');
 		                            }
 		                            else
@@ -208,6 +219,111 @@ Ext.onReady(function()
         {
             var item = items[j];
             item.setValue(inciso[item.name]);
+            item.valorInicial = inciso[item.name];
+            
+            if(item.hidden==false&&item.readOnly==false)
+            {
+	            if(_p44_smap1.TIPO_VALIDACION=='MENOR')
+	            {
+	                item.validator = function()
+	                {
+	                    var val = this.getValue();
+	                    debug('validator-:',val);
+	                    if(Number(this.valorInicial)<Number(val))
+	                    {
+	                        return 'Valor m&aacute;ximo '+this.valorInicial;
+	                    }
+	                    return true;
+	                };
+	            }
+	            else if(_p44_smap1.TIPO_VALIDACION=='MAYOR')
+	            {
+	                item.validator = function()
+	                {
+	                    var val = this.getValue();
+	                    debug('validator+:',val);
+	                    if(Number(this.valorInicial)>Number(val))
+	                    {
+	                        return 'Valor m&iacute;nimo '+this.valorInicial;
+	                    }
+	                    return true;
+	                };
+	            }
+            }
+            
+            item.extraParams =
+            {
+                'cdunieco'  : inciso.CDUNIECO
+                ,'cdramo'   : inciso.CDRAMO
+                ,'estado'   : inciso.ESTADO
+                ,'nmpoliza' : inciso.NMPOLIZA
+                ,'nmsituac' : inciso.NMSITUAC
+                ,'nmsuplem' : inciso.NMSUPLEM
+                ,'cdtipsit' : inciso.CDTIPSIT
+            };
+            
+            if(item.param1=='amparado')
+            {
+                item.disable();
+                try
+                {
+                    var params =
+                    {
+                        'smap1.procedimiento' : 'RECUPERAR_TATRISIT_AMPARADO'
+                        ,'smap1.cdatribu'     : item.value1
+                        ,'smap1.compId'       : item.id
+                    };
+                    for (var i in item.extraParams)
+                    {
+                        params['smap1.'+i] = item.extraParams[i];
+                    } 
+                    Ext.Ajax.request(
+                    {
+                        url      : _p44_urlRecuperacionSimple
+                        ,params  : params
+                        ,success : function(response)
+                        {
+                            try
+                            {
+                                var json = Ext.decode(response.responseText);
+                                debug('### amparada:',json);
+                                if(json.exito)
+                                {
+                                    if(json.smap1.CONTEO>0)
+                                    {
+                                        Ext.getCmp(json.smap1.compId).enable();
+                                    }
+                                }
+                                else
+                                {
+                                    mensajeError(json.respuesta);
+                                    _fieldById('_p44_botonConfirmar').disable();
+                                    _fieldById('_p44_botonConfirmar').setText('Verificacion de cobertura no exitosa');
+                                }
+                            }
+                            catch(e)
+                            {
+                                manejaException(e,'descodificando cobertura amparada');
+                                _fieldById('_p44_botonConfirmar').disable();
+                                _fieldById('_p44_botonConfirmar').setText('Error al decodificar verificacion de coberturas');
+                            }
+                        }
+                        ,failure : function()
+                        {
+                            errorComunicacion();
+                            _fieldById('_p44_botonConfirmar').disable();
+                            _fieldById('_p44_botonConfirmar').setText('Error al solicitar verificacion de coberturas');
+                        }
+                    });
+                }
+                catch(e)
+                {
+                    manejaException(e,'Verificando cobertura amparada');
+                    _fieldById('_p44_botonConfirmar').disable();
+                    _fieldById('_p44_botonConfirmar').setText('Error al verificar coberturas');
+                }
+            }
+            
             if(!Ext.isEmpty(item.store))
             {
                 item.store.proxy.extraParams['params.cdunieco'] = inciso.CDUNIECO;
@@ -216,6 +332,7 @@ Ext.onReady(function()
                 item.store.proxy.extraParams['params.nmpoliza'] = inciso.NMPOLIZA;
                 item.store.proxy.extraParams['params.nmsituac'] = inciso.NMSITUAC;
                 item.store.proxy.extraParams['params.nmsuplem'] = inciso.NMSUPLEM;
+                item.store.proxy.extraParams['params.cdtipsit'] = inciso.CDTIPSIT;
                 debug('item con store:',item);
                 
                 if(Number(_p44_smap1.cdtipsup)==43
@@ -272,15 +389,8 @@ Ext.onReady(function()
                         }
                     });
                     debug('item:',item);
-                }
-                
-                if(item.anidado==true)
-                {
+                    
                     item.heredar(true);
-                }
-                else
-                {
-                    item.store.load();
                 }
             }
         }
