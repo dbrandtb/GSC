@@ -1856,13 +1856,13 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o"   , OracleTypes.CURSOR));
             declareParameter(new SqlOutParameter("pv_reg_unieco_o" , OracleTypes.CURSOR
-            		,new GenericMapper(new String[]{"SUCURSAL" , "COTIZACIONES" , "EMISIONES"})));
+            		,new GenericMapper(new String[]{"CDUNIECO" , "DSUNIECO" , "SUCURSAL" , "COTIZACIONES" , "EMISIONES"})));
             declareParameter(new SqlOutParameter("pv_reg_ramo_o"   , OracleTypes.CURSOR
-            		,new GenericMapper(new String[]{"PRODUCTO" , "COTIZACIONES" , "EMISIONES"})));
+            		,new GenericMapper(new String[]{"CDRAMO" , "DSRAMO" , "PRODUCTO" , "COTIZACIONES" , "EMISIONES"})));
             declareParameter(new SqlOutParameter("pv_reg_usuario_o"   , OracleTypes.CURSOR
-            		,new GenericMapper(new String[]{"USUARIO" , "COTIZACIONES" , "EMISIONES"})));
+            		,new GenericMapper(new String[]{"CDUSUARI" , "DSUSUARI" , "USUARIO" , "COTIZACIONES" , "EMISIONES"})));
             declareParameter(new SqlOutParameter("pv_reg_agente_o"   , OracleTypes.CURSOR
-            		,new GenericMapper(new String[]{"AGENTE" , "COTIZACIONES" , "EMISIONES"})));
+            		,new GenericMapper(new String[]{"CDAGENTE" , "NOMBRE" , "AGENTE" , "COTIZACIONES" , "EMISIONES"})));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"     , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"      , OracleTypes.VARCHAR));
             compile();
@@ -1952,18 +1952,76 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_reg_tarea_o"  , OracleTypes.CURSOR
-            		,new GenericMapper(new String[]{"CDTAREA" , "TAREA" , "TODAS" , "TIEMPO" , "ESCALA"})));
+            		,new GenericMapper(new String[]{"CDTAREA" , "DSTAREA" , "TAREA" , "TODAS" , "TIEMPO" , "ESCALA"})));
             declareParameter(new SqlOutParameter("pv_reg_unieco_o" , OracleTypes.CURSOR
-            		,new GenericMapper(new String[]{"SUCURSAL" , "TODAS" , "TIEMPO" , "ESCALA"})));
+            		,new GenericMapper(new String[]{"CDUNIECO" , "DSUNIECO" , "SUCURSAL" , "TODAS" , "TIEMPO" , "ESCALA"})));
             declareParameter(new SqlOutParameter("pv_reg_ramo_o"   , OracleTypes.CURSOR
-            		,new GenericMapper(new String[]{"PRODUCTO" , "TODAS" , "TIEMPO" , "ESCALA"})));
+            		,new GenericMapper(new String[]{"CDRAMO" , "DSRAMO" , "PRODUCTO" , "TODAS" , "TIEMPO" , "ESCALA"})));
             declareParameter(new SqlOutParameter("pv_reg_sisrol_o" , OracleTypes.CURSOR
-            		,new GenericMapper(new String[]{"CDSISROL" , "ROL" , "TODAS" , "TIEMPO" , "ESCALA"})));
+            		,new GenericMapper(new String[]{"CDSISROL" , "DSSISROL" , "ROL" , "TODAS" , "TIEMPO" , "ESCALA"})));
             declareParameter(new SqlOutParameter("pv_reg_usuari_o" , OracleTypes.CURSOR
-            		,new GenericMapper(new String[]{"USUARIO" , "TODAS" , "TIEMPO" , "ESCALA"})));
+            		,new GenericMapper(new String[]{"CDUSUARI" , "DSUSUARI" , "USUARIO" , "TODAS" , "TIEMPO" , "ESCALA"})));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"     , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"      , OracleTypes.VARCHAR));
             compile();
     	}
     }
+	
+	@Override
+	public String obtieneConteoSituacionCoberturaAmparada(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdtipsit
+			,String cdatribu
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdatribu" , cdatribu);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_TATRISIT_AMPARADO", params);
+		Map<String,Object> procResult = ejecutaSP(new ObtieneAtributosSituacionCoberturaAmparada(getDataSource()),params);
+		String             conteo     = (String)procResult.get("pv_conteo_o");
+		if(StringUtils.isBlank(conteo))
+		{
+			conteo="0";
+		}
+		logger.debug(Utils.join(
+				 "\n**************************************************"
+				,"\n****** PKG_CONSULTA.P_GET_TATRISIT_AMPARADO ******"
+				,"\n****** params=" , params
+				,"\n****** conteo=" , conteo
+				,"\n**************************************************"
+				));
+		return conteo;
+	}
+	
+	protected class ObtieneAtributosSituacionCoberturaAmparada extends StoredProcedure
+	{
+		protected ObtieneAtributosSituacionCoberturaAmparada(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_TATRISIT_AMPARADO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdatribu" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_conteo_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

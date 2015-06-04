@@ -349,7 +349,7 @@ public class GeneradorCampos
         item.add("swobligaemiflot" , comp.isObligatorioEmiFlot());
         if(StringUtils.isNotBlank(comp.getAuxiliar()))
         {
-        	item.add("auxiliar"        , comp.getAuxiliar());
+        	item.add("auxiliar" , comp.getAuxiliar());
         }
         if(StringUtils.isNotBlank(value))
         {
@@ -688,6 +688,50 @@ public class GeneradorCampos
             ////// autocompleter //////
         }
         ////// combo //////
+        
+        ////// auxiliares //////
+    	if(StringUtils.isNotBlank(comp.getParamName1()))
+    	{
+    		item.add(Item.crear("param1",comp.getParamName1()).setQuotes(""));
+    	}
+    	if(StringUtils.isNotBlank(comp.getParamName2()))
+    	{
+    		item.add(Item.crear("param2",comp.getParamName2()).setQuotes(""));
+    	}
+    	if(StringUtils.isNotBlank(comp.getParamName3()))
+    	{
+    		item.add(Item.crear("param3",comp.getParamName3()).setQuotes(""));
+    	}
+    	if(StringUtils.isNotBlank(comp.getParamName4()))
+    	{
+    		item.add(Item.crear("param4",comp.getParamName4()).setQuotes(""));
+    	}
+    	if(StringUtils.isNotBlank(comp.getParamName5()))
+    	{
+    		item.add(Item.crear("param5",comp.getParamName5()).setQuotes(""));
+    	}
+
+    	if(StringUtils.isNotBlank(comp.getParamValue1()))
+    	{
+    		item.add(Item.crear("value1",comp.getParamValue1()).setQuotes(""));
+    	}
+    	if(StringUtils.isNotBlank(comp.getParamValue2()))
+    	{
+    		item.add(Item.crear("value2",comp.getParamValue2()).setQuotes(""));
+    	}
+    	if(StringUtils.isNotBlank(comp.getParamValue3()))
+    	{
+    		item.add(Item.crear("value3",comp.getParamValue3()).setQuotes(""));
+    	}
+    	if(StringUtils.isNotBlank(comp.getParamValue4()))
+    	{
+    		item.add(Item.crear("value4",comp.getParamValue4()).setQuotes(""));
+    	}
+    	if(StringUtils.isNotBlank(comp.getParamValue5()))
+    	{
+    		item.add(Item.crear("value5",comp.getParamValue5()).setQuotes(""));
+    	}
+        ////// auxiliares //////
         
         if(comp.getType()==ComponenteVO.TIPO_TATRIPER)
         {
