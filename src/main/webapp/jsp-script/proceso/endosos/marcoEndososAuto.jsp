@@ -1134,7 +1134,7 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                                 ,title       : record.get('DSTIPSUP')
                                 ,_p34_window : 'si'
                                 ,width       : 950
-                                ,height      : 400
+                                ,height      : 450
                                 ,closeAction : 'destroy'
                                 ,autoScroll  : true
                                 ,loader      :
