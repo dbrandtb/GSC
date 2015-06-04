@@ -68,7 +68,7 @@ Ext.onReady(function()
                         }
                     }
                     ,{
-                        text     : 'Cerrar ventanas'
+                        text     : 'Cerrar gr&aacute;ficas'
                         ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
                         ,handler : function()
                         {
