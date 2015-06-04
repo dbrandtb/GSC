@@ -76,7 +76,7 @@ Ext.onReady(function(){
 	var loginForm = new Ext.form.FormPanel({
 	    el:'formLogin',
 	    id: 'loginForm',
-	    title: 'AUTENTICACI�N DE USUARIO',	    
+	    title: 'AUTENTICACI&Oacute;N DE USUARIO',	    
 	    labelAlign: 'top',	    
 	    frame:true,
 	    //height: 200,
