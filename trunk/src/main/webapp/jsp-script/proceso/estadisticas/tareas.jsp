@@ -5,6 +5,7 @@
 <script>
 ////// urls //////
 var _p47_urlRecuperarTareas = '<s:url namespace="/estadisticas" action="recuperarTareas" />';
+var _p47_URL_OBTENER_REPORTE_EXCEL = '<s:url namespace="/reportes" action="procesoObtencionReporte" />';
 ////// urls //////
 
 ////// variables //////
@@ -85,6 +86,56 @@ Ext.onReady(function()
                                 manejaException(e,'Cerrando ventanas');
                             }
                         }
+                    },
+                    {
+                        text  : 'Exportar',
+                        handler: function(btn, e) {
+                            
+                            var formCmpRep = this.up('form').getForm();
+                            
+                            debug('formulario:', formCmpRep);
+                            debug(formCmpRep.getValues());
+                            
+                            if (formCmpRep.isValid()) {
+                                
+                                //Iteramos los fields del formulario para buscar los del tipo datefield
+                                Ext.Array.each(formCmpRep.getFields().items, function(item){
+                                    debug(item);
+                                });
+                                
+                                formCmpRep.submit({
+                                	url : _p47_URL_OBTENER_REPORTE_EXCEL,
+                                    standardSubmit : true,
+                                    params: {
+                                        cdreporte : 'REPEST001'
+                                    },
+                                    success: function(form, action) {
+                                        
+                                    },
+                                    failure: function(form, action) {
+                                        switch (action.failureType) {
+                                            case Ext.form.action.Action.CONNECT_FAILURE:
+                                                Ext.Msg.alert('Error', 'Error de comunicaci&oacute;n');
+                                                break;
+                                            case Ext.form.action.Action.SERVER_INVALID:
+                                            case Ext.form.action.Action.LOAD_FAILURE:
+                                                Ext.Msg.alert('Error', 'Error del servidor, consulte a soporte');
+                                                break;
+                                       }
+                                    }
+                                });
+                            } else {
+                                Ext.Msg.show({
+                                    title: 'Aviso',
+                                    msg: 'Complete la informaci&oacute;n requerida',
+                                    buttons: Ext.Msg.OK,
+                                    animateTarget: btn,
+                                    icon: Ext.Msg.WARNING
+                                });
+                            }
+                            
+                            
+                        }
                     }
                 ]
             })
@@ -117,7 +168,7 @@ function _p47_buscar(me)
         var params = {};
         for(var i in values)
         {
-            params['params.'+i]=values[i];
+            params[i]=values[i];
         }
         debug('params para buscar:',params);
         
@@ -375,7 +426,6 @@ function _p47_buscar(me)
                             collapsible: true,
                             height: 400,
                             width: 450,
-                            autoScroll:true,
                             layout: 'fit',
                             items: {  
                                 xtype: 'chart',
