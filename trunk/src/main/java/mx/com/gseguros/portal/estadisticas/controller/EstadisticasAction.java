@@ -166,14 +166,14 @@ public class EstadisticasAction extends PrincipalCoreAction
 		{
 			Utils.validate(sb, params , "No se recibieron datos");
 			
-			String feinicio = params.get("feinicio");
-			String fefin    = params.get("fefin");
-			String cdmodulo = params.get("cdmodulo");
-			String cdtarea  = params.get("cdtarea");
-			String cdunieco = params.get("cdunieco");
-			String cdramo   = params.get("cdramo");
-			String cdusuari = params.get("cdusuari");
-			String cdsisrol = params.get("cdsisrol");
+			String feinicio = params.get("pv_fe_desde_i");
+			String fefin    = params.get("pv_fe_hasta_i");
+			String cdmodulo = params.get("pv_cdmodulo_i");
+			String cdtarea  = params.get("pv_cdtarea_i");
+			String cdunieco = params.get("pv_cdunieco_i");
+			String cdramo   = params.get("pv_cdramo_i");
+			String cdusuari = params.get("pv_cdusuari_i");
+			String cdsisrol = params.get("pv_cdsisrol_i");
 			
 			Utils.validate(sb
 					,feinicio , "No se recibio la fecha de inicio"
