@@ -220,13 +220,13 @@ function _p47_buscar(me)
                             title: 'Por nombre de Tareas',
                             titleCollapse: true,
                             collapsible: true,
-                            height: 400,
-                            width: 900,
+                            height: 375,
+                            width: 930,
                             layout: 'fit',
                             items: {  
                                 xtype: 'chart',
-                                width:  900,  //width: 600,
-                                height: 400, //height: 700,
+                                width:  920,
+                                height: 400,
                                 animate: true,
                                 store: storeTarea,
                                 legend: {
@@ -265,7 +265,7 @@ function _p47_buscar(me)
                                     }
                                 }]
                             }
-                        }).showAt(20, 210);
+                        }).showAt(20, 230);
                         
                         Ext.create('Ext.window.Window', {
                             title: 'Tareas por Producto',
@@ -310,64 +310,11 @@ function _p47_buscar(me)
                                         display: 'insideEnd',
                                         field: ['TODAS', 'TIEMPO', 'ESCALA'],
                                         renderer: Ext.util.Format.numberRenderer('0')
-                                        //orientation: 'horizontal',
-                                        //color: '#333',
-                                       //'text-anchor': 'middle'
                                     }
                                 }]
                             }
-                        }).showAt(20,620);
+                        }).showAt(20,630);
                         
-                        Ext.create('Ext.window.Window', {
-                            title: 'Tareas por Rol',
-                            titleCollapse: true,
-                            collapsible: true,
-                            height: 400,
-                            width: 450,
-                            layout: 'fit',
-                            items: {  
-                                xtype: 'chart',
-                                width:  450,  //width: 600,
-                                height: 400, //height: 700,
-                                animate: true,
-                                store: storeRol,
-                                legend: {
-                                  position: 'right'  
-                                },
-                                axes: [{
-                                    type: 'Numeric',
-                                    position: 'bottom', //position: 'left',
-                                    fields: ['TODAS', 'TIEMPO', 'ESCALA'],
-                                    minimum: 0,
-                                    label: {
-                                        renderer: Ext.util.Format.numberRenderer('0,0')
-                                    },
-                                    grid: true,
-                                    title: 'Tareas'
-                                }, {
-                                    type: 'Category',
-                                    position: 'left', //position: 'bottom',
-                                    fields: ['ROL'],
-                                    title: 'Roles'
-                                }],
-                                series: [{
-                                    type: 'bar', //type: 'column',
-                                    highlight: true,
-                                    axis: 'bottom',
-                                    xField: 'ROL',
-                                    yField: ['TODAS', 'TIEMPO', 'ESCALA'],
-                                    title:['Total','En tiempo', 'Escaladas'],
-                                    label: {
-                                        display: 'insideEnd',
-                                        field: ['TODAS', 'TIEMPO', 'ESCALA'],
-                                        renderer: Ext.util.Format.numberRenderer('0')
-                                        //orientation: 'horizontal',
-                                        //color: '#333',
-                                       //'text-anchor': 'middle'
-                                    }
-                                }]
-                            }
-                        }).showAt(500, 620);
                         
                         Ext.create('Ext.window.Window', {
                             title: 'Tareas por Sucursal',
@@ -412,16 +359,13 @@ function _p47_buscar(me)
                                         display: 'insideEnd',
                                         field: ['TODAS', 'TIEMPO', 'ESCALA'],
                                         renderer: Ext.util.Format.numberRenderer('0')
-                                        //orientation: 'horizontal',
-                                        //color: '#333',
-                                       //'text-anchor': 'middle'
                                     }
                                 }]
                             }
-                        }).showAt(20,1040);
+                        }).showAt(20,1050);
                         
                         Ext.create('Ext.window.Window', {
-                            title: 'Tareas por Usuario',
+                            title: 'Tareas por Rol',
                             titleCollapse: true,
                             collapsible: true,
                             height: 400,
@@ -429,8 +373,56 @@ function _p47_buscar(me)
                             layout: 'fit',
                             items: {  
                                 xtype: 'chart',
-                                width:  450,  //width: 600,
-                                height: 1000, //height: 700,
+                                width:  450,
+                                height: 400,
+                                animate: true,
+                                store: storeRol,
+                                legend: {
+                                  position: 'right'  
+                                },
+                                axes: [{
+                                    type: 'Numeric',
+                                    position: 'bottom', //position: 'left',
+                                    fields: ['TODAS', 'TIEMPO', 'ESCALA'],
+                                    minimum: 0,
+                                    label: {
+                                        renderer: Ext.util.Format.numberRenderer('0,0')
+                                    },
+                                    grid: true,
+                                    title: 'Tareas'
+                                }, {
+                                    type: 'Category',
+                                    position: 'left', //position: 'bottom',
+                                    fields: ['ROL'],
+                                    title: 'Roles'
+                                }],
+                                series: [{
+                                    type: 'bar', //type: 'column',
+                                    highlight: true,
+                                    axis: 'bottom',
+                                    xField: 'ROL',
+                                    yField: ['TODAS', 'TIEMPO', 'ESCALA'],
+                                    title:['Total','En tiempo', 'Escaladas'],
+                                    label: {
+                                        display: 'insideEnd',
+                                        field: ['TODAS', 'TIEMPO', 'ESCALA'],
+                                        renderer: Ext.util.Format.numberRenderer('0')
+                                    }
+                                }]
+                            }
+                        }).showAt(20, 1470);
+                        
+                        Ext.create('Ext.window.Window', {
+                            title: 'Tareas por Usuario',
+                            titleCollapse: true,
+                            collapsible: true,
+                            height: 1240,
+                            width: 450,
+                            layout: 'fit',
+                            items: {  
+                                xtype: 'chart',
+                                width:  450,
+                                height: 1240,
                                 animate: true,
                                 store: storeUsuario,
                                 legend: {
@@ -463,13 +455,10 @@ function _p47_buscar(me)
                                         display: 'insideEnd',
                                         field: ['TODAS', 'TIEMPO', 'ESCALA'],
                                         renderer: Ext.util.Format.numberRenderer('0')
-                                        //orientation: 'horizontal',
-                                        //color: '#333',
-                                       //'text-anchor': 'middle'
                                     }
                                 }]
                             }
-                        }).showAt(500,1040);
+                        }).showAt(500,630);
                     	
                     }
                     else
@@ -497,5 +486,5 @@ function _p47_buscar(me)
 ////// funciones //////
 </script>
 </head>
-<body><div id="_p47_divpri" style="height:1500px; border:1px solid #CCCCCC;"></div></body>
+<body><div id="_p47_divpri" style="height:2000px; border:1px solid #CCCCCC;"></div></body>
 </html>
