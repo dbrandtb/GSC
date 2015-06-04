@@ -167,6 +167,7 @@ function _p46_buscar(me)
                             layout: 'fit',
                             items: {  
                                 xtype: 'chart',
+                                theme: 'Category2',
                                 width:  450,
                                 height: 400,
                                 animate: true,
@@ -341,6 +342,7 @@ function _p46_buscar(me)
                             layout: 'fit',
                             items: {  
                                 xtype: 'chart',
+                                theme: 'Category1',
                                 width:  450,
                                 height: 400,
                                 animate: true,
