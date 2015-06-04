@@ -504,11 +504,6 @@
                                 ,width     : 265
                             }
                             ,{
-                                header     : 'Suma asegurada'
-                                ,dataIndex : 'SUMA_ASEGURADA'
-                                ,width     : 110
-                            }
-                            ,{
                                 menuDisabled : true
                                 ,width       : 30
                                 ,dataIndex   : 'SWOBLIGA'
@@ -521,7 +516,13 @@
                                     }
                                     return rvalue;
                                 }
-                            },{
+                            }
+                            ,{
+                                header     : 'Suma asegurada'
+                                ,dataIndex : 'SUMA_ASEGURADA'
+                                ,width     : 110
+                            }
+                            ,{
                                 header     : 'No.'
                                 ,dataIndex : 'nmsituac'
                                 ,width     : 15
@@ -541,7 +542,7 @@
                                 debug('incisoSelected=', incisoSelected);
                                 debug('cellIndex=', cellIndex);
                                 
-                                if(cellIndex==2 && hayIncisoSeleccionado) {
+                                if(cellIndex==1 && hayIncisoSeleccionado) {
                                 	if(record.get('SWOBLIGA')=='N' && inputAltabajap3=='baja') {
                                         storeCoberturasEditadas_p3.add(record);
                                         storeCoberturasActuales_p3.remove(record)
@@ -577,11 +578,6 @@
                                 ,width     : 265
                             }
                             ,{
-                                header     : 'Suma asegurada'
-                                ,dataIndex : 'SUMA_ASEGURADA'
-                                ,width     : 110
-                            }
-                            ,{
                                 menuDisabled : true
                                 ,width       : 30
                                 ,icon        : '${ctx}/resources/fam3icons/icons/cancel.png'
@@ -589,7 +585,13 @@
                                 {
                                     return '<img src="${ctx}/resources/fam3icons/icons/control_rewind_blue.png" data-qtip="Volver a agregar" style="cursor:pointer;">';
                                 }
-                            },{
+                            }
+                            ,{
+                                header     : 'Suma asegurada'
+                                ,dataIndex : 'SUMA_ASEGURADA'
+                                ,width     : 110
+                            }
+                            ,{
                                 header     : 'No.'
                                 ,dataIndex : 'nmsituac'
                                 ,width     : 15
@@ -601,7 +603,7 @@
                             cellclick : function(grid, td, cellIndex, record)
                             {
                                 debug('cellclick');
-                                if(cellIndex==2)
+                                if(cellIndex==1)
                                 {
                                     storeCoberturasActuales_p3.add(record);
                                     storeCoberturasEditadas_p3.remove(record);
@@ -634,19 +636,20 @@
                                 ,width     : 265
                             }
                             ,{
-                                header     : 'Suma asegurada'
-                                ,dataIndex : 'SUMA_ASEGURADA'
-                                ,width     : 110
-                                ,hidden    : true
-                            }
-                            ,{
                                 menuDisabled : true
                                 ,width       : 30
                                 ,renderer    : function(value)
                                 {
                                     return '<img src="${ctx}/resources/fam3icons/icons/add.png" data-qtip="Agregar" style="cursor:pointer;">';
                                 }
-                            },{
+                            }
+                            ,{
+                                header     : 'Suma asegurada'
+                                ,dataIndex : 'SUMA_ASEGURADA'
+                                ,width     : 110
+                                ,hidden    : true
+                            }
+                            ,{
                                 header     : 'No.'
                                 ,dataIndex : 'nmsituac'
                                 ,width     : 15
@@ -666,7 +669,7 @@
                                  debug('inciso seleccionado?', hayIncisoSeleccionado);
                                  debug('incisoSelected=', incisoSelected);
                                  debug('cellIndex=', cellIndex);
-                                 if(cellIndex==2 && hayIncisoSeleccionado)
+                                 if(cellIndex==1 && hayIncisoSeleccionado)
                                  {
                                      Ext.Ajax.request(
                                      {
@@ -776,20 +779,20 @@
                                 ,width     : 265
                             }
                             ,{
-                                header     : 'Suma asegurada'
-                                ,dataIndex : 'SUMA_ASEGURADA'
-                                ,width     : 110
-                                ,hidden    : true
-                            }
-                            ,{
                                 menuDisabled : true
                                 ,width       : 30
                                 ,renderer    : function(value)
                                 {
                                     return '<img src="${ctx}/resources/fam3icons/icons/delete.png" data-qtip="No agregar" style="cursor:pointer;">';
                                 }
-                            },
-                            {
+                            }
+                            ,{
+                                header     : 'Suma asegurada'
+                                ,dataIndex : 'SUMA_ASEGURADA'
+                                ,width     : 110
+                                ,hidden    : true
+                            }
+                            ,{
                                 header     : 'No.'
                                 ,dataIndex : 'nmsituac'
                                 ,width     : 15
@@ -801,7 +804,7 @@
                             cellclick : function(grid, td, cellIndex, record)
                             {
                                 debug('cellclick');
-                                if(cellIndex==2)
+                                if(cellIndex==1)
                                 {
                                     storeCoberturasDisponibles_p3.add(record);
                                     storeCoberturasEditadas_p3.remove(record);
