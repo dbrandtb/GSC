@@ -4161,14 +4161,15 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			/**
 			 * PARA LLAMAR WS SEGUN TIPO DE ENDOSO
 			 */
+			String nmsuplemGen = propWS.getNmsuplem();
+			String ntramite = propWS.getNtramite();
+			String tipoGrupoInciso = propWS.getTipoflot();
+			
 			if(TipoEndoso.CAMBIO_TIPO_SERVICIO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
-				String nmsuplemGen = propWS.getNmsuplem();
-				String ntramite = propWS.getNtramite();
-				String tipoGrupoInciso = propWS.getTipoflot();
 				
 				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
 				if(aux == null || !aux.isExitoRecibos()){
-					logger.error("Error al ejecutar los WS de endoso");
+					logger.error("Error al ejecutar los WS de endoso CAMBIO_TIPO_SERVICIO");
 					
 					boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen);
 					
@@ -4183,6 +4184,30 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				}
 				
 				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
+				
+			}else if(TipoEndoso.SUMA_ASEGURADA_INCREMENTO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup) 
+					|| TipoEndoso.SUMA_ASEGURADA_DECREMENTO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)
+					|| TipoEndoso.DEDUCIBLE_MAS.getCdTipSup().toString().equalsIgnoreCase(cdtipsup) 
+					|| TipoEndoso.DEDUCIBLE_MENOS.getCdTipSup().toString().equalsIgnoreCase(cdtipsup) ){
+
+				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
+				if(aux == null || !aux.isExitoRecibos()){
+					
+					logger.error("Error al ejecutar los WS de endoso");
+					boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen);
+							
+					if(endosoRevertido){
+						logger.error("Endoso revertido exitosamente.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					}else{
+						logger.error("Error al revertir el endoso");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+					}
+					
+				}
+				
+				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
+			
 			}
 			
 		}
