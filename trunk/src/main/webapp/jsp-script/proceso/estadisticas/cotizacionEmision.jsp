@@ -137,8 +137,7 @@ function _p46_buscar(me)
                     debug('### filtros:',json);
                     if(json.success)
                     {
-                        //alert('richi');
-                        
+                    	
                         var storeUnieco = Ext.create('Ext.data.JsonStore', {
                             fields: ['SUCURSAL', 'COTIZACIONES', 'EMISIONES'],
                             data: json.objetos.unieco
@@ -168,8 +167,8 @@ function _p46_buscar(me)
                             layout: 'fit',
                             items: {  
                                 xtype: 'chart',
-                                width:  450,  //width: 600,
-                                height: 400, //height: 700,
+                                width:  450,
+                                height: 400,
                                 animate: true,
                                 store: storeUnieco,
                                 legend: {
@@ -202,12 +201,19 @@ function _p46_buscar(me)
                                         display: 'insideEnd',
                                         field: ['COTIZACIONES', 'EMISIONES'],
                                         renderer: Ext.util.Format.numberRenderer('0')
-                                        //orientation: 'horizontal',
-                                        //color: '#333',
-                                       //'text-anchor': 'middle'
                                     }
                                 }]
-                            }
+                            },
+                            buttons: [{
+                                text: 'Exportar',
+                                icon: '${ctx}/resources/fam3icons/icons/chart_bar.png',
+                                handler: function() {
+                                    console.log(this);
+                                    this.up('window').down('chart').save({
+                                        type: 'image/png'
+                                    });
+                                }
+                            }]
                         }).showAt(20,200);
                         
                         Ext.create('Ext.window.Window', {
@@ -219,8 +225,8 @@ function _p46_buscar(me)
                             layout: 'fit',
                             items: {  
                                 xtype: 'chart',
-                                width:  450,  //width: 600,
-                                height: 400, //height: 700,
+                                width:  450,
+                                height: 400,
                                 animate: true,
                                 store: storeRamo,
                                 legend: {
@@ -253,12 +259,19 @@ function _p46_buscar(me)
                                         display: 'insideEnd',
                                         field: ['COTIZACIONES', 'EMISIONES'],
                                         renderer: Ext.util.Format.numberRenderer('0')
-                                        //orientation: 'horizontal',
-                                        //color: '#333',
-                                       //'text-anchor': 'middle'
                                     }
                                 }]
-                            }
+                            },
+                            buttons: [{
+                                text: 'Exportar',
+                                icon: '${ctx}/resources/fam3icons/icons/chart_bar.png',
+                                handler: function() {
+                                    console.log(this);
+                                    this.up('window').down('chart').save({
+                                        type: 'image/png'
+                                    });
+                                }
+                            }]
                         }).showAt(500, 200);
                         
                         Ext.create('Ext.window.Window', {
@@ -270,8 +283,8 @@ function _p46_buscar(me)
                             layout: 'fit',
                             items: {  
                                 xtype: 'chart',
-                                width:  450,  //width: 600,
-                                height: 400, //height: 700,
+                                width:  450,
+                                height: 400,
                                 animate: true,
                                 store: storeUsuario,
                                 legend: {
@@ -304,12 +317,19 @@ function _p46_buscar(me)
                                         display: 'insideEnd',
                                         field: ['COTIZACIONES', 'EMISIONES'],
                                         renderer: Ext.util.Format.numberRenderer('0')
-                                        //orientation: 'horizontal',
-                                        //color: '#333',
-                                       //'text-anchor': 'middle'
                                     }
                                 }]
-                            }
+                            },
+                            buttons: [{
+                                text: 'Exportar',
+                                icon: '${ctx}/resources/fam3icons/icons/chart_bar.png',
+                                handler: function() {
+                                    console.log(this);
+                                    this.up('window').down('chart').save({
+                                        type: 'image/png'
+                                    });
+                                }
+                            }]
                         }).showAt(20, 620);
                         
                         Ext.create('Ext.window.Window', {
@@ -321,8 +341,8 @@ function _p46_buscar(me)
                             layout: 'fit',
                             items: {  
                                 xtype: 'chart',
-                                width:  450,  //width: 600,
-                                height: 400, //height: 700,
+                                width:  450,
+                                height: 400,
                                 animate: true,
                                 store: storeAgente,
                                 legend: {
@@ -355,12 +375,19 @@ function _p46_buscar(me)
                                         display: 'insideEnd',
                                         field: ['COTIZACIONES', 'EMISIONES'],
                                         renderer: Ext.util.Format.numberRenderer('0')
-                                        //orientation: 'horizontal',
-                                        //color: '#333',
-                                       //'text-anchor': 'middle'
                                     }
                                 }]
-                            }
+                            },
+                            buttons: [{
+                                text: 'Exportar',
+                                icon: '${ctx}/resources/fam3icons/icons/chart_bar.png',
+                                handler: function() {
+                                    console.log(this);
+                                    this.up('window').down('chart').save({
+                                        type: 'image/png'
+                                    });
+                                }
+                            }]
                         }).showAt(500,620);
                     }
                     else

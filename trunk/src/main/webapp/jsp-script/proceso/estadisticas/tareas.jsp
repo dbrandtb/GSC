@@ -89,7 +89,8 @@ Ext.onReady(function()
                     },
                     {
                         text  : 'Exportar',
-                        icon    : '${ctx}/resources/fam3icons/icons/printer.png',
+                        //icon    : '${ctx}/resources/fam3icons/icons/page_excel.png',
+                        icon    : '${ctx}/resources/fam3icons/icons/page_excel.png',
                         handler: function(btn, e) {
                             
                             var formCmpRep = this.up('form').getForm();
@@ -224,7 +225,7 @@ function _p47_buscar(me)
                             height: 375,
                             width: 930,
                             layout: 'fit',
-                            items: {  
+                            items: {
                                 xtype: 'chart',
                                 width:  920,
                                 height: 400,
@@ -265,7 +266,17 @@ function _p47_buscar(me)
                                        //'text-anchor': 'middle'
                                     }
                                 }]
-                            }
+                            },
+                            buttons: [{
+                                text: 'Exportar',
+                                icon: '${ctx}/resources/fam3icons/icons/chart_bar.png',
+                                handler: function() {
+                                    console.log(this);
+                                    this.up('window').down('chart').save({
+                                        type: 'image/png'
+                                    });
+                                }
+                            }]
                         }).showAt(20, 230);
                         
                         Ext.create('Ext.window.Window', {
@@ -313,7 +324,17 @@ function _p47_buscar(me)
                                         renderer: Ext.util.Format.numberRenderer('0')
                                     }
                                 }]
-                            }
+                            },
+                            buttons: [{
+                                text: 'Exportar',
+                                icon: '${ctx}/resources/fam3icons/icons/chart_bar.png',
+                                handler: function() {
+                                    console.log(this);
+                                    this.up('window').down('chart').save({
+                                        type: 'image/png'
+                                    });
+                                }
+                            }]
                         }).showAt(20,630);
                         
                         
@@ -362,7 +383,17 @@ function _p47_buscar(me)
                                         renderer: Ext.util.Format.numberRenderer('0')
                                     }
                                 }]
-                            }
+                            },
+                            buttons: [{
+                                text: 'Exportar',
+                                icon: '${ctx}/resources/fam3icons/icons/chart_bar.png',
+                                handler: function() {
+                                    console.log(this);
+                                    this.up('window').down('chart').save({
+                                        type: 'image/png'
+                                    });
+                                }
+                            }]
                         }).showAt(20,1050);
                         
                         Ext.create('Ext.window.Window', {
@@ -410,7 +441,17 @@ function _p47_buscar(me)
                                         renderer: Ext.util.Format.numberRenderer('0')
                                     }
                                 }]
-                            }
+                            },
+                            buttons: [{
+                                text: 'Exportar',
+                                icon: '${ctx}/resources/fam3icons/icons/chart_bar.png',
+                                handler: function() {
+                                    console.log(this);
+                                    this.up('window').down('chart').save({
+                                        type: 'image/png'
+                                    });
+                                }
+                            }]
                         }).showAt(20, 1470);
                         
                         Ext.create('Ext.window.Window', {
@@ -458,7 +499,17 @@ function _p47_buscar(me)
                                         renderer: Ext.util.Format.numberRenderer('0')
                                     }
                                 }]
-                            }
+                            },
+                            buttons: [{
+                                text: 'Exportar',
+                                icon: '${ctx}/resources/fam3icons/icons/chart_bar.png',
+                                handler: function() {
+                                    console.log(this);
+                                    this.up('window').down('chart').save({
+                                        type: 'image/png'
+                                    });
+                                }
+                            }]
                         }).showAt(500,630);
                     	
                     }
