@@ -3322,6 +3322,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			setCheckpoint("Validando datos de descuento por nomina");
 			//consultasDAO.validarAtributosDXN(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 			
+			setCheckpoint("Tarificando");
 			if(!notarifica)
 			{
 				cotizacionDAO.sigsvdefEnd(
@@ -3346,6 +3347,13 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						,"0" //nmsuplem
 						,cdtipsit
 						);
+			}
+			
+			setCheckpoint("Ejecutando validaciones");
+			String errores = consultasDAO.validacionesSuplemento(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, "1");
+			if(StringUtils.isNotBlank(errores))
+			{
+				throw new ApplicationException(errores);
 			}
 			
 			resp.setSlist(cotizacionDAO.cargarDetallesCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza, cdperpag));

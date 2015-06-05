@@ -1251,7 +1251,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					,cdramo
 					,estado
 					,nmpoliza
-					,cdtipsit
+					,"0"
 					,StringUtils.isNotBlank(notarifica)&&notarifica.equalsIgnoreCase("si")
 					,cdusuari
 					,cdelemen

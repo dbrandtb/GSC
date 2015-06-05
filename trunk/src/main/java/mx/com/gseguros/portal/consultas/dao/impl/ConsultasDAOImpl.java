@@ -2024,4 +2024,55 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public String validacionesSuplemento(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdtipsup
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("cdtipsup" , cdtipsup);
+		Utils.debugProcedure(logger, "PKG_DESARROLLO.P_VALIDA_SUPLEMENTO", params);
+		Map<String,Object> procResult = ejecutaSP(new ValidacionesSuplemento(getDataSource()),params);
+		String             error      = (String)procResult.get("pv_error_o");
+		logger.debug(Utils.join(
+				 "\n************************************************"
+				,"\n****** params=" , params
+				,"\n****** error="  , error
+				,"\n****** PKG_DESARROLLO.P_VALIDA_SUPLEMENTO ******"
+				,"\n************************************************"
+				));
+		return error;
+	}
+	
+	protected class ValidacionesSuplemento extends StoredProcedure
+	{
+		protected ValidacionesSuplemento(DataSource dataSource)
+		{
+			super(dataSource,"PKG_DESARROLLO.P_VALIDA_SUPLEMENTO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
