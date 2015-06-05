@@ -392,6 +392,11 @@ Ext.onReady(function()
                     
                     item.heredar(true);
                 }
+                //para todos los demas que requieren los atributos extras puestos arriba (deberan venir con autoload=false)
+                else if(item.store.autoLoad==false)
+                {
+                    item.store.load();
+                }
             }
         }
     }
