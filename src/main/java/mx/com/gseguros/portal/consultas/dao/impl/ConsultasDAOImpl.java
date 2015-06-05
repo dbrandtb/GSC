@@ -2044,14 +2044,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("nmsituac" , nmsituac);
 		params.put("nmsuplem" , nmsuplem);
 		params.put("cdtipsup" , cdtipsup);
-		Utils.debugProcedure(logger, "PKG_DESARROLLO.P_VALIDA_SUPLEMENTO", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_VALIDA_SUPLEMENTO", params);
 		Map<String,Object> procResult = ejecutaSP(new ValidacionesSuplemento(getDataSource()),params);
 		String             error      = (String)procResult.get("pv_error_o");
 		logger.debug(Utils.join(
 				 "\n************************************************"
 				,"\n****** params=" , params
 				,"\n****** error="  , error
-				,"\n****** PKG_DESARROLLO.P_VALIDA_SUPLEMENTO ******"
+				,"\n****** PKG_SATELITES2.P_VALIDA_SUPLEMENTO ******"
 				,"\n************************************************"
 				));
 		return error;
@@ -2061,7 +2061,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected ValidacionesSuplemento(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_VALIDA_SUPLEMENTO");
+			super(dataSource,"PKG_SATELITES2.P_VALIDA_SUPLEMENTO");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
