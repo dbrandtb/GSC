@@ -776,7 +776,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 
     		logger.debug("Guardando Atributos... ");
     		catalogosManager.guardaAtributosTablaApoyo(params, saveList2);
-    		logger.debug("Atributos Guardadas... ");
+    		logger.debug("Atributos Guardados... ");
     		
     	}catch(Exception ex){
     		logger.error("Error al guardaTablaApoyo",ex);
