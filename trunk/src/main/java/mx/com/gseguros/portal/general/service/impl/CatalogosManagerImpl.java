@@ -237,6 +237,18 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		logger.debug("Claves existentes: "+ existentes);
 		logger.debug("Claves nuevas/ a generar: "+ inexistentes);
 		
+		
+		/** Si no hay nada que guardar **/
+		if(existentes.isEmpty() && inexistentes.isEmpty()){
+			logger.debug("Sin claves que guardar");
+			return true;
+		}
+		
+		/** Si no la tabla no se creo con ninguna clave y la tabla no tiene claves se inserta **/
+		if(existentes.isEmpty()){
+			params.put("pi_tip_tran", "1");
+		}
+		
 		Map<String, String> claveAgregar = null;
 		
 		//Agregando Existentes
