@@ -102,7 +102,7 @@ if(!Ext.isEmpty(_p22_smap1)){
 	
 	_esCargaClienteNvo = !Ext.isEmpty(_p22_smap1.esCargaClienteNvo) && _p22_smap1.esCargaClienteNvo == "S" ? true : false ;
 	_ocultaBusqueda = !Ext.isEmpty(_p22_smap1.ocultaBusqueda) && _p22_smap1.ocultaBusqueda == "S" ? true : false ;
-	_cargaCompania = _p22_smap1.esSaludDanios;	
+	_cargaCompania  = _p22_smap1.esSaludDanios;	
 	_cargaCP = _p22_smap1.cargaCP;	
 	_cargaTipoPersona = _p22_smap1.cargaTipoPersona;	
 	_cargaSucursalEmi = _p22_smap1.cargaSucursalEmi;
@@ -2075,7 +2075,15 @@ function _p22_guardarDatosAdicionalesClic()
                 }
                 else
                 {
-                    mensajeError(json.respuesta);
+                	/**
+                	 * TODO: Cambiar por Es en Proceso
+                	 */
+                    if(!Ext.isEmpty(_cargaCompania)){
+                    	mensajeWarning(json.respuesta);
+                    }else{
+                    	mensajeError(json.respuesta);	
+                    }
+                    
                 }
                 
                 /** PARA ACTUALIZAR EL NUEVO ESTATUS GENERAL DE LA PERSONA 
