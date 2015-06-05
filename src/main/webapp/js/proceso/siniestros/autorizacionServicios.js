@@ -630,7 +630,7 @@ Ext.onReady(function() {
 	});
 
 	asegurado = Ext.create('Ext.form.field.ComboBox',{
-		colspan:2,						fieldLabel     : 'Asegurado',		allowBlank     : false,			displayField : 'value',
+		/*colspan:2,*/						fieldLabel     : 'Asegurado',		allowBlank     : false,			displayField : 'value',
 		id     :'idAsegurado',			labelWidth 	   : 170,				valueField     : 'key',			queryParam   : 'params.cdperson',
 		width  :500,					forceSelection : true,				matchFieldWidth: false,			queryMode    :'remote',
 		minChars  : 2,					store 		   : storeAsegurados,	triggerAction  : 'all',			name:'cdperson',
@@ -1819,7 +1819,53 @@ Ext.onReady(function() {
 				]
 			}
 			, cmbRamos		//1.- Producto
-			, asegurado		//2.- Asegurado
+			,{	colspan:2								,border: false
+				,layout      : {
+					type     : 'table'
+					,columns : 2
+				},
+				items    :[
+					asegurado,
+					{	xtype   : 'button',
+						text    : 'Siniestralidad',
+						icon    : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
+						handler : function() {
+							var windowHistSinies = Ext.create('Ext.window.Window',{
+								modal       : true,
+								buttonAlign : 'center',
+								width       : 800,
+								height      : 500,
+								autoScroll  : true,
+								loader      : {
+									url     : _URL_LOADER_HISTORIAL_RECLAMACIONES,
+									params  : {
+										'params.cdperson'  : panelInicialPrincipal.down('[name=cdperson]').getValue(),
+										'params.cdramo'    : null,
+										'params.nmpoliza'  : null,
+										'params.cdunieco'  : null,
+										'params.proceso'  : '0'
+										
+									},
+									scripts  : true,
+									loadMask : true,
+									autoLoad : true,
+									ajaxOptions: {
+										method: 'POST'
+									}
+								},
+								buttons: [{
+									icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+									text: 'Cerrar',
+									handler: function() {
+										windowHistSinies.close();
+									}
+								}]
+							}).show();
+							centrarVentana(windowHistSinies);
+						}
+					}
+				]
+			}
 			,//3.- Fecha de Solicitud
 			{	id: 'fechaSolicitud'		,xtype		: 'datefield'				,fieldLabel	: 'Fecha Solicitud',
 				name:'fesolici'				,labelWidth : 170						,id 		: 'fechaSolicitud',			format		: 'd/m/Y',

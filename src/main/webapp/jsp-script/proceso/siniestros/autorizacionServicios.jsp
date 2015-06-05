@@ -67,6 +67,7 @@
             var _URL_CIRCULO_HOSP_MULTISALUD        = '<s:url namespace="/siniestros" action="consultaCirculoHospitalarioMultisalud" />';
             var _URL_CIRCULO_HOSPITALARIO        	= '<s:url namespace="/siniestros" action="consultaCirculoHospitalario" />';
             var _URL_PORCENTAJE_QUIRURGICO        	= '<s:url namespace="/siniestros" action="consultaPorcentajeQuirurgico" />';
+            var _URL_LOADER_HISTORIAL_RECLAMACIONES= '<s:url namespace="/siniestros"	 action="includes/historialReclamaciones" />';
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             
         </script>
