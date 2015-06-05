@@ -2817,6 +2817,12 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		Utils.debugProcedure(logger, "PKG_SATELITES2.P_ENDOSO_ATRIBUTOS_AUTO", params);
 		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoTvalositAuto(getDataSource()),params);
 		
+		String errores = (String)resParams.get("pv_error_o");
+		if(StringUtils.isNotBlank(errores))
+		{
+			throw new ApplicationException(errores);
+		}
+		
 		return resParams;
 	}
 	
@@ -2839,6 +2845,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_error_o"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

@@ -52,6 +52,7 @@ import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
 import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
@@ -1605,6 +1606,31 @@ public class ComplementariosAction extends PrincipalCoreAction
 		        /*////////////////////////////*/
 		        ////// retarifica         //////
 		        ////////////////////////////////
+			}
+			
+			try
+			{
+				String error = consultasManager.validacionesSuplemento(
+						cdunieco
+						,cdramo
+						,"W"
+						,panel1.get("nmpoliza")
+						,null
+						,"0"
+						,"1"
+						);
+				if(StringUtils.isNotBlank(error))
+				{
+					mensajeRespuesta = error;
+					return SUCCESS;
+				}
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				logger.error(Utils.join("Error en validaciones #",timestamp),ex);
+				mensajeRespuesta = Utils.join("Error en validaciones #",timestamp);
+				return SUCCESS;
 			}
 	        
 			///////////////////////////////////

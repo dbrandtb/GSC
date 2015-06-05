@@ -187,6 +187,36 @@ public class ConsultasManagerImpl implements ConsultasManager
 		return consultasDAO.esProductoSalud(cdramo);
 	}
 	
+	@Override
+	public String validacionesSuplemento(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdtipsup
+			)throws Exception
+	{
+		logger.info(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ validacionesSuplemento @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				));
+		
+		String error=consultasDAO.validacionesSuplemento(cdunieco,cdramo,estado,nmpoliza,nmsituac,nmsuplem,cdtipsup);
+		
+		logger.info(Utils.join(
+				 "\n@@@@@@ error=",error
+				,"\n@@@@@@ validacionesSuplemento @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return error;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	///////////////////////////////

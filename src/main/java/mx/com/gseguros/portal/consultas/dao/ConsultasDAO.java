@@ -254,4 +254,14 @@ public interface ConsultasDAO
 			,String cdtipsit
 			,String cdatribu
 			)throws Exception;
+	
+	public String validacionesSuplemento(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdtipsup
+			)throws Exception;
 }

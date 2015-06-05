@@ -48,7 +48,7 @@ Ext.override(Ext.form.TextField,
                             {
                                 floating : true
                                 ,frame   : true
-                                ,html    : me.cdatribu
+                                ,html    : me.cdatribu+':'+me.getValue()
                             });
                             me.ventana.show();
                             me.ventana.setY(me.getY());
