@@ -1983,6 +1983,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				incisos = incisos + datosEnIt.get("Inciso");
 				
 				paramsEnd.put("vFEndoso"   , datosEnIt.get("FEndoso"));
+				paramsEnd.put("vClausula"   , datosEnIt.get("Clausula"));
 			}
 			
 			paramsEnd.put("vListaIncisos"  , incisos);
