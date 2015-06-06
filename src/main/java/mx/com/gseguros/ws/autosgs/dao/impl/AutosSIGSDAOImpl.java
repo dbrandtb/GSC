@@ -117,7 +117,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	
 	public class InsertaReciboAuto extends StoredProcedure{
 		protected InsertaReciboAuto(DataSource dataSource){
-			super(dataSource, "sprecibosigs_prov");
+			super(dataSource, "spReciboSigs");
 			
 			declareParameter(new SqlParameter("Sucursal", Types.SMALLINT));
 			declareParameter(new SqlParameter("Ramo", Types.SMALLINT));
