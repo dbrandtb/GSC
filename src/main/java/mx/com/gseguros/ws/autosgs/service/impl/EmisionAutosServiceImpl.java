@@ -647,6 +647,30 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		return emisionAutoRes;
 	}
 	
+	public List<Map<String,String>> obtieneEndososImprimir(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem){
+		
+		logger.debug(">>>>> Entrando a metodo Obtiene Endosos a Imprimir");
+		
+		LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+		params.put("param1" , cdunieco);
+		params.put("param2" , cdramo);
+		params.put("param3" , estado);
+		params.put("param4" , nmpoliza);
+		params.put("param5" , nmsuplem);
+		
+		List<Map<String,String>> listaEndosos = null;
+		
+		try {
+			listaEndosos = storedProceduresManager.procedureListCall(
+					ObjetoBD.OBTIENE_DATOS_IMP_WS_ENDOSO_AUTO.getNombre(), params, null);
+		} catch (Exception e2) {
+			logger.error("Error al obtener lista de endosos o emision a Imprimir para WS de autos.",e2);
+		}
+		
+		return listaEndosos;
+	}
+	
 	private WrapperResultadosWS ejecutaCotizacionAutosWS(Cotizacion datosCotizacionAuto) throws Exception{
 		
 		WrapperResultadosWS resultWS = new WrapperResultadosWS();

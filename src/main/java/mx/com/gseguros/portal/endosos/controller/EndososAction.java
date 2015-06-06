@@ -9844,146 +9844,148 @@ public class EndososAction extends PrincipalCoreAction
 		 */
 		
 		try {
+			List<Map<String,String>> listaEndosos = emisionAutosService.obtieneEndososImprimir(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 			
-			String parametros = null;
-			
-			String urlCaratula = null;
-			if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo) 
-		    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)
-		    	){
-				urlCaratula = this.getText("caratula.impresion.autos.url");
-			}else if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)){
-				urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
+			if(listaEndosos == null || listaEndosos.isEmpty()){
+				logger.error("Error al ejecutar caratula endoso con tarifa, Sin Datos de consulta.");
+				return false;
 			}
 			
-			if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
-				urlCaratula = this.getText("caratula.impresion.autos.flotillas.url");
+			for(Map<String,String> endosoIt : listaEndosos){
+				if(StringUtils.isNotBlank(endosoIt.get("IMPRIMIR")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("IMPRIMIR"))){
+
+					
+					String parametros = null;
+					
+					String urlCaratula = null;
+					if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo) 
+				    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)
+				    	){
+						urlCaratula = this.getText("caratula.impresion.autos.url");
+					}else if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)){
+						urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
+					}
+					
+					if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
+						urlCaratula = this.getText("caratula.impresion.autos.flotillas.url");
+					}
+					
+					String urlRecibo = this.getText("recibo.impresion.autos.url");
+					String urlCaic = this.getText("caic.impresion.autos.url");
+					String urlAp = this.getText("ap.impresion.autos.url");
+					
+					String urlIncisosFlot = this.getText("incisos.flotillas.impresion.autos.url");
+					String urlTarjIdent = this.getText("tarjeta.iden.impresion.autos.url");
+					
+					
+					/**
+					 * Para Caratula
+					 */
+					parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"));
+					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
+					
+					HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+					paramsR.put("pv_cdunieco_i", cdunieco);
+					paramsR.put("pv_cdramo_i",   cdramo);
+					paramsR.put("pv_estado_i",   estado);
+					paramsR.put("pv_nmpoliza_i", nmpoliza);
+					paramsR.put("pv_nmsuplem_i", nmsuplem);
+					paramsR.put("pv_feinici_i",  new Date());
+					paramsR.put("pv_cddocume_i", urlCaratula + parametros);
+					paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")");
+					paramsR.put("pv_nmsolici_i", nmpoliza);
+					paramsR.put("pv_ntramite_i", ntramite);
+					paramsR.put("pv_tipmov_i",   cdtipsup);
+					paramsR.put("pv_swvisible_i", Constantes.SI);
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para Recibo 1
+					 */
+					parametros = "?9999,0,"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",0,"+(StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+endosoIt.get("TIPOEND")+",1";
+					logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
+					
+					paramsR.put("pv_cddocume_i", urlRecibo + parametros);
+					paramsR.put("pv_dsdocume_i", "Recibo 1 ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")");
+					
+					kernelManager.guardarArchivo(paramsR);
+					
+					/**
+					 * Para AP inciso 1
+					 */
+					
+					if(StringUtils.isNotBlank(endosoIt.get("AP")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("AP"))){
+						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
+						logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
+						
+						paramsR.put("pv_cddocume_i", urlAp + parametros);
+						paramsR.put("pv_dsdocume_i", "AP");
+						
+						kernelManager.guardarArchivo(paramsR);
+					}
+					
+					/**
+					 * Para CAIC inciso 1
+					 */
+					
+					if(StringUtils.isNotBlank(endosoIt.get("CAIC")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("CAIC"))){
+						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
+						logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
+						
+						paramsR.put("pv_cddocume_i", urlCaic + parametros);
+						paramsR.put("pv_dsdocume_i", "CAIC");
+						
+						kernelManager.guardarArchivo(paramsR);
+					}
+					
+					
+					if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
+						/**
+						 * Para Incisos Flotillas
+						 */
+						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"));
+						logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
+						
+						paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
+						paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
+						
+						kernelManager.guardarArchivo(paramsR);
+						
+						/**
+						 * Para Tarjeta Identificacion
+						 */
+						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
+						logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+						
+						paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
+						paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
+						
+						kernelManager.guardarArchivo(paramsR);
+						
+					}
+					
+					/**
+					 * Para cobertura de reduce GS
+					 */
+					if(StringUtils.isNotBlank(endosoIt.get("REDUCEGS")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("REDUCEGS"))){
+						paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
+						paramsR.put("pv_dsdocume_i", "Reduce GS");
+						
+						kernelManager.guardarArchivo(paramsR);
+					}
+					
+					/**
+					 * Para cobertura de gestoria GS
+					 */
+					if(StringUtils.isNotBlank(endosoIt.get("GESTORIA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("GESTORIA"))){
+						paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
+						paramsR.put("pv_dsdocume_i", "Gestoria GS");
+						
+						kernelManager.guardarArchivo(paramsR);
+					}
+				}
 			}
-			
-			String urlRecibo = this.getText("recibo.impresion.autos.url");
-			String urlCaic = this.getText("caic.impresion.autos.url");
-			String urlAp = this.getText("ap.impresion.autos.url");
-			
-			String urlIncisosFlot = this.getText("incisos.flotillas.impresion.autos.url");
-			String urlTarjIdent = this.getText("tarjeta.iden.impresion.autos.url");
-			
-			
-			/**
-			 * Para Caratula
-			 */
-			parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+emisionWS.getTipoEndoso()+","+ (StringUtils.isBlank(emisionWS.getNumeroEndoso())?"0":emisionWS.getNumeroEndoso());
-			logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
-			
-			HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-			paramsR.put("pv_cdunieco_i", cdunieco);
-			paramsR.put("pv_cdramo_i",   cdramo);
-			paramsR.put("pv_estado_i",   estado);
-			paramsR.put("pv_nmpoliza_i", nmpoliza);
-			paramsR.put("pv_nmsuplem_i", nmsuplem);
-			paramsR.put("pv_feinici_i",  new Date());
-			paramsR.put("pv_cddocume_i", urlCaratula + parametros);
-			paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
-			paramsR.put("pv_nmsolici_i", nmpoliza);
-			paramsR.put("pv_ntramite_i", ntramite);
-			paramsR.put("pv_tipmov_i",   cdtipsup);
-			paramsR.put("pv_swvisible_i", Constantes.SI);
-			
-			kernelManager.guardarArchivo(paramsR);
-			
-			/**
-			 * Para Recibo 1
-			 */
-			parametros = "?9999,0,"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",0,"+(StringUtils.isBlank(emisionWS.getNumeroEndoso())?"0":emisionWS.getNumeroEndoso())+","+emisionWS.getTipoEndoso()+",1";
-			logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
-			
-			paramsR.put("pv_cddocume_i", urlRecibo + parametros);
-			paramsR.put("pv_dsdocume_i", "Recibo 1");
-			
-			kernelManager.guardarArchivo(paramsR);
-			
-			/**
-			 * Para AP inciso 1
-			 */
-			parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+emisionWS.getTipoEndoso()+","+ (StringUtils.isBlank(emisionWS.getNumeroEndoso())?"0":emisionWS.getNumeroEndoso())+",0";
-			logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
-			
-			paramsR.put("pv_cddocume_i", urlAp + parametros);
-			paramsR.put("pv_dsdocume_i", "AP");
-			
-			kernelManager.guardarArchivo(paramsR);
-			
-			/**
-			 * Para CAIC inciso 1
-			 */
-			parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+emisionWS.getTipoEndoso()+","+ (StringUtils.isBlank(emisionWS.getNumeroEndoso())?"0":emisionWS.getNumeroEndoso())+",0";
-			logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
-			
-			paramsR.put("pv_cddocume_i", urlCaic + parametros);
-			paramsR.put("pv_dsdocume_i", "CAIC");
-			
-			kernelManager.guardarArchivo(paramsR);
-			
-			if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
-				/**
-				 * Para Incisos Flotillas
-				 */
-				parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+emisionWS.getTipoEndoso()+","+ (StringUtils.isBlank(emisionWS.getNumeroEndoso())?"0":emisionWS.getNumeroEndoso());
-				logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
-				
-				paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
-				paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
-				
-				kernelManager.guardarArchivo(paramsR);
-				
-				/**
-				 * Para Tarjeta Identificacion
-				 */
-				parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+emisionWS.getTipoEndoso()+","+ (StringUtils.isBlank(emisionWS.getNumeroEndoso())?"0":emisionWS.getNumeroEndoso())+",0";
-				logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
-				
-				paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
-				paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
-				
-				kernelManager.guardarArchivo(paramsR);
-				
-			}
-			
-			/**
-			 * TODO: Datos Temporales, quitar cuando las caratulas de autos ya tengan la informacion completa
-			 */
-			
-			PolizaAseguradoVO datosPol = new PolizaAseguradoVO();
-			
-			datosPol.setCdunieco(cdunieco);
-			datosPol.setCdramo(cdramo);
-			datosPol.setEstado(estado);
-			datosPol.setNmpoliza(nmpoliza);
-	
-			List<PolizaDTO> listaPolizas = consultasPolizaManager.obtieneDatosPoliza(datosPol);
-			PolizaDTO polRes = listaPolizas.get(0);
-			
-			boolean reduceGS = (StringUtils.isNotBlank(polRes.getReduceGS()) && Constantes.SI.equalsIgnoreCase(polRes.getReduceGS()))?true:false;
-			boolean gestoria = (StringUtils.isNotBlank(polRes.getGestoria()) && Constantes.SI.equalsIgnoreCase(polRes.getGestoria()))?true:false;
-			
-			if(reduceGS){
-				/**
-				 * Para cobertura de reduce GS
-				 */
-				paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
-				paramsR.put("pv_dsdocume_i", "Reduce GS");
-				
-				kernelManager.guardarArchivo(paramsR);
-			}
-			if(gestoria){
-				/**
-				 * Para cobertura de gestoria GS
-				 */
-				paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
-				paramsR.put("pv_dsdocume_i", "Gestoria GS");
-				
-				kernelManager.guardarArchivo(paramsR);
-			}
-			
 			
 		} catch (Exception e) {
 			logger.error("Error al generar las Caratulas de endoso: " + cdtipsup, e);
