@@ -279,6 +279,7 @@ public interface EndososDAO
 			,String multiple
 			,String tipoflot
 			,String cdsisrol
+			,String cdusuari
 			)throws Exception;
 	
 	public void guardarTvalositEndoso(

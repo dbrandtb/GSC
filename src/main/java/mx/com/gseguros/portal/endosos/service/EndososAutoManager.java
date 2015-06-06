@@ -22,6 +22,7 @@ public interface EndososAutoManager
 			,List<Map<String,String>>incisos
 			,String cdsisrol
 			,String cancelada
+			,String cdusuari
 			)throws Exception;
 	
 	/**

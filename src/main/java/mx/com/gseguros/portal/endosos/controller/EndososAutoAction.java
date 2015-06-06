@@ -151,21 +151,16 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(session                , "No hay sesion");
 			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
 			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
 			
 			if(slist1==null)
 			{
 				slist1=new ArrayList<Map<String,String>>();
 			}
 			
-			SlistSmapVO resp=endososAutoManager.recuperarEndososClasificados(
-					cdramo
-					,nivel
-					,multiple
-					,tipoflot
-					,slist1
-					,cdsisrol
-					,cancelada
-					);
+			SlistSmapVO resp = endososAutoManager.recuperarEndososClasificados(
+					cdramo, nivel, multiple, tipoflot, slist1, cdsisrol,
+					cancelada, cdusuari);
 			
 			smap1.putAll(resp.getSmap());
 			slist1=resp.getSlist();
