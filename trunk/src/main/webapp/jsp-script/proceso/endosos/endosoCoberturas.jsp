@@ -273,13 +273,17 @@
             ]
         });
         
-        // Seteamos los nuevos campos para el modelo:
-        var arrAtributos = [];
-        debug('keys:', Ext.Object.getKeys(paramsincisos[0]));
-        Ext.each(Ext.Object.getKeys(paramsincisos[0]), function(name) {
-            arrAtributos.push(name);
-        });
-        Ext.ModelManager.getModel('ModelInciso_p3').setFields(arrAtributos);
+        // Si el origen es el marco general de endosos, obtenemos los incisos de sus parametros:
+        if(pantallaOrigen == 'MARCO_ENDOSOS_GENERAL') {
+            // Seteamos los nuevos campos para el modelo:
+            var arrAtributos = [];
+            debug('paramsIncisos:', Ext.Object.getKeys(paramsincisos));
+            debug('keys:', Ext.Object.getKeys(paramsincisos[0]));
+            Ext.each(Ext.Object.getKeys(paramsincisos[0]), function(name) {
+                arrAtributos.push(name);
+            });
+            Ext.ModelManager.getModel('ModelInciso_p3').setFields(arrAtributos);
+        }
         /*/////////////////*/
         ////// Modelos //////
         /////////////////////
@@ -401,7 +405,32 @@
             storeIncisos_p3.load({
                 callback: function(records, operation, success) {
                     if(success){
+                    	
+                    	///////////////// Para llenar los datos de incisos a mostrar: ///////////////////
+                    	// Seteamos los nuevos campos para el modelo:
+                        var arrAtributos = [];
+                        var keys = Ext.Object.getKeys(records[0].raw);
+                        //debug('paramsIncisos:', Ext.Object.getKeys(records));
+                        //debug('keys:', keys);
+                        Ext.each(keys, function(name) {
+                            arrAtributos.push(name);
+                        });
+                        Ext.ModelManager.getModel('ModelInciso_p3').setFields(arrAtributos);
+                        ///////////////////////////////////////////////////////////////////////
+                    	
                         Ext.Array.each(records, function(record, index, recordsItSelf) {
+                        	
+                        	///////////////// Para llenar los datos de incisos a mostrar: ///////////////////
+                        	Ext.Array.each(keys, function(item, index, allItems) {
+                        		if(item.slice(0,4)=='CVE_'||item.slice(0,4)=='DES_')
+                        		{
+                        		    record.set(item, record.raw[item]);
+                        		}
+                            });
+                            ///////////////////////////////////////////////////////////////////////
+                            
+                            debug('record data nuevo:',record.data);
+                        	
                         	// Cargamos todas las coberturas actuales y disponibles para esos incisos:
                             storeCoberturasActuales_p3.load({
                                 addRecords: true,
