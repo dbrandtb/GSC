@@ -56,7 +56,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 			.getLogger(Ice2sigsServiceImpl.class);
 
 	private static final long WS_TIMEOUT =  20000;
-	private static final long WS_TIMEOUT_EXTENDED =  35000;
+	private static final long WS_TIMEOUT_EXTENDED =  60000;
 	
 	private String endpoint;
 	
