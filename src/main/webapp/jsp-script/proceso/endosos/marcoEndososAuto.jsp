@@ -571,19 +571,18 @@ function _p34_gridPolizasDocumentosClic(record)
         ,'smap1.ntramite'      : record.get('NTRAMITE')
         ,'smap1.tipomov'       : '0'
         ,'smap1.ocultarRecibo' : ''
-    });
+    }
+    ,record
+    );
     debug('<_p34_gridPolizasDocumentosClic');
 }
 
-function _p34_mostrarVentanaDocumentos(params)
+function _p34_mostrarVentanaDocumentos(params,recordPoliza)
 {
     debug('>_p34_mostrarVentanaDocumentos params:',params);
     centrarVentanaInterna(Ext.create('Ext.window.Window',
     {
-        title        : 'Documentos de p&oacute;liza - Sucursal '
-                                   +params['smap1.cdunieco']+' - producto '
-                                   +params['smap1.cdramo']  +' - p&oacuteliza '
-                                   +params['smap1.nmpoliza']
+        title        : 'Documentos de la p&oacute;liza - '+recordPoliza.get('NMPOLIEX')
         ,_p34_window : 'si'
         ,modal       : true
         ,buttonAlign : 'center'
