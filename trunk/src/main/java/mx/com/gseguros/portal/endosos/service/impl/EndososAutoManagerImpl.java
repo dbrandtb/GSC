@@ -314,6 +314,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,List<Map<String,String>>incisos
 			,String cdsisrol
 			,String cancelada
+			,String cdusuari
 			)throws Exception
 	{
 		logger.info(Utils.join(
@@ -326,6 +327,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ incisos="   , incisos
 				,"\n@@@@@@ cdsisrol="  , cdsisrol
 				,"\n@@@@@@ cancelada=" , cancelada
+				,"\n@@@@@@ cdusuari=" , cdusuari
 				));
 
 		SlistSmapVO resp = new SlistSmapVO();
@@ -364,7 +366,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			if("N".equals(cancelada))
 			{
-				resp.setSlist(endososDAO.recuperarEndososClasificados(stamp,cdramo,nivel,multiple,tipoflot,cdsisrol));
+				resp.setSlist(endososDAO.recuperarEndososClasificados(stamp,cdramo,nivel,multiple,tipoflot,cdsisrol, cdusuari));
 			}
 			else if("POLIZA".equals(nivel))
 			{
