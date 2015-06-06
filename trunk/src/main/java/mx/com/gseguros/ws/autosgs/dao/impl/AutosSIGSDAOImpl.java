@@ -117,7 +117,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	
 	public class InsertaReciboAuto extends StoredProcedure{
 		protected InsertaReciboAuto(DataSource dataSource){
-			super(dataSource, "spReciboSigs");
+			super(dataSource, "sprecibosigs_prov");
 			
 			declareParameter(new SqlParameter("Sucursal", Types.SMALLINT));
 			declareParameter(new SqlParameter("Ramo", Types.SMALLINT));
@@ -135,6 +135,8 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("ComisionRecargo", Types.DECIMAL));
 			declareParameter(new SqlParameter("FechaInicio", Types.DATE));
 			declareParameter(new SqlParameter("FechaTermino", Types.DATE));
+			declareParameter(new SqlParameter("Modo", Types.SMALLINT));
+			declareParameter(new SqlParameter("Estatus", Types.VARCHAR));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 			@Override  
@@ -206,6 +208,46 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vInciso",   Types.SMALLINT));
 			declareParameter(new SqlParameter("vPlacas",   Types.VARCHAR));
 			declareParameter(new SqlParameter("vMotor",    Types.VARCHAR));
+			declareParameter(new SqlParameter("vEndoB",    Types.INTEGER));
+			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
+			
+			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
+				@Override  
+				public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+					Integer result = null;
+					while(rs.next()){  
+						result = rs.getInt(1);
+					}  
+					return result;  
+				}
+			}));
+			
+			compile();
+		}
+	}
+	
+	@Override
+	public Integer endosoTipoServicio(Map<String, Object> params) throws Exception {
+		Integer resp = null;
+		Map<String, Object> mapResult = ejecutaSP(new EndosoTipoServicio(getDataSource()), params);
+		resp = (Integer) mapResult.get("rs");
+		
+		return resp;
+	}
+	
+	public class EndosoTipoServicio extends StoredProcedure{
+		protected EndosoTipoServicio(DataSource dataSource){
+			super(dataSource, "sp_EndosoBTipoServicio");
+			
+			declareParameter(new SqlParameter("vIdMotivo", Types.SMALLINT));
+			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
+			declareParameter(new SqlParameter("vRamo",     Types.SMALLINT));
+			declareParameter(new SqlParameter("vPoliza",   Types.INTEGER));
+			declareParameter(new SqlParameter("vTEndoso",  Types.VARCHAR));
+			declareParameter(new SqlParameter("vEndoso",   Types.INTEGER));
+			declareParameter(new SqlParameter("vInciso",   Types.SMALLINT));
+			declareParameter(new SqlParameter("vServicio", Types.SMALLINT));
+			declareParameter(new SqlParameter("vTipoUso",  Types.SMALLINT));
 			declareParameter(new SqlParameter("vEndoB",    Types.INTEGER));
 			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
 			

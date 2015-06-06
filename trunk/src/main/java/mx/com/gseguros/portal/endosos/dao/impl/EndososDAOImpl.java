@@ -2894,6 +2894,47 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 
 	@Override
+	public List<Map<String,String>> obtieneDatosEndTipoServicio(Map<String, String> params)throws Exception
+	{
+		List<Map<String,String>>lista = null;
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DAT_SP_SIGS_CAM_TIP_SERV", params);
+		Map<String,Object>procResult  = ejecutaSP(new ObtieneDatosEndTipoServicio(getDataSource()),params);
+		lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DAT_SP_SIGS_CAM_TIP_SERV", params, lista);
+		return lista;
+	}
+	
+	protected class ObtieneDatosEndTipoServicio extends StoredProcedure
+	{
+		protected ObtieneDatosEndTipoServicio(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_DAT_SP_SIGS_CAM_TIP_SERV");
+			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"IdMotivo"
+					,"Sucursal"
+					,"Ramo"
+					,"Poliza"
+					,"TEndoso"
+					,"Endoso"
+					,"Inciso"
+					,"Servicio"
+					,"TipoUso"
+					,"EndosoB"
+					,"FEndoso"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
 	public List<Map<String,String>> obtieneDatosEndVigenciaPol(Map<String, String> params)throws Exception
 	{
 		List<Map<String,String>>lista = null;
