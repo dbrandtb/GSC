@@ -204,7 +204,7 @@ public interface EndososDAO
 			,String nmsuplem
 			,String cdtipsup) throws Exception;
 	
-	public ComponenteVO obtenerComponenteSituacionCobertura(String cdramo,String cdtipsit,String cdtipsup,String cdgarant)throws ApplicationException,Exception;
+	public List<ComponenteVO> obtenerComponentesSituacionCobertura(String cdramo,String cdtipsit,String cdtipsup,String cdgarant)throws ApplicationException,Exception;
 	public void actualizaTvalositSitaucionCobertura(
 			String cdunieco
 			,String cdramo
