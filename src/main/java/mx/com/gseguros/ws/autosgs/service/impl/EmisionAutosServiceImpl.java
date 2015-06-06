@@ -794,6 +794,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					params.put("ComisionRecargo" , reciboIt.get("COMISIONRECARGO"));
 					params.put("FechaInicio"     , fechaInicio);
 					params.put("FechaTermino"    , fechaTermino);
+					params.put("Modo"            , reciboIt.get("MODO"));
+					params.put("Estatus"         , reciboIt.get("ESTATUS"));
 					
 					Integer res = autosSIGSDAO.insertaReciboAuto(params);
 					
