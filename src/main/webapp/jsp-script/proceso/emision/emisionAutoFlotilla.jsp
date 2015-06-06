@@ -468,6 +468,18 @@ Ext.onReady(function()
             _fieldLikeLabel('PARA PAI').hide();
         }
         //pai
+        
+        // y o
+        if(_p31_smap1.tipoflot+'x'=='Px')
+        {
+            var yos = Ext.ComponentQuery.query('[fieldLabel=Y/O]');
+            for(var i in yos)
+            {
+                yos[i].hide();
+            }
+        }
+        // y o
+        
     }//ramo 5
     ////// custom //////
     
