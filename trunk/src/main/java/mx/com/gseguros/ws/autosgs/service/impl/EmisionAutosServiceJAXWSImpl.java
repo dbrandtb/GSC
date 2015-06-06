@@ -466,6 +466,14 @@ public class EmisionAutosServiceJAXWSImpl implements EmisionAutosService {
 		return emisionAutoRes;
 	}
 	
+	public List<Map<String,String>> obtieneEndososImprimir(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem){
+		/**
+		 * Sin Codigo
+		 */
+		return null;
+	}
+	
 	private WrapperResultadosWS ejecutaCotizacionAutosWS(Cotizacion datosCotizacionAuto) throws Exception{
 		
 		WrapperResultadosWS resultWS = new WrapperResultadosWS();

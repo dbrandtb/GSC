@@ -1,5 +1,8 @@
 package mx.com.gseguros.ws.autosgs.service;
 
+import java.util.List;
+import java.util.Map;
+
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
 
@@ -18,6 +21,18 @@ public interface EmisionAutosService {
 	 */
 	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO);
+	
+	/**
+	 * Para saber que movimientos de endosos se imprimiran en un endoso principal.
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @return
+	 */
+	public List<Map<String,String>> obtieneEndososImprimir(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem);
 	
 	public boolean enviaRecibosAutosSigs(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String nmpoliex, String subramo, String sucursal);
