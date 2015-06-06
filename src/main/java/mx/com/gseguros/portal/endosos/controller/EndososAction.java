@@ -245,7 +245,7 @@ public class EndososAction extends PrincipalCoreAction
 			}
 			
 			//Se obtienen las columnas del grid de incisos:
-			List<ComponenteVO> componentes = pantallasManager.obtenerComponentes(null, null, null, smap1.get("pv_cdtipsit_i"), null, null, "ENDOSO_COBERTURA", "GRID_INCISOS", null);
+			List<ComponenteVO> componentes = pantallasManager.obtenerComponentes(null, null, smap1.get("CDRAMO"), null, null, null, "ENDOSO_COBERTURA", "GRID_INCISOS", null);
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.generaComponentes(componentes, true, false, false, true, false, false);
 			columnas = gc.getColumns().toString();
