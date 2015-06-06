@@ -21,32 +21,39 @@ function showMessage(title, msg, buttons, icon){
 }
 
 /**
-** Funcion para implementar Paginacion,
-** carga un Store y pagina sus datos de forma local.
-** Se debe de tener un Store con un proxy 
-** de la siguiente forma:
-
-var store=Ext.create('Ext.data.Store',
-    {
-        pageSize : 10,
-        autoLoad : true,
-        model    : 'modelPersonalizado',
-        proxy    :
-        {
-            enablePaging : true,
-            reader       : 'json',
-            type         : 'memory',
-            data         : []
-        }
-    });
-
- * @param _store
- * @param _url
- * @param _root
- * @param _params
- * @param _callback
+ * Funcion para implementar Paginacion,
+ * carga un Store y pagina sus datos de forma local.
+ * Se debe de tener un Store con un proxy 
+ * de la siguiente forma:
+ *
+   var store=Ext.create('Ext.data.Store',
+   {
+       pageSize : 10,
+       autoLoad : true,
+       model    : 'modelPersonalizado',
+       proxy    :
+       {
+           enablePaging : true,
+           reader       : 'json',
+           type         : 'memory',
+           data         : []
+       }
+   });
+       
+ * @param {Ext.data.Store} _store
+ * @param {String} _url
+ * @param {String} _root
+ * @param {Array} _params
+ * @param {Function} _callback Function to be called 
+ * @param {Ext.grid.Panel} _grid (Optional)
+ * @param {Number} _timeout (Optional)
  */
-function cargaStorePaginadoLocal(_store, _url, _root, _params, _callback, _grid) {
+function cargaStorePaginadoLocal(_store, _url, _root, _params, _callback, _grid, _timeout) {
+	
+	var timeOut = null;
+	if(_timeout) {
+		timeOut = _timeout;
+	}
 	
 	if(_grid){
 		_grid.setLoading(true);
@@ -59,6 +66,7 @@ function cargaStorePaginadoLocal(_store, _url, _root, _params, _callback, _grid)
         url       : _url,
         params    : _params,
         callback  : _callback,
+        timeout   : timeOut != null ? timeOut : Ext.Ajax.timeout, 
         success   : function(response)
         {
         	if(_grid){
