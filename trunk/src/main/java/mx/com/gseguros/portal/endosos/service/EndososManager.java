@@ -335,7 +335,7 @@ public interface EndososManager
 			,String nmsuplem
 			,String cdtipsup) throws Exception;
 	
-	public ManagerRespuestaImapSmapVO obtenerComponenteSituacionCobertura(String cdramo,String cdtipsit,String cdtipsup,String cdgarant);
+	public ManagerRespuestaImapSmapVO obtenerComponentesSituacionCobertura(String cdramo,String cdtipsit,String cdtipsup,String cdgarant);
 	public void actualizaTvalositSituacionCobertura(
 			String cdunieco
 			,String cdramo

@@ -2065,33 +2065,23 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public ComponenteVO obtenerComponenteSituacionCobertura(String cdramo,String cdtipsit,String cdtipsup,String cdgarant)throws ApplicationException,Exception
+	public List<ComponenteVO> obtenerComponentesSituacionCobertura(String cdramo,String cdtipsit,String cdtipsup,String cdgarant)throws ApplicationException,Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdramo"   , cdramo);
 		params.put("cdtipsit" , cdtipsit);
 		params.put("cdtipsup" , cdtipsup);
 		params.put("cdgarant" , cdgarant);
-		logger.debug(
-				new StringBuilder()
-				.append("\n*****************************************************")
-				.append("\n****** PKG_LISTAS.P_RECUPERA_TATRISIT_COB_ADIC ******")
-				.append("\n****** params=").append(params)
-				.append("\n*****************************************************")
-				.toString()
-				);
+		Utils.debugProcedure(logger, "PKG_LISTAS.P_RECUPERA_TATRISIT_COB_ADIC", params);
 		Map<String,Object>procResult=ejecutaSP(new ObtenerComponenteSituacionCobertura(getDataSource()),params);
 		List<ComponenteVO>lista=(List<ComponenteVO>)procResult.get("pv_registro_o");
+		Utils.debugProcedure(logger, "PKG_LISTAS.P_RECUPERA_TATRISIT_COB_ADIC", params, lista);
 		ComponenteVO comp = null;
-		if(lista!=null&&lista.size()==1)
+		if(lista==null)
 		{
-			comp = lista.get(0);
+			lista = new ArrayList<ComponenteVO>();
 		}
-		else if(lista!=null&&lista.size()>1)
-		{
-			throw new ApplicationException("Hay atributos repetidos");
-		}
-		return comp;
+		return lista;
 	}
 	
 	protected class ObtenerComponenteSituacionCobertura extends StoredProcedure
@@ -2480,6 +2470,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			,String multiple
 			,String tipoflot
 			,String cdsisrol
+			,String cdusuari
 			)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
@@ -2489,6 +2480,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("multiple" , multiple);
 		params.put("tipoflot" , tipoflot);
 		params.put("cdsisrol" , cdsisrol);
+		params.put("cdusuari" , cdusuari);
 		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_ENDOSOS_CLASIFICADOS", params);
 		Map<String,Object>procResult  = ejecutaSP(new RecuperarEndososClasificados(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
@@ -2511,6 +2503,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("multiple" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("tipoflot" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			String[] cols=new String[]{
 					"CDTIPSUP"
 					,"DSTIPSUP"

@@ -70,22 +70,26 @@
             {
                 slist1.push(
                 {
-                    garantia  : record.get('GARANTIA')
-                    ,cdcapita : record.get('CDCAPITA')
-                    ,status   : record.get('status')
-                    ,ptcapita : record.get('SUMA_ASEGURADA')
-                    ,ptreduci : record.get('ptreduci')
-                    ,fereduci : record.get('fereduci')
-                    ,swrevalo : record.get('swrevalo')
-                    ,cdagrupa : record.get('cdagrupa')
-                    ,cdtipbca : record.get('cdtipbca')
-                    ,ptvalbas : record.get('ptvalbas')
-                    ,swmanual : record.get('swmanual')
-                    ,swreas   : record.get('swreas')
-                    ,cdatribu : record.get('cdatribu')
-                    ,otvalor  : record.get('otvalor')
-                    ,nmsituac : record.get('nmsituac')
-                    ,cdtipsit : record.get('cdtipsit')
+                    garantia   : record.get('GARANTIA')
+                    ,cdcapita  : record.get('CDCAPITA')
+                    ,status    : record.get('status')
+                    ,ptcapita  : record.get('SUMA_ASEGURADA')
+                    ,ptreduci  : record.get('ptreduci')
+                    ,fereduci  : record.get('fereduci')
+                    ,swrevalo  : record.get('swrevalo')
+                    ,cdagrupa  : record.get('cdagrupa')
+                    ,cdtipbca  : record.get('cdtipbca')
+                    ,ptvalbas  : record.get('ptvalbas')
+                    ,swmanual  : record.get('swmanual')
+                    ,swreas    : record.get('swreas')
+                    ,cdatribu1 : record.get('cdatribu1')
+                    ,otvalor1  : record.get('otvalor1')
+                    ,cdatribu2 : record.get('cdatribu2')
+                    ,otvalor2  : record.get('otvalor2')
+                    ,cdatribu3 : record.get('cdatribu3')
+                    ,otvalor3  : record.get('otvalor3')
+                    ,nmsituac  : record.get('nmsituac')
+                    ,cdtipsit  : record.get('cdtipsit')
                 });
             });
             json['smap1']={};
@@ -205,8 +209,12 @@
             }, {
                 name : 'swrevalo'
             }
-            ,'cdatribu'
-            ,'otvalor'
+            ,'cdatribu1'
+            ,'otvalor1'
+            ,'cdatribu2'
+            ,'otvalor2'
+            ,'cdatribu3'
+            ,'otvalor3'
             ,'nmsituac'
             ,'cdtipsit'
             ]//,
@@ -695,11 +703,8 @@
                                                              title   : 'Valor de cobertura'
                                                              ,modal  : true
                                                              ,width  : 300
-                                                             ,height : 150
-                                                             ,items  :
-                                                             [
-                                                                 Ext.decode(json.smap1.item)
-                                                             ]
+                                                             ,minHeight : 150
+                                                             ,items  : Ext.decode('['+json.smap1.item+']')
                                                              ,buttonAlign : 'center'
                                                              ,buttons     :
                                                              [
@@ -708,19 +713,45 @@
                                                                      ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
                                                                      ,handler : function(me)
                                                                      {
-                                                                         var item=me.up().up().items.items[0];
-                                                                         var valido = !Ext.isEmpty(item.getValue());
-                                                                         if(!valido)
+                                                                         var item1 = me.up().up().items.items[0];
+                                                                         var item2 = me.up().up().items.items[1];
+                                                                         var item3 = me.up().up().items.items[2];
+                                                                         
+                                                                         var valido = true;
+                                                                         if(!Ext.isEmpty(item1))
                                                                          {
-                                                                             datosIncompletos();
+                                                                             valido = valido && !Ext.isEmpty(item1.getValue());
+                                                                         }
+                                                                         if(!Ext.isEmpty(item2))
+                                                                         {
+                                                                             valido = valido && !Ext.isEmpty(item2.getValue());
+                                                                         }
+                                                                         if(!Ext.isEmpty(item3))
+                                                                         {
+                                                                             valido = valido && !Ext.isEmpty(item3.getValue());
                                                                          }
                                                                          
                                                                          if(valido)
                                                                          {
                                                                              storeCoberturasEditadas_p3.add(record);
                                                                              storeCoberturasDisponibles_p3.remove(record);
-                                                                             record.set('cdatribu' , item.cdatribu);
-                                                                             record.set('otvalor'  , item.getValue());
+                                                                             
+                                                                             if(!Ext.isEmpty(item1))
+                                                                             {
+                                                                                 record.set('cdatribu1' , item1.cdatribu);
+                                                                                 record.set('otvalor1'  , item1.getValue());
+                                                                             }
+                                                                             if(!Ext.isEmpty(item2))
+                                                                             {
+                                                                                 record.set('cdatribu2' , item2.cdatribu);
+                                                                                 record.set('otvalor2'  , item2.getValue());
+                                                                             }
+                                                                             if(!Ext.isEmpty(item3))
+                                                                             {
+                                                                                 record.set('cdatribu3' , item3.cdatribu);
+                                                                                 record.set('otvalor3'  , item3.getValue());
+                                                                             }
+                                                                             
                                                                              debug('record:',record);
                                                                              me.up().up().destroy();
                                                                          }

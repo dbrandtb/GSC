@@ -916,7 +916,7 @@ public class EndososManagerImpl implements EndososManager
 	}
 	
 	@Override
-	public ManagerRespuestaImapSmapVO obtenerComponenteSituacionCobertura(String cdramo,String cdtipsit,String cdtipsup,String cdgarant)
+	public ManagerRespuestaImapSmapVO obtenerComponentesSituacionCobertura(String cdramo,String cdtipsit,String cdtipsup,String cdgarant)
 	{
 		logger.info(
 				new StringBuilder()
@@ -933,12 +933,12 @@ public class EndososManagerImpl implements EndososManager
 		resp.setSmap(new HashMap<String,String>());
 		resp.setImap(new HashMap<String,Item>());
 		
-		ComponenteVO comp = null;
+		List<ComponenteVO> comp = null;
 		
 		//obtener componente
 		try
 		{
-			comp = endososDAO.obtenerComponenteSituacionCobertura(cdramo,cdtipsit,cdtipsup,cdgarant);
+			comp = endososDAO.obtenerComponentesSituacionCobertura(cdramo,cdtipsit,cdtipsup,cdgarant);
 		}
 		catch(ApplicationException ax)
 		{
@@ -962,7 +962,7 @@ public class EndososManagerImpl implements EndososManager
 		{
 			try
 			{
-				if(comp==null)
+				if(comp==null||comp.size()==0)
 				{
 					resp.getSmap().put("CONITEM" , "false");
 				}
@@ -974,10 +974,7 @@ public class EndososManagerImpl implements EndososManager
 					gc.setCdramo(cdramo);
 					gc.setCdtipsit(cdtipsit);
 					
-					List<ComponenteVO>lista=new ArrayList<ComponenteVO>();
-					lista.add(comp);
-					
-					gc.generaComponentes(lista, true, false, true, false, false, false);
+					gc.generaComponentes(comp, true, false, true, false, false, false);
 					
 					resp.getImap().put("item",gc.getItems());
 				}

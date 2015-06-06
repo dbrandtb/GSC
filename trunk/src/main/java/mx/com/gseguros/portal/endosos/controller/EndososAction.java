@@ -2225,16 +2225,38 @@ public class EndososAction extends PrincipalCoreAction
 			{
 				for(Map<String,String> coberturasEditadas : slist1)
 				{
-					String cdatribu = coberturasEditadas.get("cdatribu");
-					String otvalor  = coberturasEditadas.get("otvalor");
-					if(StringUtils.isNotBlank(cdatribu) && StringUtils.isNotBlank(otvalor))
+					String cdatribu1 = coberturasEditadas.get("cdatribu1");
+					String otvalor1  = coberturasEditadas.get("otvalor1");
+					String cdatribu2 = coberturasEditadas.get("cdatribu2");
+					String otvalor2  = coberturasEditadas.get("otvalor2");
+					String cdatribu3 = coberturasEditadas.get("cdatribu3");
+					String otvalor3  = coberturasEditadas.get("otvalor3");
+					if(StringUtils.isNotBlank(cdatribu1) && StringUtils.isNotBlank(otvalor1))
 					{
 						endososManager.actualizaTvalositSituacionCobertura(
 								(String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
 								(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
 								respEndCob.get("pv_nmsuplem_o"),
 								coberturasEditadas.get("nmsituac"),
-								cdatribu, otvalor);
+								cdatribu1, otvalor1);
+					}
+					if(StringUtils.isNotBlank(cdatribu2) && StringUtils.isNotBlank(otvalor2))
+					{
+						endososManager.actualizaTvalositSituacionCobertura(
+								(String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
+								(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
+								respEndCob.get("pv_nmsuplem_o"),
+								coberturasEditadas.get("nmsituac"),
+								cdatribu2, otvalor2);
+					}
+					if(StringUtils.isNotBlank(cdatribu3) && StringUtils.isNotBlank(otvalor3))
+					{
+						endososManager.actualizaTvalositSituacionCobertura(
+								(String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
+								(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
+								respEndCob.get("pv_nmsuplem_o"),
+								coberturasEditadas.get("nmsituac"),
+								cdatribu3, otvalor3);
 					}
 				}
 			
@@ -9356,7 +9378,7 @@ public class EndososAction extends PrincipalCoreAction
 		//proceso
 		if(exito)
 		{
-			ManagerRespuestaImapSmapVO resp=endososManager.obtenerComponenteSituacionCobertura(cdramo,cdtipsit,cdtipsup,cdgarant);
+			ManagerRespuestaImapSmapVO resp=endososManager.obtenerComponentesSituacionCobertura(cdramo,cdtipsit,cdtipsup,cdgarant);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();
