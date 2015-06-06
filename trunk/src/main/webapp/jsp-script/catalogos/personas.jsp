@@ -114,6 +114,10 @@ if(!Ext.isEmpty(_p22_smap1)){
 
 Ext.onReady(function()
 {
+	
+	// Se aumenta el timeout para todas las peticiones:
+	Ext.Ajax.timeout = 90000; // 60 seconds
+	
 	////// modelos //////
 	Ext.define('_p22_modeloGrid',
 	{
@@ -275,6 +279,7 @@ Ext.onReady(function()
 					                proxy     : {
 				                            type        : 'ajax'
 				                            ,url        : _p22_urlObtenerPersonas
+				                            ,timeout    : 90000
 				                            ,reader     :
 				                            {
 				                                type  : 'json'
@@ -391,6 +396,7 @@ Ext.onReady(function()
 					                proxy     : {
 				                            type        : 'ajax'
 				                            ,url        : _p22_urlObtenerPersonas
+				                            ,timeout    : 90000
 				                            ,reader     :
 				                            {
 				                                type  : 'json'
@@ -2049,6 +2055,7 @@ function _p22_guardarDatosAdicionalesClic()
         Ext.Ajax.request(
         {
             url       : _p22_urlGuadarTvaloper
+            ,timeout  : 90000
             ,jsonData :
             {
                 smap1 : jsonData,
