@@ -686,6 +686,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case ESTD_MODULOS:
 					lista = catalogosManager.recuperarModulosEstadisticas();
 					break;
+				case ASEGURADOS:
+					lista = siniestrosManager.getConsultaListaAsegurado(params != null ? params.get("cdperson") : null);
+					break;
 				case ESTD_TAREAS:
 					if(params==null)
 					{
