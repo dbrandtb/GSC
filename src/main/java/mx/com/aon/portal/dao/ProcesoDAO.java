@@ -280,7 +280,7 @@ public class ProcesoDAO extends AbstractDAO {
 	protected class ActualizaCdIdeper extends CustomStoredProcedure {
 
 		protected ActualizaCdIdeper(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_ACTUALIZA_CDIDEPER");
+			super(dataSource, "PKG_SATELITES.P_ACTUALIZA_CODCLI_EXTERNO");
 
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
