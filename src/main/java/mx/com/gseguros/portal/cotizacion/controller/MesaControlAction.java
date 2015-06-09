@@ -25,6 +25,7 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -974,6 +975,39 @@ public class MesaControlAction extends PrincipalCoreAction
 				+ "\n###### regresarEmisionEnAutori ######"
 				+ "\n#####################################"
 				);
+		return SUCCESS;
+	}
+	
+	public String movimientoDetalleTramite()
+	{
+		log.info(Utils.join(
+				 "\n######################################"
+				,"\n###### movimientoDetalleTramite ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			UserVO user = Utils.validateSession(session);
+			
+			Utils.validate(smap1 , "No se recibieron datos");
+			
+			String ntramite = smap1.get("ntramite");
+			String dscoment = smap1.get("dscoment");
+			
+			Utils.validate(ntramite , "No se recibio el numero de tramite");
+			
+			mesaControlManager.movimientoDetalleTramite(ntramite, new Date(), null, dscoment, user.getUser(), null);
+		}
+		catch(Exception ex)
+		{
+			mensaje = Utils.manejaExcepcion(ex);
+		}
+		
+		log.info(Utils.join(
+				 "\n###### movimientoDetalleTramite ######"
+				,"\n######################################"
+				));
 		return SUCCESS;
 	}
 	
