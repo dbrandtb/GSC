@@ -1430,6 +1430,17 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			try
 			{
+				consultasManager.validarDatosCliente(cdunieco, cdramo, "W", panel1.get("nmpoliza"));
+			}
+			catch(Exception ex)
+			{
+				logger.error("Error al validar datos de cliente",ex);
+				mensajeRespuesta=ex.getMessage();
+				return SUCCESS;
+			}
+			
+			try
+			{
 				consultasManager.validarDatosObligatoriosPrevex(cdunieco, cdramo, "W", panel1.get("nmpoliza"));
 			}
 			catch(Exception ex)

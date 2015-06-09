@@ -41,6 +41,11 @@ public class ConsultasManagerImpl implements ConsultasManager
 	}
 	
 	@Override
+	public void validarDatosCliente(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception {
+		consultasDAO.validarDatosCliente(cdunieco, cdramo, estado, nmpoliza);
+	}
+
+	@Override
 	public void validarDatosObligatoriosPrevex(
 			String cdunieco
 			,String cdramo

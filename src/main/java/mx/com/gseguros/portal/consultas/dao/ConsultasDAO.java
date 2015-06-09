@@ -64,6 +64,12 @@ public interface ConsultasDAO
 			,String estado
 			,String nmpoliza)throws Exception;
 	
+	public void validarDatosCliente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)throws Exception;
+
 	public void validarDatosObligatoriosPrevex(
 			String cdunieco
 			,String cdramo
