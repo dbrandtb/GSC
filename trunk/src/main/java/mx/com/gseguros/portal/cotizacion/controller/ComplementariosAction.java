@@ -240,6 +240,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				List<ComponenteVO>listaTatrisit = kernelManager.obtenerTatripol(new String[]{cdramo,cdtipsit,"I"});
 				GeneradorCampos gc              = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				
+				gc.setCdramo(cdramo);
 				gc.genera(listaTatrisit);
 				
 				items  = gc.getItems();
