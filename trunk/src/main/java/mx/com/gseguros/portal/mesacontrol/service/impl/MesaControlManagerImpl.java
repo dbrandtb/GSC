@@ -1,16 +1,18 @@
 package mx.com.gseguros.portal.mesacontrol.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.log4j.Logger;
 
 public class MesaControlManagerImpl implements MesaControlManager
 {
-	private final Logger logger=Logger.getLogger(MesaControlManagerImpl.class);
+	private static Logger logger = Logger.getLogger(MesaControlManagerImpl.class);
 	private MesaControlDAO mesaControlDAO;
 	
 	@Override
@@ -31,6 +33,38 @@ public class MesaControlManagerImpl implements MesaControlManager
 	}
 	
 	@Override
+	public void movimientoDetalleTramite(
+			String ntramite
+			,Date feinicio
+			,String cdclausu
+			,String comments
+			,String cdusuari
+			,String cdmotivo
+			)throws Exception
+	{
+		logger.info(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ movimientoDetalleTramite @@@@@@"
+				,"\n@@@@@@ ntramite=" , ntramite
+				,"\n@@@@@@ feinicio=" , feinicio
+				,"\n@@@@@@ cdclausu=" , cdclausu
+				,"\n@@@@@@ comments=" , comments
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdmotivo=" , cdmotivo
+				));
+		
+		mesaControlDAO.movimientoDetalleTramite(ntramite, feinicio, cdclausu, comments, cdusuari, cdmotivo);
+		
+		logger.info(Utils.join(
+				 "\n@@@@@@ movimientoDetalleTramite @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	/*
+	 * Getters y setters
+	 */
+	@Override
 	public void guardarRegistroContrarecibo(String ntramite,String cdusuari)throws Exception
 	{
 		mesaControlDAO.guardarRegistroContrarecibo(ntramite,cdusuari);
@@ -48,9 +82,6 @@ public class MesaControlManagerImpl implements MesaControlManager
 		mesaControlDAO.borrarDocumento(ntramite,cddocume);
 	}
 	
-	/*
-	 * Getters y setters
-	 */
 	public void setMesaControlDAO(MesaControlDAO mesaControlDAO) {
 		this.mesaControlDAO = mesaControlDAO;
 	}

@@ -66,6 +66,7 @@ var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocI
 var venDocUrlImpConrec   = '<s:url namespace ="/documentos" action="generarContrarecibo"         />';
 var panDocUrlFusionar    = '<s:url namespace ="/documentos" action="fusionarDocumentos"          />';
 var _URLhabilitaSigRec   = '<s:url namespace ="/documentos" action="habilitaSigRec"              />';
+var panDocUrlDetalleTra  = '<s:url namespace="/mesacontrol" action="movimientoDetalleTramite"    />';
 
 var panDocUrlActualizarNombreDocumento = '<s:url namespace="/documentos" action="actualizarNombreDocumento" />';
 var panDocUrlBorrarDocumento           = '<s:url namespace="/documentos" action="borrarDocumento"           />';
@@ -1032,6 +1033,55 @@ Ext.onReady(function()
                         $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
                     }
         		}
+        		,tbar :
+        		[
+        		    {
+        		        text     : 'Imprimir'
+        		        ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
+        		        ,handler : function(me)
+        		        {
+        		            try
+        		            {
+        		                var iframe = window.frames['f'+numRand];
+        		                debug('iframe:',iframe);
+        		                iframe.focus();
+        		                iframe.print();
+                                Ext.Ajax.request(
+                                {
+                                    url : panDocUrlDetalleTra
+                                    ,params :
+                                    {
+                                        'smap1.ntramite'  : record.get('ntramite')
+                                        ,'smap1.dscoment' : 'Se imprime el archivo '+record.get('dsdocume')
+                                    }
+                                });
+        		            }
+        		            catch(e)
+        		            {
+        		                debugError(e,'Error imprimiendo iframe');
+        		                try
+        		                {
+        		                    var popup = window.open(urlImg,'_blank','width=800, height=600');
+									popup.focus(); // Required for IE
+									popup.print();
+        		                    Ext.Ajax.request(
+                                    {
+                                        url : panDocUrlDetalleTra
+                                        ,params :
+                                        {
+                                            'smap1.ntramite'  : record.get('ntramite')
+                                            ,'smap1.dscoment' : 'Se imprime el archivo '+record.get('dsdocume')
+                                        }
+                                    });
+        		                }
+        		                catch(e)
+        		                {
+        		                    debugError(e,'Error mprimiendo window');
+        		                }
+        		            }
+        		        }
+        		    }
+        		]
         	});
         	
         	// Si el documento es una imagen usamos el visor de imagenes, sino usamos iframe:
@@ -1046,7 +1096,7 @@ Ext.onReady(function()
                 });
         	} else {
         		windowVerDocu.add({
-        			html: '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100" src="'+urlImg+'"></iframe>'
+        			html: '<iframe id="f'+numRand+'" name="f'+numRand+'" innerframe="'+numRand+'" frameborder="0" width="100" height="100" src="'+urlImg+'"></iframe>'
         		});
         	}
         	

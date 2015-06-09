@@ -51,6 +51,9 @@
             </interceptor-ref>
             <result name="success" type="json" />
         </action>
+        <action name="movimientoDetalleTramite" method="movimientoDetalleTramite" class="MesaControlAction">
+            <result name="success" type="json" />
+        </action>
     </package>
 
 </struts>
