@@ -108,7 +108,8 @@ public enum Catalogos {
 	TTIPOPAGO(""),
 	CONCEPTOPAGO(""),
 	ESTD_MODULOS(""),
-	ESTD_TAREAS("")
+	ESTD_TAREAS(""),
+	ASEGURADOS("")
 	;
 
 	private String cdTabla;
