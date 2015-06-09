@@ -559,6 +559,37 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     }
     
     @Override
+    public void validarDatosCliente(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza)throws Exception
+    		{
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("estado"   , estado);
+    	params.put("nmpoliza" , nmpoliza);
+    	Utils.debugProcedure(logger, "PKG_SATELITES2.P_VALIDAR_CODIGO_EXTERNO_CTE", params);
+    	ejecutaSP(new ValidarDatosCliente(getDataSource()),params);
+    		}
+    
+    protected class ValidarDatosCliente extends StoredProcedure
+    {
+    	protected ValidarDatosCliente(DataSource dataSource)
+    	{
+    		super(dataSource,"PKG_SATELITES2.P_VALIDAR_CODIGO_EXTERNO_CTE");
+    		declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+
+    @Override
     public void validarDatosObligatoriosPrevex(
 			String cdunieco
 			,String cdramo
