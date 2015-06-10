@@ -116,7 +116,7 @@ Ext.onReady(function()
 {
 	
 	// Se aumenta el timeout para todas las peticiones:
-	Ext.Ajax.timeout = 90000; // 60 seconds
+	Ext.Ajax.timeout = 90000; // 90 seconds
 	
 	////// modelos //////
 	Ext.define('_p22_modeloGrid',
@@ -1495,6 +1495,14 @@ function _p22_guardarClic(callback, autosave)
         
     	if(!Ext.isEmpty(municipioImportarTMP)){
 				_fieldByName('CDMUNICI').setValue('');
+		}
+		
+		/**
+		 * PARA CARGAR LA SUCURSAL ANTES DE GUARDAR
+		 * @type String
+		 */
+		if(!Ext.isEmpty(_cargaSucursalEmi)){
+			_fieldByName('CDSUCEMI').setValue(_cargaSucursalEmi);
 		}
         
         Ext.Ajax.request(
