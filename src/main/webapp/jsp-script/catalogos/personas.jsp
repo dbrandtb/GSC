@@ -866,6 +866,14 @@ Ext.onReady(function()
 						if(_ocultaBusqueda){
 							_p22_formBusqueda().hide();
 						}
+						
+						/**
+						 * POR SI HAY UNA SUCURSAL A CARGAR EN EL MODO DE AGREGAR
+						 * @type String
+						 */
+						if(!Ext.isEmpty(_cargaSucursalEmi)){
+							_fieldByName('CDSUCEMI').setValue(_cargaSucursalEmi);
+						}
 		                
 						try{
 			    			var ventanaMensaje = window.parent;
@@ -977,10 +985,6 @@ function importaPersonaWS(esSaludD, codigoCliExt){
     _fieldByName('CDSUCEMI').editable = true;
     _fieldByName('CDSUCEMI').forceSelection = false;
     _fieldByName('CDSUCEMI').setReadOnly(true);
-
-    if(!Ext.isEmpty(_cargaSucursalEmi)){
-		_fieldByName('CDSUCEMI').setValue(_cargaSucursalEmi);
-	}
 
     _fieldByName('CDEDO').editable = true;
     _fieldByName('CDEDO').forceSelection = false;
@@ -1314,10 +1318,6 @@ function _p22_loadRecordCdperson(callbackload,autosave)
 			    	_fieldByName('EMAIL').setValue(valMail);
 			    }
 			    
-			    if(!Ext.isEmpty(_cargaSucursalEmi)){
-					_fieldByName('CDSUCEMI').setValue(_cargaSucursalEmi);
-				}
-			    
 			    Ext.Ajax.request(
 			    {
 			        url      : _p22_urlObtenerDomicilio
@@ -1501,7 +1501,7 @@ function _p22_guardarClic(callback, autosave)
 		 * PARA CARGAR LA SUCURSAL ANTES DE GUARDAR
 		 * @type String
 		 */
-		if(!Ext.isEmpty(_cargaSucursalEmi)){
+		if(!autosave && Ext.isEmpty(_fieldByName('CDSUCEMI').getValue()) && !Ext.isEmpty(_cargaSucursalEmi)){
 			_fieldByName('CDSUCEMI').setValue(_cargaSucursalEmi);
 		}
         
