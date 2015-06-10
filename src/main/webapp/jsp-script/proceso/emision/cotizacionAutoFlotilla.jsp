@@ -2058,14 +2058,20 @@ Ext.onReady(function()
                                             debug('### obtener rango valor:',json);
                                             if(json.exito)
                                             {
-                                                var valormin = me.valorCargado-0*(1+(json.smap1.P1VALOR-0));
-                                                var valormax = me.valorCargado-0*(1+(json.smap1.P2VALOR-0));
-                                                me.setMinValue(valormin);
-                                                me.setMaxValue(valormax);
-                                                me.isValid();
-                                                debug('valor:',me.valorCargado);
-                                                debug('valormin:',valormin);
-                                                debug('valormax:',valormax);
+                                            	try {
+                                            		debug('json.smap1.P1VALOR=', Number(json.smap1.P1VALOR));
+                                            		debug('json.smap1.P2VALOR=', Number(json.smap1.P2VALOR));
+                                            		var valormin = Number(me.valorCargado)*(1+Number(json.smap1.P1VALOR));
+                                                    var valormax = Number(me.valorCargado)*(1+Number(json.smap1.P2VALOR));
+                                                    me.setMinValue(valormin);
+                                                    me.setMaxValue(valormax);
+                                                    me.isValid();
+                                                    debug('valor:',me.valorCargado);
+                                                    debug('valormin:',valormin);
+                                                    debug('valormax:',valormax);
+                                            	} catch(e) {
+                                            		debug('No se asignaron valores minimo ni maximo', e);
+                                            	}
                                             }
                                             else
                                             {
