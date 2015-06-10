@@ -529,7 +529,7 @@ Ext.onReady(function()
 												ventanaMensaje.postMessage(objMsg, "*");
 												
 								    		}catch(e){
-								    			debug('Error en postMessage',e);
+								    			debugError('Error en postMessage',e);
 								    		}
 								    		
 											irModoEdicion();
@@ -568,29 +568,6 @@ Ext.onReady(function()
 															
 															_esSaludDanios = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue();
 															
-															
-															try{
-												    			var ventanaMensaje = window.parent;
-												    			
-												    			if (ventanaMensaje != window.top) {
-																  debug('Para postMessage, El parent es el mismo que el top');
-																}else{
-																  debug('Para postMessage, El parent no es el mismo que el top');
-																}
-																
-																var objMsg = {
-																	modo: 'A',
-																	cdperson: _p22_cdperson,
-																	cdideper: _CDIDEPERsel,
-																	cdideext: _CDIDEEXTsel
-																};
-																
-																ventanaMensaje.postMessage(objMsg, "*");
-																
-												    		}catch(e){
-												    			debug('Error en postMessage',e);
-												    		}
-								    		
 															irModoAgregar();
 							    		            	}else{
 							    		            		return;
@@ -624,29 +601,6 @@ Ext.onReady(function()
 												if(_esCargaClienteNvo){
 													form.down('[name=smap1.rfc]').doQuery(valorRFC,true,false);
 												}else{
-													
-													try{
-										    			var ventanaMensaje = window.parent;
-										    			
-										    			if (ventanaMensaje != window.top) {
-														  debug('Para postMessage, El parent es el mismo que el top');
-														}else{
-														  debug('Para postMessage, El parent no es el mismo que el top');
-														}
-														
-														var objMsg = {
-															modo: 'A',
-															cdperson: _p22_cdperson,
-															cdideper: _CDIDEPERsel,
-															cdideext: _CDIDEEXTsel
-														};
-														
-														ventanaMensaje.postMessage(objMsg, "*");
-														
-										    		}catch(e){
-										    			debug('Error en postMessage',e);
-										    		}
-										    		
 													irModoAgregar();
 												}
 												
@@ -913,6 +867,28 @@ Ext.onReady(function()
 							_p22_formBusqueda().hide();
 						}
 		                
+						try{
+			    			var ventanaMensaje = window.parent;
+			    			
+			    			if (ventanaMensaje != window.top) {
+							  debug('Para postMessage, El parent es el mismo que el top');
+							}else{
+							  debug('Para postMessage, El parent no es el mismo que el top');
+							}
+							
+							var objMsg = {
+								modo: 'A',
+								cdperson: _p22_cdperson,
+								cdideper: _CDIDEPERsel,
+								cdideext: _CDIDEEXTsel
+							};
+							
+							ventanaMensaje.postMessage(objMsg, "*");
+							
+			    		}catch(e){
+			    			debugError('Error en postMessage',e);
+			    		}
+										    		
 		                _p22_guardarClic(_p22_datosAdicionalesClic, true);
 		            }
 		        }
@@ -2181,7 +2157,7 @@ function _p22_guardarDatosAdicionalesClic()
 					ventanaMensaje.postMessage(objMsg, "*");
 					
 	    		}catch(e){
-	    			debug('Error en postMessage',e);
+	    			debugError('Error en postMessage',e);
 	    		}
                 
                 /** PARA ACTUALIZAR EL NUEVO ESTATUS GENERAL DE LA PERSONA 
