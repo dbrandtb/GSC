@@ -582,9 +582,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				;
 			HttpUtil.generaArchivo(urlAutorizacionServicio, pathArchivo);
 			
-			Date myDate = new Date();
-			System.out.println();
-			
 			paramsO.put("pv_feinici_i"  , new Date());
 			paramsO.put("pv_cddocume_i" , nombreArchivoModificado);
 			paramsO.put("pv_dsdocume_i" , "Autorizacion Servicio "+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
