@@ -329,7 +329,7 @@ Ext.onReady(function()
                 ,layout   :
                 {
                     type     : 'table'
-                    ,columns : 3
+                    ,columns : 4
                 }
                 ,buttonAlign : 'center'
                 ,buttons     :

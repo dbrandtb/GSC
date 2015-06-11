@@ -369,7 +369,10 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String ramo      = params.get("ramo");
 				String cdagente  = params.get("cdagente");
 				String statusVig = params.get("statusVig");
-				resp.setSlist(consultasDAO.recuperarPolizasEndosables(cdunieco,cdramo,estado,nmpoliza,nmpoliex,ramo,cdagente,statusVig));
+				//Se agregan campos para Filtrado por Fecha de Inicio y Fecha de fin
+				String finicio   = params.get("finicio");
+				String ffin      = params.get("ffin");
+				resp.setSlist(consultasDAO.recuperarPolizasEndosables(cdunieco,cdramo,estado,nmpoliza,nmpoliex,ramo,cdagente,statusVig,finicio,ffin));
 			}
 			else if(proc.equals(RecuperacionSimple.RECUPERAR_HISTORICO_POLIZA))
 			{

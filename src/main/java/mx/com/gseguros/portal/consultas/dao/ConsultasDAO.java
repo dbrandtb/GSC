@@ -141,6 +141,8 @@ public interface ConsultasDAO
 			,String ramo
 			,String cdagente
 			,String statusVig
+			,String finicio //Se agrega campo fecha de inicio param No. 9
+			,String ffin //Se agrega campo fecha de fin param No. 10
 			)throws Exception;
 	
 	public List<Map<String,String>>recuperarHistoricoPoliza(
