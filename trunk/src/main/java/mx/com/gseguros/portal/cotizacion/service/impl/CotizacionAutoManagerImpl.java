@@ -2250,7 +2250,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			logger.debug(config);
 			
 			setCheckpoint("Instanciando mapa buffer de tablas de apoyo");
-			Map<String,List<Map<String,String>>>buffer=new HashMap<String,List<Map<String,String>>>();
+			Map<String,List<Map<String,String>>> buffer        = new HashMap<String,List<Map<String,String>>>();
+			Map<String,String>                   bufferTiposit = new HashMap<String,String>();
 			
 			setCheckpoint("Iniciando procesador de hoja de calculo");
 			FileInputStream input       = new FileInputStream(excel);;
@@ -2417,13 +2418,25 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									nextNextCellValue = "";
 								}
 							}
-							String cdtipsitProc = consultasDAO.recuperarCdtipsitExtraExcel(
-									fila
-									,orCdtipsit
-									,cellValue
-									,nextCellValue
-									,nextNextCellValue
-									);
+							String llaveBufferTiposit = Utils.join(orCdtipsit,"-",cellValue,"-",nextCellValue,"-",nextNextCellValue);
+							String cdtipsitProc       = null;
+							if(bufferTiposit.containsKey(llaveBufferTiposit))
+							{
+								sb.append("(buffer)");
+								cdtipsitProc = bufferTiposit.get(llaveBufferTiposit);
+							}
+							else
+							{
+								sb.append("(sin buffer)");
+								cdtipsitProc = consultasDAO.recuperarCdtipsitExtraExcel(
+										fila
+										,orCdtipsit
+										,cellValue
+										,nextCellValue
+										,nextNextCellValue
+										);
+								bufferTiposit.put(llaveBufferTiposit,cdtipsitProc);
+							}
 							sb.append("==").append(cdtipsitProc);
 							record.put("cdtipsit" , cdtipsitProc);
 							
