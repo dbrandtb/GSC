@@ -374,6 +374,59 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
 										handler: function() {
 											windowLoader.close();
 										}
+									},
+									{
+										text: 'Vista Previa',
+										icon    : '${ctx}/resources/fam3icons/icons/application_form_magnify.png',
+										buttonAlign : 'center',
+										handler: function() {
+											Ext.Ajax.request({
+												url     : compleUrlGuardarCartoRechazo
+												,method:'GET'
+												,params :{
+													'map1.ntramite'  : record.get('ntramite')
+													,'map1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
+													,'map1.cdsisrol' : 'MEDICO'
+													,'map1.cdunieco' : record.get('cdunieco')
+													,'map1.cdramo'   : record.get('cdramo')
+													,'map1.estado'   : record.get('estado')
+													,'map1.nmpoliza' : record.get('nmpoliza')
+												}
+												,success : function(response){
+													// YA NO REALIZA NADA PORQUE YA SE GENERO EL ARCHIVO
+													debug("Valor de la respuesta",response);
+													var numRand=Math.floor((Math.random()*100000)+1);
+										        	debug('numRand a: ',numRand);
+										        	var windowVerDocu=Ext.create('Ext.window.Window',
+										        	{
+										        		title          : 'Carta de Rechazo'
+										        		,width         : 700
+										        		,height        : 500
+										        		,collapsible   : true
+										        		,titleCollapse : true
+										        		,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+										        		                 +'src="'+panDocUrlViewDoc+'?subfolder=' + record.get('ntramite') + '&filename=' + '<s:text name="pdf.emision.rechazo.nombre"/>' +'">'
+										        		                 +'</iframe>'
+										        		,listeners     :
+										        		{
+										        			resize : function(win,width,height,opt){
+										                        debug(width,height);
+										                        $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+										                    }
+										        		}
+										        	}).show();
+										        	windowVerDocu.center();
+												}
+												,failure : function(){
+													Ext.Msg.show({
+														title:'Error',
+														msg: 'Error de comunicaci&oacute;n',
+														buttons: Ext.Msg.OK,
+														icon: Ext.Msg.ERROR
+													});
+												}
+											});
+										}
 									}
 								]
 							})  
