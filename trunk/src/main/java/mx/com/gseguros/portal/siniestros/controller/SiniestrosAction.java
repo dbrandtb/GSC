@@ -571,17 +571,23 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				+ "&paramform=no"
 				;
 			logger.debug(urlAutorizacionServicio);
+			//logger.debug(getText("siniestro.autorizacionServicio.nombre").substring(beginIndex));
 			String nombreArchivo = getText("siniestro.autorizacionServicio.nombre");
+			
+			String nombreArchivoModificado = nombreArchivo.substring(nombreArchivo.indexOf(".")+1)+System.currentTimeMillis()+"_"+((long)(Math.random()*10000l))+".pdf";
 			String pathArchivo=""
 				+ getText("ruta.documentos.poliza")
 				+ "/" + paramsO.get("pv_ntramite_i")
-				+ "/" + nombreArchivo
+				+ "/" + nombreArchivoModificado
 				;
 			HttpUtil.generaArchivo(urlAutorizacionServicio, pathArchivo);
-
+			
+			Date myDate = new Date();
+			System.out.println();
+			
 			paramsO.put("pv_feinici_i"  , new Date());
-			paramsO.put("pv_cddocume_i" , nombreArchivo);
-			paramsO.put("pv_dsdocume_i" , "Autorizacion Servicio");
+			paramsO.put("pv_cddocume_i" , nombreArchivoModificado);
+			paramsO.put("pv_dsdocume_i" , "Autorizacion Servicio "+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
 			paramsO.put("pv_swvisible_i"   , null);
 			paramsO.put("pv_codidocu_i"   , null);
 			paramsO.put("pv_cdtiptra_i"   , TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra());
