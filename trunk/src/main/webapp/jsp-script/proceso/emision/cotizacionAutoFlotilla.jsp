@@ -451,11 +451,18 @@ Ext.onReady(function()
         }
         ,listeners :
         {
-            load : function()
+            load : function(me,rec,success)
             {
-                this.cargado=true;
-                _fieldById('_p30_grid').getView().refresh();
-                _fieldById('_p30_panelStoreSubmarcas').destroy();
+                if(success)
+                {
+                    this.cargado=true;
+                    _fieldById('_p30_grid').getView().refresh();
+                    _fieldById('_p30_panelStoreSubmarcas').destroy();
+                }
+                else
+                {
+                    _fieldById('_p30_panelStoreSubmarcas').setBodyStyle('border:2px solid red;');
+                }
             }
         }
     });
@@ -482,11 +489,18 @@ Ext.onReady(function()
         }
         ,listeners :
         {
-            load : function()
+            load : function(me,rec,success)
             {
-                this.cargado=true;
-                _fieldById('_p30_grid').getView().refresh();
-                _fieldById('_p30_panelStoreVersiones').destroy();
+                if(success)
+                {
+                    this.cargado=true;
+                    _fieldById('_p30_grid').getView().refresh();
+                    _fieldById('_p30_panelStoreVersiones').destroy();
+                }
+                else
+                {
+                    _fieldById('_p30_panelStoreVersiones').setBodyStyle('border:2px solid red;');
+                }
             }
         }
     });
@@ -513,11 +527,18 @@ Ext.onReady(function()
         }
         ,listeners :
         {
-            load : function()
+            load : function(me,rec,success)
             {
-                this.cargado=true;
-                _fieldById('_p30_grid').getView().refresh();
-                _fieldById('_p30_panelStoreUsos').destroy();
+                if(success)
+                {
+                    this.cargado=true;
+                    _fieldById('_p30_grid').getView().refresh();
+                    _fieldById('_p30_panelStoreUsos').destroy();
+                }
+                else
+                {
+                    _fieldById('_p30_panelStoreUsos').setBodyStyle('border:2px solid red;');
+                }
             }
         }
     });
@@ -544,11 +565,18 @@ Ext.onReady(function()
         }
         ,listeners :
         {
-            load : function()
+            load : function(me,records,success)
             {
-                this.cargado=true;
-                _fieldById('_p30_grid').getView().refresh();
-                _fieldById('_p30_panelStoreMarcas').destroy();
+                if(success)
+                {
+                    this.cargado=true;
+                    _fieldById('_p30_grid').getView().refresh();
+                    _fieldById('_p30_panelStoreMarcas').destroy();
+                }
+                else
+                {
+                    _fieldById('_p30_panelStoreMarcas').setBodyStyle('border:2px solid red;');
+                }
             }
         }
     });
@@ -577,11 +605,18 @@ Ext.onReady(function()
         }
         ,listeners :
         {
-            load : function()
+            load : function(me,rec,success)
             {
-                this.cargado=true;
-                _fieldById('_p30_grid').getView().refresh();
-                _fieldById('_p30_panelStorePlanes').destroy();
+                if(success)
+                {
+                    this.cargado=true;
+                    _fieldById('_p30_grid').getView().refresh();
+                    _fieldById('_p30_panelStorePlanes').destroy();
+                }
+                else
+                {
+                    _fieldById('_p30_panelStorePlanes').setBodyStyle('border:2px solid red;');
+                }
             }
         }
     });
@@ -610,11 +645,18 @@ Ext.onReady(function()
         }
         ,listeners :
         {
-            load : function()
+            load : function(me,rec,success)
             {
-                this.cargado=true;
-                _fieldById('_p30_grid').getView().refresh();
-                _fieldById('_p30_panelStoreCargas').destroy();
+                if(success)
+                {
+                    this.cargado=true;
+                    _fieldById('_p30_grid').getView().refresh();
+                    _fieldById('_p30_panelStoreCargas').destroy();
+                }
+                else
+                {
+                    _fieldById('_p30_panelStoreCargas').setBodyStyle('border:2px solid red;');
+                }
             }
         }
     });
@@ -642,12 +684,18 @@ Ext.onReady(function()
         }
         ,listeners :
         {
-            load : function(store,records)
+            load : function(store,records,success)
             {
-                this.cargado=true;
-                _fieldById('_p30_grid').getView().refresh();
-                _fieldById('_p30_panelStoreCdtipsit').destroy();
-                debug('### cdtipsit:',records);
+                if(success)
+                {
+                    this.cargado=true;
+                    _fieldById('_p30_grid').getView().refresh();
+                    _fieldById('_p30_panelStoreCdtipsit').destroy();
+                }
+                else
+                {
+                    _fieldById('_p30_panelStoreCdtipsit').setBodyStyle('border:2px solid red;');
+                }
             }
         }
     });
@@ -3026,6 +3074,7 @@ function _p30_gridBotonConfigClic(view,row,col,item,e,record)
         }
         
         var form  = panel.down('form');
+        debug('form values:',form.getValues(),'record.data:',record.data);
         var valoresExtras = false;
         for(var prop in form.getValues())
         {
