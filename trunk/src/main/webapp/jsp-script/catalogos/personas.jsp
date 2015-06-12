@@ -533,12 +533,29 @@ Ext.onReady(function()
 												  debug('Para postMessage, El parent no es el mismo que el top');
 												}
 												
+												var _codigoDanios = '';
+												var _codigoSalud  = '';
+												
+												try{
+													_codigoDanios = _CDIDEPERsel.substring(5);
+												}catch(e){
+													debug('Error al obtener codigo externo de Danios',e);
+												}
+												
+												try{
+													_codigoSalud = _CDIDEEXTsel.substring(5);
+												}catch(e){
+													debug('Error al obtener codigo externo de Salud',e);
+												}
+												
 												var objMsg = {
 													clienteIce: true,
 													modo: 'E',
 													cdperson: _p22_cdperson,
 													cdideper: _CDIDEPERsel,
-													cdideext: _CDIDEEXTsel
+													cdideext: _CDIDEEXTsel,
+													codigoDanios: _codigoDanios,
+													codigoSalud:_codigoSalud
 												};
 												
 												ventanaMensaje.postMessage(objMsg, "*");
@@ -899,12 +916,29 @@ Ext.onReady(function()
 							  debug('Para postMessage, El parent no es el mismo que el top');
 							}
 							
+							var _codigoDanios = '';
+							var _codigoSalud  = '';
+							
+							try{
+								_codigoDanios = _CDIDEPERsel.substring(5);
+							}catch(e){
+								debug('Error al obtener codigo externo de Danios',e);
+							}
+							
+							try{
+								_codigoSalud = _CDIDEEXTsel.substring(5);
+							}catch(e){
+								debug('Error al obtener codigo externo de Salud',e);
+							}
+												
 							var objMsg = {
 								clienteIce: true,
 								modo: 'A',
 								cdperson: _p22_cdperson,
 								cdideper: _CDIDEPERsel,
-								cdideext: _CDIDEEXTsel
+								cdideext: _CDIDEEXTsel,
+								codigoDanios: _codigoDanios,
+								codigoSalud:_codigoSalud
 							};
 							
 							ventanaMensaje.postMessage(objMsg, "*");
@@ -2169,13 +2203,30 @@ function _p22_guardarDatosAdicionalesClic()
 					  debug('Para postMessage, El parent no es el mismo que el top');
 					}
 					
+					var _codigoDanios = '';
+					var _codigoSalud  = '';
+					
+					try{
+						_codigoDanios = _CDIDEPERsel.substring(5);
+					}catch(e){
+						debug('Error al obtener codigo externo de Danios',e);
+					}
+					
+					try{
+						_codigoSalud = _CDIDEEXTsel.substring(5);
+					}catch(e){
+						debug('Error al obtener codigo externo de Salud',e);
+					}
+					
 					var objMsg = {
 						clienteIce: true,
 						modo: 'G',
 						success : json.exito,
 						cdperson: _p22_cdperson,
 						cdideper: _CDIDEPERsel,
-						cdideext: _CDIDEEXTsel
+						cdideext: _CDIDEEXTsel,
+						codigoDanios: _codigoDanios,
+						codigoSalud:_codigoSalud
 					};
 					
 					ventanaMensaje.postMessage(objMsg, "*");
