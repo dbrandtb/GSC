@@ -118,6 +118,11 @@
 		    <result name="clienteUnico" type="redirectAction">
 		        <param name="actionName">personas</param>
                 <param name="namespace">/catalogos</param>
+                <param name="smap1.esSaludDanios">${params.esSaludDanios}</param>
+                <param name="smap1.ocultaBusqueda">${params.ocultaBusqueda}</param>
+                <param name="smap1.esCargaClienteNvo">${params.esCargaClienteNvo}</param>
+                <param name="smap1.cargaCP">${params.cargaCP}</param>
+                <param name="smap1.cargaTipoPersona">${params.cargaTipoPersona}</param>
 		    </result>
 		    <result name="endososAutos" type="redirectAction">
                 <param name="actionName">marcoEndosos</param>

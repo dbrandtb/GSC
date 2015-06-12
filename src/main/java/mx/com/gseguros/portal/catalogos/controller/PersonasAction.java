@@ -99,7 +99,7 @@ public class PersonasAction extends PrincipalCoreAction
 	 * Carga personas por rfc
 	 * @return SUCCESS
 	 */
-	public String obtenerPersonasPorRFC()
+	public String obtenerPersonasPorRFC()throws Exception
 	{
 		long timestamp=System.currentTimeMillis();
 		logger.info(timestamp
