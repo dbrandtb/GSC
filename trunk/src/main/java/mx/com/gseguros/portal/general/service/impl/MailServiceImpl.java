@@ -10,15 +10,15 @@ import mx.com.gseguros.portal.general.service.MailService;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 public class MailServiceImpl implements MailService {
 	
-	private final static Log logger = LogFactory.getLog(MailServiceImpl.class);
+	static final Logger logger = LoggerFactory.getLogger(MailServiceImpl.class);
 	
 	private JavaMailSender mailSender;
 	
@@ -74,10 +74,10 @@ public class MailServiceImpl implements MailService {
 			for(File file : adjuntos) {
 				if(file != null && file.exists()) {
 					helper.addAttachment(file.getName(), file);
-					logger.info( new StringBuffer("Se adjuntó el archivo ").append(file.getAbsolutePath()).toString() );
+					logger.info( "Se adjuntó el archivo {}", file.getAbsolutePath() );
 				} else {
 					String fileName = (file != null) ? file.getName() : null;
-					logger.warn( new StringBuffer("El archivo ").append(fileName).append(" no existe, no se adjuntará").toString() );
+					logger.warn( "El archivo {} no existe, no se adjuntará", fileName);
 				}
 			}
 			// Se envia el correo:
