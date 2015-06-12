@@ -37841,6 +37841,36 @@
                             
 
                         /**
+                        * field for Nmsolici
+                        */
+
+                        
+                                    protected int localNmsolici ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getNmsolici(){
+                               return localNmsolici;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param Nmsolici
+                               */
+                               public void setNmsolici(int param){
+                            
+                                            this.localNmsolici=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for PeriodoGracia
                         */
 
@@ -37925,6 +37955,50 @@
                                public void setTipoCambio(double param){
                             
                                             this.localTipoCambio=param;
+                                    
+
+                               }
+                            
+
+                        /**
+                        * field for TipoCotizacion
+                        */
+
+                        
+                                    protected java.lang.String localTipoCotizacion ;
+                                
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localTipoCotizacionTracker = false ;
+                           
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getTipoCotizacion(){
+                               return localTipoCotizacion;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param TipoCotizacion
+                               */
+                               public void setTipoCotizacion(java.lang.String param){
+                            
+                                       if (param != null){
+                                          //update the setting tracker
+                                          localTipoCotizacionTracker = true;
+                                       } else {
+                                          localTipoCotizacionTracker = false;
+                                              
+                                       }
+                                   
+                                            this.localTipoCotizacion=param;
                                     
 
                                }
@@ -38354,6 +38428,35 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
+                                            xmlWriter.writeStartElement(prefix,"nmsolici", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"nmsolici");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("nmsolici");
+                                    }
+                                
+                                               if (localNmsolici==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("nmsolici cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localNmsolici));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
                                             xmlWriter.writeStartElement(prefix,"periodoGracia", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
@@ -38433,7 +38536,41 @@
                                                }
                                     
                                    xmlWriter.writeEndElement();
-                             
+                              if (localTipoCotizacionTracker){
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"tipoCotizacion", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"tipoCotizacion");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("tipoCotizacion");
+                                    }
+                                
+
+                                          if (localTipoCotizacion==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("tipoCotizacion cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localTipoCotizacion);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             }
                                     namespace = "";
                                     if (! namespace.equals("")) {
                                         prefix = xmlWriter.getPrefix(namespace);
@@ -38686,6 +38823,12 @@
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localMultianual));
                             
                                       elementList.add(new javax.xml.namespace.QName("",
+                                                                      "nmsolici"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localNmsolici));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
                                                                       "periodoGracia"));
                                  
                                 elementList.add(
@@ -38702,7 +38845,16 @@
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localTipoCambio));
-                            
+                             if (localTipoCotizacionTracker){
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "tipoCotizacion"));
+                                 
+                                        if (localTipoCotizacion != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localTipoCotizacion));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("tipoCotizacion cannot be null!!");
+                                        }
+                                    }
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "udi"));
                                  
@@ -38977,6 +39129,25 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","nmsolici").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setNmsolici(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
                                     if (reader.isStartElement() && new javax.xml.namespace.QName("","periodoGracia").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
@@ -39031,6 +39202,24 @@
                                     throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
                                 }
                             
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","tipoCotizacion").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setTipoCotizacion(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                    else {
+                                        
+                                    }
+                                
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
@@ -51661,6 +51850,50 @@
                             
 
                         /**
+                        * field for AseguradoAlterno
+                        */
+
+                        
+                                    protected java.lang.String localAseguradoAlterno ;
+                                
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localAseguradoAlternoTracker = false ;
+                           
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getAseguradoAlterno(){
+                               return localAseguradoAlterno;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param AseguradoAlterno
+                               */
+                               public void setAseguradoAlterno(java.lang.String param){
+                            
+                                       if (param != null){
+                                          //update the setting tracker
+                                          localAseguradoAlternoTracker = true;
+                                       } else {
+                                          localAseguradoAlternoTracker = false;
+                                              
+                                       }
+                                   
+                                            this.localAseguradoAlterno=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for BeneficiarioPref
                         */
 
@@ -53019,6 +53252,40 @@
                                           }
                                     
                                    xmlWriter.writeEndElement();
+                             } if (localAseguradoAlternoTracker){
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"aseguradoAlterno", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"aseguradoAlterno");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("aseguradoAlterno");
+                                    }
+                                
+
+                                          if (localAseguradoAlterno==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("aseguradoAlterno cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localAseguradoAlterno);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
                              } if (localBeneficiarioPrefTracker){
                                     namespace = "";
                                     if (! namespace.equals("")) {
@@ -54059,6 +54326,15 @@
                                         } else {
                                            throw new org.apache.axis2.databinding.ADBException("adaptaciones cannot be null!!");
                                         }
+                                    } if (localAseguradoAlternoTracker){
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "aseguradoAlterno"));
+                                 
+                                        if (localAseguradoAlterno != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localAseguradoAlterno));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("aseguradoAlterno cannot be null!!");
+                                        }
                                     } if (localBeneficiarioPrefTracker){
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "beneficiarioPref"));
@@ -54389,6 +54665,24 @@
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setAdaptaciones(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                    else {
+                                        
+                                    }
+                                
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","aseguradoAlterno").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setAseguradoAlterno(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();
