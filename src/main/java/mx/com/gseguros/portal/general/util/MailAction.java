@@ -11,14 +11,15 @@ import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.utils.HttpUtil;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class MailAction extends PrincipalCoreAction {
 
 	private static final long serialVersionUID = 3608545898806750390L;
 	
-	private final static Log logger = LogFactory.getLog(MailAction.class);
+	static final Logger logger = LoggerFactory.getLogger(MailAction.class);
 	
 	private MailService mailService;
 	
