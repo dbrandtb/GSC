@@ -64,7 +64,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 
 	private static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EmisionAutosServiceImpl.class);
 	
-	private static final long WS_TIMEOUT =  220000;
+	private static final long WS_TIMEOUT =  180000;
+	private static final long WS_TIMEOUT_EXTENDED =  300000;
 	
 	@Value("${ws.cotizacion.autos.url}")
 	private String endpointCotiza;
@@ -166,6 +167,9 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						cotNeg.setPorcentajeBono(Double.valueOf(m.get("PORCENTAJEBONO")));
 						cotNeg.setIdCotizaciongs(Integer.valueOf(m.get("IDPROVEEDORUDI")));
 						cotNeg.setMontoCedido(Double.valueOf(m.get("MONTOCEDIDO")));
+						
+						cotNeg.setNmsolici(Integer.valueOf(m.get("NMSOLICI")));
+						cotNeg.setTipoCotizacion(m.get("TIPOCOTIZACION"));
 						
 						datosCotizacionAuto.setCotizacionNegocio(cotNeg);
 						
@@ -449,6 +453,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 							 */
 							incisoIterado.setNumSerieValido(Boolean.valueOf(row.get("NUMSERIEVALIDO")));
 							
+							incisoIterado.setAseguradoAlterno(row.get("ASEGURADOALTERNO"));
 							
 							//version
 							Version version=new Version();
@@ -679,7 +684,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		try {
 			logger.info(new StringBuffer("endpoint a invocar=").append(endpointCotiza));
 			stubGS = new CotizacionIndividualWSServiceStub(endpointCotiza);
-			stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
+			stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT_EXTENDED);
 		} catch (AxisFault e) {
 			logger.error(e);
 			throw new Exception("Error de preparacion de Axis2: " + e.getMessage());
