@@ -2713,36 +2713,40 @@ public class EndososAction extends PrincipalCoreAction
 			paramsNuevos.put("pv_accion_i" , "I");
 			logger.debug("los actualizados seran: "+paramsNuevos);
 			kernelManager.insertaValoresSituaciones(paramsNuevos);
-            
+
+/**
+ * No se requiere mandar mpoliper, se comentan lineas
+ */
+			
 			//////////////////////
 			////// cdperson //////
-			Map<String,String>mapCdperson=new HashMap<String,String>(0);
-			mapCdperson.put("pv_cdunieco" , smap1.get("cdunieco"));
-			mapCdperson.put("pv_cdramo"   , smap1.get("cdramo"));
-			mapCdperson.put("pv_estado"   , smap1.get("estado"));
-			mapCdperson.put("pv_nmpoliza" , smap1.get("nmpoliza"));
-			mapCdperson.put("pv_nmsituac" , smap1.get("nmsituac"));
-			List<Map<String,String>>listCdperson=endososManager.obtenerCdpersonMpoliper(mapCdperson);
+//			Map<String,String>mapCdperson=new HashMap<String,String>(0);
+//			mapCdperson.put("pv_cdunieco" , smap1.get("cdunieco"));
+//			mapCdperson.put("pv_cdramo"   , smap1.get("cdramo"));
+//			mapCdperson.put("pv_estado"   , smap1.get("estado"));
+//			mapCdperson.put("pv_nmpoliza" , smap1.get("nmpoliza"));
+//			mapCdperson.put("pv_nmsituac" , smap1.get("nmsituac"));
+//			List<Map<String,String>>listCdperson=endososManager.obtenerCdpersonMpoliper(mapCdperson);
 			////// cdperson //////
 			//////////////////////
 			
             //////////////////////
 			////// mpoliper //////
-			Map<String,Object>mapaMpoliper=new LinkedHashMap<String,Object>(0);
-			mapaMpoliper.put("pv_cdunieco_i" , smap1.get("cdunieco"));
-			mapaMpoliper.put("pv_cdramo_i"   , smap1.get("cdramo"));
-			mapaMpoliper.put("pv_estado_i"   , smap1.get("estado"));
-			mapaMpoliper.put("pv_nmpoliza_i" , smap1.get("nmpoliza"));
-			mapaMpoliper.put("pv_nmsituac_i" , smap1.get("nmsituac"));
-			mapaMpoliper.put("pv_cdrol_i"    , "2");
-			mapaMpoliper.put("pv_cdperson_i" , listCdperson.get(0).get("CDPERSON"));
-			mapaMpoliper.put("pv_nmsuplem_i" , respEnd.get("pv_nmsuplem_o"));
-			mapaMpoliper.put("pv_status_i"   , "V");
-			mapaMpoliper.put("pv_nmorddom_i" , "1");
-			mapaMpoliper.put("pv_swreclam_i" , null);
-			mapaMpoliper.put("pv_accion_i"   , "I");
-			mapaMpoliper.put("pv_swexiper_i" , Constantes.SI);
-			kernelManager.movMpoliper(mapaMpoliper);
+//			Map<String,Object>mapaMpoliper=new LinkedHashMap<String,Object>(0);
+//			mapaMpoliper.put("pv_cdunieco_i" , smap1.get("cdunieco"));
+//			mapaMpoliper.put("pv_cdramo_i"   , smap1.get("cdramo"));
+//			mapaMpoliper.put("pv_estado_i"   , smap1.get("estado"));
+//			mapaMpoliper.put("pv_nmpoliza_i" , smap1.get("nmpoliza"));
+//			mapaMpoliper.put("pv_nmsituac_i" , smap1.get("nmsituac"));
+//			mapaMpoliper.put("pv_cdrol_i"    , "2");
+//			mapaMpoliper.put("pv_cdperson_i" , listCdperson.get(0).get("CDPERSON"));
+//			mapaMpoliper.put("pv_nmsuplem_i" , respEnd.get("pv_nmsuplem_o"));
+//			mapaMpoliper.put("pv_status_i"   , "V");
+//			mapaMpoliper.put("pv_nmorddom_i" , "1");
+//			mapaMpoliper.put("pv_swreclam_i" , null);
+//			mapaMpoliper.put("pv_accion_i"   , "I");
+//			mapaMpoliper.put("pv_swexiper_i" , Constantes.SI);
+//			kernelManager.movMpoliper(mapaMpoliper);
 			////// mpoliper //////
 			//////////////////////
 			
