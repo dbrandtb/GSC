@@ -41,6 +41,7 @@ import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
 import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -90,6 +91,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Autowired
 	@Qualifier("emisionAutosServiceImpl")
 	private EmisionAutosService emisionAutosService;
+
+	@Autowired
+	private transient Ice2sigsService ice2sigsService;
 	
 	@Value("${caratula.impresion.autos.url}")
 	private String urlImpresionCaratula;
@@ -1550,33 +1554,49 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						,usuarioSesion.getUser()
 						);
 			
-			paso = "Enviando a Web Service Sigs";
-			logger.info(paso);
-			
 			String nmsuplemGen = (String) resParams.get("pv_nmsuplem_o");
 			String ntramite = (String) resParams.get("pv_ntramite_o");
 			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
 			
-			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
-			if(aux == null || !aux.isExitoRecibos()){
-				logger.error("Error al ejecutar los WS de endoso");
+			boolean esProductoSalud = consultasDAO.esProductoSalud(cdramo);
+			
+			if(esProductoSalud) {
+				paso = "Enviando a Web Service para Recibos de Salud";
+				logger.info(paso);
 				
-				boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen);
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
+						estado, nmpoliza, 
+						nmsuplemGen, null, 
+						cdunieco, "0", ntramite, 
+						true, cdtipsup, 
+						usuarioSesion);
+			}else{
+				paso = "Enviando a Web Service Sigs";
+				logger.info(paso);
 				
-				if(endosoRevertido){
-					logger.error("Endoso revertido exitosamente.");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
-				}else{
-					logger.error("Error al revertir el endoso");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
+				if(aux == null || !aux.isExitoRecibos()){
+					logger.error("Error al ejecutar los WS de endoso");
+					
+					boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen);
+					
+					if(endosoRevertido){
+						logger.error("Endoso revertido exitosamente.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					}else{
+						logger.error("Error al revertir el endoso");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+					}
+					
 				}
 				
+				paso = "Ejecutando caratula";
+				logger.info(paso);
+				
+				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
 			}
 			
-			paso = "Ejecutando caratula";
-			logger.info(paso);
-			
-			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
 			
 		}
 		catch(Exception ex)

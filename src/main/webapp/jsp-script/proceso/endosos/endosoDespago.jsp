@@ -70,39 +70,51 @@
 				text: 'Confirmar endoso'
 				,icon:_CONTEXT+'/resources/fam3icons/icons/key.png'
 				,buttonAlign : 'center',
-				handler: function() {
+				handler: function(btn, e) {
 					
 					var model =  gridRecibos.getSelectionModel();
 	            	if(model.hasSelection()){
-	            		var record = model.getLastSelected();
-	            		var submitValues={};
-	        				paramsEntrada.FEINIVAL = Ext.Date.format(panelInicialPral.down('[name="feInival"]').getValue(),'d/m/Y');
-	        				paramsEntrada.NMRECIBO = record.get('NMRECIBO');
-	        				paramsEntrada.NMIMPRES = record.get('NMIMPRES');
-	        				submitValues['smap1']= paramsEntrada;
-	        				
-	        				var panelMask = new Ext.LoadMask('mainDivDespago', {msg:"Confirmando..."});
-							panelMask.show();
-		
-	        				Ext.Ajax.request( {
-	   						    url: guarda_Despago,
-	   						    jsonData: Ext.encode(submitValues),
-	   						    success:function(response,opts){
-	   						    	 panelMask.hide();
-	   						         var jsonResp = Ext.decode(response.responseText);
-	   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,null);
-	   						      	 marendNavegacion(2);
-	   						    },
-	   						    failure:function(response,opts){
-	   						        panelMask.hide();
-	   						        Ext.Msg.show({
-	   						            title:'Error',
-	   						            msg: 'Error de comunicaci&oacute;n',
-	   						            buttons: Ext.Msg.OK,
-	   						            icon: Ext.Msg.ERROR
-	   						        });
-	   						    }
-	   						});
+	            		
+		            	Ext.Msg.show({
+	                        title: 'Confirmar acci&oacute;n',
+	                        msg   : '&iquest;Esta seguro que desea despagar este recibo?',
+	                        buttons: Ext.Msg.YESNO,
+	                        fn: function(buttonId, text, opt) {
+	                            if(buttonId == 'yes') {
+	                                var record = model.getLastSelected();
+				            		var submitValues={};
+				        				paramsEntrada.FEINIVAL = Ext.Date.format(panelInicialPral.down('[name="feInival"]').getValue(),'d/m/Y');
+				        				paramsEntrada.NMRECIBO = record.get('NMRECIBO');
+				        				paramsEntrada.NMIMPRES = record.get('NMIMPRES');
+				        				submitValues['smap1']= paramsEntrada;
+				        				
+				        				var panelMask = new Ext.LoadMask('mainDivDespago', {msg:"Confirmando..."});
+										panelMask.show();
+					
+				        				Ext.Ajax.request( {
+				   						    url: guarda_Despago,
+				   						    jsonData: Ext.encode(submitValues),
+				   						    success:function(response,opts){
+				   						    	 panelMask.hide();
+				   						         var jsonResp = Ext.decode(response.responseText);
+				   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,null);
+				   						      	 marendNavegacion(2);
+				   						    },
+				   						    failure:function(response,opts){
+				   						        panelMask.hide();
+				   						        Ext.Msg.show({
+				   						            title:'Error',
+				   						            msg: 'Error de comunicaci&oacute;n',
+				   						            buttons: Ext.Msg.OK,
+				   						            icon: Ext.Msg.ERROR
+				   						        });
+				   						    }
+				   						});
+		                         }
+		                        },
+	                        animateTarget: btn,
+	                        icon: Ext.Msg.QUESTION
+	                    });
 	            		
 	            	}else{
 	            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);

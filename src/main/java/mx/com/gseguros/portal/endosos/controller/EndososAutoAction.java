@@ -1067,8 +1067,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String cdramo   = smap1.get("CDRAMO");
 			String estado   = smap1.get("ESTADO");
 			String nmpoliza = smap1.get("NMPOLIZA");
-			String status   = smap1.get("STATUS");
-			String ntramite = smap1.get("NTRAMITE");
+//			String status   = smap1.get("STATUS");
+//			String ntramite = smap1.get("NTRAMITE");
 			String nmsuplemOriginal = smap1.get("NMSUPLEM");
 			String nmrecibo = smap1.get("NMRECIBO");
 			String nmimpres = smap1.get("NMIMPRES");
@@ -1077,7 +1077,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(cdramo   , "No se recibio el producto");
 			Utils.validate(estado   , "No se recibio el estado de la poliza");
 			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
-			Utils.validate(status   , "No se recibio el status");
+//			Utils.validate(status   , "No se recibio el status");
 			
 			
 			Utils.validate(session                , "No hay sesion");
@@ -1087,7 +1087,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			
 			String cdtipsup      = TipoEndoso.DESPAGO.getCdTipSup().toString();
 			String fechaEndoso   = smap1.get("FEINIVAL");
-			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
+//			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
 			
 			endososAutoManager.guardarEndosoDespago(
 					cdunieco,
