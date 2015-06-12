@@ -116,7 +116,10 @@ Ext.onReady(function()
 {
 	
 	// Se aumenta el timeout para todas las peticiones:
-	Ext.Ajax.timeout = 90000; // 90 seconds
+	Ext.Ajax.timeout = 65000; // 60 seconds
+	Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+	Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+	Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
 	
 	////// modelos //////
 	Ext.define('_p22_modeloGrid',
@@ -279,7 +282,6 @@ Ext.onReady(function()
 					                proxy     : {
 				                            type        : 'ajax'
 				                            ,url        : _p22_urlObtenerPersonas
-				                            ,timeout    : 90000
 				                            ,reader     :
 				                            {
 				                                type  : 'json'
@@ -289,27 +291,33 @@ Ext.onReady(function()
 				                        ,listeners: {
 				                        	beforeload: function( store, operation, eOpts){
 				                        		operation.callback = function(records, op, succ){
-				                        			
-				                        			var jsonResponse = Ext.decode(op.response.responseText);
-//				                        			debug(typeof jsonResponse.exito);
-//				                        			debug(jsonResponse.exito);
-				                        			if(!jsonResponse.exito){
-				                        				mensajeError('Error al hacer la consulta, Favor de Reintentar');
-				                        				var form=_p22_formBusqueda();
-					            						form.down('[name=smap1.rfc]').reset();
-				                        				form.down('[name=smap1.nombre]').reset();
-				                        			}
-				                        			
-				                        			if(_esCargaClienteNvo && jsonResponse.exito && records.length >0){
-					                        			var form =_p22_formBusqueda();
-			        	 								form.down('[name=smap1.rfc]').reset();
-			        	 								form.down('[name=smap1.rfc]').getStore().removeAll();
-						                        		
-					                        			mensajeWarning('La persona para el RFC ingresado ya existe como cliente. Favor de volver a realizar la cotizaci&oacute;n como cliente existente.');
-					                        			form.down('[name=smap1.rfc]').reset();
+				                        			if(succ){
+					                        			var jsonResponse = Ext.decode(op.response.responseText);
+	//				                        			debug(typeof jsonResponse.exito);
+	//				                        			debug(jsonResponse.exito);
+					                        			if(!jsonResponse.exito){
+					                        				mensajeError('Error al hacer la consulta, Favor de Reintentar');
+					                        				var form=_p22_formBusqueda();
+						            						form.down('[name=smap1.rfc]').reset();
+					                        				form.down('[name=smap1.nombre]').reset();
+					                        			}
 					                        			
-					                        		}else if(_esCargaClienteNvo && jsonResponse.exito){
-					                        			irModoAgregar();
+					                        			if(_esCargaClienteNvo && jsonResponse.exito && records.length >0){
+						                        			var form =_p22_formBusqueda();
+				        	 								form.down('[name=smap1.rfc]').reset();
+				        	 								form.down('[name=smap1.rfc]').getStore().removeAll();
+							                        		
+						                        			mensajeWarning('La persona para el RFC ingresado ya existe como cliente. Favor de volver a realizar la cotizaci&oacute;n como cliente existente.');
+						                        			form.down('[name=smap1.rfc]').reset();
+						                        			
+						                        		}else if(_esCargaClienteNvo && jsonResponse.exito){
+						                        			irModoAgregar();
+						                        		}
+					                        		}else{
+					                        				mensajeError('Error al hacer la consulta, Favor de Reintentar2');
+					                        				var form=_p22_formBusqueda();
+						            						form.down('[name=smap1.rfc]').reset();
+					                        				form.down('[name=smap1.nombre]').reset();
 					                        		}
 				                        		};
 				                        		operation.params['smap1.esSalud'] = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue(); //SALUD o DAÑOS
@@ -396,7 +404,6 @@ Ext.onReady(function()
 					                proxy     : {
 				                            type        : 'ajax'
 				                            ,url        : _p22_urlObtenerPersonas
-				                            ,timeout    : 90000
 				                            ,reader     :
 				                            {
 				                                type  : 'json'
@@ -406,15 +413,22 @@ Ext.onReady(function()
 				                        ,listeners: {
 				                        	beforeload: function( store, operation, eOpts){
 				                        		operation.callback = function(records, op, succ){
-//				                        			debug('op:',op);
-				                        			var jsonResponse = Ext.decode(op.response.responseText);
-				                        			if(!jsonResponse.exito){
-				                        				mensajeError('Error al hacer la consulta, Favor de Reintentar');	
+				                        			if(succ){
+	//				                        			debug('op:',op);
+					                        			var jsonResponse = Ext.decode(op.response.responseText);
+					                        			if(!jsonResponse.exito){
+					                        				mensajeError('Error al hacer la consulta, Favor de Reintentar');	
+					                        				var form=_p22_formBusqueda();
+						            						form.down('[name=smap1.rfc]').reset();
+					                        				form.down('[name=smap1.nombre]').reset();
+					                        			}
+				                        			}else{
+				                        				mensajeError('Error al hacer la consulta, Favor de Reintentar2');	
 				                        				var form=_p22_formBusqueda();
 					            						form.down('[name=smap1.rfc]').reset();
 				                        				form.down('[name=smap1.nombre]').reset();
 				                        			}
-				                        		}
+				                        		};
 				                        		operation.params['smap1.esSalud'] = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue(); //SALUD o DAÑOS
 				                        		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].disable();
 				                        		Ext.ComponentQuery.query('#companiaGroupId')[Ext.ComponentQuery.query('#companiaGroupId').length-1].disable();
@@ -520,6 +534,7 @@ Ext.onReady(function()
 												}
 												
 												var objMsg = {
+													clienteIce: true,
 													modo: 'E',
 													cdperson: _p22_cdperson,
 													cdideper: _CDIDEPERsel,
@@ -885,6 +900,7 @@ Ext.onReady(function()
 							}
 							
 							var objMsg = {
+								clienteIce: true,
 								modo: 'A',
 								cdperson: _p22_cdperson,
 								cdideper: _CDIDEPERsel,
@@ -2107,7 +2123,6 @@ function _p22_guardarDatosAdicionalesClic()
         Ext.Ajax.request(
         {
             url       : _p22_urlGuadarTvaloper
-            ,timeout  : 90000
             ,jsonData :
             {
                 smap1 : jsonData,
@@ -2155,6 +2170,7 @@ function _p22_guardarDatosAdicionalesClic()
 					}
 					
 					var objMsg = {
+						clienteIce: true,
 						modo: 'G',
 						success : json.exito,
 						cdperson: _p22_cdperson,
