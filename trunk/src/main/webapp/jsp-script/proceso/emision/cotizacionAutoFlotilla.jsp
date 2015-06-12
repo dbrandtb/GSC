@@ -5312,23 +5312,6 @@ function _p30_imprimir()
     {
         Ext.create('Ext.form.Panel').submit(
         {
-            url             : _p30_urlObtencionReporteExcel
-            ,standardSubmit : true
-            ,target         : '_blank'
-            ,params         :
-            {
-                'params.pv_cdunieco_i'  : _p30_smap1.cdunieco
-                ,'params.pv_cdramo_i'   : _p30_smap1.cdramo
-                ,'params.pv_estado_i'   : 'W'
-                ,'params.pv_nmpoliza_i' : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
-                ,'params.pv_nmsuplem_i' : '0'
-                ,'params.pv_cdperpag_i' : _p30_selectedTarifa.get('CDPERPAG')
-                ,'params.pv_cdusuari_i' : _p30_smap1.cdusuari
-                ,cdreporte              : 'REPCOT001'
-            }
-        });
-        Ext.create('Ext.form.Panel').submit(
-        {
             url             : _p30_urlObtencionReporteExcel2
             ,standardSubmit : true
             ,target         : '_blank'
@@ -5342,6 +5325,23 @@ function _p30_imprimir()
                 ,'params.pv_cdperpag_i' : _p30_selectedTarifa.get('CDPERPAG')
                 ,'params.pv_cdusuari_i' : _p30_smap1.cdusuari
                 ,cdreporte              : 'REPCOT002'
+            }
+        });
+        Ext.create('Ext.form.Panel').submit(
+        {
+            url             : _p30_urlObtencionReporteExcel
+            ,standardSubmit : true
+            ,target         : '_blank'
+            ,params         :
+            {
+                'params.pv_cdunieco_i'  : _p30_smap1.cdunieco
+                ,'params.pv_cdramo_i'   : _p30_smap1.cdramo
+                ,'params.pv_estado_i'   : 'W'
+                ,'params.pv_nmpoliza_i' : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
+                ,'params.pv_nmsuplem_i' : '0'
+                ,'params.pv_cdperpag_i' : _p30_selectedTarifa.get('CDPERPAG')
+                ,'params.pv_cdusuari_i' : _p30_smap1.cdusuari
+                ,cdreporte              : 'REPCOT001'
             }
         });
     }
