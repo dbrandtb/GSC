@@ -4137,7 +4137,7 @@ function _p30_cotizar(sinTarificar)
                                     ,{
                                         itemId    : '_p30_botonComprar'
                                         ,xtype    : 'button'
-                                        ,text     : 'Emitir'
+                                        ,text     : 'Confirmar cotizaci&oacute;n'
                                         ,icon     : '${ctx}/resources/fam3icons/icons/book_next.png'
                                         ,disabled : true
                                         ,handler  : _p30_comprar
@@ -4854,9 +4854,7 @@ function _p30_comprar()
                 centrarVentanaInterna(Ext.Msg.show(
                {
                    title    : 'Tr&aacute;mite generado'
-                   ,msg     : 'La cotizaci&oacute;n '+_fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()+' se guard&oacute; para el tr&aacute;mite '
-                              + json.smap1.ntramite
-                              + '<br/>y no podr&aacute; ser modificada posteriormente'
+                   ,msg     : 'La cotizaci&oacute;n '+_fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()+' se guard&oacute; y no podr&aacute; ser modificada posteriormente'
                    ,buttons : Ext.Msg.OK
                    ,fn      : function()
                    {
@@ -5316,6 +5314,7 @@ function _p30_imprimir()
         {
             url             : _p30_urlObtencionReporteExcel
             ,standardSubmit : true
+            ,target         : '_blank'
             ,params         :
             {
                 'params.pv_cdunieco_i'  : _p30_smap1.cdunieco
@@ -5328,10 +5327,11 @@ function _p30_imprimir()
                 ,cdreporte              : 'REPCOT001'
             }
         });
-        /*Ext.create('Ext.form.Panel').submit(
+        Ext.create('Ext.form.Panel').submit(
         {
             url             : _p30_urlObtencionReporteExcel2
             ,standardSubmit : true
+            ,target         : '_blank'
             ,params         :
             {
                 'params.pv_cdunieco_i'  : _p30_smap1.cdunieco
@@ -5343,7 +5343,7 @@ function _p30_imprimir()
                 ,'params.pv_cdusuari_i' : _p30_smap1.cdusuari
                 ,cdreporte              : 'REPCOT002'
             }
-        });*/
+        });
     }
     debug('<_p30_imprimir');
 }

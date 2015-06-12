@@ -1342,7 +1342,7 @@ function _p28_cotizar(sinTarificar)
                                     ,{
                                         itemId    : '_p28_botonComprar'
                                         ,xtype    : 'button'
-                                        ,text     : 'Emitir'
+                                        ,text     : 'Confirmar cotizaci&oacute;n'
                                         ,icon     : '${ctx}/resources/fam3icons/icons/book_next.png'
                                         ,disabled : true
                                         ,handler  : _p28_comprar
@@ -2406,9 +2406,7 @@ function _p28_comprar()
                 centrarVentanaInterna(Ext.Msg.show(
                {
                    title    : 'Tr&aacute;mite generado'
-                   ,msg     : 'La cotizaci&oacute;n '+_fieldByName('nmpoliza').getValue()+' se guard&oacute; para el tr&aacute;mite '
-                              + json.smap1.ntramite
-                              + '<br/>y no podr&aacute; ser modificada posteriormente'
+                   ,msg     : 'La cotizaci&oacute;n '+_fieldByName('nmpoliza').getValue()+' se guard&oacute; y no podr&aacute; ser modificada posteriormente'
                    ,buttons : Ext.Msg.OK
                    ,fn      : function()
                    {
