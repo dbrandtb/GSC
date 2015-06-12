@@ -168,8 +168,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						cotNeg.setIdCotizaciongs(Integer.valueOf(m.get("IDPROVEEDORUDI")));
 						cotNeg.setMontoCedido(Double.valueOf(m.get("MONTOCEDIDO")));
 						
-//						cotNeg.setNmsolici(Integer.valueOf(m.get("NMSOLICI")));
-//						cotNeg.setTipoCotizacion(m.get("TIPOCOTIZACION"));
+						cotNeg.setNmsolici(Integer.valueOf(m.get("NMSOLICI")));
+						cotNeg.setTipoCotizacion(m.get("TIPOCOTIZACION"));
 						
 						datosCotizacionAuto.setCotizacionNegocio(cotNeg);
 						
@@ -453,7 +453,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 							 */
 							incisoIterado.setNumSerieValido(Boolean.valueOf(row.get("NUMSERIEVALIDO")));
 							
-//							incisoIterado.setAseguradoAlterno(row.get("ASEGURADOALTERNO"));
+							incisoIterado.setAseguradoAlterno(row.get("ASEGURADOALTERNO"));
 							
 							//version
 							Version version=new Version();
