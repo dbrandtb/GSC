@@ -39,6 +39,8 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -54,8 +56,8 @@ import org.springframework.stereotype.Controller;
 public class ConsultasPolizaAction extends PrincipalCoreAction {
 
 	private static final long serialVersionUID = -6321288906841302337L;
-
-	private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(ConsultasPolizaAction.class);
+	
+	final static Logger logger = LoggerFactory.getLogger(ConsultasPolizaAction.class);
 
 	/**
 	 * Success property
@@ -161,7 +163,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			if (lista != null && !lista.isEmpty())
 				datosPoliza = lista.get(0);
 
-			logger.debug("Resultado de la consulta de poliza:" + datosPoliza);
+			logger.debug("Resultado de la consulta de poliza:{}", datosPoliza);
 
 		} catch (Exception e) {
 			logger.error("Error al obtener los datos de la poliza ", e);
@@ -192,8 +194,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			if (lista != null && !lista.isEmpty())
 				datosComplementarios = lista.get(0);
 
-			logger.debug("Resultado de consultaAseguradoDetalle:"
-					+ datosComplementarios);
+			logger.debug("Resultado de consultaAseguradoDetalle:{}", datosComplementarios);
 
 			/*
 			 * PolizaAseguradoVO polizaAseguradoVO = new
@@ -210,8 +211,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			 * if(lista!=null && !lista.isEmpty()) datosPoliza = lista.get(0);
 			 */
 
-			logger.debug("Resultado de la consulta de datos complementarios:"
-					+ datosComplementarios);
+			logger.debug("Resultado de la consulta de datos complementarios:{}", datosComplementarios);
 
 		} catch (Exception e) {
 			logger.error("Error al obtener los datos complementarios ", e);
@@ -237,7 +237,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			datosSuplemento = consultasPolizaManager.obtieneHistoricoPoliza(poliza);
 
 			if (datosSuplemento != null) {
-				logger.debug("Historicos encontrados: " + datosSuplemento.size());
+				logger.debug("Historicos encontrados: {}", datosSuplemento.size());
 			}
 
 			if (datosSuplemento != null && !datosSuplemento.isEmpty()) {
@@ -247,7 +247,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 										datosSuplemento.get(0).getCdramo(), 
 										datosSuplemento.get(0).getEstado(), 
 										datosSuplemento.get(0).getNmpoliza()));
-					logger.debug("Mensaje para Agente: " + mensajeRes);
+					logger.debug("Mensaje para Agente: {}", mensajeRes);
 				} catch (Exception e) {
 					logger.error("Error!! no se pudo obtener el mensaje para el Agente de esta poliza!", e);
 				}
@@ -255,7 +255,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 
 		} catch (Exception e) {
 			success = false;
-			logger.error("Error al obtener los consultaDatosSuplemento ", e);
+			logger.error("Error al obtener los consultaDatosSuplemento {}", datosSuplemento, e);
 			return SUCCESS;
 		}
 
@@ -277,7 +277,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			poliza.setIcodpoliza(params.get("icodpoliza"));
 			poliza.setNmpoliex(params.get("nmpoliex"));
 			datosHistorico = consultasPolizaManager.obtieneHistoricoPolizaSISA(poliza);
-			logger.debug("Resultado de la consultaDatosHistorico:" + datosHistorico);
+			logger.debug("Resultado de la consultaDatosHistorico:{}", datosHistorico);
 
 		} catch (Exception e) {
 			success = false;
@@ -310,8 +310,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			if (lista != null && !lista.isEmpty())
 				datosContratante = lista.get(0);
 
-			logger.debug("Resultado de la consulta de contratante:"
-					+ datosContratante);
+			logger.debug("Resultado de la consulta de contratante:{}", datosContratante);
 
 		} catch (Exception e) {
 			logger.error("Error al obtener los datos del contratante ", e);
@@ -443,7 +442,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 						params.get("nombre"));
 
 				if (polizasAsegurado != null) {
-					logger.debug("Polizas por asegurado encontradas: " + polizasAsegurado.size());
+					logger.debug("Polizas por asegurado encontradas: {}", polizasAsegurado.size());
 				}
 			} catch (Exception e) {
 				logger.error("Error al obtener los obtienePolizasAsegurado ", e);
@@ -460,7 +459,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 						params.get("nombre"));
 
 				if (polizasAsegurado != null) {
-					logger.debug("Polizas por asegurado encontradas: " + polizasAsegurado.size());
+					logger.debug("Polizas por asegurado encontradas: {}", polizasAsegurado.size());
 				}
 			} catch (Exception e) {
 				logger.error("Error al obtener los obtienePolizasAsegurado ", e);
@@ -477,7 +476,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 						params.get("nombre"));
 
 				if (polizasAsegurado != null) {
-					logger.debug("Polizas por asegurado encontradas: " + polizasAsegurado.size());
+					logger.debug("Polizas por asegurado encontradas: {}", polizasAsegurado.size());
 				}
 			} catch (Exception e) {
 				logger.error("Error al obtener los obtienePolizasAsegurado ", e);
@@ -501,7 +500,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 					new PolizaVO(params.get("cdunieco"), params.get("cdramo"), params.get("estado"), 
 							params.get("nmpoliza"), params.get("suplemento"), null, null));
 			
-			logger.debug("Resultado de la consultaDatosTarifa:" + datosTarifa);
+			logger.debug("Resultado de la consultaDatosTarifa:{}", datosTarifa);
 		} catch (Exception e) {
 			logger.error("Error al obtener los consultaDatosTarifaPoliza ", e);
 			return SUCCESS;
@@ -529,7 +528,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			recibosAgente = consultasPolizaManager.obtieneRecibosAgente(poliza);
 			
 			if (recibosAgente != null) {
-				logger.debug("Recibos del agente encontrados: " + recibosAgente.size());
+				logger.debug("Recibos del agente encontrados: {}", recibosAgente.size());
 			}
 		} catch (Exception e) {
 			logger.error("Error al obtener los consultaRecibosAgente ", e);
@@ -556,7 +555,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			if (lista != null && !lista.isEmpty()) {
 				agentePoliza = lista.get(0);
 			}
-			logger.debug("Resultado de la consultaAgentesPoliza="+ agentePoliza);
+			logger.debug("Resultado de la consultaAgentesPoliza={}", agentePoliza);
 		} catch (Exception e) {
 			logger.error("Error en consultaAgentesPoliza", e);
 			success = false;
@@ -582,7 +581,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			poliza.setNmsuplem(params.get("suplemento"));
 			poliza.setIcodpoliza(params.get("icodpoliza"));
 			datosAsegurados = consultasPolizaManager.obtieneAsegurados(poliza);
-			logger.debug("Resultado de la consultaDatosAsegurado:" + datosAsegurados);
+			logger.debug("Resultado de la consultaDatosAsegurado:{}", datosAsegurados);
 		} catch (Exception e) {
 			logger.error("Error al obtener los datos del Asegurado ", e);
 			return SUCCESS;
@@ -607,7 +606,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			poliza.setNmsuplem(params.get("suplemento"));
 			poliza.setIcodpoliza(params.get("icodpoliza"));
 			datosCopagosPoliza = consultasPolizaManager.obtieneCopagosPoliza(poliza);
-			logger.debug("Resultado de consultaCopagosPoliza:" + datosCopagosPoliza);
+			logger.debug("Resultado de consultaCopagosPoliza:{}", datosCopagosPoliza);
 		} catch (Exception e) {
 			logger.error("Error al obtener los copagos de la poliza ", e);
 			return SUCCESS;
@@ -635,8 +634,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			datosCoberturasPoliza = consultasPolizaManager
 					.obtieneCoberturasPoliza(poliza);
 
-			logger.debug("Resultado de consultaCoberturasBasicas:"
-					+ datosCoberturasBasicas);
+			logger.debug("Resultado de consultaCoberturasBasicas:{}", datosCoberturasBasicas);
 
 		} catch (Exception e) {
 			logger.error("Error al obtener las coberturas basicas ", e);
@@ -667,8 +665,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			datosCoberturasBasicas = consultasPolizaManager
 					.obtieneCoberturasBasicas(poliza);
 
-			logger.debug("Resultado de consultaCoberturasBasicas:"
-					+ datosCoberturasBasicas);
+			logger.debug("Resultado de consultaCoberturasBasicas:{}", datosCoberturasBasicas);
 
 		} catch (Exception e) {
 			logger.error("Error al obtener las coberturas basicas ", e);
@@ -702,7 +699,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			if (lista != null && !lista.isEmpty())
 				datosPlan = lista.get(0);
 
-			logger.debug("Resultado de la consulta de plan:" + datosPlan);
+			logger.debug("Resultado de la consulta de plan:{}", datosPlan);
 
 		} catch (Exception e) {
 			logger.error("Error al obtener los datos del plan ", e);
@@ -721,7 +718,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	public String verCoberturas() {
 		logger.debug(" **** Entrando a verCoberturas ****");
 		try {
-			logger.debug("params=" + params);
+			logger.debug("params={}", params);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -781,7 +778,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	public String verExclusiones() {
 		logger.debug(" **** Entrando a verExclusiones ****");
 		try {
-			// logger.debug("params=" + params);
+			// logger.debug("params={}" + params);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -805,8 +802,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			datosEndososPoliza = consultasPolizaManager.obtieneEndososPoliza(
 					poliza, asegurado);
 
-			logger.debug("Resultado de consultaEndososPoliza:"
-					+ datosEndososPoliza);
+			logger.debug("Resultado de consultaEndososPoliza:{}", datosEndososPoliza);
 
 		} catch (Exception e) {
 			logger.error("Error al obtener los endosos de la poliza ", e);
@@ -829,8 +825,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			datosAseguradoDetalle = consultasPolizaManager
 					.obtieneAseguradoDetalle(asegurado);
 
-			logger.debug("Resultado de consultaAseguradoDetalle:"
-					+ datosAseguradoDetalle);
+			logger.debug("Resultado de consultaAseguradoDetalle:{}", datosAseguradoDetalle);
 
 		} catch (Exception e) {
 			logger.error("Error al obtener el detalle del asegurado.", e);
@@ -842,9 +837,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	}
 
 	public String obtenerDatosTatrisit() {
-		logger.info("" + "\n######################################"
-				+ "\n###### pantallaConsultaTatrisit ######");
-		logger.info("params: " + params);
+		logger.info("\n######################################\n###### pantallaConsultaTatrisit ######");
+		logger.info("params: {}", params);
 		try {
 			String cdtipsit = params.get("cdtipsit");
 			String cdusuari;
@@ -888,11 +882,9 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			itemMap.put("fieldsModelo", gc.getFields());
 			itemMap.put("itemsFormulario", gc.getItems());
 		} catch (Exception ex) {
-			logger.error("error al generar pantalla de consulta de tatrisit",
-					ex);
+			logger.error("error al generar pantalla de consulta de tatrisit", ex);
 		}
-		logger.info("" + "\n###### pantallaConsultaTatrisit ######"
-				+ "\n######################################");
+		logger.info("\n###### pantallaConsultaTatrisit ######\n######################################");
 		return SUCCESS;
 	}
 
