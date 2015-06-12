@@ -268,7 +268,11 @@ function _datComTurnarSuscripcion()
             
             Ext.onReady(function(){
             	
-            	Ext.Ajax.timeout = 5*60*1000;
+            	// Se aumenta el timeout para todas las peticiones:
+				Ext.Ajax.timeout = 485000; // 8 min
+				Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+				Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+				Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
                 
                 Ext.define('MiModeloDinamico',{
                     extend:'Ext.data.Model',
@@ -1082,7 +1086,6 @@ function _datComTurnarSuscripcion()
 										                                                            	Ext.Ajax.request(
 										                                                            	{
 										                                                            		url     : urlEmitir
-										                                                            		,timeout : 240000
 										                                                            		,params :
 										                                                            		{
 										                                                                        'panel1.pv_nmpoliza'  : inputNmpoliza
@@ -2062,7 +2065,6 @@ function _datComTurnarSuscripcion()
 	                    	Ext.Ajax.request(
 	                            	{
 	                            		url     : urlReintentarWS
-	                            		,timeout: 240000
 	                            		,params :params
 	                            	    ,success:function(response)
 	                            	    {

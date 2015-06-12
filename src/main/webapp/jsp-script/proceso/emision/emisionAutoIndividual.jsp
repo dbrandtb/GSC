@@ -42,6 +42,13 @@ var _mensajeEmail;
 
 Ext.onReady(function()
 {
+	
+	// Se aumenta el timeout para todas las peticiones:
+	Ext.Ajax.timeout = 485000; // 8 min
+	Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+	Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+	Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
+	
 	////// modelos //////
 	Ext.define('_p29_polizaModelo',
 	{
@@ -962,7 +969,6 @@ function _p29_emitirFinal(me)
     Ext.Ajax.request(
     {
         url      : _p29_urlEmitir
-        ,timeout : 240000
         ,params  :
         {
             'panel1.pv_ntramite'  : _p29_smap1.ntramite
@@ -1124,7 +1130,6 @@ function reintentarWSAuto(loading, params){
         	Ext.Ajax.request(
                 	{
                 		url     : urlReintentarWS
-                		,timeout: 240000
                 		,params :params
                 	    ,success:function(response)
                 	    {
