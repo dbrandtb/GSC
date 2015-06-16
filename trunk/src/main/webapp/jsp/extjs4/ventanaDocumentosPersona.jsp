@@ -350,7 +350,7 @@ function _p23_onViewClick(record)
         ,height        : 500
         ,collapsible   : true
         ,titleCollapse : true
-        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" style="overflow: hidden; height: 100%;width: 100%; position: absolute;" height="100%" width="100%"'
                 +'src="'+_p23_urlViewDoc+'?path='+_RUTA_DOCUMENTOS_PERSONA+'&subfolder='+record.get('cdperson')+'&filename='+record.get('cddocume')+'">'
                 +'</iframe>'
         ,listeners     :
