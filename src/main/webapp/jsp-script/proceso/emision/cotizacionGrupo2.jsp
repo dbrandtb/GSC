@@ -79,6 +79,7 @@ var _p25_urlGuardarContratanteColectivo = '<s:url namespace="/emision"         a
 var _p25_urlRecuperarProspecto          = '<s:url namespace="/emision"         action="cargarTramite"                    />';
 var _p25_urlPantallaClausulasPoliza     = '<s:url namespace="/emision"         action="includes/pantallaClausulasPoliza" />';
 var _p25_urlRecuperacionSimpleLista     = '<s:url namespace="/emision"         action="recuperacionSimpleLista"          />';
+var _p25_urlRecuperacionSimple          = '<s:url namespace="/emision"         action="recuperacionSimple"               />';
 var _p25_urlPantallaAgentes             = '<s:url namespace="/flujocotizacion" action="principal"                        />';
 
 var _p25_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports" />';
@@ -998,6 +999,106 @@ Ext.onReady(function()
         });
     }
     
+    try
+    {
+        var recCombo    = _fieldLikeLabel('PERSONALIZA');
+        var recNumber   = _fieldLikeLabel('PAGO FRACCIONADO');
+        var cdperpagCmp = _fieldByName('cdperpag');
+        recNumber.bloqueo = false;
+        recNumber.heredar = function()
+        {
+            var recCombo    = _fieldLikeLabel('PERSONALIZA');
+            var recNumber   = _fieldLikeLabel('PAGO FRACCIONADO');
+            var cdperpagCmp = _fieldByName('cdperpag');
+            if(recCombo.getValue()+'x'=='Nx')
+            {
+                recNumber.hide();
+                recNumber.setValue(0);
+            }
+            else
+            {
+                recNumber.show();
+                if(!Ext.isEmpty(cdperpagCmp.getValue())&&recNumber.bloqueo==false)
+	            {
+	                recNumber.setLoading(true);
+	                Ext.Ajax.request(
+	                {
+	                    url     : _p25_urlRecuperacionSimple
+	                    ,params :
+	                    {
+	                        'smap1.procedimiento' : 'RECUPERAR_PORCENTAJE_RECARGO_POR_PRODUCTO'
+	                        ,'smap1.cdramo'       : _p25_smap1.cdramo
+	                        ,'smap1.cdperpag'     : cdperpagCmp.getValue()
+	                    }
+	                    ,success : function(response)
+	                    {
+	                        var ck = 'Recuperando porcentaje de recargo por producto';
+	                        try
+	                        {
+	                            recNumber.setLoading(false);
+	                            ck = 'Decodificando porcentaje de recargo por producto'; 
+	                            var json=Ext.decode(response.responseText);
+	                            debug('### pago frac:',json);
+	                            if(json.exito)
+	                            {
+    	                            recNumber.setValue(json.smap1.recargo);
+	                            }
+	                            else
+	                            {
+	                                mensajeError(json.respuesta);
+	                            }
+	                        }
+	                        catch(e)
+	                        {
+	                            manejaException(e,ck);
+	                        }
+	                    }
+	                    ,failure : function()
+	                    {
+	                        recNumber.setLoading(false);
+	                        errorComunicacion('Recuperando porcentaje de recargo por producto');
+	                    }
+	                });
+	            }
+            }
+        };
+        
+        //triggers
+        recCombo.on(
+        {
+           change : function()
+           {
+               _fieldLikeLabel('PAGO FRACCIONADO').heredar();
+           }
+        });
+        if(recCombo.store.getCount()>0)
+        {
+            recCombo.setValue('N');
+        }
+        else
+        {
+            recCombo.store.padre=recCombo;
+            recCombo.store.on(
+            {
+                load : function(me)
+                {
+                    me.padre.setValue('N');
+                }
+            });
+        }
+        
+        cdperpagCmp.on(
+        {
+           change : function()
+           {
+               _fieldLikeLabel('PAGO FRACCIONADO').heredar();
+           }
+        });
+    }
+    catch(e)
+    {
+        debugError('Error al customizar recargo personalizado',e);
+    }
     ////// custom //////
     
     ////// loaders //////
@@ -1029,6 +1130,14 @@ Ext.onReady(function()
     else if(_p25_ntramite)
     {
         _p25_tabpanel().setLoading(true);
+        try
+        {
+            _fieldLikeLabel('PAGO FRACCIONADO').bloqueo=true;
+        }
+        catch(e)
+        {
+            debugError('Error al bloquear campo de recargo personalizado',e);
+        }
         Ext.Ajax.request(
         {
             url     : _p25_urlCargarDatosCotizacion
@@ -1153,6 +1262,17 @@ Ext.onReady(function()
                                 ,'smap1.cdramo'   : _p25_smap1.cdramo
                                 ,'smap1.estado'   : _p25_smap1.estado
                                 ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                            }
+                            ,callback : function()
+                            {
+                                try
+						        {
+						            _fieldLikeLabel('PAGO FRACCIONADO').bloqueo=false;
+						        }
+						        catch(e)
+						        {
+						            debugError('Error al desbloquear campo de recargo personalizado',e);
+						        }
                             }
                             ,success : function(response)
                             {
