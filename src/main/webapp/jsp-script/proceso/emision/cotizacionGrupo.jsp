@@ -4162,6 +4162,44 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                             }
                         }
                     }
+                    ,{
+                        xtype             : 'numberfield'
+                        ,fieldLabel       : '<span style="color:white;">Extraprima ocupaci&oacute;n titulares:</span>'
+                        ,name             : 'extrtitu'
+                        ,grupo            : record.get('letra')
+                        ,allowBlank       : false
+                        ,allowDecimals    : true
+                        ,decimalSeparator : '.'
+                    }
+                    ,{
+                        xtype    : 'button'
+                        ,text    : 'Aplicar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/bell_link.png'
+                        ,grupo   : record.get('letra')
+                        ,handler : function(me)
+                        {
+                            var ck = 'Asignando extraprimas de ocupaci&oacute;n';
+                            try
+                            {
+                                var extrCmp = Ext.ComponentQuery.query('[name=extrtitu][grupo='+me.grupo+']')[0];
+                                if(extrCmp.isValid())
+                                {
+                                    extrCmp.up('grid').store.each(function(record)
+                                    {
+                                        debug('record:',record);
+                                        if(record.get('PARENTESCO')=='T')
+                                        {
+                                            record.set('EXTPRI_OCUPACION',extrCmp.getValue());
+                                        }
+                                    });
+                                }
+                            }
+                            catch(e)
+                            {
+                                manejaException(e,ck);
+                            }
+                        }
+                    }
                 ]
                 ,store      : Ext.create('Ext.data.Store',
                 {
