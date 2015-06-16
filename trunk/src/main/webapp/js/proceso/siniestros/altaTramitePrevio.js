@@ -239,7 +239,7 @@ Ext.onReady(function() {
     	displayField: 'value',					valueField: 'key',					queryMode:'local',			emptyText:'Seleccione...',
     	width		 : 300,						store: storeTipoPago,
     	listeners : {
-    		'select':function(e){
+    		'change':function(e){
     			panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
 				storeTipoAtencion.load({
 					params:{

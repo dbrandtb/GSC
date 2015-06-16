@@ -91,7 +91,7 @@ public interface SiniestrosManager {
 	
 	public List<AutorizacionServicioVO> guardarAutorizacionServicio(HashMap<String, Object> paramsR) throws Exception;
 	
-	public List<HashMap<String, String>> loadListaDocumentos(HashMap<String, String> params) throws Exception;
+	public List<HashMap<String, String>> loadListaDocumentos(Map<String, String> params) throws Exception;
 
 	public String generaContraRecibo(HashMap<String, Object> params) throws Exception;
 

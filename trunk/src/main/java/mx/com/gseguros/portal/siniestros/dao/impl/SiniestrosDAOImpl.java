@@ -842,7 +842,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		
 	    @Override
 		public List<HashMap<String, String>> loadListaDocumentos(
-				HashMap<String, String> params) throws Exception {
+				Map<String, String> params) throws Exception {
 			logger.debug(
 					new StringBuilder()
 					.append("\n****************************************************")

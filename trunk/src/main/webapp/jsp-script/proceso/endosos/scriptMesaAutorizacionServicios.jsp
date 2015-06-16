@@ -26,10 +26,8 @@ var _4_authEndUrlDoc      			= '<s:url namespace="/documentos" 	action="ventanaD
 
 var _4_urlPantallaAutServ 			= '<s:url namespace="/siniestros" 	action="autorizacionServicios" />';
 
-var _UrlGenerarAutoServicio     	= '<s:url namespace="/siniestros" 	action="generarAutoriServicio"       />';
 var _UrlAutorizacionServicio    	= '<s:url namespace="/siniestros" 	action="autorizacionServicios" />';
 var _UrlRechazarTramiteWindwow  	= '<s:url namespace="/siniestros" 	action="includes/rechazoReclamaciones" />';
-var _URL_MONTO_MAXIMO				= '<s:url namespace="/siniestros"  	action="consultaMontoMaximo"/>';
 
 var _UrlValidaAutoProceso    		= '<s:url namespace="/siniestros" 	action="validaAutorizacionProceso" />';
 var panDocUrlViewDoc     			= '<s:url namespace ="/documentos" 	action="descargaDocInline" />';
