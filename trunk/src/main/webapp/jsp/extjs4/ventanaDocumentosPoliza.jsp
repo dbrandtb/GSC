@@ -1096,7 +1096,7 @@ Ext.onReady(function()
                 });
         	} else {
         		windowVerDocu.add({
-        			html: '<iframe id="f'+numRand+'" name="f'+numRand+'" innerframe="'+numRand+'" frameborder="0" width="100" height="100" src="'+urlImg+'"></iframe>'
+        			html: '<iframe id="f'+numRand+'" name="f'+numRand+'" innerframe="'+numRand+'" src="'+urlImg+'" frameborder="0" style="overflow: hidden; height: 100%;width: 100%; position: absolute;" height="100%" width="100%"></iframe>'
         		});
         	}
         	
