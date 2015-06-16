@@ -761,7 +761,9 @@ Ext.onReady(function() {
 																                                url     : _URL_PORCENTAJE_PENALIZACION1
 																                                ,params:{
 																                                    'params.zonaContratada': Ext.getCmp('idZonaContratadaPoliza1').getValue(),
-																                                    'params.zonaAtencion': Ext.getCmp('idzonaHospProv1').getValue()
+																                                    'params.zonaAtencion': Ext.getCmp('idzonaHospProv1').getValue(),
+																                                    'params.cdRamo': Ext.getCmp('cmbRamos2').getValue()
+																                                    
 																                                }
 																                                ,success : function (response)
 																                                {

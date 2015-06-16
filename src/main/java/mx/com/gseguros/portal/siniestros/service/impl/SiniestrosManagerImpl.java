@@ -167,7 +167,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		}
 	}
 	@Override
-	public List<HashMap<String, String>> loadListaDocumentos(HashMap<String, String> params)
+	public List<HashMap<String, String>> loadListaDocumentos(Map<String, String> params)
 			throws Exception {
 		try {
 			return siniestrosDAO.loadListaDocumentos(params);

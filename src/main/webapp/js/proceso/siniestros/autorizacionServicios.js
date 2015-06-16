@@ -521,7 +521,13 @@ Ext.onReady(function() {
 	***************************************************/
 	if(valorAction.nmAutSer == null && valorAction.ntramite ==null){
 		cdrol = valorAction.cdrol;
-		storeTipoMedico.load();
+		//storeTipoMedico.load();
+		storeTipoMedico.load({
+			params:{
+				'params.codigo': null
+			}
+		});
+		
 		storeMedico.load();
 		storeProveedor.load();
 		storeTiposICD.load();
@@ -532,7 +538,12 @@ Ext.onReady(function() {
 		storePlazas.load();
 		storeTiposICD.load();
 		storeProveedor.load();
-		storeTipoMedico.load();
+		//storeTipoMedico.load();
+		storeTipoMedico.load({
+			params:{
+				'params.codigo': null
+			}
+		});
 		storeTabulador.load();
 		storeTipoAutorizacion.load();
 		cdrol = valorAction.cdrol;
@@ -1223,6 +1234,12 @@ Ext.onReady(function() {
 				triggerAction: 'all',			name:'idmedicoEqQuirurg',		minChars  : 2,						hideTrigger:true
 				,listeners : {
 					'select' : function(combo, record) {
+						storeTipoMedico.load({
+							params:{
+								'params.codigo': null
+							}
+						});
+						
 						if(this.getValue() =='0'){
 							Ext.getCmp('medicoExtEqQ').setValue('EQUIPO QUIR\u00DARGICO'),
 							Ext.getCmp('medicoExtEqQ').show();
@@ -2355,7 +2372,7 @@ Ext.onReady(function() {
 			}
 			,success : function (response) {
 				var json=Ext.decode(response.responseText).datosAutorizacionEsp;
-				
+				debug("Valor de Respuesta====> ",json);
 				if(json.aplicaCirHos == null ||json.aplicaCirHos ==''){
 					Ext.getCmp('idaplicaCirHosp').setValue('S');
 				}else{
@@ -2420,6 +2437,8 @@ Ext.onReady(function() {
 					}
 				});
 				Ext.getCmp('cmbRamos').setValue(json.cdramo);								// Valor de Ramos
+				panelInicialPrincipal.down('[name="cdperson"]').setReadOnly(false);
+				
 				Ext.getCmp('idComboICD').setValue(json.cdicd);								// Valor de ICD
 				//debug("<--- Valor de cdrol --->",cdrol);
 				if(cdrol == "COORDINAMED"){

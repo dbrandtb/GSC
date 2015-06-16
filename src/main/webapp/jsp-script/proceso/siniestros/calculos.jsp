@@ -36,14 +36,6 @@ debug('_p12_lpdir:'   , _p12_lpdir);
 debug('_p12_lprem:'   , _p12_lprem);
 debug('_p12_listaWS:' , _p12_listaWS);
 
-var _p12_urlObtenerFacturasTramite   = '<s:url namespace="/siniestros"  action="obtenerFacturasTramite"   />';
-var _p12_urlObtenerSiniestrosTramite = '<s:url namespace="/siniestros"  action="obtenerSiniestrosTramite" />';
-var _p12_urlObtenerDatosProveedor    = '<s:url namespace="/siniestros"  action="obtenerDatosProveedor"    />';
-var _p12_urlObtenerConceptosCalculo  = '<s:url namespace="/siniestros"  action="obtenerConceptosCalculo"  />';
-var _p12_urlAutorizaConceptos        = '<s:url namespace="/siniestros"  action="autorizaConcepto"         />';
-var _p12_urlMesaControl              = '<s:url namespace="/mesacontrol" action="mcdinamica"               />';
-var _p12_urlGuardar                  = '<s:url namespace="/siniestros"  action="guardarCalculos"          />';
-
 var _p12_formTramite;
 var _p12_formFactura;
 var _p12_formProveedor;
@@ -164,11 +156,7 @@ Ext.onReady(function()
                     
                     panelFacturasPD.loadRecord(new _p12_Factura(_p12_slist1[indice]));
                     _p12_paneles.push(panelFacturasPD);
-            
-            
-            
-            
-            //
+                    
             for(indiceSiniestro = 0;indiceSiniestro<_p12_slist1[indice].siniestroPD.length ;indiceSiniestro++)
             {
             	debug("VALOR DE _p12_slist1[indice].siniestroPD[indiceSiniestro].conceptosAsegurado");
@@ -225,9 +213,6 @@ Ext.onReady(function()
                     ]
                 });
                 panelSiniestro.loadRecord(new _p12_Siniestro(_p12_slist1[indice].siniestroPD[indiceSiniestro]));
-                
-                //debug("VALOR DE TIPO DE CALCULO");
-                //debug(_p12_slist1[indice].TIPOFORMATOCALCULO);
                 
                 if(_p12_slist1[indice].TIPOFORMATOCALCULO =="1"){
                     debug("HOSPITALIZACION");
@@ -1099,23 +1084,14 @@ Ext.onReady(function()
     	                {
     	                    return Ext.util.Format.usMoney(value);
     	                }
-    	    	    }/*
-    	    	    ,{
-    	    	    	xtype    : 'button'
-    	    	    	,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
-    	    	    	,text    : 'Aceptar y guardar'
-    	    	    	,handler : _p12_guardar_click
-    	    	    }*/
+    	    	    }
     	    	]
     	    }));
     	    
 
     ////// componentes //////
 	
-	////// contenido //////
-	//_p12_formRechazo   = new _p12_FormRechazo();
-	//_p12_windowRechazo = new _p12_WindowRechazo();
-	
+
 	_p12_formAutoriza = Ext.create('Ext.form.Panel',
 	{
 		items : [ <s:property value="imap.autorizaItems" /> ] 
@@ -1206,119 +1182,15 @@ Ext.onReady(function()
 	    ,renderTo : '_p12_divpri'
 	    ,items    :
 	    [
-	        /*{
-	        	xtype     : 'panel'
-	        	,title    : 'C&Aacute;LCULOS DEL TR&Aacute;MITE'
-	        	,items :
-	        	[
-			        {
-			        	xtype   : 'panel'
-			        	,style  : 'margin : 5px;'
-			        	,border : 0
-			        	,icon   : '${ctx}/resources/fam3icons/icons/error.png'
-			        	,title  : 'Al acceder a esta pesta&ntilde;a los c&aacute;lculos anteriores se eliminan y debe guardarlos de nuevo'
-			        }
-	        	]
-	        }
-	        ,*/
 	        _p12_formTramite
 	        ,_p12_formProveedor
-	        //,_p12_formFactura
-	        //,_p12_formSiniestro
 	        ,_p12_panelCalculo
 	    ]
 	});
 	////// contenido //////
-	
-	////// loader //////
-	//_p12_formRechazo.items.items[1].on('select',function(combo, records, eOpts)
-    //{
-	//	_p12_formRechazo.items.items[2].setValue(records[0].get('value'));
-    //});
-	
 	_p12_formTramite.loadRecord(new _p12_Tramite(_p12_smap));
-	//_p12_formFactura.loadRecord(new _p12_Factura(_p12_smap2));
 	_p12_formProveedor.loadRecord(new _p12_Proveedor(_p12_smap3));
-	//_p12_formSiniestro.loadRecord(new _p12_Siniestro(_p12_smap2));
-	/*_p12_storeFacturas.load(
-	{
-		params : { 'smap.ntramite' : _p12_smap.NTRAMITE }
-	});
-	_p12_storeSiniestros.load(
-    {
-        params : { 'smap.ntramite' : _p12_smap.NTRAMITE }
-    });*/
-	////// loader //////
 });
-
-
-
-//////funciones //////
-function _p12_guardar_click()
-{
-	debug('_p12_guardar_click');
-	var ventana = Ext.MessageBox.confirm('Guardar pagos','¿Desea guardar el importe total?',_p12_guardar_confirmar);
-	centrarVentanaInterna(ventana);
-}
-
-function _p12_guardar_confirmar(boton)
-{
-	debug('_p12_guardar_confirmar:',boton);
-	if(boton=='yes')
-	{
-		_p12_guardar();
-	}
-}
-
-function _p12_guardar()
-{
-	debug('_p12_guardar');
-	var valido = _p12_validaAutorizaciones();
-	//console.log(valido);
-	if(valido.length==0)
-	{
-		_p12_panelCalculo.setLoading(true);
-		var esPagoDirecto = _p12_smap.PAGODIRECTO=='S';
-		Ext.Ajax.request(
-		{
-			url       : _p12_urlGuardar
-			,jsonData :
-			{
-				slist1  : _p12_listaWS
-				,slist2 : esPagoDirecto ? [] : _p12_slist1
-			}
-			,success  : function(response)
-			{
-				_p12_panelCalculo.setLoading(false);
-				var json = Ext.decode(response.responseText);
-				debug('respuesta:',json);
-				if(json.success)
-				{
-					mensajeCorrecto('Datos guardados',json.mensaje);
-				}
-				else
-				{
-					mensajeError(json.mensaje);
-				}
-			}
-		    ,failure  : function()
-		    {
-		    	_p12_panelCalculo.setLoading(false);
-		    	errorComunicacion();
-		    }
-		});
-	}
-	else
-	{
-		centrarVentanaInterna(Ext.Msg.show({
-	           title      : 'Error',
-	           msg        : valido,
-	           width      : 600,
-	           icon    	  : Ext.Msg.ERROR,
-	           buttons    : Ext.Msg.OK
-	    }));
-	}
-}
 
 function _p12_validaAutorizaciones()
 {
@@ -1328,53 +1200,11 @@ function _p12_validaAutorizaciones()
 	debug('esPagoDirecto:',esPagoDirecto);
 	if(esPagoDirecto)
 	{
-		//var esHospital = _p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA';
-		//var esHospital = _p12_coberturaxcal[0].tipoFormatoCalculo =='1';
 		var esHospital =  _p12_slist1[0].TIPOFORMATOCALCULO =='1';
 		debug('esHospital:',esHospital);
 		if(esHospital&&false)
 		{
 			debug('validando hospitalizacion pago directo');
-		}
-		else
-		{
-			//VERIFICAR VALIDACIONES DE LAS FACTURAS
-			
-			/*debug('validando pago directo');
-			var i;
-			var factura    = _p12_smap2;
-			var siniestros = _p12_slist1;
-			var conceptos  = _p12_llist1; 
-			
-			for(i=0;i<siniestros.length;i++)
-            {
-				var siniestroIte = siniestros[i];
-				if(factura['AUTRECLA'+siniestroIte.NMSINIES]!='S')
-				{
-					result = result + 'Reclamaciones no autoriza la factura para el siniestro ' + siniestroIte.NMSINIES + '<br/>';
-				}
-				if(false && factura['AUTMEDIC'+siniestroIte.NMSINIES]!='S')
-				{
-					result = result + 'El m&eacute;dico no autoriza la factura para el siniestro ' + siniestroIte.NMSINIES + '<br/>';
-				}
-            }*/
-			/*if(!esHospital)
-			{
-				for(i=0;i<siniestros.length;i++)
-	            {
-	                var siniestroIte = siniestros[i];
-	                var conceptosSiniestro = _p12_llist1[i];
-	                var j;
-	                for(j=0;j<conceptosSiniestro.length;j++)
-	                {
-	                	var conceptoSiniestroIte = conceptosSiniestro[j];
-	                	if(false && conceptoSiniestroIte.AUTMEDIC!='S')
-	                    {
-	                        result = result + 'El m&eacute;dico no autoriza el concepto \'' + conceptoSiniestroIte.OTVALOR + '\' del siniestro ' + siniestroIte.NMSINIES + '<br/>';
-	                    }
-	                }
-	            }
-			}*/
 		}
 	}
 	else

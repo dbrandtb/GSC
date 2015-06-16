@@ -22,16 +22,16 @@ import mx.com.gseguros.portal.siniestros.model.MesaControlVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.json.JSONUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DetalleSiniestroAction extends PrincipalCoreAction {
 
 	private static final long serialVersionUID = 1L;
 
-	private Logger logger = Logger.getLogger(DetalleSiniestroAction.class);
-
+	static final Logger logger = LoggerFactory.getLogger(DetalleSiniestroAction.class);
 	private transient SiniestrosManager siniestrosManager;
 	private PantallasManager       pantallasManager;
 	private KernelManagerSustituto kernelManager;
@@ -41,54 +41,59 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	private boolean success;
 
 	private Map<String, String> loadForm;
-	
 	private List<Map<String, String>> loadList;
-    private List<Map<String, String>> saveList;
-    private List<Map<String, String>> deleteList;
-    private Map<String, String> parametros;
+	private List<Map<String, String>> saveList;
+	private Map<String, String> parametros;
 	private HashMap<String, String> params;
 	private HashMap<String,Object> paramsO;
 	private String                   mensaje;
-	
 	private Map<String,Item> imap;
-	
 	private List<Map<String, String>> siniestro;
-	
 	private List<HistorialSiniestroVO> historialSiniestro;
 	
 	
-	public String execute() throws Exception
-	{
-		
+	public String execute() throws Exception{
 		success = true;
 		return SUCCESS;
 	}
 	
-	//ALTA DE TRAMITE
 	/**
 	* Funcion que visualiza la informacion del historial de reclamaciones
 	* @param params
 	* @return Historial de reclamaciones de siniestros
 	*/
 	public String cargaHistorialSiniestros(){
+		logger.debug(""
+			+ "\n######################################"
+			+ "\n###### cargaHistorialSiniestros ######"
+		);
+		logger.debug("Params: {}", params);
 		try {
 			loadList = siniestrosManager.cargaHistorialSiniestros(params); 
 		}catch( Exception e){
-			logger.error("Error en loadListaFacturasTramite",e);
+			logger.error("Error en loadListaFacturasTramite : {}", e.getMessage(), e);
 			success =  false;
 			return SUCCESS;
 		}
+		logger.debug(""
+			+ "\n###### cargaHistorialSiniestros ######"
+			+ "\n######################################"
+		);
 		success = true;
 		return SUCCESS;
 	}
 
-	//SINIESTROS
 	/**
 	* Funcion para asociar al Siniestro Maestro para GMMI
 	* @param cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac,aaapertu, status, nmsinies, nmsiniesRef
 	* @return exito si se asocia el siniestro
 	*/
 	public String asociaMsiniestroReferenciado() throws Exception {
+		logger.debug(""
+			+ "\n##########################################"
+			+ "\n###### asociaMsiniestroReferenciado ######"
+		);
+		logger.debug("Params: {}", params);
 		try {
 			siniestrosManager.actualizaMsiniestroReferenciado(
 				params.get("cdunieco"), params.get("cdramo"),
@@ -98,8 +103,12 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				params.get("nmsinies"), params.get("nmsiniesRef"));
 			success = true;
 		} catch(Exception e) {
-			logger.error("Error en actualizaDatosGeneralesSiniestro", e);
+			logger.error("Error en actualizaDatosGeneralesSiniestro : {}", e.getMessage(), e);
 		}
+		logger.debug(""
+			+ "\n###### asociaMsiniestroReferenciado ######"
+			+ "\n##########################################"
+		);
 		return SUCCESS;
 	}
 	
@@ -109,8 +118,12 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	* @return exito si se asocia el siniestro
 	*/
 	public String actualizaDatosGeneralesSiniestro() throws Exception {
+		logger.debug(""
+			+ "\n##############################################"
+			+ "\n###### actualizaDatosGeneralesSiniestro ######"
+		);
+		logger.debug("Params: {}", params);
 		try {
-			logger.debug("VAlores de entrada : "+params);
 			Date dFeocurre = renderFechas.parse(params.get("feocurre"));
 			String valor = null;
 			if(!params.get("nmautser").toString().equalsIgnoreCase("N/A")){
@@ -140,8 +153,12 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), dFeFactura , params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),dFeEgreso, params.get("diasdedu"),null);
 			success = true;
 		}catch(Exception e){
-			logger.error("Error en actualizaDatosGeneralesSiniestro", e);
+			logger.error("Error en actualizaDatosGeneralesSiniestro {}", e.getMessage(), e);
 		}
+		logger.debug(""
+			+ "\n###### actualizaDatosGeneralesSiniestro ######"
+			+ "\n##############################################"
+		);
 		return SUCCESS;
 	}
 	
@@ -153,13 +170,9 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	public String guardaFacturaTramite() throws ApplicationException{
 		logger.debug(""
 		+ "\n######################################"
-		+ "\n######################################"
-		+ "\n###### GUARDA FACTURA X TRAMITE ######"
-		+ "\n######                          ######"
+		+ "\n######   guardaFacturaTramite   ######"
 		);
-		logger.debug("parametros de entrada PARAMS : "+ params);
-		logger.debug("parametros de entrada PARAMETROS : "+ parametros);
-		
+		logger.debug("Params: {} parametros :{}", params, parametros);
 		try {
 			Date feegreso = null;
 			if(params.get("feegreso").length() > 0){
@@ -207,16 +220,12 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			}
 			actualizaMesaControlSiniestro(params.get("ntramite"));
 		}catch( Exception e){
-			logger.error("Error en guardaListaTramites",e);
+			logger.error("Error en guardaListaTramites : {}", e.getMessage(), e);
 			success =  false;
 			return SUCCESS;
 		}
-	   	
-		
 		logger.debug(""
-		+ "\n######                           ######"
-		+ "\n###### GUARDA FACTURA X TRAMITE  ######"
-		+ "\n#######################################"
+		+ "\n######   guardaFacturaTramite   ######"
 		+ "\n#######################################"
 		);
 		success = true;
@@ -231,11 +240,9 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	public String obtieneMensajeMautSini() throws ApplicationException{
 		logger.debug(""
 		+ "\n######################################"
-		+ "\n######################################"
 		+ "\n######  obtieneMensajeMautSini  ######"
-		+ "\n######                          ######"
 		);
-		logger.debug("parametros de entrada PARAMS : "+ params);
+		logger.debug("Params: {}", params);
 		try {
 			loadList = siniestrosManager.obtenerFacturasTramite(params.get("ntramite"));
 			String mensajeRespuesta ="";
@@ -252,26 +259,24 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			}
 			mensaje = mensajeRespuesta;
 		}catch( Exception e){
-			logger.error("Error en guardaListaTramites",e);
+			logger.error("Error obtieneMensajeMautSini : {}", e.getMessage(), e);
 			success =  false;
 			return SUCCESS;
 		}
 		logger.debug(""
-		+ "\n######                           ######"
 		+ "\n######   obtieneMensajeMautSini  ######"
-		+ "\n#######################################"
 		+ "\n#######################################"
 		);
 		success = true;
 		return SUCCESS;
 	}
 	
-	//////////////// FIN SINIESTRO
-	
-	
-	
 	public void actualizaMesaControlSiniestro (String ntramiteProceso){
-		//obtenemos el total de facturas por el tramite
+		logger.debug(""
+			+ "\n###########################################"
+			+ "\n###### actualizaMesaControlSiniestro ######"
+		);
+		logger.debug("Actualizar Mesa de Control : {}", ntramiteProceso);
 		try{
 			List<Map<String,String>> slist1;
 			slist1 = siniestrosManager.obtenerFacturasTramite(ntramiteProceso);
@@ -281,11 +286,11 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				SumaTotal += Double.parseDouble(slist1.get(i).get("PTIMPORT"));
 				nfacturaInd = slist1.get(i).get("NFACTURA");
 			}
-			logger.debug("Valor de Suma Total ---> "+SumaTotal);
-			logger.debug("Total de Facturas  ---> "+slist1.size());
+			logger.debug("Suma Total : {}", SumaTotal);
+			logger.debug("Total Facturas : {}",slist1.size());
 			//modificamos la mesa de control valores ot
 			List<MesaControlVO> lista = siniestrosManager.getConsultaListaMesaControl(ntramiteProceso);
-			logger.debug("Valores de TMESACONTROL --> : "+lista);
+			logger.debug("Total Registro MC : {}",lista.size());
 			
 			HashMap<String, Object> modMesaControl = new HashMap<String, Object>();
 			modMesaControl.put("pv_ntramite_i",ntramiteProceso);
@@ -318,46 +323,42 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			modMesaControl.put("pv_otvalor20_i",lista.get(0).getOtvalor20mc());
 			siniestrosManager.actualizaValorMC(modMesaControl);
 		}catch( Exception e){
-			logger.error("Error al modificar la Mesa de control",e);
+			logger.error("Error al actualizar la Mesa de Control: {}", e.getMessage(), e);
 		}
+		logger.debug(""
+			+ "\n###### actualizaMesaControlSiniestro ######"
+			+ "\n###########################################"
+		);
 	}
 
 	public String detalleSiniestro() throws Exception
 	{
 		logger.debug(""
-				+ "\n####################################"
-				+ "\n####################################"
-				+ "\n###### DetalleSiniestroAction ######"
-				+ "\n######                        ######"
-				);
-		logger.debug("params:"+params);
+			+ "\n####################################"
+			+ "\n###### DetalleSiniestroAction ######"
+		);
+		logger.debug("Params: {}", params);
 		UserVO usuario= (UserVO)session.get("USUARIO");
 		params.put("cdrol", usuario.getRolActivo().getClave());
 		
-		if(!params.containsKey("nmsinies"))
-		{
+		if(!params.containsKey("nmsinies")){
 			try{
 				String ntramite = params.get("ntramite");
 				usuario= (UserVO)session.get("USUARIO");
 				params.put("cdrol", usuario.getRolActivo().getClave());
-				
 				Map<String,String> paramsRes = (HashMap<String, String>) siniestrosManager.obtenerLlaveSiniestroReembolso(ntramite);
 				
 				for(Entry<String,String>en:paramsRes.entrySet()){
 					params.put(en.getKey().toLowerCase(),en.getValue());
 					params.put("cdrol", usuario.getRolActivo().getClave());
 				}
-				
 			}catch(Exception ex){
-				logger.error("error al obtener clave de siniestro para la pantalla del tabed panel",ex);
+				logger.error("Error la obtener clave de siniestro : {}", ex.getMessage(), ex);
 			}
 		}
-		
-		logger.debug("params obtenidos:"+params);
+		logger.debug("Params obtenidos: {}", params);
 		logger.debug(""
-				+ "\n######                        ######"
 				+ "\n###### DetalleSiniestroAction ######"
-				+ "\n####################################"
 				+ "\n####################################"
 				);
 		success = true;
@@ -366,15 +367,25 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	
 	
 	public String loadInfoGeneralReclamacion() {
+		logger.debug(""
+			+ "\n########################################"
+			+ "\n###### loadInfoGeneralReclamacion ######"
+		);
+		logger.debug(""
+			+ "\n###### loadInfoGeneralReclamacion ######"
+			+ "\n########################################"
+		);
 		success = true;
 		return SUCCESS;
 	}
 	
-	
 	public String entradaRevisionAdmin(){
+		logger.debug(""
+			+ "\n####################################"
+			+ "\n######  entradaRevisionAdmin  ######"
+		);
+		logger.debug("paramis RevisionAdmin: {}", params);
 		try {
-			logger.debug("Obteniendo Columnas dinamicas de Revision Administrativa");
-			
 			UserVO usuario  = (UserVO)session.get("USUARIO");
 			String cdrol    = usuario.getRolActivo().getClave();
 			params.put("cdrol", usuario.getRolActivo().getClave());
@@ -393,7 +404,6 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			}
 			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-			
 			imap = new HashMap<String,Item>();
 			
 			List<ComponenteVO>tatrisin=kernelManager.obtenerTatrisinPoliza(cdunieco,cdramo,estado,nmpoliza);
@@ -404,7 +414,6 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			gc.generaComponentes(componentes, true, false, false, true,false, false);
 			
 			imap.put("gridColumns",gc.getColumns());
-			
 			pantalla = "DETALLE_FACTURA";
 			seccion  = "BOTONES_CONCEPTOS";
 			
@@ -427,20 +436,27 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			gc.generaComponentes(componentes, true, false, true, false, false, false);
 			imap.put("itemsCancelar",gc.getItems());
 			
-			logger.debug("Resultado: "+imap);
-			//siniestrosManager.guardaListaTramites(params, deleteList, saveList);
+			logger.debug("Resultado de imap : {}", imap);
 		}catch( Exception e){
-			logger.error("Error en guardaListaTramites",e);
+			logger.error("Error al mostrar los datos {}", e.getMessage(), e);
 			success =  false;
 			return SUCCESS;
 		}
+		logger.debug(""
+			+ "\n######  entradaRevisionAdmin  ######"
+			+ "\n####################################"
+		);
 		success = true;
 		return SUCCESS;
 	}
 	
 	public String entradaRevisionAdminConsulta(){
-	try {
-			logger.debug("Obteniendo Columnas dinamicas de Revision Administrativa");
+		logger.debug(""
+			+ "\n##########################################"
+			+ "\n###### entradaRevisionAdminConsulta ######"
+		);
+		logger.debug("EntradaRevisionAdminConsulta : {}",params);
+		try {
 			UserVO usuario  = (UserVO)session.get("USUARIO");
 			String cdrol    =  RolSistema.COORDINADOR_SINIESTROS.getCdsisrol();
 			String pantalla = "AFILIADOS_AGRUPADOS";
@@ -491,32 +507,49 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			gc.generaComponentes(componentes, true, false, true, false, false, false);
 			imap.put("itemsCancelar",gc.getItems());
 
-			logger.debug("Resultado: "+imap);
+			logger.debug("Resultado: {} ",imap);
 			//siniestrosManager.guardaListaTramites(params, deleteList, saveList);
 		}catch( Exception e){
-			logger.error("Error en guardaListaTramites",e);
+			logger.error("Error en guardaListaTramites : {}", e.getMessage(), e);
 			success =  false;
 			return SUCCESS;
 		}
-	success = true;
-	return SUCCESS;
+		logger.debug(""
+			+ "\n###### entradaRevisionAdminConsulta ######"
+			+ "\n##########################################"
+		);
+		success = true;
+		return SUCCESS;
 	}
 	
 	public String loadListaFacturasTramite(){
+		logger.debug(""
+			+ "\n######################################"
+			+ "\n###### loadListaFacturasTramite ######"
+		);
+		logger.debug("Valores de entrada: {}",params);
 		try {
-			logger.debug("Valores de entrada "+params);
 			loadList = siniestrosManager.P_GET_FACTURAS_SINIESTRO(params.get("cdunieco"), params.get("cdramo"), params.get("estado"), params.get("nmpoliza"), params.get("nmsuplem"), params.get("nmsituac"), params.get("aaapertu"), params.get("status"), params.get("nmsinies"), params.get("cdtipsit")); 
-			logger.debug("Valores de retorno "+loadList);
+			logger.debug("Valores recuperados: {}",loadList);
 		}catch( Exception e){
-			logger.error("Error en loadListaFacturasTramite",e);
+			logger.error("Error loadListaFacturasTramite : {}", e.getMessage(), e);
 			success =  false;
 			return SUCCESS;
 		}
+		logger.debug(""
+			+ "\n###### loadListaFacturasTramite ######"
+			+ "\n######################################"
+		);
 		success = true;
 		return SUCCESS;
 	}
 
 	public String obtieneDatosGeneralesSiniestro() throws Exception {
+		logger.debug(""
+			+ "\n############################################"
+			+ "\n###### obtieneDatosGeneralesSiniestro ######"
+		);
+		logger.debug("Valores de entrada: {}",params);
 		try {
 			siniestro = siniestrosManager.obtieneDatosGeneralesSiniestro(
 					params.get("cdunieco"), params.get("cdramo"),
@@ -526,8 +559,13 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 					params.get("nmsinies"), params.get("ntramite"));
 			success = true;
 		}catch(Exception e){
-			logger.error("Error en obtieneDatosGeneralesSiniestro", e);
+			logger.error("Error en obtieneDatosGeneralesSiniestro : {}", e.getMessage(), e);
+			
 		}
+		logger.debug(""
+			+ "\n###### obtieneDatosGeneralesSiniestro ######"
+			+ "\n############################################"
+		);
 		return SUCCESS;
 	}
 	
@@ -547,7 +585,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		try {
 			return JSONUtil.serialize(loadForm);
 		} catch (Exception e) {
-			logger.error("Error al generar JSON de LoadForm",e);
+			logger.error("Error al generar JSON de LoadForm {}", e.getMessage(), e);
 			return null;
 		}
 	}
