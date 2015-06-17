@@ -156,7 +156,8 @@
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
 					success,
-					mesesTiempoEspera
+					mesesTiempoEspera,
+					mensaje
 				</param>
 			</result>
 		</action>

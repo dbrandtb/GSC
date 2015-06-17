@@ -42,11 +42,7 @@ public class AjustesMedicosSiniestrosAction extends PrincipalCoreAction {
 	}
 
 	public String obtenerTdsinival(){
-		logger.debug(""
-			+ "\n##############################"
-			+ "\n###### obtenerTdsinival ######"
-		);
-		logger.debug("params: {}",params);
+		logger.debug("Entra a obtenerTdsinival params: {}",params);
 		try{
 			String cdunieco = params.get("cdunieco");
 			String cdramo   = params.get("cdramo");
@@ -76,19 +72,11 @@ public class AjustesMedicosSiniestrosAction extends PrincipalCoreAction {
 			success = false;
 			mensaje = ex.getMessage();
 		}
-		logger.debug(""
-			+ "\n###### obtenerTdsinival ######"
-			+ "\n##############################"
-		);
 		return SUCCESS;
 	}
 
 	public String guardarTdsinival(){
-		logger.debug(""
-			+ "\n##############################"
-			+ "\n###### guardarTdsinival ######"
-		);
-		logger.debug("params: {}",params);
+		logger.debug("Entra a guardarTdsinival params: {}",params);
 		try{
 			UserVO usuario = (UserVO)session.get("USUARIO");
 			String cdunieco  = params.get("cdunieco");
@@ -126,21 +114,13 @@ public class AjustesMedicosSiniestrosAction extends PrincipalCoreAction {
 			success=false;
 			mensaje=ex.getMessage();
 		}
-		logger.debug(""
-			+ "\n###### guardarTdsinival ######"
-			+ "\n##############################"
-		);
 		return SUCCESS;
 	}
 
 
 	public String eliminarTdsinival()
 	{
-		logger.debug(""
-			+ "\n###############################"
-			+ "\n###### eliminarTdsinival ######"
-		);
-		logger.debug("params: {}",params);
+		logger.debug("Entra a eliminarTdsinival params: {}",params);
 		try{
 			UserVO usuario = (UserVO)session.get("USUARIO");
 			String cdunieco  = params.get("cdunieco");
@@ -179,19 +159,11 @@ public class AjustesMedicosSiniestrosAction extends PrincipalCoreAction {
 			success=false;
 			mensaje=ex.getMessage();
 		}
-		logger.debug(""
-			+ "\n###### eliminarTdsinival ######"
-			+ "\n###############################"
-		);
 		return SUCCESS;
 	}
 
 	public String modificarTdsinival(){
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n######   modificarTdsinival   ######"
-		);
-		logger.debug("params: {}",params);
+		logger.debug("Entra a modificarTdsinival params: {}",params);
 		try{
 			UserVO usuario = (UserVO)session.get("USUARIO");
 			String cdunieco  = params.get("cdunieco");
@@ -230,10 +202,6 @@ public class AjustesMedicosSiniestrosAction extends PrincipalCoreAction {
 			success=false;
 			mensaje=ex.getMessage();
 		}
-		logger.debug(""
-			+ "\n######   modificarTdsinival   ######"
-			+ "\n####################################"
-			);
 		return SUCCESS;
 	}
 
