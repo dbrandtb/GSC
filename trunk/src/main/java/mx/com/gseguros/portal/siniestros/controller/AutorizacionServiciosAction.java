@@ -335,7 +335,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 					paramsMCAut.put("pv_nmsuplem_i",params.get("nmsuplem"));
 					paramsMCAut.put("pv_cdsucadm_i",null);
 					paramsMCAut.put("pv_cdsucdoc_i",null);
-					paramsMCAut.put("pv_cdtiptra_i","14");
+					paramsMCAut.put("pv_cdtiptra_i",TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra());
 					paramsMCAut.put("pv_ferecepc_i",null);
 					paramsMCAut.put("pv_cdagente_i",null);
 					paramsMCAut.put("pv_referencia_i",null);
