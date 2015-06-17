@@ -898,30 +898,26 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Lista CoberturaPolizaVO con la informacion de los asegurados
 	*/
 	public String consultaListaCoberturaPoliza(){
-		logger.debug(""
-				+ "\n##########################################"
-				+ "\n###### consultaListaCoberturaPoliza ######"
-			);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("params de entrada de consultaListaCoberturaPoliza :{}",params);
 		try {
-			HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
-			paramCobertura.put("pv_cdunieco_i",params.get("cdunieco"));
-			paramCobertura.put("pv_estado_i",params.get("estado"));
-			paramCobertura.put("pv_cdramo_i",params.get("cdramo"));
-			paramCobertura.put("pv_nmpoliza_i",params.get("nmpoliza"));
-			paramCobertura.put("pv_nmsituac_i",params.get("nmsituac"));
-			paramCobertura.put("pv_cdgarant_i",params.get("cdgarant"));
-			
-			List<CoberturaPolizaVO> lista = siniestrosManager.getConsultaListaCoberturaPoliza(paramCobertura);
-			if(lista!=null && !lista.isEmpty())	listaCoberturaPoliza = lista;
+			if(params != null) {
+				HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
+				paramCobertura.put("pv_cdunieco_i",params.get("cdunieco"));
+				paramCobertura.put("pv_estado_i",params.get("estado"));
+				paramCobertura.put("pv_cdramo_i",params.get("cdramo"));
+				paramCobertura.put("pv_nmpoliza_i",params.get("nmpoliza"));
+				paramCobertura.put("pv_nmsituac_i",params.get("nmsituac"));
+				paramCobertura.put("pv_cdgarant_i",params.get("cdgarant"));
+				
+				List<CoberturaPolizaVO> lista = siniestrosManager.getConsultaListaCoberturaPoliza(paramCobertura);
+				if(lista!=null && !lista.isEmpty())	listaCoberturaPoliza = lista;
+			} else {
+				logger.warn("No se ejecutó la consultaListaCoberturaPoliza, parametros nulos");
+			}
 		}catch( Exception e){
 			logger.error("Error al obtener la lista de la cobertura de la poliza : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-				+ "\n###### consultaListaCoberturaPoliza ######"
-				+ "\n##########################################"
-			);
 		success = true;
 		return SUCCESS;
 	}
