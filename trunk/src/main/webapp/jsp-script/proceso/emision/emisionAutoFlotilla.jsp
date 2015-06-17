@@ -185,12 +185,19 @@ Ext.onReady(function()
         }
         ,listeners :
         {
-            load : function(store,records)
+            load : function(store,records,success)
             {
-                this.cargado=true;
-                _fieldById('_p31_gridIncisos').getView().refresh();
-                _fieldById('_p31_panelStoreCdtipsit').destroy();
-                debug('### cdtipsit:',records);
+                if(success)
+                {
+                    this.cargado=true;
+                    _fieldById('_p31_gridIncisos').getView().refresh();
+                    _fieldById('_p31_panelStoreCdtipsit').destroy();
+                    debug('### cdtipsit:',records);
+                }
+                else
+                {
+                    _fieldById('_p31_panelStoreCdtipsit').setBodyStyle('border:2px solid red;');
+                }
             }
         }
     });
@@ -217,11 +224,18 @@ Ext.onReady(function()
         }
         ,listeners :
         {
-            load : function()
+            load : function(me,rec,success)
             {
-                this.cargado=true;
-                _fieldById('_p31_gridIncisos').getView().refresh();
-                _fieldById('_p31_panelStoreVersiones').destroy();
+                if(success)
+                {
+	                this.cargado=true;
+	                _fieldById('_p31_gridIncisos').getView().refresh();
+	                _fieldById('_p31_panelStoreVersiones').destroy();
+                }
+                else
+                {
+                    _fieldById('_p31_panelStoreVersiones').setBodyStyle('border:2px solid red;');
+                }
             }
         }
     });
@@ -1426,27 +1440,57 @@ function _p31_renderer(record,mapeo)
                     else
                     {
                         label='Error...';//'-sin store-';
-                        var store=Ext.getStore(origen);
-                        if(Ext.isEmpty(store))
+                        var fuentes      = '';
+                        var valorFuentes = false;
+                        if(origen.lastIndexOf('!')!=-1)
                         {
-                            debugError('No hay store:',origen);
-                            mensajeError('No se encuentra la colecci&oacute;n con id "'+origen+'"');
+                            fuentes = origen.split('!')[1];
+                            origen  = origen.split('!')[0];
                         }
-                        if(!Ext.isEmpty(store)&&store.cargado)
+                        
+                        if(!Ext.isEmpty(fuentes))
                         {
-                            var index = store.find('key',valor,0,false,false,true);
-                            if(index==-1)
+                            var pares = fuentes.split('-');
+                            for (var paresI in pares)
                             {
-                                label='No encontrado...';
-                            }
-                            else
-                            {
-                                label=store.getAt(index).get('value');
+                                var parIzq = pares[paresI].split(':')[0];
+                                var parDer = pares[paresI].split(':')[1];
+                                if(parIzq==cdtipsit)
+                                {
+                                    var parDerFull = 'parametros.pv_otvalor'+(('00'+parDer).slice(-2));
+                                    if('x'+record.get(parDerFull)!='x')
+                                    {
+                                        label        = record.get(parDerFull);
+                                        valorFuentes = true;
+                                    }
+                                }
                             }
                         }
-                        else
+                        
+                        if(!valorFuentes)
                         {
-                            label = 'Cargando...';
+	                        var store=Ext.getStore(origen);
+	                        if(Ext.isEmpty(store))
+	                        {
+	                            debugError('No hay store:',origen);
+	                            mensajeError('No se encuentra la colecci&oacute;n con id "'+origen+'"');
+	                        }
+	                        if(!Ext.isEmpty(store)&&store.cargado)
+	                        {
+	                            var index = store.find('key',valor,0,false,false,true);
+	                            if(index==-1)
+	                            {
+	                                label='No encontrado...';
+	                            }
+	                            else
+	                            {
+	                                label=store.getAt(index).get('value');
+	                            }
+	                        }
+	                        else
+	                        {
+	                            label = 'Cargando...';
+	                        }
                         }
                     }
                 }
