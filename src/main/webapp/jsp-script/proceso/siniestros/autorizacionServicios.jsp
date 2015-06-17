@@ -2,8 +2,8 @@
 <%@ include file="/taglibs.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-    <head>
-        <title>Autorizaci&oacute;n de servicio</title>
+	<head>
+    <title>Autorizaci&oacute;n de servicio</title>
         
         <script type="text/javascript">
             var _CONTEXT = '${ctx}'; 
@@ -17,9 +17,15 @@
             var _CAT_PROVEEDORES                    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
             var _SINO								= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SINO" />';
             
+            var _SALUD_VITAL						= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SALUD_VITAL.cdramo" />';
+            var _MULTISALUD							= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo" />';
+            var _GMMI								= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES.cdramo" />';
+            var _RECUPERA							= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo" />';
+            
             var _CODIGO_CAUSA_ENFERMEDAD		    = '<s:property value="@mx.com.gseguros.portal.general.util.CausaSiniestro@ENFERMEDAD.codigo"/>';
             var _CODIGO_CAUSA_ACCIDENTE			    = '<s:property value="@mx.com.gseguros.portal.general.util.CausaSiniestro@ACCIDENTE.codigo"/>';
             var _CODIGO_CAUSA_MATERNIDAD		    = '<s:property value="@mx.com.gseguros.portal.general.util.CausaSiniestro@MATERNIDAD.codigo"/>';
+            var _AUTORIZACION_SERVICIO			    = '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@AUTORIZACION_SERVICIOS.cdtiptra"/>';	
             
             var _URL_TIPO_AUTORIZACION				= _CONTEXT + '/js/proceso/siniestros/tiposAutorizacion.json';
             
@@ -69,7 +75,7 @@
             var _URL_PORCENTAJE_QUIRURGICO        	= '<s:url namespace="/siniestros" action="consultaPorcentajeQuirurgico" />';
             var _URL_LOADER_HISTORIAL_RECLAMACIONES= '<s:url namespace="/siniestros"	 action="includes/historialReclamaciones" />';
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
-            
+            debug("valor d_SALUD_VITAL --->",_SALUD_VITAL);
         </script>
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/autorizacionServicios.js?${now}"></script>
         <!-- <script type="text/javascript" src="${ctx}/js/proceso/siniestros/verAutorizacionServicios.js"></script> -->

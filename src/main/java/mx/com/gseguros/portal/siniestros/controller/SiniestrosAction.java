@@ -20,7 +20,6 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasAseguradoManager;
-import mx.com.gseguros.portal.cotizacion.controller.MesaControlAction;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
@@ -135,11 +134,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return PolizaVigenteVO - Informacion de Poliza en especifico
 	*/
 	public String consultaPolizaUnica(){
-		logger.debug(""
-			+ "\n#################################"
-			+ "\n###### consultaPolizaUnica ######"
-		);
-		logger.debug("params : {}",params);
+		logger.debug("Entra a consultaPolizaUnica params : {}",params);
 		try {
 			HashMap<String, Object> paramPolUnica = new HashMap<String, Object>();
 			paramPolUnica.put("pv_cdunieco_i",params.get("cdunieco"));
@@ -153,10 +148,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("Error al obtener los datos de la poliza unica : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaPolizaUnica ######"
-			+ "\n#################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -167,11 +158,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Nuevo tramite
 	*/
 	public String solicitarComplemento(){
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n######  solicitarComplemento  ######"
-		);
-		logger.debug("params : {}",params);
+		logger.debug("Entra a SolicitarComplemento params : {}",params);
 		try{
 			List<MesaControlVO> listaMesaControl = siniestrosManager.getConsultaListaMesaControl(params.get("pv_ntramite_i"));
 			logger.debug("Total Registros MC : {}", listaMesaControl.size());
@@ -558,10 +545,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("Error al generar el complemento del tramite : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n######  solicitarComplemento  ######"
-			+ "\n####################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -572,11 +555,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return List<Map<String, String>>  de las facturas del tramite
 	*/ 
 	public String obtenerFacturasTramite() {
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n###### obtenerFacturasTramite ######"
-		);
-		logger.debug("smap :{}",smap);
+		logger.debug("Entra a obtenerFacturasTramite smap :{}",smap);
 		try{
 			slist1=siniestrosManager.obtenerFacturasTramite(smap.get("ntramite"));
 			mensaje="Facturas obtenidas";
@@ -587,10 +566,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("Error al obtener facturas de tramite : {}", ex.getMessage(), ex);
 			mensaje=ex.getMessage();
 		}
-		logger.debug(""
-			+ "\n###### obtenerFacturasTramite ######"
-			+ "\n####################################"
-		);
 		return SUCCESS;
 	}
 
@@ -600,11 +575,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return PolizaVigenteVO con la informacion de los asegurados
 	*/ 
 	public String consultaListaPoliza(){
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n######  consultaListaPoliza   ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a consultaListaPoliza params de entrada :{}",params);
 		try {
 			List<PolizaVigenteVO> lista = siniestrosManager.getConsultaListaPoliza(params.get("cdperson"), params.get("cdramo"));
 			if(lista!=null && !lista.isEmpty())	listaPoliza = lista;
@@ -612,10 +583,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("Error al obtener los datos de la poliza : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-				+ "\n######  consultaListaPoliza   ######"
-				+ "\n####################################"
-			);
 		success = true;
 		return SUCCESS;
 	}
@@ -626,21 +593,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Lista GenericVO con la informacion de los asegurados
 	*/    
 	public String consultaListaAsegurado(){
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n###### consultaListaAsegurado ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a consultaListaAsegurado params de entrada :{}",params);
 		try {
 			listaAsegurado= siniestrosManager.getConsultaListaAsegurado(params.get("cdperson"));
 		}catch( Exception e){
 			logger.error("Error al consultar la Lista de los asegurados : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaListaAsegurado ######"
-			+ "\n####################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -651,21 +610,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Lista GenericVO con la informacion de los asegurados
 	*/    
 	public String consultaListaAseguradoPoliza(){
-		logger.debug(""
-			+ "\n##########################################"
-			+ "\n###### consultaListaAseguradoPoliza ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a consultaListaAseguradoPoliza params de entrada :{}",params);
 		try {
 			listaAsegurado= siniestrosManager.getConsultaListaAseguradoPoliza(params.get("cdunieco"),params.get("cdramo"),params.get("estado"),params.get("nmpoliza"));
 		}catch( Exception e){
 			logger.error("Error al consultar la Lista de los asegurados : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaListaAseguradoPoliza ######"
-			+ "\n##########################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -676,21 +627,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Lista GenericVO - Informacion de los ramos
 	*/    
 	public String consultaRamosSalud(){
-		logger.debug(""
-				+ "\n####################################"
-				+ "\n######   consultaRamosSalud   ######"
-			);
-		logger.debug(" **** Entrando al metodo para la consulta de Ramos para salud ****");
+		logger.debug("Entra a consultaRamosSalud");
 		try {
 			listadoRamosSalud = siniestrosManager.getConsultaListaRamoSalud();
 		}catch( Exception e){
 			logger.error("Error al consultar los ramos para Salud : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-				+ "\n######   consultaRamosSalud   ######"
-				+ "\n####################################"
-			);
 		success = true;
 		return SUCCESS;
 	}
@@ -701,10 +644,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return List<HashMap<String, String>> - Motivo de rechazo
 	*/
 	public String loadListaRechazos(){
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n######   loadListaRechazos    ######"
-		);
+		logger.debug("Entra a loadListaRechazos");
 		try {
 			loadList = new ArrayList<HashMap<String,String>>();
 			List<Map<String,String>>lista=siniestrosManager.loadListaRechazos();
@@ -719,10 +659,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			success =  false;
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n######   loadListaRechazos    ######"
-			+ "\n####################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -733,10 +669,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return List<HashMap<String, String>> - incisos de rechazo
 	*/
 	public String loadListaIncisosRechazos(){
-		logger.debug(""
-			+ "\n######################################"
-			+ "\n###### loadListaIncisosRechazos ######"
-		);
+		logger.debug("Entra a loadListaIncisosRechazos");
 		try {
 			loadList = new ArrayList<HashMap<String,String>>();
 			List<Map<String,String>>lista= siniestrosManager.loadListaIncisosRechazos(params);
@@ -751,10 +684,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			success =  false;
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### loadListaIncisosRechazos ######"
-			+ "\n######################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -765,10 +694,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return PDF - Carta de rechazo
 	*/
 	public String generaCartaRechazo(){
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n######   generaCartaRechazo   ######"
-		);
+		logger.debug("Entra a generaCartaRechazo");
 		try {
 			logger.debug("generaCartaRechazo Siniestros");
 			UserVO usuario=(UserVO)session.get("USUARIO");
@@ -834,10 +760,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			success =  false;
 			return SUCCESS;
 		}
-		logger.debug(""
-				+ "\n######   generaCartaRechazo   ######"
-				+ "\n####################################"
-			);
 		success = true;
 		return SUCCESS;
 	}
@@ -848,21 +770,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return usuarioTurnadoSiniestro - Usuario al que se le turno el tramite
 	*/    
 	public String obtieneUsuarioTurnado(){
-		logger.debug(""
-				+ "\n####################################"
-				+ "\n###### obtieneUsuarioTurnado  ######"
-			);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a obtieneUsuarioTurnado params de entrada :{}",params);
 		try {
 			usuarioTurnadoSiniestro = siniestrosManager.obtieneUsuarioTurnadoSiniestro(params.get("ntramite"),params.get("rolDestino"));
 		}catch( Exception e){
 			logger.error("Error al consultar el periodo de espera en meses : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-				+ "\n###### obtieneUsuarioTurnado  ######"
-				+ "\n####################################"
-			);
 		success = true;
 		return SUCCESS;
 	}
@@ -873,21 +787,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return datosInformacionAdicional informacion adicional
 	*/
 	public String obtieneRequiereAutServ(){
-		logger.debug(""
-				+ "\n####################################"
-				+ "\n###### obtieneRequiereAutServ ######"
-			);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a obtieneRequiereAutServ params de entrada :{}",params);
 		try {
 			datosInformacionAdicional = siniestrosManager.requiereInformacionAdicional(params.get("cobertura"),params.get("subcobertura"),params.get("cdramo"),params.get("cdtipsit"));
 		}catch( Exception e){
 			logger.error("Error al obtener si requiere autorizacion servicio : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-				+ "\n###### obtieneRequiereAutServ ######"
-				+ "\n####################################"
-			);
 		success = true;
 		return SUCCESS;
 	}
@@ -898,11 +804,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Lista CoberturaPolizaVO con la informacion de los asegurados
 	*/
 	public String consultaListaCoberturaPoliza(){
-		logger.debug(""
-				+ "\n##########################################"
-				+ "\n###### consultaListaCoberturaPoliza ######"
-			);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a consultaListaCoberturaPoliza params de entrada :{}",params);
 		try {
 			HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
 			paramCobertura.put("pv_cdunieco_i",params.get("cdunieco"));
@@ -918,10 +820,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("Error al obtener la lista de la cobertura de la poliza : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-				+ "\n###### consultaListaCoberturaPoliza ######"
-				+ "\n##########################################"
-			);
 		success = true;
 		return SUCCESS;
 	}
@@ -933,11 +831,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Lista GenericVO con la informacion de los asegurados
 	*/    
 	public String consultaListaSubcobertura(){
-		logger.debug(""
-				+ "\n#######################################"
-				+ "\n###### consultaListaSubcobertura ######"
-			);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a consultaListaSubcobertura params de entrada :{}",params);
 		try {
 			//cdunieco, cdramo, estado, nmpoliza, nmsituac, cdtipsit, cdgarant, cdsubcob
 			listaSubcobertura= siniestrosManager.getConsultaListaSubcobertura(params.get("cdunieco"),params.get("cdramo"), params.get("estado"),
@@ -946,10 +840,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("Error al consultar la Lista de subcoberturas : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-				+ "\n###### consultaListaSubcobertura ######"
-				+ "\n#######################################"
-			);
 		success = true;
 		return SUCCESS;
 	}
@@ -960,11 +850,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Lista GenericVO - Tipo de Atencion
 	*/    
 	public String consultaListaTipoAtencion(){
-		logger.debug(""
-			+ "\n#######################################"
-			+ "\n###### consultaListaTipoAtencion ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a consultaListaTipoAtencion params de entrada :{}",params);
 		try {
 			if(params != null){
 				listaTipoAtencion= siniestrosManager.getconsultaListaTipoAtencion(params.get("cdramo"), params.get("tipoPago"));
@@ -974,10 +860,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("Error al consultar la Lista de los asegurados : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaListaTipoAtencion ######"
-			+ "\n#######################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -988,11 +870,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return MesaControlVO - Informacion del tramite
 	*/ 
 	public String consultaListadoMesaControl(){
-		logger.debug(""
-			+ "\n########################################"
-			+ "\n###### consultaListadoMesaControl ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a consultaListadoMesaControl params de entrada :{}",params);
 		try {
 			List<MesaControlVO> lista = siniestrosManager.getConsultaListaMesaControl(params.get("ntramite"));
 			if(lista!=null && !lista.isEmpty())	listaMesaControl = lista;
@@ -1000,10 +878,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("Error al obtener los registros de la mesa de control : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaListadoMesaControl ######"
-			+ "\n########################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -1014,11 +888,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Success - Exito si se genera el numero de tramite
 	*/
 	public String validaDocumentosCargados(){
-		logger.debug(""
-			+ "\n########################################"
-			+ "\n######  validaDocumentosCargados  ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a validaDocumentosCargados params de entrada :{}",params);
 		try {
 			msgResult = siniestrosManager.validaDocumentosCargados(params);
 			logger.debug("Respuesta ValidaDocumentosCargados:{} ", msgResult);
@@ -1048,21 +918,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Lista GenericVO con la informacion de los asegurados
 	*/
 	public String consultaListaCPTICD(){
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n######  consultaListaCPTICD   ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a consultaListaCPTICD params de entrada :{}",params);
 		try {
 			listaCPTICD= siniestrosManager.getConsultaListaCPTICD(params.get("cdtabla"),params.get("otclave"));
 		}catch( Exception e){
 			logger.error("Error al consultar la Lista de subcoberturas : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n######  consultaListaCPTICD   ######"
-			+ "\n####################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -1073,13 +935,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return visualizacion de la pantalla
 	*/
 	public String afiliadosAfectados() {
-		logger.info(""
-			+ "\n################################"
-			+ "\n################################"
-			+ "\n###### afiliadosAfectados ######"
-			+ "\n######                    ######"
-		);
-		logger.info("params: {}",params);
+		logger.info("Entra a afiliadosAfectados params: {}",params);
 		try{
 			String ntramite = params.get("ntramite");
 			if(ntramite==null){
@@ -1149,12 +1005,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		catch(Exception ex){
 			logger.error("error al cargar pantalla de asegurados afectados : {}", ex.getMessage(), ex);
 		}
-		logger.info(""
-			+ "\n######                    ######"
-			+ "\n###### afiliadosAfectados ######"
-			+ "\n################################"
-			+ "\n################################"
-		);
 		return SUCCESS;
 	}
 
@@ -1164,11 +1014,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Num. de autorizacion
 	*/
 	public String generarSiniestroSinAutorizacion(){
-		logger.debug(""
-			+ "\n#############################################"
-			+ "\n###### generarSiniestroSinAutorizacion ######"
-		);
-		logger.debug("params: {}",params);
+		logger.debug("Entra a generarSiniestroSinAutorizacion params: {}",params);
 		try {
 			String fechaOcurrencia = params.get("dateOcurrencia");
 			Date   dFeOcurrencia   = renderFechas.parse(fechaOcurrencia);
@@ -1183,10 +1029,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			mensaje = ex.getMessage();
 			success=false;
 		}
-		logger.debug(""
-			+ "\n###### generarSiniestroSinAutorizacion ######"
-			+ "\n#############################################"
-		);
 		return SUCCESS;
 	}
 	
@@ -1196,11 +1038,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Num. de autorizacion
 	*/
 	public String iniciarSiniestroTworksin() {
-		logger.debug(""
-			+ "\n######################################"
-			+ "\n###### iniciarSiniestroTworksin ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a iniciarSiniestroTworksin params de entrada :{}",params);
 		try {
 			String nmautser = params.get("nmautser");
 			String cdperson = params.get("cdperson");
@@ -1222,10 +1060,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			mensaje = ex.getMessage();
 			success=false;
 		}
-		logger.debug(""
-			+ "\n###### iniciarSiniestroTworksin ######"
-			+ "\n######################################"
-		);
 		return SUCCESS;
 	}
 
@@ -1235,11 +1069,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Num. de autorizacion
 	*/
 	public String guardarConceptoDestino() {
-		logger.debug(""
-			+ "\n###############################################"
-			+ "\n###### guardarConceptoDestino			  ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a guardarConceptoDestino params de entrada :{}",params);
 		try {
 			String ntramite = params.get("ntramite");
 			String cdtipsit = params.get("cdtipsit");
@@ -1270,10 +1100,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("error al seleccionar la cobertura : {}", ex.getMessage(), ex);
 			mensaje = ex.getMessage();
 		}
-		logger.debug(""
-			+ "\n###### 	guardarConceptoDestino 	      ######"
-			+ "\n###############################################"
-		);
 		return SUCCESS;
 	}
 
@@ -1283,11 +1109,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Exito en el pago del Siniestro
 	*/
 	public String solicitarPago(){
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n######     solicitarPago      ######"
-		);
-		logger.debug("Datos de Entrada :{}",params);
+		logger.debug("Entra a solicitarPago Datos de Entrada :{}",params);
 		try {
 			UserVO usuario  = (UserVO)session.get("USUARIO");
 			RespuestaVO res = ice2sigsService.ejecutaWSreclamosTramite(params.get("pv_ntramite_i"), Operacion.INSERTA, false, usuario);
@@ -1359,10 +1181,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			mensaje = "Error al solicitar Pago, generaci&oacute;n de cartas finiquito. Consulte a Soporte T&eacute;cnico.";
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n######     solicitarPago      ######"
-			+ "\n####################################"
-		);
 		return SUCCESS;
 	}
 
@@ -1372,11 +1190,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return obtenemos el listado de los conceptos
 	*/
 	public String obtenerMsinival() {
-		logger.debug(""
-			+ "\n#############################"
-			+ "\n###### obtenerMsinival ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a obtenerMsinival params de entrada :{}",params);
 		try {
 			String cdunieco = params.get("cdunieco");
 			String cdramo   = params.get("cdramo");
@@ -1405,10 +1219,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			success = false;
 			mensaje = ex.getMessage();
 		}
-		logger.debug(""
-			+ "\n###### obtenerMsinival ######"
-			+ "\n#############################"
-		);
 		return SUCCESS;
 	}
 	/**
@@ -1417,11 +1227,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return exito cuando eliminamos el concepto
 	*/
 	public String guardarMsinival() {
-		logger.debug(""
-			+ "\n#############################"
-			+ "\n###### guardarMsinival ######"
-		);
-		logger.debug("params de entrada :{} datosTabla : {}",params,datosTablas);
+		logger.debug("Entra a guardarMsinival params de entrada :{} datosTabla : {}",params,datosTablas);
 		try {
 			Date   dFemovimi = new Date();
 			Date   dFeregist = new Date();
@@ -1464,10 +1270,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			success=false;
 			mensaje=ex.getMessage();
 		}
-		logger.debug(""
-			+ "\n###### guardarMsinival ######"
-			+ "\n#############################"
-		);
 		return SUCCESS;
 	}
 
@@ -1477,11 +1279,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return montoArancel
 	*/
 	public String obtieneMontoArancel(){
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n######  obtieneMontoArancel   ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a obtieneMontoArancel params de entrada :{}",params);
 		try {
 			String tipoConcepto = null;
 			String claveProveedor = null;
@@ -1500,10 +1298,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("Error al obtener el monto del arancel : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n######  obtieneMontoArancel   ######"
-			+ "\n####################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -1514,11 +1308,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return List<Map<String, String>> datosInformacionAdicional
 	*/ 
 	public String consultaAutServicioSiniestro(){
-		logger.debug(""
-			+ "\n##########################################"
-			+ "\n###### consultaAutServicioSiniestro ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a consultaAutServicioSiniestro params de entrada :{}",params);
 		try {
 			datosInformacionAdicional = siniestrosManager.getConsultaListaAutServicioSiniestro(params.get("cdperson"));
 			logger.debug("Valor de Respuesta : {} Total de registros :{}" ,datosInformacionAdicional,datosInformacionAdicional.size());
@@ -1526,10 +1316,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("Error al obtener las autorizaciones : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaAutServicioSiniestro ######"
-			+ "\n##########################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -1540,11 +1326,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return List<Map<String, String>> datosInformacionAdicional
 	*/ 
 	public String consultaSiniestroMaestro(){
-		logger.debug(""
-			+ "\n######################################"
-			+ "\n###### consultaSiniestroMaestro ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a consultaSiniestroMaestro params de entrada :{}",params);
 		try {
 			datosInformacionAdicional = siniestrosManager.getConsultaListaMSiniestMaestro( params.get("cdunieco"),		params.get("cdramo"),		params.get("estado"),
 																						   params.get("nmpoliza"),		params.get("nmsuplem"),		params.get("nmsituac"),
@@ -1554,10 +1336,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("Error al obtener las consultaSiniestroMaestro : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-				+ "\n###### consultaSiniestroMaestro ######"
-				+ "\n######################################"
-			);
 		success = true;
 		return SUCCESS;
 	}
@@ -1568,11 +1346,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return List<Map<String, String>> datosValidacion
 	*/ 
 	public String consultaDatosValidacionSiniestro(){
-		logger.debug(""
-			+ "\n##############################################"
-			+ "\n###### consultaDatosValidacionSiniestro ######"
-		);
-		logger.debug("params de entrada :{} ",params);
+		logger.debug("Entra a consultaDatosValidacionSiniestro params de entrada :{} ",params);
 		try {
 			datosValidacion = siniestrosManager.getConsultaDatosValidacionSiniestro(params.get("ntramite"),params.get("nfactura"),params.get("tipoPago"));
 			logger.debug("Respuesta datosValidacion : {}",datosValidacion);
@@ -1580,10 +1354,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("Error al obtener los datos de la validacion del Siniestro : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaDatosValidacionSiniestro ######"
-			+ "\n##############################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -1593,11 +1363,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return List<Map<String, String>> datosValidacion
 	*/ 
 	public String consultaDatosAseguradoSiniestro(){
-		logger.debug(""
-			+ "\n#############################################"
-			+ "\n###### consultaDatosAseguradoSiniestro ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a consultaDatosAseguradoSiniestro params de entrada :{}",params);
 		try {
 			datosValidacion = siniestrosManager.obtenerInfAseguradosTramite(params.get("ntramite"));
 			logger.debug("Respuesta datosValidacion : {}", datosValidacion);
@@ -1605,10 +1371,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("Error al obtener los datos de la validacion del Siniestro : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaDatosAseguradoSiniestro ######"
-			+ "\n#############################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -1618,11 +1380,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return List<Map<String, String>> datosValidacion
 	*/
 	public String consultaDatosValidacionAjustadorMed(){
-		logger.debug(""
-			+ "\n#################################################"
-			+ "\n###### consultaDatosValidacionAjustadorMed ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a consultaDatosValidacionAjustadorMed params de entrada :{}",params);
 		try {
 			datosValidacion = siniestrosManager.getConsultaDatosValidacionAjustadorMed(params.get("ntramite"));
 			logger.debug("Respuesta datosValidacion : {}", datosValidacion);
@@ -1630,10 +1388,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("Error al obtener las consultaDatosValidacionAjustadorMed : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaDatosValidacionAjustadorMed ######"
-			+ "\n#################################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -1644,11 +1398,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return List<Map<String, String>> datosValidacion
 	*/
 	public String guardaaseguradoUnico(){
-		logger.debug(""
-			+ "\n#############################"
-			+ "\n###### guardaTworksin #######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a guardaTworksin params de entrada :{}",params);
 		try{
 			HashMap<String, Object> paramsTworkSin = new HashMap<String, Object>();
 			paramsTworkSin.put("pv_nmtramite_i",params.get("nmtramite"));
@@ -1673,10 +1423,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			success=false;
 			mensaje=ex.getMessage();
 		}
-		logger.debug(""
-			+ "\n###### guardaTworksin  ######"
-			+ "\n#############################"
-		);
 		return SUCCESS;
 	}
 
@@ -1686,11 +1432,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return exito
 	*/
 	public String eliminarAsegurado(){
-		logger.debug(""
-			+ "\n###############################"
-			+ "\n###### eliminarAsegurado ######"
-			);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a eliminarAsegurado params de entrada :{}",params);
 		try{
 			HashMap<String, Object> paramsTworkSin = new HashMap<String, Object>();
 				paramsTworkSin.put("pv_nmtramite_i",params.get("nmtramite"));
@@ -1714,10 +1456,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			success=false;
 			mensaje=ex.getMessage();
 		}
-		logger.debug(""
-			+ "\n###### eliminarAsegurado  ######"
-			+ "\n################################"
-		);
 		return SUCCESS;
 	}
 	
@@ -1727,11 +1465,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return List<Map<String, String>> slist1
 	*/
 	public String obtenerSiniestrosTramite() {
-		logger.debug(""
-			+ "\n######################################"
-			+ "\n###### obtenerSiniestrosTramite ######"
-		);
-		logger.debug("smap de entrada :{}",smap);
+		logger.debug("Entra a obtenerSiniestrosTramite smap de entrada :{}",smap);
 		try {
 			slist1 = siniestrosManager.listaSiniestrosTramite2(smap.get("ntramite"),smap.get("nfactura"),null);
 			success=true;
@@ -1742,10 +1476,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			success = false;
 			mensaje = ex.getMessage();
 		}
-		logger.debug(""
-			+ "\n###### obtenerSiniestrosTramite ######"
-			+ "\n######################################"
-		);
 		return SUCCESS;
 	}
 
@@ -1755,11 +1485,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return List<Map<String, String>> datosValidacion
 	*/
 	public String consultaDatosSumaAsegurada(){
-		logger.debug(""
-			+ "\n########################################"
-			+ "\n###### consultaDatosSumaAsegurada ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a consultaDatosSumaAsegurada params de entrada :{}",params);
 		try {
 			datosValidacion = siniestrosManager.getConsultaDatosSumaAsegurada(params.get("cdunieco"),		params.get("cdramo"),		params.get("estado"),
 																			  params.get("nmpoliza"),		params.get("cdperson"),		params.get("nmsinref"));
@@ -1768,10 +1494,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("Error al obtener las autorizaciones : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaDatosSumaAsegurada ######"
-			+ "\n########################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -1782,11 +1504,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return List<Map<String, String>> datosValidacion
 	*/
 	public String pantallaSeleccionCobertura() {
-		logger.debug(""
-			+ "\n########################################"
-			+ "\n###### pantallaSeleccionCobertura ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a pantallaSeleccionCobertura params de entrada :{}",params);
 		try {
 			UserVO usuario  = (UserVO)session.get("USUARIO");
 			String cdrol    = usuario.getRolActivo().getClave();
@@ -1811,10 +1529,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		catch(Exception ex){
 			logger.error("error al cargar pantalla de seleccion de cobertura : {}", ex.getMessage(), ex);
 		}
-		logger.debug(""
-			+ "\n###### pantallaSeleccionCobertura ######"
-			+ "\n########################################"
-		);
 		return SUCCESS;
 	}
 
@@ -1824,11 +1538,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return List<Map<String, String>> datosValidacion
 	*/
 	public String obtenerUsuariosPorRol() {
-		logger.debug(""
-			+ "\n###################################"
-			+ "\n###### obtenerUsuariosPorRol ######"
-		);
-		logger.debug("smap de entrada :{}",smap);
+		logger.debug("Entra a obtenerUsuariosPorRol smap de entrada :{}",smap);
 		try {
 			String cdsisrol = smap.get("cdsisrol");
 			slist1  = siniestrosManager.obtenerUsuariosPorRol(cdsisrol);
@@ -1839,10 +1549,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			slist1  = new ArrayList<Map<String,String>>();
 			success = false;
 		}
-		logger.info(""
-			+ "\n###### obtenerUsuariosPorRol ######"
-			+ "\n###################################"
-		);
 		return SUCCESS;
 	}
 
@@ -1852,11 +1558,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return List<Map<String, String>> loadList
 	*/
 	public String loadListaDocumentos(){
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n######  loadListaDocumentos   ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a loadListaDocumentos params de entrada :{}",params);
 		try {
 			loadList = siniestrosManager.loadListaDocumentos(params);
 		}catch( Exception e){
@@ -1864,10 +1566,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			success =  false;
 			return SUCCESS;
 		}
-		logger.debug(""
-				+ "\n######  loadListaDocumentos   ######"
-				+ "\n####################################"
-			);
 		success = true;
 		return SUCCESS;
 	}
@@ -1878,11 +1576,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return SUCCESS
 	*/
 	public String guardaListaDocumentos(){
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n###### guardaListaDocumentos  ######"
-		);
-		logger.debug("params de entrada :{} SaveList : {}",params, saveList);
+		logger.debug("Entra a guardaListaDocumentos params de entrada :{} SaveList : {}",params, saveList);
 		try {
 			siniestrosManager.guardaEstatusDocumentos(params, saveList);
 		}catch( Exception e){
@@ -1890,10 +1584,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			success =  false;
 			return SUCCESS;
 		}
-		logger.debug(""
-				+ "\n###### guardaListaDocumentos  ######"
-				+ "\n####################################"
-			);
 		success = true;
 		return SUCCESS;
 	}
@@ -1905,11 +1595,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	*/
 	private double penalizacionCambioZona(String existePenalizacion, String causaSiniestro, String circuloHospAsegurado,
 			String zonaTarifiAsegurado, String idProveedor, String cdRamo) {
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n###### penalizacionCambioZona ######"
-		);
-		logger.debug("existePenalizacion : {}  causaSiniestro :{}  circuloHospAsegurado :{}  zonaTarifiAsegurado :{}  idProveedor :{}  cdRamo :{} ",
+		logger.debug("Entra a penalizacionCambioZona existePenalizacion : {}  causaSiniestro :{}  circuloHospAsegurado :{}  zonaTarifiAsegurado :{}  idProveedor :{}  cdRamo :{} ",
 					existePenalizacion,causaSiniestro,circuloHospAsegurado,zonaTarifiAsegurado,idProveedor,cdRamo);
 		double penalizacionCambioZona = 0;
 		if(causaSiniestro!= null){
@@ -1926,10 +1612,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				}
 			}
 		}
-		logger.debug(""
-			+ "\n###### penalizacionCambioZona ######"
-			+ "\n####################################"
-		);
 		return penalizacionCambioZona;
 	}
 	
@@ -1939,11 +1621,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return penaliCirculoHosp
 	*/
 	private double calcularPenalizacionCirculo(String circuloHospAsegurado, String circuloHospProveedor, String causaSiniestro,String ramo){
-		logger.debug(""
-			+ "\n#########################################"
-			+ "\n###### calcularPenalizacionCirculo ######"
-		);
-		logger.debug("circuloHospAsegurado : {} circuloHospProveedor : {}  causaSiniestro : {}  ramo : {} ",
+		logger.debug("Entra a calcularPenalizacionCirculo circuloHospAsegurado : {} circuloHospProveedor : {}  causaSiniestro : {}  ramo : {} ",
 					circuloHospAsegurado, circuloHospProveedor, causaSiniestro, ramo);
 		double penaliCirculoHosp = 0;
 		if(causaSiniestro != null){
@@ -1962,10 +1640,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				penaliCirculoHosp =  Double.parseDouble("0");
 			}
 		}
-		logger.debug(""
-			+ "\n###### calcularPenalizacionCirculo ######"
-			+ "\n#########################################"
-		);
 		return penaliCirculoHosp;
 	}
 	
@@ -1975,11 +1649,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return copagoFinal
 	*/
 	private String calcularTotalPenalizacion(double penalizacionCambioZona, double penalizacionCirculoHosp, String causaSiniestro, String copagoOriginal, String tipoCopago,String proveedor,String ramo, String fechaOcurrencia) {
-		logger.debug(""
-			+ "\n#######################################"
-			+ "\n###### calcularTotalPenalizacion ######"
-		);
-		logger.debug("penalizacionCambioZona : {} penalizacionCirculoHosp : {} causaSiniestro : {} copagoOriginal : {} tipoCopago : {} proveedor : {} ramo : {} fechaOcurrencia : {} ",
+		logger.debug("Entra a calcularPenalizacionCirculo penalizacionCambioZona : {} penalizacionCirculoHosp : {} causaSiniestro : {} copagoOriginal : {} tipoCopago : {} proveedor : {} ramo : {} fechaOcurrencia : {} ",
 				penalizacionCambioZona, penalizacionCirculoHosp, causaSiniestro, copagoOriginal, tipoCopago, proveedor,ramo, fechaOcurrencia);
 		double copagoPenaPorcentaje = 0d;
 		double copagoPenaPesos = 0d;
@@ -2058,10 +1728,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		}else{
 			copagoFinal = copagoPenaPorcentaje+"|"+copagoOriginalPoliza;
 		}
-		logger.debug(""
-				+ "\n###### calcularTotalPenalizacion ######"
-				+ "\n#######################################"
-			);
 		return copagoFinal;
 	}
 	
@@ -2071,11 +1737,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	 * @return Exito en el pago del Siniestro
 	 */
 	public String generarCalculoSiniestros() {
-		logger.debug(""
-			+ "\n#######################################"
-			+ "\n###### Generar calculoSiniestros ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a generarCalculoSiniestros params de entrada :{}",params);
 		try {
 			Map<String,String> factura        = null;
 			Map<String,String> siniestroIte   = null;
@@ -3390,10 +3052,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		}catch(Exception ex){
 			logger.debug("error al cargar pantalla de calculo de siniestros : {}", ex.getMessage(), ex);
 		}
-		logger.debug(""
-			+ "\n###### Generar calculoSiniestros ######"
-			+ "\n#######################################"
-		);
 		return SUCCESS;
 	}
 	
@@ -3403,11 +3061,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Exito se guarda la cobertura para la factura en especifica
 	*/
 	public String guardarCoberturaxFactura(){
-		logger.debug(""
-			+ "\n#######################################"
-			+ "\n###### guardarCoberturaxFactura  ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a guardarCoberturaxFactura params de entrada :{}",params);
 		try{
 			String                   ntramite  = params.get("ntramite");
 			String                   nfactura  = params.get("nfactura");
@@ -3433,10 +3087,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("error al seleccionar la cobertura : {}", ex.getMessage(), ex);
 			mensaje = ex.getMessage();
 		}
-		logger.debug(""
-			+ "\n###### guardarCoberturaxFactura  ######"
-			+ "\n#######################################"
-		);
 		return SUCCESS;
 	}
 	
@@ -3446,11 +3096,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Exito se guarda la cobertura
 	*/
 	public String guardarSeleccionCobertura(){
-		logger.debug(""
-			+ "\n#######################################"
-			+ "\n###### guardarSeleccionCobertura ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a guardarSeleccionCobertura params de entrada :{}",params);
 		try{
 			String cdramo   = params.get("cdramo");
 			String cdtipsit = params.get("cdtipsit");
@@ -3489,10 +3135,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("error al seleccionar la cobertura : {}", ex.getMessage(), ex);
 			mensaje = ex.getMessage();
 		}
-		logger.debug(""
-			+ "\n###### guardarSeleccionCobertura ######"
-			+ "\n#######################################"
-		);
 		return SUCCESS;
 	}
 
@@ -3502,11 +3144,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return Exito se guarda la cobertura para la factura en especifica
 	*/
 	public String guardarSeleccionCoberturaxTramite(){
-		logger.debug(""
-			+ "\n###############################################"
-			+ "\n###### guardarSeleccionCoberturaxTramite ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a guardarSeleccionCoberturaxTramite params de entrada :{}",params);
 		try{
 			String cdramo   = params.get("cdramo");
 			String cdtipsit = params.get("cdtipsit");
@@ -3528,10 +3166,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("error al seleccionar la cobertura : {}", ex.getMessage(), ex);
 			mensaje = ex.getMessage();
 		}
-		logger.debug(""
-			+ "\n###### guardarSeleccionCoberturaxTramite ######"
-			+ "\n###############################################"
-		);
 		return SUCCESS;
 	}
 
@@ -3541,21 +3175,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return listado de los afiliados afectados
 	*/
 	public String afiliadosAfectadosConsulta(){
-		logger.debug(""
-			+ "\n########################################"
-			+ "\n###### afiliadosAfectadosConsulta ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a afiliadosAfectadosConsulta params de entrada :{}",params);
 		try{
 			slist1 = siniestrosManager.listaAseguradosTramite(params.get("ntramite"), params.get("nfactura"), params.get("tipoProceso"));
 			logger.debug("Total de registros : {}",slist1.size());
 		}catch(Exception ex){
 			logger.error("error al cargar pantalla de asegurados afectados : {}", ex.getMessage(), ex);
 		}
-		logger.debug(""
-			+ "\n###### afiliadosAfectadosConsulta ######"
-			+ "\n########################################"
-		);
 		return SUCCESS;
 	}
 	
@@ -3565,11 +3191,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	 * @return Exito los periodo de espera en dias 
 	 */
 	public String obtenerPeriodoEspera(){
-		logger.debug(""
-			+ "\n###############################################"
-			+ "\n###### 		obtenerPeriodoEspera 	  ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a obtenerPeriodoEspera params de entrada :{}",params);
 		try{
 			
 			PolizaAseguradoVO datosPol = new PolizaAseguradoVO();
@@ -3606,10 +3228,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.error("error al obtener el periodo de espera : {}", ex.getMessage(), ex);
 			mensaje = ex.getMessage();
 		}
-		logger.debug(""
-			+ "\n######			obtenerPeriodoEspera	  ######"
-			+ "\n###############################################"
-		);
 		return SUCCESS;
 	}
 	
@@ -3619,11 +3237,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @return el monto total de las facturas y el monto de los pagos del Siniestro
 	*/
 	public String obtieneMontoPagoSiniestro(){
-		logger.debug(""
-			+ "\n#######################################"
-			+ "\n###### obtieneMontoPagoSiniestro ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a obtieneMontoPagoSiniestro params de entrada :{}",params);
 		try {
 			mensaje ="";
 			double impFactura = 0d;
@@ -3682,11 +3296,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	
 
 	public String calculoSiniestros(){
-		logger.debug(""
-			+ "\n###############################"
-			+ "\n###### calculoSiniestros ######"
-		);
-		logger.debug("params de entrada :{}",params);
+		logger.debug("Entra a calculoSiniestros params de entrada :{}",params);
 		try{
 			this.facturasxSiniestro=new ArrayList<Map<String,Object>>();
 			imap = new HashMap<String,Item>();
@@ -4869,14 +4479,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
     	{
     		logger.error("error al cargar pantalla de calculo de siniestros : {}", ex.getMessage(), ex);
     	}
-    	logger.debug(""
-    		+ "\n###### calculoSiniestros ######"
-    		+ "\n###############################"
-   		);
     	return SUCCESS;
     }
-
-
+	
 /****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {
 		return listaTipoAtencion;

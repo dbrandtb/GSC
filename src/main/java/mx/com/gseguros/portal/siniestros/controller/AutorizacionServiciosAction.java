@@ -19,6 +19,7 @@ import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.Rol;
 import mx.com.gseguros.portal.general.util.RolSistema;
@@ -74,13 +75,10 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	private String msgResult;
 	private String autorizarProceso;
 	private Map<String, String> map1;
+	private String mensaje;
 	
 	public String autorizacionServicios() {
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n###### autorizacionServicios  ######"
-		);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a autorizacionServicios Params: {}", params);
 		try {
 			UserVO usuario  	= (UserVO)session.get("USUARIO");
 			String cdrol    	= usuario.getRolActivo().getClave();
@@ -112,10 +110,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		} catch (Exception e) {
 			logger.error("Error en la autorizacion de Servicio : {}", e.getMessage(), e);
 		}
-		logger.debug(""
-			+ "\n###### autorizacionServicios  ######"
-			+ "\n####################################"
-		);
 		setSuccess(true);
 		return SUCCESS;
 	}
@@ -125,19 +119,12 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return params con los valores para hacer las consultas
 	*/
 	public String verAutorizacionServicio(){
-		logger.debug(""
-			+ "\n#####################################"
-			+ "\n###### verAutorizacionServicio ######"
-		);
+		logger.debug("Entra a verAutorizacionServicio");
 		try {
 			logger.debug("Params: {}", params);
 		}catch( Exception e){
 			logger.error("Error al visualizar la autorizacion de servicio : {}", e.getMessage(), e);
 		}
-		logger.debug(""
-			+ "\n###### verAutorizacionServicio ######"
-			+ "\n#####################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -148,11 +135,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return Lista AutorizaServiciosVO con la informacion de los asegurados
 	*/
 	public String consultaListaAutorizacion(){
-		logger.debug(""
-			+ "\n#######################################"
-			+ "\n###### consultaListaAutorizacion ######"
-		);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a consultaListaAutorizacion Params: {}", params);
 		try {
 			List<AutorizaServiciosVO> lista = siniestrosManager.getConsultaListaAutorizaciones(params.get("tipoAut"),params.get("cdperson"));
 			if(lista!=null && !lista.isEmpty())	setListaAutorizacion(lista);
@@ -160,10 +143,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error consultaListaAutorizacion : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaListaAutorizacion ######"
-			+ "\n#######################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -174,11 +153,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return AutorizacionServicioVO
 	*/
 	public String consultaAutorizacionServicio(){
-		logger.debug(""
-			+ "\n##########################################"
-			+ "\n###### consultaAutorizacionServicio ######"
-		);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a consultaAutorizacionServicio Params: {}", params);
 		try {
 			List<AutorizacionServicioVO> lista = siniestrosManager.getConsultaAutorizacionesEsp(params.get("nmautser"));
 			logger.debug("Total Registros {}", lista.size());
@@ -189,10 +164,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error consultaAutorizacionServicio : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaAutorizacionServicio ######"
-			+ "\n##########################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -203,11 +174,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return Lista DatosSiniestroVO con la informacion de los asegurados
 	*/
 	public String consultaListaDatSubGeneral(){
-		logger.debug(""
-			+ "\n########################################"
-			+ "\n###### consultaListaDatSubGeneral ######"
-		);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra consultaListaDatSubGeneral Params: {}", params);
 		try {
 			HashMap<String, Object> paramDatSubGral = new HashMap<String, Object>();
 			paramDatSubGral.put("pv_cdunieco_i",params.get("cdunieco"));
@@ -228,10 +195,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error consultaListaDatSubGeneral : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaListaDatSubGeneral ######"
-			+ "\n########################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -242,11 +205,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return Lista ConsultaPorcentajeVO con la informacion del proveedor
 	*/ 
 	public String consultaListaPorcentaje(){
-		logger.debug(""
-			+ "\n#####################################"
-			+ "\n###### consultaListaPorcentaje ######"
-		);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a consultaListaPorcentaje Params: {}", params);
 		try {
 			if(params != null){
 				List<ConsultaPorcentajeVO> lista = siniestrosManager.getConsultaListaPorcentaje(params.get("cdcpt"),params.get("cdtipmed"),params.get("mtobase"));
@@ -257,10 +216,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error consultaListaPorcentaje : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaListaPorcentaje ######"
-			+ "\n#####################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -271,11 +226,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return Lista ConsultaTDETAUTSVO con la informacion
 	*/
 	public String consultaTipoMedico(){
-		logger.debug(""
-			+ "\n######################################"
-			+ "\n######    consultaTipoMedico    ######"
-		);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a consultaTipoMedico Params: {}", params);
 		try {
 			List<ConsultaManteniVO> lista = siniestrosManager.getConsultaListaTipoMedico(params.get("codigo"));
 			logger.debug("Total List<ConsultaManteniVO> lista : {} valores a enviar {}", lista.size(), lista);
@@ -284,10 +235,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error consultaTipoMedico {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n######    consultaTipoMedico    ######"
-			+ "\n######################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -298,11 +245,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return Lista ConsultaTDETAUTSVO con la informacion
 	*/
 	public String consultaListaTDeTauts(){
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n###### consultaListaTDeTauts  ######"
-		);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a consultaListaTDeTauts Params: {}", params);
 		try {
 			List<ConsultaTDETAUTSVO> lista = siniestrosManager.getConsultaListaTDeTauts(params.get("nmautser"));
 			logger.debug("Total Lista consultaListaTDeTauts : {}", lista.size());
@@ -311,10 +254,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error consultaListaTDeTauts : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaListaTDeTauts  ######"
-			+ "\n####################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -325,11 +264,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return Lista AutorizaServiciosVO con la informaciï¿½n de los asegurados
 	*/
 	public String guardaAutorizacionServicio(){
-		logger.debug(""
-			+ "\n########################################"
-			+ "\n###### guardaAutorizacionServicio ######"
-		);
-		logger.debug("Params:{} datosTabla: {}", params,datosTablas);
+		logger.debug("Entra a guardaAutorizacionServicio Params:{} datosTabla: {}", params,datosTablas);
 		try {
 			this.session=ActionContext.getContext().getSession();
 			UserVO usuario=(UserVO) session.get("USUARIO");
@@ -494,10 +429,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error guardaAutorizacionServicio : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### guardaAutorizacionServicio ######"
-			+ "\n########################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -508,11 +439,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return Autorizacion de Servicio
 	*/
 	public String generarAutoriServicio(Map<String, Object> paramsO){
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n###### generarAutoriServicio  ######"
-		);
-		logger.debug("Valores para generarAutoriServicio: {}", paramsO);
+		logger.debug("Entra a generarAutoriServicio Valores para generarAutoriServicio: {}", paramsO);
 		try {
 			File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
 			if(!carpeta.exists()){
@@ -529,13 +456,13 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 
 			UserVO usuario=(UserVO)session.get("USUARIO");
 			String reporteSeleccion = null;
-			if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase("2")){
+			if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase(Ramo.SALUD_VITAL.getCdramo())){
 				reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre");
 			}
-			if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase("4")){
+			if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase(Ramo.MULTISALUD.getCdramo())){
 				reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.MS");
 			}
-			if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase("7")){
+			if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 				reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.GMMI");
 			}
 			
@@ -581,10 +508,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			success =  false;
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### generarAutoriServicio  ######"
-			+ "\n####################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -595,10 +518,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return Listado de las plazas
 	*/
 	public String consultaListaPlazas(){
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n######  consultaListaPlazas   ######"
-		);
+		logger.debug("Entra a consultaListaPlazas");
 		try {
 			listaPlazas= siniestrosManager.getConsultaListaPlaza();
 			logger.debug("total de registros: {}", listaPlazas.size());
@@ -606,10 +526,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error consultaListaPlazas : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n######  consultaListaPlazas   ######"
-			+ "\n####################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -620,11 +536,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return diasMaximos - Numero de dias maximo
 	*/
 	public String consultaNumeroDias(){
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n######   consultaNumeroDias   ######"
-		);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a consultaNumeroDias Params: {}", params);
 		try {
 			diasMaximos= catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), 
 												TipoTramite.SINIESTRO, Rango.DIAS, Validacion.DIAS_MAX_AUTORIZACION_SERVICIOS);
@@ -632,10 +544,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error consultaAutorizacionServicio : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n######   consultaNumeroDias   ######"
-			+ "\n####################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -646,11 +554,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return existePenalizacion - Exlusion de penalizacion
 	*/
 	public String validaExclusionPenalizacion(){
-		logger.debug(""
-			+ "\n#########################################"
-			+ "\n###### validaExclusionPenalizacion ######"
-		);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a validaExclusionPenalizacion  Params: {}", params);
 		try {
 			HashMap<String, Object> paramExclusion = new HashMap<String, Object>();
 			paramExclusion.put("pv_cdunieco_i",params.get("cdunieco"));
@@ -664,10 +568,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error validaExclusionPenalizacion : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### validaExclusionPenalizacion ######"
-			+ "\n#########################################"
-			);
 		success = true;
 		return SUCCESS;
 	}
@@ -678,11 +578,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return porcentajePenalizacion - Porcentaje de Penalizacion x Zona Contratada
 	*/
 	public String validaPorcentajePenalizacion(){
-		logger.debug(""
-			+ "\n##########################################"
-			+ "\n###### validaPorcentajePenalizacion ######"
-		);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a validaPorcentajePenalizacion Params: {}", params);
 		try {
 			porcentajePenalizacion = siniestrosManager.validaPorcentajePenalizacion(params.get("zonaContratada"), params.get("zonaAtencion"), params.get("cdRamo"));
 			logger.debug("porcentajePenalizacion : {}", porcentajePenalizacion);
@@ -690,10 +586,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error validaPorcentajePenalizacion : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### validaPorcentajePenalizacion ######"
-			+ "\n##########################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -704,11 +596,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return montoMaximo - Monto Maximo
 	*/
 	public String consultaMontoMaximo(){
-		logger.debug(""
-			+ "\n####################################"
-			+ "\n######  consultaMontoMaximo   ######"
-		);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a consultaMontoMaximo Params: {}", params);
 		try {
 			montoMaximo = catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), 
 											TipoTramite.SINIESTRO, Rango.PESOS, Validacion.MONTO_MAXIMO_AUTORIZACION_SERVICIOS);
@@ -717,10 +605,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error consultaMontoMaximo : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n######  consultaMontoMaximo   ######"
-			+ "\n####################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -731,11 +615,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return mesMaximoMaternidad - Numero de meses maximo
 	*/
 	public String consultaMesesMaximoMaternidad(){
-		logger.debug(""
-			+ "\n###########################################"
-			+ "\n###### consultaMesesMaximoMaternidad ######"
-		);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a consultaMesesMaximoMaternidad Params: {}", params);
 		try {
 			mesMaximoMaternidad = catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), 
 														TipoTramite.SINIESTRO, Rango.MESES, Validacion.MESES_MAX_MATERNIDAD);
@@ -744,10 +624,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error consultaMesesMaximoMaternidad : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaMesesMaximoMaternidad ######"
-			+ "\n###########################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -758,11 +634,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return existeDocAutServicio - Existe Documentos cargados
 	*/
 	public String validaDocumentosAutoServ(){
-		logger.debug(""
-			+ "\n######################################"
-			+ "\n###### validaDocumentosAutoServ ######"
-		);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a validaDocumentosAutoServ Params: {}", params);
 		try {
 			existeDocAutServicio = siniestrosManager.validaDocumentosAutServicio(params.get("ntramite"));
 			logger.debug("existeDocAutServicio: {}", existeDocAutServicio);
@@ -770,10 +642,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error validaDocumentosAutoServ : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### validaDocumentosAutoServ ######"
-			+ "\n######################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -785,22 +653,15 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return mesesTiempoEspera - Numero maximo de tiempo de espera
 	*/
 	public String obtieneMesesTiempoEspera(){
-		logger.debug(""
-			+ "\n#####################################"
-			+ "\n###### obtieneMesesTiempoEspera ######"
-		);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a obtieneMesesTiempoEspera Params: {}", params);
 		try {
 			mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEspera(params.get("otvalor"),params.get("cdtabla"));
-			logger.debug("mesesTiempoEspera: {}", mesesTiempoEspera);
+			mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" años";
+			logger.debug("mesesTiempoEspera: {} mensaje de respuesta : {}", mesesTiempoEspera,mensaje);
 		}catch( Exception e){
 			logger.error("Error obtieneMesesTiempoEspera : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### obtieneMesesTiempoEspera ######"
-			+ "\n#####################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -811,11 +672,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return datosInformacionAdicional del Multisalud
 	*/
 	public String consultaCirculoHospitalarioMultisalud(){
-		logger.debug(""
-			+ "\n###################################################"
-			+ "\n###### consultaCirculoHospitalarioMultisalud ######"
-		);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a consultaCirculoHospitalarioMultisalud Params: {}", params);
 		try {
 			String fechaAutorizacion = params.get("feautori");
 			String feAutorizacion= fechaAutorizacion.substring(8,10)+"/"+fechaAutorizacion.substring(5,7)+"/"+fechaAutorizacion.substring(0,4);
@@ -825,10 +682,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error consultaCirculoHospitalarioMultisalud : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaCirculoHospitalarioMultisalud ######"
-			+ "\n###################################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -839,11 +692,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return porcentajePenalizacion - Porcentaje de penalizacion
 	*/
 	public String consultaPenalizacionCirculoHospitalario(){
-		logger.debug(""
-			+ "\n#####################################################"
-			+ "\n###### consultaPenalizacionCirculoHospitalario ######"
-		);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a consultaPenalizacionCirculoHospitalario Params: {}", params);
 		try {
 			String fechaAutorizacion = params.get("feautori");
 			String feAutorizacion= fechaAutorizacion.substring(8,10)+"/"+fechaAutorizacion.substring(5,7)+"/"+fechaAutorizacion.substring(0,4);
@@ -858,10 +707,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error consultaPenalizacionCirculoHospitalario : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaPenalizacionCirculoHospitalario ######"
-			+ "\n#####################################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -872,11 +717,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return msgResult - Porcentaje
 	*/
 	public String consultaPorcentajeQuirurgico(){
-		logger.debug(""
-				+ "\n##########################################"
-				+ "\n###### consultaPorcentajeQuirurgico ######"
-			);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a consultaPorcentajeQuirurgico Params: {}", params);
 		try {
 			String fechaAutorizacion = params.get("feautori");
 			String feAutorizacion= fechaAutorizacion.substring(8,10)+"/"+fechaAutorizacion.substring(5,7)+"/"+fechaAutorizacion.substring(0,4);
@@ -887,10 +728,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error consultaPorcentajeQuirurgico :{}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### consultaPorcentajeQuirurgico ######"
-			+ "\n##########################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -901,11 +738,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return autorizarProceso - Autorizacion en proceso
 	*/
 	public String validaAutorizacionProceso(){
-		logger.debug(""
-				+ "\n#######################################"
-				+ "\n###### validaAutorizacionProceso ######"
-			);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a validaAutorizacionProceso Params: {}", params);
 		try {
 			autorizarProceso = siniestrosManager.validaAutorizacionProceso(params.get("nmAutSer"));
 			logger.debug("autorizarProceso: {}", autorizarProceso);
@@ -913,10 +746,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.error("Error consultaAutorizacionServicio : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
-		logger.debug(""
-			+ "\n###### validaAutorizacionProceso ######"
-			+ "\n#######################################"
-		);
 		success = true;
 		return SUCCESS;
 	}
@@ -927,20 +756,12 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return cambioEstatus
 	*/
 	public String cambiarEstatusMAUTSERV(){
-		logger.debug(""
-				+ "\n####################################"
-				+ "\n###### cambiarEstatusMAUTSERV ######"
-			);
-		logger.debug("Params: {}", params);
+		logger.debug("Entra a cambiarEstatusMAUTSERV Params: {}", params);
 		try {
 			siniestrosManager.getCambiarEstatusMAUTSERV(params.get("nmautser"), params.get("status"));
 		}catch( Exception e){
 			logger.error("Error cambiarEstatusMAUTSERV : {}", e.getMessage(), e);
 		}
-		logger.debug(""
-				+ "\n###### cambiarEstatusMAUTSERV ######"
-				+ "\n####################################"
-			);
 		success = true;
 		return SUCCESS;
 	}
@@ -951,11 +772,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @return PDF - Carta de rechazo
 	*/
 	public String guardarCartaRechazoAutServ() {
-		logger.debug(""
-			+ "\n########################################"
-			+ "\n###### guardarCartaRechazoAutServ ######"
-		);
-		logger.debug("map1: {}", map1);
+		logger.debug("Entra a guardarCartaRechazoAutServ map1: {}", map1);
 		String ntramite    = map1.get("ntramite");
 		String comments    = map1.get("comments");
 		logger.debug("comments: {}", comments);
@@ -1023,10 +840,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		catch(Exception ex){
 			logger.error("Error guardarCartaRechazoAutServ : {}", ex.getMessage(), ex);
 		}
-		logger.debug(""
-			+ "\n###### guardarCartaRechazoAutServ ######"
-			+ "\n########################################"
-		);
 		return SUCCESS;
 	}
 	
@@ -1258,5 +1071,13 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	
 	public Map<String, String> getMap1() {
 		return map1;
+	}
+	
+	public String getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
 	}
 }

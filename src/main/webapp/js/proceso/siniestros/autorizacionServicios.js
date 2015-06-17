@@ -6,7 +6,7 @@ var storeQuirugico;
 var extraParams='';
 var cdrol;
 var notasInternas ='';
-var mensajeInicial = ' Movimiento no procede por padecimiento de periodo de espera de ';
+//var mensajeInicial = ' Movimiento no procede por padecimiento de periodo de espera de ';
 var _Existe = "S";
 var _NExiste = "N";
 Ext.onReady(function() {
@@ -325,6 +325,7 @@ Ext.onReady(function() {
 		}
 	});
 	storeAplCirculoHos.load();
+	
 	storeAplZona = Ext.create('Ext.data.Store', {
 		model:'Generic',
 		autoLoad:true,
@@ -521,7 +522,6 @@ Ext.onReady(function() {
 	***************************************************/
 	if(valorAction.nmAutSer == null && valorAction.ntramite ==null){
 		cdrol = valorAction.cdrol;
-		//storeTipoMedico.load();
 		storeTipoMedico.load({
 			params:{
 				'params.codigo': null
@@ -538,7 +538,6 @@ Ext.onReady(function() {
 		storePlazas.load();
 		storeTiposICD.load();
 		storeProveedor.load();
-		//storeTipoMedico.load();
 		storeTipoMedico.load({
 			params:{
 				'params.codigo': null
@@ -705,7 +704,7 @@ Ext.onReady(function() {
 		colspan:2, width:400,
 		fieldLabel :'Cobertura afectada',	allowBlank: false,			displayField : 'dsgarant',		id:'idCobAfectada',		name:'cdgarant',
 		labelWidth: 170,					valueField   : 'cdgarant',	forceSelection : true,			matchFieldWidth: false,
-		queryMode :'remote',				store : storeCobertura,		triggerAction: 'all',			editable:false,
+		queryMode :'local',					store : storeCobertura,		triggerAction: 'all',			editable:false,
 		listeners : {
 			'select' : function(combo, record) {
 				Ext.getCmp('idSubcobertura').reset();
@@ -714,18 +713,6 @@ Ext.onReady(function() {
 				Ext.getCmp('idTipoCopago').setValue('');
 				Ext.getCmp('idCopago').setValue('');
 				storeSubcobertura.removeAll();
-				//cdunieco, cdramo, estado, nmpoliza, nmsituac, cdtipsit, cdgarant, cdsubcob..
-				/*cdunieco = params.get("cdunieco");
-						estado = params.get("estado");
-						cdramo = params.get("cdramo");
-						nmpoliza = params.get("nmpoliza");
-						nmsituac = params.get("nmsituac");
-						cdsubcob = params.get("cdsubcob");
-						cdtipsit = params.get("cdtipsit");
-						
-						//idUnieco		idcdRamo		idEstado	idNmSituac		idcdtipsit
-			
-				*/
 				storeSubcobertura.load({
 					params:{
 						'params.cdunieco' : Ext.getCmp('idUnieco').getValue(),
@@ -746,7 +733,7 @@ Ext.onReady(function() {
 		colspan:2, 		width:550,
 		fieldLabel : 'Subcobertura',	allowBlank: false,				displayField : 'value',			id:'idSubcobertura',		name:'cdconval',
 		labelWidth: 170,				valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,
-		queryMode :'remote',			store : storeSubcobertura,		triggerAction: 'all',			editable:false,
+		queryMode :'local',			store : storeSubcobertura,		triggerAction: 'all',			editable:false,
 		listeners : {
 			'select':function(e){
 				debug("====> VALOR INICIAL DE cveTipoAutorizaG  : ",Ext.getCmp('cveTipoAutorizaG').getValue());
@@ -754,7 +741,6 @@ Ext.onReady(function() {
 				if(Ext.getCmp('cveTipoAutorizaG').getValue()=="3" && (Ext.getCmp('claveTipoAutoriza').getValue()=="2" ||Ext.getCmp('claveTipoAutoriza').getValue()=="3" )){
 					Ext.getCmp('cveTipoAutorizaG').setValue("2");
 				}
-				debug("====> VALOR INICIAL DE cveTipoAutorizaG  Modificado : ",Ext.getCmp('cveTipoAutorizaG').getValue());
 				obtieneDatosCoberturaSubCobertura();
 			}
 		}
@@ -766,7 +752,7 @@ Ext.onReady(function() {
 		matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeProveedor,
 		minChars  : 2,					triggerAction: 'all',			hideTrigger:true,
 		listeners : {
-			change:function(e){
+			'select':function(field,value){
 				obtieneInformacion();
 				if(validaRamoTramite (Ext.getCmp('idcdRamo').getValue()) == false){
 					obtieneCirHospitalarioMultisalud();
@@ -781,8 +767,8 @@ Ext.onReady(function() {
 		matchFieldWidth : false,					triggerAction: 'all',			queryParam   : 'params.cdpresta',		store          : storeMedico,
 		minChars  		: 2,						queryMode    :'remote',			hideTrigger:true,		width:500,
 		listeners : {
-			change:function(e){
-				if(e.getValue() =='0'){
+			'select':function(field,value){
+				if(this.getValue() =='0'){
 					Ext.getCmp('medicoPExt').show();
 					Ext.getCmp('especialidadPExt').show();
 					Ext.getCmp('idEspecialidad').hide();
@@ -793,29 +779,7 @@ Ext.onReady(function() {
 				}
 				
 				Ext.getCmp('idEspecialidad').setValue('');
-				Ext.Ajax.request({
-					url     : _URL_CATALOGOS
-					,params : {
-						'params.cdpresta': e.getValue(),
-						catalogo         : _CAT_MEDICOS_ESPECIFICO,
-						catalogoGenerico : true
-					}
-					,success : function (response) {
-						if(Ext.decode(response.responseText).listaGenerica != null){
-							var json=Ext.decode(response.responseText).listaGenerica[0];
-							Ext.getCmp('idEspecialidad').setValue(json.descesp);
-						}
-					},
-					failure : function (){
-						me.up().up().setLoading(false);
-						centrarVentanaInterna(Ext.Msg.show({
-							title:'Error',
-							msg: 'Error de comunicaci&oacute;n',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.ERROR
-						}));
-					}
-				});
+				especialidadMedico(this.getValue());
 			}
 		}
 	});
@@ -834,23 +798,15 @@ Ext.onReady(function() {
 						'params.cdtabla':'TAPERESP'
 					}
 					,success : function (response){
-						var tiempoEsperaICD = Ext.decode(response.responseText).mesesTiempoEspera;
-						var tiempo ='';
-						// EXITO --> mesesAseguado >  tiempoEsperaICD  ó  mesesAseguado =  tiempoEsperaICD 
+						var resEspera = Ext.decode(response.responseText);
+						var tiempoEsperaICD = resEspera.mesesTiempoEspera;
 						if(!(+Ext.getCmp('idMesesAsegurado').getValue() >= +tiempoEsperaICD)){
-							if(tiempoEsperaICD == "24"){
-								tiempo = '2 años.';
-							}else if(tiempoEsperaICD == "60"){
-								tiempo = '5 años.';
-							}else{
-								tiempo = '10 meses.';
-							}
 							if(Ext.getCmp('idCausaSiniestro').getValue()!= _CODIGO_CAUSA_ACCIDENTE){
-								notasInternas= Ext.getCmp('notaInterna').getValue() +" ICD :" +comboICD.rawValue + (mensajeInicial +tiempo);
+								notasInternas= Ext.getCmp('notaInterna').getValue() +" ICD :" +comboICD.rawValue + resEspera.mensaje;
 								Ext.getCmp('notaInterna').setValue(notasInternas);
 								centrarVentanaInterna(Ext.Msg.show({
 									title: 'Error',
-									msg: mensajeInicial +tiempo,
+									msg: resEspera.mensaje,
 									buttons: Ext.Msg.OK,
 									icon: Ext.Msg.WARNING
 								}));
@@ -880,7 +836,6 @@ Ext.onReady(function() {
 			'select' :function(e){
 				switch (this.getValue()) {
 					case '1': //ENFERMEDAD
-						Ext.getCmp('notaInterna').setValue('');
 						obtieneInformacion();
 					break;
 					case '2' : // ACCIDENTE
@@ -959,19 +914,11 @@ Ext.onReady(function() {
 						'params.cdtabla':'TAPERESP'
 					}
 					,success : function (response){
-						var tiempoEsperaICD = Ext.decode(response.responseText).mesesTiempoEspera;
-						var tiempo ='';
+						var resEspera = Ext.decode(response.responseText);
+						var tiempoEsperaICD = resEspera.mesesTiempoEspera;
 						if(!(+Ext.getCmp('idMesesAsegurado').getValue() >= +tiempoEsperaICD)){
-							if(tiempoEsperaICD == "24"){
-								tiempo = '2 años.';
-							}else if(tiempoEsperaICD == "60"){
-								tiempo = '5 años.';
-							}else{
-								tiempo = '10 meses.';
-							}
-							
 							if(Ext.getCmp('idCausaSiniestro').getValue()!= _CODIGO_CAUSA_ACCIDENTE){
-								notasInternas = Ext.getCmp('notaInterna').getValue() +" CPT Trátamiento médico: " +cptConAutorizado.rawValue + (mensajeInicial +tiempo);
+								notasInternas = Ext.getCmp('notaInterna').getValue() +" CPT Trátamiento médico: " +cptConAutorizado.rawValue + resEspera.mensaje;
 								Ext.getCmp('notaInterna').setValue(notasInternas);
 								centrarVentanaInterna(Ext.Msg.show({
 									title: 'Error',
@@ -1037,19 +984,13 @@ Ext.onReady(function() {
 						'params.cdtabla':'TAPERESP'
 					}
 					,success : function (response) {
-						var tiempoEsperaICD = Ext.decode(response.responseText).mesesTiempoEspera;
-						var tiempo ='';
+						var resEspera = Ext.decode(response.responseText);
+						var tiempoEsperaICD = resEspera.mesesTiempoEspera;
+						
 						if(!(+Ext.getCmp('idMesesAsegurado').getValue() >= +tiempoEsperaICD)){
-							if(tiempoEsperaICD == "24"){
-								tiempo = '2 años.';
-							}else if(tiempoEsperaICD == "60"){
-								tiempo = '5 años.';
-							}else{
-								tiempo = '10 meses.';
-							}
 							
 							if(Ext.getCmp('idCausaSiniestro').getValue()!= _CODIGO_CAUSA_ACCIDENTE){
-								notasInternas= Ext.getCmp('notaInterna').getValue() +" CPT equipo quirúrgico base: " +cptQuirBase.rawValue + (mensajeInicial +tiempo);
+								notasInternas= Ext.getCmp('notaInterna').getValue() +" CPT equipo quirúrgico base: " +cptQuirBase.rawValue + resEspera.mensaje
 								Ext.getCmp('notaInterna').setValue(notasInternas);
 								centrarVentanaInterna(Ext.Msg.show({
 									title: 'Error',
@@ -1234,12 +1175,6 @@ Ext.onReady(function() {
 				triggerAction: 'all',			name:'idmedicoEqQuirurg',		minChars  : 2,						hideTrigger:true
 				,listeners : {
 					'select' : function(combo, record) {
-						storeTipoMedico.load({
-							params:{
-								'params.codigo': null
-							}
-						});
-						
 						if(this.getValue() =='0'){
 							Ext.getCmp('medicoExtEqQ').setValue('EQUIPO QUIR\u00DARGICO'),
 							Ext.getCmp('medicoExtEqQ').show();
@@ -2420,6 +2355,8 @@ Ext.onReady(function() {
 				if(json.cdmedico == '0'){
 					Ext.getCmp('medicoPExt').setValue(json.nombreMedico);					// Valor del Medico
 					Ext.getCmp('especialidadPExt').setValue(json.especialidadMedico);		// Valor de la especialidad
+				}else{
+					especialidadMedico(json.cdmedico);
 				}
 				Ext.getCmp('tratamiento').setValue(json.dstratam);							// Valor del Tratamiento
 				Ext.getCmp('observaciones').setValue(json.dsobserv);						// Valor de Observaciones
@@ -2557,6 +2494,7 @@ Ext.onReady(function() {
 				Ext.getCmp('idProveedor').setValue(json.cdprovee);								// Valor del Proveedor
 				storeCausaSinestro.load();
 				Ext.getCmp('idCausaSiniestro').setValue(json.cdcausa);							// Valor de la Causa del Siniestro
+				obtieneInformacion();
 			},
 			failure : function (){
 				me.up().up().setLoading(false);
@@ -2568,6 +2506,8 @@ Ext.onReady(function() {
 				}));
 			}
 		});
+		
+		
 		return true;
 	}
 
@@ -2688,6 +2628,7 @@ Ext.onReady(function() {
 								,success : function (response){
 									if(Ext.decode(response.responseText).listaGenerica != null){
 										var json=Ext.decode(response.responseText).listaGenerica[0];
+										debug("VALOR DE RESPUESTA===========> ", json);
 										Ext.getCmp('idCirculoHospProv').setValue(json.circulo);
 										Ext.getCmp('codPostalProv').setValue(json.codpos);
 										Ext.getCmp('idzonaHospProv').setValue(json.zonaHospitalaria);
@@ -2941,7 +2882,7 @@ Ext.onReady(function() {
 	}
 
 	function validaRamoTramite(ramoPoliza){
-		if(ramoPoliza =="2" || ramoPoliza =="7" ){
+		if(ramoPoliza == _SALUD_VITAL || ramoPoliza == _GMMI ){
 			return true;
 		}else{
 			return false;
@@ -3003,6 +2944,31 @@ Ext.onReady(function() {
 		return true;
 	}
 
+	function especialidadMedico(cdprestaMedico){
+		Ext.Ajax.request({
+			url     : _URL_CATALOGOS
+			,params : {
+				'params.cdpresta': cdprestaMedico,
+				catalogo         : _CAT_MEDICOS_ESPECIFICO,
+				catalogoGenerico : true
+			}
+			,success : function (response) {
+				if(Ext.decode(response.responseText).listaGenerica != null){
+					var json=Ext.decode(response.responseText).listaGenerica[0];
+					Ext.getCmp('idEspecialidad').setValue(json.descesp);
+				}
+			},
+			failure : function (){
+				me.up().up().setLoading(false);
+				centrarVentanaInterna(Ext.Msg.show({
+					title:'Error',
+					msg: 'Error de comunicaci&oacute;n',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				}));
+			}
+		});
+	}
 	function  guardadoAutorizacionServicio(valor){
 		var respuesta=true;
 		var submitValues={};
@@ -3086,19 +3052,11 @@ Ext.onReady(function() {
 							,standardSubmit : true
 							,params         : {
 								'smap1.gridTitle'      : 'Autorizaci\u00F3n de servicio'
-								,'smap2.pv_cdtiptra_i' : 14
+								,'smap2.pv_cdtiptra_i' : _AUTORIZACION_SERVICIO
 							}
 						});
 					});
-
-					panelInicialPrincipal.getForm().reset();
-					storeMedico.removeAll();
-					Ext.getCmp('idEspecialidad').setValue('');
-					Ext.getCmp('fechaSolicitud').setValue('');
-					storeConceptoAutorizados.removeAll();
-					storeQuirugicoBase.removeAll();
-						storeQuirurgico.removeAll();
-					}
+				}
 				else{
 					centrarVentanaInterna(Ext.Msg.show({
 						title:'Error',
