@@ -193,7 +193,7 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
         iso = navigationManagerNuevo.getVariablesIso(usuario.getUser());
         numReg = navigationManager.getNumRegistro(usuario.getUser());
         userList = usuarioManager.getAttributesUser(usuario.getUser());
-        logger.warn("Usuarios totales: "+(userList!=null?userList.size():"null")+ " pero solo el de sesion se complemento");
+        logger.info("Usuarios totales: "+(userList!=null?userList.size():"null")+ " pero solo el de sesion se complemento");
         complementaUsuario(usuario);
         session.put("USUARIO", usuario);
         ///////////////////////////////////////////////////////////////////////////////
