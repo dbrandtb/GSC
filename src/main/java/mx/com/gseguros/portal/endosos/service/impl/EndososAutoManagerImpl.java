@@ -1688,7 +1688,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			}
 			
 		}else{
-			logger.warn("Aviso, No se tienen datos de Cambio AseguradoAlterno");
+			logger.error("Aviso, No se tienen datos de Cambio AseguradoAlterno");
 			return false;
 		}
 		
@@ -1775,7 +1775,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			}
 			
 		}else{
-			logger.warn("Aviso, No se tienen datos de Cambio AdaptacionesRC");
+			logger.error("Aviso, No se tienen datos de Cambio AdaptacionesRC");
 			return false;
 		}
 		
@@ -1867,7 +1867,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			}
 				
 		}else{
-			logger.warn("Aviso, No se tienen datos de Cambio Vigencia");
+			logger.error("Aviso, No se tienen datos de Cambio Vigencia");
 			return false;
 		}
 
@@ -1952,7 +1952,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			}
 			
 		}else{
-			logger.warn("Aviso, No se tienen datos de endosoTextoLibre");
+			logger.error("Aviso, No se tienen datos de endosoTextoLibre");
 			return false;
 		}
 		
@@ -2050,7 +2050,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			}
 			
 		}else{
-			logger.warn("Aviso, No se tienen datos de Cambio Beneficiario");
+			logger.error("Aviso, No se tienen datos de Cambio Beneficiario");
 			return false;
 		}
 		
@@ -2138,7 +2138,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			}
 				
 		}else{
-			logger.warn("Aviso, No se tienen datos de Cambio Placas Motor");
+			logger.error("Aviso, No se tienen datos de Cambio Placas Motor");
 			return false;
 		}
 		
@@ -2226,7 +2226,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			}
 				
 		}else{
-			logger.warn("Aviso, No se tienen datos de Cambio Tipo Servicio");
+			logger.error("Aviso, No se tienen datos de Cambio Tipo Servicio");
 			return false;
 		}
 		
@@ -2313,7 +2313,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			}
 			
 		}else{
-			logger.warn("Aviso, No se tienen datos de Cambio Serie");
+			logger.error("Aviso, No se tienen datos de Cambio Serie");
 			return false;
 		}
 		
