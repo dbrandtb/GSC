@@ -2087,11 +2087,20 @@ function _p22_datosAdicionalesClic()
 				
 				
 				if(!_activaCveFamiliar){
-			    	//Clave familiar
-			    	_fieldByName('parametros.pv_otvalor49', _PanelPrincipalPersonas, true).hide();
 			    	
-			    	//Numero socio
-			    	_fieldByName('parametros.pv_otvalor50', _PanelPrincipalPersonas, true).hide();
+					try{
+						//Clave familiar
+			    		_fieldByName('parametros.pv_otvalor49', _PanelPrincipalPersonas, true).hide();	
+					}catch(e){
+						debug('Sin campo de Clave Familiar');
+					}
+
+					try{
+						//Numero socio
+			    	_fieldByName('parametros.pv_otvalor50', _PanelPrincipalPersonas, true).hide();	
+					}catch(e){
+						debug('Sin campo de Numero de Socio');
+					}
 			    }
 				
             }
