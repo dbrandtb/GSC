@@ -102,7 +102,7 @@ public class CatalogosAction extends PrincipalCoreAction {
         			lista = catalogosManager.cargarAgentesPorPromotor(params.get("cdusuari"));
         			break;
         		case COLONIAS:
-					lista = catalogosManager.obtieneColonias(params.get("cp"));
+					lista = catalogosManager.obtieneColonias(params!=null?params.get("cp"):null);
 					break;
         		case MUNICIPIOS:
 					lista = catalogosManager.obtieneMunicipios(params.get("cdestado"));
