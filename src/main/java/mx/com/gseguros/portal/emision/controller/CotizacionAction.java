@@ -4399,6 +4399,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,true     , null/*ntramite*/, null/*cdagente*/
 					,false //sincenso
 					,false //censoAtrasado
+					,false //resubirCenso
 					);
 			exito           = aux.exito;
 			respuesta       = aux.respuesta;
@@ -4653,6 +4654,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			boolean sincenso      = StringUtils.isNotBlank(sincensoS)&&sincensoS.equals("S");
 			String censoAtrasadoS = smap1.get("censoAtrasado");
 			boolean censoAtrasado = StringUtils.isNotBlank(censoAtrasadoS)&&censoAtrasadoS.equals("S");
+			String resubirCensoS  = smap1.get("resubirCenso");
+			boolean resubirCenso  = StringUtils.isNotBlank(resubirCensoS)&&resubirCensoS.equals("S");
 			
 			censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+inTimestamp);
 			
@@ -4761,7 +4764,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			
 			//enviar archivo
-			if(exito&&(!hayTramite||hayTramiteVacio||censoAtrasado)&&!sincenso)
+			if(exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)&&!sincenso)
 			{
 				
 				FileInputStream input      = null;
@@ -5250,7 +5253,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			
 			//pl censo
-			if(exito&&(!hayTramite||hayTramiteVacio||censoAtrasado))
+			if(exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso))
 			{
 				try
 				{
@@ -5318,12 +5321,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			if(exito)
 			{
 				tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject aux = this.tvalositSigsvdefTvalogarContratanteTramiteSigsvalipol(
-						clasif    , LINEA      , LINEA_EXTENDIDA
-						,cdunieco , cdramo     , nmpoliza
-						,cdtipsit , hayTramite , hayTramiteVacio
-						,user     , cdelemento , ntramiteVacio
-						,false    , ntramite   , cdagente
-						,sincenso , censoAtrasado
+						clasif    , LINEA         , LINEA_EXTENDIDA
+						,cdunieco , cdramo        , nmpoliza
+						,cdtipsit , hayTramite    , hayTramiteVacio
+						,user     , cdelemento    , ntramiteVacio
+						,false    , ntramite      , cdagente
+						,sincenso , censoAtrasado , resubirCenso
 						);
 				exito           = aux.exito;
 				respuesta       = aux.respuesta;
@@ -5373,6 +5376,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			,String cdagente
 			,boolean sincenso
 			,boolean censoAtrasado
+			,boolean resubirCenso
 			)
 	{
 		logger.debug(
@@ -5396,6 +5400,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				.append("\n## cdagente: ")            .append(cdagente)
 				.append("\n## sincenso: ")            .append(sincenso)
 				.append("\n## censoAtrasado: ")       .append(censoAtrasado)
+				.append("\n## resubirCenso: ")        .append(resubirCenso)
 				.toString()
 				);
 		
@@ -5487,7 +5492,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		
 		//sigsvdef
-		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado))
+		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso))
 		{
 			try
 			{
@@ -5666,7 +5671,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					exiper   = "N";
 				}
 				
-				if(exiper.equals("N")||reinsertaContratante||censoAtrasado)
+				if(exiper.equals("N")||reinsertaContratante||censoAtrasado||resubirCenso)
 				{
 					LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
 					parametros.put("param01_pv_cdperson_i"    , cdperson);
