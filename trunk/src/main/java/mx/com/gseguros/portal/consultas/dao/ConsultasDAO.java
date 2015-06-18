@@ -272,4 +272,11 @@ public interface ConsultasDAO
 			,String nmsuplem
 			,String cdtipsup
 			)throws Exception;
+	
+	public List<Map<String,String>> recuperarRevisionColectivos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }
