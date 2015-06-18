@@ -14,194 +14,122 @@
     ////// variables //////
     
     ////// funciones //////
-    function comboMotivocambio(combo,nue,ant)
-    {
+    function comboMotivocambio(combo,nue,ant){   
     	debug('>comboMotivocambio:',combo,ant,nue);
-    	if(nue=='22')
-    	{
-    		//-----------------------------------
-        	Ext.MessageBox.show({
-                title: "Confirmaci&oacuten de Cancelaci&oacuten de P&oacuteliza",
-                msg: "¿Desea efectuar Cancelaci&oacuten a Solicitud?",
-                icon: Ext.MessageBox.WARNING,
-                buttons: Ext.MessageBox.OKCANCEL,
-                fn: function(buttonId) {
-                    if (buttonId === "ok") {
-                        // do on OK pressed                        	                                                                                  
-                        debug(22);
-                        panCanInputFecha.setValue(new Date());
-                        panCanInputFecha.setReadOnly(false);
-                        panCanForm.setLoading(true);
-                        Ext.Ajax.request(
-                        {
-                            url       : _global_urlConsultaDinamica
-                            ,jsonData :
-                            {
-                                 stringMap :
-                                 {
-                                     accion : Accion.ValidaCancelacionProrrata           
-                                 }
-                                 ,linkedObjectMap :
-                                 {
-                                     param1  : pancanInSmap1.CDUNIAGE
-                                     ,param2 : pancanInSmap1.CDRAMO
-                                     ,param3 : pancanInSmap1.ESTADO
-                                     ,param4 : pancanInSmap1.NMPOLIZA
-                                     ,param5 : nue
-                                 }
-                             }
-                            ,success  : function(response)
-                            {
+    	if(nue=='22'){
+            debug(22);
+            panCanInputFecha.setValue(new Date());
+            panCanInputFecha.setReadOnly(false);
+            panCanForm.setLoading(true);
+            Ext.Ajax.request({
+                url             : _global_urlConsultaDinamica
+                ,jsonData       :{
+                    stringMap   :{
+                        accion : Accion.ValidaCancelacionProrrata           
+                    }
+                    ,linkedObjectMap :{
+                         param1  : pancanInSmap1.CDUNIAGE
+                         ,param2 : pancanInSmap1.CDRAMO
+                         ,param3 : pancanInSmap1.ESTADO
+                         ,param4 : pancanInSmap1.NMPOLIZA
+                         ,param5 : nue
+                     }
+                 }
+                ,success  : function(response){
                                 panCanForm.setLoading(false);
                                 jsonData = Ext.decode(response.responseText);
-                                if(jsonData.success)
-                                {
+                                if(jsonData.success){
                                 }
-                                else
-                                {
+                                else{
                                     mensajeError(jsonData.mensaje);
-                                    combo.setValue('');
+                                    combo.setValue('22');
                                 }
                             }
-                            ,failure  : function()
-                            {
+                ,failure  : function(){
                                 panCanForm.setLoading(false);
                                 errorComunicacion();
                                 combo.setValue('22');
                             }
-                        });
-                    }
-                    else{
-                    	combo.setValue('');
-                    }
-                    debug('<comboMotivocambio');
-                }
             });
-            //-----------------------------------
+        debug('<comboMotivocambio');
     	}
-    	else if(nue=='24')
-    	{
-            Ext.MessageBox.show({
-                title: "Confirmaci&oacuten de Cancelaci&oacuten de P&oacuteliza",
-                msg: "¿Desea efectuar Cancelaci&oacuten a Prorrata con Derechos de P&oacuteliza?",
-                icon: Ext.MessageBox.WARNING,
-                buttons: Ext.MessageBox.OKCANCEL,
-                fn: function(buttonId) {
-                    if (buttonId === "ok") {
-                            		debug(24);
-                            		panCanInputFecha.setValue(new Date());
-                                    panCanInputFecha.setReadOnly(true);
-                                    panCanForm.setLoading(true);
-                                    Ext.Ajax.request(
-                                    {
-                                        url       : _global_urlConsultaDinamica
-                                        ,jsonData :
-                                        {
-                                             stringMap :
-                                             {
-                                                 accion : Accion.ValidaCancelacionProrrata           
-                                             }
-                                             ,linkedObjectMap :
-                                             {
-                                                 param1  : pancanInSmap1.CDUNIAGE
-                                                 ,param2 : pancanInSmap1.CDRAMO
-                                                 ,param3 : pancanInSmap1.ESTADO
-                                                 ,param4 : pancanInSmap1.NMPOLIZA
-                                                 ,param5 : nue
-                                             }
-                                         }
-                                        ,success  : function(response)
-                                        {
-                                            panCanForm.setLoading(false);
-                                            jsonData = Ext.decode(response.responseText);
-                                            if(jsonData.success)
-                                            {
-                                            }
-                                            else
-                                            {
-                                                mensajeError(jsonData.mensaje);
-                                                combo.setValue('');
-                                            }
-                                        }
-                                        ,failure  : function()
-                                        {
-                                            panCanForm.setLoading(false);
-                                            errorComunicacion();
-                                            combo.setValue('22');
-                                            }
-                                        }); 
-                                  }
-                    else{
-                        combo.setValue('');
-                    }                          
-                debug('<comboMotivocambio');
+    	else if(nue=='24'){
+    		debug(24);
+    		panCanInputFecha.setValue(new Date());
+            panCanInputFecha.setReadOnly(true);
+            panCanForm.setLoading(true);
+            Ext.Ajax.request({
+                url       : _global_urlConsultaDinamica
+                ,jsonData :{
+                    stringMap :{
+                         accion : Accion.ValidaCancelacionProrrata           
+                     }
+                     ,linkedObjectMap :{
+                          param1 : pancanInSmap1.CDUNIAGE
+                         ,param2 : pancanInSmap1.CDRAMO
+                         ,param3 : pancanInSmap1.ESTADO
+                         ,param4 : pancanInSmap1.NMPOLIZA
+                         ,param5 : nue
+                     }
+                 }
+                ,success  : function(response){
+                                panCanForm.setLoading(false);
+                                jsonData = Ext.decode(response.responseText);
+                                if(jsonData.success){
+                                }
+                                else{
+                                    mensajeError(jsonData.mensaje);
+                                    combo.setValue('24');
+                                }
                             }
-            });
+                ,failure  : function(){
+                                panCanForm.setLoading(false);
+                                errorComunicacion();
+                                combo.setValue('22');
+                            }
+            }); 
+        debug('<comboMotivocambio');
     	}
     	else if(nue=='25'){
-    		            Ext.MessageBox.show({
-                title: "Confirmaci&oacuten de Cancelaci&oacuten de P&oacuteliza",
-                msg: "¿Desea efectuar Cancelaci&oacuten a Prorrata sin Derechos de P&oacuteliza?",
-                icon: Ext.MessageBox.WARNING,
-                buttons: Ext.MessageBox.OKCANCEL,
-                fn: function(buttonId) {
-                    if (buttonId === "ok") {
-                                    debug(25);
-                                    panCanInputFecha.setValue(new Date());
-                                    panCanInputFecha.setReadOnly(true);
-                                    panCanForm.setLoading(true);
-                                    Ext.Ajax.request(
-                                    {
-                                        url       : _global_urlConsultaDinamica
-                                        ,jsonData :
-                                        {
-                                             stringMap :
-                                             {
-                                                 accion : Accion.ValidaCancelacionProrrata           
-                                             }
-                                             ,linkedObjectMap :
-                                             {
-                                                 param1  : pancanInSmap1.CDUNIAGE
-                                                 ,param2 : pancanInSmap1.CDRAMO
-                                                 ,param3 : pancanInSmap1.ESTADO
-                                                 ,param4 : pancanInSmap1.NMPOLIZA
-                                                 ,param5 : nue
-                                             }
-                                         }
-                                        ,success  : function(response)
-                                        {
-                                            panCanForm.setLoading(false);
-                                            jsonData = Ext.decode(response.responseText);
-                                            if(jsonData.success)
-                                            {
-                                            }
-                                            else
-                                            {
-                                                mensajeError(jsonData.mensaje);
-                                                combo.setValue('');
-                                            }
-                                        }
-                                        ,failure  : function()
-                                        {
-                                            panCanForm.setLoading(false);
-                                            errorComunicacion();
-                                            combo.setValue('22');
-                                            }
-                                        }); 
-                                  }
-                    else{
-                        combo.setValue('');
-                    }                          
-                debug('<comboMotivocambio');
+            debug(25);
+            panCanInputFecha.setValue(new Date());
+            panCanInputFecha.setReadOnly(true);
+            panCanForm.setLoading(true);
+            Ext.Ajax.request({
+                url       : _global_urlConsultaDinamica
+                ,jsonData :{
+                    stringMap :{
+                        accion : Accion.ValidaCancelacionProrrata           
+                    }
+                   ,linkedObjectMap :{
+                      param1 : pancanInSmap1.CDUNIAGE
+                     ,param2 : pancanInSmap1.CDRAMO
+                     ,param3 : pancanInSmap1.ESTADO
+                     ,param4 : pancanInSmap1.NMPOLIZA
+                     ,param5 : nue
+                     }
+                 }
+                ,success  : function(response){
+                                panCanForm.setLoading(false);
+                                jsonData = Ext.decode(response.responseText);
+                                if(jsonData.success){
+                                }
+                                else{
+                                mensajeError(jsonData.mensaje);
+                                combo.setValue('25');
+                                }
                             }
-            });
+                ,failure  : function(){
+                                panCanForm.setLoading(false);
+                                errorComunicacion();
+                                combo.setValue('22');
+                            }
+            }); 
+        debug('<comboMotivocambio');
         }
-    	}
-                                		
+	}
     ////// funciones //////
-    
-Ext.onReady(function()
-{
+Ext.onReady(function(){
     
     ////// modelos //////
     ////// modelos //////
@@ -213,121 +141,81 @@ Ext.onReady(function()
     ////// componentes //////
     
     ////// contenido //////
-    panCanForm = Ext.create('Ext.form.Panel',
-    {
-    	renderTo     : 'panCanDivPri'
+    panCanForm = Ext.create('Ext.form.Panel',{
+        renderTo     : 'panCanDivPri'
     	,id          : 'panCanFormPri'
     	,url         : panCanUrlCancelar
-    	,layout      :
-    	{
-    		type     : 'table'
-    		,columns : 2
+    	,layout      :{
+    	   type     : 'table'
+    	   ,columns : 2
     	}
-    	,defaults    :
-    	{
-    		style : 'margin : 5px;'
+    	,defaults    :{
+		  style : 'margin : 5px;'
     	}
-    	,items       :
-    	[
+    	,items       :[
     	    <s:property value="imap.itemsMarcocancelacionModelocandidata" />
     	]
     	,buttonAlign : 'center'
-    	//----------------------------------------------------------    	
-    	/*
-    	,buttons   : 
-        [
-            {
-                text : 'Bot&oacuten Prueba',
-                
-            	handler: function ()
-            	{
-            		var boton=this;
-            		if (nue=='24'){
-            		boton.hide();	
-            		}
-            		else{
-                        Ext.Msg.show({
-                            title:'Confirmaci&oacuten de  Cancelaci&oacuten',
-                            msg: 'Elija una Raz&oacuten de Cancelaci&oacuten',
-                            buttons: Ext.Msg.OK,
-                            icon: Ext.Msg.WARNING
-                        });            			
-            		}
-            	}
-            }
-        ]
-        */
-        //----------------------------------------------------------
-    	/*
-    	,buttons     :
-    	[
-    	    {
-    	    	text     : 'Confirmar cancelaci&oacute;n'
-    	    	,icon    : '${ctx}/resources/fam3icons/icons/key.png'
-    	    	,handler : function()
-    	    	{
-    	    		var boton=this;
-    	    		boton.hide();
-    	    		var form=this.up().up();
-    	    		if(form.isValid())
-    	    		{
-    	    			form.setLoading(true);
-    	    			form.submit(
-    	    			{
-    	    				success : function(formu,action)
-                            {
-    	    					form.setLoading(false);
-                                debug(action);
-                                var json = Ext.decode(action.response.responseText);
-                                debug(json);
-                                if(json.success==true)
-                                {
-                                    debug('ok');
-                                    Ext.Msg.show({
-                                        title    : 'Cancelaci&oacute;n exitosa'
-                                        ,msg     : 'Se ha cancelado la p&oacute;liza'
-                                        ,buttons : Ext.Msg.OK
-                                    });
-                                    boton.hide();
-                                }
-                                else
-                                {
-                                    Ext.Msg.show(
-                                    {
-                                        title    : 'Error'
-                                        ,msg     : 'Error al cancelar la p&oacute;liza'
-                                        ,icon    : Ext.Msg.ERROR
-                                        ,buttons : Ext.Msg.OK
-                                    });
-                                }
-                            }
-                            ,failure : function()
-                            {
-                            	form.setLoading(false);
-                                Ext.Msg.show(
-                                {
-                                    title   : 'Error',
-                                    icon    : Ext.Msg.ERROR,
-                                    msg     : 'Error de comunicaci&oacute;n',
-                                    buttons : Ext.Msg.OK
-                                });
-                            }
-    	    			});
-    	    		}
-    	    		else
-    	    		{
-    	    			Ext.Msg.show(
-                        {
+    	,buttons     :[
+	       {
+        	text     : 'Confirmar cancelaci&oacute;n'
+        	,icon    : '${ctx}/resources/fam3icons/icons/key.png'
+        	,handler : function(){
+    	                   var boton=this;
+	    		           var form=this.up().up();
+    	    		       if(form.isValid()){
+    		                  if( jsonData.success==true){
+    		                      form.setLoading(true);
+    		                      form.submit({
+    		                          success :function(formu,action){
+    		                                       form.setLoading(false);
+    		                                       debug(action);
+    		                                       var json = Ext.decode(action.response.responseText);
+    		                                       debug(json);
+    		                                       if(json.success==true){
+    		                                          debug('ok');
+            		                                  Ext.Msg.show({
+            		                                      title    : 'Cancelaci&oacute;n exitosa'
+            		                                      ,msg     : 'Se ha cancelado la p&oacute;liza'
+            		                                      ,buttons : Ext.Msg.OK
+        		                                      });
+        		                                      boton.hide();
+    		                                      }
+        	                                      else{
+        	                                          Ext.Msg.show({
+    	                                                  title    : 'Error'
+    	                                                  ,msg     : 'Error al cancelar la p&oacute;liza'
+    	                                                  ,icon    : Ext.Msg.ERROR
+    	                                                  ,buttons : Ext.Msg.OK
+    	                                                  });
+                                                  }
+                                              }
+                                      ,failure : function(){
+                                                     form.setLoading(false);
+                                                     Ext.Msg.show({
+                                                     title   : 'Error',
+                                                     icon    : Ext.Msg.ERROR,
+                                                     msg     : 'Error de comunicaci&oacute;n',
+                                                     buttons : Ext.Msg.OK
+                                                     });
+                                                 }
+                                 });
+                             }
+                             else{
+                                mensajeError(jsonData.mensaje);
+                             }
+                         }
+                         else{
+                            Ext.Msg.show({
                             title   : 'Datos incompletos',
                             icon    : Ext.Msg.WARNING,
                             msg     : 'Favor de llenar los campos requeridos',
                             buttons : Ext.Msg.OK
-                        });
-    	    		}
-    	    	}
+                            });
+                        }
+                       }
     	    }
     	]
-      */
     });
     
     var comboMotivoCanc = panCanForm.items.items[6];
@@ -336,7 +224,8 @@ Ext.onReady(function()
     panCanInputFecha = panCanForm.items.items[9];
     debug('panCanInputFecha:',panCanInputFecha);
     comboMotivoCanc.addListener('change',comboMotivocambio);
-    comboMotivocambio(comboMotivoCanc);
+    comboMotivocambio(comboMotivoCanc,'22');
+    
     ////// contenido //////
     
     ////// cargador //////
