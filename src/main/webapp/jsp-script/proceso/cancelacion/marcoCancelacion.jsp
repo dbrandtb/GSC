@@ -89,12 +89,14 @@
                     }
    		    	});
                 //--------------
+   		    	/*
                 Ext.Msg.show(
                 {
                     icon    : Ext.Msg.WARNING,
                     msg     : 'Seleccione una Raz&oacuten de Cancelaci&oacuten de la P&oacuteliza para continuar',
                     buttons : Ext.Msg.OK
                 });
+                */
                 //--------------
    		    }
    		    else
@@ -514,7 +516,15 @@ Ext.onReady(function()
 					    }
 					}
     	    		,*/
-    	    		{
+                    {
+                        text     : 'Limpiar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/control_repeat_blue.png'
+                        ,handler : function()
+                        {
+                            this.up().up().getForm().reset();
+                        }
+                    },
+	    			{
     	    			text     : 'Buscar'
     	    			,id      : 'marcanFilBotGen'
     	    			,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
@@ -576,15 +586,7 @@ Ext.onReady(function()
                                 });
     	    				}
     	    		    }
-    	    		},
-    	    		{
-                        text     : 'Limpiar'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/control_repeat_blue.png'
-                        ,handler : function()
-                        {
-                            this.up().up().getForm().reset();
-                        }
-                    }
+    	    		}
     	    	]
     	    })
     	    ,Ext.create('Ext.grid.Panel',
