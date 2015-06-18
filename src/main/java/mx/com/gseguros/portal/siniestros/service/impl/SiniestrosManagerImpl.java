@@ -1166,6 +1166,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		String iva     = proveedor.get("IVA");
 		String cedular = proveedor.get("CEDULAR");
 		String isr     = proveedor.get("ISR");
+		String idprov  = proveedor.get("IDPROVEEDOR");
 		if(StringUtils.isBlank(iva))
 		{
 			proveedor.put("IVA","0");
@@ -1177,6 +1178,10 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		if(StringUtils.isBlank(isr))
 		{
 			proveedor.put("ISR","0");
+		}
+		if(StringUtils.isBlank(idprov))
+		{
+			proveedor.put("IDPROVEEDOR","0");
 		}
 		log.info("proveedor: "+proveedor);
 		log.info(""

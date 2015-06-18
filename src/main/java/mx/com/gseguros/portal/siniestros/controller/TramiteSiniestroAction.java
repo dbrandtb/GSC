@@ -17,6 +17,7 @@ import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
+import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.Rol;
 import mx.com.gseguros.portal.general.util.TipoPago;
 import mx.com.gseguros.portal.general.util.TipoTramite;
@@ -146,7 +147,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				parMesCon.put("pv_otvalor13",Rol.CLINICA.getCdrol());
 			}
 			
-			if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase("7")){
+			if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 				parMesCon.put("pv_otvalor12","7RDH");
 				parMesCon.put("pv_otvalor14","7RDH001");
 			}
@@ -201,7 +202,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				modMesaControl.put("pv_otvalor15_i",params.get("idnombreBeneficiarioProv"));
 				modMesaControl.put("pv_otvalor20_i",params.get("cmbRamos"));
 				
-				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase("7")){
+				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 					modMesaControl.put("pv_otvalor12","7RDH");
 					modMesaControl.put("pv_otvalor14","7RDH001");
 				}
@@ -262,7 +263,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			}
 			String cobertura = null;
 			String subcobertura = null;
-			if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase("7")){
+			if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 				cobertura 	 = "7RDH";
 				subcobertura = "7RDH001";
 			}
@@ -279,7 +280,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					nfactura,
 					renderFechas.parse(datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4)),
 					datosTablas.get(i).get("cdtipser"),
-					(cdramo.equalsIgnoreCase("1"))?"0":datosTablas.get(i).get("cdpresta"),
+					(cdramo.equalsIgnoreCase(Ramo.RECUPERA.getCdramo()))?"0":datosTablas.get(i).get("cdpresta"),
 					datosTablas.get(i).get("ptimport"),
 					cobertura,
 					subcobertura,
@@ -292,7 +293,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					null,
 					null,
 					null,
-					(cdramo.equalsIgnoreCase("1"))?datosTablas.get(i).get("nombprov"):null
+					(cdramo.equalsIgnoreCase(Ramo.RECUPERA.getCdramo()))?datosTablas.get(i).get("nombprov"):null
 				);
 			}
 	
@@ -339,7 +340,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			String tipoPago = params.get("cmbTipoPago");
 			for(int i=0;i<datosTablas.size();i++) {
 				
-				if((cdramo.equalsIgnoreCase("1") || cdramo.equalsIgnoreCase("7")) && tipoPago.equalsIgnoreCase("3")) {
+				if((cdramo.equalsIgnoreCase(Ramo.RECUPERA.getCdramo()) || cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())) && tipoPago.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo())) {
 					valorFactura = params.get("nmtramite")+""+(slist1.size());
 				}else{
 					valorFactura = datosTablas.get(i).get("nfactura");
@@ -352,8 +353,8 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					datosTablas.get(i).get("cdtipser"),
 					datosTablas.get(i).get("cdpresta"),
 					datosTablas.get(i).get("ptimport"),
-					((cdramo.equalsIgnoreCase("7") && tipoPago.equalsIgnoreCase("3"))?"7RDH":null),
-					((cdramo.equalsIgnoreCase("7") && tipoPago.equalsIgnoreCase("3"))?"7RDH001":null),
+					((cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) && tipoPago.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()))?"7RDH":null),
+					((cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) && tipoPago.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()))?"7RDH001":null),
 					null,
 					null,
 					datosTablas.get(i).get("cdmoneda"),
@@ -492,16 +493,22 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 		try {
 			List<Map<String,String>> datosAsegurado = siniestrosManager.obtieneDatosBeneficiario(params.get("cdunieco"), params.get("cdramo"), params.get("estado"),
 									params.get("nmpoliza"), params.get("cdperson"));
-			logger.debug("VALORES DE EDAD: {}", datosAsegurado.get(0).get("EDAD"));
 			
-			int edadMinima = Integer.parseInt("18");
-			if(Integer.parseInt(datosAsegurado.get(0).get("EDAD")) >= edadMinima){
+			if(datosAsegurado.size()> 0){
+				logger.debug("VALORES DE EDAD: {}", datosAsegurado.get(0).get("EDAD"));
+				int edadMinima = Integer.parseInt("18");
+				if(Integer.parseInt(datosAsegurado.get(0).get("EDAD")) >= edadMinima){
+					mensaje = "";
+					success = true;
+				}else{
+					mensaje = "El Beneficiario es un menor de edad."+"\n"+"Elegir otro.";
+					success = false;
+				}
+			}else{
 				mensaje = "";
 				success = true;
-			}else{
-				mensaje = "El Beneficiario es un menor de edad."+"\n"+"Elegir otro.";
-				success = false;
 			}
+
 		}catch( Exception e){
 			logger.error("Error consultaDatosBeneficiario {}", e.getMessage(), e);
 			return SUCCESS;
@@ -796,7 +803,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 		success = true;
 		return SUCCESS;
 	}
-	
+
 	public void setIce2sigsService(Ice2sigsService ice2sigsService) {
 		this.ice2sigsService = ice2sigsService;
 	}

@@ -29,6 +29,11 @@
             var _CAT_CONCEPTO                           = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CATCONCEPTO"/>';
             var _STATUS_TRAMITE_CONFIRMADO              = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@CONFIRMADO.codigo" />';
             var _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_ASIGNACION.codigo" />';
+            var _RECHAZADO								= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@RECHAZADO.codigo" />';
+            var _SALUD_VITAL							= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SALUD_VITAL.cdramo" />';
+            var _MULTISALUD								= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo" />';
+            var _GMMI									= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES.cdramo" />';
+            var _RECUPERA								= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo" />';
             var _CATALOGO_PROVEEDORES  					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
             var _URL_CATALOGOS							= '<s:url namespace="/catalogos" 		action="obtieneCatalogo"/>';
 			var _URL_DOCUMENTOSPOLIZA					= '<s:url namespace="/documentos" 		action="ventanaDocumentosPoliza" />';
@@ -110,7 +115,6 @@
 			var storeProveedor;
 			var storeTipoAtencion;
 			var modPolizasAltaTramite;
-			//var storeFacturaDirectoNva;
 			var gridAutorizacion;
 			var gridAutorizacionMod;
 			var gridMsiniestMaestro;
@@ -214,7 +218,7 @@
 				},{
 					text	:'Importe Factura',			dataIndex	:'ptimporta',		renderer: Ext.util.Format.usMoney
 				},{
-					text	:'Fecha Egreso',			dataIndex	:'feegreso'//	,		hidden : _tipoPago != _TIPO_PAGO_INDEMNIZACION
+					text	:'Fecha Egreso',			dataIndex	:'feegreso'
 				},{
 					text	:'Dias Deducible',			dataIndex	:'diasdedu'	,		hidden : _tipoPago != _TIPO_PAGO_INDEMNIZACION
 				}
@@ -223,7 +227,6 @@
 			Ext.onReady(function()
 			{
 				/*############################		MODEL		########################################*/
-//MODELO DE LOS ASEGURADOS
 				Ext.define('modelAseguradosFactura',{
 					extend: 'Ext.data.Model',
 					fields: [
@@ -343,12 +346,10 @@
 				storeTipoAtencion = Ext.create('Ext.data.Store', {
 					model:'Generic',
 					autoLoad:true,
-					proxy:
-					{
+					proxy: {
 						type: 'ajax',
 						url:_URL_TIPO_ATENCION,
-						reader:
-						{
+						reader: {
 							type: 'json',
 							root: 'listaTipoAtencion'
 						}
@@ -361,7 +362,7 @@
 					proxy: {
 						type: 'ajax',
 						url : _URL_CATALOGOS,
-						extraParams:{
+						extraParams: {
 							catalogo         : _CATALOGO_PROVEEDORES,
 							catalogoGenerico : true
 						},
@@ -375,13 +376,11 @@
 				storeCobertura = Ext.create('Ext.data.Store', {
 					model:'Generic',
 					autoLoad:false,
-					proxy:
-					{
+					proxy: {
 						type: 'ajax',
 						url : _URL_CATALOGOS,
 						extraParams : {catalogo:_CATALOGO_COB_X_VALORES},
-						reader:
-						{
+						reader: {
 							type: 'json',
 							root: 'lista'
 						}
@@ -439,13 +438,10 @@
 							type: 'json',
 							root: 'lista'
 						}
-					},listeners:
-					{
-						load : function()
-						{
+					},listeners: {
+						load : function(){
 							this.cargado=true;
-							if(!Ext.isEmpty(gridFacturaDirecto))
-							{
+							if(!Ext.isEmpty(gridFacturaDirecto)){
 								gridFacturaDirecto.getView().refresh();
 							}
 						}
@@ -465,13 +461,10 @@
 							type: 'json',
 							root: 'lista'
 						}
-					},listeners:
-					{
-						load : function()
-						{
+					},listeners: {
+						load : function() {
 							this.cargado=true;
-							if(!Ext.isEmpty(gridFacturaDirecto))
-							{
+							if(!Ext.isEmpty(gridFacturaDirecto)){
 								gridFacturaDirecto.getView().refresh();
 							}
 						}
@@ -480,13 +473,11 @@
 				storeSubcoberturaAseguradoRender.load();
 				
 // STORE PARA EL LISTADO DE LAS AUTORIZACIONES DE SERVICIO
-				storeListadoAutorizacion = new Ext.data.Store(
-				{
+				storeListadoAutorizacion = new Ext.data.Store({
 					pageSize : 10
 					,model	  : 'modelListadoAutorizacion'
 					,autoLoad  : false
-					,proxy	 :
-					{
+					,proxy	 : {
 						enablePaging : true,
 						reader	   : 'json',
 						type		 : 'memory',
@@ -494,13 +485,11 @@
 					}
 				});
 // STORE PARA EL LISTADO SINIESTRO MAESTRO
-				storeListadoSiniestMaestro = new Ext.data.Store(
-				{
-					pageSize : 5
+				storeListadoSiniestMaestro = new Ext.data.Store({
+					pageSize  : 5
 					,model	  : 'modelListadoSiniestroMaestro'
-					,autoLoad  : false
-					,proxy	 :
-					{
+					,autoLoad : false
+					,proxy	  : {
 						enablePaging : true,
 						reader	   : 'json',
 						type		 : 'memory',
@@ -548,13 +537,10 @@
 							root: 'listaCPTICD'
 						}
 					}
-				,listeners:
-				{
-					load : function()
-					{
+				,listeners: {
+					load : function() {
 						this.cargado=true;
-						if(!Ext.isEmpty(gridFacturaDirecto))
-						{
+						if(!Ext.isEmpty(gridFacturaDirecto)){
 							gridFacturaDirecto.getView().refresh();
 						}
 					}
@@ -588,17 +574,14 @@
 							root: 'listaCPTICD'
 						}
 					}
-				,listeners:
-				{
-					load : function()
-					{
-						this.cargado=true;
-						if(!Ext.isEmpty(gridFacturaDirecto))
-						{
-							gridFacturaDirecto.getView().refresh();
+					,listeners: {
+						load : function() {
+							this.cargado=true;
+							if(!Ext.isEmpty(gridFacturaDirecto)){
+								gridFacturaDirecto.getView().refresh();
+							}
 						}
 					}
-				}
 				});
 // STORE TIPO DE MONEDA
 				var storeTipoMoneda = Ext.create('Ext.data.JsonStore', {
@@ -615,14 +598,11 @@
 				});
 				storeTipoMoneda.load();
 // STORE PARA EL OBTENER LOS VALORES DE LOS ASEGURADOS
-				storeAseguradoFactura = Ext.create('Ext.data.Store',
-				{
+				storeAseguradoFactura = Ext.create('Ext.data.Store', {
 					autoLoad : false
 					,model   : 'modelAseguradosFactura'
-					,proxy   :
-					{
-						reader :
-						{
+					,proxy   : {
+						reader : {
 							type  : 'json'
 							,root : 'slist1'
 						}
@@ -633,8 +613,7 @@
 //STORE PARA EL TIPO DE CONCEPTO
 				var storeTipoConcepto = Ext.create('Ext.data.JsonStore', {
 					model:'Generic',
-					proxy:
-					{
+					proxy: {
 						type: 'ajax',
 						url: _URL_CATALOGOS,
 						extraParams : {catalogo:_CATALOGO_TIPOCONCEPTO},
@@ -671,13 +650,10 @@
 							type: 'json',
 							root: 'lista'
 						}
-					},listeners:
-					{
-						load : function()
-						{
+					},listeners: {
+						load : function() {
 							this.cargado=true;
-							if(!Ext.isEmpty(gridEditorConceptos))
-							{
+							if(!Ext.isEmpty(gridEditorConceptos)) {
 								gridEditorConceptos.getView().refresh();
 							}
 						}
@@ -685,8 +661,7 @@
 				});
 				storeConceptosCatalogoRender.load();
 				
-				storeConceptos=new Ext.data.Store(
-				{
+				storeConceptos=new Ext.data.Store( {
 					autoDestroy: true,
 					model: 'modelConceptos',
 					proxy: {
@@ -699,13 +674,11 @@
 					}
 				});
 //STORE DE LAS POLIZAS
-				var storeListadoPoliza = new Ext.data.Store(
-				{
+				var storeListadoPoliza = new Ext.data.Store({
 					pageSize : 5
 					,model      : 'modelListadoPoliza'
 					,autoLoad  : false
-					,proxy     :
-					{
+					,proxy     : {
 						enablePaging : true,
 						reader       : 'json',
 						type         : 'memory',
@@ -754,13 +727,11 @@
 				storeDestinoPago = Ext.create('Ext.data.JsonStore', {
 					model:'Generic',
 					autoLoad:true,
-					proxy:
-					{
+					proxy: {
 						type: 'ajax',
 						url: _URL_CATALOGOS,
 						extraParams : {catalogo:_CAT_DESTINOPAGO},
-						reader:
-						{
+						reader: {
 							type: 'json',
 							root: 'lista'
 						}
@@ -769,7 +740,7 @@
 				
 				storeConceptoPago = Ext.create('Ext.data.JsonStore', {
 					model:'Generic',
-					autoLoad:true,
+					autoLoad:false,
 					proxy: {
 						type: 'ajax',
 						url: _URL_CATALOGOS,
@@ -824,8 +795,7 @@
 					}
 				});
 				
-				var comboICDSecundario = Ext.create('Ext.form.field.ComboBox',
-				{
+				var comboICDSecundario = Ext.create('Ext.form.field.ComboBox', {
 					allowBlank: false,				displayField : 'value',		forceSelection : true,
 					name:'idComboICDSEcundario',	valueField   : 'key',		store : storeTiposICDSecundario,
 					matchFieldWidth: false,			queryMode :'remote',		queryParam: 'params.otclave',
@@ -839,8 +809,7 @@
 					}
 				});
 				
-				var cmbCausaSiniestro = Ext.create('Ext.form.ComboBox',
-				{
+				var cmbCausaSiniestro = Ext.create('Ext.form.ComboBox', {
 					name:'cmbCausaSiniestro',			store: storeCausaSinestro,		value:'1',		queryMode:'local',  
 					displayField: 'value',		valueField: 'key',			editable:false,		allowBlank:false,
 					listeners : {
@@ -851,8 +820,7 @@
 					}
 				});
 
-				var cmbTipoMoneda = Ext.create('Ext.form.ComboBox',
-				{
+				var cmbTipoMoneda = Ext.create('Ext.form.ComboBox', {
 					name:'params.tipoMoneda',		fieldLabel	: 'Moneda',		store: storeTipoMoneda,			queryMode:'local',  
 					displayField: 'value',		valueField: 'key',			editable:false,					allowBlank:false,
 					listeners : {
@@ -873,8 +841,7 @@
 				});
 
 				
-				var cobertura = Ext.create('Ext.form.field.ComboBox',
-				{
+				var cobertura = Ext.create('Ext.form.field.ComboBox', {
 					name:'params.cdgarant',			fieldLabel : 'COBERTURA',	/*allowBlank: false,*/				displayField : 'value',
 					valueField   : 'key',			forceSelection : true,		matchFieldWidth: false,				hidden: true,
 					queryMode :'remote',			store : storeCobertura,		editable:false,
@@ -891,8 +858,7 @@
 				});
 
 				
-				coberturaxAsegurado = Ext.create('Ext.form.field.ComboBox',
-			    {
+				coberturaxAsegurado = Ext.create('Ext.form.field.ComboBox', {
 			    	allowBlank: false,			displayField : 'dsgarant',		id:'idCobAfectada',		name:'cdgarant',
 			    	valueField   : 'cdgarant',	forceSelection : true,			matchFieldWidth: false,
 			    	queryMode :'remote',				store : storeCoberturaxAsegurado,		triggerAction: 'all',			editable:true,
@@ -917,8 +883,7 @@
 					}
 			    });
 				
-				var subCoberturaAsegurado = Ext.create('Ext.form.field.ComboBox',
-				{
+				var subCoberturaAsegurado = Ext.create('Ext.form.field.ComboBox', {
 			    	allowBlank: false,				displayField : 'value',			id:'idSubcobertura1',		name:'cdconval',
 			    	labelWidth: 170,				valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,
 			    	queryMode :'local',			store : storeSubcoberturaAsegurado,		triggerAction: 'all',			editable:true,
@@ -931,8 +896,7 @@
 					}
 			    });
 
-				var subCobertura = Ext.create('Ext.form.field.ComboBox',
-				{
+				var subCobertura = Ext.create('Ext.form.field.ComboBox', {
 					name:'params.cdconval',		fieldLabel : 'SUBCOBERTURA',	/*allowBlank: false,*/				displayField : 'value',			id:'idSubcobertura',
 					valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,		hidden: true,
 					queryMode :'remote',			store : storeSubcobertura,		triggerAction: 'all',			editable:false
@@ -940,16 +904,14 @@
 						
 				
 				
-				cmbCveTipoConcepto = Ext.create('Ext.form.ComboBox',
-				{
+				cmbCveTipoConcepto = Ext.create('Ext.form.ComboBox', {
 					name:'params.idconcep',		store: storeTipoConcepto,		queryMode:'local',
 					displayField: 'value',		valueField: 'key',				editable:false,				allowBlank:false,
 					listeners:{
 						select: function (combo, records, opts){
 							banderaConcepto = 1;
 							var cdTipo = records[0].get('key');
-							storeConceptosCatalogo.proxy.extraParams=
-							{
+							storeConceptosCatalogo.proxy.extraParams= {
 								'params.idPadre' : cdTipo
 								,catalogo		: _CATALOGO_CONCEPTOSMEDICOS
 							};
@@ -957,23 +919,20 @@
 					}
 				});
 
-				cmbCveConcepto = Ext.create('Ext.form.ComboBox',
-				{
+				cmbCveConcepto = Ext.create('Ext.form.ComboBox', {
 					name:'params.cdconcep',		store: storeConceptosCatalogo,		queryMode:'remote',
 					displayField: 'value',		valueField: 'key',					editable:true,				allowBlank:false,
 					forceSelection: true,		queryParam  : 'params.descripc',	hideTrigger : true,			minChars	: 3
 					,listeners : {
 						select:function(e){
-							Ext.Ajax.request(
-							{
+							Ext.Ajax.request( {
 								url	 : _URL_MONTO_ARANCEL
 								,params:{
 									'params.tipoConcepto'   : _11_conceptoSeleccionado.get('IDCONCEP'),
 									'params.idProveedor'	: panelInicialPral.down('combo[name=params.cdpresta]').getValue(),
 									'params.idConceptoTipo' : e.getValue()
 								}
-								,success : function (response)
-								{
+								,success : function (response) {
 									banderaConcepto = 1;
 									if(Ext.decode(response.responseText).montoArancel == null){
 										_11_conceptoSeleccionado.set('PTMTOARA','0');
@@ -985,11 +944,8 @@
 									if(+ valorArancel > 0){
 										_11_conceptoSeleccionado.set('PTPRECIO',valorArancel);
 									}
-										
-									
 								},
-								failure : function ()
-								{
+								failure : function () {
 									me.up().up().setLoading(false);
 									Ext.Msg.show({
 										title:'Error',
@@ -1017,14 +973,10 @@
 						height: 450,
 						plugins  :
 						[
-							Ext.create('Ext.grid.plugin.CellEditing',
-							{
+							Ext.create('Ext.grid.plugin.CellEditing', {
 								clicksToEdit: 1
-								,listeners :
-								{
-									beforeedit : function()
-									{
-										
+								,listeners : {
+									beforeedit : function() {
 										if (banderaConcepto == "1"){
 											debug("Guardamos los conceptos ");
 											//Mandamos a guardar los conceptos
@@ -1035,9 +987,7 @@
 											storeConceptos.removeAll();
 										}else{
 											_11_aseguradoSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
-											debug("VALOR SELECCIONADO ALBERTO-->",_11_aseguradoSeleccionado);
-											storeCoberturaxAsegurado.proxy.extraParams=
-											{
+											storeCoberturaxAsegurado.proxy.extraParams= {
 												'params.cdunieco':_11_aseguradoSeleccionado.get('CDUNIECO'),
 								            	'params.estado':_11_aseguradoSeleccionado.get('ESTADO'),
 								            	'params.cdramo':_11_aseguradoSeleccionado.get('CDRAMO'),
@@ -1080,12 +1030,7 @@
 										icon	 : '${ctx}/resources/fam3icons/icons/accept.png'
 										,tooltip : 'Guardar'
 										,handler : guardarDatosComplementarios
-									}/*,
-									{
-										icon	 : '${ctx}/resources/fam3icons/icons/folder.png'
-										,tooltip : 'Siniestro'
-										,handler : _11_pedirMsiniestMaestro
-									}*/,
+									},
 									{
 										icon	 : '${ctx}/resources/fam3icons/icons/user_delete.png'
 										,tooltip : 'Eliminar Asegurado'
@@ -1103,7 +1048,6 @@
 									xtype: 'numberfield',
 									listeners : {
 										change:function(e){
-											//banderaAsegurado = 1;
 											_11_modificarAutorizacion(_11_aseguradoSeleccionado);
 										}
 									}
@@ -1129,17 +1073,14 @@
 								,editor : cmbCausaSiniestro
 								,renderer : function(v) {
 									var leyenda = '';
-									if (typeof v == 'string')
-									{
+									if (typeof v == 'string') {
 										storeCausaSinestro.each(function(rec) {
 											if (rec.data.key == v) {
 												leyenda = rec.data.value;
 											}
 										});
-									}else
-									{
-										if (v.key && v.value)
-										{
+									}else {
+										if (v.key && v.value) {
 											leyenda = v.value;
 										} else {
 											leyenda = v.data.value;
@@ -1153,27 +1094,20 @@
 								,editor: coberturaxAsegurado
 								,renderer : function(v) {
 									var leyenda = '';
-									if (typeof v == 'string')
-									{
-										if(storeCoberturaxAseguradoRender.cargado)
-										{
+									if (typeof v == 'string') {
+										if(storeCoberturaxAseguradoRender.cargado) {
 											//debug("storeCoberturaxAseguradoRender :",storeCoberturaxAseguradoRender);
-											storeCoberturaxAseguradoRender.each(function(rec)
-										    {
-												if (rec.data.key == v)
-											    {
+											storeCoberturaxAseguradoRender.each(function(rec) {
+												if (rec.data.key == v) {
 													leyenda = rec.data.value;
 												}
 											});
 										}
-										else
-										{
+										else{
 										    leyenda='Cargando...';
 										}
-									}else
-									{
-										if (v.key && v.value)
-										{
+									}else {
+										if (v.key && v.value) {
 											leyenda = v.value;
 										} else {
 											leyenda = v.data.value;
@@ -1188,30 +1122,23 @@
 								,editor: subCoberturaAsegurado
 								,renderer : function(v) {
 									var leyenda = '';
-									if (typeof v == 'string')
-									{
+									if (typeof v == 'string') {
 										debug("Valor de V : "+v);
 										debug("Valor de storeSubcoberturaAseguradoRender.cargado : "+storeSubcoberturaAseguradoRender.cargado);
-										if(storeSubcoberturaAseguradoRender.cargado)
-										{
+										if(storeSubcoberturaAseguradoRender.cargado) {
 											debug("storeSubcoberturaAseguradoRender");
 											debug(storeSubcoberturaAseguradoRender);
-											storeSubcoberturaAseguradoRender.each(function(rec)
-										    {
-												if (rec.data.key == v)
-											    {
+											storeSubcoberturaAseguradoRender.each(function(rec) {
+												if (rec.data.key == v){
 													leyenda = rec.data.value;
 												}
 											});
 										}
-										else
-										{
+										else{
 										    leyenda='Cargando...';
 										}
-									}else
-									{
-										if (v.key && v.value)
-										{
+									}else{
+										if (v.key && v.value){
 											leyenda = v.value;
 										} else {
 											leyenda = v.data.value;
@@ -1226,26 +1153,19 @@
 								,editor : comboICDPrimario
 								,renderer : function(v) {
 									var leyenda = '';
-									if (typeof v == 'string')// tengo solo el indice
-									{
-										if(storeTiposICDPrimarioRender.cargado)
-										{
-											storeTiposICDPrimarioRender.each(function(rec)
-										    {
-												if (rec.data.key == v)
-											    {
+									if (typeof v == 'string') {
+										if(storeTiposICDPrimarioRender.cargado) {
+											storeTiposICDPrimarioRender.each(function(rec) {
+												if (rec.data.key == v) {
 													leyenda = rec.data.value;
 												}
 											});
 										}
-										else
-										{
+										else{
 										    leyenda= v;
 										}
-									}else // tengo objeto que puede venir como Generic u otro mas complejo
-									{
-										if (v.key && v.value)
-										{
+									}else {
+										if (v.key && v.value) {
 											leyenda = v.value;
 										} else {
 											leyenda = v.data.value;
@@ -1260,26 +1180,19 @@
 								,editor : comboICDSecundario
 								,renderer : function(v) {
 									var leyenda = '';
-									if (typeof v == 'string')// tengo solo el indice
-									{
-										if(storeTiposICDSecundarioRender.cargado)
-										{
-											storeTiposICDSecundarioRender.each(function(rec)
-										    {
-												if (rec.data.key == v)
-											    {
+									if (typeof v == 'string') {
+										if(storeTiposICDSecundarioRender.cargado) {
+											storeTiposICDSecundarioRender.each(function(rec) {
+												if (rec.data.key == v) {
 													leyenda = rec.data.value;
 												}
 											});
 										}
-										else
-										{
+										else {
 										    leyenda= v;
 										}
-									}else // tengo objeto que puede venir como Generic u otro mas complejo
-									{
-										if (v.key && v.value)
-										{
+									}else {
+										if (v.key && v.value) {
 											leyenda = v.value;
 										} else {
 											leyenda = v.data.value;
@@ -1295,15 +1208,12 @@
 							{
 								header: 'Vo.Bo.<br/>Auto.',			dataIndex: 'VOBOAUTO', 
 								hidden: true,
-								renderer		: function(v)
-								{
+								renderer		: function(v) {
 									var r=v;
-									if(v=='S'||v=='s')
-									{
+									if(v=='S'||v=='s') {
 										r='SI';
 									}
-									else if(v=='N'||v=='n')
-									{
+									else if(v=='N'||v=='n'){
 										r='NO';
 									}
 									return r;
@@ -1374,7 +1284,6 @@
 									var numSiniestro = record.get('NMSINIES');
 									if(numSiniestro.length == "0"){
 										revisarDocumento(grid,index)
-										
 									}else{
 										storeConceptos.removeAll();
 										storeConceptos.load({
@@ -1392,8 +1301,7 @@
 											}
 										});
 										
-										Ext.Ajax.request(
-										{
+										Ext.Ajax.request( {
 											url	 : _URL_CONCEPTOSASEG
 											,params:{
 												'params.nfactura'  : panelInicialPral.down('[name=params.nfactura]').getValue(),
@@ -1407,8 +1315,7 @@
 												'params.aaapertu'  : record.get('AAAPERTU'),
 												'params.nmsinies'  : record.get('NMSINIES')
 											}
-											,success : function (response)
-											{
+											,success : function (response) {
 												//Obtenemos los datos
 												var conceptos = Ext.decode(response.responseText).loadList;
 												var i = 0;
@@ -1416,16 +1323,13 @@
 												for(i = 0; i < conceptos.length; i++){
 													totalConsumido = (+ totalConsumido) + (+ conceptos[i].SUBTAJUSTADO);
 												}
-												debug("VALOR DE CDRAMO ...-----_______ >>>>",record.get('CDRAMO'));
-												if(record.get('CDRAMO') == '7' ){
+												if(record.get('CDRAMO') == _GMMI){
 													obtenerSumaAsegurada (record.get('CDUNIECO'), record.get('CDRAMO'), record.get('ESTADO'), 
 																		  record.get('NMPOLIZA'), record.get('CDPERSON'), record.get('NMSINREF'),
 																		  totalConsumido);
 												}
-												
 											},
-											failure : function ()
-											{
+											failure : function () {
 												me.up().up().setLoading(false);
 												Ext.Msg.show({
 													title:'Error',
@@ -1464,16 +1368,12 @@
 						height: 250,
 						plugins  :
 						[
-							Ext.create('Ext.grid.plugin.CellEditing',
-							{
+							Ext.create('Ext.grid.plugin.CellEditing', {
 								clicksToEdit: 1
-								,listeners :
-								{
-									beforeedit : function()
-									{
+								,listeners : {
+									beforeedit : function() {
 										_11_conceptoSeleccionado = gridEditorConceptos.getView().getSelectionModel().getSelection()[0];
-										storeConceptosCatalogo.proxy.extraParams=
-										{
+										storeConceptosCatalogo.proxy.extraParams= {
 											'params.idPadre' :  _11_conceptoSeleccionado.get('IDCONCEP')
 											,catalogo		: _CATALOGO_CONCEPTOSMEDICOS
 										};
@@ -1514,17 +1414,14 @@
 								,editor : cmbCveTipoConcepto
 								,renderer : function(v) {
 								var leyenda = '';
-									if (typeof v == 'string')// tengo solo el indice
-									{
+									if (typeof v == 'string') {
 										storeTipoConcepto.each(function(rec) {
 											if (rec.data.key == v) {
 												leyenda = rec.data.value;
 											}
 										});
-									}else // tengo objeto que puede venir como Generic u otro mas complejo
-									{
-										if (v.key && v.value)
-										{
+									}else {
+										if (v.key && v.value) {
 											leyenda = v.value;
 										} else {
 											leyenda = v.data.value;
@@ -1538,26 +1435,19 @@
 								,editor : cmbCveConcepto
 								,renderer : function(v) {
 									var leyenda = '';
-									if (typeof v == 'string')
-									{
-										if(storeConceptosCatalogoRender.cargado)
-										{
-											storeConceptosCatalogoRender.each(function(rec)
-										    {
-												if (rec.data.key == v)
-											    {
+									if (typeof v == 'string'){
+										if(storeConceptosCatalogoRender.cargado) {
+											storeConceptosCatalogoRender.each(function(rec) {
+												if (rec.data.key == v) {
 													leyenda = rec.data.value;
 												}
 											});
 										}
-										else
-										{
+										else{
 										    leyenda='Cargando...';
 										}
-									}else
-									{
-										if (v.key && v.value)
-										{
+									}else{
+										if (v.key && v.value){
 											leyenda = v.value;
 										} else {
 											leyenda = v.data.value;
@@ -1931,57 +1821,49 @@
 					[
 						{
 							xtype		: 'displayfield',			fieldLabel	: 'Suma Asegurada',			name	: 'params.sumaAsegurada', value : '0.00', 	hidden : _tipoProducto != '7',
-    	    	    		valueToRaw : function(value)
-	    	                {
+    	    	    		valueToRaw : function(value){
 	    	                    return Ext.util.Format.usMoney(value);
 	    	                }
 						},
 						{
 							xtype		: 'displayfield',			fieldLabel	: 'Suma Disponible',			name	: 'params.sumaGastada', value : '0.00',		hidden : _tipoProducto != '7',
-    	    	    		valueToRaw : function(value)
-	    	                {
+    	    	    		valueToRaw : function(value){
 	    	                    return Ext.util.Format.usMoney(value);
 	    	                }
 						},
 						{
     	    	    		xtype       : 'displayfield',		fieldLabel : 'Subtotal Factura',		name	: 'params.subtotalFac', value : '0.00',
-    	    	    		valueToRaw : function(value)
-	    	                {
+    	    	    		valueToRaw : function(value){
 	    	                    return Ext.util.Format.usMoney(value);
 	    	                }
 	    	    	    },
 						{
 							xtype		: 'displayfield',			fieldLabel	: 'IVA Factura',			name	: 'params.ivaFac',	 value : '0.00',
-							valueToRaw : function(value)
-	    	                {
+							valueToRaw : function(value){
 	    	                    return Ext.util.Format.usMoney(value);
 	    	                }
 						},
 						{
 							xtype		: 'displayfield',			fieldLabel	: 'IVA Ret. Factura',		name	: 'params.ivaRetFac', value : '0.00',
-							valueToRaw : function(value)
-	    	                {
+							valueToRaw : function(value){
 	    	                    return Ext.util.Format.usMoney(value);
 	    	                }
 						},
 						{
 							xtype		: 'displayfield',			fieldLabel	: 'ISR Factura',			name	: 'params.isrFac', value : '0.00',
-							valueToRaw : function(value)
-	    	                {
+							valueToRaw : function(value){
 	    	                    return Ext.util.Format.usMoney(value);
 	    	                }
 						},
 						{
 							xtype		: 'displayfield',			fieldLabel	: 'Imp. Cedular Factura',		name	: 'params.impCedularFac', value : '0.00',
-							valueToRaw : function(value)
-	    	                {
+							valueToRaw : function(value){
 	    	                    return Ext.util.Format.usMoney(value);
 	    	                }
 						},
 						{
 							xtype		: 'displayfield',			fieldLabel	: 'Importe Pagar Factura',			name	: 'params.impPagarFac', value : '0.00',
-							valueToRaw : function(value)
-	    	                {
+							valueToRaw : function(value){
 	    	                    return Ext.util.Format.usMoney(value);
 	    	                }
 						}
@@ -2074,16 +1956,13 @@
 						<s:property value='%{"," + imap.itemsEdicion}' />
 					]
 					,buttonAlign:'center'
-					,buttons: [
-						{
+					,buttons: [ {
 							text:'Aplicar Cambios Factura',
 							icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
-							handler:function()
-							{
+							handler:function() {
 								
 								var valido = panelInicialPral.isValid();
-								if(!valido)
-								{
+								if(!valido) {
 									datosIncompletos();
 								}else{
 									var autorizaRecla = panelInicialPral.down('[name="params.autrecla"]').getValue()+"";
@@ -2096,8 +1975,7 @@
 									}
 									
 									var valido =  autorizaRecla =='S' &&  autorizaMedic!='N' ;
-									if(!valido)
-									{
+									if(!valido) {
 										mensajeWarning(
 												'El tr&aacute;mite de pago directo ser&aacute; cancelado debido a que no ha sido autorizado alguno de los siniestros'
 												,function(){_11_windowRechazoSiniestro.show();centrarVentanaInterna(_11_windowRechazoSiniestro);}
@@ -2123,11 +2001,9 @@
 							icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
 							handler:function()
 							{
-								Ext.create('Ext.form.Panel').submit(
-								{
+								Ext.create('Ext.form.Panel').submit( {
 									standardSubmit :true
-									,params		:
-									{
+									,params		: {
 										'params.ntramite' : panelInicialPral.down('[name=params.ntramite]').getValue()
 									}
 								});
@@ -2137,14 +2013,12 @@
 					
 				});
 				
-				for(var i=0;i<panelInicialPral.items.items.length;i++)
-				{
+				for(var i=0;i<panelInicialPral.items.items.length;i++) {
 					panelInicialPral.items.items[i].labelWidth =150;
 					panelInicialPral.items.items[i].style	  = 'margin-right:100px;';
 				}
 
-				modPolizasAltaTramite = Ext.create('Ext.window.Window',
-				{
+				modPolizasAltaTramite = Ext.create('Ext.window.Window', {
 					title		: 'Detalle Factura'
 					,modal	   : true
 					,resizable   : false
@@ -2172,11 +2046,9 @@
 					listeners:{
 						 close:function(){
 							 if(true){
-								Ext.create('Ext.form.Panel').submit(
-								{
+								Ext.create('Ext.form.Panel').submit( {
 									standardSubmit :true
-									,params		:
-									{
+									,params		: {
 										'params.ntramite' : panelInicialPral.down('[name=params.ntramite]').getValue()
 									}
 								});
@@ -2189,17 +2061,14 @@
 				});
 
 				
-				gridPolizasAltaTramite= Ext.create('Ext.grid.Panel',
-				{
+				gridPolizasAltaTramite= Ext.create('Ext.grid.Panel', {
 					id            : 'polizaGridAltaTramite',
 					store         : storeListadoPoliza,
 					selType	      : 'checkboxmodel',
 					width         : 700,
 					height		  : 200,
 					columns       :
-					[
-						
-						
+					[	
 						{
 							 header     : 'N&uacute;mero de P&oacute;liza',		dataIndex : 'numPoliza',		width	 	: 200
 						},
@@ -2231,8 +2100,7 @@
 							 header     : 'N&uacute;mero de Situaci&oacute;n',	dataIndex : 'nmsituac',		width	    : 150
 						 }
 					],
-					bbar :
-					{
+					bbar : {
 						displayInfo : true,
 						store       : storeListadoPoliza,
 						xtype       : 'pagingtoolbar'
@@ -2240,8 +2108,7 @@
 					listeners: {
 							itemclick: function(dv, record, item, index, e){
 								//1.- Validamos que el asegurado este vigente
-								if(record.get('desEstatusCliente')=="Vigente")
-								{
+								if(record.get('desEstatusCliente')=="Vigente") {
 									var valorFechaOcurrencia;
 									var valorFechaOcu = panelListadoAsegurado.query('datefield[name=dtfechaOcurrencias]')[0].rawValue;
 									valorFechaOcurrencia = new Date(valorFechaOcu.substring(6,10)+"/"+valorFechaOcu.substring(3,5)+"/"+valorFechaOcu.substring(0,2));
@@ -2251,8 +2118,7 @@
 									var valorFechaAltaAsegurado = new Date(record.get('faltaAsegurado').substring(6,10)+"/"+record.get('faltaAsegurado').substring(3,5)+"/"+record.get('faltaAsegurado').substring(0,2));
 									
 									if( (valorFechaOcurrencia <= valorFechaFinal) && (valorFechaOcurrencia >= valorFechaInicial)){
-										if( valorFechaOcurrencia >= valorFechaAltaAsegurado )
-										{
+										if( valorFechaOcurrencia >= valorFechaAltaAsegurado ) {
 												panelListadoAsegurado.down('[name="cdUniecoAsegurado"]').setValue(record.get('cdunieco'));
 												panelListadoAsegurado.down('[name="cdRamoAsegurado"]').setValue(record.get('cdramo'));
 												panelListadoAsegurado.down('[name="estadoAsegurado"]').setValue(record.get('estado'));
@@ -2270,28 +2136,30 @@
 												buttons: Ext.Msg.OK,
 												icon: Ext.Msg.ERROR
 											});
+											panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue("");
 											modPolizasAsegurado.hide();
 											//limpiarRegistros();
 										}
 									}else{
 										// La fecha de ocurrencia no se encuentra en el rango de la poliza vigente
-										Ext.Msg.show({
+										centrarVentanaInterna(Ext.Msg.show({
 											title:'Error',
 											msg: 'La fecha de ocurrencia no se encuentra en el rango de la p&oacute;liza vigente',
 											buttons: Ext.Msg.OK,
 											icon: Ext.Msg.ERROR
-										});
+										}));
+										panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue("");
 										modPolizasAsegurado.hide();
 										//limpiarRegistros();
 									}
 								}else{
 									// El asegurado no se encuentra vigente
-									Ext.Msg.show({
+									centrarVentanaInterna(Ext.Msg.show({
 										title:'Error',
 										msg: 'El asegurado de la p&oacute;liza seleccionado no se encuentra vigente',
 										buttons: Ext.Msg.OK,
 										icon: Ext.Msg.ERROR
-									});
+									}));
 									modPolizasAsegurado.hide();
 									//limpiarRegistros();
 								}
@@ -2401,7 +2269,7 @@
 											});
 										}
 									});
-									modPolizasAsegurado.show();
+									centrarVentanaInterna(modPolizasAsegurado.show());
 								}
 							}
 						}
@@ -2417,16 +2285,14 @@
 					resizable: false,
 					items:[panelListadoAsegurado],
 					buttonAlign : 'center',
-					buttons:[
-						{
+					buttons:[ {
 							text: 'Aceptar',
 							icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
 							handler: function() {
 								if (panelListadoAsegurado.form.isValid()) {
 									var datos=panelListadoAsegurado.form.getValues();
 									
-									if(datos.cmbAseguradoAfect==''|| datos.cmbAseguradoAfect== null && datos.dtfechaOcurrencias==''|| datos.dtfechaOcurrencias== null )
-									{
+									if(datos.cmbAseguradoAfect==''|| datos.cmbAseguradoAfect== null && datos.dtfechaOcurrencias==''|| datos.dtfechaOcurrencias== null ){
 										Ext.Msg.show({
 											title: 'Aviso',
 											msg: 'Complete la informaci&oacute;n requerida',
@@ -2434,9 +2300,7 @@
 											icon: Ext.Msg.WARNING
 										});
 									}else{
-										debug("Entra al else000",datos);
-										Ext.Ajax.request(
-										{
+										Ext.Ajax.request( {
 											url	 : _URL_GUARDA_ASEGURADO
 											,params:{
 												'params.nmtramite'  : panelInicialPral.down('[name=params.ntramite]').getValue(),
@@ -2452,8 +2316,7 @@
 												'params.cdperson'   : datos.cmbAseguradoAfect,
 												'params.feocurre'   : datos.dtfechaOcurrencias
 											}
-											,success : function (response)
-											{
+											,success : function (response){
 												//alert("Guardado");
 												banderaAsegurado = 0;
 												storeAseguradoFactura.load({
@@ -2463,8 +2326,7 @@
 													}
 												});
 											},
-											failure : function ()
-											{
+											failure : function () {
 												me.up().up().setLoading(false);
 												Ext.Msg.show({
 													title:'Error',
@@ -2498,14 +2360,11 @@
 					]
 				});
 				
-				Ext.define('_11_WindowRechazoSiniestro',
-				{
+				Ext.define('_11_WindowRechazoSiniestro', {
 					extend		 : 'Ext.window.Window'
-					,initComponent : function()
-					{
+					,initComponent : function() {
 						debug('_11_WindowRechazoSiniestro initComponent');
-						Ext.apply(this,
-						{
+						Ext.apply(this, {
 							title		: 'Rechazo de tr&aacute;mite'
 							,width	   : 600
 							,height	  : 350
@@ -2528,14 +2387,11 @@
 					}
 				});
 
-				Ext.define('_11_WindowPedirAut',
-				{
+				Ext.define('_11_WindowPedirAut', {
 					extend		 : 'Ext.window.Window'
-					,initComponent : function()
-					{
+					,initComponent : function() {
 						debug('_11_windowPedirAut initComponent');
-						Ext.apply(this,
-						{
+						Ext.apply(this, {
 							title		: 'Autorizaci&oacute;n de servicios'
 							,icon		: '${ctx}/resources/fam3icons/icons/tick.png'
 							//,width	   : 350
@@ -2557,14 +2413,11 @@
 						this.callParent();
 					}
 				});
-				Ext.define('_11_FormPedirAuto',
-				{
+				Ext.define('_11_FormPedirAuto', {
 					extend		 : 'Ext.form.Panel'
-					,initComponent : function()
-					{
+					,initComponent : function() {
 						debug('_11_FormPedirAuto initComponent');
-						Ext.apply(this,
-						{
+						Ext.apply(this, {
 							border : 0
 							,items :
 							[
@@ -2581,15 +2434,11 @@
 					}
 				});
 				
-				
-				Ext.define('_11_WindowModificarAut',
-				{
+				Ext.define('_11_WindowModificarAut', {
 					extend		 : 'Ext.window.Window'
-					,initComponent : function()
-					{
+					,initComponent : function() {
 						debug('_11_windowModificarAut initComponent');
-						Ext.apply(this,
-						{
+						Ext.apply(this, {
 							title		: 'Modificar autorizaci&oacute;n de servicios'
 							,icon		: '${ctx}/resources/fam3icons/icons/tick.png'
 							,closeAction : 'hide'
@@ -2609,14 +2458,11 @@
 						this.callParent();
 					}
 				});
-				Ext.define('_11_FormModificarAuto',
-				{
+				Ext.define('_11_FormModificarAuto', {
 					extend		 : 'Ext.form.Panel'
-					,initComponent : function()
-					{
+					,initComponent : function() {
 						debug('_11_FormModificarAuto initComponent');
-						Ext.apply(this,
-						{
+						Ext.apply(this, {
 							border : 0
 							,items :
 							[
@@ -2632,14 +2478,11 @@
 						this.callParent();
 					}
 				});
-				Ext.define('_11_WindowPedirMsiniest',
-				{
+				Ext.define('_11_WindowPedirMsiniest',{
 					extend		 : 'Ext.window.Window'
-					,initComponent : function()
-					{
+					,initComponent : function() {
 						debug('_11_WindowPedirMsiniest initComponent');
-						Ext.apply(this,
-						{
+						Ext.apply(this, {
 							title		: 'Asociar Reclamaci&oacute;n'
 							,icon		: '${ctx}/resources/fam3icons/icons/tick.png'
 							,closeAction : 'hide'
@@ -2660,14 +2503,11 @@
 					}
 				});
 				
-				Ext.define('_11_formPedirMsiniest',
-				{
+				Ext.define('_11_formPedirMsiniest', {
 					extend		 : 'Ext.form.Panel'
-					,initComponent : function()
-					{
+					,initComponent : function() {
 						debug('_11_formPedirMsiniest initComponent');
-						Ext.apply(this,
-						{
+						Ext.apply(this, {
 							border : 0
 							,items :
 							[
@@ -2684,14 +2524,11 @@
 					}
 				});
 				
-				Ext.define('_11_FormRechazo',
-				{
+				Ext.define('_11_FormRechazo', {
 					extend		 : 'Ext.form.Panel'
-					,initComponent : function()
-					{
+					,initComponent : function() {
 						debug('_11_FormRechazo initComponent');
-						Ext.apply(this,
-						{
+						Ext.apply(this, {
 							border  : 0
 							,items  : _11_itemsRechazo
 						});
@@ -2699,8 +2536,7 @@
 					}
 				});
 			/**FIN DE COMPONENTES***/
-			var venDocuTramite=Ext.create('Ext.window.Window',
-					{
+			var venDocuTramite=Ext.create('Ext.window.Window', {
 						title		   : 'Documentos del tr&aacute;mite '
 						,closable	   : false
 						,width		  : 370
@@ -2715,8 +2551,7 @@
 							scripts   : true
 							,autoLoad : true
 							,url	  : _URL_DOCUMENTOSPOLIZA
-							,params   :
-							{
+							,params   : {
 								'smap1.ntramite'   : _11_params.NTRAMITE
 								,'smap1.cdtippag' : _11_params.OTVALOR02
 								,'smap1.cdtipate' : ''
@@ -2733,14 +2568,12 @@
 					}).showAt(600,0);
 					venDocuTramite.collapse();
 			/**INICIO DE CONTENIDO***/
-				_11_textfieldAsegurado = Ext.create('Ext.form.TextField',
-				{
+				_11_textfieldAsegurado = Ext.create('Ext.form.TextField', {
 					fieldLabel : 'Asegurado'
 					,width	 : 500
 					,readOnly  : true
 				});
-				_11_textfieldNmautserv = Ext.create('Ext.form.NumberField',
-				{
+				_11_textfieldNmautserv = Ext.create('Ext.form.NumberField', {
 					fieldLabel  : 'No. de autorizaci&oacute;n'
 					,readOnly   : false
 					,allowBlank : false
@@ -2748,8 +2581,7 @@
 					,minLength  : 1
 				});
 				
-				_11_textfieldNmautservMod = Ext.create('Ext.form.NumberField',
-				{
+				_11_textfieldNmautservMod = Ext.create('Ext.form.NumberField', {
 					fieldLabel  : 'No. de autorizaci&oacute;n'
 					,readOnly   : false
 					,allowBlank : false
@@ -2757,21 +2589,18 @@
 					,minLength  : 1
 				});
 				
-				_11_textfieldAseguradoMod = Ext.create('Ext.form.TextField',
-				{
+				_11_textfieldAseguradoMod = Ext.create('Ext.form.TextField', {
 					fieldLabel : 'Asegurado'
 					,width	 : 500
 					,readOnly  : true
 				});
 				
-				_11_textfieldAseguradoMsiniest = Ext.create('Ext.form.TextField',
-				{
+				_11_textfieldAseguradoMsiniest = Ext.create('Ext.form.TextField', {
 					fieldLabel : 'Asegurado'
 					,width	 : 500
 					,readOnly  : true
 				});
-				_11_textfieldNmSiniest = Ext.create('Ext.form.NumberField',
-				{
+				_11_textfieldNmSiniest = Ext.create('Ext.form.NumberField', {
 					fieldLabel  : 'No. de Siniestro'
 					,name : 'nmsiniestroRef'
 					,readOnly   : false
@@ -2854,7 +2683,7 @@
 							waitMsg:'Procesando...',
 							params: {
 								'smap1.ntramite' : _11_params.NTRAMITE,
-								'smap1.status'   : 4
+								'smap1.status'   : _RECHAZADO
 							},
 							failure: function(form, action) {
 								Ext.Msg.show({
@@ -2920,7 +2749,7 @@
 											,params         :
 											{
 												'smap1.gridTitle'      : 'Siniestros en espera'
-												,'smap2.pv_cdtiptra_i' : 16
+												,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
 											}
 										});
 									});
@@ -2978,7 +2807,7 @@
 			,params			:
 			{
 				'smap1.gridTitle'		: 'Siniestros'
-				,'smap2.pv_cdtiptra_i'	: 16
+				,'smap2.pv_cdtiptra_i'	: _TIPO_TRAMITE_SINIESTRO
 			}
 		});
 	}
@@ -3070,7 +2899,7 @@
 					panelInicialPral.down('[name="parametros.pv_otvalor01"]').hide();
 					panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();
 					panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();
-					if(_11_params.CDRAMO =="1"){
+					if(_11_params.CDRAMO == _RECUPERA){
 						//panelInicialPral.down('[name=params.feegreso]').hide(); 
 						panelInicialPral.down('[name=params.diasdedu]').hide();
 						valorRequerido = true;

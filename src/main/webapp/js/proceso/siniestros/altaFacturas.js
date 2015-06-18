@@ -82,7 +82,7 @@ Ext.onReady(function() {
 	
 	var storeTipoAtencion = Ext.create('Ext.data.Store', {
 		model:'Generic',
-		autoLoad:true,
+		autoLoad:false,
 		proxy: {
 			type: 'ajax',
 			url:_UR_TIPO_ATENCION,
