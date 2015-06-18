@@ -705,6 +705,7 @@ Ext.onReady(function()
                             ,{
                                 xtype   : 'fieldset'
                                 ,title  : '<span style="font:bold 14px Calibri;">DATOS DEL AGENTE</span>'
+                                ,itemId : '_p25_fieldsetDatosAgente'
                                 ,items  : [ <s:property value="imap.itemsAgente" /> ]
                                 ,layout :
                                 {
@@ -1098,6 +1099,24 @@ Ext.onReady(function()
     catch(e)
     {
         debugError('Error al customizar recargo personalizado',e);
+    }
+    
+    try
+    {
+        var botonAgentes = Ext.ComponentQuery.query('button[text=Agentes]')[0];
+        botonAgentes.up().remove(botonAgentes,false);
+        _fieldById('_p25_fieldsetDatosAgente').add(Ext.create('Ext.button.Button',
+        {
+            text     : botonAgentes.text
+            ,icon    : botonAgentes.icon
+            ,handler : botonAgentes.handler
+            ,style   : 'margin:5px;'
+        }));
+        _fieldById('_p25_fieldsetDatosAgente').doLayout();
+    }
+    catch(e)
+    {
+        debugError('error inofensivo al querer mover boton de agentes',e);
     }
     ////// custom //////
     
@@ -1949,17 +1968,29 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                 hijo.fieldLabel='['+hijo.cdatribu+'] '+hijo.fieldLabel;
                                                 if(hijo.maxValue&&hijo.maxValue<999999999)
                                                 {
-                                                    hijo.on('change',function(comp,value)
+                                                    var compara = function(me)
                                                     {
-                                                        debug('change:',value,comp.maxValue,comp);
-                                                        if(value!=comp.valorInicial)
+                                                        if(me.isDisabled())
                                                         {
-                                                            comp.addCls('valorNoOriginal');
+                                                            me.removeCls('valorNoOriginal');
                                                         }
                                                         else
                                                         {
-                                                            comp.removeCls('valorNoOriginal');
+                                                            if(me.getValue()!=me.valorInicial)
+                                                            {
+                                                                me.addCls('valorNoOriginal');
+                                                            }
+                                                            else
+                                                            {
+                                                                me.removeCls('valorNoOriginal');
+                                                            }
                                                         }
+                                                    };
+                                                    hijo.on(
+                                                    {
+                                                        change   : compara
+                                                        ,disable : compara
+                                                        ,enable  : compara
                                                     });
                                                 }
                                             } 
