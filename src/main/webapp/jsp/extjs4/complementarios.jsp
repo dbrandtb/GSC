@@ -64,10 +64,23 @@
             var _panDatCom_numPestaniasIniciales=4;
             var accordion;
             var datComPolizaMaestra;
-            var _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.nombre" />';
-            if(panDatComMap1.SITUACION=='AUTO')
-            {
+            
+            
+            var _NOMBRE_REPORTE_CARATULA; //= '<s:text name="rdf.caratula.previa.nombre" />';
+            if(panDatComMap1.SITUACION=='AUTO'){
                 _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.auto.nombre" />';
+            }else if(inputCdtipsit == 'SL' || inputCdtipsit == 'SN'){
+            	_NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.nombre" />';
+            }else if(inputCdtipsit == 'GMI'){
+            	_NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.gmi.nombre" />';
+            }else if(inputCdtipsit == 'MS'){
+            	_NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.ms.nombre" />';
+            }else if(inputCdtipsit == 'RI'){
+            	_NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.ri.nombre" />';
+            }
+            
+            if(Ext.isEmpty(_NOMBRE_REPORTE_CARATULA)){
+            	debugError('Error, no se tiene nombre de caratula para vista previa con cdtipsit: ', inputCdtipsit);
             }
             
             var fechaMinEmi = Ext.Date.parse('<s:property value="map1.fechamin" />','d/m/Y');
