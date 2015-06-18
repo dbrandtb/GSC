@@ -463,6 +463,27 @@ function _fieldByName(name,parent,ocultarErrores)
     return comp;
 }
 
+/**
+ * Funcion que obtiene un campo debajo de una forma por medio de la funcion Down
+ * @param {} name (Obligatorio) Name del campo
+ * @param {} parent (Obligatorio) Componente ExtJS con funcion down
+ * @param {} ocultarErrores (Opcional) Ocultar mensaje si no se encuentra el campo.
+ * @return {} componente Campo encontrado
+ */
+function _fieldByNameDown(name,parent,ocultarErrores){
+    var comp; 
+    try{
+    	comp = parent.down('[name='+name+']');
+    	if((Ext.isEmpty(ocultarErrores)||ocultarErrores==false) && (comp==undefined || comp == null) ){
+    		mensajeError('No se encuentra el campo con name "'+name+'"');
+    	}
+    }catch(e){
+    	mensajeError('Mal uso de fieldByNameDown, No se encuentra el campo con name "'+name+'"');
+    	debugError('Exception, mal uso de _fieldByNameDown:',e);
+    }
+    return comp;
+}
+
 function _fieldByLabel(label,parent,ocultarErrores)
 {
     //debug('_fieldByLabel:',label);
