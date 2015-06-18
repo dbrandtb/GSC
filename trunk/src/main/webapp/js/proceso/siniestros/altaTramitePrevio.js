@@ -43,23 +43,23 @@ Ext.onReady(function() {
 	
 	//Stores:
 	oficinaReceptora = Ext.create('Ext.data.Store', {
-        model:'Generic',
-        autoLoad:true,
-        proxy: {
-            type: 'ajax',
-            url:_URL_CATALOGOS,
-            extraParams : {
-            	catalogo:_CATALOGO_OFICINA_RECEP,
-            	'params.idPadre' : '1000'
-            },
-            reader: {
-                type: 'json',
-                root: 'lista'
-            }
-        }
-    });
-	
-    var storeTipoMoneda = Ext.create('Ext.data.JsonStore', {
+		model:'Generic',
+		autoLoad:true,
+		proxy: {
+			type: 'ajax',
+			url:_URL_CATALOGOS,
+			extraParams : {
+				catalogo:_CATALOGO_OFICINA_RECEP,
+				'params.idPadre' : '1000'
+			},
+			reader: {
+				type: 'json',
+				root: 'lista'
+			}
+		}
+	});
+
+	var storeTipoMoneda = Ext.create('Ext.data.JsonStore', {
 		model:'Generic',
 		proxy: {
 			type: 'ajax',
@@ -378,7 +378,6 @@ Ext.onReady(function() {
 		}
 	});
 	
-	
 	cmbProveedor = Ext.create('Ext.form.field.ComboBox', {
 		fieldLabel : 'Proveedor',		displayField : 'nombre',		name:'cmbProveedor',		valueField   : 'cdpresta',
 		forceSelection : true,			matchFieldWidth: false,			queryMode :'remote',		queryParam: 'params.cdpresta',
@@ -526,7 +525,7 @@ Ext.onReady(function() {
 	 	}
  	});
     gridFacturaDirecto=new EditorFacturaDirecto();
-    
+    //2.- GRID´S PARA EL PAGO REEMBOLSO
 	Ext.define('EditorFacturaReembolso', {
  		extend: 'Ext.grid.Panel',
 		name:'editorFacturaReembolso',
@@ -685,7 +684,7 @@ Ext.onReady(function() {
 	 	}
  	});
     gridFacturaReembolso =new EditorFacturaReembolso();
-
+    //3.- GRID´S PARA EL PAGO INDEMNIZATORIO GMMI
 	Ext.define('EditorPagoIndemnizatorio', {
  		extend: 'Ext.grid.Panel',
 		name:'editorPagoIndemnizatorio',
@@ -840,7 +839,7 @@ Ext.onReady(function() {
 	 	}
  	});
     gridPagoIndemnizatorio =new EditorPagoIndemnizatorio();
-    
+    //4.- GRID´S PARA EL PAGO INDEMNIZATORIO RECUPERA
 	Ext.define('EditorPagoIndemnizatorioRecupera', {
  		extend: 'Ext.grid.Panel',
 		name:'editorPagoIndemnizatorioRecupera',
@@ -926,7 +925,7 @@ Ext.onReady(function() {
 											var importeFactura = valorIndexSeleccionado.get('importeFactura');
 											var importeMxn = +tasaCambio * +importeFactura;
 											valorIndexSeleccionado.set('importe',importeMxn);
-											validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
+											//validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 										}
 									}
 						        }
@@ -948,7 +947,7 @@ Ext.onReady(function() {
 											var importeFactura = e.getValue();
 											var importeMxn = +tasaCambio * +importeFactura;
 											valorIndexSeleccionado.set('importe',importeMxn);
-											validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
+											//validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 										}
 									}
 						        }
@@ -960,7 +959,7 @@ Ext.onReady(function() {
 							allowBlank: false,
 							listeners : {
 								change:function(e){
-									validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), e.getValue());
+									//validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), e.getValue());
 								}
 							}
 						}
@@ -1348,7 +1347,7 @@ Ext.onReady(function() {
                 				}
         					}else{ //PAGO POR INDEMNIZACION
         						var obtener = [];
-                				if(panelInicialPral.down('combo[name=cmbRamos]').getValue() =="1"){
+                				if(panelInicialPral.down('combo[name=cmbRamos]').getValue() == _RECUPERA){
 	                				storePagoIndemnizatorioRecupera.each(function(record) {
 	    								obtener.push(record.data);
 									});
@@ -1437,7 +1436,7 @@ Ext.onReady(function() {
 							}
 							else{
 								//Pago Indemnizatorios
-								if(panelInicialPral.down('combo[name=cmbRamos]').getValue() =="1"){
+								if(panelInicialPral.down('combo[name=cmbRamos]').getValue() == _RECUPERA){
 									storePagoIndemnizatorioRecupera.each(function(record,index){
 										datosTablas.push({
 											nfactura:record.get('noFactura'),
@@ -1549,7 +1548,7 @@ Ext.onReady(function() {
     	oficinaReceptora.load();
     	panelInicialPral.down('combo[name=cmbOficReceptora]').setValue(valorAction.cdunieco);
     	/*Seleccionamos el producto Salud vital*/
-    	panelInicialPral.down('combo[name=cmbRamos]').setValue("2");
+    	panelInicialPral.down('combo[name=cmbRamos]').setValue(_SALUD_VITAL);
     	/*Tipo de pago*/
     	storeTipoPago.removeAll();
 		storeTipoPago.load({
@@ -1623,7 +1622,7 @@ Ext.onReady(function() {
 		}else{
 			pagoDirecto = true;
 		    pagoReembolso = false;
-		    if(panelInicialPral.down('combo[name=cmbRamos]').getValue() =="1"){
+		    if(panelInicialPral.down('combo[name=cmbRamos]').getValue() == _RECUPERA){
 				panelInicialPral.down('[name=editorFacturaDirecto]').hide();
 				panelInicialPral.down('[name=editorFacturaReembolso]').hide();
 				panelInicialPral.down('[name=editorPagoIndemnizatorio]').hide();
@@ -1636,7 +1635,7 @@ Ext.onReady(function() {
 		    }else{
 				panelInicialPral.down('[name=editorFacturaDirecto]').hide();
 				panelInicialPral.down('[name=editorFacturaReembolso]').hide();
-				panelInicialPral.down('[name=editorPagoIndemnizatorioRecupera]').show();
+				panelInicialPral.down('[name=editorPagoIndemnizatorioRecupera]').hide();
 				panelInicialPral.down('[name=editorPagoIndemnizatorio]').show();
 				panelInicialPral.down('combo[name=cmbProveedor]').hide();
 				panelInicialPral.down('combo[name=cmbProveedor]').setValue('');
@@ -1671,7 +1670,7 @@ Ext.onReady(function() {
 			if(fechaOcurrencia == null){
 				mensajeError('Para agregar un documento se requiere la fecha de ocurrencia');
 			}else{
-				if(panelInicialPral.down('combo[name=cmbRamos]').getValue() =="1"){
+				if(panelInicialPral.down('combo[name=cmbRamos]').getValue() == _RECUPERA){
 					storePagoIndemnizatorioRecupera.add(new modelFacturaSiniestro({noFactura:'0',fechaFactura:fechaOcurrencia,tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001', importe:'0.00'}));
 				}else{
 					storePagoIndemnizatorio.add(new modelFacturaSiniestro({noFactura:'0',fechaFactura:fechaOcurrencia,tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));

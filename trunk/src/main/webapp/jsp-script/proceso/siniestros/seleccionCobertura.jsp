@@ -23,6 +23,12 @@
             var _PeriodoEspera                = '<s:url namespace="/siniestros" action="obtenerPeriodoEspera"/>';
             var _UrlRechazarTramiteWindwow    = '<s:url namespace="/siniestros" 	action="includes/rechazoReclamaciones" />';
             var _URL_MESACONTROL			  = '<s:url namespace="/mesacontrol" 		action="mcdinamica" />';
+            var _TIPO_PAGO_REEMBOLSO		  = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo"/>';
+            var _SALUD_VITAL				  = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SALUD_VITAL.cdramo" />';
+            var _MULTISALUD					  = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo" />';
+            var _GMMI						  = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES.cdramo" />';
+            var _RECUPERA					  = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo" />';
+            var _SINIESTRO					  = '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra"/>';
             var ntramite= null;
             var nfactura = null;
             var ffactura = null;
@@ -297,7 +303,7 @@
 								json['cdconval'] = subcoberInt;
 								
 								
-								if(_selCobParams.cdramo =="1"){
+								if(_selCobParams.cdramo == _RECUPERA){
 									Ext.Ajax.request(
 									{
 										url		:	_PeriodoEspera
@@ -346,7 +352,7 @@
 											}else{
 												centrarVentanaInterna(Ext.Msg.show({
 													title:'Error',
-													msg: json.mensaje,
+													msg: jsonRes.mensaje,
 													buttons: Ext.Msg.OK,
 													icon: Ext.Msg.ERROR
 												}));
@@ -510,7 +516,7 @@
 						,params			:
 						{
 							'smap1.gridTitle'		: 'Siniestros'
-							,'smap2.pv_cdtiptra_i'	: 16
+							,'smap2.pv_cdtiptra_i'	: _SINIESTRO
 						}
 					});
 				}

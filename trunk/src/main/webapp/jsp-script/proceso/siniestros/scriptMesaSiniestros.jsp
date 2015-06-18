@@ -22,13 +22,10 @@ var _CAT_DESTINOPAGO                        = '<s:property value="@mx.com.gsegur
 var _CAT_CONCEPTO                           = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CATCONCEPTO"/>';
 var _STATUS_DEVOLVER_TRAMITE				= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@TRAMITE_EN_DEVOLUCION.codigo" />';
 var _CATALOGO_CONCEPTOPAGO					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CONCEPTOPAGO"/>';
+var _TIPO_TRAMITE_SINIESTRO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra" />';
 var _URL_LISTADO_ASEGURADO_POLIZA			= '<s:url namespace="/siniestros"       action="consultaListaAseguradoPoliza" />';
 var _URL_CONSULTA_BENEFICIARIO				= '<s:url namespace="/siniestros"		action="consultaDatosBeneficiario" />';
 
-
-
-// Catalogo Tipos de tramite a utilizar:
-var _TIPO_TRAMITE_SINIESTRO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra" />';
 /* *************************************************** */
 
 // URLs:
@@ -1629,11 +1626,11 @@ function reasignarClick(grid,dataIndex)
 	var record=grid.getStore().getAt(dataIndex);
 	debug('reasignarClick record:',record);
 	var rol='';
-	if(record.get('status')=='1')
+	if(record.get('status') == _STATUS_TRAMITE_EN_REVISION_MEDICA)
 	{
 		rol='medajustador';
 	}
-	else if(record.get('status')=='7')
+	else if(record.get('status') == EN_CAPTURA)
 	{
 		rol='operadorsini';
 	}

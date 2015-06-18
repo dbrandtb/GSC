@@ -84,7 +84,7 @@ function _4_authEndosoDocumentos(grid,rowIndex,colIndex){
 				,'smap1.nmsuplem' : record.get('nmsuplem')
 				,'smap1.ntramite' : record.get('ntramite')
 				,'smap1.nmsolici' : ''
-				,'smap1.tipomov'  : 14
+				,'smap1.tipomov'  : _TIPO_TRAMITE_AUTORIZACION_SERVICIOS
 				,'smap1.cdtiptra' : _TIPO_TRAMITE_AUTORIZACION_SERVICIOS
 				//,'smap1.readOnly' : 'si'
 			}

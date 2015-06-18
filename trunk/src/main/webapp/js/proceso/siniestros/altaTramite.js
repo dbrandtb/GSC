@@ -1392,7 +1392,7 @@ Ext.onReady(function() {
 											var importeFactura = valorIndexSeleccionado.get('importeFactura');
 											var importeMxn = +tasaCambio * +importeFactura;
 											valorIndexSeleccionado.set('importe',importeMxn);
-											validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
+											//validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 										}
 									}
 						        }
@@ -1415,7 +1415,7 @@ Ext.onReady(function() {
 											var importeFactura = e.getValue();
 											var importeMxn = +tasaCambio * +importeFactura;
 											valorIndexSeleccionado.set('importe',importeMxn);
-											validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
+											//validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 										}
 									}
 						        }
@@ -1428,7 +1428,7 @@ Ext.onReady(function() {
 							allowBlank: false,
 							listeners : {
 								change:function(e){
-									validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), e.getValue());
+									//validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), e.getValue());
 								}
 							}
 						}
@@ -1899,7 +1899,7 @@ Ext.onReady(function() {
 							'smap1.ntramite'  : panelInicialPral.down('[name=idNumTramite]').getValue()
 							,'smap1.cdtippag' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
 							,'smap1.cdtipate' : panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue()
-							,'smap1.cdtiptra' : '16'
+							,'smap1.cdtiptra' : _TIPO_TRAMITE_SINIESTRO
 							,'smap1.cdunieco' : null
 							,'smap1.cdramo'   : panelInicialPral.down('combo[name=cmbRamos]').getValue()
 							,'smap1.estado'   : null
@@ -1953,7 +1953,7 @@ Ext.onReady(function() {
 									waitMsg:'Procesando...',
 									params: {
 										'smap1.ntramite' : panelInicialPral.down('[name=idNumTramite]').getValue(), 
-										'smap1.status'   : 4
+										'smap1.status'   : _RECHAZADO
 									},
 									failure: function(form, action) {
 										Ext.Msg.show({
@@ -2019,7 +2019,7 @@ Ext.onReady(function() {
 													,params         :
 													{
 														'smap1.gridTitle'      : 'Siniestros en espera'
-														,'smap2.pv_cdtiptra_i' : 16
+														,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
 													}
 												});
 											});
@@ -2110,7 +2110,7 @@ Ext.onReady(function() {
 					});
 					
 					if(json.otvalor20mc == null || json.otvalor20mc==''){
-						panelInicialPral.down('combo[name=cmbRamos]').setValue("2");
+						panelInicialPral.down('combo[name=cmbRamos]').setValue(_SALUD_VITAL);
 					}else{
 						panelInicialPral.down('combo[name=cmbRamos]').setValue(json.otvalor20mc);
 					}
@@ -2236,7 +2236,7 @@ Ext.onReady(function() {
 										var fechaFacturaM = json[i].ffactura.match(/\d+/g); 
 										var dateFac = new Date(fechaFacturaM[2], fechaFacturaM[1]-1,fechaFacturaM[0]);
 										
-										if(panelInicialPral.down('combo[name=cmbRamos]').getValue() =="1"){
+										if(panelInicialPral.down('combo[name=cmbRamos]').getValue() == _RECUPERA){
 											var rec = new modelFacturaSiniestro({
 												noFactura: json[i].nfactura,
 												fechaFactura: dateFac,
@@ -2551,7 +2551,7 @@ Ext.onReady(function() {
 		else{ //PAGO POR INMEDIZACION
 			var obtener = [];
 			/*Verificamos el numero total de facturas*/
-			if(panelInicialPral.down('combo[name=cmbRamos]').getValue() =="1"){
+			if(panelInicialPral.down('combo[name=cmbRamos]').getValue() == _RECUPERA){
 				storePagoIndemnizatorioRecupera.each(function(record) {
 					obtener.push(record.data);
 				});
@@ -2607,7 +2607,7 @@ Ext.onReady(function() {
 			var formulario=panelInicialPral.form.getValues();
 			submitValues['params']=formulario;
 			
-			if(panelInicialPral.down('combo[name=cmbRamos]').getValue() =="1"){
+			if(panelInicialPral.down('combo[name=cmbRamos]').getValue() == _RECUPERA){
 				storePagoIndemnizatorioRecupera.each(function(record,index){
 					datosTablas.push({
 						nfactura:record.get('noFactura'),
@@ -2689,7 +2689,7 @@ Ext.onReady(function() {
 		}else{
 			pagoDirecto = true;
 			pagoReembolso = false;
-			if(panelInicialPral.down('combo[name=cmbRamos]').getValue() =="1"){
+			if(panelInicialPral.down('combo[name=cmbRamos]').getValue() == _RECUPERA){
 				panelInicialPral.down('[name=editorPagoIndemnizatorio]').hide();
 				panelInicialPral.down('[name=editorPagoIndemnizatorioRecupera]').show();
 				panelInicialPral.down('[name=editorFacturaDirecto]').hide();
@@ -2916,7 +2916,7 @@ Ext.onReady(function() {
 			}else{
 				banderaFactura = "1";
 				//storePagoIndemnizatorio.add(new modelFacturaSiniestro({noFactura:'0',fechaFactura:fechaOcurrencia,tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
-				if(panelInicialPral.down('combo[name=cmbRamos]').getValue() =="1"){
+				if(panelInicialPral.down('combo[name=cmbRamos]').getValue() == _RECUPERA){
 					storePagoIndemnizatorioRecupera.add(new modelFacturaSiniestro({noFactura:'0',fechaFactura:fechaOcurrencia,tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001', importe:'0.00'}));
 				}else{
 					storePagoIndemnizatorio.add(new modelFacturaSiniestro({noFactura:'0',fechaFactura:fechaOcurrencia,tasaCambio:'0.00',importeFactura:'0.00',tipoMonedaName:'001'}));
@@ -3165,7 +3165,7 @@ Ext.onReady(function() {
 																									,params         :
 																									{
 																										'smap1.gridTitle'      : 'Siniestros en espera'
-																										,'smap2.pv_cdtiptra_i' : 16
+																										,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
 																									}
 																								});
 																							});
@@ -3251,7 +3251,7 @@ Ext.onReady(function() {
 																						,params         :
 																						{
 																							'smap1.gridTitle'      : 'Siniestros en espera'
-																							,'smap2.pv_cdtiptra_i' : 16
+																							,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
 																						}
 																					});
 																				});
