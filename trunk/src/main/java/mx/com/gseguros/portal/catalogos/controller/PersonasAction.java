@@ -800,6 +800,67 @@ public class PersonasAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
+
+	/**
+	 * Guarda los datos de un cliente en una compania  (Salud/Danios) usando Web Service
+	 * @return SUCCESS
+	 */
+	public String guardarClienteCompania()
+	{
+		long timestamp = System.currentTimeMillis();
+		logger.info(timestamp+""
+				+ "\n##################################"
+				+ "\n###### Crea Cliente Compania ######"
+				+ "\nsmap1: "+smap1
+				);
+		try
+		{
+			String saludDanios = smap1.get("esSalud");
+			logger.debug("...Crear nueva Persona en WS... , Compania: " + saludDanios);
+			
+			
+			ClienteGeneral clienteGeneral = new ClienteGeneral();
+			clienteGeneral.setClaveCia(saludDanios);
+			
+			ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("cdperson"), Ice2sigsService.Operacion.INSERTA, clienteGeneral, null, false);
+			
+			if(clientesRes == null || (Estatus.EXITO.getCodigo() != clientesRes.getCodigo())){
+				
+				logger.debug("Error en WS, exito false,Error al crear codigo externo de cliente");
+				exito           = false;
+				respuesta       = "Error al crear codigo externo de cliente";
+				respuestaOculta = "Error al crear codigo externo de cliente";
+				slist1          = null;
+				
+				return SUCCESS;
+			}else{
+				exito = true;
+
+				smap1.put("codigoExternoGen", clientesRes.getClientesGeneral()[0].getNumeroExterno());
+				logger.debug("Codigo externo obtenido: " + clientesRes.getClientesGeneral()[0].getNumeroExterno());
+				
+				params = new HashMap<String, String>();
+				params.put("pv_cdperson_i", smap1.get("cdperson"));
+				params.put("pv_swsalud_i"  , saludDanios);
+				params.put("pv_cdideper_i"  , clientesRes.getClientesGeneral()[0].getNumeroExterno());
+				
+				personasManager.actualizaCodigoExterno(params);
+			
+			}
+		}
+		catch(Exception ex)
+		{
+			logger.error(timestamp+"Error inesperado al guardar datos de persona en WS",ex);
+			exito           = false;
+			respuesta       = "Error inesperado #"+timestamp;
+			respuestaOculta = ex.getMessage();
+		}
+		logger.info(timestamp+""
+				+ "\n###### guardarDatosTvaloper ######"
+				+ "\n##################################"
+				);
+		return SUCCESS;
+	}
 	
 	public String obtieneAccionistas()
 	{
