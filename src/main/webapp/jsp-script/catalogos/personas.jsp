@@ -101,6 +101,8 @@ var _activaCveFamiliar = false;
 var _PanelPrincipalPersonas;
 var _panelTipoPer;
 
+var _modoRecuperaDanios;
+
 if(!Ext.isEmpty(_p22_smap1)){
 	
 	_cargaCdPerson = _p22_smap1.cdperson;
@@ -113,6 +115,7 @@ if(!Ext.isEmpty(_p22_smap1)){
 	_cargaSucursalEmi = _p22_smap1.cargaSucursalEmi;
 	
 	_activaCveFamiliar = !Ext.isEmpty(_p22_smap1.activaCveFamiliar) && _p22_smap1.activaCveFamiliar == "S" ? true : false ;
+	_modoRecuperaDanios = !Ext.isEmpty(_p22_smap1.modoRecuperaDanios) && _p22_smap1.modoRecuperaDanios == "S" ? true : false ;
 }
 
 ////// variables //////
@@ -229,7 +232,7 @@ Ext.onReady(function()
 					            		
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.nombre]').reset();
-					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText('Continuar y Editar Cliente');
+					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_modoRecuperaDanios?'Continuar y Recuperar Cliente':'Continuar y Editar Cliente');
 					            	}, 
 					            	keydown: function( com, e, eOpts ){
 					            		_RFCsel = '';
@@ -382,7 +385,7 @@ Ext.onReady(function()
 					            		
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.rfc]').reset();
-					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText('Continuar y Editar Cliente');
+					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_modoRecuperaDanios?'Continuar y Recuperar Cliente':'Continuar y Editar Cliente');
 					            	}, 
 					            	keydown: function(){
 					            		_RFCnomSel = '';
@@ -521,45 +524,6 @@ Ext.onReady(function()
 								    		form.down('[name=smap1.rfc]').getStore().removeAll();
 								    		form.down('[name=smap1.nombre]').getStore().removeAll();
 								    		
-								    		try{
-								    			var ventanaMensaje = window.parent;
-								    			
-								    			if (ventanaMensaje != window.top) {
-												  debug('Para postMessage, El parent es el mismo que el top');
-												}else{
-												  debug('Para postMessage, El parent no es el mismo que el top');
-												}
-												
-												var _codigoDanios = '';
-												var _codigoSalud  = '';
-												
-												try{
-													_codigoDanios = _CDIDEPERsel.substring(5);
-												}catch(e){
-													debug('Error al obtener codigo externo de Danios',e);
-												}
-												
-												try{
-													_codigoSalud = _CDIDEEXTsel.substring(5);
-												}catch(e){
-													debug('Error al obtener codigo externo de Salud',e);
-												}
-												
-												var objMsg = {
-													clienteIce: true,
-													modo: 'E',
-													cdperson: _p22_cdperson,
-													cdideper: _CDIDEPERsel,
-													cdideext: _CDIDEEXTsel,
-													codigoDanios: _codigoDanios,
-													codigoSalud:_codigoSalud
-												};
-												
-												ventanaMensaje.postMessage(objMsg, "*");
-												
-								    		}catch(e){
-								    			debugError('Error en postMessage',e);
-								    		}
 								    		
 											irModoEdicion();
 											
@@ -678,7 +642,7 @@ Ext.onReady(function()
                         ,buttonAlign: 'center'
                         ,buttons    :
 	                    [{
-	                            text     : 'Guardar datos de Persona'
+	                            text     : _modoRecuperaDanios?'Guardar datos y Recuperar Persona':'Guardar datos de Persona'
 	                            ,itemId  : '_p22_botonGuardar'
 	                            ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
 	                            ,handler : function(){
@@ -962,26 +926,111 @@ Ext.onReady(function()
     	
     }
     
-    function irModoEdicion(){
-    	
-		if(_p22_cdperson!=false){
-			_p22_formDatosGenerales().show();
-			_p22_formDomicilio().show();
-		    _p22_principalDatosAdicionales().show();
-
-		    if(_ocultaBusqueda){
-				_p22_formBusqueda().hide();
+function irModoEdicion(){
+	
+	if(_modoRecuperaDanios && !Ext.isEmpty(_CDIDEPERsel)){
+		
+		try{
+			var ventanaMensaje = window.parent;
+			
+			if (ventanaMensaje != window.top) {
+			  debug('Para postMessage, El parent es el mismo que el top');
+			}else{
+			  debug('Para postMessage, El parent no es el mismo que el top');
 			}
 			
-			/**
-			 * Autosave en true para auto guardado cuando carga la pantalla o cuando cambian los factores de art 140
-			 */
-		    _p22_loadRecordCdperson(function(){_p22_guardarClic(_p22_datosAdicionalesClic, true);},true);
-		    
-		}else{
-			mensajeWarning('Error al cargar datos.');
+			var _codigoDanios = '';
+			var _codigoSalud  = '';
+			
+			try{
+				_codigoDanios = _CDIDEPERsel.substring(5);
+			}catch(e){
+				debug('Error al obtener codigo externo de Danios',e);
+			}
+			
+			try{
+				_codigoSalud = _CDIDEEXTsel.substring(5);
+			}catch(e){
+				debug('Error al obtener codigo externo de Salud',e);
+			}
+			
+			var objMsg = {
+				clienteIce: true,
+				modo: 'R',
+				cdperson: _p22_cdperson,
+				cdideper: _CDIDEPERsel,
+				cdideext: _CDIDEEXTsel,
+				codigoDanios: _codigoDanios,
+				codigoSalud:_codigoSalud
+			};
+			
+			ventanaMensaje.postMessage(objMsg, "*");
+			mensajeInfo('Cliente Recuperado: ' + _codigoDanios);
+		}catch(e){
+			debugError('Error en postMessage',e);
 		}
-    }
+		
+		return;
+	}
+	
+	if(_p22_cdperson!=false){
+		_p22_formDatosGenerales().show();
+		_p22_formDomicilio().show();
+	    _p22_principalDatosAdicionales().show();
+
+	    if(_ocultaBusqueda){
+			_p22_formBusqueda().hide();
+		}
+		
+		/**
+		 * Autosave en true para auto guardado cuando carga la pantalla o cuando cambian los factores de art 140
+		 */
+	    _p22_loadRecordCdperson(function(){_p22_guardarClic(_p22_datosAdicionalesClic, true);},true);
+	    
+	    try{
+			var ventanaMensaje = window.parent;
+			
+			if (ventanaMensaje != window.top) {
+			  debug('Para postMessage, El parent es el mismo que el top');
+			}else{
+			  debug('Para postMessage, El parent no es el mismo que el top');
+			}
+			
+			var _codigoDanios = '';
+			var _codigoSalud  = '';
+			
+			try{
+				_codigoDanios = _CDIDEPERsel.substring(5);
+			}catch(e){
+				debug('Error al obtener codigo externo de Danios',e);
+			}
+			
+			try{
+				_codigoSalud = _CDIDEEXTsel.substring(5);
+			}catch(e){
+				debug('Error al obtener codigo externo de Salud',e);
+			}
+			
+			var objMsg = {
+				clienteIce: true,
+				modo: 'E',
+				cdperson: _p22_cdperson,
+				cdideper: _CDIDEPERsel,
+				cdideext: _CDIDEEXTsel,
+				codigoDanios: _codigoDanios,
+				codigoSalud:_codigoSalud
+			};
+			
+			ventanaMensaje.postMessage(objMsg, "*");
+			
+		}catch(e){
+			debugError('Error en postMessage',e);
+		}
+	    
+	}else{
+		mensajeWarning('Error al cargar datos.');
+	}
+}
     
 function importaPersonaWS(esSaludD, codigoCliExt){
     	
@@ -2236,6 +2285,9 @@ function _p22_guardarDatosAdicionalesClic()
 					};
 					
 					ventanaMensaje.postMessage(objMsg, "*");
+					if(_modoRecuperaDanios){
+						mensajeInfo('Cliente Guardado y Recuperado: ' + _codigoDanios);
+					}
 					
 	    		}catch(e){
 	    			debugError('Error en postMessage',e);

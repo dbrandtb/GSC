@@ -123,6 +123,7 @@
                 <param name="smap1.esCargaClienteNvo">${params.esCargaClienteNvo}</param>
                 <param name="smap1.cargaCP">${params.cargaCP}</param>
                 <param name="smap1.cargaTipoPersona">${params.cargaTipoPersona}</param>
+                <param name="smap1.modoRecuperaDanios">${params.modoRecuperaDanios}</param>
 		    </result>
 		    <result name="endososAutos" type="redirectAction">
                 <param name="actionName">marcoEndosos</param>

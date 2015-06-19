@@ -24,8 +24,8 @@ var _TIPOTABLA = '<s:property value="params.tipotab" />';
 
 
 
-console.log('_NMTABLA:', _NMTABLA);
-console.log('_TIPOTABLA:', _TIPOTABLA);
+debug('_NMTABLA:', _NMTABLA);
+debug('_TIPOTABLA:', _TIPOTABLA);
 
 
 var _TIPO_1CLAVE =  _TIPOTABLA == 1;
