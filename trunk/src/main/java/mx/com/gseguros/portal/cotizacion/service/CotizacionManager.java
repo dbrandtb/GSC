@@ -460,4 +460,40 @@ public interface CotizacionManager
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+	
+	@Deprecated
+	public void ejecutaValoresDefectoTarificacionConcurrente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String tipotari
+			,String cdperpag
+			)throws Exception;
+	
+	@Deprecated
+	public void ejecutaValoresDefectoConcurrente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String tipotari
+			,String cdperpag
+			)throws Exception;
+	
+	@Deprecated
+	public void ejecutaTarificacionConcurrente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String tipotari
+			,String cdperpag
+			)throws Exception;
 }

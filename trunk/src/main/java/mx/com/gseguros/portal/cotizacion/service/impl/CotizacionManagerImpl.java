@@ -6014,6 +6014,90 @@ public class CotizacionManagerImpl implements CotizacionManager
     	return cotizacionDAO.cargarPorcentajeCesionComisionAutos(cdunieco,cdramo,estado,nmpoliza);
 	}
     
+    @Override
+    public void ejecutaValoresDefectoConcurrente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String tipotari
+			,String cdperpag
+			)throws Exception
+	{
+    	logger.info(Utils.join(
+    			 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    			,"\n@@@@@@ ejecutaValoresDefectoConcurrente @@@@@@"
+    			,"\n@@@@@@ cdunieco=" , cdunieco
+    			,"\n@@@@@@ cdramo="   , cdramo
+    			,"\n@@@@@@ estado="   , estado
+    			,"\n@@@@@@ nmpoliza=" , nmpoliza
+    			,"\n@@@@@@ nmsuplem=" , nmsuplem
+    			,"\n@@@@@@ nmsituac=" , nmsituac
+    			,"\n@@@@@@ tipotari=" , tipotari
+    			,"\n@@@@@@ cdperpag=" , cdperpag
+    			,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    			));
+    	cotizacionDAO.ejecutaValoresDefectoConcurrente(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, tipotari, cdperpag);
+	}
+    
+    @Override
+    public void ejecutaTarificacionConcurrente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String tipotari
+			,String cdperpag
+			)throws Exception
+	{
+    	logger.info(Utils.join(
+    			 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    			,"\n@@@@@@ ejecutaTarificacionConcurrente @@@@@@"
+    			,"\n@@@@@@ cdunieco=" , cdunieco
+    			,"\n@@@@@@ cdramo="   , cdramo
+    			,"\n@@@@@@ estado="   , estado
+    			,"\n@@@@@@ nmpoliza=" , nmpoliza
+    			,"\n@@@@@@ nmsuplem=" , nmsuplem
+    			,"\n@@@@@@ nmsituac=" , nmsituac
+    			,"\n@@@@@@ tipotari=" , tipotari
+    			,"\n@@@@@@ cdperpag=" , cdperpag
+    			,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    			));
+    	cotizacionDAO.ejecutaTarificacionConcurrente(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, tipotari, cdperpag);
+	}
+    
+    @Override
+    public void ejecutaValoresDefectoTarificacionConcurrente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String tipotari
+			,String cdperpag
+			)throws Exception
+	{
+    	logger.info(Utils.join(
+    			 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    			,"\n@@@@@@ ejecutaValoresDefectoTarificacionConcurrente @@@@@@"
+    			,"\n@@@@@@ cdunieco=" , cdunieco
+    			,"\n@@@@@@ cdramo="   , cdramo
+    			,"\n@@@@@@ estado="   , estado
+    			,"\n@@@@@@ nmpoliza=" , nmpoliza
+    			,"\n@@@@@@ nmsuplem=" , nmsuplem
+    			,"\n@@@@@@ nmsituac=" , nmsituac
+    			,"\n@@@@@@ tipotari=" , tipotari
+    			,"\n@@@@@@ cdperpag=" , cdperpag
+    			,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    			));
+    	cotizacionDAO.ejecutaValoresDefectoTarificacionConcurrente(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, tipotari, cdperpag);
+	}
+    
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {

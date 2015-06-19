@@ -2775,6 +2775,7 @@ function _p21_generarTramiteClic(callback,sincenso)
                                     var ck = 'Recuperando asegurados para revision';
                                     try
                                     {
+                                        _p21_tabpanel().setLoading(true);
                                         Ext.Ajax.request(
                                         {
                                             url      : _p21_urlRecuperacionSimpleLista
@@ -2791,6 +2792,7 @@ function _p21_generarTramiteClic(callback,sincenso)
                                                 var ck = 'Decodificando datos de asegurados para revision';
                                                 try
                                                 {
+                                                    _p21_tabpanel().setLoading(false);
                                                     var json2 = Ext.decode(response.responseText);
                                                     debug('### asegurados:',json2);
                                                     var store = Ext.create('Ext.data.Store',
@@ -2802,13 +2804,65 @@ function _p21_generarTramiteClic(callback,sincenso)
 	                                                centrarVentanaInterna(Ext.create('Ext.window.Window',
 			                                        {
 			                                            width   : 600
-			                                            ,height : 400
+			                                            ,height : 500
 			                                            ,title  : 'Revisar asegurados del censo'
+			                                            ,closable : false
 			                                            ,items  :
 			                                            [
-			                                                Ext.create('Ext.grid.Panel',
+			                                                Ext.create('Ext.panel.Panel',
 			                                                {
-			                                                    height   : 300
+			                                                    layout    : 'hbox'
+			                                                    ,border   : 0
+			                                                    ,defaults : { style : 'margin:5px;' }
+			                                                    ,height   : 40
+			                                                    ,items    :
+			                                                    [
+			                                                        {
+			                                                            xtype       : 'displayfield'
+			                                                            ,fieldLabel : 'Filas leidas'
+			                                                            ,value      : json.smap1.filasLeidas
+			                                                        }
+			                                                        ,{
+                                                                        xtype       : 'displayfield'
+                                                                        ,fieldLabel : 'Filas procesadas'
+                                                                        ,value      : json.smap1.filasProcesadas
+                                                                    }
+                                                                    ,{
+                                                                        xtype       : 'displayfield'
+                                                                        ,fieldLabel : 'Filas con error'
+                                                                        ,value      : json.smap1.filasErrores
+                                                                    }
+                                                                    ,{
+                                                                        xtype    : 'button'
+                                                                        ,text    : 'Ver errores'
+                                                                        ,hidden  : Number(json.smap1.filasErrores)==0
+                                                                        ,handler : function()
+                                                                        {
+                                                                            centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                                                            {
+                                                                                modal        : true
+                                                                                ,closeAction : 'destroy'
+                                                                                ,title       : 'Errores al procesar censo'
+                                                                                ,width       : 500
+                                                                                ,height      : 400
+                                                                                ,items       :
+                                                                                [
+                                                                                    {
+                                                                                        xtype     : 'textarea'
+                                                                                        ,value    : json.smap1.erroresCenso
+                                                                                        ,readOnly : true
+                                                                                        ,width    : 480
+                                                                                        ,height   : 320
+                                                                                    }
+                                                                                ]
+                                                                            }).show());
+                                                                        }
+                                                                    }
+			                                                    ]
+			                                                })
+			                                                ,Ext.create('Ext.grid.Panel',
+			                                                {
+			                                                    height   : 350
 			                                                    ,columns :
 			                                                    [
 			                                                        {
@@ -2900,6 +2954,7 @@ function _p21_generarTramiteClic(callback,sincenso)
                                             }
                                             ,failure : function()
                                             {
+                                                _p21_tabpanel().setLoading(false);
                                                 errorComunicacion('Recuperando asegurados para revision');
                                             }
                                         });

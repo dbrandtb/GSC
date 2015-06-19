@@ -2158,7 +2158,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				cotizacionDAO.aplicarAjustesCotizacionPorProducto(cdunieco, cdramo, estado, nmpoliza, cdtipsit, tipoflot);
 				
 				setCheckpoint("Generando tarificacion concurrente");
-				cotizacionDAO.ejecutaTarificacionConcurrente(
+				cotizacionDAO.ejecutaValoresDefectoTarificacionConcurrente(
 						cdunieco
 						,cdramo
 						,estado
