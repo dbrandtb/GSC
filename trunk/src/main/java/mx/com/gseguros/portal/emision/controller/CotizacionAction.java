@@ -5368,22 +5368,24 @@ public class CotizacionAction extends PrincipalCoreAction
 						String ptsumaaseg = (String)iGrupo.get("ptsumaaseg");
 						String ayudamater = (String)iGrupo.get("ayudamater");
 						Object incrinflL  = iGrupo.get("incrinfl");
-						String incrinfl   = incrinflL!=null? incrinflL.toString() : "0";
+						String incrinfl   = incrinflL!=null? incrinflL.toString() : "";
 						Object extrrenoL  = iGrupo.get("extrreno");
-						String extrreno   = extrrenoL!=null? extrrenoL.toString() : "0";
+						String extrreno   = extrrenoL!=null? extrrenoL.toString() : "";
 						Object cesicomiL  = iGrupo.get("cesicomi");
-						String cesicomi   = cesicomiL!=null? cesicomiL.toString() : "0";
+						String cesicomi   = cesicomiL!=null? cesicomiL.toString() : "";
 						Object pondubicL  = iGrupo.get("pondubic");
-						String pondubic   = pondubicL!=null? pondubicL.toString() : "0";
+						String pondubic   = pondubicL!=null? pondubicL.toString() : "";
 						Object descbonoL  = iGrupo.get("descbono");
-						String descbono   = descbonoL!=null? descbonoL.toString() : "0";
+						String descbono   = descbonoL!=null? descbonoL.toString() : "";
 						Object porcgastL  = iGrupo.get("porcgast");
-						String porcgast   = porcgastL!=null? porcgastL.toString() : "0";
+						String porcgast   = porcgastL!=null? porcgastL.toString() : "";
 						cotizacionManager.movimientoMpolisitTvalositGrupo(
 								cdunieco, cdramo, "W", nmpoliza,
 								cdgrupo, ptsumaaseg, incrinfl, extrreno,
 								cesicomi, pondubic, descbono, porcgast,
 								(String)iGrupo.get("nombre"),ayudamater);
+						
+						cotizacionManager.actualizaValoresDefectoSituacion(cdunieco,cdramo,"W",nmpoliza,"0");
 					}
 				}
 				else
@@ -5515,13 +5517,27 @@ public class CotizacionAction extends PrincipalCoreAction
 						String valor    = (String)iGrupo.get("deducible");
 						cotizacionManager.movimientoTvalogarGrupo(cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", cdatribu, valor);
 						
-						//ASISTENCIA INTERNACIONAL VIAJES
+						//ASISTENCIA INTERNACIONAL VIAJES --AHORA MEDICAMENTOS
 						String asisinte = (String)iGrupo.get("asisinte");
-						cdgarant = "4AIV";
-						if(asisinte.equalsIgnoreCase("S"))
+						cdgarant = "4MED";
+						if(Integer.parseInt(asisinte)>0)
 						{
 							cotizacionManager.movimientoMpoligarGrupo(
 									cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.INSERT_MODE);
+							
+							cotizacionManager.movimientoTvalogarGrupo(
+									cdunieco
+									,cdramo
+									,"W" //estado
+									,nmpoliza
+									,"0" //nmsuplem
+									,cdtipsit
+									,cdgrupo
+									,cdgarant
+									,"V" //status
+									,"001"
+									,asisinte
+									);
 						}
 						else
 						{

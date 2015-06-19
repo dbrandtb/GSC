@@ -698,4 +698,12 @@ public interface CotizacionDAO
 			,String tipotari
 			,String cdperpag
 			)throws Exception;
+	
+	public void actualizaValoresDefectoSituacion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception;
 }

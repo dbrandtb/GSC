@@ -496,4 +496,13 @@ public interface CotizacionManager
 			,String tipotari
 			,String cdperpag
 			)throws Exception;
+	
+	@Deprecated
+	public void actualizaValoresDefectoSituacion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception;
 }

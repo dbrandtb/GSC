@@ -469,7 +469,7 @@ Ext.onReady(function()
                     }
                 }
                 ,{
-                    header     : 'Asis. Inter. Viajes'
+                    header     : 'Medicamentos'
                     ,dataIndex : 'asisinte'
                     ,width     : 140
                     ,editor    : _p21_editorAsisInter
