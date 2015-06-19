@@ -26,6 +26,8 @@ var _p43_formEndosoItems   = [ <s:property value="imap.formEndosoItems"   escape
 
 Ext.onReady(function()
 {
+	Ext.Ajax.timeout = 5*60*1000;
+	
     ////// modelos //////
     ////// modelos //////
     
