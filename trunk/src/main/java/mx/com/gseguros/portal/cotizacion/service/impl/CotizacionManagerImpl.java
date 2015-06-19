@@ -3187,6 +3187,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,false //reinsertarContratante
 					,sincenso
 					,censoAtrasado
+					,cdperpag
 					);
 			
 			resp.setExito(respInterna.isExito());
@@ -3235,6 +3236,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,boolean reinsertaContratante
 			,boolean sincenso
 			,boolean censoAtrasado
+			,String cdperpag
 			)
 	{
 		logger.info(
@@ -3267,6 +3269,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ reinsertaContratante=").append(reinsertaContratante)
 				.append("\n@@@@@@ sincenso=")            .append(sincenso)
 				.append("\n@@@@@@ censoAtrasado=")       .append(censoAtrasado)
+				.append("\n@@@@@@ cdperpag=")            .append(cdperpag)
 				.toString()
 				);
 		
@@ -3324,6 +3327,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		{
 			try
 			{
+				/*
 				cotizacionDAO.valoresPorDefecto(
 						cdunieco
 						,cdramo
@@ -3333,6 +3337,17 @@ public class CotizacionManagerImpl implements CotizacionManager
 						,"0"    //nmsuplem
 						,"TODO" //cdgarant
 						,"1"    //cdtipsup
+						);
+				*/
+				cotizacionDAO.ejecutaValoresDefectoConcurrente(
+						cdunieco
+						,cdramo
+						,"W" //estado
+						,nmpoliza
+						,"0" //nmsuplem
+						,"0" //nmsituac
+						,"1" //tipotari
+						,cdperpag
 						);
 				
 				try
@@ -3673,6 +3688,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		{
 			try
 			{
+				/*
 				cotizacionDAO.tarificaEmi(
 						cdusuari
 						,cdelemen
@@ -3683,6 +3699,17 @@ public class CotizacionManagerImpl implements CotizacionManager
 						,"0"       //nmstiuac
 						,"0"       //nmsuplem
 						,cdtipsit);
+				*/
+				cotizacionDAO.ejecutaTarificacionConcurrente(
+						cdunieco
+						,cdramo
+						,"W" //estado
+						,nmpoliza
+						,"0" //nmsuplem
+						,"0" //nmsituac
+						,"1" //tipotari
+						,cdperpag
+						);
 			}
 			catch(Exception ex)
 			{
@@ -4806,6 +4833,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,true
 					,false
 					,false
+					,cdperpag
 					);
 		}
 		
