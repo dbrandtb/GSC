@@ -110,6 +110,7 @@ var _p25_tabGruposLineal;
 var _p25_tabGruposModifi;
 var _p25_gridTarifas;
 var _p25_valoresFactores = null;
+var _p25_resubirCenso    = 'N';
 
 var _p25_filtroCobTimeout;
 
@@ -330,6 +331,24 @@ Ext.onReady(function()
     {
         extend  : 'Ext.data.Model'
         ,fields : [ 'concepto' , { name : 'importe',type :'float' }]
+    });
+    
+    Ext.define('_p25_modeloRevisionAsegurado',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields :
+        [
+            'CDUNIECO'
+            ,'CDRAMO'
+            ,'ESTADO'
+            ,'NMPOLIZA'
+            ,'CDGRUPO'
+            ,'NMSITUAC'
+            ,'PARENTESCO'
+            ,'NOMBRE'
+            ,'EDAD'
+            ,'SEXO'
+        ]
     });
     ////// modelos //////
     
@@ -2680,6 +2699,7 @@ function _p25_generarTramiteClic(callback,sincenso)
             conceptos['ntramiteVacio']   = _p25_ntramiteVacio ? _p25_ntramiteVacio : ''
             conceptos['sincenso']        = !Ext.isEmpty(sincenso)&&sincenso==true?'S':'N';
             conceptos['censoAtrasado']   = !Ext.isEmpty(_p25_smap1.sincenso)&&_p25_smap1.sincenso=='S'?'S':'N';
+            conceptos['resubirCenso']    = _p25_resubirCenso;
             var grupos = [];
             _p25_storeGrupos.each(function(record)
             {
@@ -2724,33 +2744,199 @@ function _p25_generarTramiteClic(callback,sincenso)
                             _p25_fieldNtramite().setValue(json.smap1.ntramite);
                             _p25_tabpanel().setDisabled(true);
                             
-                            mensajeCorrecto('Tr&aacute;mite generado',json.respuesta+'<br/>Para subir la documentaci&oacute;n presiona aceptar',function()
+                            mensajeCorrecto('Tr&aacute;mite generado',json.respuesta+'<br/>Para revisar los datos presiona aceptar',function()
                             {
-                                centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                var ck = 'Recuperando asegurados para revision';
+                                try
                                 {
-                                    width        : 600
-                                    ,height      : 400
-                                    ,title       : 'Subir documentos de tu tr&aacute;mite ('+json.smap1.ntramite+')'
-                                    ,closable    : false
-                                    ,modal       : true
-                                    ,loadingMask : true
-                                    ,loader      :
+                                    _p25_tabpanel().setLoading(true);
+                                    Ext.Ajax.request(
                                     {
-                                        url       : _p25_urlVentanaDocumentos
-                                        ,scripts  : true
-                                        ,autoLoad : true
-                                        ,params   :
+                                        url      : _p25_urlRecuperacionSimpleLista
+                                        ,params  :
                                         {
-                                            'smap1.cdunieco'  : json.smap1.cdunieco
-                                            ,'smap1.cdramo'   : json.smap1.cdramo
-                                            ,'smap1.estado'   : 'W'
-                                            ,'smap1.nmpoliza' : '0'
-                                            ,'smap1.nmsuplem' : '0'
-                                            ,'smap1.ntramite' : json.smap1.ntramite
-                                            ,'smap1.tipomov'  : '0'
+                                            'smap1.procedimiento' : 'RECUPERAR_REVISION_COLECTIVOS'
+                                            ,'smap1.cdunieco'     : _p25_smap1.cdunieco
+                                            ,'smap1.cdramo'       : _p25_smap1.cdramo
+                                            ,'smap1.estado'       : 'W'
+                                            ,'smap1.nmpoliza'     : json.smap1.nmpoliza
                                         }
-                                    }
-                                }).show());
+                                        ,success : function(response)
+                                        {
+                                            var ck = 'Decodificando datos de asegurados para revision';
+                                            try
+                                            {
+                                                _p25_tabpanel().setLoading(false);
+                                                var json2 = Ext.decode(response.responseText);
+                                                debug('### asegurados:',json2);
+                                                var store = Ext.create('Ext.data.Store',
+                                                {
+                                                    model : '_p25_modeloRevisionAsegurado'
+                                                    ,data : json2.slist1
+                                                });
+                                                debug('store.getRange():',store.getRange());
+                                                centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                                {
+                                                    width   : 600
+                                                    ,height : 500
+                                                    ,title  : 'Revisar asegurados del censo'
+                                                    ,closable : false
+                                                    ,items  :
+                                                    [
+                                                        Ext.create('Ext.panel.Panel',
+                                                        {
+                                                            layout    : 'hbox'
+                                                            ,border   : 0
+                                                            ,defaults : { style : 'margin:5px;' }
+                                                            ,height   : 40
+                                                            ,items    :
+                                                            [
+                                                                {
+                                                                    xtype       : 'displayfield'
+                                                                    ,fieldLabel : 'Filas leidas'
+                                                                    ,value      : json.smap1.filasLeidas
+                                                                }
+                                                                ,{
+                                                                    xtype       : 'displayfield'
+                                                                    ,fieldLabel : 'Filas procesadas'
+                                                                    ,value      : json.smap1.filasProcesadas
+                                                                }
+                                                                ,{
+                                                                    xtype       : 'displayfield'
+                                                                    ,fieldLabel : 'Filas con error'
+                                                                    ,value      : json.smap1.filasErrores
+                                                                }
+                                                                ,{
+                                                                    xtype    : 'button'
+                                                                    ,text    : 'Ver errores'
+                                                                    ,hidden  : Number(json.smap1.filasErrores)==0
+                                                                    ,handler : function()
+                                                                    {
+                                                                        centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                                                        {
+                                                                            modal        : true
+                                                                            ,closeAction : 'destroy'
+                                                                            ,title       : 'Errores al procesar censo'
+                                                                            ,width       : 500
+                                                                            ,height      : 400
+                                                                            ,items       :
+                                                                            [
+                                                                                {
+                                                                                    xtype     : 'textarea'
+                                                                                    ,value    : json.smap1.erroresCenso
+                                                                                    ,readOnly : true
+                                                                                    ,width    : 480
+                                                                                    ,height   : 320
+                                                                                }
+                                                                            ]
+                                                                        }).show());
+                                                                    }
+                                                                }
+                                                            ]
+                                                        })
+                                                        ,Ext.create('Ext.grid.Panel',
+                                                        {
+                                                            height   : 350
+                                                            ,columns :
+                                                            [
+                                                                {
+                                                                    text       : 'Grupo'
+                                                                    ,dataIndex : 'CDGRUPO'
+                                                                    ,width     : 60
+                                                                }
+                                                                ,{
+                                                                    text       : 'No.'
+                                                                    ,dataIndex : 'NMSITUAC'
+                                                                    ,width     : 40
+                                                                }
+                                                                ,{
+                                                                    text       : 'Parentesco'
+                                                                    ,dataIndex : 'PARENTESCO'
+                                                                    ,width     : 120
+                                                                }
+                                                                ,{
+                                                                    text       : 'Nombre'
+                                                                    ,dataIndex : 'NOMBRE'
+                                                                    ,width     : 200
+                                                                }
+                                                                ,{
+                                                                    text       : 'Sexo'
+                                                                    ,dataIndex : 'SEXO'
+                                                                    ,width     : 80
+                                                                }
+                                                                ,{
+                                                                    text       : 'Edad'
+                                                                    ,dataIndex : 'EDAD'
+                                                                    ,width     : 60
+                                                                }
+                                                            ]
+                                                            ,store : store
+                                                        })
+                                                    ]
+                                                    ,buttonAlign : 'center'
+                                                    ,buttons     :
+                                                    [
+                                                        {
+                                                            text     : 'Aceptar y subir documentos'
+                                                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                                            ,handler : function()
+                                                            {
+                                                                centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                                                {
+                                                                    width        : 600
+                                                                    ,height      : 400
+                                                                    ,title       : 'Subir documentos de tu tr&aacute;mite ('+json.smap1.ntramite+')'
+                                                                    ,closable    : false
+                                                                    ,modal       : true
+                                                                    ,loadingMask : true
+                                                                    ,loader      :
+                                                                    {
+                                                                        url       : _p25_urlVentanaDocumentos
+                                                                        ,scripts  : true
+                                                                        ,autoLoad : true
+                                                                        ,params   :
+                                                                        {
+                                                                            'smap1.cdunieco'  : json.smap1.cdunieco
+                                                                            ,'smap1.cdramo'   : json.smap1.cdramo
+                                                                            ,'smap1.estado'   : 'W'
+                                                                            ,'smap1.nmpoliza' : '0'
+                                                                            ,'smap1.nmsuplem' : '0'
+                                                                            ,'smap1.ntramite' : json.smap1.ntramite
+                                                                            ,'smap1.tipomov'  : '0'
+                                                                        }
+                                                                    }
+                                                                }).show());
+                                                            }
+                                                        }
+                                                        ,{
+                                                            text     : 'Modificar datos'
+                                                            ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
+                                                            ,handler : function(me)
+                                                            {
+                                                                me.up('window').destroy();
+                                                                _p25_tabpanel().setDisabled(false);
+                                                                _p25_resubirCenso = 'S';
+                                                            }
+                                                        }
+                                                    ]
+                                                }).show());
+                                            }
+                                            catch(e)
+                                            {
+                                                manejaException(e,ck);
+                                            }
+                                        }
+                                        ,failure : function()
+                                        {
+                                            _p25_tabpanel().setLoading(false);
+                                            errorComunicacion('Recuperando asegurados para revision');
+                                        }
+                                    });
+                                }
+                                catch(e)
+                                {
+                                    manejaException(e,ck);
+                                }
                             });
                         }
                     }
