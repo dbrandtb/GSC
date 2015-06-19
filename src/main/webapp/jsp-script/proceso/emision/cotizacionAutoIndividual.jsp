@@ -1881,6 +1881,14 @@ function _p28_cargarSumaAseguradaRamo5(clave,modelo,callback)
                 var sumaseg = _fieldByName('parametros.pv_otvalor13');
                 sumaseg.setValue(json.smap1.sumaseg);
                 sumaseg.valorCargado=json.smap1.sumaseg;
+                try
+                {
+                    _fieldByLabel('RESPALDO VALOR').setValue(json.smap1.sumaseg);
+                }
+                catch(e)
+                {
+                    debugError('error al guardar respaldo valor',e);
+                }
                 _p28_cargarRangoValorRamo5(callback);
             }
             else
@@ -2078,7 +2086,22 @@ function _p28_cargar(boton)
                                         _fieldById('_p28_form').formOculto.getForm().reset();
                                     }
                                     
-                                    if(Ext.isEmpty(json.smap1.NTRAMITE)||vencida)
+                                    if(Ext.isEmpty(json.smap1.NTRAMITE)&&!vencida)
+                                    {
+                                        try
+                                        {
+                                            _fieldLikeLabel('VALOR VEH').valorCargado=_fieldByLabel('RESPALDO VALOR').getValue();
+                                            _p28_cargarRangoValorRamo5(function()
+                                            {
+                                                _p28_cotizar(!maestra&&!vencida);
+                                            });
+                                        }
+                                        catch(e)
+                                        {
+                                            debugError('error al parchar respaldo valor respaldo',e);
+                                        }
+                                    }
+                                    else if(vencida)
                                     {
                                         _p28_cotizar(!maestra&&!vencida);
                                     }
