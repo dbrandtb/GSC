@@ -40,6 +40,7 @@ var _UrlEliminaAccionistas = '<s:url namespace="/catalogos" action="eliminaAccio
 
 var _UrlActualizaStatusPersona = '<s:url namespace="/catalogos" action="actualizaStatusPersona" />';
 var _UrlImportaPersonaWS = '<s:url namespace="/catalogos" action="importaPersonaExtWS" />';
+var _UrlguardaPersonaWS = '<s:url namespace="/catalogos" action="guardarClienteCompania" />';
 
 /* PARA EL LOADER */
 var _p22_urlCargarPersonaCdperson = '<s:url namespace="/catalogos" action="obtenerPersonaPorCdperson" />';
@@ -928,46 +929,112 @@ Ext.onReady(function()
     
 function irModoEdicion(){
 	
-	if(_modoRecuperaDanios && !Ext.isEmpty(_CDIDEPERsel)){
+	if(_modoRecuperaDanios){
 		
-		try{
-			var ventanaMensaje = window.parent;
-			
-			if (ventanaMensaje != window.top) {
-			  debug('Para postMessage, El parent es el mismo que el top');
-			}else{
-			  debug('Para postMessage, El parent no es el mismo que el top');
-			}
-			
-			var _codigoDanios = '';
-			var _codigoSalud  = '';
-			
+		if(!Ext.isEmpty(_CDIDEPERsel)){
 			try{
-				_codigoDanios = _CDIDEPERsel.substring(5);
+				var ventanaMensaje = window.parent;
+				
+				if (ventanaMensaje != window.top) {
+				  debug('Para postMessage, El parent es el mismo que el top');
+				}else{
+				  debug('Para postMessage, El parent no es el mismo que el top');
+				}
+				
+				var _codigoDanios = '';
+				var _codigoSalud  = '';
+				
+				try{
+					_codigoDanios = _CDIDEPERsel.substring(5);
+				}catch(e){
+					debug('Error al obtener codigo externo de Danios',e);
+				}
+				
+				try{
+					_codigoSalud = _CDIDEEXTsel.substring(5);
+				}catch(e){
+					debug('Error al obtener codigo externo de Salud',e);
+				}
+				
+				var objMsg = {
+					clienteIce: true,
+					modo: 'R',
+					cdperson: _p22_cdperson,
+					cdideper: _CDIDEPERsel,
+					cdideext: _CDIDEEXTsel,
+					codigoDanios: _codigoDanios,
+					codigoSalud:_codigoSalud
+				};
+				
+				ventanaMensaje.postMessage(objMsg, "*");
+				mensajeInfo('Cliente Recuperado: ' + _codigoDanios);
 			}catch(e){
-				debug('Error al obtener codigo externo de Danios',e);
+				debugError('Error en postMessage',e);
 			}
-			
-			try{
-				_codigoSalud = _CDIDEEXTsel.substring(5);
-			}catch(e){
-				debug('Error al obtener codigo externo de Salud',e);
-			}
-			
-			var objMsg = {
-				clienteIce: true,
-				modo: 'R',
-				cdperson: _p22_cdperson,
-				cdideper: _CDIDEPERsel,
-				cdideext: _CDIDEEXTsel,
-				codigoDanios: _codigoDanios,
-				codigoSalud:_codigoSalud
-			};
-			
-			ventanaMensaje.postMessage(objMsg, "*");
-			mensajeInfo('Cliente Recuperado: ' + _codigoDanios);
-		}catch(e){
-			debugError('Error en postMessage',e);
+		}else{
+			Ext.Ajax.request(
+	        {
+	            url       : _UrlguardaPersonaWS
+	            ,params: {
+            		'smap1.esSalud' :  'D',// solo para Danios en este caso
+            		'smap1.cdperson':  _p22_cdperson
+            	}
+	            ,success  : function(response)
+	            {
+	                var json = Ext.decode(response.responseText);
+	                debug('response text:',json);
+	                if(json.exito){
+	                	try{
+	                		var codigoExtGen = json.smap1.codigoExternoGen;
+							var ventanaMensaje = window.parent;
+							
+							if (ventanaMensaje != window.top) {
+							  debug('Para postMessage, El parent es el mismo que el top');
+							}else{
+							  debug('Para postMessage, El parent no es el mismo que el top');
+							}
+							
+							var _codigoDanios = '';
+							var _codigoSalud  = '';
+							
+							try{
+								_codigoDanios = codigoExtGen.substring(5);
+							}catch(e){
+								debug('Error al obtener codigo externo de Danios',e);
+							}
+							
+							try{
+								_codigoSalud = _CDIDEEXTsel.substring(5);
+							}catch(e){
+								debug('Error al obtener codigo externo de Salud',e);
+							}
+							
+							var objMsg = {
+								clienteIce: true,
+								modo: 'R',
+								cdperson: _p22_cdperson,
+								cdideper: codigoExtGen,
+								cdideext: _CDIDEEXTsel,
+								codigoDanios: _codigoDanios,
+								codigoSalud:_codigoSalud
+							};
+							
+							ventanaMensaje.postMessage(objMsg, "*");
+							mensajeInfo('Cliente Recuperado: ' + _codigoDanios);
+						}catch(e){
+							debugError('Error en postMessage',e);
+						}
+	                }
+	                else
+	                {
+	                    mensajeError("Error al Editar Cliente, vuelva a intentarlo.");
+	                }
+	            }
+	            ,failure  : function()
+	            {
+	                errorComunicacion(null,'En recuperar c&oacute;digo externo. Consulte a soporte.');
+	            }
+			});
 		}
 		
 		return;

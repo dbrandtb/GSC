@@ -326,6 +326,10 @@
             </interceptor-ref>
             <result type="json" />
         </action>
+
+        <action name="guardarClienteCompania" class="personasAction" method="guardarClienteCompania">
+            <result type="json" />
+        </action>
         
         <action name="obtenerDomicilioPorCdperson" class="personasAction" method="obtenerDomicilioPorCdperson">
             <result type="json" />
