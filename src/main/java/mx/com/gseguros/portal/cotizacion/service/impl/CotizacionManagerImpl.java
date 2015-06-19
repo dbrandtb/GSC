@@ -5953,6 +5953,28 @@ public class CotizacionManagerImpl implements CotizacionManager
     	cotizacionDAO.ejecutaValoresDefectoTarificacionConcurrente(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, tipotari, cdperpag);
 	}
     
+    @Override
+    public void actualizaValoresDefectoSituacion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception
+	{
+    	logger.info(Utils.join(
+   			 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+   			,"\n@@@@@@ actualizaValoresDefectoSituacion @@@@@@"
+   			,"\n@@@@@@ cdunieco=" , cdunieco
+   			,"\n@@@@@@ cdramo="   , cdramo
+   			,"\n@@@@@@ estado="   , estado
+   			,"\n@@@@@@ nmpoliza=" , nmpoliza
+   			,"\n@@@@@@ nmsuplem=" , nmsuplem
+   			,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+   			));
+    	cotizacionDAO.actualizaValoresDefectoSituacion(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+	}
+    
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
