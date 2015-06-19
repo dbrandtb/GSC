@@ -5089,7 +5089,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
-	public void ejecutaTarificacionConcurrente(
+	public void ejecutaValoresDefectoTarificacionConcurrente(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -5110,12 +5110,12 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("tipotari" , tipotari);
 		params.put("cdperpag" , cdperpag);
 		Utils.debugProcedure(logger, "P_EJECUTA_LANZATARI", params);
-		ejecutaSP(new EjecutaTarificacionConcurrente(getDataSource()),params);
+		ejecutaSP(new EjecutaValoresDefectoTarificacionConcurrente(getDataSource()),params);
 	}
 	
-	protected class EjecutaTarificacionConcurrente extends StoredProcedure
+	protected class EjecutaValoresDefectoTarificacionConcurrente extends StoredProcedure
 	{
-		protected EjecutaTarificacionConcurrente(DataSource dataSource)
+		protected EjecutaValoresDefectoTarificacionConcurrente(DataSource dataSource)
 		{
 			super(dataSource,"P_EJECUTA_LANZATARI");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
@@ -5469,6 +5469,94 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("cdusuariDes" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrolDes" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("status"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void ejecutaValoresDefectoConcurrente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String tipotari
+			,String cdperpag
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("nmsituac" , nmsituac);
+		params.put("tipotari" , tipotari);
+		params.put("cdperpag" , cdperpag);
+		Utils.debugProcedure(logger, "P_Ejecuta_lanzadef", params);
+		ejecutaSP(new EjecutaValoresDefectoConcurrente(getDataSource()),params);
+	}
+	
+	protected class EjecutaValoresDefectoConcurrente extends StoredProcedure
+	{
+		protected EjecutaValoresDefectoConcurrente(DataSource dataSource)
+		{
+			super(dataSource,"P_Ejecuta_lanzadef");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipotari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdperpag" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void ejecutaTarificacionConcurrente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String tipotari
+			,String cdperpag
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("nmsituac" , nmsituac);
+		params.put("tipotari" , tipotari);
+		params.put("cdperpag" , cdperpag);
+		Utils.debugProcedure(logger, "P_Ejecuta_lanzatar", params);
+		ejecutaSP(new EjecutaTarificacionConcurrente(getDataSource()),params);
+	}
+	
+	protected class EjecutaTarificacionConcurrente extends StoredProcedure
+	{
+		protected EjecutaTarificacionConcurrente(DataSource dataSource)
+		{
+			super(dataSource,"P_Ejecuta_lanzatar");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipotari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdperpag" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

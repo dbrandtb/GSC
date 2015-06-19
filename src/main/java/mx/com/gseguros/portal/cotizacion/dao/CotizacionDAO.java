@@ -600,7 +600,7 @@ public interface CotizacionDAO
 			,String nmpoliza
 			)throws Exception;
 	
-	public void ejecutaTarificacionConcurrente(
+	public void ejecutaValoresDefectoTarificacionConcurrente(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -675,5 +675,27 @@ public interface CotizacionDAO
 			,String cdusuariDes
 			,String cdsisrolDes
 			,String status
+			)throws Exception;
+	
+	public void ejecutaValoresDefectoConcurrente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String tipotari
+			,String cdperpag
+			)throws Exception;
+	
+	public void ejecutaTarificacionConcurrente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String tipotari
+			,String cdperpag
 			)throws Exception;
 }
