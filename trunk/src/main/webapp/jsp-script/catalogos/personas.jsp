@@ -972,6 +972,8 @@ function irModoEdicion(){
 				debugError('Error en postMessage',e);
 			}
 		}else{
+			var loadMaskTabla = new Ext.LoadMask('_p22_divpri', {msg:"Recuperando Cliente..."});
+			loadMaskTabla.show();
 			Ext.Ajax.request(
 	        {
 	            url       : _UrlguardaPersonaWS
@@ -981,6 +983,8 @@ function irModoEdicion(){
             	}
 	            ,success  : function(response)
 	            {
+	            	loadMaskTabla.hide();
+	            	
 	                var json = Ext.decode(response.responseText);
 	                debug('response text:',json);
 	                if(json.exito){
@@ -1032,6 +1036,7 @@ function irModoEdicion(){
 	            }
 	            ,failure  : function()
 	            {
+	            	loadMaskTabla.hide();
 	                errorComunicacion(null,'En recuperar c&oacute;digo externo. Consulte a soporte.');
 	            }
 			});
