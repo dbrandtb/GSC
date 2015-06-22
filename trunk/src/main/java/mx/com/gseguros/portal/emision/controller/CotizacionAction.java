@@ -5413,10 +5413,10 @@ public class CotizacionAction extends PrincipalCoreAction
 						List<Map<String,String>>tvalogars=(List<Map<String,String>>)iGrupo.get("tvalogars");
 						for(Map<String,String>iTvalogar:tvalogars)
 						{
-							String cdgarant=iTvalogar.get("cdgarant");
-							if(cdgarant.equalsIgnoreCase("4AYM"))
-							{
-								ayudamater=iTvalogar.get("parametros.pv_otvalor01");
+							String cdgarant = iTvalogar.get("cdgarant");
+							boolean amparada = "S".equals(iTvalogar.get("amparada"));
+							if (cdgarant.equalsIgnoreCase("4AYM")) {
+								ayudamater = amparada ? "S" : "N";
 							}
 						}
 						
@@ -5573,8 +5573,8 @@ public class CotizacionAction extends PrincipalCoreAction
 							boolean amparada = StringUtils.isNotBlank(iTvalogar.get("amparada"))
 									&&iTvalogar.get("amparada").equalsIgnoreCase("S");
 							
-							if(!cdgarant.equalsIgnoreCase("4AYM"))
-							{
+							//if(!cdgarant.equalsIgnoreCase("4AYM"))
+							//{
 								if(amparada)
 								{
 									cotizacionManager.movimientoMpoligarGrupo(
@@ -5611,7 +5611,7 @@ public class CotizacionAction extends PrincipalCoreAction
 									cotizacionManager.movimientoMpoligarGrupo(
 											cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.DELETE_MODE);
 								}
-							}
+							//}
 						}
 					}
 				}
