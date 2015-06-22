@@ -141,4 +141,6 @@ public interface CatalogosManager {
     public List<GenericVO> recuperarModulosEstadisticas() throws Exception;
     
     public List<GenericVO> recuperarTareasEstadisticas(String cdmodulo) throws Exception;
+
+    public List<GenericVO> obtieneListaParentesco() throws Exception;
 }
