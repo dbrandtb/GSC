@@ -3168,6 +3168,7 @@ function _p25_imprimir()
             + '&p_suplem=0'
             + '&p_cdplan='
             + '&p_cdperpag='    + _fieldByName('cdperpag').getValue()
+            + '&p_perpag='      + _fieldByName('cdperpag').getValue()
             + '&destype=cache'
             + "&desformat=PDF"
             + "&userid="        + _p25_reportsServerUser
