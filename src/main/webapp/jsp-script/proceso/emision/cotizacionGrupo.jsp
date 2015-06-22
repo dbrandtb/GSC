@@ -4260,6 +4260,7 @@ function _p21_imprimir()
             + '&p_poliza='      + _p21_smap1.nmpoliza
             + '&p_suplem=0'
             + '&p_cdperpag='    + _fieldByName('cdperpag').getValue()
+            + '&p_perpag='      + _fieldByName('cdperpag').getValue()
             + '&p_cdplan='
             + '&destype=cache'
             + "&desformat=PDF"
