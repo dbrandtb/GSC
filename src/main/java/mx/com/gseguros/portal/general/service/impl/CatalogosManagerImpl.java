@@ -13,6 +13,7 @@ import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.Utils;
+import mx.com.gseguros.wizard.dao.TablasApoyoDAO;
 import mx.com.gseguros.wizard.dao.WizardDAO;
 
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +26,9 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	
 	@Autowired
 	private WizardDAO wizardDAO;
+
+	@Autowired
+	private TablasApoyoDAO tablasApoyoDAO;
 	
 	private static final Logger logger = Logger.getLogger(CatalogosManagerImpl.class);
 	
@@ -994,6 +998,42 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		
 		logger.info(Utils.join(
 				 "\n@@@@@@ recuperarTareasEstadisticas @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
+
+	@Override
+	public List<GenericVO> obtieneListaParentesco() throws Exception
+	{
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		logger.info(Utils.join(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ obtieneListaParentesco @@@@@@"
+				));
+		
+		Map<String, String> params =  new HashMap<String, String>();
+		
+		params.put("PV_NMTABLA_I", "3395");
+		params.put("PV_OTCLAVE1_I", null);
+		params.put("PV_LIMITE_I",   null);
+		Map<String,Object> result = tablasApoyoDAO.obtieneValoresTablaApoyo1clave(params);
+		
+		List<Map<String,String>> listaResult = (List<Map<String, String>>) result.get("PV_REGISTRO_O");
+		
+		GenericVO generic= null;
+		if(listaResult!= null){
+			for(Map<String,String> parent : listaResult){
+				generic = new GenericVO();
+				generic.setKey(parent.get("OTCLAVE1"));
+				generic.setValue(parent.get("OTVALOR01"));
+				lista.add(generic);
+			}
+			
+		}
+		
+		logger.info(Utils.join(
+				"\n@@@@@@ obtieneListaParentesco @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return lista;

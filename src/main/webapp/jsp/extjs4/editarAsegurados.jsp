@@ -30,6 +30,7 @@
 	var storeTomadorp2;
 	var storeTpersonasp2;
 	var storeNacionesp2;
+	var storeParentescop2;
 	var gridPersonasp2;
 	var editorRolesp2;
 	var editorGenerosp2;
@@ -187,6 +188,41 @@
         {
             //window.console&&console.log('string:');
             storeNacionesp2.each(function(rec){
+                //window.console&&console.log('iterando...',rec.data);
+                if(rec.data.key==v)
+                {
+                    leyenda=rec.data.value; 
+                }
+            });
+            //window.console&&console.log(leyenda);
+        }
+        else
+        //tengo objeto que puede venir como Generic u otro mas complejo
+        {
+            //window.console&&console.log('object:');
+            if(v.key&&v.value)
+            //objeto Generic
+            {
+                leyenda=v.value;
+            }
+            else
+            {
+                leyenda=v.data.value;
+            }
+            //window.console&&console.log(leyenda);
+        }
+        //console.log('return',leyenda);
+        return leyenda;
+    }
+
+    function rendererParentescop2(v)
+    {
+        var leyenda='';
+        if(typeof v == 'string')
+                   //tengo solo el indice
+        {
+            //window.console&&console.log('string:');
+            storeParentescop2.each(function(rec){
                 //window.console&&console.log('iterando...',rec.data);
                 if(rec.data.key==v)
                 {
@@ -758,6 +794,22 @@ debug("validarYGuardar flag:2");
                 }
             }
         });
+
+        storeParentescop2 = new Ext.data.Store({
+            model:'Generic',
+            autoLoad:true,
+            proxy:
+            {
+                type: 'ajax',
+                url : urlCargarCatalogosp2,
+                extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PARENTESCO"/>'},
+                reader:
+                {
+                    type: 'json',
+                    root: 'lista'
+                }
+            }
+        });
 		
 		storeTpersonasp2 = new Ext.data.Store({
             model:'Generic',
@@ -1027,6 +1079,29 @@ debug("validarYGuardar flag:2");
             valueField: 'key',
             allowBlank:false,
             editable:false
+        });
+
+        
+        editorParentescop2=Ext.create('Ext.form.ComboBox',
+        {
+            store: storeParentescop2,
+            queryMode:'local',
+            displayField: 'value',
+            valueField: 'key',
+            allowBlank:false,
+            editable:false,
+            readOnly:true
+        });
+	    
+	    editorParentescoBp2=Ext.create('Ext.form.ComboBox',
+        {
+            store: storeParentescop2,
+            queryMode:'local',
+            displayField: 'value',
+            valueField: 'key',
+            allowBlank:false,
+            editable:false,
+            readOnly:true
         });
 	    
 	    editorFechap2=Ext.create('Ext.form.field.Date',

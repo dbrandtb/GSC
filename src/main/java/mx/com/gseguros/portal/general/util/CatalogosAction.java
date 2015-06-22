@@ -689,6 +689,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case ASEGURADOS:
 					lista = siniestrosManager.getConsultaListaAsegurado(params != null ? params.get("cdperson") : null);
 					break;
+				case PARENTESCO:
+					lista = catalogosManager.obtieneListaParentesco();
+					break;
 				case ESTD_TAREAS:
 					if(params==null)
 					{
