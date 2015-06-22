@@ -2487,6 +2487,11 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                 form.down('[name=amparada]').setValue(true);
                                                 debug('se "checkeo" el box');
                                             }
+                                            else
+                                            {
+                                                form.down('[name=amparada]').setValue(false);
+                                                debug('se "descheckeo" el box');
+                                            }
                                             debug('cargado:',form);
                                         }
                                     }
