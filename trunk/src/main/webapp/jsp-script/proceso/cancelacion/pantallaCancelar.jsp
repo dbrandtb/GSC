@@ -20,7 +20,7 @@
             debug(22);
             panCanInputFecha.setValue(new Date());
             panCanInputFecha.setReadOnly(false);
-            panCanForm.setLoading(true);
+            //panCanForm.setLoading(true);
             Ext.Ajax.request({
                 url             : _global_urlConsultaDinamica
                 ,jsonData       :{
@@ -41,7 +41,7 @@
                                 if(jsonData.success){
                                 }
                                 else{
-                                    mensajeError(jsonData.mensaje);
+                                    //mensajeError(jsonData.mensaje);
                                     combo.setValue('22');
                                 }
                             }
@@ -57,7 +57,7 @@
     		debug(24);
     		panCanInputFecha.setValue(new Date());
             panCanInputFecha.setReadOnly(true);
-            panCanForm.setLoading(true);
+            //panCanForm.setLoading(true);
             Ext.Ajax.request({
                 url       : _global_urlConsultaDinamica
                 ,jsonData :{
@@ -78,7 +78,7 @@
                                 if(jsonData.success){
                                 }
                                 else{
-                                    mensajeError(jsonData.mensaje);
+                                    //mensajeError(jsonData.mensaje);
                                     combo.setValue('24');
                                 }
                             }
@@ -94,7 +94,7 @@
             debug(25);
             panCanInputFecha.setValue(new Date());
             panCanInputFecha.setReadOnly(true);
-            panCanForm.setLoading(true);
+            //panCanForm.setLoading(true);
             Ext.Ajax.request({
                 url       : _global_urlConsultaDinamica
                 ,jsonData :{
@@ -115,7 +115,7 @@
                                 if(jsonData.success){
                                 }
                                 else{
-                                mensajeError(jsonData.mensaje);
+                                //mensajeError(jsonData.mensaje);
                                 combo.setValue('25');
                                 }
                             }
@@ -135,7 +135,7 @@ Ext.onReady(function(){
     ////// modelos //////
     
     ////// stores //////
-    ////// stores //////
+        ////// stores //////
     
     ////// componentes //////
     ////// componentes //////
@@ -161,18 +161,18 @@ Ext.onReady(function(){
         	text     : 'Confirmar cancelaci&oacute;n'
         	,icon    : '${ctx}/resources/fam3icons/icons/key.png'
         	,handler : function(){
+        	               panCanForm.setLoading(true);        	               
     	                   var boton=this;
 	    		           var form=this.up().up();
     	    		       if(form.isValid()){
     		                  if( jsonData.success==true){
-    		                      form.setLoading(true);
     		                      form.submit({
     		                          success :function(formu,action){
-    		                                       form.setLoading(false);
     		                                       debug(action);
     		                                       var json = Ext.decode(action.response.responseText);
     		                                       debug(json);
     		                                       if(json.success==true){
+    		                                       	  panCanForm.setLoading(false);
     		                                          debug('ok');
             		                                  Ext.Msg.show({
             		                                      title    : 'Cancelaci&oacute;n exitosa'
@@ -182,6 +182,7 @@ Ext.onReady(function(){
         		                                      boton.hide();
     		                                      }
         	                                      else{
+    	                                           panCanForm.setLoading(false);
         	                                          Ext.Msg.show({
     	                                                  title    : 'Error'
     	                                                  ,msg     : 'Error al cancelar la p&oacute;liza'
@@ -191,7 +192,7 @@ Ext.onReady(function(){
                                                   }
                                               }
                                       ,failure : function(){
-                                                     form.setLoading(false);
+                                                     panCanForm.setLoading(false);
                                                      Ext.Msg.show({
                                                      title   : 'Error',
                                                      icon    : Ext.Msg.ERROR,
@@ -200,11 +201,14 @@ Ext.onReady(function(){
                                                      });
                                                  }
                                  });
+                                 
                              }
                              else{
                                 mensajeError(jsonData.mensaje);
+                                panCanForm.setLoading(false);
                              }
-                         }
+                          }
+                         
                          else{
                             Ext.Msg.show({
                             title   : 'Datos incompletos',
