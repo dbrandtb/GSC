@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -4043,6 +4044,17 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	try
 	                	{
 			                auxDate=row.getCell(7).getDateCellValue();
+			                if(auxDate!=null)
+			                {
+			                	Calendar cal = Calendar.getInstance();
+			                	cal.setTime(auxDate);
+			                	if(cal.get(Calendar.YEAR)>2100
+			                			||cal.get(Calendar.YEAR)<1900
+			                			)
+			                	{
+			                		throw new ApplicationException("El anio de la fecha no es valido");
+			                	}
+			                }
 			                logger.info("FECHA NACIMIENTO: "+(
 			                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
 			                			));
@@ -4478,6 +4490,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		boolean sincenso      = false;
 		boolean censoAtrasado = false;
+		boolean resubirCenso  = false;
 		
 		//datos de entrada
 		try
@@ -4534,6 +4547,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			sincenso              = StringUtils.isNotBlank(sincensoS)&&sincensoS.equals("S");
 			String censoAtrasadoS = smap1.get("censoAtrasado");
 			censoAtrasado         = StringUtils.isNotBlank(censoAtrasadoS)&&censoAtrasadoS.equals("S");
+			String resubirCensoS  = smap1.get("resubirCenso");
+			resubirCenso          = StringUtils.isNotBlank(resubirCensoS)&&resubirCensoS.equals("S");
 		}
 		catch(ApplicationException ax)
 		{
@@ -4592,6 +4607,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdelemen
 					,sincenso
 					,censoAtrasado
+					,resubirCenso
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -4818,8 +4834,9 @@ public class CotizacionAction extends PrincipalCoreAction
 			            int           fila        = 0;
 			            while (rowIterator.hasNext()&&exito) 
 			            {
-			            	boolean       filaBuena   = true;
-			            	StringBuilder bufferLinea = new StringBuilder();
+			            	boolean       filaBuena      = true;
+			            	StringBuilder bufferLinea    = new StringBuilder();
+			            	StringBuilder bufferLineaStr = new StringBuilder();
 			            	
 			                Row  row     = rowIterator.next();
 			                Date auxDate = null;
@@ -4838,8 +4855,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			                catch(Exception ex)
 			                {
 			                	filaBuena          = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Nombre' (A) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Nombre' (A) de la fila ",fila," "));
 			                }
+		                    finally
+		                    {
+		                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(0)),"-"));
+		                    }
 		                    
 			                try
 			                {
@@ -4850,8 +4871,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			                catch(Exception ex)
 			                {
 			                	filaBuena          = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido paterno' (B) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido paterno' (B) de la fila ",fila," "));
 			                }
+		                    finally
+		                    {
+		                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(1)),"-"));
+		                    }
 			                
 		                	try
 		                	{
@@ -4862,8 +4887,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			                catch(Exception ex)
 			                {
 			                	filaBuena          = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido materno' (C) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido materno' (C) de la fila ",fila," "));
 			                }
+		                    finally
+		                    {
+		                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(2)),"-"));
+		                    }
 		                	
 		                	try
 		                	{
@@ -4873,6 +4902,17 @@ public class CotizacionAction extends PrincipalCoreAction
 				                
 				                if(row.getCell(4)!=null) {
 					                auxDate=row.getCell(4).getDateCellValue();
+					                if(auxDate!=null)
+					                {
+					                	Calendar cal = Calendar.getInstance();
+					                	cal.setTime(auxDate);
+					                	if(cal.get(Calendar.YEAR)>2100
+					                			||cal.get(Calendar.YEAR)<1900
+					                			)
+					                	{
+					                		throw new ApplicationException("El anio de la fecha no es valido");
+					                	}
+					                }
 					                logger.info("FENACIMI: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
 					                bufferLinea.append(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
 				                } else {
@@ -4883,8 +4923,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			                catch(Exception ex)
 			                {
 			                	filaBuena          = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Edad' o 'Fecha de nacimiento' (D) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Edad' o 'Fecha de nacimiento' (D) de la fila ",fila," "));
 			                }
+		                    finally
+		                    {
+		                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(3)),"-"));
+		                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(4)),"-"));
+		                    }
 		                	
 		                	try
 		                	{
@@ -4900,8 +4945,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			                catch(Exception ex)
 			                {
 			                	filaBuena          = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (F) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (F) de la fila ",fila," "));
 			                }
+		                    finally
+		                    {
+		                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(5)),"-"));
+		                    }
 			                
 			                try
 		                	{
@@ -4923,8 +4972,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			                catch(Exception ex)
 			                {
 			                	filaBuena          = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (G) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (G) de la fila ",fila," "));
 			                }
+		                    finally
+		                    {
+		                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(6)),"-"));
+		                    }
 			                
 		                	try
 		                	{
@@ -4935,8 +4988,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			                catch(Exception ex)
 			                {
 			                	filaBuena          = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Ocupacion' (H) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Ocupacion' (H) de la fila ",fila," "));
 			                }
+		                    finally
+		                    {
+		                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(7)),"-"));
+		                    }
 			                
 		                	try
 		                	{
@@ -4947,8 +5004,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			                catch(Exception ex)
 			                {
 			                	filaBuena          = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de ocupacion' (I) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de ocupacion' (I) de la fila ",fila," "));
 			                }
+		                    finally
+		                    {
+		                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(8)),"-"));
+		                    }
 			                
 		                	try
 		                	{
@@ -4959,8 +5020,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			                catch(Exception ex)
 			                {
 			                	filaBuena          = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Peso' (J) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Peso' (J) de la fila ",fila," "));
 			                }
+		                    finally
+		                    {
+		                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(9)),"-"));
+		                    }
 			                
 			                try
 		                	{
@@ -4971,8 +5036,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			                catch(Exception ex)
 			                {
 			                	filaBuena          = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estatura' (K) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estatura' (K) de la fila ",fila," "));
 			                }
+		                    finally
+		                    {
+		                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(10)),"-"));
+		                    }
 			                
 			                try
 		                	{
@@ -4983,8 +5052,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			                catch(Exception ex)
 			                {
 			                	filaBuena          = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de sobrepeso' (L) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de sobrepeso' (L) de la fila ",fila," "));
 			                }
+		                    finally
+		                    {
+		                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(11)),"-"));
+		                    }
 			                
 			                try
 		                	{
@@ -4995,7 +5068,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				                if(cdgrupo>nGrupos||cdgrupo<1d)
 				                {
 				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("No existe el grupo (M) de la fila ",fila,"\n"));
+				                	bufferErroresCenso.append(Utils.join("No existe el grupo (M) de la fila ",fila," "));
 				                }
 				                else
 				                {
@@ -5005,8 +5078,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			                catch(Exception ex)
 			                {
 			                	filaBuena          = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (M) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (M) de la fila ",fila," "));
 			                }
+		                    finally
+		                    {
+		                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(12)),"-"));
+		                    }
 			                
 			                bufferLinea.append("\n");
 			                logger.info("** NUEVA_FILA **");
@@ -5019,6 +5096,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			                else
 			                {
 			                	filasErrores = filasErrores + 1;
+			                	bufferErroresCenso.append(Utils.join(": ",bufferLineaStr.toString(),"\n"));
 			                }
 			            }
 			            input.close();
@@ -5041,8 +5119,9 @@ public class CotizacionAction extends PrincipalCoreAction
 			            {
 			                Row row = rowIterator.next();
 			                
-			                boolean       filaBuena   = true;
-			                StringBuilder bufferLinea = new StringBuilder("");
+			                boolean       filaBuena      = true;
+			                StringBuilder bufferLinea    = new StringBuilder("");
+			                StringBuilder bufferLineaStr = new StringBuilder("");
 			                
 			                fila        = fila + 1;
 			                filasLeidas = filasLeidas + 1;
@@ -5055,8 +5134,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			                catch(Exception ex)
 			                {
 			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Edad' (A) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Edad' (A) de la fila ",fila," "));
 			                }
+		                    finally
+		                    {
+		                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(0)),"-"));
+		                    }
 			                
 			                try
 		                	{
@@ -5066,8 +5149,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			                catch(Exception ex)
 			                {
 			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (B) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (B) de la fila ",fila," "));
 			                }
+		                    finally
+		                    {
+		                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(1)),"-"));
+		                    }
 			                
 			                try
 		                	{
@@ -5079,8 +5166,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			                catch(Exception ex)
 			                {
 			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Cantidad' (C) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Cantidad' (C) de la fila ",fila," "));
 			                }
+		                    finally
+		                    {
+		                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(2)),"-"));
+		                    }
 			                
 			                try
 		                	{
@@ -5091,7 +5182,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				                if(cdgrupo>nGrupos||cdgrupo<1d)
 				                {
 				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("No existe el grupo (D) de la fila ",fila,"\n"));
+				                	bufferErroresCenso.append(Utils.join("No existe el grupo (D) de la fila ",fila," "));
 				                }
 				                else
 				                {
@@ -5101,8 +5192,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			                catch(Exception ex)
 			                {
 			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (D) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (D) de la fila ",fila," "));
 			                }
+		                    finally
+		                    {
+		                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(3)),"-"));
+		                    }
 			                
 			                bufferLinea.append("\n");
 			                logger.info("** NUEVA_FILA **");
@@ -5115,6 +5210,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			                else
 			                {
 			                	filasErrores = filasErrores + 1;
+			                	bufferErroresCenso.append(Utils.join(": ",bufferLineaStr.toString(),"\n"));
 			                }
 			            }
 			            input.close();
@@ -8230,6 +8326,20 @@ public class CotizacionAction extends PrincipalCoreAction
 				,"\n################################"
 				));
 		return SUCCESS;
+	}
+	
+	private String extraerStringDeCelda(Cell cell)
+	{
+		try
+		{
+			cell.setCellType(Cell.CELL_TYPE_STRING);
+			String cadena = cell.getStringCellValue();
+			return cadena==null?"":cadena;
+		}
+		catch(Exception ex)
+		{
+			return "";
+		}
 	}
 	
 	///////////////////////////////

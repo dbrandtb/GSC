@@ -324,6 +324,7 @@ public interface CotizacionManager
 			,String cdelemen
 			,boolean sincenso
 			,boolean censoAtrasado
+			,boolean resubirCenso
 			);
 	
 	public ManagerRespuestaSlistVO obtenerTiposSituacion();
