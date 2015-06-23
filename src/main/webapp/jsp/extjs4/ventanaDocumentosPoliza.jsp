@@ -1024,6 +1024,7 @@ Ext.onReady(function()
         		,width         : 700
         		,height        : 500
         		,collapsible   : true
+        		,maximizable   : true
         		,titleCollapse : true
         		,layout: 'fit'
         		,listeners     :
