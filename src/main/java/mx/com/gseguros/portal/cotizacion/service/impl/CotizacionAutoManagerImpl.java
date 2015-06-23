@@ -1454,6 +1454,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 								sustituto.setColumna(tatri.getColumna());
 								sustituto.setSwpresenflot(tatri.getSwpresenflot());
 								sustituto.setNmordenFlot(tatri.getNmordenFlot());
+								sustituto.setObligatorioFlot(tatri.isObligatorioFlot());
 								sustituido = true;
 								aux.add(sustituto);
 							}
