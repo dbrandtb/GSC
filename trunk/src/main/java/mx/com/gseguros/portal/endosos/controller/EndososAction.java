@@ -7149,6 +7149,9 @@ public class EndososAction extends PrincipalCoreAction
 			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza
 					,nmsuplem, nsuplogi, cdtipsup, comentaReexp, dFecha, cdtipsit);
 			
+			
+			consultasManager.copiarArchivosUsuarioTramite(cdunieco, cdramo, estado, nmpoliza, ntramiteNuevaPoliza, this.getText("ruta.documentos.poliza"));
+			
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
 				

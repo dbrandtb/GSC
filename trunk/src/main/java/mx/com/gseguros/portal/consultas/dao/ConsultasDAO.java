@@ -279,4 +279,12 @@ public interface ConsultasDAO
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+
+	public boolean copiaDocumentosTdocupol(
+			 String cduniecoOrig
+			,String cdramoOrig
+			,String estadoOrig
+			,String nmpolizaOrig
+			,String ntramiteDestino
+			)throws Exception;
 }

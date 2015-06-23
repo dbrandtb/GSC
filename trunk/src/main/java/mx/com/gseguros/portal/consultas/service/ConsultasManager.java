@@ -88,4 +88,19 @@ public interface ConsultasManager
 			,String nmsuplem
 			,String cdtipsup
 			)throws Exception;
+	
+	/**
+	 * Copia lo documentos de una poliza a un tramite nuevo.
+	 * @param cduniecoOrigen
+	 * @param cdramoOrigen
+	 * @param estadoOrigen
+	 * @param nmpolizaOrigen
+	 * @param ntramiteDestino
+	 * @param rutaDocumentosDestino
+	 * @return boolean exito
+	 * @throws Exception
+	 */
+	public boolean copiarArchivosUsuarioTramite(String cduniecoOrigen, String cdramoOrigen, String estadoOrigen, 
+			String nmpolizaOrigen, String ntramiteDestino, String rutaDocumentosDestino)throws Exception;
+	
 }
