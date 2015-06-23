@@ -2136,6 +2136,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdelemen
 			,boolean sincenso
 			,boolean censoAtrasado
+			,boolean resubirCenso
 			)
 	{
 		logger.info(
@@ -2178,6 +2179,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ cdelemen=")               .append(cdelemen)
 				.append("\n@@@@@@ sincenso=")               .append(sincenso)
 				.append("\n@@@@@@ censoAtrasado=")          .append(censoAtrasado)
+				.append("\n@@@@@@ resubirCenso=")           .append(resubirCenso)
 				.toString()
 				);
 		
@@ -2330,7 +2332,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		String  nombreCenso     = null;
 		
 		//enviar censo
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado)&&!sincenso)
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)&&!sincenso)
 		{
 			FileInputStream input       = null;
 			XSSFSheet       sheet       = null;
@@ -2384,8 +2386,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 		            int fila = 0;
 		            while (rowIterator.hasNext()&&resp.isExito()) 
 		            {
-		            	boolean       filaBuena   = true;
-		            	StringBuilder bufferLinea = new StringBuilder();
+		            	boolean       filaBuena      = true;
+		            	StringBuilder bufferLinea    = new StringBuilder();
+		            	StringBuilder bufferLineaStr = new StringBuilder();
 		            	
 		                Row  row     = rowIterator.next();
 		                Date auxDate = null;
@@ -2416,8 +2419,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Nombre' (A) de la fila ",fila,"\n"));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Nombre' (A) de la fila ",fila," "));
 		                }
+	                    finally
+	                    {
+	                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(0)),"-"));
+	                    }
 		                
 		                try
 		                {
@@ -2439,8 +2446,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido paterno' (B) de la fila ",fila,"\n"));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido paterno' (B) de la fila ",fila," "));
 		                }
+	                    finally
+	                    {
+	                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(1)),"-"));
+	                    }
 		                
 		                try
 	                	{
@@ -2462,8 +2473,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido materno' (C) de la fila ",fila,"\n"));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido materno' (C) de la fila ",fila," "));
 		                }
+	                    finally
+	                    {
+	                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(2)),"-"));
+	                    }
 		                
 		                try
 	                	{
@@ -2483,6 +2498,17 @@ public class CotizacionManagerImpl implements CotizacionManager
 			                
 			                if(row.getCell(4)!=null) {
 				                auxDate=row.getCell(4).getDateCellValue();
+				                if(auxDate!=null)
+				                {
+				                	Calendar cal = Calendar.getInstance();
+				                	cal.setTime(auxDate);
+				                	if(cal.get(Calendar.YEAR)>2100
+				                			||cal.get(Calendar.YEAR)<1900
+				                			)
+				                	{
+				                		throw new ApplicationException("El anio de la fecha no es valido");
+				                	}
+				                }
 				                logger.debug(new StringBuilder("FENACIMI: ").append(
 				                		auxDate!=null?new StringBuilder(renderFechas.format(auxDate)).append("|").toString():"|").toString());
 				                bufferLinea.append(
@@ -2495,24 +2521,39 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Edad' o 'Fecha de nacimiento' (D) de la fila ",fila,"\n"));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Edad' o 'Fecha de nacimiento' (D) de la fila ",fila," "));
 		                }
+	                    finally
+	                    {
+	                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(3)),"-"));
+	                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(4)),"-"));
+	                    }
 		                
 		                try
 	                	{
+		                	String sexo = row.getCell(5).getStringCellValue();
+		                	if(StringUtils.isEmpty(sexo)
+	                				||(!sexo.equals("H")&&!sexo.equals("M")))
+	                		{
+	                			throw new ApplicationException("El sexo no se reconoce [H,M]");
+	                		}
 			                logger.debug(
 			                		new StringBuilder("SEXO: ")
-			                		.append(row.getCell(5).getStringCellValue())
+			                		.append(sexo)
 			                		.append("|")
 			                		.toString());
 			                bufferLinea.append(
-			                		new StringBuilder(row.getCell(5).getStringCellValue()).append("|").toString());
+			                		new StringBuilder(sexo).append("|").toString());
 		                }
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (F) de la fila ",fila,"\n"));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (F) de la fila ",fila," "));
 		                }
+	                    finally
+	                    {
+	                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(5)),"-"));
+	                    }
 		                
 		                try
 	                	{
@@ -2527,8 +2568,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (G) de la fila ",fila,"\n"));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (G) de la fila ",fila," "));
 		                }
+	                    finally
+	                    {
+	                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(6)),"-"));
+	                    }
 		                
 		                try
 	                	{
@@ -2548,8 +2593,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Ocupacion' (H) de la fila ",fila,"\n"));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Ocupacion' (H) de la fila ",fila," "));
 		                }
+	                    finally
+	                    {
+	                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(7)),"-"));
+	                    }
 		                
 		                try
 	                	{
@@ -2569,8 +2618,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de ocupacion' (I) de la fila ",fila,"\n"));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de ocupacion' (I) de la fila ",fila," "));
 		                }
+	                    finally
+	                    {
+	                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(8)),"-"));
+	                    }
 		                
 		                try
 	                	{
@@ -2590,8 +2643,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Peso' (J) de la fila ",fila,"\n"));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Peso' (J) de la fila ",fila," "));
 		                }
+	                    finally
+	                    {
+	                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(9)),"-"));
+	                    }
 		                
 		                try
 	                	{
@@ -2611,8 +2668,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estatura' (K) de la fila ",fila,"\n"));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estatura' (K) de la fila ",fila," "));
 		                }
+	                    finally
+	                    {
+	                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(10)),"-"));
+	                    }
 		                
 		                try
 	                	{
@@ -2632,8 +2693,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de sobrepeso' (L) de la fila ",fila,"\n"));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de sobrepeso' (L) de la fila ",fila," "));
 		                }
+	                    finally
+	                    {
+	                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(11)),"-"));
+	                    }
 		                
 		                try
 	                	{
@@ -2650,7 +2715,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			                if(cdgrupo>nGrupos||cdgrupo<1d)
 			                {
 			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("No existe el grupo (M) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("No existe el grupo (M) de la fila ",fila," "));
 			                }
 			                else
 			                {
@@ -2660,8 +2725,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (M) de la fila ",fila,"\n"));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (M) de la fila ",fila," "));
 		                }
+	                    finally
+	                    {
+	                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(12)),"-"));
+	                    }
 		                
 		                bufferLinea.append("\n");
 		                logger.debug("** NUEVA_FILA **");
@@ -2674,6 +2743,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                else
 		                {
 		                	filasErrores = filasErrores + 1;
+		                	bufferErroresCenso.append(Utils.join(": ",bufferLineaStr.toString(),"\n"));
 		                }
 		            }
 		            
@@ -2714,8 +2784,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 		            {
 		                Row row = rowIterator.next();
 		                
-		                boolean       filaBuena   = true;
-		                StringBuilder bufferLinea = new StringBuilder("");
+		                boolean       filaBuena      = true;
+		                StringBuilder bufferLinea    = new StringBuilder("");
+		                StringBuilder bufferLineaStr = new StringBuilder("");
 		                
 		                fila        = fila + 1;
 		                filasLeidas = filasLeidas + 1;
@@ -2732,7 +2803,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Edad' (A) de la fila ",fila,"\n"));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Edad' (A) de la fila ",fila," "));
+		                }
+		                finally
+		                {
+		                	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(0)),"-"));
 		                }
 		                
 		                try
@@ -2745,7 +2820,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (B) de la fila ",fila,"\n"));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (B) de la fila ",fila," "));
+		                }
+		                finally
+		                {
+		                	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(1)),"-"));
 		                }
 		                
 		                try
@@ -2763,7 +2842,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Cantidad' (C) de la fila ",fila,"\n"));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Cantidad' (C) de la fila ",fila," "));
+		                }
+		                finally
+		                {
+		                	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(2)),"-"));
 		                }
 		                
 		                try
@@ -2780,7 +2863,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			                if(cdgrupo>nGrupos||cdgrupo<1d)
 			                {
 			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("No existe el grupo (D) de la fila ",fila,"\n"));
+			                	bufferErroresCenso.append(Utils.join("No existe el grupo (D) de la fila ",fila," "));
 			                }
 			                else
 			                {
@@ -2790,7 +2873,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (D) de la fila ",fila,"\n"));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (D) de la fila ",fila," "));
+		                }
+		                finally
+		                {
+		                	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(3)),"-"));
 		                }
 		                
 		                bufferLinea.append("\n");
@@ -2804,6 +2891,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                else
 		                {
 		                	filasErrores = filasErrores + 1;
+		                	bufferErroresCenso.append(Utils.join(": ",bufferLineaStr.toString(),"\n"));
 		                }
 		            }
 		            
@@ -2903,7 +2991,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//pl censo
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado))
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso))
 		{
 			String nombreProcedureCenso = null;
 			String tipoCensoParam       = "AGRUPADO";
@@ -3015,6 +3103,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,sincenso
 					,censoAtrasado
 					,cdperpag
+					,resubirCenso
 					);
 			
 			resp.setExito(respInterna.isExito());
@@ -3064,6 +3153,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,boolean sincenso
 			,boolean censoAtrasado
 			,String cdperpag
+			,boolean resubirCenso
 			)
 	{
 		logger.info(
@@ -3097,6 +3187,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ sincenso=")            .append(sincenso)
 				.append("\n@@@@@@ censoAtrasado=")       .append(censoAtrasado)
 				.append("\n@@@@@@ cdperpag=")            .append(cdperpag)
+				.append("\n@@@@@@ resubirCenso=")        .append(resubirCenso)
 				.toString()
 				);
 		
@@ -3150,7 +3241,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//sigsvdef
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado))
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso))
 		{
 			try
 			{
@@ -3303,7 +3394,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					swexiper = "N";
 				}
 				
-				if(swexiper.equals("N")||reinsertaContratante||censoAtrasado)
+				if(swexiper.equals("N")||reinsertaContratante||censoAtrasado||resubirCenso)
 				{
 					personasDAO.movimientosMpersona(
 							cdpersonCli
@@ -3952,9 +4043,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            int fila = 0;
 	            while (rowIterator.hasNext()&&resp.isExito()) 
 	            {
-	                Row row        = rowIterator.next();
-	                Date   auxDate = null;
-	                Cell   auxCell = null;
+	                Row  row     = rowIterator.next();
+	                Date auxDate = null;
+	                Cell auxCell = null;
 	                
 	                fila = fila + 1;
 	                
@@ -4661,6 +4752,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,false
 					,false
 					,cdperpag
+					,false //resubirCenso
 					);
 		}
 		
@@ -5973,6 +6065,20 @@ public class CotizacionManagerImpl implements CotizacionManager
    			,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
    			));
     	cotizacionDAO.actualizaValoresDefectoSituacion(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+	}
+	
+	private String extraerStringDeCelda(Cell cell)
+	{
+		try
+		{
+			cell.setCellType(Cell.CELL_TYPE_STRING);
+			String cadena = cell.getStringCellValue();
+			return cadena==null?"":cadena;
+		}
+		catch(Exception ex)
+		{
+			return "";
+		}
 	}
     
 	///////////////////////////////

@@ -2848,16 +2848,17 @@ function _p21_generarTramiteClic(callback,sincenso)
                                                                                 modal        : true
                                                                                 ,closeAction : 'destroy'
                                                                                 ,title       : 'Errores al procesar censo'
-                                                                                ,width       : 500
-                                                                                ,height      : 400
+                                                                                ,width       : 800
+                                                                                ,height      : 500
                                                                                 ,items       :
                                                                                 [
                                                                                     {
-                                                                                        xtype     : 'textarea'
-                                                                                        ,value    : json.smap1.erroresCenso
-                                                                                        ,readOnly : true
-                                                                                        ,width    : 480
-                                                                                        ,height   : 320
+                                                                                        xtype       : 'textarea'
+                                                                                        ,fieldStyle : 'font-family: monospace'
+                                                                                        ,value      : json.smap1.erroresCenso
+                                                                                        ,readOnly   : true
+                                                                                        ,width      : 780
+                                                                                        ,height     : 440
                                                                                     }
                                                                                 ]
                                                                             }).show());
