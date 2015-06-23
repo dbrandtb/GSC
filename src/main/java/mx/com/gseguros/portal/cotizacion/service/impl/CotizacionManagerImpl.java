@@ -2437,7 +2437,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			                					:"|"
 			                		).toString()
 			                );
-			                output.print(
+			                bufferLinea.append(
 			                		auxCell!=null?
 			                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
 			                				:"|"
@@ -2557,13 +2557,20 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                
 		                try
 	                	{
-			                logger.debug(
-			                		new StringBuilder("PARENTESCO: ")
-			                		.append(row.getCell(6).getStringCellValue())
-			                		.append("|")
-			                		.toString());
-			                bufferLinea.append(
-			                		new StringBuilder(row.getCell(6).getStringCellValue()).append("|").toString());
+		                	String parentesco = row.getCell(6).getStringCellValue();
+		                	if(StringUtils.isEmpty(parentesco)
+	                				||(!parentesco.equals("T")
+	                						&&!parentesco.equals("H")
+	                						&&!parentesco.equals("P")
+	                						&&!parentesco.equals("C")
+	                						&&!parentesco.equals("D")
+	                						)
+	                						)
+	                		{
+	                			throw new ApplicationException("El parentesco no se reconoce [T,C,P,H,D]");
+	                		}
+			                logger.debug(Utils.join("PARENTESCO: ",parentesco,"|"));
+			                bufferLinea.append(Utils.join(parentesco,"|"));
 		                }
 		                catch(Exception ex)
 		                {
