@@ -826,7 +826,7 @@ public class PersonasAction extends PrincipalCoreAction
 			
 			if(clientesRes == null || (Estatus.EXITO.getCodigo() != clientesRes.getCodigo())){
 				
-				logger.debug("Error en WS, exito false,Error al crear codigo externo de cliente");
+				logger.error("Error en WS, exito false,Error al crear codigo externo de cliente");
 				exito           = false;
 				respuesta       = "Error al crear codigo externo de cliente";
 				respuestaOculta = "Error al crear codigo externo de cliente";
