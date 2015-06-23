@@ -3881,448 +3881,455 @@ public class CotizacionAction extends PrincipalCoreAction
 						+ "\n##############################################"
 						+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
 						);
-	            Iterator<Row> rowIterator = sheet.iterator();
-	            int fila = 0;
+				
+	            Iterator<Row> rowIterator        = sheet.iterator();
+	            int           fila               = 0;
+	            StringBuilder bufferErroresCenso = new StringBuilder();
+	            int           filasLeidas        = 0;
+	            int           filasProcesadas    = 0;
+	            int           filasError         = 0;
+	            
 	            while (rowIterator.hasNext()&&exito) 
 	            {
-	                Row row        = rowIterator.next();
-	                Date   auxDate = null;
-	                Cell   auxCell = null;
+	                Row           row            = rowIterator.next();
+	                Date          auxDate        = null;
+	                Cell          auxCell        = null;
+	                StringBuilder bufferLinea    = new StringBuilder();
+	                StringBuilder bufferLineaStr = new StringBuilder();
+	                boolean       filaBuena      = true;
 	                
-	                fila = fila + 1;
+	                fila        = fila + 1;
+	                filasLeidas = filasLeidas + 1;
 	                
-	                if(exito)
+	                try
+                	{
+		                logger.info("GRUPO: "+(
+		                		String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"
+		                		));
+		                bufferLinea.append(
+		                		String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"
+		                		);
+                	}
+	                catch(Exception ex)
 	                {
-	                	try
-	                	{
-			                logger.info("GRUPO: "+(
-			                		String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"
-			                		));
-			                output.print(
-			                		String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"
-			                		);
-	                	}
-		                catch(Exception ex)
-		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Grupo' ("+"A"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
-		                }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (A) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(0)),"-"));
 	                }
 	                
-	                if(exito)
-	                {
-	                	try
+	                try
+                	{
+	                	String parentesco = row.getCell(1).getStringCellValue();
+	                	if(!"T".equalsIgnoreCase(parentesco)
+	                			&&!"C".equalsIgnoreCase(parentesco)
+	                			&&!"H".equalsIgnoreCase(parentesco)
+	                			&&!"P".equalsIgnoreCase(parentesco)
+	                			&&!"D".equalsIgnoreCase(parentesco)
+	                			)
 	                	{
-			                logger.info("PARENTESCO: "+(
-			                		row.getCell(1).getStringCellValue()+"|"
-			                		));
-			                output.print(
-			                		row.getCell(1).getStringCellValue()+"|"
-			                		);
+	                		throw new ApplicationException("El parentesco no se reconoce [T,C,H,P,D]");
 	                	}
-		                catch(Exception ex)
-		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Parentesco' ("+"B"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
-		                }
+		                logger.info("PARENTESCO: "+(
+		                		parentesco+"|"
+		                		));
+		                bufferLinea.append(
+		                		parentesco+"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (B) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
 	                }
 	                
-	                if(exito)
+	                try
+                	{
+		                logger.info("PATERNO: "+(
+		                		row.getCell(2).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(2).getStringCellValue()+"|"
+		                		);
+                	}
+	                catch(Exception ex)
 	                {
-	                	try
-	                	{
-			                logger.info("PATERNO: "+(
-			                		row.getCell(2).getStringCellValue()+"|"
-			                		));
-			                output.print(
-			                		row.getCell(2).getStringCellValue()+"|"
-			                		);
-	                	}
-		                catch(Exception ex)
-		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Apellido paterno' ("+"C"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
-		                }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido paterno' (C) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(2)),"-"));
 	                }
 	                
-	                if(exito)
+	                try
+                	{
+		                logger.info("MATERNO: "+(
+		                		row.getCell(3).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(3).getStringCellValue()+"|"
+		                		);
+                	}
+	                catch(Exception ex)
 	                {
-	                	try
-	                	{
-			                logger.info("MATERNO: "+(
-			                		row.getCell(3).getStringCellValue()+"|"
-			                		));
-			                output.print(
-			                		row.getCell(3).getStringCellValue()+"|"
-			                		);
-	                	}
-		                catch(Exception ex)
-		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Apellido materno' ("+"D"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
-		                }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido materno' (D) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(3)),"-"));
 	                }
 	                
-	                if(exito)
+	                try
+                	{
+		                logger.info("NOMBRE: "+(
+		                		row.getCell(4).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(4).getStringCellValue()+"|"
+		                		);
+                	}
+	                catch(Exception ex)
 	                {
-	                	try
-	                	{
-			                logger.info("NOMBRE: "+(
-			                		row.getCell(4).getStringCellValue()+"|"
-			                		));
-			                output.print(
-			                		row.getCell(4).getStringCellValue()+"|"
-			                		);
-	                	}
-		                catch(Exception ex)
-		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Nombre' ("+"E"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
-		                }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Nombre' (E) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(4)),"-"));
 	                }
 	                
-	                if(exito)
+	                try
+                	{
+		                auxCell=row.getCell(5);
+		                logger.info("SEGUNDO NOMBRE: "+(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		));
+		                bufferLinea.append(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		);
+                	}
+	                catch(Exception ex)
 	                {
-	                	try
-	                	{
-			                auxCell=row.getCell(5);
-			                logger.info("SEGUNDO NOMBRE: "+(
-			                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
-			                		));
-			                output.print(
-			                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
-			                		);
-	                	}
-		                catch(Exception ex)
-		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Segundo nombre' ("+"F"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
-		                }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Segundo nombre' (F) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(5)),"-"));
 	                }
 	                
-	                if(exito)
-	                {
-	                	try
+	                try
+                	{
+	                	String sexo = row.getCell(6).getStringCellValue();
+	                	if(!"H".equalsIgnoreCase(sexo)
+	                			&&!"M".equalsIgnoreCase(sexo)
+	                	)
 	                	{
-			                logger.info("SEXO: "+(
-			                		row.getCell(6).getStringCellValue()+"|"
-			                		));
-			                output.print(
-			                		row.getCell(6).getStringCellValue()+"|"
-			                		);
+	                		throw new ApplicationException("No se reconoce el sexo [H,M]");
 	                	}
-		                catch(Exception ex)
-		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Sexo' ("+"G"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
-		                }
+		                logger.info("SEXO: "+(
+		                		sexo+"|"
+		                		));
+		                bufferLinea.append(
+		                		sexo+"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (G) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
 	                }
 	                
-	                if(exito)
-	                {
-	                	try
-	                	{
-			                auxDate=row.getCell(7).getDateCellValue();
-			                if(auxDate!=null)
-			                {
-			                	Calendar cal = Calendar.getInstance();
-			                	cal.setTime(auxDate);
-			                	if(cal.get(Calendar.YEAR)>2100
-			                			||cal.get(Calendar.YEAR)<1900
-			                			)
-			                	{
-			                		throw new ApplicationException("El anio de la fecha no es valido");
-			                	}
-			                }
-			                logger.info("FECHA NACIMIENTO: "+(
-			                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
-			                			));
-			                output.print(
-			                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
-			                			);
-	                	}
-		                catch(Exception ex)
+	                try
+                	{
+		                auxDate=row.getCell(7).getDateCellValue();
+		                if(auxDate!=null)
 		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Fecha de nacimiento' ("+"H"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
-		                }
-	                }
-	                
-	                if(exito)
-	                {
-	                	try
-	                	{
-			                logger.info("COD POSTAL: "+(
-			                		String.format("%.0f",row.getCell(8).getNumericCellValue())+"|"
-			                		));
-			                output.print(
-			                		String.format("%.0f",row.getCell(8).getNumericCellValue())+"|"
-			                		);
-	                	}
-		                catch(Exception ex2)
-		                {
-		                	logger.error("error al leer codigo postal como numero, se intentara como string:",ex2);
-		                	try
+		                	Calendar cal = Calendar.getInstance();
+		                	cal.setTime(auxDate);
+		                	if(cal.get(Calendar.YEAR)>2100
+		                			||cal.get(Calendar.YEAR)<1900
+		                			)
 		                	{
-		                		logger.info("COD POSTAL: "+row.getCell(8).getStringCellValue()+"|");
-				                output.print(row.getCell(8).getStringCellValue()+"|");
-		                	}
-		                	catch(Exception ex)
-		                	{
-		                		long etimestamp = System.currentTimeMillis();
-			                	exito           = false;
-			                	respuesta       = "Error en el campo 'Codigo postal' ("+"I"+") de la fila "+fila+" #"+etimestamp;
-			                	respuestaOculta = ex.getMessage();
-			                	logger.error(respuesta,ex);
+		                		throw new ApplicationException("El anio de la fecha no es valido");
 		                	}
 		                }
+		                logger.info("FECHA NACIMIENTO: "+(
+		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
+		                			));
+		                bufferLinea.append(
+		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
+		                			);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de nacimiento' (H) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(7)),"-"));
 	                }
 	                
-	                if(exito)
+	                try
+                	{
+		                logger.info("COD POSTAL: "+(
+		                		String.format("%.0f",row.getCell(8).getNumericCellValue())+"|"
+		                		));
+		                bufferLinea.append(
+		                		String.format("%.0f",row.getCell(8).getNumericCellValue())+"|"
+		                		);
+                	}
+	                catch(Exception ex2)
 	                {
+	                	logger.error("error al leer codigo postal como numero, se intentara como string:",ex2);
 	                	try
 	                	{
-			                logger.info("ESTADO: "+(
-			                		row.getCell(9).getStringCellValue()+"|"
-			                		));
-			                output.print(
-			                		row.getCell(9).getStringCellValue()+"|"
-			                		);
+	                		logger.info("COD POSTAL: "+row.getCell(8).getStringCellValue()+"|");
+			                bufferLinea.append(row.getCell(8).getStringCellValue()+"|");
 	                	}
 		                catch(Exception ex)
 		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Estado' ("+"J"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' (I) de la fila ",fila," "));
 		                }
 	                }
-	                
-	                if(exito)
+	                finally
 	                {
-	                	try
-	                	{
-			                logger.info("MUNICIPIO: "+(
-			                		row.getCell(10).getStringCellValue()+"|"
-			                		));
-			                output.print(
-			                		row.getCell(10).getStringCellValue()+"|"
-			                		);
-	                	}
-		                catch(Exception ex)
-		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Municipio' ("+"K"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
-		                }
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(8)),"-"));
 	                }
 	                
-	                if(exito)
+	                try
+                	{
+		                logger.info("ESTADO: "+(
+		                		row.getCell(9).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(9).getStringCellValue()+"|"
+		                		);
+                	}
+	                catch(Exception ex)
 	                {
-	                	try
-	                	{
-			                logger.info("COLONIA: "+(
-			                		row.getCell(11).getStringCellValue()+"|"
-			                		));
-			                output.print(
-			                		row.getCell(11).getStringCellValue()+"|"
-			                		);
-	                	}
-		                catch(Exception ex)
-		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Colonia' ("+"L"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
-		                }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estado' (J) de la fila ",fila," "));
 	                }
-	                
-	                if(exito)
+	                finally
 	                {
-	                	try
-	                	{
-			                logger.info("CALLE: "+(
-			                		row.getCell(12).getStringCellValue()+"|"
-			                		));
-			                output.print(
-			                		row.getCell(12).getStringCellValue()+"|"
-			                		);
-	                	}
-		                catch(Exception ex)
-		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Calle' ("+"M"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
-		                }
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(9)),"-"));
 	                }
 	                
-	                if(exito)
+	                try
+                	{
+		                logger.info("MUNICIPIO: "+(
+		                		row.getCell(10).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(10).getStringCellValue()+"|"
+		                		);
+                	}
+	                catch(Exception ex)
 	                {
-	                	try
-	                	{
-			                logger.info("NUM EXT: "+(
-			                		String.format("%.0f",row.getCell(13).getNumericCellValue())+"|"
-			                		));
-			                output.print(
-			                		String.format("%.0f",row.getCell(13).getNumericCellValue())+"|"
-			                		);
-	                	}
-		                catch(Exception ex)
-		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Numero exterior' ("+"N"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
-		                }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Municipio' (K) de la fila ",fila," "));
 	                }
-	                
-	                if(exito)
+	                finally
 	                {
-	                	try
-	                	{
-			                auxCell=row.getCell(14);
-			                logger.info("NUM INT: "+(
-			                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
-			                		));
-			                output.print(
-			                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
-			                		);
-	                	}
-		                catch(Exception ex)
-		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Numero interior' ("+"O"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
-		                }
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(10)),"-"));
 	                }
 	                
-	                if(exito)
+	                try
+                	{
+		                logger.info("COLONIA: "+(
+		                		row.getCell(11).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(11).getStringCellValue()+"|"
+		                		);
+                	}
+	                catch(Exception ex)
 	                {
-	                	try
-	                	{
-			                logger.info("RFC: "+(
-			                		row.getCell(15).getStringCellValue()+"|"
-			                		));
-			                output.print(
-			                		row.getCell(15).getStringCellValue()+"|"
-			                		);
-			                if(StringUtils.isBlank(row.getCell(15).getStringCellValue()))
-			                {
-			                	throw new Exception("Sin rfc");
-			                }
-	                	}
-		                catch(Exception ex)
-		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'RFC' ("+"P"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
-		                }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Colonia' (L) de la fila ",fila," "));
 	                }
-	                
-	                if(exito)
+	                finally
 	                {
-	                	try
-	                	{
-			                auxCell=row.getCell(16);
-			                logger.info("CORREO: "+(
-			                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
-			                		));
-			                output.print(
-			                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
-			                		);
-	                	}
-		                catch(Exception ex)
-		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Correo' ("+"Q"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
-		                }
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(11)),"-"));
 	                }
 	                
-	                if(exito)
+	                try
+                	{
+		                logger.info("CALLE: "+(
+		                		row.getCell(12).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(12).getStringCellValue()+"|"
+		                		);
+                	}
+	                catch(Exception ex)
 	                {
-	                	try
-	                	{
-			                auxCell=row.getCell(17);
-			                logger.info("TELEFONO: "+(
-			                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
-			                		));
-			                output.print(
-			                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
-			                		);
-	                	}
-		                catch(Exception ex)
-		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Telefono' ("+"R"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
-		                }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Calle' (M) de la fila ",fila," "));
 	                }
-	                
-	                if(exito)
+	                finally
 	                {
-	                	try
-	                	{
-			                auxCell=row.getCell(18);
-			                logger.info("IDENTIDAD: "+(
-			                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
-			                		));
-			                output.print(
-			                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
-			                		);
-	                	}
-		                catch(Exception ex)
-		                {
-		                	long etimestamp = System.currentTimeMillis();
-		                	exito           = false;
-		                	respuesta       = "Error en el campo 'Identidad' ("+"S"+") de la fila "+fila+" #"+etimestamp;
-		                	respuestaOculta = ex.getMessage();
-		                	logger.error(respuesta,ex);
-		                }
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(12)),"-"));
 	                }
 	                
-	                output.println("");
+	                try
+                	{
+		                logger.info("NUM EXT: "+(
+		                		String.format("%.0f",row.getCell(13).getNumericCellValue())+"|"
+		                		));
+		                bufferLinea.append(
+		                		String.format("%.0f",row.getCell(13).getNumericCellValue())+"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero exterior' (N) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(13)),"-"));
+	                }
+	                
+	                try
+                	{
+		                auxCell=row.getCell(14);
+		                logger.info("NUM INT: "+(
+		                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
+		                		));
+		                bufferLinea.append(
+		                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero interior' (O) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(14)),"-"));
+	                }
+	                
+	                try
+                	{
+		                logger.info("RFC: "+(
+		                		row.getCell(15).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(15).getStringCellValue()+"|"
+		                		);
+		                if(StringUtils.isBlank(row.getCell(15).getStringCellValue()))
+		                {
+		                	throw new ApplicationException("Sin rfc");
+		                }
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'RFC' (P) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(15)),"-"));
+	                }
+	                
+	                try
+                	{
+		                auxCell=row.getCell(16);
+		                logger.info("CORREO: "+(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		));
+		                bufferLinea.append(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Correo' (Q) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(16)),"-"));
+	                }
+	                
+	                try
+                	{
+		                auxCell=row.getCell(17);
+		                logger.info("TELEFONO: "+(
+		                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
+		                		));
+		                bufferLinea.append(
+		                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Telefono' (R) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(17)),"-"));
+	                }
+	                
+	                try
+                	{
+		                auxCell=row.getCell(18);
+		                logger.info("IDENTIDAD: "+(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		));
+		                bufferLinea.append(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' (S) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(18)),"-"));
+	                }
+	                
 	                logger.info("** NUEVA_FILA **");
+	                
+	                if(filaBuena)
+	                {
+	                	output.println(bufferLinea.toString());
+	                	filasProcesadas = filasProcesadas + 1;
+	                }
+	                else
+	                {
+	                	filasError = filasError + 1;
+	                	bufferErroresCenso.append(Utils.join(": ",bufferLineaStr.toString(),"\n"));
+	                }
 	            }
+	            
+	            if(exito)
+				{
+					smap1.put("erroresCenso"    , bufferErroresCenso.toString());
+					smap1.put("filasLeidas"     , Integer.toString(filasLeidas));
+					smap1.put("filasProcesadas" , Integer.toString(filasProcesadas));
+					smap1.put("filasErrores"    , Integer.toString(filasError));
+				}
 	            
 	            if(exito)
 	            {
