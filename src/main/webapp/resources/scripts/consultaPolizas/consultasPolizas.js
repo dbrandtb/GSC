@@ -661,22 +661,17 @@ Ext.onReady(function() {
     // GRID PARA LOS DATOS DEL ASEGURADO
     
     var oculto;
-    var anchoGridPolizas;
-    if(cdSisRolActivo=='PROMOTORAUTO')
-    {
-    	anchoGridPolizas = 1387;
+    if(cdSisRolActivo=='PROMOTORAUTO') {
     	oculto = false;
-    }
-    else
-    {
+    } else {
     	oculto = true;
-    	anchoGridPolizas = 1307;
     }
     
     var gridPolizasAsegurado= Ext.create('Ext.grid.Panel', {
-        store : storePolizaAsegurado,
-        selType: 'checkboxmodel',
-        width : anchoGridPolizas,
+        store    : storePolizaAsegurado,
+        selType  : 'checkboxmodel',
+        //width  : anchoGridPolizas,
+        minHeight: 300, 
         bbar     :
         {
             displayInfo : true,
@@ -688,16 +683,35 @@ Ext.onReady(function() {
         }],
         columns: [
             {text: 'P&oacute;liza', dataIndex: 'nmpoliex', width: 160},
-            {text: '# P&oacute;liza en sistema', dataIndex: 'nmpoliza', width: 140},
+            {text: 'P&oacute;liza interna', dataIndex: 'nmpoliza', width: 100},
+            {
+                text: 'Fecha de vigencia', 
+                dataIndex: 'feinivigencia', 
+                format: 'd M Y', 
+                width:160,
+                renderer: function(value, metaData, record, rowIndex , colIndex, store, view) {
+                    return value + ' - ' + record.get('fefinvigencia');
+                }
+            },
+            {
+                text: 'Estado', 
+                dataIndex: 'estado', 
+                width: 100,
+                renderer: function(value, metaData, record, rowIndex , colIndex, store, view) {
+                    if (value == 'VIGENTE') {
+                    	metaData.style += 'color:green;font-weight:bold;';
+                    } else {
+                    	metaData.style += 'color:red;font-weight:bold;';
+                    }
+                    return value;
+                }
+            },
             {text: 'Nombre del asegurado', dataIndex: 'nombreAsegurado', width: 200},
             {text: 'Sucursal', dataIndex: 'dsunieco', width: 140},
             //{text: 'Producto', dataIndex: 'dsramo', width:180},
             {text: 'Descripci&oacute;n de producto', dataIndex: 'dstipsit', width:180},
             {text: 'Subramo', dataIndex: 'cdsubram', width:80},
-            {text: 'Agente', dataIndex: 'nombreAgente', width:80, hidden:oculto},
-            {text: 'Fecha inicio vigencia', dataIndex: 'feinivigencia', format: 'd M Y', width:140},
-            {text: 'Fecha final vigencia', dataIndex: 'fefinvigencia', format: 'd M Y', width:140},
-            {text: 'Estado', dataIndex: 'estado', width: 100}
+            {text: 'Agente', dataIndex: 'nombreAgente', width:80, hidden:oculto}
             //,{text: '# poliza', dataIndex: 'nmpoliza', width: 70}
         ]
     });
@@ -705,10 +719,9 @@ Ext.onReady(function() {
     
     var windowPolizas= Ext.create('Ext.window.Window', {
         title : 'Elija una p&oacute;liza:',
-        height: 455,
         modal:true,
         autoScroll : true,
-        width : 680,
+        width : 950,
         closeAction: 'hide',
         items:[gridPolizasAsegurado],
         buttons:[{
@@ -960,6 +973,7 @@ Ext.onReady(function() {
         items:[{
             title:'B&Uacute;SQUEDA DE P&Oacute;LIZAS',
             colspan:2,
+            collapsible:true,
             width:990,
             height:170,
             items: [
@@ -1197,7 +1211,8 @@ Ext.onReady(function() {
             width:990,
             height:150,
             colspan:2,
-            autoScroll:true,
+            autoScroll : true,
+            collapsible: true,
             items : [
                 gridSuplementos
             ]
