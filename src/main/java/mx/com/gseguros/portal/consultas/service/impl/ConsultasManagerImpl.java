@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -8,15 +9,21 @@ import java.util.Map;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
+import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
 import mx.com.gseguros.utils.Utils;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ConsultasManagerImpl implements ConsultasManager
 {
 	private static Logger logger = Logger.getLogger(ConsultasManagerImpl.class);
 	
 	private ConsultasDAO consultasDAO;
+	
+	@Autowired
+	private RenovacionDAO renovacionDAO;
 	
 	@Override
 	public List<Map<String,String>> consultaDinamica(ObjetoBD objetoBD,LinkedHashMap<String,Object>params) throws Exception
@@ -220,6 +227,58 @@ public class ConsultasManagerImpl implements ConsultasManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return error;
+	}
+	
+	
+	public boolean copiarArchivosUsuarioTramite(String cduniecoOrigen, String cdramoOrigen, String estadoOrigen, 
+			String nmpolizaOrigen, String ntramiteDestino, String rutaDocumentos)throws Exception{
+		
+		//copiar documentos de usuario
+		List<Map<String,String>>iPolizaUserDocs=renovacionDAO.cargarDocumentosSubidosPorUsuario(cduniecoOrigen,cdramoOrigen,estadoOrigen,nmpolizaOrigen);
+		for(Map<String,String>iUserDoc:iPolizaUserDocs)
+		{
+			String ntramiteAnt = iUserDoc.get("ntramite");
+			String cddocume    = iUserDoc.get("cddocume");
+			
+			File doc = new File(
+					new StringBuilder(rutaDocumentos)
+					.append("/")
+					.append(ntramiteAnt)
+					.append("/")
+					.append(cddocume)
+					.toString()
+					);
+			
+			File newDoc = new File(
+					new StringBuilder(rutaDocumentos)
+					.append("/")
+					.append(ntramiteDestino)
+					.append("/")
+					.append(cddocume)
+					.toString()
+					);
+			
+			if(doc!=null&&doc.exists())
+			{
+				try
+				{
+					FileUtils.copyFile(doc, newDoc);
+				}
+				catch(Exception ex)
+				{
+					logger.error("Error copiando archivo de usuario",ex);
+				}
+			}
+			else
+			{
+				logger.error(new StringBuilder("No existe el documento").append(doc).toString());
+			}
+		}
+		
+		consultasDAO.copiaDocumentosTdocupol(cduniecoOrigen, cdramoOrigen, estadoOrigen, 
+				nmpolizaOrigen, ntramiteDestino);
+		
+		return true;
 	}
 	
 	///////////////////////////////

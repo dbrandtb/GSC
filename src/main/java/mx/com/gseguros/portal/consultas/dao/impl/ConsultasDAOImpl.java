@@ -2154,4 +2154,39 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+
+	@Override
+	public boolean copiaDocumentosTdocupol(
+			 String cduniecoOrig
+			,String cdramoOrig
+			,String estadoOrig
+			,String nmpolizaOrig
+			,String ntramiteDestino
+			)throws Exception
+			{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i" , cduniecoOrig);
+		params.put("pv_cdramo_i"   , cdramoOrig);
+		params.put("pv_estado_i"   , estadoOrig);
+		params.put("pv_nmpoliza_i" , nmpolizaOrig);
+		params.put("pv_ntramite_i" , ntramiteDestino);
+		ejecutaSP(new CopiaDocumentosTdocupol(getDataSource()),params);
+		return true;
+	}
+	
+	protected class CopiaDocumentosTdocupol extends StoredProcedure
+	{
+		protected CopiaDocumentosTdocupol(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_INS_TDOCUPOL_DOCTOS_USUARIO");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
