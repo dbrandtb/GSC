@@ -6873,6 +6873,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					, "&p_estado="      , estado
 					, "&p_poliza="      , nmpoliza
 					, "&p_cdperpag="    , cdperpag
+					, "&p_perpag="      , cdperpag
 					, "&p_suplem=0"
 					, "&p_cdplan="
                     , "&destype=cache"
