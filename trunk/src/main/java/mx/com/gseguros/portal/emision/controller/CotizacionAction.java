@@ -4964,7 +4964,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                						)
 		                						)
 		                		{
-		                			throw new ApplicationException("El parentesco no se reconoce [H,M]");
+		                			throw new ApplicationException("El parentesco no se reconoce [T,C,P,H,D]");
 		                		}
 				                logger.info("PARENTESCO: "+parentesco+"|");
 				                bufferLinea.append(parentesco+"|");
