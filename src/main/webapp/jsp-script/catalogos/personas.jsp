@@ -13,11 +13,11 @@
 
 <script>
 
-debug('PANTALLAS PERSONA: ',Ext.ComponentQuery.query('#companiaGroupId'));
-if(Ext.ComponentQuery.query('#companiaGroupId').length >= 1){
-	debugError('Error, no se puede crear mas de una instancia de la pantalla de contratante');
-}else
-{
+//debug('PANTALLAS PERSONA: ',Ext.ComponentQuery.query('#companiaGroupId'));
+//if(Ext.ComponentQuery.query('#companiaGroupId').length >= 1){
+//	debugError('Error, no se puede crear mas de una instancia de la pantalla de contratante');
+//}else
+//{
 
 ////// variables //////
 var _p22_urlObtenerPersonas     = '<s:url namespace="/catalogos"  action="obtenerPersonasPorRFC"              />';
@@ -2960,7 +2960,7 @@ function obtDatLoaderContratante(){
 
 ////// funciones //////
 
-}//fin de if para que no se duplique codigo
+//}//fin de if para que no se duplique codigo
 </script>
 </head>
 <body>
