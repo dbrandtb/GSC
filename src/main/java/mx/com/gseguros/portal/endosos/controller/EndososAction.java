@@ -18,6 +18,7 @@ import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
+import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
@@ -46,7 +47,10 @@ import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
 import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -95,6 +99,9 @@ public class EndososAction extends PrincipalCoreAction
 	@Autowired
 	@Qualifier("emisionAutosServiceImpl")
 	private EmisionAutosService emisionAutosService;
+	
+	@Autowired
+	private PersonasManager personasManager;
 	
 	private boolean exito           = false;
 	private String  respuesta;
@@ -8530,9 +8537,51 @@ public class EndososAction extends PrincipalCoreAction
 			String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
 			String sucursal = cdunieco;
 			
-			
-			
+
 			if(!esProductoSalud){
+				
+				long timestamp=System.currentTimeMillis();
+				Map<String,Object>resultData = personasManager.obtenerPersonaPorCdperson(smap2.get("cdpersonNvoContr"), timestamp);
+				Map<String,String>resultPer =  (Map<String, String>) resultData.get("persona");
+				
+				if( resultPer!=null && resultPer.containsKey("CDIDEPER") && StringUtils.isBlank(resultPer.get("CDIDEPER"))){
+					String saludDanios = "D";
+					logger.debug("...Crear nueva Persona en WS desde endoso Contratante... , Compania: " + saludDanios);
+					
+					ClienteGeneral clienteGeneral = new ClienteGeneral();
+					clienteGeneral.setClaveCia(saludDanios);
+					
+					ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap2.get("cdpersonNvoContr"), Ice2sigsService.Operacion.INSERTA, clienteGeneral, null, false);
+					
+					if(clientesRes == null || (Estatus.EXITO.getCodigo() != clientesRes.getCodigo())){
+						
+						logger.error("Error en WS, exito false,Error al crear codigo externo de cliente, en endoso de contratante");
+						mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
+						error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
+						
+						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+						if(endosoRevertido){
+							logger.error("Endoso revertido exitosamente.");
+							error+=" Favor de volver a itentar.";
+						}else{
+							logger.error("Error al revertir el endoso");
+							error+=" No se ha revertido el endoso.";
+						}
+						
+						success = false;
+						return SUCCESS;
+					}else{
+						logger.debug("Codigo externo obtenido: " + clientesRes.getClientesGeneral()[0].getNumeroExterno());
+						
+						HashMap params = new HashMap<String, String>();
+						params.put("pv_cdperson_i", smap2.get("cdpersonNvoContr"));
+						params.put("pv_swsalud_i"  , saludDanios);
+						params.put("pv_cdideper_i"  , clientesRes.getClientesGeneral()[0].getNumeroExterno());
+						
+						personasManager.actualizaCodigoExterno(params);
+					
+					}
+				}
 
 				/**
 				 * PARA WS ENDOSO DE AUTOS
