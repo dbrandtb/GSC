@@ -1031,7 +1031,7 @@ function irModoEdicion(){
 	                }
 	                else
 	                {
-	                    mensajeError("Error al Editar Cliente, vuelva a intentarlo.");
+	                    mensajeError("En recuperar c&oacute;digo externo. Consulte a soporte.");
 	                }
 	            }
 	            ,failure  : function()
