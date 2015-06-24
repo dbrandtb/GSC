@@ -3813,11 +3813,176 @@ function _p25_subirDetallePersonas()
                                                                 debug('subir censo completo response:',json);
                                                                 if(json.exito)
                                                                 {
-                                                                    mensajeCorrecto('Datos guardados','Los datos de asegurados se guardaron y ahora<br/>'
-                                                                           +'el tr&aacute;mite pasar&aacute; a status Completo'
+                                                                    mensajeCorrecto('Datos guardados','Datos guardados<br/>Para revisar los datos presiona aceptar'
                                                                     ,function()
                                                                     {
-                                                                        _p25_turnar(19,'Tr&aacute;mite completo',false);
+                                                                        var callback = function() { _p25_turnar(19,'Observaciones de la carga',false); };
+                                                                        _p25_tabpanel().setDisabled(true);
+                                                                        var ck = 'Recuperando asegurados para revision';
+                                                                        try
+                                                                        {
+                                                                            _p25_tabpanel().setLoading(true);
+                                                                            Ext.Ajax.request(
+                                                                            {
+                                                                                url      : _p25_urlRecuperacionSimpleLista
+                                                                                ,params  :
+                                                                                {
+                                                                                    'smap1.procedimiento' : 'RECUPERAR_REVISION_COLECTIVOS'
+                                                                                    ,'smap1.cdunieco'     : _p25_smap1.cdunieco
+                                                                                    ,'smap1.cdramo'       : _p25_smap1.cdramo
+                                                                                    ,'smap1.estado'       : 'W'
+                                                                                    ,'smap1.nmpoliza'     : json.smap1.nmpoliza
+                                                                                }
+                                                                                ,success : function(response)
+                                                                                {
+                                                                                    var ck = 'Decodificando datos de asegurados para revision';
+                                                                                    try
+                                                                                    {
+                                                                                        _p25_tabpanel().setLoading(false);
+                                                                                        var json2 = Ext.decode(response.responseText);
+                                                                                        debug('### asegurados:',json2);
+                                                                                        var store = Ext.create('Ext.data.Store',
+                                                                                        {
+                                                                                            model : '_p25_modeloRevisionAsegurado'
+                                                                                            ,data : json2.slist1
+                                                                                        });
+                                                                                        debug('store.getRange():',store.getRange());
+                                                                                        centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                                                                        {
+                                                                                            width   : 600
+                                                                                            ,height : 500
+                                                                                            ,title  : 'Revisar asegurados del censo'
+                                                                                            ,closable : false
+                                                                                            ,items  :
+                                                                                            [
+                                                                                                Ext.create('Ext.panel.Panel',
+                                                                                                {
+                                                                                                    layout    : 'hbox'
+                                                                                                    ,border   : 0
+                                                                                                    ,defaults : { style : 'margin:5px;' }
+                                                                                                    ,height   : 40
+                                                                                                    ,items    :
+                                                                                                    [
+                                                                                                        {
+                                                                                                            xtype       : 'displayfield'
+                                                                                                            ,fieldLabel : 'Filas leidas'
+                                                                                                            ,value      : json.smap1.filasLeidas
+                                                                                                        }
+                                                                                                        ,{
+                                                                                                            xtype       : 'displayfield'
+                                                                                                            ,fieldLabel : 'Filas procesadas'
+                                                                                                            ,value      : json.smap1.filasProcesadas
+                                                                                                        }
+                                                                                                        ,{
+                                                                                                            xtype       : 'displayfield'
+                                                                                                            ,fieldLabel : 'Filas con error'
+                                                                                                            ,value      : json.smap1.filasErrores
+                                                                                                        }
+                                                                                                        ,{
+                                                                                                            xtype    : 'button'
+                                                                                                            ,text    : 'Ver errores'
+                                                                                                            ,hidden  : Number(json.smap1.filasErrores)==0
+                                                                                                            ,handler : function()
+                                                                                                            {
+                                                                                                                centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                                                                                                {
+                                                                                                                    modal        : true
+                                                                                                                    ,closeAction : 'destroy'
+                                                                                                                    ,title       : 'Errores al procesar censo'
+                                                                                                                    ,width       : 800
+                                                                                                                    ,height      : 500
+                                                                                                                    ,items       :
+                                                                                                                    [
+                                                                                                                        {
+                                                                                                                            xtype       : 'textarea'
+                                                                                                                            ,fieldStyle : 'font-family: monospace'
+                                                                                                                            ,value      : json.smap1.erroresCenso
+                                                                                                                            ,readOnly   : true
+                                                                                                                            ,width      : 780
+                                                                                                                            ,height     : 440
+                                                                                                                        }
+                                                                                                                    ]
+                                                                                                                }).show());
+                                                                                                            }
+                                                                                                        }
+                                                                                                    ]
+                                                                                                })
+                                                                                                ,Ext.create('Ext.grid.Panel',
+                                                                                                {
+                                                                                                    height   : 350
+                                                                                                    ,columns :
+                                                                                                    [
+                                                                                                        {
+                                                                                                            text       : 'Grupo'
+                                                                                                            ,dataIndex : 'CDGRUPO'
+                                                                                                            ,width     : 60
+                                                                                                        }
+                                                                                                        ,{
+                                                                                                            text       : 'No.'
+                                                                                                            ,dataIndex : 'NMSITUAC'
+                                                                                                            ,width     : 40
+                                                                                                        }
+                                                                                                        ,{
+                                                                                                            text       : 'Parentesco'
+                                                                                                            ,dataIndex : 'PARENTESCO'
+                                                                                                            ,width     : 120
+                                                                                                        }
+                                                                                                        ,{
+                                                                                                            text       : 'Nombre'
+                                                                                                            ,dataIndex : 'NOMBRE'
+                                                                                                            ,width     : 200
+                                                                                                        }
+                                                                                                        ,{
+                                                                                                            text       : 'Sexo'
+                                                                                                            ,dataIndex : 'SEXO'
+                                                                                                            ,width     : 80
+                                                                                                        }
+                                                                                                        ,{
+                                                                                                            text       : 'Edad'
+                                                                                                            ,dataIndex : 'EDAD'
+                                                                                                            ,width     : 60
+                                                                                                        }
+                                                                                                    ]
+                                                                                                    ,store : store
+                                                                                                })
+                                                                                            ]
+                                                                                            ,buttonAlign : 'center'
+                                                                                            ,buttons     :
+                                                                                            [
+                                                                                                {
+                                                                                                    text     : 'Aceptar y continuar'
+                                                                                                    ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                                                                                    ,handler : function(){ callback(json); }
+                                                                                                }
+                                                                                                ,{
+                                                                                                    text     : 'Modificar datos'
+                                                                                                    ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
+                                                                                                    ,handler : function(me)
+                                                                                                    {
+                                                                                                        me.up('window').destroy();
+                                                                                                        _p25_tabpanel().setDisabled(false);
+                                                                                                        _p25_resubirCenso = 'S';
+                                                                                                    }
+                                                                                                }
+                                                                                            ]
+                                                                                        }).show());
+                                                                                    }
+                                                                                    catch(e)
+                                                                                    {
+                                                                                        manejaException(e,ck);
+                                                                                    }
+                                                                                }
+                                                                                ,failure : function()
+                                                                                {
+                                                                                    _p25_tabpanel().setLoading(false);
+                                                                                    errorComunicacion(ck);
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                        catch(e)
+                                                                        {
+                                                                            manejaException(e,ck);
+                                                                        }        
                                                                     });
                                                                 }
                                                                 else

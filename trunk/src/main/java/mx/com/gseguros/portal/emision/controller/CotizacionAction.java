@@ -3695,7 +3695,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		//proceso
 		if(exito)
 		{
-			ManagerRespuestaVoidVO resp = cotizacionManager.subirCensoCompleto(
+			ManagerRespuestaSmapVO resp = cotizacionManager.subirCensoCompleto(
 					cdunieco
 					,cdramo
 					,nmpoliza
@@ -3732,6 +3732,10 @@ public class CotizacionAction extends PrincipalCoreAction
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+			}
 		}
 		
 		logger.info(
