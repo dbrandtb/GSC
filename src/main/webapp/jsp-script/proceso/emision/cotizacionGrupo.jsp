@@ -5049,7 +5049,7 @@ function _p21_guardarExtraprimas(letra)
                 ,extpri_ocupacion : record.get('EXTPRI_OCUPACION')
                 ,peso             : record.get('PESO')
                 ,estatura         : record.get('ESTATURA')
-                ,extpri_estatura  : record.get('EXTPRI_ESTATURA')
+                ,extpri_estatura  : record.get('EXTPRI_SOBREPESO')
             };
             asegurados.push(asegurado);
         });
