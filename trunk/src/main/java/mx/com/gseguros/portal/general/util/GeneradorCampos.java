@@ -583,7 +583,7 @@ public class GeneradorCampos
 	            Item proxy=new Item("proxy",null,Item.OBJ);
 	            store.add(proxy);
 	            proxy.add("type","ajax");
-	            proxy.add("url",this.context+"/catalogos/obtieneCatalogo.action");
+	            proxy.add("url",this.context+"/catalogos/obtieneCatalogo.action?tstamp="+(System.currentTimeMillis())+"_"+((int)(10000*Math.random())));
 	            proxy.add(
 	            		Item.crear("reader", null, Item.OBJ)
 	            		.add("type","json")
