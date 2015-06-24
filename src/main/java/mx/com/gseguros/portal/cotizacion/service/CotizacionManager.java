@@ -340,7 +340,7 @@ public interface CotizacionManager
 	
 	public ManagerRespuestaVoidVO guardarValoresSituaciones(List<Map<String,String>>situaciones);
 	
-	public ManagerRespuestaVoidVO subirCensoCompleto(
+	public ManagerRespuestaSmapVO subirCensoCompleto(
 			String cdunieco
 			,String cdramo
 			,String nmpoliza
