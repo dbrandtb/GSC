@@ -5503,7 +5503,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						
 						//SUMA ASEGURADA y ayuda maternidad
 						String ptsumaaseg = (String)iGrupo.get("ptsumaaseg");
-						String ayudamater = null;
+						String ayudamater = "0";
 						Object incrinflL  = iGrupo.get("incrinfl");
 						String incrinfl   = incrinflL!=null? incrinflL.toString() : "0";
 						Object extrrenoL  = iGrupo.get("extrreno");
@@ -5520,10 +5520,11 @@ public class CotizacionAction extends PrincipalCoreAction
 						List<Map<String,String>>tvalogars=(List<Map<String,String>>)iGrupo.get("tvalogars");
 						for(Map<String,String>iTvalogar:tvalogars)
 						{
-							String cdgarant = iTvalogar.get("cdgarant");
+							String cdgarant  = iTvalogar.get("cdgarant");
 							boolean amparada = "S".equals(iTvalogar.get("amparada"));
-							if (cdgarant.equalsIgnoreCase("4AYM")) {
-								ayudamater = amparada ? "S" : "N";
+							if("4AYM".equalsIgnoreCase(cdgarant) && amparada )
+							{
+								ayudamater = iTvalogar.get("parametros.pv_otvalor001");
 							}
 						}
 						
