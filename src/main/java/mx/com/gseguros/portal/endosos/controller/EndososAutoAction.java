@@ -1011,6 +1011,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(session                , "No hay sesion");
 			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
 			
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
 			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
 			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
@@ -1018,6 +1019,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String cdtipsup      = TipoEndoso.AMPLIACION_DE_VIGENCIA.getCdTipSup().toString();
 			String fechaEndoso   = smap1.get("FEINIVAL");
 			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
+			
+			String tipoGrupoInciso = smap1.get("TIPOFLOT");
+			
 			endososAutoManager.guardarEndosoAmpliacionVigencia(
 					cdunieco,
 					cdramo,
@@ -1032,7 +1036,11 @@ public class EndososAutoAction extends PrincipalCoreAction
 					dFechaEndoso,
 					feefecto,
 					feproren,
-					nmsuplemOriginal);
+					nmsuplemOriginal,
+					usuarioSesion,
+					tipoGrupoInciso
+					);
+			
 			respuesta = "Endoso generado correctamente";
 			success   = false;
 		}

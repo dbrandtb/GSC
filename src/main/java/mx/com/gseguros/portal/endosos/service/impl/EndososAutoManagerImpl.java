@@ -4598,6 +4598,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String feefecto
 			,String feproren
 			,String nmsuplemOriginal
+			,UserVO usuarioSesion
+			,String tipoGrupoInciso
 		)throws Exception
 	{
 		logger.info(Utils.join(
@@ -4687,8 +4689,36 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			endososDAO.calcularValorEndoso(mapaValorEndoso);
 			paso = "Se confirma el endoso";
 			logger.debug(paso);
+			
 			endososDAO.confirmarEndosoB(cdunieco,cdramo,estado,nmpoliza,nmsuplem, nsuplogi, cdtipsup, null);
-			/*Validacion del WS*/
+			
+
+			String nmsuplemGen = nmsuplem;
+
+			paso = "Enviando a Web Service Sigs";
+			logger.info(paso);
+			
+			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
+			if(aux == null || !aux.isExitoRecibos()){
+				logger.error("Error al ejecutar los WS de endoso");
+				
+				boolean endosoRevertido = endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen);
+				
+				if(endosoRevertido){
+					logger.error("Endoso revertido exitosamente.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+				}else{
+					logger.error("Error al revertir el endoso");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+				}
+				
+			}
+			
+			paso = "Ejecutando caratula";
+			logger.info(paso);
+			
+			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
+		
 		
 		}
 		catch(Exception ex)

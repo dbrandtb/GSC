@@ -400,5 +400,7 @@ public interface EndososAutoManager
 			,String feefecto
 			,String feproren
 			,String nmsuplemOriginal
+			,UserVO usuarioSesion
+			,String tipoGrupoInciso
 			)throws Exception;
 }
