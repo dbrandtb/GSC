@@ -1002,7 +1002,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			//obtenemos los valores de las facturas y de ahi la información de los asegurados
 			List<Map<String,String>> facturasAux = siniestrosManager.obtenerFacturasTramite(ntramite);
 			logger.debug("Valor de facturasAux : {}",facturasAux);
-			List<Map<String,String>> siniestros = siniestrosManager.listaSiniestrosMsiniesTramite(ntramite,facturasAux.get(0).get("NFACTURA"),null);
+			List<Map<String,String>> siniestros = siniestrosManager.listaSiniestrosTramite2(ntramite,facturasAux.get(0).get("NFACTURA"),null);
 			logger.debug("Valor de siniestros : {}",siniestros);
 			
 			List<ComponenteVO>tatrisin=kernelManagerSustituto.obtenerTatrisinPoliza(siniestros.get(0).get("CDUNIECO"),siniestros.get(0).get("CDRAMO"),siniestros.get(0).get("ESTADO"),siniestros.get(0).get("NMPOLIZA"));
