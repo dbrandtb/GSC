@@ -62,6 +62,7 @@
 						var feAmpli  = new Date(panelInicialPral.down('[name="feAmpliacion"]').getValue());
 						var feProren = new Date(panelInicialPral.down('[name="feFin"]').getValue());
 						paramsEntrada.FEINIVAL = Ext.Date.format(panelInicialPral.down('[name="feFin"]').getValue(),'d/m/Y');
+						paramsEntrada.FEPROREN = Ext.Date.format(panelInicialPral.down('[name="feAmpliacion"]').getValue(),'d/m/Y');
 						if(feAmpli > feProren){
 						    //Exito
 							var submitValues={};
