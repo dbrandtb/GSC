@@ -384,4 +384,21 @@ public interface EndososAutoManager
 			,String nmsuplem
 			,UserVO usuarioSesion
 			) throws Exception;
+	
+	public void guardarEndosoAmpliacionVigencia(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String ntramite
+			,String cdelemen
+			,String cdusuari
+			,String cdtipsup
+			,String status
+			,String fechaEndoso
+			,Date dFechaEndoso
+			,String feefecto
+			,String feproren
+			,String nmsuplemOriginal
+			)throws Exception;
 }

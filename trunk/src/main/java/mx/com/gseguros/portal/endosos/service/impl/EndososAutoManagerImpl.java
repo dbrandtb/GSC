@@ -4581,4 +4581,125 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
+	
+	@Override
+	public void guardarEndosoAmpliacionVigencia(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String ntramite
+			,String cdelemen
+			,String cdusuari
+			,String cdtipsup
+			,String status
+			,String fechaEndoso
+			,Date dFechaEndoso
+			,String feefecto
+			,String feproren
+			,String nmsuplemOriginal
+		)throws Exception
+	{
+		logger.info(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarEndosoAmpliacionVigencia @@@@@@"
+				,"\n@@@@@@ cdunieco="         , cdunieco
+				,"\n@@@@@@ cdramo="           , cdramo
+				,"\n@@@@@@ estado="           , estado
+				,"\n@@@@@@ nmpoliza="         , nmpoliza
+				,"\n@@@@@@ cdelemen="         , cdelemen
+				,"\n@@@@@@ cdusuari="         , cdusuari
+				,"\n@@@@@@ cdtipsup="         , cdtipsup
+				,"\n@@@@@@ fechaEndoso="      , fechaEndoso
+				,"\n@@@@@@ dFechaEndoso="     , dFechaEndoso
+				,"\n@@@@@@ feefecto="         , feefecto
+				,"\n@@@@@@ feproren="         , feproren
+				,"\n@@@@@@ nmsuplemOriginal=" , nmsuplemOriginal
+				));
+		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
+		String paso = "";
+		try
+		{
+			paso = "Iniciando endoso";
+			logger.info(paso);
+			Map<String,String>iniciarEndosoResp=endososDAO.iniciarEndoso(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,dFechaEndoso
+					,cdelemen
+					,cdusuari
+					,"END"
+					,cdtipsup);
+			String nmsuplem = iniciarEndosoResp.get("pv_nmsuplem_o");
+			String nsuplogi = iniciarEndosoResp.get("pv_nsuplogi_o");
+			
+			paso = "Registra los valores en mpolizas";
+			logger.debug(paso);
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("pv_cdunieco_i"  , cdunieco);
+			params.put("pv_cdramo_i"    , cdramo);
+			params.put("pv_estado_i"    , estado);
+			params.put("pv_nmpoliza_i"  , nmpoliza);
+			params.put("pv_nmsuplem_i"  , nmsuplem);
+			params.put("pv_feefecto_i"  , feefecto);
+			params.put("pv_feproren_i"  , feproren);
+			logger.debug("EndososManager actualizaDeducibleValosit params: "+params);
+			endososDAO.actualizaVigenciaPoliza(params);
+			
+			paso = "Registra los valores en tworksup";
+			logger.debug(paso);
+			Map<String,String>mapaTworksupEnd=new LinkedHashMap<String,String>(0);
+			mapaTworksupEnd.put("pv_cdunieco_i" , cdunieco);
+			mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
+			mapaTworksupEnd.put("pv_estado_i"   , estado);
+			mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
+			mapaTworksupEnd.put("pv_cdtipsup_i" , cdtipsup);
+			mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
+			endososDAO.insertarTworksupSitTodas(mapaTworksupEnd);
+			
+			paso = "Registra los valores de tarificacion sigsvalipolEnd";
+			logger.debug(paso);
+			Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
+			mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
+			mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemen);
+			mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
+			mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
+			mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
+			mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
+			mapaSigsvalipolEnd.put("pv_nmsituac_i" , "0");
+			mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
+			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , cdtipsup);
+			endososDAO.sigsvalipolEnd(mapaSigsvalipolEnd);
+			
+			paso = "Se calcula los valores de Endoso";
+			logger.debug(paso);
+			Map<String,Object>mapaValorEndoso=new LinkedHashMap<String,Object>(0);
+			mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
+			mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
+			mapaValorEndoso.put("pv_estado_i"   , estado);
+			mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
+			mapaValorEndoso.put("pv_nmsituac_i" , "1");
+			mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
+			mapaValorEndoso.put("pv_feinival_i" , dFechaEndoso);
+			mapaValorEndoso.put("pv_cdtipsup_i" , cdtipsup);
+			endososDAO.calcularValorEndoso(mapaValorEndoso);
+			paso = "Se confirma el endoso";
+			logger.debug(paso);
+			endososDAO.confirmarEndosoB(cdunieco,cdramo,estado,nmpoliza,nmsuplem, nsuplogi, cdtipsup, null);
+			/*Validacion del WS*/
+		
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utils.join(
+				 "\n@@@@@@ " , resp
+				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
 }
