@@ -176,8 +176,7 @@ public interface EndososDAO
 			,String cdramo
 			,String estado
 			,String nmpoliza
-			,String nmsuplem
-			,String cdagente) throws Exception;
+			,String nmsuplem) throws Exception;
 
 	public void calcularRecibosCambioContratante(
 			String cdunieco

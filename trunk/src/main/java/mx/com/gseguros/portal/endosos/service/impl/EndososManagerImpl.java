@@ -833,14 +833,13 @@ public class EndososManagerImpl implements EndososManager
 			,String cdramo
 			,String estado
 			,String nmpoliza
-			,String nmsuplem
-			,String cdagente) throws Exception
+			,String nmsuplem) throws Exception
 	{
 		logger.info(""
 				+ "\n#########################################"
 				+ "\n###### calcularRecibosCambioAgente ######"
 				);
-		endososDAO.calcularRecibosCambioAgente(cdunieco,cdramo,estado,nmpoliza,nmsuplem,cdagente);
+		endososDAO.calcularRecibosCambioAgente(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
 		logger.info(""
 				+ "\n###### calcularRecibosCambioAgente ######"
 				+ "\n#########################################"

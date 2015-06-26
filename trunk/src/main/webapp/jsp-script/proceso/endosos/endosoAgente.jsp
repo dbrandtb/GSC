@@ -25,7 +25,6 @@ smap1:
 var _10_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
 var _10_formLectura;
-var _10_formAgente;
 var _10_panelPri;
 var _10_panelEndoso;
 var _10_fieldFechaEndoso;
@@ -48,7 +47,7 @@ Ext.onReady(function()
 	{
 		initComponent : function()
 		{
-			debug('Ext.form.field.ComboBox initComponent');
+//			debug('Ext.form.field.ComboBox initComponent');
 			Ext.apply(this,
 			{
 				forceSelection : 'true'
@@ -75,11 +74,13 @@ Ext.onReady(function()
     {
 		autoLoad : false
     	,model   : '_10_ModeloAgente'
-        ,proxy   :
-        {
-            type    : 'ajax'
-            ,reader : 'json'
-            ,data   : []
+        ,proxy: {
+            type: 'ajax',
+            url : _10_urlLoadAgentes,
+            reader: {
+                type: 'json',
+                root: 'slist1'
+            }
         }
     });
     ////// stores //////
@@ -98,6 +99,78 @@ Ext.onReady(function()
     			title    : 'Agente(s)'
     			,store   : _10_storeAgentes
     			,columns : [ <s:property value="imap1.columnsGrid" /> ]
+    			,tbar:[{
+		                text     : 'Cambiar Agente'
+		                ,icon    : '${ctx}/resources/fam3icons/icons/group_go.png'
+		                ,handler : function(){
+		                	if(_10_gridAgentes.getSelectionModel().hasSelection()){
+		                		var recordSel = _10_gridAgentes.getSelectionModel().getLastSelected();
+		                		
+		                		var windowAgente = Ext.create('Ext.window.Window', {
+								  title : 'Cambiar Agente ' + recordSel.get('CDAGENTE'),
+						          modal:true,
+						          width : 350,
+						          height : 150,
+						          bodyStyle:'padding:5px;',
+						          items:[{
+						    				xtype: 'displayfield',
+						    				fieldLabel: 'Agente actual',
+						    				value: recordSel.get('NOMBRE')
+						    			},
+						    			<s:property value="imap1.comboAgentes" />],
+						          buttons:[{
+						        	  text: 'Aceptar',
+						                 icon:'${ctx}/resources/fam3icons/icons/accept.png',
+							                 handler: function() {
+							                 	var comboAgente = _fieldByNameDown('NUEVOAGENTE',windowAgente);
+							                 	
+							                 	if(comboAgente.isValid() && comboAgente.getStore().find('key',comboAgente.getValue()) >= 0 ){
+								                 	recordSel.set('CDAGENTE',comboAgente.getValue());
+								                 	recordSel.set('NOMBRE',comboAgente.getRawValue());
+								                	
+								                	if(!recordSel.isModified('CDAGENTE')){
+								                		recordSel.reject();
+								                	}
+								                	
+								                	windowAgente.close();
+							                 	}else{
+							                 		comboAgente.reset();
+							                 		showMessage("Aviso","Debe seleccionar un agente.", Ext.Msg.OK, Ext.Msg.INFO);
+							                 	}
+							                 }
+						           		},{
+						        	  	 text: 'Cancelar',
+						                 icon:'${ctx}/resources/fam3icons/icons/cancel.png',
+							                 handler: function() {
+							                 	windowAgente.close();
+							                 }
+						           		} ]
+						          });
+							 	windowAgente.show();
+		                	}else{
+		                		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+		                	}
+		                	
+		                }
+		            },'-',{
+		                text     : 'Quitar Cambios'
+		                ,icon    : '${ctx}/resources/fam3icons/icons/arrow_rotate_anticlockwise.png'
+		                ,handler : function(btn,e){
+			                	Ext.Msg.show({
+		                        title: 'Confirmar acci&oacute;n',
+		                        msg   : '&iquest;Esta seguro que desea quitar todos los cambios?',
+		                        buttons: Ext.Msg.YESNO,
+		                        fn: function(buttonId, text, opt) {
+		                            if(buttonId == 'yes') {
+		                        		_10_storeAgentes.rejectChanges();    
+		                            }
+			                    },
+		                        animateTarget: btn,
+		                        icon: Ext.Msg.QUESTION
+		                    });
+		                }
+		            }
+    			]
     		});
     		this.callParent();
     	}
@@ -120,39 +193,6 @@ Ext.onReady(function()
                 [
                     _10_fieldFechaEndoso
                 ]
-            });
-            this.callParent();
-        }
-    });
-    
-    Ext.define('_10_FormAgente',
-    {
-        extend         : 'Ext.form.Panel'
-        ,initComponent : function()
-        {
-            debug('_10_FormAgente initComponent');
-            Ext.apply(this,
-            {
-                title      : 'Agente nuevo'
-                ,defaults  :
-                {
-                    style : 'margin : 5px;'
-                }
-                ,layout    :
-                {
-                    type     : 'table'
-                    ,columns : 2
-                }
-                ,items     :
-                [
-                     <s:property value="imap1.comboAgentes" />
-                ]
-                ,listeners :
-                {
-                    afterrender : function(me)
-                    {
-                    }
-                }
             });
             this.callParent();
         }
@@ -200,7 +240,6 @@ Ext.onReady(function()
         ,name       : 'fecha_endoso'
     });
     _10_panelEndoso = new _10_PanelEndoso();
-    _10_formAgente  = new _10_FormAgente();
     _10_formLectura = new _10_FormLectura();
     _10_gridAgentes = new _10_GridAgentes();
     
@@ -224,7 +263,6 @@ Ext.onReady(function()
         [
             _10_formLectura
             ,_10_gridAgentes
-            ,_10_formAgente
             ,_10_panelEndoso
         ]
     });
@@ -234,32 +272,18 @@ Ext.onReady(function()
     ////////////////////
     ////// loader //////
     _10_panelPri.setLoading(true);
-    Ext.Ajax.request(
-    {
-    	url      : _10_urlLoadAgentes
-    	,params  :
-    	{
+    _10_storeAgentes.load({
+		params: {
     		'smap1.cdunieco'  : _10_smap1.CDUNIECO
     		,'smap1.cdramo'   : _10_smap1.CDRAMO
     		,'smap1.estado'   : _10_smap1.ESTADO
     		,'smap1.nmpoliza' : _10_smap1.NMPOLIZA
     		,'smap1.nmsuplem' : _10_smap1.NMSUPLEM
-    	}
-    	,success : function (response)
-    	{
-    		_10_panelPri.setLoading(false);
-    		var json=Ext.decode(response.responseText);
-    		debug('agentes cargados:',json);
-    		if(json.success==true)
-    		{
-    			/*
-    			a.cdunieco, a.cdramo, a.estado, a.nmpoliza, a.cdagente, a.nmsuplem, a.status, a.cdtipoag, porredau, a.porparti,nombre
-    			*/
-    			_10_storeAgentes.add(json.slist1);
-    		}
-    		else
-    		{
-    			mensajeError(json.error);
+    	},
+		callback: function(records, operation, success){
+			_10_panelPri.setLoading(false);
+    		if(!success){
+    			mensajeError('Error al cargar los Agentes.');
     			//////////////////////////////////
                 ////// usa codigo del padre //////
                 /*//////////////////////////////*/
@@ -268,13 +292,8 @@ Ext.onReady(function()
                 ////// usa codigo del padre //////
                 //////////////////////////////////
     		}
-    	}
-        ,failure : function()
-        {
-        	_10_panelPri.setLoading(false);
-        	errorComunicacion();
-        }
-    });
+		}
+	});
     
     Ext.Ajax.request(
     {
@@ -323,7 +342,7 @@ function _10_confirmar()
     
     if(valido)
     {
-        valido=_10_formAgente.isValid()&&_10_panelEndoso.isValid();
+        valido = _10_panelEndoso.isValid();
         if(!valido)
         {
             datosIncompletos();
@@ -335,24 +354,49 @@ function _10_confirmar()
         /*
         a.cdunieco, a.cdramo, a.estado, a.nmpoliza, a.cdagente, a.nmsuplem, a.status, a.cdtipoag, porredau, a.porparti,nombre,cdsucurs,nmcuadro
         */
-        var slist1=[];
-        _10_storeAgentes.each(function(record)
-        {
-        	slist1.push(record.raw);
+		
+        var agentes=[];
+        _10_storeAgentes.each(function(record){
+        	var data = record.getData();
+    		if(!Ext.isEmpty(agentes[data.CDAGENTE])){
+        		mensajeWarning('Existen agentes repetidos.');
+        		valido=false;
+        	}
+    		agentes[data.CDAGENTE]=data.CDAGENTE;
         });
-        var json=
-        {
+        
+        
+        /**
+         * SI HAY AGENTES REPETIDOS 
+         */
+        if(!valido){
+        	debug('Existen agentes repetidos.');
+        	return;
+        }
+        
+        var slist1=[];
+        _10_storeAgentes.getUpdatedRecords().forEach(function(record,index,arr){
+        	var data = record.getData();
+    		data.CDAGENTEORIG = record.modified.CDAGENTE;
+    		slist1.push(data);
+        	
+        });
+        
+        if(slist1.length <= 0){
+        	mensajeWarning('No hay cambios en los agentes para realizar el endoso.');
+        	return;
+        }
+        
+        var json={
             smap1   : _10_smap1
             ,smap2  :
             {
                 fecha_endoso : Ext.Date.format(_10_fieldFechaEndoso.getValue(),'d/m/Y')
-                ,agente      : _10_formAgente.items.items[0].getValue()
-                ,nmcuadro    : _10_storeAgentes.getAt(0).get('NMCUADRO')
-                ,cdsucurs    : _10_storeAgentes.getAt(0).get('CDSUCURS')
             }
             ,slist1 : slist1
         }
         debug('datos que se enviaran:',json);
+        
         var panelMask = new Ext.LoadMask('_10_divPri', {msg:"Confirmando..."});
 		panelMask.show();
 		
