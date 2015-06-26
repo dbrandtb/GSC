@@ -64,7 +64,7 @@ public class AutenticacionAction extends PrincipalCoreAction {
 			return autenticaUsuarioAgregaLDAP();
 		}
 		
-		logger.debug("Autentificaci&acuteon,sin entrar a modo Agregar Usuarios a LDAP");
+		logger.debug("Autentificacion,sin entrar a modo Agregar Usuarios a LDAP");
 		
 		try {
 			
