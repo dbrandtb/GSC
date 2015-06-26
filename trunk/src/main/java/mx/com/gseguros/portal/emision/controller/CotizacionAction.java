@@ -3063,7 +3063,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				List<ComponenteVO>componentesRiesgo=pantallasManager.obtenerComponentes(
 						null, null, null,
-						null, null, null,
+						null, null, cdsisrol,
 						"COTIZACION_GRUPO", "RIESGO", null);
 				gc.generaComponentes(componentesRiesgo, true,true,true,false,false,false);
 				imap.put("itemsRiesgo"  , gc.getItems());
@@ -4830,6 +4830,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				params.put("pv_otvalor02" , smap1.get("cdrelconaseg"));
 				params.put("pv_otvalor03" , smap1.get("cdformaseg"));
 				params.put("pv_otvalor04" , smap1.get("cdperpag"));
+				params.put("pv_otvalor09" , smap1.get("dctocmer"));
 				params.put("pv_otvalor10" , smap1.get("tipoDerPol"));
 				params.put("pv_otvalor11" , smap1.get("montoDerPol"));
 				params.put("pv_otvalor12" , smap1.get("recargoPers"));
