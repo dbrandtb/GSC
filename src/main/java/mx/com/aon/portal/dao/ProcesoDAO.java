@@ -2996,7 +2996,9 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	
 	protected class ObtenerDocumentosPolizaMapper implements RowMapper {
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-			String cols[]=new String[]{"nmsolici","cddocume","dsdocume","feinici","ntramite","tipmov","nmsuplem","nsuplogi","editable"};
+			String cols[] = new String[] { "nmsolici", "cddocume", "dsdocume",
+					"feinici", "ntramite", "tipmov", "nmsuplem", "nsuplogi",
+					"editable", "feinicio", "fefinal" };
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
 			{
