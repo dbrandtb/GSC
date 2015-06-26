@@ -53,6 +53,7 @@ public interface CotizacionDAO
 			,String status
 			,String cdmoneda
 			,String accion
+			,String respvalogar
 			)throws Exception;
 	public Map<String,String>cargarDatosCotizacionGrupo(Map<String,String>params)throws Exception;
 	public Map<String,String>cargarDatosCotizacionGrupo2(

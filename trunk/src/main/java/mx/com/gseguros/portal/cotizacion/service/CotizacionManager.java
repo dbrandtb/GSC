@@ -59,7 +59,8 @@ public interface CotizacionManager
 			,String cdgarant
 			,String status
 			,String cdmoneda
-			,String accion)throws Exception;
+			,String accion
+			,String respvalogar)throws Exception;
 	
 	public Map<String,String> cargarDatosCotizacionGrupo(
 			String cdunieco

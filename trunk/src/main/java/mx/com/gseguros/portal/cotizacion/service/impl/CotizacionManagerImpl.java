@@ -277,23 +277,25 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdgarant
 			,String status
 			,String cdmoneda
-			,String accion)throws Exception
+			,String accion
+			,String respvalogar)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.append("\n@@@@@@ movimientoMpoligarGrupo @@@@@@")
-				.append("\n@@@@@@ cdunieco=").append(cdunieco)
-				.append("\n@@@@@@ cdramo=")  .append(cdramo)
-				.append("\n@@@@@@ estado=")  .append(estado)
-				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
-				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
-				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
-				.append("\n@@@@@@ cdgrupo=") .append(cdgrupo)
-				.append("\n@@@@@@ cdgarant=").append(cdgarant)
-				.append("\n@@@@@@ status=")  .append(status)
-				.append("\n@@@@@@ cdmoneda=").append(cdmoneda)
-				.append("\n@@@@@@ accion=")  .append(accion)
+				.append("\n@@@@@@ cdunieco=")   .append(cdunieco)
+				.append("\n@@@@@@ cdramo=")     .append(cdramo)
+				.append("\n@@@@@@ estado=")     .append(estado)
+				.append("\n@@@@@@ nmpoliza=")   .append(nmpoliza)
+				.append("\n@@@@@@ nmsuplem=")   .append(nmsuplem)
+				.append("\n@@@@@@ cdtipsit=")   .append(cdtipsit)
+				.append("\n@@@@@@ cdgrupo=")    .append(cdgrupo)
+				.append("\n@@@@@@ cdgarant=")   .append(cdgarant)
+				.append("\n@@@@@@ status=")     .append(status)
+				.append("\n@@@@@@ cdmoneda=")   .append(cdmoneda)
+				.append("\n@@@@@@ accion=")     .append(accion)
+				.append("\n@@@@@@ respvalogar=").append(respvalogar)
 				.toString()
 				);
 		cotizacionDAO.movimientoMpoligarGrupo(
@@ -308,6 +310,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,status
 				,cdmoneda
 				,accion
+				,respvalogar
 				);
 		logger.info(
 				new StringBuilder()
@@ -3342,7 +3345,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 									,grupoIteCoberturaIteCdgarant
 									,"V"      //status
 									,"001"    //cdmoneda
-									,Constantes.INSERT_MODE
+									,Constantes.INSERT_MODE, null
 									);
 							boolean grupoIteCoberturaIteTieneAtrib          = false;
 							Map<String,String>grupoIteCoberturaIteTvalogars = new HashMap<String,String>();

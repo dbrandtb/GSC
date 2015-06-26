@@ -217,20 +217,22 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,String status
 			,String cdmoneda
 			,String accion
+			,String respvalogar
 			)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
-		params.put("cdunieco" , cdunieco);
-		params.put("cdramo"   , cdramo);
-		params.put("estado"   , estado);
-		params.put("nmpoliza" , nmpoliza);
-		params.put("nmsuplem" , nmsuplem);
-		params.put("cdtipsit" , cdtipsit);
-		params.put("cdgrupo"  , cdgrupo);
-		params.put("cdgarant" , cdgarant);
-		params.put("status"   , status);
-		params.put("cdmoneda" , cdmoneda);
-		params.put("accion"   , accion);
+		params.put("cdunieco"    , cdunieco);
+		params.put("cdramo"      , cdramo);
+		params.put("estado"      , estado);
+		params.put("nmpoliza"    , nmpoliza);
+		params.put("nmsuplem"    , nmsuplem);
+		params.put("cdtipsit"    , cdtipsit);
+		params.put("cdgrupo"     , cdgrupo);
+		params.put("cdgarant"    , cdgarant);
+		params.put("status"      , status);
+		params.put("cdmoneda"    , cdmoneda);
+		params.put("accion"      , accion);
+		params.put("respvalogar" , respvalogar);
 		logger.debug(
 				new StringBuilder()
 				.append("\n************************************************")
@@ -247,17 +249,18 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		protected MovimientoMpoligarGrupo(DataSource dataSource)
 		{
 			super(dataSource,"PKG_SATELITES.P_MOV_MPOLIGAR_GRUPO");
-			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdgrupo"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdgarant" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdmoneda" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("accion"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgrupo"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgarant"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdmoneda"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("respvalogar" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
