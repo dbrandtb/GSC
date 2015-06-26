@@ -112,10 +112,6 @@ public class AutenticacionAction extends PrincipalCoreAction {
 			} 
 			return SUCCESS;
 
-		} catch (AuthenticationException ax) {
-			logger.info(ax.getMessage());
-			errorMessage = "Error en el proceso de validaci&oacute;n de usuario, detalle: " + ax.getMessage();
-			return SUCCESS;
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 			errorMessage = "Error en el proceso de validaci&oacute;n de usuario, detalle: " + ex.getMessage();
