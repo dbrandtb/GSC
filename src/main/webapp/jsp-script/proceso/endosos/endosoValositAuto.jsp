@@ -46,7 +46,7 @@ for(var i in _p36_gridColumns)
     )
     {
         col.editor.fieldLabel = col.text;
-        col.editor.width      = 300;
+        //col.editor.width      = 300;
         col.editor.allowBlank = false;
         _p36_itemsEdicion.push(col.editor);
     }
