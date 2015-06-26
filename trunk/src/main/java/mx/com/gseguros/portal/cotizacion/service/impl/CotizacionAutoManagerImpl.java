@@ -2255,7 +2255,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			Map<String,String>                   bufferTiposit = new HashMap<String,String>();
 			
 			setCheckpoint("Iniciando procesador de hoja de calculo");
-			FileInputStream input       = new FileInputStream(excel);;
+			FileInputStream input       = new FileInputStream(excel);
 			XSSFWorkbook    workbook    = new XSSFWorkbook(input);
 			XSSFSheet       sheet       = workbook.getSheetAt(0);
 			Iterator<Row>   rowIterator = sheet.iterator();

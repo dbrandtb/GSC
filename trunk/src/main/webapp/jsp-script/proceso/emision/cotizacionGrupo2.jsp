@@ -81,6 +81,7 @@ var _p25_urlPantallaClausulasPoliza     = '<s:url namespace="/emision"         a
 var _p25_urlRecuperacionSimpleLista     = '<s:url namespace="/emision"         action="recuperacionSimpleLista"          />';
 var _p25_urlRecuperacionSimple          = '<s:url namespace="/emision"         action="recuperacionSimple"               />';
 var _p25_urlPantallaAgentes             = '<s:url namespace="/flujocotizacion" action="principal"                        />';
+var _p25_urlComplementoCotizacion       = '<s:url namespace="/emision"         action="complementoSaludGrupo"            />';
 
 var _p25_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports" />';
 var _p25_reportsServerUser       = '<s:text name="pass.servidor.reports" />';
@@ -4881,6 +4882,266 @@ function _p25_agentes()
         }
     }).show());
     debug('<_p25_agentes');
+}
+
+function _p25_mostrarVentanaComplementoCotizacion(complemento,callback)
+{
+    debug('>_p25_mostrarVentanaComplementoCotizacion');
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title           : 'Complemento de '+(complemento=='C'?'cotizaci&oacute;n':'emisi&oacute;n')
+        ,width          : 500
+        ,minHeight      : 100
+        ,maxHeight      : 400
+        ,modal          : true
+        ,closeOperation : 'destroy'
+        ,items          :
+        [
+            {
+                xtype     : 'form'
+                ,url      : _p25_urlComplementoCotizacion
+                ,border   : 0
+                ,defaults : { style : 'margin:5px;' }
+                ,items    :
+                [
+                    {
+                        xtype  : 'displayfield'
+                        ,value : 'Puede subir un complemento para agregar asegurados a la '+(complemento=='C'?'cotizaci&oacute;n':'emisi&oacute;n')
+                    }
+                    ,{
+                        xtype       : 'filefield'
+                        ,fieldLabel : 'Censo de asegurados'
+                        ,name       : 'censo'
+                        ,buttonText : 'Examinar...'
+                        ,allowBlank : false
+                        ,buttonOnly : false
+                        ,width      : 450
+                        ,cAccept    : ['xls','xlsx']
+                        ,msgTarget  : 'side'
+                        ,listeners  :
+                        {
+                            change : function(me)
+                            {
+                                var indexofPeriod = me.getValue().lastIndexOf("."),
+                                uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
+                                if (!Ext.Array.contains(this.cAccept, uploadedExtension))
+                                {
+                                    centrarVentanaInterna(Ext.MessageBox.show(
+                                    {
+                                        title   : 'Error de tipo de archivo',
+                                        msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
+                                        buttons : Ext.Msg.OK,
+                                        icon    : Ext.Msg.WARNING
+                                    }));
+                                    me.reset();
+                                }
+                            }
+                        }
+                    }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text     : 'Complementar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+                        ,handler : function(me)
+                        {
+                            debug('>complemento cotizacion button click');
+                            var form = me.up('form');
+                            if(form.isValid())
+                            {
+                                form.setLoading(true);
+                                form.submit(
+                                {
+                                    params :
+                                    {
+                                        'smap1.cdunieco'     : _p25_smap1.cdunieco
+                                        ,'smap1.cdramo'      : _p25_smap1.cdramo
+                                        ,'smap1.estado'      : _p25_smap1.estado
+                                        ,'smap1.nmpoliza'    : _p25_smap1.nmpoliza
+                                        ,'smap1.complemento' : complemento
+                                        ,'smap1.ntramite'    : _p25_smap1.ntramite
+                                    }
+                                    ,success : function(form2,action)
+                                    {
+                                        form.setLoading(false);
+                                        var ck = 'Procesando respuesta al subir complemento';
+                                        try
+                                        {
+                                            var json = Ext.decode(action.response.responseText);
+                                            debug('### submit:',json);
+                                            if(json.exito)
+                                            {
+                                                me.up('window').destroy();
+                                                var numRand      = Math.floor((Math.random() * 100000) + 1);
+                                                var nombreModelo = '_modelo'+numRand;
+                                                var fields  = [];
+                                                var columns = [];
+                                                
+                                                if(Number(json.smap1.filasProcesadas)>0)
+                                                {
+                                                    var record = json.slist1[0];
+                                                    debug('record:',record);
+                                                    for(var att in record)
+                                                    {
+                                                        if(att.substring(0,1)=='_')
+                                                        {
+                                                            var col =
+                                                            {
+                                                                dataIndex : att.substring(att.lastIndexOf('_')+1)
+                                                                ,text     : record[att]
+                                                                ,orden    : ''+att
+                                                            };
+                                                            columns.push(col);
+                                                        }
+                                                        else
+                                                        {
+                                                            fields.push(att);
+                                                        }
+                                                    }
+                                                }
+                                                
+                                                for(var i=0;i<columns.length-1;i++)
+                                                {
+                                                    for(var j=i+1;j<columns.length;j++)
+                                                    {
+                                                        if(columns[i].orden>columns[j].orden)
+                                                        {
+                                                            var aux    = columns[i];
+                                                            columns[i] = columns[j];
+                                                            columns[j] = aux;
+                                                        }
+                                                    }
+                                                }
+                                                
+                                                debug('fields:',fields,'columns:',columns);
+                                                
+                                                Ext.define(nombreModelo,
+                                                {
+                                                    extend  : 'Ext.data.Model'
+                                                    ,fields : fields
+                                                });
+                                                
+                                                var store = Ext.create('Ext.data.Store',
+                                                {
+                                                    model : nombreModelo
+                                                    ,data : json.slist1
+                                                });
+                                                
+                                                debug('store.getRange():',store.getRange());
+                                                
+                                                centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                                {
+                                                    width     : 600
+                                                    ,height   : 500
+                                                    ,title    : 'Revisar asegurados del complemento'
+                                                    ,closable : false
+                                                    ,items    :
+                                                    [
+                                                        Ext.create('Ext.panel.Panel',
+                                                        {
+                                                            layout    : 'hbox'
+                                                            ,border   : 0
+                                                            ,defaults : { style : 'margin:5px;' }
+                                                            ,height   : 40
+                                                            ,items    :
+                                                            [
+                                                                {
+                                                                    xtype       : 'displayfield'
+                                                                    ,fieldLabel : 'Filas leidas'
+                                                                    ,value      : json.smap1.filasLeidas
+                                                                }
+                                                                ,{
+                                                                    xtype       : 'displayfield'
+                                                                    ,fieldLabel : 'Filas procesadas'
+                                                                    ,value      : json.smap1.filasProcesadas
+                                                                }
+                                                                ,{
+                                                                    xtype       : 'displayfield'
+                                                                    ,fieldLabel : 'Filas con error'
+                                                                    ,value      : json.smap1.filasErrores
+                                                                }
+                                                                ,{
+                                                                    xtype    : 'button'
+                                                                    ,text    : 'Ver errores'
+                                                                    ,hidden  : Number(json.smap1.filasErrores)==0
+                                                                    ,handler : function()
+                                                                    {
+                                                                        centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                                                        {
+                                                                            modal        : true
+                                                                            ,closeAction : 'destroy'
+                                                                            ,title       : 'Errores al procesar censo'
+                                                                            ,width       : 800
+                                                                            ,height      : 500
+                                                                            ,items       :
+                                                                            [
+                                                                                {
+                                                                                    xtype       : 'textarea'
+                                                                                    ,fieldStyle : 'font-family: monospace'
+                                                                                    ,value      : json.smap1.erroresCenso
+                                                                                    ,readOnly   : true
+                                                                                    ,width      : 780
+                                                                                    ,height     : 440
+                                                                                }
+                                                                            ]
+                                                                        }).show());
+                                                                    }
+                                                                }
+                                                            ]
+                                                        })
+                                                        ,Ext.create('Ext.grid.Panel',
+                                                        {
+                                                            height      : 350
+                                                            ,columns    : columns
+                                                            ,store      : store
+                                                            ,viewConfig : viewConfigAutoSize
+                                                        })
+                                                    ]
+                                                    ,buttonAlign : 'center'
+                                                    ,buttons     :
+                                                    [
+                                                        {
+                                                            text     : 'Aceptar y continuar'
+                                                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                                            ,handler : function(){ callback(); }
+                                                        }
+                                                        ,{
+                                                            text     : 'Agregar m&aacute;s'
+                                                            ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
+                                                            ,handler : function(me){ me.up('window').destroy(); }
+                                                        }
+                                                    ]
+                                                }).show());
+                                            }
+                                            else
+                                            {
+                                                mensajeError(json.respuesta);
+                                            }
+                                        }
+                                        catch(e)
+                                        {
+                                            manejaException(e,ck);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        form.setLoading(false);
+                                        errorComunicacion('Error al subir archivo de complemento');
+                                    }
+                                })
+                            }
+                            else
+                            {
+                                datosIncompletos();
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }).show());
 }
 ////// funciones //////
 </script>

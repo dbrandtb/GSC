@@ -59,7 +59,6 @@ import mx.com.gseguros.ws.tipocambio.service.TipoCambioDolarGSService;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -68,6 +67,8 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -76,7 +77,7 @@ public class CotizacionAction extends PrincipalCoreAction
 {
 
 	private static final long       serialVersionUID = 3237792502541753915L;
-	private static final Logger     logger           = Logger.getLogger(CotizacionAction.class);
+	private static final Logger     logger           = LoggerFactory.getLogger(CotizacionAction.class);
 	private static SimpleDateFormat renderFechas     = new SimpleDateFormat("dd/MM/yyyy"); 
 	private static SimpleDateFormat renderHora       = new SimpleDateFormat  ("HH:mm");
 	
@@ -6537,6 +6538,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				.append("\n##########################################")
 				.append("\n###### cargarAseguradosExtraprimas2 ######")
 				.append("\n######smap1=").append(smap1)
+				.toString()
 				);
 		
 		success = true;
@@ -8353,6 +8355,71 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			return "";
 		}
+	}
+	
+	public String complementoSaludGrupo()
+	{
+		logger.debug(Utils.join(
+				 "\n###################################"
+				,"\n###### complementoSaludGrupo ######"
+				,"\n###### smap1="         , smap1
+				,"\n###### censo="         , censo
+				,"\n###### censoFileName=" , censoFileName
+				));
+		try
+		{
+			success = true;
+			exito   = false;
+			
+			UserVO user = Utils.validateSession(session);
+			
+			Utils.validate(smap1 , "No se recibieron datos");
+			
+			String cdunieco    = smap1.get("cdunieco");
+			String cdramo      = smap1.get("cdramo");
+			String estado      = smap1.get("estado");
+			String nmpoliza    = smap1.get("nmpoliza");
+			String ntramite    = smap1.get("ntramite");
+			String complemento = smap1.get("complemento");
+			
+			Utils.validate(
+					cdunieco     , "No se recibio la sucursal"
+					,cdramo      , "No se recibio el producto"
+					,estado      , "No se recibio el estado"
+					,nmpoliza    , "No se recibio el estado"
+					,ntramite    , "No se recibio el tramite"
+					,complemento , "No se recibio el complemento"
+					);
+			
+			Map<String,Object> managerResp =cotizacionManager.complementoSaludGrupo(
+					ntramite
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,complemento
+					,censo
+					);
+			
+			smap1.put("erroresCenso"    , (String)managerResp.get("erroresCenso"));
+			smap1.put("filasLeidas"     , (String)managerResp.get("filasLeidas"));
+			smap1.put("filasProcesadas" , (String)managerResp.get("filasProcesadas"));
+			smap1.put("filasErrores"    , (String)managerResp.get("filasErrores"));
+			
+			slist1 = (List<Map<String,String>>)managerResp.get("registros");
+			
+			exito = true;
+			
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		logger.debug(Utils.join(
+				 "\n###### complementoSaludGrupo ######"
+				,"\n###################################"
+				));
+		return SUCCESS;
 	}
 	
 	///////////////////////////////
