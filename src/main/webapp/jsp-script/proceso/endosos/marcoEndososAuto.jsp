@@ -311,8 +311,12 @@ Ext.onReady(function()
     ////// stores //////
     
     ////// componentes //////
+    _p34_formBusqItems.forEach(function(elemento){
+    	elemento.width = 235;
+        elemento.labelWidth = 80;
+        
+    });
     ////// componentes //////
-    
     ////// contenido //////
     Ext.create('Ext.panel.Panel',
     {
