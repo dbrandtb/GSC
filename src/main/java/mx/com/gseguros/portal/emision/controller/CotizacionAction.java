@@ -5632,7 +5632,19 @@ public class CotizacionAction extends PrincipalCoreAction
 						if(Integer.parseInt(asisinte)>0)
 						{
 							cotizacionManager.movimientoMpoligarGrupo(
-									cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.INSERT_MODE);
+									cdunieco
+									,cdramo
+									,"W"
+									,nmpoliza
+									,"0"
+									,cdtipsit
+									,cdgrupo
+									,cdgarant
+									,"V"
+									,"001"
+									,Constantes.INSERT_MODE
+									,"S"
+									);
 							
 							cotizacionManager.movimientoTvalogarGrupo(
 									cdunieco
@@ -5651,7 +5663,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						else
 						{
 							cotizacionManager.movimientoMpoligarGrupo(
-									cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.DELETE_MODE);
+									cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.DELETE_MODE, null);
 						}
 						
 						//EMERGENCIA EXTRANJERO
@@ -5660,12 +5672,12 @@ public class CotizacionAction extends PrincipalCoreAction
 						if(emerextr.equalsIgnoreCase("S"))
 						{
 							cotizacionManager.movimientoMpoligarGrupo(
-									cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.INSERT_MODE);
+									cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.INSERT_MODE, null);
 						}
 						else
 						{
 							cotizacionManager.movimientoMpoligarGrupo(
-									cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.DELETE_MODE);
+									cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.DELETE_MODE, null);
 						}
 					}
 				}
@@ -5687,7 +5699,7 @@ public class CotizacionAction extends PrincipalCoreAction
 								if(amparada)
 								{
 									cotizacionManager.movimientoMpoligarGrupo(
-											cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.INSERT_MODE);
+											cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.INSERT_MODE, null);
 									//buscar cdatribus
 									boolean hayAtributos=false;
 									Map<String,String>listaCdatribu=new HashMap<String,String>();
@@ -5718,7 +5730,7 @@ public class CotizacionAction extends PrincipalCoreAction
 								else
 								{
 									cotizacionManager.movimientoMpoligarGrupo(
-											cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.DELETE_MODE);
+											cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.DELETE_MODE, null);
 								}
 							//}
 						}
