@@ -62,7 +62,7 @@ public class LoginManagerImpl implements LoginManager {
 	private String Ldap_security_principal;
 	private String Ldap_security_credentials;
 	private String Ldap_base_search;
-
+	
 
 	public UserVO obtenerDatosUsuario(String user) throws Exception {
 
@@ -119,6 +119,7 @@ public class LoginManagerImpl implements LoginManager {
 
 	public boolean validaUsuarioLDAP(boolean unicamenteExiste, String user,
 			String password) throws Exception {
+		boolean existeUsuario = false;
 		DirContext ctx;
 //		logger.debug("URLLDAP=" + Ldap_provider_url);
 //		logger.debug("ContextoLDAP=" + Ldap_factory_initial);
@@ -129,7 +130,7 @@ public class LoginManagerImpl implements LoginManager {
 
 		Hashtable env = obtieneDatosConexionLDAP(Ldap_security_principal,
 				Ldap_security_credentials);
-		boolean existeUsuario = false;
+		
 		ctx = new InitialLdapContext(env, null);
 
 		SearchControls searchCtls = new SearchControls();
@@ -163,23 +164,19 @@ public class LoginManagerImpl implements LoginManager {
 		return existeUsuario;
 	}
 
-	public boolean validaDatosConexionLDAP(String dn, String password) {
+	public boolean validaDatosConexionLDAP(String dn, String password) throws Exception{
 		boolean validadaUsuario = false;
 		Hashtable env1 = obtieneDatosConexionLDAP(dn, password);
-		try {
 			DirContext ctx1 = new InitialLdapContext(env1, null);
 			validadaUsuario = true;
 			ctx1.close();
-		} catch (NamingException e) {
-			logger.error("Error en la validacion LDAP " + e.getMessage());
-		}
 		return validadaUsuario;
 	}
 
 	public Hashtable obtieneDatosConexionLDAP(String user, String pass) {
 		Hashtable<String, String> env = new Hashtable<String, String>();
 		try {
-			env.put(Context.INITIAL_CONTEXT_FACTORY, Ldap_factory_initial);
+			env.put(Context.INITIAL_CONTEXT_FACTORY, Ldap_factory_initial);	
 			env.put(Context.SECURITY_AUTHENTICATION,
 					Ldap_security_authentication);
 			env.put(Context.SECURITY_PRINCIPAL, user);
