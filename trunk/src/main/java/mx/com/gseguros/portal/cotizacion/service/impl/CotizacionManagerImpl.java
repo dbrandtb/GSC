@@ -2379,6 +2379,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 				//pipes para censo solo
 				if(esCensoSolo)
 				{
+					
+					Map<Integer,String>  familias       = new LinkedHashMap<Integer,String>();
+					Map<Integer,Boolean> estadoFamilias = new LinkedHashMap<Integer,Boolean>();
+					Map<Integer,Integer> errorFamilia   = new LinkedHashMap<Integer,Integer>();
+					Map<Integer,String>  titulares      = new LinkedHashMap<Integer,String>();
+					
 					//Iterate through each rows one by one
 					logger.debug(
 							new StringBuilder()
@@ -2387,7 +2393,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 							.toString()
 							);
 		            Iterator<Row> rowIterator = sheet.iterator();
-		            int fila = 0;
+		            int           fila        = 0;
+		            int           nFamilia    = 0;
 		            while (rowIterator.hasNext()&&resp.isExito()) 
 		            {
 		            	boolean       filaBuena      = true;
@@ -2401,6 +2408,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                fila        = fila + 1;
 		                nSituac     = nSituac + 1;
 		                filasLeidas = filasLeidas + 1;
+		                
+		                String nombre = "";
 		                
 		                try
 		                {	
@@ -2419,6 +2428,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
 			                				:"|"
 			                );
+			                
+			                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():""," ");
 		                }
 		                catch(Exception ex)
 		                {
@@ -2446,6 +2457,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
 			                				:"|"
 			                );
+			                
+			                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():""," ");
 		                }
 		                catch(Exception ex)
 		                {
@@ -2473,6 +2486,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
 			                				:"|"
 			                		);
+			                
+			                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():"");
 		                }
 		                catch(Exception ex)
 		                {
@@ -2575,6 +2590,14 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                		}
 			                logger.debug(Utils.join("PARENTESCO: ",parentesco,"|"));
 			                bufferLinea.append(Utils.join(parentesco,"|"));
+			                
+			                if("T".equals(parentesco))
+			                {
+			                	nFamilia++;
+			                	familias.put(nFamilia,"");
+			                	estadoFamilias.put(nFamilia,true);
+			                	titulares.put(nFamilia,nombre);
+			                }
 		                }
 		                catch(Exception ex)
 		                {
@@ -2748,18 +2771,41 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                
 		                if(filaBuena)
 		                {
-		                	output.print(bufferLinea.toString());
+		                	familias.put(nFamilia,Utils.join(familias.get(nFamilia),bufferLinea.toString()));
 		                	filasProcesadas = filasProcesadas + 1;
 		                }
 		                else
 		                {
 		                	filasErrores = filasErrores + 1;
 		                	bufferErroresCenso.append(Utils.join(": ",bufferLineaStr.toString(),"\n"));
+		                	estadoFamilias.put(nFamilia,false);
+		                	
+		                	if(!errorFamilia.containsKey(nFamilia))
+		                	{
+		                		errorFamilia.put(nFamilia,fila);
+		                	}
 		                }
 		            }
 		            
 		            try
 		            {
+			            logger.debug("\nFamilias: {}\nEstado familias: {}\nErrorFamilia: {}\nTitulares: {}"
+			            		,familias,estadoFamilias,errorFamilia,titulares);
+			            
+			            for(Entry<Integer,Boolean>en:estadoFamilias.entrySet())
+			            {
+			            	int     n = en.getKey();
+			            	boolean v = en.getValue();
+			            	if(v)
+			            	{
+			            		output.print(familias.get(n));
+			            	}
+			            	else
+			            	{
+			            		bufferErroresCenso.append(Utils.join("La familia ",n," del titular '",titulares.get(n),"' no fue incluida por error en la fila ",errorFamilia.get(n),"\n"));
+			            	}
+			            }
+			            
 		                input.close();
 		            }
 		            catch(IOException ex)
@@ -4053,10 +4099,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 						);
 				Iterator<Row> rowIterator        = sheet.iterator();
 	            int           fila               = 0;
+	            int           nFamilia           = 0;
 	            StringBuilder bufferErroresCenso = new StringBuilder();
 	            int           filasLeidas        = 0;
 	            int           filasProcesadas    = 0;
 	            int           filasError         = 0;
+	            
+	            Map<Integer,String>  familias       = new LinkedHashMap<Integer,String>();
+				Map<Integer,Boolean> estadoFamilias = new LinkedHashMap<Integer,Boolean>();
+				Map<Integer,Integer> errorFamilia   = new LinkedHashMap<Integer,Integer>();
+				Map<Integer,String>  titulares      = new LinkedHashMap<Integer,String>();
 	            
 	            while (rowIterator.hasNext()&&resp.isExito()) 
 	            {
@@ -4067,7 +4119,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                StringBuilder bufferLineaStr = new StringBuilder();
 	                boolean       filaBuena      = true;
 	                
-	                fila = fila + 1;
+	                fila        = fila + 1;
+	                filasLeidas = filasLeidas + 1;
+	                
+	                String parentesco = null;
+	                String nombre     = "";
 	                
 	                try
                 	{
@@ -4095,7 +4151,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                
 	                try
                 	{
-	                	String parentesco = row.getCell(1).getStringCellValue();
+	                	parentesco = row.getCell(1).getStringCellValue();
 	                	if(StringUtils.isEmpty(parentesco)
                 				||(!parentesco.equals("T")
                 						&&!parentesco.equals("H")
@@ -4142,6 +4198,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		.append("|")
 		                		.toString()
 		                		);
+		                
+		                nombre = Utils.join(nombre,row.getCell(2).getStringCellValue()," ");
                 	}
 	                catch(Exception ex)
 	                {
@@ -4166,6 +4224,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		.append("|")
 		                		.toString()
 		                		);
+		                
+		                nombre = Utils.join(nombre,row.getCell(3).getStringCellValue()," ");
                 	}
 	                catch(Exception ex)
 	                {
@@ -4190,6 +4250,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		.append("|")
 		                		.toString()
 		                		);
+		                
+		                nombre = Utils.join(nombre,row.getCell(4).getStringCellValue()," ");
                 	}
 	                catch(Exception ex)
 	                {
@@ -4219,6 +4281,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
 		                				:"|"
 		                		);
+		                
+		                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():"");
+		                
+		                if("T".equals(parentesco))
+		                {
+		                	nFamilia++;
+		                	familias.put(nFamilia,"");
+		                	estadoFamilias.put(nFamilia,true);
+		                	titulares.put(nFamilia,nombre);
+		                }
                 	}
 	                catch(Exception ex)
 	                {
@@ -4602,23 +4674,45 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(18)),"-"));
 	                }
 	                
-	                bufferLinea.append("\n");
 	                logger.debug("** NUEVA_FILA **");
 	                
 	                if(filaBuena)
 	                {
-	                	output.println(bufferLinea.toString());
+	                	familias.put(nFamilia,Utils.join(familias.get(nFamilia),bufferLinea.toString(),"\n"));
 	                	filasProcesadas = filasProcesadas + 1;
 	                }
 	                else
 	                {
 	                	filasError = filasError + 1;
 	                	bufferErroresCenso.append(Utils.join(": ",bufferLineaStr.toString(),"\n"));
+	                	estadoFamilias.put(nFamilia,false);
+	                	
+	                	if(!errorFamilia.containsKey(nFamilia))
+	                	{
+	                		errorFamilia.put(nFamilia,fila);
+	                	}
 	                }
 	            }
 	            
 	            if(resp.isExito())
 	            {
+	            	logger.debug("\nFamilias: {}\nEstado familias: {}\nErrorFamilia: {}\nTitulares: {}"
+		            		,familias,estadoFamilias,errorFamilia,titulares);
+		            
+		            for(Entry<Integer,Boolean>en:estadoFamilias.entrySet())
+		            {
+		            	int     n = en.getKey();
+		            	boolean v = en.getValue();
+		            	if(v)
+		            	{
+		            		output.print(familias.get(n));
+		            	}
+		            	else
+		            	{
+		            		bufferErroresCenso.append(Utils.join("La familia ",n," del titular '",titulares.get(n),"' no fue incluida por error en la fila ",errorFamilia.get(n),"\n"));
+		            	}
+		            }
+		            
 	            	resp.getSmap().put("erroresCenso"    , bufferErroresCenso.toString());
 	            	resp.getSmap().put("filasLeidas"     , Integer.toString(filasLeidas));
 	            	resp.getSmap().put("filasProcesadas" , Integer.toString(filasProcesadas));

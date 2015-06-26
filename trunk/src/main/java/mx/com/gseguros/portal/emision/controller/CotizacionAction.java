@@ -3889,10 +3889,16 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 	            Iterator<Row> rowIterator        = sheet.iterator();
 	            int           fila               = 0;
+	            int           nFamilia           = 0;
 	            StringBuilder bufferErroresCenso = new StringBuilder();
 	            int           filasLeidas        = 0;
 	            int           filasProcesadas    = 0;
 	            int           filasError         = 0;
+	            
+	            Map<Integer,String>  familias       = new LinkedHashMap<Integer,String>();
+				Map<Integer,Boolean> estadoFamilias = new LinkedHashMap<Integer,Boolean>();
+				Map<Integer,Integer> errorFamilia   = new LinkedHashMap<Integer,Integer>();
+				Map<Integer,String>  titulares      = new LinkedHashMap<Integer,String>();
 	            
 	            while (rowIterator.hasNext()&&exito) 
 	            {
@@ -3905,6 +3911,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                fila        = fila + 1;
 	                filasLeidas = filasLeidas + 1;
+	                
+	                String parentesco = null;
+	                String nombre     = "";
 	                
 	                try
                 	{
@@ -3927,7 +3936,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                try
                 	{
-	                	String parentesco = row.getCell(1).getStringCellValue();
+	                	parentesco = row.getCell(1).getStringCellValue();
 	                	if(!"T".equalsIgnoreCase(parentesco)
 	                			&&!"C".equalsIgnoreCase(parentesco)
 	                			&&!"H".equalsIgnoreCase(parentesco)
@@ -3962,6 +3971,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		                bufferLinea.append(
 		                		row.getCell(2).getStringCellValue()+"|"
 		                		);
+		                
+		                nombre = Utils.join(nombre,row.getCell(2).getStringCellValue()," ");
                 	}
 	                catch(Exception ex)
 	                {
@@ -3981,6 +3992,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                bufferLinea.append(
 		                		row.getCell(3).getStringCellValue()+"|"
 		                		);
+		                nombre = Utils.join(nombre,row.getCell(3).getStringCellValue()," ");
                 	}
 	                catch(Exception ex)
 	                {
@@ -4000,6 +4012,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                bufferLinea.append(
 		                		row.getCell(4).getStringCellValue()+"|"
 		                		);
+		                nombre = Utils.join(nombre,row.getCell(4).getStringCellValue()," ");
                 	}
 	                catch(Exception ex)
 	                {
@@ -4020,6 +4033,15 @@ public class CotizacionAction extends PrincipalCoreAction
 		                bufferLinea.append(
 		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
 		                		);
+		                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():"");
+		                
+		                if("T".equals(parentesco))
+		                {
+		                	nFamilia++;
+		                	familias.put(nFamilia,"");
+		                	estadoFamilias.put(nFamilia,true);
+		                	titulares.put(nFamilia,nombre);
+		                }
                 	}
 	                catch(Exception ex)
 	                {
@@ -4318,18 +4340,41 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                if(filaBuena)
 	                {
-	                	output.println(bufferLinea.toString());
+	                	familias.put(nFamilia,Utils.join(familias.get(nFamilia),bufferLinea.toString(),"\n"));
 	                	filasProcesadas = filasProcesadas + 1;
 	                }
 	                else
 	                {
 	                	filasError = filasError + 1;
 	                	bufferErroresCenso.append(Utils.join(": ",bufferLineaStr.toString(),"\n"));
+	                	estadoFamilias.put(nFamilia,false);
+	                	
+	                	if(!errorFamilia.containsKey(nFamilia))
+	                	{
+	                		errorFamilia.put(nFamilia,fila);
+	                	}
 	                }
 	            }
 	            
 	            if(exito)
 				{
+	            	logger.debug("\nFamilias: {}\nEstado familias: {}\nErrorFamilia: {}\nTitulares: {}"
+		            		,familias,estadoFamilias,errorFamilia,titulares);
+		            
+		            for(Entry<Integer,Boolean>en:estadoFamilias.entrySet())
+		            {
+		            	int     n = en.getKey();
+		            	boolean v = en.getValue();
+		            	if(v)
+		            	{
+		            		output.print(familias.get(n));
+		            	}
+		            	else
+		            	{
+		            		bufferErroresCenso.append(Utils.join("La familia ",n," del titular '",titulares.get(n),"' no fue incluida por error en la fila ",errorFamilia.get(n),"\n"));
+		            	}
+		            }
+		            
 					smap1.put("erroresCenso"    , bufferErroresCenso.toString());
 					smap1.put("filasLeidas"     , Integer.toString(filasLeidas));
 					smap1.put("filasProcesadas" , Integer.toString(filasProcesadas));
@@ -4837,6 +4882,12 @@ public class CotizacionAction extends PrincipalCoreAction
 					
 					if(esCensoSolo)
 					{
+						
+						Map<Integer,String>  familias       = new LinkedHashMap<Integer,String>();
+						Map<Integer,Boolean> estadoFamilias = new LinkedHashMap<Integer,Boolean>();
+						Map<Integer,Integer> errorFamilia   = new LinkedHashMap<Integer,Integer>();
+						Map<Integer,String>  titulares      = new LinkedHashMap<Integer,String>();
+						
 						//Iterate through each rows one by one
 						logger.info(""
 								+ "\n##############################################"
@@ -4844,6 +4895,7 @@ public class CotizacionAction extends PrincipalCoreAction
 								);
 			            Iterator<Row> rowIterator = sheet.iterator();
 			            int           fila        = 0;
+			            int           nFamilia    = 0;
 			            while (rowIterator.hasNext()&&exito) 
 			            {
 			            	boolean       filaBuena      = true;
@@ -4858,11 +4910,14 @@ public class CotizacionAction extends PrincipalCoreAction
 			                nSituac     = nSituac + 1;
 			                filasLeidas = filasLeidas + 1;
 			                
+			                String nombre = "";
+			                
 		                    try
 			                {
 				                auxCell=row.getCell(0);
 				                logger.info("NOMBRE: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
 				                bufferLinea.append(Utils.join(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+				                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():""," ");
 			                }
 			                catch(Exception ex)
 			                {
@@ -4879,6 +4934,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				                auxCell=row.getCell(1);
 				                logger.info("APELLIDO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
 				                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+				                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():""," ");
 			                }
 			                catch(Exception ex)
 			                {
@@ -4895,6 +4951,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				                auxCell=row.getCell(2);
 				                logger.info("APELLIDO 2: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
 				                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+				                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():"");
 			                }
 			                catch(Exception ex)
 			                {
@@ -4980,6 +5037,14 @@ public class CotizacionAction extends PrincipalCoreAction
 		                		}
 				                logger.info("PARENTESCO: "+parentesco+"|");
 				                bufferLinea.append(parentesco+"|");
+				                
+				                if("T".equals(parentesco))
+				                {
+				                	nFamilia++;
+				                	familias.put(nFamilia,"");
+				                	estadoFamilias.put(nFamilia,true);
+				                	titulares.put(nFamilia,nombre);
+				                }
 			                }
 			                catch(Exception ex)
 			                {
@@ -5102,15 +5167,39 @@ public class CotizacionAction extends PrincipalCoreAction
 			                
 			                if(filaBuena)
 			                {
-			                	output.print(bufferLinea.toString());
+			                	familias.put(nFamilia,Utils.join(familias.get(nFamilia),bufferLinea.toString()));
 			                	filasProcesadas = filasProcesadas + 1;
 			                }
 			                else
 			                {
 			                	filasErrores = filasErrores + 1;
 			                	bufferErroresCenso.append(Utils.join(": ",bufferLineaStr.toString(),"\n"));
+			                	estadoFamilias.put(nFamilia,false);
+			                	
+			                	if(!errorFamilia.containsKey(nFamilia))
+			                	{
+			                		errorFamilia.put(nFamilia,fila);
+			                	}
 			                }
 			            }
+			            
+			            logger.debug("\nFamilias: {}\nEstado familias: {}\nErrorFamilia: {}\nTitulares: {}"
+			            		,familias,estadoFamilias,errorFamilia,titulares);
+			            
+			            for(Entry<Integer,Boolean>en:estadoFamilias.entrySet())
+			            {
+			            	int     n = en.getKey();
+			            	boolean v = en.getValue();
+			            	if(v)
+			            	{
+			            		output.print(familias.get(n));
+			            	}
+			            	else
+			            	{
+			            		bufferErroresCenso.append(Utils.join("La familia ",n," del titular '",titulares.get(n),"' no fue incluida por error en la fila ",errorFamilia.get(n),"\n"));
+			            	}
+			            }
+			            
 			            input.close();
 			            output.close();
 			            logger.info(""
