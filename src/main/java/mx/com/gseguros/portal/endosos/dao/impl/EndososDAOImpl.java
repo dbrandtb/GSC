@@ -1852,8 +1852,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			,String cdramo
 			,String estado
 			,String nmpoliza
-			,String nmsuplem
-			,String cdagente) throws Exception
+			,String nmsuplem) throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdunieco" , cdunieco);
@@ -1861,7 +1860,6 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
-		params.put("cdagente" , cdagente);
 		logger.info("params :"+params);
 		logger.debug(
 				new StringBuilder()
@@ -1886,7 +1884,6 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

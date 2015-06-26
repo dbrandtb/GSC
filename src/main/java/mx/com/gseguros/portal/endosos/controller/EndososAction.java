@@ -8057,12 +8057,6 @@ public class EndososAction extends PrincipalCoreAction
 			String cdusuari            = usuario.getUser();
 			String proceso             = "END";
 			String cdtipsup            = TipoEndoso.CAMBIO_AGENTE.getCdTipSup().toString();
-			String cdagente            = smap2.get("agente");
-			String tipoAgentePrincipal = "1";
-			String sesionComision      = "0";
-			String porcenParticip      = "100";
-			String nmcuadro            = smap2.get("nmcuadro");
-			String cdsucurs            = smap2.get("cdsucurs");
 			String comentariosEndoso   = "";
 			String cdtipsit            = smap1.get("CDTIPSIT");
 			String ntramite            = smap1.get("NTRAMITE");
@@ -8075,6 +8069,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			//matar anteriores
 			for(Map<String,String>agenteIte:slist1) {
+				String cdagenteOrigIte = agenteIte.get("CDAGENTEORIG");
 				String cdagenteIte = agenteIte.get("CDAGENTE");
 				String cdtipoagIte = agenteIte.get("CDTIPOAG");
 				String porredauIte = agenteIte.get("PORREDAU");
@@ -8087,19 +8082,19 @@ public class EndososAction extends PrincipalCoreAction
 				 * PKG_SATELITES.P_MOV_MPOLIAGE
 				 */
 				endososManager.pMovMpoliage(cdunieco, cdramo, estado, nmpoliza,
-						cdagenteIte, nmsuplem, Constantes.STATUS_VIVO, cdtipoagIte, porredauIte,
+						cdagenteOrigIte, nmsuplem, Constantes.STATUS_VIVO, cdtipoagIte, porredauIte,
 						nmcuadroIte, cdsucursIte, Constantes.DELETE_MODE, ntramite, porpartiIte);
+				
+				/**
+				 * insertar vivo
+				 * PKG_SATELITES.P_MOV_MPOLIAGE
+				 */
+				endososManager.pMovMpoliage(cdunieco, cdramo, estado, nmpoliza,
+						cdagenteIte, nmsuplem, Constantes.STATUS_VIVO, cdtipoagIte, porredauIte,
+						nmcuadroIte, cdsucursIte, Constantes.INSERT_MODE, ntramite, porpartiIte);
 			}
 			
-			/**
-			 * insertar vivo
-			 * PKG_SATELITES.P_MOV_MPOLIAGE
-			 */
-			endososManager.pMovMpoliage(cdunieco, cdramo, estado, nmpoliza,
-					cdagente, nmsuplem, Constantes.STATUS_VIVO, tipoAgentePrincipal, sesionComision,
-					nmcuadro, cdsucurs, Constantes.INSERT_MODE, ntramite, porcenParticip);
-	   		
-			endososManager.calcularRecibosCambioAgente(cdunieco,cdramo,estado,nmpoliza,nmsuplem,cdagente);
+			endososManager.calcularRecibosCambioAgente(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
 			
 	   		//// Se confirma el endoso si cumple la validacion de fechas: 
 			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, comentariosEndoso, dFecha, cdtipsit);
