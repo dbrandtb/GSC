@@ -414,6 +414,10 @@
         <action name="recuperarDatosEndosoAltaIncisoAuto" class="endososAutoAction" method="recuperarDatosEndosoAltaIncisoAuto">
             <result type="json" />
         </action>
+        
+        <action name="complementoSaludGrupo" class="CotizacionAction" method="complementoSaludGrupo">
+            <result name="success" type="json" />
+        </action>
        
     </package>
     

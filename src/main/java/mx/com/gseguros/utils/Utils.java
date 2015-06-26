@@ -24,7 +24,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utiler&iacute;as para validar datos de la aplicacion
@@ -34,7 +35,7 @@ import org.apache.log4j.Logger;
 public class Utils
 {
 	
-	private static Logger           logger              = Logger.getLogger(Utils.class);
+	private static Logger           logger              = LoggerFactory.getLogger(Utils.class);
 	private static SimpleDateFormat renderFechas        = new SimpleDateFormat("dd/MM/yyyy");
 	private static String           stringDateFormat    = "dd/MM/yyyy";
 	private static String           TIMEZONE_DEFAULT_ID = "GMT0"; //Se manda TimeZone a 0 para los WS de ice2sigs, pues se movia un dia.
@@ -508,7 +509,7 @@ public class Utils
 		return concat;
 	}
 	
-	public static void debugProcedure(Logger logger,String storedProcedureName,Map<String,?>params)
+	public static void debugProcedure(org.apache.log4j.Logger logger2,String storedProcedureName,Map<String,?>params)
     {
 		int len = storedProcedureName.length();
 		logger.debug
@@ -523,7 +524,7 @@ public class Utils
 		);
     }
     
-    public static void debugProcedure(Logger logger,String storedProcedureName,Map<String,?>params,List<?>lista)
+    public static void debugProcedure(org.apache.log4j.Logger logger2,String storedProcedureName,Map<String,?>params,List<?>lista)
     {
     	int len = storedProcedureName.length();
     	logger.debug
@@ -542,5 +543,28 @@ public class Utils
     public static Date render(String fecha) throws Exception
     {
     	return renderFechas.parse(fecha);
+    }
+    
+    public static String[][] convierteMapasEnArreglos(List<Map<String,String>>lista)
+    {
+    	String[][] arreglos = new String[lista.size()][];
+    	int i = 0;
+    	for(Map<String,String>elem:lista)
+    	{
+    		arreglos[i++] = Utils.convierteMapaEnArreglo(elem);
+    	}
+    	return arreglos;
+    }
+    
+    public static String[] convierteMapaEnArreglo(Map<String,String>mapa)
+    {
+    	String[] arreglo = new String[mapa.entrySet().size()];
+    	int i = 0;
+    	for(Entry<String,String>en:mapa.entrySet())
+    	{
+    		arreglo[i++] = en.getValue();
+    	}
+    	logger.debug("\nEntrada {}\nSalida {}",mapa,arreglo);
+    	return arreglo;
     }
 }

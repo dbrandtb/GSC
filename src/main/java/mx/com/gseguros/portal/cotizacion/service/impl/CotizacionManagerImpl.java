@@ -47,18 +47,19 @@ import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class CotizacionManagerImpl implements CotizacionManager 
 {
 
-	private static final Logger           logger       = Logger.getLogger(CotizacionManagerImpl.class);
+	private static final Logger           logger       = LoggerFactory.getLogger(CotizacionManagerImpl.class);
 	private static final SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	private CotizacionDAO  cotizacionDAO;
@@ -6093,6 +6094,26 @@ public class CotizacionManagerImpl implements CotizacionManager
     	cotizacionDAO.actualizaValoresDefectoSituacion(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
 	}
 	
+    private String extraerStringDeCelda(Cell cell, String tipo)
+	{
+		try
+		{
+			if("date".equals(tipo)&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC)
+			{
+				return renderFechas.format(cell.getDateCellValue());
+			}
+			else
+			{
+				cell.setCellType(Cell.CELL_TYPE_STRING);
+				return cell.getStringCellValue().toString();
+			}
+		}
+		catch(Exception ex)
+		{
+			return "";
+		}
+	}
+    
 	private String extraerStringDeCelda(Cell cell)
 	{
 		try
@@ -6105,6 +6126,213 @@ public class CotizacionManagerImpl implements CotizacionManager
 		{
 			return "";
 		}
+	}
+	
+	@Override
+	public Map<String,Object> complementoSaludGrupo(
+			String ntramite
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String complemento
+			,File censo
+			)throws Exception
+	{
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ complementoSaludGrupo @@@@@@"
+				,"\n@@@@@@ ntramite="    , ntramite
+				,"\n@@@@@@ cdunieco="    , cdunieco
+				,"\n@@@@@@ cdramo="      , cdramo
+				,"\n@@@@@@ estado="      , estado
+				,"\n@@@@@@ nmpoliza="    , nmpoliza
+				,"\n@@@@@@ complemento=" , complemento
+				,"\n@@@@@@ censo="       , censo
+				));
+		
+		Map<String,Object> resp = new HashMap<String,Object>();
+		
+		String paso = "Complementando asegurados";
+		try
+		{
+			paso = "Recuperando configuracion de complemento";
+			logger.debug("\nPaso: {}",paso);
+			List<Map<String,String>>configs=cotizacionDAO.cargarParametrizacionExcel("COMPGRUP",cdramo,complemento);
+			logger.debug("\nConfigs: {}",configs);
+			
+			paso = "Filtrando filas con errores";
+			logger.debug("\nPaso: {}",paso);
+			
+			Iterator<Row>            rowIterator = (new XSSFWorkbook(new FileInputStream(censo))).getSheetAt(0).iterator();
+			List<Map<String,String>> registros   = new ArrayList<Map<String,String>>();
+			List<Map<String,String>> recordsDTO  = new ArrayList<Map<String,String>>();
+			int                      nTotal      = 0;
+			int                      nBuenas     = 0;
+			int                      nError      = 0;
+			StringBuilder            errores     = new StringBuilder();
+			
+			int fila = 0;
+			String[] columnas=new String[]{
+					  "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+					,"AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ"
+					,"BA","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP","BQ","BR","BS","BT","BU","BV","BW","BX","BY","BZ"
+			};
+			while (rowIterator.hasNext()) 
+            {
+				fila++;
+				nTotal++;
+				
+				logger.debug("\nIterando fila {}",fila);
+				
+				Row                row         = rowIterator.next();
+				boolean            filaBuena   = true;
+				StringBuilder      bufferLinea = new StringBuilder();
+				Map<String,String> registro    = new HashMap<String,String>();
+				Map<String,String> recordDTO   = new LinkedHashMap<String,String>();
+				
+				for(Map<String,String>config : configs)
+				{
+					try
+					{
+						logger.debug("\nIterando config {}",config);
+						int    indice = Integer.parseInt(config.get("COLUMNA"));
+						String letra  = columnas[indice];
+						Cell   celda  = row.getCell(indice);
+						
+						String tipo   = config.get("TIPO");
+						String valor  = extraerStringDeCelda(row.getCell(indice),tipo);
+						String substr = config.get("CDTIPSIT");
+						logger.debug("\nValor {} Tipo {} Substr {}",valor,tipo,substr);
+						
+						boolean obligatorio = "S".equals(config.get("REQUERIDO"));
+						
+						//validar obligatorio
+						if(obligatorio&&StringUtils.isBlank(valor))
+						{
+							filaBuena = false;
+							errores.append(Utils.join("Se requiere ",letra,", "));
+						}
+						
+						//validar tipo
+						if(StringUtils.isNotBlank(valor))
+						{
+							if("int".equals(tipo))
+							{
+								try
+								{
+									Integer.parseInt(valor);
+								}
+								catch(Exception ex)
+								{
+									filaBuena = false;
+									errores.append(Utils.join("No es numerico ",letra,", "));
+								}
+							}
+							else if("double".equals(tipo))
+							{
+								try
+								{
+									Double.parseDouble(valor);
+								}
+								catch(Exception ex)
+								{
+									filaBuena = false;
+									errores.append(Utils.join("No es decimal ",letra,", "));
+								}
+							}
+							else if("date".equals(tipo))
+							{
+								try
+								{
+									logger.debug("\nAntes leer fecha");
+									celda.setCellType(Cell.CELL_TYPE_NUMERIC);
+									Date fecha = celda.getDateCellValue();
+									logger.debug("\nFecha leida: {}",fecha);
+									Calendar cal = Calendar.getInstance();
+				                	cal.setTime(fecha);
+				                	if(cal.get(Calendar.YEAR)>2100
+				                			||cal.get(Calendar.YEAR)<1900
+				                			)
+				                	{
+				                		throw new ApplicationException("El anio de la fecha no es valido");
+				                	}
+				                	valor = renderFechas.format(fecha);
+								}
+								catch(Exception ex)
+								{
+									logger.error("Erro al leer fecha",ex);
+									filaBuena = false;
+									errores.append(Utils.join("Fecha incorrecta ",letra,", "));
+								}
+							}
+						}
+						
+						//validar 
+						if(StringUtils.isNotBlank(valor)&&StringUtils.isNotBlank(substr))
+						{
+							if(substr.indexOf(Utils.join("|",valor,"|"))==-1)
+							{
+								filaBuena = false;
+								errores.append(Utils.join("Valor incorrecto ",letra,", "));
+							}
+						}
+
+						bufferLinea.append(Utils.join(valor,"-"));
+						recordDTO.put(config.get("PROPIEDAD"),valor);
+						registro.put(config.get("PROPIEDAD"),valor);
+						registro.put(Utils.join("_",letra,"_",config.get("PROPIEDAD")),config.get("DESCRIPCION"));
+					}
+					catch(Exception ex)
+					{
+						filaBuena = false;
+					}
+				}
+				
+				if(filaBuena)
+				{
+					nBuenas++;
+					registros.add(registro);
+					recordsDTO.add(recordDTO);
+				}
+				else
+				{
+					nError++;
+					errores.append(Utils.join("en la fila ",fila,": ",bufferLinea.toString(),"\n"));
+				}
+            }
+			
+			resp.put("erroresCenso"    , errores.toString());
+			resp.put("filasLeidas"     , Integer.toString(nTotal));
+			resp.put("filasProcesadas" , Integer.toString(nBuenas));
+			resp.put("filasErrores"    , Integer.toString(nError));
+			resp.put("registros"       , registros);
+			
+			paso = "Guardando asegurados";
+			logger.debug("\nPaso: {}",paso);
+			if(nBuenas>0)
+			{
+				cotizacionDAO.complementoSaludGrupoLote(
+						ntramite
+						,cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,complemento
+						,Utils.convierteMapasEnArreglos(recordsDTO)
+						);
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.join(
+				 "\n@@@@@@ complementoSaludGrupo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return resp;
 	}
     
 	///////////////////////////////

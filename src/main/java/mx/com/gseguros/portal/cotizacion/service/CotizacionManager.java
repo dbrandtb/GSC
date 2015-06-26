@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.cotizacion.service;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -505,5 +506,15 @@ public interface CotizacionManager
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
+			)throws Exception;
+	
+	public Map<String,Object> complementoSaludGrupo(
+			String ntramite
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String complemento
+			,File censo
 			)throws Exception;
 }

@@ -4308,6 +4308,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
              		"COLUMNA"    , "CDTIPSIT"        , "PROPIEDAD"  , "TIPO"
              		,"REQUERIDO" , "DECODE"          , "CDTABLA1"   , "TIPOATRI"
              		,"VALOR"     , "ORIGEN_CDTIPSIT" , "OTRA_PROP1" , "OTRO_VAL1"
+             		,"DESCRIPCION"
              };
              declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
              declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -5591,6 +5592,49 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void complementoSaludGrupoLote(
+			String ntramite
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String complemento
+			,String[][] listaDTO
+			)throws Exception
+	{
+		Map<String,Object>params = new LinkedHashMap<String,Object>();
+		params.put("idproceso"   , System.currentTimeMillis());
+		params.put("ntramite"    , ntramite);
+		params.put("cdunieco"    , cdunieco);
+		params.put("cdramo"      , cdramo);
+		params.put("estado"      , estado);
+		params.put("nmpoliza"    , nmpoliza);
+		params.put("complemento" , complemento);
+		params.put("listaListas" , new SqlArrayValue(listaDTO));
+		Utils.debugProcedure(logger, "PKG_COTIZA.P_COMPLEMENTA_GRUPO", params);
+		ejecutaSP(new ComplementoSaludGrupoLote(getDataSource()),params);
+	}
+	
+	protected class ComplementoSaludGrupoLote extends StoredProcedure
+	{
+		protected ComplementoSaludGrupoLote(DataSource dataSource)
+		{
+			super(dataSource,"PKG_COTIZA.P_COMPLEMENTA_GRUPO");
+			declareParameter(new SqlParameter("idproceso"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ntramite"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("complemento" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("listaListas" , OracleTypes.ARRAY , "LISTA_LISTAS_VARCHAR2"));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

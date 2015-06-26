@@ -706,4 +706,14 @@ public interface CotizacionDAO
 			,String nmpoliza
 			,String nmsuplem
 			)throws Exception;
+	
+	public void complementoSaludGrupoLote(
+			String ntramite
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String complemento
+			,String[][] listaDTO
+			)throws Exception;
 }
