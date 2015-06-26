@@ -60,8 +60,11 @@ public class AutenticacionAction extends PrincipalCoreAction {
 		 * Si es true agrega los usuarios en LDAP si ya existen previamente en BD (flujo temporal), <br/> false si solo autentica en LDAP y BD (flujo correcto)
 		 */
 		if(new Boolean(getText("login.modo.agregar.usuarios.ldap"))){
+			logger.debug("Autentificacion,entrando a modo Agregar Usuarios a LDAP");
 			return autenticaUsuarioAgregaLDAP();
 		}
+		
+		logger.debug("Autentificaci&acuteon,sin entrar a modo Agregar Usuarios a LDAP");
 		
 		try {
 			
@@ -80,7 +83,8 @@ public class AutenticacionAction extends PrincipalCoreAction {
 
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
-			errorMessage = "Error en el proceso de validaci&oacute;n de usuario. Consulte a Soporte T&eacute;cnico.";
+			//errorMessage = "Error en el proceso de validaci&oacute;n de usuario. Consulte a Soporte T&eacute;cnico.";
+			errorMessage = "Error en el proceso de validaci&oacute;n de usuario, detalle: " + ex.getMessage(); //Se agrega el mensaje de la Excepción en Pantalla
 			return SUCCESS;
 		}
 	}
