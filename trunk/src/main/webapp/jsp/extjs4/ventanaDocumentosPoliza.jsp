@@ -222,6 +222,8 @@ Ext.onReady(function()
             ,'orden'
             ,'nsuplogi'
             ,'editable'
+            ,'feinicio'
+            ,'fefinal'
         ]
     });
     
@@ -677,8 +679,14 @@ Ext.onReady(function()
                         header     : 'Descripci&oacute;n'
                         ,dataIndex : 'dsdocume'
                         ,flex      : 1
-                    }
-                    ,{
+                        ,renderer  : function(value, metaData, record, rowIndex, colIndex, store, view) {
+                        	// Cuando es recibo, si vienen las fechas las agregamos a la descripcion del documento:
+                        	if( !Ext.isEmpty(record.get('feinicio')) && !Ext.isEmpty(record.get('fefinal')) ) {
+                        		value = value + ' (Vigencia: ' + record.get('feinicio') + ' - ' + record.get('fefinal') + ' )';
+                        	}
+                        	return value;
+                        }
+                    },{
                         header     : 'Fecha'
                         ,dataIndex : 'feinici'
                         ,width     : 100
