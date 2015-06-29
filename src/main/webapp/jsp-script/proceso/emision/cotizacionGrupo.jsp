@@ -1885,6 +1885,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                     form.items.items[l].setDisabled(!value);
                                                                 }
                                                                 
+                                                                //4MAT y 4AYM
                                                                 if(_p21_smap1.cdsisrol!='COTIZADOR'&&value)
                                                                 {
                                                                     try
@@ -1917,6 +1918,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                     }
                                                                 }
                                                                 
+                                                                //4MED
                                                                 if(_p21_smap1.cdsisrol!='COTIZADOR')
                                                                 {
                                                                     try
@@ -1948,6 +1950,37 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                     }
                                                                 }
                                                                 
+                                                                //4SAD
+                                                                if(_p21_smap1.cdsisrol!='COTIZADOR')
+                                                                {
+                                                                    try
+                                                                    {
+                                                                        if(miCdgarant=='4SAD'||miCdgarant=='4MS')
+                                                                        {
+                                                                            var cmpSad;
+                                                                            var cmpMs;
+                                                                            if(miCdgarant=='4SAD')
+                                                                            {
+                                                                                cmpSad = me;
+                                                                                cmpMs  = me.up('form').up('panel').down('[cdgarant=4MS]').down('checkbox');
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                cmpSad = me.up('form').up('panel').down('[cdgarant=4SAD]').down('checkbox');
+                                                                                cmpMs  = me;
+                                                                            }
+                                                                            if(!cmpMs.getValue()&&cmpSad.getValue())
+                                                                            {
+                                                                                cmpSad.setValue(false);
+                                                                                mensajeWarning('Se marc&oacute; como no amparada la cobertura SERVICIOS AUXILIARES DIAGN&Oacute;STICO porque depende de la cobertura MANTENIMIENTO DE LA SALUD');
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    catch(e)
+                                                                    {
+                                                                        debugError('error al validar dependencia de 4sad ante 4ms',e);
+                                                                    }
+                                                                }
                                                             }
                                                         }
                                                     }
