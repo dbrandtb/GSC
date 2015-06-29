@@ -51,4 +51,7 @@ public interface EmisionAutosService {
 
 	public int actualizaDatosCambioDomicilCP(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem);
+
+	public int actualizaDatosCambioDomicilSinCP(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem);
 }

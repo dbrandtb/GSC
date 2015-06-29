@@ -919,7 +919,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				logger.debug("Respuesta de Cambio nombre cliente, numero de endoso: " + res);
 				
 				if(res == null || res == 0){
-					logger.debug("Endoso domicilio no exitoso");
+					logger.debug("Endoso Cambio nombre cliente no exitoso");
 				}else{
 					numeroEndosoRes = res.intValue();
 					
@@ -943,7 +943,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				}
 				
 			} catch (Exception e){
-				logger.error("Error en Envio Recibo Auto: " + e.getMessage(),e);
+				logger.error("Error en Cambio nombre cliente Auto: " + e.getMessage(),e);
 			}
 			
 		}else{
@@ -997,7 +997,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				logger.debug("Respuesta de Cambio Rfc cliente, numero de endoso: " + res);
 				
 				if(res == null || res == 0){
-					logger.debug("Endoso domicilio no exitoso");
+					logger.debug("Endoso Cambio Rfc cliente no exitoso");
 				}else{
 					numeroEndosoRes = res.intValue();
 					
@@ -1021,7 +1021,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				}
 				
 			} catch (Exception e){
-				logger.error("Error en Envio Recibo Auto: " + e.getMessage(),e);
+				logger.error("Error en Envio Cambio Rfc cliente Auto: " + e.getMessage(),e);
 			}
 			
 		}else{
@@ -1075,7 +1075,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				logger.debug("Respuesta de Cambio cliente, numero de endoso: " + res);
 				
 				if(res == null || res == 0){
-					logger.debug("Endoso domicilio no exitoso");
+					logger.debug("Endoso Cambio cliente no exitoso");
 				}else{
 					numeroEndosoRes = res.intValue();
 					
@@ -1099,7 +1099,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				}
 				
 			} catch (Exception e){
-				logger.error("Error en Envio Recibo Auto: " + e.getMessage(),e);
+				logger.error("Error en Envio  Cambio cliente Auto: " + e.getMessage(),e);
 			}
 			
 		}else{
@@ -1185,11 +1185,11 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				}
 				
 			} catch (Exception e){
-				logger.error("Error en Envio Recibo Auto: " + e.getMessage(),e);
+				logger.error("Error en Envio datos domicilio: " + e.getMessage(),e);
 			}
 			
 		}else{
-			logger.warn("Aviso, No se tienen datos de Cambio Domicil");
+			logger.warn("Aviso, No se tienen datos de Cambio Domicilio");
 			return 0;
 		}
 		
@@ -1218,7 +1218,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			
 			
 		} catch (Exception e1) {
-			logger.error("Error en llamar al PL de obtencion de datos para Cambio Domicil para SIGS",e1);
+			logger.error("Error en llamar al PL de obtencion de datos para Cambio Domicil Codigo Postal para SIGS",e1);
 			return 0;
 		}	
 		
@@ -1243,20 +1243,105 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				
 				Integer res = autosSIGSDAO.cambioDomicilioCP(paramsEnd);
 				
-				logger.debug("Respuesta de cambio domicil, numero de endoso: " + res);
+				logger.debug("Respuesta de cambio domicilio Codigo Postal, numero de endoso: " + res);
 				
 				if(res == null || res == 0){
-					logger.debug("Endoso domicilio no exitoso");
+					logger.debug("Endoso domicilio Codigo Postal no exitoso");
 				}else{
 					numeroEndosoRes = res.intValue();
 				}
 				
 			} catch (Exception e){
-				logger.error("Error en Envio Recibo Auto: " + e.getMessage(),e);
+				logger.error("Error en Endoso domicilio Codigo postal : " + e.getMessage(),e);
 			}
 			
 		}else{
-			logger.warn("Aviso, No se tienen datos de Cambio Domicil");
+			logger.warn("Aviso, No se tienen datos de Cambio Domicilio Codigo Postal");
+			return 0;
+		}
+		
+		return numeroEndosoRes;
+	}
+
+	public int actualizaDatosCambioDomicilSinCP(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem){
+		
+		logger.debug(">>>>> Entrando a metodo Cambio Domicilio Sin Codigo Postal y cambio de Colonia");
+		
+		int numeroEndosoRes = 0;
+		List<Map<String,String>> datos = null;
+		
+		//Se invoca servicio para obtener los datos del CAMBIO DOMICIL
+		try{
+			LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+			params.put("param1" , cdunieco);
+			params.put("param2" , cdramo);
+			params.put("param3" , estado);
+			params.put("param4" , nmpoliza);
+			params.put("param5" , nmsuplem);
+			
+			datos = storedProceduresManager.procedureListCall(
+					ObjetoBD.OBTIENE_DATOS_END_DOM_SIGS.getNombre(), params, null);
+			
+			
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de datos para Cambio Domicil Sin Codigo Postal y cambio de Colonia para SIGS",e1);
+			return 0;
+		}	
+		
+		if(datos != null && !datos.isEmpty()){
+			Map<String,String> datosEnd = datos.get(0);
+			try{
+				
+				HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
+				paramsEnd.put("vSucursal"  , datosEnd.get("SUCURSAL"));
+				paramsEnd.put("vRamo"      , datosEnd.get("RAMO"));
+				paramsEnd.put("vPoliza"    , datosEnd.get("POLIZA"));
+				paramsEnd.put("vTEndoso"   , StringUtils.isBlank(datosEnd.get("TENDOSO"))?" " : datosEnd.get("TENDOSO"));
+				paramsEnd.put("vEndoso"    , datosEnd.get("ENDOSO"));
+				paramsEnd.put("vIdMotivo"  , datosEnd.get("IDMOTIVO"));
+				paramsEnd.put("vCalle"     , datosEnd.get("CALLE"));
+				paramsEnd.put("vNumero"    , datosEnd.get("NUMERO"));
+				paramsEnd.put("vColonia"   , datosEnd.get("COLONIA"));
+				paramsEnd.put("vTelefono1" , datosEnd.get("TELEFONO1"));
+				paramsEnd.put("vTelefono2" , datosEnd.get("TELEFONO2"));
+				paramsEnd.put("vTelefono3" , datosEnd.get("TELEFONO3"));
+				paramsEnd.put("vFEndoso"   , datosEnd.get("FENDOSO"));
+				
+				Integer res = autosSIGSDAO.cambioDomicilioSinCPColonia(paramsEnd);
+				
+				logger.debug("Respuesta de cambio domicil Sin Codigo Postal y cambio de Colonia, numero de endoso: " + res);
+				
+				if(res == null || res == 0){
+					logger.debug("Endoso domicilio Sin Codigo Postal y cambio de Colonia no exitoso");
+				}else{
+					numeroEndosoRes = res.intValue();
+					
+					try{
+						LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+						params.put("param1" , cdunieco);
+						params.put("param2" , cdramo);
+						params.put("param3" , estado);
+						params.put("param4" , nmpoliza);
+						params.put("param5" , nmsuplem);
+						params.put("param6" , numeroEndosoRes);
+						
+						storedProceduresManager.procedureVoidCall(
+								ObjetoBD.ACTUALIZA_ENDB_DE_SIGS.getNombre(), params, null);
+						
+						
+					} catch (Exception e1) {
+						logger.error("Error en llamar al PL de obtencion de datos para Cambio Domicil Sin Codigo Postal y cambio de Colonia para SIGS",e1);
+						return 0;
+					}	
+				}
+				
+			} catch (Exception e){
+				logger.error("Error en Envio datos domicilio Sin Codigo Postal y cambio de Colonia: " + e.getMessage(),e);
+			}
+			
+		}else{
+			logger.warn("Aviso, No se tienen datos de Cambio Domicilio Sin Codigo Postal y cambio de Colonia");
 			return 0;
 		}
 		

@@ -6155,9 +6155,9 @@ public class EndososAction extends PrincipalCoreAction
 				if(aux.isEndosoSinRetarif()){
 					
 					/**
-					 * PARA WS ENDOSO DE AUTOS
+					 * PARA WS ENDOSO DE AUTOS SIN TARIFICACION DONDE PUEDE INCLUIR LA COLONIA
 					 */
-					numEndRes = emisionAutosService.endosoCambioDomicil(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+					numEndRes = emisionAutosService.actualizaDatosCambioDomicilSinCP(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 					
 					if(numEndRes == 0){
 						mensaje = "Error al generar el endoso, sigs. Consulte a Soporte.";
@@ -9853,7 +9853,7 @@ public class EndososAction extends PrincipalCoreAction
 			datosPol.setCdramo(cdramo);
 			datosPol.setEstado(estado);
 			datosPol.setNmpoliza(nmpoliza);
-	
+			
 			List<PolizaDTO> listaPolizas = consultasPolizaManager.obtieneDatosPoliza(datosPol);
 			PolizaDTO polRes = listaPolizas.get(0);
 	

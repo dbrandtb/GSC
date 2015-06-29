@@ -8,6 +8,8 @@ public interface AutosSIGSDAO {
 	public Integer endosoDomicilio(Map<String, Object> params) throws Exception;
 
 	public Integer cambioDomicilioCP(Map<String, Object> params) throws Exception;
+	
+	public Integer cambioDomicilioSinCPColonia(Map<String, Object> params) throws Exception;
 
 	public Integer insertaReciboAuto(Map<String, Object> params) throws Exception;
 
