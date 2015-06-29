@@ -2077,6 +2077,38 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                         debugError('error inofensivo al validar dependencia de 4aym ante 4hos',e);
                                                                     }
                                                                 }
+                                                                
+                                                                //4EAC
+                                                                if(_p21_smap1.cdsisrol!='COTIZADOR')
+                                                                {
+                                                                    try
+                                                                    {
+                                                                        if(miCdgarant=='4HOS'||miCdgarant=='4EAC')
+                                                                        {
+                                                                            var cmpHos;
+                                                                            var cmpEac;
+                                                                            if(miCdgarant=='4HOS')
+                                                                            {
+                                                                                cmpHos = me;
+                                                                                cmpEac = me.up('form').up('panel').down('[cdgarant=4EAC]').down('checkbox');
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                cmpHos = me.up('form').up('panel').down('[cdgarant=4HOS]').down('checkbox');
+                                                                                cmpEac = me;
+                                                                            }
+                                                                            if(!cmpHos.getValue()&&cmpEac.getValue())
+                                                                            {
+                                                                                cmpEac.setValue(false);
+                                                                                mensajeWarning('Se marc&oacute; como no amparada la cobertura EVENTO DE ALTO COSTO porque depende de la cobertura HOSPITALIZACI&Oacute;N');
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    catch(e)
+                                                                    {
+                                                                        debugError('error inofensivo al validar dependencia de 4eac ante 4hos',e);
+                                                                    }
+                                                                }
                                                             }
                                                         }
                                                     }
