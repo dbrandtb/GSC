@@ -2013,6 +2013,70 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                         debugError('error al validar dependencia de 4ee ante 4hos',e);
                                                                     }
                                                                 }
+                                                                
+                                                                //4MAT
+                                                                if(_p21_smap1.cdsisrol!='COTIZADOR')
+                                                                {
+                                                                    try
+                                                                    {
+                                                                        if(miCdgarant=='4HOS'||miCdgarant=='4MAT')
+                                                                        {
+                                                                            var cmpHos;
+                                                                            var cmpMat;
+                                                                            if(miCdgarant=='4HOS')
+                                                                            {
+                                                                                cmpHos = me;
+                                                                                cmpMat = me.up('form').up('panel').down('[cdgarant=4MAT]').down('checkbox');
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                cmpHos = me.up('form').up('panel').down('[cdgarant=4HOS]').down('checkbox');
+                                                                                cmpMat = me;
+                                                                            }
+                                                                            if(!cmpHos.getValue()&&cmpMat.getValue())
+                                                                            {
+                                                                                cmpMat.setValue(false);
+                                                                                mensajeWarning('Se marc&oacute; como no amparada la cobertura MATERNIDAD porque depende de la cobertura HOSPITALIZACI&Oacute;N');
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    catch(e)
+                                                                    {
+                                                                        debugError('error inofensivo al validar dependencia de 4mat ante 4hos',e);
+                                                                    }
+                                                                }
+                                                                
+                                                                //4AYM
+                                                                if(_p21_smap1.cdsisrol!='COTIZADOR')
+                                                                {
+                                                                    try
+                                                                    {
+                                                                        if(miCdgarant=='4HOS'||miCdgarant=='4AYM')
+                                                                        {
+                                                                            var cmpHos;
+                                                                            var cmpAym;
+                                                                            if(miCdgarant=='4HOS')
+                                                                            {
+                                                                                cmpHos = me;
+                                                                                cmpAym = me.up('form').up('panel').down('[cdgarant=4AYM]').down('checkbox');
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                cmpHos = me.up('form').up('panel').down('[cdgarant=4HOS]').down('checkbox');
+                                                                                cmpAym = me;
+                                                                            }
+                                                                            if(!cmpHos.getValue()&&cmpAym.getValue())
+                                                                            {
+                                                                                cmpAym.setValue(false);
+                                                                                mensajeWarning('Se marc&oacute; como no amparada la cobertura AYUDA EN MATERNIDAD porque depende de la cobertura HOSPITALIZACI&Oacute;N');
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    catch(e)
+                                                                    {
+                                                                        debugError('error inofensivo al validar dependencia de 4aym ante 4hos',e);
+                                                                    }
+                                                                }
                                                             }
                                                         }
                                                     }
