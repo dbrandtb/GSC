@@ -3889,16 +3889,19 @@ function _p21_estiloEditores(cdplan)
                     _p21_editorDeducible.removeCls('_p21_editorLectura');
                 }
                 _p21_editorDeducible.setReadOnly(!_4HOS);
-                if(!_4AYM)
+                if(_p21_smap1.cdsisrol!='COTIZADOR')
                 {
-                    _p21_editorAyudaMater.setValue('0');
-                    _p21_editorAyudaMater.addCls('_p21_editorLectura');
+                    if(!_4AYM||!_4HOS)
+                    {
+                        _p21_editorAyudaMater.setValue('0');
+                        _p21_editorAyudaMater.addCls('_p21_editorLectura');
+                    }
+                    else if(_4AYM&&_4HOS)
+                    {
+                        _p21_editorAyudaMater.removeCls('_p21_editorLectura');
+                    }
                 }
-                else
-                {
-                    _p21_editorAyudaMater.removeCls('_p21_editorLectura');
-                }
-                _p21_editorAyudaMater.setReadOnly(!_4AYM);
+                //_p21_editorAyudaMater.setReadOnly(!_4AYM);
                 if(!_4AIV)
                 {
                     _p21_editorAsisInter.setValue('N');
