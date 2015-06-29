@@ -3900,8 +3900,8 @@ function _p21_estiloEditores(cdplan)
                     {
                         _p21_editorAyudaMater.removeCls('_p21_editorLectura');
                     }
+                    //_p21_editorAyudaMater.setReadOnly(!_4AYM);
                 }
-                //_p21_editorAyudaMater.setReadOnly(!_4AYM);
                 if(!_4AIV)
                 {
                     _p21_editorAsisInter.setValue('N');
@@ -3912,16 +3912,19 @@ function _p21_estiloEditores(cdplan)
                     _p21_editorAsisInter.removeCls('_p21_editorLectura');
                 }
                 _p21_editorAsisInter.setReadOnly(!_4AIV);
-                if(!_4EE)
+                if(_p21_smap1.cdsisrol!='COTIZADOR')
                 {
-                    _p21_editorEmerextr.setValue('N');
-                    _p21_editorEmerextr.addCls('_p21_editorLectura');
+                    if(!_4EE||cdplan=='PR')
+                    {
+                        _p21_editorEmerextr.setValue('N');
+                        _p21_editorEmerextr.addCls('_p21_editorLectura');
+                    }
+                    else if(_4EE&&cdplan!='PR')
+                    {
+                        _p21_editorEmerextr.removeCls('_p21_editorLectura');
+                    }
+                    //_p21_editorEmerextr.setReadOnly(!_4EE);
                 }
-                else
-                {
-                    _p21_editorEmerextr.removeCls('_p21_editorLectura');
-                }
-                _p21_editorEmerextr.setReadOnly(!_4EE);
             }
             else
             {
