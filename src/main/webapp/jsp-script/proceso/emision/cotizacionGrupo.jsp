@@ -1877,17 +1877,18 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                             }
                                                             ,change : function(me,value)
                                                             {
-                                                                debug('checkbox change:',value);
-                                                                var form = me.up('form');
+                                                                debug('checkbox change:',value,me.up('form').cdgarant);
+                                                                var form       = me.up('form');
+                                                                var miCdgarant = form.cdgarant;
                                                                 for(var l=0;l<form.items.items.length;l++)
                                                                 {
                                                                     form.items.items[l].setDisabled(!value);
                                                                 }
+                                                                
                                                                 if(_p21_smap1.cdsisrol!='COTIZADOR'&&value)
                                                                 {
                                                                     try
                                                                     {
-                                                                        var miCdgarant = form.cdgarant;
                                                                         if(miCdgarant=='4AYM'||miCdgarant=='4MAT')
                                                                         {
                                                                             var cmpAym;
@@ -1915,6 +1916,38 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                         debugError('error inofensivo al validar 4mat contra 4aym',e);
                                                                     }
                                                                 }
+                                                                
+                                                                if(_p21_smap1.cdsisrol!='qweCOTIZADOR')
+                                                                {
+                                                                    try
+                                                                    {
+                                                                        if(miCdgarant=='4MED'||miCdgarant=='4MS')
+                                                                        {
+                                                                            var cmpMed;
+                                                                            var cmpMs;
+                                                                            if(miCdgarant=='4MED')
+                                                                            {
+                                                                                cmpMed = me;
+                                                                                cmpMs  = me.up('form').up('panel').down('[cdgarant=4MS]').down('checkbox');
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                cmpMed = me.up('form').up('panel').down('[cdgarant=4MED]').down('checkbox');
+                                                                                cmpMs  = me;
+                                                                            }
+                                                                            if(!cmpMs.getValue()&&cmpMed.getValue())
+                                                                            {
+                                                                                cmpMed.setValue(false);
+                                                                                mensajeWarning('Se marc&oacute; como no amparada la cobertura MEDICAMENTOS porque depende de la cobertura MANTENIMIENTO DE LA SALUD');
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    catch(e)
+                                                                    {
+                                                                        debugError('error al validar dependencia de 4med ante 4ms',e);
+                                                                    }
+                                                                }
+                                                                
                                                             }
                                                         }
                                                     }
@@ -3887,6 +3920,8 @@ function _p21_estiloEditores(cdplan)
                 var _4AYM = false;
                 var _4AIV = false;
                 var _4EE  = false;
+                var _4MAT = false;
+                var _4MS  = false;
                 $.each(json.slist1,function(i,cob)
                 {
                     debug('iterando:',cob.CDGARANT);
@@ -3900,7 +3935,7 @@ function _p21_estiloEditores(cdplan)
                         debug('_4AYM found');
                         _4AYM=true;
                     }
-                    if(cob.CDGARANT=='4AIV')
+                    if(cob.CDGARANT=='4MED')
                     {
                         debug('_4AIV found');
                         _4AIV=true;
@@ -3909,6 +3944,16 @@ function _p21_estiloEditores(cdplan)
                     {
                         debug('_4EE found');
                         _4EE=true;
+                    }
+                    if(cob.CDGARANT=='4MAT')
+                    {
+                        debug('_4MAT found');
+                        _4MAT=true;
+                    }
+                    if(cob.CDGARANT=='4MS')
+                    {
+                        debug('_4MS found');
+                        _4MS=true;
                     }
                 });
                 if(!_4HOS)
@@ -3923,25 +3968,28 @@ function _p21_estiloEditores(cdplan)
                 _p21_editorDeducible.setReadOnly(!_4HOS);
                 if(_p21_smap1.cdsisrol!='COTIZADOR')
                 {
-                    if(!_4AYM||!_4HOS)
+                    if(!_4AYM||!_4HOS||_4MAT)
                     {
                         _p21_editorAyudaMater.setValue('0');
                         _p21_editorAyudaMater.addCls('_p21_editorLectura');
                     }
-                    else if(_4AYM&&_4HOS)
+                    else if(_4AYM&&_4HOS&&!_4MAT)
                     {
                         _p21_editorAyudaMater.removeCls('_p21_editorLectura');
                     }
                     //_p21_editorAyudaMater.setReadOnly(!_4AYM);
                 }
-                if(!_4AIV)
+                if(_p21_smap1.cdsisrol!='COTIZADOR')
                 {
-                    _p21_editorAsisInter.setValue('N');
-                    _p21_editorAsisInter.addCls('_p21_editorLectura');
-                }
-                else
-                {
-                    _p21_editorAsisInter.removeCls('_p21_editorLectura');
+                    if(!_4AIV||!_4MS)
+                    {
+                        _p21_editorAsisInter.setValue('0');
+                        _p21_editorAsisInter.addCls('_p21_editorLectura');
+                    }
+                    else if(_4AIV&&_4MS)
+                    {
+                        _p21_editorAsisInter.removeCls('_p21_editorLectura');
+                    }
                 }
                 _p21_editorAsisInter.setReadOnly(!_4AIV);
                 if(_p21_smap1.cdsisrol!='COTIZADOR')
