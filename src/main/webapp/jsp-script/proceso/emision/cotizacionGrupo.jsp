@@ -1917,7 +1917,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                     }
                                                                 }
                                                                 
-                                                                if(_p21_smap1.cdsisrol!='qweCOTIZADOR')
+                                                                if(_p21_smap1.cdsisrol!='COTIZADOR')
                                                                 {
                                                                     try
                                                                     {
