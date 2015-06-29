@@ -1875,13 +1875,45 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                     form.items.items[l].setDisabled(!value);
                                                                 }
                                                             }
-                                                            ,change : function(checkbox,value)
+                                                            ,change : function(me,value)
                                                             {
                                                                 debug('checkbox change:',value);
-                                                                var form = checkbox.up().up();
+                                                                var form = me.up('form');
                                                                 for(var l=0;l<form.items.items.length;l++)
                                                                 {
                                                                     form.items.items[l].setDisabled(!value);
+                                                                }
+                                                                if(_p21_smap1.cdsisrol!='COTIZADOR'&&value)
+                                                                {
+                                                                    try
+                                                                    {
+                                                                        var miCdgarant = form.cdgarant;
+                                                                        if(miCdgarant=='4AYM'||miCdgarant=='4MAT')
+                                                                        {
+                                                                            var cmpAym;
+                                                                            var cmpMat;
+                                                                            if(miCdgarant=='4AYM')
+                                                                            {
+                                                                                cmpAym = me;
+                                                                                cmpMat = me.up('form').up('panel').down('[cdgarant=4MAT]').down('checkbox');
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                cmpMat = me;
+                                                                                cmpAym = me.up('form').up('panel').down('[cdgarant=4AYM]').down('checkbox');
+                                                                            }
+                                                                            debug('cmpAym:',cmpAym,'cmpMat:',cmpMat);
+                                                                            if(cmpAym.getValue()&&cmpMat.getValue())
+                                                                            {
+                                                                                me.setValue(false);
+                                                                                mensajeWarning('No se pueden amparar ambas coberturas (maternidad y ayuda en maternidad).');
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    catch(e)
+                                                                    {
+                                                                        debugError('error inofensivo al validar 4mat contra 4aym',e);
+                                                                    }
                                                                 }
                                                             }
                                                         }
