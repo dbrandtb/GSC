@@ -228,6 +228,12 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						,cdatribu
 						));
 			}
+			else if(proc.equals(RecuperacionSimple.RECUPERAR_DERECHOS_POLIZA_POR_PAQUETE_RAMO_1))
+			{
+				String paquete = params.get("paquete");
+				resp.setSmap(new HashMap<String,String>());
+				resp.getSmap().put("DERECHOS" , consultasDAO.recuperarDerechosPolizaPorPaqueteRamo1(paquete));
+			}
 			
 			setCheckpoint("0");
 		}
