@@ -1981,6 +1981,38 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                         debugError('error al validar dependencia de 4sad ante 4ms',e);
                                                                     }
                                                                 }
+                                                                
+                                                                //4EE
+                                                                if(_p21_smap1.cdsisrol!='COTIZADOR')
+                                                                {
+                                                                    try
+                                                                    {
+                                                                        if(miCdgarant=='4HOS'||miCdgarant=='4EE')
+                                                                        {
+                                                                            var cmpHos;
+                                                                            var cmpEe;
+                                                                            if(miCdgarant=='4HOS')
+                                                                            {
+                                                                                cmpHos = me;
+                                                                                cmpEe  = me.up('form').up('panel').down('[cdgarant=4EE]').down('checkbox');
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                cmpHos = me.up('form').up('panel').down('[cdgarant=4HOS]').down('checkbox');
+                                                                                cmpEe  = me;
+                                                                            }
+                                                                            if(!cmpHos.getValue()&&cmpEe.getValue())
+                                                                            {
+                                                                                cmpEe.setValue(false);
+                                                                                mensajeWarning('Se marc&oacute; como no amparada la cobertura EMERGENCIA EN EL EXTRANJERO porque depende de la cobertura HOSPITALIZACI&Oacute;N');
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    catch(e)
+                                                                    {
+                                                                        debugError('error al validar dependencia de 4ee ante 4hos',e);
+                                                                    }
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -4027,12 +4059,12 @@ function _p21_estiloEditores(cdplan)
                 _p21_editorAsisInter.setReadOnly(!_4AIV);
                 if(_p21_smap1.cdsisrol!='COTIZADOR')
                 {
-                    if(!_4EE||cdplan=='PR')
+                    if(!_4EE||cdplan=='PR'||!_4HOS)
                     {
                         _p21_editorEmerextr.setValue('N');
                         _p21_editorEmerextr.addCls('_p21_editorLectura');
                     }
-                    else if(_4EE&&cdplan!='PR')
+                    else if(_4EE&&cdplan!='PR'&&_4HOS)
                     {
                         _p21_editorEmerextr.removeCls('_p21_editorLectura');
                     }
