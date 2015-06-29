@@ -24,7 +24,6 @@ import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
@@ -32,7 +31,8 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 {
-	private static final Logger logger = Logger.getLogger(ConsultasDAOImpl.class);
+	private static final org.apache.log4j.Logger logger  = org.apache.log4j.Logger.getLogger(ConsultasDAOImpl.class);
+	private static final org.slf4j.Logger        logger2 = org.slf4j.LoggerFactory.getLogger(ConsultasDAOImpl.class);
 	
 	@Override
 	public List<Map<String,String>> consultaDinamica(String storedProcedure,LinkedHashMap<String,Object>params) throws Exception
@@ -2184,6 +2184,34 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String recuperarDerechosPolizaPorPaqueteRamo1(String paquete) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("paquete" , paquete);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarDerechosPolizaPorPaqueteRamo1(getDataSource()),params);
+		String derechos = (String) procRes.get("pv_derechos_o");
+		if(StringUtils.isBlank(derechos))
+		{
+			throw new ApplicationException("No hay derechos parametrizados para el paquete");
+		}
+		logger2.debug("\nRecuperar derechos con paquete {}\nDerechos: {}" , paquete , derechos);
+		return derechos;
+	}
+	
+	protected class RecuperarDerechosPolizaPorPaqueteRamo1 extends StoredProcedure
+	{
+		protected RecuperarDerechosPolizaPorPaqueteRamo1(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_DERPOL_X_PAQ_RAMO1");
+			declareParameter(new SqlParameter("paquete" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_derechos_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

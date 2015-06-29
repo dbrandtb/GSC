@@ -1138,6 +1138,74 @@ Ext.onReady(function()
     {
         debugError('error inofensivo al querer mover boton de agentes',e);
     }
+    
+    //para ramo 1 quieren heredar derechos de poliza según paquete
+    if(_p25_smap1.LINEA_EXTENDIDA=='S'&&Number(_p25_smap1.cdramo)==1)
+    {
+        var paqueteCmp;
+        var derechosCmp;
+        for(var i in _p25_colsExtColumns)
+        {
+            var col = _p25_colsExtColumns[i];
+            if(col.text=='PAQUETE')
+            {
+                paqueteCmp = col.editor;
+            }
+            else if(col.text=='DERECHOS DE POLIZA')
+            {
+                derechosCmp = col.editor;
+            }
+        }
+        derechosCmp.setReadOnly(_p25_smap1.cdsisrol!='COTIZADOR');
+        derechosCmp.heredar = function(paqueteVal)
+        {
+            derechosCmp.setLoading(true);
+            Ext.Ajax.request(
+            {
+                url      : _p25_urlRecuperacionSimple
+                ,params  :
+                {
+                    'smap1.procedimiento' : 'RECUPERAR_DERECHOS_POLIZA_POR_PAQUETE_RAMO_1'
+                    ,'smap1.paquete'      : paqueteVal
+                }
+                ,success : function(response)
+                {
+                    derechosCmp.setLoading(false);
+                    var ck = 'Decodificando derechos de poliza';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### derechos de poliza:',json);
+                        if(json.exito)
+                        {
+                            derechosCmp.setValue(json.smap1.DERECHOS);
+                        }
+                        else
+                        {
+                            mensajeError(json.respuesta);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function()
+                {
+                    derechosCmp.setLoading(false);
+                    errorComunicacion('Recuperando derechos de poliza');
+                }
+            });
+        };
+        paqueteCmp.on(
+        {
+            select : function(me,rec)
+            {
+                derechosCmp.heredar(rec[0].get('key'));
+            }
+        });
+    }
+    //para ramo 1 quieren heredar derechos de poliza según paquete
     ////// custom //////
     
     ////// loaders //////

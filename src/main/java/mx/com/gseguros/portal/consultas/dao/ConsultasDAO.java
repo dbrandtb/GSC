@@ -287,4 +287,6 @@ public interface ConsultasDAO
 			,String nmpolizaOrig
 			,String ntramiteDestino
 			)throws Exception;
+	
+	public String recuperarDerechosPolizaPorPaqueteRamo1(String paquete) throws Exception;
 }
