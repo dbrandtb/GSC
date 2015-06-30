@@ -853,10 +853,10 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	public String consultaListaTipoAtencion(){
 		logger.debug("Entra a consultaListaTipoAtencion params de entrada :{}",params);
 		try {
-			if(params != null){
+			//if(params != null){
 				listaTipoAtencion= siniestrosManager.getconsultaListaTipoAtencion(params.get("cdramo"), params.get("tipoPago"));
 				logger.debug("listaTipoAtencion : {}",listaTipoAtencion);
-			}
+			//}
 		}catch( Exception e){
 			logger.error("Error al consultar la Lista de los asegurados : {}", e.getMessage(), e);
 			return SUCCESS;
@@ -4610,6 +4610,42 @@ public class SiniestrosAction extends PrincipalCoreAction {
     	}
     	return SUCCESS;
     }
+	
+	public String entradaRevisionAdmin(){
+		logger.info("Entra a entradaRevisionAdmin params: {}",params);
+		try{
+			String ntramite = "9661";//params.get("ntramite");
+			if(ntramite==null){
+				throw new Exception("No hay tramite");
+			}
+			
+			 HashMap<String, String> params = new HashMap<String,String>();
+			UserVO usuario  = (UserVO)session.get("USUARIO");
+			String cdrol    = usuario.getRolActivo().getClave();
+			params.put("cdrol", cdrol);
+			
+			
+			String pantalla = "AFILIADOS_AGRUPADOS";
+			String seccion  = "FORMULARIO";
+
+			List<ComponenteVO> componentes = pantallasManager.obtenerComponentes(
+				null, null, null, null, null, cdrol, pantalla, seccion, null);
+
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			imap = new HashMap<String,Item>();
+			String valorComplementario = "0";
+
+			List<ComponenteVO>tatrisin=kernelManagerSustituto.obtenerTatrisinPoliza("1000","2","M","20");
+			gc.generaComponentes(tatrisin, true, false, true, false, false, false);
+			imap.put("tatrisinItems",gc.getItems());
+			
+			logger.debug("Valores de Respuesta  {}",imap);
+		}
+		catch(Exception ex){
+			logger.error("error al cargar pantalla de asegurados afectados : {}", ex.getMessage(), ex);
+		}
+		return SUCCESS;
+	}
 	
 /****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {

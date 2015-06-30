@@ -169,7 +169,7 @@ Ext.onReady(function() {
 	
 	var storeTipoAtencion = Ext.create('Ext.data.Store', {
 		model:'Generic',
-		autoLoad:true,
+		autoLoad:false,
 		proxy: {
 			type: 'ajax',
 			url:_UR_TIPO_ATENCION,
@@ -2123,7 +2123,7 @@ Ext.onReady(function() {
 					
 					limpiarRegistrosTipoPago(panelInicialPral.down('combo[name=cmbTipoPago]').getValue());
 					
-					storeTipoAtencion.load({
+					storeTipoAtencion.load({ 
 						params:{
 							'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue(),
 							'params.tipoPago':panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
