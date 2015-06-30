@@ -5957,9 +5957,12 @@ public class EndososAction extends PrincipalCoreAction
 			,OTVALOR48,OTVALOR49,OTVALOR50
 			 */
 			
+			String valorCodPosOriginal = null;
+			
 			for(Map<String,String>valositIte:valositsPoliza) {
 				String nmsituacIte=valositIte.get("NMSITUAC");
 				String keyCodPostal = "pv_otvalor"+valositIte.get("CDATRIBU");
+				valorCodPosOriginal = valositIte.get("OTVALOR"+valositIte.get("CDATRIBU"));
 				logger.debug("OTvalor encontrado para CP: "  +keyCodPostal);
 				
 				//otvalor05 -> pv_otvalor05
@@ -6007,38 +6010,45 @@ public class EndososAction extends PrincipalCoreAction
 			endososManager.insertarTworksupSitTodas(mapaTworksupEnd);
 			////// inserta tworksup //////
 			//////////////////////////////
-			
-			//////////////////////////
-			////// tarificacion //////
-			Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
-			mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
-			mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemento);
-			mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
-			mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
-			mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
-			mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
-			mapaSigsvalipolEnd.put("pv_nmsituac_i" , "0");
-			mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
-			//mapaSigsvalipolEnd.put("pv_cdtipsit_i" , null);
-			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , cdtipsup);
-			endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
-			////// tarificacion //////
-			//////////////////////////
-			
-			//////////////////////////
-			////// valor endoso //////
-			Map<String,Object>mapaValorEndoso=new LinkedHashMap<String,Object>(0);
-			mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
-			mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
-			mapaValorEndoso.put("pv_estado_i"   , estado);
-			mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
-			mapaValorEndoso.put("pv_nmsituac_i" , "1");
-			mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
-			mapaValorEndoso.put("pv_feinival_i" , dFechaEndoso);
-			mapaValorEndoso.put("pv_cdtipsup_i" , cdtipsup);
-			endososManager.calcularValorEndoso(mapaValorEndoso);
-			////// valor endoso //////
-			//////////////////////////
+			logger.info("Codigo Postal Original:>"+valorCodPosOriginal+"<Codigo Postal Nuevo:>"+cdpostal+"<");
+
+			if(cdpostal.equalsIgnoreCase(valorCodPosOriginal)){
+				logger.info("El codigo Postal para Endoso de Domicilio Full no ha cambiado, no se ejecuta SIGSVALIPOL, CALCULA_VALOR_ENDOSO");
+			}else{
+				logger.info("Codigo postal nuevo para Endoso de Domicilio Full, ejecutando SIGSVALIPOL, CALCULA_VALOR_ENDOSO");
+				//////////////////////////
+				////// tarificacion //////
+				Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
+				mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
+				mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemento);
+				mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
+				mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
+				mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
+				mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
+				mapaSigsvalipolEnd.put("pv_nmsituac_i" , "0");
+				mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
+				//mapaSigsvalipolEnd.put("pv_cdtipsit_i" , null);
+				mapaSigsvalipolEnd.put("pv_cdtipsup_i" , cdtipsup);
+				endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
+				////// tarificacion //////
+				//////////////////////////
+				
+				//////////////////////////
+				////// valor endoso //////
+				Map<String,Object>mapaValorEndoso=new LinkedHashMap<String,Object>(0);
+				mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
+				mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
+				mapaValorEndoso.put("pv_estado_i"   , estado);
+				mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
+				mapaValorEndoso.put("pv_nmsituac_i" , "1");
+				mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
+				mapaValorEndoso.put("pv_feinival_i" , dFechaEndoso);
+				mapaValorEndoso.put("pv_cdtipsup_i" , cdtipsup);
+				endososManager.calcularValorEndoso(mapaValorEndoso);
+				////// valor endoso //////
+				//////////////////////////
+				
+			}
 			
 			// Se confirma el endoso si cumple la validacion de fechas: 
 			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(
