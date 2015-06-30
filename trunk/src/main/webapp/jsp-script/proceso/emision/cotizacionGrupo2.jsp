@@ -1140,10 +1140,13 @@ Ext.onReady(function()
     }
     
     //para ramo 1 quieren heredar derechos de poliza según paquete
-    if(_p25_smap1.LINEA_EXTENDIDA=='S'&&Number(_p25_smap1.cdramo)==1)
+    if(Number(_p25_smap1.cdramo)==1)
     {
         var paqueteCmp;
+        var paqueteCmp2;
         var derechosCmp;
+        var derechosCmp2;
+        
         for(var i in _p25_colsExtColumns)
         {
             var col = _p25_colsExtColumns[i];
@@ -1202,6 +1205,69 @@ Ext.onReady(function()
             select : function(me,rec)
             {
                 derechosCmp.heredar(rec[0].get('key'));
+            }
+        });
+        
+        ////
+        
+        for(var i in _p25_colsBaseColumns)
+        {
+            var col = _p25_colsBaseColumns[i];
+            if(col.text=='PAQUETE')
+            {
+                paqueteCmp2 = col.editor;
+            }
+            else if(col.text=='DERECHOS DE POLIZA')
+            {
+                derechosCmp2 = col.editor;
+            }
+        }
+        derechosCmp2.setReadOnly(_p25_smap1.cdsisrol!='COTIZADOR');
+        derechosCmp2.heredar = function(paqueteVal)
+        {
+            derechosCmp2.setLoading(true);
+            Ext.Ajax.request(
+            {
+                url      : _p25_urlRecuperacionSimple
+                ,params  :
+                {
+                    'smap1.procedimiento' : 'RECUPERAR_DERECHOS_POLIZA_POR_PAQUETE_RAMO_1'
+                    ,'smap1.paquete'      : paqueteVal
+                }
+                ,success : function(response)
+                {
+                    derechosCmp2.setLoading(false);
+                    var ck = 'Decodificando derechos de poliza';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### derechos de poliza:',json);
+                        if(json.exito)
+                        {
+                            derechosCmp2.setValue(json.smap1.DERECHOS);
+                        }
+                        else
+                        {
+                            mensajeError(json.respuesta);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function()
+                {
+                    derechosCmp2.setLoading(false);
+                    errorComunicacion('Recuperando derechos de poliza');
+                }
+            });
+        };
+        paqueteCmp2.on(
+        {
+            select : function(me,rec)
+            {
+                derechosCmp2.heredar(rec[0].get('key'));
             }
         });
     }
@@ -3289,6 +3355,7 @@ function _p25_turnar(status,titulo,closable)
                             debug('json response:',json);
                             if(json.success)
                             {
+                                status = json.smap1.status;
                                 ventana.setLoading(true);
                                 if(status+'x'=='17x')
 			                    {

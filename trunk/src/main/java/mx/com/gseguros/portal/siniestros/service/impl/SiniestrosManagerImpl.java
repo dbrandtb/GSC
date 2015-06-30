@@ -1416,7 +1416,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	public void moverTramite(
+	public Map<String,Object> moverTramite(
 			String ntramite
 			,String nuevoStatus
 			,String comments
@@ -1432,7 +1432,8 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 				+ "\n##########################"
 				+ "\n###### moverTramite ######"
 				);
-		siniestrosDAO.moverTramite(ntramite,nuevoStatus,comments,cdusuariSesion,cdsisrolSesion,cdusuariDestino,cdsisrolDestino,cdmotivo,cdclausu);
+		
+		Map<String,Object> res = siniestrosDAO.moverTramite(ntramite,nuevoStatus,comments,cdusuariSesion,cdsisrolSesion,cdusuariDestino,cdsisrolDestino,cdmotivo,cdclausu);
 		
 		try
         {
@@ -1459,9 +1460,11 @@ public class SiniestrosManagerImpl implements SiniestrosManager
         }
 		
 		log.info(""
+				+ "\n###### res=" + res
 				+ "\n###### moverTramite ######"
 				+ "\n##########################"
 				);
+		return res;
 	}
 	
 	@Override
