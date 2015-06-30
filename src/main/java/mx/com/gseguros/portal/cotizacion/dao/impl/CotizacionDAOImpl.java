@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -4461,39 +4462,34 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
      protected class CargarDetallesCotizacionAutoFlotilla extends StoredProcedure
      {
      	protected CargarDetallesCotizacionAutoFlotilla(DataSource dataSource)
-         {
-             super(dataSource,"PKG_SATELITES2.P_GET_DETALLE_COTI_AUTO_FLOT");
-             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
-             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
-             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
-             declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
-             declareParameter(new SqlParameter("cdperpag" , OracleTypes.VARCHAR));
-             String[] cols=new String[]{
-            		  "CDUNIECO"
-            		 ,"CDRAMO"
-            		 ,"ESTADO"
-            		 ,"NMPOLIZA"
-            		 ,"NMSITUAC"
-            		 /*
-            		 ,"NMSUPLEM"
-            		 ,"STATUS"
-            		 ,"CDGARANT"
-            		 ,"CDTIPCON"
-            		 ,"CDCONTAR"*/
-            		 ,"PRIMA"/*
-            		 ,"CDAGRUPA"
-            		 ,"ORDEN"
-            		 ,"CDPERPAG"
-            		 ,"CDPLAN"*/
-            		 ,"COBERTURA"
-            		 ,"TITULO"
-            		 ,"ORDEN"
-            		 };
-             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-             compile();
+     	{
+     		super(dataSource,"PKG_SATELITES2.P_GET_DETALLE_COTI_AUTO_FLOT");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdperpag" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DetalleCotizacionAutoFLotillaMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
      	}
+     }
+     
+     protected class DetalleCotizacionAutoFLotillaMapper implements RowMapper<Map<String,String>> {
+         public Map<String, String> mapRow(ResultSet rs, int rowNum) throws SQLException {
+             Map<String, String> map = new HashMap<String, String>();
+             map.put("CDUNIECO", rs.getString("CDUNIECO"));
+             map.put("CDRAMO", rs.getString("CDRAMO"));
+             map.put("ESTADO", rs.getString("ESTADO"));
+             map.put("NMPOLIZA", rs.getString("NMPOLIZA"));
+             map.put("NMSITUAC", rs.getString("NMSITUAC"));
+             map.put("PRIMA", rs.getString("PRIMA"));
+             map.put("COBERTURA", rs.getString("COBERTURA"));
+             map.put("TITULO", rs.getString("TITULO"));
+             map.put("ORDEN", rs.getString("ORDEN"));
+             return map;
+         }
      }
      
      @Override
