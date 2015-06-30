@@ -286,6 +286,35 @@ Ext.onReady(function() {
                             }
                         }
                     },{
+                    	//Se agrega el combo para elegir Empresa:Todas (1) General de Salud (2),General de Seguros (3)
+                    	xtype       : 'combo',
+                        name        : 'params.cdempresa',
+                        value       : _parametros.cdempresa="", //Valor inicial: 1-Todas
+                        fieldLabel  : 'Empresa',
+                        valueField  : 'key',
+                        displayField: 'value',
+                        forceSelection: true,
+                        queryMode   :'local',
+                        anyMatch    : true,
+                        store       : Ext.create('Ext.data.Store', {
+                                       model : 'Generic',
+                                       autoLoad : true,                         
+                                       fields : [ 'id', 'genre_name' ],
+                                       data : [ 
+                                                 [ '', 'Todas' ],
+                                                 [ '1', 'General de Salud' ], 
+                                                 [ '2', 'General de Seguros' ] 
+                                               ]
+                                    })
+                                    ,                                                       
+                                    listeners: {
+                                            load:function (){
+                                                    if(editMode){
+                                                        panelPersona.getForm().findField('params.cdempresa').setValue(_parametros.cdempresa);
+                                                    }
+                                             }
+                                    }
+                    },{
                         xtype      : 'textfield',
                         name       : 'params.dsnombre',
                         fieldLabel : 'Nombre',

@@ -248,7 +248,7 @@ Ext.apply(Ext.form.field.VTypes, {
                                          'params.cdbroker': record.get('cdbroker'),
                                          'params.cdoficin': record.get('cdoficin')//,
                                          //'params.cduniecoRuta': record.get('cduniecoRuta')
-                                         
+                                         ,'params.cdempresa': record.get('cdempresa')
                                     }
                                 }
                             }).show();
