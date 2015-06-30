@@ -741,6 +741,23 @@ debug("validarYGuardar flag:2");
     //!guardador
 	
     Ext.onReady(function(){
+    	
+    	storeParentescop2 = new Ext.data.Store({
+            model:'Generic',
+            proxy:
+            {
+                type: 'ajax',
+                url : urlCargarCatalogosp2,
+                extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PARENTESCO"/>'},
+                reader:
+                {
+                    type: 'json',
+                    root: 'lista'
+                }
+            }
+        });
+        
+        storeParentescop2.load();
 		
 		Ext.define('Modelo1p2',{
 			extend:'Ext.data.Model',
@@ -795,22 +812,6 @@ debug("validarYGuardar flag:2");
             }
         });
 
-        storeParentescop2 = new Ext.data.Store({
-            model:'Generic',
-            autoLoad:true,
-            proxy:
-            {
-                type: 'ajax',
-                url : urlCargarCatalogosp2,
-                extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PARENTESCO"/>'},
-                reader:
-                {
-                    type: 'json',
-                    root: 'lista'
-                }
-            }
-        });
-		
 		storeTpersonasp2 = new Ext.data.Store({
             model:'Generic',
             autoLoad:true,
