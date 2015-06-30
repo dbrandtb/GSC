@@ -55,7 +55,11 @@ public class UsuarioVO implements Serializable {
     private String statusag;
     private String cdoficin;
     private String cdbroker;
-    
+    /**
+     * Se agrega campo: Empresa
+     * cdempresa
+     */
+    private String cdempresa;
     /**
      * @return the cdUsuario
      */
@@ -257,5 +261,13 @@ public class UsuarioVO implements Serializable {
 
 	public void setCdbroker(String cdbroker) {
 		this.cdbroker = cdbroker;
+	}
+
+	public String getCdempresa() {
+		return cdempresa;
+	}
+
+	public void setCdempresa(String cdempresa) {
+		this.cdempresa = cdempresa;
 	}
 }

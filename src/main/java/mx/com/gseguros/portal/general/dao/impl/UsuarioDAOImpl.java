@@ -79,6 +79,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			parametros.put("PV_STATUSAG_I", params.get("statusag"));
 			parametros.put("PV_CDOFICIN_I", params.get("cdoficin"));
 			parametros.put("PV_CDBROKER_I", params.get("cdbroker"));
+			parametros.put("PV_CDEMPRESA_I", params.get("cdempresa"));
 			parametros.put("PV_ACCION_I", params.get("accion"));
 			
 			Map<String, Object> result = ejecutaSP(new GuardaUsuario(getDataSource()), parametros);
@@ -117,6 +118,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			declareParameter(new SqlParameter("PV_STATUSAG_I", OracleTypes.VARCHAR));//DEBE SER VARCHAR
 			declareParameter(new SqlParameter("PV_CDOFICIN_I", OracleTypes.VARCHAR));//DEBE SER NUMBER (6)
 			declareParameter(new SqlParameter("PV_CDBROKER_I", OracleTypes.VARCHAR));//DEBE SER NUMBER (6)
+			declareParameter(new SqlParameter("PV_CDEMPRESA_I", OracleTypes.VARCHAR));//DEBE SER TIPO , ASI SE DEFINE EN EL PROCEDURE
 			declareParameter(new SqlParameter("PV_ACCION_I", OracleTypes.VARCHAR));//DEBE SER TIPO VARCHAR, ASI SE DEFINE EN EL PROCEDURE
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));//DEBE SER TIPO NUMBER
 			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
@@ -296,6 +298,10 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			usuarioVO.setStatusag(rs.getString("STATUSAG"));
 			usuarioVO.setCdoficin(rs.getString("CDOFICIN"));
 			usuarioVO.setCdbroker(rs.getString("CDBROKER"));
+			/**
+			 * Se agrega el campo CDEMPRESA
+			 */
+			usuarioVO.setCdbroker(rs.getString("CDEMPRESA"));
 			return usuarioVO;
         }
     }
