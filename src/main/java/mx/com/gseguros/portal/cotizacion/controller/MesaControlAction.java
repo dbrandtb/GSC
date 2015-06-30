@@ -351,7 +351,26 @@ public class MesaControlAction extends PrincipalCoreAction
 			String cdsisrolSesion = usu.getRolActivo().getClave();
 			String cdclausu       = null;
 			
-			siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu);
+			Map<String,Object> res = siniestrosManager.moverTramite(
+					ntramite
+					,statusNuevo
+					,comments
+					,cdusuariSesion
+					,cdsisrolSesion
+					,usuarioDestino
+					,rolDestino
+					,cdmotivo
+					,cdclausu
+					);
+			
+			Boolean escalado  = (Boolean)res.get("ESCALADO");
+			String  statusEsc = (String)res.get("STATUS");
+			
+			smap1.put("ESCALADO" , escalado ? "S" : "N" );
+			if(escalado)
+			{
+				smap1.put("status" , statusEsc);
+			}
 			
 			/*
 			// Se actualiza el estatus en la mesa de control:

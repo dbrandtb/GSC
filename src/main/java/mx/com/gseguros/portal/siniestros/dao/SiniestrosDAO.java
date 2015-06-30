@@ -382,7 +382,7 @@ public interface SiniestrosDAO {
 	
 	public List<Map<String,String>> obtenerUsuariosPorRol(String cdsisrol)throws Exception;
 	
-	public void moverTramite(
+	public Map<String,Object> moverTramite(
 			String ntramite
 			,String nuevoStatus
 			,String comments

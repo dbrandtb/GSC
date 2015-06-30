@@ -3499,6 +3499,7 @@ function _p21_turnar(status,titulo,closable)
                             debug('json response:',json);
                             if(json.success)
                             {
+                                status = json.smap1.status;
                                 ventana.setLoading(true);
                                 if(status+'x'=='17x')
 			                    {

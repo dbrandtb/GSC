@@ -34,7 +34,7 @@ import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
 import oracle.jdbc.driver.OracleTypes;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
@@ -42,7 +42,8 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosDAO {
 
-	private static Logger logger = Logger.getLogger(SiniestrosDAOImpl.class);
+	private static org.apache.log4j.Logger logger  = org.apache.log4j.Logger.getLogger(SiniestrosDAOImpl.class);
+	private static org.slf4j.Logger        logger2 = LoggerFactory.getLogger(SiniestrosDAOImpl.class);
 	
 	@Override
 	public List<AutorizacionServicioVO> obtieneDatosAutorizacionEsp(String nmautser) throws Exception {
@@ -474,10 +475,9 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         }
     }
     
-    public static void setLogger(Logger logger) {
+    public static void setLogger(org.apache.log4j.Logger logger) {
 		SiniestrosDAOImpl.logger = logger;
 	}
-
     
 	@Override
 	public List<ConsultaTDETAUTSVO> obtieneListadoTDeTauts(String nmautser)
@@ -3584,7 +3584,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 	
 	@Override
-	public void moverTramite(
+	public Map<String,Object> moverTramite(
 			String ntramite
 			,String nuevoStatus
 			,String comments
@@ -3607,14 +3607,21 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		params.put("cdmotivo"        , cdmotivo);
 		params.put("cdclausu"        , cdclausu);
 		logger.info("params: "+params);
-		ejecutaSP(new MoverTramite(getDataSource()), params);
+		Map<String,Object> procRes  = ejecutaSP(new MoverTramite(getDataSource()), params);
+		boolean            escalado = "S".equals((String)procRes.get("pv_escalado_o"));
+		String             status   = (String)procRes.get("pv_status_esc_o");
+		Map<String,Object> result   = new HashMap<String,Object>();
+		result.put("ESCALADO" , escalado);
+		result.put("STATUS"   , status);
+		logger2.debug("\nMover tramite, escalado: {}, status: {}, result: {}",escalado,status,result);
+		return result;
 	}
 	
 	protected class MoverTramite extends StoredProcedure
 	{
 		protected MoverTramite(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES.P_MOV_TRAMITE");
+			super(dataSource, "PKG_SATELITES2.P_MOV_TRAMITE");
 			declareParameter(new SqlParameter("ntramite"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nuevoStatus"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("comments"        , OracleTypes.VARCHAR));
@@ -3624,8 +3631,10 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("cdsisrolDestino" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdmotivo"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdclausu"        , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_escalado_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_status_esc_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"     , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"      , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
