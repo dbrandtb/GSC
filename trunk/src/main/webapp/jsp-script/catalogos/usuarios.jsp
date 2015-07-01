@@ -246,9 +246,9 @@ Ext.apply(Ext.form.field.VTypes, {
                                          'params.statusag': record.get('statusag'),
                                          'params.claseag': record.get('claseag'),
                                          'params.cdbroker': record.get('cdbroker'),
-                                         'params.cdoficin': record.get('cdoficin')//,
+                                         'params.cdoficin': record.get('cdoficin'),
                                          //'params.cduniecoRuta': record.get('cduniecoRuta')
-                                         ,'params.cdempresa': record.get('cdempresa')
+                                         'params.cdempresa': record.get('cdempresa')
                                     }
                                 }
                             }).show();

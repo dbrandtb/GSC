@@ -301,7 +301,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			/**
 			 * Se agrega el campo CDEMPRESA
 			 */
-			usuarioVO.setCdbroker(rs.getString("CDEMPRESA"));
+			usuarioVO.setCdempresa(rs.getString("CDEMPRESA"));
 			return usuarioVO;
         }
     }
