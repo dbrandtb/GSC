@@ -24,9 +24,9 @@
 					,itemId     : '_pAsegAlte_fechaCmp'
 					,labelWidth	: 150
 					,format		: 'd/m/Y'
-					,editable	: true
+					,readOnly   : true
 					,allowBlank	: false
-					, value     : new Date()
+					, value     : asegAlterno.FEEFECTO
 				},
 			 	{
 			        fieldLabel	: 'Asegurado Alterno',
@@ -91,6 +91,7 @@
 		});
 		
 		////// loaders //////
+		/*
 		Ext.Ajax.request(
 	    {
 	        url      : _pAsegAlte_urlRecuperacionSimple
@@ -123,7 +124,7 @@
 	        {
 	            errorComunicacion();
 	        }
-	    });
+	    });*/
 		////// loaders //////
             	
     });
