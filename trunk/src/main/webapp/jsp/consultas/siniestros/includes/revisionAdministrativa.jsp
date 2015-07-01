@@ -10,8 +10,6 @@ var _PAGO_DIRECTO = '<s:property value="@mx.com.gseguros.portal.general.util.Tip
 var _REEMBOLSO    = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo" />';
 var _ROL_ACTIVO   = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MEDICO_AJUSTADOR.cdsisrol" />';
 var _URL_LoadFacturas =  '<s:url namespace="/siniestros" action="loadListaFacturasTramite" />';
-var _URL_GuardaFactura =  '<s:url namespace="/siniestros" action="guardaFacturaTramite" />';
-var _URL_ActualizaFactura =  '<s:url namespace="/siniestros" action="actualizaFacturaTramite" />';
 var _URL_EliminaFactura =  '<s:url namespace="/siniestros" action="eliminaFacturaTramite" />';
 
 var _URL_LoadConceptos =  '<s:url namespace="/siniestros" action="obtenerMsinival" />';
@@ -336,7 +334,7 @@ Ext.onReady(function() {
 	panelEdicionFacturas= Ext.create('Ext.form.Panel',{
         border  : 0,
         width: 400,
-        url: _URL_GuardaFactura
+        url: null
         ,bodyStyle:'padding:5px;'
        	/*,listeners : { 
 	    		afterrender : function(){
@@ -910,9 +908,7 @@ Ext.onReady(function() {
                         	
                         	var UrlFact;
                         	if(_Operacion == 'I'){
-                        		UrlFact = _URL_GuardaFactura;
-                        	}else {
-                        		UrlFact = _URL_ActualizaFactura;
+                        		UrlFact = null;
                         	}
                         	//Obtenemos los valores
                         	var tipoMoneda = panelEdicionFacturas.down('[name="params.tipoMoneda"]').getValue();
@@ -1800,9 +1796,7 @@ function _revAdm_rechazoSiniestro()
     {
     	var UrlFact;
         if(_Operacion == 'I'){
-            UrlFact = _URL_GuardaFactura;
-        }else {
-            UrlFact = _URL_ActualizaFactura;
+            UrlFact = null;
         }
         _revAdm_windowRechazo.setLoading(true);
         panelEdicionFacturas.form.submit({    
