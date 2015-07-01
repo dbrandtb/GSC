@@ -5271,6 +5271,7 @@ function _p21_guardarExtraprimas(letra)
     if(records.length==0)
     {
         mensajeWarning('No hay cambios');
+        _p21_setActiveResumen();
     }
     else
     {
@@ -5310,6 +5311,7 @@ function _p21_guardarExtraprimas(letra)
                 {
                     store.commitChanges();
                     mensajeCorrecto('Datos guardados',json.respuesta);
+                    _p21_setActiveResumen();
                 }
                 else
                 {
@@ -5540,6 +5542,7 @@ function _p21_guardarAsegurados(grid,callback)
         if(!valido)
         {
             mensajeWarning('No hay cambios');
+            _p21_setActiveResumen();
         }
     }
     
@@ -5592,6 +5595,7 @@ function _p21_guardarAsegurados(grid,callback)
                     else
                     {
                         mensajeCorrecto('Datos guardados',json.respuesta);
+                        _p21_setActiveResumen();
                     }
                 }
                 else
