@@ -2471,7 +2471,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                         {
                                                             text     : 'Ver conceptos globales'
                                                             ,icon    : '${ctx}/resources/fam3icons/icons/money_dollar.png'
-                                                            ,hidden  : _p21_smap1.cdsisrol!='COTIZADOR'
+                                                            ,hidden  : '|COTIZADOR|SUPTECSALUD|SUBDIRSALUD|DIRECSALUD|'.indexOf('|'+_p21_smap1.cdsisrol+'|')==-1
                                                             ,handler : function(){ _p21_generarVentanaVistaPrevia(true); }
                                                         }
                                                     ]
