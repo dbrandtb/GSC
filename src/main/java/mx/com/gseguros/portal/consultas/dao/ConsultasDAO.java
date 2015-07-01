@@ -289,4 +289,11 @@ public interface ConsultasDAO
 			)throws Exception;
 	
 	public String recuperarDerechosPolizaPorPaqueteRamo1(String paquete) throws Exception;
+	
+	public boolean validaPagoPolizaRepartido(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }

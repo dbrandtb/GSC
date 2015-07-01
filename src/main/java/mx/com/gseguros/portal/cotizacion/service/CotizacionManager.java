@@ -518,4 +518,13 @@ public interface CotizacionManager
 			,String complemento
 			,File censo
 			)throws Exception;
+	
+	@Deprecated
+	public boolean validaPagoPolizaRepartido(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
+	
 }

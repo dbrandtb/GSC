@@ -3850,6 +3850,22 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
+		boolean pagoRepartido = false;
+		if(exito)
+		{
+			try
+			{
+				pagoRepartido = cotizacionManager.validaPagoPolizaRepartido(cdunieco,cdramo,"W",nmpoliza);
+			}
+			catch(Exception ex)
+			{
+				respuesta       = Utils.join("Error al recuperar reparto de pago #",System.currentTimeMillis());
+				respuestaOculta = ex.getMessage();
+				exito           = false;
+				logger.error(respuesta,ex);
+			}
+		}
+		
 		if(exito)
 		{
 			FileInputStream input       = null;
@@ -4255,15 +4271,19 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                try
                 	{
-		                logger.info("RFC: "+(
-		                		row.getCell(15).getStringCellValue()+"|"
-		                		));
-		                bufferLinea.append(
-		                		row.getCell(15).getStringCellValue()+"|"
-		                		);
-		                if(StringUtils.isBlank(row.getCell(15).getStringCellValue()))
+	                	auxCell=row.getCell(15);
+	                	
+		                logger.info("RFC: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+		                
+		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+		                
+		                if(
+		                		(auxCell==null||StringUtils.isBlank(auxCell.getStringCellValue()))
+		                		&&pagoRepartido
+		                		&&"T".equals(parentesco)
+		                )
 		                {
-		                	throw new ApplicationException("Sin rfc");
+		                	throw new ApplicationException("Sin rfc para un titular en pago repartido");
 		                }
                 	}
 	                catch(Exception ex)

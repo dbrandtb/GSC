@@ -4057,7 +4057,23 @@ public class CotizacionManagerImpl implements CotizacionManager
 			logger.error(resp.getRespuesta(),ex);
 		}
 		
-		String nombreCenso = null;
+		String  nombreCenso   = null;
+		boolean pagoRepartido = false;
+		
+		if(resp.isExito())
+		{
+			try
+			{
+				pagoRepartido = consultasDAO.validaPagoPolizaRepartido(cdunieco, cdramo, "W", nmpoliza);
+			}
+			catch(Exception ex)
+			{
+				resp.setRespuesta(Utils.join("Error al recuperar reparto de pago #",System.currentTimeMillis()));
+				resp.setRespuestaOculta(ex.getMessage());
+				resp.setExito(false);
+				logger.error(resp.getRespuesta(),ex);
+			}
+		}
 		
 		//crear pipes
 		if(resp.isExito())
@@ -4562,20 +4578,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                
 	                try
                 	{
-		                logger.debug(
-		                		new StringBuilder("RFC: ")
-		                		.append(row.getCell(15).getStringCellValue())
-		                		.append("|")
-		                		.toString()
-		                		);
-		                bufferLinea.append(
-		                		new StringBuilder(row.getCell(15).getStringCellValue())
-		                		.append("|")
-		                		.toString()
-		                		);
-		                if(StringUtils.isBlank(row.getCell(15).getStringCellValue()))
+	                	auxCell = row.getCell(15);
+		                logger.debug(Utils.join("RFC: ",auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+		                bufferLinea.append(Utils.join(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+		                if(
+		                		(auxCell==null||StringUtils.isBlank(auxCell.getStringCellValue()))
+		                		&&pagoRepartido
+		                		&&"T".equals(parentesco)
+		                )
 		                {
-		                	throw new Exception("Sin rfc");
+		                	throw new Exception("Sin rfc para un titular en pago repartido");
 		                }
                 	}
 	                catch(Exception ex)
@@ -6430,6 +6442,32 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return resp;
+	}
+	
+	@Override
+	@Deprecated
+	public boolean validaPagoPolizaRepartido(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ validaPagoPolizaRepartido @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				));
+		boolean pagoRepartido = consultasDAO.validaPagoPolizaRepartido(cdunieco,cdramo,estado,nmpoliza);
+		logger.debug(Utils.join(
+				 "\n@@@@@@ pagoRepartido=" , pagoRepartido
+				,"\n@@@@@@ validaPagoPolizaRepartido @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return pagoRepartido;
 	}
     
 	///////////////////////////////
