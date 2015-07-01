@@ -3213,8 +3213,8 @@ function _p25_generarTramiteClic(callback,sincenso,revision)
                                                                             'smap1.cdunieco'  : json.smap1.cdunieco
                                                                             ,'smap1.cdramo'   : json.smap1.cdramo
                                                                             ,'smap1.estado'   : 'W'
-                                                                            ,'smap1.nmpoliza' : json.smap1.nmpoliza
-                                                                            ,'smap1.nmsolici' : json.smap1.nmpoliza
+                                                                            ,'smap1.nmpoliza' : '0'
+                                                                            ,'smap1.nmsolici' : '0'
                                                                             ,'smap1.nmsuplem' : '0'
                                                                             ,'smap1.ntramite' : json.smap1.ntramite
                                                                             ,'smap1.tipomov'  : '0'
