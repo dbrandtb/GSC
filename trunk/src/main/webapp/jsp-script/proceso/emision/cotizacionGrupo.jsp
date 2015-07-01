@@ -2457,12 +2457,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                 })
                                                 ,Ext.create('Ext.grid.Panel',
                                                 {
-                                                    title      : 'TARIFA POR EDADES ('
-                                                         +(
-                                                         _p21_ntramite?
-                                                         (_fieldByName('cdperpag').findRecord('key',_fieldByName('cdperpag').getValue()).get('value'))
-                                                         :''
-                                                         )+')'
+                                                    title      : 'TARIFA POR EDADES'
                                                     ,minHeight : 100
                                                     ,hidden    : _p21_ntramite ? false : true
                                                     ,maxHeight : 250
@@ -2546,12 +2541,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                 })
                                                 ,Ext.create('Ext.grid.Panel',
                                                 {
-                                                    title      : 'PRIMA PROMEDIO ('
-                                                         +(
-                                                         _p21_ntramite?
-                                                         (_fieldByName('cdperpag').findRecord('key',_fieldByName('cdperpag').getValue()).get('value'))
-                                                         :''
-                                                         )+')'
+                                                    title      : 'PRIMA PROMEDIO'
                                                     ,minHeight : 100
                                                     ,hidden    : _p21_ntramite ? false : true
                                                     ,maxHeight : 250
