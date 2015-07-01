@@ -2217,4 +2217,39 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public boolean validaPagoPolizaRepartido(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Map<String,Object> procRes = ejecutaSP(new ValidaPagoPolizaRepartido(getDataSource()),params);
+		boolean pagoRepartido = "S".equals((String)procRes.get("pv_repartido_o"));
+		logger2.debug("\nPKG_CONSULTA.P_GET_SWCONTRIBUTORIO pagoRepartido: {}",pagoRepartido);
+		return pagoRepartido;
+	}
+	
+	protected class ValidaPagoPolizaRepartido extends StoredProcedure
+	{
+		protected ValidaPagoPolizaRepartido(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_SWCONTRIBUTORIO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_repartido_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"    , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"     , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
