@@ -873,14 +873,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 					.add(Item.crear("editor","editorTpersonaBp2").setQuotes(""))
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
-					.add(new Item("header", "Nacionalidad"))
-					.add(new Item("dataIndex", "nacional"))
-					.add(new Item("flex", 1))
-					.add(Item.crear("renderer","rendererNacionesp2").setQuotes(""))
-					.add(Item.crear("editor","editorNacionesBp2").setQuotes(""))
-					.add(Item.crear("hidden",true))
-					);
-			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Parentesco"))
 					.add(new Item("dataIndex", "Parentesco"))
 					.add(new Item("flex", 1))
@@ -963,6 +955,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 							.add("xtype","textfield")
 							.add("allowBlank",false)
 						)
+					);
+			item2.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "Nacionalidad"))
+					.add(new Item("dataIndex", "nacional"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("renderer","rendererNacionesp2").setQuotes(""))
+					.add(Item.crear("editor","editorNacionesBp2").setQuotes(""))
+					.add(Item.crear("hidden",true))
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "nmsituac"))
