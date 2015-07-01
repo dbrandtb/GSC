@@ -54,7 +54,6 @@ var _p25_urlObtenerHijosCobertura       = '<s:url namespace="/emision"         a
 var _p25_urlObtenerTarifaEdad           = '<s:url namespace="/emision"         action="cargarTarifasPorEdad"             />';
 var _p25_urlObtenerTarifaCobertura      = '<s:url namespace="/emision"         action="cargarTarifasPorCobertura"        />';
 var _p25_urlGenerarTramiteGrupo         = '<s:url namespace="/emision"         action="generarTramiteGrupo2"             />';
-var _p25_urlVentanaDocumentos           = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"          />';
 var _p25_guardarReporteCotizacion       = '<s:url namespace="/emision"         action="guardarReporteCotizacionGrupo"    />';
 var _p25_urlActualizarStatus            = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"          />';
 var _p25_urlCargarParametros            = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"      />';
@@ -3214,7 +3213,8 @@ function _p25_generarTramiteClic(callback,sincenso,revision)
                                                                             'smap1.cdunieco'  : json.smap1.cdunieco
                                                                             ,'smap1.cdramo'   : json.smap1.cdramo
                                                                             ,'smap1.estado'   : 'W'
-                                                                            ,'smap1.nmpoliza' : '0'
+                                                                            ,'smap1.nmpoliza' : json.smap1.nmpoliza
+                                                                            ,'smap1.nmsolici' : json.smap1.nmpoliza
                                                                             ,'smap1.nmsuplem' : '0'
                                                                             ,'smap1.ntramite' : json.smap1.ntramite
                                                                             ,'smap1.tipomov'  : '0'
