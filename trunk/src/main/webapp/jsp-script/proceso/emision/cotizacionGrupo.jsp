@@ -1201,7 +1201,7 @@ Ext.onReady(function()
                 {
                     for(var prop in json.params)
                     {
-                        if(prop!='cdmunici'&&prop!='clasif')
+                        if(prop!='cdedo'&&prop!='cdmunici'&&prop!='clasif')
                         {
                             if(prop=='pcpgocte')
                             {
@@ -1283,9 +1283,13 @@ Ext.onReady(function()
                             }
                         }
                     }
-                    _fieldByName('cdmunici').heredar(true,function()
+                    _fieldByName('cdedo').heredar(true,function()
                     {
-                        _fieldByName('cdmunici').setValue(json.params['cdmunici']);
+                        _fieldByName('cdedo').setValue(json.params['cdedo']);
+                        _fieldByName('cdmunici').heredar(true,function()
+                        {
+                            _fieldByName('cdmunici').setValue(json.params['cdmunici']);
+                        });
                     });
                     _p21_clasif = json.params['clasif'];
                     debug('_p21_clasif:',_p21_clasif);
