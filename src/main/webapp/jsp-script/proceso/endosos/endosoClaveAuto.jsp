@@ -59,7 +59,7 @@ Ext.onReady(function()
                     {
                         xtype       : 'datefield'
                         ,format     : 'd/m/Y'
-                        ,value      : new Date()
+                        ,value      : _p38_smap1.FEEFECTO
                         ,fieldLabel : 'Fecha de efecto'
                         ,name       : 'feefecto'
                     }
@@ -191,13 +191,7 @@ Ext.onReady(function()
         }
     }
     
-    _fieldByName('feefecto').setValue(_p38_smap1.FEEFECTO);
-    _fieldByName('feefecto').allowBlank = false;
-    _fieldByName('feefecto').setReadOnly(true);
-    _fieldByName('feefecto').isValid();
     
-    /**
-     * SE QUITA CODIGO PARA TOMAR FEEFECTO DE POLIZA
     Ext.Ajax.request(
     {
         url      : _p38_urlRecuperacionSimple
@@ -231,8 +225,6 @@ Ext.onReady(function()
             errorComunicacion();
         }
     });
-    
-    */
     
     ////// loaders //////
 });
