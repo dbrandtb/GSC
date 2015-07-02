@@ -24,7 +24,7 @@
 					,itemId     : '_pAsegAlte_fechaCmp'
 					,labelWidth	: 150
 					,format		: 'd/m/Y'
-					,readOnly   : true
+					,editable   : true
 					,allowBlank	: false
 					, value     : asegAlterno.FEEFECTO
 				},
@@ -91,7 +91,7 @@
 		});
 		
 		////// loaders //////
-		/*
+		
 		Ext.Ajax.request(
 	    {
 	        url      : _pAsegAlte_urlRecuperacionSimple
@@ -124,7 +124,7 @@
 	        {
 	            errorComunicacion();
 	        }
-	    });*/
+	    });
 		////// loaders //////
             	
     });

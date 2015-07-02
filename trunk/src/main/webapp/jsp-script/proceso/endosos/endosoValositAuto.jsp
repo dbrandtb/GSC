@@ -219,7 +219,7 @@ Ext.onReady(function()
                                 xtype       : 'datefield'
                                 ,itemId     : '_p36_fechaCmp'
                                 ,fieldLabel : 'Fecha de efecto'
-                                ,value      : new Date()
+                                ,value      : _p36_smap1.FEEFECTO
                                 ,allowBlank : false
                             }
                             ,{
