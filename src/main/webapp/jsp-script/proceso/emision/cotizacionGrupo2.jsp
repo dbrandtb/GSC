@@ -1969,11 +1969,16 @@ function _p25_rfcBlur(field)
                                                 _fieldByName('cdperson') .setValue(record.get('CLAVECLI'));
                                                 _fieldByName('nombre')   .setValue(record.get('NOMBRECLI'));
                                                 _fieldByName('codpostal').setValue(record.get('CODPOSTAL'));
-                                                _fieldByName('cdedo')    .setValue(record.get('CDEDO'));
-                                                _fieldByName('cdmunici') .heredar(true,function()
+                                                
+                                                _fieldByName('cdedo').heredar(true,function()
                                                 {
-                                                    _fieldByName('cdmunici') .setValue(record.get('CDMUNICI'));
+                                                    _fieldByName('cdedo').setValue(record.get('CDEDO'));
+                                                    _fieldByName('cdmunici') .heredar(true,function()
+                                                    {
+                                                        _fieldByName('cdmunici') .setValue(record.get('CDMUNICI'));
+                                                    });
                                                 });
+                                                
                                                 _fieldByName('dsdomici') .setValue(record.get('DSDOMICIL'));
                                                 _fieldByName('nmnumero') .setValue(record.get('NMNUMERO'));
                                                 _fieldByName('nmnumint') .setValue(record.get('NMNUMINT'));
