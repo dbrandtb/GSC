@@ -3419,6 +3419,14 @@ function _p25_turnar(status,titulo,closable)
                     });
                 }
             }
+            ,{
+                text     : 'Cancelar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+                ,handler : function(me)
+                {
+                    me.up('window').destroy();
+                }
+            }
         ]
     }).show();
     centrarVentanaInterna(ventana);
