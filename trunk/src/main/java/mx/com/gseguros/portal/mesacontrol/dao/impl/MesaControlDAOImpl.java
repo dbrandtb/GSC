@@ -547,4 +547,30 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		}
 	}
 	
+	@Override
+	public void turnaPorCargaTrabajo(
+			String ntramite
+			,String cdsisrol
+			,String status
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("cdsisrol" , cdsisrol);
+		params.put("status"   ,status);
+		ejecutaSP(new TurnaPorCargaTrabajo(getDataSource()),params);
+	}
+	
+	protected class TurnaPorCargaTrabajo extends StoredProcedure {
+		protected TurnaPorCargaTrabajo(DataSource dataSource) {
+			super(dataSource, "PKG_SATELITES2.P_MUEVE_TRAMITE_CARGA");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+			
 }
