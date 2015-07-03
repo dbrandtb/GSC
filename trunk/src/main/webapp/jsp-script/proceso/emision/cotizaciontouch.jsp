@@ -228,16 +228,14 @@ function _mcotiza_load()
 		    		    		}
 		    		    		else
 		    		    		{
-		    		    		    $(['<form action="'+_mcotiza_urlDatosComplementarios+'" >'
-                                      ,'<input type="text" name="cdunieco"      value="'+json.smap1.CDUNIECO+'" />'
-                                      ,'<input type="text" name="cdramo"        value="'+json.smap1.cdramo+'"   />'
-                                      ,'<input type="text" name="estado"        value="W"                       />'
-                                      ,'<input type="text" name="nmpoliza"      value="'+json.smap1.nmpoliza+'" />'
-                                      ,'<input type="text" name="map1.ntramite" value="'+json.smap1.NTRAMITE+'" />'
-                                      ,'<input type="text" name="cdtipsit"      value="'+json.smap1.cdtipsit+'" />'
-                                      ,'</form>'].join("")
-                                    )
-                                    .submit();
+                                    window.location.href=
+                                        _mcotiza_urlDatosComplementarios
+                                            +'?cdunieco='      + json.smap1.CDUNIECO
+                                            +'&cdramo='        + json.smap1.cdramo
+                                            +'&estado=W'
+                                            +'&nmpoliza='      + json.smap1.nmpoliza
+                                            +'&map1.ntramite=' + json.smap1.NTRAMITE
+                                            +'&cdtipsit='      + json.smap1.cdtipsit;
 		    		    		}
 		    		    	}
 		    		    	else
@@ -390,16 +388,14 @@ function _mcotiza_comprar()
                 {
                     Ext.Msg.alert('Tr&aacute;mite generado','Se ha generado el tr&aacute;mite '+json.smap1.ntramite,function()
                     {
-                        $(['<form action="'+_mcotiza_urlDatosComplementarios+'" >'
-                          ,'<input type="text" name="cdunieco"      value="'+_mcotiza_smap1.cdunieco+'"                />'
-                          ,'<input type="text" name="cdramo"        value="'+_mcotiza_smap1.cdramo+'"                  />'
-                          ,'<input type="text" name="estado"        value="W"                                          />'
-                          ,'<input type="text" name="nmpoliza"      value="'+_mcotiza_getFieldNmpoliza().getValue()+'" />'
-                          ,'<input type="text" name="map1.ntramite" value="'+json.smap1.ntramite+'"                    />'
-                          ,'<input type="text" name="cdtipsit"      value="'+_mcotiza_smap1.cdtipsit+'"                />'
-                          ,'</form>'].join("")
-                        )
-                        .submit();
+                        window.location.href=
+                            _mcotiza_urlDatosComplementarios
+                                +'?cdunieco='      + _mcotiza_smap1.cdunieco
+                                +'&cdramo='        + _mcotiza_smap1.cdramo
+                                +'&estado=W'
+                                +'&nmpoliza='      + _mcotiza_getFieldNmpoliza().getValue()
+                                +'&map1.ntramite=' + json.smap1.ntramite
+                                +'&cdtipsit='      + _mcotiza_smap1.cdtipsit;
                     });
                 }
                 else
@@ -450,12 +446,11 @@ function _mcotiza_imprimir()
             + "&paramform=no";
     debug('urlRequestImpCotiza:',urlRequestImpCotiza);
     
-    var numRand=Math.floor((Math.random()*100000)+1);
-    $('<form action="<s:url namespace="/documentos" action="descargaDocInline" />?'+numRand+'" target="_blank" method="post">'
-               +'<input type="text" name="url" value="'+urlRequestImpCotiza+'"/>'
-               +'<input type="text" name="contentType" value="application/pdf" />'
-               +'<input type="submit" id="e'+numRand+'" />'
-               +'</form>').submit();
+    window.open(
+        '<s:url namespace="/documentos" action="descargaDocInline" />?contentType=application/pdf&url='+encodeURIComponent(urlRequestImpCotiza)
+        ,'_blank'
+        ,'width=800, height=600'
+        );
 }
 
 function _mcotiza_tarifaSelect(columnName, record, row, column, eOpts)
