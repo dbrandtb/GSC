@@ -1987,13 +1987,12 @@ function _p1_guardarDetalleInspeccion()
             debug('respuesta:',json);
             if(json.success)
             {
-            	mensajeCorrecto('En unos segundos iniciar&aacute; la descarga del reporte generado, por favor verifique sus descargas');
-            	$(['<form action="${ctx}/peritaje/descargaDocumento.action">'
-            			,'<input type="text" name="strMapIn.ruta"     value="'+json.mensaje+'" />'
-            			,'<input type="text" name="strMapIn.filename" value="inspeccion.pdf"   />'
-            			,'</form>'].join("")
-            			)
-            	    .submit();
+                mensajeCorrecto('En unos segundos iniciar&aacute; la descarga del reporte generado, por favor verifique sus descargas');
+            	window.open(
+            	    '${ctx}/peritaje/descargaDocumento.action?strMapIn.ruta='+encodeURIComponent(json.mensaje)+'&strMapIn.filename=inspeccion.pdf'
+            	    ,'_blank'
+            	    ,'width=800, height=600'
+            	);
             }
             else
             {
@@ -2284,12 +2283,11 @@ function _p1_guardarDetalleAjuste()
             	if(Ext.ComponentQuery.query('#fieldsetDetalleDanioAjus')[0].down('[name="micheck"]').getValue()==1)
                 {
             		mensajeCorrecto('En unos segundos iniciar&aacute; la descarga del reporte generado, por favor verifique sus descargas');
-	                $(['<form action="${ctx}/peritaje/descargaDocumento.action">'
-	                        ,'<input type="text" name="strMapIn.ruta"     value="'+json.mensaje+'" />'
-	                        ,'<input type="text" name="strMapIn.filename" value="inspeccion.pdf"   />'
-	                        ,'</form>'].join("")
-	                        )
-	                    .submit();
+	                window.open(
+                        '${ctx}/peritaje/descargaDocumento.action?strMapIn.ruta='+encodeURIComponent(json.mensaje)+'&strMapIn.filename=inspeccion.pdf'
+                        ,'_blank'
+                        ,'width=800, height=600'
+                    );
                 }
             	else
             	{
