@@ -1,3 +1,6 @@
+// Bug fix para componentes en chrome, los componentes de formulario no se veian
+// Fuente: http://www.ladysign-apps.com/developer/chrome-43-breaks-sencha-touch-modern-toolkit-and-how-to-fix-it/#.VZayunWlyko
+
 Ext.define('MyApp.util.PaintMonitor', {
     override: 'Ext.util.PaintMonitor',
 
