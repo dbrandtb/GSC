@@ -1629,6 +1629,28 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					tatrisitPanel.add(tatri);
 				}
 				
+				List<Map<String,String>> listaAtriPorRol = consultasDAO.recuperarAtributosPorRol(situacionPanel,cdsisrol);
+				for(ComponenteVO tatri : tatrisitPanel)
+				{
+					String cdatribu1 = tatri.getNameCdatribu();
+					boolean quitar = false;
+					String  valor  = null;
+					for(Map<String,String> atri : listaAtriPorRol)
+					{
+						String cdatribu2 = atri.get("CDATRIBU");
+						if(cdatribu1.equals(cdatribu2)&&"0".equals(atri.get("APLICA")))
+						{
+							quitar = true;
+							valor  = atri.get("VALOR");
+						}
+					}
+					if(quitar)
+					{
+						tatri.setOculto(true);
+						tatri.setValue("'"+valor+"'");
+					}
+				}
+				
 				setCheckpoint(new StringBuilder("Construyendo panel dinamico ").append(situacionPanel).toString());
 				GeneradorCampos gcPanel = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				gcPanel.setCdramo(cdramo);
