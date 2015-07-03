@@ -1542,6 +1542,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	Map<String,String> result     = new HashMap<String,String>();
     	result.put("FECHA_MINIMA" , (String)procResult.get("pv_fechamin_o"));
     	result.put("FECHA_MAXIMA" , (String)procResult.get("pv_fechamax_o"));
+    	result.put("FECHA_REFERENCIA" , (String)procResult.get("pv_fecharef_o"));
     	result.put("EDITABLE"     , (String)procResult.get("pv_editable_o"));
     	logger.debug(Utils.join("PKG_CONSULTA.P_GET_FECHAS_ENDOSO mapa=",result));
     	return result;
@@ -1561,6 +1562,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_fechamin_o" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_fechamax_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_fecharef_o" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_editable_o" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

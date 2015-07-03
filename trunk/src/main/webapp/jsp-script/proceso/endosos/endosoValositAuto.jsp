@@ -373,6 +373,7 @@ Ext.onReady(function()
             {
                 _fieldById('_p36_fechaCmp').setMinValue(json.smap1.FECHA_MINIMA);
                 _fieldById('_p36_fechaCmp').setMaxValue(json.smap1.FECHA_MAXIMA);
+                _fieldById('_p36_fechaCmp').setValue(json.smap1.FECHA_REFERENCIA);
                 _fieldById('_p36_fechaCmp').setReadOnly(json.smap1.EDITABLE=='N');
                 _fieldById('_p36_fechaCmp').isValid();
             }
