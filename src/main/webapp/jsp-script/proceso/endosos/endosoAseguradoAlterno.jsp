@@ -112,6 +112,7 @@
 	            {
 	                _fieldById('_pAsegAlte_fechaCmp').setMinValue(json.smap1.FECHA_MINIMA);
 	                _fieldById('_pAsegAlte_fechaCmp').setMaxValue(json.smap1.FECHA_MAXIMA);
+	                _fieldById('_pAsegAlte_fechaCmp').setValue(json.smap1.FECHA_REFERENCIA);
 	                _fieldById('_pAsegAlte_fechaCmp').setReadOnly(json.smap1.EDITABLE=='N');
 	                _fieldById('_pAsegAlte_fechaCmp').isValid();
 	            }
