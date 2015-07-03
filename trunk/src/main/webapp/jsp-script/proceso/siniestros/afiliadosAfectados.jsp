@@ -3792,7 +3792,7 @@
 					,cantidad : record.get('CANTIDAD')
 					,destopor : record.get('DESTOPOR')
 					,destoimp : record.get('DESTOIMP')
-					,ptimport : record.get('SUBTAJUSTADO')
+					,ptimport : record.get('PTIMPORT')
 					,ptrecobr : record.get('PTRECOBR')
 					,nmapunte : record.get('NMAPUNTE')
 					,feregist : record.get('FEREGIST')
