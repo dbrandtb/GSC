@@ -3561,6 +3561,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,null       //cdmotivo
 							);
 					
+					mesaControlDAO.turnaPorCargaTrabajo(ntramite,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
+					
 					try
 		            {
 						cotizacionDAO.grabarEvento(new StringBuilder("\nNuevo tramite grupo")
@@ -6468,6 +6470,30 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return pagoRepartido;
+	}
+	
+	@Deprecated
+	@Override
+	public void turnaPorCargaTrabajo(
+			String ntramite
+			,String cdsisrol
+			,String status
+			)throws Exception
+	{
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ turnaPorCargaTrabajo @@@@@@"
+				,"\n@@@@@@ ntramite=" , ntramite
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ status="   , status
+				));
+		
+		mesaControlDAO.turnaPorCargaTrabajo(ntramite,cdsisrol,status);
+		
+		logger.debug(Utils.join(
+				 "\n@@@@@@ turnaPorCargaTrabajo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
 	}
     
 	///////////////////////////////

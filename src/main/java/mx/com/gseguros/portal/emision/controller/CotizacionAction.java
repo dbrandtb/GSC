@@ -5996,6 +5996,8 @@ public class CotizacionAction extends PrincipalCoreAction
 	            	parDmesCon.put("pv_cdmotivo_i"   , null);
 	            	kernelManager.movDmesacontrol(parDmesCon);
 	            	
+	            	cotizacionManager.turnaPorCargaTrabajo(ntramiteNew,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
+	            	
 	            	try
 		            {
 		            	serviciosManager.grabarEvento(new StringBuilder("\nNuevo tramite grupo")

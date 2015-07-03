@@ -527,4 +527,10 @@ public interface CotizacionManager
 			,String nmpoliza
 			)throws Exception;
 	
+	@Deprecated
+	public void turnaPorCargaTrabajo(
+			String ntramite
+			,String cdsisrol
+			,String status
+			)throws Exception;
 }
