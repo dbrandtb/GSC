@@ -2252,4 +2252,35 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> recuperarAtributosPorRol(String cdtipsit,String cdsisrol) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdsisrol" , cdsisrol);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarAtributosPorRol(getDataSource()),params);
+		List<Map<String,String>> lista = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		return lista;
+	}
+	
+	protected class RecuperarAtributosPorRol extends StoredProcedure
+	{
+		protected RecuperarAtributosPorRol(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_ATRIXROL_AUTOS");
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR
+					,new GenericMapper(new String[]{"CDATRIBU","APLICA","VALOR"})));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"    , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"     , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }
