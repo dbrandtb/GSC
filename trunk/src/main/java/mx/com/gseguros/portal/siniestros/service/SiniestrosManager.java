@@ -579,4 +579,6 @@ public interface SiniestrosManager {
 	public List<Map<String, String>> obtieneDatosBeneficiario(String cdunieco,String cdramo, String estado, String nmpoliza, String cdperson) throws Exception;
 	
 	public List<Map<String, String>> obtenerDatoMsiniper(String ntramite) throws Exception;
+	
+	public List<Map<String, String>> getConsultaConfiguracionProveedor(String cdpresta)throws Exception;
 }

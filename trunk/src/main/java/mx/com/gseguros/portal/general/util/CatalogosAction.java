@@ -699,6 +699,11 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = catalogosManager.recuperarTareasEstadisticas(params.get("idPadre"));
 					break;
+				case SECUENCIA_IVA:
+					lista=new ArrayList<GenericVO>(0);
+					lista.add(new GenericVO("A", "IVA ANTES DE COPAGO"));
+					lista.add(new GenericVO("D", "IVA DESPUES DE COPAGO"));
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;
