@@ -6165,7 +6165,7 @@ public class EndososAction extends PrincipalCoreAction
 				if(aux.isEndosoSinRetarif()){
 					
 					/**
-					 * PARA WS ENDOSO DE AUTOS SIN TARIFICACION DONDE PUEDE INCLUIR LA COLONIA
+					 * PARA WS ENDOSO DE AUTOS SIN TARIFICACION DONDE PUEDE INCLUIR LA COLONIA y con o sin cambio de CP
 					 */
 					numEndRes = emisionAutosService.actualizaDatosCambioDomicilSinCP(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 					

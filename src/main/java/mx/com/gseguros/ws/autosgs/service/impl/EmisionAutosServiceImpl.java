@@ -1303,6 +1303,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vCalle"     , datosEnd.get("CALLE"));
 				paramsEnd.put("vNumero"    , datosEnd.get("NUMERO"));
 				paramsEnd.put("vColonia"   , datosEnd.get("COLONIA"));
+				paramsEnd.put("vCodpostal" , datosEnd.get("CPOSTAL"));
 				paramsEnd.put("vTelefono1" , datosEnd.get("TELEFONO1"));
 				paramsEnd.put("vTelefono2" , datosEnd.get("TELEFONO2"));
 				paramsEnd.put("vTelefono3" , datosEnd.get("TELEFONO3"));
