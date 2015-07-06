@@ -302,6 +302,7 @@ public class MesaControlAction extends PrincipalCoreAction
         	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite manual desde mesa de control");
         	parDmesCon.put("pv_cdusuari_i"   , user.getUser());
         	parDmesCon.put("pv_cdmotivo_i"   , null);
+        	parDmesCon.put("pv_cdsisrol_i"   , user.getRolActivo().getClave());
         	kernelManager.movDmesacontrol(parDmesCon);
 					
 			success=true;
@@ -898,6 +899,7 @@ public class MesaControlAction extends PrincipalCoreAction
         	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite manual desde mesa de control");
         	parDmesCon.put("pv_cdusuari_i"   , usu.getUser());
         	parDmesCon.put("pv_cdmotivo_i"   , null);
+        	parDmesCon.put("pv_cdsisrol_i"   , usu.getRolActivo().getClave());
         	kernelManager.movDmesacontrol(parDmesCon);
 			////// se guarda el detalle //////
         	//////////////////////////////////
@@ -964,9 +966,11 @@ public class MesaControlAction extends PrincipalCoreAction
 		log.info("ntramiteEmi:"+ntramiteEmi);
 		log.info("comentario:"+comentario);
 		String cdusuari;
+		String cdsisrol;
 		{
 			UserVO usuario = (UserVO)session.get("USUARIO");
 			cdusuari = usuario.getUser();
+			cdsisrol = usuario.getRolActivo().getClave();
 		}
 		log.info("cdusuari:"+cdusuari);
 		try
@@ -980,6 +984,7 @@ public class MesaControlAction extends PrincipalCoreAction
         	parDmesCon.put("pv_comments_i"   , "El gerente regres&oacute; el tr&aacute;mite con las siguientes observaciones:<br/>"+comentario);
         	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
         	parDmesCon.put("pv_cdmotivo_i"   , null);
+        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
         	kernelManager.movDmesacontrol(parDmesCon);
         	mensaje = "Tr&aacute;mite regresado";
         	success = true;
@@ -1016,7 +1021,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			
 			Utils.validate(ntramite , "No se recibio el numero de tramite");
 			
-			mesaControlManager.movimientoDetalleTramite(ntramite, new Date(), null, dscoment, user.getUser(), null);
+			mesaControlManager.movimientoDetalleTramite(ntramite, new Date(), null, dscoment, user.getUser(), null, user.getRolActivo().getClave());
 		}
 		catch(Exception ex)
 		{

@@ -810,6 +810,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		UserVO usuario  = (UserVO)session.get("USUARIO");
 		String cdusuari = usuario.getUser();
+		String cdsisrol = usuario.getRolActivo().getClave();
 		String cdelemen = usuario.getEmpresa().getElementoId();
 		String cdunieco = smap1.get("cdunieco");
 		String cdramo   = smap1.get("cdramo");
@@ -1119,6 +1120,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se emiti&oacute;");
 	        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 	        	parDmesCon.put("pv_cdmotivo_i"   , null);
+	        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
 	        	kernelManager.movDmesacontrol(parDmesCon);
 			}
 			catch(Exception ex)
@@ -3773,6 +3775,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		UserVO usuario          = (UserVO)session.get("USUARIO");
 		String user             = usuario.getUser();
 		String cdelemento       = usuario.getEmpresa().getElementoId();
+		String cdsisrol         = usuario.getRolActivo().getClave();
 		final String LINEA      = "1";
 		String ntramite         = smap1.get("ntramite");
 		boolean hayTramite      = StringUtils.isNotBlank(ntramite);
@@ -4490,6 +4493,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,false //censoAtrasado
 					,false //resubirCenso
 					,cdperpag
+					,cdsisrol
 					);
 			exito           = aux.exito;
 			respuesta       = aux.respuesta;
@@ -4733,6 +4737,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			UserVO usuario          = (UserVO)session.get("USUARIO");
 			String user             = usuario.getUser();
 			String cdelemento       = usuario.getEmpresa().getElementoId();
+			String cdsisrol         = usuario.getRolActivo().getClave();
 			String nombreCenso      = null;
 			String ntramite         = smap1.get("ntramite");
 			String cdagente         = smap1.get("cdagente");
@@ -5487,7 +5492,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,user     , cdelemento    , ntramiteVacio
 						,false    , ntramite      , cdagente
 						,sincenso , censoAtrasado , resubirCenso
-						,cdperpag
+						,cdperpag , cdsisrol
 						);
 				exito           = aux.exito;
 				respuesta       = aux.respuesta;
@@ -5539,6 +5544,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			,boolean censoAtrasado
 			,boolean resubirCenso
 			,String cdperpag
+			,String cdsisrol
 			)
 	{
 		logger.debug(
@@ -5564,6 +5570,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				.append("\n## censoAtrasado: ")       .append(censoAtrasado)
 				.append("\n## resubirCenso: ")        .append(resubirCenso)
 				.append("\n## cdperpag: ")            .append(cdperpag)
+				.append("\n## cdsisrol: ")            .append(cdsisrol)
 				.toString()
 				);
 		
@@ -5994,6 +6001,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite en mesa de control desde cotizaci&oacute;n de agente");
 	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 	            	parDmesCon.put("pv_cdmotivo_i"   , null);
+	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
 	            	kernelManager.movDmesacontrol(parDmesCon);
 	            	
 	            	cotizacionManager.turnaPorCargaTrabajo(ntramiteNew,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());

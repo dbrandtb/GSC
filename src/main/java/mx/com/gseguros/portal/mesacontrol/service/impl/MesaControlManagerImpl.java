@@ -40,6 +40,7 @@ public class MesaControlManagerImpl implements MesaControlManager
 			,String comments
 			,String cdusuari
 			,String cdmotivo
+			,String cdsisrol
 			)throws Exception
 	{
 		logger.info(Utils.join(
@@ -51,9 +52,10 @@ public class MesaControlManagerImpl implements MesaControlManager
 				,"\n@@@@@@ comments=" , comments
 				,"\n@@@@@@ cdusuari=" , cdusuari
 				,"\n@@@@@@ cdmotivo=" , cdmotivo
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
 				));
 		
-		mesaControlDAO.movimientoDetalleTramite(ntramite, feinicio, cdclausu, comments, cdusuari, cdmotivo);
+		mesaControlDAO.movimientoDetalleTramite(ntramite, feinicio, cdclausu, comments, cdusuari, cdmotivo, cdsisrol);
 		
 		logger.info(Utils.join(
 				 "\n@@@@@@ movimientoDetalleTramite @@@@@@"

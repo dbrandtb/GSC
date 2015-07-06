@@ -246,6 +246,46 @@ function _mcdinamica_nuevoTramite(button,turnar)
     }
     debug('>_mcdinamica_nuevoTramite');
 }
+
+function _mcdinamica_rendererStatus(val)
+{
+    var l = 'Cargando...';
+    try
+    {
+        var statusCmp = _fieldByName('smap2.pv_status_i');
+        if(statusCmp.store.getCount()>0)
+        {
+            var rec = statusCmp.findRecordByValue(''+val);
+            if(rec)
+            {
+                l = rec.get('value');
+            }
+            else
+            {
+                l = 'No encontrado ('+val+')';
+            }
+        }
+        else
+        {            
+            statusCmp.store.on(
+            {
+                load : function(me,records)
+                {
+                    if(Ext.isEmpty(me.cargado))
+                    {
+                        mcdinGrid.getView().refresh();
+                        me.cargado = true;
+                    }
+                }
+            });
+        }
+    }
+    catch(e)
+    {
+        debugError('Error al renderizar el status del tramite, val:',val,e);
+    }
+    return l;
+}
 /*///////////////////*/
 ////// funciones //////
 ///////////////////////
