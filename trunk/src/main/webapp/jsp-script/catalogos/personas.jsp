@@ -1121,7 +1121,19 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 	                if(json.exito)
 	                {
 	                	if(esSaludD == 'S'){
-	                		_CDIDEEXTsel = json.params.codigoExterno;
+	                		
+	                		/**
+	                		 * 
+	                		 * SE PONE EL CDIDEEXT EN BLANCO POR PETICION DE ARGENIS POR PROBLEMAS DE SUCURSAL CON EL CLIENTE
+	                		 * SE MANDAN A CREAR NUEVOS CLIENTES.
+	                		 * 
+	                		 * Codigo Original:
+	                		 * _CDIDEEXTsel = json.params.codigoExterno; 
+	                		 * 
+	                		 */
+	                		
+	                		_CDIDEEXTsel = '';
+	                		
 	                	}else{
 	                		_CDIDEPERsel = json.params.codigoExterno;
 	                	}
