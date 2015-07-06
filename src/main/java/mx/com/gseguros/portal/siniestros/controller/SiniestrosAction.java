@@ -4614,12 +4614,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	public String entradaRevisionAdmin(){
 		logger.info("Entra a entradaRevisionAdmin params: {}",params);
 		try{
-			String ntramite = "9661";//params.get("ntramite");
-			if(ntramite==null){
-				throw new Exception("No hay tramite");
-			}
-			
-			 HashMap<String, String> params = new HashMap<String,String>();
+			HashMap<String, String> params = new HashMap<String,String>();
 			UserVO usuario  = (UserVO)session.get("USUARIO");
 			String cdrol    = usuario.getRolActivo().getClave();
 			params.put("cdrol", cdrol);
@@ -4646,6 +4641,27 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		}
 		return SUCCESS;
 	}
+	
+	/**
+	* Funcion donde obtenemos los datos de las validaciones del siniestro
+	* @param params
+	* @return List<Map<String, String>> datosValidacion
+	*/ 
+	public String consultaDatosConfiguracionProveedor(){
+		logger.debug("Entra a consultaDatosProveedorSiniestro params de entrada :{} ",params);
+		try {
+			datosValidacion = siniestrosManager.getConsultaConfiguracionProveedor(params.get("cdpresta"));
+			logger.debug("Respuesta datosValidacion : {}",datosValidacion);
+		}catch( Exception e){
+			logger.error("Error al obtener consultaDatosProveedorSiniestro : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	/*
+	
+	proveedor = siniestrosManager.obtenerDatosProveedor(facturasAux.get(0).get("CDPRESTA"));
 	
 /****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {

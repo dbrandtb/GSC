@@ -1809,4 +1809,12 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
 		this.cotizacionDAO = cotizacionDAO;
 	}
+	
+	@Override
+	public List<Map<String, String>> getConsultaConfiguracionProveedor(String cdpresta) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdpresta_i", cdpresta);
+		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
+		return siniestrosDAO.obtieneListaConfiguracionProveedor(params);
+	}
 }

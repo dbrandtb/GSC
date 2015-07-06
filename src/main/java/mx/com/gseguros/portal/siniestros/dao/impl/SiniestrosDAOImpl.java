@@ -4528,4 +4528,25 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String, String>> obtieneListaConfiguracionProveedor(HashMap<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneListaConfiguracionProveedor(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneListaConfiguracionProveedor extends StoredProcedure {
+		protected ObtieneListaConfiguracionProveedor(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_SINIESTRO.P_LISTA_CONFIGPROV");
+			declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CLAVEPROVEEDOR","NOMBPROVEEDOR","APLICAIVA","APLICAIVADESC","SECUENCIAIVA","SECIVADESC","APLICAIVARET","IVARETDESC"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

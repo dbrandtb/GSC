@@ -110,7 +110,8 @@ public enum Catalogos {
 	CONCEPTOPAGO(""),
 	ESTD_MODULOS(""),
 	ESTD_TAREAS(""),
-	ASEGURADOS("")
+	ASEGURADOS(""),
+	SECUENCIA_IVA("")
 	;
 
 	private String cdTabla;

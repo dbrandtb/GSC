@@ -466,4 +466,5 @@ public interface SiniestrosDAO {
 
 	public List<Map<String, String>> obtieneDatoMsiniper(HashMap<String, Object> params) throws Exception;
 
+	public List<Map<String, String>> obtieneListaConfiguracionProveedor(HashMap<String, Object> params) throws Exception;
 }
