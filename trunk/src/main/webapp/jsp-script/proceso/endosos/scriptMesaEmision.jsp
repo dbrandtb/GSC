@@ -69,7 +69,35 @@ function _4_rechazar(row)
 
 function _4_solicitarEmision(row)
 {
-    _4_turnar(row,18,'Solicitar emisi&oacute;n');
+    centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'El tr&aacute;mite ser&aacute; enviado al suscriptor para emisi&oacute;n<br>¿Desea continuar?', function(btn)
+    {
+        if(btn === 'yes')
+        {
+            _4_turnar(row,18,'Solicitar emisi&oacute;n');
+        }
+    }));
+}
+
+function _4_turnarSuscripcion(row)
+{
+    centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'El tr&aacute;mite ser&aacute; enviado al suscriptor para emisi&oacute;n<br>¿Desea continuar?', function(btn)
+    {
+        if(btn === 'yes')
+        {
+            _4_turnar(row,13,'Turnar a suscripci&oacute;n');
+        }
+    }));
+}
+
+function _4_informacionCompleta(row)
+{
+    centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'El tr&aacute;mite ser&aacute; enviado al &aacute;rea t&eacute;cnica para cotizaci&oacute;n<br>¿Desea continuar?', function(btn)
+    {
+        if(btn === 'yes')
+        {
+            _4_turnar(row,14,'Enviar al &aacute;rea t&eacute;cnica');
+        }
+    }));
 }
 
 function _4_turnar(row,status,titulo)

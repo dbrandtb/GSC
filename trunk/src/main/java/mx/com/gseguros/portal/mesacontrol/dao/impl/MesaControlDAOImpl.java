@@ -184,7 +184,8 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			,String cdclausu
 			,String comments
 			,String cdusuari
-			,String cdmotivo)throws Exception
+			,String cdmotivo
+			,String cdsisrol)throws Exception
 	{
 		Map<String,Object>params=new LinkedHashMap<String,Object>();
 		params.put("ntramite" , ntramite);
@@ -193,6 +194,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("comments" , comments);
 		params.put("cdusuari" , cdusuari);
 		params.put("cdmotivo" , cdmotivo);
+		params.put("cdsisrol" , cdmotivo);
 		logger.debug(
 				new StringBuilder()
 				.append("\n**********************************************")
@@ -215,6 +217,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("comments" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdmotivo" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

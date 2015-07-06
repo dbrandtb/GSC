@@ -1770,6 +1770,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String nmpoliza        = null;
 		String cdpersonSesion  = null;
 		String cdusuari        = null;
+		String cdsisrol        = null;
 		String cdelemen        = null;
 		String rutaCarpeta     = null;
 		String cdperpag        = null;
@@ -1824,6 +1825,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				cdpersonSesion = datUs.getCdperson();
 				cdusuari       = us.getUser();
 				cdelemen       = us.getEmpresa().getElementoId();
+				cdsisrol       = us.getRolActivo().getClave();
 			}
 			catch(Exception ex)
 			{
@@ -1899,6 +1901,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se envi&oacute; a autorizaci&oacute;n ("+ntramiteAutorizacion+")");
 		        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 		        	parDmesCon.put("pv_cdmotivo_i"   , null);
+		        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
 		        	kernelManager.movDmesacontrol(parDmesCon);
 					
 		        	kernelManager.mesaControlUpdateStatus(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
@@ -1958,6 +1961,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se envi&oacute; a autorizaci&oacute;n ("+ntramiteAutorizacion+")");
 		        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 		        	parDmesCon.put("pv_cdmotivo_i"   , null);
+		        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
 		        	kernelManager.movDmesacontrol(parDmesCon);
 					
 		        	kernelManager.mesaControlUpdateStatus(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
@@ -2487,6 +2491,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se emiti&oacute;");
 	        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 	        	parDmesCon.put("pv_cdmotivo_i"   , null);
+	        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
 	        	kernelManager.movDmesacontrol(parDmesCon);
 			}
 			catch(Exception ex)
@@ -2800,6 +2805,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	        	parDmesCon.put("pv_comments_i"   , "La emisi&oacute;n del tr&aacute;mite se autoriz&oacute; con las siguientes observaciones:<br/>"+comentarios);
 	        	parDmesCon.put("pv_cdusuari_i"   , us.getUser());
 	        	parDmesCon.put("pv_cdmotivo_i"   , null);
+	        	parDmesCon.put("pv_cdsisrol_i"   , us.getRolActivo().getClave());
 	        	kernelManager.movDmesacontrol(parDmesCon);
 				
 	        	kernelManager.mesaControlUpdateStatus(ntramiteAut, EstatusTramite.CONFIRMADO.getCodigo());
@@ -2845,6 +2851,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String cdIdeperRes = this.cdIdeper;
 		UserVO us          = (UserVO)session.get("USUARIO");
 		String cdusuari    = us.getUser();
+		String cdsisrol    = us.getRolActivo().getClave();
 		
 		String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 		
@@ -3228,6 +3235,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se emiti&oacute;");
 		        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 		        	parDmesCon.put("pv_cdmotivo_i"   , null);
+		        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
 		        	kernelManager.movDmesacontrol(parDmesCon);
 				}
 				catch(Exception ex)

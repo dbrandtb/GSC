@@ -3161,6 +3161,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,censoAtrasado
 					,cdperpag
 					,resubirCenso
+					,cdsisrol
 					);
 			
 			resp.setExito(respInterna.isExito());
@@ -3211,6 +3212,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,boolean censoAtrasado
 			,String cdperpag
 			,boolean resubirCenso
+			,String cdsisrol
 			)
 	{
 		logger.info(
@@ -3245,6 +3247,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ censoAtrasado=")       .append(censoAtrasado)
 				.append("\n@@@@@@ cdperpag=")            .append(cdperpag)
 				.append("\n@@@@@@ resubirCenso=")        .append(resubirCenso)
+				.append("\n@@@@@@ cdsisrol=")            .append(cdsisrol)
 				.toString()
 				);
 		
@@ -3559,6 +3562,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,"Se guard&oacute; un nuevo tr&aacute;mite en mesa de control desde cotizaci&oacute;n de agente"
 							,cdusuari
 							,null       //cdmotivo
+							,cdsisrol
 							);
 					
 					mesaControlDAO.turnaPorCargaTrabajo(ntramite,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
@@ -4891,6 +4895,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,false
 					,cdperpag
 					,false //resubirCenso
+					,cdsisrol
 					);
 		}
 		

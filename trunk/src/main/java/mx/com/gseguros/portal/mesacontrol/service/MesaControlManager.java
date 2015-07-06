@@ -19,5 +19,6 @@ public interface MesaControlManager
 			,String comments
 			,String cdusuari
 			,String cdmotivo
+			,String cdsisrol
 			)throws Exception;
 }

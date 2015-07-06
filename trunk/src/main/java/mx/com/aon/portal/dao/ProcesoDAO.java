@@ -2703,6 +2703,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_comments_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdusuari_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdmotivo_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsisrol_i", 		OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));

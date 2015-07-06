@@ -826,6 +826,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	
     	UserVO usuario     = null;
     	String cdusuari    = null;
+    	String cdsisrol    = null;
     	String cdperson    = null;
     	String fechaInicio = null;
     	String fechaFin    = null;
@@ -847,6 +848,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     			usuario  = (UserVO)session.get("USUARIO");
     			cdusuari = usuario.getUser();
     			cdelemen = usuario.getEmpresa().getElementoId();
+    			cdsisrol = usuario.getRolActivo().getClave();
     		}
     		catch(Exception ex)
     		{
@@ -1109,6 +1111,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; una cotizaci&oacute;n nueva para el tr&aacute;mite");
 	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 	            	parDmesCon.put("pv_cdmotivo_i"   , null);
+	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
 	            	kernelManagerSustituto.movDmesacontrol(parDmesCon);
 	            }
 	    		catch(Exception ex)
@@ -1154,6 +1157,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite en mesa de control desde cotizaci&oacute;n de agente");
 	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 	            	parDmesCon.put("pv_cdmotivo_i"   , null);
+	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
 	            	kernelManagerSustituto.movDmesacontrol(parDmesCon);
 	            	
 	            	try
