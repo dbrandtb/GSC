@@ -8,7 +8,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
 import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2VO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.utils.Utils;
 
@@ -26,6 +26,7 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 	private String                    respuesta;
 	private Map<String,String>        smap1;
 	private List<Map<String,String>>  slist1;
+	private List<Map<String,String>>  slist2;
 	private RecuperacionSimpleManager recuperacionSimpleManager;
 	
 	public RecuperacionSimpleAction()
@@ -145,13 +146,14 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 			
 			try
 			{
-				RecuperacionSimple rec       = RecuperacionSimple.valueOf(procedimiento);
-				ManagerRespuestaSlistVO resp = recuperacionSimpleManager.recuperacionSimpleLista(rec,smap1,cdsisrol,cdusuari);
+				RecuperacionSimple rec        = RecuperacionSimple.valueOf(procedimiento);
+				ManagerRespuestaSlist2VO resp = recuperacionSimpleManager.recuperacionSimpleLista(rec,smap1,cdsisrol,cdusuari);
 				exito     = resp.isExito();
 				respuesta = resp.getRespuesta();
 				if(exito)
 				{
-					slist1=resp.getSlist();
+					slist1 = resp.getSlist();
+					slist2 = resp.getSlist2();
 				}
 			}
 			catch(Exception ex)
@@ -219,5 +221,13 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 	public void setRecuperacionSimpleManager(RecuperacionSimpleManager recuperacionSimpleManager) {
 		recuperacionSimpleManager.setSession(this.session);
 		this.recuperacionSimpleManager = recuperacionSimpleManager;
+	}
+
+	public List<Map<String, String>> getSlist2() {
+		return slist2;
+	}
+
+	public void setSlist2(List<Map<String, String>> slist2) {
+		this.slist2 = slist2;
 	}
 }

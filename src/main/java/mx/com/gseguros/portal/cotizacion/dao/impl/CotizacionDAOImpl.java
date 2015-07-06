@@ -4753,7 +4753,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     }
     
     @Override
-    public List<Map<String,String>>cargarConfiguracionTvalositFlotillas(
+    public Map<String,List<Map<String,String>>>cargarConfiguracionTvalositFlotillas(
     		String cdramo
     		,String cdtipsit
     		,String negocio
@@ -4764,14 +4764,23 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	params.put("cdtipsit" , cdtipsit);
     	params.put("negocio"  , negocio);
     	Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_CONFIG_VALOSIT_FLOTILLAS", params);
-    	Map<String,Object>procResult  = ejecutaSP(new CargarConfiguracionTvalositFlotillas(getDataSource()),params);
-    	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-    	Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_CONFIG_VALOSIT_FLOTILLAS", params, lista);
+    	Map<String,Object>procResult   = ejecutaSP(new CargarConfiguracionTvalositFlotillas(getDataSource()),params);
+    	List<Map<String,String>>lista  = (List<Map<String,String>>)procResult.get("pv_registro_o");
+    	List<Map<String,String>>lista2 = (List<Map<String,String>>)procResult.get("pv_atrirang_o");
+    	Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_CONFIG_VALOSIT_FLOTILLAS config", params, lista);
+    	Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_CONFIG_VALOSIT_FLOTILLAS rangos", params, lista2);
     	if(lista==null||lista.size()==0)
     	{
     		throw new ApplicationException(Utils.join("No hay configuracion para los valores del ramo ",cdramo," y subramo ",cdtipsit));
     	}
-    	return lista;
+    	if(lista2==null)
+    	{
+    		lista2 = new ArrayList<Map<String,String>>();
+    	}
+    	Map<String,List<Map<String,String>>> res = new HashMap<String,List<Map<String,String>>>();
+    	res.put("config" , lista);
+    	res.put("rangos" , lista2);
+    	return res;
     }
     
     protected class CargarConfiguracionTvalositFlotillas extends StoredProcedure
@@ -4786,7 +4795,14 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     				"CDATRIBU"
     				,"VALOR"
     				};
+    		String[] cols2=new String[]{
+    				"CDTIPSIT"
+    				,"CDATRIBU"
+    				,"MINIMO"
+    				,"MAXIMO"
+    				};
     		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_atrirang_o" , OracleTypes.CURSOR, new GenericMapper(cols2)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
     		compile();

@@ -1365,6 +1365,79 @@ Ext.onReady(function()
                                 _p30_paneles[json.smap1.cdtipsit].valoresBkp['parametros.pv_otvalor'+(('00'+json.slist1[i].CDATRIBU).slice(-2))] = json.slist1[i].VALOR;
                             }
                             debug('valores:',_p30_paneles[json.smap1.cdtipsit].valores);
+                            
+                            if(json.slist2.length>0)
+                            {
+                                for(var i in json.slist2)
+                                {
+                                    var minimo = json.slist2[i].MINIMO;
+                                    var maximo = json.slist2[i].MAXIMO;
+                                    var item   = _p30_paneles[json.smap1.cdtipsit].down('[name=parametros.pv_otvalor'+(('x00'+json.slist2[i].CDATRIBU).slice(-2))+']');
+                                    debug('cdtipsit:',json.smap1.cdtipsit,'item.fieldLabel:',item.fieldLabel);
+                                    debug('min:',minimo,'max:',maximo);
+                                    if(!Ext.isEmpty(minimo)&&!Ext.isEmpty(maximo))
+		                            {
+		                                item.minValue = minimo;
+		                                item.maxValue = maximo;
+		                                if(item.xtype=='combobox')
+		                                {
+		                                    item.validator=function(value)
+		                                    {
+		                                        var valido=true;
+		                                        if(value+'x'!='x')
+		                                        {
+		                                            var record = this.getStore().findRecord('value',value);
+		                                            if(record)
+		                                            {
+		                                                var value=record.get('key');
+		                                                if(Number(value)<Number(this.minValue))
+		                                                {
+		                                                    valido = 'El valor m&iacute;nimo es '+this.minValue;
+		                                                }
+		                                                else if(Number(value)>Number(this.maxValue))
+		                                                {
+		                                                    valido = 'El valor m&aacute;ximo es '+this.maxValue;
+		                                                }
+		                                            }
+		                                            else
+		                                            {
+		                                                valido = 'El valor debe estar en el rango '+this.minValue+' - '+this.maxValue;
+		                                            }
+		                                        }
+		                                        return valido;
+		                                    }
+		                                    if(!item.isValid())
+		                                    {
+		                                        item.reset();
+		                                    }
+		                                    debug('item=',item.fieldLabel);
+		                                    debug('minimo=',minimo,'maximo=',maximo);
+		                                    item.store.filterBy(function(record)
+		                                    {
+		                                        debug('filtrando record=',record);
+		                                        var key=record.get('key')-0;
+		                                        debug('quitando key=',key,key>=minimo&&key<=maximo,'.');
+		                                        return key>=minimo&&key<=maximo;
+		                                    });
+		                                    item.on(
+		                                    {
+		                                        expand : function(me)
+		                                        {
+		                                            var minimo = me.minValue;
+		                                            var maximo = me.maxValue;
+		                                            me.store.filterBy(function(record)
+		                                            {
+		                                                debug('filtrando record=',record);
+		                                                var key=record.get('key')-0;
+		                                                debug('quitando key=',key,key>=minimo&&key<=maximo,'.');
+		                                                return key>=minimo&&key<=maximo;
+		                                            });
+		                                        }
+		                                    });
+		                                }
+		                            }
+                                }
+                            }
                         }
                         else
                         {
