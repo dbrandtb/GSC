@@ -11,7 +11,7 @@ import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
 import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2VO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.utils.Utils;
@@ -251,7 +251,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 	}
 	
 	@Override
-	public ManagerRespuestaSlistVO recuperacionSimpleLista(
+	public ManagerRespuestaSlist2VO recuperacionSimpleLista(
 			RecuperacionSimple proc
 			,Map<String,String>params
 			,String cdsisrol
@@ -267,7 +267,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				,"\n@@@@@@ cdusuari=" , cdusuari
 				));
 		
-		ManagerRespuestaSlistVO resp=new ManagerRespuestaSlistVO(true);
+		ManagerRespuestaSlist2VO resp=new ManagerRespuestaSlist2VO(true);
 		
 		try
 		{
@@ -304,7 +304,9 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String cdramo   = params.get("cdramo");
 				String cdtipsit = params.get("cdtipsit");
 				String negocio  = params.get("negocio");
-				resp.setSlist(cotizacionDAO.cargarConfiguracionTvalositFlotillas(cdramo, cdtipsit, negocio));
+				Map<String,List<Map<String,String>>> res = cotizacionDAO.cargarConfiguracionTvalositFlotillas(cdramo, cdtipsit, negocio);
+				resp.setSlist(res.get("config"));
+				resp.setSlist2(res.get("rangos"));
 			}
 			else if(proc.equals(RecuperacionSimple.RECUPERAR_MPOLIPER_OTROS_ROLES_POR_NMSITUAC))
 			{
