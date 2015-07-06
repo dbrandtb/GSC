@@ -384,7 +384,16 @@ public class PersonasAction extends PrincipalCoreAction
 						,null// ptcumupr
 						,null// residencia
 						,null// nongrata
-						,"S".equalsIgnoreCase(saludDanios)? cliImport.getNumeroExterno() : null
+						/**
+                		 * 
+                		 * SE PONE EL CDIDEEXT EN BLANCO POR PETICION DE ARGENIS POR PROBLEMAS DE SUCURSAL CON EL CLIENTE
+                		 * SE MANDAN A CREAR NUEVOS CLIENTES.
+                		 * 
+                		 * Codigo Original:
+                		 * "S".equalsIgnoreCase(saludDanios)? cliImport.getNumeroExterno() : null 
+                		 * 
+                		 **/
+						,null//"S".equalsIgnoreCase(saludDanios)? cliImport.getNumeroExterno() : null
 						,cliImport.getEdocivilCli()<=0 ?"0" : Integer.toString(cliImport.getEdocivilCli())
 						,Integer.toString(cliImport.getSucursalCli())
 						,"1"//nmorddom
