@@ -2239,8 +2239,8 @@ Ext.onReady(function()
                 ,success : function(response)
                 {
                     _0_formAgrupados.setLoading(false);
-                    var json=Ext.decode(response.responseText);
-                    debug('nada response:',json);
+                    var json = Ext.decode(response.responseText);
+                    debug('nada response:', json);
                     if(json.success)
                     {
                         var precioDolar = _0_formAgrupados.down('[name=parametros.pv_otvalor24]').getValue()-0;
@@ -2257,7 +2257,19 @@ Ext.onReady(function()
                     }
                     else
                     {
-                        mensajeError(json.error);
+                    	//parche para AUTOS FRONTERIZOS con rol SUSCRIPTOR AUTO:
+                    	if(_0_smap1.cdramo == TipoSituacion.AutosFronterizos && _0_smap1.cdsisrol=='SUSCRIAUTO') {
+                    	    // Si no obtuvo datos el servicio "NADA", reseteamos valores:
+                    		_0_formAgrupados.down('[name=parametros.pv_otvalor04]').setValue();
+                            _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setValue();
+                            _0_formAgrupados.down('[name=parametros.pv_otvalor06]').setValue();
+                            _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setValue();
+                            _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMinValue();
+                            _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMaxValue();
+                            _0_formAgrupados.down('[name=parametros.pv_otvalor26]').setValue();
+                    	} else {
+                    		mensajeError(json.error);
+                    	}
                     }
                 }
                 ,failure : function()
