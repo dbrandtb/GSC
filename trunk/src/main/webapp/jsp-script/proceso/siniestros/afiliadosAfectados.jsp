@@ -170,6 +170,7 @@
 					,dctoNuex:		'<s:property value='%{getSlist2().get(#contadorFactura).get("DCTONUEX")}'			escapeHtml="false" />'
 					,feegreso:		'<s:property value='%{getSlist2().get(#contadorFactura).get("FEEGRESO")}'			escapeHtml="false" />'
 					,diasdedu:		'<s:property value='%{getSlist2().get(#contadorFactura).get("DIASDEDU")}'			escapeHtml="false" />'
+					,contraRecibo:	'<s:property value='%{getSlist2().get(#contadorFactura).get("CONTRARECIBO")}'		escapeHtml="false" />'
 				});
 				<s:set name="contadorFactura" value="#contadorFactura+1" />
 			</s:iterator>
@@ -193,6 +194,8 @@
 							,handler	: _11_eliminarFactura
 						}
 					]
+				},{
+					text	:'ContraRecibo',			dataIndex	:'contraRecibo',		hidden : true
 				},{
 					text	:'Reclamaci&oacute;n',		dataIndex	:'reclamacion'
 				},{
@@ -1891,7 +1894,10 @@
 					,items	:
 					[
 						{
-							xtype		: 'textfield',			fieldLabel	: 'No. Tr&aacute;mite',		name	: 'params.ntramite', readOnly   : true
+							xtype		: 'textfield',			fieldLabel	: 'No. Tr&aacute;mite',		name	: 'params.ntramite', readOnly   : true, hidden: true
+						},
+						{
+							xtype		: 'textfield',			fieldLabel	: 'ContraRecibo',		name	: 'params.contrarecibo', readOnly   : true
 						},
 						{
 							xtype		: 'textfield',			fieldLabel	: 'No. Factura',			name	: 'params.nfactura', readOnly   : true
@@ -2940,6 +2946,7 @@
 				});
 				panelInicialPral.down('combo[name=params.cdtipser]').setValue(_11_recordActivo.get('cdtipser'));
 				
+				panelInicialPral.down('[name=params.contrarecibo]').setValue(_11_recordActivo.get('contraRecibo'));
 				
 				panelInicialPral.down('[name=params.ntramite]').setValue(_11_recordActivo.get('ntramite'));
 				
