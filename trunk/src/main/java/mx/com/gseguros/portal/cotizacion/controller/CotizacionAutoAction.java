@@ -163,8 +163,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		setCheckpoint("Validando datos de entrada");
 		try
 		{
-			checkNull(session,"No hay sesión");
-			checkNull(session.get("USUARIO"),"No hay usuario en la sesión");
+			checkNull(session,"No hay sesion");
+			checkNull(session.get("USUARIO"),"No hay usuario en la sesion");
 			UserVO usuario = (UserVO)session.get("USUARIO");
 			cdusuari = usuario.getUser();
 			cdsisrol = usuario.getRolActivo().getClave();
@@ -1328,10 +1328,19 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		{
 			setCheckpoint("Validando datos de entrada");
 			checkNull(smap1, "No se recibieron datos para cargar detalle de negocio");
-			String negocio = smap1.get("negocio");
+			checkNull(session,"No hay sesion");
+			checkNull(session.get("USUARIO"),"No hay usuario en la sesion");
+			
+			String negocio  = smap1.get("negocio");
+			String cdramo   = smap1.get("cdramo");
+			String cdtipsit = smap1.get("cdtipsit");
+			
+			UserVO usuario = (UserVO)session.get("USUARIO");
+			String cdusuari = usuario.getUser();
+			String cdsisrol = usuario.getRolActivo().getClave();
 			checkBlank(negocio, "No se recibio clave de negocio");
 			
-			ManagerRespuestaSmapVO resp = cotizacionAutoManager.cargarDetalleNegocioRamo5(negocio);
+			ManagerRespuestaSmapVO resp = cotizacionAutoManager.cargarDetalleNegocioRamo5(negocio, cdramo, cdtipsit, cdsisrol, cdusuari);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();

@@ -797,58 +797,59 @@ Ext.onReady(function()
                         });
                     }
                     
-                    if(_p28_smap1.cdsisrol=='EJECUTIVOCUENTA'||_p28_smap1.cdsisrol=='PROMOTORAUTO')
-	                {
-	                    var negoCmp = _fieldByLabel('NEGOCIO');
-	                    var negoVal = negoCmp.getValue();
-	                    negoCmp.setLoading(true);
-	                    Ext.Ajax.request(
-	                    {
-	                        url     : _p28_urlCargarDetalleNegocioRamo5
-	                        ,params :
-	                        {
-	                            'smap1.negocio' : negoVal
-	                        }
-	                        ,success : function(response)
-	                        {
-	                            negoCmp.setLoading(false);
-	                            var json = Ext.decode(response.responseText);
-	                            debug('### detalle negocio:',json);
-	                            _fieldByName('fefin').validator=function(val)
-	                            {
-	                                var feiniVal = Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y');
-	                                debug('feiniVal:',feiniVal);
-	                                var fefinVal=[];
-	                                for(var i=1;i<=json.smap1.MULTIANUAL-0;i++)
-	                                {
-	                                    debug('mas anios:',i);
-	                                    fefinVal.push(Ext.Date.format(Ext.Date.add(Ext.Date.parse(feiniVal,'d/m/Y'),Ext.Date.YEAR,i),'d/m/Y'));
-	                                }
-	                                debug('validar contra:',fefinVal);
-	                                var valido = true;
-	                                if(!Ext.Array.contains(fefinVal,val))
-	                                {
-	                                    valido = 'Solo se permite:';
-	                                    for(var i in fefinVal)
-	                                    {
-	                                        valido = valido + ' ' + fefinVal[i];
-	                                        if(fefinVal.length>1&&i<fefinVal.length-1)
-	                                        {
-	                                            valido = valido + ',';
-	                                        }
-	                                    }
-	                                }
-	                                return valido;
-	                            }
-	                            _fieldByName('fefin').isValid();
-	                        }
-	                        ,failure : function()
-	                        {
-	                            negoCmp.setLoading(false);
-	                            errorComunicacion();
-	                        }
-	                    });
-	                }
+                    var negoCmp = _fieldByLabel('NEGOCIO');
+                    var negoVal = negoCmp.getValue();
+                    negoCmp.setLoading(true);
+                    Ext.Ajax.request(
+                    {
+                        url     : _p28_urlCargarDetalleNegocioRamo5
+                        ,params :
+                        {
+                            'smap1.negocio' : negoVal,
+                            'smap1.cdramo'  : _p28_smap1.cdramo,
+                            'smap1.cdtipsit': _p28_smap1.cdtipsit
+                        }
+                        ,success : function(response)
+                        {
+                            negoCmp.setLoading(false);
+                            var json = Ext.decode(response.responseText);
+                            debug('### detalle negocio:',json);
+                            if(Number(json.smap1.MULTIANUAL) != 0) {
+                            	_fieldByName('fefin').validator=function(val)
+                                {
+                                    var feiniVal = Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y');
+                                    debug('feiniVal:',feiniVal);
+                                    var fefinVal=[];
+                                    for(var i=1; i <= Number(json.smap1.MULTIANUAL); i++)
+                                    {
+                                        debug('mas anios:',i);
+                                        fefinVal.push(Ext.Date.format(Ext.Date.add(Ext.Date.parse(feiniVal,'d/m/Y'),Ext.Date.YEAR,i),'d/m/Y'));
+                                    }
+                                    debug('validar contra:',fefinVal);
+                                    var valido = true;
+                                    if(!Ext.Array.contains(fefinVal,val))
+                                    {
+                                        valido = 'Solo se permite:';
+                                        for(var i in fefinVal)
+                                        {
+                                            valido = valido + ' ' + fefinVal[i];
+                                            if(fefinVal.length>1&&i<fefinVal.length-1)
+                                            {
+                                                valido = valido + ',';
+                                            }
+                                        }
+                                    }
+                                    return valido;
+                                }
+                            }
+                            _fieldByName('fefin').isValid();
+                        }
+                        ,failure : function()
+                        {
+                            negoCmp.setLoading(false);
+                            errorComunicacion();
+                        }
+                    });
 	            }
 	        }
 	    });
