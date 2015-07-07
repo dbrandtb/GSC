@@ -24,6 +24,21 @@
         </property>
     </bean>
     
+    <bean id="mailSenderForSms" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="gseguros.com.mx" />
+        <property name="port" value="25" />
+        <property name="username" value="sisa@gsalud.com.mx" />
+        <property name="password" value="Smtps1s4.2015" />
+        
+        <property name="javaMailProperties">
+            <props>
+            	<prop key="mail.debug">true</prop>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">false</prop>
+            </props>
+        </property>
+    </bean>
+    
     <!-- Mensaje de mail por default // TODO: Eliminar y obtener la info de BD -->
     <bean id="defaultMailMessage" class="org.springframework.mail.SimpleMailMessage">
         <!-- <property name="from" value="${mail.from}" /> -->

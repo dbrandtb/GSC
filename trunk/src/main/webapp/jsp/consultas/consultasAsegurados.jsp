@@ -26,9 +26,11 @@
             var _URL_LOADER_HISTORICO             = '<s:url namespace="/consultasAsegurado" action="consultaDatosHistorico" />';
             var _URL_LOADER_HISTORICO_FARMACIA    = '<s:url namespace="/consultasAsegurado" action="consultaDatosHistoricoFarmacia" />';
             var _URL_LOADER_VIGENCIA              = '<s:url namespace="/consultasAsegurado" action="consultaPeriodosVigencia" />';
+            var _URL_CONSULTA_HOSPITALES 		  = '<s:url namespace="/consultasAsegurado" action="consultaHospitales" />';
+            var _URL_LOADER_AVISOS_ANTERIORES     = '<s:url namespace="/consultasAsegurado" action="includes/avisosAnteriores" />';
+            var _URL_ENVIAR_AVISO_HOSPITALIZACION = '<s:url namespace="/consultasAsegurado" action="includes/enviarAvisoHospitalizacion" />';
           
             var _URL_CONSULTA_DATOS_TARIFA_POLIZA = '<s:url namespace="/consultasPoliza" action="consultaDatosTarifaPoliza" />';
-         
             var _URL_CONSULTA_DOCUMENTOS          = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
             var _URL_LOADER_RECIBOS               = '<s:url namespace="/general"         action="includes/loadRecibos" />';
             

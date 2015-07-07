@@ -2,8 +2,10 @@ package mx.com.gseguros.portal.consultas.service;
 
 import java.util.List;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
+import mx.com.gseguros.portal.consultas.model.AvisoHospitalizacionVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
@@ -19,6 +21,7 @@ import mx.com.gseguros.portal.consultas.model.HistoricoVO;
 import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.PlanVO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
+import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 
 public interface ConsultasAseguradoManager {
@@ -55,6 +58,16 @@ public interface ConsultasAseguradoManager {
 	
 	public List<HistoricoFarmaciaVO> obtieneHistoricoFarmacia(PolizaVO poliza, AseguradoVO asegurado) throws Exception;
 	
-	public List<PeriodoVigenciaVO> obtienePeriodosVigencia(PolizaVO poliza, AseguradoVO asegurado) throws Exception;	
+	public List<PeriodoVigenciaVO> obtienePeriodosVigencia(PolizaVO poliza, AseguradoVO asegurado) throws Exception;
+	
+	public List<BaseVO> obtieneHospitales(String filtro, PolizaVO poliza) throws Exception;
+	
+	public List<AvisoHospitalizacionVO> obtieneAvisosAnteriores(PolizaVO poliza, AseguradoVO asegurado) throws Exception;
+	
+	public String enviarAvisoHospitalizacion (AvisoHospitalizacionVO aviso, PolizaVO poliza) throws ApplicationException;
+	
+	public String consultaTelefonoAgente (String cdagente) throws ApplicationException;
+
+	public void actualizaEstatusEnvio(String iCodAviso, PolizaVO poliza) throws ApplicationException;
 	
 }

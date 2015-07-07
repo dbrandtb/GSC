@@ -4,6 +4,7 @@ import java.util.List;
 
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
+import mx.com.gseguros.portal.consultas.model.AvisoHospitalizacionVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
@@ -15,6 +16,7 @@ import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.consultas.model.EndosoVO;
 import mx.com.gseguros.portal.consultas.model.EnfermedadVO;
 import mx.com.gseguros.portal.consultas.model.HistoricoFarmaciaVO;
+import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.portal.consultas.model.HistoricoVO;
 import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.PlanVO;
@@ -158,4 +160,44 @@ public interface IConsultasAseguradoDAO {
      * @throws Exception
      */
     public List<PeriodoVigenciaVO> obtienePeriodosVigencia(PolizaVO poliza, AseguradoVO asegurado) throws Exception;
+    
+    /**
+     * Obtiene lista de hospitales
+     * @return
+     * @throws Exception
+     */
+    public List<BaseVO> obtieneHospitales(String filtro) throws Exception;
+    
+    /**
+     * Obtiene avisos de hospitalizacion
+     * @param asegurado
+     * @return
+     * @throws Exception
+     */
+    public List<AvisoHospitalizacionVO> obtieneAvisosAnteriores(AseguradoVO asegurado) throws Exception;
+    
+    /**
+     * Inserta aviso de hospitalizacion
+     * @param aviso
+     * @return
+     * @throws Exception
+     */
+    public String enviarAvisoHospitalizacion(AvisoHospitalizacionVO aviso) throws Exception;
+
+    /**
+     * Obtiene telefono de agente
+     * @param cdagente
+     * @return
+     * @throws Exception
+     */
+    public String consultaTelefonoAgente(String cdagente) throws Exception;
+    
+    /**
+     * Actualiza el estatus de envio de aviso hospitalizacion
+     * @param iCodAviso
+     * @return
+     * @throws Exception
+     */
+	public void actualizaEstatusEnvio(String iCodAviso) throws Exception;
+	
 }
