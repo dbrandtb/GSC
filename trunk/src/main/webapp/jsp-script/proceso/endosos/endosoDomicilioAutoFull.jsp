@@ -47,6 +47,11 @@ var _5_panelPri;
 var datosIniciales;
 
 debug('_5_smap1:',_5_smap1);
+
+
+var _p5_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple" />';
+var _cdTipSupCambioDomFull = '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@CAMBIO_DOMICILIO_ASEGURADO_TITULAR.cdTipSup" />';
+
 //////variables //////
 //////////////////////
 
@@ -313,6 +318,44 @@ Ext.onReady(function()
     _fieldByName('NMNUMERO').regexText = 'Solo d&iacute;gitos, letras y guiones';
     _fieldByName('NMNUMINT').regex = /^[A-Za-z0-9-]*$/;
     _fieldByName('NMNUMINT').regexText = 'Solo d&iacute;gitos, letras y guiones';
+    
+    
+    Ext.Ajax.request(
+    {
+        url      : _p5_urlRecuperacionSimple
+        ,params  :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
+            ,'smap1.cdunieco'     : _5_smap1.CDUNIECO
+            ,'smap1.cdramo'       : _5_smap1.CDRAMO
+            ,'smap1.estado'       : _5_smap1.ESTADO
+            ,'smap1.nmpoliza'     : _5_smap1.NMPOLIZA
+            ,'smap1.cdtipsup'     : _cdTipSupCambioDomFull
+        }
+        ,success : function(response)
+        {
+            var json = Ext.decode(response.responseText);
+            debug('### fechas:',json);
+            if(json.exito)
+            {
+                _5_fieldFechaEndoso.setMinValue(json.smap1.FECHA_MINIMA);
+                _5_fieldFechaEndoso.setMaxValue(json.smap1.FECHA_MAXIMA);
+                _5_fieldFechaEndoso.setValue(json.smap1.FECHA_REFERENCIA);
+                _5_fieldFechaEndoso.setReadOnly(json.smap1.EDITABLE=='N');
+                _5_fieldFechaEndoso.isValid();
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
+    
+    
     ////// loader //////
     ////////////////////
 });
