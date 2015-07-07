@@ -478,13 +478,50 @@ public class CotizacionAction extends PrincipalCoreAction
 						//NEGOCIO
 						if(tatriIte.getNameCdatribu().equalsIgnoreCase("31"))
 						{
-							List<ComponenteVO>componenteSustitutoListaAux=pantallasManager.obtenerComponentes(
+							List<ComponenteVO> componenteSustitutoListaAux = pantallasManager.obtenerComponentes(
 									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
 									,cdtipsit                              ,  "W"         , cdsisrol
 									,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "31");
 							temp.remove(tatriIte);
 							componenteSustitutoListaAux.get(0).setSwsuscri("N");
 							temp.add(componenteSustitutoListaAux.get(0));
+						}
+					}
+					
+					//[parche] para fronterizos
+					if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
+					{
+						logger.debug("tatriIte=" + tatriIte);
+						//agente
+						if(tatriIte.getNameCdatribu().equalsIgnoreCase("32"))
+						{
+							logger.debug("tatriIte==" + tatriIte);
+							//valor inicial si es agente
+							if(cdsisrol.equals(RolSistema.AGENTE.getCdsisrol())
+									&&StringUtils.isNotBlank(cdagente))
+							{
+								tatriIte.setValue(cdagente);
+								tatriIte.setSoloLectura(true);
+								logger.debug(
+										new StringBuilder()
+										.append("\n@@@@@@ parche pone cdagente=")
+										.append(cdagente)
+										.append(" @@@@@@")
+										.toString()
+										);
+							}
+							//sustituir componente si es promotor o suscriptor
+							else if(cdsisrol.equalsIgnoreCase(RolSistema.PROMOTOR_AUTO.getCdsisrol())
+									||cdsisrol.equalsIgnoreCase(RolSistema.SUSCRIPTOR_AUTO.getCdsisrol()))
+							{
+								List<ComponenteVO>componenteSustitutoListaAux=pantallasManager.obtenerComponentes(
+										TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
+										,cdtipsit                              ,  "W"         , cdsisrol
+										,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "32");
+								temp.remove(tatriIte);
+								componenteSustitutoListaAux.get(0).setSwsuscri("N");
+								temp.add(componenteSustitutoListaAux.get(0));
+							}
 						}
 					}
 				}
