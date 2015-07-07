@@ -1286,7 +1286,7 @@
 								}else{
 									var numSiniestro = record.get('NMSINIES');
 									if(numSiniestro.length == "0"){
-										revisarDocumento(grid,index)
+										revisarDocumento(grid,index);
 									}else{
 										storeConceptos.removeAll();
 										storeConceptos.load({
