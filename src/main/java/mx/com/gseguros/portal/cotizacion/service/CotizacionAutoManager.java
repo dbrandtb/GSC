@@ -179,7 +179,8 @@ public interface CotizacionAutoManager
 	
 	public ManagerRespuestaSmapVO cargarObligatorioTractocamionRamo5(String clave);
 	
-	public ManagerRespuestaSmapVO cargarDetalleNegocioRamo5(String negocio);
+	public ManagerRespuestaSmapVO cargarDetalleNegocioRamo5(String negocio, String cdramo, String cdtipsit, String cdsisrol, String cdusuari);
+	
 	
 	public ManagerRespuestaVoidVO guardarPantallaBeneficiarios(
 			String cdunieco

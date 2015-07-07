@@ -3442,7 +3442,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	}
 
 	@Override
-	public ManagerRespuestaSmapVO cargarDetalleNegocioRamo5(String negocio)
+	public ManagerRespuestaSmapVO cargarDetalleNegocioRamo5(String negocio, String cdramo, String cdtipsit, String cdsisrol, String cdusuari)
 	{
 		logger.info(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3456,7 +3456,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		{
 			setCheckpoint("Recuperando detalle de negocio");
 			
-			resp.setSmap(cotizacionDAO.cargarDetalleNegocioRamo5(negocio));
+			resp.setSmap(cotizacionDAO.cargarDetalleNegocioRamo5(negocio, cdramo, cdtipsit, cdsisrol, cdusuari));
 			
 			setCheckpoint("0");
 		}

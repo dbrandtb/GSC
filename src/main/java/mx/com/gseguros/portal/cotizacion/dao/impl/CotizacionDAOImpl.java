@@ -4710,10 +4710,14 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     }
     
     @Override
-    public Map<String,String>cargarDetalleNegocioRamo5(String negocio)throws Exception
+    public Map<String,String>cargarDetalleNegocioRamo5(String negocio, String cdramo, String cdtipsit, String cdsisrol, String cdusuari) throws Exception
     {
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("negocio" , negocio);
+    	params.put("cdramo" , cdramo);
+    	params.put("cdtipsit" , cdtipsit);
+    	params.put("cdsisrol" , cdsisrol);
+    	params.put("cdusuari" , cdusuari);
     	Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_DETALLE_NEGOCIO_RAMO5", params);
     	Map<String,Object>procResult  = ejecutaSP(new CargarDetalleNegocioRamo5(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
@@ -4734,6 +4738,10 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	{
     		super(dataSource,"PKG_SATELITES2.P_GET_DETALLE_NEGOCIO_RAMO5");
     		declareParameter(new SqlParameter("negocio" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdramo"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdtipsit", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdsisrol", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdusuari", OracleTypes.VARCHAR));
     		String[] cols=new String[]{
     				"TARIFA"
     				,"UDI"

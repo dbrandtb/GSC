@@ -557,7 +557,9 @@ public interface CotizacionDAO
     		,String nmsuplem
     		,String cdrol)throws Exception;
 	public String cargarTipoVehiculoRamo5(String clave)throws Exception;
-	public Map<String,String>cargarDetalleNegocioRamo5(String negocio)throws Exception;
+	
+	public Map<String,String>cargarDetalleNegocioRamo5(String negocio, String cdramo, String cdtipsit, String cdsisrol, String cdusuari) throws Exception;
+	
 	public Map<String,List<Map<String,String>>>cargarConfiguracionTvalositFlotillas(
 			String cdramo
 			,String cdtipsit
