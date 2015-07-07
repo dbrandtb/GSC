@@ -27,6 +27,9 @@ var urlGuardarp4           = '<s:url namespace="/endosos" action="guardarEndosoD
 var enddomUrlDoc           = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" />';
 var _ComboColoniasUrl      = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
 
+var _p4_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple" />';
+var _cdTipSupCambioDom = '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@CAMBIO_DOMICILIO.cdTipSup" />';
+
 var esElContratanteP4   = true;
 var formPanelp4;
 
@@ -256,10 +259,8 @@ Ext.onReady(function(){
 					    xtype       : 'datefield'
 					    ,fieldLabel : 'Fecha de efecto'
 					    ,format     : 'd/m/Y'
-					    ,value      : inputFechaInicio
 					    ,allowBlank : false
 					    ,name       : 'smap2.pv_fecha_i'
-					    ,readOnly   : true
 					}
             	]
             })
@@ -493,6 +494,42 @@ Ext.onReady(function(){
     _fieldByName('smap1.NMNUMINT').regexText = 'Solo d&iacute;gitos, letras y guiones';
     
     Ext.ComponentQuery.query('[name=smap1.NMTELEFO]')[Ext.ComponentQuery.query('[name=smap1.NMTELEFO]').length-1].hide();
+    
+    
+    Ext.Ajax.request(
+    {
+        url      : _p4_urlRecuperacionSimple
+        ,params  :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
+            ,'smap1.cdunieco'     : inputCduniecop4
+            ,'smap1.cdramo'       : inputCdramop4
+            ,'smap1.estado'       : inputEstadop4
+            ,'smap1.nmpoliza'     : inputNmpolizap4
+            ,'smap1.cdtipsup'     : _cdTipSupCambioDom
+        }
+        ,success : function(response)
+        {
+            var json = Ext.decode(response.responseText);
+            debug('### fechas:',json);
+            if(json.exito)
+            {
+                _fieldByName('smap2.pv_fecha_i',formPanelp4).setMinValue(json.smap1.FECHA_MINIMA);
+                _fieldByName('smap2.pv_fecha_i',formPanelp4).setMaxValue(json.smap1.FECHA_MAXIMA);
+                _fieldByName('smap2.pv_fecha_i',formPanelp4).setValue(json.smap1.FECHA_REFERENCIA);
+                _fieldByName('smap2.pv_fecha_i',formPanelp4).setReadOnly(json.smap1.EDITABLE=='N');
+                _fieldByName('smap2.pv_fecha_i',formPanelp4).isValid();
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
     
     /*//////////////////*/
     ////// cargador //////

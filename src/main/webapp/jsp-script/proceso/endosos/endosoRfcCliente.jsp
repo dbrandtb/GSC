@@ -38,6 +38,10 @@ var _35_urlLoadContratantes = '<s:url namespace="/endosos" action="cargarContrat
 debug('_35_smap1:',_35_smap1);
 
 var nombreInicial;
+
+var _p35_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple" />';
+var _cdTipSupCambioRFC = '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@CAMBIO_RFC_CLIENTE.cdTipSup" />';
+
 ////// variables //////
 ///////////////////////
 
@@ -223,7 +227,6 @@ Ext.onReady(function()
         ,fieldLabel : 'Fecha de efecto'
         ,allowBlank : false
         ,value      : '<s:property value="smap1.fechaInicioEndoso" />'
-        ,readOnly   : true
         ,name       : 'fecha_endoso'
     });
     _35_panelEndoso = new _35_PanelEndoso();
@@ -314,6 +317,42 @@ Ext.onReady(function()
         {
         	_35_panelPri.setLoading(false);
         	errorComunicacion();
+        }
+    });
+    
+    
+    Ext.Ajax.request(
+    {
+        url      : _p35_urlRecuperacionSimple
+        ,params  :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
+            ,'smap1.cdunieco'     : _35_smap1.CDUNIECO
+            ,'smap1.cdramo'       : _35_smap1.CDRAMO
+            ,'smap1.estado'       : _35_smap1.ESTADO
+            ,'smap1.nmpoliza'     : _35_smap1.NMPOLIZA
+            ,'smap1.cdtipsup'     : _cdTipSupCambioRFC
+        }
+        ,success : function(response)
+        {
+            var json = Ext.decode(response.responseText);
+            debug('### fechas:',json);
+            if(json.exito)
+            {
+                _35_fieldFechaEndoso.setMinValue(json.smap1.FECHA_MINIMA);
+                _35_fieldFechaEndoso.setMaxValue(json.smap1.FECHA_MAXIMA);
+                _35_fieldFechaEndoso.setValue(json.smap1.FECHA_REFERENCIA);
+                _35_fieldFechaEndoso.setReadOnly(json.smap1.EDITABLE=='N');
+                _35_fieldFechaEndoso.isValid();
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
         }
     });
     ////// loader //////
