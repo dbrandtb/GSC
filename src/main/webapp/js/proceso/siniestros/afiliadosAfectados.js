@@ -32,7 +32,8 @@ Ext.onReady(function() {
 				{type:'string',    name:'dssubgar'			},				{type:'string',    name:'cdmoneda'			},
 				{type:'string',    name:'descMoneda'		},				{type:'string',    name:'tasaCambio'		},
 				{type:'string',    name:'ptimporta'			},				{type:'string',    name:'dctoNuex'			},
-				{type:'string',    name:'feegreso'          },				{type:'string',    name:'diasdedu'			}
+				{type:'string',    name:'feegreso'          },				{type:'string',    name:'diasdedu'			},
+				{type:'string',    name:'contraRecibo'      }
 		]
     });
     
