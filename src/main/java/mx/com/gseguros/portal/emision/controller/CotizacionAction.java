@@ -3093,9 +3093,9 @@ public class CotizacionAction extends PrincipalCoreAction
 				imap.put("editorDeducibleColumn",gc.getColumns());
 				
 				List<ComponenteVO>componentesContratante=pantallasManager.obtenerComponentes(
-						null, null, "|"+status+"|",
-						null, null, cdsisrol,
-						"COTIZACION_GRUPO", "CONTRATANTE", null);
+						null               , "|"+cdramo+"|" , "|"+status+"|" ,
+						null               , null           , cdsisrol       ,
+						"COTIZACION_GRUPO" , "CONTRATANTE"  , null);
 				gc.generaComponentes(componentesContratante, true,true,true,false,false,false);
 				imap.put("itemsContratante"  , gc.getItems());
 				imap.put("fieldsContratante" , gc.getFields());
@@ -3906,6 +3906,22 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
+		boolean pideNumCliemte = false;
+		if(exito)
+		{
+			try
+			{
+				pideNumCliemte = consultasManager.validaClientePideNumeroEmpleado(cdunieco,cdramo,"W",nmpoliza);
+			}
+			catch(Exception ex)
+			{
+				respuesta       = Utils.join("Error al recuperar parametrizacion de numero de empleado por cliente");
+				respuestaOculta = ex.getMessage();
+				exito           = false;
+				logger.error(respuesta,ex);
+			}
+		}
+		
 		if(exito)
 		{
 			FileInputStream input       = null;
@@ -4379,6 +4395,12 @@ public class CotizacionAction extends PrincipalCoreAction
 	                try
                 	{
 		                auxCell=row.getCell(18);
+		                if(pideNumCliemte&&
+		                		(auxCell==null||auxCell.getStringCellValue()==null||StringUtils.isBlank(auxCell.getStringCellValue()))
+		                )
+		                {
+		                	throw new ApplicationException("Necesito el numero de empleado");
+		                }
 		                logger.info("IDENTIDAD: "+(
 		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
 		                		));

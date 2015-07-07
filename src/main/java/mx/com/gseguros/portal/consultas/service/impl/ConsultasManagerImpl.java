@@ -281,6 +281,34 @@ public class ConsultasManagerImpl implements ConsultasManager
 		return true;
 	}
 	
+	@Deprecated
+	@Override
+	public boolean validaClientePideNumeroEmpleado(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		logger.info(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ validaClientePideNumeroEmpleado @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				));
+		
+		boolean pide = consultasDAO.validaClientePideNumeroEmpleado(cdunieco,cdramo,estado,nmpoliza);
+		
+		logger.info(Utils.join(
+				 "\n@@@@@@ pide=",pide
+				,"\n@@@@@@ validaClientePideNumeroEmpleado @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return pide;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	///////////////////////////////

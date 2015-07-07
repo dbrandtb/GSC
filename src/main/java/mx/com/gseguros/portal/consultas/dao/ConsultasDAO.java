@@ -298,4 +298,11 @@ public interface ConsultasDAO
 			)throws Exception;
 	
 	public List<Map<String,String>> recuperarAtributosPorRol(String cdtipsit,String cdsisrol) throws Exception;
+	
+	public boolean validaClientePideNumeroEmpleado(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }

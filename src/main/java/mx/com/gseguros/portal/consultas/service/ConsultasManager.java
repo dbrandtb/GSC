@@ -103,4 +103,11 @@ public interface ConsultasManager
 	public boolean copiarArchivosUsuarioTramite(String cduniecoOrigen, String cdramoOrigen, String estadoOrigen, 
 			String nmpolizaOrigen, String ntramiteDestino, String rutaDocumentosDestino)throws Exception;
 	
+	@Deprecated
+	public boolean validaClientePideNumeroEmpleado(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }
