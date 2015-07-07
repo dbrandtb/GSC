@@ -2285,4 +2285,39 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		}
 	}
 	
+	@Override
+	public boolean validaClientePideNumeroEmpleado(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Map<String,Object> procRes = ejecutaSP(new ValidaClientePideNumeroEmpleado(getDataSource()),params);
+		boolean pide = "S".equals((String)procRes.get("pv_swempleado_o"));
+		logger2.debug("\nPKG_CONSULTA.P_VALIDA_CLIENTE_NEMP pide= {}",pide);
+		return pide;
+	}
+	
+	protected class ValidaClientePideNumeroEmpleado extends StoredProcedure
+	{
+		protected ValidaClientePideNumeroEmpleado(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_VALIDA_CLIENTE_NEMP");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_swempleado_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"     , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"      , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

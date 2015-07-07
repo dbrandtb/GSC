@@ -1795,9 +1795,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 				gcGral.setCdramo(null);
 				
 				List<ComponenteVO>componentesContratante=pantallasDAO.obtenerComponentes(
-						null, null, "|"+status+"|",
-						null, null, cdsisrol,
-						"COTIZACION_GRUPO", "CONTRATANTE", null);
+						null               , "|"+cdramo+"|" , "|"+status+"|" ,
+						null               , null           , cdsisrol       ,
+						"COTIZACION_GRUPO" , "CONTRATANTE"  , null);
 				gcGral.generaComponentes(componentesContratante, true,false,true,false,false,false);
 				resp.getImap().put("itemsContratante"  , gcGral.getItems());
 				
@@ -4081,6 +4081,22 @@ public class CotizacionManagerImpl implements CotizacionManager
 			}
 		}
 		
+		boolean pideNumCliemte = false;
+		if(resp.isExito())
+		{
+			try
+			{
+				pideNumCliemte = consultasDAO.validaClientePideNumeroEmpleado(cdunieco,cdramo,"W",nmpoliza);
+			}
+			catch(Exception ex)
+			{
+				resp.setRespuesta(Utils.join("Error al recuperar parametrizacion de numero de empleado por cliente"));
+				resp.setRespuestaOculta(ex.getMessage());
+				resp.setExito(false);
+				logger.error(resp.getRespuesta(),ex);
+			}
+		}
+		
 		//crear pipes
 		if(resp.isExito())
 		{
@@ -4666,6 +4682,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                try
                 	{
 		                auxCell=row.getCell(18);
+		                if(pideNumCliemte&&
+		                		(auxCell==null||auxCell.getStringCellValue()==null||StringUtils.isBlank(auxCell.getStringCellValue()))
+		                )
+		                {
+		                	throw new ApplicationException("Necesito el numero de empleado");
+		                }
 		                logger.debug(
 		                		new StringBuilder("IDENTIDAD: ")
 		                		.append(
