@@ -3,9 +3,11 @@ package mx.com.gseguros.portal.consultas.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.IConsultasAseguradoDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
+import mx.com.gseguros.portal.consultas.model.AvisoHospitalizacionVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
@@ -22,19 +24,20 @@ import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.PlanVO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasAseguradoManager;
+import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-
-
 @Service("consultasAseguradoManagerImpl")
 public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager {
 
-	private org.apache.log4j.Logger logger =org.apache.log4j.Logger.getLogger(ConsultasAseguradoManagerImpl.class);
+	static final Logger logger = LoggerFactory.getLogger(ConsultasAseguradoManagerImpl.class);
 	
 	@Autowired
 	@Qualifier("consultasAseguradoDAOICEImpl")
@@ -43,6 +46,10 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	@Autowired
 	@Qualifier("consultasAseguradoDAOSISAImpl")
 	private IConsultasAseguradoDAO consultasAseguradoDAOSISA;
+	
+	@Autowired
+	@Qualifier("consultasAseguradoDAOSIGSImpl")
+	private IConsultasAseguradoDAO consultasAseguradoDAOSIGS;
 		
 	@Override
 	public List<ConsultaResultadosAseguradoVO> obtieneResultadosAsegurado(String rfc,
@@ -314,5 +321,74 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	  return periodosVigencia;
 	}
 
+	@Override
+	public List<BaseVO> obtieneHospitales(String filtro, PolizaVO poliza) throws Exception {
+		List<BaseVO> hospitales = new ArrayList<BaseVO>();
+		// Si iCodPoliza no es nulo, es información de SISA.
+		if(StringUtils.isNotBlank(poliza.getIcodpoliza())){
+			hospitales = consultasAseguradoDAOSISA.obtieneHospitales("%"+filtro+"%");
+		} else{
+			hospitales = consultasAseguradoDAOICE.obtieneHospitales(filtro);
+		}
+		return hospitales;
+	}
+	
+	@Override
+	public List<AvisoHospitalizacionVO> obtieneAvisosAnteriores(
+			PolizaVO poliza, AseguradoVO asegurado) throws Exception {
+		List<AvisoHospitalizacionVO> avisosHospitalizacion = new ArrayList<AvisoHospitalizacionVO>();
+		//Si iCodPoliza no es nulo, es información de SISA.
+		if(StringUtils.isNotBlank(poliza.getIcodpoliza())){
+			avisosHospitalizacion = consultasAseguradoDAOSISA.obtieneAvisosAnteriores(asegurado);
+		}else{
+			avisosHospitalizacion = consultasAseguradoDAOICE.obtieneAvisosAnteriores(asegurado);
+		}
+		return avisosHospitalizacion;
+	}
+
+	@Override
+	public String enviarAvisoHospitalizacion(AvisoHospitalizacionVO aviso, PolizaVO poliza)
+			throws ApplicationException {
+		try{
+			String iCodAviso;
+			//Si iCodPoliza no es nulo, es información de SISA.
+			if(StringUtils.isNotBlank(poliza.getIcodpoliza())){
+				iCodAviso = consultasAseguradoDAOSISA.enviarAvisoHospitalizacion(aviso);
+			}else{
+				iCodAviso = consultasAseguradoDAOICE.enviarAvisoHospitalizacion(aviso);
+			}
+			return iCodAviso;
+		}catch (Exception e){
+			throw new ApplicationException("1", e);
+		}
+	}
+
+	@Override
+	public String consultaTelefonoAgente(String cdagente)
+			throws ApplicationException {
+		try {
+			String telefonoAgente = "";
+				telefonoAgente = consultasAseguradoDAOSIGS.consultaTelefonoAgente(cdagente);
+			return telefonoAgente;
+		} catch (Exception e) {
+			throw new ApplicationException("2", e);
+		}
+	}
+
+	@Override
+	public void actualizaEstatusEnvio(String iCodAviso, PolizaVO poliza)
+			throws ApplicationException {
+		try {
+			if(StringUtils.isNotBlank(poliza.getIcodpoliza())){
+				//Si iCodPoliza no es nulo, enviar flujo SISA
+				consultasAseguradoDAOSISA.actualizaEstatusEnvio(iCodAviso);
+			}else{
+				//Si iCodPoliza es nulo, enviar flujo ICE
+				consultasAseguradoDAOICE.actualizaEstatusEnvio(iCodAviso);
+			}
+		} catch (Exception e) {
+			throw new ApplicationException("5",e);
+		}
+	}
 	
 }

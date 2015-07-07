@@ -25,6 +25,11 @@ public class ConsultaPolizaActualVO implements Serializable{
 	private String cdramo;
 	
 	/**
+	 * Ramo de Producto (ICE)
+	 */
+	private String cdsubram;
+	
+	/**
 	 * Estado de la poliza
 	 */
 	private String estado;
@@ -146,6 +151,12 @@ public class ConsultaPolizaActualVO implements Serializable{
 	}
 	public void setCdramo(String cdramo) {
 		this.cdramo = cdramo;
+	}
+	public String getCdsubram() {
+		return cdsubram;
+	}
+	public void setCdsubram(String cdsubram) {
+		this.cdsubram = cdsubram;
 	}
 	public String getEstado() {
 		return estado;

@@ -22,4 +22,11 @@
         <property name="defaultMailMessage" ref="defaultMailMessage" />
     </bean>
     
+    <bean id="mailServiceForSmsImpl" class="mx.com.gseguros.portal.general.service.impl.MailServiceForSmsImpl">
+        <property name="from" value="sisa@gsalud.com.mx" />
+        <property name="fromAlias" value="General de Seguros" />
+        <property name="mailSender" ref="mailSenderForSms" />
+        <property name="defaultMailMessage" ref="defaultMailMessage" />
+    </bean>
+    
 </beans>

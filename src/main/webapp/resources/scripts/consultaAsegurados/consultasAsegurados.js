@@ -27,7 +27,7 @@ Ext.onReady(function() {
             type : 'string'
         }]
     });
-    
+
     var storeTiposConsulta = Ext.create('Ext.data.JsonStore', {
         model: 'KeyValueModel',
         proxy: {
@@ -71,6 +71,9 @@ Ext.onReady(function() {
                                 
                                 //Mostrar seccion de datos generales:
                                 tabDatosGeneralesPoliza.show();
+                                tabDatosGeneralesPoliza.child('#tabDatosGenerales').tab.show();
+                                tabDatosGeneralesPoliza.setActiveTab('tabDatosGenerales');
+                                
                                 
                                 //Datos de Copagos de poliza
                                 storeCopagosPoliza.load({
@@ -138,13 +141,11 @@ Ext.onReady(function() {
                                 
                                 //Se activan/desactivan tabs:
                                                                                                                     
-                                	tabDatosGeneralesPoliza.setActiveTab(0);
-                                	tabDatosGeneralesPoliza.show();                            	
                                 	tabDatosGeneralesPoliza.child('#tabDatosAsegurado').tab.show();
                                 	tabDatosGeneralesPoliza.child('#tabDatosContratante').tab.show();
                                 	tabDatosGeneralesPoliza.child('#tabDatosTitular').tab.show();
-                                	tabDatosGeneralesPoliza.child('#tabDatosAsegurados').tab.show();                            	
-                                	tabDatosGeneralesPoliza.child('#tabEndosos').tab.show();                                	
+                                	tabDatosGeneralesPoliza.child('#tabDatosAsegurados').tab.show();
+                                	tabDatosGeneralesPoliza.child('#tabEndosos').tab.show();
                                 	if(gridSuplementos.getSelectionModel().getSelection()[0].get('origen') == 'SISA') {
                                 	   tabDatosGeneralesPoliza.child('#tbDocumentos').tab.hide();
                                 	   tabDatosGeneralesPoliza.child('#tabEnfermedades').tab.show();
@@ -173,8 +174,9 @@ Ext.onReady(function() {
                             
                             case 2:
                                 //Mostrar seccion de plan y coberturas:
-                                tabDatosGeneralesPoliza.setActiveTab(0);
-                                tabDatosGeneralesPoliza.show();                                
+                                tabDatosGeneralesPoliza.setActiveTab('tabDatosPlan');
+                                tabDatosGeneralesPoliza.show();
+                                tabDatosGeneralesPoliza.child('#tabDatosGenerales').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tbDocumentos').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabDatosPlan').tab.show();
                                 tabDatosGeneralesPoliza.child('#tabDatosCopagosPoliza').tab.show();
@@ -194,12 +196,14 @@ Ext.onReady(function() {
                                 tabDatosGeneralesPoliza.child('#tbVigencia').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabEndosos').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabEnfermedades').tab.hide();
+                                tabDatosGeneralesPoliza.child('#tbRecibos').tab.hide();
                             break;
                             
                             case 3:
                                 //Mostrar seccion de historicos
-                                tabDatosGeneralesPoliza.setActiveTab(0);
-                                tabDatosGeneralesPoliza.show();                                
+                                tabDatosGeneralesPoliza.setActiveTab('tbHistorico');
+                                tabDatosGeneralesPoliza.show();                         
+                                tabDatosGeneralesPoliza.child('#tabDatosGenerales').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tbHistorico').tab.show();
                                 //El histórico de farmacia solo se muestra para SISA
                                 if(gridSuplementos.getSelectionModel().getSelection()[0].get('origen') == 'SISA') {
@@ -218,12 +222,14 @@ Ext.onReady(function() {
                                 tabDatosGeneralesPoliza.child('#tbVigencia').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabEndosos').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabEnfermedades').tab.hide();
+                                tabDatosGeneralesPoliza.child('#tbRecibos').tab.hide();
                             break;
                             
                             case 4:
                                 //Mostrar sección de Vigencia
-                                tabDatosGeneralesPoliza.setActiveTab(0);
+                                tabDatosGeneralesPoliza.setActiveTab('tbVigencia');
                                 tabDatosGeneralesPoliza.show();
+                                tabDatosGeneralesPoliza.child('#tabDatosGenerales').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tbVigencia').tab.show();
                                 tabDatosGeneralesPoliza.child('#tbHistorico').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tbHistoricoFarmacia').tab.hide();
@@ -237,8 +243,8 @@ Ext.onReady(function() {
                                 tabDatosGeneralesPoliza.child('#tabDatosAsegurados').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabEndosos').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabEnfermedades').tab.hide();
-                            break;
-                                               
+                                tabDatosGeneralesPoliza.child('#tbRecibos').tab.hide();
+                            break;                                               
                         }//end switch                
                     } else {                        
                     	showMessage('Aviso', 'Debe seleccionar una opci\u00F3n', Ext.Msg.OK, Ext.Msg.WARN)
@@ -247,9 +253,278 @@ Ext.onReady(function() {
             }
         }
     });
+    
+    /**INFORMACION DE LA SECCION DE FAMILIA (ASEGURADOS)**/
+    //-------------------------------------------------------------------------------------------------------------
+    // Modelo
+    Ext.define('AseguradosModel', {
+        extend: 'Ext.data.Model',
+        fields: [
+            {type:'string', name:'cdperson'},
+            {type:'string', name:'cdrfc'},
+            {type:'string', name:'cdrol'},
+            {type:'string', name:'dsrol'},
+            {type:'date'  , name:'fenacimi', dateFormat: 'd/m/Y'},
+            {type:'string', name:'nmsituac'},
+            {type:'string', name:'cdtipsit'},
+            {type:'string', name:'sexo'},
+            {type:'string', name:'nombre'},
+            {type:'string', name:'status'},
+            {type:'string', name:'parentesco'}
+        ]
+    });
+    
+    // Store
+    var storeAsegurados = new Ext.data.Store({
+     model: 'AseguradosModel',
+     proxy:
+     {
+          type: 'ajax',
+          url : _URL_CONSULTA_DATOS_ASEGURADO,          
+      reader:
+      {
+           type: 'json',
+           root: 'datosAsegurados'
+      }
+     }
+    });
 
-    
-    
+    var gridDatosAsegurado = Ext.create('Ext.grid.Panel', {
+        title   : 'DATOS DE LOS ASEGURADOS',
+        store   : storeAsegurados,
+        id      : 'gridDatosAsegurado',
+        //width   : 830,
+        autoScroll:true,
+        columns: [
+            //{text:'Rol',dataIndex:'dsrol',width:130 , align:'left'},
+            {text:'ID',dataIndex:'cdperson',flex:1,align:'left'},
+        	{text:'Parentesco',dataIndex:'parentesco',flex:1 , align:'left'},            
+            {text:'Nombre',dataIndex:'nombre',flex:2,align:'left'},
+            {text:'Estatus',dataIndex:'status',flex:1,align:'left'},
+            {text:'RFC',dataIndex:'cdrfc',width:120,align:'left'},
+            {text:'Sexo',dataIndex:'sexo',flex:1 , align:'left'},
+            {text:'Nacimiento',dataIndex:'fenacimi',flex:1, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')},
+            {
+            	text         : 'Hospitalizaci&oacute;n',
+            	align        : 'center',
+                xtype        : 'actioncolumn',
+                id           : 'columnAvisoHospitalizacion',
+                icon         : _CONTEXT+'/resources/fam3icons/icons/building.png',
+                tooltip      : 'Dar Aviso de Hospitalización',
+                flex         : 1,
+                //width        : auto,
+                menuDisabled : true,
+                sortable     : false,
+                handler      : function(grid,rowIndex)
+                {
+                	// Se generan y manejan los elementos a mostrar en la ventana de Aviso de Hospitalizacion
+                    var record = grid.getStore().getAt(rowIndex);
+                    if(record.get("status") == 'VIGENTE'){
+                    var ventanaAviso =  Ext.create('Ext.window.Window', {
+                        title       : 'Aviso de Hospitalizacion',
+                        modal       : true,
+                        closeAction: 'destroy',
+                        width       : 850,
+                        height      : 500,
+                        items : [
+							{
+								xtype: 'form',
+								defaults : {
+									bodyPadding : 5,
+									border : false
+								},
+								items : [ 
+									{
+										layout: 'hbox',
+										items : [
+													{xtype: 'textfield', name : 'params.cdperson', fieldLabel : 'C&oacute;digo', 
+													labelWidth: 60, width: 300, readOnly: true, labelAlign: 'left', value: record.get('cdperson')},
+													{xtype:'textfield', name:'params.status', fieldLabel : 'Estatus Asegurado',
+													labelWidth: 120, width: 450, readOnly: true, labelAlign: 'right', value: record.get('status')}
+										]
+									},{
+										layout: 'hbox',
+										items : [
+													{xtype: 'textfield', name: 'params.nombre', fieldLabel: 'Nombre', 
+													labelWidth: 60, width: 750, labelAlign: 'left', readOnly: true, value: record.get('nombre')}
+										]
+									},{
+										layout: 'hbox',
+										items : [
+													{xtype: 'datefield', name: 'params.fecha', fieldLabel: 'Fecha', 
+													labelWidth: 60, width: 300, labelAlign: 'left', readOnly: true, value: new Date() },
+													{xtype: 'datefield', name: 'params.hora', fieldLabel: 'Hora', 
+													labelWidth: 120, width: 300, labelAlign: 'right', readOnly: true, value: new Date(), format: 'g:i a'}
+										]
+									},{ /*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+										/////////////////////////////////////////COMBOBOX PARA SELECCION DE HOSPITAL DE INGRESO/////////////////////////////////////////*/
+										layout: 'hbox',
+										items : [ 
+													{
+														xtype: 'combo',
+														fieldLabel: 'Hospital',
+														name: 'params.hospital',
+														store: storeHospitales,
+														minChars: 2,
+														queryMode : 'remote', 
+														forceSelection: true,
+														queryParam : 'params.hospital',
+														queryCaching: false,
+														displayField: 'value',
+														valueField: 'key',
+														allowBlank: false,
+														blankText : 'Debe seleccionar hospital de ingreso.',
+														labelAlign: 'left',
+														labelWidth: 60,
+														width: 750
+													}
+										]
+									},{
+										layout: 'hbox',
+										items : [
+													{xtype: 'datefield', name: 'params.feingreso', fieldLabel: 'Fecha ingreso', allowBlank: false, 
+													blankText : 'Debe seleccionar fecha de ingreso.', minValue: Ext.Date.add(new Date(),Ext.Date.DAY,-10), 
+													maxValue: Ext.Date.add(new Date(),Ext.Date.DAY, 10), format: 'd/m/Y', submitFormat: 'd/m/Y'},
+													{xtype: 'hiddenfield', name: 'params.cdunieco', value: panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue()},
+													{xtype: 'hiddenfield', name: 'params.cdramo', value: panelBusqueda.down('form').getForm().findField("params.cdramo").getValue()},
+													{xtype: 'hiddenfield', name: 'params.nmpoliza', value: panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue()},
+													{xtype: 'hiddenfield', name: 'params.cdsubram', value: panelBusqueda.down('form').getForm().findField("params.cdsubram").getValue()}
+										]
+									},{
+										layout: 'hbox',
+										items : [
+													{xtype: 'textarea', name: 'params.comentario',   fieldLabel: 'Comentarios', allowBlank: false, 
+													blankText : 'Debe agregar un comentario.', labelWidth: 110, width: 700, labelAlign: 'left',
+													listeners: {
+											                change: function( fld, newValue, oldValue, opts ) {
+											                    fld.setValue( newValue.toUpperCase() );
+										               	 }                    
+            										}
+													}
+										]
+									},{
+										layout: {
+												type: 'vbox',
+												align: 'center'
+										},
+										items : [{
+												xtype: 'button', 
+												name: 'btnSubbmitAvisoHosp', 
+												text: 'Continuar...',
+												minWidth: 100,
+												handler: function(btn, e) {
+													var formPanel = this.up().up();
+													if (formPanel.form.isValid())
+													{
+															Ext.Msg.show({
+															title:'Enviar Aviso',
+															msg: 'El Aviso se enviar&aacute;, ¿esta de acuerdo?',
+															buttons: Ext.Msg.OKCANCEL,
+															icon: Ext.Msg.INFO,
+															fn: function(buttonId, text, opt) {
+																if (buttonId == 'ok'){
+																	ventanaAviso.setLoading(true);
+																	formPanel.form.submit(
+																	{
+																		clientValidation: true,
+																	    url: _URL_ENVIAR_AVISO_HOSPITALIZACION,
+																	    params: {
+																	    	'params.icodpoliza': panelBusqueda.down('form').getForm().findField("params.icodpoliza").getValue(),
+																	    	'params.cdagente' : panelBusqueda.down('form').getForm().findField("params.cdagente").getValue()
+																	    },
+																	    success: function(form, action) {
+																	    	ventanaAviso.setLoading(false);
+																	    	showMessage('&Eacute;xito (Aviso '+gridSuplementos.getSelectionModel().getSelection()[0].get('origen')+': '+action.result.iCodAviso+')', action.result.mensajeRes, Ext.Msg.OK, Ext.Msg.INFO)
+																	    	ventanaAviso.hide();
+																	    },
+																	    failure: function(form, action) {
+																	    	ventanaAviso.setLoading(false);
+																	    	if(action.result.mensajeRes == '1')
+																	    	{
+																	    		showMessage('Aviso No Registrado', 'Error al registrar Aviso de Hospitalizaci&oacute;n en el sistema.', Ext.Msg.OK, Ext.Msg.ERROR);
+																	    	}else if(action.result.mensajeRes == '2'){
+																	    		showMessage('Aviso ('+gridSuplementos.getSelectionModel().getSelection()[0].get('origen')+': '+action.result.iCodAviso+') Registrado', 'Error al obtener telefono de agente.', Ext.Msg.OK, Ext.Msg.ERROR);
+																	    	}else if(action.result.mensajeRes == '3'){
+																	    		showMessage('Aviso ('+gridSuplementos.getSelectionModel().getSelection()[0].get('origen')+': '+action.result.iCodAviso+') Registrado', 'El agente no tiene tel&eacute;fono registrado en el sistema.', Ext.Msg.OK, Ext.Msg.WARNING);
+																	    	}else if(action.result.mensajeRes == '4'){
+																	    		showMessage('Aviso ('+gridSuplementos.getSelectionModel().getSelection()[0].get('origen')+': '+action.result.iCodAviso+') Registrado', 'No se pudo enviar SMS.', Ext.Msg.OK, Ext.Msg.WARNING);
+																	    	}else if(action.result.mensajeRes == '5'){
+																	    		showMessage('Aviso ('+gridSuplementos.getSelectionModel().getSelection()[0].get('origen')+': '+action.result.iCodAviso+') Registrado', 'Registrado y Enviado SMS (Estatus Env&iacute;o en BD: 0)', Ext.Msg.OK, Ext.Msg.INFO);
+																	    	}
+																	    	ventanaAviso.hide();
+																	    }
+																	});
+															    }
+															}
+														});
+													}
+													else
+													{
+														showMessage('Atenci&oacute;n', 'Complete adecuadamente el formulario.', Ext.Msg.OK, Ext.Msg.WARNING)
+													}
+												}
+											}
+										]
+									}
+								]
+							},{
+								xtype: 'grid',
+								store   : storeAvisosAnteriores,
+								title: 'Avisos anteriores:',								
+								defaults:{sortable:true, align:'right', autoScroll: true},
+								columns:[{
+									text:'Fecha Registro',
+									dataIndex:'feregistro',
+									format:'d M Y',
+									align:'left',
+									flex: 1
+								},{
+									text:'Hospital',
+									dataIndex:'dspresta',
+									align:'left',
+									flex: 3
+								},{
+									text:'Fecha Ingreso',
+									dataIndex:'feingreso',
+									align:'left',
+									format:'d M Y',
+									flex: 1
+								},{
+									text:'Comentario',
+									dataIndex:'comentario',
+									align:'left',
+									flex: 3
+								}
+								]
+							}
+                        ]
+                     });
+                     ventanaAviso.down('grid').getStore().removeAll();
+                     ventanaAviso.down('combo').getStore().removeAll();
+                     ventanaAviso.show();
+                     storeAvisosAnteriores.load({
+            		  params: {
+            		  			'params.cdperson': record.get('cdperson'),
+            		  			'params.icodpoliza': panelBusqueda.down('form').getForm().findField("params.icodpoliza").getValue()
+            		  },
+            		  callback: function(records, operation, success) {
+                            if (!success) {
+                                showMessage('Error', 'Error en la consulta, intente m&aacute;s tarde', Ext.Msg.OK, Ext.Msg.ERROR);
+                                return;
+                            }
+                            if(records.length == 0){
+                                showMessage('No hay avisos', 'Este asegurado no tiene avisos anteriores', Ext.Msg.OK, Ext.Msg.INFO);
+                                return;
+                            }
+                        }
+            		});
+                  	}else{
+                  		showMessage('Servicio Denegado', 'Asegurado NO posee derechos de servicio debido al &lsquo;status&rsquo; de su p&oacute;liza.', Ext.Msg.OK, Ext.Msg.ERROR);
+                  	}
+                }
+            }
+        ]
+    });
     
     /**INFORMACION DEL PÓLIZA ACTUAL**/
     //-------------------------------------------------------------------------------------------------------------
@@ -258,6 +533,7 @@ Ext.onReady(function() {
         extend: 'Ext.data.Model',
         fields: [
             {name: 'cdramo'},
+            {name: 'cdsubram'},
             {name: 'cdunieco'},
             {name: 'estado'},
             {name: 'nmpoliza'},
@@ -355,10 +631,10 @@ Ext.onReady(function() {
                     var rowSelected = gridSuplementos.getSelectionModel().getSelection()[0];
                     panelBusqueda.down('form').getForm().findField("params.cdunieco").setValue(rowSelected.get('cdunieco'));
                     panelBusqueda.down('form').getForm().findField("params.cdramo").setValue(rowSelected.get('cdramo'));
+                    panelBusqueda.down('form').getForm().findField("params.cdsubram").setValue(rowSelected.get('cdsubram'));
                     panelBusqueda.down('form').getForm().findField("params.estado").setValue(rowSelected.get('estado'));
                     panelBusqueda.down('form').getForm().findField("params.nmpoliza").setValue(rowSelected.get('nmpoliza'));
                     panelBusqueda.down('form').getForm().findField("params.suplemento").setValue(rowSelected.get('nmsuplem'));
-                    
                     
                     //console.log('Params busqueda de datos grales poliza=');console.log(panelBusqueda.down('form').getForm().getValues());
 
@@ -370,7 +646,6 @@ Ext.onReady(function() {
                                 if (records.length > 0) {
                                     // Se asigna valor al parametro de busqueda:
                                     panelBusqueda.down('form').getForm().findField("params.cdagente").setValue(records[0].get('cdagente'));
-                                    
                                     // Se llenan los datos generales de la poliza elegida
                                     panelDatosPoliza.getForm().loadRecord(records[0]);
                                     
@@ -414,10 +689,11 @@ Ext.onReady(function() {
                             if (success) {
                                 if (records.length > 0) {
                                     // Se asigna valor al parametro de busqueda:
-                                    panelBusqueda.down('form').getForm().findField("params.cdagente").setValue(records[0].get('cdagente'));
-                                    
+                                    //panelBusqueda.down('form').getForm().findField("params.cdagente").setValue(records[0].get('cdagente'));
+                                	
                                     // Se llenan los datos generales de la poliza elegida
                                     panelDatosComplementarios.getForm().loadRecord(records[0]);
+                                    
                                     panelDatosComplementarios.setVisible(true);
                                     //Mensajes
                                     cambiaTextoMensajeAgente(records[0].get('statusaseg'));
@@ -505,19 +781,17 @@ Ext.onReady(function() {
                     
                     }
                     });
-                    
- 
                 }
             }
         }
     });
+    
     gridSuplementos.store.sort([
         { 
         	property    : 'nsuplogi',
         	direction   : 'DESC'
         }
     ]);
-    
     
     
     /**DATOS GENERALES**/
@@ -541,6 +815,7 @@ Ext.onReady(function() {
             {type:'string', name:'cdrfc'},            
             {type:'string', name:'titular'},
             {type:'string', name:'agente'},
+            {type:'string', name:'cdagente'},
             {type:'string', name:'cdunieco'}
                                    
         ]
@@ -681,6 +956,70 @@ Ext.onReady(function() {
     });
     
     
+    /**INFORMACION DEL PANEL DE AVISO DE HOSPITALIZACION**/
+    //-------------------------------------------------------------------------------------------------------------    
+    //Modelo
+     Ext.define('AvisosAnterioresModel',{
+        extend: 'Ext.data.Model',
+        fields:[
+    	   { type:'string', name:'dspresta' },
+    	   { type:'string', name:'comentario' },
+    	   { name:'feregistro', dateFormat:'d/m/Y' },
+    	   { name:'feingreso', dateFormat:'d/m/Y' }
+    	   
+    	]
+    });
+    
+    var storeAvisosAnteriores = Ext.create('Ext.data.Store', {
+    	pageSize:20,
+        model:'AvisosAnterioresModel',
+        proxy:{
+        	type:'ajax',
+        	url: _URL_LOADER_AVISOS_ANTERIORES,
+        	enablePaging:true,
+        	reader:{
+        		type:'json',
+        		root:'datosAvisosAnteriores'
+        	}  	
+        }
+    });
+    
+    var storeHospitales = Ext.create('Ext.data.Store', {
+    	model: 'Generic',
+    	autoLoad: false,
+    	proxy: {
+	         type: 'ajax',
+	         url : _URL_CONSULTA_HOSPITALES,
+	         reader: {
+		             type: 'json',
+		             root: 'datosHospitales'
+	         }
+     	},
+     	listeners: {
+        		beforeload: function( store, operation, eOpts) {
+        		operation.params['params.icodpoliza'] =  panelBusqueda.down('form').getForm().findField("params.icodpoliza").getValue()
+   				 }
+		}
+    });
+    
+    var cboHospital = Ext.create('Ext.form.ComboBox', {
+        fieldLabel: 'Hospital',
+        name: 'hospital',
+        store: storeHospitales,
+        floating : true,
+        queryMode : 'remote', 
+        forceSelection: true,
+        queryParam : 'params.hospital',
+        displayField: 'value',
+        valueField: 'key',
+        allowBlank: false,
+        blankText : 'Debe seleccionar hospital de ingreso.',
+        labelAlign: 'left',
+    	labelWidth: 60,
+    	width: 750
+    });
+    
+    
     /**INFORMACION DEL GRID DE TARIFICACION**/
     //-------------------------------------------------------------------------------------------------------------    
     //Modelo
@@ -706,6 +1045,7 @@ Ext.onReady(function() {
             }
         }
     });
+    
     /**GRID PARA LOS DATOS DE TARIFICACION **/
     var gridDatosTarificacion = Ext.create('Ext.grid.Panel', {
         width   : 820,
@@ -768,6 +1108,7 @@ Ext.onReady(function() {
               {type:'string',    name:'agrupador' }
         ]
     });
+    
     // Store
     var storeCopagosPoliza = new Ext.data.Store({
         model: 'CopagosPolizaModel',
@@ -1241,8 +1582,6 @@ Ext.onReady(function() {
         }
     });
     
-
-    
     // FORMULARIO DATOS DE CONTRATANTE
     var panelDatosContratante = Ext.create('Ext.form.Panel', {
         model : 'DatosContratanteModel',
@@ -1305,100 +1644,6 @@ Ext.onReady(function() {
                 {xtype:'textfield', name:'imss',   fieldLabel: 'Registro del IMSS',         readOnly: true, labelWidth: 120,  width: 300, labelAlign: 'right'}
             ]
         }]
-    });
-    
-
-    
-    
-    /**INFORMACION DE LA SECCION DE FAMILIA (ASEGURADOS)**/
-    //-------------------------------------------------------------------------------------------------------------
-    // Modelo
-    Ext.define('AseguradosModel', {
-        extend: 'Ext.data.Model',
-        fields: [
-            {type:'string', name:'cdperson'},
-            {type:'string', name:'cdrfc'},
-            {type:'string', name:'cdrol'},
-            {type:'string', name:'dsrol'},
-            {type:'date'  , name:'fenacimi', dateFormat: 'd/m/Y'},
-            {type:'string', name:'nmsituac'},
-            {type:'string', name:'cdtipsit'},
-            {type:'string', name:'sexo'},
-            {type:'string', name:'nombre'},
-            {type:'string', name:'status'},
-            {type:'string', name:'parentesco'}
-        ]
-    });
-    
-    // Store
-    var storeAsegurados = new Ext.data.Store({
-     model: 'AseguradosModel',
-     proxy:
-     {
-          type: 'ajax',
-          url : _URL_CONSULTA_DATOS_ASEGURADO,          
-      reader:
-      {
-           type: 'json',
-           root: 'datosAsegurados'
-      }
-     }
-    });
-    
-    var gridDatosAsegurado = Ext.create('Ext.grid.Panel', {
-        title   : 'DATOS DE LOS ASEGURADOS',
-        store   : storeAsegurados,
-        id      : 'gridDatosAsegurado',
-        width   : 830,
-        autoScroll:true,
-        items:[{
-           xtype:'textfield', name:'cdrfc', fieldLabel: 'RFC', readOnly: true, labelWidth: 120
-        }],
-        columns: [
-            //{text:'Rol',dataIndex:'dsrol',width:130 , align:'left'},
-            {text:'ID',dataIndex:'cdperson',width:90,align:'left'},
-        	{text:'Parentesco',dataIndex:'parentesco',width:100 , align:'left'},            
-            {text:'Nombre',dataIndex:'nombre',width:210,align:'left'},
-            {text:'Estatus',dataIndex:'status',width:120,align:'left'},
-            {text:'RFC',dataIndex:'cdrfc',width:120,align:'left'},
-            {text:'Sexo',dataIndex:'sexo',width:100 , align:'left'},
-            {text:'Nacimiento',dataIndex:'fenacimi',width:90, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}            
-            
-            /*{
-                xtype        : 'actioncolumn',
-                icon         : _CONTEXT+'/resources/fam3icons/icons/email.png',
-                tooltip      : 'Aviso de hospitalización',
-                width        : 30,
-                menuDisabled : true,
-                sortable     : false,
-                handler      : function(grid,rowIndex)
-                {
-                    var record = grid.getStore().getAt(rowIndex);
-                    var values = panelBusqueda.down('form').getForm().getValues();
-                    debug('record nmsituac:',record.get('nmsituac'));
-                    values['params.nmsituac']=record.get('nmsituac');
-                    values['params.cdperson']=record.get('cdperson');
-                    values['params.estatus']=record.get('status');
-                    values['params.nombre']=record.get('nombre');
-                    debug('form values:',values);
-                    Ext.create('Ext.window.Window', {
-                        title       : 'Aviso de Hospitalizacion',
-                        modal       : true,
-                        buttonAlign : 'center',
-                        autoScroll  : true,
-                        width       : 650,
-                        height      : 455,
-                        loader      :
-                        {
-                            url      : _URL_LOADER_AVISO_HOSPITALIZACION,
-                            scripts  : true,
-                            autoLoad : true,
-                            params   : values
-                        }
-                     }).show();
-                }
-            }*/
-        ]
     });
     
     /**INFORMACION DE LA SECCION DE ENDOSOS**/
@@ -1486,7 +1731,6 @@ Ext.onReady(function() {
         ]        
            
     });
-    
     
     
     /**INFORMACION DEL GRID DE LA POLIZA DEL ASEGURADO**/
@@ -1591,8 +1835,6 @@ Ext.onReady(function() {
              }
         }
     });
-    
-    
     
     var windowPolizas= Ext.create('Ext.window.Window', {
         title : 'Elija un asegurado:',    	
@@ -1886,8 +2128,6 @@ Ext.onReady(function() {
             ]
     });
     
-    
-    
     /***PANEL PRINCIPAL***/    
     //----------------------------------------
     
@@ -1895,6 +2135,7 @@ Ext.onReady(function() {
         width: 830,
         items: [{
             title : 'DATOS GENERALES',
+            itemId: 'tabDatosGenerales',
             border:false,
             items:[{
                 items: [panelDatosComplementarios, panelDatosPoliza]
@@ -2118,8 +2359,6 @@ Ext.onReady(function() {
                                 return;
                             }
                         }
-                      
-                      
                     });
                 }
             }
@@ -2207,7 +2446,7 @@ Ext.onReady(function() {
                             flex: 2.5
                         },
                         {
-                        	id: 'subpanelBusquedas',
+                        	id: 'subpanelBusquedas',	
                             layout : 'vbox',
                             align:'stretch',
                             flex: 70,
@@ -2250,6 +2489,9 @@ Ext.onReady(function() {
                                         },{
                                             xtype: 'hiddenfield',
                                             name : 'params.nmsituac'
+                                        },{
+                                            xtype : 'hiddenfield',
+                                            name : 'params.cdsubram'
                                         }
                                     ]
                                 },                                
@@ -2318,7 +2560,6 @@ Ext.onReady(function() {
                                 }
                             ]
                         },
-                        
                         {
                             xtype:'tbspacer',
                             flex: 2.5
@@ -2462,7 +2703,6 @@ Ext.onReady(function() {
         }]
     });
     
-    
     ////Hide elements
     if(tabDatosGeneralesPoliza.isVisible()) {
         tabDatosGeneralesPoliza.hide();
@@ -2578,13 +2818,13 @@ Ext.onReady(function() {
     }
     
     function cargaPolizasAsegurado(formBusqueda, btn) {
-    	gridPolizasAsegurado.down('pagingtoolbar').moveFirst();    	
-    	gridSuplementos.setLoading(true);
+    	gridPolizasAsegurado.down('pagingtoolbar').moveFirst();
     	var callbackGetPolizasAsegurado = function(options, success, response) {
             if(success){
                 var jsonResponse = Ext.decode(response.responseText);
-                if(jsonResponse.polizasAsegurado && jsonResponse.polizasAsegurado.length == 0) {
+                if(jsonResponse.resultadosAsegurado && jsonResponse.resultadosAsegurado.length == 0) {
                     showMessage(_MSG_SIN_DATOS, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.INFO);
+                    panelBusqueda.setLoading(false);
                     return;
                 }
                 panelBusqueda.setLoading(false);
@@ -2595,8 +2835,6 @@ Ext.onReady(function() {
                     Ext.Msg.OK, Ext.Msg.ERROR);
             }
         }
-        gridSuplementos.setLoading(false);
-        
         
         //console.log('Params busqueda de polizas por RFC=');console.log(formBusqueda.getValues());
         cargaStorePaginadoLocal(storePolizaAsegurado, 
@@ -2605,6 +2843,5 @@ Ext.onReady(function() {
             formBusqueda.getValues(), 
             callbackGetPolizasAsegurado);
     }
-    
     
 });

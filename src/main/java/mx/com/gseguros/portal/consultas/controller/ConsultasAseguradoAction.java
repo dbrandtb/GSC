@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
+import mx.com.gseguros.portal.consultas.model.AvisoHospitalizacionVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
@@ -23,10 +26,16 @@ import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.PlanVO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasAseguradoManager;
+import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
+import mx.com.gseguros.portal.general.service.MailService;
+import mx.com.gseguros.portal.general.service.MailServiceForSms;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
@@ -46,7 +55,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 
 	private static final long serialVersionUID = 7279218302506728952L;
 
-	private org.apache.log4j.Logger logger =org.apache.log4j.Logger.getLogger(ConsultasAseguradoAction.class);
+	static final Logger logger = LoggerFactory.getLogger(ConsultasAseguradoAction.class);
 	
 	/**
      * Success property
@@ -54,6 +63,14 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     private boolean success;
     
     private String mensajeRes;
+    
+    private String iCodAviso;
+    
+    @Autowired
+    private MailServiceForSms mailServiceForSms;
+    
+    @Autowired
+    private MailService mailService;
 	
 	@Autowired
 	@Qualifier("consultasAseguradoManagerImpl")
@@ -102,6 +119,10 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 	
 	private List<PeriodoVigenciaVO> periodosVigencia;
 	
+	private List<BaseVO> datosHospitales;
+	
+	private List<AvisoHospitalizacionVO> datosAvisosAnteriores;
+	
 	/**
      * Obtiene las coincidencias de asegurados
      * @return String result
@@ -114,7 +135,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     		resultadosAsegurado = consultasAseguradoManager.obtieneResultadosAsegurado(params.get("rfc"), params.get("cdperson"), params.get("nombre"));
     		
     		if(resultadosAsegurado != null) {
-    			logger.debug("Coincidencias por asegurado encontradas: " + resultadosAsegurado.size());
+    			logger.debug("Coincidencias por asegurado encontradas: {}", resultadosAsegurado.size());
     		}
     		
     	}catch( Exception e){
@@ -141,7 +162,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     		datosPolizaActual = consultasAseguradoManager.obtienePolizaActual(poliza);
     		
     		if(datosPolizaActual != null) {
-    			logger.debug("Póliza actual encontrada: " + datosPolizaActual.size());
+    			logger.debug("Póliza actual encontrada: {}", datosPolizaActual.size());
     		}
     		
     		
@@ -180,7 +201,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 			if(listaAux!=null && !listaAux.isEmpty())	datosComplementarios = listaAux.get(0);
 			
         	
-        	logger.debug("Resultado de la consulta de datos complementarios:" + datosComplementarios);
+        	logger.debug("Resultado de la consulta de datos complementarios: {}" , datosComplementarios);
         	
         }catch( Exception e){
             logger.error("Error al obtener los datos complementarios ",e);
@@ -209,7 +230,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
         	
         	if(lista!=null && !lista.isEmpty())	datosPoliza = lista.get(0);
         	
-        	logger.debug("Resultado de la consulta de poliza:" + datosPoliza);
+        	logger.debug("Resultado de la consulta de poliza: {}" , datosPoliza);
         	
         }catch( Exception e){
             logger.error("Error al obtener los datos de la poliza ",e);
@@ -239,7 +260,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 			
 			datosAseguradoDetalle = consultasAseguradoManager.obtieneAseguradoDetalle(poliza, asegurado);
 			
-			logger.debug("Resultado de consultaAseguradoDetalle:" + datosAseguradoDetalle);
+			logger.debug("Resultado de consultaAseguradoDetalle: {}" , datosAseguradoDetalle);
 			
 		}catch(Exception e){
 			logger.error("Error al obtener el detalle del asegurado.",e);
@@ -271,7 +292,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
         	
         	if(lista!=null && !lista.isEmpty())	datosTitular = lista.get(0);
         	
-        	logger.debug("Resultado de la consulta de titular:" + datosTitular);
+        	logger.debug("Resultado de la consulta de titular: {}" , datosTitular);
         	
         }catch( Exception e){
             logger.error("Error al obtener los datos del titular ",e);
@@ -301,7 +322,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
         	
         	if(lista!=null && !lista.isEmpty())	datosContratante = lista.get(0);
         	
-        	logger.debug("Resultado de la consulta de contratante:" + datosContratante);
+        	logger.debug("Resultado de la consulta de contratante: {}" , datosContratante);
         	
         }catch( Exception e){
             logger.error("Error al obtener los datos del contratante ",e);
@@ -331,7 +352,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     		asegurado.setCdperson(params.get("cdperson"));
     		datosAsegurados = consultasAseguradoManager.obtieneAsegurados(poliza,asegurado);
     		
-    		logger.debug("Resultado de la consultaDatosAsegurado:" + datosAsegurados);
+    		logger.debug("Resultado de la consultaDatosAsegurado: {}" , datosAsegurados);
     		
     	}catch( Exception e){
     		logger.error("Error al obtener los datos del Asegurado ",e);
@@ -361,6 +382,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 		asegurado.setCdperson(params.get("cdperson"));
     	try {    		
     		datosEndosos = consultasAseguradoManager.obtieneEndososPoliza(poliza, asegurado);
+    		logger.debug("Resultados de la consulta de endosos: {}" , datosEndosos.size());
     		success = true;
     	} catch(Exception e){
     		logger.error("Error al obtener las cláusulas de la póliza",e);
@@ -387,7 +409,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 		AseguradoVO asegurado = new AseguradoVO();
 		asegurado.setCdperson(params.get("cdperson"));
     	try {    		
-    		logger.debug("El asegurado a buscar es:" + params.get("cdperson"));
+    		logger.debug("El asegurado a buscar es: {}" , params.get("cdperson"));
     		datosEnfermedades = consultasAseguradoManager.obtieneEnfermedades(poliza, asegurado);
     		success = true;
     	} catch(Exception e){
@@ -417,7 +439,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
         	
         	if(lista!=null && !lista.isEmpty())	datosPlan = lista.get(0);
         	
-        	logger.debug("Resultado de la consulta de plan:" + datosPlan);
+        	logger.debug("Resultado de la consulta de plan: {}" , datosPlan);
         	
         }catch( Exception e){
             logger.error("Error al obtener los datos del plan ",e);
@@ -448,7 +470,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     		datosCopagosPoliza = consultasAseguradoManager.obtieneCopagosPoliza(poliza);
     		   		
     		
-    		logger.debug("Resultado de consultaCopagosPoliza:" + datosCopagosPoliza);
+    		logger.debug("Resultado de consultaCopagosPoliza: {}" , datosCopagosPoliza);
     		
     	}catch( Exception e){
     		logger.error("Error al obtener los copagos de la poliza ",e);
@@ -479,7 +501,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     		datosCoberturasPoliza = consultasAseguradoManager.obtieneCoberturasPoliza(poliza);
     		   		
     		
-    		logger.debug("Resultado de consultaCoberturas:" + datosCoberturasPoliza);
+    		logger.debug("Resultado de consultaCoberturas: {}" , datosCoberturasPoliza);
     		
     	}catch( Exception e){
     		logger.error("Error al obtener las coberturas",e);
@@ -510,7 +532,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     		datosCoberturasBasicas = consultasAseguradoManager.obtieneCoberturasBasicas(poliza);
     		   		
     		
-    		logger.debug("Resultado de consultaCoberturasBasicas:" + datosCoberturasBasicas);
+    		logger.debug("Resultado de consultaCoberturasBasicas: {}" , datosCoberturasBasicas);
     		
     	}catch( Exception e){
     		logger.error("Error al obtener las coberturas basicas ",e);
@@ -539,7 +561,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     		asegurado.setCdperson(params.get("cdperson"));
     		datosHistorico = consultasAseguradoManager.obtieneHistoricoAsegurado(poliza,asegurado);
     		
-    		logger.debug("Resultado de la consultaDatosHistorico:" + datosHistorico);
+    		logger.debug("Resultado de la consultaDatosHistorico: {}" , datosHistorico);
     		    		   		
     	}catch( Exception e){
     		success = false;
@@ -552,6 +574,26 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     	
     }
     
+    /**
+     * Obtiene los datos del avisos anteriores
+     * @return String result
+     */
+    public String consultaAvisosAnteriores(){
+    	logger.debug(" **** Entrando a consultaAvisosAnteriores ****");
+    	PolizaVO poliza = new PolizaVO();
+    	poliza.setIcodpoliza(params.get("icodpoliza"));
+    	AseguradoVO asegurado = new AseguradoVO();
+    	asegurado.setCdperson(params.get("cdperson"));
+    	try{    		
+    		datosAvisosAnteriores = consultasAseguradoManager.obtieneAvisosAnteriores(poliza, asegurado);
+    		logger.debug("Resultado de la consultaAvisosAnteriores: {}" , datosAvisosAnteriores);
+    	}catch(Exception e){
+    		logger.error("Error al obtener avisos anteriores.",e);
+    		return 	SUCCESS;
+    	}
+    	success = true;
+    	return SUCCESS;
+    }
     
     /**
      * Obtiene el histórico de farmacia
@@ -608,7 +650,72 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     	return SUCCESS;
     }
     
-	
+    public String consultaHospitales(){
+    	logger.debug("***Entrando a consultaHospitales***");
+    	PolizaVO poliza = new PolizaVO();
+    	String filtro = params.get("hospital");
+    	poliza.setIcodpoliza(params.get("icodpoliza"));
+    	try{
+    		datosHospitales = consultasAseguradoManager.obtieneHospitales(filtro,poliza);
+    	}catch(Exception e){
+    		logger.error("Error al obtener hospitales",e);
+    		return 	SUCCESS;
+    	}
+    	success = true;
+    	return SUCCESS;
+    }
+    
+    public String enviarAvisoHospitalizacion() {
+    	logger.debug("***Entrando a enviarAvisoHospitalizacion***");
+    	AvisoHospitalizacionVO aviso = new AvisoHospitalizacionVO();
+    	UserVO usuario = (UserVO)session.get("USUARIO");
+    	String telefonoAgente="";
+    	String mensajeAgente="";
+    	boolean smsSend;
+		String [] mailSms= {"smsgs@gseguros.com.mx"};
+		String [] adjuntos = new String[0];
+		mensajeAgente = "EL AFILIADO(" + params.get("cdperson") + "), " + params.get("nombre") +
+                ", DE LA POLIZA DE GSALUD: (" + params.get("cdunieco") + "/ ";
+				if(StringUtils.isNotBlank(params.get("icodpoliza"))){
+					mensajeAgente+=(params.get("cdramo"));
+				}else{
+					mensajeAgente+=(params.get("cdsubram"));
+				}
+				mensajeAgente+="/ " + params.get("nmpoliza") + "), SE ENCUENTRA HOSPITALIZADO.";
+    	PolizaVO poliza = new PolizaVO();
+    	poliza.setIcodpoliza(params.get("icodpoliza"));
+    	aviso.setCdperson(params.get("cdperson"));
+    	aviso.setNmpoliza(params.get("nmpoliza"));
+    	aviso.setCdagente(params.get("cdagente"));
+    	aviso.setCdpresta(params.get("hospital"));
+    	aviso.setFeingreso(params.get("feingreso"));
+    	aviso.setCdusuari(usuario.getUser());
+    	aviso.setComentario(params.get("comentario"));
+    	try{
+    		iCodAviso = consultasAseguradoManager.enviarAvisoHospitalizacion(aviso, poliza);
+			telefonoAgente = consultasAseguradoManager.consultaTelefonoAgente(params.get("cdagente"));
+			logger.debug("El telefono del agente {} es: {}", params.get("cdagente"), telefonoAgente);
+			if(StringUtils.isBlank(telefonoAgente)) {
+				throw new ApplicationException("3");
+			}
+			smsSend = mailServiceForSms.enviaCorreo(mailSms, null, null, telefonoAgente, mensajeAgente, adjuntos, false);
+    		if(!smsSend)
+    		{
+    			throw new ApplicationException("4");
+    		}else{
+    			consultasAseguradoManager.actualizaEstatusEnvio(iCodAviso, poliza);
+			}
+    		mensajeRes = "Se registr&oacute; Aviso de Hospitalizaci&oacute;n y se envi&oacute; SMS.";
+    		success = true;
+    		
+    	}catch(Exception e){
+    		mensajeRes = e.getMessage();
+    		logger.error(e.getMessage(),e);
+    	}
+    	logger.debug("***Saliendo de enviarAvisoHospitalizacion***");
+    	return SUCCESS;
+    }
+    
 	public Map<String, String> getParams() {
 		return params;
 	}
@@ -639,6 +746,14 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 
 	public void setMensajeRes(String mensajeRes) {
 		this.mensajeRes = mensajeRes;
+	}
+
+	public String getiCodAviso() {
+		return iCodAviso;
+	}
+
+	public void setiCodAviso(String iCodAviso) {
+		this.iCodAviso = iCodAviso;
 	}
 
 	public List<ConsultaResultadosAseguradoVO> getResultadosAsegurado() {
@@ -748,6 +863,22 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 	public void setPeriodosVigencia(
 			List<PeriodoVigenciaVO> periodosVigencia) {
 		this.periodosVigencia = periodosVigencia;
+	}
+
+	public List<BaseVO> getDatosHospitales() {
+		return datosHospitales;
+	}
+
+	public void setDatosHospitales(List<BaseVO> datosHospitales) {
+		this.datosHospitales = datosHospitales;
+	}
+
+	public List<AvisoHospitalizacionVO> getDatosAvisosAnteriores() {
+		return datosAvisosAnteriores;
+	}
+
+	public void setDatosAvisosAnteriores(List<AvisoHospitalizacionVO> datosAvisosAnteriores) {
+		this.datosAvisosAnteriores = datosAvisosAnteriores;
 	}
 
 	public List<AseguradoDetalleVO> getDatosAseguradoDetalle() {

@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.consultas.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import javax.sql.DataSource;
 import mx.com.gseguros.portal.consultas.dao.IConsultasAseguradoDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
+import mx.com.gseguros.portal.consultas.model.AvisoHospitalizacionVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosComplementariosVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
@@ -28,7 +30,9 @@ import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.PlanVO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
+import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang.StringUtils;
@@ -40,6 +44,8 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 		IConsultasAseguradoDAO {
+	
+	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	/* Coincidencias del asegurado según criterios: RFC, código de asegurado y
 	nombre.*/
@@ -124,6 +130,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 			ConsultaPolizaActualVO polizaActual = new ConsultaPolizaActualVO();
 			polizaActual.setCdunieco(rs.getString("cdunieco"));
 			polizaActual.setCdramo(rs.getString("cdramo"));
+			polizaActual.setCdsubram(rs.getString("cdsubram"));
 			polizaActual.setEstado(rs.getString("estado"));
 			polizaActual.setNmpoliza(rs.getString("nmpoliza"));
 			polizaActual.setNmsuplem(rs.getString("nmsuplem"));
@@ -141,6 +148,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	}
 	
 	//Datos Complementarios a los Datos Generales.
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ConsultaDatosComplementariosVO> obtieneDatosComplementarios(PolizaVO poliza,
 			AseguradoVO asegurado) throws Exception {
@@ -187,6 +195,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	//Consulta datos generales de la póliza
 	// Datos generales de la póliza.
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ConsultaDatosGeneralesPolizaVO> obtieneDatosPoliza(
 			PolizaAseguradoVO polizaAsegurado) throws Exception {
@@ -262,6 +271,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	}
 	
 	//Datos del Asegurado (Detalle)
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<AseguradoDetalleVO> obtieneAseguradoDetalle(PolizaVO poliza, AseguradoVO asegurado) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -311,6 +321,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	}
 	
 	//Datos del titular
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ConsultaDatosTitularVO> obtieneDatosTitular(PolizaVO poliza, AseguradoVO asegurado) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -357,6 +368,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	}
 	
 	//Datos del contratante
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ContratanteVO> obtieneDatosContratante(PolizaVO poliza) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -401,6 +413,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	}
 	
 	// Asegurados de la póliza (Familia)
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza, AseguradoVO asegurado)
 			throws Exception {
@@ -451,6 +464,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	}
 	
 	//Datos de los endosos de exclusion
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<EndosoVO> obtieneEndososPoliza(PolizaVO poliza,
 			AseguradoVO asegurado) throws Exception {
@@ -493,6 +507,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	
 	//Datos del plan
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<PlanVO> obtieneDatosPlan(PolizaVO poliza) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -535,6 +550,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	}
 	
 	// Copagos de la póliza.
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza)
 			throws Exception {
@@ -578,6 +594,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	}
 	
 	// Coberturas póliza. Utilizan el mismo VO que las básicas. NO CAMBIAR
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CoberturaBasicaVO> obtieneCoberturasPoliza(PolizaVO poliza)
 			throws Exception {
@@ -620,6 +637,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	}
 	
 	// Coberturas básicas.
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CoberturaBasicaVO> obtieneCoberturasBasicas(PolizaVO poliza)
 			throws Exception {
@@ -656,6 +674,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	}
 	
 	// Histórico del asegurado 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<HistoricoVO> obtieneHistoricoAsegurado(
 			PolizaAseguradoVO polizaAsegurado, AseguradoVO asegurado) throws Exception {		
@@ -704,6 +723,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	}
 	
 	//Histórico de Farmacia
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<HistoricoFarmaciaVO> obtieneHistoricoFarmacia(PolizaVO poliza,
 			AseguradoVO asegurado) throws Exception {
@@ -757,6 +777,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	}
 	
 	//Periodos de Vigencia
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<PeriodoVigenciaVO> obtienePeriodosVigencia(PolizaVO poliza,
 			AseguradoVO asegurado) throws Exception {
@@ -794,9 +815,122 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	@Override
 	public List<EnfermedadVO> obtieneEnfermedades(PolizaVO poliza,
 			AseguradoVO asegurado) throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<BaseVO> obtieneHospitales(String filtro) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdpresta_i", filtro);
+		Map<String, Object> mapResult = ejecutaSP(new ConsultaHospitalesSP(getDataSource()), params);
+		return (List<BaseVO>) mapResult.get("pv_registro_o");
+	}
+	
+	public class ConsultaHospitalesSP extends StoredProcedure{
+		protected ConsultaHospitalesSP(DataSource dataSource){
+			super(dataSource, "PKG_CONSULTA_GS.P_Get_Catalogo_Hospitales");
+    		declareParameter(new SqlParameter("pv_cdpresta_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new HospitalesMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	public class HospitalesMapper implements RowMapper<BaseVO>{
+		public BaseVO mapRow(ResultSet rs, int rowNum) throws SQLException{
+			BaseVO hospitales = new BaseVO();
+			hospitales.setKey(rs.getString("cdpresta"));
+			hospitales.setValue(rs.getString("dspresta"));
+			return hospitales;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<AvisoHospitalizacionVO> obtieneAvisosAnteriores(
+			AseguradoVO asegurado) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdperson_i", asegurado.getCdperson());
+		Map<String, Object> mapResult = ejecutaSP(new AvisosAnterioresSP(getDataSource()), params);
+		return (List<AvisoHospitalizacionVO>) mapResult.get("pv_registro_o");
+	}
+	
+	public class AvisosAnterioresSP extends StoredProcedure{
+		protected AvisosAnterioresSP(DataSource dataSource){
+			super(dataSource, "PKG_CONSULTA_GS.P_Get_Avisos_Hosp_Anteriores");
+			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new AvisosAnterioresMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	public class AvisosAnterioresMapper implements RowMapper<AvisoHospitalizacionVO>{
+		public AvisoHospitalizacionVO mapRow(ResultSet rs, int rowNum) throws SQLException{
+			AvisoHospitalizacionVO avisoHospitalizacion = new AvisoHospitalizacionVO();
+			avisoHospitalizacion.setFeregistro(Utils.formateaFecha(rs.getString("feregistro")));
+			avisoHospitalizacion.setDspresta(rs.getString("dspresta"));
+			avisoHospitalizacion.setFeingreso(Utils.formateaFecha(rs.getString("feingreso")));
+			avisoHospitalizacion.setComentario(rs.getString("dsobserv"));
+			return avisoHospitalizacion;
+		}
+	}
+
+	@Override
+	public String enviarAvisoHospitalizacion(AvisoHospitalizacionVO aviso)
+			throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdperson_i", aviso.getCdperson());
+		params.put("pv_nmpoliza_i", aviso.getNmpoliza());
+		params.put("pv_cdagente_i", aviso.getCdagente());
+		params.put("pv_cdpresta_i", aviso.getCdpresta());
+		params.put("pv_feingreso_i", StringUtils.isBlank(aviso.getFeingreso()) ? null : renderFechas.parse(aviso.getFeingreso()));
+		params.put("pv_cdusuari_i", aviso.getCdusuari());
+		params.put("pv_dsobserv_i", aviso.getComentario());
+		Map<String, Object> mapResult = ejecutaSP(new enviarAvisoHospitalizacionSP(getDataSource()), params);
+		return (String) mapResult.get("pv_cdaviso_o");
+	}
+	
+	public class enviarAvisoHospitalizacionSP extends StoredProcedure{
+		protected enviarAvisoHospitalizacionSP(DataSource dataSource){
+			super(dataSource, "PKG_SATELITES2.P_Guarda_Aviso_Hosp");
+			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdagente_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdpresta_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feingreso_i", OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_dsobserv_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdusuari_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdaviso_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public String consultaTelefonoAgente(String cdagente) throws Exception {
+		return null;
+	}
+
+	@Override
+	public void actualizaEstatusEnvio(String iCodAviso) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdaviso_i", iCodAviso);
+		ejecutaSP(new actualizaEstatusEnvioSP(getDataSource()), params);
+	}
+	
+	public class actualizaEstatusEnvioSP extends StoredProcedure{
+		protected actualizaEstatusEnvioSP(DataSource dataSource){
+			super(dataSource, "PKG_SATELITES2.P_Actualiza_Estatus_Envio");
+			declareParameter(new SqlParameter("pv_cdaviso_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 
 }

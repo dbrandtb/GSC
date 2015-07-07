@@ -181,6 +181,17 @@
             </result>
         </action>
         
+        <action name="consultaHospitales" class="ConsultasAseguradoAction"
+            method="consultaHospitales">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    datosHospitales.*,
+                    success
+                </param>
+            </result>
+        </action>
+        
         <action name="consultaAseguradoDetalle" class="ConsultasAseguradoAction" method="consultaAseguradoDetalle">
             <result type="json">
                 <param name="ignoreHierarchy">false</param>
@@ -189,6 +200,26 @@
                     success
                 </param>
             
+            </result>
+        </action>
+        
+        <action name="includes/enviarAvisoHospitalizacion" class="ConsultasAseguradoAction" method="enviarAvisoHospitalizacion">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includePropeties">
+                    success
+                </param>
+            
+            </result>
+        </action>
+        
+        <action name="includes/avisosAnteriores" class="ConsultasAseguradoAction" method="consultaAvisosAnteriores">
+        	<result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    datosAvisosAnteriores.*,
+                    success
+                </param>
             </result>
         </action>
            		
