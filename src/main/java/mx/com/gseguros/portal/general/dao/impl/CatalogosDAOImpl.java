@@ -1149,11 +1149,13 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	public List<GenericVO>cargarNegociosPorAgenteRamo5(
 			String cdagente
 			,String cdsisrol
+			,String tipoflot
 			)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdagente" , cdagente);
 		params.put("cdsisrol" , cdsisrol);
+		params.put("tipoflot" , tipoflot);
 		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_NEGOCIO_X_AGENTE_RAMO5", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargarNegociosPorAgenteRamo5(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
@@ -1176,6 +1178,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			super(dataSource,"PKG_SATELITES2.P_GET_NEGOCIO_X_AGENTE_RAMO5");
 			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipoflot" , OracleTypes.VARCHAR));
 			String[] cols=new String[]{ "OTCLAVE" , "OTVALOR" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
