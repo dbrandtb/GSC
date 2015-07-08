@@ -137,7 +137,7 @@ public interface CatalogosManager {
 			,String nmsuplem
 			)throws Exception;
     
-    public List<GenericVO> recuperarListaTiposValorRamo5PorRol(String cdtipsit,String cdsisrol) throws Exception;
+    public List<GenericVO> recuperarListaTiposValorRamo5PorRol(String cdtipsit,String cdsisrol,String cdusuari) throws Exception;
     
     public List<GenericVO> recuperarModulosEstadisticas() throws Exception;
     
