@@ -107,6 +107,7 @@ public interface CatalogosManager {
     public List<GenericVO>cargarNegociosPorAgenteRamo5(
     		String cdagente
     		,String cdsisrol
+    		,String tipoflot
     		)throws Exception;
     public List<GenericVO>cargarCargasPorNegocioRamo5(String cdsisrol,String negocio)throws Exception;
     public List<GenericVO>cargarPlanesPorNegocioModeloClavegsRamo5(

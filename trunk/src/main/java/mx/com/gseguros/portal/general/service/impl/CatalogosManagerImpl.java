@@ -723,6 +723,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	public List<GenericVO>cargarNegociosPorAgenteRamo5(
 			String cdagente
 			,String cdsisrol
+			,String tipoflot
 			)throws Exception
 	{
 		logger.info(
@@ -731,13 +732,14 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				.append("\n@@@@@@ cargarNegociosPorAgenteRamo5 @@@@@@")
 				.append("\n@@@@@@ cdagente=").append(cdagente)
 				.append("\n@@@@@@ cdsisrol=").append(cdsisrol)
+				.append("\n@@@@@@ tipoflot=").append(tipoflot)
 				.toString()
 				);
 		
 		List<GenericVO>lista=new ArrayList<GenericVO>();
 		if(StringUtils.isNotBlank(cdagente))
 		{
-			lista=catalogosDAO.cargarNegociosPorAgenteRamo5(cdagente,cdsisrol);
+			lista=catalogosDAO.cargarNegociosPorAgenteRamo5(cdagente,cdsisrol,tipoflot);
 		}
 		
 		logger.info(
