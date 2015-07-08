@@ -2405,6 +2405,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                Date auxDate = null;
 		                Cell auxCell = null;
 		                
+		                if(Utils.isRowEmpty(row))
+		                {
+		                	break;
+		                }
+		                
 		                fila        = fila + 1;
 		                nSituac     = nSituac + 1;
 		                filasLeidas = filasLeidas + 1;
@@ -2840,6 +2845,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 		            while (rowIterator.hasNext()&&resp.isExito()) 
 		            {
 		                Row row = rowIterator.next();
+		                
+		                if(Utils.isRowEmpty(row))
+		                {
+		                	break;
+		                }
 		                
 		                boolean       filaBuena      = true;
 		                StringBuilder bufferLinea    = new StringBuilder("");
@@ -4162,6 +4172,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                StringBuilder bufferLinea    = new StringBuilder();
 	                StringBuilder bufferLineaStr = new StringBuilder();
 	                boolean       filaBuena      = true;
+	                
+	                if(Utils.isRowEmpty(row))
+	                {
+	                	break;
+	                }
 	                
 	                fila        = fila + 1;
 	                filasLeidas = filasLeidas + 1;
@@ -6334,6 +6349,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 				StringBuilder      bufferLinea = new StringBuilder();
 				Map<String,String> registro    = new HashMap<String,String>();
 				Map<String,String> recordDTO   = new LinkedHashMap<String,String>();
+				
+				if(Utils.isRowEmpty(row))
+				{
+					break;
+				}
 				
 				for(Map<String,String>config : configs)
 				{

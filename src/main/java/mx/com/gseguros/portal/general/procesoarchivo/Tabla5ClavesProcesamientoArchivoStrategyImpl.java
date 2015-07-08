@@ -12,6 +12,7 @@ import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.general.validacionformato.CampoVO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
+import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.wizard.dao.TablasApoyoDAO;
 
 import org.apache.log4j.Logger;
@@ -109,6 +110,12 @@ public class Tabla5ClavesProcesamientoArchivoStrategyImpl implements Procesamien
 	        while (rowIterator.hasNext()) {
 	        	
 	            Row row   = rowIterator.next();
+	            
+	            if(Utils.isRowEmpty(row))
+	            {
+	            	break;
+	            }
+	            
 	            for (int colIndex = 0; colIndex < TOTAL_COLUMNAS; colIndex++) {
 	            	
 	            	Cell celdaActual = row.getCell(colIndex);

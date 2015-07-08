@@ -77,7 +77,7 @@ public class ExpresionesManagerImpl extends AbstractManagerJdbcTemplateInvoke im
 			params.put("pv_OTTIPEXP_i", expresionVO.getOttipexp());
 			WrapperResultados res = returnBackBoneInvoke(params, "INSERTAR_EXPRESION");
 			
-			id = Integer.parseInt((String)res.getItemMap().get("PV_SEC_CDEXPRES"));;
+			id = Integer.parseInt((String)res.getItemMap().get("PV_SEC_CDEXPRES"));
 			logger.debug("Este es el id que regresa del endpoint" + id);
 			if (id == 0 && expresionVO.getCodigoExpresion() !=0 ) {
 				id = expresionVO.getCodigoExpresion();
