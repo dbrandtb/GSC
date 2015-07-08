@@ -55,4 +55,12 @@ public interface CancelacionManager
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+
+	public boolean validaRazonCancelacion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdrazon
+			)throws Exception;
 }

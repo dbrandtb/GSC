@@ -5,6 +5,8 @@
     //var panCanUrlCat        = '<s:url namespace="/flujocotizacion"  action="cargarCatalogos" />';
     var panCanUrlCat        = '<s:url namespace="/catalogos"        action="obtieneCatalogo" />';
     var panCanUrlCancelar   = '<s:url namespace="/cancelacion"      action="cancelacionUnica" />';
+    var _pCan_urlValidaCanc = '<s:url namespace="/cancelacion" action="validaRazonCancelacion"        />';
+    
     var panCanInputFecha;
     var panCanForm;
     
@@ -170,19 +172,14 @@ Ext.onReady(function(){
                     if(form.isValid()){
                         debug(panCanForm.items.items[6].value);
                         Ext.Ajax.request({
-                            url             : _global_urlConsultaDinamica
-                            ,jsonData       :{
-                                stringMap   :{
-                                    accion  : Accion.ValidaCancelacionProrrata           
+                            url             : _pCan_urlValidaCanc
+                            ,params       :{
+                                     'smap1.cdunieco' : pancanInSmap1.CDUNIAGE
+                                    ,'smap1.cdramo'   : pancanInSmap1.CDRAMO
+                                    ,'smap1.estado'   : pancanInSmap1.ESTADO
+                                    ,'smap1.nmpoliza' : pancanInSmap1.NMPOLIZA
+                                    ,'smap1.cdrazon'  : panCanForm.items.items[6].value
                                 }
-                                ,linkedObjectMap :{
-                                    param1  : pancanInSmap1.CDUNIAGE
-                                    ,param2 : pancanInSmap1.CDRAMO
-                                    ,param3 : pancanInSmap1.ESTADO
-                                    ,param4 : pancanInSmap1.NMPOLIZA
-                                    ,param5 : panCanForm.items.items[6].value
-                                }
-                            }
                             ,success  : 
                                 function(response){
                                     panCanForm.setLoading(false);
@@ -215,19 +212,21 @@ Ext.onReady(function(){
                                                     }
                                                 }
                                             ,failure :
-                                                function(){
+                                                function(formu,action){
+                                                	var json = Ext.decode(action.response.responseText);
+                                                	
                                                     panCanForm.setLoading(false);
                                                     Ext.Msg.show({
                                                         title   : 'Error',
                                                         icon    : Ext.Msg.ERROR,
-                                                        msg     : 'Error de comunicaci&oacute;n',
+                                                        msg     : json.respuesta,
                                                         buttons : Ext.Msg.OK
                                                     });
                                                 }
                                         });
                                     }
                                     else{
-                                        mensajeError(jsonData.mensaje);
+                                        mensajeError(jsonData.respuesta);
                                         panCanForm.setLoading(false);
                                     }
                                 }

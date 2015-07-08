@@ -70,4 +70,12 @@ public interface CancelacionDAO
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+	
+	public boolean validaRazoCancelacion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdrazon
+			)throws Exception;
 }

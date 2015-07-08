@@ -473,7 +473,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 		Utils.debugProcedure(logger, "PKG_SATELITES.P_VALIDA_CANC_A_PRORRATA", params);
 		ejecutaSP(new ValidaCancelacionAProrrata(getDataSource()),params);
 	}
-	
+
 	protected class ValidaCancelacionAProrrata extends StoredProcedure
 	{
     	protected ValidaCancelacionAProrrata(DataSource dataSource)
@@ -489,4 +489,42 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
             compile();
     	}
     }
+
+	@Override
+	public boolean validaRazoCancelacion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdrazon
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_cdrazon_i"  , cdrazon);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_VALIDA_RAZON_CANCELACION", params);
+		ejecutaSP(new ValidaRazonCancelacion(getDataSource()),params);
+		
+		return true;
+	}
+	
+	protected class ValidaRazonCancelacion extends StoredProcedure
+	{
+		protected ValidaRazonCancelacion(DataSource dataSource)
+		{
+			super(dataSource , "PKG_SATELITES2.P_VALIDA_RAZON_CANCELACION");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdrazon_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{})));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
