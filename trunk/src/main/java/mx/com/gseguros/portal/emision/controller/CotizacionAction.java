@@ -5329,8 +5329,14 @@ public class CotizacionAction extends PrincipalCoreAction
 			                
 			                try
 		                	{
-				                logger.info("SEXO: "+row.getCell(1).getStringCellValue()+"|");
-				                bufferLinea.append(row.getCell(1).getStringCellValue()+"|");
+			                	String sexo = row.getCell(1).getStringCellValue();
+			                	if(!"H".equals(sexo)
+			                			&&!"M".equals(sexo))
+			                	{
+			                		throw new ApplicationException("Genero (sexo) incorrecto");
+			                	}
+				                logger.info("SEXO: "+sexo+"|");
+				                bufferLinea.append(sexo+"|");
 			                }
 			                catch(Exception ex)
 			                {

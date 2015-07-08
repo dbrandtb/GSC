@@ -2869,10 +2869,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                
 		                try
 	                	{
+		                	String sexo = row.getCell(1).getStringCellValue();
+		                	if(!"H".equals(sexo)
+		                			&&!"M".equals(sexo))
+		                	{
+		                		throw new ApplicationException("Genero (sexo) incorrecto");
+		                	}
 			                logger.debug(
-			                		new StringBuilder("SEXO: ").append(row.getCell(1).getStringCellValue()).append("|").toString());
+			                		new StringBuilder("SEXO: ").append(sexo).append("|").toString());
 			                bufferLinea.append(
-			                		new StringBuilder(row.getCell(1).getStringCellValue()).append("|").toString());
+			                		new StringBuilder(sexo).append("|").toString());
 		                }
 		                catch(Exception ex)
 		                {
