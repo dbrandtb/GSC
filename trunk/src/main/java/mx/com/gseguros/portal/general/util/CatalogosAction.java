@@ -679,6 +679,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 						lista = catalogosManager.recuperarListaTiposValorRamo5PorRol(
 								params.get("cdtipsit")
 								,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+								,((UserVO)session.get("USUARIO")).getUser()
 								);
 					}
 					break;
