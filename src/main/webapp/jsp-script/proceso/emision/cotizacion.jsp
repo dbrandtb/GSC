@@ -2258,7 +2258,7 @@ Ext.onReady(function()
                     else
                     {
                     	//parche para AUTOS FRONTERIZOS con rol SUSCRIPTOR AUTO:
-                    	if(_0_smap1.cdramo == TipoSituacion.AutosFronterizos && _0_smap1.cdsisrol=='SUSCRIAUTO') {
+                    	if(_0_smap1.cdtipsit == TipoSituacion.AutosFronterizos && _0_smap1.cdsisrol=='SUSCRIAUTO') {
                     	    // Si no obtuvo datos el servicio "NADA", reseteamos valores:
                     		_0_formAgrupados.down('[name=parametros.pv_otvalor04]').setValue();
                             _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setValue();
@@ -2338,6 +2338,15 @@ Ext.onReady(function()
         });
     }
     //fin [parche]
+    
+    //parche para AUTOS FRONTERIZOS con rol SUSCRIPTOR AUTO:
+    if(_0_smap1.cdtipsit == TipoSituacion.AutosFronterizos && _0_smap1.cdsisrol=='SUSCRIAUTO') {
+        _0_formAgrupados.down('[name=parametros.pv_otvalor04]').setReadOnly(false);
+        _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setReadOnly(false);
+        _0_formAgrupados.down('[name=parametros.pv_otvalor06]').setReadOnly(false);
+        _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setReadOnly(false);
+        _0_formAgrupados.down('[name=parametros.pv_otvalor26]').setReadOnly(false);
+    }
     
     <s:if test='%{getSmap1().get("CDATRIBU_DERECHO")!=null}'>
         var items=_0_formAgrupados.items.items;
