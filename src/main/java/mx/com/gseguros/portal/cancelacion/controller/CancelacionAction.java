@@ -313,6 +313,7 @@ public class CancelacionAction extends PrincipalCoreAction
 		catch(Exception ex)
 		{
 			log.error("error al cancelar poliza unica",ex);
+			respuesta = ex.getMessage();
 			success=false;
 		}
 		log.debug(""
@@ -524,6 +525,49 @@ public class CancelacionAction extends PrincipalCoreAction
 		logger.info(Utils.join(
 				 "\n###### respuesta=",respuesta
 				,"\n###### validaCancelacionAProrrata ######"
+				,"\n########################################"
+				));
+		return SUCCESS;
+	}
+
+	public String validaRazonCancelacion()
+	{
+		logger.info(Utils.join(
+				"\n########################################"
+				,"\n###### validaRazonCancelacion ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			Utils.validate(smap1 , "No se recibieron datos");
+			
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			String cdrazon  = smap1.get("cdrazon");
+			
+			Utils.validate(
+					cdunieco  , "No se recibio la sucursal"
+					,cdramo   , "No se recibio el producto"
+					,estado   , "No se recibio el estado de la poliza"
+					,nmpoliza , "No se recibio el numero de poliza"
+					);
+			
+			cancelacionManager.validaRazonCancelacion(cdunieco,cdramo,estado,nmpoliza,cdrazon);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			success = false;
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utils.join(
+				"\n###### respuesta=",respuesta
+				,"\n###### validaRazonCancelacion ######"
 				,"\n########################################"
 				));
 		return SUCCESS;

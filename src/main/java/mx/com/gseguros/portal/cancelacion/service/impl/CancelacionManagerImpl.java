@@ -210,4 +210,41 @@ public class CancelacionManagerImpl implements CancelacionManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
+
+	@Override
+	public boolean validaRazonCancelacion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdrazon
+			)throws Exception
+	{
+		logger.info(Utils.join(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ validaRazonCancelacion @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ cdrazon=" , cdrazon
+				));
+		
+		String paso = "En validaRazonCancelacion";
+		try
+		{
+			cancelacionDAO.validaRazoCancelacion(cdunieco, cdramo, estado, nmpoliza, cdrazon);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.info(Utils.join(
+				"\n@@@@@@ validaRazonCancelacion @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		return true;
+	}
 }

@@ -44,6 +44,10 @@
         <action name="validaCancelacionAProrrata" class="CancelacionAction" method="validaCancelacionAProrrata">
             <result name="success" type="json" />
         </action>
+
+        <action name="validaRazonCancelacion" class="CancelacionAction" method="validaRazonCancelacion">
+            <result name="success" type="json" />
+        </action>
         
     </package>
 
