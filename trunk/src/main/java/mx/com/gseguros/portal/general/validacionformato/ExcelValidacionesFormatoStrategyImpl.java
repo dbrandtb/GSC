@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
 
+import mx.com.gseguros.utils.Utils;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -42,6 +44,12 @@ public class ExcelValidacionesFormatoStrategyImpl implements ValidacionesFormato
         while (rowIterator.hasNext()) {
             Row row   = rowIterator.next();
             int colIndex = 0;
+            
+            if(Utils.isRowEmpty(row))
+            {
+            	break;
+            }
+            
             for (CampoVO campo: campos) {
             	
             	Cell celdaActual = row.getCell(colIndex);
@@ -70,7 +78,7 @@ public class ExcelValidacionesFormatoStrategyImpl implements ValidacionesFormato
                     			new StringBuilder()
                     				.append("fila ").append((celdaActual.getRowIndex()+1))	
                     				.append(", col ").append((celdaActual.getColumnIndex()+1))
-			    					.append("\tFormato inválido")
+			    					.append("\tFormato invï¿½lido")
 			    					.append(NEW_LINE).toString());
             		}
             		
@@ -80,7 +88,7 @@ public class ExcelValidacionesFormatoStrategyImpl implements ValidacionesFormato
                 				new StringBuilder()
                 					.append("fila ").append((rowIndex+1))
     	            				.append(", col ").append((colIndex+1))
-    								.append("\tValor no debe ser nulo, el valor leído es ").append(strValor)
+    								.append("\tValor no debe ser nulo, el valor leï¿½do es ").append(strValor)
     								.append(NEW_LINE).toString());
                 	}
             		
@@ -92,7 +100,7 @@ public class ExcelValidacionesFormatoStrategyImpl implements ValidacionesFormato
             						.append(", col ").append((celdaActual.getColumnIndex()+1))
 		        					.append("\tLongitud debe ser entre ").append(campo.getMinLength())
 		        					.append("\ty ").append(campo.getMaxLength())
-		        					.append(", longitud leída: ").append(strValor.length())
+		        					.append(", longitud leï¿½da: ").append(strValor.length())
 		        					.append(NEW_LINE).toString());
         			}
                     

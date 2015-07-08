@@ -3981,6 +3981,11 @@ public class CotizacionAction extends PrincipalCoreAction
 	                StringBuilder bufferLineaStr = new StringBuilder();
 	                boolean       filaBuena      = true;
 	                
+	                if(Utils.isRowEmpty(row))
+	                {
+	                	break;
+	                }
+	                
 	                fila        = fila + 1;
 	                filasLeidas = filasLeidas + 1;
 	                
@@ -4803,7 +4808,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			String ntramiteVacio    = smap1.get("ntramiteVacio");
 			String tipoCenso        = smap1.get("tipoCenso");
 			//String ptajepar         = smap1.get("cdreppag");
-			String pcpgocte         = smap1.get("pcpgocte");;
+			String pcpgocte         = smap1.get("pcpgocte");
 			boolean esCensoSolo     = StringUtils.isNotBlank(tipoCenso)&&tipoCenso.equalsIgnoreCase("solo");
 			boolean hayTramite      = StringUtils.isNotBlank(ntramite);
 			boolean hayTramiteVacio = StringUtils.isNotBlank(ntramiteVacio);
@@ -4990,6 +4995,11 @@ public class CotizacionAction extends PrincipalCoreAction
 			                Row  row     = rowIterator.next();
 			                Date auxDate = null;
 			                Cell auxCell = null;
+			                
+			                if(Utils.isRowEmpty(row))
+			                {
+			                	break;
+			                }
 			                
 			                fila        = fila + 1;
 			                nSituac     = nSituac + 1;
@@ -5304,6 +5314,11 @@ public class CotizacionAction extends PrincipalCoreAction
 			            while (rowIterator.hasNext()&&exito) 
 			            {
 			                Row row = rowIterator.next();
+			                
+			                if(Utils.isRowEmpty(row))
+			                {
+			                	break;
+			                }
 			                
 			                boolean       filaBuena      = true;
 			                StringBuilder bufferLinea    = new StringBuilder("");

@@ -24,6 +24,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -566,5 +568,18 @@ public class Utils
     	}
     	logger.debug("\nEntrada {}\nSalida {}",mapa,arreglo);
     	return arreglo;
+    }
+    
+    public static boolean isRowEmpty(Row row)
+    {
+        for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++)
+        {
+            Cell cell = row.getCell(c);
+            if (cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

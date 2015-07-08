@@ -288,7 +288,7 @@ public class PersonasAction extends PrincipalCoreAction
 			
 			ClienteGeneral clienteGeneral = new ClienteGeneral();
 			clienteGeneral.setClaveCia(saludDanios);
-			clienteGeneral.setNumeroExterno(params.get("codigoCliExt"));;
+			clienteGeneral.setNumeroExterno(params.get("codigoCliExt"));
 			
 			ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
 			

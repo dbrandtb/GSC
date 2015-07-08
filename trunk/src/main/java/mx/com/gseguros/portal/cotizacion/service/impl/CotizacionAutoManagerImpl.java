@@ -2301,6 +2301,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					row = rowIterator.next();
 				}
 				
+				if(Utils.isRowEmpty(row))
+				{
+					break;
+				}
+				
 				sb = new StringBuilder();
 				
 				Map<String,String>record=new LinkedHashMap<String,String>();
