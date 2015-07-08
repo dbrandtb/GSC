@@ -6,6 +6,9 @@
 	var situaciones          = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
 	var guardaTextoLibre = '<s:url namespace="/endosos" action=" guardarEndosoTextoLibre"       />';
 	
+	var _p44_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple" />';
+	var _cdTipSupEndLibre = '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@ENDOSO_B_LIBRE.cdTipSup" />';
+	
 	debug('paramsEntrada  -->:',paramsEntrada);
 	
 	Ext.onReady(function() {
@@ -95,6 +98,41 @@
 			}]
 		});
 
+		
+		Ext.Ajax.request(
+   		{
+        url      : _p44_urlRecuperacionSimple
+        ,params  :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
+            ,'smap1.cdunieco'     : paramsEntrada.CDUNIECO
+            ,'smap1.cdramo'       : paramsEntrada.CDRAMO	
+            ,'smap1.estado'       : paramsEntrada.ESTADO
+            ,'smap1.nmpoliza'     : paramsEntrada.NMPOLIZA
+            ,'smap1.cdtipsup'     : _cdTipSupEndLibre
+        }
+        ,success : function(response)
+        {
+            var json = Ext.decode(response.responseText);
+            debug('### fechas:',json);
+            if(json.exito)
+            {
+                panelInicialPral.down('[name="feInival"]').setMinValue(json.smap1.FECHA_MINIMA);
+                panelInicialPral.down('[name="feInival"]').setMaxValue(json.smap1.FECHA_MAXIMA);
+                panelInicialPral.down('[name="feInival"]').setValue(json.smap1.FECHA_REFERENCIA);
+                panelInicialPral.down('[name="feInival"]').setReadOnly(json.smap1.EDITABLE=='N');
+                panelInicialPral.down('[name="feInival"]').isValid();
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
 		
     });
 </script>
