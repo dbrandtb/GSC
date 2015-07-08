@@ -4,9 +4,10 @@
     ///////////////////////
     //////variables //////
     /*///////////////////*/
-    var CD_ROL_SUSCRIPTOR      = 'SUSCRIPTOR';
-    var CD_ROL_SUSCRIPTOR_AUTO = 'SUSCRIAUTO';
-    var CD_ROL_ACTUAL          = '<s:property value="%{#session['USUARIO'].rolActivo.clave}" />';
+    var CD_ROL_SUSCRIPTOR       = 'SUSCRIPTOR';
+    var CD_ROL_SUSCRIPTOR_AUTO  = 'SUSCRIAUTO';
+    var CD_ROL_ACTUAL           = '<s:property value="%{#session['USUARIO'].rolActivo.clave}" />';
+    var CD_RAMO_AUTOS_RESIDENTES= '5';
     var storeCoberturasActuales_p3;
     var storeCoberturasEditadas_p3;
     var storeCoberturasDisponibles_p3;
@@ -966,39 +967,43 @@
         ////// custom //////
         
         ////// loader //////
-        Ext.Ajax.request(
-        {
-            url      : urlRecuperacionSimplep3
-            ,params  :
+        // Para AUTOS RESIDENTES (cdramo 5) recuperamos las fechas limites de endoso:
+        if(inputCdramop3 == CD_RAMO_AUTOS_RESIDENTES) {
+        	
+        	Ext.Ajax.request(
             {
-                'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
-                ,'smap1.cdunieco'     : inputCduniecop3
-                ,'smap1.cdramo'       : inputCdramop3
-                ,'smap1.estado'       : inputEstadop3
-                ,'smap1.nmpoliza'     : inputNmpolizap3
-                ,'smap1.cdtipsup'     : inputAltabajap3=='alta'?'6':'7'
-            }
-            ,success : function(response)
-            {
-                var json = Ext.decode(response.responseText);
-                debug('### fechas:',json);
-                if(json.exito)
+                url      : urlRecuperacionSimplep3
+                ,params  :
                 {
-                    _fieldByName('pv_fecha_i').setMinValue(json.smap1.FECHA_MINIMA);
-                    _fieldByName('pv_fecha_i').setMaxValue(json.smap1.FECHA_MAXIMA);
-                    _fieldByName('pv_fecha_i').setReadOnly(json.smap1.EDITABLE=='N');
-                    _fieldByName('pv_fecha_i').isValid();
+                    'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
+                    ,'smap1.cdunieco'     : inputCduniecop3
+                    ,'smap1.cdramo'       : inputCdramop3
+                    ,'smap1.estado'       : inputEstadop3
+                    ,'smap1.nmpoliza'     : inputNmpolizap3
+                    ,'smap1.cdtipsup'     : inputAltabajap3=='alta'?'6':'7'
                 }
-                else
+                ,success : function(response)
                 {
-                    mensajeError(json.respuesta);
+                    var json = Ext.decode(response.responseText);
+                    debug('### fechas:',json);
+                    if(json.exito)
+                    {
+                        _fieldByName('pv_fecha_i').setMinValue(json.smap1.FECHA_MINIMA);
+                        _fieldByName('pv_fecha_i').setMaxValue(json.smap1.FECHA_MAXIMA);
+                        _fieldByName('pv_fecha_i').setReadOnly(json.smap1.EDITABLE=='N');
+                        _fieldByName('pv_fecha_i').isValid();
+                    }
+                    else
+                    {
+                        mensajeError(json.respuesta);
+                    }
                 }
-            }
-            ,failure : function()
-            {
-                errorComunicacion();
-            }
-        });
+                ,failure : function()
+                {
+                    errorComunicacion();
+                }
+            });
+        }
         ////// loader //////
     });
 </script>
