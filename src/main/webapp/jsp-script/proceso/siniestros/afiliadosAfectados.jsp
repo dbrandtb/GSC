@@ -3421,99 +3421,81 @@
 		{
 			url	: _11_URL_REQUIEREAUTSERV
 			,params:{
-				'params.cobertura': panelInicialPral.down('[name=params.cdgarant]').getValue(),
-				'params.subcobertura': panelInicialPral.down('[name=params.cdconval]').getValue(),
+				'params.cobertura': null,
+				'params.subcobertura': null,
 				'params.cdramo': record.raw.CDRAMO,
 				'params.cdtipsit': record.raw.CDTIPSIT
 			}
 			,success : function (response)
 			{
-				
-				var json=Ext.decode(response.responseText).datosInformacionAdicional[0];
-				//var json=Ext.decode(response.responseText);
-				if( json == undefined || json == 'undefined'){
-					var requiereAutorizacion = 'OP';
-					debug(requiereAutorizacion);
-				}else{
-					var requiereAutorizacion = json.REQAUTSERV
-					debug(requiereAutorizacion);
-				}
-				
-				if(requiereAutorizacion == "SI"){ //Requiere autorizacion de servicio
-					var idReclamacion = record.raw.NMSINIES;
-					valido = idReclamacion && idReclamacion>0;
-					if(!valido){
-						_11_pedirAutorizacion(record);
-					}
-				}else{
-					//NO REQUIERE AUTORIZACIÓN DE SERVICIO
-					var idReclamacion = record.raw.NMSINIES;
-					debug(idReclamacion);
-					valido = idReclamacion && idReclamacion>0;
-					if(!valido){
-						//Preguntamos si esta seguro de generar el siniestro
-						msgWindow = Ext.Msg.show({
-							title: 'Aviso',
-							msg: '&iquest;Desea asociar el asegurado con la autorizaci&oacute;n de Servicio ?',
-							buttons: Ext.Msg.YESNO,
-							icon: Ext.Msg.QUESTION,
-							fn: function(buttonId, text, opt){
-								if(buttonId == 'no'){
-									var json =
+				var idReclamacion = record.raw.NMSINIES;
+				debug(idReclamacion);
+				valido = idReclamacion && idReclamacion>0;
+				if(!valido){
+					//Preguntamos si esta seguro de generar el siniestro
+					msgWindow = Ext.Msg.show({
+						title: 'Aviso',
+						msg: '&iquest;Desea asociar el asegurado con la autorizaci&oacute;n de Servicio ?',
+						buttons: Ext.Msg.YESNO,
+						icon: Ext.Msg.QUESTION,
+						fn: function(buttonId, text, opt){
+							if(buttonId == 'no'){
+								var json =
+								{
+									'params.ntramite' : panelInicialPral.down('[name=params.ntramite]').getValue(),
+									'params.cdunieco' : record.raw.CDUNIECO,
+									'params.cdramo'   : record.raw.CDRAMO,
+									'params.estado'   : record.raw.ESTADO,
+									'params.nmpoliza' : record.raw.NMPOLIZA,
+									'params.nmsuplem' : record.raw.NMSUPLEM,
+									'params.nmsituac' : record.raw.NMSITUAC,
+									'params.cdtipsit' : record.raw.CDTIPSIT,
+									'params.dateOcurrencia' : record.raw.FEOCURRE,
+									'params.nfactura' : panelInicialPral.down('[name=params.nfactura]').getValue()
+								};
+								Ext.Ajax.request(
+								{
+									url	  : _11_URL_INICIARSINIESTROSINAUTSERV
+									,params  : json
+									,success : function(response)
 									{
-										'params.ntramite' : panelInicialPral.down('[name=params.ntramite]').getValue(),
-										'params.cdunieco' : record.raw.CDUNIECO,
-										'params.cdramo'   : record.raw.CDRAMO,
-										'params.estado'   : record.raw.ESTADO,
-										'params.nmpoliza' : record.raw.NMPOLIZA,
-										'params.nmsuplem' : record.raw.NMSUPLEM,
-										'params.nmsituac' : record.raw.NMSITUAC,
-										'params.cdtipsit' : record.raw.CDTIPSIT,
-										'params.dateOcurrencia' : record.raw.FEOCURRE,
-										'params.nfactura' : panelInicialPral.down('[name=params.nfactura]').getValue()
-									};
-									Ext.Ajax.request(
-									{
-										url	  : _11_URL_INICIARSINIESTROSINAUTSERV
-										,params  : json
-										,success : function(response)
-										{
-											json = Ext.decode(response.responseText);
-											if(json.success==true){
-												_11_guardarInformacionAdicional();
-												mensajeCorrecto('Autorizaci&oacute;n',json.mensaje,function(){
-													storeAseguradoFactura.removeAll();
-													storeAseguradoFactura.load({
-														params: {
-															'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue(),
-															'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
-														}
-													});
+										json = Ext.decode(response.responseText);
+										if(json.success==true){
+											_11_guardarInformacionAdicional();
+											mensajeCorrecto('Autorizaci&oacute;n',json.mensaje,function(){
+												storeAseguradoFactura.removeAll();
+												storeAseguradoFactura.load({
+													params: {
+														'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue(),
+														'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
+													}
 												});
-											}else{
-												mensajeError(json.mensaje);
-											}
+											});
+										}else{
+											mensajeError(json.mensaje);
 										}
-										,failure : function()
-										{
-											errorComunicacion();
-										}
-									});
-								}else{
-									var valido = true;
-									var nAut = record.get('NoAutorizacion');
-									valido = nAut && nAut>0;
-									if(!valido){
-										_11_pedirAutorizacion(record);
 									}
-									debug('!_11_validaAutorizacion: ',valido?'si':'no');
-									return valido;
-								}
+									,failure : function()
+									{
+										errorComunicacion();
+									}
+								});
 							}
-						});
-						centrarVentana(msgWindow);
-					}
+							if(buttonId == 'yes'){
+								var valido = true;
+								var nAut = record.get('NoAutorizacion');
+								valido = nAut && nAut>0;
+								if(!valido){
+									_11_pedirAutorizacion(record);
+								}
+								debug('!_11_validaAutorizacion: ',valido?'si':'no');
+								return valido;
+							}
+						}
+					});
+					centrarVentana(msgWindow);
 				}
+				
 				
 				if(valido)
 				{
