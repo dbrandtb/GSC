@@ -12,126 +12,38 @@
     
     // Obtenemos el contenido en formato JSON de la propiedad solicitada:
     var pancanInSmap1=<s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
+    
     debug('pancanInSmap1',pancanInSmap1);
     ////// variables //////
     
     ////// funciones //////
-    /*
-    function comboMotivocambio(combo,nue,ant){   
+    
+    function comboMotivocambio(combo,nue,ant){ 
+    	
     	debug('>comboMotivocambio:',combo,ant,nue);
+    	
     	if(nue=='22'){
             debug(22);
+            combo.setValue('22');
             panCanInputFecha.setValue(new Date());
-            panCanInputFecha.setReadOnly(false);
-            //panCanForm.setLoading(true);
-            Ext.Ajax.request({
-                url             : _global_urlConsultaDinamica
-                ,jsonData       :{
-                    stringMap   :{
-                        accion : Accion.ValidaCancelacionProrrata           
-                    }
-                    ,linkedObjectMap :{
-                         param1  : pancanInSmap1.CDUNIAGE
-                         ,param2 : pancanInSmap1.CDRAMO
-                         ,param3 : pancanInSmap1.ESTADO
-                         ,param4 : pancanInSmap1.NMPOLIZA
-                         ,param5 : nue
-                     }
-                 }
-                ,success  : function(response){
-                                panCanForm.setLoading(false);
-                                jsonData = Ext.decode(response.responseText);
-                                if(jsonData.success){
-                                }
-                                else{
-                                    //mensajeError(jsonData.mensaje);
-                                    combo.setValue('22');
-                                }
-                            }
-                ,failure  : function(){
-                                panCanForm.setLoading(false);
-                                errorComunicacion();
-                                combo.setValue('22');
-                            }
-            });
-        debug('<comboMotivocambio');
+            panCanInputFecha.setReadOnly(true);
     	}
     	else if(nue=='24'){
     		debug(24);
-    		panCanInputFecha.setValue(new Date());
+    		combo.setValue('24');
+    		panCanInputFecha.setValue(pancanInSmap1.FEEFECTO);
             panCanInputFecha.setReadOnly(true);
-            //panCanForm.setLoading(true);
-            Ext.Ajax.request({
-                url       : _global_urlConsultaDinamica
-                ,jsonData :{
-                    stringMap :{
-                         accion : Accion.ValidaCancelacionProrrata           
-                     }
-                     ,linkedObjectMap :{
-                          param1 : pancanInSmap1.CDUNIAGE
-                         ,param2 : pancanInSmap1.CDRAMO
-                         ,param3 : pancanInSmap1.ESTADO
-                         ,param4 : pancanInSmap1.NMPOLIZA
-                         ,param5 : nue
-                     }
-                 }
-                ,success  : function(response){
-                                panCanForm.setLoading(false);
-                                jsonData = Ext.decode(response.responseText);
-                                if(jsonData.success){
-                                }
-                                else{
-                                    //mensajeError(jsonData.mensaje);
-                                    combo.setValue('24');
-                                }
-                            }
-                ,failure  : function(){
-                                panCanForm.setLoading(false);
-                                errorComunicacion();
-                                combo.setValue('22');
-                            }
-            }); 
-        debug('<comboMotivocambio');
     	}
     	else if(nue=='25'){
             debug(25);
-            panCanInputFecha.setValue(new Date());
-            panCanInputFecha.setReadOnly(true);
-            //panCanForm.setLoading(true);
-            Ext.Ajax.request({
-                url       : _global_urlConsultaDinamica
-                ,jsonData :{
-                    stringMap :{
-                        accion : Accion.ValidaCancelacionProrrata           
-                    }
-                   ,linkedObjectMap :{
-                      param1 : pancanInSmap1.CDUNIAGE
-                     ,param2 : pancanInSmap1.CDRAMO
-                     ,param3 : pancanInSmap1.ESTADO
-                     ,param4 : pancanInSmap1.NMPOLIZA
-                     ,param5 : nue
-                     }
-                 }
-                ,success  : function(response){
-                                panCanForm.setLoading(false);
-                                jsonData = Ext.decode(response.responseText);
-                                if(jsonData.success){
-                                }
-                                else{
-                                //mensajeError(jsonData.mensaje);
-                                combo.setValue('25');
-                                }
-                            }
-                ,failure  : function(){
-                                panCanForm.setLoading(false);
-                                errorComunicacion();
-                                combo.setValue('22');
-                            }
-            }); 
-        debug('<comboMotivocambio');
+            combo.setValue('25');
+            panCanInputFecha.setValue(pancanInSmap1.FEEFECTO);
+            panCanInputFecha.setReadOnly(false);
         }
+        
+        debug('<comboMotivocambio');
 	}
-	*/
+	
     ////// funciones //////
 Ext.onReady(function(){
     
@@ -249,13 +161,14 @@ Ext.onReady(function(){
     	    }
     	]
     });
-    var comboMotivoCanc = panCanForm.items.items[6];
-    comboMotivoCanc.width=400;
+    var comboMotivoCanc = _fieldByName('smap1.pv_cdrazon_i',panCanForm);
+//    comboMotivoCanc.width=400;
     debug('comboMotivoCanc:',comboMotivoCanc);
-    panCanInputFecha = panCanForm.items.items[9];
+    panCanInputFecha = _fieldByName('smap1.pv_fecancel_i',panCanForm);;
     debug('panCanInputFecha:',panCanInputFecha);
-    //comboMotivoCanc.addListener('change',comboMotivocambio);
-    //comboMotivocambio(comboMotivoCanc,'22');
+    
+    comboMotivoCanc.addListener('change',comboMotivocambio);
+    comboMotivocambio(comboMotivoCanc,'22');
     
     ////// contenido //////
     
