@@ -289,7 +289,7 @@ Ext.onReady(function() {
                     	//Se agrega el combo para elegir Empresa:Todas (1) General de Salud (2),General de Seguros (3)
                     	xtype       : 'combo',
                         name        : 'params.cdempresa',
-                        value       : _parametros.cdempresa="", //Valor inicial: 1-Todas
+                        value       : editMode?_parametros.cdempresa : '',
                         fieldLabel  : 'Empresa',
                         valueField  : 'key',
                         displayField: 'value',
@@ -297,23 +297,23 @@ Ext.onReady(function() {
                         queryMode   :'local',
                         anyMatch    : true,
                         store       : Ext.create('Ext.data.Store', {
-                                       model : 'Generic',
-                                       autoLoad : true,                         
-                                       fields : [ 'id', 'genre_name' ],
+                                       fields : [ 'key', 'value' ],
                                        data : [ 
-                                                 [ '', 'Todas' ],
-                                                 [ '1', 'General de Salud' ], 
-                                                 [ '2', 'General de Seguros' ] 
+                                       	        {'key':'' , 'value':'Todas' },
+                                                {'key':'1', 'value':'General de Salud'}, 
+                                                {'key':'2', 'value':'General de Seguros'}
                                                ]
                                     })
-                                    ,                                                       
-                                    listeners: {
-                                            load:function (){
-                                                    if(editMode){
-                                                        panelPersona.getForm().findField('params.cdempresa').setValue(_parametros.cdempresa);
-                                                    }
-                                             }
-                                    }
+                                    /*,                                                       
+                        listeners: {
+                                afterrender:function (cmb){
+                                        if(editMode){
+                                            cmb.setValue(_parametros.cdempresa);
+                                        }else{
+                                            cmb.setValue('');
+                                        }
+                                 }
+                        }*/
                     },{
                         xtype      : 'textfield',
                         name       : 'params.dsnombre',
