@@ -709,7 +709,13 @@ Ext.onReady(function()
                                 }
                                 ,items    :
                                 [
-                                    Ext.create('Ext.form.field.Number',
+                                    Ext.create('Ext.form.field.Display',
+                                    {
+                                        fieldLabel  : 'PRODUCTO'
+                                        ,labelWidth : 250
+                                        ,value      : 'Cargando...'
+                                    })
+                                    ,Ext.create('Ext.form.field.Number',
                                     {
                                         fieldLabel : 'TR&Aacute;MITE'
                                         ,itemId    : '_p21_fieldNtramite'
@@ -1557,6 +1563,43 @@ Ext.onReady(function()
     }
     catch(e)
     {}
+    
+    Ext.Ajax.request(
+    {
+        url      : _p21_urlCargarParametros
+        ,params  :
+        {
+            'smap1.parametro' : 'TITULO_COTIZACION'
+            ,'smap1.cdramo'   : _p21_smap1.cdramo
+            ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
+        }
+        ,success : function(response)
+        {
+            try
+            {
+                var json=Ext.decode(response.responseText);
+                debug('### obtener rango años response:',json);
+                if(json.exito)
+                {
+                    _fieldByLabel('PRODUCTO').setValue(json.smap1.P1VALOR);
+                }
+                else
+                {
+                    _fieldByLabel('PRODUCTO').hide();
+                    debugError('No se encontro titulo de la cotizacion:',json.respuesta);
+                }
+            }
+            catch(e)
+            {
+                debugError('error al obtener titulo de cotizacion:',e);
+            }
+        }
+        ,failure : function()
+        {
+            _fieldByLabel('PRODUCTO').hide();
+            errorComunicacion();
+        }
+    });
     ////// loaders //////
 });
 
