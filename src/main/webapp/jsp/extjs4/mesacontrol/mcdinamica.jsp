@@ -69,6 +69,49 @@ var _4_botonesGrid =
 [
 	<s:property value="imap1.gridbuttons" />
 ];
+_4_botonesGrid.push('->',
+{
+    xtype       : 'textfield'
+    ,fieldLabel : '<span style="color:white;">Filtro:</span>'
+    ,labelWidth : 60
+    ,espera     : ''
+    ,listeners  :
+    {
+        change : function(me,val)
+        {
+            clearTimeout(me.espera);
+            me.espera=setTimeout(function()
+            {
+                if(Ext.isEmpty(val))
+                {
+                    me.up('grid').getStore().removeFilter();
+                }
+                else
+                {
+                    me.up('grid').getStore().filterBy(function(record, id)
+                    {
+	                    var datos = '';
+	                    for(var att in record.data)
+	                    {
+	                        datos+=record.data[att];
+	                    }
+	                    var nombre    = datos.toUpperCase().replace(/ /g,'');
+	                    var filtro    = val.toUpperCase().replace(/ /g,'');
+	                    var posNombre = nombre.lastIndexOf(filtro);
+	                    if(posNombre > -1)
+	                    {
+	                        return true;
+	                    }
+	                    else
+	                    {
+	                        return false;
+	                    }
+                    });
+                }
+            },1500);
+        }
+    }
+});
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
