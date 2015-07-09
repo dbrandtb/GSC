@@ -1822,14 +1822,19 @@ Ext.onReady(function()
                         ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
                         ,handler : function()
                         {
-                        	
                             if(this.up().up().isValid())
                             {
+                            	var loadMaskTabla = new Ext.LoadMask(this.up().up(), {msg:"Buscando..."});
+								loadMaskTabla.show();
+                            	
                             	marendNavegacion(2);
                                 this.up().up().submit(
                                 {
                                     success  : function(form,action)
                                     {
+                                    	
+                                    	loadMaskTabla.hide();
+                                    	
                                         debug(action);
                                         var json = Ext.decode(action.response.responseText);
                                         debug(json);
@@ -1852,6 +1857,8 @@ Ext.onReady(function()
                                     }
                                     ,failure : function()
                                     {
+                                    	loadMaskTabla.hide();
+                                    	
                                         Ext.Msg.show(
                                         {
                                             title   : 'Error',
