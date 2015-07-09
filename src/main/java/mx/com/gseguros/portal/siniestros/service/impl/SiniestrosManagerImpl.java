@@ -916,7 +916,8 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			String ptpcioex,
 			String dctoimex,
 			String ptimpoex,
-			String mtoArancel) throws Exception
+			String mtoArancel,
+			String aplicIVA) throws Exception
 	{
 		siniestrosDAO.P_MOV_MSINIVAL(cdunieco,
 				 cdramo,
@@ -950,7 +951,8 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 				 ptpcioex,
 				 dctoimex,
 				 ptimpoex,
-				 mtoArancel);
+				 mtoArancel,
+				 aplicIVA);
 	}
 	
 	@Override
@@ -1816,5 +1818,15 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		params.put("pv_cdpresta_i", cdpresta);
 		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
 		return siniestrosDAO.obtieneListaConfiguracionProveedor(params);
+	}
+	
+	@Override
+	//String tipoConcepto, String idProveedor, String idConceptoTipo
+	public String obtieneAplicaConceptoIVA(String idConcepto) throws Exception {
+		try {
+			return siniestrosDAO.obtieneAplicaConceptoIVA(idConcepto);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
 	}
 }

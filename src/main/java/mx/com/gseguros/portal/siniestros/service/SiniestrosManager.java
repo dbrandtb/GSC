@@ -333,7 +333,8 @@ public interface SiniestrosManager {
 			String ptpcioex,
 			String dctoimex,
 			String ptimpoex,
-			String mtoArancel) throws Exception;
+			String mtoArancel,
+			String aplicIVA) throws Exception;
 	
 	/**
 	 * CDUNIECO,CDRAMO,ESTADO,NMPOLIZA,NMSUPLEM,
@@ -581,4 +582,6 @@ public interface SiniestrosManager {
 	public List<Map<String, String>> obtenerDatoMsiniper(String ntramite) throws Exception;
 	
 	public List<Map<String, String>> getConsultaConfiguracionProveedor(String cdpresta)throws Exception;
+	
+	public String obtieneAplicaConceptoIVA(String idConcepto)throws Exception;
 }

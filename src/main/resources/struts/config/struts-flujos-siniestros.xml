@@ -633,6 +633,16 @@
 			</result>
 		</action>
 		
+		<action name="obtieneAplicacionIVA" class="siniestrosAction" method="obtieneAplicacionIVA">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					msgResult
+				</param>
+			</result>
+		</action>
+		
 		<action name="consultaAutServicioSiniestro" class="siniestrosAction" method="consultaAutServicioSiniestro">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
