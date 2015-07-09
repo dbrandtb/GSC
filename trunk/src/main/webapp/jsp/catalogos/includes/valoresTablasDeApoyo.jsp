@@ -817,7 +817,7 @@ Ext.onReady(function() {
 				        	}
 		                }
 		            }else{
-		                showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
+		                showMessage('Error', 'Error al obtener los datos de las claves.', Ext.Msg.OK, Ext.Msg.ERROR);
 		            }
 				}
 			});
@@ -842,7 +842,7 @@ Ext.onReady(function() {
 				        	}
 		                }
 		            }else{
-		                showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
+		                showMessage('Error', 'Error al obtener los datos de los atributos.', Ext.Msg.OK, Ext.Msg.ERROR);
 		            }
 				}
 			});
@@ -952,7 +952,7 @@ Ext.onReady(function() {
 		                     
 		                    
 		                    if(tipoFormato == 'A'){
-		                    	regexFormato = new RegExp("^[a-zA-Z0-9\\s]+$");
+		                    	regexFormato = new RegExp("^.*$");//new RegExp("^[a-zA-Z0-9\\s]+$");
 		                    	dsFormato = 'Alfanum&eacute;rico';
 		                    }else if(tipoFormato == 'N'){
 		                    	regexFormato = new RegExp("^([0-9])+$");
