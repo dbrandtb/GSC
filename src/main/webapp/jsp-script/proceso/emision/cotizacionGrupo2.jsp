@@ -3220,6 +3220,12 @@ function _p25_generarTramiteClic(callback,sincenso,revision)
                                                                         }
                                                                     }
                                                                 }).show());
+                                                                if(!Ext.isEmpty(json.smap1.nombreUsuarioDestino))
+                                                                {
+                                                                    mensajeCorrecto('Tr&aacute;mite asignado'
+                                                                        ,'El tr&aacute;mite fue asignado a '+json.smap1.nombreUsuarioDestino
+                                                                    );
+                                                                }
                                                             }
                                                         }
                                                         ,{
@@ -3386,11 +3392,17 @@ function _p25_turnar(status,titulo,closable)
                                     ,success : function(response)
                                     {
                                         ventana.setLoading(false);
-                                        var json=Ext.decode(response.responseText);
-                                        debug('### json response parametro mensaje turnar:',json);
-                                        if(json.exito)
+                                        var json2=Ext.decode(response.responseText);
+                                        debug('### json response parametro mensaje turnar:',json2);
+                                        if(json2.exito)
                                         {
-                                            mensajeCorrecto('Tr&aacute;mite guardado',json.smap1.P1VALOR,function()
+                                            mensajeCorrecto('Tr&aacute;mite guardado'
+                                                ,json2.smap1.P1VALOR
+                                                    +(!Ext.isEmpty(json.smap1.nombreUsuarioDestino)?
+                                                        '<br/>El tr&aacute;mite fue asignado a '+json.smap1.nombreUsuarioDestino:
+                                                        ''
+                                                    )
+                                                ,function()
                                             {
                                                 button.up().up().destroy();
                                                 if(status+'x'=='19x')

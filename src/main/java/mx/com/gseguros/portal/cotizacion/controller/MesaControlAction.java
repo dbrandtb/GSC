@@ -367,7 +367,8 @@ public class MesaControlAction extends PrincipalCoreAction
 			Boolean escalado  = (Boolean)res.get("ESCALADO");
 			String  statusEsc = (String)res.get("STATUS");
 			
-			smap1.put("ESCALADO" , escalado ? "S" : "N" );
+			smap1.put("nombreUsuarioDestino" , (String)res.get("NOMBRE"));
+			smap1.put("ESCALADO"             , escalado ? "S" : "N" );
 			if(escalado)
 			{
 				smap1.put("status" , statusEsc);

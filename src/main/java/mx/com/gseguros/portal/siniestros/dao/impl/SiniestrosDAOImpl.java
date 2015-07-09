@@ -3610,9 +3610,11 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		Map<String,Object> procRes  = ejecutaSP(new MoverTramite(getDataSource()), params);
 		boolean            escalado = "S".equals((String)procRes.get("pv_escalado_o"));
 		String             status   = (String)procRes.get("pv_status_esc_o");
+		String             nombre   = (String)procRes.get("pv_nombre_o");
 		Map<String,Object> result   = new HashMap<String,Object>();
 		result.put("ESCALADO" , escalado);
 		result.put("STATUS"   , status);
+		result.put("NOMBRE"   , nombre);
 		logger2.debug("\nMover tramite, escalado: {}, status: {}, result: {}",escalado,status,result);
 		return result;
 	}
@@ -3633,6 +3635,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("cdclausu"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_escalado_o"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_status_esc_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nombre_o"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"     , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"      , OracleTypes.VARCHAR));
 			compile();
