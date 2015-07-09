@@ -528,7 +528,7 @@ public interface CotizacionManager
 			)throws Exception;
 	
 	@Deprecated
-	public void turnaPorCargaTrabajo(
+	public String turnaPorCargaTrabajo(
 			String ntramite
 			,String cdsisrol
 			,String status

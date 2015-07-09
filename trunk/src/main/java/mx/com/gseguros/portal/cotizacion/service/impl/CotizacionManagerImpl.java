@@ -3581,7 +3581,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,cdsisrol
 							);
 					
-					mesaControlDAO.turnaPorCargaTrabajo(ntramite,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
+					resp.getSmap().put("nombreUsuarioDestino"
+							,mesaControlDAO.turnaPorCargaTrabajo(ntramite,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())
+					);
 					
 					try
 		            {
@@ -6527,7 +6529,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	
 	@Deprecated
 	@Override
-	public void turnaPorCargaTrabajo(
+	public String turnaPorCargaTrabajo(
 			String ntramite
 			,String cdsisrol
 			,String status
@@ -6541,12 +6543,14 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@ status="   , status
 				));
 		
-		mesaControlDAO.turnaPorCargaTrabajo(ntramite,cdsisrol,status);
+		String nombre = mesaControlDAO.turnaPorCargaTrabajo(ntramite,cdsisrol,status);
 		
 		logger.debug(Utils.join(
-				 "\n@@@@@@ turnaPorCargaTrabajo @@@@@@"
+				 "\n@@@@@@ nombre=",nombre
+				,"\n@@@@@@ turnaPorCargaTrabajo @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
+		return nombre;
 	}
     
 	///////////////////////////////

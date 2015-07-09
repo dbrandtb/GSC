@@ -147,7 +147,7 @@ public interface MesaControlDAO
 			String dsdocume, String nmsolici, String ntramite, String tipmov,
 			String swvisible, String codidocu, String cdtiptra) throws Exception;
 	
-	public void turnaPorCargaTrabajo(
+	public String turnaPorCargaTrabajo(
 			String ntramite
 			,String cdsisrol
 			,String status

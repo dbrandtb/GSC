@@ -6084,7 +6084,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
 	            	kernelManager.movDmesacontrol(parDmesCon);
 	            	
-	            	cotizacionManager.turnaPorCargaTrabajo(ntramiteNew,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
+	            	smap1.put("nombreUsuarioDestino"
+	            			,cotizacionManager.turnaPorCargaTrabajo(ntramiteNew,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())
+	            			);
 	            	
 	            	try
 		            {

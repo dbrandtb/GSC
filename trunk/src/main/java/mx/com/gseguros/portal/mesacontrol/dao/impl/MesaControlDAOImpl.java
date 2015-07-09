@@ -551,7 +551,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	}
 	
 	@Override
-	public void turnaPorCargaTrabajo(
+	public String turnaPorCargaTrabajo(
 			String ntramite
 			,String cdsisrol
 			,String status
@@ -561,7 +561,8 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("ntramite" , ntramite);
 		params.put("cdsisrol" , cdsisrol);
 		params.put("status"   ,status);
-		ejecutaSP(new TurnaPorCargaTrabajo(getDataSource()),params);
+		Map<String,Object> procRes = ejecutaSP(new TurnaPorCargaTrabajo(getDataSource()),params);
+		return (String)procRes.get("pv_nombre_o");
 	}
 	
 	protected class TurnaPorCargaTrabajo extends StoredProcedure {
@@ -570,8 +571,9 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o",OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nombre_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
