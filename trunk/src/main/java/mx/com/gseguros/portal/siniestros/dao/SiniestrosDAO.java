@@ -240,7 +240,8 @@ public interface SiniestrosDAO {
 			String ptpcioex,
 			String dctoimex,
 			String ptimpoex,
-			String mtoArancel) throws Exception;
+			String mtoArancel,
+			String aplicIVA) throws Exception;
 	
 	public List<Map<String,String>>P_GET_MSINIVAL(
 			String cdunieco,
@@ -467,4 +468,6 @@ public interface SiniestrosDAO {
 	public List<Map<String, String>> obtieneDatoMsiniper(HashMap<String, Object> params) throws Exception;
 
 	public List<Map<String, String>> obtieneListaConfiguracionProveedor(HashMap<String, Object> params) throws Exception;
+	
+	public String obtieneAplicaConceptoIVA(String idConcepto) throws Exception;
 }

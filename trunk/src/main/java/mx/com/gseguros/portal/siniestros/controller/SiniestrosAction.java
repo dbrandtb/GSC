@@ -349,7 +349,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 											loadList.get(j).get("DESTOPOR"),		loadList.get(j).get("DESTOIMP"),		loadList.get(j).get("PTIMPORT"),			loadList.get(j).get("PTRECOBR"),
 											nmanno,									loadList.get(j).get("NMAPUNTE"),		loadList.get(j).get("USERREGI"),			dFeregist,
 											"I",									loadList.get(j).get("PTIMPOEX"),		loadList.get(j).get("DCTOIMEX"),			loadList.get(j).get("PTIMPOEX"),	
-											loadList.get(j).get("PTMTOARA"));
+											loadList.get(j).get("PTMTOARA"),		loadList.get(j).get("APLICIVA"));
 										
 										//7.- Obtenemos los valores de TDSINIVAL para ver si tiene Ajuste Medico
 										List<Map<String,String>> ajusteMedico = siniestrosManager.P_GET_TDSINIVAL(
@@ -470,7 +470,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								loadList.get(j).get("DESTOPOR"),		loadList.get(j).get("DESTOIMP"),		loadList.get(j).get("PTIMPORT"),			loadList.get(j).get("PTRECOBR"),
 								nmanno,									loadList.get(j).get("NMAPUNTE"),		loadList.get(j).get("USERREGI"),			dFeregist,
 								"I",									loadList.get(j).get("PTIMPOEX"),		loadList.get(j).get("DCTOIMEX"),			loadList.get(j).get("PTIMPOEX"),	
-								loadList.get(j).get("PTMTOARA"));
+								loadList.get(j).get("PTMTOARA"),		loadList.get(j).get("APLICIVA"));
 							
 							//7.- Obtenemos los valores de TDSINIVAL para ver si tiene Ajuste Medico
 							List<Map<String,String>> ajusteMedico = siniestrosManager.P_GET_TDSINIVAL(
@@ -1267,7 +1267,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						datosTablas.get(i).get("destopor"), 	datosTablas.get(i).get("destoimp"),		datosTablas.get(i).get("ptimport"), 	datosTablas.get(i).get("ptrecobr"),
 						nmanno,									datosTablas.get(i).get("nmapunte"),		 "", 									dFeregist,
 						datosTablas.get(i).get("operacion"),	datosTablas.get(i).get("ptpcioex"),		datosTablas.get(i).get("dctoimex"),		datosTablas.get(i).get("ptimpoex"),
-						datosTablas.get(i).get("mtoArancel"));
+						datosTablas.get(i).get("mtoArancel"),	datosTablas.get(i).get("aplicaIVA"));
 			}
 			mensaje = "Datos guardados";
 			success = true;
@@ -2101,7 +2101,16 @@ public class SiniestrosAction extends PrincipalCoreAction {
 									
 									hPTIMPORT 	+= PTIMPORT;
 									hDESTO    	+= (PTIMPORT*(DESTOPOR/100d)) + (DESTOIMP);
-									hIVA      	+= PTIMPORT*(ivaprov/100d);
+									
+									if(aplicaIVA.equalsIgnoreCase("S")){
+										//verificamos si aplica para el concepto 
+										if(concepto.get("APLICIVA").equalsIgnoreCase("S")){
+											hIVA      	+= PTIMPORT*(ivaprov/100d);
+										}
+									}else{
+										hIVA      	+= PTIMPORT*(ivaprov/100d);
+									}
+									
 									hISR		+= PTIMPORT*(isrprov/100d);
 									hICED		+= PTIMPORT*(cedprov/100d);
 									hPRECIO 	+= PTPRECIO;
@@ -2333,16 +2342,20 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							double hPTIMPORT = Double.valueOf(hosp.get("PTIMPORT"));
 							double DESTOIMP  = Double.valueOf(hosp.get("DESTO"));
 							double hIVA      = Double.valueOf(hosp.get("IVA"));
+							
 							String causadelSiniestro = informacionGral.get(0).get("CDCAUSA");
 							double subttDesto =0d;
 							
 							if(!causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){ // Diferente de Accidente
 								subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP + deducibleSiniestroIte );
+								logger.debug("VALOR DE subttDesto ! ACCIDENTE {}",subttDesto);
 							}else{
 								if(cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 									subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP + deducibleSiniestroIte );
+									logger.debug("VALOR DE subttDesto GASTOS MEDICOS : {}",subttDesto);
 								}else{
 									subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP);
+									logger.debug("VALOR DE subttDesto ACCIDENTE : {}",subttDesto);
 								}
 							}
 							
@@ -2355,7 +2368,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							}
 							
 							importeSiniestroIte = subttDesto - copagoAplicadoSiniestroIte;
-							double hIVADesCopago  = importeSiniestroIte*(ivaprov/100d);
+							double hIVADesCopago  = Double.valueOf(hosp.get("IVA"));//importeSiniestroIte*(ivaprov/100d);
 							logger.debug("IVA despues de Copago  : {} ",hIVADesCopago);
 							
 							hosp.put("PTIMPORT_DESCOPAGO" , importeSiniestroIte+"");
@@ -3664,7 +3677,16 @@ public class SiniestrosAction extends PrincipalCoreAction {
 									
 									hPTIMPORT 	+= PTIMPORT;
 									hDESTO    	+= (PTIMPORT*(DESTOPOR/100d)) + (DESTOIMP);
-									hIVA      	+= PTIMPORT*(ivaprov/100d);
+									//hIVA      	+= PTIMPORT*(ivaprov/100d);
+									if(aplicaIVA.equalsIgnoreCase("S")){
+										//verificamos si aplica para el concepto 
+										if(concepto.get("APLICIVA").equalsIgnoreCase("S")){
+											hIVA      	+= PTIMPORT*(ivaprov/100d);
+										}
+									}else{
+										hIVA      	+= PTIMPORT*(ivaprov/100d);
+									}
+									
 									hISR		+= PTIMPORT*(isrprov/100d);
 									hICED		+= PTIMPORT*(cedprov/100d);
 									hPRECIO 	+= PTPRECIO;
@@ -3918,7 +3940,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							}
 							
 							importeSiniestroIte = subttDesto - copagoAplicadoSiniestroIte;
-							double hIVADesCopago  = importeSiniestroIte*(ivaprov/100d);
+							double hIVADesCopago  = Double.valueOf(hosp.get("IVA"));//double hIVADesCopago  = importeSiniestroIte*(ivaprov/100d);
 							logger.debug("IVA despues de Copago  : {} ",hIVADesCopago);
 							
 							hosp.put("PTIMPORT_DESCOPAGO" , importeSiniestroIte+"");
@@ -4654,6 +4676,25 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.debug("Respuesta datosValidacion : {}",datosValidacion);
 		}catch( Exception e){
 			logger.error("Error al obtener consultaDatosProveedorSiniestro : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	/**
+	* Funcion para obtener si aplica o no iva en los conceptos
+	* @param params
+	* @return montoArancel
+	*/
+	public String obtieneAplicacionIVA(){
+		logger.debug("Entra a obtieneAplicacionIVA params de entrada :{}",params);
+		try {
+			msgResult = siniestrosManager.obtieneAplicaConceptoIVA(params.get("idConcepto"));
+			logger.debug("VALOR DE RESPUESTA ===>: {}", msgResult);
+			
+		}catch( Exception e){
+			logger.error("Error al obtener el monto del arancel : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
 		success = true;

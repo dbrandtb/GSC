@@ -1984,7 +1984,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			String ptpcioex,
 			String dctoimex,
 			String ptimpoex,
-			String mtoArancel) throws Exception
+			String mtoArancel,
+			String aplicIVA) throws Exception
 	{
 		Map<String,Object>p=new HashMap<String,Object>();
 		p.put("pv_cdunieco_i" , cdunieco);
@@ -2020,6 +2021,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		p.put("pv_dctoimex_i"   , dctoimex);
 		p.put("pv_ptimpoex_i"   , ptimpoex);
 		p.put("pv_ptmtoara_i"   , mtoArancel);
+		p.put("pv_aplicIVA_i"   , aplicIVA);
 		logger.debug("P_MOV_MSINIVAL params: "+p);
 		ejecutaSP(new PMOVMSINIVAL(this.getDataSource()), p);
 		logger.debug("P_MOV_MSINIVAL end");
@@ -2063,6 +2065,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_dctoimex_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ptimpoex_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ptmtoara_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_aplicIVA_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
@@ -2123,7 +2126,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"DESTOPOR"   , "DESTOIMP"     , "PTIMPORT" , "PTRECOBR"
 					,"NMANNO"     , "NMAPUNTE"     , "USERREGI" , "FEREGIST"
 					,"PTPCIOEX"   , "DCTOIMEX"     , "PTIMPOEX" , "PTMTOARA"
-					,"TOTAJUSMED" , "SUBTAJUSTADO"
+					,"TOTAJUSMED" , "SUBTAJUSTADO" , "APLICIVA"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -2671,6 +2674,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"CDGARANT"
 					,"CDCONVAL"
 					,"NMORDINA"
+					,"APLICIVA"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -4552,4 +4556,27 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	@Override
+	public String obtieneAplicaConceptoIVA(String idConcepto) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		//params.put("pv_tipoConcepto_i", tipoConcepto);
+		params.put("pv_idConcepto_i", idConcepto);
+		Map<String, Object> resultado = ejecutaSP(new ObtieneAplicaConceptoIVA(getDataSource()), params);
+		logger.debug( resultado.get("pv_registro_o"));
+		return (String) resultado.get("pv_registro_o");
+	}
+	
+    protected class ObtieneAplicaConceptoIVA extends StoredProcedure {
+    	
+    	protected ObtieneAplicaConceptoIVA(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_SINIESTRO.P_GET_CONCEPTOIVA");
+    		declareParameter(new SqlParameter("pv_idConcepto_i",   OracleTypes.VARCHAR));		// Id. del concepto
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }

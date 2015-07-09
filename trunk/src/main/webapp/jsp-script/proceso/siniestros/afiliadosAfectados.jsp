@@ -86,6 +86,8 @@
 			var _CATALOGO_CONCEPTOPAGO					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CONCEPTOPAGO"/>';
 			var _URL_LISTADO_ASEGURADO_POLIZA			= '<s:url namespace="/siniestros"       action="consultaListaAseguradoPoliza" />';
 			var _URL_CONSULTA_BENEFICIARIO				= '<s:url namespace="/siniestros"		action="consultaDatosBeneficiario" />';
+			var _SINO									= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SINO" />';
+			var _URL_APLICA_IVA_CONCEPTO				= '<s:url namespace="/siniestros"		action="obtieneAplicacionIVA"/>';
 			debug("VALOR DE _11_params --->",_11_params);
 			debug("VALOR DEL ROL ACTIVO --->",_CDROL);
 			var _11_itemsForm	=
@@ -122,6 +124,7 @@
 			var storeListadoSiniestMaestro;
 			var storeConceptosCatalogoRender;
 			var cmbCveTipoConcepto;
+			var cmbAplicaIVA;
 			var cmbCveConcepto;
 			var cmbCveConceptoRender;
 			var _11_windowRechazoSiniestro;
@@ -273,7 +276,8 @@
 						{type:'string',	name:'PTIMPORT'},		{type:'string',	name:'PTRECOBR'},		{type:'string',	name:'NMANNO'},
 						{type:'string',	name:'NMAPUNTE'},		{type:'string',	name:'USERREGI'},		{type:'string',	name:'FEREGIST'},
 						{type:'string',	name:'PTPCIOEX'},		{type:'string',	name:'DCTOIMEX'},		{type:'string',	name:'PTIMPOEX'},
-						{type:'string',	name:'PTMTOARA'},		{type:'string',	name:'TOTAJUSMED'},		{type:'string',	name:'SUBTAJUSTADO'}
+						{type:'string',	name:'PTMTOARA'},		{type:'string',	name:'TOTAJUSMED'},		{type:'string',	name:'SUBTAJUSTADO'},
+						{type:'string',	name:'APLICIVA'}
 					]
 				});
 //MODELO DEL LISTADO DE LAS COBERTURAS
@@ -627,6 +631,21 @@
 					}
 				});
 				storeTipoConcepto.load();
+				
+				var storeAplicaIVA = Ext.create('Ext.data.JsonStore', {
+					model:'Generic',
+					proxy: {
+						type: 'ajax',
+						url: _URL_CATALOGOS,
+						extraParams : {catalogo:_SINO},
+						reader: {
+							type: 'json',
+							root: 'lista'
+						}
+					}
+				});
+				storeAplicaIVA.load();
+				
 // STORE PARA OBTENER EL LISTADO DE LOS ICD,CDT Y UB
 				var storeConceptosCatalogo = Ext.create('Ext.data.JsonStore', {
 					model:'Generic',
@@ -921,6 +940,21 @@
 						}
 					}
 				});
+				
+				cmbAplicaIVA = Ext.create('Ext.form.ComboBox', {
+					name:'params.idAplicaIVA',		store: storeAplicaIVA,		queryMode:'local',
+					displayField: 'value',		valueField: 'key',				editable:false,				allowBlank:false/*,
+					listeners:{
+						select: function (combo, records, opts){
+							banderaConcepto = 1;
+							var cdTipo = records[0].get('key');
+							storeConceptosCatalogo.proxy.extraParams= {
+								'params.idPadre' : cdTipo
+								,catalogo		: _CATALOGO_CONCEPTOSMEDICOS
+							};
+						}
+					}*/
+				});
 
 				cmbCveConcepto = Ext.create('Ext.form.ComboBox', {
 					name:'params.cdconcep',		store: storeConceptosCatalogo,		queryMode:'remote',
@@ -928,6 +962,32 @@
 					forceSelection: true,		queryParam  : 'params.descripc',	hideTrigger : true,			minChars	: 3
 					,listeners : {
 						select:function(e){
+							//Verificamos una tabla de apoyo para saber si se encuentra en la tabla de apoyo
+							var aplicaIVAFact = panelInicialPral.down('[name="parametros.pv_otvalor01"]').getValue();
+							if(aplicaIVAFact =='S'){
+								Ext.Ajax.request( {
+									url	 : _URL_APLICA_IVA_CONCEPTO
+									,params:{
+										'params.idConcepto'   : e.getValue()
+									}
+									,success : function (response) {
+										_11_conceptoSeleccionado.set('APLICIVA',Ext.decode(response.responseText).msgResult);
+									},
+									failure : function () {
+										//me.up().up().setLoading(false);
+										Ext.Msg.show({
+											title:'Error',
+											msg: 'Error de comunicaci&oacute;n',
+											buttons: Ext.Msg.OK,
+											icon: Ext.Msg.ERROR
+										});
+									}
+								});
+							}else{
+								_11_conceptoSeleccionado.set('APLICIVA',aplicaIVAFact);
+							}
+							
+							
 							Ext.Ajax.request( {
 								url	 : _URL_MONTO_ARANCEL
 								,params:{
@@ -949,7 +1009,7 @@
 									}
 								},
 								failure : function () {
-									me.up().up().setLoading(false);
+									//me.up().up().setLoading(false);
 									Ext.Msg.show({
 										title:'Error',
 										msg: 'Error de comunicaci&oacute;n',
@@ -1333,7 +1393,7 @@
 												}
 											},
 											failure : function () {
-												me.up().up().setLoading(false);
+												//me.up().up().setLoading(false);
 												Ext.Msg.show({
 													title:'Error',
 													msg: 'Error de comunicaci&oacute;n',
@@ -1456,6 +1516,27 @@
 											leyenda = v.data.value;
 										}
 										leyenda= v;
+									}
+									return leyenda;
+								}
+							},
+							{
+								header: 'Aplica IVA', 				dataIndex: 'APLICIVA',	width : 90		,  allowBlank: false
+								,editor : cmbAplicaIVA
+								,renderer : function(v) {
+								var leyenda = '';
+									if (typeof v == 'string') {
+										storeAplicaIVA.each(function(rec) {
+											if (rec.data.key == v) {
+												leyenda = rec.data.value;
+											}
+										});
+									}else {
+										if (v.key && v.value) {
+											leyenda = v.value;
+										} else {
+											leyenda = v.data.value;
+										}
 									}
 									return leyenda;
 								}
@@ -1596,15 +1677,7 @@
 								dataIndex : 'SUBTAJUSTADO',
 								width : 120,
 								renderer : Ext.util.Format.usMoney
-							}/*,{
-								header : 'Cobertura',
-								dataIndex : 'CDGARANT',
-								width : 150
-							},{
-								header : 'Subobertura',
-								dataIndex : 'CDCONVAL',
-								width : 150
-							}*/
+							}
 						],
 						selModel: {
 							selType: 'cellmodel'
@@ -1957,7 +2030,7 @@
 						{
 							xtype		: 'numberfield',		fieldLabel 	: 'Descuento $',			name	: 'params.descnume',
 							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
-						}
+						},
 						<s:property value='%{"," + imap.tatrisinItems}' />
 						<s:property value='%{"," + imap.itemsEdicion}' />
 					]
@@ -2333,7 +2406,7 @@
 												});
 											},
 											failure : function () {
-												me.up().up().setLoading(false);
+												//me.up().up().setLoading(false);
 												Ext.Msg.show({
 													title:'Error',
 													msg: 'Error de comunicaci&oacute;n',
@@ -2861,7 +2934,7 @@
 							});
 						},
 						failure : function (){
-							me.up().up().setLoading(false);
+							//me.up().up().setLoading(false);
 							Ext.Msg.show({
 								title:'Error',
 								msg: 'Error de comunicaci&oacute;n',
@@ -3082,7 +3155,7 @@
 				}
 			},
 			failure : function (){
-				me.up().up().setLoading(false);
+				//me.up().up().setLoading(false);
 				Ext.Msg.show({
 					title:'Error',
 					msg: 'Error de comunicaci&oacute;n',
@@ -3136,7 +3209,7 @@
 				},
 				failure : function ()
 				{
-					me.up().up().setLoading(false);
+					//me.up().up().setLoading(false);
 					Ext.Msg.show({
 						title:'Error',
 						msg: 'Error de comunicaci&oacute;n',
@@ -3173,7 +3246,7 @@
 			},
 			failure : function ()
 			{
-				me.up().up().setLoading(false);
+				//me.up().up().setLoading(false);
 				Ext.Msg.show({
 					title:'Error',
 					msg: 'Error de comunicaci&oacute;n',
@@ -3219,7 +3292,7 @@
 				
 			},
 			failure : function (){
-				me.up().up().setLoading(false);
+				//me.up().up().setLoading(false);
 				centrarVentanaInterna(Ext.Msg.show({
 					title:'Error',
 					msg: 'Error de comunicaci&oacute;n',
@@ -3327,10 +3400,10 @@
 			},
 			failure : function ()
 			{
-				me.up().up().setLoading(false);
+				//me.up().up().setLoading(false);
 				Ext.Msg.show({
 					title:'Error',
-					msg: 'Error de comunicaci&oacute;n',
+					msg: 'Error de comunicaci&oacute;n --> ',
 					buttons: Ext.Msg.OK,
 					icon: Ext.Msg.ERROR
 				});
@@ -3790,6 +3863,7 @@
 					,dctoimex : record.get('DCTOIMEX')
 					,ptimpoex : record.get('PTIMPOEX')
 					,mtoArancel : record.get('PTMTOARA')
+					,aplicaIVA : record.get('APLICIVA')
 				});
 			});
 			submitValues['datosTablas']=datosTablas;
@@ -3900,7 +3974,7 @@
 			},
 			failure : function ()
 			{
-				me.up().up().setLoading(false);
+				//me.up().up().setLoading(false);
 				Ext.Msg.show({
 					title:'Error',
 					msg: 'Error de comunicaci&oacute;n',
@@ -3936,7 +4010,7 @@
 			},
 			failure : function ()
 			{
-				me.up().up().setLoading(false);
+				//me.up().up().setLoading(false);
 				Ext.Msg.show({
 					title:'Error',
 					msg: 'Error de comunicaci&oacute;n',
@@ -4149,7 +4223,7 @@
 								    	            },
 								    	            failure : function ()
 								    	            {
-								    	                me.up().up().setLoading(false);
+								    	                //me.up().up().setLoading(false);
 								    	                centrarVentanaInterna(Ext.Msg.show({
 								    	                    title:'Error',
 								    	                    msg: 'Error de comunicaci&oacute;n',
@@ -4474,7 +4548,7 @@
 																	    	            },
 																	    	            failure : function ()
 																	    	            {
-																	    	                me.up().up().setLoading(false);
+																	    	                //me.up().up().setLoading(false);
 																	    	                centrarVentanaInterna(Ext.Msg.show({
 																	    	                    title:'Error',
 																	    	                    msg: 'Error de comunicaci&oacute;n',
@@ -4652,7 +4726,7 @@
 									}
 								},
 								failure : function (){
-									me.up().up().setLoading(false);
+									//me.up().up().setLoading(false);
 									Ext.Msg.show({
 										title:'Error',
 										msg: 'Error de comunicaci&oacute;n',
@@ -4748,7 +4822,7 @@
 											}
 										},
 										failure : function (){
-											me.up().up().setLoading(false);
+											//me.up().up().setLoading(false);
 											centrarVentanaInterna(Ext.Msg.show({
 												title:'Error',
 												msg: 'Error de comunicaci&oacute;n',
@@ -4790,7 +4864,7 @@
 							},
 							failure : function ()
 							{
-								me.up().up().setLoading(false);
+								//me.up().up().setLoading(false);
 								Ext.Msg.show({
 									title:'Error',
 									msg: 'Error de comunicaci&oacute;n',
@@ -4871,7 +4945,7 @@
 													},
 													failure : function ()
 													{
-														me.up().up().setLoading(false);
+														//me.up().up().setLoading(false);
 														Ext.Msg.show({
 															title:'Error',
 															msg: 'Error de comunicaci&oacute;n',
