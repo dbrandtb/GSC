@@ -14,6 +14,9 @@
 			////// variables //////
 			
 			Ext.onReady(function() {
+				
+				Ext.Ajax.timeout = 5*60*1000;//se aumenta tiempo de espera de la pantalla a 5 minutos
+				
 				////// modelos //////
 				////// modelos //////
 				
