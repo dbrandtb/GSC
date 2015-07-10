@@ -437,10 +437,10 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 							//conductor
 							incisoIterado.setConductor(row.get("CONDUCTOR"));
 		
-							//TipoUso
-							incisoIterado.setConductor(row.get("CONDUCTOR"));
+							//Tipo Servicio
+							incisoIterado.setIdTipoServicio(Integer.valueOf(row.get("TIPOSERVICIO")));
 							
-							//primanetainc
+							//TipoUso
 							incisoIterado.setTipoUso(Integer.valueOf(row.get("TIPOUSO")));
 							
 							incisoIterado.setIdTipoCarga(Integer.valueOf(row.get("IDTIPOCARGA")));
