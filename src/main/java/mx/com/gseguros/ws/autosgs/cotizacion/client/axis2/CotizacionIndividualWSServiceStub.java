@@ -52397,6 +52397,36 @@
                             
 
                         /**
+                        * field for IdTipoServicio
+                        */
+
+                        
+                                    protected int localIdTipoServicio ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getIdTipoServicio(){
+                               return localIdTipoServicio;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param IdTipoServicio
+                               */
+                               public void setIdTipoServicio(int param){
+                            
+                                            this.localIdTipoServicio=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for IdTipoValor
                         */
 
@@ -53650,6 +53680,35 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
+                                            xmlWriter.writeStartElement(prefix,"idTipoServicio", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"idTipoServicio");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("idTipoServicio");
+                                    }
+                                
+                                               if (localIdTipoServicio==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("idTipoServicio cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdTipoServicio));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
                                             xmlWriter.writeStartElement(prefix,"idTipoValor", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
@@ -54436,6 +54495,12 @@
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdTipoCarga));
                             
                                       elementList.add(new javax.xml.namespace.QName("",
+                                                                      "idTipoServicio"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localIdTipoServicio));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
                                                                       "idTipoValor"));
                                  
                                 elementList.add(
@@ -54917,6 +54982,25 @@
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setIdTipoCarga(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","idTipoServicio").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setIdTipoServicio(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
                                               
                                         reader.next();
@@ -57115,6 +57199,50 @@
                             
 
                         /**
+                        * field for Comentarios
+                        */
+
+                        
+                                    protected java.lang.String localComentarios ;
+                                
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localComentariosTracker = false ;
+                           
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getComentarios(){
+                               return localComentarios;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param Comentarios
+                               */
+                               public void setComentarios(java.lang.String param){
+                            
+                                       if (param != null){
+                                          //update the setting tracker
+                                          localComentariosTracker = true;
+                                       } else {
+                                          localComentariosTracker = false;
+                                              
+                                       }
+                                   
+                                            this.localComentarios=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for ContarPAI
                         */
 
@@ -58091,6 +58219,50 @@
                             
 
                         /**
+                        * field for Renueva
+                        */
+
+                        
+                                    protected java.lang.String localRenueva ;
+                                
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localRenuevaTracker = false ;
+                           
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getRenueva(){
+                               return localRenueva;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param Renueva
+                               */
+                               public void setRenueva(java.lang.String param){
+                            
+                                       if (param != null){
+                                          //update the setting tracker
+                                          localRenuevaTracker = true;
+                                       } else {
+                                          localRenuevaTracker = false;
+                                              
+                                       }
+                                   
+                                            this.localRenueva=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for SdtPoliza
                         */
 
@@ -58528,7 +58700,41 @@
                                                }
                                     
                                    xmlWriter.writeEndElement();
-                             
+                              if (localComentariosTracker){
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"comentarios", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"comentarios");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("comentarios");
+                                    }
+                                
+
+                                          if (localComentarios==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("comentarios cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localComentarios);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             }
                                     namespace = "";
                                     if (! namespace.equals("")) {
                                         prefix = xmlWriter.getPrefix(namespace);
@@ -59324,7 +59530,41 @@
                                                }
                                     
                                    xmlWriter.writeEndElement();
-                              if (localSdtPolizaTracker){
+                              if (localRenuevaTracker){
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"renueva", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"renueva");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("renueva");
+                                    }
+                                
+
+                                          if (localRenueva==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("renueva cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localRenueva);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             } if (localSdtPolizaTracker){
                                             if (localSdtPoliza==null){
                                                  throw new org.apache.axis2.databinding.ADBException("sdtPoliza cannot be null!!");
                                             }
@@ -59664,7 +59904,16 @@
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localCodigoPostalVacio));
-                            
+                             if (localComentariosTracker){
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "comentarios"));
+                                 
+                                        if (localComentarios != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localComentarios));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("comentarios cannot be null!!");
+                                        }
+                                    }
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "contarPAI"));
                                  
@@ -59872,7 +60121,16 @@
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localProspecto));
-                             if (localSdtPolizaTracker){
+                             if (localRenuevaTracker){
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "renueva"));
+                                 
+                                        if (localRenueva != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localRenueva));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("renueva cannot be null!!");
+                                        }
+                                    } if (localSdtPolizaTracker){
                             elementList.add(new javax.xml.namespace.QName("",
                                                                       "sdtPoliza"));
                             
@@ -60002,7 +60260,7 @@
                     
                     reader.next();
                 
-                        java.util.ArrayList list23 = new java.util.ArrayList();
+                        java.util.ArrayList list24 = new java.util.ArrayList();
                     
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
@@ -60087,6 +60345,24 @@
                                     throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
                                 }
                             
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","comentarios").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setComentarios(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                    else {
+                                        
+                                    }
+                                
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
@@ -60413,14 +60689,14 @@
                                     
                                                           nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance","nil");
                                                           if ("true".equals(nillableValue) || "1".equals(nillableValue)){
-                                                              list23.add(null);
+                                                              list24.add(null);
                                                               reader.next();
                                                           } else {
-                                                        list23.add(Inciso.Factory.parse(reader));
+                                                        list24.add(Inciso.Factory.parse(reader));
                                                                 }
                                                         //loop until we find a start element that is not part of this array
-                                                        boolean loopDone23 = false;
-                                                        while(!loopDone23){
+                                                        boolean loopDone24 = false;
+                                                        while(!loopDone24){
                                                             // We should be at the end element, but make sure
                                                             while (!reader.isEndElement())
                                                                 reader.next();
@@ -60431,19 +60707,19 @@
                                                                 reader.next();
                                                             if (reader.isEndElement()){
                                                                 //two continuous end elements means we are exiting the xml structure
-                                                                loopDone23 = true;
+                                                                loopDone24 = true;
                                                             } else {
                                                                 if (new javax.xml.namespace.QName("","incisos").equals(reader.getName())){
                                                                     
                                                                       nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance","nil");
                                                                       if ("true".equals(nillableValue) || "1".equals(nillableValue)){
-                                                                          list23.add(null);
+                                                                          list24.add(null);
                                                                           reader.next();
                                                                       } else {
-                                                                    list23.add(Inciso.Factory.parse(reader));
+                                                                    list24.add(Inciso.Factory.parse(reader));
                                                                         }
                                                                 }else{
-                                                                    loopDone23 = true;
+                                                                    loopDone24 = true;
                                                                 }
                                                             }
                                                         }
@@ -60452,7 +60728,7 @@
                                                         object.setIncisos((Inciso[])
                                                             org.apache.axis2.databinding.utils.ConverterUtil.convertToArray(
                                                                 Inciso.class,
-                                                                list23));
+                                                                list24));
                                                             
                               }  // End of if for expected property start element
                                 
@@ -60643,6 +60919,24 @@
                                     throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
                                 }
                             
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","renueva").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setRenueva(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                    else {
+                                        
+                                    }
+                                
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
