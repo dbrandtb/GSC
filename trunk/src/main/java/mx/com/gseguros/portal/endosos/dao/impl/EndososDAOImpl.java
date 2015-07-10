@@ -3694,6 +3694,36 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+
+	@Override
+	public boolean reasignaParentescoTitular(Map<String, String> params)
+	{
+		try {
+			Utils.debugProcedure(logger, "P_SACAENDOSO_DAT_MPERSONA", params);
+			ejecutaSP(new ReasignaParentescoTitular(getDataSource()),params);
+			Utils.debugProcedure(logger, "P_SACAENDOSO_DAT_MPERSONA", params);
+		} catch (Exception e) {
+			logger.error("Error al revertir el nombre de persona. " ,e);
+			return false;
+		}
+		return true;
+	}
+	
+	protected class ReasignaParentescoTitular extends StoredProcedure
+	{
+		protected ReasignaParentescoTitular(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_REASIGNA_PARENTESCO_TIT");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o" , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	
 	@Override

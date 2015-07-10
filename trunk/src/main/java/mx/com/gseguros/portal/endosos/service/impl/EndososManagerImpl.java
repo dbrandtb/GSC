@@ -2056,6 +2056,10 @@ public class EndososManagerImpl implements EndososManager
 	public boolean revierteNombrePersona(Map<String, String> params){
 		return endososDAO.revierteNombrePersona(params);
 	}
+
+	public boolean reasignaParentescoTitular(Map<String, String> params){
+		return endososDAO.reasignaParentescoTitular(params);
+	}
 	/********************** BASE MANAGER ***********************/
 	
 	public void guardarMpolicot(String cdunieco, String cdramo, String estado,

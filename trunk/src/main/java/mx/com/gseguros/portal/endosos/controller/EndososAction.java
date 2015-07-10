@@ -4088,6 +4088,21 @@ public class EndososAction extends PrincipalCoreAction
 				endososManager.calcularValorEndoso(mapaValorEndoso);
 				////// valor endoso //////
 				//////////////////////////
+				
+				/**
+				 * Si el Parentesco en la baja de asegurado es el titular se reasigna
+				 */
+				if("T".equalsIgnoreCase(smap1.get("Parentesco"))){
+					Map<String,String>mapaReasignaParent=new LinkedHashMap<String,String>(0);
+					mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
+					mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
+					mapaValorEndoso.put("pv_estado_i"   , estado);
+					mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
+					mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
+					endososManager.reasignaParentescoTitular(mapaReasignaParent);
+				}
+				
+				
 			}
 			
 			// Se confirma el endoso si cumple la validacion de fechas: 

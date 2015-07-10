@@ -89,7 +89,7 @@ function panendabaseguFunQuitar() {
     
     if(aseguSelec==1) {
     	// Si no es cliente ni titular, permitimos la baja:
-        if(aseguActivo.get('cdrol')==2 && aseguActivo.get('Parentesco') != _TITULAR) {
+        if(aseguActivo.get('cdrol')==2 /* se permite quitar asegurado Titular && aseguActivo.get('Parentesco') != _TITULAR*/) {
         	if(panEndAltBajAseStoreAltas.getCount()+panEndAltBajAseStoreBajas.getCount()==0) {
         		panEndAltBajAseStoreBajas.add(aseguActivo);
         		panendabaseguStoreAsegu.remove(aseguActivo);
@@ -105,7 +105,7 @@ function panendabaseguFunQuitar() {
         	Ext.Msg.show({
    	            title    : 'Error'
    	            ,icon    : Ext.Msg.WARNING
-   	            ,msg     : 'No se puede quitar el cliente ni el titular'
+   	            ,msg     : 'No se puede quitar el cliente'
    	            ,buttons : Ext.Msg.OK
    	        });
         }
