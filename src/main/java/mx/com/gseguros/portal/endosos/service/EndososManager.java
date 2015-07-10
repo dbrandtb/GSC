@@ -398,6 +398,13 @@ public interface EndososManager
 	public boolean revierteDomicilio(Map<String, String> params);
 
 	public boolean revierteNombrePersona(Map<String, String> params);
+
+	/**
+	 * Para reasignar el parentesco cuando se da de baja el titular en el endoso de baja de asegurado
+	 * @param params
+	 * @return
+	 */
+	public boolean reasignaParentescoTitular(Map<String, String> params);
 	
 	
 	/**
