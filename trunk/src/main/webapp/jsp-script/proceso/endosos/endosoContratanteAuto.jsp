@@ -50,10 +50,10 @@ Ext.onReady(function()
 {
 	
 	// Se aumenta el timeout para todas las peticiones:
-	Ext.Ajax.timeout = 485000; // 8 min
-	Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
-	Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
-	Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
+	Ext.Ajax.timeout = 8*60*1000; // 8 min
+//	Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+//	Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+//	Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
 	
 	
 	var query = Ext.ComponentQuery.query('#_p22_PanelPrincipal');
@@ -314,6 +314,7 @@ Ext.onReady(function()
 					                        {
 					                            type    : 'ajax'
 					                            ,url    : _p35_urlRecuperarCliente
+					                            ,timeout: 8*60*1000
 					                            ,reader :
 					                            {
 					                                type  : 'json'
