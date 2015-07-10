@@ -4094,11 +4094,11 @@ public class EndososAction extends PrincipalCoreAction
 				 */
 				if("T".equalsIgnoreCase(smap1.get("Parentesco"))){
 					Map<String,String>mapaReasignaParent=new LinkedHashMap<String,String>(0);
-					mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
-					mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
-					mapaValorEndoso.put("pv_estado_i"   , estado);
-					mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
-					mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
+					mapaReasignaParent.put("pv_cdunieco_i" , cdunieco);
+					mapaReasignaParent.put("pv_cdramo_i"   , cdramo);
+					mapaReasignaParent.put("pv_estado_i"   , estado);
+					mapaReasignaParent.put("pv_nmpoliza_i" , nmpoliza);
+					mapaReasignaParent.put("pv_nmsuplem_i" , nmsuplem);
 					endososManager.reasignaParentescoTitular(mapaReasignaParent);
 				}
 				

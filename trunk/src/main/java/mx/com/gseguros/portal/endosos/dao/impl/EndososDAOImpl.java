@@ -3696,17 +3696,11 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 
 	@Override
-	public boolean reasignaParentescoTitular(Map<String, String> params)
+	public void reasignaParentescoTitular(Map<String, String> params)throws Exception
 	{
-		try {
-			Utils.debugProcedure(logger, "P_SACAENDOSO_DAT_MPERSONA", params);
+			Utils.debugProcedure(logger, "PKG_SATELITES2.P_REASIGNA_PARENTESCO_TIT", params);
 			ejecutaSP(new ReasignaParentescoTitular(getDataSource()),params);
-			Utils.debugProcedure(logger, "P_SACAENDOSO_DAT_MPERSONA", params);
-		} catch (Exception e) {
-			logger.error("Error al revertir el nombre de persona. " ,e);
-			return false;
-		}
-		return true;
+			Utils.debugProcedure(logger, "PKG_SATELITES2.P_REASIGNA_PARENTESCO_TIT", params);
 	}
 	
 	protected class ReasignaParentescoTitular extends StoredProcedure

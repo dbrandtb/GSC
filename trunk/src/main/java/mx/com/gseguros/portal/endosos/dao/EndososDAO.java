@@ -419,7 +419,7 @@ public interface EndososDAO
 	 * @param params
 	 * @return
 	 */
-	public boolean reasignaParentescoTitular(Map<String, String> params);
+	public void reasignaParentescoTitular(Map<String, String> params)throws Exception;
 	
 	/**
 	 * 
