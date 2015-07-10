@@ -50,6 +50,7 @@ var mcdinStore;
 var mcdinFiltro;
 var mcdinFormNuevo;
 var loadMcdinStore;
+var loadMcdinStoreFiltro;
 
 var _4_botones=
 {
@@ -82,32 +83,8 @@ _4_botonesGrid.push('->',
             clearTimeout(me.espera);
             me.espera=setTimeout(function()
             {
-                if(Ext.isEmpty(val))
-                {
-                    me.up('grid').getStore().removeFilter();
-                }
-                else
-                {
-                    me.up('grid').getStore().filterBy(function(record, id)
-                    {
-	                    var datos = '';
-	                    for(var att in record.data)
-	                    {
-	                        datos+=record.data[att];
-	                    }
-	                    var nombre    = datos.toUpperCase().replace(/ /g,'');
-	                    var filtro    = val.toUpperCase().replace(/ /g,'');
-	                    var posNombre = nombre.lastIndexOf(filtro);
-	                    if(posNombre > -1)
-	                    {
-	                        return true;
-	                    }
-	                    else
-	                    {
-	                        return false;
-	                    }
-                    });
-                }
+                loadMcdinStoreFiltro = val;
+                Ext.ComponentQuery.query('[xtype=button][text=Buscar]')[0].handler();
             },1500);
         }
     }
@@ -417,7 +394,7 @@ Ext.onReady(function()
     		{
     			title      : '<s:property value="smap1.gridTitle" />'
     			,store     : mcdinStore
-    			,minHeight : 200
+    			,height    : 420
     			,selType   : 'checkboxmodel'
     			,columns   : columnas
     			,tbar      : _4_botonesGrid
@@ -540,8 +517,10 @@ Ext.onReady(function()
 		    	    				,'smap1.pv_tipoPago_i'	: Ext.isEmpty(_fieldByName('smap2.pv_tipoPago_i').getValue())?'':_fieldByName('smap2.pv_tipoPago_i').getValue()
 		    	    				,'smap1.pv_nfactura_i'	: Ext.isEmpty(_fieldByName('smap2.pv_nfactura_i').getValue())?'':_fieldByName('smap2.pv_nfactura_i').getValue()
 		    	    				,'smap1.pv_cdpresta_i'	: Ext.isEmpty(_fieldByName('smap2.pv_cdpresta_i').getValue())?'':_fieldByName('smap2.pv_cdpresta_i').getValue()
+		    	    				,'smap1.filtro'         : loadMcdinStoreFiltro
 		    	    			};
 		    	    			cargaStorePaginadoLocal(mcdinStore, mcdinUrlCargar, 'olist1', params, function (options, success, response){
+		    	    			    loadMcdinStoreFiltro = '';
 		    	    	            if(success){
 		    	    	                var jsonResponse = Ext.decode(response.responseText);
 		    	    	                

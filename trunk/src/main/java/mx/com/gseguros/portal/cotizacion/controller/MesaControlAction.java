@@ -27,6 +27,7 @@ import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -197,6 +198,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			UserVO usu=(UserVO) session.get("USUARIO");
 			String cdsisrol = usu.getRolActivo().getClave();
 			String cdusuari = usu.getUser();
+			String filtro   = smap1.get("filtro");
 			smap1.put("pv_cdrol_i",cdsisrol);
 			smap1.put("pv_cdusuari_i",cdusuari);
 			if(cdsisrol.equalsIgnoreCase(RolSistema.OPERADOR_SINIESTROS.getCdsisrol())
@@ -213,6 +215,28 @@ public class MesaControlAction extends PrincipalCoreAction
 				slist1=kernelManager.loadMesaControl(smap1);
 			}
 			olist1=new ArrayList<Map<String,Object>>();
+			
+			if(StringUtils.isNotBlank(filtro))
+			{
+				List<Map<String,String>> aux = new ArrayList<Map<String,String>>();
+				for(Map<String,String>rec:slist1)
+				{
+					for(Entry<String,String>en:rec.entrySet())
+					{
+						String value = en.getValue();
+						if(value==null)
+						{
+							value = "";
+						}
+						if(value.toUpperCase().indexOf(filtro.toUpperCase())!=-1)
+						{
+							aux.add(rec);
+							break;
+						}
+					}
+				}
+				slist1 = aux;
+			}
 			
 			if(slist1!=null&&slist1.size()>0)
 			{
