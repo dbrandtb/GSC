@@ -90,34 +90,46 @@
 		<!-- Acceso directo desde la Oficina Virtual de GS para acceder sin el login: -->
         <action name="accesoDirecto" class="accesoDirectoAction" method="accesoDirecto">
             <result name="login" type="redirectAction">
-                <param name="actionName">login</param>
                 <param name="namespace">/seguridad</param>
+                <param name="actionName">login</param>
             </result>
             <result name="cotizador" type="redirectAction">
-                <param name="actionName">cotizacion</param>
                 <param name="namespace">/emision</param>
+                <param name="actionName">cotizacion</param>
                 <param name="smap1.cdramo">${params.cdramo}</param>
                 <param name="smap1.cdtipsit">${params.cdtipsit}</param>
             </result>
             <result name="cotizadorAutoIndividual" type="redirectAction">
-                <param name="actionName">cotizacionAutoIndividual</param>
                 <param name="namespace">/emision</param>
+                <param name="actionName">cotizacionAutoIndividual</param>
                 <param name="smap1.cdramo">${params.cdramo}</param>
                 <param name="smap1.cdtipsit">${params.cdtipsit}</param>
             </result>
             <result name="cotizadorAutoFlotilla" type="redirectAction">
-                <param name="actionName">cotizacionAutoFlotilla</param>
                 <param name="namespace">/emision</param>
+                <param name="actionName">cotizacionAutoFlotilla</param>
                 <param name="smap1.cdramo">${params.cdramo}</param>
                 <param name="smap1.cdtipsit">${params.cdtipsit}</param>
                 <param name="smap1.tipoflot">${params.tipoflot}</param>
+            </result>
+            <result name="cotizadorGrupo" type="redirectAction">
+                <param name="namespace">/emision</param>
+                <param name="actionName">cotizacionGrupo</param>
+                <param name="smap1.cdramo">${params.cdramo}</param>
+                <param name="smap1.cdtipsit">${params.cdtipsit}</param>
+            </result>
+            <result name="cotizadorGrupo2" type="redirectAction">
+                <param name="namespace">/emision</param>
+                <param name="actionName">cotizacionGrupo2</param>
+                <param name="smap1.cdramo">${params.cdramo}</param>
+                <param name="smap1.cdtipsit">${params.cdtipsit}</param>
             </result>
 		    <result name="consultaPolizas">/jsp/consultas/containerConsultasPolizas.jsp</result>
 		    <result name="consultaAsegurados">/jsp/consultas/consultasAsegurados.jsp</result>
 		    <result name="rolInvalido">/jsp-script/general/rolInvalido.jsp</result>
 		    <result name="clienteUnico" type="redirectAction">
-		        <param name="actionName">personas</param>
                 <param name="namespace">/catalogos</param>
+		        <param name="actionName">personas</param>
                 <param name="smap1.esSaludDanios">${params.esSaludDanios}</param>
                 <param name="smap1.ocultaBusqueda">${params.ocultaBusqueda}</param>
                 <param name="smap1.esCargaClienteNvo">${params.esCargaClienteNvo}</param>
@@ -126,12 +138,21 @@
                 <param name="smap1.modoRecuperaDanios">${params.modoRecuperaDanios}</param>
 		    </result>
 		    <result name="endososAutos" type="redirectAction">
-                <param name="actionName">marcoEndosos</param>
                 <param name="namespace">/endosos</param>
+                <param name="actionName">marcoEndosos</param>
             </result>
 		    <result name="menuPrincipal" type="redirectAction">
-                <param name="actionName">login</param>
                 <param name="namespace">/seguridad</param>
+                <param name="actionName">login</param>
+            </result>
+            <result name="mesaControlAgentes" type="redirectAction">
+                <param name="namespace">/mesacontrol</param>
+                <param name="actionName">mcdinamica</param>
+                <param name="smap1.gridTitle">${params.gridTitle}</param>    <!-- POLIZAS -->
+                <param name="smap2.pv_cdtiptra_i">${params.cdtiptra}</param> <!-- 1 -->
+                <param name="smap1.cddos">${params.cdramo}</param>           <!-- 2 -->
+                <param name="smap1.cdtres">${params.cdtipsit}</param>        <!-- SL -->
+                <param name="smap1.cdsiete">${params.mc}</param>             <!-- MCAGENTES -->
             </result>
         </action>
         
