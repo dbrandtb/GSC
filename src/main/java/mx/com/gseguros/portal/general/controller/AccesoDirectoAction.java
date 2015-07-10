@@ -42,11 +42,14 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 	public static final String ACCESO_COTIZADOR = "cotizador";
 	public static final String ACCESO_COTIZADOR_AUTO_INDIVIDUAL = "cotizadorAutoIndividual";
 	public static final String ACCESO_COTIZADOR_AUTO_FLOTILLA = "cotizadorAutoFlotilla";
+	public static final String ACCESO_COTIZADOR_GRUPO = "cotizadorGrupo";
+	public static final String ACCESO_COTIZADOR_GRUPO2 = "cotizadorGrupo2";
 	public static final String ACCESO_CONSULTA_POLIZAS = "consultaPolizas";
 	public static final String ACCESO_CONSULTA_ASEGURADOS = "consultaAsegurados";
 	public static final String ACCESO_CLIENTE_UNICO = "clienteUnico";
 	public static final String ENDOSOS_AUTOS = "endososAutos";
 	public static final String MENU_PRINCIPAL = "menuPrincipal";
+	public static final String MESA_CONTROL_AGENTES = "mesaControlAgentes";
 
 	/**
 	 * Success property
@@ -153,11 +156,14 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 		if (ACCESO_COTIZADOR.equals(acceso)
 				|| ACCESO_COTIZADOR_AUTO_INDIVIDUAL.equals(acceso)
 				|| ACCESO_COTIZADOR_AUTO_FLOTILLA.equals(acceso)
+				|| ACCESO_COTIZADOR_GRUPO.equals(acceso)
+				|| ACCESO_COTIZADOR_GRUPO2.equals(acceso)
 				|| ACCESO_CONSULTA_POLIZAS.equals(acceso)
 				|| ACCESO_CONSULTA_ASEGURADOS.equals(acceso)
 				|| ACCESO_CLIENTE_UNICO.equals(acceso)
 				|| ENDOSOS_AUTOS.equals(acceso)
-				|| MENU_PRINCIPAL.equals(acceso)) {
+				|| MENU_PRINCIPAL.equals(acceso)
+				|| MESA_CONTROL_AGENTES.equals(acceso)) {
 
 			if (ACCESO_CONSULTA_POLIZAS.equals(acceso)) {
 				// logica para asignar rol en base al parametro tipoUsuario:
