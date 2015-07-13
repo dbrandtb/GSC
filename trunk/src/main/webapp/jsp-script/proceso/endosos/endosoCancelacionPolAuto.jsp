@@ -24,6 +24,10 @@ var _p43_panelLecturaItems = [ <s:property value="imap.panelLecturaItems" escape
 var _p43_formEndosoItems   = [ <s:property value="imap.formEndosoItems"   escapeHtml="false" /> ];
 ////// componentes dinamicos //////
 
+var panCanForm;
+var comboMotivoCanc;
+var panCanInputFecha;
+
 Ext.onReady(function()
 {
 	Ext.Ajax.timeout = 5*60*1000;
@@ -38,7 +42,7 @@ Ext.onReady(function()
     ////// componentes //////
     
     ////// contenido //////
-    Ext.create('Ext.panel.Panel',
+    panCanForm = Ext.create('Ext.panel.Panel',
     {
         renderTo  : '_p43_divpri'
         ,itemId   : '_p43_panelpri'
@@ -130,45 +134,6 @@ Ext.onReady(function()
     ////// contenido //////
     
     ////// custom //////
-    _fieldByName('cdrazon').on(
-    {
-        select : function(me,rec)
-        {
-            debug('rec:',rec);
-            if(Number(rec[0].get('key'))==25)
-            {
-	            Ext.Ajax.request(
-	            {
-	                url     : _p43_urlValidaCancProrrata
-	                ,params :
-	                {
-	                    'smap1.cdunieco'  : _p43_smap1.CDUNIECO
-	                    ,'smap1.cdramo'   : _p43_smap1.CDRAMO
-	                    ,'smap1.estado'   : _p43_smap1.ESTADO
-	                    ,'smap1.nmpoliza' : _p43_smap1.NMPOLIZA
-	                }
-	                ,success : function(response)
-	                {
-	                    var json = Ext.decode(response.responseText);
-	                    if(json.success)
-	                    {
-	                    }
-	                    else
-	                    {
-	                        me.reset();
-	                        mensajeError(json.respuesta);
-	                    }
-	                }
-	                ,failure : function()
-	                {
-	                    me.reset();
-	                    errorComunicacion();
-	                }
-	            });
-            }
-        }
-    });
-    ////// custom //////
     
     ////// loaders //////
     Ext.Ajax.request(
@@ -186,7 +151,7 @@ Ext.onReady(function()
             debug('### marcar poliza:',json);
             if(json.success)
             {
-                _fieldByName('fecancel').setValue(json.smap1.FECANCEL);
+//                _fieldByName('fecancel').setValue(json.smap1.FECANCEL);
                 _p43_smap1['FEEFECTO'] = json.smap1.FEEFECTO;
                 _p43_smap1['FEVENCIM'] = json.smap1.FEVENCIM;
                 debug('_p43_smap1:',_p43_smap1);
@@ -202,7 +167,48 @@ Ext.onReady(function()
         }
     });
     ////// loaders //////
+    
+    comboMotivoCanc = _fieldByName('cdrazon',panCanForm);
+    debug('comboMotivoCanc:',comboMotivoCanc);
+    panCanInputFecha = _fieldByName('fecancel',panCanForm);
+    panCanInputFecha.setEditable(true);
+    debug('panCanInputFecha:',panCanInputFecha);
+    
+    
+    comboMotivoCanc.addListener('select',function(combo,records){
+    	var nue = records[0].get('key');
+    	comboMotivocambio(comboMotivoCanc,nue);
+    	
+    });
+    comboMotivocambio(comboMotivoCanc,'9');
+    
+    
+    function comboMotivocambio(combo,nue){
+	
+    	debug('>comboMotivocambio:', nue);
+    	
+    	if(nue=='9'){
+            combo.setValue('9');
+            panCanInputFecha.setValue(new Date());
+            panCanInputFecha.setReadOnly(true);
+    	}
+    	else if(nue=='25'){
+    		combo.setValue('25');
+    		panCanInputFecha.setValue(_p43_smap1.FEEFECTO);
+            panCanInputFecha.setReadOnly(false);
+    	}
+    	else if(nue=='31'){
+            combo.setValue('31');
+            panCanInputFecha.setValue(_p43_smap1.FEEFECTO);
+            panCanInputFecha.setReadOnly(false);
+        }
+        
+        debug('<comboMotivocambio');
+}
+	
 });
+
+	
 
 ////// funciones //////
 ////// funciones //////
