@@ -1521,7 +1521,7 @@
 								}
 							},
 							{
-								header: 'Aplica IVA', 				dataIndex: 'APLICIVA',	width : 90		,  allowBlank: false
+								header: 'Aplica IVA', 				dataIndex: 'APLICIVA',	width : 90		,  allowBlank: false, hidden : true
 								,editor : cmbAplicaIVA
 								,renderer : function(v) {
 								var leyenda = '';

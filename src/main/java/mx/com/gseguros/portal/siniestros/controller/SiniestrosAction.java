@@ -2102,15 +2102,17 @@ public class SiniestrosAction extends PrincipalCoreAction {
 									hPTIMPORT 	+= PTIMPORT;
 									hDESTO    	+= (PTIMPORT*(DESTOPOR/100d)) + (DESTOIMP);
 									
-									if(aplicaIVA.equalsIgnoreCase("S")){
+									/*
+									 Cuando nos den el VoBo. lo tendremos que decomentar
+									 if(aplicaIVA.equalsIgnoreCase("S")){
 										//verificamos si aplica para el concepto 
 										if(concepto.get("APLICIVA").equalsIgnoreCase("S")){
 											hIVA      	+= PTIMPORT*(ivaprov/100d);
 										}
 									}else{
 										hIVA      	+= PTIMPORT*(ivaprov/100d);
-									}
-									
+									}*/
+									hIVA      	+= PTIMPORT*(ivaprov/100d);
 									hISR		+= PTIMPORT*(isrprov/100d);
 									hICED		+= PTIMPORT*(cedprov/100d);
 									hPRECIO 	+= PTPRECIO;
@@ -2348,14 +2350,11 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							
 							if(!causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){ // Diferente de Accidente
 								subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP + deducibleSiniestroIte );
-								logger.debug("VALOR DE subttDesto ! ACCIDENTE {}",subttDesto);
 							}else{
 								if(cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 									subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP + deducibleSiniestroIte );
-									logger.debug("VALOR DE subttDesto GASTOS MEDICOS : {}",subttDesto);
 								}else{
 									subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP);
-									logger.debug("VALOR DE subttDesto ACCIDENTE : {}",subttDesto);
 								}
 							}
 							
@@ -2368,7 +2367,10 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							}
 							
 							importeSiniestroIte = subttDesto - copagoAplicadoSiniestroIte;
-							double hIVADesCopago  = Double.valueOf(hosp.get("IVA"));//importeSiniestroIte*(ivaprov/100d);
+							/*
+							Cambiarlo cuando nos del el Vo.Bo. de Siniestros
+							double hIVADesCopago  = Double.valueOf(hosp.get("IVA"));*/
+							double hIVADesCopago  = importeSiniestroIte*(ivaprov/100d);
 							logger.debug("IVA despues de Copago  : {} ",hIVADesCopago);
 							
 							hosp.put("PTIMPORT_DESCOPAGO" , importeSiniestroIte+"");
@@ -3677,7 +3679,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 									
 									hPTIMPORT 	+= PTIMPORT;
 									hDESTO    	+= (PTIMPORT*(DESTOPOR/100d)) + (DESTOIMP);
-									//hIVA      	+= PTIMPORT*(ivaprov/100d);
+									
+									/*
+									Cuando nos den el VoBo. lo tendremos que decomentar
 									if(aplicaIVA.equalsIgnoreCase("S")){
 										//verificamos si aplica para el concepto 
 										if(concepto.get("APLICIVA").equalsIgnoreCase("S")){
@@ -3685,8 +3689,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 										}
 									}else{
 										hIVA      	+= PTIMPORT*(ivaprov/100d);
-									}
-									
+									}*/
+									hIVA      	+= PTIMPORT*(ivaprov/100d);
 									hISR		+= PTIMPORT*(isrprov/100d);
 									hICED		+= PTIMPORT*(cedprov/100d);
 									hPRECIO 	+= PTPRECIO;
@@ -3940,7 +3944,10 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							}
 							
 							importeSiniestroIte = subttDesto - copagoAplicadoSiniestroIte;
-							double hIVADesCopago  = Double.valueOf(hosp.get("IVA"));//double hIVADesCopago  = importeSiniestroIte*(ivaprov/100d);
+							/*
+							Cambiarlo cuando nos del el Vo.Bo. de Siniestros
+							double hIVADesCopago  = Double.valueOf(hosp.get("IVA"));*/
+							double hIVADesCopago  = importeSiniestroIte*(ivaprov/100d);
 							logger.debug("IVA despues de Copago  : {} ",hIVADesCopago);
 							
 							hosp.put("PTIMPORT_DESCOPAGO" , importeSiniestroIte+"");
