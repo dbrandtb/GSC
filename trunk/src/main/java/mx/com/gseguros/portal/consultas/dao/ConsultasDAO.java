@@ -305,4 +305,6 @@ public interface ConsultasDAO
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+	
+	public List<Map<String,String>>recuperarUsuariosReasignacionTramite(String ntramite) throws Exception;
 }
