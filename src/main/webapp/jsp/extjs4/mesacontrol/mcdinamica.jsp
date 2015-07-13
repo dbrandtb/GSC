@@ -13,12 +13,14 @@
 ///////////////////////
 ////// variables //////
 /*///////////////////*/
-var mcdinInput     = [];
-var mcdinSesion    = [];
-var mcdinUrlNuevo  = '<s:url namespace="/mesacontrol" action="guardarTramiteDinamico"  />';
-var mcdinUrlCargar = '<s:url namespace="/mesacontrol" action="loadTareasDinamico"      />';
-var _4_urlReload   = '<s:url namespace="/mesacontrol" action="mcdinamica"              />';
-var _4_urlReporte  = '<s:url namespace="/reportes"    action="procesoObtencionReporte" />';
+var mcdinInput                    = [];
+var mcdinSesion                   = [];
+var mcdinUrlNuevo                 = '<s:url namespace="/mesacontrol" action="guardarTramiteDinamico"  />';
+var mcdinUrlCargar                = '<s:url namespace="/mesacontrol" action="loadTareasDinamico"      />';
+var _4_urlReload                  = '<s:url namespace="/mesacontrol" action="mcdinamica"              />';
+var _4_urlReporte                 = '<s:url namespace="/reportes"    action="procesoObtencionReporte" />';
+var _4_urlRecuperacionSimpleLista = '<s:url namespace="/emision"     action="recuperacionSimpleLista" />';
+var _4_urlActualizarStatusTramite = '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
 
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _4_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
@@ -305,6 +307,177 @@ function _mcdinamica_rendererStatus(val)
         debugError('Error al renderizar el status del tramite, val:',val,e);
     }
     return l;
+}
+
+function _4_onReasignarClick(row)
+{
+    debug('>_4_onReasignarClick row:',row);
+    var record = mcdinStore.getAt(row);
+    debug('record:',record);
+    mcdinGrid.setLoading(true);
+    Ext.Ajax.request(
+    {
+        url : _4_urlRecuperacionSimpleLista
+        ,params :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_USUARIOS_REASIGNACION_TRAMITE'
+            ,'smap1.ntramite'     : record.get('ntramite')
+        }
+        ,success : function(response)
+        {
+            mcdinGrid.setLoading(false);
+            var ck = 'Recuperando usuarios para reasignaci&oacute;n';
+            try
+            {
+                var json = Ext.decode(response.responseText);
+                debug('### usuarios:',json);
+                if(json.exito)
+                {
+                    centrarVentanaInterna(Ext.create('Ext.window.Window',
+                    {
+                         modal      : true
+                        ,title      : 'Reasignar tr&aacute;mite'
+                        ,items      :
+                        [
+                            Ext.create('Ext.grid.Panel',
+                            {
+                                width    : 500
+                                ,height  : 300
+                                ,columns :
+                                [
+                                    {
+                                        xtype    : 'actioncolumn'
+                                        ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                        ,tooltip : 'Aceptar'
+                                        ,width   : 30
+                                        ,handler : function(v,row,col,item,e,rec)
+                                        {
+                                            var window1  = v.up('window');
+                                            var cdusuari = rec.get('CDUSUARI');
+                                            var cdsisrol = rec.get('CDSISROL');
+                                            var status   = record.get('status');
+                                            debug('cdusuari:',cdusuari,'cdsisrol:',cdsisrol);
+                                            debug('status:',status,'window1:',window1);
+                                            centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                            {
+                                                title        : 'Comentarios'
+                                                ,buttonAlign : 'center'
+                                                ,modal       : true
+                                                ,buttons     :
+                                                [
+                                                    {
+                                                        text     : 'Reasignar'
+                                                        ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                                        ,handler : function(me)
+                                                        {
+                                                            var window = me.up('window');
+                                                            var text   = window.down('textarea');
+                                                            debug('window:',window,'text:',text);
+                                                            if(!text.isValid())
+                                                            {
+                                                                datosIncompletos();
+                                                            }
+                                                            else
+                                                            {
+                                                                window.setLoading(true);
+                                                                Ext.Ajax.request(
+                                                                {
+                                                                    url     : _4_urlActualizarStatusTramite
+                                                                    ,params :
+                                                                    {
+                                                                        'smap1.ntramite'         : record.get('ntramite')
+                                                                        ,'smap1.status'          : status
+                                                                        ,'smap1.rol_destino'     : cdsisrol
+                                                                        ,'smap1.usuario_destino' : cdusuari
+                                                                        ,'smap1.comments'        : text.getValue()
+                                                                    }
+                                                                    ,success : function(response)
+                                                                    {
+                                                                        window.setLoading(false);
+                                                                        var ck = 'Reasignando tr&aacute;mite';
+                                                                        try
+                                                                        {
+                                                                            var json2 = Ext.decode(response.responseText);
+                                                                            debug('### reasignar:',json2);
+                                                                            if(json2.success)
+                                                                            {
+                                                                                window.close();
+                                                                                window1.close();
+                                                                                Ext.ComponentQuery.query('[xtype=button][text=Buscar]')[0].handler();
+                                                                                mensajeCorrecto('Tr&aacute;mite reasignado'
+                                                                                    ,'El tr&aacute;mite '+record.get('ntramite')
+                                                                                        +' ha sido asignado a '+json2.smap1.nombreUsuarioDestino
+                                                                                );
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                mensajeError('Error al reasignar tr&aacute;mite');
+                                                                            }
+                                                                        }
+                                                                        catch(e)
+                                                                        {
+                                                                            manejaException(e,ck);
+                                                                        }
+                                                                    }
+                                                                    ,failure : function()
+                                                                    {
+                                                                        window.setLoading(false);
+                                                                        errorComunicacion('Error al reasignar tr&aacute;mite');
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                                ,items :
+                                                [
+                                                    {
+                                                        xtype       : 'textarea'
+                                                        ,width      : 400
+                                                        ,height     : 200
+                                                        ,allowBlank : false
+                                                    }
+                                                ]
+                                            }).show());
+                                        }
+                                    }
+                                    ,{
+                                        text       : 'Clave'
+                                        ,dataIndex : 'CDUSUARI'
+                                        ,width     : 120
+                                    }
+                                    ,{
+                                        text       : 'Nombre'
+                                        ,dataIndex : 'NOMBRE'
+                                        ,flex      : 1
+                                    }
+                                ]
+                                ,store : Ext.create('Ext.data.Store',
+                                {
+                                    fields : [ 'CDUSUARI' , 'NOMBRE' , 'CDSISROL' ]
+                                    ,data  : json.slist1
+                                })
+                            })
+                        ]
+                    }).show());
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+                debug('<_4_onReasignarClick');
+            }
+            catch(e)
+            {
+                manejaException(e,ck);
+            }
+        }
+        ,failure : function()
+        {
+            mcdinGrid.setLoading(false);
+            errorComunicacion('Error recuperando usuarios para reasignaci&oacute;n');
+        }
+    });
 }
 /*///////////////////*/
 ////// funciones //////

@@ -2320,4 +2320,31 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		}
 	}
 	
+	@Override
+	public List<Map<String,String>>recuperarUsuariosReasignacionTramite(String ntramite) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarUsuariosReasignacionTramite(getDataSource()),params);
+		List<Map<String,String>> lista = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException("No se encontraron usuarios");
+		}
+		return lista;
+	}
+	
+	protected class RecuperarUsuariosReasignacionTramite extends StoredProcedure
+	{
+		protected RecuperarUsuariosReasignacionTramite(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_USUARIOS_REASIGNA");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR
+					,new GenericMapper(new String[]{"CDUSUARI","NOMBRE","CDSISROL"})));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"     , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"      , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
