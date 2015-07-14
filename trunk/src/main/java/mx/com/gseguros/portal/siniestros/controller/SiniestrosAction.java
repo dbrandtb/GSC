@@ -29,7 +29,7 @@ import mx.com.gseguros.portal.general.util.CausaSiniestro;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
-import mx.com.gseguros.portal.general.util.Rol;
+import mx.com.gseguros.portal.general.util.TipoPrestadorServicio;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoPago;
 import mx.com.gseguros.portal.general.util.TipoTramite;
@@ -1609,7 +1609,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			if(!causaSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
 				if(!existePenalizacion.equalsIgnoreCase("S")){
 					try{
-						List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(),idProveedor);
+						List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(TipoPrestadorServicio.MEDICO.getCdtipo(),idProveedor);
 						porcentajePenalizacion = siniestrosManager.validaPorcentajePenalizacion(zonaTarifiAsegurado, medicos.get(0).getZonaHospitalaria(), cdRamo);
 						penalizacionCambioZona =  Double.parseDouble(porcentajePenalizacion);
 					}catch(Exception ex){
@@ -2665,7 +2665,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
 							informacionGral.get(0).get("DSZONAT"),facturaIte.get("CDPRESTA"),siniestro.get("CDRAMO"));
 							//3.- Obtenemos la penalizaci�n por circulo Hospitalario
-							List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(),facturaIte.get("CDPRESTA"));
+							List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(TipoPrestadorServicio.MEDICO.getCdtipo(),facturaIte.get("CDPRESTA"));
 							penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), medicos.get(0).getCirculo(),informacionGral.get(0).get("CDCAUSA"),siniestro.get("CDRAMO"));
 						}else{
 							// --> DIFERENTE DE SALUD VITAL
@@ -4242,7 +4242,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
 							informacionGral.get(0).get("DSZONAT"),facturaIte.get("CDPRESTA"),siniestro.get("CDRAMO"));
 							//3.- Obtenemos la penalizaci�n por circulo Hospitalario
-							List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(),facturaIte.get("CDPRESTA"));
+							List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(TipoPrestadorServicio.MEDICO.getCdtipo(),facturaIte.get("CDPRESTA"));
 							penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), medicos.get(0).getCirculo(),informacionGral.get(0).get("CDCAUSA"),siniestro.get("CDRAMO"));
 						}else{
 							// --> DIFERENTE DE SALUD VITAL
