@@ -78,7 +78,7 @@ public class ExcelValidacionesFormatoStrategyImpl implements ValidacionesFormato
                     			new StringBuilder()
                     				.append("fila ").append((celdaActual.getRowIndex()+1))	
                     				.append(", col ").append((celdaActual.getColumnIndex()+1))
-			    					.append("\tFormato invï¿½lido")
+			    					.append("\tFormato inválido")
 			    					.append(NEW_LINE).toString());
             		}
             		
@@ -88,7 +88,7 @@ public class ExcelValidacionesFormatoStrategyImpl implements ValidacionesFormato
                 				new StringBuilder()
                 					.append("fila ").append((rowIndex+1))
     	            				.append(", col ").append((colIndex+1))
-    								.append("\tValor no debe ser nulo, el valor leï¿½do es ").append(strValor)
+    								.append("\tValor no debe ser nulo, el valor leído es ").append(strValor)
     								.append(NEW_LINE).toString());
                 	}
             		
@@ -100,10 +100,20 @@ public class ExcelValidacionesFormatoStrategyImpl implements ValidacionesFormato
             						.append(", col ").append((celdaActual.getColumnIndex()+1))
 		        					.append("\tLongitud debe ser entre ").append(campo.getMinLength())
 		        					.append("\ty ").append(campo.getMaxLength())
-		        					.append(", longitud leï¿½da: ").append(strValor.length())
+		        					.append(", longitud leída: ").append(strValor.length())
 		        					.append(NEW_LINE).toString());
         			}
                     
+            	} else {
+            		// Validacion de nulos:
+                	if(!campo.isNullable()) {
+                		writerErrors.write(
+                				new StringBuilder()
+                					.append("fila ").append((rowIndex+1))
+    	            				.append(", col ").append((colIndex+1))
+    								.append("\tValor no debe ser nulo")
+    								.append(NEW_LINE).toString());
+                	}
             	}
             	colIndex++;
 			}
