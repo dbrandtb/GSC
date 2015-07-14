@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.general.validacionformato;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
@@ -32,10 +33,10 @@ public class ExcelValidacionesFormatoStrategyImpl implements ValidacionesFormato
 		File fileErrors = new File(nombreArchivoErrores);
 		BufferedWriter writerErrors = new BufferedWriter( new FileWriter(fileErrors));
 		
-		//FileInputStream input = new FileInputStream(archivo);
+		FileInputStream input = new FileInputStream(archivo);
 		//XSSFWorkbook workbook = new XSSFWorkbook(input);
 		//XSSFSheet       sheet = workbook.getSheetAt(0);
-		Workbook workbook = WorkbookFactory.create(archivo);
+		Workbook workbook = WorkbookFactory.create(input);
 		Sheet sheet = workbook.getSheetAt(0);
 		
 		//Iterate through each rows:
