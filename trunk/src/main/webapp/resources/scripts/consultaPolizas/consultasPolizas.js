@@ -878,8 +878,8 @@ Ext.onReady(function() {
             {text:'Agente',dataIndex:'cdagente', flex:1},
             {text:'Nombre',dataIndex:'nombre', flex:2},
             {text:'Tipo Agente',dataIndex:'descripl',flex:1},
-            {text:'Cesi&oacute;n de Comisi&oacute;n',dataIndex:'PORREDAU',flex:1},
-            {text:'Participaci&oacute;n',dataIndex:'PORPARTI',flex:1}
+            {text:'Cesi&oacute;n de Comisi&oacute;n',dataIndex:'porredau',flex:1},
+            {text:'Participaci&oacute;n',dataIndex:'porparti',flex:1}
         ]
     });
     
