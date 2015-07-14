@@ -375,7 +375,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 					break;
 				case MEDICOS:
 					List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(
-							Rol.MEDICO.getCdrol(), params != null ? params.get("cdpresta") : null);
+							TipoPrestadorServicio.MEDICO.getCdtipo(), params != null ? params.get("cdpresta") : null);
 					if(catalogoGenerico) {
 						listaGenerica = medicos;
 					} else {
@@ -399,7 +399,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 					break;
 				case PROVEEDORES:
 					List<ConsultaProveedorVO> provs = siniestrosManager.getConsultaListaProveedorMedico(
-							Rol.CLINICA.getCdrol(), params != null ? params.get("cdpresta") : null);
+							TipoPrestadorServicio.CLINICA.getCdtipo(), params != null ? params.get("cdpresta") : null);
 					if(catalogoGenerico) {
 						listaGenerica = provs;
 					} else {

@@ -18,7 +18,7 @@ import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.Ramo;
-import mx.com.gseguros.portal.general.util.Rol;
+import mx.com.gseguros.portal.general.util.TipoPrestadorServicio;
 import mx.com.gseguros.portal.general.util.TipoPago;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
@@ -144,7 +144,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			parMesCon.put("pv_otvalor20",params.get("cmbRamos"));
 			parMesCon.put("pv_otvalor11",params.get("cmbProveedor"));
 			if(params.get("cmbProveedor").toString().length() > 0){
-				parMesCon.put("pv_otvalor13",Rol.CLINICA.getCdrol());
+				parMesCon.put("pv_otvalor13",TipoPrestadorServicio.CLINICA.getCdtipo());
 			}
 			
 			if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){

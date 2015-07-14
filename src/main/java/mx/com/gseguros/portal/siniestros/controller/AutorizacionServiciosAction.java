@@ -21,7 +21,7 @@ import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.Rango;
-import mx.com.gseguros.portal.general.util.Rol;
+import mx.com.gseguros.portal.general.util.TipoPrestadorServicio;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
@@ -185,7 +185,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			paramDatSubGral.put("pv_cdgarant_i",params.get("cdgarant"));
 			paramDatSubGral.put("pv_subcober_i",params.get("subcober"));
 			paramDatSubGral.put("pv_cdpresta_i",params.get("cdpresta"));
-			paramDatSubGral.put("pv_cdtipo_i",Rol.CLINICA.getCdrol());
+			paramDatSubGral.put("pv_cdtipo_i",TipoPrestadorServicio.CLINICA.getCdtipo());
 			paramDatSubGral.put("pv_cdtipsit_i",params.get("cdtipsit"));
 			
 			List<DatosSiniestroVO> lista = siniestrosManager.getConsultaListaDatSubGeneral(paramDatSubGral);
