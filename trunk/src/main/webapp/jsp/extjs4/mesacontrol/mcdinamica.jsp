@@ -111,7 +111,7 @@ _4_botonesGrid.push('->',
 <%@ include file="/jsp-script/proceso/emision/scriptMesaAutorizacionEmisiones.jsp"%>
 </s:elseif>
 
-_4_botones.width = (_4_botones.items.length*20)+10;
+_4_botones.width = (_4_botones.items.length*20)+20;
 
 ///////////////////////
 ////// funciones //////
