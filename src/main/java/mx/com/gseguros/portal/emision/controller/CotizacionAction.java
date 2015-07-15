@@ -4525,11 +4525,11 @@ public class CotizacionAction extends PrincipalCoreAction
 							cdplanes[indGrupo-1] = cdplan;
 						}
 						
-						cotizacionManager.guardarCensoCompleto(nombreCenso,
-								cdunieco     , cdramo      , "W"
+						cotizacionManager.guardarCensoCompletoMultisalud(nombreCenso
+								,cdunieco    , cdramo      , "W"
 								,nmpoliza    , cdedo       , cdmunici
 								,cdplanes[0] , cdplanes[1] , cdplanes[2]
-								,cdplanes[3] , cdplanes[4]
+								,cdplanes[3] , cdplanes[4] , "N"
 								);
 					}
 					catch(Exception ex)
@@ -4558,6 +4558,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,false //resubirCenso
 					,cdperpag
 					,cdsisrol
+					,false
 					);
 			exito           = aux.exito;
 			respuesta       = aux.respuesta;
@@ -4636,6 +4637,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		boolean sincenso      = false;
 		boolean censoAtrasado = false;
 		boolean resubirCenso  = false;
+		boolean complemento   = false;
 		
 		//datos de entrada
 		try
@@ -4694,6 +4696,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			censoAtrasado         = StringUtils.isNotBlank(censoAtrasadoS)&&censoAtrasadoS.equals("S");
 			String resubirCensoS  = smap1.get("resubirCenso");
 			resubirCenso          = StringUtils.isNotBlank(resubirCensoS)&&resubirCensoS.equals("S");
+			
+			complemento = "S".equals(smap1.get("complemento"));
 		}
 		catch(ApplicationException ax)
 		{
@@ -4753,6 +4757,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,sincenso
 					,censoAtrasado
 					,resubirCenso
+					,complemento
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -4819,6 +4824,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			boolean censoAtrasado = StringUtils.isNotBlank(censoAtrasadoS)&&censoAtrasadoS.equals("S");
 			String resubirCensoS  = smap1.get("resubirCenso");
 			boolean resubirCenso  = StringUtils.isNotBlank(resubirCensoS)&&resubirCensoS.equals("S");
+			
+			boolean complemento = "S".equals(smap1.get("complemento"));
 			
 			censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+inTimestamp);
 			
@@ -4928,7 +4935,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			
 			//enviar archivo
-			if(exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)&&!sincenso)
+			if(exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)&&!sincenso&&!complemento)
 			{
 				
 				FileInputStream input      = null;
@@ -5531,6 +5538,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						params.put("param10",cdplanes[2]);
 						params.put("param11",cdplanes[3]);
 						params.put("param12",cdplanes[4]);
+						params.put("param13","N");
 						storedProceduresManager.procedureVoidCall(
 								ObjetoBD.CARGAR_CENSO.getNombre(), params, null);
 					}
@@ -5572,7 +5580,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,user     , cdelemento    , ntramiteVacio
 						,false    , ntramite      , cdagente
 						,sincenso , censoAtrasado , resubirCenso
-						,cdperpag , cdsisrol
+						,cdperpag , cdsisrol      , complemento
 						);
 				exito           = aux.exito;
 				respuesta       = aux.respuesta;
@@ -5625,6 +5633,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			,boolean resubirCenso
 			,String cdperpag
 			,String cdsisrol
+			,boolean complemento
 			)
 	{
 		logger.debug(
@@ -5651,6 +5660,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				.append("\n## resubirCenso: ")        .append(resubirCenso)
 				.append("\n## cdperpag: ")            .append(cdperpag)
 				.append("\n## cdsisrol: ")            .append(cdsisrol)
+				.append("\n## complemento: ")         .append(complemento)
 				.toString()
 				);
 		
@@ -5745,7 +5755,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		
 		//sigsvdef
-		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso))
+		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento))
 		{
 			try
 			{
@@ -8589,20 +8599,36 @@ public class CotizacionAction extends PrincipalCoreAction
 			
 			Utils.validate(smap1 , "No se recibieron datos");
 			
-			String cdunieco    = smap1.get("cdunieco");
-			String cdramo      = smap1.get("cdramo");
-			String estado      = smap1.get("estado");
-			String nmpoliza    = smap1.get("nmpoliza");
-			String ntramite    = smap1.get("ntramite");
-			String complemento = smap1.get("complemento");
+			String cdunieco     = smap1.get("cdunieco");
+			String cdramo       = smap1.get("cdramo");
+			String cdtipsit     = smap1.get("cdtipsit");
+			String estado       = smap1.get("estado");
+			String nmpoliza     = smap1.get("nmpoliza");
+			String ntramite     = smap1.get("ntramite");
+			String complemento  = smap1.get("complemento");
+			String cdagente     = smap1.get("cdagente");
+			String codpostalCli = smap1.get("codpostal");
+			String cdestadoCli  = smap1.get("cdestado");
+			String cdmuniciCli  = smap1.get("cdmunici");
+			String cdplan1      = smap1.get("cdplan1");
+			String cdplan2      = smap1.get("cdplan2");
+			String cdplan3      = smap1.get("cdplan3");
+			String cdplan4      = smap1.get("cdplan4");
+			String cdplan5      = smap1.get("cdplan5");
 			
 			Utils.validate(
-					cdunieco     , "No se recibio la sucursal"
-					,cdramo      , "No se recibio el producto"
-					,estado      , "No se recibio el estado"
-					,nmpoliza    , "No se recibio el estado"
-					,ntramite    , "No se recibio el tramite"
-					,complemento , "No se recibio el complemento"
+					cdunieco      , "No se recibio la sucursal"
+					,cdramo       , "No se recibio el producto"
+					,cdtipsit     , "No se recibio la modalidad"
+					,estado       , "No se recibio el estado"
+					,nmpoliza     , "No se recibio el estado"
+					,ntramite     , "No se recibio el tramite"
+					,complemento  , "No se recibio el complemento"
+					,cdagente     , "No se recibio la clave de agente"
+					,codpostalCli , "No se recibio el codigo postal"
+					,cdestadoCli  , "No se recibio el estado"
+					,cdmuniciCli  , "No se recibio el municipio"
+					,cdplan1      , "No se recibio el plan 1"
 					);
 			
 			Map<String,Object> managerResp =cotizacionManager.complementoSaludGrupo(
@@ -8613,6 +8639,23 @@ public class CotizacionAction extends PrincipalCoreAction
 					,nmpoliza
 					,complemento
 					,censo
+					,getText("ruta.documentos.temporal")
+					,getText("dominio.server.layouts")
+					,getText("user.server.layouts")
+					,getText("pass.server.layouts")
+					,getText("directorio.server.layouts")
+					,cdtipsit
+					,user.getUser()
+					,user.getRolActivo().getClave()
+					,cdagente
+					,codpostalCli
+					,cdestadoCli
+					,cdmuniciCli
+					,cdplan1
+					,cdplan2
+					,cdplan3
+					,cdplan4
+					,cdplan5
 					);
 			
 			smap1.put("erroresCenso"    , (String)managerResp.get("erroresCenso"));

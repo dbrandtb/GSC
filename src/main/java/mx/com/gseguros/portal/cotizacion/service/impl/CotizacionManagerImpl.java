@@ -744,8 +744,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 	
 	@Override
-	public void guardarCensoCompleto(
-			String  nombreCenso
+	public void guardarCensoCompletoMultisalud(
+			String nombreArchivo
 			,String cdunieco
 			,String cdramo
 			,String estado
@@ -756,42 +756,48 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdplan2
 			,String cdplan3
 			,String cdplan4
-			,String cdplan5)throws Exception
+			,String cdplan5
+			,String complemento
+			)throws Exception
 	{
-		logger.info(""
-				+ "\n##################################"
-				+ "\n###### guardarCensoCompleto ######"
-				+ "\nnombreCenso "+nombreCenso
-				+ "\ncdunieco "+cdunieco
-				+ "\ncdramo "+cdramo
-				+ "\nestado "+estado
-				+ "\nmpoliza "+nmpoliza
-				+ "\ncdedo "+cdedo
-				+ "\ncdmunici "+cdmunici
-				+ "\ncdplan1 "+cdplan1
-				+ "\ncdplan2 "+cdplan2
-				+ "\ncdplan3 "+cdplan3
-				+ "\ncdplan4 "+cdplan4
-				+ "\ncdplan5 "+cdplan5
+		logger.info(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarCensoCompleto @@@@@@"
+				,"\n@@@@@@ nombreArchivo=" , nombreArchivo
+				,"\n@@@@@@ cdunieco="      , cdunieco
+				,"\n@@@@@@ cdramo="        , cdramo
+				,"\n@@@@@@ estado="        , estado
+				,"\n@@@@@@ mpoliza="       , nmpoliza
+				,"\n@@@@@@ cdedo="         , cdedo
+				,"\n@@@@@@ cdmunici="      , cdmunici
+				,"\n@@@@@@ cdplan1="       , cdplan1
+				,"\n@@@@@@ cdplan2="       , cdplan2
+				,"\n@@@@@@ cdplan3="       , cdplan3
+				,"\n@@@@@@ cdplan4="       , cdplan4
+				,"\n@@@@@@ cdplan5="       , cdplan5
+				,"\n@@@@@@ complemento="   , complemento
+				));
+		
+		cotizacionDAO.guardarCensoCompletoMultisalud(
+				nombreArchivo
+				,cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,cdedo
+				,cdmunici
+				,cdplan1
+				,cdplan2
+				,cdplan3
+				,cdplan4
+				,cdplan5
+				,complemento
 				);
-		Map<String,String>params=new HashMap<String,String>();
-		params.put("censo"     , nombreCenso);
-		params.put("cdunieco"  , cdunieco);
-		params.put("cdramo"    , cdramo);
-		params.put("estado"    , estado);
-		params.put("nmpoliza"  , nmpoliza);
-		params.put("otvalor04" , cdedo);
-		params.put("otvalor05" , cdmunici);
-		params.put("cdplan1"   , cdplan1);
-		params.put("cdplan2"   , cdplan2);
-		params.put("cdplan3"   , cdplan3);
-		params.put("cdplan4"   , cdplan4);
-		params.put("cdplan5"   , cdplan5);
-		cotizacionDAO.guardarCensoCompleto(params);
-		logger.info(""
-				+ "\n###### guardarCensoCompleto ######"
-				+ "\n##################################"
-				);
+		
+		logger.info(Utils.join(
+				 "\n@@@@@@ guardarCensoCompleto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
 	}
 	
 	
@@ -2141,6 +2147,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,boolean sincenso
 			,boolean censoAtrasado
 			,boolean resubirCenso
+			,boolean complemento
 			)
 	{
 		logger.info(
@@ -2184,6 +2191,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ sincenso=")               .append(sincenso)
 				.append("\n@@@@@@ censoAtrasado=")          .append(censoAtrasado)
 				.append("\n@@@@@@ resubirCenso=")           .append(resubirCenso)
+				.append("\n@@@@@@ complemento=")            .append(complemento)
 				.toString()
 				);
 		
@@ -2336,7 +2344,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		String  nombreCenso     = null;
 		
 		//enviar censo
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)&&!sincenso)
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)&&!sincenso&&!complemento)
 		{
 			FileInputStream input       = null;
 			XSSFSheet       sheet       = null;
@@ -3133,6 +3141,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,codpostalCli
 							,cdedoCli
 							,cdmuniciCli
+							,"N"
 							);
 				}
 	            catch(Exception ex)
@@ -3178,6 +3187,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,cdperpag
 					,resubirCenso
 					,cdsisrol
+					,complemento
 					);
 			
 			resp.setExito(respInterna.isExito());
@@ -3229,6 +3239,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdperpag
 			,boolean resubirCenso
 			,String cdsisrol
+			,boolean complemento
 			)
 	{
 		logger.info(
@@ -3264,6 +3275,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ cdperpag=")            .append(cdperpag)
 				.append("\n@@@@@@ resubirCenso=")        .append(resubirCenso)
 				.append("\n@@@@@@ cdsisrol=")            .append(cdsisrol)
+				.append("\n@@@@@@ complemento=")         .append(complemento)
 				.toString()
 				);
 		
@@ -3317,7 +3329,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//sigsvdef
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso))
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento))
 		{
 			try
 			{
@@ -4893,6 +4905,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,codpostalCli
 							,cdedoCli
 							,cdmuniciCli
+							,"N"
 							);
 				}
 	            catch(Exception ex)
@@ -4941,6 +4954,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,cdperpag
 					,false //resubirCenso
 					,cdsisrol
+					,false
 					);
 		}
 		
@@ -6298,18 +6312,52 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String nmpoliza
 			,String complemento
 			,File censo
+			,String rutaDocumentosTemporal
+			,String dominioServerLayouts
+			,String userServerLayouts
+			,String passServerLayouts
+			,String rootServerLayouts
+			,String cdtipsit
+			,String cdusuari
+			,String cdsisrol
+			,String cdagente
+			,String codpostalCli
+			,String cdestadoCli
+			,String cdmuniciCli
+			,String cdplan1
+			,String cdplan2
+			,String cdplan3
+			,String cdplan4
+			,String cdplan5
 			)throws Exception
 	{
 		logger.debug(Utils.join(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ complementoSaludGrupo @@@@@@"
-				,"\n@@@@@@ ntramite="    , ntramite
-				,"\n@@@@@@ cdunieco="    , cdunieco
-				,"\n@@@@@@ cdramo="      , cdramo
-				,"\n@@@@@@ estado="      , estado
-				,"\n@@@@@@ nmpoliza="    , nmpoliza
-				,"\n@@@@@@ complemento=" , complemento
-				,"\n@@@@@@ censo="       , censo
+				,"\n@@@@@@ ntramite="               , ntramite
+				,"\n@@@@@@ cdunieco="               , cdunieco
+				,"\n@@@@@@ cdramo="                 , cdramo
+				,"\n@@@@@@ estado="                 , estado
+				,"\n@@@@@@ nmpoliza="               , nmpoliza
+				,"\n@@@@@@ complemento="            , complemento
+				,"\n@@@@@@ censo="                  , censo
+				,"\n@@@@@@ rutaDocumentosTemporal=" , rutaDocumentosTemporal
+				,"\n@@@@@@ dominioServerLayouts="   , dominioServerLayouts
+				,"\n@@@@@@ userServerLayouts="      , userServerLayouts
+				,"\n@@@@@@ passServerLayouts="      , passServerLayouts
+				,"\n@@@@@@ rootServerLayouts="      , rootServerLayouts
+				,"\n@@@@@@ cdtipsit="               , cdtipsit
+				,"\n@@@@@@ cdusuari="               , cdusuari
+				,"\n@@@@@@ cdsisrol="               , cdsisrol
+				,"\n@@@@@@ cdagente="               , cdagente
+				,"\n@@@@@@ codpostalCli="           , codpostalCli
+				,"\n@@@@@@ cdestadoCli="            , cdestadoCli
+				,"\n@@@@@@ cdmuniciCli="            , cdmuniciCli
+				,"\n@@@@@@ cdplan1="                , cdplan1
+				,"\n@@@@@@ cdplan2="                , cdplan2
+				,"\n@@@@@@ cdplan3="                , cdplan3
+				,"\n@@@@@@ cdplan4="                , cdplan4
+				,"\n@@@@@@ cdplan5="                , cdplan5
 				));
 		
 		Map<String,Object> resp = new HashMap<String,Object>();
@@ -6474,19 +6522,112 @@ public class CotizacionManagerImpl implements CotizacionManager
 			resp.put("filasErrores"    , Integer.toString(nError));
 			resp.put("registros"       , registros);
 			
-			paso = "Guardando asegurados";
+			paso = "Generando archivo de transferencia";
 			logger.debug("\nPaso: {}",paso);
+			String nombreCenso = null;
 			if(nBuenas>0)
 			{
-				cotizacionDAO.complementoSaludGrupoLote(
-						ntramite
-						,cdunieco
-						,cdramo
-						,estado
-						,nmpoliza
-						,complemento
-						,Utils.convierteMapasEnArreglos(recordsDTO)
+				nombreCenso = Utils.join("censo_",System.currentTimeMillis(),"_",nmpoliza,".txt");
+				
+				File        archivoTxt = new File(Utils.join(rutaDocumentosTemporal,"/",nombreCenso));
+				PrintStream output     = new PrintStream(archivoTxt);
+				for(Map<String,String>recordDTO:recordsDTO)
+				{
+					for(Entry<String,String>en:recordDTO.entrySet())
+					{
+						output.print(Utils.join(en.getValue(),"|"));
+					}
+					output.println();
+				}
+				output.close();
+				
+				paso = "Transfiriendo archivo";
+				logger.debug("\nPaso: {}",paso);
+				
+				boolean transferido = FTPSUtils.upload(
+						dominioServerLayouts,
+						userServerLayouts,
+						passServerLayouts,
+						archivoTxt.getAbsolutePath(),
+						Utils.join(rootServerLayouts,"/",nombreCenso)
 						);
+				if(!transferido)
+				{
+					throw new ApplicationException("No se pudo transferir el archivo");
+				}
+				
+				paso = "Recuperando procedimiento";
+				logger.debug("\nPaso: {}",paso);
+				Map<String,String> mapaProc = cotizacionDAO.obtenerParametrosCotizacion(
+						ParametroCotizacion.PROCEDURE_CENSO
+						,cdramo
+						,cdtipsit
+						,complemento == "C" ? "INDIVIDUAL" : "COMPLETO"
+						,null
+						);
+				String nombreProc = mapaProc.get("P1VALOR");
+				logger.debug("\ncenso: {}",nombreProc);
+				
+				paso = "Procesar censo";
+				logger.debug("\nPaso: {}",paso);
+				if(TipoSituacion.MULTISALUD_COLECTIVO.getCdtipsit().equals(cdtipsit))
+				{
+					if("C".equals(complemento))
+					{
+						cotizacionDAO.procesaLayoutCensoMultisalud(
+								nombreCenso
+								,cdunieco
+								,cdramo
+								,"W"
+								,nmpoliza
+								,cdestadoCli
+								,cdmuniciCli
+								,cdplan1
+								,cdplan2
+								,cdplan3
+								,cdplan4
+								,cdplan5
+								,"S"
+								);
+					}
+					else
+					{
+						cotizacionDAO.guardarCensoCompletoMultisalud(
+								nombreCenso
+								,cdunieco
+								,cdramo
+								,"W"
+								,nmpoliza
+								,cdestadoCli
+								,cdmuniciCli
+								,cdplan1
+								,cdplan2
+								,cdplan3
+								,cdplan4
+								,cdplan5
+								,"S"
+								);
+					}
+				}
+				else
+				{
+					cotizacionDAO.procesarCenso(
+							nombreProc
+							,cdusuari
+							,cdsisrol
+							,nombreCenso
+							,cdunieco
+							,cdramo
+							,"W"
+							,nmpoliza
+							,cdtipsit
+							,cdagente
+							,codpostalCli
+							,cdestadoCli
+							,cdmuniciCli
+							,"S"
+							);
+				}
 			}
 		}
 		catch(Exception ex)

@@ -759,30 +759,59 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
-	public void guardarCensoCompleto(Map<String,String>params)throws Exception
+	public void guardarCensoCompletoMultisalud(
+			String nombreArchivo
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdestadoCli
+			,String cdmuniciCli
+			,String cdplan1
+			,String cdplan2
+			,String cdplan3
+			,String cdplan4
+			,String cdplan5
+			,String complemento
+			)throws Exception
 	{
-		ejecutaSP(new GuardarCensoCompleto(getDataSource()),params);
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("censo"       , nombreArchivo);
+		params.put("cdunieco"    , cdunieco);
+		params.put("cdramo"      , cdramo);
+		params.put("estado"      , estado);
+		params.put("nmpoliza"    , nmpoliza);
+		params.put("cdestado"    , cdestadoCli);
+		params.put("cdmunici"    , cdmuniciCli);
+		params.put("cdplan1"     , cdplan1);
+		params.put("cdplan2"     , cdplan2);
+		params.put("cdplan3"     , cdplan3);
+		params.put("cdplan4"     , cdplan4);
+		params.put("cdplan5"     , cdplan5);
+		params.put("complemento" , complemento);
+		ejecutaSP(new GuardarCensoCompletoMultisalud(getDataSource()),params);
 	}
 	
-	protected class GuardarCensoCompleto extends StoredProcedure
+	protected class GuardarCensoCompletoMultisalud extends StoredProcedure
 	{
-		protected GuardarCensoCompleto(DataSource dataSource)
+		protected GuardarCensoCompletoMultisalud(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES.P_LAYOUT_CENSO_MS_COLEC_DEF");
-			declareParameter(new SqlParameter("censo"     , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("nmpoliza"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor04" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor05" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdplan1"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdplan2"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdplan3"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdplan4"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdplan5"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			super(dataSource,"PKG_SATELITES2.P_LAYOUT_CENSO_MS_COLEC_DEF");
+			declareParameter(new SqlParameter("censo"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdestado"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdmunici"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan1"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan2"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan3"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan4"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan5"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("complemento" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
@@ -2231,6 +2260,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,String codpostal
 			,String cdedo
 			,String cdmunici
+			,String complemento
 			)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
@@ -2246,6 +2276,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("codpostal"   , codpostal);
 		params.put("cdedo"       , cdedo);
 		params.put("cdmunici"    , cdmunici);
+		params.put("complemento" , complemento);
 		logger.debug(
 				new StringBuilder()
 				.append("\n********************************************")
@@ -2275,6 +2306,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     		declareParameter(new SqlParameter("codpostal"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("cdedo"       , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("cdmunici"    , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("complemento" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
     		compile();
@@ -5621,44 +5653,59 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
-	
+
 	@Override
-	public void complementoSaludGrupoLote(
-			String ntramite
+	public void procesaLayoutCensoMultisalud(
+			String nombreArchivo
 			,String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			,String cdestadoCli
+			,String cdmuniciCli
+			,String cdplan1
+			,String cdplan2
+			,String cdplan3
+			,String cdplan4
+			,String cdplan5
 			,String complemento
-			,String[][] listaDTO
 			)throws Exception
 	{
-		Map<String,Object>params = new LinkedHashMap<String,Object>();
-		params.put("idproceso"   , System.currentTimeMillis());
-		params.put("ntramite"    , ntramite);
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("censo"       , nombreArchivo);
 		params.put("cdunieco"    , cdunieco);
 		params.put("cdramo"      , cdramo);
 		params.put("estado"      , estado);
 		params.put("nmpoliza"    , nmpoliza);
+		params.put("cdestado"    , cdestadoCli);
+		params.put("cdmunici"    , cdmuniciCli);
+		params.put("cdplan1"     , cdplan1);
+		params.put("cdplan2"     , cdplan2);
+		params.put("cdplan3"     , cdplan3);
+		params.put("cdplan4"     , cdplan4);
+		params.put("cdplan5"     , cdplan5);
 		params.put("complemento" , complemento);
-		params.put("listaListas" , new SqlArrayValue(listaDTO));
-		Utils.debugProcedure(logger, "PKG_COTIZA.P_COMPLEMENTA_GRUPO", params);
-		ejecutaSP(new ComplementoSaludGrupoLote(getDataSource()),params);
+		ejecutaSP(new ProcesaLayoutCensoMultisalud(getDataSource()),params);
 	}
 	
-	protected class ComplementoSaludGrupoLote extends StoredProcedure
+	protected class ProcesaLayoutCensoMultisalud extends StoredProcedure
 	{
-		protected ComplementoSaludGrupoLote(DataSource dataSource)
+		protected ProcesaLayoutCensoMultisalud(DataSource dataSource)
 		{
-			super(dataSource,"PKG_COTIZA.P_COMPLEMENTA_GRUPO");
-			declareParameter(new SqlParameter("idproceso"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("ntramite"    , OracleTypes.VARCHAR));
+			super(dataSource,"PKG_SATELITES2.P_LAYOUT_CENSO_MS_COLECTIVO");
+			declareParameter(new SqlParameter("censo"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdestado"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdmunici"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan1"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan2"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan3"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan4"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan5"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("complemento" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("listaListas" , OracleTypes.ARRAY , "LISTA_LISTAS_VARCHAR2"));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
