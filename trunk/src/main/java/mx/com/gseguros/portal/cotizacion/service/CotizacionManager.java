@@ -128,8 +128,8 @@ public interface CotizacionManager
 	
 	public Map<String,String>cargarPermisosPantallaGrupo(String cdsisrol,String status)throws Exception;
 	
-	public void guardarCensoCompleto(
-			String  nombreCenso
+	public void guardarCensoCompletoMultisalud(
+			String nombreArchivo
 			,String cdunieco
 			,String cdramo
 			,String estado
@@ -140,7 +140,9 @@ public interface CotizacionManager
 			,String cdplan2
 			,String cdplan3
 			,String cdplan4
-			,String cdplan5)throws Exception;
+			,String cdplan5
+			,String complemento
+			)throws Exception;
 
 	public int obtieneTipoValorAutomovil(String codigoPostal, String tipoVehiculo)throws Exception;
 	
@@ -327,6 +329,7 @@ public interface CotizacionManager
 			,boolean sincenso
 			,boolean censoAtrasado
 			,boolean resubirCenso
+			,boolean complemento
 			);
 	
 	public ManagerRespuestaSlistVO obtenerTiposSituacion();
@@ -517,6 +520,23 @@ public interface CotizacionManager
 			,String nmpoliza
 			,String complemento
 			,File censo
+			,String rutaDocumentosTemporal
+			,String dominioServerLayouts
+			,String userServerLayouts
+			,String passServerLayouts
+			,String rootServerLayouts
+			,String cdtipsit
+			,String cdusuari
+			,String cdsisrol
+			,String cdagente
+			,String codpostalCli
+			,String cdestadoCli
+			,String cdmuniciCli
+			,String cdplan1
+			,String cdplan2
+			,String cdplan3
+			,String cdplan4
+			,String cdplan5
 			)throws Exception;
 	
 	@Deprecated
