@@ -98,6 +98,10 @@ public class CatalogosAction extends PrincipalCoreAction {
         		case AGENTES:
         			lista = catalogosManager.obtieneAgentes(params!=null?params.get("agente"):null);
         			break;
+        		case AGENTE_ESPECIFICO:
+        			lista = catalogosManager.obtieneAgenteEspecifico(params!=null?params.get("agente"):null);
+        			logger.debug("<=== AGENTE_ESPECIFICO  ====>"+lista);
+        			break;
         		case AGENTES_POR_PROMOTOR:
         			lista = catalogosManager.cargarAgentesPorPromotor(params.get("cdusuari"));
         			break;

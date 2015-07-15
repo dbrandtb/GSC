@@ -18,6 +18,7 @@
             var _URL_GUARDA_PORCENTAJE      =    '<s:url namespace="/flujocotizacion" 	action="guardaPorcentajeAgentes" />';
             var _URL_GUARDA_ELIMINA_PORC    =    '<s:url namespace="/flujocotizacion" 	action="guardaEliminaPorcentajeAgentes" />';
             var _CATALOGO_AGENTES			= 	 '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES"/>';
+            var _CATALOGO_AGENTES_UNICO     = 	 '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTE_ESPECIFICO"/>';
             
             <%--
             Estas variables se toman del padre, complementarios.jsp

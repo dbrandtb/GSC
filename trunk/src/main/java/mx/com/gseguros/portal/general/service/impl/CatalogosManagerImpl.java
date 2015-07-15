@@ -1041,4 +1041,9 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO> obtieneAgenteEspecifico(String cdagente) throws Exception {
+		return catalogosDAO.obtieneAgenteEspecifico(cdagente);
+	}
 }

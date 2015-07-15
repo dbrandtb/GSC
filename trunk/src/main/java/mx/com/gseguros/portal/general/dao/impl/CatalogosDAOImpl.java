@@ -1611,4 +1611,30 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<GenericVO> obtieneAgenteEspecifico(String cdagente) throws Exception {
+		try {
+			HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
+			params.put("pv_cdagente_i", cdagente);
+    		
+    		Map<String, Object> resultado = ejecutaSP(new ObtieneAgenteEspecifico(getDataSource()), params);
+    		return (List<GenericVO>) resultado.get("pv_registro_o");
+		} catch (Exception e) {
+			throw new Exception(e.getMessage(), e);
+		}
+	}
+	
+	protected class ObtieneAgenteEspecifico extends StoredProcedure
+	{
+		protected ObtieneAgenteEspecifico(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_OBTIENE_AGENTES_X_CDAGENTE");
+			declareParameter(new SqlParameter("pv_cdagente_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerAgentesMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
