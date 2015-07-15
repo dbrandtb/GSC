@@ -156,7 +156,13 @@ public class ExcelValidacionesFormatoStrategyImpl implements ValidacionesFormato
     private String obtieneValor(Cell celda, CampoVO campo) throws Exception {
     	String strValor = null;
 		if(campo.getType().equals(CampoVO.FECHA)) {
-        	SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        	//SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+			SimpleDateFormat df;
+			if(campo.getDateFormat() == null) {
+				df = new SimpleDateFormat("dd/MM/yyyy");
+			} else {
+				df = new SimpleDateFormat(campo.getDateFormat());
+			}
         	strValor  = df.format(celda.getDateCellValue());
     	} else {
     		celda.setCellType(Cell.CELL_TYPE_STRING);
