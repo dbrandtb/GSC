@@ -34,6 +34,11 @@ public class CampoVO {
 		this.maxLength = maxLength;
 		this.nullable = nullable;
 	}
+	
+	public CampoVO(String type, Integer minLength, Integer maxLength, boolean nullable, String dateFormat) {
+		this(type, minLength, maxLength, nullable);
+		this.dateFormat = dateFormat;
+	}
 
 
 	private String type;
@@ -47,6 +52,8 @@ public class CampoVO {
 	private Integer maxValue;
 	
 	private boolean nullable;
+	
+	private String dateFormat;
 	
 	@Override
 	public String toString() {
@@ -99,6 +106,14 @@ public class CampoVO {
 
 	public void setNullable(boolean nullable) {
 		this.nullable = nullable;
+	}
+
+	public String getDateFormat() {
+		return dateFormat;
+	}
+
+	public void setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
 	}
 	
 }
