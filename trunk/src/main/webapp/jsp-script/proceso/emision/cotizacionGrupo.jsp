@@ -110,6 +110,13 @@ var _p21_resubirCenso       = 'N';
 var _p21_filtroCobTimeout;
 
 var _p22_parentCallback     = false;
+var _ventanaClausulas;
+
+var _callbackAseguradoExclusiones =  function (){
+   	_ventanaClausulas.close();
+};
+
+
 var expande                 = function(){};
 
 var _p21_arrayNombresFactores =
@@ -143,6 +150,7 @@ var inputNmpoliza = _p21_smap1.nmpoliza;
 //Para la pantalla de agentes
 
 var _p21_ntramite = Ext.isEmpty(_p21_smap1.ntramite) ? false : _p21_smap1.ntramite;
+var inputNtramite = _p21_ntramite;
 debug('_p21_ntramite:',_p21_ntramite);
 
 var _p21_ntramiteVacio = Ext.isEmpty(_p21_smap1.ntramiteVacio) ? false : _p21_smap1.ntramiteVacio;
@@ -782,8 +790,8 @@ Ext.onReady(function()
                                     }
                                     ,{
                                         xtype    : 'button'
-                                        ,text    : 'Cl&aacute;usulas'
-                                        ,icon    : '${ctx}/resources/fam3icons/icons/book_addresses.png'
+                                        ,text    : 'Exclusiones/Extraprimas (Cl&aacute;usulas)'
+                                        ,icon    : '${ctx}/resources/fam3icons/icons/lock.png'
                                         ,hidden  : Ext.isEmpty(_p21_smap1.nmpoliza)
                                         ,handler : function(){ _p21_crearVentanaClausulas(); }
                                     }
@@ -5566,6 +5574,7 @@ function _p21_editarAsegurado(grid,rowIndex)
         }
     }).show()
     centrarVentanaInterna(ventana);
+    
     _p22_parentCallback = function(json)
     {
         record.set('RFC'              , json.smap1.CDRFC);
@@ -5578,6 +5587,7 @@ function _p21_editarAsegurado(grid,rowIndex)
         record.set('NACIONALIDAD'     , json.smap1.CDNACION);
         mensajeCorrecto('Datos guardados','Se actualiz&oacute; la persona');
     };
+    
     debug('<_p21_editarAsegurado');
 }
 
@@ -5767,13 +5777,32 @@ function _p21_editarExclusiones(grid,row)
 function _p21_crearVentanaClausulas()
 {
     debug('>_p21_crearVentanaClausulas<');
-    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    
+    _ventanaClausulas = Ext.create('Ext.window.Window',
     {
-        title   : 'CL&Aacute;USULAS'
-        ,width  : 500
-        ,height : 350
+        title   : 'Exclusiones/Extraprimas (Cl&aacute;usulas)'
+        ,width  : 800
+        ,height : 500
         ,modal  : true
-        ,loader :
+        ,loader : {
+                url       : _p21_urlEditarExclusiones
+                ,params   :
+                {
+                    'smap1.pv_cdunieco'      : _p21_smap1.cdunieco
+                    ,'smap1.pv_cdramo'       : _p21_smap1.cdramo
+                    ,'smap1.pv_estado'       : _p21_smap1.estado
+                    ,'smap1.pv_nmpoliza'     : _p21_smap1.nmpoliza
+                    ,'smap1.pv_nmsituac'     : '0'
+                    ,'smap1.pv_nmsuplem'     : Ext.isEmpty(_p21_smap1.nmsuplem)?'0':_p21_smap1.nmsuplem
+                    ,'smap1.pv_cdperson'     : ''
+                    ,'smap1.pv_cdrol'        : ''
+                    ,'smap1.nombreAsegurado' : 'POLIZA'
+                    ,'smap1.cdrfc'           : ''
+                }
+                ,scripts  : true
+                ,autoLoad : true
+            }
+        /*,loader :
         {
             scripts   : true
             ,autoLoad : true
@@ -5786,8 +5815,10 @@ function _p21_crearVentanaClausulas()
                 ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
                 ,'smap1.nmsuplem' : Ext.isEmpty(_p21_smap1.nmsuplem)?'0':_p21_smap1.nmsuplem
             }
-        }
-    }).show());
+        }*/
+    }).show();
+    
+    centrarVentanaInterna(_ventanaClausulas);
 }
 
 function _p21_mostrarVentanaComplementoCotizacion(complemento,callback)
@@ -6048,6 +6079,7 @@ function _p21_mostrarVentanaComplementoCotizacion(complemento,callback)
             }
         ]
     }).show());
+    
 }
 ////// funciones //////
 </script>

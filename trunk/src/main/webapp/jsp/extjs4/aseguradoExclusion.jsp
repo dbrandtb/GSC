@@ -563,7 +563,17 @@ Ext.onReady(function(){
                         ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
                         ,handler : function()
                         {
-                            expande(2);
+                        	try{
+                        		expande(2);
+                        	}catch(e){
+                        		debugError('No hay funcion de Expande para Exclusiones',e);
+                        	}
+                        	
+                            try{
+                            	_callbackAseguradoExclusiones();
+                            }catch(e){
+                            	debugError('No hay funcion de Callback para Exclusiones',e);
+                            }
                         }
                     }
                 ]
