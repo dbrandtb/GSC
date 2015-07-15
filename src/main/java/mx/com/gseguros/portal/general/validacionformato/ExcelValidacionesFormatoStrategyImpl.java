@@ -94,7 +94,7 @@ public class ExcelValidacionesFormatoStrategyImpl implements ValidacionesFormato
                 	}
             		
             		// Se valida longitud del valor:
-            		if(!validaLongitud(strValor, campo)) {
+            		if(!campo.isNullable() && !validaLongitud(strValor, campo)) {
         				writerErrors.write(
             					new StringBuilder()
             						.append("fila ").append((celdaActual.getRowIndex()+1))
