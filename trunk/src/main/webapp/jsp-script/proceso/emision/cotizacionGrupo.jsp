@@ -503,7 +503,7 @@ Ext.onReady(function()
                     xtype         : 'actioncolumn'
                     ,sortable     : false
                     ,menuDisabled : true
-                    ,width        : (botoneslinea.length*20) + 10
+                    ,width        : (botoneslinea.length*20) + 20
                     ,items        : botoneslinea
                 }
             ]
@@ -642,7 +642,7 @@ Ext.onReady(function()
                     xtype         : 'actioncolumn'
                     ,sortable     : false
                     ,menuDisabled : true
-                    ,width        : (botonesModificada.length*20) + 10
+                    ,width        : (botonesModificada.length*20) + 20
                     ,items        : botonesModificada
                 }
             ]
