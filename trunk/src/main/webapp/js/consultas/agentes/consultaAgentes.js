@@ -367,7 +367,6 @@ Ext.onReady(function() {
                         valorsesionComision= Ext.getCmp('sesionComision').setValue(record.data.porredau);
                         bandera= 1;
                         valorIndex= rowIndex;
-                        alert(record.data.cdagente)
                         actualizacionInsercion(record.data.cdagente ,record.data.cdtipoAg ,record.data.porparti ,record.data.porredau);
 				   }
 				})
