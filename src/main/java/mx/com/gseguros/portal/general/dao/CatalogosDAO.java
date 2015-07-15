@@ -121,4 +121,6 @@ public interface CatalogosDAO {
 	public List<GenericVO> recuperarModulosEstadisticas() throws Exception;
 	
 	public List<GenericVO> recuperarTareasEstadisticas(String cdmodulo) throws Exception;
+	
+	public List<GenericVO> obtieneAgenteEspecifico(String cdagente) throws Exception;
 }

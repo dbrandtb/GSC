@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.general.util;
 public enum Catalogos {
 	
 	AGENTES(""),
+	AGENTE_ESPECIFICO(""),
 	AGENTES_POR_PROMOTOR(""),
 	ANIOS_RENOVACION("ANIORENOVA"),
 	CAUSA_SINIESTRO("TCAUSASSV"),
