@@ -63,6 +63,31 @@ public class MesaControlManagerImpl implements MesaControlManager
 				));
 	}
 	
+	@Override
+	public void validarAntesDeTurnar(
+    		String ntramite
+    		,String status
+    		,String cdusuari
+    		,String cdsisrol
+    		)throws Exception
+    {
+		logger.info(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ validarAntesDeTurnar @@@@@@"
+				,"\n@@@@@@ ntramite=" , ntramite
+				,"\n@@@@@@ status="   , status
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				));
+		
+		mesaControlDAO.validarAntesDeTurnar(ntramite,status,cdusuari,cdsisrol);
+		
+		logger.info(Utils.join(
+				 "\n@@@@@@ validarAntesDeTurnar @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+    }
+	
 	/*
 	 * Getters y setters
 	 */

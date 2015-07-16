@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
@@ -581,6 +582,41 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlOutParameter("pv_nombre_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void validarAntesDeTurnar(
+    		String ntramite
+    		,String status
+    		,String cdusuari
+    		,String cdsisrol
+    		)throws Exception
+    {
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("status"   , status);
+		params.put("cdusuari" , cdusuari);
+		params.put("cdsisrol" , cdsisrol);
+		Map<String,Object> procRes = ejecutaSP(new ValidarAntesDeTurnar(getDataSource()),params);
+		String error = (String)procRes.get("pv_dserror_o");
+		if(StringUtils.isNotBlank(error))
+		{
+			throw new ApplicationException(error);
+		}
+    }
+	
+	protected class ValidarAntesDeTurnar extends StoredProcedure {
+		protected ValidarAntesDeTurnar(DataSource dataSource) {
+			super(dataSource, "PKG_CONSULTA.P_VALIDA_ANTES_TURNADO");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_dserror_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
