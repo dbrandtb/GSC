@@ -2347,4 +2347,37 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public boolean validarVentanaDocumentosBloqueada(
+			String ntramite
+			,String cdtiptra
+			,String cdusuari
+			,String cdsisrol
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("cdtiptra" , cdtiptra);
+		params.put("cdusuari" , cdusuari);
+		params.put("cdsisrol" , cdsisrol);
+		Map<String,Object> procRes = ejecutaSP(new ValidarVentanaDocumentosBloqueada(getDataSource()),params);
+		return "S".equals((String)procRes.get("pv_swbloqueo_o"));
+	}
+	
+	protected class ValidarVentanaDocumentosBloqueada extends StoredProcedure
+	{
+		protected ValidarVentanaDocumentosBloqueada(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_VALIDA_VENT_DOCS_BLOQUEADA");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtiptra" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_swbloqueo_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"    , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"     , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

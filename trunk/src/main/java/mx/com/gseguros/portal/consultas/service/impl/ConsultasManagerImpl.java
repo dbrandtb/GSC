@@ -309,6 +309,30 @@ public class ConsultasManagerImpl implements ConsultasManager
 		return pide;
 	}
 	
+	@Deprecated
+	@Override
+	public boolean validarVentanaDocumentosBloqueada(
+			String ntramite
+			,String cdtiptra
+			,String cdusuari
+			,String cdsisrol
+			)throws Exception
+	{
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ validarVentanaDocumentosBloqueada @@@@@@"
+				));
+		
+		boolean bloqueada = consultasDAO.validarVentanaDocumentosBloqueada(ntramite,cdtiptra,cdusuari,cdsisrol);
+		
+		logger.debug(Utils.join(
+				 "\n@@@@@@ bloqueada=",bloqueada
+				,"\n@@@@@@ validarVentanaDocumentosBloqueada @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return bloqueada;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	///////////////////////////////

@@ -9,9 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.DocumentosUtils;
 import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -39,6 +42,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	private String  respuestaOculta = null;
 	private boolean exito           = false;
 	
+	private ConsultasManager consultasManager;
 	
 	/**
 	 * Metodo para la descarga de los archivos de los Movimientos en los casos
@@ -77,13 +81,11 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	
 	public String ventanaDocumentosPoliza()
 	{
-		logger.debug(""
-				+ "\n#####################################"
-				+ "\n#####################################"
-				+ "\n###### ventanaDocumentosPoliza ######"
-				+ "\n######                         ######"
-				+ "\n######                         ######"
-				);
+		logger.debug(Utils.join(
+				 "\n#####################################"
+				,"\n###### ventanaDocumentosPoliza ######"
+				,"\n###### smap1=",smap1
+				));
 		logger.debug("smap1: "+smap1);
 		if(smap1==null)
 		{
@@ -94,13 +96,39 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 			smap1.put("cdtiptra","1");
 		}
 		
-		logger.debug(""
-				+ "\n######                         ######"
-				+ "\n######                         ######"
-				+ "\n###### ventanaDocumentosPoliza ######"
-				+ "\n#####################################"
-				+ "\n#####################################"
-				);
+		if(smap1.containsKey("ntramite")
+				&&"1".equals(smap1.get("cdtiptra"))
+				&&session!=null
+				&&session.get("USUARIO")!=null
+				&&!smap1.containsKey("readOnly")
+				)
+		{
+			UserVO usuario = (UserVO)session.get("USUARIO");
+			boolean bloqueoPermisoVentana = false;
+			try
+			{
+				bloqueoPermisoVentana = consultasManager.validarVentanaDocumentosBloqueada(
+					smap1.get("ntramite")
+					,smap1.get("cdtiptra")
+					,usuario.getUser()
+					,usuario.getRolActivo().getClave()
+					);
+			}
+			catch(Exception ex)
+			{
+				logger.error("error al validar ventana de documentos bloqueada",ex);
+			}
+			
+			if(bloqueoPermisoVentana)
+			{
+				smap1.put("readOnly" , "");
+			}
+		}
+
+		logger.debug(Utils.join(
+				 "\n###### ventanaDocumentosPoliza ######"
+				,"\n#####################################"
+				));
 		return SUCCESS;
 	}
 	
@@ -349,6 +377,11 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 
 	public void setExito(boolean exito) {
 		this.exito = exito;
+	}
+
+
+	public void setConsultasManager(ConsultasManager consultasManager) {
+		this.consultasManager = consultasManager;
 	}
 	
 }

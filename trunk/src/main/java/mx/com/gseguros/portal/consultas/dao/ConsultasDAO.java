@@ -307,4 +307,11 @@ public interface ConsultasDAO
 			)throws Exception;
 	
 	public List<Map<String,String>>recuperarUsuariosReasignacionTramite(String ntramite) throws Exception;
+	
+	public boolean validarVentanaDocumentosBloqueada(
+			String ntramite
+			,String cdtiptra
+			,String cdusuari
+			,String cdsisrol
+			)throws Exception;
 }
