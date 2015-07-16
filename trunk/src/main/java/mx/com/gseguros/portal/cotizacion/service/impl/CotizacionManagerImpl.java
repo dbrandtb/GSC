@@ -4589,17 +4589,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                
 	                try
                 	{
-		                logger.debug(
-		                		new StringBuilder("NUM EXT: ")
-		                		.append(String.format("%.0f",row.getCell(13).getNumericCellValue()))
-		                		.append("|")
-		                		.toString()
-		                		);
-		                bufferLinea.append(
-		                		new StringBuilder(String.format("%.0f",row.getCell(13).getNumericCellValue()))
-		                		.append("|")
-		                		.toString()
-		                		);
+	                	String numExt = extraerStringDeCelda(row.getCell(13));
+	                	if(StringUtils.isBlank(numExt))
+	                	{
+	                		throw new ApplicationException("Falta numero exterior");
+	                	}
+		                logger.debug(Utils.join("NUM EXT: ",numExt,"|"));
+		                bufferLinea.append(Utils.join(numExt,"|"));
                 	}
 	                catch(Exception ex)
 	                {
@@ -4613,22 +4609,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                
 	                try
                 	{
-		                auxCell=row.getCell(14);
-		                logger.debug(
-		                		new StringBuilder("NUM INT: ")
-		                		.append(
-		                				auxCell!=null?
-		                						String.format("%.0f",auxCell.getNumericCellValue())
-		                						:""
-		                		)
-		                		.append("|")
-		                		.toString()
-		                		);
-		                bufferLinea.append(
-		                		auxCell!=null?
-		                				new StringBuilder(String.format("%.0f",auxCell.getNumericCellValue())).append("|").toString()
-		                				:"|"
-		                		);
+		                String numInt = extraerStringDeCelda(row.getCell(14));
+		                logger.debug(Utils.join("NUM INT: ",numInt,"|"));
+		                bufferLinea.append(Utils.join(numInt,"|"));
                 	}
 	                catch(Exception ex)
 	                {
