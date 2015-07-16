@@ -191,16 +191,19 @@ Ext.onReady(function()
             combo.setValue('9');
             panCanInputFecha.setValue(new Date());
             panCanInputFecha.setReadOnly(true);
+            _p43_smap1.cdtipsup = '53';
     	}
     	else if(nue=='25'){
     		combo.setValue('25');
     		panCanInputFecha.setValue(_p43_smap1.FEEFECTO);
             panCanInputFecha.setReadOnly(false);
+            _p43_smap1.cdtipsup = '52';
     	}
     	else if(nue=='31'){
             combo.setValue('31');
             panCanInputFecha.setValue(_p43_smap1.FEEFECTO);
             panCanInputFecha.setReadOnly(false);
+            _p43_smap1.cdtipsup = '52';
         }
         
         debug('<comboMotivocambio');
