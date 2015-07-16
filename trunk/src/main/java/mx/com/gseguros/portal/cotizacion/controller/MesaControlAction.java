@@ -60,6 +60,8 @@ public class MesaControlAction extends PrincipalCoreAction
 	private Map<String,Object>             params;
 	private String						   tmpNtramite;
 	
+	private String                         respuesta;
+	
 	@Autowired
 	private ServiciosManager serviciosManager;
 	
@@ -1065,6 +1067,39 @@ public class MesaControlAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String validarAntesDeTurnar()
+	{
+		logger.debug(Utils.join(
+				 "\n##################################"
+				,"\n###### validarAntesDeTurnar ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			UserVO usuario = Utils.validateSession(session);
+			
+			Utils.validate(smap1 , "No se recibieron datos");
+			
+			String ntramite = smap1.get("ntramite");
+			String status   = smap1.get("status");
+			
+			mesaControlManager.validarAntesDeTurnar(ntramite,status,usuario.getUser(),usuario.getRolActivo().getClave());
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.join(
+				 "\n###### validarAntesDeTurnar ######"
+				,"\n##################################"
+				));
+		return SUCCESS;
+	}
+	
 	/////////////////////////////////
 	////// getters ans setters //////
 	/*/////////////////////////////*/
@@ -1206,6 +1241,14 @@ public class MesaControlAction extends PrincipalCoreAction
 
 	public void setServiciosManager(ServiciosManager serviciosManager) {
 		this.serviciosManager = serviciosManager;
+	}
+
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
 	}
 	
 }

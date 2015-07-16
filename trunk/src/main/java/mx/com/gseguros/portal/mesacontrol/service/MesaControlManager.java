@@ -21,4 +21,11 @@ public interface MesaControlManager
 			,String cdmotivo
 			,String cdsisrol
 			)throws Exception;
+    
+    public void validarAntesDeTurnar(
+    		String ntramite
+    		,String status
+    		,String cdusuari
+    		,String cdsisrol
+    		)throws Exception;
 }

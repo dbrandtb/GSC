@@ -54,6 +54,9 @@
         <action name="movimientoDetalleTramite" method="movimientoDetalleTramite" class="MesaControlAction">
             <result name="success" type="json" />
         </action>
+        <action name="validarAntesDeTurnar" class="MesaControlAction" method="validarAntesDeTurnar">
+            <result name="success" type="json" />
+        </action>
     </package>
 
 </struts>
