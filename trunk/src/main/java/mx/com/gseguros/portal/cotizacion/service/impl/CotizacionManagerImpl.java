@@ -4222,7 +4222,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (A) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (A) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4258,7 +4258,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (B) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (B) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4284,7 +4284,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido paterno' (C) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido paterno' (C) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4310,7 +4310,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido materno' (D) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido materno' (D) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4336,7 +4336,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Nombre' (E) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Nombre' (E) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4375,7 +4375,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Segundo nombre' (F) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Segundo nombre' (F) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4405,7 +4405,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (G) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (G) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4445,7 +4445,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de nacimiento' (H) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de nacimiento' (H) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4483,7 +4483,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' (I) de la fila",fila," "));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' (I) de la fila ",fila," "));
 		                }
 	                }
 	                finally
@@ -4508,7 +4508,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estado' (J) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estado' (J) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4532,7 +4532,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Municipio' (K) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Municipio' (K) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4556,7 +4556,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Colonia' (L) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Colonia' (L) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4580,7 +4580,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Calle' (M) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Calle' (M) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4600,7 +4600,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero exterior' (N) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero exterior' (N) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4616,7 +4616,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero interior' (O) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero interior' (O) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4640,7 +4640,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'RFC' (P) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'RFC' (P) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4668,7 +4668,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Correo' (Q) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Correo' (Q) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4697,7 +4697,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Telefono' (R) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Telefono' (R) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4732,7 +4732,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' (S) de la fila",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' (S) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4777,6 +4777,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            		resp.setExito(false);
 	            		resp.setRespuesta(errorGrupos.append("Error #").append(System.currentTimeMillis()).toString());
 	            		resp.setRespuestaOculta(resp.getRespuesta());
+	            		logger.error(bufferErroresCenso.toString());
 	            		logger.error(resp.getRespuesta());
 	            	}
 	            }
