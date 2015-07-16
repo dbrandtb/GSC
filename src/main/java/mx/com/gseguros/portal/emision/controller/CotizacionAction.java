@@ -4462,6 +4462,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            		exito           = false;
 	            		respuesta       = errorGrupos.append("Error #").append(System.currentTimeMillis()).toString();
 	            		respuestaOculta = respuesta;
+	            		logger.error(bufferErroresCenso.toString());
 	            		logger.error(respuesta);
 	            	}
 	            }
