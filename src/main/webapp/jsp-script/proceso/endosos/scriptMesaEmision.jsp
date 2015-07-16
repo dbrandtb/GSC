@@ -19,6 +19,7 @@ var mesConUrlComGrupo2          = '<s:url namespace="/emision"     action="cotiz
 var mesConUrlUpdateStatus       = '<s:url namespace="/mesacontrol" action="actualizarStatusTramite"     />';
 var mesConUrlCargarParametros   = '<s:url namespace="/emision"     action="obtenerParametrosCotizacion" />';
 var _mescon_urlObtenerTipoRamos = '<s:url namespace="/emision"     action="obtenerTiposSituacion"       />';
+var _mescon_urlValidarTurnado   = '<s:url namespace="/mesacontrol" action="validarAntesDeTurnar"        />';
 var _mescon_mapaTiposRamo = {};
 
 var ROL_MESA_DE_CONTROL = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MESA_DE_CONTROL.cdsisrol" />';
@@ -73,7 +74,40 @@ function _4_solicitarEmision(row)
     {
         if(btn === 'yes')
         {
-            _4_turnar(row,18,'Solicitar emisi&oacute;n');
+            Ext.Ajax.request(
+            {
+                url      : _mescon_urlValidarTurnado
+                ,params  :
+                {
+                    'smap1.ntramite' : mcdinStore.getAt(row).get('ntramite')
+                    ,'smap1.status'  : 18
+                }
+                ,success : function(response)
+                {
+                    var ck = 'Validando turnado';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### validar turnado:',json);
+                        if(json.success)
+                        {
+                            _4_turnar(row,18,'Solicitar emisi&oacute;n');
+                        }
+                        else
+                        {
+                            mensajeError(json.respuesta);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function()
+                {
+                    errorComunicacion('Error validando turnado');
+                }
+            });
         }
     }));
 }
