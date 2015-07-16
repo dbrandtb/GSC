@@ -52012,6 +52012,50 @@
                             
 
                         /**
+                        * field for Comentario_inciso
+                        */
+
+                        
+                                    protected java.lang.String localComentario_inciso ;
+                                
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localComentario_incisoTracker = false ;
+                           
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getComentario_inciso(){
+                               return localComentario_inciso;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param Comentario_inciso
+                               */
+                               public void setComentario_inciso(java.lang.String param){
+                            
+                                       if (param != null){
+                                          //update the setting tracker
+                                          localComentario_incisoTracker = true;
+                                       } else {
+                                          localComentario_incisoTracker = false;
+                                              
+                                       }
+                                   
+                                            this.localComentario_inciso=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for Conductor
                         */
 
@@ -52887,6 +52931,36 @@
                             
 
                         /**
+                        * field for Salvamento
+                        */
+
+                        
+                                    protected boolean localSalvamento ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return boolean
+                           */
+                           public  boolean getSalvamento(){
+                               return localSalvamento;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param Salvamento
+                               */
+                               public void setSalvamento(boolean param){
+                            
+                                            this.localSalvamento=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for SituacionRiesgo
                         */
 
@@ -53409,6 +53483,40 @@
 
                                         
                                                    xmlWriter.writeCharacters(localCilindraje);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             } if (localComentario_incisoTracker){
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"comentario_inciso", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"comentario_inciso");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("comentario_inciso");
+                                    }
+                                
+
+                                          if (localComentario_inciso==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("comentario_inciso cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localComentario_inciso);
                                             
                                           }
                                     
@@ -54075,6 +54183,35 @@
                                                }
                                     
                                    xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"salvamento", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"salvamento");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("salvamento");
+                                    }
+                                
+                                               if (false) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("salvamento cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localSalvamento));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
                               if (localSituacionRiesgoTracker){
                                     namespace = "";
                                     if (! namespace.equals("")) {
@@ -54418,6 +54555,15 @@
                                         } else {
                                            throw new org.apache.axis2.databinding.ADBException("cilindraje cannot be null!!");
                                         }
+                                    } if (localComentario_incisoTracker){
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "comentario_inciso"));
+                                 
+                                        if (localComentario_inciso != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localComentario_inciso));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("comentario_inciso cannot be null!!");
+                                        }
                                     } if (localConductorTracker){
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "conductor"));
@@ -54592,6 +54738,12 @@
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localPrimaNeta));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "salvamento"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localSalvamento));
                              if (localSituacionRiesgoTracker){
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "situacionRiesgo"));
@@ -54803,6 +54955,24 @@
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setCilindraje(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                    else {
+                                        
+                                    }
+                                
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","comentario_inciso").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setComentario_inciso(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();
@@ -55241,6 +55411,25 @@
                                     
                                               object.setPrimaNeta(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToDouble(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","salvamento").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setSalvamento(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToBoolean(content));
                                               
                                         reader.next();
                                     
@@ -57351,14 +57540,14 @@
                         */
 
                         
-                                    protected int localDescuentoAgente ;
+                                    protected double localDescuentoAgente ;
                                 
 
                            /**
                            * Auto generated getter method
-                           * @return int
+                           * @return double
                            */
-                           public  int getDescuentoAgente(){
+                           public  double getDescuentoAgente(){
                                return localDescuentoAgente;
                            }
 
@@ -57368,7 +57557,7 @@
                                * Auto generated setter method
                                * @param param DescuentoAgente
                                */
-                               public void setDescuentoAgente(int param){
+                               public void setDescuentoAgente(double param){
                             
                                             this.localDescuentoAgente=param;
                                     
@@ -58818,7 +59007,7 @@
                                         xmlWriter.writeStartElement("descuentoAgente");
                                     }
                                 
-                                               if (localDescuentoAgente==java.lang.Integer.MIN_VALUE) {
+                                               if (java.lang.Double.isNaN(localDescuentoAgente)) {
                                            
                                                          throw new org.apache.axis2.databinding.ADBException("descuentoAgente cannot be null!!");
                                                       
@@ -60424,7 +60613,7 @@
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setDescuentoAgente(
-                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToDouble(content));
                                               
                                         reader.next();
                                     

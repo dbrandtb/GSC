@@ -245,7 +245,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						logger.info("Clave del Usuario Captura a enviar: "+ datosCotizacionAuto.getCveUsuarioCaptura());
 						
 						//descuentoagente
-						datosCotizacionAuto.setDescuentoAgente(Integer.valueOf(m.get("DESCUENTOAGENTE")));
+						datosCotizacionAuto.setDescuentoAgente(Double.valueOf(m.get("DESCUENTOAGENTE")));
 						datosCotizacionAuto.setDescuentoCliente(Double.valueOf(m.get("DESCUENTOCLIENTE")));
 						datosCotizacionAuto.setDescuentoFacultamiento(Double.valueOf(m.get("DESCUENTOFACULTAMIENTO")));
 						datosCotizacionAuto.setPorcentajeCesionComision(Double.valueOf(m.get("PORCENTAJECESIONCOMISION")));
