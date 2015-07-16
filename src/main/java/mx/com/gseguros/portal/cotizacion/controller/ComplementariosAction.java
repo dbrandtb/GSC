@@ -1890,6 +1890,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 					paramsMesaControl.put("pv_otvalor03"    , ntramite);
 					paramsMesaControl.put("pv_otvalor04"    , cdpersonSesion);
 					paramsMesaControl.put("pv_otvalor05"    , "EMISION");
+					paramsMesaControl.put("cdusuari"        , cdusuari);
+					paramsMesaControl.put("cdsisrol"        , cdsisrol);
 					WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
 					String ntramiteAutorizacion=(String) wr.getItemMap().get("ntramite");
 					mensajeRespuesta = mensajeRespuesta + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
@@ -1950,6 +1952,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 					paramsMesaControl.put("pv_otvalor03"    , ntramite);
 					paramsMesaControl.put("pv_otvalor04"    , cdpersonSesion);
 					paramsMesaControl.put("pv_otvalor05"    , "EMISION");
+					paramsMesaControl.put("cdusuari"        , cdusuari);
+					paramsMesaControl.put("cdsisrol"        , cdsisrol);
 					WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
 					String ntramiteAutorizacion=(String) wr.getItemMap().get("ntramite");
 					mensajeRespuesta = mensajeRespuesta + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;

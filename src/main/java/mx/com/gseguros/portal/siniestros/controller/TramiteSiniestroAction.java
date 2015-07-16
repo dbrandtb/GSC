@@ -18,8 +18,8 @@ import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.Ramo;
-import mx.com.gseguros.portal.general.util.TipoPrestadorServicio;
 import mx.com.gseguros.portal.general.util.TipoPago;
+import mx.com.gseguros.portal.general.util.TipoPrestadorServicio;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.MesaControlVO;
@@ -143,6 +143,8 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			parMesCon.put("pv_otvalor10",params.get("dtFechaOcurrencia"));
 			parMesCon.put("pv_otvalor20",params.get("cmbRamos"));
 			parMesCon.put("pv_otvalor11",params.get("cmbProveedor"));
+			parMesCon.put("cdusuari"    ,usuario.getUser());
+			parMesCon.put("cdsisrol"    ,usuario.getRolActivo());
 			if(params.get("cmbProveedor").toString().length() > 0){
 				parMesCon.put("pv_otvalor13",TipoPrestadorServicio.CLINICA.getCdtipo());
 			}

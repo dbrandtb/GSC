@@ -309,6 +309,8 @@ public class MesaControlAction extends PrincipalCoreAction
 			omap.put("pv_ferecepc_i",new Date());
 			omap.put("pv_festatus_i",new Date());
 			omap.put("pv_cdunieco_i",omap.get("pv_cdsucdoc_i"));
+			omap.put("cdusuari" , user.getUser());
+			omap.put("cdsisrol" , user.getRolActivo().getClave());
 			
 			//Validamos el usuario contra la sucursal:
 			kernelManager.validaUsuarioSucursal(omap.get("pv_cdsucdoc_i").toString(), null, null, user.getUser());
@@ -894,6 +896,9 @@ public class MesaControlAction extends PrincipalCoreAction
 			//Validamos el usuario contra la sucursal:
 			UserVO user=(UserVO)session.get("USUARIO");
 			WrapperResultados result = kernelManager.validaUsuarioSucursal(smap1.get("pv_cdsucdoc_i").toString(), null, null, user.getUser());
+			
+			omap.put("cdusuari" , user.getUser());
+			omap.put("cdsisrol" , user.getRolActivo().getClave());
 			
 			WrapperResultados res = kernelManager.PMovMesacontrol(omap);
 			////// Se guarda el tramite //////

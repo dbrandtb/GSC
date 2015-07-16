@@ -4190,6 +4190,8 @@ public class EndososAction extends PrincipalCoreAction
 					paramsMesaControl.put("pv_otvalor06"    , cdtipsup);
 					paramsMesaControl.put("pv_otvalor07"    , nsuplogi);
 					paramsMesaControl.put("pv_otvalor08"    , ntramite);
+					paramsMesaControl.put("cdusuari"        , cdusuari);
+					paramsMesaControl.put("cdsisrol"        , cdsisrol);
 					WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
 					tramiteGenerado=(String) wr.getItemMap().get("ntramite");
 				}
@@ -5140,6 +5142,9 @@ public class EndososAction extends PrincipalCoreAction
 		paramsMesaControl.put("pv_otvalor03"    , descEndoso);
 		paramsMesaControl.put("pv_otvalor04"    , nsuplogi);
 		paramsMesaControl.put("pv_otvalor05"    , ((UserVO)session.get("USUARIO")).getUser());
+		
+		paramsMesaControl.put("cdusuari" , ((UserVO)session.get("USUARIO")).getUser());
+		paramsMesaControl.put("cdsisrol" , ((UserVO)session.get("USUARIO")).getRolActivo().getClave());
 		
 		WrapperResultados wr = kernelManager.PMovMesacontrol(paramsMesaControl);
 		

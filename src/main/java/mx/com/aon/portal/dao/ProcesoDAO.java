@@ -2490,24 +2490,24 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	/*///////////////////////////*/
 	protected class PMovMesacontrol extends CustomStoredProcedure {
 		protected PMovMesacontrol(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES.P_MOV_MESACONTROL");
-			declareParameter(new SqlParameter("pv_cdunieco_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdramo_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_estado_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsuplem_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdsucadm_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdsucdoc_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtiptra_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_ferecepc_i", 		OracleTypes.DATE));
-			declareParameter(new SqlParameter("pv_cdagente_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_referencia_i", 	OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nombre_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_festatus_i",      OracleTypes.DATE));
-			declareParameter(new SqlParameter("pv_status_i",        OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_comments_i",      OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsolici_i",      OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtipsit_i",      OracleTypes.VARCHAR));
+			super(dataSource,"PKG_SATELITES2.P_MOV_MESACONTROL");
+			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsucadm_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsucdoc_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtiptra_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ferecepc_i"   , OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_cdagente_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_referencia_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nombre_i"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_festatus_i"   , OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_status_i"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_comments_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsolici_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor01"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor02"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor03"    , OracleTypes.VARCHAR));
@@ -2558,9 +2558,11 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_otvalor48"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor49"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor50"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_tramite_o", 	OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_tramite_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
 			compile();
 		}
 	
