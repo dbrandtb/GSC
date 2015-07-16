@@ -100,6 +100,16 @@ var _parentescoTitular = 'T';
 
 debug('_0_smap1: ',_0_smap1);
 
+//parche para RAMO 16 (FRONTERIZOS) con rol SUSCRIPTOR AUTO, no se lanza la validación:
+var aplicarValidacionModelo = true; 
+if(_0_smap1.cdramo == Ramo.AutosFronterizos && _0_smap1.cdsisrol == 'SUSCRIAUTO') {
+    aplicarValidacionModelo = false;
+}
+//parche para RAMO 16 (FRONTERIZOS) con rol distinto de SUSCRIPTOR AUTO, se oculta el botón Detalle:
+var ocultarDetalleCotizacion = false; 
+if(_0_smap1.cdramo == Ramo.AutosFronterizos && _0_smap1.cdsisrol != 'SUSCRIAUTO') {
+    ocultarDetalleCotizacion = true;
+}
 
 var _0_rowEditing = Ext.create('Ext.grid.plugin.RowEditing',{
 	clicksToEdit : 1,
@@ -1715,6 +1725,7 @@ Ext.onReady(function()
         ,handler  : _0_coberturas
     });
     
+    
     Ext.define('_0_BotDetalles',
     {
         extend    : 'Ext.Button'
@@ -1722,7 +1733,7 @@ Ext.onReady(function()
         ,text     : 'Detalles'
         ,icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
         ,disabled : true
-        ,hidden   : _0_smap1.cdramo == TipoSituacion.AutosFronterizos  
+        ,hidden   : ocultarDetalleCotizacion  
         ,handler  : _0_detalles
     });
     
@@ -2257,8 +2268,8 @@ Ext.onReady(function()
                     }
                     else
                     {
-                    	//parche para AUTOS FRONTERIZOS con rol SUSCRIPTOR AUTO:
-                    	if(_0_smap1.cdtipsit == TipoSituacion.AutosFronterizos && _0_smap1.cdsisrol=='SUSCRIAUTO') {
+                    	//parche para RAMO 16 (FRONTERIZOS) con rol SUSCRIPTOR AUTO, no se lanza la validación:
+                    	if(_0_smap1.cdramo == Ramo.AutosFronterizos && _0_smap1.cdsisrol == 'SUSCRIAUTO') {
                     	    // Si no obtuvo datos el servicio "NADA", reseteamos valores:
                     		_0_formAgrupados.down('[name=parametros.pv_otvalor04]').setValue();
                             _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setValue();
@@ -2292,50 +2303,53 @@ Ext.onReady(function()
         };
         comboTipoValor.addListener('change',changeFunction);
         changeFunction();
-        Ext.Ajax.request(
-        {
-            url      : _0_urlObtenerParametros
-            ,params  :
+        
+        if(aplicarValidacionModelo) {
+            Ext.Ajax.request(
             {
-                'smap1.parametro' : 'RANGO_ANIO_MODELO'
-                ,'smap1.cdramo'   : _0_smap1.cdramo
-                ,'smap1.cdtipsit' : _0_smap1.cdtipsit
-            }
-            ,success : function(response)
-            {
-                var json=Ext.decode(response.responseText);
-                debug('### obtener rango años response:',json);
-                if(json.exito)
+                url      : _0_urlObtenerParametros
+                ,params  :
                 {
-                    var limiteInferior = json.smap1.P1VALOR-0;
-                    var limiteSuperior = json.smap1.P2VALOR-0;
-                    _0_formAgrupados.down('[name=parametros.pv_otvalor05]').validator=function(value)
+                    'smap1.parametro' : 'RANGO_ANIO_MODELO'
+                    ,'smap1.cdramo'   : _0_smap1.cdramo
+                    ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+                }
+                ,success : function(response)
+                {
+                    var json=Ext.decode(response.responseText);
+                    debug('### obtener rango años response:',json);
+                    if(json.exito)
                     {
-                        var r = true;
-                        var anioActual = new Date().getFullYear();
-                        var max = anioActual+limiteSuperior;
-                        var min = anioActual+limiteInferior;
-                        debug('anioActual:',anioActual);
-                        debug('max:',max);
-                        debug('min:',min);
-                        debug('value:',value);
-                        if(value<min||value>max)
+                        var limiteInferior = json.smap1.P1VALOR-0;
+                        var limiteSuperior = json.smap1.P2VALOR-0;
+                        _0_formAgrupados.down('[name=parametros.pv_otvalor05]').validator=function(value)
                         {
-                            r='El modelo debe estar en el rango '+min+'-'+max;
-                        }
-                        return r;
-                   };
-               }
-               else
-               {
-                   mensajeError(json.respuesta);
-               }
-            }
-            ,failure : function()
-            {
-                errorComunicacion();
-            }
-        });
+                            var r = true;
+                            var anioActual = new Date().getFullYear();
+                            var max = anioActual+limiteSuperior;
+                            var min = anioActual+limiteInferior;
+                            debug('anioActual:',anioActual);
+                            debug('max:',max);
+                            debug('min:',min);
+                            debug('value:',value);
+                            if(value<min||value>max)
+                            {
+                                r='El modelo debe estar en el rango '+min+'-'+max;
+                            }
+                            return r;
+                        };
+                    }
+                    else
+                    {
+                        mensajeError(json.respuesta);
+                    }
+                }
+                ,failure : function()
+                {
+                    errorComunicacion();
+                }
+            });
+        }
     }
     //fin [parche]
     
