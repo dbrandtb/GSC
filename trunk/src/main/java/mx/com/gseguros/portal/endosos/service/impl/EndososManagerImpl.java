@@ -1281,6 +1281,7 @@ public class EndososManagerImpl implements EndososManager
 	{
 		String cdelemen = usuario.getEmpresa().getElementoId();
 		String cdusuari = usuario.getUser();
+		String cdsisrol = usuario.getRolActivo().getClave();
 		String nmsolici = null;
 		
 		logger.info(
@@ -1498,7 +1499,10 @@ public class EndososManagerImpl implements EndososManager
 						,""
 						,null
 						,cdtipsit
-						,valores);
+						,valores
+						,cdusuari
+						,cdsisrol
+						);
 			}
 			catch(Exception ex)
 			{

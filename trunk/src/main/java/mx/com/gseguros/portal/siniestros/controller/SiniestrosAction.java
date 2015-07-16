@@ -29,9 +29,9 @@ import mx.com.gseguros.portal.general.util.CausaSiniestro;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
-import mx.com.gseguros.portal.general.util.TipoPrestadorServicio;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoPago;
+import mx.com.gseguros.portal.general.util.TipoPrestadorServicio;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
@@ -235,6 +235,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			parMesCon.put("pv_otvalor48"    , 	listaMesaControl.get(0).getOtvalor48mc());
 			parMesCon.put("pv_otvalor49"    , 	listaMesaControl.get(0).getOtvalor49mc());
 			parMesCon.put("pv_otvalor50"    , 	listaMesaControl.get(0).getOtvalor50mc());
+			parMesCon.put("cdusuari"        , usuario.getUser());
+			parMesCon.put("cdsisrol"        , usuario.getRolActivo().getClave());
 			WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
 			if(res.getItemMap() == null){
 				logger.error("Sin mensaje respuesta de nmtramite!!");
@@ -999,7 +1001,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			gc.generaComponentes(componentes, true, false, true, false, false, false);
 			imap.put("itemsEdicion",gc.getItems());
 
-			//obtenemos los valores de las facturas y de ahi la información de los asegurados
+			//obtenemos los valores de las facturas y de ahi la informaciï¿½n de los asegurados
 			List<Map<String,String>> facturasAux = siniestrosManager.obtenerFacturasTramite(ntramite);
 			logger.debug("Valor de facturasAux : {}",facturasAux);
 			List<Map<String,String>> siniestros = siniestrosManager.listaSiniestrosTramite2(ntramite,facturasAux.get(0).get("NFACTURA"),null);

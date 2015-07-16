@@ -1146,6 +1146,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            	parMesCon.put("pv_comments_i"   , "");
 	            	parMesCon.put("pv_nmsolici_i"   , comprarNmpoliza);
 	            	parMesCon.put("pv_cdtipsit_i"   , cdtipsit);
+	            	parMesCon.put("cdusuari"        , cdusuari);
+	            	parMesCon.put("cdsisrol"        , cdsisrol);
 	            	WrapperResultados mesaContWr = kernelManagerSustituto.PMovMesacontrol(parMesCon);
 	            	ntramite                     = (String) mesaContWr.getItemMap().get("ntramite");
 	            	smap1.put("ntramite",ntramite);

@@ -6080,6 +6080,8 @@ public class CotizacionAction extends PrincipalCoreAction
 					params.put("pv_cdtipsit_i"   , cdtipsit);
 					params.put("pv_otvalor01"    , clasif);
 					params.put("pv_otvalor02"    , sincenso ? "S" : "N");
+					params.put("cdusuari"        , cdusuari);
+					params.put("cdsisrol"        , cdsisrol);
 					WrapperResultados wr=kernelManager.PMovMesacontrol(params);
 					String ntramiteNew = (String)wr.getItemMap().get("ntramite");
 					smap1.put("ntramite",ntramiteNew);

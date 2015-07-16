@@ -3580,7 +3580,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,null      //comments
 							,nmpoliza
 							,cdtipsit
-							,otvalorMesaControl);
+							,otvalorMesaControl
+							,cdusuari
+							,cdsisrol
+							);
 					resp.getSmap().put("ntramite" , ntramite);
 					
 					mesaControlDAO.movimientoDetalleTramite(

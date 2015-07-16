@@ -42,7 +42,10 @@ public interface MesaControlDAO
 			String cdsucdoc, String cdtiptra, Date ferecepc, String cdagente,
 			String referencia, String nombre, Date festatus, String status,
 			String comments, String nmsolici, String cdtipsit,
-			Map<String, String> valores) throws Exception;
+			Map<String, String> valores
+			,String cdusuari
+			,String cdsisrol
+			) throws Exception;
 	
 	/**
 	 * 

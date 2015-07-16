@@ -58,7 +58,10 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			String cdsucdoc, String cdtiptra, Date ferecepc, String cdagente,
 			String referencia, String nombre, Date festatus, String status,
 			String comments, String nmsolici, String cdtipsit,
-			Map<String, String> valores) throws Exception
+			Map<String, String> valores
+			,String cdusuari
+			,String cdsisrol
+			) throws Exception
 	{
 		Map<String,Object>params=new LinkedHashMap<String,Object>();
 		params.put("cdunieco"   , cdunieco);
@@ -78,6 +81,8 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("comments"   , comments);
 		params.put("nmsolici"   , nmsolici);
 		params.put("cdtipsit"   , cdtipsit);
+		params.put("cdusuari"   , cdusuari);
+		params.put("cdsisrol"   , cdsisrol);
 		
 		for(int i=1;i<=50;i++)
 		{
@@ -88,10 +93,10 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 
 		logger.debug(
 				new StringBuilder()
-				.append("\n*********************************************")
-				.append("\n****** PKG_SATELITES.P_MOV_MESACONTROL ******")
+				.append("\n**********************************************")
+				.append("\n****** PKG_SATELITES2.P_MOV_MESACONTROL ******")
 				.append("\n****** params=").append(params)
-				.append("\n*********************************************")
+				.append("\n**********************************************")
 				.toString()
 				);
 		Map<String,Object>procResult=ejecutaSP(new MovimientoMesaControl(getDataSource()),params);
@@ -102,7 +107,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected MovimientoMesaControl(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES.P_MOV_MESACONTROL");
+			super(dataSource,"PKG_SATELITES2.P_MOV_MESACONTROL");
 			declareParameter(new SqlParameter("cdunieco"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"     , OracleTypes.VARCHAR));
@@ -170,6 +175,8 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("otvalor48"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("otvalor49"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("otvalor50"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_tramite_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
