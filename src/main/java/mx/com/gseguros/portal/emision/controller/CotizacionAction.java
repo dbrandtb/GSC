@@ -4297,12 +4297,13 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                try
                 	{
-		                logger.info("NUM EXT: "+(
-		                		String.format("%.0f",row.getCell(13).getNumericCellValue())+"|"
-		                		));
-		                bufferLinea.append(
-		                		String.format("%.0f",row.getCell(13).getNumericCellValue())+"|"
-		                		);
+	                	String numExt = extraerStringDeCelda(row.getCell(13));
+	                	if(StringUtils.isBlank(numExt))
+	                	{
+	                		throw new ApplicationException("Falta numero exterior");
+	                	}
+		                logger.info("NUM EXT: "+numExt);
+		                bufferLinea.append(Utils.join(numExt,"|"));
                 	}
 	                catch(Exception ex)
 	                {
@@ -4316,13 +4317,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                try
                 	{
-		                auxCell=row.getCell(14);
-		                logger.info("NUM INT: "+(
-		                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
-		                		));
-		                bufferLinea.append(
-		                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
-		                		);
+	                	String numInt = extraerStringDeCelda(row.getCell(14));
+		                logger.info("NUM INT: "+numInt);
+		                bufferLinea.append(Utils.join(numInt,"|"));
                 	}
 	                catch(Exception ex)
 	                {
