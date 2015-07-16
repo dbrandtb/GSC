@@ -3972,6 +3972,8 @@ public class CotizacionAction extends PrincipalCoreAction
 				Map<Integer,Integer> errorFamilia   = new LinkedHashMap<Integer,Integer>();
 				Map<Integer,String>  titulares      = new LinkedHashMap<Integer,String>();
 	            
+				boolean[] gruposValidos = new boolean[olist1.size()];
+				
 	            while (rowIterator.hasNext()&&exito) 
 	            {
 	                Row           row            = rowIterator.next();
@@ -3991,9 +3993,11 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                String parentesco = null;
 	                String nombre     = "";
+	                double cdgrupo    = -1d;
 	                
 	                try
                 	{
+	                	cdgrupo = row.getCell(0).getNumericCellValue();
 		                logger.info("GRUPO: "+(
 		                		String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"
 		                		));
@@ -4429,6 +4433,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                {
 	                	familias.put(nFamilia,Utils.join(familias.get(nFamilia),bufferLinea.toString(),"\n"));
 	                	filasProcesadas = filasProcesadas + 1;
+	                	gruposValidos[((int)cdgrupo)-0]=true;
 	                }
 	                else
 	                {
@@ -4441,6 +4446,27 @@ public class CotizacionAction extends PrincipalCoreAction
 	                		errorFamilia.put(nFamilia,fila);
 	                	}
 	                }
+	            }
+	            
+	            if(exito)
+	            {
+	            	boolean       sonGruposValidos = true;
+	            	StringBuilder errorGrupos      = new StringBuilder();
+	            	for(int i=0;i<gruposValidos.length;i++)
+	            	{
+	            		if(!gruposValidos[i])
+	            		{
+	            			sonGruposValidos = false;
+	            			errorGrupos.append("Debe haber al menos un asegurado v&aacute;lido para el grupo ").append(i+1).append("<br/>");
+	            		}
+	            	}
+	            	if(!sonGruposValidos)
+	            	{
+	            		exito           = false;
+	            		respuesta       = errorGrupos.append("Error #").append(System.currentTimeMillis()).toString();
+	            		respuestaOculta = respuesta;
+	            		logger.error(respuesta);
+	            	}
 	            }
 	            
 	            if(exito)

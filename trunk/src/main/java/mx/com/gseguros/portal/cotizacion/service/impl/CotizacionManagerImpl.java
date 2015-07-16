@@ -4181,6 +4181,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 				Map<Integer,Integer> errorFamilia   = new LinkedHashMap<Integer,Integer>();
 				Map<Integer,String>  titulares      = new LinkedHashMap<Integer,String>();
 	            
+				boolean[] gruposValidos = new boolean[grupos.size()];
+				
 	            while (rowIterator.hasNext()&&resp.isExito()) 
 	            {
 	                Row           row            = rowIterator.next();
@@ -4200,9 +4202,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                
 	                String parentesco = null;
 	                String nombre     = "";
+	                double cdgrupo    = -1d;
 	                
 	                try
                 	{
+	                	cdgrupo = row.getCell(0).getNumericCellValue();
 		                logger.debug(
 		                		new StringBuilder("GRUPO: ")
 		                        .append(
@@ -4758,6 +4762,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                {
 	                	familias.put(nFamilia,Utils.join(familias.get(nFamilia),bufferLinea.toString(),"\n"));
 	                	filasProcesadas = filasProcesadas + 1;
+	                	gruposValidos[((int)cdgrupo)-0]=true;
 	                }
 	                else
 	                {
@@ -4770,6 +4775,27 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                		errorFamilia.put(nFamilia,fila);
 	                	}
 	                }
+	            }
+	            
+	            if(resp.isExito())
+	            {
+	            	boolean       sonGruposValidos = true;
+	            	StringBuilder errorGrupos      = new StringBuilder();
+	            	for(int i=0;i<gruposValidos.length;i++)
+	            	{
+	            		if(!gruposValidos[i])
+	            		{
+	            			sonGruposValidos = false;
+	            			errorGrupos.append("Debe haber al menos un asegurado v&aacute;lido para el grupo ").append(i+1).append("<br/>");
+	            		}
+	            	}
+	            	if(!sonGruposValidos)
+	            	{
+	            		resp.setExito(false);
+	            		resp.setRespuesta(errorGrupos.append("Error #").append(System.currentTimeMillis()).toString());
+	            		resp.setRespuestaOculta(resp.getRespuesta());
+	            		logger.error(resp.getRespuesta());
+	            	}
 	            }
 	            
 	            if(resp.isExito())
