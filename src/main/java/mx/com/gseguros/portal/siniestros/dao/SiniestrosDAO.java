@@ -359,7 +359,8 @@ public interface SiniestrosDAO {
 			,String ivr
 			,String isr
 			,String cedular
-			,boolean enviado) throws Exception;
+			,boolean enviado
+			,String nmsecsin) throws Exception;
 	
 	public Map<String,String>obtenerAutorizacionesFactura(
 			String cdunieco
@@ -375,7 +376,7 @@ public interface SiniestrosDAO {
 	
 	public List<SiniestroVO> solicitudPagoEnviada(Map params)throws Exception;
 	
-	public void guardarTotalProcedenteFactura(String ntramite,String nfactura,String importe)throws Exception;
+	public void guardarTotalProcedenteFactura(String ntramite,String nfactura,String importe,String nmsecsin)throws Exception;
 	
 	public String validaDocumentosAutServicio(String ntramite)throws Exception;
 	
@@ -470,4 +471,6 @@ public interface SiniestrosDAO {
 	public List<Map<String, String>> obtieneListaConfiguracionProveedor(HashMap<String, Object> params) throws Exception;
 	
 	public String obtieneAplicaConceptoIVA(String idConcepto) throws Exception;
+	
+	public String guardaConfiguracionProveedor(String cdpresta, String aplicaIVA,String secuenciaIVA, String aplicaIVARET, String proceso) throws Exception;
 }

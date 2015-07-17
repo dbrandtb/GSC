@@ -477,7 +477,8 @@ public interface SiniestrosManager {
 			,String ivr
 			,String isr
 			,String cedular
-			,boolean enviado) throws Exception;
+			,boolean enviado
+			,String nmsecsin) throws Exception;
 	
 	public Map<String,String>obtenerAutorizacionesFactura(
 			String cdunieco
@@ -493,7 +494,7 @@ public interface SiniestrosManager {
 
 	public String validaDocumentosAutServicio(String ntramite) throws Exception;
 	
-	public void guardarTotalProcedenteFactura(String ntramite,String nfactura,String importe)throws Exception;
+	public void guardarTotalProcedenteFactura(String ntramite,String nfactura,String importe, String nmsecsin)throws Exception;
 	
 	public void turnarTramite(String ntramite,String cdsisrol,String cdusuari) throws Exception;
 	
@@ -584,4 +585,6 @@ public interface SiniestrosManager {
 	public List<Map<String, String>> getConsultaConfiguracionProveedor(String cdpresta)throws Exception;
 	
 	public String obtieneAplicaConceptoIVA(String idConcepto)throws Exception;
+	
+	public String guardaConfiguracionProveedor(String cdpresta, String aplicaIVA,String secuenciaIVA, String aplicaIVARET, String proceso) throws Exception;
 }

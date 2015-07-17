@@ -112,7 +112,8 @@ public enum Catalogos {
 	ESTD_MODULOS(""),
 	ESTD_TAREAS(""),
 	ASEGURADOS(""),
-	SECUENCIA_IVA("")
+	SECUENCIA_IVA(""),
+	CVECOLUMNA("CVECOLUMNA")
 	;
 
 	private String cdTabla;

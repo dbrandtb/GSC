@@ -157,6 +157,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case STATUSINIESTROS:
 				case STATUS_VIGENCIA_POL:
 				case TRAZCANAU:
+				case CVECOLUMNA:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case MC_SUCURSALES_ADMIN:
