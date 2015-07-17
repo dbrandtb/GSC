@@ -2341,7 +2341,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			super(dataSource,"PKG_CONSULTA.P_GET_USUARIOS_REASIGNA");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR
-					,new GenericMapper(new String[]{"CDUSUARI","NOMBRE","CDSISROL"})));
+					,new GenericMapper(new String[]{"CDUSUARI","NOMBRE","CDSISROL","TOTAL"})));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"     , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"      , OracleTypes.VARCHAR));
 			compile();

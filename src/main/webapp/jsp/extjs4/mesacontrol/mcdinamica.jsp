@@ -341,7 +341,7 @@ function _4_onReasignarClick(row)
                         [
                             Ext.create('Ext.grid.Panel',
                             {
-                                width    : 500
+                                width    : 600
                                 ,height  : 300
                                 ,columns :
                                 [
@@ -451,10 +451,15 @@ function _4_onReasignarClick(row)
                                         ,dataIndex : 'NOMBRE'
                                         ,flex      : 1
                                     }
+                                    ,{
+                                        text       : 'Num. tr&aacute;mites asignados'
+                                        ,dataIndex : 'TOTAL'
+                                        ,width     : 160
+                                    }
                                 ]
                                 ,store : Ext.create('Ext.data.Store',
                                 {
-                                    fields : [ 'CDUSUARI' , 'NOMBRE' , 'CDSISROL' ]
+                                    fields : [ 'CDUSUARI' , 'NOMBRE' , 'CDSISROL' , 'TOTAL']
                                     ,data  : json.slist1
                                 })
                             })
