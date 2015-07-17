@@ -2,6 +2,8 @@ package mx.com.aon.portal2.web;
 
 import java.io.Serializable;
 
+import mx.com.gseguros.utils.Utils;
+
 /**
  *
  * @author Jair
@@ -48,7 +50,7 @@ public class GenericVO implements Serializable {
     @Override
     public String toString()
     {
-    	return new StringBuilder(this.key).append(" - ").append(this.value).toString();
+    	return Utils.join("key=",key,", value=",value,", aux=",aux);
     }
 
 	public String getAux() {
