@@ -924,6 +924,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 							.append(" - ")
 							.append(descripcion.get("descripcion"))
 							.toString()
+							,descripcion.get("tipovehi")
 					));
 		}
 		logger.debug(
@@ -955,6 +956,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 					,"modelo"
 					,"clave_marca"
 					,"clave_submarca"
+					,"tipovehi"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

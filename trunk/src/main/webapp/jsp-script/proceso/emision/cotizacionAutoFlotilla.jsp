@@ -1022,6 +1022,13 @@ Ext.onReady(function()
                                                                                     record.set(json.params.marcaName    , marca);
                                                                                     record.set(json.params.submarcaName , submarca);
                                                                                     record.set(json.params.versionName  , version);
+                                                                                    
+                                                                                    if('x'+record.get('cdtipsit')=='xCR')
+                                                                                    {
+                                                                                        var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
+                                                                                        record.set(tipoVehiName,json.lista[j].aux);
+                                                                                        //alert(record.get(tipoVehiName));
+                                                                                    }
                                                                                 
                                                                                     _p30_bufferAutos[llaveAuto]=encontrado;
                                                                                 }
