@@ -3372,7 +3372,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			,String ivr
 			,String isr
 			,String cedular
-			,boolean enviado) throws Exception
+			,boolean enviado
+			,String nmsecsin) throws Exception
 	{
 		Map<String,String>params=new HashMap<String,String>();
 		params.put("accion"   , accion);
@@ -3392,6 +3393,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		params.put("isr"      , isr);
 		params.put("cedular"  , cedular);
 		params.put("enviado",enviado?Constantes.SI:Constantes.NO);
+		params.put("nmsecsin"  , nmsecsin);
+		
 		logger.debug("params: "+params);
 		ejecutaSP(new MovTimpsini(this.getDataSource()), params);
 	}
@@ -3418,6 +3421,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("isr"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cedular"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("enviado"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsecsin"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
@@ -3491,12 +3495,13 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 
 	@Override
-	public void guardarTotalProcedenteFactura(String ntramite,String nfactura,String importe)throws Exception
+	public void guardarTotalProcedenteFactura(String ntramite,String nfactura,String importe,String nmsecsin)throws Exception
 	{
 		Map<String,String>params=new HashMap<String,String>();
 		params.put("ntramite" , ntramite);
 		params.put("nfactura" , nfactura);
 		params.put("importe"  , importe);
+		params.put("nmsecsin"  , nmsecsin);
 		logger.debug("params: "+params);
 		ejecutaSP(new GuardarTotalProcedenteFactura(this.getDataSource()), params);
 	}
@@ -3509,6 +3514,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nfactura" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("importe"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsecsin"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
@@ -4574,6 +4580,36 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		super(dataSource, "PKG_SINIESTRO.P_GET_CONCEPTOIVA");
     		declareParameter(new SqlParameter("pv_idConcepto_i",   OracleTypes.VARCHAR));		// Id. del concepto
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+	@Override
+	public String guardaConfiguracionProveedor(String cdpresta, String aplicaIVA,String secuenciaIVA, String aplicaIVARET, String proceso) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdpresta_i", cdpresta);
+		params.put("pv_aplicaIVA_i", aplicaIVA);
+		params.put("pv_secuenciaIVA_i", secuenciaIVA);
+		params.put("pv_aplicaIVARet_i", aplicaIVARET);
+		params.put("pv_accion_i", proceso);
+		Map<String, Object> resultado = ejecutaSP(new GuardaConfiguracionProveedor(getDataSource()), params);
+		//logger.debug( resultado.get("pv_registro_o"));
+		return "0";
+	}
+	
+    protected class GuardaConfiguracionProveedor extends StoredProcedure {
+    	
+    	protected GuardaConfiguracionProveedor(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_SINIESTRO.P_MOV_CONFPROV");
+    		declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_aplicaIVA_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_secuenciaIVA_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_aplicaIVARet_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_accion_i",   OracleTypes.VARCHAR));
+    		//declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
     		compile();

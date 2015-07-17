@@ -1330,13 +1330,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			,String ivr
 			,String isr
 			,String cedular
-			,boolean enviado) throws Exception
+			,boolean enviado
+			,String nmsecsin) throws Exception
 	{
 		log.info(""
 				+ "\n#########################"
 				+ "\n###### movTimpsini ######");
 		siniestrosDAO.movTimpsini(accion,cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,ntramite,
-				ptimport,iva,ivr,isr,cedular,enviado);
+				ptimport,iva,ivr,isr,cedular,enviado,nmsecsin);
 		log.info(""
 				+ "\n###### movTimpsini ######"
 				+ "\n#########################"
@@ -1371,12 +1372,12 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	public void guardarTotalProcedenteFactura(String ntramite,String nfactura,String importe)throws Exception
+	public void guardarTotalProcedenteFactura(String ntramite,String nfactura,String importe, String nmsecsin)throws Exception
 	{
 		log.info(""
 				+ "\n###########################################"
 				+ "\n###### guardarTotalProcedenteFactura ######");
-		siniestrosDAO.guardarTotalProcedenteFactura(ntramite,nfactura,importe);
+		siniestrosDAO.guardarTotalProcedenteFactura(ntramite,nfactura,importe,nmsecsin);
 		log.info(""
 				+ "\n###### guardarTotalProcedenteFactura ######"
 				+ "\n###########################################"
@@ -1825,6 +1826,16 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	public String obtieneAplicaConceptoIVA(String idConcepto) throws Exception {
 		try {
 			return siniestrosDAO.obtieneAplicaConceptoIVA(idConcepto);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	//String tipoConcepto, String idProveedor, String idConceptoTipo
+	public String guardaConfiguracionProveedor(String cdpresta, String aplicaIVA,String secuenciaIVA, String aplicaIVARET, String proceso) throws Exception {
+		try {
+			return siniestrosDAO.guardaConfiguracionProveedor(cdpresta, aplicaIVA, secuenciaIVA, aplicaIVARET, proceso);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}

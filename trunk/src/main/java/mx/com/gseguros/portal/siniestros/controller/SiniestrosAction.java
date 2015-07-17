@@ -1780,7 +1780,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 
 			siniestrosManager.movTimpsini(Constantes.DELETE_MODE, null, null, null, null,
 					null, null, null, null, null,
-					ntramite, null, null, null, null, null, false);
+					ntramite, null, null, null, null, null, false,null);
 			logger.debug("Paso 3.- Eliminacion de TIMPSINI");
 			boolean esPagoDirecto = false;
 			//4.- Verificamos el tipo de pago
@@ -3019,6 +3019,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		logger.debug("Tipo de pago :{}",esPagoDirecto);
 		logger.debug("facturasxSiniestro :{}",facturasxSiniestro);
 			try{
+				int nmsecsin= 1;
 				for(Map<String,String> importe : listaImportesWS){
 					logger.debug("Valor de Importe :{}",importe);
 					String cduniecoIte = importe.get("cdunieco");
@@ -3053,18 +3054,21 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						,ivrIte
 						,isrIte
 						,cedularIte
-						,false);
+						,false
+						,nmsecsin+"");
+					nmsecsin++;
 				}
 				logger.debug("VALORES DE LAS FACTURAS---->");
 				logger.debug("Total de registros :{}",facturasxSiniestro.size());
 				logger.debug("facturasxSiniestro :{}",facturasxSiniestro);
-				
+				int nmSecSinFac= 1;
 				for(Map<String, Object> totalFacturaIte : facturasxSiniestro){
 					logger.debug("VALOR DE LAS FACTURAS :{}",totalFacturaIte);
 					String ntramiteA     = (String) totalFacturaIte.get("NTRAMITE");
 					String nfacturaA     = (String) totalFacturaIte.get("NFACTURA");
 					String totalFacturaA = (String) totalFacturaIte.get("TOTALFACTURAIND");
-					siniestrosManager.guardarTotalProcedenteFactura(ntramiteA,nfacturaA,totalFacturaA);
+					siniestrosManager.guardarTotalProcedenteFactura(ntramiteA,nfacturaA,totalFacturaA, nmSecSinFac+"");
+					nmSecSinFac++;
 				}
 				success = true; 
 				mensaje = "Datos guardados";
@@ -4705,6 +4709,34 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		}catch( Exception e){
 			logger.error("Error al obtener el monto del arancel : {}", e.getMessage(), e);
 			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	
+	public String  guardarConfiguracionProveedor(){
+		logger.debug("Entra a guardarConfiguracionProveedor params de entrada :{}",params);
+		try {
+			String respuesta = siniestrosManager.guardaConfiguracionProveedor(params.get("cmbProveedorMod"),params.get("idaplicaIVA"),params.get("secuenciaIVA"),params.get("idaplicaIVARET"),params.get("proceso"));
+		}catch( Exception e){
+			logger.error("Error al obtener el monto del arancel : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	/**
+	* Funcion para la visualizacion de la autorizacion de servicio 
+	* @return params con los valores para hacer las consultas
+	*/
+	public String configuracionLayoutProveedor(){
+		logger.debug("Entra a configuracionLayoutProveedor");
+		try {
+			logger.debug("Params: {}", params);
+		}catch( Exception e){
+			logger.error("Error altaFacturasProceso {}", e.getMessage(), e);
 		}
 		success = true;
 		return SUCCESS;

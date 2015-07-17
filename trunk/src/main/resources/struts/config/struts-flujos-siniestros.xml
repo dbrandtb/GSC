@@ -865,6 +865,19 @@
 				</param>
 			</result>
 		</action>
+
+		<action name="guardarConfiguracionProveedor" class="siniestrosAction" method="guardarConfiguracionProveedor">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success
+				</param>
+			</result>
+		</action>
+
+		<action name="includes/configuracionLayout" class="siniestrosAction" method="configuracionLayoutProveedor">
+			<result>/jsp-script/proceso/siniestros/configuracionLayout.jsp</result>
+		</action>
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>
