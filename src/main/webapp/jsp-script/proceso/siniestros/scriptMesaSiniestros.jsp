@@ -1630,7 +1630,7 @@ function reasignarClick(grid,dataIndex)
 	{
 		rol='medajustador';
 	}
-	else if(record.get('status') == EN_CAPTURA)
+	else if(record.get('status') == _STATUS_TRAMITE_EN_CAPTURA)
 	{
 		rol='operadorsini';
 	}
