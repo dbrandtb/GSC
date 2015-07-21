@@ -4426,7 +4426,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                try
                 	{
-		                auxDate=row.getCell(19).getDateCellValue();
+		                auxDate=row.getCell(19)!=null?row.getCell(19).getDateCellValue():null;
 		                if(auxDate!=null)
 		                {
 		                	Calendar cal = Calendar.getInstance();
@@ -4455,13 +4455,13 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
 	                }
 	                
-	                logger.info("** NUEVA_FILA **");
+	                logger.debug(Utils.join("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
 	                
 	                if(filaBuena)
 	                {
 	                	familias.put(nFamilia,Utils.join(familias.get(nFamilia),bufferLinea.toString(),"\n"));
 	                	filasProcesadas = filasProcesadas + 1;
-	                	gruposValidos[((int)cdgrupo)-0]=true;
+	                	gruposValidos[((int)cdgrupo)-1]=true;
 	                }
 	                else
 	                {
@@ -4474,6 +4474,19 @@ public class CotizacionAction extends PrincipalCoreAction
 	                		errorFamilia.put(nFamilia,fila);
 	                	}
 	                }
+	                
+	                if(cdgrupo>0d)
+	                {
+	                	logger.debug(Utils.join("cdgrupo=",cdgrupo,", valido=",gruposValidos[((int)cdgrupo)-1]));
+	                }
+	            }
+	            
+	            if(exito)
+	            {
+	            	for(int i=0;i<gruposValidos.length;i++)
+	            	{
+	            		logger.debug(Utils.join("gruposValidos[i]=",gruposValidos[i]));
+	            	}
 	            }
 	            
 	            if(exito)
