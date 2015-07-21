@@ -4561,7 +4561,21 @@ function _p21_subirDetallePersonas()
                                                                 }
                                                                 else
                                                                 {
-                                                                    mensajeError(json.respuesta);
+                                                                    centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                                                    {
+                                                                        modal  : true
+                                                                        ,title : 'Error'
+                                                                        ,items :
+                                                                        [
+                                                                            {
+                                                                                xtype     : 'textarea'
+                                                                                ,width    : 700
+                                                                                ,height   : 400
+                                                                                ,readOnly : true
+                                                                                ,value    : json.respuesta
+                                                                            }
+                                                                        ]
+                                                                    }).show());
                                                                 }
                                                             }
                                                             ,failure  : function()

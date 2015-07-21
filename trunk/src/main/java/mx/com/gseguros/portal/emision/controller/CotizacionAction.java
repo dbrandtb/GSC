@@ -4498,13 +4498,15 @@ public class CotizacionAction extends PrincipalCoreAction
 	            		if(!gruposValidos[i])
 	            		{
 	            			sonGruposValidos = false;
-	            			errorGrupos.append("Debe haber al menos un asegurado v&aacute;lido para el grupo ").append(i+1).append("<br/>");
+	            			errorGrupos.append("Debe haber al menos un asegurado v\u00E1lido para el grupo ").append(i+1).append("\n");
 	            		}
 	            	}
 	            	if(!sonGruposValidos)
 	            	{
 	            		exito           = false;
-	            		respuesta       = errorGrupos.append("Error #").append(System.currentTimeMillis()).toString();
+	            		respuesta       = errorGrupos.append("\n")
+	            				.append(bufferErroresCenso.toString())
+	            				.append("\nError #").append(System.currentTimeMillis()).toString();
 	            		respuestaOculta = respuesta;
 	            		logger.error(bufferErroresCenso.toString());
 	            		logger.error(respuesta);

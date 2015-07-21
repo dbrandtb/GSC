@@ -4822,13 +4822,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            		if(!gruposValidos[i])
 	            		{
 	            			sonGruposValidos = false;
-	            			errorGrupos.append("Debe haber al menos un asegurado v&aacute;lido para el grupo ").append(i+1).append("<br/>");
+	            			errorGrupos.append("Debe haber al menos un asegurado v\u00E1lido para el grupo ").append(i+1).append("\n");
 	            		}
 	            	}
 	            	if(!sonGruposValidos)
 	            	{
 	            		resp.setExito(false);
-	            		resp.setRespuesta(errorGrupos.append("Error #").append(System.currentTimeMillis()).toString());
+	            		resp.setRespuesta(
+	            				errorGrupos.append("\n")
+	            				.append(bufferErroresCenso.toString())
+	            				.append("\nError #").append(System.currentTimeMillis()).toString());
 	            		resp.setRespuestaOculta(resp.getRespuesta());
 	            		logger.error(bufferErroresCenso.toString());
 	            		logger.error(resp.getRespuesta());
