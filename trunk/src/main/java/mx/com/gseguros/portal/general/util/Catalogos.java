@@ -113,7 +113,9 @@ public enum Catalogos {
 	ESTD_TAREAS(""),
 	ASEGURADOS(""),
 	SECUENCIA_IVA(""),
-	CVECOLUMNA("CVECOLUMNA")
+	CVECOLUMNA("CVECOLUMNA"),
+	FORMATOFECHA("FORMFECHA"),
+	ATRIBUTOLAYOUT("")
 	;
 
 	private String cdTabla;
