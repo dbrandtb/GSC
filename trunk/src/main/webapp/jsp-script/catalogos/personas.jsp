@@ -102,7 +102,10 @@ var _activaCveFamiliar = false;
 var _PanelPrincipalPersonas;
 var _panelTipoPer;
 
+var _nombreComContratante;
+
 var _modoRecuperaDanios;
+var _modoSoloEdicion; // no es compatible con _esCargaClienteNvo
 
 if(!Ext.isEmpty(_p22_smap1)){
 	
@@ -117,6 +120,7 @@ if(!Ext.isEmpty(_p22_smap1)){
 	
 	_activaCveFamiliar = !Ext.isEmpty(_p22_smap1.activaCveFamiliar) && _p22_smap1.activaCveFamiliar == "S" ? true : false ;
 	_modoRecuperaDanios = !Ext.isEmpty(_p22_smap1.modoRecuperaDanios) && _p22_smap1.modoRecuperaDanios == "S" ? true : false ;
+	_modoSoloEdicion = !Ext.isEmpty(_p22_smap1.modoSoloEdicion) && _p22_smap1.modoSoloEdicion == "S" ? true : false ;
 }
 
 ////// variables //////
@@ -157,7 +161,8 @@ Ext.onReady(function()
 	    [
 	        Ext.create('Ext.form.Panel',
 	        {
-	        	 title        : _esCargaClienteNvo?"Ingrese el RFC de la Persona, posteriormente de clic en continuar para validar el RFC y seguir con la captura." : "Escriba el RFC de la Persona a buscar/agregar y de clic en 'Continuar'. Si selecciona una persona de la lista ser&aacute; editada, de lo contrario se agregar&aacute; una nueva."
+	        	 title        : _esCargaClienteNvo?"Ingrese el RFC de la Persona, posteriormente de clic en continuar para validar el RFC y seguir con la captura." : 
+	        	 				(_modoSoloEdicion? "Escriba el RFC de la Persona a buscar y de clic en 'Continuar'." : "Escriba el RFC de la Persona a buscar/agregar y de clic en 'Continuar'. Si selecciona una persona de la lista ser&aacute; editada, de lo contrario se agregar&aacute; una nueva.")
 	        	 ,itemId      : '_p22_formBusqueda'
 	        	 ,hidden      : !Ext.isEmpty(_cargaCdPerson)
 //	        	 ,layout      :
@@ -252,7 +257,7 @@ Ext.onReady(function()
 					            			
 					            		
 					            		
-					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_esCargaClienteNvo?'Continuar':'Continuar y Agregar Cliente');
+					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_esCargaClienteNvo?'Continuar': (_modoSoloEdicion?'Seleccione...' : 'Continuar y Agregar Cliente') );
 					            	},
 					            	change: function(me, val, oldVal, eopts){
 						    				try{
@@ -394,7 +399,7 @@ Ext.onReady(function()
 					            		form.down('[name=smap1.rfc]').reset();
 					            		form.down('[name=smap1.nombre]').getStore().removeAll();
 					            		
-					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_esCargaClienteNvo?'Continuar':'Continuar y Agregar Cliente');
+					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_esCargaClienteNvo?'Continuar': (_modoSoloEdicion?'Seleccione...' : 'Continuar y Agregar Cliente') );
 					            	},
 					            	change: function(me, val){
 						    				try{
@@ -475,7 +480,7 @@ Ext.onReady(function()
 	        	 ,buttons     :
 	        	 [
 	        	     {
-                         text     : _esCargaClienteNvo?'Continuar':'Continuar y Agregar Cliente'
+                         text     : _esCargaClienteNvo?'Continuar': (_modoSoloEdicion?'Seleccione...' : 'Continuar y Agregar Cliente')
                          ,xtype   : 'button'
                          ,itemId  : 'btnContinuarId'
                          ,disabled: !_esCargaClienteNvo
@@ -494,6 +499,13 @@ Ext.onReady(function()
 										debug('valorNombre:',valorNombre);
 										debug('_RFCsel:',_RFCsel);
 										debug('_RFCnomSel:',_RFCnomSel);
+										
+										_nombreComContratante = '';
+										if(Ext.isEmpty(valorRFC)){
+											_nombreComContratante = form.down('[name=smap1.nombre]').getRawValue();
+										}else{
+											_nombreComContratante = form.down('[name=smap1.rfc]').getRawValue();
+										}
 										
 										if( (!Ext.isEmpty(_RFCsel)&&(_RFCsel == valorRFC)) || ((!Ext.isEmpty(_RFCnomSel))&&(_RFCnomSel == valorNombre))){
 											_p22_formDatosGenerales().getForm().reset();
@@ -529,6 +541,12 @@ Ext.onReady(function()
 											irModoEdicion();
 											
 										}else if(!Ext.isEmpty(valorRFC)){
+											
+											if(_modoSoloEdicion){
+												mensajeWarning('Seleccione una persona.');
+												return;
+											}
+											
 											_p22_formDatosGenerales().getForm().reset();
 											_p22_formDomicilio().getForm().reset();
 											_p22_formDatosGenerales().hide();
@@ -967,7 +985,16 @@ function irModoEdicion(){
 				};
 				
 				ventanaMensaje.postMessage(objMsg, "*");
-				mensajeInfo('Cliente Recuperado: ' + _codigoDanios);
+				
+				try{
+                	if(_p22_recuperaCallback){
+                    	_p22_recuperaCallback();
+                	}
+                }catch(e){
+                	debug('Error en recupera callback',e)
+                }		
+                
+				mensajeCorrecto('Aviso','Cliente Recuperado: ' + _codigoDanios);
 			}catch(e){
 				debugError('Error en postMessage',e);
 			}
@@ -1024,7 +1051,7 @@ function irModoEdicion(){
 							};
 							
 							ventanaMensaje.postMessage(objMsg, "*");
-							mensajeInfo('Cliente Recuperado: ' + _codigoDanios);
+							mensajeCorrecto('Aviso','Cliente Recuperado: ' + _codigoDanios);
 						}catch(e){
 							debugError('Error en postMessage',e);
 						}
@@ -2942,7 +2969,8 @@ obtieneDatosClienteContratante = function(){
 		rfc:      _p22_fieldRFC().getValue(),
 		cdideper: _fieldByName('CDIDEPER',_PanelPrincipalPersonas).getValue(),
 		cdideext: _fieldByName('CDIDEEXT',_PanelPrincipalPersonas).getValue(),
-		codpos:   _p22_comboCodPostal().getValue()
+		codpos:   _p22_comboCodPostal().getValue(),
+		nomRecupera: _nombreComContratante
 		
 	}
 	
@@ -2950,6 +2978,7 @@ obtieneDatosClienteContratante = function(){
 };
 
 function obtDatLoaderContratante(){
+	
 	var datosPersona = {
 		cdperson: (_p22_cdperson != false && !Ext.isEmpty(_p22_cdperson))? _p22_cdperson : '',
 		fenacimi: _fieldByName('FENACIMI',_PanelPrincipalPersonas).getValue(),
@@ -2963,8 +2992,8 @@ function obtDatLoaderContratante(){
 		rfc:      _p22_fieldRFC().getValue(),
 		cdideper: _fieldByName('CDIDEPER',_PanelPrincipalPersonas).getValue(),
 		cdideext: _fieldByName('CDIDEEXT',_PanelPrincipalPersonas).getValue(),
-		codpos:   _p22_comboCodPostal().getValue()
-		
+		codpos:   _p22_comboCodPostal().getValue(),
+		nomRecupera: _nombreComContratante
 	}
 	
 	return datosPersona;

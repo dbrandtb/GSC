@@ -8423,6 +8423,20 @@ public class EndososAction extends PrincipalCoreAction
 		String comentariosEndoso   = "";
 		String cdtipsit            = smap1.get("CDTIPSIT");
 		String ntramite            = smap1.get("NTRAMITE");
+		String cdpostalNuevo       =  null;
+		
+		long timestamp=System.currentTimeMillis();
+		
+		
+		Map<String,Object> managerResult = personasManager.obtenerDomicilioPorCdperson(smap2.get("cdpersonNvoContr"), timestamp);
+		Map<String,String> domicilioNvo  = (Map<String,String>)managerResult.get("domicilio");
+		
+		if(domicilioNvo.containsKey("CODPOSTAL") && StringUtils.isNotBlank(domicilioNvo.get("CODPOSTAL"))){
+			logger.debug("Nuevo codigo postal del contratante: "+ domicilioNvo.get("CODPOSTAL"));
+			cdpostalNuevo = domicilioNvo.get("CODPOSTAL");
+		}else{
+			throw new ApplicationException("No se tiene el nuevo codigo postal para este contratante.");
+		}
 		
 		//PKG_ENDOSOS.P_ENDOSO_INICIA
 		Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, sFecha, cdelemento, cdusuari, proceso, cdtipsup);
@@ -8492,7 +8506,7 @@ public class EndososAction extends PrincipalCoreAction
 					}
 				}
 				
-				otvalorValositIte.put(keyCodPostal , smap2.get("cdpostalNuevo"));
+				otvalorValositIte.put(keyCodPostal , cdpostalNuevo);
 				
 				//PKG_SATELITES2.P_MOV_TVALOSIT
 				kernelManager.insertaValoresSituaciones(cdunieco, cdramo, estado, nmpoliza
@@ -8565,7 +8579,6 @@ public class EndososAction extends PrincipalCoreAction
 
 			if(!esProductoSalud){
 				
-				long timestamp=System.currentTimeMillis();
 				Map<String,Object>resultData = personasManager.obtenerPersonaPorCdperson(smap2.get("cdpersonNvoContr"), timestamp);
 				Map<String,String>resultPer =  (Map<String, String>) resultData.get("persona");
 				
