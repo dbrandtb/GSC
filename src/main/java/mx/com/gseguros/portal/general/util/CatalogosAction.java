@@ -158,6 +158,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case STATUS_VIGENCIA_POL:
 				case TRAZCANAU:
 				case CVECOLUMNA:
+				case FORMATOFECHA:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case MC_SUCURSALES_ADMIN:
@@ -713,6 +714,16 @@ public class CatalogosAction extends PrincipalCoreAction {
 					lista=new ArrayList<GenericVO>(0);
 					lista.add(new GenericVO("A", "IVA ANTES DE COPAGO"));
 					lista.add(new GenericVO("D", "IVA DESPUES DE COPAGO"));
+					break;
+				case ATRIBUTOLAYOUT:
+					/*String idconcep = null;
+					String descripc = null;
+					if(params!=null)
+					{
+						idconcep = params.get("idPadre");
+						descripc = params.get("descripc");
+					}*/
+					lista = siniestrosManager.obtenerAtributosLayout(null);
 					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);

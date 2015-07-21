@@ -5,12 +5,22 @@ Ext.onReady(function() {
 		mode: 'SINGLE',
 		allowDeselect: true
 	});
-
+	//Declaracion de los modelos 
 	Ext.define('modeloProveedores',{
 		extend:'Ext.data.Model',
 		fields:['CLAVEPROVEEDOR','NOMBPROVEEDOR','APLICAIVA','APLICAIVADESC','SECUENCIAIVA','SECIVADESC','APLICAIVARET','IVARETDESC']
 	});
 	
+	Ext.define('modelListadoProvMedico',{
+		extend: 'Ext.data.Model',
+		fields: [
+			{type:'string',		name:'cdpresta'},
+			{type:'string',		name:'nombre'},
+			{type:'string',		name:'cdespeci'},
+			{type:'string',		name:'descesp'}
+		]
+	});
+	//Declaracion de los stores
 	var storeGridProveedores = new Ext.data.Store({
 		pageSize	: 10
 		,model		: 'modeloProveedores'
@@ -68,16 +78,6 @@ Ext.onReady(function() {
 	});
 	storeSecuenciaIVA.load();
 	
-	Ext.define('modelListadoProvMedico',{
-		extend: 'Ext.data.Model',
-		fields: [
-			{type:'string',		name:'cdpresta'},
-			{type:'string',		name:'nombre'},
-			{type:'string',		name:'cdespeci'},
-			{type:'string',		name:'descesp'}
-		]
-	});
-
 	var storeProveedor = Ext.create('Ext.data.Store', {
 		model:'modelListadoProvMedico',
 		autoLoad:false,
@@ -125,7 +125,8 @@ Ext.onReady(function() {
 		width		 : 550,					valueField   : 'cdpresta',			forceSelection : true,
 		matchFieldWidth: false,				queryMode :'remote',				queryParam: 'params.cdpresta',
 		minChars  : 2,						store : storeProveedorMod,			triggerAction: 'all',
-		labelWidth : 170,					hideTrigger:true
+		labelWidth : 170,					hideTrigger:true,					allowBlank:false//,
+		//readOnly : (panelProveedor.down('[name=params.proceso]').getValue() != "I")
 	});
 	
 	aplicaIVA = Ext.create('Ext.form.field.ComboBox',{
@@ -174,6 +175,7 @@ Ext.onReady(function() {
 					panelProveedor.form.submit({
 						waitMsg:'Procesando...',
 						failure: function(form, action) {
+							//Se cambia el valor 
 							Ext.Msg.show({
 								title: 'ERROR',
 								msg: action.result.errorMessage,
@@ -185,7 +187,7 @@ Ext.onReady(function() {
 							panelProveedor.form.reset();
 							modificacionClausula.close();
 							cargarPaginacion();
-							mensajeCorrecto('&Eacute;XITO','Se ha guardado con &eacute;xito.',function(){});
+							mensajeCorrecto('&Eacute;XITO','La configuraci&oacute; del proveedor fue exitoso.',function(){});
 						}
 					});
 				} else {
@@ -257,7 +259,7 @@ Ext.onReady(function() {
 				id             : 'clausulasGridId'
 				,title         : 'Proveedores'
 				,store         :  storeGridProveedores
-				,collapsible   : true
+				//,collapsible   : true
 				,titleCollapse : true
 				,style         : 'margin:5px'
 				,height        : 400

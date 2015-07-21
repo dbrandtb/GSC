@@ -33,6 +33,7 @@ import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoPago;
 import mx.com.gseguros.portal.general.util.TipoPrestadorServicio;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
@@ -4737,6 +4738,54 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.debug("Params: {}", params);
 		}catch( Exception e){
 			logger.error("Error altaFacturasProceso {}", e.getMessage(), e);
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	/**
+	* metodo para el guardado del alta del tramite
+	* @param Json con todos los valores del formulario y los grid
+	* @return Lista AutorizaServiciosVO con la informacion de los asegurados
+	*/
+	public String guardaConfiguracionLayout(){
+		logger.debug("Entra a guardaAltaTramite Params: {} datosTablas {}", params,datosTablas);
+		try{
+			//Realizamos la inserción de los guardados
+			siniestrosManager.guardaLayoutProveedor(params.get("cmbProveedor"), null,null,null,null,null,null,null,"D");
+			for(int i=0;i<datosTablas.size();i++) {
+				siniestrosManager.guardaLayoutProveedor(
+					params.get("cmbProveedor"), 
+					datosTablas.get(i).get("claveAtributo"),
+					datosTablas.get(i).get("claveFormatoAtributo"),
+					datosTablas.get(i).get("valorMinimo"),
+					datosTablas.get(i).get("valorMaximo"),
+					datosTablas.get(i).get("columnaExcel"),
+					datosTablas.get(i).get("claveFormatoFecha"),
+					i+"",
+					null
+				);
+			}
+		}catch( Exception e){
+			logger.error("Error en el guardado de alta de tramite : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	/**
+	* Funcion para obtener el listado del alta del tramite
+	* @param ntramite
+	* @return Lista AltaTramiteVO - tramite Alta Tramite
+	*/
+	public String consultaConfiguracionLayout(){
+		logger.debug("Entra a consultaConfiguracionLayout Params: {}", params);
+		try {
+			datosInformacionAdicional = siniestrosManager.consultaConfiguracionLayout(params.get("cdpresta"));
+		}catch( Exception e){
+			logger.error("Error consultaListadoAltaTramite: {}", e.getMessage(), e);
+			return SUCCESS;
 		}
 		success = true;
 		return SUCCESS;
