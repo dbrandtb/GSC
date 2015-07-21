@@ -3342,7 +3342,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("pv_cdramo_i"  , cdramo);
 		params.put("pv_estado_i"  , estado);
 		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", nmsuplem);
+//		params.put("pv_nmsuplem_i", nmsuplem);
 		params.put("pv_nmrecibo_i", nmrecibo);
 		params.put("pv_nmimpres_i", nmimpres);
 		params.put("pv_cduser_i"  , cdusuari);
@@ -3361,7 +3361,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+//			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmrecibo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmimpres_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cduser_i", OracleTypes.VARCHAR));
