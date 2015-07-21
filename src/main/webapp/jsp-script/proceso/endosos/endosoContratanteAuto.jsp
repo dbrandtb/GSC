@@ -36,13 +36,17 @@ var _35_urlGuardar     = '<s:url namespace="/endosos" action="guardarEndosoContr
 var _35_urlLoadContratantes = '<s:url namespace="/endosos" action="cargarContratantesEndosoContratante" />';
 
 var _p35_urlRecuperarCliente = '<s:url namespace="/" action="buscarPersonasRepetidas" />';
+var _p35_urlPantallaCliente  = '<s:url namespace="/catalogos" action="includes/personasLoader"/>';
 
 debug('_35_smap1:',_35_smap1);
 
 
 var _cdpersonActual;
 var _cdpersonNuevo = '';
-var _cdpostalNuevo = '';
+
+var _p22_recuperaCallback;
+var ventanaContratante;
+var obtieneDatosClienteContratante;
 ////// variables //////
 ///////////////////////
 
@@ -150,7 +154,7 @@ Ext.onReady(function()
     		debug('_35_GridContratantes initComponent');
     		Ext.apply(this,
     		{
-    			title    : 'Contratante Actual'
+    			title    : 'Datos del Contratante Actual'
     			,store   : _35_storeContratantes
     			,columns : [ <s:property value="imap1.columnsGrid" escapeHtml="false" /> ]
     		});
@@ -188,7 +192,7 @@ Ext.onReady(function()
             debug('_35_FormContratante initComponent');
             Ext.apply(this,
             {
-                title       : 'Cambio de Nombre del Contratante'
+                title       : 'Datos del Nuevo Contratante'
 //                ,height     : 80
 //                ,autoScroll : true
                 ,defaults :
@@ -208,124 +212,36 @@ Ext.onReady(function()
 					xtype: 'button',
 					text: 'Seleccionar Cliente',
 					handler: function(){
-					        var ventana=Ext.create('Ext.window.Window',
+					        ventanaContratante = Ext.create('Ext.window.Window',
 					        {
 					            title      : 'Recuperar cliente'
 					            ,modal     : true
-					            ,width     : 600
-					            ,height    : 400
-					            ,items     :
-					            [
-					                {
-					                    layout    : 'hbox'
-					                    ,defaults : { style : 'margin : 5px;' }
-					                    ,items    :
-					                    [
-					                        {
-					                            xtype       : 'textfield'
-					                            ,name       : '_p35_recuperaRfc'
-					                            ,fieldLabel : 'RFC'
-					                            ,minLength  : 9
-					                            ,maxLength  : 13
-					                        }
-					                        ,{
-					                            xtype    : 'button'
-					                            ,text    : 'Buscar'
-					                            ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
-					                            ,handler : function(button)
-					                            {
-					                                debug('recuperar cliente buscar');
-					                                var rfc=_fieldByName('_p35_recuperaRfc').getValue();
-					                                var valido=true;
-					                                if(valido)
-					                                {
-					                                    valido = !Ext.isEmpty(rfc)
-					                                             &&rfc.length>8
-					                                             &&rfc.length<14;
-					                                    if(!valido)
-					                                    {
-					                                        mensajeWarning('Introduza un RFC v&aacute;lido');
-					                                    }
-					                                }
-					                                
-					                                if(valido)
-					                                {
-					                                    button.up('window').down('grid').getStore().load(
-					                                    {
-					                                        params :
-					                                        {
-					                                            'map1.pv_rfc_i'       : rfc
-					                                            ,'map1.cdtipsit'      : _35_smap1.CDTIPSIT
-					                                            ,'map1.pv_cdtipsit_i' : _35_smap1.CDTIPSIT
-					                                            ,'map1.pv_cdunieco_i' : _35_smap1.CDUNIECO
-					                                            ,'map1.pv_cdramo_i'   : _35_smap1.CDRAMO
-					                                            ,'map1.pv_estado_i'   : 'W'
-					                                            ,'map1.pv_nmpoliza_i' : ''
-					                                            ,'map1.soloBD' : 'S'
-					                                        }
-					                                    });
-					                                }
-					                            }
-					                        }
-					                    ]
-					                }
-					                ,Ext.create('Ext.grid.Panel',
-					                {
-					                    title    : 'Resultados'
-					                    ,columns :
-					                    [
-					                        {
-					                            xtype    : 'actioncolumn'
-					                            ,width   : 30
-					                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-					                            ,handler : function(view,row,col,item,e,record)
-					                            {
-					                                debug('recuperar cliente handler record:',record);
-					                                
-					                                if(_cdpersonActual == record.raw.CLAVECLI){
-					                                	mensajeWarning('El cliente seleccionado es el mismo que se encuentra actualmente registrado en la p&oacute;liza');
-					                                	return;
-					                                }
-					                                
-													_cdpersonNuevo = record.raw.CLAVECLI;
-													_cdpostalNuevo = record.raw.CODPOSTAL;
-													
-													_35_formContratante.down('[name=nuevoContratante]').setValue( record.raw.NOMBRECLI);
-					                                
-					                                ventana.destroy();
-					                            }
-					                        }
-					                        ,{
-					                            text       : 'Nombre'
-					                            ,dataIndex : 'NOMBRECLI'
-					                            ,width     : 200
-					                        }
-					                        ,{
-					                            text       : 'Direcci&oacute;n'
-					                            ,dataIndex : 'DIRECCIONCLI'
-					                            ,flex      : 1
-					                        }
-					                    ]
-					                    ,store : Ext.create('Ext.data.Store',
-					                    {
-					                        model     : '_p35_modeloRecuperado'
-					                        ,autoLoad : false
-					                        ,proxy    :
-					                        {
-					                            type    : 'ajax'
-					                            ,url    : _p35_urlRecuperarCliente
-					                            ,timeout: 8*60*1000
-					                            ,reader :
-					                            {
-					                                type  : 'json'
-					                                ,root : 'slist1'
-					                            }
-					                        }
-					                    })
-					                })
-					            ]
+					            ,width     : 800
+					            ,height    : 250
+					            ,loader    : 
+					            {
+				                    url       : _p35_urlPantallaCliente
+				                    ,scripts  : true
+				                    ,autoLoad : true
+				                    ,ajaxOptions: {
+				                            method: 'POST'
+				                     },
+				                     params: {
+									                'smap1.cdperson' : '',
+									                'smap1.cdideper' : '',
+									                'smap1.cdideext' : '',
+									                'smap1.esSaludDanios' : 'D',
+									                'smap1.esCargaClienteNvo' : 'N' ,
+									                'smap1.ocultaBusqueda' : 'S' ,
+									                'smap1.cargaCP' : '',
+									                'smap1.cargaTipoPersona' : '',
+									                'smap1.activaCveFamiliar': 'N',
+									                'smap1.modoRecuperaDanios': 'S',
+									                'smap1.modoSoloEdicion': 'S'
+									            }
+				                }
 					        }).show();
-					        centrarVentanaInterna(ventana);
+					        centrarVentanaInterna(ventanaContratante);
 					    
 					}
 				}
@@ -464,6 +380,35 @@ Ext.onReady(function()
 
 ///////////////////////
 ////// funciones //////
+
+
+_p22_recuperaCallback  =  function (){
+	var datosPersona = obtieneDatosClienteContratante();
+  
+    if(_cdpersonActual == datosPersona.cdperson){
+    	
+    	_cdpersonNuevo = '';
+    	_35_formContratante.down('[name=nuevoContratante]').reset();
+    	
+    	destruirLoaderContratante();
+    	ventanaContratante.destroy();
+    	
+    	setTimeout(function(){
+    		mensajeWarning('El cliente seleccionado es el mismo que se encuentra actualmente registrado en la p&oacute;liza. Seleccione uno distinto');
+    	},1000);
+    	
+    	return;
+    }
+      
+    _cdpersonNuevo = datosPersona.cdperson;
+    
+    _35_formContratante.down('[name=nuevoContratante]').setValue( datosPersona.nomRecupera );
+    
+    destruirLoaderContratante();
+    ventanaContratante.destroy();
+    
+};
+
 function _35_confirmar()
 {
     debug('_35_confirmar');
@@ -495,8 +440,7 @@ function _35_confirmar()
             ,smap2  :
             {
                 'fecha_endoso'     : Ext.Date.format(_35_fieldFechaEndoso.getValue(),'d/m/Y'),
-                'cdpersonNvoContr' : _cdpersonNuevo,
-                'cdpostalNuevo'    : _cdpostalNuevo
+                'cdpersonNvoContr' : _cdpersonNuevo
             }
             ,slist1 : slist1
         }
