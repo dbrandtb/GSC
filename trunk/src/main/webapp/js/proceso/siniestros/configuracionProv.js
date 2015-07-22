@@ -97,7 +97,7 @@ Ext.onReady(function() {
 	
 	var storeProveedorMod = Ext.create('Ext.data.Store', {
 		model:'modelListadoProvMedico',
-		autoLoad:true,
+		autoLoad:false,
 		proxy: {
 			type: 'ajax',
 			url : _URL_CATALOGOS,
@@ -125,8 +125,45 @@ Ext.onReady(function() {
 		width		 : 550,					valueField   : 'cdpresta',			forceSelection : true,
 		matchFieldWidth: false,				queryMode :'remote',				queryParam: 'params.cdpresta',
 		minChars  : 2,						store : storeProveedorMod,			triggerAction: 'all',
-		labelWidth : 170,					hideTrigger:true,					allowBlank:false//,
-		//readOnly : (panelProveedor.down('[name=params.proceso]').getValue() != "I")
+		labelWidth : 170,					hideTrigger:true,					allowBlank:false,
+		listeners : {
+			'select':function(e){
+				Ext.Ajax.request({
+					url: _URL_CONSULTA_PROVEEDOR,
+					params: {
+						'params.cdpresta'  : e.getValue()
+					},
+					success: function(response) {
+						var res = Ext.decode(response.responseText);
+						if(res.datosValidacion &&res.datosValidacion.length == 0) {
+							//Preguntamos que ya existe el proveedor dado de alta
+						}else{
+							var jsonRes = Ext.decode(response.responseText).datosValidacion[0];
+							debug("Valor -->",jsonRes.APLICAIVA);
+							centrarVentanaInterna(Ext.Msg.show({
+								title: 'Aviso',
+								msg: '&iquest;El proveedor ya se encuentra configurado. Desea cargar la informaci&oacute;n ?',
+								buttons: Ext.Msg.YESNO,
+								icon: Ext.Msg.QUESTION,
+								fn: function(buttonId, text, opt){
+									if(buttonId == 'yes'){
+										panelProveedor.down('combo[name=params.idaplicaIVARET]').setValue(jsonRes.APLICAIVARET);
+										panelProveedor.down('combo[name=params.idaplicaIVA]').setValue(jsonRes.APLICAIVA);
+										panelProveedor.down('combo[name=params.secuenciaIVA]').setValue(jsonRes.SECUENCIAIVA);
+										panelProveedor.down('[name=params.proceso]').setValue('U');
+									}else{
+										panelProveedor.down('[name=params.proceso]').setValue('U');
+									}
+								}
+							}));
+						}
+					},
+					failure: function(){
+						centrarVentanaInterna(mensajeError('No se pudo obtener la informaci&oacute;n.'));
+					}
+				});
+			}
+		}
 	});
 	
 	aplicaIVA = Ext.create('Ext.form.field.ComboBox',{
@@ -161,7 +198,7 @@ Ext.onReady(function() {
 			secuenciaIVA,
 			aplicaIVARET,
 			{	xtype  : 'textfield',	fieldLabel 	: 'Proceso',		labelWidth: 100,
-				width	:350,			name   :'params.proceso', 		hidden: true
+				width	:350,			name   :'params.proceso',		hidden :true
 			}
 			
 		],
@@ -187,7 +224,7 @@ Ext.onReady(function() {
 							panelProveedor.form.reset();
 							modificacionClausula.close();
 							cargarPaginacion();
-							mensajeCorrecto('&Eacute;XITO','La configuraci&oacute; del proveedor fue exitoso.',function(){});
+							mensajeCorrecto('&Eacute;XITO','La configuraci&oacute;n del proveedor fue exitoso.',function(){});
 						}
 					});
 				} else {
@@ -377,12 +414,11 @@ Ext.onReady(function() {
 	
 	function configuracionLayoutProveedor(grid,rowIndex){
 		var record = grid.getStore().getAt(rowIndex);
-		debug("VALOR DEL RECORD  =====>",record)
 		windowLoader = Ext.create('Ext.window.Window',{
 			title         : 'Configuraci&oacute;n Layout'
 			,buttonAlign  : 'center'
 			,width        : 800
-			,height       : 530
+			,height       : 550
 			,autoScroll   : true
 			,loader       : {
 				url       : _VER_CONFIG_LAYOUT
@@ -422,7 +458,7 @@ Ext.onReady(function() {
 		var record = grid.getStore().getAt(rowIndex);
 		centrarVentanaInterna(Ext.Msg.show({
 			title: 'Aviso',
-			msg: '&iquest;Esta seguro que desea eliminar el asegurado?',
+			msg: '&iquest;Esta seguro que desea eliminar la configuraci&oacute; del proveedor?',
 			buttons: Ext.Msg.YESNO,
 			icon: Ext.Msg.QUESTION,
 			fn: function(buttonId, text, opt){

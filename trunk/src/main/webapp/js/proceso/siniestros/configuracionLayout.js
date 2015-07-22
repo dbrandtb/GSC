@@ -96,7 +96,7 @@ Ext.onReady(function() {
 	
 	var storeProveedor = Ext.create('Ext.data.Store', {
 		model:'modelListadoProvMedico',
-		autoLoad:false,
+		autoLoad:true,
 		proxy: {
 			type: 'ajax',
 			url : _URL_CATALOGOS,
@@ -199,7 +199,7 @@ Ext.onReady(function() {
 	
 	cmbFormFecha = Ext.create('Ext.form.ComboBox',{
 		id:'cmbFormFecha',			store: storeFormFecha,			queryMode:'local',
-		displayField: 'value',		valueField: 'key',				editable:false,		allowBlank:false
+		displayField: 'value',		valueField: 'key',				editable:false
 	});
 	
     /*////////////////////////////////////////////////////////////////
@@ -229,7 +229,15 @@ Ext.onReady(function() {
 				store: storeLayoutProveedor,
 				columns: 
 				[
-					{	header: 'Atributo', 			dataIndex: 'claveAtributo',			flex:3,			editor : cmbAtributos
+					{	xtype: 'actioncolumn',		width: 30,		sortable: false,		menuDisabled: true,
+						items: [{
+							icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+							tooltip: 'Quitar inciso',
+							scope: this,
+							handler: this.onRemoveClick
+						}]
+					},
+					{	header: 'Atributo', 			dataIndex: 'claveAtributo',			flex:3,			editor : cmbAtributos,			allowBlank: false
 						,renderer : function(v) {
 							var leyenda = '';
 							if (typeof v == 'string'){
@@ -248,7 +256,7 @@ Ext.onReady(function() {
 							return leyenda;
 						}
 					},
-					{	header: 'Formato', 				dataIndex: 'claveFormatoAtributo',	flex:2,			editor : cmbTipoFormato
+					{	header: 'Formato', 				dataIndex: 'claveFormatoAtributo',	flex:2,			editor : cmbTipoFormato,		allowBlank: false
 						,renderer : function(v) {
 							var leyenda = '';
 							if (typeof v == 'string'){
@@ -267,16 +275,14 @@ Ext.onReady(function() {
 							return leyenda;
 						}
 					},
-					{	header: 'Valor Minimo',			dataIndex: 'valorMinimo',			flex:2, 		allowBlank: false
+					{	header: 'Valor Minimo',			dataIndex: 'valorMinimo',			flex:2//, 		allowBlank: false
 						,editor: {		
-							xtype: 'numberfield',		decimalSeparator :'.',			allowBlank: false
-							//xtype: 'textfield',		editable : true,		allowBlank: false
+							xtype: 'numberfield',		decimalSeparator :'.'//,			allowBlank: false
 						}
 					},
-					{	header: 'Valor M&aacute;ximo',	dataIndex: 'valorMaximo',			flex:2,			allowBlank: false
+					{	header: 'Valor M&aacute;ximo',	dataIndex: 'valorMaximo',			flex:2//,			allowBlank: false
 						,editor: {		
-							xtype: 'numberfield',		decimalSeparator :'.',			allowBlank: false
-							//xtype: 'textfield',		editable : true,		allowBlank: false
+							xtype: 'numberfield',		decimalSeparator :'.'//,			allowBlank: false
 						}
 					},
 					{	header: 'Columna', 				dataIndex: 'columnaExcel',			flex:2,			editor : cmbCveColumna
@@ -316,14 +322,6 @@ Ext.onReady(function() {
 							}
 							return leyenda;
 						}
-					},
-					{	xtype: 'actioncolumn',		width: 30,		sortable: false,		menuDisabled: true,
-						items: [{
-							icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
-							tooltip: 'Quitar inciso',
-							scope: this,
-							handler: this.onRemoveClick
-						}]
 					}
 				],
 				selModel: {
@@ -336,6 +334,10 @@ Ext.onReady(function() {
 				}]
 			});
 			this.callParent();
+		},
+		onRemoveClick: function(grid, rowIndex){
+			var record=this.getStore().getAt(rowIndex);
+			this.getStore().removeAt(rowIndex);
 		}
 	});
 	gridLayoutProveedor = new EditorLayoutProveedor();
@@ -374,16 +376,14 @@ Ext.onReady(function() {
 			text: 'Guardar Configuraci&oacute;n',
 			handler: function() {
 				var form = this.up('form').getForm();
-				//myMask.show();
 				if (form.isValid()){
-					//
+					//myMask.show();
 					var submitValues={};
     				var formulario=panelInicialPral.form.getValues();
     				submitValues['params']=formulario;
     				var datosTablas = [];
     				
     				storeLayoutProveedor.each(function(record,index){
-    					debug("Valores del Store --> ",record);
     					datosTablas.push({
 							claveAtributo:record.get('claveAtributo'),
 							claveFormatoAtributo:record.get('claveFormatoAtributo'),
@@ -393,60 +393,78 @@ Ext.onReady(function() {
 							claveFormatoFecha:record.get('claveFormatoFecha')
 						});
 					});
-					submitValues['datosTablas'] = datosTablas;
-					panelInicialPral.setLoading(true);
-					debug("VALORES A ENVIAR A GUARDAR --->");
-					debug(submitValues);
-					Ext.Ajax.request({
-						url: _URL_GUARDA_CONFIGURACION,
-						jsonData:Ext.encode(submitValues), // convierte a estructura JSON
-						
-						success:function(response,opts){
-							panelInicialPral.setLoading(false);
-							var jsonResp = Ext.decode(response.responseText);
-							/*if(jsonResp.success==true){
-								var etiqueta;
-								var mensaje;
-								if(valorAction.ntramite == null) {
-									etiqueta = "Guardado";
-									mensaje = "Se gener&oacute; el n&uacute;mero de tr&aacute;mite "+ Ext.decode(response.responseText).msgResult; 
+					
+					claveAtributo = 0;
+					bandera = 0;
+					columnaExcel = 0;
+					for(var i = 0; i < datosTablas.length; i++){
+						for (var j = i + 1; j < datosTablas.length; j++){
+							if(datosTablas[i].claveAtributo == datosTablas[j].claveAtributo){
+								claveAtributo++;
+							}
+							
+							if(datosTablas[i].columnaExcel == datosTablas[j].columnaExcel){
+								columnaExcel++;
+							}
+						}
+					}
+					
+					if(claveAtributo > 0){
+						bandera =1;
+						Ext.Msg.show({
+							title: 'Aviso',
+							msg: 'Existen atributos duplicados, favor de verificar',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.WARNING
+						});
+					}
+					
+					if(columnaExcel > 0){
+						bandera =1;
+						Ext.Msg.show({
+							title: 'Aviso',
+							msg: 'Existen columnas duplicados, favor de verificar',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.WARNING
+						});
+					}
+					
+					if(bandera != '1'){
+						submitValues['datosTablas'] = datosTablas;
+						panelInicialPral.setLoading(true);
+						Ext.Ajax.request({
+							url: _URL_GUARDA_CONFIGURACION,
+							jsonData:Ext.encode(submitValues),
+							
+							success:function(response,opts){
+								panelInicialPral.setLoading(false);
+								var jsonResp = Ext.decode(response.responseText);
+								if(jsonResp.success==true){
+									mensajeCorrecto("Guardado","La configuraci&oacute;n se guardo correctamente.",null);
+									panelInicialPral.getForm().reset();
+									storeFacturaDirecto.removeAll();
+									windowLoader.close();
 								}else{
-									etiqueta = "Modificaci&oacute;n";
-									mensaje = "Se modific&oacute; el n&uacute;mero de tr&aacute;mite "+ valorAction.ntramite;
-								}
-								mensajeCorrecto(etiqueta,mensaje,function() {
-									Ext.create('Ext.form.Panel').submit( {
-										url             : _p12_urlMesaControl
-										,standardSubmit : true
-										,params         : {
-											'smap1.gridTitle'      : 'Siniestros en espera'
-											,'smap2.pv_cdtiptra_i' : 16
-										}
+									Ext.Msg.show({
+										title:'Error',
+										msg: 'Error en el guardado de la configuraci&oacute;n',
+										buttons: Ext.Msg.OK,
+										icon: Ext.Msg.ERROR
 									});
-								});
-								panelInicialPral.getForm().reset();
-								storeFacturaDirecto.removeAll();
-								windowLoader.close();
-							}else{
+									respuesta = false;
+								}
+							},
+							failure:function(response,opts){
+								panelInicialPrincipal.setLoading(false);
 								Ext.Msg.show({
 									title:'Error',
-									msg: 'Error en el guardado del alta de tr&aacute;mite',
+									msg: 'Error de comunicaci&oacute;n',
 									buttons: Ext.Msg.OK,
 									icon: Ext.Msg.ERROR
 								});
-								respuesta= false;
-							}*/
-						},
-						failure:function(response,opts){
-							panelInicialPrincipal.setLoading(false);
-							Ext.Msg.show({
-								title:'Error',
-								msg: 'Error de comunicaci&oacute;n',
-								buttons: Ext.Msg.OK,
-								icon: Ext.Msg.ERROR
-							});
-						}
-					});
+							}
+						});
+					}
 				}else {
 					Ext.Msg.show({
 						title:'Datos incompletos',
@@ -460,10 +478,15 @@ Ext.onReady(function() {
 	});
 	
 	if(valorAction.ntramite != null){
-		debug("Valores de recuperacion", valorAction);
 		storeProveedor.load();
 		storeSecuenciaIVA.load();
 		storeAplicaIVARet.load();
+		
+		storeProveedor.load({
+			params:{
+				'params.cdpresta': valorAction.cdpresta
+			}
+		});
 		panelInicialPral.down('combo[name=cmbProveedor]').setValue(valorAction.cdpresta);
 		panelInicialPral.down('combo[name=idaplicaIVA]').setValue(valorAction.idaplicaIVA);
 		panelInicialPral.down('combo[name=secuenciaIVA]').setValue(valorAction.secuenciaIVA);
@@ -480,18 +503,17 @@ Ext.onReady(function() {
 				if(Ext.decode(response.responseText).datosInformacionAdicional != null)
 				{
 					var json=Ext.decode(response.responseText).datosInformacionAdicional;
-					debug("VALOR DEL JSON GRID ====> : ", json);
-						for(var i = 0; i < json.length; i++){
-							var rec = new modeLayoutProveedor({
-								claveAtributo: json[i].CVEATRI,
-								claveFormatoAtributo: json[i].CVEFORMATO,
-								valorMinimo: json[i].VALORMIN,
-								valorMaximo: json[i].VALORMAX,
-								columnaExcel: json[i].CVEEXCEL,
-								claveFormatoFecha: json[i].FORMATFECH
-							});
-							storeLayoutProveedor.add(rec);
-						}
+					for(var i = 0; i < json.length; i++){
+						var rec = new modeLayoutProveedor({
+							claveAtributo: json[i].CVEATRI,
+							claveFormatoAtributo: json[i].CVEFORMATO,
+							valorMinimo: json[i].VALORMIN,
+							valorMaximo: json[i].VALORMAX,
+							columnaExcel: json[i].CVEEXCEL,
+							claveFormatoFecha: json[i].FORMATFECH
+						});
+						storeLayoutProveedor.add(rec);
+					}
 				}
 			},
 			failure : function (){
