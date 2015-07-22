@@ -4790,9 +4790,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		success = true;
 		return SUCCESS;
 	}
-	/*
-	
-	proveedor = siniestrosManager.obtenerDatosProveedor(facturasAux.get(0).get("CDPRESTA"));
 	
 /****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {
