@@ -286,6 +286,9 @@ Ext.onReady(function()
             ,'TARIFA_UNICA_MUJERES'
             ,'TARIFA_TOTAL_HOMBRES'
             ,'TARIFA_TOTAL_MUJERES'
+            ,'DERPOL_TOTAL_GENERAL'
+            ,'RECARGOS_TOTAL_GENERAL'
+            ,'IVA_TOTAL_GENERAL'
         ]
     });
     
@@ -327,7 +330,20 @@ Ext.onReady(function()
     Ext.define('_p21_vpModelo',
     {
         extend  : 'Ext.data.Model'
-        ,fields : [ 'concepto' , { name : 'importe',type :'float' }]
+        ,fields :
+        [
+            'concepto'
+            ,{ name : 'importe'   , type :'float' }
+            ,{ name : 'subgrupo1' , type :'float' }
+            ,{ name : 'subgrupo2' , type :'float' }
+            ,{ name : 'subgrupo3' , type :'float' }
+            ,{ name : 'subgrupo4' , type :'float' }
+            ,{ name : 'subgrupo5' , type :'float' }
+            ,{ name : 'subgrupo6' , type :'float' }
+            ,{ name : 'subgrupo7' , type :'float' }
+            ,{ name : 'subgrupo8' , type :'float' }
+            ,{ name : 'subgrupo9' , type :'float' }
+        ]
     });
     
     Ext.define('_p21_modeloRevisionAsegurado',
@@ -4664,6 +4680,7 @@ function _p21_generarVentanaVistaPrevia(sinBotones)
     Ext.create('Ext.grid.Panel',
     {
         title     : 'CONCEPTOS GLOBALES'
+        ,itemId   : '_p21_gridConceptosGlobales'
         ,stores   : Ext.create('Ext.data.Store',
         {
             model : '_p21_vpModelo'
@@ -4688,11 +4705,92 @@ function _p21_generarVentanaVistaPrevia(sinBotones)
                 }
             }
             ,{
-                text         : 'IMPORTE'
+                text         : 'IMPORTE<br/>SUBGRUPO 1'
+                ,dataIndex   : 'subgrupo1'
+                ,sortable    : false
+                ,renderer    : Ext.util.Format.usMoney
+                ,width       : 140
+                ,summaryType : 'sum'
+                ,hidden      : _p21_storeGrupos.getCount()<1
+            }
+            ,{
+                text         : 'IMPORTE<br/>SUBGRUPO 2'
+                ,dataIndex   : 'subgrupo2'
+                ,sortable    : false
+                ,renderer    : Ext.util.Format.usMoney
+                ,width       : 140
+                ,summaryType : 'sum'
+                ,hidden      : _p21_storeGrupos.getCount()<2
+            }
+            ,{
+                text         : 'IMPORTE<br/>SUBGRUPO 3'
+                ,dataIndex   : 'subgrupo3'
+                ,sortable    : false
+                ,renderer    : Ext.util.Format.usMoney
+                ,width       : 140
+                ,summaryType : 'sum'
+                ,hidden      : _p21_storeGrupos.getCount()<3
+            }
+            ,{
+                text         : 'IMPORTE<br/>SUBGRUPO 4'
+                ,dataIndex   : 'subgrupo4'
+                ,sortable    : false
+                ,renderer    : Ext.util.Format.usMoney
+                ,width       : 140
+                ,summaryType : 'sum'
+                ,hidden      : _p21_storeGrupos.getCount()<4
+            }
+            ,{
+                text         : 'IMPORTE<br/>SUBGRUPO 5'
+                ,dataIndex   : 'subgrupo5'
+                ,sortable    : false
+                ,renderer    : Ext.util.Format.usMoney
+                ,width       : 140
+                ,summaryType : 'sum'
+                ,hidden      : _p21_storeGrupos.getCount()<5
+            }
+            ,{
+                text         : 'IMPORTE<br/>SUBGRUPO 6'
+                ,dataIndex   : 'subgrupo6'
+                ,sortable    : false
+                ,renderer    : Ext.util.Format.usMoney
+                ,width       : 140
+                ,summaryType : 'sum'
+                ,hidden      : _p21_storeGrupos.getCount()<6
+            }
+            ,{
+                text         : 'IMPORTE<br/>SUBGRUPO 7'
+                ,dataIndex   : 'subgrupo7'
+                ,sortable    : false
+                ,renderer    : Ext.util.Format.usMoney
+                ,width       : 140
+                ,summaryType : 'sum'
+                ,hidden      : _p21_storeGrupos.getCount()<7
+            }
+            ,{
+                text         : 'IMPORTE<br/>SUBGRUPO 8'
+                ,dataIndex   : 'subgrupo8'
+                ,sortable    : false
+                ,renderer    : Ext.util.Format.usMoney
+                ,width       : 140
+                ,summaryType : 'sum'
+                ,hidden      : _p21_storeGrupos.getCount()<8
+            }
+            ,{
+                text         : 'IMPORTE<br/>SUBGRUPO 9'
+                ,dataIndex   : 'subgrupo9'
+                ,sortable    : false
+                ,renderer    : Ext.util.Format.usMoney
+                ,width       : 140
+                ,summaryType : 'sum'
+                ,hidden      : _p21_storeGrupos.getCount()<9
+            }
+            ,{
+                text         : 'IMPORTE<br/>P&Oacute;LIZA'
                 ,dataIndex   : 'importe'
                 ,sortable    : false
                 ,renderer    : Ext.util.Format.usMoney
-                ,width       : 200
+                ,width       : 140
                 ,summaryType : 'sum'
             }
         ]
@@ -4762,6 +4860,7 @@ function _p21_generarVentanaVistaPrevia(sinBotones)
             ,store     : Ext.create('Ext.data.Store',
             {
                 model     : '_p21_modeloTarifaEdad'
+                ,grupo    : record.get('letra')
                 ,autoLoad : true
                 ,proxy    :
                 {
@@ -4782,6 +4881,33 @@ function _p21_generarVentanaVistaPrevia(sinBotones)
                     {
                         type  : 'json'
                         ,root : 'slist1'
+                    }
+                }
+                ,listeners :
+                {
+                    load : function(me,records,success)
+                    {
+                        if(success)
+                        {
+                            var prima  = 0;
+                            var derpol = 0;
+                            var recar  = 0;
+                            var iva    = 0;
+                            
+                            for(var ij in records)
+                            {
+                                prima  += Number(records[ij].get('TARIFA_TOTAL_HOMBRES')) + Number(records[ij].get('TARIFA_TOTAL_MUJERES'));
+                                derpol += Number(records[ij].get('DERPOL_TOTAL_GENERAL'));
+                                recar  += Number(records[ij].get('RECARGOS_TOTAL_GENERAL'));
+                                iva    += Number(records[ij].get('IVA_TOTAL_GENERAL'));
+                            }
+                            
+                            _fieldById('_p21_gridConceptosGlobales').store.getAt(0).set('subgrupo'+me.grupo , prima);
+                            _fieldById('_p21_gridConceptosGlobales').store.getAt(1).set('subgrupo'+me.grupo , derpol);
+                            _fieldById('_p21_gridConceptosGlobales').store.getAt(2).set('subgrupo'+me.grupo , recar);
+                            _fieldById('_p21_gridConceptosGlobales').store.getAt(3).set('subgrupo'+me.grupo , iva);
+                            _fieldById('_p21_gridConceptosGlobales').store.commitChanges();
+                        }
                     }
                 }
             })
