@@ -652,6 +652,7 @@ Ext.onReady(function()
                             ,{
                                 xtype     : 'fieldset'
                                 ,title    : '<span style="font:bold 14px Calibri;">INFORMACI&Oacute;N DEL RIESGO</span>'
+                                ,itemId   : '_p25_fieldsetRiesgo'
                                 ,layout   :
                                 {
                                     type     : 'table'
@@ -1720,6 +1721,51 @@ Ext.onReady(function()
         {
             _fieldByLabel('PRODUCTO').hide();
             errorComunicacion();
+        }
+    });
+    
+    Ext.Ajax.request(
+    {
+        url     : _p25_urlCargarParametros
+        ,params :
+        {
+            'smap1.parametro' : 'COMP_LECT_RIESGO_COT_GRUP'
+            ,'smap1.cdramo'   : _p25_smap1.cdramo
+            ,'smap1.cdtipsit' : _p25_smap1.cdtipsit
+            ,'smap1.clave4'   : _p25_smap1.cdsisrol
+        }
+        ,success : function(response)
+        {
+            var ck = 'Decodificando permisos de componentes de riesgo';
+            try
+            {
+                var json = Ext.decode(response.responseText);
+                debug('### permisos:',json);
+                if(json.exito)
+                {
+                    for(var i=1;i<=13;i++)
+                    {
+                        var indice = 'P'+i+'VALOR';
+                        var label  = json.smap1[indice];
+                        if(!Ext.isEmpty(label))
+                        {
+                            _fieldLikeLabel(json.smap1[indice],_fieldById('_p25_fieldsetRiesgo')).readOnly = true;
+                        }
+                    }
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            catch(e)
+            {
+                manejaException(e,ck);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion('Error al obtener permisos de componentes de riesgo');
         }
     });
     ////// loaders //////
