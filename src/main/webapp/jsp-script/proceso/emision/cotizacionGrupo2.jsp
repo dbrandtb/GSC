@@ -3287,6 +3287,18 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento)
                                                                             ,'smap1.tipomov'  : '0'
                                                                         }
                                                                     }
+                                                                    ,buttonAlign : 'center'
+                                                                    ,buttons     :
+                                                                    [
+                                                                        {
+                                                                            text     : 'Continuar'
+                                                                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                                                            ,handler : function(me)
+                                                                            {
+                                                                                location.reload();
+                                                                            }
+                                                                        }
+                                                                    ]
                                                                 }).show());
                                                                 if(!Ext.isEmpty(json.smap1.nombreUsuarioDestino))
                                                                 {
