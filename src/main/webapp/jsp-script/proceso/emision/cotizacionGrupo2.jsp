@@ -3265,7 +3265,7 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento)
                                                                 centrarVentanaInterna(Ext.create('Ext.window.Window',
                                                                 {
                                                                     width        : 600
-                                                                    ,height      : 400
+                                                                    ,height      : 440
                                                                     ,title       : 'Subir documentos de tu tr&aacute;mite ('+json.smap1.ntramite+')'
                                                                     ,closable    : false
                                                                     ,modal       : true
