@@ -613,6 +613,9 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					,"TARIFA_UNICA_MUJERES"
 					,"TARIFA_TOTAL_HOMBRES"
 					,"TARIFA_TOTAL_MUJERES"
+					,"DERPOL_TOTAL_GENERAL"
+					,"RECARGOS_TOTAL_GENERAL"
+					,"IVA_TOTAL_GENERAL"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
