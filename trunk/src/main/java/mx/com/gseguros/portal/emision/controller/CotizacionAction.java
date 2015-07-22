@@ -524,6 +524,22 @@ public class CotizacionAction extends PrincipalCoreAction
 							}
 						}
 					}
+	        		
+					//[parche] para ramo 16 y sucriptor auto, sustituir campo Numero de serie:
+					if(cdramo.equals(Ramo.AUTOS_FRONTERIZOS.getCdramo())) {
+						if(tatriIte.getNameCdatribu().equalsIgnoreCase("3")) {
+							List<ComponenteVO> componenteSustitutoListaAux = pantallasManager.obtenerComponentes(
+									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
+									,cdtipsit                              ,  "W"         , cdsisrol
+									,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "3");
+							// Si se encuentra el componente lo reemplazamos:
+							if(componenteSustitutoListaAux != null && componenteSustitutoListaAux.size() > 0) {
+								temp.remove(tatriIte);
+								componenteSustitutoListaAux.get(0).setSwsuscri("N");
+								temp.add(componenteSustitutoListaAux.get(0));
+							}
+						}
+					}
 				}
 		        tatrisit=temp;
 		        

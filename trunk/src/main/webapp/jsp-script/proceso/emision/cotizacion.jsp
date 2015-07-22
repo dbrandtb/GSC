@@ -2228,10 +2228,14 @@ Ext.onReady(function()
                 return;
         	}
         	
-            var vim=this.value;
-            if(!vim||(vim+'x').length!=18)
+            var vim = this.value;
+            if(Ext.isEmpty(vim) || (vim.length < this.minLength || vim.length > this.maxLength))
             {
-                mensajeWarning('La longitud del n&uacute;mero de serie debe ser 17');
+            	if(this.minLength == this.maxLength) {
+            		mensajeWarning('La longitud del n&uacute;mero de serie debe ser ' + this.minLength);
+            	} else {
+            		mensajeWarning('La longitud del n&uacute;mero de serie debe ser entre ' + this.minLength + ' y ' + this.maxLength);
+            	}
                 return;
             }
             debug('>llamando a nada:',vim);
