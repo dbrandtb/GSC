@@ -1755,7 +1755,7 @@ Ext.onReady(function()
                 }
                 else
                 {
-                    mensajeError(json.respuesta);
+                    debugError('Error inofensivo al obtener permisos de componentes de riesgo',json.respuesta);
                 }
             }
             catch(e)
