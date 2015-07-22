@@ -3379,7 +3379,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento)
                                                                     centrarVentanaInterna(Ext.create('Ext.window.Window',
                                                                     {
                                                                         width        : 600
-                                                                        ,height      : 400
+                                                                        ,height      : 440
                                                                         ,title       : 'Subir documentos de tu tr&aacute;mite ('+json.smap1.ntramite+')'
                                                                         ,closable    : false
                                                                         ,modal       : true
@@ -3401,6 +3401,18 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento)
                                                                                 ,'smap1.tipomov'  : '0'
                                                                             }
                                                                         }
+                                                                        ,buttonAlign : 'center'
+                                                                        ,buttons     :
+                                                                        [
+                                                                            {
+                                                                                text     : 'Continuar'
+                                                                                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                                                                ,handler : function(me)
+                                                                                {
+                                                                                    location.reload();
+                                                                                }
+                                                                            }
+                                                                        ]
                                                                     }).show());
                                                                     if(!Ext.isEmpty(json.smap1.nombreUsuarioDestino))
                                                                     {
