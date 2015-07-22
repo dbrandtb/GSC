@@ -119,7 +119,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 				logger.error("error al validar ventana de documentos bloqueada",ex);
 			}
 			
-			if(bloqueoPermisoVentana)
+			if(bloqueoPermisoVentana&&false)
 			{
 				smap1.put("readOnly" , "");
 			}
