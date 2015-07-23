@@ -344,6 +344,8 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 			datosTitular.setCodigopostal(rs.getString("vchCP"));
 			datosTitular.setEdocivil(rs.getString("vchEstadoCivil"));
 			datosTitular.setFeingreso(rs.getString("dtFecingreso"));
+			datosTitular.setCelular(rs.getString("vchCelular"));
+			datosTitular.setEmail(rs.getString("vchEmailT"));
 			return datosTitular;
 		}
 	}
@@ -887,7 +889,7 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 			params.put("iCodProveedor", aviso.getCdpresta());
 			params.put("dtFecRegistro", null);
 			params.put("dtFecIngreso", StringUtils.isBlank(aviso.getFeingreso()) ? null : renderFechas.parse(aviso.getFeingreso()));
-			params.put("siUsuario", 10);
+			params.put("siUsuario", 515);
 			params.put("vchCadena", aviso.getComentario());
 			Map<String, Object> mapResult = ejecutaSP(new enviarAvisoHospitalizacionSP(getDataSource()), params);
 			return (String) mapResult.get("vchOpcional");

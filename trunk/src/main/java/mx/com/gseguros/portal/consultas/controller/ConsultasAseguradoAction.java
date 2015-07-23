@@ -30,6 +30,7 @@ import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.service.MailServiceForSms;
+import mx.com.gseguros.portal.general.util.RolSistema;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -65,6 +66,11 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     private String mensajeRes;
     
     private String iCodAviso;
+    
+	/**
+	 * Indica si el usuario es de CallCenter
+	 */
+	private boolean usuarioCallCenter;
     
     @Autowired
     private MailServiceForSms mailServiceForSms;
@@ -122,6 +128,21 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 	private List<BaseVO> datosHospitales;
 	
 	private List<AvisoHospitalizacionVO> datosAvisosAnteriores;
+	
+	/**
+	 * Metodo de entrada a consulta de polizas
+	 */
+	public String execute() throws Exception {
+
+		// Obtenemos el rol de sistema del usuario en sesion:
+		UserVO usuario = (UserVO) session.get("USUARIO");
+		String cdRolSistema = usuario.getRolActivo().getClave();
+		// Si es Call Center, tendra permiso de ver Aviso Hospitalizacion:
+		if (cdRolSistema.equals(RolSistema.CALLCENTER.getCdsisrol())) {
+			usuarioCallCenter = true;
+		}
+		return SUCCESS;
+	}
 	
 	/**
      * Obtiene las coincidencias de asegurados
@@ -671,8 +692,9 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     	UserVO usuario = (UserVO)session.get("USUARIO");
     	String telefonoAgente="";
     	String mensajeAgente="";
-    	boolean smsSend;
-		String [] mailSms= {"smsgs@gseguros.com.mx"};
+    	boolean smsSend, mailSend;
+		String [] mailSms = { "smsgs@gseguros.com.mx" };
+		String [] mails = { "ahernandezc@gsalud.com.mx","nlromeroc@gsalud.com.mx","jvargas@gsalud.com.mx" };
 		String [] adjuntos = new String[0];
 		mensajeAgente = "EL AFILIADO(" + params.get("cdperson") + "), " + params.get("nombre") +
                 ", DE LA POLIZA DE GSALUD: (" + params.get("cdunieco") + "/ ";
@@ -699,13 +721,14 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 				throw new ApplicationException("3");
 			}
 			smsSend = mailServiceForSms.enviaCorreo(mailSms, null, null, telefonoAgente, mensajeAgente, adjuntos, false);
-    		if(!smsSend)
+			mailSend = mailService.enviaCorreo(mails, null, null, "Aviso de Hospitalizacion", mensajeAgente, adjuntos, false);
+    		if(!smsSend && !mailSend)
     		{
     			throw new ApplicationException("4");
     		}else{
     			consultasAseguradoManager.actualizaEstatusEnvio(iCodAviso, poliza);
 			}
-    		mensajeRes = "Se registr&oacute; Aviso de Hospitalizaci&oacute;n y se envi&oacute; SMS.";
+    		mensajeRes = "Se registr&oacute; y envi&oacute; Aviso de Hospitalizaci&oacute;n.";
     		success = true;
     		
     	}catch(Exception e){
@@ -754,6 +777,14 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 
 	public void setiCodAviso(String iCodAviso) {
 		this.iCodAviso = iCodAviso;
+	}
+
+	public boolean isUsuarioCallCenter() {
+		return usuarioCallCenter;
+	}
+
+	public void setUsuarioCallCenter(boolean usuarioCallCenter) {
+		this.usuarioCallCenter = usuarioCallCenter;
 	}
 
 	public List<ConsultaResultadosAseguradoVO> getResultadosAsegurado() {
