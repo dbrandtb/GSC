@@ -100,11 +100,6 @@ var _parentescoTitular = 'T';
 
 debug('_0_smap1: ',_0_smap1);
 
-//parche para RAMO 16 (FRONTERIZOS) con rol SUSCRIPTOR AUTO, no se lanza la validación:
-var aplicarValidacionModelo = true; 
-if(_0_smap1.cdramo == Ramo.AutosFronterizos && _0_smap1.cdsisrol == 'SUSCRIAUTO') {
-    aplicarValidacionModelo = false;
-}
 //parche para RAMO 16 (FRONTERIZOS) con rol distinto de SUSCRIPTOR AUTO, se oculta el botón Detalle:
 var ocultarDetalleCotizacion = false; 
 if(_0_smap1.cdramo == Ramo.AutosFronterizos && _0_smap1.cdsisrol != 'SUSCRIAUTO') {
@@ -2308,52 +2303,53 @@ Ext.onReady(function()
         comboTipoValor.addListener('change',changeFunction);
         changeFunction();
         
-        if(aplicarValidacionModelo) {
-            Ext.Ajax.request(
+        Ext.Ajax.request(
+        {
+            url      : _0_urlObtenerParametros
+            ,params  :
             {
-                url      : _0_urlObtenerParametros
-                ,params  :
+                'smap1.parametro' : 'RANGO_ANIO_MODELO'
+                ,'smap1.cdramo'   : _0_smap1.cdramo
+                ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+                ,'smap1.clave4'   : _0_smap1.cdsisrol
+            }
+            ,success : function(response)
+            {
+                var json=Ext.decode(response.responseText);
+                debug('### obtener rango años response:',json);
+                if(json.exito)
                 {
-                    'smap1.parametro' : 'RANGO_ANIO_MODELO'
-                    ,'smap1.cdramo'   : _0_smap1.cdramo
-                    ,'smap1.cdtipsit' : _0_smap1.cdtipsit
-                }
-                ,success : function(response)
-                {
-                    var json=Ext.decode(response.responseText);
-                    debug('### obtener rango años response:',json);
-                    if(json.exito)
+                    var limiteInferior = json.smap1.P1VALOR-0;
+                    var limiteSuperior = json.smap1.P2VALOR-0;
+                    _0_formAgrupados.down('[name=parametros.pv_otvalor05]').validator=function(value)
                     {
-                        var limiteInferior = json.smap1.P1VALOR-0;
-                        var limiteSuperior = json.smap1.P2VALOR-0;
-                        _0_formAgrupados.down('[name=parametros.pv_otvalor05]').validator=function(value)
+                        var r = true;
+                        var anioActual = new Date().getFullYear();
+                        var max = anioActual+limiteSuperior;
+                        var min = anioActual+limiteInferior;
+                        debug('limiteInferior:',limiteInferior);
+                        debug('limiteSuperior:',limiteSuperior);
+                        debug('anioActual:',anioActual);
+                        debug('max:',max);
+                        debug('min:',min);
+                        debug('value:',value);
+                        if(value<min||value>max)
                         {
-                            var r = true;
-                            var anioActual = new Date().getFullYear();
-                            var max = anioActual+limiteSuperior;
-                            var min = anioActual+limiteInferior;
-                            debug('anioActual:',anioActual);
-                            debug('max:',max);
-                            debug('min:',min);
-                            debug('value:',value);
-                            if(value<min||value>max)
-                            {
-                                r='El modelo debe estar en el rango '+min+'-'+max;
-                            }
-                            return r;
-                        };
-                    }
-                    else
-                    {
-                        mensajeError(json.respuesta);
-                    }
+                            r='El modelo debe estar en el rango '+min+'-'+max;
+                        }
+                        return r;
+                    };
                 }
-                ,failure : function()
+                else
                 {
-                    errorComunicacion();
+                    mensajeError(json.respuesta);
                 }
-            });
-        }
+            }
+            ,failure : function()
+            {
+                errorComunicacion();
+            }
+        });
     }
     //fin [parche]
     
