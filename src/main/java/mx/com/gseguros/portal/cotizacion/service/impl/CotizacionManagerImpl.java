@@ -2279,6 +2279,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			            ,null     //swpatent
 			            ,pcpgocte
 			            ,"F"      //tipoflot
+			            ,null     //agrupador
 			            ,"U"      //accion
 						);
 			}
@@ -4084,6 +4085,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		            ,null     //swpatent
 		            ,pcpgocte
 		            ,"F"      //tipoflot
+		            ,null     //agrupador
 		            ,"U"      //accion
 					);
 		}
@@ -5468,6 +5470,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 						,null     //swpatent
 						,"100"    //pcpgocte
 						,null     //tipoflot
+						,null     //agrupador
 						,"U"      //accion
 						);
 	            ////// mpolizas //////
@@ -6761,6 +6764,45 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return nombre;
+	}
+	
+	@Override
+	public String guardarConfiguracionGarantias(
+			String cdramo
+			,String cdtipsit
+			,String cdplan
+			,String cdpaq
+			,String dspaq
+			,List<Map<String,String>>tvalogars
+			)throws Exception
+	{
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarConfiguracionGarantias @@@@@@"
+				,"\n@@@@@@ cdramo="    , cdramo
+				,"\n@@@@@@ cdtipsit="  , cdtipsit
+				,"\n@@@@@@ cdplan="    , cdplan
+				,"\n@@@@@@ cdpaq="     , cdpaq
+				,"\n@@@@@@ dspaq="     , dspaq
+				,"\n@@@@@@ tvalogars=" , tvalogars.size()
+				));
+		
+		String cdPaqueteNuevo = "cdprueba";
+		String paso           = null;
+		try
+		{}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.join(
+				 "\n@@@@@@ cdPaqueteNuevo=",cdPaqueteNuevo
+				,"\n@@@@@@ guardarConfiguracionGarantias @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		return cdPaqueteNuevo;
 	}
     
 	///////////////////////////////

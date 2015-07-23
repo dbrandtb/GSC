@@ -2026,6 +2026,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             ,String swpatent
             ,String pcpgocte
             ,String tipoflot
+            ,String agrupador
             ,String accion
 			) throws Exception
 	{
@@ -2077,6 +2078,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
         params.put("swpatent"  , swpatent);
         params.put("pcpgocte"  , pcpgocte);
         params.put("tipoflot"  , tipoflot);
+        params.put("agrupador" , agrupador);
         params.put("accion"    , accion);
         logger.debug(
         		new StringBuilder()
@@ -2093,7 +2095,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	{
 		protected MovimientoPoliza(DataSource dataSource)
 		{
-    		super(dataSource,"PKG_SATELITES.P_MOV_MPOLIZAS");
+    		super(dataSource,"PKG_SATELITES2.P_MOV_MPOLIZAS");
     		declareParameter(new SqlParameter("cdunieco"  , OracleTypes.NUMERIC));
     		declareParameter(new SqlParameter("cdramo"    , OracleTypes.NUMERIC));
     		declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
@@ -2141,6 +2143,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     		declareParameter(new SqlParameter("swpatent"  , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pcpgocte"  , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("tipoflot"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("agrupador" , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("accion"    , OracleTypes.VARCHAR));	
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));

@@ -81,6 +81,7 @@ var _p25_urlRecuperacionSimpleLista     = '<s:url namespace="/emision"         a
 var _p25_urlRecuperacionSimple          = '<s:url namespace="/emision"         action="recuperacionSimple"               />';
 var _p25_urlPantallaAgentes             = '<s:url namespace="/flujocotizacion" action="principal"                        />';
 var _p25_urlComplementoCotizacion       = '<s:url namespace="/emision"         action="complementoSaludGrupo"            />';
+var _p25_urlGuardarConfig4TVALAT        = '<s:url namespace="/emision"         action="guardarConfiguracionGarantias"    />';
 
 var _p25_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports" />';
 var _p25_reportsServerUser       = '<s:text name="pass.servidor.reports" />';
@@ -1107,7 +1108,7 @@ Ext.onReady(function()
 	                    ,failure : function()
 	                    {
 	                        recNumber.setLoading(false);
-	                        errorComunicacion('Recuperando porcentaje de recargo por producto');
+	                        errorComunicacion(null,'Recuperando porcentaje de recargo por producto');
 	                    }
 	                });
 	            }
@@ -1226,7 +1227,7 @@ Ext.onReady(function()
                 ,failure : function()
                 {
                     derechosCmp.setLoading(false);
-                    errorComunicacion('Recuperando derechos de poliza');
+                    errorComunicacion(null,'Recuperando derechos de poliza');
                 }
             });
         };
@@ -1289,7 +1290,7 @@ Ext.onReady(function()
                 ,failure : function()
                 {
                     derechosCmp2.setLoading(false);
-                    errorComunicacion('Recuperando derechos de poliza');
+                    errorComunicacion(null,'Recuperando derechos de poliza');
                 }
             });
         };
@@ -1765,7 +1766,7 @@ Ext.onReady(function()
         }
         ,failure : function()
         {
-            errorComunicacion('Error al obtener permisos de componentes de riesgo');
+            errorComunicacion(null,'Error al obtener permisos de componentes de riesgo');
         }
     });
     ////// loaders //////
@@ -2425,6 +2426,252 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                     }
                                                     ,defaults    : { style : 'margin:5px' }
                                                     ,items       : items
+                                                    ,tbar        :
+                                                    [
+                                                        '->'
+                                                        ,{
+                                                            text     : 'Guardar configuraci&oacute;n'
+                                                            ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+                                                            ,hidden  : _p25_smap1.cdsisrol!='COTIZADOR'||_p25_smap1.cdtipsit!='RC'
+                                                            ,handler : function(me)
+                                                            {
+                                                                var ck = 'Guardando config.';
+                                                                try
+                                                                {
+                                                                    var errores = [];
+                                                                    var forms   = Ext.ComponentQuery.query('form',me.up().up());
+                                                                    debug('forms:',forms)
+                                                                    for(var i in forms)
+                                                                    {
+                                                                        if(!forms[i].isValid())
+                                                                        {
+                                                                            errores.push('Revisar la cobertura '+forms[i].down('displayfield').fieldLabel);
+                                                                        }
+                                                                    }
+                                                                    if(errores.length>0)
+                                                                    {
+                                                                        throw errores.join('<br/>').replace(/white/g,'black');
+                                                                    }
+                                                                    
+                                                                    var cdgrupo = me.up('[tipo=tabDetalleGrupo]').letraGrupo;
+                                                                    debug('cdgrupo:',cdgrupo);
+                                                                    
+                                                                    var grupo = _p25_storeGrupos.findRecord('letra',cdgrupo);
+                                                                    debug('grupo:',grupo);
+                                                                    
+                                                                    var nombrePlan = _p25_tabGruposModifiCols[2].editor
+                                                                        .findRecord('key',grupo.get('cdplan')).get('value');
+                                                                    debug('nombrePlan:',nombrePlan);
+                                                                    
+                                                                    var nombrePaq = _p25_tabGruposModifiCols[3].editor
+                                                                        .findRecord('key',grupo.get('parametros.pv_otvalor01')).get('value');
+                                                                    debug('nombrePaq:',nombrePaq);
+                                                                    
+                                                                    centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                                                    {
+                                                                        modal  : true
+                                                                        ,title : '¿Desea actualizar?'
+                                                                        ,html  : '<div style="padding:5px;">'
+                                                                                     +'¿Desea actualizar la configuraci&oacute;n para el plan '
+                                                                                     +nombrePlan+' y el<br/>paquete '+nombrePaq+' o desea guardar como un nuevo paquete'
+                                                                                     +'?</div>'
+                                                                        ,buttonAlign : 'center'
+                                                                        ,buttons     :
+                                                                        [
+                                                                            {
+                                                                                text     : 'Actualizar'
+                                                                                ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+                                                                                ,handler : function(me)
+                                                                                {
+                                                                                    var ck = 'Actualizando configuraci&oacute;n';
+                                                                                    try
+                                                                                    {
+                                                                                        var tvalogars = [];
+                                                                                        for(var i in forms)
+                                                                                        {
+                                                                                            tvalogars.push(forms[i].getValues());
+                                                                                        }
+                                                                                        debug('tvalogars:',tvalogars);
+                                                                                        
+                                                                                        var params =
+                                                                                        {
+                                                                                            smap1 :
+                                                                                            {
+                                                                                                cdramo    : _p25_smap1.cdramo
+                                                                                                ,cdtipsit : _p25_smap1.cdtipsit
+                                                                                                ,cdplan   : grupo.get('cdplan')
+                                                                                                ,cdpaq    : grupo.get('parametros.pv_otvalor01')
+                                                                                                ,dspaq    : '0'
+                                                                                            }
+                                                                                            ,slist1 : tvalogars
+                                                                                        };
+                                                                                        debug('params:',params);
+                                                                                        
+                                                                                        var window = me.up('window');
+                                                                                        window.setLoading(true);
+                                                                                        Ext.Ajax.request(
+                                                                                        {
+                                                                                            url       : _p25_urlGuardarConfig4TVALAT
+                                                                                            ,jsonData : params
+                                                                                            ,success  : function(response)
+                                                                                            {
+                                                                                                window.setLoading(false);
+                                                                                                var ck = 'Decodificando respuesta al guardar configuraci&oacute;n';
+                                                                                                try
+                                                                                                {
+                                                                                                    var json = Ext.decode(response.responseText);
+                                                                                                    debug('### guardar config:',json);
+                                                                                                    if(json.success)
+                                                                                                    {
+                                                                                                        me.up('window').destroy();
+                                                                                                        mensajeCorrecto('Datos guardados','Se actualiz\u00F3 la configuraci\u00F3n del paquete');
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        mensajeError(json.respuesta);
+                                                                                                    }
+                                                                                                }
+                                                                                                catch(e)
+                                                                                                {
+                                                                                                    manejaException(e);
+                                                                                                }
+                                                                                            }
+                                                                                            ,failure  : function()
+                                                                                            {
+                                                                                                window.setLoading(false);
+                                                                                                errorComunicacion(null,'Error guardando configuraci&oacute;n');
+                                                                                            }
+                                                                                        });
+                                                                                    }
+                                                                                    catch(e)
+                                                                                    {
+                                                                                        manejaException(e,ck);
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                            ,{
+                                                                                text     : 'Agregar nuevo paquete'
+                                                                                ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
+                                                                                ,handler : function(me)
+                                                                                {
+                                                                                    centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                                                                    {
+                                                                                        modal  : true
+                                                                                        ,title : 'Guardar nuevo paquete'
+                                                                                        ,items :
+                                                                                        [
+                                                                                            {
+                                                                                                xtype     : 'form'
+                                                                                                ,defaults : { style : 'margin:5px;' }
+                                                                                                ,items    :
+                                                                                                [
+                                                                                                    {
+                                                                                                        xtype       : 'textfield'
+                                                                                                        ,fieldLabel : 'Nombre'
+                                                                                                        ,allowBlank : false
+                                                                                                    }
+                                                                                                ]
+                                                                                                ,buttonAlign : 'center'
+                                                                                                ,buttons     :
+                                                                                                [
+                                                                                                    {
+                                                                                                        text     : 'Agregar nuevo paquete'
+                                                                                                        ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
+                                                                                                        ,handler : function(me2)
+                                                                                                        {
+                                                                                                            if(!me2.up('form').isValid())
+                                                                                                            {
+                                                                                                                datosIncompletos();
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                var ck = 'Guardando nuevo paquete';
+							                                                                                    try
+							                                                                                    {
+							                                                                                        var tvalogars = [];
+							                                                                                        for(var i in forms)
+							                                                                                        {
+							                                                                                            tvalogars.push(forms[i].getValues());
+							                                                                                        }
+							                                                                                        debug('tvalogars:',tvalogars);
+							                                                                                        
+							                                                                                        var params =
+							                                                                                        {
+							                                                                                            smap1 :
+							                                                                                            {
+							                                                                                                cdramo    : _p25_smap1.cdramo
+							                                                                                                ,cdtipsit : _p25_smap1.cdtipsit
+							                                                                                                ,cdplan   : grupo.get('cdplan')
+							                                                                                                ,cdpaq    : '0'
+							                                                                                                ,dspaq    : me2.up('form').down('textfield').getValue()
+							                                                                                            }
+							                                                                                            ,slist1 : tvalogars
+							                                                                                        };
+							                                                                                        debug('params:',params);
+							                                                                                        
+							                                                                                        var window2 = me2.up('window');
+							                                                                                        window2.setLoading(true);
+							                                                                                        Ext.Ajax.request(
+							                                                                                        {
+							                                                                                            url       : _p25_urlGuardarConfig4TVALAT
+							                                                                                            ,jsonData : params
+							                                                                                            ,success  : function(response)
+							                                                                                            {
+							                                                                                                window2.setLoading(false);
+							                                                                                                var ck = 'Decodificando respuesta al guardar nuevo paquete';
+							                                                                                                try
+							                                                                                                {
+							                                                                                                    var json = Ext.decode(response.responseText);
+							                                                                                                    debug('### nuevo paquete:',json);
+							                                                                                                    if(json.success)
+							                                                                                                    {
+							                                                                                                        _p25_tabGruposModifiCols[3].editor.store.reload();
+							                                                                                                        //TODOgrupo.set('parametros.pv_otvalor01',json.smap1.cdPaqueteNuevo);
+							                                                                                                        debug('grupo:',grupo);
+							                                                                                                        me.up('window').destroy();
+							                                                                                                        window2.destroy();
+							                                                                                                        mensajeCorrecto('Datos guardados','Se guard\u00F3 el nuevo paquete');
+							                                                                                                    }
+							                                                                                                    else
+							                                                                                                    {
+							                                                                                                        mensajeError(json.respuesta);
+							                                                                                                    }
+							                                                                                                }
+							                                                                                                catch(e)
+							                                                                                                {
+							                                                                                                    manejaException(e);
+							                                                                                                }
+							                                                                                            }
+							                                                                                            ,failure  : function()
+							                                                                                            {
+							                                                                                                window2.setLoading(false);
+							                                                                                                errorComunicacion(null,'Error guardando nuevo paquete');
+							                                                                                            }
+							                                                                                        });
+							                                                                                    }
+							                                                                                    catch(e)
+							                                                                                    {
+							                                                                                        manejaException(e,ck);
+							                                                                                    }
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ]
+                                                                                    }).show());
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    }).show());
+                                                                }
+                                                                catch(e)
+                                                                {
+                                                                    manejaException(e,ck);
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
                                                 })
                                                 ,Ext.create('Ext.grid.Panel',
                                                 {
@@ -3375,7 +3622,7 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento)
                                         ,failure : function()
                                         {
                                             _p25_tabpanel().setLoading(false);
-                                            errorComunicacion('Recuperando asegurados para revision');
+                                            errorComunicacion(null,'Recuperando asegurados para revision');
                                         }
                                     });
                                 }
@@ -5584,7 +5831,7 @@ function _p25_mostrarVentanaComplementoCotizacion(complemento,callback)
                                     ,failure : function()
                                     {
                                         form.setLoading(false);
-                                        errorComunicacion('Error al subir archivo de complemento');
+                                        errorComunicacion(null,'Error al subir archivo de complemento');
                                     }
                                 })
                             }

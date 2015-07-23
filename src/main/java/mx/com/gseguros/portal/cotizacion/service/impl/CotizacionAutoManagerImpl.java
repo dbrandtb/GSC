@@ -1830,6 +1830,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			            ,null     //swpatent
 			            ,"100"    //pcpgocte
 			            ,tipoflot
+			            ,null     //agrupador
 			            ,"U"      //accion
 						);
 				

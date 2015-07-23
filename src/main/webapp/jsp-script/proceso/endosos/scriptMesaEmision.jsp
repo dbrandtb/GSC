@@ -105,7 +105,7 @@ function _4_solicitarEmision(row)
                 }
                 ,failure : function()
                 {
-                    errorComunicacion('Error validando turnado');
+                    errorComunicacion(null,'Error validando turnado');
                 }
             });
         }

@@ -3893,6 +3893,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            mapaMpolizas.put("pv_swpatent"  , null);
 	            mapaMpolizas.put("pv_pcpgocte"  , pcpgocte);
 	            mapaMpolizas.put("pv_tipoflot"  , "F");
+	            mapaMpolizas.put("pv_agrupador" , null);
 	            mapaMpolizas.put("pv_accion"    , "U");
 	            kernelManager.insertaMaestroPolizas(mapaMpolizas);
 			}
@@ -4985,6 +4986,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		            mapaMpolizas.put("pv_swpatent"  , null);
 		            mapaMpolizas.put("pv_pcpgocte"  , pcpgocte);
 		            mapaMpolizas.put("pv_tipoflot"  , "F");
+		            mapaMpolizas.put("pv_agrupador" , null);
 		            mapaMpolizas.put("pv_accion"    , "U");
 		            kernelManager.insertaMaestroPolizas(mapaMpolizas);
 				}
@@ -8763,6 +8765,57 @@ public class CotizacionAction extends PrincipalCoreAction
 		logger.debug(Utils.join(
 				 "\n###### complementoSaludGrupo ######"
 				,"\n###################################"
+				));
+		return SUCCESS;
+	}
+	
+	public String guardarConfiguracionGarantias()
+	{
+		logger.debug(Utils.join(
+				 "\n###########################################"
+				,"\n###### guardarConfiguracionGarantias ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### slist1=" , slist1!=null
+				));
+		
+		try
+		{
+			Utils.validate(smap1  , "No se recibieron datos");
+			Utils.validate(slist1 , "No se recibieron datos de configuraci\u00F3n");
+			
+			String cdramo   = smap1.get("cdramo");
+			String cdtipsit = smap1.get("cdtipsit");
+			String cdplan   = smap1.get("cdplan");
+			String cdpaq    = smap1.get("cdpaq");
+			String dspaq    = smap1.get("dspaq");
+			
+			Utils.validate(
+					cdramo    , "No se recibi\u00F3 el producto"
+					,cdtipsit , "No se recibi\u00F3 la modalidad"
+					,cdplan   , "No se recibi\u00F3 la clave de plan"
+					,cdpaq    , "No se recibi\u00F3 la clave de paquete"
+					,dspaq    , "No se recibi\u00F3 el nombre de paquete"
+					);
+			
+			smap1.put("cdPaqueteNuevo",cotizacionManager.guardarConfiguracionGarantias(
+					cdramo
+					,cdtipsit
+					,cdplan
+					,cdpaq
+					,dspaq
+					,slist1
+					));
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.join(
+				 "\n###### guardarConfiguracionGarantias ######"
+				,"\n###########################################"
 				));
 		return SUCCESS;
 	}

@@ -1667,7 +1667,7 @@ Ext.onReady(function()
         }
         ,failure : function()
         {
-            errorComunicacion('Error al obtener permisos de componentes de riesgo');
+            errorComunicacion(null,'Error al obtener permisos de componentes de riesgo');
         }
     });
     ////// loaders //////
@@ -3489,7 +3489,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento)
                                             ,failure : function()
                                             {
                                                 _p21_tabpanel().setLoading(false);
-                                                errorComunicacion('Recuperando asegurados para revision');
+                                                errorComunicacion(null,'Recuperando asegurados para revision');
                                             }
                                         });
                                     }
@@ -6290,7 +6290,7 @@ function _p21_mostrarVentanaComplementoCotizacion(complemento,callback)
                                     ,failure : function()
                                     {
                                         form.setLoading(false);
-                                        errorComunicacion('Error al subir archivo de complemento');
+                                        errorComunicacion(null,'Error al subir archivo de complemento');
                                     }
                                 })
                             }

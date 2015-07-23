@@ -422,7 +422,7 @@ function _4_onReasignarClick(row)
                                                                     ,failure : function()
                                                                     {
                                                                         window.setLoading(false);
-                                                                        errorComunicacion('Error al reasignar tr&aacute;mite');
+                                                                        errorComunicacion(null,'Error al reasignar tr&aacute;mite');
                                                                     }
                                                                 });
                                                             }
@@ -480,7 +480,7 @@ function _4_onReasignarClick(row)
         ,failure : function()
         {
             mcdinGrid.setLoading(false);
-            errorComunicacion('Error recuperando usuarios para reasignaci&oacute;n');
+            errorComunicacion(null,'Error recuperando usuarios para reasignaci&oacute;n');
         }
     });
 }
