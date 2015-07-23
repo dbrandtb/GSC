@@ -24,6 +24,8 @@ public class ConsultaDatosTitularVO implements Serializable{
 	private String direccion;
 	private String colonia;	
 	private String codigopostal;
+	private String celular;
+	private String email;
 				
 	public String getIdentificacion() {
 		return identificacion;
@@ -115,5 +117,21 @@ public class ConsultaDatosTitularVO implements Serializable{
 
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
+	}
+
+	public String getCelular() {
+		return celular;
+	}
+
+	public void setCelular(String celular) {
+		this.celular = celular;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}		
 }

@@ -45,8 +45,8 @@
             var _MSG_CDPERSON_INVALIDO           = 'Ingrese un c\u00F3digo de persona';
             var _MSG_NOMBRE_INVALIDO             = 'Ingrese el nombre';
             
-            //var _IS_USUARIO_CALL_CENTER          = <s:property value="usuarioCallCenter"/>;
-            var _IS_USUARIO_CALL_CENTER          = "0";
+            //Variable que determina si es usuario de CallCenter
+            var _IS_USUARIO_CALL_CENTER          = <s:property value="usuarioCallCenter"/>
             
         </script>
         <script type="text/javascript" src="${ctx}/resources/scripts/consultaAsegurados/consultasAsegurados.js?${now}"></script>

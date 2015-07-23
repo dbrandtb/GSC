@@ -363,6 +363,8 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 			datosTitular.setCodigopostal(rs.getString("cdpostal"));
 			datosTitular.setEdocivil(rs.getString("edocivil"));
 			datosTitular.setFeingreso(rs.getString("feingreso"));
+			datosTitular.setCelular(rs.getString("celular"));
+			datosTitular.setEmail(rs.getString("correo"));
 			return datosTitular;
 		}
 	}

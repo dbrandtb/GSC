@@ -313,6 +313,7 @@ Ext.onReady(function() {
                 tooltip      : 'Dar Aviso de Hospitalización',
                 flex         : 1,
                 //width        : auto,
+                hidden       : _IS_USUARIO_CALL_CENTER? false : true,
                 menuDisabled : true,
                 sortable     : false,
                 handler      : function(grid,rowIndex)
@@ -447,9 +448,9 @@ Ext.onReady(function() {
 																	    	}else if(action.result.mensajeRes == '3'){
 																	    		showMessage('Aviso ('+gridSuplementos.getSelectionModel().getSelection()[0].get('origen')+': '+action.result.iCodAviso+') Registrado', 'El agente no tiene tel&eacute;fono registrado en el sistema.', Ext.Msg.OK, Ext.Msg.WARNING);
 																	    	}else if(action.result.mensajeRes == '4'){
-																	    		showMessage('Aviso ('+gridSuplementos.getSelectionModel().getSelection()[0].get('origen')+': '+action.result.iCodAviso+') Registrado', 'No se pudo enviar SMS.', Ext.Msg.OK, Ext.Msg.WARNING);
+																	    		showMessage('Aviso ('+gridSuplementos.getSelectionModel().getSelection()[0].get('origen')+': '+action.result.iCodAviso+') Registrado', 'No se pudo enviar Aviso.', Ext.Msg.OK, Ext.Msg.WARNING);
 																	    	}else if(action.result.mensajeRes == '5'){
-																	    		showMessage('Aviso ('+gridSuplementos.getSelectionModel().getSelection()[0].get('origen')+': '+action.result.iCodAviso+') Registrado', 'Registrado y Enviado SMS (Estatus Env&iacute;o en BD: 0)', Ext.Msg.OK, Ext.Msg.INFO);
+																	    		showMessage('Aviso ('+gridSuplementos.getSelectionModel().getSelection()[0].get('origen')+': '+action.result.iCodAviso+') Registrado', 'Aviso Registrado y Enviado (Estatus Env&iacute;o en BD: 0)', Ext.Msg.OK, Ext.Msg.INFO);
 																	    	}
 																	    	ventanaAviso.hide();
 																	    }
@@ -519,7 +520,7 @@ Ext.onReady(function() {
                         }
             		});
                   	}else{
-                  		showMessage('Servicio Denegado', 'Asegurado NO posee derechos de servicio debido al &lsquo;status&rsquo; de su p&oacute;liza.', Ext.Msg.OK, Ext.Msg.ERROR);
+                  		showMessage('Servicio Denegado', 'Asegurado NO posee derechos de servicio debido a su &lsquo;status&rsquo;.', Ext.Msg.OK, Ext.Msg.ERROR);
                   	}
                 }
             }
@@ -1442,7 +1443,9 @@ Ext.onReady(function() {
             {type:'string', name:'telefono'},
             {type:'string', name:'direccion'},
             {type:'string', name:'colonia'},
-            {type:'string', name:'codigopostal'}
+            {type:'string', name:'codigopostal'},
+            {type:'string', name:'celular'},
+            {type:'string', name:'email'}
         ]
     });
     
@@ -1499,6 +1502,12 @@ Ext.onReady(function() {
             items : [
                 {xtype: 'textfield', name: 'colonia',   fieldLabel: 'Colonia',      readOnly: true, labelWidth: 120, width: 500},
                 {xtype: 'textfield', name: 'codigopostal', fieldLabel: 'Codigo Postal', readOnly: true, labelWidth: 120,  width: 300, labelAlign: 'right'}
+            ]
+        },{
+            layout : 'hbox',
+            items : [
+                {xtype: 'textfield', name: 'celular',   fieldLabel: 'Celular',      readOnly: true, labelWidth: 120, width: 350},
+                {xtype: 'textfield', name: 'email', fieldLabel: 'e-mail', readOnly: true, labelWidth: 120,  width: 450, labelAlign: 'right'}
             ]
         }/*,       	
 		{

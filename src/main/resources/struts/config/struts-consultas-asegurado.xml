@@ -5,6 +5,10 @@
 
     <package name="consultasAsegurado" namespace="/consultasAsegurado" extends="default">
         
+        <action name="pantallaConsultasAsegurado" class="ConsultasAseguradoAction">
+            <result name="success">/jsp/consultas/consultasAsegurados.jsp</result>
+        </action>
+        
         <action name="consultaResultadosAsegurado" class="ConsultasAseguradoAction"
             method="consultaResultadosAsegurado">
             <result type="json">
