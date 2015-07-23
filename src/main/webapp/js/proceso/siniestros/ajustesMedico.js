@@ -2,7 +2,7 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 var datosgrid;
 var storeIncisos;
 var tipoAccion = 0; // Nuevo
-var montoAjuste;
+
 Ext.define('modelAjusteMedico',{
     extend: 'Ext.data.Model',
     fields: [
@@ -67,7 +67,6 @@ var storeConceptosCatalogo = Ext.create('Ext.data.JsonStore', {
 
 function _amRecargar()
 {
-	debug("Entra a _amRecargar");
 	var json =
 	{
 		'params.cdunieco' : _amParams.cdunieco,
@@ -123,8 +122,7 @@ function _amRecargar()
 	    			montoAjustado = montoAjustado + (+ arr[i].PTIMPORT);
 		    	}
 	    		Ext.getCmp('idTotalAjustado').setValue(montoAjustado);
-	    		montoAjuste = (+ _amParams.importe - +montoAjustado);
-	    		debug("montoAjuste===>",montoAjuste);
+	    		
 	    		storeModelInforGral.removeAll();
 	    		var rec = new modelInforGral({
 	    			txtPrecio:   _amParams.precio,
@@ -135,9 +133,8 @@ function _amRecargar()
 	    			txtAjusteMed: montoAjustado,
 	    			txtSbubTotalAjuste: (+ _amParams.importe - +montoAjustado)
 	    			});
-	    			
+	    		
 	    		storeModelInforGral.add(rec);
-	    		obtenerMontoAjuste(storeModelInforGral);
 			}
 			else
 			{
@@ -152,20 +149,6 @@ function _amRecargar()
 	});
 }
 
-function obtenerMontoAjuste(storeQuirugicoBase){
-	var arr = [];
-	var valorBase=0;
-	storeQuirugicoBase.each(function(record) {
-		arr.push(record.data);
-	});
-
-	for(var i = 0; i < arr.length; i++){
-		debug("arr[i] ==>",arr[i]);
-		montoAjuste = arr[i].txtSbubTotalAjuste;
-	}
-	debug("Valor ===",montoAjuste);
-	return montoAjuste;
-}
 
 function _amEliminar(nmordmov,ptimport,comments)
 {
@@ -335,45 +318,15 @@ Ext.onReady(function() {
 			    labelWidth: 170,
 			    hidden:true
 			},
-	         {
-	            	xtype:'displayfield',
-			        name:'idImpTotalAjustado',
-			        fieldLabel : 'Subtotal ajustado',
-			    	allowBlank:false,
-			    	allowDecimals :true,
-			    	decimalSeparator :'.',
-			    	minValue: 0,
-	                labelWidth: 170,
-	                renderer: Ext.util.Format.usMoney,
-	                readOnly    : true
-	    	},{   
+	         {   
 	            	xtype:'numberfield',
 			        name:'idAjusteImporte',
-			        fieldLabel : 'Ajuste m&eacute;dico',
+			        fieldLabel : 'Importe',
 			    	allowBlank:false,
 			    	allowDecimals :true,
 			    	decimalSeparator :'.',
 			    	minValue: 0,
-	                labelWidth: 170,
-	                renderer: Ext.util.Format.usMoney,
-	                readOnly    : true
-	    	},
-	    	{   
-	            	xtype:'numberfield',
-			        name:'idImportePagar',
-			        fieldLabel : 'Importe a pagar',
-			    	allowBlank:false,
-			    	allowDecimals :true,
-			    	decimalSeparator :'.',
-			    	minValue: 0,
-	                labelWidth: 170,
-	                renderer: Ext.util.Format.usMoney,
-	                listeners : {
-						change:function(e){
-							var importeTotal= +panelAjusteMedico.down('[name="idImpTotalAjustado"]').getValue() -  +panelAjusteMedico.down('[name="idImportePagar"]').getValue();
-							panelAjusteMedico.down('[name="idAjusteImporte"]').setValue(importeTotal);
-						}
-					}
+	                labelWidth: 170
 	    	},
 	         {
 		    	 xtype      : 'textfield',
@@ -389,7 +342,7 @@ Ext.onReady(function() {
     ventanaGridAjusteMedico= Ext.create('Ext.window.Window', {
          renderTo: document.body,
            title: 'Ajuste M&eacute;dico',
-           height: 200,
+           height: 150,
            width: 600,
            closeAction: 'hide',
            items:[panelAjusteMedico],
@@ -468,7 +421,7 @@ Ext.onReady(function() {
 				 	},
 				 	{
 					 	header: 'Observaciones',		dataIndex: 'COMMENTS',	 	flex:2	
-				 	},/*
+				 	},
 				 	{
 					 	xtype: 'actioncolumn',
 					 	width: 30,
@@ -480,7 +433,7 @@ Ext.onReady(function() {
 	 						scope : this,
 	 						handler : this.onEditClick
 	 					}]
-				 	},*/
+				 	},
 				 	{
 					 	xtype: 'actioncolumn',
 					 	width: 30,
@@ -551,7 +504,7 @@ Ext.onReady(function() {
 	 	onAddClick: function(){
 	 		tipoAccion= 0;
 	 		panelAjusteMedico.getForm().reset();
-	 		panelAjusteMedico.down('[name="idImpTotalAjustado"]').setValue(obtenerMontoAjuste(storeModelInforGral));
+	 		//ventanaGridAjusteMedico.showAt(150,600);
 	 		centrarVentanaInterna(ventanaGridAjusteMedico.show());
 	 	},
 	 	onRemoveClick: function(grid, rowIndex){
