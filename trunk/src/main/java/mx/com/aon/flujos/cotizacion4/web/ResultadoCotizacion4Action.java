@@ -323,6 +323,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             mapa.put("pv_swpatent",     null);
             mapa.put("pv_pcpgocte",     "100");
             mapa.put("pv_tipoflot",     null);
+            mapa.put("pv_agrupador",    null);
             mapa.put("pv_accion",       "U");
             logger.debug("### Invocacion de insercion de maestro de poliza map: "+mapa);
             t1=System.currentTimeMillis();

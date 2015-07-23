@@ -553,4 +553,13 @@ public interface CotizacionManager
 			,String cdsisrol
 			,String status
 			)throws Exception;
+	
+	public String guardarConfiguracionGarantias(
+			String cdramo
+			,String cdtipsit
+			,String cdplan
+			,String cdpaq
+			,String dspaq
+			,List<Map<String,String>>tvalogars
+			)throws Exception;
 }

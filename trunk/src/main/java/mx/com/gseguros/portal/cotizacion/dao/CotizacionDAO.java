@@ -169,7 +169,7 @@ public interface CotizacionDAO {
 			String fesolici, String cdramant, String cdmejred, String nmpoldoc,
 			String nmpoliza2, String nmrenove, String nmsuplee,
 			String ttipcamc, String ttipcamv, String swpatent, String pcpgocte,
-			String tipoflot, String accion) throws Exception;
+			String tipoflot, String agrupador, String accion) throws Exception;
 
 	public void movimientoTvalopol(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String status,

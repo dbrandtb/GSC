@@ -418,6 +418,14 @@
         <action name="complementoSaludGrupo" class="CotizacionAction" method="complementoSaludGrupo">
             <result name="success" type="json" />
         </action>
+        
+        <action name="guardarConfiguracionGarantias" class="CotizacionAction" method="guardarConfiguracionGarantias">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json"/>
+        </action>
        
     </package>
     
