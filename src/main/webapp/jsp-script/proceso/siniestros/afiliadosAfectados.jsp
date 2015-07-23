@@ -11,6 +11,7 @@
 			var _CATALOGO_COBERTURASTOTALES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURASTOTALES"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASTOTALES"/>';
 			var _ROL_MEDICO								= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MEDICO_AJUSTADOR.cdsisrol" />';
+			var _ROL_COORD_MEDICO						= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@GERENTE_MEDICO_MULTIREGIONAL.cdsisrol" />';
 			var _OPERADOR_REC							= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@OPERADOR_SINIESTROS.cdsisrol" />';
 			var _COORDINADOR_REC						= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@COORDINADOR_SINIESTROS.cdsisrol" />';
 			var _CATALOGO_COB_X_VALORES 				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURASXVALORES"/>';
