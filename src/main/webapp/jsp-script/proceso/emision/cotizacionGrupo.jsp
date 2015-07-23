@@ -5802,7 +5802,7 @@ function _p21_guardarAsegurados(grid,callback)
         var error = '';
         store.each(function(record)
         {
-            if(Ext.isEmpty(record.get('RFC')))
+            if(Ext.isEmpty(record.get('NOMBRE')))
             {
                 valido = false;
                 error = error + 'Faltan los datos de la situaci&oacute;n '+record.get('NMSITUAC')+'<BR/>';
