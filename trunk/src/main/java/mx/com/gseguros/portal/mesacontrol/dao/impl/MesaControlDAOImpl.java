@@ -202,7 +202,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("comments" , comments);
 		params.put("cdusuari" , cdusuari);
 		params.put("cdmotivo" , cdmotivo);
-		params.put("cdsisrol" , cdmotivo);
+		params.put("cdsisrol" , cdsisrol);
 		logger.debug(
 				new StringBuilder()
 				.append("\n**********************************************")

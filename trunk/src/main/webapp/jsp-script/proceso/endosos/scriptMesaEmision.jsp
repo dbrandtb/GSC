@@ -134,6 +134,17 @@ function _4_informacionCompleta(row)
     }));
 }
 
+function _4_informacionMedicaCompleta(row)
+{
+    centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'El tr&aacute;mite ser&aacute; enviado al &aacute;rea m&eacute;dica para revisi&oacute;n<br>¿Desea continuar?', function(btn)
+    {
+        if(btn === 'yes')
+        {
+            _4_turnar(row,15,'Enviar al &aacute;rea m&eacute;dica');
+        }
+    }));
+}
+
 function _4_turnar(row,status,titulo)
 {
     debug('>_4_turnar',row,status,titulo);
