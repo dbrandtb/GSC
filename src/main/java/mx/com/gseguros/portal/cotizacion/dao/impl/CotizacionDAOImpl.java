@@ -336,6 +336,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					,"cdagente"
 					,"clasif"
 					,"pcpgocte"
+					,"cdpool"
 				};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -383,6 +384,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,"recargoPers"
 			,"recargoPago"
 			,"dctocmer"
+			,"cdpool"
 		};
 		
 		protected CargarDatosCotizacionGrupo(DataSource dataSource)
