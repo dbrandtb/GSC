@@ -4451,19 +4451,19 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_status_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o",OracleTypes.CURSOR, new GenericMapper(new String[]{"STATUS" , "ASEGURADO"})));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o ", OracleTypes.VARCHAR));
     		compile();
     	}
     	
     	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
-			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-			WrapperResultados wrapperResultados=mapper.build(map);
-			wrapperResultados.setItemMap(new HashMap<String, Object>());
-			wrapperResultados.getItemMap().put("status", map.get("pv_status_o"));
-			return wrapperResultados;
-		}   	
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            WrapperResultados wrapperResultados = mapper.build(map);
+            List result = (List) map.get("pv_registro_o");
+            wrapperResultados.setItemList(result);
+            return wrapperResultados;
+    	}
 
     }
 
