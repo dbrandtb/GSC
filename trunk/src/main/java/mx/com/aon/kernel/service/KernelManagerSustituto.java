@@ -204,18 +204,12 @@ public interface KernelManagerSustituto {
 	
 	public WrapperResultados guardarEliminarPorcentajeAgentes(Map<String, Object> params) throws ApplicationException;
 	/**
-	 * pkg_satelites.valida_extraprima_situac
+	 * Devuelve una lista con los asegurados extraprimados invalidos
+	 * @param params
+	 * @return
+	 * @throws ApplicationException
 	 */
 	public WrapperResultados validarExtraprima(Map<String, String> params) throws ApplicationException;
-	/**
-	 * pkg_satelites.valida_extraprima_situac
-	 */
-	public WrapperResultados validarExtraprimaSituac(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String nmsituac) throws ApplicationException;
 	/**
 	 * pkg_satelites.valida_extraprima_situac
 	 */

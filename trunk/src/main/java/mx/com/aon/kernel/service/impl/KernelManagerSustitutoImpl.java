@@ -1342,7 +1342,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 	{
 		log.debug("### kernel validarExtraprima map: "+params);
 		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.VALIDAR_EXTRAPRIMA);
-		log.debug("### kernel sustituto validarExtraprima status:"+res.getItemMap().get("status"));
+		log.debug("### kernel sustituto validarExtraprima status:"+res.getItemList());
         log.debug("### kernel sustituto validarExtraprima id:"+res.getMsgId());
         log.debug("### kernel sustituto validarExtraprima mesage:"+res.getMsgText());
 		return res;
@@ -1357,23 +1357,6 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto validarExtraprimaSituac id:"+res.getMsgId());
         log.debug("### kernel sustituto validarExtraprimaSituac mesage:"+res.getMsgText());
 		return res;
-	}
-	
-	@Override
-	public WrapperResultados validarExtraprimaSituac(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String nmsituac) throws ApplicationException
-	{
-		Map<String,String>params=new HashMap<String,String>();
-		params.put("pv_cdunieco_i" , cdunieco);
-		params.put("pv_cdramo_i"   , cdramo);
-		params.put("pv_estado_i"   , estado);
-		params.put("pv_nmpoliza_i" , nmpoliza);
-		params.put("pv_nmsituac_i" , nmsituac);
-		return this.validarExtraprimaSituac(params);
 	}
 	
 	@Override

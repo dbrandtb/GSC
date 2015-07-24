@@ -1420,6 +1420,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public String retarificar()
 	{
 		logger.debug(
@@ -1474,7 +1475,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			///////////////////////////////////
 			////// validar la extraprima //////
 			/*///////////////////////////////*/
-			String statusValidacionExtraprimas="S";
+			List<Map<String,String>> aseguradosExtraprimadosInvalidos = null;
 			try
 			{
 				Map<String,String>paramValExtraprima=new LinkedHashMap<String,String>(0);
@@ -1482,21 +1483,18 @@ public class ComplementariosAction extends PrincipalCoreAction
 				paramValExtraprima.put("pv_cdramo_i"   , cdramo);
 				paramValExtraprima.put("pv_estado_i"   , "W");
 				paramValExtraprima.put("pv_nmpoliza_i" , panel1.get("nmpoliza"));
-				statusValidacionExtraprimas=(String) kernelManager.validarExtraprima(paramValExtraprima).getItemMap().get("status");
-				logger.debug("tiene status la extraprima: "+statusValidacionExtraprimas);
-				if(statusValidacionExtraprimas==null)
-				{
-					statusValidacionExtraprimas="N";
-				}
+				aseguradosExtraprimadosInvalidos = kernelManager.validarExtraprima(paramValExtraprima).getItemList();
 			}
 			catch(Exception ex)
 			{
 				logger.warn("Error sin impacto funcional al validar extraprimas: ",ex);
-				statusValidacionExtraprimas="S";
 			}
-			if(statusValidacionExtraprimas.equalsIgnoreCase("N"))
-			{
-				mensajeRespuesta="Favor de verificar las extraprimas y los endosos de extraprima";
+			if(aseguradosExtraprimadosInvalidos != null && aseguradosExtraprimadosInvalidos.size() > 0) {
+				StringBuilder msjeErrorExtraprimas = new StringBuilder("Favor de verificar las extraprimas y los endosos de extraprima de: <br/>");
+				for (Map<String, String> map : aseguradosExtraprimadosInvalidos) {
+					msjeErrorExtraprimas.append(map.get("ASEGURADO")).append("<br/>");
+				}
+				mensajeRespuesta = msjeErrorExtraprimas.toString();
 				return SUCCESS;
 			}
 			/*///////////////////////////////*/
