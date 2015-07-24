@@ -1639,4 +1639,32 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<GenericVO> recuperarListaPools() throws Exception
+	{
+		Map<String,Object>       procRes    = ejecutaSP(new RecuperarListaPools(getDataSource()),new LinkedHashMap<String,String>());
+		List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		List<GenericVO>          lista      = new ArrayList<GenericVO>();
+		if(listaMapas!=null)
+		{
+			for(Map<String,String> mapa : listaMapas)
+			{
+				lista.add(new GenericVO(mapa.get("OTCLAVE"),mapa.get("OTVALOR")));
+			}
+		}
+		return lista;
+	}
+	
+	protected class RecuperarListaPools extends StoredProcedure
+	{
+		protected RecuperarListaPools(DataSource dataSource)
+		{
+			super(dataSource,"Pkg_Consulta.P_GET_POOL");
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"OTCLAVE","OTVALOR"})));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

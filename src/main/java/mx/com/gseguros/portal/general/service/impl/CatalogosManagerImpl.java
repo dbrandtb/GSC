@@ -1046,4 +1046,22 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	public List<GenericVO> obtieneAgenteEspecifico(String cdagente) throws Exception {
 		return catalogosDAO.obtieneAgenteEspecifico(cdagente);
 	}
+	
+	@Override
+	public List<GenericVO> recuperarListaPools() throws Exception
+	{
+		logger.info(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarListaPools @@@@@@"
+				));
+		
+		List<GenericVO> lista = catalogosDAO.recuperarListaPools();
+
+		logger.info(Utils.join(
+				 "\n@@@@@@ lista=",lista.size()
+				,"\n@@@@@@ recuperarListaPools @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
 }

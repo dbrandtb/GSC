@@ -330,6 +330,7 @@ public interface CotizacionManager
 			,boolean censoAtrasado
 			,boolean resubirCenso
 			,boolean complemento
+			,String cdpool
 			);
 	
 	public ManagerRespuestaSlistVO obtenerTiposSituacion();

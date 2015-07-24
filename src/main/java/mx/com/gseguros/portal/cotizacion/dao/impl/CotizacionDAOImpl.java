@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
+import mx.com.gseguros.portal.cotizacion.model.ConfiguracionCoberturaDTO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrigarMapper;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatripolMapper;
@@ -2082,10 +2083,10 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
         params.put("accion"    , accion);
         logger.debug(
         		new StringBuilder()
-        		.append("\n******************************************")
-        		.append("\n****** PKG_SATELITES.P_MOV_MPOLIZAS ******")
+        		.append("\n*******************************************")
+        		.append("\n****** PKG_SATELITES2.P_MOV_MPOLIZAS ******")
         		.append("\n****** params=").append(params)
-        		.append("\n******************************************")
+        		.append("\n*******************************************")
         		.toString()
         		);
         ejecutaSP(new MovimientoPoliza(getDataSource()),params);
@@ -5714,6 +5715,58 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("complemento" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String guardarConfiguracionGarantias(
+			String cdramo
+			,String cdtipsit
+			,String cdplan
+			,String cdpaquete
+			,boolean nuevo
+			,String dspaquete
+			,List<ConfiguracionCoberturaDTO>lista
+			)throws Exception
+	{
+		Map<String,Object>params = new LinkedHashMap<String,Object>();
+		params.put("cdramo"   , cdramo);
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdplan"   , cdplan);
+		params.put("cdpaquete" , cdpaquete);
+		params.put("nuevo"     , nuevo ? "S" : "N");
+		params.put("dspaquete" , dspaquete);
+		
+		String[][] array = new String[lista.size()][];
+		int        i     = 0;
+		for(ConfiguracionCoberturaDTO e : lista)
+		{
+			array[i++] = e.indexar();
+		}
+		params.put("llave" , ConfiguracionCoberturaDTO.obtenerLlaveAtributos());
+		params.put("array" , new SqlArrayValue(array));
+		
+		Map<String,Object> procRes = ejecutaSP(new GuardarConfiguracionGarantias(getDataSource()),params);
+		return (String) procRes.get("pv_cdpaquete_o");
+	}
+	
+	protected class GuardarConfiguracionGarantias extends StoredProcedure
+	{
+		protected GuardarConfiguracionGarantias(DataSource dataSource)
+		{
+			super(dataSource,"PKG_COTIZA.P_GUARDA_CONFIG_COBERTURAS_RC");
+			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdpaquete" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nuevo"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("dspaquete" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("llave"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("array"     , OracleTypes.ARRAY , "LISTA_LISTAS_VARCHAR2"));
+			declareParameter(new SqlOutParameter("pv_cdpaquete_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"    , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"     , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

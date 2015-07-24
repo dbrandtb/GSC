@@ -146,4 +146,6 @@ public interface CatalogosManager {
     public List<GenericVO> obtieneListaParentesco() throws Exception;
     
     public List<GenericVO> obtieneAgenteEspecifico(String cdagente) throws Exception;
+    
+    public List<GenericVO> recuperarListaPools() throws Exception;
 }

@@ -3147,6 +3147,13 @@ public class CotizacionAction extends PrincipalCoreAction
 				gc.generaComponentes(comboRepartoPago, true,false,true,false,false,false);
 				imap.put("comboRepartoPago"  , gc.getItems());
 				
+				List<ComponenteVO>comboPool = pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "COMBO_POOL", null);
+				gc.generaComponentes(comboPool, true,false,true,false,false,false);
+				imap.put("comboPool"  , gc.getItems());
+				
 				List<ComponenteVO>botones=pantallasManager.obtenerComponentes(
 						null, null, "|"+status+"|",
 						null, null, cdsisrol,
@@ -4720,6 +4727,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		String nmnumeroCli             = null;
 		String nmnumintCli             = null;
 		String cdelemen                = null;
+		String cdpool                  = null;
 		
 		boolean sincenso      = false;
 		boolean censoAtrasado = false;
@@ -4770,6 +4778,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			dsdomiciCli     = smap1.get("dsdomici");
 			nmnumeroCli     = smap1.get("nmnumero");
 			nmnumintCli     = smap1.get("nmnumint");
+			cdpool          = smap1.get("cdpool");
 			
 			rutaDocumentosTemporal  = getText("ruta.documentos.temporal");
 			dominioServerLayouts    = getText("dominio.server.layouts");
@@ -4845,6 +4854,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,censoAtrasado
 					,resubirCenso
 					,complemento
+					,cdpool
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -4888,6 +4898,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			Date   fechaHoy         = new Date();
 			String feini            = smap1.get("feini");
 			String fefin            = smap1.get("fefin");
+			String cdpool           = smap1.get("cdpool");
 			String cdperpag         = smap1.get("cdperpag");
 			final String LINEA      = "1";
 			UserVO usuario          = (UserVO)session.get("USUARIO");
@@ -4986,7 +4997,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		            mapaMpolizas.put("pv_swpatent"  , null);
 		            mapaMpolizas.put("pv_pcpgocte"  , pcpgocte);
 		            mapaMpolizas.put("pv_tipoflot"  , "F");
-		            mapaMpolizas.put("pv_agrupador" , null);
+		            mapaMpolizas.put("pv_agrupador" , cdpool);
 		            mapaMpolizas.put("pv_accion"    , "U");
 		            kernelManager.insertaMaestroPolizas(mapaMpolizas);
 				}
