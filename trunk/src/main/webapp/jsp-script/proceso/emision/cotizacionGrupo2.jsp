@@ -744,6 +744,7 @@ Ext.onReady(function()
                                         ,name       : 'pcpgotit'
                                         ,readOnly   : true
                                     }
+                                    ,<s:property value="imap.comboPool" />
                                     ,{
                                         xtype    : 'button'
                                         ,text    : 'Exclusiones/Extraprimas (Cl&aacute;usulas)'
@@ -1769,6 +1770,8 @@ Ext.onReady(function()
             errorComunicacion(null,'Error al obtener permisos de componentes de riesgo');
         }
     });
+    
+    _fieldByName('cdpool').forceSelection=false;
     ////// loaders //////
 });
 
@@ -2602,7 +2605,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
 							                                                                                                cdramo    : _p25_smap1.cdramo
 							                                                                                                ,cdtipsit : _p25_smap1.cdtipsit
 							                                                                                                ,cdplan   : grupo.get('cdplan')
-							                                                                                                ,cdpaq    : '0'
+							                                                                                                ,cdpaq    : grupo.get('parametros.pv_otvalor01')
 							                                                                                                ,dspaq    : me2.up('form').down('textfield').getValue()
 							                                                                                            }
 							                                                                                            ,slist1 : tvalogars
@@ -2626,7 +2629,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
 							                                                                                                    if(json.success)
 							                                                                                                    {
 							                                                                                                        _p25_tabGruposModifiCols[3].editor.store.reload();
-							                                                                                                        //TODOgrupo.set('parametros.pv_otvalor01',json.smap1.cdPaqueteNuevo);
+							                                                                                                        grupo.set('parametros.pv_otvalor01',json.smap1.cdPaqueteNuevo);
 							                                                                                                        debug('grupo:',grupo);
 							                                                                                                        me.up('window').destroy();
 							                                                                                                        window2.destroy();

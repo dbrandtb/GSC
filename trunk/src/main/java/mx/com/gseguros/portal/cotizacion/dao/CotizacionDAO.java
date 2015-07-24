@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.cotizacion.model.ConfiguracionCoberturaDTO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.PInsertaTbasvalsitDTO;
 import mx.com.gseguros.portal.cotizacion.model.PInsertaTconvalsitDTO;
@@ -442,4 +443,14 @@ public interface CotizacionDAO {
 			String cdestadoCli, String cdmuniciCli, String cdplan1,
 			String cdplan2, String cdplan3, String cdplan4, String cdplan5,
 			String complemento) throws Exception;
+	
+	public String guardarConfiguracionGarantias(
+			String cdramo
+			,String cdtipsit
+			,String cdplan
+			,String cdpaquete
+			,boolean nuevo
+			,String dspaquete
+			,List<ConfiguracionCoberturaDTO>lista
+			)throws Exception;
 }

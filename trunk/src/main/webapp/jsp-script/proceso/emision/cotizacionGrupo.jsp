@@ -805,6 +805,7 @@ Ext.onReady(function()
                                         ,name       : 'pcpgotit'
                                         ,readOnly   : true
                                     }
+                                    ,<s:property value="imap.comboPool" />
                                     ,{
                                         xtype    : 'button'
                                         ,text    : 'Exclusiones/Extraprimas (Cl&aacute;usulas)'
@@ -1670,6 +1671,8 @@ Ext.onReady(function()
             errorComunicacion(null,'Error al obtener permisos de componentes de riesgo');
         }
     });
+    
+    _fieldByName('cdpool').forceSelection=false;
     ////// loaders //////
 });
 

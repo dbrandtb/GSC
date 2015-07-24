@@ -725,6 +725,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}*/
 					lista = siniestrosManager.obtenerAtributosLayout(null);
 					break;
+				case AGRUPADOR_POLIZA:
+					lista = catalogosManager.recuperarListaPools();
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;
