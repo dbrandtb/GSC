@@ -68,6 +68,7 @@ var _p25_urlSubirCensoCompleto          = '<s:url namespace="/emision"         a
 var _p25_urlCargarAseguradosGrupo       = '<s:url namespace="/emision"         action="cargarAseguradosGrupo"            />';
 var _p25_urlRecuperarPersona            = '<s:url namespace="/"                action="buscarPersonasRepetidas"          />';
 var _p25_urlPantallaPersonas            = '<s:url namespace="/catalogos"       action="includes/personasLoader"          />';
+var _p25_urlPantallaDomicilio           = '<s:url namespace="/catalogos"       action="includes/editarDomicilioAsegurado"/>';
 var _p25_urlEditarCoberturas            = '<s:url namespace="/"                action="editarCoberturas"                 />';
 var _p25_urlEditarExclusiones           = '<s:url namespace="/"                action="pantallaExclusion"                />';
 var _p25_urlGuardarAsegurados           = '<s:url namespace="/emision"         action="guardarAseguradosCotizacion"      />';
@@ -124,6 +125,8 @@ var _ventanaClausulas;
 var _callbackAseguradoExclusiones = function (){
     _ventanaClausulas.close();
 };
+
+var _ventanaPersonas;
 
 var _p25_editorNombreGrupo=
 {
@@ -4857,37 +4860,88 @@ function _p25_editarAsegurado(grid,rowIndex)
 {
     var record=grid.getStore().getAt(rowIndex);
     debug('>_p25_editarAsegurado:',record.data);
-    var ventana = Ext.create('Ext.window.Window',
-    {
-        title   : 'Editar persona '+record.get('NOMBRE')
-        ,width  : 900
-        ,height : 500
-        ,modal  : true
-        ,loader :
-        {
-            url       : _p25_urlPantallaPersonas
-            ,params   :
-            {
-                'smap1.cdperson' : record.get('CDPERSON')
-            }
-            ,scripts  : true
-            ,autoLoad : true
-        }
-    }).show()
-    centrarVentanaInterna(ventana);
     
-    _p22_parentCallback = function(json)
-    {
-        record.set('RFC'              , json.smap1.CDRFC);
-        record.set('NOMBRE'           , json.smap1.DSNOMBRE);
-        record.set('SEGUNDO_NOMBRE'   , json.smap1.DSNOMBRE1);
-        record.set('APELLIDO_PATERNO' , json.smap1.DSAPELLIDO);
-        record.set('APELLIDO_MATERNO' , json.smap1.DSAPELLIDO1);
-        record.set('APELLIDO_MATERNO' , json.smap1.DSAPELLIDO1);
-        record.set('FECHA_NACIMIENTO' , json.smap1.FENACIMI);
-        record.set('NACIONALIDAD'     , json.smap1.CDNACION);
-        mensajeCorrecto('Datos guardados','Se actualiz&oacute; la persona');
-    };
+    try{
+    	destruirLoaderContratante();
+    	_ventanaPersonas.destroy();
+    }catch(e){
+    	debug('No se elimina ventana de Persona');
+    }
+    
+    var titularComoContratante = false;
+    
+    if(_fieldByName('cdreppag').getValue() == '2' || _fieldByName('cdreppag').getValue() == '3'){
+    	if(!Ext.isEmpty(record.get('PARENTESCO')) && 'T' == record.get('PARENTESCO')){
+			titularComoContratante = true;
+    	}
+    }
+    
+    
+    if(titularComoContratante){
+    	_ventanaPersonas = Ext.create('Ext.window.Window',
+					        {
+					            title      : 'Editar persona '+record.get('NOMBRE') + ' ' +record.get('APELLIDO_PATERNO')
+					            ,modal     : true
+					            ,autoScroll: true
+					            ,width     : 900
+					            ,height    : 900
+					            ,loader    : 
+					            {
+				                    url       : _p25_urlPantallaPersonas
+				                    ,scripts  : true
+				                    ,autoLoad : true
+				                    ,ajaxOptions: {
+				                            method: 'POST'
+				                     },
+				                     params: {
+									                'smap1.cdperson' : record.get('CDPERSON'),
+									                'smap1.cdideper' : '',
+									                'smap1.cdideext' : '',
+									                'smap1.esSaludDanios' : 'D',
+									                'smap1.esCargaClienteNvo' : 'N' ,
+									                'smap1.ocultaBusqueda' : 'S' ,
+									                'smap1.cargaCP' : '',
+									                'smap1.cargaTipoPersona' : '',
+									                'smap1.activaCveFamiliar': 'N',
+									                'smap1.modoRecuperaDanios': 'N',
+									                'smap1.modoSoloEdicion': 'S'
+									            }
+				                }
+					        }).show();
+					        centrarVentanaInterna(_ventanaPersonas);
+    }else{
+    	_ventanaPersonas = Ext.create('Ext.window.Window',
+			{
+		        title   : 'Editar persona '+record.get('NOMBRE') + ' ' +record.get('APELLIDO_PATERNO')
+		        ,width  : 450
+		        ,height : 400
+		        ,modal  : true
+		        ,loader : {
+	            url       : _p25_urlPantallaDomicilio
+	            ,params   :
+	            {
+	                'params.cdperson' : record.get('CDPERSON')
+	            }
+	            ,scripts  : true
+	            ,autoLoad : true
+        	}
+		    }).show();
+		    
+		centrarVentanaInterna(_ventanaPersonas);
+    }
+    
+//    _p22_parentCallback = function(json)
+//    {
+//        record.set('RFC'              , json.smap1.CDRFC);
+//        record.set('NOMBRE'           , json.smap1.DSNOMBRE);
+//        record.set('SEGUNDO_NOMBRE'   , json.smap1.DSNOMBRE1);
+//        record.set('APELLIDO_PATERNO' , json.smap1.DSAPELLIDO);
+//        record.set('APELLIDO_MATERNO' , json.smap1.DSAPELLIDO1);
+//        record.set('APELLIDO_MATERNO' , json.smap1.DSAPELLIDO1);
+//        record.set('FECHA_NACIMIENTO' , json.smap1.FENACIMI);
+//        record.set('NACIONALIDAD'     , json.smap1.CDNACION);
+//        mensajeCorrecto('Datos guardados','Se actualiz&oacute; la persona');
+//    };
     
     debug('<_p25_editarAsegurado');
 }

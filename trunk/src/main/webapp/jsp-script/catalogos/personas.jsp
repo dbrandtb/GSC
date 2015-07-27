@@ -13,6 +13,33 @@
 
 <script>
 
+////// overrides Para quitar overrides de paginas padre//////
+Ext.override(Ext.form.TextField,
+{
+    beforeRender:function()
+    {
+    	Ext.apply(this,
+        {
+            labelWidth : 100
+        });
+        return this.callParent();
+    }
+});
+
+Ext.override(Ext.form.NumberField,
+{
+    beforeRender:function()
+    {
+        Ext.apply(this,
+        {
+            decimalPrecision : 2
+        });
+        return this.callParent();
+    }
+});
+////// overrides //////
+
+
 //debug('PANTALLAS PERSONA: ',Ext.ComponentQuery.query('#companiaGroupId'));
 //if(Ext.ComponentQuery.query('#companiaGroupId').length >= 1){
 //	debugError('Error, no se puede crear mas de una instancia de la pantalla de contratante');
@@ -631,7 +658,7 @@ Ext.onReady(function()
 	        	    	title     : 'Datos generales de la Persona'
 	        	    	,itemId   : '_p22_formDatosGenerales'
                         ,border   : 0
-	        	    	,defaults : { style : 'margin:5px' , width: 310}
+	        	    	,defaults : { style : 'margin:5px'}
 	        	        ,layout   :
 	        	        {
 	        	        	type     : 'table'
