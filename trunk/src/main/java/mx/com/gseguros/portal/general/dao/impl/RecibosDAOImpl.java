@@ -54,6 +54,7 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
 			recibo.setDsestado(rs.getString("DSESTADO"));
 			recibo.setTiporeci(rs.getString("TIPORECI"));
 			recibo.setDstipore(rs.getString("DSTIPORE"));
+			recibo.setConsecutivo(rs.getString("CONSECUTIVO"));
 			return recibo;
 		}
 	}

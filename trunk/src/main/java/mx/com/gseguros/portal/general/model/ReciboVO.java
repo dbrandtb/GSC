@@ -62,6 +62,11 @@ public class ReciboVO implements Serializable {
 	 * C&oacute;digo del recibo usado en SISA
 	 */
 	private String icodrecibo;
+	
+	/**
+	 * Numero consecutivo de recibo
+	 */
+	private String consecutivo;
 
 	
 	//Getters and setters:
@@ -144,6 +149,14 @@ public class ReciboVO implements Serializable {
 
 	public void setIcodrecibo(String icodrecibo) {
 		this.icodrecibo = icodrecibo;
+	}
+	
+	public String getConsecutivo() {
+		return consecutivo;
+	}
+
+	public void setConsecutivo(String consecutivo) {
+		this.consecutivo = consecutivo;
 	}
 
 	@Override

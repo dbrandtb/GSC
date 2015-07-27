@@ -62,7 +62,8 @@ Ext.onReady(function(){
 			'feinicio',
 			'nmrecibo',
 			'ptimport',
-			'tiporeci'
+			'tiporeci',
+			'consecutivo'
 		]
 	});
 	
@@ -119,10 +120,9 @@ Ext.onReady(function(){
 			}
 		}],
 		columns: [
-			{text: '#', dataIndex:'nmrecibo', width:100},
-			//{text: 'Estado', dataIndex:'cdestado', width:80},
+			//{text: 'nmrecibo', dataIndex:'nmrecibo', width:100},
+			{text: '#', dataIndex:'consecutivo', width:100},
 			{text: 'Estado', dataIndex:'dsestado', width:120},
-			//{text: 'Tipo recibo', dataIndex:'tiporeci', width:80},
 			{text: 'Tipo de recibo', dataIndex:'dstipore', width:120},
 			{text: 'Fecha emisi\u00F3n', dataIndex:'feemisio', width:100},
 			{text: 'Fecha inicio', dataIndex:'feinicio', width:100},
