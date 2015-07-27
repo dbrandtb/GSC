@@ -21,6 +21,7 @@ import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -1099,46 +1100,64 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 				//ordenar codigo postal>estado>municipio
 				if(agrupado&&
 						(
-								cdtipsit.equals(TipoSituacion.SALUD_VITAL)
-								||cdtipsit.equals(TipoSituacion.SALUD_NOMINA)
-								||cdtipsit.equals(TipoSituacion.MULTISALUD)
+								cdtipsit.equals(TipoSituacion.SALUD_VITAL.getCdtipsit())
+								||cdtipsit.equals(TipoSituacion.SALUD_NOMINA.getCdtipsit())
+								||cdtipsit.equals(TipoSituacion.MULTISALUD.getCdtipsit())
 						)
 					)
 				{
-					List<ComponenteVO>tatriTemp2=new ArrayList<ComponenteVO>(0);
+					logger.debug("vamos a ordenar postal, estado y municipio");
+					ComponenteVO[] tatriTemp2 = new ComponenteVO[tatrisit.size()];
 					//buscar cp
 					for(ComponenteVO t:tatrisit)
 					{
-						if(t.getNameCdatribu().equals("3"))
+						if((""+t.getLabel()).toUpperCase().indexOf("POSTAL")!=-1)
 						{
-							tatriTemp2.add(t);
+							t.setComboVacio(true);
+							tatriTemp2[0] = t;
+							logger.debug("encontramos postal 0");
+							break;
 						}
 					}
 					//buscar estado
 					for(ComponenteVO t:tatrisit)
 					{
-						if(t.getNameCdatribu().equals("4"))
+						if((""+t.getLabel()).toUpperCase().indexOf("ESTADO")!=-1)
 						{
-							tatriTemp2.add(t);
+							tatriTemp2[1] = t;
+							logger.debug("encontramos estado 1");
+							break;
 						}
 					}
 					//buscar municipio
 					for(ComponenteVO t:tatrisit)
 					{
-						if(t.getNameCdatribu().equals("17"))
+						if((""+t.getLabel()).toUpperCase().indexOf("MUNICIPIO")!=-1)
 						{
-							tatriTemp2.add(t);
+							tatriTemp2[2] = t;
+							logger.debug("encontramos municipio 2");
+							break;
 						}
 					}
 					//agregar todos los demas
+					int i = 3;
 					for(ComponenteVO t:tatrisit)
 					{
-						if(!t.getNameCdatribu().equals("3")&&!t.getNameCdatribu().equals("4")&&!t.getNameCdatribu().equals("17"))
+						if((""+t.getLabel()).toUpperCase().indexOf("POSTAL")==-1
+								&&(""+t.getLabel()).toUpperCase().indexOf("ESTADO")==-1
+								&&(""+t.getLabel()).toUpperCase().indexOf("MUNICIPIO")==-1
+						)
 						{
-							tatriTemp2.add(t);
+							tatriTemp2[i++] = t;
+							logger.debug(Utils.join("ahora agregamos ",t.getLabel()));
 						}
 					}
-					tatrisit=tatriTemp2;
+					tatrisit = new ArrayList<ComponenteVO>();
+					for(ComponenteVO c : tatriTemp2)
+					{
+						logger.debug(Utils.join("ahora movemos del array a la lista ",c.getLabel()));
+						tatrisit.add(c);
+					}
 				}
 				
 				gc.genera(tatrisit);
