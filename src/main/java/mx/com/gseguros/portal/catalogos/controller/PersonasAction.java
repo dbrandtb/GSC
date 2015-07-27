@@ -571,6 +571,52 @@ public class PersonasAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
+
+	
+	/**
+	 * Guarda los datos de la pantalla de personas
+	 * @return SUCCESS
+	 */
+	public String guardarDomicilioAsegurado()
+	{
+		long timestamp = System.currentTimeMillis();
+		logger.info(timestamp+""
+				+ "\n#####################################"
+				+ "\n###### guardarDomicilioAsegurado ######"
+				+ "\nsmap1: "+smap1
+				);
+		try
+		{
+			
+			personasManager.guardarPantallaDomicilio(
+					smap1.get("CDPERSON")
+					,smap1.get("NMORDDOM")
+					,smap1.get("DSDOMICI")
+					,smap1.get("NMTELEFO")
+					,smap1.get("CODPOSTAL")
+					,smap1.get("CDEDO")
+					,smap1.get("CDMUNICI")
+					,smap1.get("CDCOLONI")
+					,smap1.get("NMNUMERO")
+					,smap1.get("NMNUMINT")
+					,timestamp
+					);
+		}
+		catch(Exception ex)
+		{
+			logger.error(timestamp+" error inesperado al guardar pantalla de guardarDomicilioAsegurado",ex);
+			exito = false;
+			respuesta = "Error: " + ex.getMessage()+", "+timestamp;
+		}
+		logger.info(timestamp+""
+				+ "\n###### guardarDomicilioAsegurado ######"
+				+ "\n#####################################"
+				);
+		exito = true;
+		return SUCCESS;
+	}
+	
+	
 	
 	/**
 	 * Obtener la direccion de una persona por su CDPERSON

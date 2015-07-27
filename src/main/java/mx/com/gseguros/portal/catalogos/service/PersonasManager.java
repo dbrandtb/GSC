@@ -64,6 +64,22 @@ public interface PersonasManager
 			,String nmnumint
 			,boolean autosave
 			,long   timestamp) throws Exception;
+
+	/**
+	 * Guardar pantalla de domicilio asegurados
+	 * @return 
+	 */
+	public void guardarPantallaDomicilio(String cdperson
+			,String nmorddom
+			,String dsdomici
+			,String nmtelefo
+			,String cdpostal
+			,String cdedo
+			,String cdmunici
+			,String cdcoloni
+			,String nmnumero
+			,String nmnumint
+			,long   timestamp) throws Exception;
 	/**
 	 * Obtener el domicilio de una persona por su cdperson de PKG_CONSULTA.P_GET_MDOMICIL
 	 * @return exito,respuesta,respuestaOculta,domicilio

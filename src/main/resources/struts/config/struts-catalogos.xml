@@ -78,6 +78,10 @@
         <action name="includes/editarRolesUsuario" class="usuarioAction">
             <result>/jsp/catalogos/includes/editarRolesUsuario.jsp</result>
         </action>
+
+        <action name="includes/editarDomicilioAsegurado" class="personasAction">
+            <result>/jsp/consultas/editarDomicilioAsegurado.jsp</result>
+        </action>
  
         <action name="includes/editarProductosAgente" class="usuarioAction">
             <result>/jsp/catalogos/includes/editarProductosAgente.jsp</result>
@@ -332,6 +336,10 @@
         </action>
         
         <action name="obtenerDomicilioPorCdperson" class="personasAction" method="obtenerDomicilioPorCdperson">
+            <result type="json" />
+        </action>
+
+        <action name="guardarDomicilioAsegurado" class="personasAction" method="guardarDomicilioAsegurado">
             <result type="json" />
         </action>
         
