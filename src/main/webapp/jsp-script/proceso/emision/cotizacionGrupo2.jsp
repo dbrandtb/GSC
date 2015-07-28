@@ -119,6 +119,7 @@ var _p25_resubirCenso    = 'N';
 var _p25_filtroCobTimeout;
 
 var _p22_parentCallback = false;
+var _callbackDomicilioAseg = false;
 
 var _ventanaClausulas;
 
@@ -4862,6 +4863,8 @@ function _p25_editarAsegurado(grid,rowIndex)
     debug('>_p25_editarAsegurado:',record.data);
     
     try{
+    	_p22_parentCallback = false;
+    	_callbackDomicilioAseg = false;
     	destruirLoaderContratante();
     	_ventanaPersonas.destroy();
     }catch(e){
@@ -4909,6 +4912,19 @@ function _p25_editarAsegurado(grid,rowIndex)
 				                }
 					        }).show();
 					        centrarVentanaInterna(_ventanaPersonas);
+					        
+					        _p22_parentCallback = function(json){
+							        record.set('RFC'              , json.smap1.CDRFC);
+							        record.set('NOMBRE'           , json.smap1.DSNOMBRE);
+							        record.set('SEGUNDO_NOMBRE'   , json.smap1.DSNOMBRE1);
+							        record.set('APELLIDO_PATERNO' , json.smap1.DSAPELLIDO);
+							        record.set('APELLIDO_MATERNO' , json.smap1.DSAPELLIDO1);
+							        record.set('APELLIDO_MATERNO' , json.smap1.DSAPELLIDO1);
+							        record.set('FECHA_NACIMIENTO' , json.smap1.FENACIMI);
+							        record.set('NACIONALIDAD'     , json.smap1.CDNACION);
+							        
+							        _ventanaPersonas.close();
+							};
     }else{
     	_ventanaPersonas = Ext.create('Ext.window.Window',
 			{
@@ -4928,20 +4944,11 @@ function _p25_editarAsegurado(grid,rowIndex)
 		    }).show();
 		    
 		centrarVentanaInterna(_ventanaPersonas);
+		
+		_callbackDomicilioAseg = function(){
+		        _ventanaPersonas.close();
+		};
     }
-    
-//    _p22_parentCallback = function(json)
-//    {
-//        record.set('RFC'              , json.smap1.CDRFC);
-//        record.set('NOMBRE'           , json.smap1.DSNOMBRE);
-//        record.set('SEGUNDO_NOMBRE'   , json.smap1.DSNOMBRE1);
-//        record.set('APELLIDO_PATERNO' , json.smap1.DSAPELLIDO);
-//        record.set('APELLIDO_MATERNO' , json.smap1.DSAPELLIDO1);
-//        record.set('APELLIDO_MATERNO' , json.smap1.DSAPELLIDO1);
-//        record.set('FECHA_NACIMIENTO' , json.smap1.FENACIMI);
-//        record.set('NACIONALIDAD'     , json.smap1.CDNACION);
-//        mensajeCorrecto('Datos guardados','Se actualiz&oacute; la persona');
-//    };
     
     debug('<_p25_editarAsegurado');
 }

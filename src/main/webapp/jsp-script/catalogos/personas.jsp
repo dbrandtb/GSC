@@ -1540,6 +1540,16 @@ function _p22_loadRecordCdperson(callbackload,autosave)
             	var record = new _p22_modeloGrid(json.smap2);
             	_p22_PanelPrincipal().setLoading(true);
             	
+            	/**
+            	 * Para cargar el cdideper y cdideext segun sea el caso.
+            	 */
+            	if(!Ext.isEmpty(record.get('CDIDEPER'))){
+            		_CDIDEPERsel = record.get('CDIDEPER');
+            	}
+            	if(!Ext.isEmpty(record.get('CDIDEEXT'))){
+            		_CDIDEEXTsel = record.get('CDIDEEXT');
+            	}
+            	
             	var valTel  = _fieldByName('TELEFONO',_PanelPrincipalPersonas).getValue(); 
             	var valMail = _fieldByName('EMAIL',_PanelPrincipalPersonas).getValue(); 
             	
