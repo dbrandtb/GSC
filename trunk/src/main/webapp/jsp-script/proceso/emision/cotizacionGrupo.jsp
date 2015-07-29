@@ -86,6 +86,7 @@ var _p21_urlRecuperacionSimple           = '<s:url namespace="/emision"         
 var _p21_urlRecuperacionSimpleLista      = '<s:url namespace="/emision"         action="recuperacionSimpleLista"          />';
 var _p21_urlPantallaAgentes              = '<s:url namespace="/flujocotizacion" action="principal"                        />';
 var _p21_urlComplementoCotizacion        = '<s:url namespace="/emision"         action="complementoSaludGrupo"            />';
+var _p21_urlPantallaEspPersona           = '<s:url namespace="/persona"         action="includes/pantallaEspPersona"      />';
 
 var _p21_nombreReporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports"     />';
@@ -5411,6 +5412,11 @@ function _p21_aseguradosClic(grid,rowIndex)
                     ,handler : _p21_recuperarAsegurado
                 }
                 ,{
+                    tooltip  : 'Editar datos b\u00E1sicos'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/wand.png'
+                    ,handler : _p21_editarDatosBaseAsegurado
+                }
+                ,{
                     tooltip  : 'Editar'
                     ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
                     ,handler : _p21_editarAsegurado
@@ -5757,6 +5763,34 @@ function _p21_recuperarAsegurado(grid,rowIndex)
         ]
     }).show());
     debug('<_p21_recuperarAsegurado');
+}
+
+function _p21_editarDatosBaseAsegurado(grid,rowIndex)
+{
+    var record=grid.getStore().getAt(rowIndex);
+    debug('>_p21_editarDatosBaseAsegurado:',record.data);
+    var ventana = Ext.create('Ext.window.Window',
+    {
+        title   : 'Editar persona '+record.get('NOMBRE')
+        ,itemId : '_p47_contenedor' //se pone para que la ventana interna pueda cerrar la ventana
+        ,width  : 860
+        ,height : 340
+        ,modal  : true
+        ,loader :
+        {
+            url       : _p21_urlPantallaEspPersona
+            ,params   :
+            {
+                'params.cdperson' : record.get('CDPERSON')
+                ,'params.origen'  : 'cotcol'
+            }
+            ,scripts  : true
+            ,autoLoad : true
+        }
+    }).show()
+    centrarVentanaInterna(ventana);
+    
+    debug('<_p21_editarDatosBaseAsegurado');
 }
 
 function _p21_editarAsegurado(grid,rowIndex)
