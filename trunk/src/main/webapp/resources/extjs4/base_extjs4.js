@@ -282,7 +282,7 @@ function mensajeError(mensaje, callback)
 function mensajeCorrecto(titulo,mensaje,funcion)
 {
 	
-	if(funcion)
+	if(!Ext.isEmpty(funcion))
 	{
 		var tmpMensajeEmergente=Ext.Msg.show({
 			title    : titulo
@@ -662,6 +662,56 @@ function _grabarEvento(cdmodulo,cdevento,ntramite,cdunieco,cdramo,estado,nmpoliz
     catch(e)
     {
         debugError('Error al grabar evento:',cdmodulo,cdevento,e);
+    }
+}
+
+function _cargarForm(form,datos)
+{
+    debug('>_cargarForm form:',form,',datos:',datos);
+    var ck = 'Cargando formulario';
+    try
+    {
+        ck = 'Cargando '+((form.title).toLowerCase());
+        for(var prop in datos)
+        {
+            var value = datos[prop];
+            var item  = form.down('[name='+prop+']');
+            if(Ext.isEmpty(item))
+            {
+                continue;
+            }
+            if(!Ext.isEmpty(item.store))//cuando es combo
+            {
+                if(item.store.getCount()==0)//aun no ha cargado
+                {
+                    item.valorPendiente = value;
+                    item.store.padre    = item;
+                    item.store.on(
+                    {
+                        load : function(me,records,success)
+                        {
+                            if(success&&!Ext.isEmpty(me.padre.valorPendiente)&&me.padre.valorPendiente!=false)
+                            {
+                                me.padre.setValue(me.padre.valorPendiente);
+                                me.padre.valorPendiente = false;
+                            }
+                        }
+                    });
+                }
+                else//ya esta cargado
+                {
+                    item.setValue(value);
+                }
+            }
+            else//cuando no es combo
+            {
+                item.setValue(value);
+            }
+        }
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
     }
 }
 
