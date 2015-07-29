@@ -2633,8 +2633,31 @@ function _p25_editarGrupoClic(grid,rowIndex)
 							                                                                                                    debug('### nuevo paquete:',json);
 							                                                                                                    if(json.success)
 							                                                                                                    {
-							                                                                                                        _p25_tabGruposModifiCols[3].editor.store.reload();
 							                                                                                                        grupo.set('parametros.pv_otvalor01',json.smap1.cdPaqueteNuevo);
+							                                                                                                        if(_p25_clasif==_p25_TARIFA_LINEA)
+							                                                                                                        {
+							                                                                                                            _p25_tabGruposModifiCols[3].editor.store.reload();
+							                                                                                                            _p25_tabGruposLinealCols[3].editor.store.reload(
+							                                                                                                            {
+							                                                                                                                callback : function()
+							                                                                                                                {
+							                                                                                                                    _fieldById('_p25_tabGruposLineal').down('grid').getView().refresh();
+							                                                                                                                }
+							                                                                                                            });
+							                                                                                                            
+							                                                                                                        }
+							                                                                                                        else
+							                                                                                                        {
+                                                                                                                                        _p25_tabGruposLinealCols[3].editor.store.reload();
+							                                                                                                            _p25_tabGruposModifiCols[3].editor.store.reload(
+							                                                                                                            {
+							                                                                                                                callback : function()
+							                                                                                                                {
+							                                                                                                                    _fieldById('_p25_tabGruposModifi').down('grid').getView().refresh();
+							                                                                                                                }
+							                                                                                                            });
+							                                                                                                            
+							                                                                                                        }
 							                                                                                                        debug('grupo:',grupo);
 							                                                                                                        me.up('window').destroy();
 							                                                                                                        window2.destroy();
