@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.catalogos.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,12 +24,13 @@ import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
 public class PersonasManagerImpl implements PersonasManager
 {
-	private final Logger logger = Logger.getLogger(PersonasManagerImpl.class);
+	private final static org.apache.log4j.Logger logger       = org.apache.log4j.Logger.getLogger(PersonasManagerImpl.class);
+	private final static org.slf4j.Logger        logger2      = org.slf4j.LoggerFactory.getLogger(PersonasManagerImpl.class);
+	private final static SimpleDateFormat        renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	private PantallasDAO pantallasDAO;
 	private PersonasDAO  personasDAO;
 	private EndososDAO   endososDAO;
@@ -866,6 +868,144 @@ public class PersonasManagerImpl implements PersonasManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return resp;
+	}
+	
+	@Override
+	public Map<String,Item> pantallaPersona(String origen, String cdsisrol, String context) throws Exception
+	{
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ pantallaPersona @@@@@@"
+				,"\n@@@@@@ origen="   , origen
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ context="  , context
+				));
+		
+		Map<String,Item> items = new HashMap<String,Item>();
+		String           paso  = null;
+		try
+		{
+			paso = "Recuperando componentes de pantalla de persona";
+			List<ComponenteVO> componentes = pantallasDAO.obtenerComponentes(
+					null                       //cdtiptra
+					,null                      //cdunieco
+					,null                      //cdramo
+					,origen                    //cdtipsit
+					,null                      //estado
+					,cdsisrol
+					,"PANTALLA_ESPEJO_PERSONA" //pantalla
+					,"ITEMS"                   //seccion
+					,null                      //orden
+					);
+			
+			List<ComponenteVO> botones = pantallasDAO.obtenerComponentes(
+					null                       //cdtiptra
+					,null                      //cdunieco
+					,null                      //cdramo
+					,origen                    //cdtipsit
+					,null                      //estado
+					,cdsisrol
+					,"PANTALLA_ESPEJO_PERSONA" //pantalla
+					,"BUTTONS"                 //seccion
+					,null                      //orden
+					);
+			
+			logger2.debug("\nNumero de componentes recuperados: {}\nNumero de botones recuperados: {}",componentes.size(),botones.size());
+			
+			paso = "Generando componentes de pantalla de persona";
+			GeneradorCampos gc = new GeneradorCampos(context);
+			gc.generaComponentes(componentes, true, false, true, false, false, false);
+			items.put("items" , gc.getItems());
+			
+			gc.generaComponentes(botones, true, false, false, false, false, true);
+			items.put("buttons" , gc.getButtons());
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.join(
+				 "\n@@@@@@ items=",items.size()
+				,"\n@@@@@@ pantallaPersona @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return items;
+	}
+	
+	@Override
+	public String guardarPantallaEspPersona(Map<String,String>params) throws Exception
+	{
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarPantallaEspPersona @@@@@@"
+				,"\n@@@@@@ params=",params
+				));
+		
+		String paso = null;
+		try
+		{
+			paso = "Guardando datos de persona";
+			logger2.debug("\nVoy a guardar datos de persona");
+			personasDAO.movimientosMpersona(
+				params.get("cdperson"),
+				params.get("cdtipide"),
+				params.get("cdideper"),
+				params.get("dsnombre"),
+				params.get("cdtipper"),
+				params.get("otfisjur"),
+				params.get("otsexo"),
+				StringUtils.isNotBlank(params.get("fenacimi"))?renderFechas.parse(params.get("fenacimi")):null,
+				params.get("cdrfc"),
+				params.get("dsemail"),
+				params.get("dsnombre1"),
+				params.get("dsapellido"),
+				params.get("dsapellido1"),
+				StringUtils.isNotBlank(params.get("feingreso"))?renderFechas.parse(params.get("feingreso")):null,
+				params.get("cdnacion"),
+				params.get("canaling"),
+				params.get("conducto"),
+				params.get("ptcumupr"),
+				params.get("residencia"),
+				params.get("nongrata"),
+				params.get("cdideext"),
+				params.get("cdestciv"),
+				params.get("cdsucemi"),
+				Constantes.UPDATE_MODE
+			);
+			
+			paso = "Datos guardados correctamente";
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.join(
+				 "\n@@@@@@ mensaje=",paso
+				,"\n@@@@@@ guardarPantallaEspPersona @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return paso;
+	}
+	
+	public Map<String,String>recuperarEspPersona(String cdperson) throws Exception
+	{
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarEspPersona @@@@@@"
+				,"\n@@@@@@ cdperson=",cdperson
+				));
+		
+		Map<String,String> persona = personasDAO.recuperarEspPersona(cdperson);
+		
+		logger.debug(Utils.join(
+				 "\n@@@@@@ persona=",persona
+				,"\n@@@@@@ recuperarEspPersona @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return persona;
 	}
 	
 	/************************ BASE MANAGER **************************/

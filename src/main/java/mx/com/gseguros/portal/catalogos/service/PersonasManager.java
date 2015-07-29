@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 
 public interface PersonasManager
@@ -122,4 +123,10 @@ public interface PersonasManager
 	public ManagerRespuestaImapVO pantallaBeneficiarios(String cdunieco,String cdramo,String estado,String cdsisrol,String cdtipsup);
 	
 	public void setSession(Map<String,Object>session);
+	
+	public Map<String,Item> pantallaPersona(String origen, String cdsisrol, String context) throws Exception;
+	
+	public String guardarPantallaEspPersona(Map<String,String>params) throws Exception;
+	
+	public Map<String,String>recuperarEspPersona(String cdperson) throws Exception;
 }

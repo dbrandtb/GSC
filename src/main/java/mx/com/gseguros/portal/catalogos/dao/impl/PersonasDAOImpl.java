@@ -985,4 +985,44 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public Map<String,String> recuperarEspPersona(String cdperson) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdperson" , cdperson);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarEspPersona(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>) procRes.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException(Utils.join("No se encuentra la persona con clave ",cdperson));
+		}
+		else if(lista.size()>1)
+		{
+			throw new ApplicationException(Utils.join("Registro de persona duplicado con clave ",cdperson));
+		}
+		return lista.get(0);
+	}
+	
+	protected class RecuperarEspPersona extends StoredProcedure
+	{
+		protected RecuperarEspPersona(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_ESPEJO_MPERSONA");
+			declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"cdperson"  , "cdtipide"  , "cdideper"   , "dsnombre"    , "cdtipper"
+					,"otfisjur" , "otsexo"    , "fenacimi"   , "cdrfc"       , "foto"
+					,"dsemail"  , "dsnombre1" , "dsapellido" , "dsapellido1" , "cdnacion"
+					,"dscomnom" , "dsrazsoc"  , "feingreso"  , "feactual"    , "dsnomusu"
+					,"cdestciv" , "cdgrueco"  , "cdstippe"   , "nmnumnom"    , "curp"
+					,"canaling" , "conducto"  , "ptcumupr"   , "status"      , "residencia"
+					,"nongrata" , "cdideext"  , "cdsucemi"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

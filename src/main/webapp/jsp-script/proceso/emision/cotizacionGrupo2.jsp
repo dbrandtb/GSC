@@ -83,6 +83,7 @@ var _p25_urlRecuperacionSimple          = '<s:url namespace="/emision"         a
 var _p25_urlPantallaAgentes             = '<s:url namespace="/flujocotizacion" action="principal"                        />';
 var _p25_urlComplementoCotizacion       = '<s:url namespace="/emision"         action="complementoSaludGrupo"            />';
 var _p25_urlGuardarConfig4TVALAT        = '<s:url namespace="/emision"         action="guardarConfiguracionGarantias"    />';
+var _p25_urlPantallaEspPersona          = '<s:url namespace="/persona"         action="includes/pantallaEspPersona"      />';
 
 var _p25_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports" />';
 var _p25_reportsServerUser       = '<s:text name="pass.servidor.reports" />';
@@ -2540,7 +2541,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                                                                 }
                                                                                                 catch(e)
                                                                                                 {
-                                                                                                    manejaException(e);
+                                                                                                    manejaException(e,ck);
                                                                                                 }
                                                                                             }
                                                                                             ,failure  : function()
@@ -2646,7 +2647,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
 							                                                                                                }
 							                                                                                                catch(e)
 							                                                                                                {
-							                                                                                                    manejaException(e);
+							                                                                                                    manejaException(e,ck);
 							                                                                                                }
 							                                                                                            }
 							                                                                                            ,failure  : function()
@@ -4606,6 +4607,11 @@ function _p25_aseguradosClic(grid,rowIndex)
                     ,handler : _p25_recuperarAsegurado
                 }
                 ,{
+                    tooltip  : 'Editar datos b\u00E1sicos'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/wand.png'
+                    ,handler : _p25_editarDatosBaseAsegurado
+                }
+                ,{
                     tooltip  : 'Editar'
                     ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
                     ,handler : _p25_editarAsegurado
@@ -4855,6 +4861,34 @@ function _p25_recuperarAsegurado(grid,rowIndex)
         ]
     }).show());
     debug('<_p25_recuperarAsegurado');
+}
+
+function _p25_editarDatosBaseAsegurado(grid,rowIndex)
+{
+    var record=grid.getStore().getAt(rowIndex);
+    debug('>_p25_editarDatosBaseAsegurado:',record.data);
+    var ventana = Ext.create('Ext.window.Window',
+    {
+        title   : 'Editar persona '+record.get('NOMBRE')
+        ,itemId : '_p47_contenedor' //se pone para que la ventana interna pueda cerrar la ventana
+        ,width  : 860
+        ,height : 340
+        ,modal  : true
+        ,loader :
+        {
+            url       : _p25_urlPantallaEspPersona
+            ,params   :
+            {
+                'params.cdperson' : record.get('CDPERSON')
+                ,'params.origen'  : 'cotcol'
+            }
+            ,scripts  : true
+            ,autoLoad : true
+        }
+    }).show()
+    centrarVentanaInterna(ventana);
+    
+    debug('<_p25_editarDatosBaseAsegurado');
 }
 
 function _p25_editarAsegurado(grid,rowIndex)

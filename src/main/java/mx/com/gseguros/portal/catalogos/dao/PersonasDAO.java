@@ -115,4 +115,6 @@ public interface PersonasDAO
 	public void actualizaCodigoExterno(Map<String, String> params) throws Exception;
 	
 	public Map<String,String>cargarPersonaPorCdperson(String cdperson)throws Exception;
+	
+	public Map<String,String> recuperarEspPersona(String cdperson) throws Exception;
 }
