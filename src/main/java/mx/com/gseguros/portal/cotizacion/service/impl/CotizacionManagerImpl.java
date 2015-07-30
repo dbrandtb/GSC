@@ -6783,6 +6783,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdplan
 			,String cdpaq
 			,String dspaq
+			,String derpol
 			,List<Map<String,String>>tvalogars
 			)throws Exception
 	{
@@ -6794,6 +6795,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@ cdplan="    , cdplan
 				,"\n@@@@@@ cdpaq="     , cdpaq
 				,"\n@@@@@@ dspaq="     , dspaq
+				,"\n@@@@@@ derpol="    , derpol
 				,"\n@@@@@@ tvalogars=" , tvalogars.size()
 				));
 		
@@ -6802,6 +6804,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 		try
 		{
 			boolean nuevo = !"0".equals(dspaq);
+			
+			paso = "Construyendo objetos de transferencia";
+			logger.debug("\nPaso: {}",paso);
 			
 			List<ConfiguracionCoberturaDTO> lista = new ArrayList<ConfiguracionCoberturaDTO>();
 			for(Map<String,String>tvalogar : tvalogars)
@@ -7450,6 +7455,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 				lista.add(c);
 			}
 			
+			paso = "Guardando configuraci\u00F3n";
+			logger.debug("\nPaso: {}",paso);
+			
 			cdPaqueteNuevo = cotizacionDAO.guardarConfiguracionGarantias(
 					cdramo
 					,cdtipsit
@@ -7457,6 +7465,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,cdpaq
 					,nuevo
 					,dspaq
+					,derpol
 					,lista
 					);
 			

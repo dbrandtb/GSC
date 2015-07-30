@@ -451,6 +451,7 @@ public interface CotizacionDAO {
 			,String cdpaquete
 			,boolean nuevo
 			,String dspaquete
+			,String derpol
 			,List<ConfiguracionCoberturaDTO>lista
 			)throws Exception;
 }

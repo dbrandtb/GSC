@@ -6,6 +6,7 @@
     
     <!-- Documentos -->
     <bean id="documentosPolizaAction" class="mx.com.gseguros.portal.general.util.DocumentosPolizaAction" scope="prototype">
+        <property name="consultasManager" ref="consultasManagerImpl"/>
     </bean>
     
     

@@ -5729,6 +5729,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,String cdpaquete
 			,boolean nuevo
 			,String dspaquete
+			,String derpol
 			,List<ConfiguracionCoberturaDTO>lista
 			)throws Exception
 	{
@@ -5739,6 +5740,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("cdpaquete" , cdpaquete);
 		params.put("nuevo"     , nuevo ? "S" : "N");
 		params.put("dspaquete" , dspaquete);
+		params.put("derpol"    , derpol);
 		
 		String[][] array = new String[lista.size()][];
 		int        i     = 0;
@@ -5764,6 +5766,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("cdpaquete" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nuevo"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("dspaquete" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("derpol"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("llave"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("array"     , OracleTypes.ARRAY , "LISTA_LISTAS_VARCHAR2"));
 			declareParameter(new SqlOutParameter("pv_cdpaquete_o" , OracleTypes.VARCHAR));
