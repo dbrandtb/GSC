@@ -1,5 +1,8 @@
 package mx.com.gseguros.portal.general.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum TipoEndoso {
 	
 	EMISION_POLIZA(1),
@@ -47,7 +50,7 @@ public enum TipoEndoso {
 	VIGENCIA_POLIZA(47);
 	
 
-	private Integer cdTipSup;
+	private final Integer cdTipSup;
 
 	private TipoEndoso(Integer cdTipSup) {
 		this.cdTipSup = cdTipSup;
@@ -57,7 +60,15 @@ public enum TipoEndoso {
 		return cdTipSup;
 	}
 	
-
+	
+	private static final Map<Integer, TipoEndoso> map;
+	static {
+		map = new HashMap<Integer, TipoEndoso>();
+		for (TipoEndoso v : TipoEndoso.values()) {
+			map.put(v.cdTipSup, v);
+		}
+	}
+	
 	/**
 	 * Obtiene el enum correspondiente al cdTipSup enviado
 	 * 
@@ -65,13 +76,7 @@ public enum TipoEndoso {
 	 * @return Enum que coincide con el cdTipSup, nulo si no existe
 	 */
 	public static TipoEndoso findByKey(Integer cdTipSup) {
-		TipoEndoso tipoEnd= null;
-		for (TipoEndoso tipo : TipoEndoso.values()) {
-			if(tipo.getCdTipSup() == cdTipSup) {
-				tipoEnd = tipo;
-			}
-		}
-		return tipoEnd;
+		return map.get(cdTipSup);
 	}
 	
 }
