@@ -665,6 +665,11 @@ function _grabarEvento(cdmodulo,cdevento,ntramite,cdunieco,cdramo,estado,nmpoliz
     }
 }
 
+/**
+ * Funcion que carga un formulario aunque tenga combos anidados y autocompleters
+ * @param {Component} form  => formulario ext js
+ * @param {Object}    datos => (objeto javascript llave:valor, se mapea "llave" contra los "name" del formulario)
+ */
 function _cargarForm(form,datos)
 {
     debug('>_cargarForm form:',form,',datos:',datos);
