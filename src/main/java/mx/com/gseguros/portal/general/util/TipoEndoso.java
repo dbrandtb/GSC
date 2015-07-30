@@ -56,4 +56,22 @@ public enum TipoEndoso {
 	public Integer getCdTipSup() {
 		return cdTipSup;
 	}
+	
+
+	/**
+	 * Obtiene el enum correspondiente al cdTipSup enviado
+	 * 
+	 * @param cdTipSup Tipo de suplemento a buscar
+	 * @return Enum que coincide con el cdTipSup, nulo si no existe
+	 */
+	public static TipoEndoso findByKey(Integer cdTipSup) {
+		TipoEndoso tipoEnd= null;
+		for (TipoEndoso tipo : TipoEndoso.values()) {
+			if(tipo.getCdTipSup() == cdTipSup) {
+				tipoEnd = tipo;
+			}
+		}
+		return tipoEnd;
+	}
+	
 }
