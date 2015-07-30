@@ -8799,6 +8799,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			String cdplan   = smap1.get("cdplan");
 			String cdpaq    = smap1.get("cdpaq");
 			String dspaq    = smap1.get("dspaq");
+			String derpol   = smap1.get("derpol");
 			
 			Utils.validate(
 					cdramo    , "No se recibi\u00F3 el producto"
@@ -8806,6 +8807,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdplan   , "No se recibi\u00F3 la clave de plan"
 					,cdpaq    , "No se recibi\u00F3 la clave de paquete"
 					,dspaq    , "No se recibi\u00F3 el nombre de paquete"
+					,derpol   , "No se recibieron los derechos de p\u00F3liza"
 					);
 			
 			smap1.put("cdPaqueteNuevo",cotizacionManager.guardarConfiguracionGarantias(
@@ -8814,6 +8816,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdplan
 					,cdpaq
 					,dspaq
+					,derpol
 					,slist1
 					));
 			

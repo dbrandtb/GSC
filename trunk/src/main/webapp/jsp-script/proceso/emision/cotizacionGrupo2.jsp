@@ -2475,6 +2475,9 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                                         .findRecord('key',grupo.get('parametros.pv_otvalor01')).get('value');
                                                                     debug('nombrePaq:',nombrePaq);
                                                                     
+                                                                    var derpol = grupo.get('parametros.pv_otvalor08');
+                                                                    debug('derpol:',derpol);
+                                                                    
                                                                     centrarVentanaInterna(Ext.create('Ext.window.Window',
                                                                     {
                                                                         modal  : true
@@ -2510,6 +2513,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                                                                 ,cdplan   : grupo.get('cdplan')
                                                                                                 ,cdpaq    : grupo.get('parametros.pv_otvalor01')
                                                                                                 ,dspaq    : '0'
+                                                                                                ,derpol   : derpol
                                                                                             }
                                                                                             ,slist1 : tvalogars
                                                                                         };
@@ -2612,6 +2616,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
 							                                                                                                ,cdplan   : grupo.get('cdplan')
 							                                                                                                ,cdpaq    : grupo.get('parametros.pv_otvalor01')
 							                                                                                                ,dspaq    : me2.up('form').down('textfield').getValue()
+							                                                                                                ,derpol   : derpol
 							                                                                                            }
 							                                                                                            ,slist1 : tvalogars
 							                                                                                        };

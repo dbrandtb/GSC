@@ -561,6 +561,7 @@ public interface CotizacionManager
 			,String cdplan
 			,String cdpaq
 			,String dspaq
+			,String derpol
 			,List<Map<String,String>>tvalogars
 			)throws Exception;
 }
