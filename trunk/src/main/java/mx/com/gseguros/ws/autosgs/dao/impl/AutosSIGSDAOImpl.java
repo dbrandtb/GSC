@@ -707,7 +707,6 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	
 	@Override
 	public void revierteEndosoBFallidoSigs(Map<String, Object> params) throws Exception {
-		Integer resp = null;
 		ejecutaSP(new RevierteEndosoBFallidoSigs(getDataSource()), params);
 	}
 	
