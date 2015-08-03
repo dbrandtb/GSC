@@ -682,6 +682,46 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			compile();
 		}
 	}
+
+	@Override
+	public void revierteEndosoFallidoSigs(Map<String, Object> params) throws Exception {
+		Integer resp = null;
+		ejecutaSP(new RevierteEndosoFallidoSigs(getDataSource()), params);
+	}
 	
+	public class RevierteEndosoFallidoSigs extends StoredProcedure{
+		protected RevierteEndosoFallidoSigs(DataSource dataSource){
+			super(dataSource, "sprevierteemision");
+			
+			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
+			declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
+			declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
+			declareParameter(new SqlParameter("vTipoEndoso", Types.VARCHAR));
+			declareParameter(new SqlParameter("vNumEndoso", Types.INTEGER));
+			declareParameter(new SqlParameter("vError", Types.SMALLINT));
+			declareParameter(new SqlParameter("vDesError", Types.VARCHAR));
+			
+			compile();
+		}
+	}
+	
+	@Override
+	public void revierteEndosoBFallidoSigs(Map<String, Object> params) throws Exception {
+		Integer resp = null;
+		ejecutaSP(new RevierteEndosoBFallidoSigs(getDataSource()), params);
+	}
+	
+	public class RevierteEndosoBFallidoSigs extends StoredProcedure{
+		protected RevierteEndosoBFallidoSigs(DataSource dataSource){
+			super(dataSource, "sp_RevierteEndosoB");
+			
+			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
+			declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
+			declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
+			declareParameter(new SqlParameter("vEndosoB", Types.INTEGER));
+						
+			compile();
+		}
+	}
 	
 }

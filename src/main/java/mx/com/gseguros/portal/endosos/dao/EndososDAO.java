@@ -529,4 +529,12 @@ public interface EndososDAO
 			,Date feinival
 			,String tstamp
 			)throws Exception;
+	
+	public List<Map<String,String>> obtieneEndososPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception;
 }

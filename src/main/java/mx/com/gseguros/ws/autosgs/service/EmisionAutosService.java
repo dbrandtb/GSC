@@ -34,7 +34,7 @@ public interface EmisionAutosService {
 	public List<Map<String,String>> obtieneEndososImprimir(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem);
 	
-	public boolean enviaRecibosAutosSigs(String cdunieco, String cdramo,
+	public Integer enviaRecibosAutosSigs(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String nmpoliex, String subramo, String sucursal);
 	
 	public int endosoCambioClienteAutos(String cdunieco, String cdramo,

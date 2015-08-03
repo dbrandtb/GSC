@@ -793,6 +793,10 @@
         <action name="obtieneRecibosPagados" class="endososAutoAction" method="obtieneRecibosPagados">
             <result name="success" type="json" />
         </action>
+
+        <action name="reenviaRecibosAuto" class="EndososAction" method="reenviaRecibosAuto">
+            <result name="success" type="json" />
+        </action>
         
     </package>
 

@@ -31,7 +31,17 @@ public class EmisionAutosVO implements Serializable {
     private boolean exitoRecibos;
     
     private boolean endosoSinRetarif;//Para usar si se se concluyo un endoso B sin retarificacion
+    
+    private Integer resRecibos;// respuesta del SP que valida la emision (recibos)
 	
+	public Integer getResRecibos() {
+		return resRecibos;
+	}
+
+	public void setResRecibos(Integer resRecibos) {
+		this.resRecibos = resRecibos;
+	}
+
 	@Override
 	public String toString()
 	{
