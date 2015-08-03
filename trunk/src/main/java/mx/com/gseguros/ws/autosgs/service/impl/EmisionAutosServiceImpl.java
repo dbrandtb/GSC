@@ -89,7 +89,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		SDTPoliza polizaEmiRes = null;
 		Cotizacion datosCotizacionAuto = null;
 		
-		boolean exitoRecibosSigs = false;
+		boolean exitoRecibosSigs = true;
 		
 		//if(true)return emisionAutoRes;
 		
@@ -577,18 +577,6 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 								
 								if(polizaEmiRes.getNumpol() == 0){
 									logger.error("Numero de Poliza de Emision en 0 para la Cotizacion: " + numSolicitud);
-									return null;
-								}
-								
-								emisionAutoRes = new EmisionAutosVO();
-								emisionAutoRes.setNmpoliex(Long.toString(polizaEmiRes.getNumpol()));
-								emisionAutoRes.setSubramo(Short.toString(polizaEmiRes.getRamos()));
-								emisionAutoRes.setSucursal(Short.toString(polizaEmiRes.getSucursal()));
-								emisionAutoRes.setNumeroEndoso(Long.toString(polizaEmiRes.getEndoso()));
-								emisionAutoRes.setTipoEndoso(polizaEmiRes.getTipendo());
-								
-								if(cdramo.equalsIgnoreCase(Ramo.AUTOS_RESIDENTES.getCdramo())){
-									
 									if(!endosoIt.get("TIPOEND").equalsIgnoreCase("E")){
 										LinkedHashMap<String, Object> paramsEnd = new LinkedHashMap<String, Object>();
 									
@@ -599,7 +587,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 										paramsEnd.put("param5" , nmsuplem);
 										paramsEnd.put("param6" , endosoIt.get("TIPOEND"));
 										paramsEnd.put("param7" , endosoIt.get("NUMEND"));
-										paramsEnd.put("param8" , polizaEmiRes.getEndoso());
+										paramsEnd.put("param8" , 0);
 										
 										try {
 											storedProceduresManager.procedureVoidCall(
@@ -608,8 +596,37 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 											logger.error("Error al actualizar el numero de endoso.",e2);
 										}
 									}
+									return null;
 									
 								}
+								
+								emisionAutoRes = new EmisionAutosVO();
+								emisionAutoRes.setNmpoliex(Long.toString(polizaEmiRes.getNumpol()));
+								emisionAutoRes.setSubramo(Short.toString(polizaEmiRes.getRamos()));
+								emisionAutoRes.setSucursal(Short.toString(polizaEmiRes.getSucursal()));
+								emisionAutoRes.setNumeroEndoso(Long.toString(polizaEmiRes.getEndoso()));
+								emisionAutoRes.setTipoEndoso(polizaEmiRes.getTipendo());
+								
+								if(!endosoIt.get("TIPOEND").equalsIgnoreCase("E")){
+									LinkedHashMap<String, Object> paramsEnd = new LinkedHashMap<String, Object>();
+								
+									paramsEnd.put("param1" , cdunieco);
+									paramsEnd.put("param2" , cdramo);
+									paramsEnd.put("param3" , estado);
+									paramsEnd.put("param4" , nmpoliza);
+									paramsEnd.put("param5" , nmsuplem);
+									paramsEnd.put("param6" , endosoIt.get("TIPOEND"));
+									paramsEnd.put("param7" , endosoIt.get("NUMEND"));
+									paramsEnd.put("param8" , polizaEmiRes.getEndoso());
+									
+									try {
+										storedProceduresManager.procedureVoidCall(
+												ObjetoBD.ACTUALIZA_ENDOSO_SIGS.getNombre(), paramsEnd, null);
+									} catch (Exception e2) {
+										logger.error("Error al actualizar el numero de endoso.",e2);
+									}
+								}
+									
 							}
 							
 						}else{
@@ -619,9 +636,47 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						
 					} catch(WSException wse){
 						logger.error("Error en WS de Autos, xml enviado: " + wse.getPayload(), wse);
+						if(!endosoIt.get("TIPOEND").equalsIgnoreCase("E")){
+							LinkedHashMap<String, Object> paramsEnd = new LinkedHashMap<String, Object>();
+						
+							paramsEnd.put("param1" , cdunieco);
+							paramsEnd.put("param2" , cdramo);
+							paramsEnd.put("param3" , estado);
+							paramsEnd.put("param4" , nmpoliza);
+							paramsEnd.put("param5" , nmsuplem);
+							paramsEnd.put("param6" , endosoIt.get("TIPOEND"));
+							paramsEnd.put("param7" , endosoIt.get("NUMEND"));
+							paramsEnd.put("param8" , 0);
+							
+							try {
+								storedProceduresManager.procedureVoidCall(
+										ObjetoBD.ACTUALIZA_ENDOSO_SIGS.getNombre(), paramsEnd, null);
+							} catch (Exception e2) {
+								logger.error("Error al actualizar el numero de endoso.",e2);
+							}
+						}
 						return null;
 					} catch (Exception e){
 						logger.error("Error en WS de Autos: " + e.getMessage(),e);
+						if(!endosoIt.get("TIPOEND").equalsIgnoreCase("E")){
+							LinkedHashMap<String, Object> paramsEnd = new LinkedHashMap<String, Object>();
+						
+							paramsEnd.put("param1" , cdunieco);
+							paramsEnd.put("param2" , cdramo);
+							paramsEnd.put("param3" , estado);
+							paramsEnd.put("param4" , nmpoliza);
+							paramsEnd.put("param5" , nmsuplem);
+							paramsEnd.put("param6" , endosoIt.get("TIPOEND"));
+							paramsEnd.put("param7" , endosoIt.get("NUMEND"));
+							paramsEnd.put("param8" , 0);
+							
+							try {
+								storedProceduresManager.procedureVoidCall(
+										ObjetoBD.ACTUALIZA_ENDOSO_SIGS.getNombre(), paramsEnd, null);
+							} catch (Exception e2) {
+								logger.error("Error al actualizar el numero de endoso.",e2);
+							}
+						}
 						return null;
 					}
 				}else{
@@ -632,13 +687,19 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		
 			}
 			
-			exitoRecibosSigs = enviaRecibosAutosSigs(cdunieco, cdramo,estado, nmpoliza, nmsuplem, emisionAutoRes.getNmpoliex(), emisionAutoRes.getSubramo(), emisionAutoRes.getSucursal());
+			Integer valida = enviaRecibosAutosSigs(cdunieco, cdramo,estado, nmpoliza, nmsuplem, emisionAutoRes.getNmpoliex(), emisionAutoRes.getSubramo(), emisionAutoRes.getSucursal());
+			
+			if(valida == null || valida != 0){
+				exitoRecibosSigs = false;
+			}
 			
 			if(!exitoRecibosSigs){
 				emisionAutoRes.setExitoRecibos(false);
+				emisionAutoRes.setResRecibos((valida == null) ?9999 : valida);
 				logger.debug("Error al Ejecutar los recibos para la emision de la poliza de autos");
 			}else{
 				emisionAutoRes.setExitoRecibos(true);
+				emisionAutoRes.setResRecibos(valida);
 			}
 		}else if(listaEndosos!=null && listaEndosos.isEmpty()){
 			
@@ -772,12 +833,13 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	}
 	
 	
-	public boolean enviaRecibosAutosSigs(String cdunieco, String cdramo,
+	public Integer enviaRecibosAutosSigs(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String nmpoliex, String subramo, String sucursal){
 		
 		logger.debug(">>>>> Entrando a metodo WS Envia Recibos para Auto");
 		
-		//boolean envioRecibos = false;
+		Integer valida = null;
+		Integer errorEjec  = new Integer(99999);
 		List<Map<String,String>> recibos = null;
 		
 		//Se invoca servicio para obtener los datos del recibos
@@ -796,7 +858,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			
 		} catch (Exception e1) {
 			logger.error("Error en llamar al PL de obtencion de datos para Emision WS Autos",e1);
-			return false;
+			return errorEjec;
 		}	
 		
 		if(recibos != null && !recibos.isEmpty()){
@@ -851,26 +913,26 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				params.put("TipoEndoso"  , StringUtils.isBlank(recibos.get(0).get("TIPEND"))?" " : recibos.get(0).get("TIPEND"));
 				params.put("NumeroEndoso", recibos.get(0).get("NUMEND"));
 				
-				Integer valida = autosSIGSDAO.confirmaRecibosAuto(params);
+				valida = autosSIGSDAO.confirmaRecibosAuto(params);
 				logger.debug("Respuesta al validar recibos: " + valida);
 				
 				if(valida == null || valida != 0){
 					logger.error("Error en la validacion de envio de recibos a SIGS, No se han enviado correctamente los recibos.");
-					return false;
+					return valida;
 				}else{
 					logger.info("Envio de Recibos de Auto a SIGS realizado correctamente");
 				}
 				
 			} catch (Exception e){
 				logger.error("Error en Confirmacion de Recibos Exitosos! " + e.getMessage(),e);
-				return false;
+				return errorEjec;
 			}
 		}else{
 			logger.warn("Aviso, No se tienen datos de Recibos Autos");
-			return false;
+			return errorEjec;
 		}
 		
-		return true;
+		return valida;
 	}
 	
 	public int endosoCambioNombreClienteAutos(String cdunieco, String cdramo,

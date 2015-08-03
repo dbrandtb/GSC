@@ -34,6 +34,7 @@ import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
+import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 import org.apache.commons.lang3.StringUtils;
@@ -61,6 +62,10 @@ public class EndososManagerImpl implements EndososManager
 	private PantallasDAO    pantallasDAO;
 	private MesaControlDAO  mesaControlDAO;
 	private PersonasDAO     personasDAO;
+	
+	@Autowired
+	private AutosSIGSDAO    autosDAOSIGS;
+	
 	@Autowired
 	private Ice2sigsService ice2sigsService;
 	
@@ -2049,7 +2054,55 @@ public class EndososManagerImpl implements EndososManager
 		return endososDAO.recuperarDiasDiferenciaEndosoValidos(cdramo,cdtipsup);
 	}
 	
-	public boolean revierteEndosoFallido(String cdunieco,String cdramo,String estado,String nmpoliza,String nsuplogi ,String nmsuplem){
+	public boolean revierteEndosoFallido(String cdunieco,String cdramo,String estado,String nmpoliza,String nsuplogi ,String nmsuplem, Integer codigoError
+			,String mensajeError, boolean esEndosoB){
+		
+		/**
+		 * Obtener los endosos a revertir
+		 */
+		List<Map<String,String>> listaEnd = null;
+		try {
+			listaEnd = endososDAO.obtieneEndososPoliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+		} catch (Exception e) {
+			logger.error("Error al revertir el endoso en SIGS. " ,e);
+		}
+		
+		if(listaEnd != null && !listaEnd.isEmpty()){
+			if(esEndosoB){
+//				try {
+//					Map<String,String> endIt = listaEnd.get(0);
+//					Tipo E para endosos B ?
+//					
+//					Map<String,Object>params=new LinkedHashMap<String,Object>();
+//					params.put("vSucursal", endIt.get("SUCURSAL"));
+//					params.put("vRamo"    , endIt.get("RAMO"));
+//					params.put("vPoliza"  , );
+//					params.put("vEndosoB" , );
+//					
+//					autosDAOSIGS.revierteEndosoBFallidoSigs(params);
+//				} catch (Exception e) {
+//					logger.error("Error al revertir el endoso en SIGS. " ,e);
+//				}
+			}else {
+				for(Map<String,String> endIt : listaEnd){
+					try {
+						Map<String,Object>params=new LinkedHashMap<String,Object>();
+						params.put("vSucursal"  , endIt.get("SUCURSAL"));
+						params.put("vRamo"      , endIt.get("RAMO"));
+						params.put("vPoliza"    , endIt.get("NMPOLIEX"));
+						params.put("vTipoEndoso", endIt.get("TIPOEND"));
+						params.put("vNumEndoso" , endIt.get("NUMEND"));
+						params.put("vError"     , codigoError);
+						params.put("vDesError"  , mensajeError);
+						
+						autosDAOSIGS.revierteEndosoFallidoSigs(params);
+					} catch (Exception e) {
+						logger.error("Error al revertir el endoso en SIGS. " ,e);
+					}
+				}
+			}
+		}
+		
 		return endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
 	}
 	

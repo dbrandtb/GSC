@@ -1780,7 +1780,7 @@ public class EndososAction extends PrincipalCoreAction
 					error = "Error al generar el endoso, sigs. Consulte a Soporte.";
 					logger.error("Error al ejecutar sp de endoso sigs");
 					
-					boolean endosoRevertido = endososManager.revierteEndosoFallido(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nsuplogi_o"), resEndDomi.get("pv_nmsuplem_o"));
+					boolean endosoRevertido = endososManager.revierteEndosoFallido(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nsuplogi_o"), resEndDomi.get("pv_nmsuplem_o"), 88888, "Error en endoso B tipo: "+TipoEndoso.CAMBIO_DOMICILIO.toString(), true);
 							
 					if(endosoRevertido){
 						
@@ -2410,7 +2410,7 @@ public class EndososAction extends PrincipalCoreAction
 							error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
 							logger.error("Error al ejecutar los WS de endoso");
 							
-							boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+							boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? 99999 : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+tipoEndoso.toString(), false);
 							
 							if(endosoRevertido){
 								logger.error("Endoso revertido exitosamente.");
@@ -6156,7 +6156,7 @@ public class EndososAction extends PrincipalCoreAction
 					logger.error("Error al ejecutar los WS de endoso");
 					
 					
-					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? 99999 : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.toString(), false);
 					if(endosoRevertido){
 						
 						Map<String,String> paramRevDom = new HashMap<String, String>();
@@ -6194,7 +6194,7 @@ public class EndososAction extends PrincipalCoreAction
 						error = "Error al generar el endoso, sigs. Consulte a Soporte.";
 						logger.error("Error al ejecutar sp de endoso sigs");
 						
-						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.CAMBIO_DOMICILIO.toString(), true);
 						
 						if(endosoRevertido){
 							
@@ -6235,7 +6235,7 @@ public class EndososAction extends PrincipalCoreAction
 						error = "Error al generar el endoso, sigs. Consulte a Soporte.";
 						logger.error("Error al ejecutar SP de endoso DOMICILIO CP sigs, ENDOSO EN 0");
 						
-						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.CAMBIO_DOMICILIO.toString(), true);
 						
 						if(endosoRevertido){
 							
@@ -7817,7 +7817,7 @@ public class EndososAction extends PrincipalCoreAction
 						error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
 						logger.error("Error al ejecutar los WS de endoso");
 						
-						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? 99999 : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+TipoEndoso.CAMBIO_FORMA_PAGO.toString(), false);
 						
 						if(endosoRevertido){
 							logger.error("Endoso revertido exitosamente.");
@@ -8154,7 +8154,7 @@ public class EndososAction extends PrincipalCoreAction
 						error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
 						logger.error("Error al ejecutar los WS de endoso");
 						
-						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? 99999 : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+TipoEndoso.CAMBIO_AGENTE.toString(), false);
 						
 						if(endosoRevertido){
 							logger.error("Endoso revertido exitosamente.");
@@ -8597,7 +8597,7 @@ public class EndososAction extends PrincipalCoreAction
 						mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
 						error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
 						
-						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.CAMBIO_CONTRATANTE.toString(), true);
 						if(endosoRevertido){
 							logger.error("Endoso revertido exitosamente.");
 							error+=" Favor de volver a itentar.";
@@ -8633,7 +8633,7 @@ public class EndososAction extends PrincipalCoreAction
 					logger.error("Error al ejecutar los WS de endoso");
 					
 					
-					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? 99999 : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+TipoEndoso.CAMBIO_CONTRATANTE.toString(), false);
 					if(endosoRevertido){
 						logger.error("Endoso revertido exitosamente.");
 						error+=" Favor de volver a itentar.";
@@ -8660,7 +8660,7 @@ public class EndososAction extends PrincipalCoreAction
 						error = "Error al generar el endoso, sigs. Consulte a Soporte.";
 						logger.error("Error al ejecutar sp de endoso sigs");
 						
-						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.CAMBIO_CONTRATANTE.toString(), true);
 						
 						if(endosoRevertido){
 							logger.error("Endoso revertido exitosamente.");
@@ -9036,7 +9036,7 @@ public class EndososAction extends PrincipalCoreAction
 		error = "Error al generar el endoso, sigs. Consulte a Soporte.";
 		logger.error("Error al ejecutar sp de endoso sigs");
 		
-		boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+		boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.CAMBIO_NOMBRE_CLIENTE.toString(), true);
 		
 		if(endosoRevertido){
 			
@@ -9297,7 +9297,7 @@ public class EndososAction extends PrincipalCoreAction
 		error = "Error al generar el endoso, sigs. Consulte a Soporte.";
 		logger.error("Error al ejecutar sp de endoso sigs");
 		
-		boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+		boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.CAMBIO_RFC_CLIENTE.toString(), true);
 		
 		if(endosoRevertido){
 			
@@ -10087,6 +10087,42 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		
 		return true;
+	}
+	
+	public String reenviaRecibosAuto()
+	{
+		logger.info(Utils.join(
+				"\n#################################"
+				,"\n###### reenviaRecibosAuto ######"
+				,"\n###### smap1="  , smap1
+				));
+		try{
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			String nmsuplem = smap1.get("nmsuplem");
+			String nmpoliex = smap1.get("nmpoliex");
+			String subramo  = smap1.get("subramo");
+			String sucursal = smap1.get("sucursal");
+			
+			Integer valida = emisionAutosService.enviaRecibosAutosSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmpoliex, subramo, sucursal);
+			
+			if(valida == null || valida != 0){
+				success = false;
+			}else{
+				success = true;
+			}
+			
+		}catch(Exception ex){
+			respuesta=Utils.manejaExcepcion(ex);
+		}
+		
+		logger.info(Utils.join(
+				"\n###### reenviaRecibosAuto ######"
+				,"\n###############################"
+				));
+		return SUCCESS;
 	}
 	
 	/****************************** BASE ACTION **********************************/

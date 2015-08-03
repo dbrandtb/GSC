@@ -3629,6 +3629,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+
 	
 	@Override
 	public boolean revierteDomicilio(Map<String, String> params)
@@ -4163,6 +4164,55 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_feproren_i" , OracleTypes.DATE));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o" , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> obtieneEndososPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_ENDOSOS_PARA_WS_AUTOS", params);
+		Map<String,Object>procResult   = ejecutaSP(new ObtieneEndososPoliza(getDataSource()),params);
+		List<Map<String,String>> lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException("No se encontraron endosos");
+		}
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_ENDOSOS_PARA_WS_AUTOS", params, lista);
+		return lista;
+	}
+	
+	protected class ObtieneEndososPoliza extends StoredProcedure
+	{
+		protected ObtieneEndososPoliza(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_ENDOSOS_PARA_WS_AUTOS");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"TIPOEND"
+					,"NUMEND"
+					,"SUCURSAL"
+					,"RAMO"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

@@ -39,4 +39,8 @@ public interface AutosSIGSDAO {
 	
 	public Integer endosoCambioCliente(Map<String, Object> params) throws Exception;
 	
+	public void revierteEndosoFallidoSigs(Map<String, Object> params) throws Exception;
+	
+	public void revierteEndosoBFallidoSigs(Map<String, Object> params) throws Exception;
+	
 }
