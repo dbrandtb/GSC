@@ -4216,4 +4216,53 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+
+	@Override
+	public List<Map<String,String>> obtieneDatosEndososB(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_ENDOSOS_B", params);
+		Map<String,Object>procResult   = ejecutaSP(new ObtieneDatosEndososB(getDataSource()),params);
+		List<Map<String,String>> lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException("No se encontraron endosos");
+		}
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_ENDOSOS_B", params, lista);
+		return lista;
+	}
+	
+	protected class ObtieneDatosEndososB extends StoredProcedure
+	{
+		protected ObtieneDatosEndososB(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_ENDOSOS_B");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"SUCURSAL"
+					,"RAMO"
+					,"NMPOLIEX"
+					,"NUMEND"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

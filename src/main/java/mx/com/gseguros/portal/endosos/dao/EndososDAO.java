@@ -537,4 +537,12 @@ public interface EndososDAO
 			,String nmpoliza
 			,String nmsuplem
 			)throws Exception;
+
+	public List<Map<String,String>> obtieneDatosEndososB(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception;
 }

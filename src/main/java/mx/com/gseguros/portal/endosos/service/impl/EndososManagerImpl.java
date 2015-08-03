@@ -2060,29 +2060,38 @@ public class EndososManagerImpl implements EndososManager
 		/**
 		 * Obtener los endosos a revertir
 		 */
+		
 		List<Map<String,String>> listaEnd = null;
-		try {
-			listaEnd = endososDAO.obtieneEndososPoliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
-		} catch (Exception e) {
-			logger.error("Error al revertir el endoso en SIGS. " ,e);
+		
+		if(esEndosoB){
+			try {
+				listaEnd = endososDAO.obtieneDatosEndososB(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+			} catch (Exception e) {
+				logger.error("Error al revertir el endoso en SIGS. " ,e);
+			}
+		}else{
+			try {
+				listaEnd = endososDAO.obtieneEndososPoliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+			} catch (Exception e) {
+				logger.error("Error al revertir el endoso en SIGS. " ,e);
+			}
 		}
 		
 		if(listaEnd != null && !listaEnd.isEmpty()){
 			if(esEndosoB){
-//				try {
-//					Map<String,String> endIt = listaEnd.get(0);
-//					Tipo E para endosos B ?
-//					
-//					Map<String,Object>params=new LinkedHashMap<String,Object>();
-//					params.put("vSucursal", endIt.get("SUCURSAL"));
-//					params.put("vRamo"    , endIt.get("RAMO"));
-//					params.put("vPoliza"  , );
-//					params.put("vEndosoB" , );
-//					
-//					autosDAOSIGS.revierteEndosoBFallidoSigs(params);
-//				} catch (Exception e) {
-//					logger.error("Error al revertir el endoso en SIGS. " ,e);
-//				}
+				try {
+					Map<String,String> endIt = listaEnd.get(0);
+					
+					Map<String,Object>params=new LinkedHashMap<String,Object>();
+					params.put("vSucursal", endIt.get("SUCURSAL"));
+					params.put("vRamo"    , endIt.get("RAMO"));
+					params.put("vPoliza"  , endIt.get("NMPOLIEX"));
+					params.put("vEndosoB" , endIt.get("NUMEND"));
+					
+					autosDAOSIGS.revierteEndosoBFallidoSigs(params);
+				} catch (Exception e) {
+					logger.error("Error al revertir el endoso en SIGS. " ,e);
+				}
 			}else {
 				for(Map<String,String> endIt : listaEnd){
 					try {
