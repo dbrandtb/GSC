@@ -4313,4 +4313,49 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public String recuperarCdtipsitInciso1(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Map<String,Object> procRes  = ejecutaSP(new RecuperarCdtipsitInciso1(getDataSource()),params);
+		String             cdtipsit = (String)procRes.get("pv_cdtipsit_o");
+		if(StringUtils.isBlank(cdtipsit))
+		{
+			throw new ApplicationException("No hay tipo de situaci\u00F3n para el primero inciso");
+		}
+		logger.debug(Utils.join("****** PKG_CONSULTA.P_GET_CDTIPSIT_PRIMER_INCISO {"
+				,cdunieco , ","
+				,cdramo   , ","
+				,estado   , ","
+				,nmpoliza , "}="
+				,cdtipsit
+				));
+		return cdtipsit;
+	}
+	
+	protected class RecuperarCdtipsitInciso1 extends StoredProcedure
+	{
+		protected RecuperarCdtipsitInciso1(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_GET_CDTIPSIT_PRIMER_INCISO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdtipsit_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

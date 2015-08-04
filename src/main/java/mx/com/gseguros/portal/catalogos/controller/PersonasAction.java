@@ -15,6 +15,8 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
+import mx.com.gseguros.portal.endosos.controller.EndososAction;
+import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
@@ -51,6 +53,9 @@ public class PersonasAction extends PrincipalCoreAction
 	@Autowired
 	private transient Ice2sigsService ice2sigsService;
 	private boolean personaWS;
+	
+	@Autowired
+	private EndososManager endososManager;
 	
 	public PersonasAction()
 	{
@@ -1108,6 +1113,10 @@ public class PersonasAction extends PrincipalCoreAction
 		{
 			setCheckpoint("Validando datos de entrada");
 			checkNull(smap1, "No se recibieron datos");
+			
+			EndososAction endososAction = new EndososAction();
+			endososAction.setEndososManager(endososManager);
+			endososAction.transformaEntrada(smap1, slist1, true);
 			
 			//validados
 			String cdunieco   = smap1.get("cdunieco");
