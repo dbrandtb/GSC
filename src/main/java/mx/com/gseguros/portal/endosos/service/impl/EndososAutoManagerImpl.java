@@ -375,6 +375,16 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			if("N".equals(cancelada))
 			{
 				resp.setSlist(endososDAO.recuperarEndososClasificados(stamp,cdramo,nivel,multiple,tipoflot,cdsisrol, cdusuari));
+				//parchamos, si el DSTIPSUP2 tiene algun *, lo metemos como DSTIPSUP
+				for(Map<String,String>endoso:resp.getSlist())
+				{
+					logger.debug(Utils.join("\nDSTIPSUP2=",endoso.get("DSTIPSUP2")));
+					if(StringUtils.isNotBlank(endoso.get("DSTIPSUP2"))&&endoso.get("DSTIPSUP2").indexOf("*")!=-1)
+					{
+						endoso.put("DSTIPSUP",endoso.get("DSTIPSUP2"));
+						logger.debug("\nreplace");
+					}
+				}
 			}
 			else if("POLIZA".equals(nivel))
 			{

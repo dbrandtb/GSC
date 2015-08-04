@@ -429,4 +429,12 @@ public interface EndososManager
 			String status, String cdtipcla, String swmodi, String dslinea,
 			String accion) throws Exception;
 	
+	public boolean esMismaPersonaContratante(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			);
+	
 }

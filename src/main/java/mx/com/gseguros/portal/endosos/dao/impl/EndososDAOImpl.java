@@ -2506,6 +2506,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 					,"DSTIPSUP"
 					,"LIGA"
 					,"TIPO_VALIDACION"
+					,"DSTIPSUP2"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -4262,6 +4263,53 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public boolean esMismaPersonaContratante(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			)
+	{
+		boolean esMismo = false;
+		try
+		{
+			Map<String,String> params = new LinkedHashMap<String,String>();
+			params.put("cdunieco" , cdunieco);
+			params.put("cdramo"   , cdramo);
+			params.put("estado"   , estado);
+			params.put("nmpoliza" , nmpoliza);
+			params.put("nmsituac" , nmsituac);
+			Map<String,Object>procRes = ejecutaSP(new EsMismaPersonaContratante(getDataSource()),params);
+			esMismo = "S".equals((String)procRes.get("pv_contrat_o"));
+			logger.debug(Utils.join("Es el contratante: ",esMismo));
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al verificar si un inciso es el mismo que el contratante, inofensivo, regresa false",ex);
+			esMismo = false;
+		}
+		return esMismo;
+	}
+	
+	protected class EsMismaPersonaContratante extends StoredProcedure
+	{
+		protected EsMismaPersonaContratante(DataSource dataSource)
+		{
+			super(dataSource, "PKG_ENDOSOS.P_VERIFICA_SITUAC_CONTRATANTE");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_contrat_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

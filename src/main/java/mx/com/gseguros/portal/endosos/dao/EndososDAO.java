@@ -545,4 +545,12 @@ public interface EndososDAO
 			,String nmpoliza
 			,String nmsuplem
 			)throws Exception;
+	
+	public boolean esMismaPersonaContratante(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			);
 }
