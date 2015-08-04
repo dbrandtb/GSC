@@ -553,4 +553,11 @@ public interface EndososDAO
 			,String nmpoliza
 			,String nmsituac
 			);
+	
+	public String recuperarCdtipsitInciso1(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }

@@ -14,6 +14,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
+import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.utils.Utils;
 
@@ -47,6 +48,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	@Autowired
 	private EndososAutoManager endososAutoManager;
+	
+	@Autowired
+	private EndososManager endososManager;
 	
 	public EndososAutoAction()
 	{
@@ -804,6 +808,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 				,"\n###### smap1="  , smap1
 				,"\n######                             ######"));
 		try {
+			EndososAction endososAction = new EndososAction();
+			endososAction.setEndososManager(endososManager);
+			endososAction.transformaEntrada(smap1, slist1, false);
 			
 			Utils.validate(session                , "No hay sesion");
 			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");

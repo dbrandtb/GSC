@@ -2079,6 +2079,33 @@ public class EndososManagerImpl implements EndososManager
 		return esContrat;
 	}
 	
+	@Override
+	public String recuperarCdtipsitInciso1(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarCdtipsitInciso1 @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				));
+		
+		String cdtipsit = endososDAO.recuperarCdtipsitInciso1(cdunieco,cdramo,estado,nmpoliza);
+		
+		logger.debug(Utils.join(
+				 "\n@@@@@@ cdtipsit=",cdtipsit
+				,"\n@@@@@@ recuperarCdtipsitInciso1 @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return cdtipsit;
+	}
+	
 	public int recuperarDiasDiferenciaEndosoValidos(String cdramo,String cdtipsup)throws Exception
 	{
 		return endososDAO.recuperarDiasDiferenciaEndosoValidos(cdramo,cdtipsup);

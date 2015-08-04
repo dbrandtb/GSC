@@ -3339,29 +3339,41 @@ public class EndososAction extends PrincipalCoreAction
 		        .append("\n######                                  ######").toString());
 		logger.debug(new StringBuilder("smap1: ").append(smap1));
 		
-		// Valida si hay un endoso anterior pendiente:
-		RespuestaVO resp = endososManager.validaEndosoAnterior(smap1.get("cdunieco"), smap1.get("cdramo"),
-				smap1.get("estado"), smap1.get("nmpoliza"),
-				TipoEndoso.CAMBIO_ENDOSOS_EXCLUSION_O_TEXTOS.getCdTipSup().toString());
-		error = resp.getMensaje();
+		RespuestaVO resp = null;
 		
 		try
 		{
-			List<ComponenteVO>autocompleterICD=pantallasManager.obtenerComponentes(
-					TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, null
-					, null, null, null
-					, "PANTALLA_EXCLUSION", "COMBO_ICD", null);
+			transformaEntrada(smap1, slist1, true);
 			
-			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			// Valida si hay un endoso anterior pendiente:
+			resp = endososManager.validaEndosoAnterior(smap1.get("cdunieco"), smap1.get("cdramo"),
+					smap1.get("estado"), smap1.get("nmpoliza"),
+					TipoEndoso.CAMBIO_ENDOSOS_EXCLUSION_O_TEXTOS.getCdTipSup().toString());
+			error = resp.getMensaje();
 			
-			gc.generaComponentes(autocompleterICD, true, false, true, false, false, false);
-			
-			item1=gc.getItems();
+			try
+			{
+				List<ComponenteVO>autocompleterICD=pantallasManager.obtenerComponentes(
+						TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, null
+						, null, null, null
+						, "PANTALLA_EXCLUSION", "COMBO_ICD", null);
+				
+				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				
+				gc.generaComponentes(autocompleterICD, true, false, true, false, false, false);
+				
+				item1=gc.getItems();
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				logger.error(new StringBuilder("Error al obtener combo de icd #").append(timestamp).toString(),ex);
+			}
 		}
 		catch(Exception ex)
 		{
-			long timestamp = System.currentTimeMillis();
-			logger.error(new StringBuilder("Error al obtener combo de icd #").append(timestamp).toString(),ex);
+			logger.error("Error al construir pantalla de endoso de clausulas",ex);
+			error = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.debug(new StringBuilder()
@@ -3370,7 +3382,7 @@ public class EndososAction extends PrincipalCoreAction
 		        .append("\n##############################################")
 		        .append("\n##############################################").toString());
 		
-		return resp.isSuccess() ? SUCCESS : ERROR;
+		return resp!=null&&resp.isSuccess() ? SUCCESS : ERROR;
 	}
 	/*//////////////////////////////////////////*/
 	////// pantalla de endosos de clausulas //////
@@ -3407,96 +3419,108 @@ public class EndososAction extends PrincipalCoreAction
 		        .append("\n######                                                   ######").toString());
 		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
 		
-		// Valida si hay un endoso anterior pendiente:
-		RespuestaVO resp = endososManager.validaEndosoAnterior(smap1.get("CDUNIECO"), smap1.get("CDRAMO"),
-				smap1.get("ESTADO"), smap1.get("NMPOLIZA"),
-				smap2.get("alta").equalsIgnoreCase("si")?
-						TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString():
-						TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString());
-		error = resp.getMensaje();
+		RespuestaVO resp = null;
 		
-		if(resp.isSuccess()) {
-			try {
-				String cdtipsit=smap1.get("CDTIPSIT");
-				
-				imap1=new HashMap<String,Item>();
-				
-				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-				
-				gc.generaParcial(pantallasManager.obtenerComponentes(
-						null, null, null,
-						null, null, null,
-						"ENDOSOABASEGU", "MODELO", null));
-				
-				imap1.put("modelo"   , gc.getFields());
-				imap1.put("columnas" , gc.getColumns());
-				
-				gc.generaParcial(pantallasManager.obtenerComponentes(
-						null, null, null,
-						null, null, null,
-						"ENDOSOABASEGU", "PANELLECTURA", null));
-				
-				imap1.put("panelLectura" , gc.getItems());
-				
-				////////////////////////////////////////////////
-				////// campos de tatrisit para individual //////
-				String cdusuari;
-				{
-					UserVO usuario=(UserVO)session.get("USUARIO");
-					cdusuari=usuario.getUser();
-				}
-				List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
-				gc.setCdtipsit(cdtipsit);
-				
-				List<String>exclusiones=new ArrayList<String>();
-				
-				List<ComponenteVO>tatriTemp=new ArrayList<ComponenteVO>(0);
-				for(ComponenteVO t:tatrisit)
-				//solo dejar los atributos si es individual, los que tengan S
-				{
-					if(t.getSwsuscri().equalsIgnoreCase("S"))//S=individual
+		try
+		{
+			transformaEntrada(smap1, slist1, false);
+		
+			// Valida si hay un endoso anterior pendiente:
+			resp = endososManager.validaEndosoAnterior(smap1.get("CDUNIECO"), smap1.get("CDRAMO"),
+					smap1.get("ESTADO"), smap1.get("NMPOLIZA"),
+					smap2.get("alta").equalsIgnoreCase("si")?
+							TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString():
+							TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString());
+			error = resp.getMensaje();
+			
+			if(resp.isSuccess()) {
+				try {
+					String cdtipsit=smap1.get("CDTIPSIT");
+					
+					imap1=new HashMap<String,Item>();
+					
+					GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+					
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+							null, null, null,
+							null, null, null,
+							"ENDOSOABASEGU", "MODELO", null));
+					
+					imap1.put("modelo"   , gc.getFields());
+					imap1.put("columnas" , gc.getColumns());
+					
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+							null, null, null,
+							null, null, null,
+							"ENDOSOABASEGU", "PANELLECTURA", null));
+					
+					imap1.put("panelLectura" , gc.getItems());
+					
+					////////////////////////////////////////////////
+					////// campos de tatrisit para individual //////
+					String cdusuari;
 					{
-						String name=t.getNameCdatribu();
-						logger.debug("se busca "+name+" en excluciones");
-						if(!exclusiones.contains(name))
+						UserVO usuario=(UserVO)session.get("USUARIO");
+						cdusuari=usuario.getUser();
+					}
+					List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
+					gc.setCdtipsit(cdtipsit);
+					
+					List<String>exclusiones=new ArrayList<String>();
+					
+					List<ComponenteVO>tatriTemp=new ArrayList<ComponenteVO>(0);
+					for(ComponenteVO t:tatrisit)
+					//solo dejar los atributos si es individual, los que tengan S
+					{
+						if(t.getSwsuscri().equalsIgnoreCase("S"))//S=individual
 						{
-							logger.debug("no encontrado");
-							tatriTemp.add(t);
+							String name=t.getNameCdatribu();
+							logger.debug("se busca "+name+" en excluciones");
+							if(!exclusiones.contains(name))
+							{
+								logger.debug("no encontrado");
+								tatriTemp.add(t);
+							}
 						}
 					}
+					tatrisit=tatriTemp;
+					
+					tatriTemp=pantallasManager.obtenerComponentes(
+							null, null, null,
+							null, null, null,
+							"ENDOSOABASEGU", "FORMULARIO", null);
+					
+					tatriTemp.addAll(tatrisit);
+					tatrisit=tatriTemp;
+					
+					gc.generaParcial(tatrisit);
+					
+					imap1.put("formulario" , gc.getItems());
+					
+					Map<String,String>paramsTatriper=new HashMap<String,String>();
+					paramsTatriper.put("pv_cdramo_i"   , smap1.get("CDRAMO"));
+					paramsTatriper.put("pv_cdrol_i"    , "2"/*ASEGURADO*/);
+					paramsTatriper.put("pv_cdtipsit_i" , smap1.get("CDTIPSIT"));
+					paramsTatriper.put("pv_cdperson_i" , "0"/*ATRIBUTOS BASICOS SIN TOMAR CUMULO DE ALGUNA PERSONA EXISTENTE*/);
+					List<ComponenteVO>tatriper=kernelManager.obtenerTatriper(paramsTatriper);
+					GeneradorCampos gc2=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+					gc2.setCdramo(smap1.get("CDRAMO"));
+					gc2.setCdtipsit(smap1.get("CDTIPSIT"));
+					gc2.setCdrol("2"/*ASEGURADO*/);
+					gc2.setAuxiliar(true);
+					gc2.generaParcial(tatriper);
+					imap1.put("formularioAtriper" , gc2.getItems());
+					////// campos de tatrisit para individual //////
+					////////////////////////////////////////////////
+				} catch(Exception ex) {
+					logger.error("Error al mostrar pantalla de alta y/o baja de asegurados", ex);
 				}
-				tatrisit=tatriTemp;
-				
-				tatriTemp=pantallasManager.obtenerComponentes(
-						null, null, null,
-						null, null, null,
-						"ENDOSOABASEGU", "FORMULARIO", null);
-				
-				tatriTemp.addAll(tatrisit);
-				tatrisit=tatriTemp;
-				
-				gc.generaParcial(tatrisit);
-				
-				imap1.put("formulario" , gc.getItems());
-				
-				Map<String,String>paramsTatriper=new HashMap<String,String>();
-				paramsTatriper.put("pv_cdramo_i"   , smap1.get("CDRAMO"));
-				paramsTatriper.put("pv_cdrol_i"    , "2"/*ASEGURADO*/);
-				paramsTatriper.put("pv_cdtipsit_i" , smap1.get("CDTIPSIT"));
-				paramsTatriper.put("pv_cdperson_i" , "0"/*ATRIBUTOS BASICOS SIN TOMAR CUMULO DE ALGUNA PERSONA EXISTENTE*/);
-				List<ComponenteVO>tatriper=kernelManager.obtenerTatriper(paramsTatriper);
-				GeneradorCampos gc2=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-				gc2.setCdramo(smap1.get("CDRAMO"));
-				gc2.setCdtipsit(smap1.get("CDTIPSIT"));
-				gc2.setCdrol("2"/*ASEGURADO*/);
-				gc2.setAuxiliar(true);
-				gc2.generaParcial(tatriper);
-				imap1.put("formularioAtriper" , gc2.getItems());
-				////// campos de tatrisit para individual //////
-				////////////////////////////////////////////////
-			} catch(Exception ex) {
-				logger.error("Error al mostrar pantalla de alta y/o baja de asegurados", ex);
 			}
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al constuir pantalla de endoso de alta/baja de inciso/asegurado(s)",ex);
+			error = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.debug(new StringBuilder("\n")
@@ -3505,7 +3529,7 @@ public class EndososAction extends PrincipalCoreAction
 		        .append("\n###############################################################")
 		        .append("\n###############################################################").toString());
 		
-		return resp.isSuccess() ? SUCCESS : ERROR;
+		return resp!=null&&resp.isSuccess() ? SUCCESS : ERROR;
 	}
 	/*///////////////////////////////////////////////////////////*/
 	////// pantalla de endoso de alta y/o baja de asegurados //////
@@ -4420,31 +4444,43 @@ public class EndososAction extends PrincipalCoreAction
 		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
 		logger.debug(new StringBuilder("slist1: ").append(slist1).toString());
 
-		// Valida si hay un endoso anterior pendiente:
-		RespuestaVO resp = endososManager.validaEndosoAnterior(
-				smap1.get("cdunieco")
-				,smap1.get("cdramo")
-				,smap1.get("estado")
-				,smap1.get("nmpoliza")
-				,smap1.get("masedad").equalsIgnoreCase("si")?
-						TipoEndoso.INCREMENTO_EDAD_ASEGURADO.getCdTipSup().toString():
-						TipoEndoso.DECREMENTO_EDAD_ASEGURADO.getCdTipSup().toString());
-		error = resp.getMensaje();
+		RespuestaVO resp = null;
 		
-		if(resp.isSuccess()){
-			try {
-				imap1=new HashMap<String,Item>();
-				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-				gc.generaParcial(pantallasManager.obtenerComponentes(
-						null, null, null,
-						null, null, null,
-						"ENDOSO_EDAD", "MODELO", null));
-				
-				imap1.put("modelo"   , gc.getFields());
-				imap1.put("columnas" , gc.getColumns());
-			} catch(Exception ex) {
-				logger.error("error al cargar la pantalla de endoso de edad",ex);
+		try
+		{
+			transformaEntrada(smap1, slist1, true);
+			
+			// Valida si hay un endoso anterior pendiente:
+			resp = endososManager.validaEndosoAnterior(
+					smap1.get("cdunieco")
+					,smap1.get("cdramo")
+					,smap1.get("estado")
+					,smap1.get("nmpoliza")
+					,smap1.get("masedad").equalsIgnoreCase("si")?
+							TipoEndoso.INCREMENTO_EDAD_ASEGURADO.getCdTipSup().toString():
+							TipoEndoso.DECREMENTO_EDAD_ASEGURADO.getCdTipSup().toString());
+			error = resp.getMensaje();
+			
+			if(resp.isSuccess()){
+				try {
+					imap1=new HashMap<String,Item>();
+					GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+							null, null, null,
+							null, null, null,
+							"ENDOSO_EDAD", "MODELO", null));
+					
+					imap1.put("modelo"   , gc.getFields());
+					imap1.put("columnas" , gc.getColumns());
+				} catch(Exception ex) {
+					logger.error("error al cargar la pantalla de endoso de edad",ex);
+				}
 			}
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al mostrar pantalla de endoso de edad",ex);
+			error = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.debug(new StringBuilder("\n")
@@ -4453,7 +4489,7 @@ public class EndososAction extends PrincipalCoreAction
 	        .append("\n############################")
 	        .append("\n############################").toString());
 		
-		return resp.isSuccess() ? SUCCESS : ERROR;
+		return resp!=null&&resp.isSuccess() ? SUCCESS : ERROR;
 	}
 	/*////////////////////////*/
 	////// endoso de edad //////
@@ -4772,32 +4808,45 @@ public class EndososAction extends PrincipalCoreAction
 		
 		this.session = ActionContext.getContext().getSession();
 		
-		// Valida si hay un endoso anterior pendiente:
-		RespuestaVO resp = endososManager.validaEndosoAnterior(
-				smap1.get("cdunieco")
-				,smap1.get("cdramo")
-				,smap1.get("estado")
-				,smap1.get("nmpoliza")
-				,smap1.get("hombremujer").equalsIgnoreCase("si")?
-						TipoEndoso.MODIFICACION_SEXO_H_A_M.getCdTipSup().toString():
-						TipoEndoso.MODIFICACION_SEXO_M_A_H.getCdTipSup().toString());
-		error = resp.getMensaje();
+		RespuestaVO resp = null;
 		
-		if(resp.isSuccess()){
-			try {
-				imap1=new HashMap<String,Item>();
-				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-				gc.generaParcial(pantallasManager.obtenerComponentes(
-						null, null, null,
-						null, null, null,
-						"ENDOSO_SEXO", "MODELO", null));
-				
-				imap1.put("modelo"   , gc.getFields());
-				imap1.put("columnas" , gc.getColumns());
-			} catch(Exception ex) {
-				logger.error("error al mostrar pantalla de endoso de cambio de sexo",ex);
+		try
+		{
+			transformaEntrada(smap1, slist1, true);
+			
+			// Valida si hay un endoso anterior pendiente:
+			resp = endososManager.validaEndosoAnterior(
+					smap1.get("cdunieco")
+					,smap1.get("cdramo")
+					,smap1.get("estado")
+					,smap1.get("nmpoliza")
+					,smap1.get("hombremujer").equalsIgnoreCase("si")?
+							TipoEndoso.MODIFICACION_SEXO_H_A_M.getCdTipSup().toString():
+							TipoEndoso.MODIFICACION_SEXO_M_A_H.getCdTipSup().toString());
+			error = resp.getMensaje();
+			
+			if(resp.isSuccess()){
+				try {
+					imap1=new HashMap<String,Item>();
+					GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+							null, null, null,
+							null, null, null,
+							"ENDOSO_SEXO", "MODELO", null));
+					
+					imap1.put("modelo"   , gc.getFields());
+					imap1.put("columnas" , gc.getColumns());
+				} catch(Exception ex) {
+					logger.error("error al mostrar pantalla de endoso de cambio de sexo",ex);
+				}
 			}
 		}
+		catch(Exception ex)
+		{
+			logger.error("Error al construir pantalla de endoso de cambio de sexo",ex);
+			error = Utils.manejaExcepcion(ex);
+		}
+		
 		
 		logger.debug(new StringBuilder("\n")
 		        .append("\n######                           ######")
@@ -4805,7 +4854,7 @@ public class EndososAction extends PrincipalCoreAction
 		        .append("\n#######################################")
 		        .append("\n#######################################").toString());
 		
-		return resp.isSuccess() ? SUCCESS : ERROR;
+		return resp!=null&&resp.isSuccess() ? SUCCESS : ERROR;
 	}
 	/*//////////////////////////////////*/
 	////// endoso de cambio de sexo //////
@@ -5434,47 +5483,59 @@ public class EndososAction extends PrincipalCoreAction
 		
 		this.session=ActionContext.getContext().getSession();
 		
-		// Valida si hay un endoso anterior pendiente:
-		RespuestaVO resp = endososManager.validaEndosoAnterior(smap1.get("CDUNIECO"),smap1.get("CDRAMO"),
-				smap1.get("ESTADO"), smap1.get("NMPOLIZA"),
-				TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString());
-		error = resp.getMensaje();
+		RespuestaVO resp = null;
 		
-		if(resp.isSuccess()){
-			try {
-				UserVO usuario=(UserVO)session.get("USUARIO");
-				
-				String cdunieco = smap1.get("CDUNIECO");
-				String cdramo   = smap1.get("CDRAMO");
-				String cdtipsit = smap1.get("CDTIPSIT");
-				String estado   = smap1.get("ESTADO");
-				String nmpoliza = smap1.get("NMPOLIZA");
-				String nmsuplem = smap1.get("NMSUPLEM");
-				String rol      = usuario.getRolActivo().getClave();
-				String rolAsegu = smap1.get("cdrol");
-				
-				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-				
-				imap1=new HashMap<String,Item>();
-				
-				gc.generaParcial(pantallasManager.obtenerComponentes(
-						null, cdunieco, cdramo,
-						cdtipsit, estado, rol,
-						"ENDOSO_DOMICILIO_FULL", "PANEL_LECTURA", null));
-							
-				imap1.put("itemsLectura",gc.getItems());
-				
-				gc.generaParcial(pantallasManager.obtenerComponentes(
-						null, cdunieco, cdramo,
-						cdtipsit, estado, rol,
-						"ENDOSO_DOMICILIO_FULL", "ITEMS_DOMICIL", null));
-				
-				imap1.put("itemsDomicil"  , gc.getItems());
-				imap1.put("fieldsDomicil" , gc.getFields());
-				
-			} catch(Exception ex) {
-				logger.error("Error al cargar la pantalla de domicilio full",ex);
+		try
+		{
+			transformaEntrada(smap1, slist1, true);
+			
+			// Valida si hay un endoso anterior pendiente:
+			resp = endososManager.validaEndosoAnterior(smap1.get("CDUNIECO"),smap1.get("CDRAMO"),
+					smap1.get("ESTADO"), smap1.get("NMPOLIZA"),
+					TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString());
+			error = resp.getMensaje();
+			
+			if(resp.isSuccess()){
+				try {
+					UserVO usuario=(UserVO)session.get("USUARIO");
+					
+					String cdunieco = smap1.get("CDUNIECO");
+					String cdramo   = smap1.get("CDRAMO");
+					String cdtipsit = smap1.get("CDTIPSIT");
+					String estado   = smap1.get("ESTADO");
+					String nmpoliza = smap1.get("NMPOLIZA");
+					String nmsuplem = smap1.get("NMSUPLEM");
+					String rol      = usuario.getRolActivo().getClave();
+					String rolAsegu = smap1.get("cdrol");
+					
+					GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+					
+					imap1=new HashMap<String,Item>();
+					
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+							null, cdunieco, cdramo,
+							cdtipsit, estado, rol,
+							"ENDOSO_DOMICILIO_FULL", "PANEL_LECTURA", null));
+								
+					imap1.put("itemsLectura",gc.getItems());
+					
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+							null, cdunieco, cdramo,
+							cdtipsit, estado, rol,
+							"ENDOSO_DOMICILIO_FULL", "ITEMS_DOMICIL", null));
+					
+					imap1.put("itemsDomicil"  , gc.getItems());
+					imap1.put("fieldsDomicil" , gc.getFields());
+					
+				} catch(Exception ex) {
+					logger.error("Error al cargar la pantalla de domicilio full",ex);
+				}
 			}
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al construir pantalla de endoso de domicilio de titular",ex);
+			error = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.debug(new StringBuilder("\n")
@@ -5483,7 +5544,7 @@ public class EndososAction extends PrincipalCoreAction
 	        .append("\n#################################")
 	        .append("\n#################################").toString());
 		
-		return resp.isSuccess() ? SUCCESS : ERROR;
+		return resp!=null&&resp.isSuccess() ? SUCCESS : ERROR;
 	}
 	///////////////////////////////////
 	////// endoso domicilio full //////
@@ -6384,116 +6445,128 @@ public class EndososAction extends PrincipalCoreAction
 		
 		this.session=ActionContext.getContext().getSession();
 		
-		String cdunieco = smap1.get("CDUNIECO");
-		String cdramo   = smap1.get("CDRAMO");
-		String estado   = smap1.get("ESTADO");
-		String nmpoliza = smap1.get("NMPOLIZA");
-		String cdtipsit = smap1.get("CDTIPSIT");
-		String cdtipsup = smap2.get("masdeducible").equalsIgnoreCase("si")?
-				TipoEndoso.DEDUCIBLE_MAS.getCdTipSup().toString():
-				TipoEndoso.DEDUCIBLE_MENOS.getCdTipSup().toString();
-				
-		UserVO usuario    = (UserVO)session.get("USUARIO");
-		String cdelemento = usuario.getEmpresa().getElementoId();
-		String cdusuari   = usuario.getUser();
-		String rol        = usuario.getRolActivo().getClave();
+		RespuestaVO resp = null;
 		
-		// Valida si hay un endoso anterior pendiente:
-		RespuestaVO resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
-		error = resp.getMensaje();
-		
-		String nmsituacTitular   = "1";
-		String llaveDeducible    = "";
-		String cdatribuDeducible = "";
-		
-		String nombreItemDeducibleOriginal = "DEDUCIBLE ORIGINAL";
-		String nombreItemNuevoDeducible    = "NUEVO DEDUCIBLE";
-		
-		String llaveItemDeducibleOriginal = "itemDeducibleLectura";
-		String llaveItemNuevoDeducible    = "itemDeducible";
-		String llavePanelLectura          = "itemsLectura";
-		
-		String pantalla = "ENDOSO_DEDUCIBLE";
-		
-		//obtener campo deducible
-		if(resp.isSuccess())
+		try
 		{
-			try
+			transformaEntrada(smap1, slist1, false);
+			
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+			String cdtipsit = smap1.get("CDTIPSIT");
+			String cdtipsup = smap2.get("masdeducible").equalsIgnoreCase("si")?
+					TipoEndoso.DEDUCIBLE_MAS.getCdTipSup().toString():
+					TipoEndoso.DEDUCIBLE_MENOS.getCdTipSup().toString();
+					
+			UserVO usuario    = (UserVO)session.get("USUARIO");
+			String cdelemento = usuario.getEmpresa().getElementoId();
+			String cdusuari   = usuario.getUser();
+			String rol        = usuario.getRolActivo().getClave();
+			
+			// Valida si hay un endoso anterior pendiente:
+			resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+			error = resp.getMensaje();
+			
+			String nmsituacTitular   = "1";
+			String llaveDeducible    = "";
+			String cdatribuDeducible = "";
+			
+			String nombreItemDeducibleOriginal = "DEDUCIBLE ORIGINAL";
+			String nombreItemNuevoDeducible    = "NUEVO DEDUCIBLE";
+			
+			String llaveItemDeducibleOriginal = "itemDeducibleLectura";
+			String llaveItemNuevoDeducible    = "itemDeducible";
+			String llavePanelLectura          = "itemsLectura";
+			
+			String pantalla = "ENDOSO_DEDUCIBLE";
+			
+			//obtener campo deducible
+			if(resp.isSuccess())
 			{
-				List<ComponenteVO>tatrisitAux = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
-				
-				for(ComponenteVO tatri:tatrisitAux)
+				try
 				{
-					if(tatri.getLabel().lastIndexOf("DEDUCIBLE")>-1)
+					List<ComponenteVO>tatrisitAux = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
+					
+					for(ComponenteVO tatri:tatrisitAux)
 					{
-						cdatribuDeducible = tatri.getNameCdatribu();
-						llaveDeducible    = new StringBuilder("otvalor").append(StringUtils.leftPad(tatri.getNameCdatribu(),2,"0")).toString();
+						if(tatri.getLabel().lastIndexOf("DEDUCIBLE")>-1)
+						{
+							cdatribuDeducible = tatri.getNameCdatribu();
+							llaveDeducible    = new StringBuilder("otvalor").append(StringUtils.leftPad(tatri.getNameCdatribu(),2,"0")).toString();
+						}
 					}
+					
+					logger.debug(new StringBuilder("cdatribuDeducible=").append(cdatribuDeducible).toString());
+					logger.debug(new StringBuilder("llaveDeducible=")   .append(llaveDeducible).toString());
 				}
-				
-				logger.debug(new StringBuilder("cdatribuDeducible=").append(cdatribuDeducible).toString());
-				logger.debug(new StringBuilder("llaveDeducible=")   .append(llaveDeducible).toString());
+				catch(Exception ex)
+				{
+					logger.error("Error al obtener componente de deducible", ex);
+					error = ex.getMessage();
+					resp.setSuccess(false);
+				}
 			}
-			catch(Exception ex)
-			{
-				logger.error("Error al obtener componente de deducible", ex);
-				error = ex.getMessage();
-				resp.setSuccess(false);
+			
+			if(resp.isSuccess()) {
+				try {
+					Map<String,Object>valositTitular=kernelManager.obtieneValositSituac(cdunieco,cdramo,estado,nmpoliza,nmsituacTitular);
+					if(llaveDeducible.length()>0
+							&&valositTitular.containsKey(llaveDeducible)
+							&&((String)valositTitular.get(llaveDeducible))!=null) {
+						String deducible=(String)valositTitular.get(llaveDeducible);
+						logger.debug("deducible de la poliza: "+deducible);
+						smap1.put("deducible"    , deducible);
+						smap1.put("masdeducible" , smap2.get("masdeducible"));
+					} else {
+						throw new Exception("No hay deducible definido para este producto");
+					}
+					
+					List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
+					List<ComponenteVO>temp     = new ArrayList<ComponenteVO>();
+					for(ComponenteVO tatrisitIte:tatrisit) {
+						if(tatrisitIte.getNameCdatribu().equalsIgnoreCase(cdatribuDeducible)) {
+							temp.add(tatrisitIte);
+						}
+					}
+					tatrisit=temp;
+					
+					GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+					gc.setCdtipsit(cdtipsit);
+					
+					imap1=new HashMap<String,Item>();
+					tatrisit.get(0).setLabel(nombreItemNuevoDeducible);
+					
+					gc.generaParcial(tatrisit);
+					
+					imap1.put(llaveItemNuevoDeducible,gc.getItems());
+					
+					tatrisit.get(0).setSoloLectura(true);
+					tatrisit.get(0).setLabel(nombreItemDeducibleOriginal);
+					
+					gc.generaParcial(tatrisit);
+					
+					imap1.put(llaveItemDeducibleOriginal,gc.getItems());
+					
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+							null, cdunieco, cdramo,
+							cdtipsit, estado, rol, 
+							pantalla, "PANEL_LECTURA", null));
+					
+					imap1.put(llavePanelLectura,gc.getItems());
+					
+				} catch(Exception ex) {
+					logger.error("Error al mostrar pantalla endoso deducible", ex);
+					error = ex.getMessage();
+					resp.setSuccess(false);
+				}
 			}
 		}
-		
-		if(resp.isSuccess()) {
-			try {
-				Map<String,Object>valositTitular=kernelManager.obtieneValositSituac(cdunieco,cdramo,estado,nmpoliza,nmsituacTitular);
-				if(llaveDeducible.length()>0
-						&&valositTitular.containsKey(llaveDeducible)
-						&&((String)valositTitular.get(llaveDeducible))!=null) {
-					String deducible=(String)valositTitular.get(llaveDeducible);
-					logger.debug("deducible de la poliza: "+deducible);
-					smap1.put("deducible"    , deducible);
-					smap1.put("masdeducible" , smap2.get("masdeducible"));
-				} else {
-					throw new Exception("No hay deducible definido para este producto");
-				}
-				
-				List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
-				List<ComponenteVO>temp     = new ArrayList<ComponenteVO>();
-				for(ComponenteVO tatrisitIte:tatrisit) {
-					if(tatrisitIte.getNameCdatribu().equalsIgnoreCase(cdatribuDeducible)) {
-						temp.add(tatrisitIte);
-					}
-				}
-				tatrisit=temp;
-				
-				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-				gc.setCdtipsit(cdtipsit);
-				
-				imap1=new HashMap<String,Item>();
-				tatrisit.get(0).setLabel(nombreItemNuevoDeducible);
-				
-				gc.generaParcial(tatrisit);
-				
-				imap1.put(llaveItemNuevoDeducible,gc.getItems());
-				
-				tatrisit.get(0).setSoloLectura(true);
-				tatrisit.get(0).setLabel(nombreItemDeducibleOriginal);
-				
-				gc.generaParcial(tatrisit);
-				
-				imap1.put(llaveItemDeducibleOriginal,gc.getItems());
-				
-				gc.generaParcial(pantallasManager.obtenerComponentes(
-						null, cdunieco, cdramo,
-						cdtipsit, estado, rol, 
-						pantalla, "PANEL_LECTURA", null));
-				
-				imap1.put(llavePanelLectura,gc.getItems());
-				
-			} catch(Exception ex) {
-				logger.error("Error al mostrar pantalla endoso deducible", ex);
-				error = ex.getMessage();
-				resp.setSuccess(false);
-			}
+		catch(Exception ex)
+		{
+			logger.error("Error al construir pantalla de deducible",ex);
+			error = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.debug(new StringBuilder("\n")
@@ -6502,7 +6575,7 @@ public class EndososAction extends PrincipalCoreAction
 		        .append("\n#############################")
 		        .append("\n#############################").toString());
 		
-		return resp.isSuccess() ? SUCCESS : ERROR;
+		return resp!=null&&resp.isSuccess() ? SUCCESS : ERROR;
 	}
 	/*/////////////////////////*/
 	////// endosoDeducible //////
@@ -6697,94 +6770,106 @@ public class EndososAction extends PrincipalCoreAction
 		
 		this.session=ActionContext.getContext().getSession();
 		
-		String cdunieco = smap1.get("CDUNIECO");
-		String cdramo   = smap1.get("CDRAMO");
-		String estado   = smap1.get("ESTADO");
-		String nmpoliza = smap1.get("NMPOLIZA");
-		String cdtipsit = smap1.get("CDTIPSIT");
-		String cdtipsup = smap2.get("mascopago").equalsIgnoreCase("si")?
-				TipoEndoso.COPAGO_MAS.getCdTipSup().toString():
-				TipoEndoso.COPAGO_MENOS.getCdTipSup().toString();
-				
-		UserVO usuario    = (UserVO)session.get("USUARIO");
-		String cdelemento = usuario.getEmpresa().getElementoId();
-		String cdusuari   = usuario.getUser();
-		String rol        = usuario.getRolActivo().getClave();
+		RespuestaVO resp = null;
 		
-		// Valida si hay un endoso anterior pendiente:
-		RespuestaVO resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
-		error = resp.getMensaje();
-		
-		String nmsituacTitular = "1";
-		String llaveCopago     = "";
-		String cdatribuCopago  = "";
-		
-		String nombreItemCopagoOriginal = "COPAGO ORIGINAL";
-		String nombreItemNuevoCopago    = "NUEVO COPAGO";
-		
-		String llaveItemCopagoOriginal = "itemCopagoLectura";
-		String llaveItemNuevoCopago    = "itemCopago";
-		String llavePanelLectura          = "itemsLectura";
-		
-		String pantalla = "ENDOSO_COPAGO";
-		
-		if(cdtipsit.equals("SL")||cdtipsit.equals("SN")) {
-			llaveCopago    = "otvalor06";
-			cdatribuCopago = "6";
-		}
-		
-		if(resp.isSuccess()) {
-			try {
-				Map<String,Object>valositTitular=kernelManager.obtieneValositSituac(cdunieco,cdramo,estado,nmpoliza,nmsituacTitular);
-				if(llaveCopago.length()>0
-						&&valositTitular.containsKey(llaveCopago)
-						&&((String)valositTitular.get(llaveCopago))!=null) {
-					String copago=(String)valositTitular.get(llaveCopago);
-					logger.debug("copago de la poliza: "+copago);
-					smap1.put("copago"    , copago);
-					smap1.put("mascopago" , smap2.get("mascopago"));
-				} else {
-					throw new Exception("No hay copago definido para este producto");
-				}
-				
-				List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
-				List<ComponenteVO>temp     = new ArrayList<ComponenteVO>();
-				for(ComponenteVO tatrisitIte:tatrisit) {
-					if(tatrisitIte.getNameCdatribu().equalsIgnoreCase(cdatribuCopago)) {
-						temp.add(tatrisitIte);
-					}
-				}
-				tatrisit=temp;
-				
-				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-				gc.setCdtipsit(cdtipsit);
-				
-				imap1=new HashMap<String,Item>();
-				tatrisit.get(0).setLabel(nombreItemNuevoCopago);
-				
-				gc.generaParcial(tatrisit);
-				
-				imap1.put(llaveItemNuevoCopago,gc.getItems());
-				
-				tatrisit.get(0).setSoloLectura(true);
-				tatrisit.get(0).setLabel(nombreItemCopagoOriginal);
-				
-				gc.generaParcial(tatrisit);
-				
-				imap1.put(llaveItemCopagoOriginal,gc.getItems());
-				
-				gc.generaParcial(pantallasManager.obtenerComponentes(
-						null, cdunieco, cdramo,
-						cdtipsit, estado, rol,
-						pantalla, "PANEL_LECTURA", null));
-				
-				imap1.put(llavePanelLectura,gc.getItems());
-				
-			} catch(Exception ex) {
-				logger.error("error al mostrar pantalla endoso copago",ex);
-				error = ex.getMessage();
-				resp.setSuccess(false);
+		try
+		{
+			transformaEntrada(smap1, slist1, false);
+			
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+			String cdtipsit = smap1.get("CDTIPSIT");
+			String cdtipsup = smap2.get("mascopago").equalsIgnoreCase("si")?
+					TipoEndoso.COPAGO_MAS.getCdTipSup().toString():
+					TipoEndoso.COPAGO_MENOS.getCdTipSup().toString();
+					
+			UserVO usuario    = (UserVO)session.get("USUARIO");
+			String cdelemento = usuario.getEmpresa().getElementoId();
+			String cdusuari   = usuario.getUser();
+			String rol        = usuario.getRolActivo().getClave();
+			
+			// Valida si hay un endoso anterior pendiente:
+			resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+			error = resp.getMensaje();
+			
+			String nmsituacTitular = "1";
+			String llaveCopago     = "";
+			String cdatribuCopago  = "";
+			
+			String nombreItemCopagoOriginal = "COPAGO ORIGINAL";
+			String nombreItemNuevoCopago    = "NUEVO COPAGO";
+			
+			String llaveItemCopagoOriginal = "itemCopagoLectura";
+			String llaveItemNuevoCopago    = "itemCopago";
+			String llavePanelLectura          = "itemsLectura";
+			
+			String pantalla = "ENDOSO_COPAGO";
+			
+			if(cdtipsit.equals("SL")||cdtipsit.equals("SN")) {
+				llaveCopago    = "otvalor06";
+				cdatribuCopago = "6";
 			}
+			
+			if(resp.isSuccess()) {
+				try {
+					Map<String,Object>valositTitular=kernelManager.obtieneValositSituac(cdunieco,cdramo,estado,nmpoliza,nmsituacTitular);
+					if(llaveCopago.length()>0
+							&&valositTitular.containsKey(llaveCopago)
+							&&((String)valositTitular.get(llaveCopago))!=null) {
+						String copago=(String)valositTitular.get(llaveCopago);
+						logger.debug("copago de la poliza: "+copago);
+						smap1.put("copago"    , copago);
+						smap1.put("mascopago" , smap2.get("mascopago"));
+					} else {
+						throw new Exception("No hay copago definido para este producto");
+					}
+					
+					List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
+					List<ComponenteVO>temp     = new ArrayList<ComponenteVO>();
+					for(ComponenteVO tatrisitIte:tatrisit) {
+						if(tatrisitIte.getNameCdatribu().equalsIgnoreCase(cdatribuCopago)) {
+							temp.add(tatrisitIte);
+						}
+					}
+					tatrisit=temp;
+					
+					GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+					gc.setCdtipsit(cdtipsit);
+					
+					imap1=new HashMap<String,Item>();
+					tatrisit.get(0).setLabel(nombreItemNuevoCopago);
+					
+					gc.generaParcial(tatrisit);
+					
+					imap1.put(llaveItemNuevoCopago,gc.getItems());
+					
+					tatrisit.get(0).setSoloLectura(true);
+					tatrisit.get(0).setLabel(nombreItemCopagoOriginal);
+					
+					gc.generaParcial(tatrisit);
+					
+					imap1.put(llaveItemCopagoOriginal,gc.getItems());
+					
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+							null, cdunieco, cdramo,
+							cdtipsit, estado, rol,
+							pantalla, "PANEL_LECTURA", null));
+					
+					imap1.put(llavePanelLectura,gc.getItems());
+					
+				} catch(Exception ex) {
+					logger.error("error al mostrar pantalla endoso copago",ex);
+					error = ex.getMessage();
+					resp.setSuccess(false);
+				}
+			}
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al construir la pantalla de endoso de copago",ex);
+			error = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.debug("\n"
@@ -6793,7 +6878,7 @@ public class EndososAction extends PrincipalCoreAction
 				+ "\n##########################"
 				+ "\n##########################"
 				);
-		return resp.isSuccess() ? SUCCESS : ERROR;
+		return resp!=null&&resp.isSuccess() ? SUCCESS : ERROR;
 	}
 	/*//////////////////////*/
 	////// endosoCopago //////
@@ -7076,53 +7161,65 @@ public class EndososAction extends PrincipalCoreAction
 		
 		this.session = ActionContext.getContext().getSession();
 		
-		String cdunieco = smap1.get("CDUNIECO");
-		String cdramo   = smap1.get("CDRAMO");
-		String estado   = smap1.get("ESTADO");
-		String nmpoliza = smap1.get("NMPOLIZA");
-		String cdtipsit = smap1.get("CDTIPSIT");
-		String cdtipsup = TipoEndoso.CANCELACION_POR_REEXPEDICION.getCdTipSup().toString();
+		RespuestaVO resp = null;
 		
-		String cdPantalla            = "ENDOSO_REEXPEDICION";
-		String cdPanelLectura        = "PANEL_LECTURA";
-		String cdDatosEndoso         = "DATOS_ENDOSO";
-		String keyItemsPanelLectura  = "itemsPanelLectura";
-		String keyFieldsPanelLectura = "fieldsFormLectura";
-		String keyItemsDatosEndoso   = "itemsDatosEndoso";
-				
-		UserVO usuario    = (UserVO)session.get("USUARIO");
-		String cdelemento = usuario.getEmpresa().getElementoId();
-		String cdusuari   = usuario.getUser();
-		String rol        = usuario.getRolActivo().getClave();
-		
-		// Valida si hay un endoso anterior pendiente:
-		RespuestaVO resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
-		error = resp.getMensaje();
-		
-		if(resp.isSuccess()) {
-			try {
-				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-				imap1=new HashMap<String,Item>();
-				
-				gc.generaParcial(pantallasManager.obtenerComponentes(
-						null, cdunieco, cdramo,
-						cdtipsit, estado, rol,
-						cdPantalla, cdPanelLectura, null));
-				
-				imap1.put(keyItemsPanelLectura,gc.getItems());
-				imap1.put(keyFieldsPanelLectura,gc.getFields());
-				
-				gc.generaParcial(pantallasManager.obtenerComponentes(
-						null, cdunieco, cdramo,
-						cdtipsit, estado, rol,
-						cdPantalla, cdDatosEndoso, null));
-				
-				imap1.put(keyItemsDatosEndoso,gc.getItems());
-			} catch(Exception ex) {
-				logger.error("error al mostrar pantalla endoso reexpedicion",ex);
-				error = ex.getMessage();
-				resp.setSuccess(false);
+		try
+		{
+			transformaEntrada(smap1, slist1, false);
+			
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+			String cdtipsit = smap1.get("CDTIPSIT");
+			String cdtipsup = TipoEndoso.CANCELACION_POR_REEXPEDICION.getCdTipSup().toString();
+			
+			String cdPantalla            = "ENDOSO_REEXPEDICION";
+			String cdPanelLectura        = "PANEL_LECTURA";
+			String cdDatosEndoso         = "DATOS_ENDOSO";
+			String keyItemsPanelLectura  = "itemsPanelLectura";
+			String keyFieldsPanelLectura = "fieldsFormLectura";
+			String keyItemsDatosEndoso   = "itemsDatosEndoso";
+					
+			UserVO usuario    = (UserVO)session.get("USUARIO");
+			String cdelemento = usuario.getEmpresa().getElementoId();
+			String cdusuari   = usuario.getUser();
+			String rol        = usuario.getRolActivo().getClave();
+			
+			// Valida si hay un endoso anterior pendiente:
+			resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+			error = resp.getMensaje();
+			
+			if(resp.isSuccess()) {
+				try {
+					GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+					imap1=new HashMap<String,Item>();
+					
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+							null, cdunieco, cdramo,
+							cdtipsit, estado, rol,
+							cdPantalla, cdPanelLectura, null));
+					
+					imap1.put(keyItemsPanelLectura,gc.getItems());
+					imap1.put(keyFieldsPanelLectura,gc.getFields());
+					
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+							null, cdunieco, cdramo,
+							cdtipsit, estado, rol,
+							cdPantalla, cdDatosEndoso, null));
+					
+					imap1.put(keyItemsDatosEndoso,gc.getItems());
+				} catch(Exception ex) {
+					logger.error("error al mostrar pantalla endoso reexpedicion",ex);
+					error = ex.getMessage();
+					resp.setSuccess(false);
+				}
 			}
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al construir pantalla de endoso de cancelacion por reexpedicion",ex);
+			error = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.debug(new StringBuilder("\n")
@@ -7131,7 +7228,7 @@ public class EndososAction extends PrincipalCoreAction
 		        .append("\n################################")
 		        .append("\n################################").toString());
 		
-		return resp.isSuccess() ? SUCCESS : ERROR;
+		return resp!=null&&resp.isSuccess() ? SUCCESS : ERROR;
 	}
 	/*////////////////////////////*/
 	////// endosoReexpedicion //////
@@ -7370,118 +7467,130 @@ public class EndososAction extends PrincipalCoreAction
 		
 		this.session=ActionContext.getContext().getSession();
 		
-		String cdunieco = smap1.get("CDUNIECO");
-		String cdramo   = smap1.get("CDRAMO");
-		String estado   = smap1.get("ESTADO");
-		String nmpoliza = smap1.get("NMPOLIZA");
-		String cdtipsit = smap1.get("CDTIPSIT");
-		String nmsituac = smap1.get("nmsituac");
-		String cdtipsup = smap2.get("masextraprima").equalsIgnoreCase("si")?
-				TipoEndoso.EXTRAPRIMA_MAS.getCdTipSup().toString():
-				TipoEndoso.EXTRAPRIMA_MENOS.getCdTipSup().toString();
-				
-		UserVO usuario    = (UserVO)session.get("USUARIO");
-		String cdelemento = usuario.getEmpresa().getElementoId();
-		String cdusuari   = usuario.getUser();
-		String rol        = usuario.getRolActivo().getClave();
+		RespuestaVO resp = null;
 		
-		// Valida si hay un endoso anterior pendiente:
-		RespuestaVO resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
-		error = resp.getMensaje();
-		
-		String llaveExtraprima     = "";
-		String cdatribuExtraprima  = "";
-		
-		String nombreItemExtraprimaOriginal = "EXTRAPRIMA ORIGINAL";
-		String nombreItemNuevaExtraprima    = "NUEVA EXTRAPRIMA";
-		
-		String llaveItemExtraprimaOriginal = "itemExtraprimaLectura";
-		String llaveItemNuevaExtraprima    = "itemExtraprima";
-		String llavePanelLectura           = "itemsLectura";
-		
-		String pantalla = "ENDOSO_EXTRAPRIMA";
-		
-		//obtener campo extraprima
-		if(resp.isSuccess())
+		try
 		{
-			try
+			transformaEntrada(smap1, slist1, true);
+			
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+			String cdtipsit = smap1.get("CDTIPSIT");
+			String nmsituac = smap1.get("nmsituac");
+			String cdtipsup = smap2.get("masextraprima").equalsIgnoreCase("si")?
+					TipoEndoso.EXTRAPRIMA_MAS.getCdTipSup().toString():
+					TipoEndoso.EXTRAPRIMA_MENOS.getCdTipSup().toString();
+					
+			UserVO usuario    = (UserVO)session.get("USUARIO");
+			String cdelemento = usuario.getEmpresa().getElementoId();
+			String cdusuari   = usuario.getUser();
+			String rol        = usuario.getRolActivo().getClave();
+			
+			// Valida si hay un endoso anterior pendiente:
+			resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+			error = resp.getMensaje();
+			
+			String llaveExtraprima     = "";
+			String cdatribuExtraprima  = "";
+			
+			String nombreItemExtraprimaOriginal = "EXTRAPRIMA ORIGINAL";
+			String nombreItemNuevaExtraprima    = "NUEVA EXTRAPRIMA";
+			
+			String llaveItemExtraprimaOriginal = "itemExtraprimaLectura";
+			String llaveItemNuevaExtraprima    = "itemExtraprima";
+			String llavePanelLectura           = "itemsLectura";
+			
+			String pantalla = "ENDOSO_EXTRAPRIMA";
+			
+			//obtener campo extraprima
+			if(resp.isSuccess())
 			{
-				List<ComponenteVO>tatrisitAux = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
-				
-				for(ComponenteVO tatri:tatrisitAux)
+				try
 				{
-					if(tatri.getLabel().lastIndexOf("EXTRAPRIMA")>-1)
+					List<ComponenteVO>tatrisitAux = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
+					
+					for(ComponenteVO tatri:tatrisitAux)
 					{
-						cdatribuExtraprima = tatri.getNameCdatribu();
-						llaveExtraprima    = new StringBuilder("otvalor").append(StringUtils.leftPad(tatri.getNameCdatribu(),2,"0")).toString();
+						if(tatri.getLabel().lastIndexOf("EXTRAPRIMA")>-1)
+						{
+							cdatribuExtraprima = tatri.getNameCdatribu();
+							llaveExtraprima    = new StringBuilder("otvalor").append(StringUtils.leftPad(tatri.getNameCdatribu(),2,"0")).toString();
+						}
 					}
+					
+					logger.debug(new StringBuilder("cdatribuExtraprima=").append(cdatribuExtraprima).toString());
+					logger.debug(new StringBuilder("llaveExtraprima=")   .append(llaveExtraprima).toString());
 				}
-				
-				logger.debug(new StringBuilder("cdatribuExtraprima=").append(cdatribuExtraprima).toString());
-				logger.debug(new StringBuilder("llaveExtraprima=")   .append(llaveExtraprima).toString());
+				catch(Exception ex)
+				{
+					logger.error("Error al obtener componente de extraprima", ex);
+					error = ex.getMessage();
+					resp.setSuccess(false);
+				}
 			}
-			catch(Exception ex)
-			{
-				logger.error("Error al obtener componente de extraprima", ex);
-				error = ex.getMessage();
-				resp.setSuccess(false);
+			
+			if(resp.isSuccess()) {
+				try {
+					Map<String,Object>valosit=kernelManager.obtieneValositSituac(cdunieco,cdramo,estado,nmpoliza,nmsituac);
+					if(llaveExtraprima.length()>0
+							&&valosit.containsKey(llaveExtraprima)) {
+						String extraprima=(String)valosit.get(llaveExtraprima);
+						if(StringUtils.isBlank(extraprima)) {
+							extraprima="0";
+						}
+						logger.debug("extraprima del asegurado: "+extraprima);
+						smap1.put("extraprima"    , extraprima);
+						smap1.put("masextraprima" , smap2.get("masextraprima"));
+					} else {
+						throw new Exception("No hay extraprima definida para este producto");
+					}
+					
+					List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
+					List<ComponenteVO>temp     = new ArrayList<ComponenteVO>();
+					for(ComponenteVO tatrisitIte:tatrisit) {
+						if(tatrisitIte.getNameCdatribu().equalsIgnoreCase(cdatribuExtraprima)) {
+							temp.add(tatrisitIte);
+						}
+					}
+					tatrisit=temp;
+					
+					GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+					gc.setCdtipsit(cdtipsit);
+					
+					imap1=new HashMap<String,Item>();
+					tatrisit.get(0).setLabel(nombreItemNuevaExtraprima);
+					
+					gc.generaParcial(tatrisit);
+					
+					imap1.put(llaveItemNuevaExtraprima,gc.getItems());
+					
+					tatrisit.get(0).setSoloLectura(true);
+					tatrisit.get(0).setLabel(nombreItemExtraprimaOriginal);
+					
+					gc.generaParcial(tatrisit);
+					
+					imap1.put(llaveItemExtraprimaOriginal,gc.getItems());
+					
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+							null, cdunieco, cdramo,
+							cdtipsit, estado, rol,
+							pantalla, "PANEL_LECTURA", null));
+					
+					imap1.put(llavePanelLectura,gc.getItems());
+					
+				} catch(Exception ex) {
+					logger.error("error al mostrar pantalla endoso extraprima",ex);
+					error = ex.getMessage();
+					resp.setSuccess(false);
+				}
 			}
 		}
-		
-		if(resp.isSuccess()) {
-			try {
-				Map<String,Object>valosit=kernelManager.obtieneValositSituac(cdunieco,cdramo,estado,nmpoliza,nmsituac);
-				if(llaveExtraprima.length()>0
-						&&valosit.containsKey(llaveExtraprima)) {
-					String extraprima=(String)valosit.get(llaveExtraprima);
-					if(StringUtils.isBlank(extraprima)) {
-						extraprima="0";
-					}
-					logger.debug("extraprima del asegurado: "+extraprima);
-					smap1.put("extraprima"    , extraprima);
-					smap1.put("masextraprima" , smap2.get("masextraprima"));
-				} else {
-					throw new Exception("No hay extraprima definida para este producto");
-				}
-				
-				List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
-				List<ComponenteVO>temp     = new ArrayList<ComponenteVO>();
-				for(ComponenteVO tatrisitIte:tatrisit) {
-					if(tatrisitIte.getNameCdatribu().equalsIgnoreCase(cdatribuExtraprima)) {
-						temp.add(tatrisitIte);
-					}
-				}
-				tatrisit=temp;
-				
-				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-				gc.setCdtipsit(cdtipsit);
-				
-				imap1=new HashMap<String,Item>();
-				tatrisit.get(0).setLabel(nombreItemNuevaExtraprima);
-				
-				gc.generaParcial(tatrisit);
-				
-				imap1.put(llaveItemNuevaExtraprima,gc.getItems());
-				
-				tatrisit.get(0).setSoloLectura(true);
-				tatrisit.get(0).setLabel(nombreItemExtraprimaOriginal);
-				
-				gc.generaParcial(tatrisit);
-				
-				imap1.put(llaveItemExtraprimaOriginal,gc.getItems());
-				
-				gc.generaParcial(pantallasManager.obtenerComponentes(
-						null, cdunieco, cdramo,
-						cdtipsit, estado, rol,
-						pantalla, "PANEL_LECTURA", null));
-				
-				imap1.put(llavePanelLectura,gc.getItems());
-				
-			} catch(Exception ex) {
-				logger.error("error al mostrar pantalla endoso extraprima",ex);
-				error = ex.getMessage();
-				resp.setSuccess(false);
-			}
+		catch(Exception ex)
+		{
+			logger.error("Error al contruir pantalla de endoso de extraprima",ex);
+			error = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.debug(new StringBuilder("\n")
@@ -7490,7 +7599,7 @@ public class EndososAction extends PrincipalCoreAction
 		        .append("\n##############################")
 		        .append("\n##############################").toString());
 		
-		return resp.isSuccess() ? SUCCESS : ERROR;
+		return resp!=null&&resp.isSuccess() ? SUCCESS : ERROR;
 	}
 	/*//////////////////////////*/
 	////// endosoExtraprima //////
@@ -7685,75 +7794,87 @@ public class EndososAction extends PrincipalCoreAction
 		
 		this.session=ActionContext.getContext().getSession();
 		
-		String cdunieco = smap1.get("CDUNIECO");
-		String cdramo   = smap1.get("CDRAMO");
-		String estado   = smap1.get("ESTADO");
-		String nmpoliza = smap1.get("NMPOLIZA");
-		String cdtipsit = smap1.get("CDTIPSIT");
-		String cdtipsup = TipoEndoso.CAMBIO_FORMA_PAGO.getCdTipSup().toString();
+		RespuestaVO resp = null;
 		
-		String cdPantalla            = "ENDOSO_FORMA_PAGO";
-		String cdPanelLectura        = "PANEL_LECTURA";
-		String keyItemsPanelLectura  = "itemsPanelLectura";
-		String keyFieldsPanelLectura = "fieldsFormLectura";
-		String cdItemsCambio         = "FORM_FORMA_PAGO";
-		String keyItemCambioOriginal = "itemCambioOld";
-		String keyItemCambioNuevo    = "itemCambioNew";
-				
-		UserVO usuario    = (UserVO)session.get("USUARIO");
-		String cdelemento = usuario.getEmpresa().getElementoId();
-		String cdusuari   = usuario.getUser();
-		String rol        = usuario.getRolActivo().getClave();
-		
-		String nombreItemOriginal = "FORMA DE PAGO ORIGINAL";
-		String nombreItemNuevo    = "NUEVA FORMA DE PAGO";
-		
-		String keyValorOriginal = "formapago";
-		
-		String llaveFechaInicio = "fechaInicio";
-		
-		// Valida si hay un endoso anterior pendiente:
-		RespuestaVO resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
-		error = resp.getMensaje();
-		
-		if(resp.isSuccess()) {
-			try {
-				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-				imap1=new HashMap<String,Item>();
-				
-				gc.generaParcial(pantallasManager.obtenerComponentes(
-						null, cdunieco, cdramo,
-						cdtipsit, estado, rol,
-						cdPantalla, cdPanelLectura, null));
-				
-				imap1.put(keyItemsPanelLectura,gc.getItems());
-				imap1.put(keyFieldsPanelLectura,gc.getFields());
-				
-				List<ComponenteVO> camposCambio=pantallasManager.obtenerComponentes(
-						null, cdunieco, cdramo,
-						cdtipsit, estado, rol,
-						cdPantalla, cdItemsCambio, null);
-				
-				camposCambio.get(0).setLabel(nombreItemOriginal);
-				camposCambio.get(0).setSoloLectura(true);
-				gc.generaParcial(camposCambio);
-				imap1.put(keyItemCambioOriginal,gc.getItems());
-				
-				camposCambio.get(0).setLabel(nombreItemNuevo);
-				camposCambio.get(0).setSoloLectura(false);
-				camposCambio.get(0).setObligatorio(true);
-				gc.generaParcial(camposCambio);
-				imap1.put(keyItemCambioNuevo,gc.getItems());
-				
-				//PKG_ENDOSOS.P_GET_FEINIVAL_END_FP
-				Date fechaInicioEndoso=endososManager.obtenerFechaEndosoFormaPago(cdunieco, cdramo, estado, nmpoliza);
-				smap1.put(llaveFechaInicio,renderFechas.format(fechaInicioEndoso));
-				
-			} catch(Exception ex) {
-				logger.error("error al mostrar pantalla endoso forma pago",ex);
-				error = ex.getMessage();
-				resp.setSuccess(false);
+		try
+		{
+			transformaEntrada(smap1, slist1, false);
+			
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+			String cdtipsit = smap1.get("CDTIPSIT");
+			String cdtipsup = TipoEndoso.CAMBIO_FORMA_PAGO.getCdTipSup().toString();
+			
+			String cdPantalla            = "ENDOSO_FORMA_PAGO";
+			String cdPanelLectura        = "PANEL_LECTURA";
+			String keyItemsPanelLectura  = "itemsPanelLectura";
+			String keyFieldsPanelLectura = "fieldsFormLectura";
+			String cdItemsCambio         = "FORM_FORMA_PAGO";
+			String keyItemCambioOriginal = "itemCambioOld";
+			String keyItemCambioNuevo    = "itemCambioNew";
+					
+			UserVO usuario    = (UserVO)session.get("USUARIO");
+			String cdelemento = usuario.getEmpresa().getElementoId();
+			String cdusuari   = usuario.getUser();
+			String rol        = usuario.getRolActivo().getClave();
+			
+			String nombreItemOriginal = "FORMA DE PAGO ORIGINAL";
+			String nombreItemNuevo    = "NUEVA FORMA DE PAGO";
+			
+			String keyValorOriginal = "formapago";
+			
+			String llaveFechaInicio = "fechaInicio";
+			
+			// Valida si hay un endoso anterior pendiente:
+			resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+			error = resp.getMensaje();
+			
+			if(resp.isSuccess()) {
+				try {
+					GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+					imap1=new HashMap<String,Item>();
+					
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+							null, cdunieco, cdramo,
+							cdtipsit, estado, rol,
+							cdPantalla, cdPanelLectura, null));
+					
+					imap1.put(keyItemsPanelLectura,gc.getItems());
+					imap1.put(keyFieldsPanelLectura,gc.getFields());
+					
+					List<ComponenteVO> camposCambio=pantallasManager.obtenerComponentes(
+							null, cdunieco, cdramo,
+							cdtipsit, estado, rol,
+							cdPantalla, cdItemsCambio, null);
+					
+					camposCambio.get(0).setLabel(nombreItemOriginal);
+					camposCambio.get(0).setSoloLectura(true);
+					gc.generaParcial(camposCambio);
+					imap1.put(keyItemCambioOriginal,gc.getItems());
+					
+					camposCambio.get(0).setLabel(nombreItemNuevo);
+					camposCambio.get(0).setSoloLectura(false);
+					camposCambio.get(0).setObligatorio(true);
+					gc.generaParcial(camposCambio);
+					imap1.put(keyItemCambioNuevo,gc.getItems());
+					
+					//PKG_ENDOSOS.P_GET_FEINIVAL_END_FP
+					Date fechaInicioEndoso=endososManager.obtenerFechaEndosoFormaPago(cdunieco, cdramo, estado, nmpoliza);
+					smap1.put(llaveFechaInicio,renderFechas.format(fechaInicioEndoso));
+					
+				} catch(Exception ex) {
+					logger.error("error al mostrar pantalla endoso forma pago",ex);
+					error = ex.getMessage();
+					resp.setSuccess(false);
+				}
 			}
+		}
+		catch(Exception ex)
+		{
+			logger.debug("Error al construir pantalla de endoso de cambio de forma de pago",ex);
+			error = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.debug(new StringBuilder("\n")
@@ -7762,7 +7883,7 @@ public class EndososAction extends PrincipalCoreAction
 		        .append("\n################################")
 		        .append("\n################################").toString());
 		
-		return resp.isSuccess() ? SUCCESS : ERROR;
+		return resp!=null&&resp.isSuccess() ? SUCCESS : ERROR;
 	}
 	/*////////////////////////////*/
 	////// endosoFormaPago //////
@@ -7942,68 +8063,80 @@ public class EndososAction extends PrincipalCoreAction
 		
 		this.session=ActionContext.getContext().getSession();
 		
-		///////////////////////
-		////// variables //////
-		String cdunieco           = smap1.get("CDUNIECO");
-		String cdramo             = smap1.get("CDRAMO");
-		String cdtipsit           = smap1.get("CDTIPSIT");
-		String estado             = smap1.get("ESTADO");
-		String nmpoliza           = smap1.get("NMPOLIZA");
-		String nmsuplem           = smap1.get("NMSUPLEM");
-		String rol                = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
-		String orden              = null;
-		String pantalla           = "ENDOSO_AGENTE";
-		String seccionLectura     = "PANEL_LECTURA";
-		String seccionModelo      = "MODELO";
-		String seccionComboAgente = "COMBOAGENTE";
-		String keyItemsPanelLec   = "itemsPanelLectura";
-		String keyFieldsModelo    = "fieldsModelo";
-		String keyColumnsGrid     = "columnsGrid";
-		String keyComboAgentes    = "comboAgentes";
-		String cdtipsup           = TipoEndoso.CAMBIO_AGENTE.getCdTipSup().toString();
-		////// variables //////
-		///////////////////////
+		RespuestaVO resp = null;
 		
-		// Valida si hay un endoso anterior pendiente:
-		RespuestaVO resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
-		error = resp.getMensaje();
-		
-		if(resp.isSuccess()) {
-			try {
-				/////////////////////////////
-				////// campos pantalla //////
-				GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-				gc.generaParcial(pantallasManager.obtenerComponentes(
-						null, cdunieco, cdramo,
-						cdtipsit, estado, rol,
-						pantalla, seccionLectura, orden));
-				
-				imap1=new HashMap<String,Item>();
-				imap1.put(keyItemsPanelLec,gc.getItems());
-				
-				gc.generaParcial(pantallasManager.obtenerComponentes(
-						null, cdunieco, cdramo,
-						cdtipsit, estado, rol,
-						pantalla, seccionModelo, orden));
-				
-				imap1.put(keyFieldsModelo,gc.getFields());
-				imap1.put(keyColumnsGrid,gc.getColumns());
-				
-				gc.generaParcial(pantallasManager.obtenerComponentes(
-						null, cdunieco, cdramo,
-						cdtipsit, estado, rol,
-						pantalla, seccionComboAgente, orden));
-				
-				imap1.put(keyComboAgentes,gc.getItems());
-				
-				Date fechaInicioEndoso=endososManager.obtenerFechaEndosoFormaPago(cdunieco, cdramo, estado, nmpoliza);
-				smap1.put("fechaInicioEndoso",renderFechas.format(fechaInicioEndoso));
-				////// campos pantalla //////
-				/////////////////////////////
-			} catch(Exception ex) {
-				logger.error("error al cargar la pantalla de endoso de agente",ex);
-				error=ex.getMessage();
+		try
+		{
+			transformaEntrada(smap1, slist1, false);
+			
+			///////////////////////
+			////// variables //////
+			String cdunieco           = smap1.get("CDUNIECO");
+			String cdramo             = smap1.get("CDRAMO");
+			String cdtipsit           = smap1.get("CDTIPSIT");
+			String estado             = smap1.get("ESTADO");
+			String nmpoliza           = smap1.get("NMPOLIZA");
+			String nmsuplem           = smap1.get("NMSUPLEM");
+			String rol                = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			String orden              = null;
+			String pantalla           = "ENDOSO_AGENTE";
+			String seccionLectura     = "PANEL_LECTURA";
+			String seccionModelo      = "MODELO";
+			String seccionComboAgente = "COMBOAGENTE";
+			String keyItemsPanelLec   = "itemsPanelLectura";
+			String keyFieldsModelo    = "fieldsModelo";
+			String keyColumnsGrid     = "columnsGrid";
+			String keyComboAgentes    = "comboAgentes";
+			String cdtipsup           = TipoEndoso.CAMBIO_AGENTE.getCdTipSup().toString();
+			////// variables //////
+			///////////////////////
+			
+			// Valida si hay un endoso anterior pendiente:
+			resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+			error = resp.getMensaje();
+			
+			if(resp.isSuccess()) {
+				try {
+					/////////////////////////////
+					////// campos pantalla //////
+					GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+							null, cdunieco, cdramo,
+							cdtipsit, estado, rol,
+							pantalla, seccionLectura, orden));
+					
+					imap1=new HashMap<String,Item>();
+					imap1.put(keyItemsPanelLec,gc.getItems());
+					
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+							null, cdunieco, cdramo,
+							cdtipsit, estado, rol,
+							pantalla, seccionModelo, orden));
+					
+					imap1.put(keyFieldsModelo,gc.getFields());
+					imap1.put(keyColumnsGrid,gc.getColumns());
+					
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+							null, cdunieco, cdramo,
+							cdtipsit, estado, rol,
+							pantalla, seccionComboAgente, orden));
+					
+					imap1.put(keyComboAgentes,gc.getItems());
+					
+					Date fechaInicioEndoso=endososManager.obtenerFechaEndosoFormaPago(cdunieco, cdramo, estado, nmpoliza);
+					smap1.put("fechaInicioEndoso",renderFechas.format(fechaInicioEndoso));
+					////// campos pantalla //////
+					/////////////////////////////
+				} catch(Exception ex) {
+					logger.error("error al cargar la pantalla de endoso de agente",ex);
+					error=ex.getMessage();
+				}
 			}
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al construir pantalla de endoso de cambio de agente",ex);
+			error = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.debug(new StringBuilder("\n")
@@ -8012,7 +8145,7 @@ public class EndososAction extends PrincipalCoreAction
 		        .append("\n##########################")
 		        .append("\n##########################").toString());
 		
-		return resp.isSuccess() ? SUCCESS : ERROR;
+		return resp!=null&&resp.isSuccess() ? SUCCESS : ERROR;
 	}
 	/*//////////////////////*/
 	////// endosoAgente //////
@@ -8270,84 +8403,96 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////*/
 	public String endosoContratante() {
 	
-	logger.debug(new StringBuilder("\n")
-	.append("\n##########################")
-	.append("\n##########################")
-	.append("\n###### endosoContratante ######")
-	.append("\n######              ######").toString());
-	logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
-	
-	this.session=ActionContext.getContext().getSession();
-	
-	///////////////////////
-	////// variables //////
-	String cdunieco           = smap1.get("CDUNIECO");
-	String cdramo             = smap1.get("CDRAMO");
-	String cdtipsit           = smap1.get("CDTIPSIT");
-	String estado             = smap1.get("ESTADO");
-	String nmpoliza           = smap1.get("NMPOLIZA");
-	String nmsuplem           = smap1.get("NMSUPLEM");
-	String rol                = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
-	String orden              = null;
-	String pantalla           = "ENDOSO_CONTRATANTE";
-	String seccionLectura     = "PANEL_LECTURA";
-	String seccionModelo      = "MODELO";
-	String keyItemsPanelLec   = "itemsPanelLectura";
-	String keyFieldsModelo    = "fieldsModelo";
-	String keyColumnsGrid     = "columnsGrid";
-	String cdtipsup           = TipoEndoso.CAMBIO_CONTRATANTE.getCdTipSup().toString();
-	////// variables //////
-	///////////////////////
-	
-	// Valida si hay un endoso anterior pendiente:
-	RespuestaVO resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
-	error = resp.getMensaje();
-	
-	if(resp.isSuccess()) {
-	try {
-	/////////////////////////////
-	////// campos pantalla //////
-	GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-	gc.generaParcial(pantallasManager.obtenerComponentes(
-		null, cdunieco, cdramo,
-		cdtipsit, estado, rol,
-		pantalla, seccionLectura, orden));
-	
-	imap1=new HashMap<String,Item>();
-	imap1.put(keyItemsPanelLec,gc.getItems());
-	
-	gc.generaParcial(pantallasManager.obtenerComponentes(
-		null, cdunieco, cdramo,
-		cdtipsit, estado, rol,
-		pantalla, seccionModelo, orden));
-	
-	imap1.put(keyFieldsModelo,gc.getFields());
-	imap1.put(keyColumnsGrid,gc.getColumns());
-	
-	
-	Date fechaInicioEndoso=endososManager.obtenerFechaEndosoFormaPago(cdunieco, cdramo, estado, nmpoliza);
-	smap1.put("fechaInicioEndoso",renderFechas.format(fechaInicioEndoso));
-	
-	
-	boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
-	
-	smap1.put("esProductoSalud", esProductoSalud? Constantes.SI : Constantes.NO);
-	
-	////// campos pantalla //////
-	/////////////////////////////
-	} catch(Exception ex) {
-	logger.error("error al cargar la pantalla de endoso de contratante",ex);
-	error=ex.getMessage();
-	}
-	}
-	
-	logger.debug(new StringBuilder("\n")
-	.append("\n######              ######")
-	.append("\n###### endosoContratante ######")
-	.append("\n##########################")
-	.append("\n##########################").toString());
-	
-	return resp.isSuccess() ? SUCCESS : ERROR;
+		logger.debug(new StringBuilder("\n")
+		.append("\n##########################")
+		.append("\n##########################")
+		.append("\n###### endosoContratante ######")
+		.append("\n######              ######").toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		
+		this.session=ActionContext.getContext().getSession();
+		
+		RespuestaVO resp = null;
+		
+		try
+		{
+			transformaEntrada(smap1, slist1, false);
+			
+			///////////////////////
+			////// variables //////
+			String cdunieco           = smap1.get("CDUNIECO");
+			String cdramo             = smap1.get("CDRAMO");
+			String cdtipsit           = smap1.get("CDTIPSIT");
+			String estado             = smap1.get("ESTADO");
+			String nmpoliza           = smap1.get("NMPOLIZA");
+			String nmsuplem           = smap1.get("NMSUPLEM");
+			String rol                = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			String orden              = null;
+			String pantalla           = "ENDOSO_CONTRATANTE";
+			String seccionLectura     = "PANEL_LECTURA";
+			String seccionModelo      = "MODELO";
+			String keyItemsPanelLec   = "itemsPanelLectura";
+			String keyFieldsModelo    = "fieldsModelo";
+			String keyColumnsGrid     = "columnsGrid";
+			String cdtipsup           = TipoEndoso.CAMBIO_CONTRATANTE.getCdTipSup().toString();
+			////// variables //////
+			///////////////////////
+			
+			// Valida si hay un endoso anterior pendiente:
+			resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+			error = resp.getMensaje();
+			
+			if(resp.isSuccess()) {
+				try {
+					/////////////////////////////
+					////// campos pantalla //////
+					GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo,
+						cdtipsit, estado, rol,
+						pantalla, seccionLectura, orden));
+					
+					imap1=new HashMap<String,Item>();
+					imap1.put(keyItemsPanelLec,gc.getItems());
+					
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo,
+						cdtipsit, estado, rol,
+						pantalla, seccionModelo, orden));
+					
+					imap1.put(keyFieldsModelo,gc.getFields());
+					imap1.put(keyColumnsGrid,gc.getColumns());
+					
+					
+					Date fechaInicioEndoso=endososManager.obtenerFechaEndosoFormaPago(cdunieco, cdramo, estado, nmpoliza);
+					smap1.put("fechaInicioEndoso",renderFechas.format(fechaInicioEndoso));
+					
+					
+					boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
+					
+					smap1.put("esProductoSalud", esProductoSalud? Constantes.SI : Constantes.NO);
+					
+					////// campos pantalla //////
+					/////////////////////////////
+				} catch(Exception ex) {
+					logger.error("error al cargar la pantalla de endoso de contratante",ex);
+					error=ex.getMessage();
+				}
+			}
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al constuir pantalla de endoso de cambio de contratante",ex);
+			error = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(new StringBuilder("\n")
+		.append("\n######              ######")
+		.append("\n###### endosoContratante ######")
+		.append("\n##########################")
+		.append("\n##########################").toString());
+		
+		return resp!=null&&resp.isSuccess() ? SUCCESS : ERROR;
 	}
 	/*//////////////////////*/
 	////// endosoContratante //////
@@ -9555,108 +9700,122 @@ public class EndososAction extends PrincipalCoreAction
 				.toString()
 				);
 		
-		exito   = true;
-		success = true;
+		String result = null;
 		
-		String cdunieco = null;
-		String cdramo   = null;
-		String cdtipsit = null;
-		String estado   = null;
-		String nmpoliza = null;
-		String nmsuplem = null;
-		String cdusuari = null;
-		String cdtipsup = null;
-		
-		//datos completos
 		try
 		{
-			if(smap1==null)
-			{
-				throw new ApplicationException("No se recibieron datos");
-			}
-			cdunieco = smap1.get("CDUNIECO");
-			cdramo   = smap1.get("CDRAMO");
-			cdtipsit = smap1.get("CDTIPSIT");
-			estado   = smap1.get("ESTADO");
-			nmpoliza = smap1.get("NMPOLIZA");
-			nmsuplem = smap1.get("NMSUPLEM");
-			cdtipsup = smap1.get("cdtipsup");
+			transformaEntrada(smap1, slist1, false);
 			
-			if(StringUtils.isBlank(cdunieco))
+			exito   = true;
+			success = true;
+			
+			String cdunieco = null;
+			String cdramo   = null;
+			String cdtipsit = null;
+			String estado   = null;
+			String nmpoliza = null;
+			String nmsuplem = null;
+			String cdusuari = null;
+			String cdtipsup = null;
+			
+			//datos completos
+			try
 			{
-				throw new ApplicationException("No se recibio la sucursal");
+				if(smap1==null)
+				{
+					throw new ApplicationException("No se recibieron datos");
+				}
+				cdunieco = smap1.get("CDUNIECO");
+				cdramo   = smap1.get("CDRAMO");
+				cdtipsit = smap1.get("CDTIPSIT");
+				estado   = smap1.get("ESTADO");
+				nmpoliza = smap1.get("NMPOLIZA");
+				nmsuplem = smap1.get("NMSUPLEM");
+				cdtipsup = smap1.get("cdtipsup");
+				
+				if(StringUtils.isBlank(cdunieco))
+				{
+					throw new ApplicationException("No se recibio la sucursal");
+				}
+				if(StringUtils.isBlank(cdramo))
+				{
+					throw new ApplicationException("No se recibio el producto");
+				}
+				if(StringUtils.isBlank(cdtipsit))
+				{
+					throw new ApplicationException("No se recibio la modalidad");
+				}
+				if(StringUtils.isBlank(estado))
+				{
+					throw new ApplicationException("No se recibio el estado");
+				}
+				if(StringUtils.isBlank(nmpoliza))
+				{
+					throw new ApplicationException("No se recibio el numero de poliza");
+				}
+				if(StringUtils.isBlank(nmsuplem))
+				{
+					throw new ApplicationException("No se recibio el suplemento");
+				}
+				if(StringUtils.isBlank(cdtipsup))
+				{
+					throw new ApplicationException("No se recibio el tipo de endoso");
+				}
+				
+				if(session==null)
+				{
+					throw new ApplicationException("No hay sesion");
+				}
+				if(session.get("USUARIO")==null)
+				{
+					throw new ApplicationException("No hay usuario en la sesion");
+				}
+				
+				UserVO usuario = (UserVO)session.get("USUARIO");
+				cdusuari       = usuario.getUser();
 			}
-			if(StringUtils.isBlank(cdramo))
+			catch(ApplicationException ax)
 			{
-				throw new ApplicationException("No se recibio el producto");
-			}
-			if(StringUtils.isBlank(cdtipsit))
-			{
-				throw new ApplicationException("No se recibio la modalidad");
-			}
-			if(StringUtils.isBlank(estado))
-			{
-				throw new ApplicationException("No se recibio el estado");
-			}
-			if(StringUtils.isBlank(nmpoliza))
-			{
-				throw new ApplicationException("No se recibio el numero de poliza");
-			}
-			if(StringUtils.isBlank(nmsuplem))
-			{
-				throw new ApplicationException("No se recibio el suplemento");
-			}
-			if(StringUtils.isBlank(cdtipsup))
-			{
-				throw new ApplicationException("No se recibio el tipo de endoso");
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+				respuestaOculta = ax.getMessage();
+				logger.error(respuesta,ax);
 			}
 			
-			if(session==null)
+			//construir
+			if(exito)
 			{
-				throw new ApplicationException("No hay sesion");
-			}
-			if(session.get("USUARIO")==null)
-			{
-				throw new ApplicationException("No hay usuario en la sesion");
+				ManagerRespuestaImapSmapVO resp = endososManager.endosoAtributosSituacionGeneral(
+						cdunieco
+						,cdramo
+						,cdtipsit
+						,estado
+						,nmpoliza
+						,cdusuari
+						,cdtipsup);
+				exito           = resp.isExito();
+				respuesta       = resp.getRespuesta();
+				respuestaOculta = resp.getRespuestaOculta();
+				if(resp.isExito())
+				{
+					imap1 = resp.getImap();
+					smap1.putAll(resp.getSmap());
+				}
 			}
 			
-			UserVO usuario = (UserVO)session.get("USUARIO");
-			cdusuari       = usuario.getUser();
-		}
-		catch(ApplicationException ax)
-		{
-			long timestamp  = System.currentTimeMillis();
-			exito           = false;
-			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
-			respuestaOculta = ax.getMessage();
-			logger.error(respuesta,ax);
-		}
-		
-		//construir
-		if(exito)
-		{
-			ManagerRespuestaImapSmapVO resp = endososManager.endosoAtributosSituacionGeneral(
-					cdunieco
-					,cdramo
-					,cdtipsit
-					,estado
-					,nmpoliza
-					,cdusuari
-					,cdtipsup);
-			exito           = resp.isExito();
-			respuesta       = resp.getRespuesta();
-			respuestaOculta = resp.getRespuestaOculta();
-			if(resp.isExito())
+			result = SUCCESS;
+			if(!exito)
 			{
-				imap1 = resp.getImap();
-				smap1.putAll(resp.getSmap());
+				result = ERROR;
 			}
 		}
-		
-		String result = SUCCESS;
-		if(!exito)
+		catch(Exception ex)
 		{
-			result = ERROR;
+			logger.error("Error al constuir pantalla de endoso de atributos de situacion general",ex);
+			exito     = false;
+			result    = ERROR;
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.info(
@@ -10182,18 +10341,22 @@ public class EndososAction extends PrincipalCoreAction
 	 * @param slist1
 	 * @throws Exception
 	 */
-	private void transformaEntrada(Map<String,String>smap1, List<Map<String,String>>slist1, boolean validaLista) throws Exception
+	public void transformaEntrada(Map<String,String>smap1, List<Map<String,String>>slist1, boolean validaLista) throws Exception
 	{
+		logger.debug("##### EndososAction.transformaEntrada ######");
 		Utils.validate(smap1  , "No se recibieron datos");
-		if(validaLista)
-		{
-			Utils.validate(slist1 , "No se recibieron incisos");
-		}
 		
 		boolean origenMarcoGeneral = "MARCO_ENDOSOS_GENERAL".equals(smap1.get("pantallaOrigen"));
 		logger.debug(Utils.join("\norigenMarcoGeneral=",origenMarcoGeneral));
+		
 		if(origenMarcoGeneral)
 		{
+			logger.debug("##### EndososAction.transformaEntrada origenMarcoGeneral ######");
+			if(validaLista)
+			{
+				Utils.validate(slist1 , "No se recibieron incisos");
+			}
+			
 			smap1.put("cdunieco"    , smap1.get("CDUNIECO"));
 			smap1.put("pv_cdunieco" , smap1.get("CDUNIECO"));
 			smap1.put("cdramo"      , smap1.get("CDRAMO"));
@@ -10216,50 +10379,289 @@ public class EndososAction extends PrincipalCoreAction
 						,smap1.get("NMPOLIZA")
 						,slist1.get(0).get("NMSITUAC")) ? "1" : "0");
 			}
+			else if(smap1.get("cdtipsup").equals(TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString())
+					||smap1.get("cdtipsup").equals(TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString())
+			)
+			{
+				//necesitamos CDTIPSIT en el smap1
+				smap1.put("CDTIPSIT" , endososManager.recuperarCdtipsitInciso1(
+						smap1.get("CDUNIECO")
+						,smap1.get("CDRAMO")
+						,smap1.get("ESTADO")
+						,smap1.get("NMPOLIZA")));
+				
+				if(smap2==null)
+				{
+					smap2 = new HashMap<String,String>();
+				}
+				if(smap1.get("cdtipsup").equals(TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString()))
+				{
+					smap2.put("alta" , "si");
+				}
+				else
+				{
+					smap2.put("alta" , "no");
+				}
+			}
+			else if(smap1.get("cdtipsup").equals(TipoEndoso.INCREMENTO_EDAD_ASEGURADO.getCdTipSup().toString())
+					||smap1.get("cdtipsup").equals(TipoEndoso.DECREMENTO_EDAD_ASEGURADO.getCdTipSup().toString())
+			)
+			{
+				if(smap1.get("cdtipsup").equals(TipoEndoso.INCREMENTO_EDAD_ASEGURADO.getCdTipSup().toString()))
+				{
+					smap1.put("masedad" , "si");
+				}
+				else
+				{
+					smap1.put("masedad" , "no");
+				}
+			}
+			else if(smap1.get("cdtipsup").equals(TipoEndoso.MODIFICACION_SEXO_H_A_M.getCdTipSup().toString())
+					||smap1.get("cdtipsup").equals(TipoEndoso.MODIFICACION_SEXO_M_A_H.getCdTipSup().toString())
+			)
+			{
+				if(smap1.get("cdtipsup").equals(TipoEndoso.MODIFICACION_SEXO_H_A_M.getCdTipSup().toString()))
+				{
+					smap1.put("hombremujer" , "si");
+					if("M".equals(slist1.get(0).get("CVE_SEXO")))
+					{
+						throw new ApplicationException("Debe seleccionar un hombre");
+					}
+				}
+				else
+				{
+					smap1.put("hombremujer" , "no");
+					if("H".equals(slist1.get(0).get("CVE_SEXO")))
+					{
+						throw new ApplicationException("Debe seleccionar una mujer");
+					}
+				}
+			}
+			else if(smap1.get("cdtipsup").equals(TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString()))
+			{
+				if(!"T".equals(slist1.get(0).get("CVE_PARENTESCO")))
+				{
+					throw new ApplicationException("Debe seleccionar al titular");
+				}
+			}
+			else if(smap1.get("cdtipsup").equals(TipoEndoso.DEDUCIBLE_MAS.getCdTipSup().toString())
+					||smap1.get("cdtipsup").equals(TipoEndoso.DEDUCIBLE_MENOS.getCdTipSup().toString())
+					)
+			{
+				//necesitamos CDTIPSIT en el smap1
+				smap1.put("CDTIPSIT" , endososManager.recuperarCdtipsitInciso1(
+						smap1.get("CDUNIECO")
+						,smap1.get("CDRAMO")
+						,smap1.get("ESTADO")
+						,smap1.get("NMPOLIZA")));
+				
+				if(smap2==null)
+				{
+					smap2 = new HashMap<String,String>();
+				}
+				if(smap1.get("cdtipsup").equals(TipoEndoso.DEDUCIBLE_MAS.getCdTipSup().toString()))
+				{
+					smap2.put("masdeducible" , "si");
+				}
+				else
+				{
+					smap2.put("masdeducible" , "no");
+				}
+			}
+			else if(smap1.get("cdtipsup").equals(TipoEndoso.COPAGO_MAS.getCdTipSup().toString())
+					||smap1.get("cdtipsup").equals(TipoEndoso.COPAGO_MENOS.getCdTipSup().toString())
+					)
+			{
+				//necesitamos CDTIPSIT en el smap1
+				smap1.put("CDTIPSIT" , endososManager.recuperarCdtipsitInciso1(
+						smap1.get("CDUNIECO")
+						,smap1.get("CDRAMO")
+						,smap1.get("ESTADO")
+						,smap1.get("NMPOLIZA")));
+				
+				if(smap2==null)
+				{
+					smap2 = new HashMap<String,String>();
+				}
+				if(smap1.get("cdtipsup").equals(TipoEndoso.COPAGO_MAS.getCdTipSup().toString()))
+				{
+					smap2.put("mascopago" , "si");
+				}
+				else
+				{
+					smap2.put("mascopago" , "no");
+				}
+			}
+			else if(smap1.get("cdtipsup").equals(TipoEndoso.CANCELACION_POR_REEXPEDICION.getCdTipSup().toString()))
+			{
+				//necesitamos CDTIPSIT en el smap1
+				smap1.put("CDTIPSIT" , endososManager.recuperarCdtipsitInciso1(
+						smap1.get("CDUNIECO")
+						,smap1.get("CDRAMO")
+						,smap1.get("ESTADO")
+						,smap1.get("NMPOLIZA")));
+			}
+			else if(smap1.get("cdtipsup").equals(TipoEndoso.EXTRAPRIMA_MAS.getCdTipSup().toString())
+					||smap1.get("cdtipsup").equals(TipoEndoso.EXTRAPRIMA_MENOS.getCdTipSup().toString())
+					)
+			{
+				if(smap2==null)
+				{
+					smap2 = new HashMap<String,String>();
+				}
+				if(smap1.get("cdtipsup").equals(TipoEndoso.EXTRAPRIMA_MAS.getCdTipSup().toString()))
+				{
+					smap2.put("masextraprima" , "si");
+				}
+				else
+				{
+					smap2.put("masextraprima" , "no");
+				}
+			}
+			else if(smap1.get("cdtipsup").equals(TipoEndoso.CAMBIO_FORMA_PAGO.getCdTipSup().toString()))
+			{
+				//necesitamos CDTIPSIT en el smap1
+				smap1.put("CDTIPSIT" , endososManager.recuperarCdtipsitInciso1(
+						smap1.get("CDUNIECO")
+						,smap1.get("CDRAMO")
+						,smap1.get("ESTADO")
+						,smap1.get("NMPOLIZA")));
+			}
+			else if(smap1.get("cdtipsup").equals(TipoEndoso.CAMBIO_AGENTE.getCdTipSup().toString()))
+			{
+				//necesitamos CDTIPSIT en el smap1
+				smap1.put("CDTIPSIT" , endososManager.recuperarCdtipsitInciso1(
+						smap1.get("CDUNIECO")
+						,smap1.get("CDRAMO")
+						,smap1.get("ESTADO")
+						,smap1.get("NMPOLIZA")));
+			}
+			else if(smap1.get("cdtipsup").equals(TipoEndoso.CAMBIO_CONTRATANTE.getCdTipSup().toString()))
+			{
+				//necesitamos CDTIPSIT en el smap1
+				smap1.put("CDTIPSIT" , endososManager.recuperarCdtipsitInciso1(
+						smap1.get("CDUNIECO")
+						,smap1.get("CDRAMO")
+						,smap1.get("ESTADO")
+						,smap1.get("NMPOLIZA")));
+			}
+			else if(smap1.get("cdtipsup").equals(TipoEndoso.DESPAGO.getCdTipSup().toString()))
+			{
+				//necesitamos CDTIPSIT en el smap1
+				smap1.put("CDTIPSIT" , endososManager.recuperarCdtipsitInciso1(
+						smap1.get("CDUNIECO")
+						,smap1.get("CDRAMO")
+						,smap1.get("ESTADO")
+						,smap1.get("NMPOLIZA")));
+			}
+			else if(smap1.get("cdtipsup").equals(TipoEndoso.SUMA_ASEGURADA_INCREMENTO.getCdTipSup().toString())
+					||smap1.get("cdtipsup").equals(TipoEndoso.SUMA_ASEGURADA_DECREMENTO.getCdTipSup().toString())
+			)
+			{
+				//necesitamos CDTIPSIT en el smap1
+				smap1.put("CDTIPSIT" , endososManager.recuperarCdtipsitInciso1(
+						smap1.get("CDUNIECO")
+						,smap1.get("CDRAMO")
+						,smap1.get("ESTADO")
+						,smap1.get("NMPOLIZA")));
+			}
+			else if(smap1.get("cdtipsup").equals(TipoEndoso.BENEFICIARIO_AUTO.getCdTipSup().toString()))
+			{
+				smap1.put("cdrolPipes"   , "3");
+				smap1.put("ultimaImagen" , "S");
+			}
+			else if(smap1.get("cdtipsup").equals(TipoEndoso.COASEGURO_INCREMENTO.getCdTipSup().toString())
+					||smap1.get("cdtipsup").equals(TipoEndoso.COASEGURO_DECREMENTO.getCdTipSup().toString())
+			)
+			{
+				//necesitamos CDTIPSIT en el smap1
+				smap1.put("CDTIPSIT" , endososManager.recuperarCdtipsitInciso1(
+						smap1.get("CDUNIECO")
+						,smap1.get("CDRAMO")
+						,smap1.get("ESTADO")
+						,smap1.get("NMPOLIZA")));
+			}
 			
 			if(validaLista)
 			{
-				smap1.put("cdtipsit"        , slist1.get(0).get("CDTIPSIT"));
-				smap1.put("nmsituac"        , slist1.get(0).get("NMSITUAC"));
-				smap1.put("pv_nmsituac"     , slist1.get(0).get("NMSITUAC"));
-				smap1.put("pv_cdperson"     , slist1.get(0).get("CDPERSON"));
-				smap1.put("cdrfc"           , slist1.get(0).get("CDRFC"));
-				smap1.put("pv_cdrol"        , slist1.get(0).get("CDROL"));
-				smap1.put("nombreAsegurado" ,
+				Map<String,String> inciso1 = slist1.get(0);
+				smap1.put("Apellido_Materno" , inciso1.get("DSAPELLIDO"));
+				smap1.put("Apellido_Paterno" , inciso1.get("DSAPELLIDO1"));
+				smap1.put("CANALING"         , inciso1.get("CANALING"));
+				smap1.put("CONDUCTO"         , inciso1.get("CONDUCTO"));
+				smap1.put("PTCUMUPR"         , inciso1.get("PTCUMUPR"));
+				smap1.put("Parentesco"       , inciso1.get("CVE_PARENTESCO"));
+				smap1.put("RESIDENCIA"       , inciso1.get("RESIDENCIA"));
+				smap1.put("cdideext"         , inciso1.get("CDIDEEXT"));
+				smap1.put("cdideper"         , inciso1.get("CDIDEPER"));
+				smap1.put("cdperson"         , inciso1.get("CDPERSON"));
+				smap1.put("cdrfc"            , inciso1.get("CDRFC"));
+				smap1.put("cdrol"            , inciso1.get("CDROL"));
+				smap1.put("fenacimi"         , inciso1.get("FENACIMI"));
+				smap1.put("nacional"         , inciso1.get("CDNACION"));
+				smap1.put("nmsituac"         , inciso1.get("NMSITUAC"));
+				smap1.put("nombre"           , inciso1.get("DSNOMBRE"));
+				smap1.put("segundo_nombre"   , inciso1.get("DSNOMBRE1"));
+				smap1.put("sexo"             , inciso1.get("CVE_SEXO"));
+				smap1.put("swexiper"         , inciso1.get("SWEXIPER"));
+				smap1.put("tpersona"         , inciso1.get("OTFISJUR"));
+				
+				smap1.put("cdtipsit"         , inciso1.get("CDTIPSIT"));
+				smap1.put("CDTIPSIT"         , inciso1.get("CDTIPSIT"));
+				smap1.put("nmsituac"         , inciso1.get("NMSITUAC"));
+				smap1.put("pv_nmsituac"      , inciso1.get("NMSITUAC"));
+				smap1.put("pv_cdperson"      , inciso1.get("CDPERSON"));
+				smap1.put("cdrfc"            , inciso1.get("CDRFC"));
+				smap1.put("pv_cdrol"         , inciso1.get("CDROL"));
+				smap1.put("nombreAsegurado"  ,
 						Utils.join(
-								slist1.get(0).get("DSNOMBRE")
+								inciso1.get("DSNOMBRE")
 								," "
-								,slist1.get(0).get("DSNOMBRE1")!=null?slist1.get(0).get("DSNOMBRE1"):""
+								,inciso1.get("DSNOMBRE1")!=null?inciso1.get("DSNOMBRE1"):""
 								," "
-								,slist1.get(0).get("DSAPELLIDO")
+								,inciso1.get("DSAPELLIDO")
 								," "
-								,slist1.get(0).get("DSAPELLIDO1")
+								,inciso1.get("DSAPELLIDO1")
 								));
+				smap1.put("nombrecompleto"  ,
+						Utils.join(
+								inciso1.get("DSNOMBRE")
+								," "
+								,inciso1.get("DSNOMBRE1")!=null?inciso1.get("DSNOMBRE1"):""
+								," "
+								,inciso1.get("DSAPELLIDO")
+								," "
+								,inciso1.get("DSAPELLIDO1")
+								));
+				
+				for(Map<String,String> inciso : slist1)
+				{
+					inciso.put("Apellido_Materno" , inciso.get("DSAPELLIDO"));
+					inciso.put("Apellido_Paterno" , inciso.get("DSAPELLIDO1"));
+					inciso.put("CANALING"         , inciso.get("CANALING"));
+					inciso.put("CONDUCTO"         , inciso.get("CONDUCTO"));
+					inciso.put("PTCUMUPR"         , inciso.get("PTCUMUPR"));
+					inciso.put("Parentesco"       , inciso.get("CVE_PARENTESCO"));
+					inciso.put("RESIDENCIA"       , inciso.get("RESIDENCIA"));
+					inciso.put("cdideext"         , inciso.get("CDIDEEXT"));
+					inciso.put("cdideper"         , inciso.get("CDIDEPER"));
+					inciso.put("cdperson"         , inciso.get("CDPERSON"));
+					inciso.put("cdrfc"            , inciso.get("CDRFC"));
+					inciso.put("cdrol"            , inciso.get("CDROL"));
+					inciso.put("fenacimi"         , inciso.get("FENACIMI"));
+					inciso.put("nacional"         , inciso.get("CDNACION"));
+					inciso.put("nmsituac"         , inciso.get("NMSITUAC"));
+					inciso.put("nombre"           , inciso.get("DSNOMBRE"));
+					inciso.put("segundo_nombre"   , inciso.get("DSNOMBRE1"));
+					inciso.put("sexo"             , inciso.get("CVE_SEXO"));
+					inciso.put("swexiper"         , inciso.get("SWEXIPER"));
+					inciso.put("tpersona"         , inciso.get("OTFISJUR"));
+				}
 			}
-			
-			for(Map<String,String> inciso : slist1)
-			{
-				inciso.put("Apellido_Materno" , inciso.get("DSAPELLIDO"));
-				inciso.put("Apellido_Paterno" , inciso.get("DSAPELLIDO1"));
-				inciso.put("CANALING"         , inciso.get("CANALING"));
-				inciso.put("CONDUCTO"         , inciso.get("CONDUCTO"));
-				inciso.put("PTCUMUPR"         , inciso.get("PTCUMUPR"));
-				inciso.put("Parentesco"       , inciso.get("CVE_PARENTESCO"));
-				inciso.put("RESIDENCIA"       , inciso.get("RESIDENCIA"));
-				inciso.put("cdideext"         , inciso.get("CDIDEEXT"));
-				inciso.put("cdideper"         , inciso.get("CDIDEPER"));
-				inciso.put("cdperson"         , inciso.get("CDPERSON"));
-				inciso.put("cdrfc"            , inciso.get("CDRFC"));
-				inciso.put("cdrol"            , inciso.get("CDROL"));
-				inciso.put("fenacimi"         , inciso.get("FENACIMI"));
-				inciso.put("nacional"         , inciso.get("CDNACION"));
-				inciso.put("nmsituac"         , inciso.get("NMSITUAC"));
-				inciso.put("nombre"           , inciso.get("DSNOMBRE"));
-				inciso.put("segundo_nombre"   , inciso.get("DSNOMBRE1"));
-				inciso.put("sexo"             , inciso.get("CVE_SEXO"));
-				inciso.put("swexiper"         , inciso.get("SWEXIPER"));
-				inciso.put("tpersona"         , inciso.get("OTFISJUR"));
-			}
+		}
+		else
+		{
+			logger.debug("##### EndososAction.transformaEntrada normal ######");
 		}
 	}
 	
