@@ -102,6 +102,8 @@ _p34_gridFamiliasColumns.push
 
 Ext.onReady(function()
 {
+    Ext.Ajax.timeout = 3*60*1000;
+
     ////// modelos //////
     Ext.define('_p34_modeloPoliza',
     {
@@ -1044,7 +1046,6 @@ function _p34_mostrarListaEndosos(nivel,stamp)
         ,_p34_window : 'si'
         ,itemId      : '_p34_windowEndosos'
         ,closeAction : 'destroy'
-        ,width       : 340
         ,maxHeight   : 300
         ,autoScroll  : true
         ,modal       : true
@@ -1053,7 +1054,7 @@ function _p34_mostrarListaEndosos(nivel,stamp)
             Ext.create('Ext.grid.Panel',
             {
                 itemId       : '_p34_gridEndosos'
-                ,width       : 300
+                ,width       : 500
                 ,store       : _p34_storeEndosos
                 ,nivel       : nivel
                 ,stamp       : stamp

@@ -2049,6 +2049,36 @@ public class EndososManagerImpl implements EndososManager
 		setCheckpoint("0");
 	}
 	
+	@Override
+	public boolean esMismaPersonaContratante(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			)
+	{
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ esMismaPersonaContratante @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ nmsituac=" , nmsituac
+				));
+		
+		boolean esContrat = endososDAO.esMismaPersonaContratante(cdunieco,cdramo,estado,nmpoliza,nmsituac);
+		
+		logger.debug(Utils.join(
+				 "\n@@@@@@ esContrat=",esContrat
+				,"\n@@@@@@ esMismaPersonaContratante @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		return esContrat;
+	}
+	
 	public int recuperarDiasDiferenciaEndosoValidos(String cdramo,String cdtipsup)throws Exception
 	{
 		return endososDAO.recuperarDiasDiferenciaEndosoValidos(cdramo,cdtipsup);

@@ -294,21 +294,29 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////////////////////////*/
 	public String pantallaEndosoDomicilio()
 	{
-		logger.debug(new StringBuilder()
-		        .append("\n#####################################")
-		        .append("\n#####################################")
-		        .append("\n###### pantallaEndosoDomicilio ######")
-		        .append("\n######                         ######").toString());
-		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		logger.debug(new StringBuilder("session: ").append(session).toString());
+		logger.debug(Utils.join(
+		         "\n#####################################"
+		        ,"\n###### pantallaEndosoDomicilio ######"
+		        ,"\n###### smap1="  , smap1
+		        ,"\n###### slist1=" , slist1
+		        ));
 		
-		// Valida si hay un endoso anterior pendiente:
-		RespuestaVO resp = endososManager.validaEndosoAnterior(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"),
-				smap1.get("pv_estado"), smap1.get("pv_nmpoliza"),
-				TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString());
-		error = resp.getMensaje();
+		respuesta = ERROR;
 		
-		if(resp.isSuccess()) {
+		try
+		{
+			transformaEntrada(smap1, slist1, true);
+			
+			// Valida si hay un endoso anterior pendiente:
+			RespuestaVO resp = endososManager.validaEndosoAnterior(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"),
+					smap1.get("pv_estado"), smap1.get("pv_nmpoliza"),
+					TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString());
+			if(!resp.isSuccess())
+			{
+				throw new ApplicationException(resp.getMensaje());
+			}
+			error = resp.getMensaje();
+			
 			ComplementariosCoberturasAction actionDomicilio=new ComplementariosCoberturasAction();
 			actionDomicilio.setSession(session);
 			actionDomicilio.setSmap1(smap1);
@@ -318,15 +326,23 @@ public class EndososAction extends PrincipalCoreAction
 			item1=actionDomicilio.getItem1();
 			item2=actionDomicilio.getItem2();
 			item3=actionDomicilio.getItem3();
+			
+			respuesta = SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			logger.error("error al cargar pantalla de endoso de valosit simple",ex);
+			error=ex.getMessage();
+			respuesta = ERROR;
 		}
 		
-		logger.debug(new StringBuilder()
-		        .append("\n######                         ######")
-		        .append("\n###### pantallaEndosoDomicilio ######")
-		        .append("\n#####################################")
-		        .append("\n#####################################").toString());
+		logger.debug(Utils.join(
+				 "\n###### respuesta=",respuesta
+				,"\n###### pantallaEndosoDomicilio ######"
+		        ,"\n#####################################"
+		        ));
 		
-		return resp.isSuccess() ? SUCCESS : ERROR;
+		return respuesta;
 	}
 	/*//////////////////////////////////////////*/
 	////// pantalla de endoso de domicilio Auto  //////
@@ -635,20 +651,22 @@ public class EndososAction extends PrincipalCoreAction
 	smap1.ntramite:662
 	*/
 	/*//////////////////////////////////////////*/
-	public String pantallaEndosoDomicilioSimple() {
-		
-		logger.debug(new StringBuilder()
-				.append("\n###########################################")
-				.append("\n###########################################")
-				.append("\n###### pantallaEndosoDomicilioSimple ######")
-				.append("\n######                               ######").toString());
-		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		logger.debug(new StringBuilder("session: ").append(session).toString());
+	public String pantallaEndosoDomicilioSimple()
+	{
+		logger.debug(Utils.join(
+				 "\n###########################################"
+				,"\n###### pantallaEndosoDomicilioSimple ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### slist1=" , slist1
+				));
 		
 		String respuesta = ERROR;
-		endosoSimple = true;
+		endosoSimple     = true;
 		
-		try {
+		try
+		{
+			transformaEntrada(smap1, slist1, true);
+			
 			String cdunieco = smap1.get("pv_cdunieco");
 			String cdramo   = smap1.get("pv_cdramo");
 			String estado   = smap1.get("pv_estado");
@@ -682,17 +700,18 @@ public class EndososAction extends PrincipalCoreAction
 			item3=actionDomicilio.getItem3();
 			
 			respuesta = SUCCESS;
-		} catch(Exception ex) {
+		}
+		catch(Exception ex)
+		{
 			logger.error("error al cargar pantalla de endoso de valosit simple",ex);
 			error=ex.getMessage();
 			respuesta = ERROR;
 		}
-			
-		logger.debug(new StringBuilder()
-			.append("\n######                               ######")
-			.append("\n###### pantallaEndosoDomicilioSimple ######")
-			.append("\n###########################################")
-			.append("\n###########################################").toString());
+		
+		logger.debug(Utils.join(
+				 "\n###### pantallaEndosoDomicilioSimple ######"
+				,"\n###########################################"
+				));
 		
 		return respuesta;
 	}
@@ -727,28 +746,38 @@ public class EndososAction extends PrincipalCoreAction
 		tpersona: "F"}]
 	*/
 	/*///////////////////////////////////////*/
-	public String pantallaEndosoNombres() {
-		logger.debug(new StringBuilder()
-				.append("\n###################################")
-				.append("\n###################################")
-				.append("\n###### pantallaEndosoNombres ######")
-				.append("\n######                       ######").toString());
-		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		logger.debug(new StringBuilder("slist1: ").append(slist1).toString());
+	public String pantallaEndosoNombres()
+	{
+		logger.debug(Utils.join(
+				 "\n###################################"
+				,"\n###### pantallaEndosoNombres ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### slist1=" , slist1
+				));
 		
-		// Valida si hay un endoso anterior pendiente:
-		RespuestaVO resp = endososManager.validaEndosoAnterior(
-				smap1.get("cdunieco"), smap1.get("cdramo"), smap1.get("estado"), smap1.get("nmpoliza"),
-				TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString());
-		error = resp.getMensaje();
+		RespuestaVO resp = null;
 		
-		logger.debug(new StringBuilder()
-				.append("\n###################################")
-				.append("\n###################################")
-				.append("\n###### pantallaEndosoNombres ######")
-				.append("\n######                       ######").toString());
+		try
+		{
+			transformaEntrada(smap1, slist1, true);
+			
+			//Valida si hay un endoso anterior pendiente:
+			resp = endososManager.validaEndosoAnterior(
+					smap1.get("cdunieco"), smap1.get("cdramo"), smap1.get("estado"), smap1.get("nmpoliza"),
+					TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString());
+			error = resp.getMensaje();
+		}
+		catch(Exception ex)
+		{
+			logger.debug("Error al convertir entrada al endoso de nombres",ex);
+		}
 		
-		return resp.isSuccess() ? SUCCESS : ERROR;
+		logger.debug(Utils.join(
+				 "\n###### pantallaEndosoNombres ######"
+				,"\n###################################"
+				));
+		
+		return resp!=null&&resp.isSuccess() ? SUCCESS : ERROR;
 	}
 	/*///////////////////////////////////////*/
 	////// pantalla de endoso de nombres //////
@@ -781,20 +810,23 @@ public class EndososAction extends PrincipalCoreAction
 		tpersona: "F"}]
 	*/
 	/*///////////////////////////////////////*/
-	public String pantallaEndosoNombresSimple() {
-		logger.debug(new StringBuilder()
-				.append("\n#########################################")
-				.append("\n#########################################")
-				.append("\n###### pantallaEndosoNombresSimple ######")
-				.append("\n######                             ######").toString());
-		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		logger.debug(new StringBuilder("slist1: ").append(slist1).toString());
+	public String pantallaEndosoNombresSimple()
+	{
+		logger.debug(Utils.join(
+				 "\n#########################################"
+				,"\n###### pantallaEndosoNombresSimple ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### slist1=" , slist1
+				));
 		
 		String respuesta = ERROR;
 		
 		endosoSimple = true;
 		
-		try {
+		try
+		{
+			transformaEntrada(smap1,slist1,true);
+			
 			String cdunieco = smap1.get("cdunieco");
 			String cdramo   = smap1.get("cdramo");
 			String estado   = smap1.get("estado");
@@ -817,17 +849,18 @@ public class EndososAction extends PrincipalCoreAction
 			mensaje = endososManager.obtieneFechaInicioVigenciaPoliza(cdunieco, cdramo, estado, nmpoliza);
 			
 			respuesta = SUCCESS;
-		} catch(Exception ex) {
+		}
+		catch(Exception ex)
+		{
 			logger.error("Error al abrir la pantalla de endoso de nombres simple", ex);
 			respuesta = ERROR;
-			error = ex.getMessage();
+			error = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(new StringBuilder()
-				.append("\n######                             ######")
-				.append("\n###### pantallaEndosoNombresSimple ######")
-				.append("\n#########################################")
-				.append("\n#########################################").toString());
+		logger.debug(Utils.join(
+				 "\n###### pantallaEndosoNombresSimple ######"
+				,"\n#########################################"
+				));
 		
 		return respuesta;
 	}
@@ -2471,55 +2504,67 @@ public class EndososAction extends PrincipalCoreAction
 	/*/////////////////////////////*/
 	public String entrarEndosoValositBasico()
 	{
-		logger.debug(new StringBuilder()
-		        .append("\n#######################################")
-		        .append("\n#######################################")
-		        .append("\n###### entrarEndosoValositBasico ######")
-		        .append("\n######                     ############").toString());
-		logger.debug(new StringBuilder("smap1: ").append(smap1));
+		logger.debug(Utils.join(
+				 "\n#######################################"
+		        ,"\n###### entrarEndosoValositBasico ######"
+		        ,"\n###### smap1="  , smap1
+		        ,"\n###### slist1=" , slist1
+		        ));
 		
-		// Valida si hay un endoso anterior pendiente:
-		RespuestaVO resp = endososManager.validaEndosoAnterior(
-				smap1.get("cdunieco")
-				,smap1.get("cdramo")
-				,smap1.get("estado")
-				,smap1.get("nmpoliza")
-				,TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString());
-		error = resp.getMensaje();
+		String respuesta = ERROR;
 		
-		if(resp.isSuccess()) {
-			try {
-				String cdusuari;
-				{
-					UserVO usuario = (UserVO)session.get("USUARIO");
-					cdusuari=usuario.getUser();
-				}
-				List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"),cdusuari);
-				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-				gc.setCdtipsit(smap1.get("cdtipsit"));
-				List<ComponenteVO>tatriTemp=new ArrayList<ComponenteVO>(0);
-				//si es agrupado solo dejar los atributos con N, si es individual solo los que tengan S
-				for(ComponenteVO t:tatrisit) {
-					//S=individual
-					if(t.getSwsuscri().equalsIgnoreCase("S")&&t.getSwtarifi().equalsIgnoreCase("N")) {
-						tatriTemp.add(t);
-					}
-				}
-				tatrisit=tatriTemp;
-				gc.genera(tatrisit);
-				item1=gc.getFields();
-				item2=gc.getItems();
-			} catch(Exception ex) {
-				logger.error("error al mostrar la pantalla de valosit", ex);
+		try
+		{
+			transformaEntrada(smap1, slist1, true);
+			
+			// Valida si hay un endoso anterior pendiente:
+			RespuestaVO resp = endososManager.validaEndosoAnterior(
+					smap1.get("cdunieco")
+					,smap1.get("cdramo")
+					,smap1.get("estado")
+					,smap1.get("nmpoliza")
+					,TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString());
+			error = resp.getMensaje();
+			if(!resp.isSuccess())
+			{
+				throw new ApplicationException(resp.getMensaje());
 			}
+			
+			String cdusuari;
+			{
+				UserVO usuario = (UserVO)session.get("USUARIO");
+				cdusuari=usuario.getUser();
+			}
+			List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"),cdusuari);
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.setCdtipsit(smap1.get("cdtipsit"));
+			List<ComponenteVO>tatriTemp=new ArrayList<ComponenteVO>(0);
+			//si es agrupado solo dejar los atributos con N, si es individual solo los que tengan S
+			for(ComponenteVO t:tatrisit) {
+				//S=individual
+				if(t.getSwsuscri().equalsIgnoreCase("S")&&t.getSwtarifi().equalsIgnoreCase("N")) {
+					tatriTemp.add(t);
+				}
+			}
+			tatrisit=tatriTemp;
+			gc.genera(tatrisit);
+			item1=gc.getFields();
+			item2=gc.getItems();
+			
+			respuesta = SUCCESS;
 		}
-		logger.debug(""
-				+ "\n######                     ############"
-				+ "\n###### entrarEndosoValositBasico ######"
-				+ "\n#######################################"
-				+ "\n#######################################"
-				);
-		return resp.isSuccess() ? SUCCESS : ERROR;
+		catch(Exception ex)
+		{
+			logger.error("error al mostrar pantalla de endoso valosit basico",ex);
+			error = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.join(
+				 "\n###### respuesta=",respuesta
+				,"\n###### entrarEndosoValositBasico ######"
+				,"\n#######################################"
+		        ));
+		return respuesta;
 	}
 	/*/////////////////////////////*/
 	////// endoso B de valosit //////
@@ -2537,18 +2582,20 @@ public class EndososAction extends PrincipalCoreAction
 	//////     ntramite        //////
 	//////     nmsuplem        //////
 	/*/////////////////////////////*/
-	public String entrarEndosoValositBasicoSimple() {
+	public String entrarEndosoValositBasicoSimple()
+	{
+		logger.debug(Utils.join(
+		         "\n#############################################"
+		        ,"\n###### entrarEndosoValositBasicoSimple ######"
+		        ,"\n###### smap1="  , smap1
+		        ,"\n###### slist1=" , slist1
+		        ));
 		
-		logger.debug(new StringBuilder()
-		        .append("\n##############################################")
-		        .append("\n##############################################")
-		        .append("\n###### entrarEndosoValositBasicoSimple ######")
-		        .append("\n######                           #############").toString());
-		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		
-		endosoSimple = true;
+		endosoSimple     = true;
 		String respuesta = ERROR;
-		try {
+		try
+		{
+			transformaEntrada(smap1, slist1, true);
 			
 			String cdunieco = smap1.get("cdunieco");
 			String cdramo   = smap1.get("cdramo");
@@ -2567,7 +2614,7 @@ public class EndososAction extends PrincipalCoreAction
 					TipoEndoso.CORRECCION_DATOS_ASEGURADOS.getCdTipSup().toString());
 			// Si la validacion no es exitosa lanzamos excepcion con el mensaje de error:
 			if(!resp.isSuccess()) {
-				throw new Exception(resp.getMensaje());
+				throw new ApplicationException(resp.getMensaje());
 			}
 			
 			mensaje = endososManager.obtieneFechaInicioVigenciaPoliza(cdunieco, cdramo, estado, nmpoliza);
@@ -2593,17 +2640,19 @@ public class EndososAction extends PrincipalCoreAction
 			item2=gc.getItems();
 			
 			respuesta = SUCCESS;
-		} catch(Exception ex) {
+		}
+		catch(Exception ex)
+		{
 			respuesta = ERROR;
-			error = ex.getMessage();
+			error     = Utils.manejaExcepcion(ex);
 			logger.error("Error al mostrar la pantalla de valosit", ex);
 		}
 		
-		logger.debug(new StringBuilder()
-		        .append("\n######                           #############")
-		        .append("\n###### entrarEndosoValositBasicoSimple ######")
-		        .append("\n##############################################")
-		        .append("\n##############################################").toString());
+		logger.debug(Utils.join(
+				 "\n###### respuesta=",respuesta
+				,"\n###### entrarEndosoValositBasicoSimple ######"
+		        ,"\n#############################################"
+		        ));
 		
 		return respuesta;
 	}
@@ -2624,7 +2673,7 @@ public class EndososAction extends PrincipalCoreAction
 	//////     confirmar                 //////
 	////// parametros: tvalosit          //////
 	/*///////////////////////////////////////*/
-	public String guardarEndosoValositBasico() {
+	public String guardarEndosoValositBasico(){
 		logger.debug(""
 				+ "\n########################################"
 				+ "\n########################################"
@@ -10123,6 +10172,95 @@ public class EndososAction extends PrincipalCoreAction
 				,"\n###############################"
 				));
 		return SUCCESS;
+	}
+	
+	/**
+	 * Transforma los parametros que se reciben del marco de endosos nuevo
+	 * en parametros que enviaban el marco de endosos anterior, para poder
+	 * usar las pantallas de endosos anteriores en el nuevo marco
+	 * @param smap1
+	 * @param slist1
+	 * @throws Exception
+	 */
+	private void transformaEntrada(Map<String,String>smap1, List<Map<String,String>>slist1, boolean validaLista) throws Exception
+	{
+		Utils.validate(smap1  , "No se recibieron datos");
+		if(validaLista)
+		{
+			Utils.validate(slist1 , "No se recibieron incisos");
+		}
+		
+		boolean origenMarcoGeneral = "MARCO_ENDOSOS_GENERAL".equals(smap1.get("pantallaOrigen"));
+		logger.debug(Utils.join("\norigenMarcoGeneral=",origenMarcoGeneral));
+		if(origenMarcoGeneral)
+		{
+			smap1.put("cdunieco"    , smap1.get("CDUNIECO"));
+			smap1.put("pv_cdunieco" , smap1.get("CDUNIECO"));
+			smap1.put("cdramo"      , smap1.get("CDRAMO"));
+			smap1.put("pv_cdramo"   , smap1.get("CDRAMO"));
+			smap1.put("estado"      , smap1.get("ESTADO"));
+			smap1.put("pv_estado"   , smap1.get("ESTADO"));
+			smap1.put("nmpoliza"    , smap1.get("NMPOLIZA"));
+			smap1.put("pv_nmpoliza" , smap1.get("NMPOLIZA"));
+			smap1.put("ntramite"    , smap1.get("NTRAMITE"));
+			smap1.put("nmsuplem"    , smap1.get("NMSUPLEM"));
+			
+			if(smap1.get("cdtipsup").equals(TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString())
+					||smap1.get("cdtipsup").equals(TipoEndoso.CORRECCION_DATOS_ASEGURADOS.getCdTipSup().toString())
+					)
+			{
+				smap1.put("habilitaEdicion" , endososManager.esMismaPersonaContratante(
+						smap1.get("CDUNIECO")
+						,smap1.get("CDRAMO")
+						,smap1.get("ESTADO")
+						,smap1.get("NMPOLIZA")
+						,slist1.get(0).get("NMSITUAC")) ? "1" : "0");
+			}
+			
+			if(validaLista)
+			{
+				smap1.put("cdtipsit"        , slist1.get(0).get("CDTIPSIT"));
+				smap1.put("nmsituac"        , slist1.get(0).get("NMSITUAC"));
+				smap1.put("pv_nmsituac"     , slist1.get(0).get("NMSITUAC"));
+				smap1.put("pv_cdperson"     , slist1.get(0).get("CDPERSON"));
+				smap1.put("cdrfc"           , slist1.get(0).get("CDRFC"));
+				smap1.put("pv_cdrol"        , slist1.get(0).get("CDROL"));
+				smap1.put("nombreAsegurado" ,
+						Utils.join(
+								slist1.get(0).get("DSNOMBRE")
+								," "
+								,slist1.get(0).get("DSNOMBRE1")!=null?slist1.get(0).get("DSNOMBRE1"):""
+								," "
+								,slist1.get(0).get("DSAPELLIDO")
+								," "
+								,slist1.get(0).get("DSAPELLIDO1")
+								));
+			}
+			
+			for(Map<String,String> inciso : slist1)
+			{
+				inciso.put("Apellido_Materno" , inciso.get("DSAPELLIDO"));
+				inciso.put("Apellido_Paterno" , inciso.get("DSAPELLIDO1"));
+				inciso.put("CANALING"         , inciso.get("CANALING"));
+				inciso.put("CONDUCTO"         , inciso.get("CONDUCTO"));
+				inciso.put("PTCUMUPR"         , inciso.get("PTCUMUPR"));
+				inciso.put("Parentesco"       , inciso.get("CVE_PARENTESCO"));
+				inciso.put("RESIDENCIA"       , inciso.get("RESIDENCIA"));
+				inciso.put("cdideext"         , inciso.get("CDIDEEXT"));
+				inciso.put("cdideper"         , inciso.get("CDIDEPER"));
+				inciso.put("cdperson"         , inciso.get("CDPERSON"));
+				inciso.put("cdrfc"            , inciso.get("CDRFC"));
+				inciso.put("cdrol"            , inciso.get("CDROL"));
+				inciso.put("fenacimi"         , inciso.get("FENACIMI"));
+				inciso.put("nacional"         , inciso.get("CDNACION"));
+				inciso.put("nmsituac"         , inciso.get("NMSITUAC"));
+				inciso.put("nombre"           , inciso.get("DSNOMBRE"));
+				inciso.put("segundo_nombre"   , inciso.get("DSNOMBRE1"));
+				inciso.put("sexo"             , inciso.get("CVE_SEXO"));
+				inciso.put("swexiper"         , inciso.get("SWEXIPER"));
+				inciso.put("tpersona"         , inciso.get("OTFISJUR"));
+			}
+		}
 	}
 	
 	/****************************** BASE ACTION **********************************/
