@@ -671,14 +671,14 @@ function _8_confirmar()
         });
         
         debug('datos que se enviaran:',json);
-        _8_panelPri.setLoading(true);
+        _setLoading(true,_8_panelPri);
         Ext.Ajax.request(
         {
             url       : _8_urlGuardar
             ,jsonData : json
             ,success  : function(response)
             {
-                _8_panelPri.setLoading(false);
+                _setLoading(false,_8_panelPri);
                 json=Ext.decode(response.responseText);
                 debug('datos recibidos:',json);
                 if(json.success==true)
@@ -700,7 +700,7 @@ function _8_confirmar()
             }
             ,failure  : function()
             {
-                _8_panelPri.setLoading(false);
+                _setLoading(false,_8_panelPri);
                 errorComunicacion();
             }
         });

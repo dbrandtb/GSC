@@ -147,7 +147,7 @@ Ext.onReady(function()
     
     ////////////////////
     ////// loader //////
-    _8_panelPri.setLoading(true);
+    _setLoading(true,_8_panelPri);
     Ext.Ajax.request(
     {
     	url      : _8_urlLoaderLectura
@@ -160,7 +160,7 @@ Ext.onReady(function()
     	}
     	,success : function(response)
     	{
-    		_8_panelPri.setLoading(false);
+    		_setLoading(false,_8_panelPri);
     		var json = Ext.decode(response.responseText);
     		debug('respuesta:',json);
     		if(json.success==true)
@@ -170,7 +170,7 @@ Ext.onReady(function()
     	}
         ,failure : function()
         {
-        	_8_panelPri.setLoading(false);
+        	_setLoading(false,_8_panelPri);
         	mensajeError('Error al cargar los datos de la p&oacute;liza');
         }
     });
@@ -231,14 +231,14 @@ function _8_confirmar()
             ,smap3 : _8_formLectura.getValues()
         }
         debug('datos que se enviaran:',json);
-        _8_panelPri.setLoading(true);
+        _setLoading(true,_8_panelPri);
         Ext.Ajax.request(
         {
             url       : _8_urlGuardar
             ,jsonData : json
             ,success  : function(response)
             {
-                _8_panelPri.setLoading(false);
+                _setLoading(false,_8_panelPri);
                 json=Ext.decode(response.responseText);
                 debug('datos recibidos:',json);
                 if(json.success==true)
@@ -260,7 +260,7 @@ function _8_confirmar()
             }
             ,failure  : function()
             {
-                _8_panelPri.setLoading(false);
+                _setLoading(false,_8_panelPri);
                 errorComunicacion();
             }
         });

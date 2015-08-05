@@ -968,14 +968,14 @@ Ext.onReady(function()
 	    		});
 	    		
 	    		debug('json:',json);
-	    		panendabaseguPanelPrincipal.setLoading(true);
+	    		_setLoading(true,panendabaseguPanelPrincipal);
 	    		Ext.Ajax.request(
 	    		{
 	    			url       : panendabaseguUrlSave
 	    			,jsonData : json
 	    			,success  : function(response)
 		            {
-	    				panendabaseguPanelPrincipal.setLoading(false);
+	    				_setLoading(false,panendabaseguPanelPrincipal);
 	    				json=Ext.decode(response.responseText);
 	    				debug('response',json);
 	    				if(json.success==true)
@@ -1004,7 +1004,7 @@ Ext.onReady(function()
 		            }
 	    		    ,failure  : function()
 	    		    {
-	    		    	panendabaseguPanelPrincipal.setLoading(false);
+	    		    	_setLoading(false,panendabaseguPanelPrincipal);
 	    		    	errorComunicacion();
 	    		    }
 	    		});

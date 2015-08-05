@@ -278,7 +278,7 @@ Ext.onReady(function()
     
     ////////////////////
     ////// loader //////
-    _10_panelPri.setLoading(true);
+    _setLoading(true,_10_panelPri);
     _10_storeAgentes.load({
 		params: {
     		'smap1.cdunieco'  : _10_smap1.CDUNIECO
@@ -288,7 +288,7 @@ Ext.onReady(function()
     		,'smap1.nmsuplem' : _10_smap1.NMSUPLEM
     	},
 		callback: function(records, operation, success){
-			_10_panelPri.setLoading(false);
+			_setLoading(false,_10_panelPri);
     		if(!success){
     			mensajeError('Error al cargar los Agentes.');
     			//////////////////////////////////

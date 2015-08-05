@@ -269,7 +269,7 @@ Ext.onReady(function(){
                     		if(form.isValid())
                     		{
                     			debug(endnomStoreAseg.getAt(0));
-                    			form.setLoading(true);
+                    			_setLoading(true,form);
                     			var json={};
                     		    json['omap1']=form.getValues();
                     		    json['omap1']['pv_cdunieco_i'] = endnomInput['cdunieco'];
@@ -306,7 +306,7 @@ Ext.onReady(function(){
                     				,jsonData : json
                     				,success  : function(response)
                     			    {
-                    					form.setLoading(false);
+                    					_setLoading(false,form);
                     					json=Ext.decode(response.responseText);
                     					debug(json);
                     					if(json.success==true)
@@ -332,7 +332,7 @@ Ext.onReady(function(){
                     			    }
                     			    ,failure  : function()
                     			    {
-                    			    	form.setLoading(false);
+                    			    	_setLoading(false,form);
                     			    	Ext.Msg.show(
                                         {
                                             title   : 'Error',
