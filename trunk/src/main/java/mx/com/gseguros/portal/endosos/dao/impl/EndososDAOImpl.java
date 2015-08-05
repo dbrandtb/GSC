@@ -4210,6 +4210,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 					,"NUMEND"
 					,"SUCURSAL"
 					,"RAMO"
+					,"NMPOLIEX"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
