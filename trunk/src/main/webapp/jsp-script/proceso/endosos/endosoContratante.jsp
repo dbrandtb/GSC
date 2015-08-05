@@ -317,7 +317,7 @@ Ext.onReady(function()
     
     ////////////////////
     ////// loader //////
-    _35_panelPri.setLoading(true);
+    _setLoading(true,_35_panelPri);
     Ext.Ajax.request(
     {
     	url      : _35_urlLoadContratantes
@@ -331,7 +331,7 @@ Ext.onReady(function()
     	}
     	,success : function (response)
     	{
-    		_35_panelPri.setLoading(false);
+    		_setLoading(false,_35_panelPri);
     		var json=Ext.decode(response.responseText);
     		debug('contratantes cargados:',json);
     		if(json.success==true)
@@ -358,7 +358,7 @@ Ext.onReady(function()
     	}
         ,failure : function()
         {
-        	_35_panelPri.setLoading(false);
+        	_setLoading(false,_35_panelPri);
         	errorComunicacion();
         }
     });
@@ -413,7 +413,7 @@ function _35_confirmar()
             ,slist1 : slist1
         }
         debug('datos que se enviaran:',json);
-        _35_panelPri.setLoading(true);
+        _setLoading(true,_35_panelPri);
         Ext.Ajax.request(
         {
             url       : _35_urlGuardar
@@ -421,7 +421,7 @@ function _35_confirmar()
             ,jsonData : json
             ,success  : function(response)
             {
-                _35_panelPri.setLoading(false);
+                _setLoading(false,_35_panelPri);
                 json=Ext.decode(response.responseText);
                 debug('datos recibidos:',json);
                 if(json.success==true)
@@ -447,7 +447,7 @@ function _35_confirmar()
             }
             ,failure  : function()
             {
-                _35_panelPri.setLoading(false);
+                _setLoading(false,_35_panelPri);
                 errorComunicacion();
             }
         });

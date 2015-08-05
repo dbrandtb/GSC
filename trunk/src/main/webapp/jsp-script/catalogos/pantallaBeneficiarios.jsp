@@ -289,13 +289,13 @@ function _p32_agregar()
     
     if(valido)
     {
-        _fieldById('_p32_grid').setLoading(true);
+        _setLoading(true,_fieldById('_p32_grid'));
         Ext.Ajax.request(
         {
             url      : _p32_urlGenerarCdperson
             ,success : function(response)
             {
-                _fieldById('_p32_grid').setLoading(false);
+                _setLoading(false,_fieldById('_p32_grid'));
                 var json=Ext.decode(response.responseText);
                 debug('### cdperson:',json);
                 if(json.success)
@@ -314,7 +314,7 @@ function _p32_agregar()
             }
             ,failure : function()
             {
-                _fieldById('_p32_grid').setLoading(false);
+                _setLoading(false,_fieldById('_p32_grid'));
                 errorComunicacion();
             }
         });
@@ -409,14 +409,14 @@ function _p32_guardarClic()
         debug('json a enviar:',json);
         
         ck='Enviando peticion';
-        _fieldById('_p32_grid').setLoading(true);
+        _setLoading(true,_fieldById('_p32_grid'));
         Ext.Ajax.request(
         {
             url       : _p32_smap1.cdtipsup-0==1 ? _p32_urlGuardar : _p32_urlConfirmarEndoso
             ,jsonData : json
             ,success  : function(response)
             {
-                _fieldById('_p32_grid').setLoading(false);
+                _setLoading(false,_fieldById('_p32_grid'));
                 var json2 = Ext.decode(response.responseText);
                 debug('### guardar:',json2);
                 if(json2.exito)
@@ -468,7 +468,7 @@ function _p32_guardarClic()
             }
             ,failure  : function()
             {
-                _fieldById('_p32_grid').setLoading(false);
+                _setLoading(false,_fieldById('_p32_grid'));
                 errorComunicacion();
             }
         });

@@ -57,7 +57,7 @@
             // Eliminamos los filtros para que enviemos todas las coberturas editadas:
             storeCoberturasEditadas_p3.clearFilter();
         	
-            form.setLoading(true);
+            _setLoading(true,form);
             var json={};
             json['omap1']=form.getValues();
             json['omap1']['pv_cdunieco_i'] = inputCduniecop3;
@@ -105,7 +105,7 @@
                 ,timeout  : 180000
                 ,success  : function(response)
                 {
-                    form.setLoading(false);
+                    _setLoading(false,form);
                     json=Ext.decode(response.responseText);
                     debug(json);
                     if(json.success==true)
@@ -144,7 +144,7 @@
                 }
                 ,failure  : function()
                 {
-                    form.setLoading(false);
+                    _setLoading(false,form);
                     Ext.Msg.show(
                     {
                         title   : 'Error',

@@ -86,7 +86,7 @@ function _2_confirmar()
 	
     if(valido)
     {
-    	boton.setLoading(true);
+    	_setLoading(true,boton);
 	    Ext.Ajax.request(
 	    {
 	        url     : venExcluUrlAddExclu
@@ -107,7 +107,7 @@ function _2_confirmar()
 	        ,success : function (response)
 	        {
 	            debug('success');
-	            boton.setLoading(false);
+	            _setLoading(false,boton);
 	            var json=Ext.decode(response.responseText);
 	            if(json.success==true)
 	            {
@@ -127,8 +127,8 @@ function _2_confirmar()
 	        }
 	        ,failure : function ()
 	        {
-	            boton.setLoading(false);
-	            me.up().up().setLoading(false);
+	            _setLoading(false,boton);
+	            _setLoading(false,me.up().up());
 	            Ext.Msg.show({
 	                title:'Error',
 	                msg: 'Error de comunicaci&oacute;n',
@@ -482,7 +482,7 @@ Ext.onReady(function(){
                                                             ,handler : function(me)
                                                             {
                                                                 debug(me);
-                                                                me.up().up().setLoading(true);
+                                                                _setLoading(true,me.up().up());
                                                                 debug(Ext.getCmp("idComboTipCla").getValue());
                                                                 var swgrapol;
                                                                 Ext.getCmp("idComboTipCla").getStore().each(function(record){
@@ -530,7 +530,7 @@ Ext.onReady(function(){
                                                                                     }
                                                                                     else
                                                                                     {
-                                                                                        me.up().up().setLoading(false);
+                                                                                        _setLoading(false,me.up().up());
                                                                                         Ext.Msg.show({
                                                                                             title:'Error',
                                                                                             msg: 'Error al agregar cl&aacute;usula',
@@ -541,7 +541,7 @@ Ext.onReady(function(){
                                                                                 }
                                                                                 ,failure : function ()
                                                                                 {
-                                                                                    me.up().up().setLoading(false);
+                                                                                    _setLoading(false,me.up().up());
                                                                                     Ext.Msg.show({
                                                                                         title:'Error',
                                                                                         msg: 'Error de comunicaci&oacute;n',
@@ -577,7 +577,7 @@ Ext.onReady(function(){
                                                                                     }
                                                                                     else
                                                                                     {
-                                                                                        me.up().up().setLoading(false);
+                                                                                        _setLoading(false,me.up().up());
                                                                                         Ext.Msg.show({
                                                                                             title:'Error',
                                                                                             msg: 'Error al agregar cl&aacute;usula',
@@ -588,7 +588,7 @@ Ext.onReady(function(){
                                                                                 }
                                                                                 ,failure : function ()
                                                                                 {
-                                                                                    me.up().up().setLoading(false);
+                                                                                    _setLoading(false,me.up().up());
                                                                                     Ext.Msg.show({
                                                                                         title:'Error',
                                                                                         msg: 'Error de comunicaci&oacute;n',
@@ -740,7 +740,7 @@ Ext.onReady(function(){
                                                 debug(me);
                                                 if(Ext.getCmp('venExcluHidenInputEdit').getValue()=='1')
                                                 {
-                                                    me.up().up().setLoading(true);
+                                                    _setLoading(true,me.up().up());
                                                     Ext.Ajax.request(
                                                     {
                                                         url     : venExcluUrlAddExclu
@@ -778,7 +778,7 @@ Ext.onReady(function(){
                                                             }
                                                             else
                                                             {
-                                                                me.up().up().setLoading(false);
+                                                                _setLoading(false,me.up().up());
                                                                 Ext.Msg.show({
                                                                     title:'Error',
                                                                     msg: 'Error al agregar cl&aacute;usula',
@@ -789,7 +789,7 @@ Ext.onReady(function(){
                                                         }
                                                         ,failure : function ()
                                                         {
-                                                            me.up().up().setLoading(false);
+                                                            _setLoading(false,me.up().up());
                                                             Ext.Msg.show({
                                                                 title:'Error',
                                                                 msg: 'Error de comunicaci&oacute;n',
@@ -820,7 +820,7 @@ Ext.onReady(function(){
                             {
                                 var record=venExcluStoreUsa.getAt(rowIndex);
                                 debug(record);
-                                grid.setLoading(true);
+                                _setLoading(true,grid);
                                 Ext.Ajax.request(
                                 {
                                     url     : venExcluUrlAddExclu
@@ -848,12 +848,12 @@ Ext.onReady(function(){
                                         var json=Ext.decode(response.responseText);
                                         if(json.success==true)
                                         {
-                                            grid.setLoading(false);
+                                            _setLoading(false,grid);
                                             venExcluStoreUsa.remove(record);
                                         }
                                         else
                                         {
-                                            grid.setLoading(false);
+                                            _setLoading(false,grid);
                                             Ext.Msg.show({
                                                 title:'Error',
                                                 msg: 'Error al quitar la cl&aacute;usula',
@@ -864,7 +864,7 @@ Ext.onReady(function(){
                                     }
                                     ,failure : function ()
                                     {
-                                        grid.setLoading(false);
+                                        _setLoading(false,grid);
                                         Ext.Msg.show({
                                             title:'Error',
                                             msg: 'Error de comunicaci&oacute;n',
@@ -906,7 +906,7 @@ function _endpnx_windowIcd(cdclausu)
         'select' : function(comp,val)
         {
             debug('combo icd select:',val[0]);
-            ventana.setLoading(true);
+            _setLoading(true,ventana);
             Ext.Ajax.request(
             {
                 url      : _endpnx_urlAgregarIcd
@@ -924,7 +924,7 @@ function _endpnx_windowIcd(cdclausu)
                 ,success : function(response)
                 {
                     comp.reset();
-                    ventana.setLoading(false);
+                    _setLoading(false,ventana);
                     var json=Ext.decode(response.responseText);
                     debug('### agregar icd response:',json);
                     if(json.exito)
@@ -942,7 +942,7 @@ function _endpnx_windowIcd(cdclausu)
                 ,failure : function()
                 {
                     comp.reset();
-                    ventana.setLoading(false);
+                    _setLoading(false,ventana);
                     errorComunicacion();
                 }
             });
@@ -1021,7 +1021,7 @@ function _endpnx_quitarICD(cdclausu,icd,store,ventana)
 {
     debug('>_endpnx_quitarICD:',cdclausu,icd,'dummy');
     debug(store,ventana,'dummy');
-    ventana.setLoading(true);
+    _setLoading(true,ventana);
     Ext.Ajax.request(
     {
         url      : _endpnx_urlBorrarIcd
@@ -1038,7 +1038,7 @@ function _endpnx_quitarICD(cdclausu,icd,store,ventana)
         }
         ,success : function(response)
         {
-            ventana.setLoading(false);
+            _setLoading(false,ventana);
             var json=Ext.decode(response.responseText);
             debug('### borrar icd response:',json);
             if(json.exito)
@@ -1055,7 +1055,7 @@ function _endpnx_quitarICD(cdclausu,icd,store,ventana)
         }
         ,failure : function()
         {
-            ventana.setLoading(false);
+            _setLoading(false,ventana);
             errorComunicacion();
         }
     });

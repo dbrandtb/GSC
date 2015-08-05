@@ -57,14 +57,14 @@ function _1_confirmar()
 			});
 		});
 		debug(json);
-		_1_form.setLoading(true);
+		_setLoading(true,_1_form);
 		Ext.Ajax.request(
 		{
 			url       : _1_urlGuardar
 			,jsonData : json
 			,success  : function(response)
 			{
-				_1_form.setLoading(false);
+				_setLoading(false,_1_form);
 				json=Ext.decode(response.responseText);
 				if(json.success==true)
 				{
@@ -82,7 +82,7 @@ function _1_confirmar()
 			}
 		    ,failure  : function()
 		    {
-		    	_1_form.setLoading(false);
+		    	_setLoading(false,_1_form);
 		    	errorComunicacion();
 		    }
 		});

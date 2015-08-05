@@ -203,7 +203,7 @@ Ext.onReady(function()
 	
 	////////////////////
 	////// loader //////
-	_5_panelPri.setLoading(true);
+	_setLoading(true,_5_panelPri);
 	Ext.Ajax.request(
 	{
 		url     : _5_urlLoadMdomicil
@@ -222,7 +222,7 @@ Ext.onReady(function()
 		}
 	    ,success : function(response)
 	    {
-	    	_5_panelPri.setLoading(false);
+	    	_setLoading(false,_5_panelPri);
 	    	var json=Ext.decode(response.responseText);
 	    	debug('respuesta',json);
 	    	_5_formDomicil.loadRecord(new _5_modeloDomicil(json.smap1));
@@ -298,7 +298,7 @@ Ext.onReady(function()
 	    }
 	    ,failure : function()
 	    {
-	    	_5_panelPri.setLoading(false);
+	    	_setLoading(false,_5_panelPri);
 	    	errorComunicacion();
 	    }
 	});
@@ -341,14 +341,14 @@ function _5_confirmar(boton)
 			//,parametros : _5_panelTatriper.getValues()
 		};
 		debug('datos a enviar:',json);
-		_5_panelPri.setLoading(true);
+		_setLoading(true,_5_panelPri);
 		Ext.Ajax.request(
 		{
 			url       : _5_urlGuardar
 			,jsonData : json
 			,success  : function(response)
 			{
-				_5_panelPri.setLoading(false);
+				_setLoading(false,_5_panelPri);
 				json=Ext.decode(response.responseText);
 				if(json.success==true)
 				{
@@ -368,7 +368,7 @@ function _5_confirmar(boton)
 			}
 		    ,failure  : function()
 		    {
-		    	_5_panelPri.setLoading(false);
+		    	_setLoading(false,_5_panelPri);
 		    	errorComunicacion();
 		    }
 		});

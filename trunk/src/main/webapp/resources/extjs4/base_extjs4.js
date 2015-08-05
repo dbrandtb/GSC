@@ -720,6 +720,43 @@ function _cargarForm(form,datos)
     }
 }
 
+/**
+ * Funcion que le pone mask a un componente
+ * @param load (boolean) activa o desactiva
+ * @param cmp (Component) componente al que se aplica/quita la mascara
+ */
+function _setLoading(load,cmp)
+{
+    debug('_setLoading load:',load,'cmp:',cmp);
+    var ck = 'Manejando m\u00E1scara';
+    try
+    {
+        if(Ext.isEmpty(load))
+        {
+            throw 'No se recibi\u00F3 par\u00E1metro 1 de m\u00E1scara';
+        }
+        if(Ext.isEmpty(cmp))
+        {
+            throw 'No se recibi\u00F3 par\u00E1metro 2 de m\u00E1scara';
+        }
+        if(true==load)
+        {
+            ck = 'Poniendo m\u00E1scara';
+            cmp.mascara = new Ext.LoadMask(cmp.el,{ msg:"Cargando..." });
+            cmp.mascara.show();
+        }
+        else
+        {
+            ck = 'Quitando m\u00E1scara';
+            cmp.mascara.hide();
+        }
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+}
+
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////

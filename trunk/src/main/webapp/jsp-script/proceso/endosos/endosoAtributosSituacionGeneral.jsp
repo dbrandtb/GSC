@@ -111,7 +111,7 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
-    _fieldById('_p27_panelpri').setLoading(true);
+    _setLoading(true,_fieldById('_p27_panelpri'));
     Ext.Ajax.request(
     {
         url     : _p27_urlCargarTvalositTitular
@@ -125,7 +125,7 @@ Ext.onReady(function()
         }
         ,success : function(response)
         {
-            _fieldById('_p27_panelpri').setLoading(false);
+            _setLoading(false,_fieldById('_p27_panelpri'));
             var json = Ext.decode(response.responseText);
             debug('### obtener tvalosit titular:',json);
             if(json.exito)
@@ -140,7 +140,7 @@ Ext.onReady(function()
         }
         ,failure : function()
         {
-            _fieldById('_p27_panelpri').setLoading(false);
+            _setLoading(false,_fieldById('_p27_panelpri'));
             errorComunicacion();
         }
     });
@@ -241,7 +241,7 @@ function _p27_confirmar(me)
     
     if(valido)
     {
-        _fieldById('_p27_panelpri').setLoading(true);
+        _setLoading(true,_fieldById('_p27_panelpri'));
         Ext.Ajax.request(
         {
             url       : _p27_urlConfirmar
@@ -253,7 +253,7 @@ function _p27_confirmar(me)
             }
             ,success : function(response)
             {
-                _fieldById('_p27_panelpri').setLoading(false);
+                _setLoading(false,_fieldById('_p27_panelpri'));
                 var json = Ext.decode(response.responseText);
                 debug('### confirmar endoso atributos general:',json);
                 if(json.exito)
@@ -272,7 +272,7 @@ function _p27_confirmar(me)
             }
             ,failure : function()
             {
-                _fieldById('_p27_panelpri').setLoading(false);
+                _setLoading(false,_fieldById('_p27_panelpri'));
                 errorComunicacion();
             }
         });

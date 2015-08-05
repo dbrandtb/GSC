@@ -306,7 +306,7 @@ Ext.onReady(function(){
                 {
                     if(this.up().up().getForm().isValid())
                     {
-                        this.up().up().setLoading(true);
+                        _setLoading(true,this.up().up());
                         this.up().up().getForm().submit(
                         {
                             params:
@@ -322,7 +322,7 @@ Ext.onReady(function(){
                             },
                             success:function(response,opts)
                             {
-                                formPanelp4.setLoading(false);
+                                _setLoading(false,formPanelp4);
                                 var json=Ext.decode(opts.response.responseText);
                             	//////////////////////////////////
                                 ////// usa codigo del padre //////
@@ -339,7 +339,7 @@ Ext.onReady(function(){
                             },
                             failure:function(response,opts)
                             {
-                                formPanelp4.setLoading(false);
+                                _setLoading(false,formPanelp4);
                             	var json=Ext.decode(opts.response.responseText);
                                 mensajeError(json.error);
                             }

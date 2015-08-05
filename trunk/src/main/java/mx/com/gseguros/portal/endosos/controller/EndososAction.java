@@ -675,7 +675,7 @@ public class EndososAction extends PrincipalCoreAction
 			// Se valida si el endoso es permitido:
 			boolean permitido = endososManager.validaEndosoSimple(cdunieco, cdramo, estado, nmpoliza);
 			if(!permitido) {
-				throw new Exception(EndososAction.ENDOSO_SIMPLE_NO_PERMITIDO);
+				throw new ApplicationException(EndososAction.ENDOSO_SIMPLE_NO_PERMITIDO);
 			}
 			
 			// Valida si hay un endoso anterior pendiente, sino lanzamos una excepcion con el mensaje de error:
@@ -835,7 +835,7 @@ public class EndososAction extends PrincipalCoreAction
 			// Validacion de endoso simple:
 			boolean permitido = endososManager.validaEndosoSimple(cdunieco, cdramo, estado, nmpoliza);
 			if(!permitido) {
-				throw new Exception(EndososAction.ENDOSO_SIMPLE_NO_PERMITIDO);
+				throw new ApplicationException(EndososAction.ENDOSO_SIMPLE_NO_PERMITIDO);
 			}
 			
 			// Valida si hay un endoso anterior pendiente, sino lanzamos una excepcion con el mensaje de error:
@@ -2605,7 +2605,7 @@ public class EndososAction extends PrincipalCoreAction
 			// Validacion de endoso simple:
 			boolean permitido = endososManager.validaEndosoSimple(cdunieco, cdramo, estado, nmpoliza);
 			if(!permitido) {
-				throw new Exception(EndososAction.ENDOSO_SIMPLE_NO_PERMITIDO);
+				throw new ApplicationException(EndososAction.ENDOSO_SIMPLE_NO_PERMITIDO);
 			}
 			
 			// Valida si hay un endoso anterior pendiente:

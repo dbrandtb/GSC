@@ -176,7 +176,7 @@ Ext.onReady(function()
     
     ////////////////////
     ////// loader //////
-    _9_panelPri.setLoading(true);
+    _setLoading(true,_9_panelPri);
     Ext.Ajax.request(
     {
         url      : _9_urlLoaderLectura
@@ -189,7 +189,7 @@ Ext.onReady(function()
         }
         ,success : function(response)
         {
-            _9_panelPri.setLoading(false);
+            _setLoading(false,_9_panelPri);
             var json = Ext.decode(response.responseText);
             debug('respuesta:',json);
             if(json.success==true)
@@ -218,7 +218,7 @@ Ext.onReady(function()
         }
         ,failure : function()
         {
-            _9_panelPri.setLoading(false);
+            _setLoading(false,_9_panelPri);
             mensajeError('Error al cargar los datos de la p&oacute;liza');
         }
     });

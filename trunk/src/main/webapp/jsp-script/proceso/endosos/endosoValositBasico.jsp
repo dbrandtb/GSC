@@ -64,7 +64,7 @@ function endvalbasSumit(form,confirmar)
         }
         if(titularvalido==true)
         {
-            form.setLoading(true);
+            _setLoading(true,form);
             form.submit({
                 params:
                 {
@@ -79,7 +79,7 @@ function endvalbasSumit(form,confirmar)
                 success:function(action,response)
                 {
                     debug(response);
-                    form.setLoading(false);
+                    _setLoading(false,form);
                     var json=Ext.decode(response.response.responseText);
                     debug(json);
                     Ext.Msg.show(
@@ -101,7 +101,7 @@ function endvalbasSumit(form,confirmar)
                 },
                 failure:function(action,response)
                 {
-                    form.setLoading(false);
+                    _setLoading(false,form);
                 	var json=Ext.decode(response.response.responseText);
                     mensajeError(json.error);
                 }
