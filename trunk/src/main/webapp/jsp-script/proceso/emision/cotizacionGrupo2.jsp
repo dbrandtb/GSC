@@ -2300,7 +2300,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                         ,name       : 'amparada'
                                                         ,inputValue : 'S'
                                                         ,checked    : json.slist1[j].SWOBLIGA=='S'
-                                                        ,disabled   : _p25_smap1.cdsisrol!='COTIZADOR'&&json.slist1[j].SWOBLIGA=='S'
+                                                        ,disabled   : false//_p25_smap1.cdsisrol!='COTIZADOR'&&json.slist1[j].SWOBLIGA=='S'
                                                         ,style      : 'color:white;'
                                                         ,listeners  :
                                                         {
@@ -3074,7 +3074,7 @@ function _p25_guardarGrupo(panelGrupo)
              var iFormTatrigar = formsTatrigar[i];
              valido            = valido && iFormTatrigar.isValid();
              var tvalogar      = iFormTatrigar.getValues();
-             if(tvalogar.swobliga=='S'&&_p25_smap1.cdsisrol!='COTIZADOR')
+             if(false)//tvalogar.swobliga=='S'&&_p25_smap1.cdsisrol!='COTIZADOR')
              {
                  tvalogar['amparada']='S';
              }
