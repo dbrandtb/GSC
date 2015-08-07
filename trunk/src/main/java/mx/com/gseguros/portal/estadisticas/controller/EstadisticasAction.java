@@ -96,8 +96,8 @@ public class EstadisticasAction extends PrincipalCoreAction
 			
 			objetos = estadisticasManager.recuperarCotizacionesEmisiones(
 					sb
-					,Utils.render(feinicio)
-					,Utils.render(fefin)
+					,Utils.parse(feinicio)
+					,Utils.parse(fefin)
 					,cdunieco
 					,cdramo
 					,cdusuari
@@ -182,8 +182,8 @@ public class EstadisticasAction extends PrincipalCoreAction
 			
 			objetos = estadisticasManager.recuperarTareas(
 					sb
-					,Utils.render(feinicio)
-					,Utils.render(fefin)
+					,Utils.parse(feinicio)
+					,Utils.parse(fefin)
 					,cdmodulo
 					,cdtarea
 					,cdunieco

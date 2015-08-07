@@ -466,10 +466,32 @@ public class Utils
 
 	public static String join(Object... args)
 	{
-		StringBuilder sb=new StringBuilder();
+		boolean debug    = false;
+		StringBuilder sb = new StringBuilder();
 		for(Object arg:args)
 		{
-			sb.append(arg);
+			if(debug)
+			{
+				sb.append(arg);
+			}
+			else
+			{
+				try
+				{
+					if(arg.toString().length()>350)
+					{
+						sb.append(Utils.join(arg.toString().substring(0,350),"..."));
+					}
+					else
+					{
+						sb.append(arg);
+					}
+				}
+				catch(Exception ex)
+				{
+					sb.append(arg);
+				}
+			}
 		}
 		return sb.toString();
 	}
@@ -535,14 +557,45 @@ public class Utils
     			(
     					 "\n*******",StringUtils.leftPad("",len,"*"),"*******"
     					,"\n****** params=",params
-    					,"\n****** registro=",lista!=null&&lista.size()<15?lista:(lista!=null?lista.size():lista)
+    					,"\n****** registro=",lista
+    					,"\n****** ",storedProcedureName," ******"
+    					,"\n*******",StringUtils.leftPad("",len,"*"),"*******"
+    			)
+    	);
+    }
+	
+	public static void debugProcedure(Logger logger2,String storedProcedureName,Map<String,?>params)
+    {
+		int len = storedProcedureName.length();
+		logger.debug
+		(
+				Utils.join
+				(
+				 "\n*******",StringUtils.leftPad("",len,"*"),"*******"
+				,"\n****** ",storedProcedureName," ******"
+				,"\n****** params=",params
+				,"\n*******",StringUtils.leftPad("",len,"*"),"*******"
+				)
+		);
+    }
+    
+    public static void debugProcedure(Logger logger2,String storedProcedureName,Map<String,?>params,List<?>lista)
+    {
+    	int len = storedProcedureName.length();
+    	logger.debug
+    	(
+    			Utils.join
+    			(
+    					 "\n*******",StringUtils.leftPad("",len,"*"),"*******"
+    					,"\n****** params=",params
+    					,"\n****** registro=",lista
     					,"\n****** ",storedProcedureName," ******"
     					,"\n*******",StringUtils.leftPad("",len,"*"),"*******"
     			)
     	);
     }
     
-    public static Date render(String fecha) throws Exception
+    public static Date parse(String fecha) throws Exception
     {
     	return renderFechas.parse(fecha);
     }

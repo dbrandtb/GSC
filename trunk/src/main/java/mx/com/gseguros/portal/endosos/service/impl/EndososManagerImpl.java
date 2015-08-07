@@ -38,14 +38,17 @@ import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+@Service
 public class EndososManagerImpl implements EndososManager
 {
-    private static final Logger logger = Logger.getLogger(EndososManagerImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(EndososManagerImpl.class);
     
     @Value("${ruta.servidor.reports}")
 	private String rutaServidorReportes;
@@ -57,10 +60,16 @@ public class EndososManagerImpl implements EndososManager
     private String passwordServidorReportes;
     
     private Map<String,Object> session;
+    
+    @Autowired
 	private EndososDAO      endososDAO;
+    @Autowired
 	private CotizacionDAO   cotizacionDAO;
+    @Autowired
 	private PantallasDAO    pantallasDAO;
+    @Autowired
 	private MesaControlDAO  mesaControlDAO;
+    @Autowired
 	private PersonasDAO     personasDAO;
 	
 	@Autowired
@@ -284,32 +293,20 @@ public class EndososManagerImpl implements EndososManager
 	}
 	
 	@Override
-	public void insertarTworksupEnd(Map<String, String> params) throws Exception
-	{
-		logger.debug("EndososManager insertarTworksupEnd params: "+params);
-		endososDAO.insertarTworksupEnd(params);
-		logger.debug("EndososManager insertarTworksupEnd end");
-	}
-	
-	@Override
-	public void insertarTworksupEnd(
+	public void movimientoTworksupEnd(
 			String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza
 			,String cdtipsup
 			,String nmsuplem
-			,String nmsituac) throws Exception
+			,String nmsituac
+			,String accion) throws Exception
 	{
-		Map<String,String>params=new LinkedHashMap<String,String>(0);
-		params.put("pv_cdunieco_i" , cdunieco);
-		params.put("pv_cdramo_i"   , cdramo);
-		params.put("pv_estado_i"   , estado);
-		params.put("pv_nmpoliza_i" , nmpoliza);
-		params.put("pv_cdtipsup_i" , cdtipsup);
-		params.put("pv_nmsuplem_i" , nmsuplem);
-		params.put("pv_nmsituac_i" , nmsituac);
-        this.insertarTworksupEnd(params);
+		logger.debug("EndososManager insertarTworksupEnd params {},{},{},{},{},{},{},{}"
+				,cdunieco,cdramo,estado,nmpoliza,cdtipsup,nmsuplem,nmsituac,accion);
+		endososDAO.movimientoTworksupEnd(cdunieco,cdramo,estado,nmpoliza,cdtipsup,nmsuplem,nmsituac,accion);
+		logger.debug("EndososManager insertarTworksupEnd end");
 	}
 	
 	//PKG_SATELITES.P_INSERTA_TWORKSUP_SIT_TODAS
@@ -1990,63 +1987,18 @@ public class EndososManagerImpl implements EndososManager
 		return resp;
 	}
 	
-	
 	public List<Map<String,String>> obtenerListaDocumentosEndosos(PolizaVO poliza) throws Exception {
 		return endososDAO.obtenerListaDocumentosEndosos(poliza);
 	}
 	
-	/********************** BASE MANAGER ***********************/
-	/**
-	 * Guarda el estado actual en sesion
-	 */
-	private void setCheckpoint(String checkpoint)
-	{
-		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
-		session.put("checkpoint",checkpoint);
-	}
-	
-	/**
-	 * Obtiene el estado actual de sesion
-	 */
-	private String getCheckpoint()
-	{
-		return (String)session.get("checkpoint");
-	}
-	
-	/**
-	 * Da valor a los atributos exito, respuesta y respuestaOculta de resp.
-	 * Tambien guarda el checkpoint en 0
-	 */
-	private void manejaException(Exception ex,ManagerRespuestaBaseVO resp)
-	{
-		long timestamp = System.currentTimeMillis();
-		resp.setExito(false);
-		resp.setRespuestaOculta(ex.getMessage());
+	public void guardarMpolicot(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsituac, String cdclausu, String nmsuplem,
+			String status, String cdtipcla, String swmodi, String dslinea,
+			String accion) throws Exception {
 		
-		if(ex instanceof ApplicationException)
-		{
-			resp.setRespuesta(
-					new StringBuilder()
-					.append(ex.getMessage())
-					.append(" #")
-					.append(timestamp)
-					.toString()
-					);
-		}
-		else
-		{
-			resp.setRespuesta(
-					new StringBuilder()
-					.append("Error ")
-					.append(getCheckpoint().toLowerCase())
-					.append(" #")
-					.append(timestamp)
-					.toString()
-					);
-		}
-		
-		logger.error(resp.getRespuesta(),ex);
-		setCheckpoint("0");
+		endososDAO.guardarMpolicot(cdunieco, cdramo, estado, nmpoliza,
+				nmsituac, cdclausu, nmsuplem, status, cdtipcla, swmodi,
+				dslinea, accion);
 	}
 	
 	@Override
@@ -2183,44 +2135,196 @@ public class EndososManagerImpl implements EndososManager
 	public void reasignaParentescoTitular(Map<String, String> params)throws Exception{
 		endososDAO.reasignaParentescoTitular(params);
 	}
-	/********************** BASE MANAGER ***********************/
 	
-	public void guardarMpolicot(String cdunieco, String cdramo, String estado,
-			String nmpoliza, String nmsituac, String cdclausu, String nmsuplem,
-			String status, String cdtipcla, String swmodi, String dslinea,
-			String accion) throws Exception {
-		
-		endososDAO.guardarMpolicot(cdunieco, cdramo, estado, nmpoliza,
-				nmsituac, cdclausu, nmsuplem, status, cdtipcla, swmodi,
-				dslinea, accion);
+	@Override
+	public Map<String,Object> pantallaEndosoAltaBajaFamilia(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String tipoflot
+			,String tipo
+			,String cdtipsup
+			,String contexto
+			)throws Exception
+	{
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ pantallaEndosoAltaBajaFamilia @@@@@@"
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ tipoflot=" , tipoflot
+				,"\n@@@@@@ tipo="     , tipo
+				,"\n@@@@@@ cdtipsup=" , cdtipsup
+				,"\n@@@@@@ contexto=" , contexto
+				));
+		String             paso  = "Construyendo pantalla de endoso de asegurados";
+		Map<String,Object> mapa  = new HashMap<String,Object>();
+		Map<String,Item>   items = new HashMap<String,Item>();
+		mapa.put("items" , items);
+		try
+		{
+			paso = "Recuperando componentes de pantalla";
+			logger.debug("Paso: {}",paso);
+			List<ComponenteVO> itemsPoliza = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,tipoflot+tipoflot //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"ENDOSO_FAMILIA"
+					,"POLIZA"
+					,null //orden
+					);
+			
+			List<ComponenteVO> fieldsInciso = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"MODELOS"
+					,"INCISO"
+					,null //orden
+					);
+			
+			List<ComponenteVO> colsInciso = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,tipoflot+tipoflot //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"ENDOSO_FAMILIA"
+					,"INCISO"
+					,null //orden
+					);
+			
+			List<ComponenteVO> itemsEndoso = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,tipoflot+tipoflot //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"ENDOSO_FAMILIA"
+					,"ENDOSO"
+					,null //orden
+					);
+			
+			paso = "Construyendo componentes de pantalla";
+			logger.debug("Paso: {}",paso);
+			GeneradorCampos gc = new GeneradorCampos(contexto);
+			
+			gc.generaComponentes(itemsPoliza, true, false, true, false, false, false);
+			items.put("itemsPoliza" , gc.getItems());
+			
+			gc.generaComponentes(fieldsInciso, true, true, false, false, false, false);
+			items.put("fieldsInciso" , gc.getFields());
+			
+			gc.generaComponentes(colsInciso, true, false, false, true, true, false);
+			items.put("colsInciso" , gc.getColumns());
+			
+			gc.generaComponentes(itemsEndoso, true, false, true, false, false, false);
+			items.put("itemsEndoso" , gc.getItems());
+			
+			paso = "Recuperando suplemento de endoso";
+			logger.debug("Paso: {}",paso);
+			String nmsuplem = endososDAO.recuperarNmsuplemEndosoValidando(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,cdtipsup
+					);
+			mapa.put("nmsuplem" , nmsuplem);
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al construir pantalla de endoso de alta/baja de familias",ex);
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.join(
+				 "\n@@@@@@ mapa=",mapa.keySet()
+				,"\n@@@@@@ pantallaEndosoAltaBajaFamilia @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return mapa;
 	}
+	
+	/***********************************************************/
+	/********************** BASE MANAGER ***********************/
+	/***********************************************************/
+	/**
+	 * Guarda el estado actual en sesion
+	 */
+	private void setCheckpoint(String checkpoint)
+	{
+		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
+		session.put("checkpoint",checkpoint);
+	}
+	
+	/**
+	 * Obtiene el estado actual de sesion
+	 */
+	private String getCheckpoint()
+	{
+		return (String)session.get("checkpoint");
+	}
+	
+	/**
+	 * Da valor a los atributos exito, respuesta y respuestaOculta de resp.
+	 * Tambien guarda el checkpoint en 0
+	 */
+	private void manejaException(Exception ex,ManagerRespuestaBaseVO resp)
+	{
+		long timestamp = System.currentTimeMillis();
+		resp.setExito(false);
+		resp.setRespuestaOculta(ex.getMessage());
+		
+		if(ex instanceof ApplicationException)
+		{
+			resp.setRespuesta(
+					new StringBuilder()
+					.append(ex.getMessage())
+					.append(" #")
+					.append(timestamp)
+					.toString()
+					);
+		}
+		else
+		{
+			resp.setRespuesta(
+					new StringBuilder()
+					.append("Error ")
+					.append(getCheckpoint().toLowerCase())
+					.append(" #")
+					.append(timestamp)
+					.toString()
+					);
+		}
+		
+		logger.error(resp.getRespuesta(),ex);
+		setCheckpoint("0");
+	}
+	/***********************************************************/
+	/********************** BASE MANAGER ***********************/
+	/***********************************************************/
 	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/
-	public void setEndososDAO(EndososDAO endososDAO) {
-		this.endososDAO = endososDAO;
-	}
-
-	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
-		this.cotizacionDAO = cotizacionDAO;
-	}
-
-	public void setPantallasDAO(PantallasDAO pantallasDAO) {
-		this.pantallasDAO = pantallasDAO;
-	}
-
-	public void setMesaControlDAO(MesaControlDAO mesaControlDAO) {
-		this.mesaControlDAO = mesaControlDAO;
-	}
 	@Override
 	public void setSession(Map<String,Object>session)
 	{
 		this.session=session;
 	}
-
-	public void setPersonasDAO(PersonasDAO personasDAO) {
-		this.personasDAO = personasDAO;
-	}
-	
 }

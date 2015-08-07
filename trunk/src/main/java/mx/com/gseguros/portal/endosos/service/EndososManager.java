@@ -89,19 +89,16 @@ public interface EndososManager
 			,String cdtipsup) throws Exception;
 	/**
 	 * PKG_SATELITES.P_INSERTA_TWORKSUP_END
+	 * @param accion TODO
 	 */
-	public void                      insertarTworksupEnd(Map<String,String>params)            throws Exception;
-	/**
-	 * PKG_SATELITES.P_INSERTA_TWORKSUP_END
-	 */
-	public void                      insertarTworksupEnd(
+	public void                      movimientoTworksupEnd(
 			String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza
 			,String cdtipsup
 			,String nmsuplem
-			,String nmsituac) throws Exception;
+			,String nmsituac, String accion) throws Exception;
 	public void                      insertarTworksupSitTodas(Map<String,String>params)       throws Exception;
 	public Map<String, String>       obtieneDatosMpolisit(Map<String, String> params)         throws Exception;
 	public Map<String, String>       obtieneDatosMpolisit(
@@ -442,6 +439,19 @@ public interface EndososManager
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			)throws Exception;
+	
+	public Map<String,Object> pantallaEndosoAltaBajaFamilia(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String tipoflot
+			,String tipo
+			,String cdtipsup
+			,String contexto
 			)throws Exception;
 	
 }

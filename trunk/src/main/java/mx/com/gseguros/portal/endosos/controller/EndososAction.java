@@ -3979,15 +3979,15 @@ public class EndososAction extends PrincipalCoreAction
                 
                 //////////////////////////////
                 ////// inserta tworksup //////
-                Map<String,String>mapaTworksupEnd=new LinkedHashMap<String,String>(0);
-                mapaTworksupEnd.put("pv_cdunieco_i" , cdunieco);
-                mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
-                mapaTworksupEnd.put("pv_estado_i"   , estado);
-                mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
-                mapaTworksupEnd.put("pv_cdtipsup_i", TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString());
-                mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
-                mapaTworksupEnd.put("pv_nmsituac_i" , nmsituac);
-                endososManager.insertarTworksupEnd(mapaTworksupEnd);
+                endososManager.movimientoTworksupEnd(
+                		cdunieco
+                		,cdramo
+                		,estado
+                		,nmpoliza
+                		,TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString()
+                		,nmsuplem
+                		,nmsituac, "I"
+                		);
                 ////// inserta tworksup //////
                 //////////////////////////////
                 
@@ -4118,15 +4118,15 @@ public class EndososAction extends PrincipalCoreAction
                 
                 //////////////////////////////
                 ////// inserta tworksup //////
-                Map<String,String>mapaTworksupEnd=new LinkedHashMap<String,String>(0);
-                mapaTworksupEnd.put("pv_cdunieco_i" , cdunieco);
-                mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
-                mapaTworksupEnd.put("pv_estado_i"   , estado);
-                mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
-                mapaTworksupEnd.put("pv_cdtipsup_i" , TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString());
-                mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
-                mapaTworksupEnd.put("pv_nmsituac_i" , nmsituac);
-                endososManager.insertarTworksupEnd(mapaTworksupEnd);
+                endososManager.movimientoTworksupEnd(
+                		cdunieco
+                		,cdramo
+                		,estado
+                		,nmpoliza
+                		,TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString()
+                		,nmsuplem
+                		,nmsituac, "I"
+                		);
                 ////// inserta tworksup //////
                 //////////////////////////////
                 
@@ -4625,15 +4625,15 @@ public class EndososAction extends PrincipalCoreAction
                 
                 //////////////////////////////
                 ////// inserta tworksup //////
-                Map<String,String>mapaTworksupEnd=new LinkedHashMap<String,String>(0);
-                mapaTworksupEnd.put("pv_cdunieco_i" , cdunieco);
-                mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
-                mapaTworksupEnd.put("pv_estado_i"   , estado);
-                mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
-                mapaTworksupEnd.put("pv_cdtipsup_i" , cdtipsup);
-                mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
-                mapaTworksupEnd.put("pv_nmsituac_i" , nmsituacIte);
-                endososManager.insertarTworksupEnd(mapaTworksupEnd);
+                endososManager.movimientoTworksupEnd(
+                		cdunieco
+                		,cdramo
+                		,estado
+                		,nmpoliza
+                		,cdtipsup
+                		,nmsuplem
+                		,nmsituacIte, "I"
+                		);
                 ////// inserta tworksup //////
                 //////////////////////////////
                 
@@ -4994,15 +4994,15 @@ public class EndososAction extends PrincipalCoreAction
                 
                 //////////////////////////////
                 ////// inserta tworksup //////
-                Map<String,String>mapaTworksupEnd=new LinkedHashMap<String,String>(0);
-                mapaTworksupEnd.put("pv_cdunieco_i" , cdunieco);
-                mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
-                mapaTworksupEnd.put("pv_estado_i"   , estado);
-                mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
-                mapaTworksupEnd.put("pv_cdtipsup_i" , cdtipsup);
-                mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
-                mapaTworksupEnd.put("pv_nmsituac_i" , nmsituacIte);
-                endososManager.insertarTworksupEnd(mapaTworksupEnd);
+                endososManager.movimientoTworksupEnd(
+                		cdunieco
+                		,cdramo
+                		,estado
+                		,nmpoliza
+                		,cdtipsup
+                		,nmsuplem
+                		,nmsituacIte, "I"
+                		);
                 ////// inserta tworksup //////
                 //////////////////////////////
                 
@@ -7710,7 +7710,7 @@ public class EndososAction extends PrincipalCoreAction
 			}
 			
 			//PKG_SATELITES.P_INSERTA_TWORKSUP_END
-			endososManager.insertarTworksupEnd(cdunieco, cdramo, estado, nmpoliza, cdtipsup, nmsuplem, nmsituac);
+			endososManager.movimientoTworksupEnd(cdunieco, cdramo, estado, nmpoliza, cdtipsup, nmsuplem, nmsituac, "I");
 
             //PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_END
             endososManager.sigsvalipolEnd(cdusuari, cdelemento, cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem, /*cdtipsit,*/ cdtipsup);

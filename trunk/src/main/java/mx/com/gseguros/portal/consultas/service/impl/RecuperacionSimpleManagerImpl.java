@@ -16,13 +16,14 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.utils.Utils;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 {
 	private Map<String,Object>session;
 	
-	private static Logger logger=Logger.getLogger(RecuperacionSimpleManagerImpl.class);
+	private final static Logger logger=LoggerFactory.getLogger(RecuperacionSimpleManagerImpl.class);
 	
 	private ConsultasDAO  consultasDAO;
 	private CotizacionDAO cotizacionDAO;
@@ -479,19 +480,125 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 		return resp;
 	}
 	
-	/*
-	 * Getters y setters
-	 */
-	public void setConsultasDAO(ConsultasDAO consultasDAO) {
-		this.consultasDAO = consultasDAO;
+	@Override
+	public Map<String,String> recuperarMapa(
+			String cdusuari
+			,String cdsisrol
+			,RecuperacionSimple consulta
+			,Map<String,String> params
+	)throws Exception
+	{
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarMapa @@@@@@"
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ consulta=" , consulta
+				,"\n@@@@@@ params="   , params
+				));
+		Map<String,String> mapa = new HashMap<String,String>();
+		String             paso = "Recuperando datos";
+		try
+		{
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.join(
+				 "\n@@@@@@ mapa=",mapa
+				,"\n@@@@@@ recuperarMapa @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return mapa;
 	}
-
-	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
-		this.cotizacionDAO = cotizacionDAO;
+	
+	@Override
+	public List<Map<String,String>> recuperarLista(
+			String cdusuari
+			,String cdsisrol
+			,RecuperacionSimple consulta
+			,Map<String,String> params
+	)throws Exception
+	{
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarLista @@@@@@"
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ consulta=" , consulta
+				,"\n@@@@@@ params="   , params
+				));
+		List<Map<String,String>> lista = new ArrayList<Map<String,String>>();
+		String                   paso  = "Recuperando datos";
+		try
+		{
+			if(consulta.equals(RecuperacionSimple.RECUPERAR_INCISOS_POLIZA_GRUPO_FAMILIA))
+			{
+				paso = "Recuperando incisos de p\u00F3liza/grupo/familia";
+				logger.debug("Paso: {}",paso);
+				String cdunieco = params.get("cdunieco");
+				String cdramo   = params.get("cdramo");
+				String estado   = params.get("estado");
+				String nmpoliza = params.get("nmpoliza");
+				String cdgrupo  = params.get("cdgrupo");
+				String nmfamili = params.get("nmfamili");
+				String nivel    = params.get("nivel");
+				lista = consultasDAO.recuperarIncisosPolizaGrupoFamilia(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,cdgrupo
+						,nmfamili
+						,nivel
+						);
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_MOVIMIENTOS_ENDOSO_ALTA_BAJA_ASEGURADO))
+			{
+				paso = "Recuperando movimientos de endoso de alta/baja de asegurados";
+				logger.debug("Paso: {}",paso);
+				String cdunieco = params.get("cdunieco");
+				String cdramo   = params.get("cdramo");
+				String estado   = params.get("estado");
+				String nmpoliza = params.get("nmpoliza");
+				String nmsuplem  = params.get("nmsuplem");
+				lista = consultasDAO.recuperarMovimientosEndosoAltaBajaAsegurados(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,nmsuplem
+						);
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.join(
+				 "\n@@@@@@ lista=",lista==null ? "null" : lista.size()
+				,"\n@@@@@@ recuperarLista @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
 	}
-
-	public void setEndososDAO(EndososDAO endososDAO) {
-		this.endososDAO = endososDAO;
-	}
+	
+	//////////////////////////////////////////////////////////////
+	// GETTERS Y SETTERS /////////////////////////////////////////
+	                                                            //
+	public void setConsultasDAO(ConsultasDAO consultasDAO) {    //
+		this.consultasDAO = consultasDAO;                       //
+	}                                                           //
+                                                                //
+	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) { //
+		this.cotizacionDAO = cotizacionDAO;                     //
+	}                                                           //
+                                                                //
+	public void setEndososDAO(EndososDAO endososDAO) {          //
+		this.endososDAO = endososDAO;                           //
+	}                                                           //
+	//////////////////////////////////////////////////////////////
 	
 }

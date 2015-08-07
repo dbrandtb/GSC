@@ -45,37 +45,19 @@ _p34_gridPolizasColumns.push
         ,items        :
         [
             {
-                icon     : '${ctx}/resources/fam3icons/icons/printer.png'
-                ,tooltip : 'Ver documentaci&oacute;n'
-                ,handler : function(view,row,col,item,e,record){ _p34_gridPolizasDocumentosClic(record); }
+                icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
+                ,tooltip : 'Ver incisos'
+                ,handler : function(view,row,col,item,e,record){ _p34_gridPolizasIncisosClic(record,view.up('grid')); }
             }
             ,{
-                icon     : '${ctx}/resources/fam3icons/icons/book_open.png'
+                icon     : '${ctx}/resources/fam3icons/icons/clock.png'
                 ,tooltip : 'Ver historial'
                 ,handler : function(view,row,col,item,e,record){ _p34_gridPolizasHistorialClic(record); }
             }
             ,{
-                icon     : '${ctx}/resources/fam3icons/icons/application_view_tile.png'
-                ,tooltip : 'Ver incisos'
-                ,handler : function(view,row,col,item,e,record){ _p34_gridPolizasIncisosClic(record,view.up('grid')); }
-            }
-        ]
-    }
-);
-
-_p34_gridGruposColumns.push
-(
-    {
-        xtype         : 'actioncolumn'
-        ,sortable     : false
-        ,menuDisabled : true
-        ,width        : 30
-        ,items        :
-        [
-            {
-                icon     : '${ctx}/resources/fam3icons/icons/application_view_tile.png'
-                ,tooltip : 'Ver incisos'
-                ,handler : function(view,row,col,item,e,record){ _p34_gridGruposIncisosClic(record,view.up('window')); }
+                icon     : '${ctx}/resources/fam3icons/icons/printer.png'
+                ,tooltip : 'Ver documentaci&oacute;n'
+                ,handler : function(view,row,col,item,e,record){ _p34_gridPolizasDocumentosClic(record); }
             }
         ]
     }
@@ -91,9 +73,27 @@ _p34_gridFamiliasColumns.push
         ,items        :
         [
             {
-                icon     : '${ctx}/resources/fam3icons/icons/application_view_tile.png'
+                icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
                 ,tooltip : 'Ver incisos'
                 ,handler : function(view,row,col,item,e,record){ _p34_gridFamiliasIncisosClic(record,view.up('window')); }
+            }
+        ]
+    }
+);
+
+_p34_gridGruposColumns.push
+(
+    {
+        xtype         : 'actioncolumn'
+        ,sortable     : false
+        ,menuDisabled : true
+        ,width        : 30
+        ,items        :
+        [
+            {
+                icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
+                ,tooltip : 'Ver incisos'
+                ,handler : function(view,row,col,item,e,record){ _p34_gridGruposIncisosClic(record,view.up('window')); }
             }
         ]
     }
@@ -1107,6 +1107,7 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                                 jsonData :
                                 {
                                     smap1   : smap1
+                                    ,params : smap1
                                 }
                             });
                         }
@@ -1156,7 +1157,9 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                                 jsonData :
                                 {
                                     smap1   : smap1
+                                    ,params : smap1
                                     ,slist1 : incisosRaw
+                                    ,list   : incisosRaw
                                 }
                             });
                         }
