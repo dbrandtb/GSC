@@ -25,15 +25,15 @@ import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
 
 public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 {
-
-	private static final Logger logger = Logger.getLogger(EndososDAOImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(EndososDAOImpl.class);
 	
 	protected class ObtenerEndosos extends StoredProcedure
 	{
@@ -657,14 +657,32 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public void insertarTworksupEnd(Map<String, String> params) throws Exception
+	public void movimientoTworksupEnd(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,String nmsuplem
+			,String nmsituac
+			,String accion
+			)throws Exception
 	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_cdtipsup_i" , cdtipsup);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		params.put("pv_nmsituac_i" , nmsituac);
+		params.put("pv_accion_i"   , accion);
 		logger.debug(
 				new StringBuilder()
-				.append("\n**************************************************")
-				.append("\n****** PKG_SATELITES.P_INSERTA_TWORKSUP_END ******")
+				.append("\n***************************************************")
+				.append("\n****** PKG_SATELITES2.P_INSERTA_TWORKSUP_END ******")
 				.append("\n****** params=").append(params)
-				.append("\n**************************************************")
+				.append("\n***************************************************")
 				.toString()
 				);
 		this.ejecutaSP(new InsertarTworksupEnd(this.getDataSource()), Utils.ponFechas(params));
@@ -674,7 +692,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected InsertarTworksupEnd(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES.P_INSERTA_TWORKSUP_END");
+			super(dataSource, "PKG_SATELITES2.P_INSERTA_TWORKSUP_END");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -682,9 +700,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_cdtipsup_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
-			
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_accion_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
@@ -4354,6 +4372,50 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_cdtipsit_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String recuperarNmsuplemEndosoValidando(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("cdtipsup" , cdtipsup);
+		Map<String,Object> procRes  = ejecutaSP(new RecuperarNmsuplemEndosoValidando(getDataSource()),params);
+		String             error    = (String)procRes.get("pv_dserror_o");
+		String             nmsuplem = (String)procRes.get("pv_nmsuplem_o");
+		if(StringUtils.isNotBlank(error))
+		{
+			throw new ApplicationException(error);
+		}
+		logger.debug("****** PKG_CONSULTA.P_GET_NMSUPLEM_ENDOSO_VAL nmsuplem={}",nmsuplem);
+		return nmsuplem;
+	}
+	
+	protected class RecuperarNmsuplemEndosoValidando extends StoredProcedure
+	{
+		protected RecuperarNmsuplemEndosoValidando(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_GET_NMSUPLEM_ENDOSO_VAL");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_dserror_o"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

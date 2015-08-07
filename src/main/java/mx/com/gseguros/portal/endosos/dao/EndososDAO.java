@@ -55,7 +55,18 @@ public interface EndososDAO
 			,String cdusuari
 			,String proceso
 			,String cdtipsup)throws Exception;
-	public void                     insertarTworksupEnd(Map<String, String> params)            throws Exception;
+	
+	public void movimientoTworksupEnd(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,String nmsuplem
+			,String nmsituac
+			,String accion
+			)throws Exception;
+	
 	public void                     insertarTworksupSitTodas(Map<String, String> params)       throws Exception;
 	public Map<String, String>      obtieneDatosMpolisit(Map<String, String> params)           throws Exception;
 	public List<Map<String,String>> obtenerNombreEndosos(String cdsisrol, Integer cdramo, String cdtipsit) throws Exception;
@@ -559,5 +570,13 @@ public interface EndososDAO
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			)throws Exception;
+	
+	public String recuperarNmsuplemEndosoValidando(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
 			)throws Exception;
 }

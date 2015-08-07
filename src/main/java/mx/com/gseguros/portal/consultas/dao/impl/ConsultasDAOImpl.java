@@ -1247,17 +1247,8 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	if(lista==null)
     	{
     		lista=new ArrayList<Map<String,String>>();
-    	} else {
-    		for (Map<String, String> map : lista) {
-    			for(int i=1;i<=99;i++) {
-    				String dsatribu = map.get("DSATRIBU"+StringUtils.leftPad(String.valueOf(i), 2, "0"));
-    				if(StringUtils.isNotBlank(dsatribu)) {
-    					map.put("CVE_"+dsatribu, map.get("OTVALOR"+StringUtils.leftPad(String.valueOf(i), 2, "0")));
-    					map.put("DES_"+dsatribu, map.get("DSVALOR"+StringUtils.leftPad(String.valueOf(i), 2, "0")));
-    				}
-    			}
-    		}
     	}
+    	construirClavesAtributos(lista);
     	Utils.debugProcedure(logger,"PKG_CONSULTA.P_GET_DATOS_INCISOS",params,lista);
     	return lista;
 	}
@@ -2378,6 +2369,121 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			declareParameter(new SqlOutParameter("pv_msg_id_o"    , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"     , OracleTypes.VARCHAR));
 			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> recuperarMovimientosEndosoAltaBajaAsegurados(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarMovimientosEndosoAltaBajaAsegurados(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		construirClavesAtributos(lista);
+		return lista;
+	}
+	
+	protected class RecuperarMovimientosEndosoAltaBajaAsegurados extends StoredProcedure
+	{
+		protected RecuperarMovimientosEndosoAltaBajaAsegurados(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_MOV_ALTA_BAJA_ASEG");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+            String[] cols=new String[]{
+            		//MPOLISIT
+            		"CDUNIECO"    , "CDRAMO"   , "ESTADO"     , "NMPOLIZA"
+            		,"NMSITUAC"   , "NMSUPLEM" , "STATUS"     , "CDTIPSIT"
+            		,"SWREDUCI"   , "CDAGRUPA" , "CDESTADO"   , "FEFECSIT"
+            		,"FECHAREF"   , "CDGRUPO"  , "NMSITUAEXT" , "NMSITAUX"
+            		,"NMSBSITEXT" , "CDPLAN"   , "CDASEGUR"   , "DSGRUPO"
+            		//TVALOSIT
+            		,"NMSUPLEM_TVAL"
+            		,"OTVALOR01" , "OTVALOR02" , "OTVALOR03" , "OTVALOR04" , "OTVALOR05" , "OTVALOR06" , "OTVALOR07" , "OTVALOR08" , "OTVALOR09" , "OTVALOR10"
+            		,"OTVALOR11" , "OTVALOR12" , "OTVALOR13" , "OTVALOR14" , "OTVALOR15" , "OTVALOR16" , "OTVALOR17" , "OTVALOR18" , "OTVALOR19" , "OTVALOR20"
+            		,"OTVALOR21" , "OTVALOR22" , "OTVALOR23" , "OTVALOR24" , "OTVALOR25" , "OTVALOR26" , "OTVALOR27" , "OTVALOR28" , "OTVALOR29" , "OTVALOR30"
+            		,"OTVALOR31" , "OTVALOR32" , "OTVALOR33" , "OTVALOR34" , "OTVALOR35" , "OTVALOR36" , "OTVALOR37" , "OTVALOR38" , "OTVALOR39" , "OTVALOR40"
+            		,"OTVALOR41" , "OTVALOR42" , "OTVALOR43" , "OTVALOR44" , "OTVALOR45" , "OTVALOR46" , "OTVALOR47" , "OTVALOR48" , "OTVALOR49" , "OTVALOR50"
+            		,"OTVALOR51" , "OTVALOR52" , "OTVALOR53" , "OTVALOR54" , "OTVALOR55" , "OTVALOR56" , "OTVALOR57" , "OTVALOR58" , "OTVALOR59" , "OTVALOR60"
+            		,"OTVALOR61" , "OTVALOR62" , "OTVALOR63" , "OTVALOR64" , "OTVALOR65" , "OTVALOR66" , "OTVALOR67" , "OTVALOR68" , "OTVALOR69" , "OTVALOR70"
+            		,"OTVALOR71" , "OTVALOR72" , "OTVALOR73" , "OTVALOR74" , "OTVALOR75" , "OTVALOR76" , "OTVALOR77" , "OTVALOR78" , "OTVALOR79" , "OTVALOR80"
+            		,"OTVALOR81" , "OTVALOR82" , "OTVALOR83" , "OTVALOR84" , "OTVALOR85" , "OTVALOR86" , "OTVALOR87" , "OTVALOR88" , "OTVALOR89" , "OTVALOR90"
+            		,"OTVALOR91" , "OTVALOR92" , "OTVALOR93" , "OTVALOR94" , "OTVALOR95" , "OTVALOR96" , "OTVALOR97" , "OTVALOR98" , "OTVALOR99"
+            		,"DSVALOR01" , "DSVALOR02" , "DSVALOR03" , "DSVALOR04" , "DSVALOR05" , "DSVALOR06" , "DSVALOR07" , "DSVALOR08" , "DSVALOR09" , "DSVALOR10"
+            		,"DSVALOR11" , "DSVALOR12" , "DSVALOR13" , "DSVALOR14" , "DSVALOR15" , "DSVALOR16" , "DSVALOR17" , "DSVALOR18" , "DSVALOR19" , "DSVALOR20"
+            		,"DSVALOR21" , "DSVALOR22" , "DSVALOR23" , "DSVALOR24" , "DSVALOR25" , "DSVALOR26" , "DSVALOR27" , "DSVALOR28" , "DSVALOR29" , "DSVALOR30"
+            		,"DSVALOR31" , "DSVALOR32" , "DSVALOR33" , "DSVALOR34" , "DSVALOR35" , "DSVALOR36" , "DSVALOR37" , "DSVALOR38" , "DSVALOR39" , "DSVALOR40"
+            		,"DSVALOR41" , "DSVALOR42" , "DSVALOR43" , "DSVALOR44" , "DSVALOR45" , "DSVALOR46" , "DSVALOR47" , "DSVALOR48" , "DSVALOR49" , "DSVALOR50"
+            		,"DSVALOR51" , "DSVALOR52" , "DSVALOR53" , "DSVALOR54" , "DSVALOR55" , "DSVALOR56" , "DSVALOR57" , "DSVALOR58" , "DSVALOR59" , "DSVALOR60"
+            		,"DSVALOR61" , "DSVALOR62" , "DSVALOR63" , "DSVALOR64" , "DSVALOR65" , "DSVALOR66" , "DSVALOR67" , "DSVALOR68" , "DSVALOR69" , "DSVALOR70"
+            		,"DSVALOR71" , "DSVALOR72" , "DSVALOR73" , "DSVALOR74" , "DSVALOR75" , "DSVALOR76" , "DSVALOR77" , "DSVALOR78" , "DSVALOR79" , "DSVALOR80"
+            		,"DSVALOR81" , "DSVALOR82" , "DSVALOR83" , "DSVALOR84" , "DSVALOR85" , "DSVALOR86" , "DSVALOR87" , "DSVALOR88" , "DSVALOR89" , "DSVALOR90"
+            		,"DSVALOR91" , "DSVALOR92" , "DSVALOR93" , "DSVALOR94" , "DSVALOR95" , "DSVALOR96" , "DSVALOR97" , "DSVALOR98" , "DSVALOR99"
+            		//MPERSONA
+            		,"CDPERSON"   , "CDTIPIDE"    , "CDIDEPER" , "DSNOMBRE"
+            		,"CDTIPPER"   , "OTFISJUR"    , "OTSEXO"   , "FENACIMI"
+            		,"CDRFC"      , "FOTO"        , "DSEMAIL"  , "DSNOMBRE1"
+            		,"DSAPELLIDO" , "DSAPELLIDO1" , "CDNACION" , "DSCOMNOM"
+            		,"DSRAZSOC"   , "FEINGRESO"   , "FEACTUAL" , "DSNOMUSU"
+            		,"CDESTCIV"   , "CDGRUECO"    , "CDSTIPPE" , "NMNUMNOM"
+            		,"CURP"       , "CANALING"    , "CONDUCTO" , "PTCUMUPR"
+            		,"STATUSPER"  , "RESIDENCIA"  , "NONGRATA" , "CDIDEEXT"
+            		,"CDSUCEMI"
+            		//MPOLIPER
+            		,"CDROL" , "NMORDDOM" , "SWRECLAM" , "SWEXIPER" , "CDPARENT" , "PORBENEF"
+            		//TATRISIT:
+            		,"DSATRIBU01" , "DSATRIBU02" , "DSATRIBU03" , "DSATRIBU04" , "DSATRIBU05" , "DSATRIBU06" , "DSATRIBU07" , "DSATRIBU08" , "DSATRIBU09" , "DSATRIBU10"
+            		,"DSATRIBU11" , "DSATRIBU12" , "DSATRIBU13" , "DSATRIBU14" , "DSATRIBU15" , "DSATRIBU16" , "DSATRIBU17" , "DSATRIBU18" , "DSATRIBU19" , "DSATRIBU20"
+            		,"DSATRIBU21" , "DSATRIBU22" , "DSATRIBU23" , "DSATRIBU24" , "DSATRIBU25" , "DSATRIBU26" , "DSATRIBU27" , "DSATRIBU28" , "DSATRIBU29" , "DSATRIBU30"
+            		,"DSATRIBU31" , "DSATRIBU32" , "DSATRIBU33" , "DSATRIBU34" , "DSATRIBU35" , "DSATRIBU36" , "DSATRIBU37" , "DSATRIBU38" , "DSATRIBU39" , "DSATRIBU40"
+            		,"DSATRIBU41" , "DSATRIBU42" , "DSATRIBU43" , "DSATRIBU44" , "DSATRIBU45" , "DSATRIBU46" , "DSATRIBU47" , "DSATRIBU48" , "DSATRIBU49" , "DSATRIBU50"
+            		,"DSATRIBU51" , "DSATRIBU52" , "DSATRIBU53" , "DSATRIBU54" , "DSATRIBU55" , "DSATRIBU56" , "DSATRIBU57" , "DSATRIBU58" , "DSATRIBU59" , "DSATRIBU60"
+            		,"DSATRIBU61" , "DSATRIBU62" , "DSATRIBU63" , "DSATRIBU64" , "DSATRIBU65" , "DSATRIBU66" , "DSATRIBU67" , "DSATRIBU68" , "DSATRIBU69" , "DSATRIBU70"
+            		,"DSATRIBU71" , "DSATRIBU72" , "DSATRIBU73" , "DSATRIBU74" , "DSATRIBU75" , "DSATRIBU76" , "DSATRIBU77" , "DSATRIBU78" , "DSATRIBU79" , "DSATRIBU80"
+            		,"DSATRIBU81" , "DSATRIBU82" , "DSATRIBU83" , "DSATRIBU84" , "DSATRIBU85" , "DSATRIBU86" , "DSATRIBU87" , "DSATRIBU88" , "DSATRIBU89" , "DSATRIBU90"
+            		,"DSATRIBU91" , "DSATRIBU92" , "DSATRIBU93" , "DSATRIBU94" , "DSATRIBU95" , "DSATRIBU96" , "DSATRIBU97" , "DSATRIBU98" , "DSATRIBU99"
+            		//MPLANES
+            		,"DSPLAN"
+            		//MOVIMIENTOS
+            		,"MOV"
+    	            };
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	private void construirClavesAtributos(List<Map<String,String>>lista)
+	{
+		for (Map<String,String> map : lista)
+		{
+			for(int i=1;i<=99;i++)
+			{
+				String dsatribu = map.get("DSATRIBU"+StringUtils.leftPad(String.valueOf(i), 2, "0"));
+				if(StringUtils.isNotBlank(dsatribu))
+				{
+					map.put("CVE_"+dsatribu, map.get("OTVALOR"+StringUtils.leftPad(String.valueOf(i), 2, "0")));
+					map.put("DES_"+dsatribu, map.get("DSVALOR"+StringUtils.leftPad(String.valueOf(i), 2, "0")));
+				}
+			}
 		}
 	}
 }

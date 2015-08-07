@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.consultas.service;
 
+import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
@@ -23,4 +24,18 @@ public interface RecuperacionSimpleManager
 			,String cdsisrol
 			,String cdusuari
 			);
+	
+	public Map<String,String> recuperarMapa(
+			String cdusuari
+			,String cdsisrol
+			,RecuperacionSimple consulta
+			,Map<String,String> params
+			)throws Exception;
+	
+	public List<Map<String,String>> recuperarLista(
+			String cdusuari
+			,String cdsisrol
+			,RecuperacionSimple consulta
+			,Map<String,String> params
+			)throws Exception;
 }

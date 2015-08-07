@@ -314,4 +314,12 @@ public interface ConsultasDAO
 			,String cdusuari
 			,String cdsisrol
 			)throws Exception;
+	
+	public List<Map<String,String>> recuperarMovimientosEndosoAltaBajaAsegurados(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception;
 }
