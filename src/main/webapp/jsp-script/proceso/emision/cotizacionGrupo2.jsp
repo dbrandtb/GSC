@@ -108,6 +108,8 @@ debug('_p25_ntramite:',_p25_ntramite,'_p25_ntramiteVacio:',_p25_ntramiteVacio);
 
 var inputNtramite = _p25_ntramite;
 
+var _RamoRecupera = ((Ramo.Recupera == _p25_smap1.cdramo) && (TipoSituacion.RecuperaColectivo == _p25_smap1.cdtipsit))? true : false;
+
 var _p25_clasif;
 var _p25_storeGrupos;
 var _p25_tabGrupos;
@@ -4962,7 +4964,7 @@ function _p25_editarAsegurado(grid,rowIndex)
 									                'smap1.cdperson' : record.get('CDPERSON'),
 									                'smap1.cdideper' : '',
 									                'smap1.cdideext' : '',
-									                'smap1.esSaludDanios' : 'D',
+									                'smap1.esSaludDanios' : _RamoRecupera? 'D' : 'S',
 									                'smap1.esCargaClienteNvo' : 'N' ,
 									                'smap1.ocultaBusqueda' : 'S' ,
 									                'smap1.cargaCP' : '',

@@ -49,6 +49,8 @@
 	var _p31_urlPantallaCliente                = '<s:url namespace="/catalogos"  action="includes/personasLoader"              />';	
 	var urlPantallaBeneficiarios = '<s:url namespace="/catalogos" action="includes/pantallaBeneficiarios" />';
 	
+	var _RamoRecupera = ((Ramo.Recupera == inputCdramop2) && (TipoSituacion.RecuperaIndividual == inputCdtipsitp2))? true : false;
+	
 	var editorFechap2;
 	var contextop2='${ctx}';
 	var gridTomadorp2;
@@ -927,7 +929,7 @@ debug("validarYGuardar flag:2");
 					                'smap1.cdperson' : cdpersonTomador,
 					                'smap1.cdideper' : recordContra.get('cdideper'),
 					                'smap1.cdideext' : recordContra.get('cdideext'),
-					                'smap1.esSaludDanios' : 'S',
+					                'smap1.esSaludDanios' : _RamoRecupera? 'D' : 'S',
 					                'smap1.esCargaClienteNvo' : 'N' ,
 					                'smap1.ocultaBusqueda' : 'S' ,
 					                'smap1.cargaCP' : '',
@@ -964,7 +966,7 @@ debug("validarYGuardar flag:2");
 					                'smap1.cdperson' : '',
 					                'smap1.cdideper' : '',
 					                'smap1.cdideext' : '',
-					                'smap1.esSaludDanios' : 'S',
+					                'smap1.esSaludDanios' : _RamoRecupera? 'D' : 'S',
 					                'smap1.esCargaClienteNvo' : 'N' ,
 					                'smap1.ocultaBusqueda' : 'S' ,
 					                'smap1.cargaCP' : '',
@@ -1589,7 +1591,7 @@ debug("validarYGuardar flag:2");
 						                'smap1.cdperson' : '',
 						                'smap1.cdideper' : '',
 						                'smap1.cdideext' : '',
-						                'smap1.esSaludDanios' : 'S',
+						                'smap1.esSaludDanios' : _RamoRecupera? 'D' : 'S',
 						                'smap1.esCargaClienteNvo' : 'N' ,
 						                'smap1.ocultaBusqueda' : 'S' ,
 						                'smap1.cargaCP' : '',
