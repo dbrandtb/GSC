@@ -5836,7 +5836,7 @@ function _p21_editarAsegurado(grid,rowIndex)
 									                'smap1.cdperson' : record.get('CDPERSON'),
 									                'smap1.cdideper' : '',
 									                'smap1.cdideext' : '',
-									                'smap1.esSaludDanios' : 'D',
+									                'smap1.esSaludDanios' : 'S',
 									                'smap1.esCargaClienteNvo' : 'N' ,
 									                'smap1.ocultaBusqueda' : 'S' ,
 									                'smap1.cargaCP' : '',

@@ -15,6 +15,7 @@ public enum TipoSituacion {
 	SERVICIO_PUBLICO_AUTO     ("AT"),
 	SERVICIO_PUBLICO_MICRO    ("MC"),
 	RECIPERA_INDIVIDUAL       ("RI"),
+	RECUPERA_COLECTIVO        ("RC"),
 	GASTOS_MEDICOS_INDIVIDUAL ("GMI")
 	;
 

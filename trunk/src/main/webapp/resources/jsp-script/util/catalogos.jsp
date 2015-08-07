@@ -83,7 +83,8 @@ var EstatusTramite = {
 var Ramo = {
 	AutosFronterizos : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@AUTOS_FRONTERIZOS.cdramo"/>',
     Multisalud       : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo"/>',
-    SaludVital       : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SALUD_VITAL.cdramo"/>'
+    SaludVital       : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SALUD_VITAL.cdramo"/>',
+    Recupera         : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo"/>'
 };
 
 
@@ -100,7 +101,9 @@ var TipoSituacion = {
     AutosPickUp      : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@AUTOS_PICK_UP.cdtipsit" />',
     Multisalud       : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@MULTISALUD.cdtipsit" />',
     SaludNomina      : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SALUD_NOMINA.cdtipsit" />',
-    SaludVital       : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SALUD_VITAL.cdtipsit" />'
+    SaludVital       : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SALUD_VITAL.cdtipsit" />',
+    RecuperaIndividual: '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@RECIPERA_INDIVIDUAL.cdtipsit" />',
+    RecuperaColectivo : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@RECUPERA_COLECTIVO.cdtipsit" />'
 };
 
 
