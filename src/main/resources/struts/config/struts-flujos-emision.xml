@@ -54,6 +54,10 @@
            <result type="json" />
        </action>
        
+       <action name="obtenerCoberturasPlanColec" class="CotizacionAction" method="obtenerCoberturasPlanColec">
+           <result type="json" />
+       </action>
+       
        <action name="obtenerTatrigarCoberturas" class="CotizacionAction" method="obtenerTatrigarCoberturas">
            <result type="json" />
        </action>
