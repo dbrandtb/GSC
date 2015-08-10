@@ -454,4 +454,10 @@ public interface CotizacionDAO {
 			,String derpol
 			,List<ConfiguracionCoberturaDTO>lista
 			)throws Exception;
+	
+	public List<Map<String,String>> obtenerCoberturasPlanColec(
+			String cdramo
+			,String cdtipsit
+			,String cdplan
+			)throws Exception;
 }
