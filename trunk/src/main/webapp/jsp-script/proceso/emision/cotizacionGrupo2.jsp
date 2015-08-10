@@ -50,6 +50,7 @@ var _p25_urlSubirCenso                  = '<s:url namespace="/emision"         a
 var _p25_urlVentanaDocumentos           = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"          />';
 var _p25_urlBuscarPersonas              = '<s:url namespace="/"                action="buscarPersonasRepetidas"          />';
 var _p25_urlObtenerCoberturas           = '<s:url namespace="/emision"         action="obtenerCoberturasPlan"            />';
+var _p25_urlObtenerCoberturasColec      = '<s:url namespace="/emision"         action="obtenerCoberturasPlanColec"       />';
 var _p25_urlObtenerHijosCobertura       = '<s:url namespace="/emision"         action="obtenerTatrigarCoberturas"        />';
 var _p25_urlObtenerTarifaEdad           = '<s:url namespace="/emision"         action="cargarTarifasPorEdad"             />';
 var _p25_urlObtenerTarifaCobertura      = '<s:url namespace="/emision"         action="cargarTarifasPorCobertura"        />';
@@ -2201,7 +2202,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
         _p25_tabpanel().setLoading(true);
         Ext.Ajax.request(
         {
-            url      : _p25_urlObtenerCoberturas
+            url      : _p25_urlObtenerCoberturasColec
             ,params  :
             {
                 'smap1.cdramo'    : _p25_smap1.cdramo
