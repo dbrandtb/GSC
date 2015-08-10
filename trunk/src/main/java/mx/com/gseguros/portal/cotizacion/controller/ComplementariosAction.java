@@ -1852,6 +1852,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				if(listaAseguradosEdadInvalida.size()>0)
 				{
 					necesitaAutorizacion=true;
+					panel1.put("necesitaAutorizacion" , "S");
 					mensajeRespuesta = "La p&oacute;liza se envi&oacute; a autorizaci&oacute;n debido a que:<br/>";
 					for(Map<String,String>iAseguradoEdadInvalida:listaAseguradosEdadInvalida)
 					{
@@ -1926,6 +1927,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				if(!cuadroNatural)
 				{
 					necesitaAutorizacion=true;
+					panel1.put("necesitaAutorizacion" , "S");
 					mensajeRespuesta = "La p&oacute;liza se envi&oacute; a autorizaci&oacute;n debido a que se cambio el cuadro de comisiones";
 					
 					Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
