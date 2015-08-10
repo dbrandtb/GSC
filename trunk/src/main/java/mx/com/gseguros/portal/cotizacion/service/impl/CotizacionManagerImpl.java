@@ -2841,6 +2841,53 @@ public class CotizacionManagerImpl implements CotizacionManager
 		            	logger.error(resp.getRespuesta(),ex);
 		            }
 		            
+		            if(resp.isExito()&&!clasif.equals("1"))
+		            {
+			            Map<String,String> familiasMinimas = null;
+			            try
+			            {
+			            	familiasMinimas = cotizacionDAO.obtenerParametrosCotizacion(
+			            		ParametroCotizacion.NUMERO_FAMILIAS_COTI_COLECTIVO
+			            		,cdramo
+			            		,cdtipsit
+			            		,null
+			            		,null
+			            		);
+			            }
+			            catch(Exception ex)
+			            {
+			            	resp.setExito(false);
+			            	resp.setRespuesta(Utils.join("Error al recuperar n\u00FAmero m\u00EDnimo de titulares #",System.currentTimeMillis()));
+			            	logger.error(resp.getRespuesta(),ex);
+			            }
+			            
+			            if(resp.isExito())
+			            {
+				            int nMin = 0;
+				            try
+				            {
+				            	nMin = Integer.parseInt(familiasMinimas.get("P1VALOR"));
+				            }
+				            catch(Exception ex)
+				            {
+				            	resp.setExito(false);
+				            	resp.setRespuesta(Utils.join("Error al validar el n\u00FAmero de titulares #",System.currentTimeMillis()));
+				            	logger.error(resp.getRespuesta(),ex);
+				            }
+				            
+				            if(resp.isExito()&&nFamilia<nMin)
+				            {
+				            	resp.setExito(false);
+				            	resp.setRespuesta(Utils.join("El n\u00FAmero de titulares debe ser por lo menos "
+				            			,nMin
+				            			,", se encontraron "
+				            			,nFamilia
+				            			," #",System.currentTimeMillis()));
+				            	logger.error(resp.getRespuesta());
+				            }
+			            }
+		            }
+		            
 		            output.close();
 		            logger.debug(
 		            		new StringBuilder()

@@ -5401,6 +5401,39 @@ public class CotizacionAction extends PrincipalCoreAction
 			            	}
 			            }
 			            
+			            if(exito&&!clasif.equals(LINEA))
+			            {
+				            ManagerRespuestaSmapVO familiasMinimas = cotizacionManager.obtenerParametrosCotizacion(
+				            		ParametroCotizacion.NUMERO_FAMILIAS_COTI_COLECTIVO
+				            		,cdramo
+				            		,cdtipsit
+				            		,null
+				            		,null
+				            		);
+				            int nMin = 0;
+				            try
+				            {
+				            	nMin = Integer.parseInt(familiasMinimas.getSmap().get("P1VALOR"));
+				            }
+				            catch(Exception ex)
+				            {
+				            	exito     = false;
+				            	respuesta = Utils.join("Error al validar el n\u00FAmero de titulares #",System.currentTimeMillis());
+				            	logger.error(respuesta,ex);
+				            }
+				            
+				            if(exito&&nFamilia<nMin)
+				            {
+				            	exito     = false;
+				            	respuesta = Utils.join("El n\u00FAmero de titulares debe ser por lo menos "
+				            			,nMin
+				            			,", se encontraron "
+				            			,nFamilia
+				            			," #",System.currentTimeMillis());
+				            	logger.error(respuesta);
+				            }
+			            }
+			            
 			            input.close();
 			            output.close();
 			            logger.info(""
