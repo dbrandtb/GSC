@@ -7483,6 +7483,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 		
 		return cdPaqueteNuevo;
 	}
+	
+	@Override
+	public List<Map<String,String>> obtenerCoberturasPlanColec(
+			String cdramo
+			,String cdtipsit
+			,String cdplan
+			)throws Exception
+	{
+		return cotizacionDAO.obtenerCoberturasPlanColec(cdramo,cdtipsit,cdplan);
+	}
     
 	///////////////////////////////
 	////// getters y setters //////
