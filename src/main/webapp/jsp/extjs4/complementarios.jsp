@@ -1189,6 +1189,20 @@ function _datComTurnarSuscripcion()
 									                                                                                    ,buttons : Ext.Msg.OK
 									                                                                                    ,icon    : Ext.Msg.WARNING
 									                                                                                    ,fn      : function(){
+									                                                                                        if(''+json.panel1.necesitaAutorizacion=='S')
+									                                                                                        {
+									                                                                                            Ext.create('Ext.form.Panel').submit(
+									                                                                                            {
+									                                                                                                url     : datComUrlMC
+									                                                                                                ,params :
+									                                                                                                {
+									                                                                                                    'smap1.gridTitle'     : 'Tareas',
+									                                                                                                    'smap2.pv_cdtiptra_i' : 1,
+									                                                                                                    'smap1.editable'      : 1
+									                                                                                                }
+									                                                                                                ,standardSubmit : true
+									                                                                                            });
+									                                                                                        }
 									                                                                                    	if(json.retryWS){
 									                                                                                    		var paramsWS = {
 																                                                                        'panel1.pv_nmpoliza'  : inputNmpoliza
