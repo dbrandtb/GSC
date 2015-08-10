@@ -8834,6 +8834,34 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String obtenerCoberturasPlanColec()
+	{
+		logger.info(""
+				+ "\n########################################"
+				+ "\n###### obtenerCoberturasPlanColec ######"
+				+ "\nsmap1: "+smap1
+				);
+		try
+		{
+			success = true;
+			exito   = true;
+			slist1 = cotizacionManager.obtenerCoberturasPlanColec(smap1.get("cdramo"),smap1.get("cdtipsit"),smap1.get("cdplan"));
+		}
+		catch(Exception ex)
+		{
+			long timestamp=System.currentTimeMillis();
+			logger.error(timestamp+" error al obtener coberturas plan");
+			respuesta       = "Error inesperado #"+timestamp;
+			respuestaOculta = ex.getMessage();
+			exito           = false;
+		}
+		logger.info(""
+				+ "\n###### obtenerCoberturasPlanColec ######"
+				+ "\n########################################"
+				);
+		return SUCCESS;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/
