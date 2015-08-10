@@ -564,4 +564,10 @@ public interface CotizacionManager
 			,String derpol
 			,List<Map<String,String>>tvalogars
 			)throws Exception;
+	
+	public List<Map<String,String>> obtenerCoberturasPlanColec(
+			String cdramo
+			,String cdtipsit
+			,String cdplan
+			)throws Exception;
 }
