@@ -47,6 +47,7 @@ Ext.override(Ext.form.NumberField,
 
 ////// variables //////
 var _p21_urlObtenerCoberturas            = '<s:url namespace="/emision"         action="obtenerCoberturasPlan"            />';
+var _p21_urlObtenerCoberturasColec       = '<s:url namespace="/emision"         action="obtenerCoberturasPlanColec"       />';
 var _p21_urlObtenerHijosCobertura        = '<s:url namespace="/emision"         action="obtenerTatrigarCoberturas"        />';
 var _p21_urlSubirCenso                   = '<s:url namespace="/emision"         action="subirCenso"                       />';
 var _p21_urlSubirCensoCompleto           = '<s:url namespace="/emision"         action="subirCensoCompleto"               />';
@@ -1850,7 +1851,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
         _p21_tabpanel().setLoading(true);
         Ext.Ajax.request(
         {
-            url      : _p21_urlObtenerCoberturas
+            url      : _p21_urlObtenerCoberturasColec
             ,params  :
             {
                 'smap1.cdramo'    : _p21_smap1.cdramo
