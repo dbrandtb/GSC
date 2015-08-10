@@ -1087,7 +1087,7 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                             {
                                 itemId       : '_p34_endosoWindow'
                                 ,modal       : true
-                                ,title       : record.get('DSTIPSUP')
+                                ,title       : record.get('DSTIPSUP')+' - P\u00D3LIZA '+poliza.get('NMPOLIEX')
                                 ,_p34_window : 'si'
                                 ,width       : 950
                                 ,height      : 500
@@ -1137,7 +1137,7 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                             {
                                 itemId       : '_p34_endosoWindow'
                                 ,modal       : true
-                                ,title       : record.get('DSTIPSUP')
+                                ,title       : record.get('DSTIPSUP')+' - P\u00D3LIZA '+poliza.get('NMPOLIEX')
                                 ,_p34_window : 'si'
                                 ,width       : 950
                                 ,height      : 500
