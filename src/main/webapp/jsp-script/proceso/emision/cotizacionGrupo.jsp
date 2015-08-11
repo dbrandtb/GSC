@@ -2010,6 +2010,17 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                 for(var l=0;l<form.items.items.length;l++)
                                                                 {
                                                                     form.items.items[l].setDisabled(!value);
+                                                                    if(value)
+                                                                    {
+                                                                        try
+                                                                        {
+                                                                            form.items.items[l].reset();
+                                                                        }
+                                                                        catch(e)
+                                                                        {
+                                                                            debugError('Error cachado:',e);
+                                                                        }
+                                                                    }
                                                                 }
                                                                 
                                                                 //4MAT y 4AYM
