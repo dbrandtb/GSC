@@ -4791,6 +4791,32 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	public String guardarHistorialSiniestro(){
+		logger.debug("Entra a guardarHistorialSiniestro Params: {}", params);
+		try {
+			//PAGO DIRECTO
+			if(TipoPago.DIRECTO.getCodigo().equals(params.get("tipmov"))){
+				//Obtenemos la facturas
+				List<Map<String,String>> facturas = siniestrosManager.obtenerFacturasTramite(params.get("ntramite"));
+				for(int i=0; i< facturas.size();i++){
+					//facturas.get(i).get("FEEGRESO")
+					logger.debug("TRAMITE :{}, FACTURA : {}",params.get("ntramite"), facturas.get(i).get("NFACTURA"));
+					datosInformacionAdicional = siniestrosManager.guardaHistorialSiniestro(params.get("ntramite"), facturas.get(i).get("NFACTURA"));
+					logger.debug("Valores de Salida Directo --> :{}",datosInformacionAdicional);
+				}
+				
+			}else{
+				//PAGO POR REEMBOLSO
+				datosInformacionAdicional = siniestrosManager.guardaHistorialSiniestro(params.get("ntramite"), null);
+				logger.debug("Valores de Salida Reembolso  --> :{}",datosInformacionAdicional);
+			}
+		}catch( Exception e){
+			logger.error("Error guardarHistorialSiniestro: {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
 /****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {
 		return listaTipoAtencion;

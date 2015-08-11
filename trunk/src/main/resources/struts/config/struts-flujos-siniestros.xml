@@ -611,6 +611,16 @@
 			</result>
 		</action>
 		
+		<action name="guardarHistorialSiniestro" class="siniestrosAction" method="guardarHistorialSiniestro">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					mensaje
+				</param>
+			</result>
+		</action>
+		
 		<action name="obtenerMsinival" class="siniestrosAction" method="obtenerMsinival">
 			<result type="json"></result>
 		</action>
