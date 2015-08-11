@@ -2,8 +2,9 @@ package mx.com.gseguros.portal.general.model;
 
 public enum Movimiento
 {
+	DESHACER_PASO_ASEGURADO ("V"),
 	PASO_QUITAR_ASEGURADO   ("M"),
-	DESHACER_PASO_ASEGURADO ("V");
+	SACAENDOSO              ("V");
 	
 	String tipo;
 	

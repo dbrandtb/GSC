@@ -16,6 +16,7 @@ debug('_p48_params:',_p48_params);
 
 var _p48_store;
 var _p48_storeMov;
+var _p48_windowEsqueleto;
 ////// variables //////
 
 ////// overrides //////
@@ -52,7 +53,8 @@ var _p48_colsMovimi   = [
                             }
                             ,<s:property value="items.colsInciso"   escapeHtml="false" />
                         ];
-var _p48_itemsEndoso  = [ <s:property value="items.itemsEndoso"  escapeHtml="false" /> ];
+var _p48_itemsEndoso    = [ <s:property value="items.itemsEndoso"    escapeHtml="false" /> ];
+var _p48_itemsEsqueleto = [ <s:property value="items.itemsEsqueleto" escapeHtml="false" /> ];
 ////// componentes dinamicos //////
 
 Ext.onReady(function()
@@ -126,6 +128,19 @@ Ext.onReady(function()
     ////// stores //////
     
     ////// componentes //////
+    _p48_windowEsqueleto = Ext.create('Ext.window.Window',
+    {
+        modal  : true
+        ,title : 'NUEVO ASEGURADO'
+        ,items :
+        [
+            Ext.create('Ext.form.Panel',
+            {
+                defaults : { style : 'margin:5px;' }
+                ,items   : _p48_itemsEsqueleto 
+            })
+        ]
+    });
     ////// componentes //////
     
     ////// contenido //////
@@ -159,9 +174,10 @@ Ext.onReady(function()
                 ,tbar     :
                 [
                     {
-                        text    : 'Agregar'
-                        ,icon   : '${icons}accept.png'
-                        ,hidden : _p48_params.operacion!='alta'
+                        text     : 'Agregar'
+                        ,icon    : '${icons}add.png'
+                        ,hidden  : _p48_params.operacion!='alta'
+                        ,handler : _p48_agregarClic
                     }
                     ,{
                         text     : 'Quitar'
@@ -189,7 +205,20 @@ Ext.onReady(function()
                 [
                     {
                         text  : 'Confirmar'
-                        ,icon : '${ctx}/resources/fam3icons/icons/key.png'
+                        ,icon : '${icons}key.png'
+                    }
+                    ,{
+                        text       : 'Cancelar endoso'
+                        ,icon      : '${icons}cancel.png'
+                        ,itemId    : '_p48_botonCancelar'
+                        ,handler   : _p48_cancelarClic
+                        ,listeners :
+                        {
+                            render : function()
+                            {
+                                _p48_validarEstadoBotonCancelar();
+                            }
+                        }
                     }
                 ]
             })
@@ -271,9 +300,12 @@ function _p48_quitarAseguradoClic(me)
                     debug('### quitar:',json);
                     if(json.success==true)
                     {
+                        _p48_params['nsuplogi']        = json.params.nsuplogi_endoso;
                         _p48_params['nmsuplem_endoso'] = json.params.nmsuplem_endoso;
+                        debug('_p48_params modificado despues de quitar asegurado:',_p48_params);
                         _p48_storeMov.proxy.extraParams['params.nmsuplem'] = _p48_params['nmsuplem_endoso'];
                         _p48_cargarStoreMov();
+                        _p48_validarEstadoBotonCancelar();
                     }
                     else
                     {
@@ -350,6 +382,94 @@ function _p48_deshacerMov(v,row,col,item,e,record)
     catch(e)
     {
         manejaException(e,ck);
+    }
+}
+
+function _p48_cancelarClic(me)
+{
+    debug('_p48_cancelarClic');
+    var form = me.up('form');
+    _setLoading(true,form);
+    Ext.Ajax.request(
+    {
+        url       : _p48_urlMovimientoSMD
+        ,jsonData :
+        {
+            params :
+            {
+                movimiento : 'SACAENDOSO'
+                ,cdunieco  : _p48_params.CDUNIECO
+                ,cdramo    : _p48_params.CDRAMO
+                ,estado    : _p48_params.ESTADO
+                ,nmpoliza  : _p48_params.NMPOLIZA
+                ,nsuplogi  : _p48_params.nsuplogi
+                ,nmsuplem  : _p48_params.nmsuplem_endoso
+            }
+        }
+        ,success  : function(response)
+        {
+            _setLoading(false,form);
+            var ck = 'Decodificando respuesta al cancelar endoso';
+            try
+            {
+                var json = Ext.decode(response.responseText);
+                debug('### cancelar:',json);
+                if(json.success==true)
+                {
+                    mensajeCorrecto('Endoso revertido','Se han revertido los cambios');
+                    _p48_params.nmsuplem_endoso = '';
+                    _p48_validarEstadoBotonCancelar();
+                    _p48_cargarStoreMov();
+                }
+                else
+                {
+                    mensajeError(json.message);
+                }
+            }
+            catch(e)
+            {
+                manejaException(e,ck);
+            }
+        }
+        ,failure : function()
+        {
+            _setLoading(false,form);
+            errorComunicacion(null,'Error al cancelar endoso');
+        }
+    });
+}
+
+function _p48_validarEstadoBotonCancelar()
+{
+    debug('_p48_validarEstadoBotonCancelar');
+    try
+    {
+        var bot = _fieldById('_p48_botonCancelar');
+        if(Ext.isEmpty(_p48_params.nmsuplem_endoso))
+        {
+            bot.hide();
+        }
+        else
+        {
+            bot.show();
+        }
+    }
+    catch(e)
+    {
+        debugError(e);
+        mensajeError('Error al validar estado de endoso');
+    }
+}
+
+function _p48_agregarClic()
+{
+    debug('_p48_agregarClic');
+    //hay que crear un mpersona vacio, un mpolisit, un tvalosit y un mpoliper
+    var familia;
+    var grupo;
+    if(!Ext.isEmpty(_p48_params.TIPOFLOT)&&_p48_params.TIPOFLOT!='I')//para colectivos
+    {
+        qwe
     }
 }
 ////// funciones //////

@@ -4379,7 +4379,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public String recuperarNmsuplemEndosoValidando(
+	public Map<String,String> recuperarNmsuplemNsuplogiEndosoValidando(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -4396,12 +4396,16 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		Map<String,Object> procRes  = ejecutaSP(new RecuperarNmsuplemEndosoValidando(getDataSource()),params);
 		String             error    = (String)procRes.get("pv_dserror_o");
 		String             nmsuplem = (String)procRes.get("pv_nmsuplem_o");
+		String             nsuplogi = (String)procRes.get("pv_nsuplogi_o");
 		if(StringUtils.isNotBlank(error))
 		{
 			throw new ApplicationException(error);
 		}
-		logger.debug("****** PKG_CONSULTA.P_GET_NMSUPLEM_ENDOSO_VAL nmsuplem={}",nmsuplem);
-		return nmsuplem;
+		Map<String,String> res = new HashMap<String,String>();
+		res.put("nmsuplem" , nmsuplem);
+		res.put("nsuplogi" , nsuplogi);
+		logger.debug("****** PKG_CONSULTA.P_GET_NMSUPLEM_ENDOSO_VAL res={}",res);
+		return res;
 	}
 	
 	protected class RecuperarNmsuplemEndosoValidando extends StoredProcedure
@@ -4415,9 +4419,45 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nsuplogi_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_dserror_o"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void sacaEndoso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nsuplogi
+			,String nmsuplem
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nsuplogi" , nsuplogi);
+		params.put("nmsuplem" , nmsuplem);
+		ejecutaSP(new SacaEndoso(getDataSource()),params);
+	}
+	
+	protected class SacaEndoso extends StoredProcedure
+	{
+		protected SacaEndoso(DataSource dataSource)
+		{
+			super(dataSource, "P_SACAENDOSO_TMP");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nsuplogi" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
