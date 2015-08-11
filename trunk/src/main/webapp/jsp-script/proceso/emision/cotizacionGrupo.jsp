@@ -5408,18 +5408,18 @@ function _p21_aseguradosClic(grid,rowIndex)
             ,items        :
             [
                 {
-                    tooltip  : 'Recuperar'
+                    tooltip  : 'Recuperar por RFC'
                     ,icon    : '${ctx}/resources/fam3icons/icons/vcard_edit.png'
                     ,handler : _p21_recuperarAsegurado
                 }
                 ,{
                     tooltip  : 'Editar datos b\u00E1sicos'
-                    ,icon    : '${ctx}/resources/fam3icons/icons/wand.png'
+                    ,icon    : '${icons}user_edit.png'
                     ,handler : _p21_editarDatosBaseAsegurado
                 }
                 ,{
-                    tooltip  : 'Editar'
-                    ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
+                    tooltip  : 'Editar persona/domicilio'
+                    ,icon    : '${icons}report_key.png'
                     ,handler : _p21_editarAsegurado
                 }
                 ,{
