@@ -7,5 +7,7 @@
 
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
+<c:set var="icons" value="${pageContext.request.contextPath}/resources/fam3icons/icons/" />
+
 <c:set var="now" value="<%= new java.util.Date() %>" />
 <fmt:formatDate pattern="yyyyMMddHHmm" value="${now}" var="now" />
