@@ -49,7 +49,6 @@
 			var _URL_LISTA_SUBCOBERTURA					= '<s:url namespace="/siniestros"  		action="consultaListaSubcobertura" />';
 			var _URL_CONCEPTODESTINO        			= '<s:url namespace="/siniestros"       action="guardarConceptoDestino" />';
             var _URL_SOLICITARPAGO           			= '<s:url namespace="/siniestros" 		action="solicitarPago" />';
-            var _URL_GUARDAHISTORIAL          			= '<s:url namespace="/siniestros" 		action="guardarHistorialSiniestro" />';
             var _URL_TIPO_ATENCION						= '<s:url namespace="/siniestros"  		action="consultaListaTipoAtencion" />';
             var _URL_NOMBRE_TURNADO   					= '<s:url namespace="/siniestros" 		action="obtieneUsuarioTurnado" />';
             var _URL_CONSULTA_TRAMITE       			= '<s:url namespace="/siniestros"       action="consultaListadoMesaControl" />';
@@ -1329,12 +1328,7 @@
 									text	: 'Generar Calculo'
 									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 									,handler : _p21_generarCalculo
-								}/*,
-								{
-									text	: 'Guardar Informaci&oacute;n'
-									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
-									,handler : _p21_guardarInformacion
-								}*/
+								}
 							],
 							
 						listeners: {
@@ -4029,56 +4023,6 @@
 		
 	}
 	
-	function _p21_guardarInformacion(){
-		// Se manda a llamar al procedimiento y se guarda
-		Ext.Ajax.request(
-		{
-			url	 : _URL_GUARDAHISTORIAL
-			,params:{
-				'params.ntramite'  : _11_params.NTRAMITE,
-				'params.tipmov'    : _11_params.OTVALOR02
-			}
-			,success : function (response)
-			{
-				var respuesta = Ext.decode(response.responseText);
-				debug("Valor de Respuesta -->", respuesta);
-				centrarVentanaInterna(mensajeCorrecto('&Eacute;XITO','El pago se ha solicitado con &eacute;xito.',function(){
-					Ext.create('Ext.form.Panel').submit(
-					{
-						url		: _URL_MESACONTROL
-						,standardSubmit : true
-						,params         :
-						{
-							'smap1.gridTitle'      : 'Siniestros en espera'
-							,'smap2.pv_cdtiptra_i' : 16
-						}
-					});
-				}));
-				/*storeAseguradoFactura.load({
-					params: {
-						'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue() ,
-						'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
-					}
-				});
-				
-				panelComplementos.down('[name=params.sumaAsegurada]').setValue("0.00");
-				panelComplementos.down('[name=params.sumaGastada]').setValue("0.00");
-				obtenerTotalPagos(panelInicialPral.down('[name=params.ntramite]').getValue() , panelInicialPral.down('[name=params.nfactura]').getValue());*/
-			},
-			failure : function ()
-			{
-				//me.up().up().setLoading(false);
-				Ext.Msg.show({
-					title:'Error',
-					msg: 'Error de comunicaci&oacute;n',
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-				});
-			}
-		});
-		
-	}
-	
 	
 	function _p21_agregarConcepto()
 	{
@@ -4979,9 +4923,7 @@
 															success: function(response, opts) {
 																var respuesta = Ext.decode(response.responseText);
 																if(respuesta.success){
-																	//realizamos la inserción de los registros
-																	_p21_guardarInformacion();
-																	/*centrarVentanaInterna(mensajeCorrecto('&Eacute;XITO','El pago se ha solicitado con &eacute;xito.',function(){
+																	centrarVentanaInterna(mensajeCorrecto('&Eacute;XITO','El pago se ha solicitado con &eacute;xito.',function(){
 																		Ext.create('Ext.form.Panel').submit(
 																		{
 																			url		: _URL_MESACONTROL
@@ -4992,7 +4934,7 @@
 																				,'smap2.pv_cdtiptra_i' : 16
 																			}
 																		});
-																	}));*/
+																	}));
 																}else {
 																	centrarVentanaInterna(mensajeError(respuesta.mensaje));
 																}

@@ -29,11 +29,10 @@ import mx.com.gseguros.portal.general.util.CausaSiniestro;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
+import mx.com.gseguros.portal.general.util.Rol;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoPago;
-import mx.com.gseguros.portal.general.util.TipoPrestadorServicio;
 import mx.com.gseguros.portal.general.util.TipoTramite;
-import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
@@ -236,8 +235,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			parMesCon.put("pv_otvalor48"    , 	listaMesaControl.get(0).getOtvalor48mc());
 			parMesCon.put("pv_otvalor49"    , 	listaMesaControl.get(0).getOtvalor49mc());
 			parMesCon.put("pv_otvalor50"    , 	listaMesaControl.get(0).getOtvalor50mc());
-			parMesCon.put("cdusuari"        , usuario.getUser());
-			parMesCon.put("cdsisrol"        , usuario.getRolActivo().getClave());
 			WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
 			if(res.getItemMap() == null){
 				logger.error("Sin mensaje respuesta de nmtramite!!");
@@ -1002,7 +999,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			gc.generaComponentes(componentes, true, false, true, false, false, false);
 			imap.put("itemsEdicion",gc.getItems());
 
-			//obtenemos los valores de las facturas y de ahi la informaciï¿½n de los asegurados
+			//obtenemos los valores de las facturas y de ahi la información de los asegurados
 			List<Map<String,String>> facturasAux = siniestrosManager.obtenerFacturasTramite(ntramite);
 			logger.debug("Valor de facturasAux : {}",facturasAux);
 			List<Map<String,String>> siniestros = siniestrosManager.listaSiniestrosTramite2(ntramite,facturasAux.get(0).get("NFACTURA"),null);
@@ -1612,7 +1609,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			if(!causaSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
 				if(!existePenalizacion.equalsIgnoreCase("S")){
 					try{
-						List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(TipoPrestadorServicio.MEDICO.getCdtipo(),idProveedor);
+						List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(),idProveedor);
 						porcentajePenalizacion = siniestrosManager.validaPorcentajePenalizacion(zonaTarifiAsegurado, medicos.get(0).getZonaHospitalaria(), cdRamo);
 						penalizacionCambioZona =  Double.parseDouble(porcentajePenalizacion);
 					}catch(Exception ex){
@@ -2668,7 +2665,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
 							informacionGral.get(0).get("DSZONAT"),facturaIte.get("CDPRESTA"),siniestro.get("CDRAMO"));
 							//3.- Obtenemos la penalizaciï¿½n por circulo Hospitalario
-							List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(TipoPrestadorServicio.MEDICO.getCdtipo(),facturaIte.get("CDPRESTA"));
+							List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(),facturaIte.get("CDPRESTA"));
 							penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), medicos.get(0).getCirculo(),informacionGral.get(0).get("CDCAUSA"),siniestro.get("CDRAMO"));
 						}else{
 							// --> DIFERENTE DE SALUD VITAL
@@ -4249,7 +4246,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
 							informacionGral.get(0).get("DSZONAT"),facturaIte.get("CDPRESTA"),siniestro.get("CDRAMO"));
 							//3.- Obtenemos la penalizaciï¿½n por circulo Hospitalario
-							List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(TipoPrestadorServicio.MEDICO.getCdtipo(),facturaIte.get("CDPRESTA"));
+							List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(),facturaIte.get("CDPRESTA"));
 							penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), medicos.get(0).getCirculo(),informacionGral.get(0).get("CDCAUSA"),siniestro.get("CDRAMO"));
 						}else{
 							// --> DIFERENTE DE SALUD VITAL
@@ -4714,109 +4711,10 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		success = true;
 		return SUCCESS;
 	}
+	/*
 	
+	proveedor = siniestrosManager.obtenerDatosProveedor(facturasAux.get(0).get("CDPRESTA"));
 	
-	public String  guardarConfiguracionProveedor(){
-		logger.debug("Entra a guardarConfiguracionProveedor params de entrada :{}",params);
-		try {
-			String respuesta = siniestrosManager.guardaConfiguracionProveedor(params.get("cmbProveedorMod"),params.get("idaplicaIVA"),params.get("secuenciaIVA"),params.get("idaplicaIVARET"),params.get("proceso"));
-		}catch( Exception e){
-			logger.error("Error al obtener el monto del arancel : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;
-	}
-	
-	/**
-	* Funcion para la visualizacion de la autorizacion de servicio 
-	* @return params con los valores para hacer las consultas
-	*/
-	public String configuracionLayoutProveedor(){
-		logger.debug("Entra a configuracionLayoutProveedor");
-		try {
-			logger.debug("Params: {}", params);
-		}catch( Exception e){
-			logger.error("Error altaFacturasProceso {}", e.getMessage(), e);
-		}
-		success = true;
-		return SUCCESS;
-	}
-	
-	/**
-	* metodo para el guardado del alta del tramite
-	* @param Json con todos los valores del formulario y los grid
-	* @return Lista AutorizaServiciosVO con la informacion de los asegurados
-	*/
-	public String guardaConfiguracionLayout(){
-		logger.debug("Entra a guardaAltaTramite Params: {} datosTablas {}", params,datosTablas);
-		try{
-			//Realizamos la inserción de los guardados
-			siniestrosManager.guardaLayoutProveedor(params.get("cmbProveedor"), null,null,null,null,null,null,null,"D");
-			for(int i=0;i<datosTablas.size();i++) {
-				siniestrosManager.guardaLayoutProveedor(
-					params.get("cmbProveedor"), 
-					datosTablas.get(i).get("claveAtributo"),
-					datosTablas.get(i).get("claveFormatoAtributo"),
-					datosTablas.get(i).get("valorMinimo"),
-					datosTablas.get(i).get("valorMaximo"),
-					datosTablas.get(i).get("columnaExcel"),
-					datosTablas.get(i).get("claveFormatoFecha"),
-					i+"",
-					null
-				);
-			}
-		}catch( Exception e){
-			logger.error("Error en el guardado de alta de tramite : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;
-	}
-	
-	/**
-	* Funcion para obtener el listado del alta del tramite
-	* @param ntramite
-	* @return Lista AltaTramiteVO - tramite Alta Tramite
-	*/
-	public String consultaConfiguracionLayout(){
-		logger.debug("Entra a consultaConfiguracionLayout Params: {}", params);
-		try {
-			datosInformacionAdicional = siniestrosManager.consultaConfiguracionLayout(params.get("cdpresta"));
-		}catch( Exception e){
-			logger.error("Error consultaListadoAltaTramite: {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;
-	}
-	
-	public String guardarHistorialSiniestro(){
-		logger.debug("Entra a guardarHistorialSiniestro Params: {}", params);
-		try {
-			//PAGO DIRECTO
-			if(TipoPago.DIRECTO.getCodigo().equals(params.get("tipmov"))){
-				//Obtenemos la facturas
-				List<Map<String,String>> facturas = siniestrosManager.obtenerFacturasTramite(params.get("ntramite"));
-				for(int i=0; i< facturas.size();i++){
-					//facturas.get(i).get("FEEGRESO")
-					logger.debug("TRAMITE :{}, FACTURA : {}",params.get("ntramite"), facturas.get(i).get("NFACTURA"));
-					datosInformacionAdicional = siniestrosManager.guardaHistorialSiniestro(params.get("ntramite"), facturas.get(i).get("NFACTURA"));
-					logger.debug("Valores de Salida Directo --> :{}",datosInformacionAdicional);
-				}
-				
-			}else{
-				//PAGO POR REEMBOLSO
-				datosInformacionAdicional = siniestrosManager.guardaHistorialSiniestro(params.get("ntramite"), null);
-				logger.debug("Valores de Salida Reembolso  --> :{}",datosInformacionAdicional);
-			}
-		}catch( Exception e){
-			logger.error("Error guardarHistorialSiniestro: {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;
-	}
 /****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {
 		return listaTipoAtencion;

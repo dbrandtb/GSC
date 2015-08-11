@@ -471,14 +471,4 @@ public interface SiniestrosDAO {
 	public List<Map<String, String>> obtieneListaConfiguracionProveedor(HashMap<String, Object> params) throws Exception;
 	
 	public String obtieneAplicaConceptoIVA(String idConcepto) throws Exception;
-	
-	public String guardaConfiguracionProveedor(String cdpresta, String aplicaIVA,String secuenciaIVA, String aplicaIVARET, String proceso) throws Exception;
-	
-	public List<GenericVO>obtenerAtributosLayout(String descripcion) throws Exception;
-	
-	public String guardaLayoutProveedor(HashMap<String, Object> paramsConfLayout) throws Exception;
-	
-	public List<Map<String, String>> obtieneConfiguracionLayout(Map<String, Object> params) throws Exception;
-	
-	public List<Map<String, String>> guardaHistorialSiniestro(Map<String, Object> params) throws Exception;
 }
