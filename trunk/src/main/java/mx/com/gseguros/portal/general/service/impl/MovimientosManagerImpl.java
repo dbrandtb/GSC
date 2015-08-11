@@ -149,6 +149,28 @@ public class MovimientosManagerImpl implements MovimientosManager
 							);
 				}
 			}
+			else if(movimiento.equals(Movimiento.SACAENDOSO))
+			{
+				paso = "Revirtiendo cambios de endoso";
+				logger.debug("Paso: {}",paso);
+				String cdunieco = params.get("cdunieco");
+				String cdramo   = params.get("cdramo");
+				String estado   = params.get("estado");
+				String nmpoliza = params.get("nmpoliza");
+				String nsuplogi = params.get("nsuplogi");
+				String nmsuplem = params.get("nmsuplem");
+				
+				Utils.validate(
+						cdunieco  , "No se recibi\u00F3 la sucursal"
+						,cdramo   , "No se recibi\u00F3 el producto"
+						,estado   , "No se recibi\u00F3 el estado de p\u00F3liza"
+						,nmpoliza , "No se recibi\u00F3 el n\u00FAmero de p\u00F3liza"
+						,nsuplogi , "No se recibi\u00F3 el consecutivo"
+						,nmsuplem , "No se recibi\u00F3 el suplemento"
+						);
+				
+				endososDAO.sacaEndoso(cdunieco,cdramo,estado,nmpoliza,nsuplogi,nmsuplem);
+			}
 		}
 		catch(Exception ex)
 		{
@@ -232,8 +254,10 @@ public class MovimientosManagerImpl implements MovimientosManager
 						,cdtipsup
 						);
 				String nmsuplemEndoso = endoso.get("pv_nmsuplem_o");
-				logger.debug("nmsuplemEndoso: {}",nmsuplemEndoso);
+				String nsuplogiEndoso = endoso.get("pv_nsuplogi_o");
+				logger.debug("nmsuplemEndoso: {}, nsuplogiEndoso: {}",nmsuplemEndoso,nsuplogiEndoso);
 				mapa.put("nmsuplem_endoso" , nmsuplemEndoso);
+				mapa.put("nsuplogi_endoso" , nsuplogiEndoso);
 				
 				paso = "Quitando relaci\u00F3n p\u00F3liza-situaci\u00F3n";
 				logger.debug("Paso: {}",paso);

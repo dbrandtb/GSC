@@ -2220,6 +2220,18 @@ public class EndososManagerImpl implements EndososManager
 					,null //orden
 					);
 			
+			List<ComponenteVO> itemsEsqueleto = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,tipoflot+tipoflot //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"ENDOSO_FAMILIA"
+					,"ESQUELETO"
+					,null //orden
+					);
+			
 			paso = "Construyendo componentes de pantalla";
 			logger.debug("Paso: {}",paso);
 			GeneradorCampos gc = new GeneradorCampos(contexto);
@@ -2236,16 +2248,20 @@ public class EndososManagerImpl implements EndososManager
 			gc.generaComponentes(itemsEndoso, true, false, true, false, false, false);
 			items.put("itemsEndoso" , gc.getItems());
 			
+			gc.generaComponentes(itemsEsqueleto, true, false, true, false, false, false);
+			items.put("itemsEsqueleto" , gc.getItems());
+			
 			paso = "Recuperando suplemento de endoso";
 			logger.debug("Paso: {}",paso);
-			String nmsuplem = endososDAO.recuperarNmsuplemEndosoValidando(
+			Map<String,String> datosEndoso = endososDAO.recuperarNmsuplemNsuplogiEndosoValidando(
 					cdunieco
 					,cdramo
 					,estado
 					,nmpoliza
 					,cdtipsup
 					);
-			mapa.put("nmsuplem" , nmsuplem);
+			mapa.put("nmsuplem_endoso" , datosEndoso.get("nmsuplem"));
+			mapa.put("nsuplogi"        , datosEndoso.get("nsuplogi"));
 		}
 		catch(Exception ex)
 		{

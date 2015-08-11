@@ -103,7 +103,8 @@ public class EndososColectivosAction extends PrincipalCoreAction
 					,ServletActionContext.getServletContext().getServletContextName()
 					);
 			items = (Map<String,Item>)res.get("items");
-			params.put("nmsuplem_endoso" , (String)res.get("nmsuplem"));
+			params.put("nmsuplem_endoso" , (String)res.get("nmsuplem_endoso"));
+			params.put("nsuplogi"        , (String)res.get("nsuplogi"));
 			
 			if(TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString().equals(cdtipsup))
 			{

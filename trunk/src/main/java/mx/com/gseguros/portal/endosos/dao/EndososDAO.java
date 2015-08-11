@@ -572,11 +572,20 @@ public interface EndososDAO
 			,String nmpoliza
 			)throws Exception;
 	
-	public String recuperarNmsuplemEndosoValidando(
+	public Map<String,String> recuperarNmsuplemNsuplogiEndosoValidando(
 			String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza
 			,String cdtipsup
+			)throws Exception;
+	
+	public void sacaEndoso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nsuplogi
+			,String nmsuplem
 			)throws Exception;
 }
