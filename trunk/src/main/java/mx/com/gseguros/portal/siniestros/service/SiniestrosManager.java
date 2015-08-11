@@ -585,4 +585,15 @@ public interface SiniestrosManager {
 	public List<Map<String, String>> getConsultaConfiguracionProveedor(String cdpresta)throws Exception;
 	
 	public String obtieneAplicaConceptoIVA(String idConcepto)throws Exception;
+	
+	public String guardaConfiguracionProveedor(String cdpresta, String aplicaIVA,String secuenciaIVA, String aplicaIVARET, String proceso) throws Exception;
+	
+	public List<GenericVO>obtenerAtributosLayout(String descripcion) throws Exception;
+	
+	public String guardaLayoutProveedor(String cdpresta, String claveAtributo, String claveFormatoAtributo,
+			String valorMinimo, String valorMaximo, String columnaExcel, String claveFormatoFecha, String nmordina, String tipoAccion) throws Exception;
+
+	public List<Map<String, String>> consultaConfiguracionLayout(String cdpresta) throws Exception;
+	
+	public List<Map<String, String>> guardaHistorialSiniestro(String ntramite, String nfactura) throws Exception;
 }

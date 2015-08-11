@@ -3394,6 +3394,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		params.put("cedular"  , cedular);
 		params.put("enviado",enviado?Constantes.SI:Constantes.NO);
 		params.put("nmsecsin"  , nmsecsin);
+		
 		logger.debug("params: "+params);
 		ejecutaSP(new MovTimpsini(this.getDataSource()), params);
 	}
@@ -3516,7 +3517,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("nmsecsin"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
-			compile(); 
+			compile();
 		}
 	}
 	
@@ -4584,4 +4585,143 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		compile();
     	}
     }
+    
+	@Override
+	public String guardaConfiguracionProveedor(String cdpresta, String aplicaIVA,String secuenciaIVA, String aplicaIVARET, String proceso) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdpresta_i", cdpresta);
+		params.put("pv_aplicaIVA_i", aplicaIVA);
+		params.put("pv_secuenciaIVA_i", secuenciaIVA);
+		params.put("pv_aplicaIVARet_i", aplicaIVARET);
+		params.put("pv_accion_i", proceso);
+		Map<String, Object> resultado = ejecutaSP(new GuardaConfiguracionProveedor(getDataSource()), params);
+		//logger.debug( resultado.get("pv_registro_o"));
+		return "0";
+	}
+	
+    protected class GuardaConfiguracionProveedor extends StoredProcedure {
+    	
+    	protected GuardaConfiguracionProveedor(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_SINIESTRO.P_MOV_CONFPROV");
+    		declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_aplicaIVA_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_secuenciaIVA_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_aplicaIVARet_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_accion_i",   OracleTypes.VARCHAR));
+    		//declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+	@Override
+	public List<GenericVO>obtenerAtributosLayout(String descripcion) throws Exception
+	{
+		Map<String,String>p=new HashMap<String,String>();
+		p.put("pv_descripc_i" , descripcion);
+		logger.debug("obtenerAtributosLayout params: "+p);
+		Map<String, Object> mapResult = ejecutaSP(new ObtenerAtributosLayout(this.getDataSource()), p);
+		List<Map<String,String>>lista=(List<Map<String,String>>) mapResult.get("pv_registro_o");
+		List<GenericVO>listaG=new ArrayList<GenericVO>();
+		if(lista!=null)
+		{
+			for(Map<String,String>cpt:lista)
+			{
+				listaG.add(new GenericVO(cpt.get("CLAVE"),cpt.get("VALOR")));
+			}
+		}
+		return listaG;
+	}
+	
+	protected class ObtenerAtributosLayout extends StoredProcedure
+	{
+		protected ObtenerAtributosLayout(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_LISTA_ATRIBUTOS_PROV");
+			declareParameter(new SqlParameter("pv_descripc_i" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CLAVE" , "VALOR"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String guardaLayoutProveedor(HashMap<String, Object> paramsFacMesaCtrl) throws Exception {
+			Map<String, Object> mapResult = ejecutaSP(new GuardaLayoutProveedor(getDataSource()), paramsFacMesaCtrl);
+			return (String) mapResult.get("pv_msg_id_o");
+	}
+	
+	protected class GuardaLayoutProveedor extends StoredProcedure {
+		protected GuardaLayoutProveedor(DataSource dataSource) {
+			super(dataSource, "PKG_SINIESTRO.P_MOV_CONFLAYOUT");
+			declareParameter(new SqlParameter("pv_cdpresta_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cveatri_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmordina_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cveformato_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_valormax_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_valormin_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cveexcel_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_formatfech_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneConfiguracionLayout(Map<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneConfiguracionLayout(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneConfiguracionLayout extends StoredProcedure {
+		protected ObtieneConfiguracionLayout(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_SINIESTRO.P_GET_CONFLAYOUT");
+			declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
+    		String[] cols = new String[]{
+    				"CDPRESTA",
+    				"CVEATRI",
+    				"NMORDINA",
+    				"CVEFORMATO",
+    				"VALORMAX",
+    				"VALORMIN",
+    				"CVEEXCEL",
+    				"FORMATFECH"
+    		};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> guardaHistorialSiniestro(Map<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new GuardaHistorialSiniestro(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class GuardaHistorialSiniestro extends StoredProcedure {
+		protected GuardaHistorialSiniestro(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_SINIESTRO.P_OBTIENE_SECPAGO");
+			declareParameter(new SqlParameter("pv_ntramite_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i",   OracleTypes.VARCHAR));
+    		String[] cols = new String[]{
+    				"RESPUESTA"
+    		};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
