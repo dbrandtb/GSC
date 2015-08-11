@@ -1830,4 +1830,78 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	//String tipoConcepto, String idProveedor, String idConceptoTipo
+	public String guardaConfiguracionProveedor(String cdpresta, String aplicaIVA,String secuenciaIVA, String aplicaIVARET, String proceso) throws Exception {
+		try {
+			return siniestrosDAO.guardaConfiguracionProveedor(cdpresta, aplicaIVA, secuenciaIVA, aplicaIVARET, proceso);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public List<GenericVO>obtenerAtributosLayout(String descripcion) throws Exception
+	{
+		List<GenericVO>lista=siniestrosDAO.obtenerAtributosLayout(descripcion);
+		if(lista==null)
+		{
+			lista = new ArrayList<GenericVO>();
+		}
+		log.debug("obtenerCodigosMedicos lista size: "+lista.size());
+		return lista;
+	}
+
+	@Override
+	public String guardaLayoutProveedor(String cdpresta, String claveAtributo,
+			String claveFormatoAtributo, String valorMinimo,
+			String valorMaximo, String columnaExcel, String claveFormatoFecha,
+			String nmordina, String tipoAccion) throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			String accion = null;
+			logger.debug("Valor de tipoAccion -->"+tipoAccion);
+			if(tipoAccion == null || tipoAccion == ""){
+				accion = Constantes.INSERT_MODE;
+			}else{
+				accion = tipoAccion;
+			}
+			
+			HashMap<String,Object> paramsConfLayout=new HashMap<String,Object>();
+			paramsConfLayout.put("pv_cdpresta_i",cdpresta);
+			paramsConfLayout.put("pv_cveatri_i", claveAtributo);
+			paramsConfLayout.put("pv_nmordina_i",nmordina);
+			paramsConfLayout.put("pv_cveformato_i",claveFormatoAtributo);
+			paramsConfLayout.put("pv_valormax_i",valorMaximo);
+			paramsConfLayout.put("pv_valormin_i", valorMinimo);
+			paramsConfLayout.put("pv_cveexcel_i", columnaExcel);
+			paramsConfLayout.put("pv_formatfech_i",claveFormatoFecha);
+			paramsConfLayout.put("pv_accion_i",accion);
+			
+			log.debug("paramsConfLayout params: "+paramsConfLayout);
+			return siniestrosDAO.guardaLayoutProveedor(paramsConfLayout);
+		} catch (ParseException parseExc) {
+			throw new Exception(parseExc.getMessage(), parseExc);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> consultaConfiguracionLayout(String cdpresta) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdpresta_i",   cdpresta);
+		log.debug("consultaConfiguracionLayout params: "+params);
+		return siniestrosDAO.obtieneConfiguracionLayout(params);
+	}
+	
+	@Override
+	public List<Map<String, String>> guardaHistorialSiniestro(String ntramite, String nfactura) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_ntramite_i",   ntramite);
+		params.put("pv_nfactura_i",   nfactura);
+		log.debug("guardaHistorialSiniestro params: "+params);
+		return siniestrosDAO.guardaHistorialSiniestro(params);
+	}
 }
