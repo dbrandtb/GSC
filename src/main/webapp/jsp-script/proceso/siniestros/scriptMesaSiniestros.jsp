@@ -64,6 +64,7 @@ var _URL_INF_ASEGURADO					= '<s:url namespace="/siniestros" 	action="consultaDa
 var _URL_POLIZA_UNICA					= '<s:url namespace="/siniestros"	action="consultaPolizaUnica"/>';
 var _URL_MONTO_PAGO_SINIESTRO			= '<s:url namespace="/siniestros"	action="obtieneMontoPagoSiniestro"/>';
 var _URL_P_MOV_MAUTSINI					= '<s:url namespace="/siniestros"	action="obtieneMensajeMautSini"/>';
+var _URL_GUARDAHISTORIAL				= '<s:url namespace="/siniestros" 		action="guardarHistorialSiniestro" />';
 var windowLoader;
 var msgWindow;
 
@@ -1339,7 +1340,26 @@ var msgWindow;
 			        	        	     							mcdinGrid.setLoading(false);
 			        	        	     							var respuesta = Ext.decode(response.responseText);
 			        	        	     							if(respuesta.success){
-			        	        	     								mensajeCorrecto('Aviso','El pago se ha solicitado con &eacute;xito.');	
+			        	        	     								mensajeCorrecto('Aviso','El pago se ha solicitado con &eacute;xito.');
+			        	        	     								Ext.Ajax.request({
+	        	        	     											url	 : _URL_GUARDAHISTORIAL
+	        	        	     											,params:{
+	        	        	     												'params.ntramite'  : record.get('ntramite'),
+	        	        	     												'params.tipmov'    : record.get('parametros.pv_otvalor02')
+	        	        	     											}
+	        	        	     											,success : function (response){
+	        	        	     												var respuesta = Ext.decode(response.responseText);
+	        	        	     												debug("Valor de Respuesta -->", respuesta);
+	        	        	     											failure : function (){
+	        	        	     												//me.up().up().setLoading(false);
+	        	        	     												Ext.Msg.show({
+	        	        	     													title:'Error',
+	        	        	     													msg: 'Error de comunicaci&oacute;n',
+	        	        	     													buttons: Ext.Msg.OK,
+	        	        	     													icon: Ext.Msg.ERROR
+	        	        	     												});
+	        	        	     											}
+	        	        	     										});
 			        	        	     							}else {
 			        	        	     								mensajeError(respuesta.mensaje);
 			        	        	     							}

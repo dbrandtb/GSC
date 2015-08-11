@@ -479,4 +479,6 @@ public interface SiniestrosDAO {
 	public String guardaLayoutProveedor(HashMap<String, Object> paramsConfLayout) throws Exception;
 	
 	public List<Map<String, String>> obtieneConfiguracionLayout(Map<String, Object> params) throws Exception;
+	
+	public List<Map<String, String>> guardaHistorialSiniestro(Map<String, Object> params) throws Exception;
 }

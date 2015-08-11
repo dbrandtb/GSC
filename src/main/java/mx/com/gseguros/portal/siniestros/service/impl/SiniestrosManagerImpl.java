@@ -1895,4 +1895,13 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		log.debug("consultaConfiguracionLayout params: "+params);
 		return siniestrosDAO.obtieneConfiguracionLayout(params);
 	}
+	
+	@Override
+	public List<Map<String, String>> guardaHistorialSiniestro(String ntramite, String nfactura) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_ntramite_i",   ntramite);
+		params.put("pv_nfactura_i",   nfactura);
+		log.debug("guardaHistorialSiniestro params: "+params);
+		return siniestrosDAO.guardaHistorialSiniestro(params);
+	}
 }

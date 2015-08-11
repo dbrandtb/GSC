@@ -4702,4 +4702,26 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String, String>> guardaHistorialSiniestro(Map<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new GuardaHistorialSiniestro(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class GuardaHistorialSiniestro extends StoredProcedure {
+		protected GuardaHistorialSiniestro(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_SINIESTRO.P_OBTIENE_SECPAGO");
+			declareParameter(new SqlParameter("pv_ntramite_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i",   OracleTypes.VARCHAR));
+    		String[] cols = new String[]{
+    				"RESPUESTA"
+    		};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

@@ -594,4 +594,6 @@ public interface SiniestrosManager {
 			String valorMinimo, String valorMaximo, String columnaExcel, String claveFormatoFecha, String nmordina, String tipoAccion) throws Exception;
 
 	public List<Map<String, String>> consultaConfiguracionLayout(String cdpresta) throws Exception;
+	
+	public List<Map<String, String>> guardaHistorialSiniestro(String ntramite, String nfactura) throws Exception;
 }
