@@ -3513,9 +3513,10 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nfactura" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("importe"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsecsin"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
-			compile();
+			compile(); 
 		}
 	}
 	
