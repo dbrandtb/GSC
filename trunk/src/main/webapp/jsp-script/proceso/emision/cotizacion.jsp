@@ -268,7 +268,7 @@ function _0_comprar()
             ,'smap1.ntramite'      : _0_smap1.ntramite
             ,'smap1.cdpersonCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.get('CLAVECLI')
             ,'smap1.cdideperCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CDIDEPER
-            ,'smap1.cdagenteExt'   : _0_smap1.cdramo+'x'=='6x' ? _fieldByName('parametros.pv_otvalor17').getValue() : ''
+            ,'smap1.cdagenteExt'   : (_0_smap1.cdramo == '6' || _0_smap1.cdramo == '16') ? _fieldByLabel('AGENTE').getValue() : ''
         }
 	    ,success : function(response,opts)
 	    {
@@ -2224,7 +2224,7 @@ Ext.onReady(function()
         	}
         	
             var vim = this.value;
-            if(Ext.isEmpty(vim) || (vim.length < this.minLength || vim.length > this.maxLength))
+            if(this.minLength > 0 || (vim.length < this.minLength || vim.length > this.maxLength))
             {
             	if(this.minLength == this.maxLength) {
             		mensajeWarning('La longitud del n&uacute;mero de serie debe ser ' + this.minLength);
