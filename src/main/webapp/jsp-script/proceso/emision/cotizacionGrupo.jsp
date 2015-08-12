@@ -540,6 +540,12 @@ Ext.onReady(function()
                 {
                     beforeedit : function(editor,context)
                     {
+                        if(!(
+                            !_p21_ntramite||_p21_ntramiteVacio||(!Ext.isEmpty(_p21_smap1.sincenso)&&_p21_smap1.sincenso=='S')
+                        ))
+                        {
+                            return false;
+                        }
                         debug('beforeedit:',context.record.get('cdplan'));
                         _p21_editorSumaAseg.forceSelection=false;
                         _p21_editorSumaAseg.heredar(context.record.get('cdplan'));
@@ -675,6 +681,18 @@ Ext.onReady(function()
             {
                 clicksToEdit  : 1
                 ,errorSummary : true
+                ,listeners    :
+                {
+                    beforeedit : function(me)
+                    {
+                        if(!(
+                            !_p21_ntramite||_p21_ntramiteVacio||(!Ext.isEmpty(_p21_smap1.sincenso)&&_p21_smap1.sincenso=='S')
+                        ))
+                        {
+                            return false;
+                        }
+                    }
+                }
             })
         })
         ,buttonAlign : 'center'
