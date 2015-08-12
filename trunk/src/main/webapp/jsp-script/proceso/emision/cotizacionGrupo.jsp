@@ -5245,8 +5245,8 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
             Ext.create('Ext.grid.Panel',
             {
                 columns     : [ <s:property value='%{getImap().containsKey("extraprimasColumns")?getImap().get("extraprimasColumns").toString():""}' escapeHtml='false' /> ]
-                ,minHeight  : 150
-                ,maxHeight  : 500
+                ,width      : 980
+                ,height     : 500
                 ,plugins    : _p21_smap1.EXTRAPRIMAS_EDITAR=='S' ? Ext.create('Ext.grid.plugin.RowEditing',
                 {
                     clicksToEdit  : 1
@@ -5476,8 +5476,8 @@ function _p21_aseguradosClic(grid,rowIndex)
             Ext.create('Ext.grid.Panel',
             {
                 columns     : columnas
-                ,minHeight  : 150
-                ,maxHeight  : 500
+                ,width      : 980
+                ,height     : 500
                 ,plugins    : false && _p21_smap1.ASEGURADOS_EDITAR=='S' ? Ext.create('Ext.grid.plugin.RowEditing',
                 {
                     clicksToEdit  : 1
