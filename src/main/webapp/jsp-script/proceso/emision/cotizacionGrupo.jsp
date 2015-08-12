@@ -4315,12 +4315,14 @@ function _p21_estiloEditores(cdplan)
                 _p21_editorDeducible.setReadOnly(!_4HOS);
                 if(_p21_smap1.cdsisrol!='COTIZADOR')
                 {
-                    if(!_4AYM||!_4HOS||_4MAT)
+                    //if(!_4AYM||!_4HOS||_4MAT)
+                    if(_4MAT)
                     {
                         _p21_editorAyudaMater.setValue('0');
                         _p21_editorAyudaMater.addCls('_p21_editorLectura');
                     }
-                    else if(_4AYM&&_4HOS&&!_4MAT)
+                    //else if(_4AYM&&_4HOS&&!_4MAT)
+                    else if(!_4MAT)
                     {
                         _p21_editorAyudaMater.removeCls('_p21_editorLectura');
                     }
@@ -4328,18 +4330,20 @@ function _p21_estiloEditores(cdplan)
                 }
                 if(_p21_smap1.cdsisrol!='COTIZADOR')
                 {
-                    if(!_4AIV||!_4MS)
+                    //if(!_4AIV||!_4MS)
+                    if(!_4MS)
                     {
                         _p21_editorAsisInter.setValue('0');
                         _p21_editorAsisInter.addCls('_p21_editorLectura');
                     }
-                    else if(_4AIV&&_4MS)
+                    //else if(_4AIV&&_4MS)
+                    else if(_4MS)
                     {
                         _p21_editorAsisInter.removeCls('_p21_editorLectura');
                     }
                 }
-                _p21_editorAsisInter.setReadOnly(!_4AIV);
-                if(_p21_smap1.cdsisrol!='COTIZADOR')
+                //_p21_editorAsisInter.setReadOnly(!_4AIV);
+                if(_p21_smap1.cdsisrol!='COTIZADOR'&&false)
                 {
                     if(!_4EE||cdplan=='PR'||!_4HOS)
                     {
