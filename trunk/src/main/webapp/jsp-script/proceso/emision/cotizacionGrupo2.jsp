@@ -494,6 +494,18 @@ Ext.onReady(function()
             {
                 clicksToEdit  : 1
                 ,errorSummary : false
+                ,listeners    :
+                {
+                    beforeedit : function(editor,context)
+                    {
+                        if(!(
+                            !_p25_ntramite||_p25_ntramiteVacio||(!Ext.isEmpty(_p25_smap1.sincenso)&&_p25_smap1.sincenso=='S')
+                        ))
+                        {
+                            return false;
+                        }
+                    }
+                }
             })
         })
         ,buttonAlign : 'center'
@@ -609,6 +621,18 @@ Ext.onReady(function()
             {
                 clicksToEdit  : 1
                 ,errorSummary : true
+                ,listeners    :
+                {
+                    beforeedit : function(editor,context)
+                    {
+                        if(!(
+                            !_p25_ntramite||_p25_ntramiteVacio||(!Ext.isEmpty(_p25_smap1.sincenso)&&_p25_smap1.sincenso=='S')
+                        ))
+                        {
+                            return false;
+                        }
+                    }
+                }
             })
         })
         ,buttonAlign : 'center'
