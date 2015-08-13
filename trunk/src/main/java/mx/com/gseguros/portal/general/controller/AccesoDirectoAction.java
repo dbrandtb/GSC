@@ -22,6 +22,8 @@ import mx.com.gseguros.utils.Constantes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -31,14 +33,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class AccesoDirectoAction extends PrincipalCoreAction {
 
 	private static final long serialVersionUID = 7885456537983878685L;
-
-	private static org.apache.log4j.Logger logger = org.apache.log4j.Logger
-			.getLogger(AccesoDirectoAction.class);
+	
+	static final Logger logger = LoggerFactory.getLogger(AccesoDirectoAction.class);
 
 	public static final String DEFAULT_DATE_FORMAT_PARAM = "defaultDateFormat";
 	public static final String DEFAULT_DECIMAL_SEPARATOR_PARAM = "defaultDecimalSeparator";
 	public static final String DEFAULT_DECIMAL_PRECISION_PARAM = "decimalPrecision";
-
+	
+	public static final String ACCESO_CODIGOS_POSTALES = "codigosPostales";
 	public static final String ACCESO_COTIZADOR = "cotizador";
 	public static final String ACCESO_COTIZADOR_AUTO_INDIVIDUAL = "cotizadorAutoIndividual";
 	public static final String ACCESO_COTIZADOR_AUTO_FLOTILLA = "cotizadorAutoFlotilla";
@@ -88,19 +90,6 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 		logger.debug(">>>> Entrando a instanciar usuario para Liga Directa ****");
 		try {
 
-			// TODO: ELIMINAR CUANDO SE RESUELVA LA PARTE DEL ROL EMPLEADO DE
-			// AGENTE:
-			if (RolSistema.AGENTE.getCdsisrol().equals(codigoRol)) {
-				Pattern pattern = Pattern.compile("A[0-9]+");
-				Matcher matcher = pattern.matcher(user);
-				if (matcher.find()) {
-					user = matcher.group(0);
-					logger.info(new StringBuilder()
-							.append("Accede el Empleado del Agente ")
-							.append(user).toString());
-				}
-			}
-
 			creaSesionDeUsuario(user);
 
 			obtenRolesClientes();
@@ -114,21 +103,12 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 
 			UserVO usuario = (UserVO) session.get("USUARIO");
 
-			logger.debug(new StringBuilder().append(">>>> usuario name: ")
-					.append(usuario.getName()).toString());
-			logger.debug(new StringBuilder().append(">>>> usuario user: ")
-					.append(usuario.getUser()).toString());
-			logger.debug(new StringBuilder()
-					.append(">>>> usuario codigopersona: ")
-					.append(usuario.getCodigoPersona()).toString());
-			logger.debug(new StringBuilder()
-					.append(">>>> usuario claveUsuarioCaptura: ")
-					.append(usuario.getClaveUsuarioCaptura()).toString());
+			logger.debug(">>>> usuario name: {}", usuario.getName());
+			logger.debug(">>>> usuario user: {}", usuario.getUser());
+			logger.debug(">>>> usuario codigopersona: {}", usuario.getCodigoPersona());
+			logger.debug(">>>> usuario claveUsuarioCaptura: {}", usuario.getClaveUsuarioCaptura());
 			if (usuario != null && usuario.getEmpresa() != null) {
-				logger.debug(new StringBuilder()
-						.append(">>>> usuario empresa cdelemento id: ")
-						.append(usuario.getEmpresa().getElementoId())
-						.toString());
+				logger.debug(">>>> usuario empresa cdelemento id: {}", usuario.getEmpresa().getElementoId());
 			}
 		} catch (Exception e) {
 			logger.error(">>>> Error en el proceso Interno", e);
@@ -149,11 +129,10 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 		Boolean rolExistente = false;
 		String acceso = (String) params.get("acceso");
 		String tipoUsuario = (String) params.get("tipoUsuario");
-		logger.info(new StringBuilder(">>>> Entrando a Acceso Directo: ")
-				.append(acceso).append(" con usuario: ").append(user)
-				.toString());
+		logger.info(">>>> Entrando a Acceso Directo: {} con usuario: {}", acceso, user);
 
-		if (ACCESO_COTIZADOR.equals(acceso)
+		if (ACCESO_CODIGOS_POSTALES.equals(acceso)
+				|| ACCESO_COTIZADOR.equals(acceso)
 				|| ACCESO_COTIZADOR_AUTO_INDIVIDUAL.equals(acceso)
 				|| ACCESO_COTIZADOR_AUTO_FLOTILLA.equals(acceso)
 				|| ACCESO_COTIZADOR_GRUPO.equals(acceso)
@@ -164,7 +143,8 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 				|| ENDOSOS_AUTOS.equals(acceso)
 				|| MENU_PRINCIPAL.equals(acceso)
 				|| MESA_CONTROL_AGENTES.equals(acceso)) {
-
+			
+			// Patch para traducir el rol, ya que el portal manda un codigo: 
 			if (ACCESO_CONSULTA_POLIZAS.equals(acceso)) {
 				// logica para asignar rol en base al parametro tipoUsuario:
 				if ("2".equals(tipoUsuario)) {
@@ -173,10 +153,20 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 					codigoRol = RolSistema.PROMOTOR_AUTO.getCdsisrol();
 				}
 			}
+			
+			// TODO: ELIMINAR CUANDO SE RESUELVA LA PARTE DEL ROL EMPLEADO DE AGENTE:
+			if (RolSistema.AGENTE.getCdsisrol().equals(codigoRol)) {
+				Pattern pattern = Pattern.compile("A[0-9]+");
+				Matcher matcher = pattern.matcher(user);
+				if (matcher.find()) {
+					user = matcher.group(0);
+					logger.info("Accede el Empleado del Agente {}", user);
+				}
+			}
+			
 			// Invocar servicio para obtener los roles:
 			listaRolCliente = usuarioManager.getClientesRoles(user);
-			// si el usuario no tiene el rol solicitado, redirigir a pagina de
-			// rol invalido
+			// si el usuario no tiene el rol solicitado, redirigir a pagina de rol invalido
 			for (RamaVO ramaVO : listaRolCliente) {
 				for (Object obj : ramaVO.getChildren()) {
 					if (((RamaVO) obj).getCodigoObjeto().equals(codigoRol)) {
@@ -187,21 +177,16 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 			}
 			if (!rolExistente) {
 				acceso = "rolInvalido";
-			}
-			else{
-
+			} else {
 				boolean sesionExitosa = instanciaUsuarioLigaDirecta();
 				if (!sesionExitosa) {
-					session.put("MsgLigaDirecta",
-							"El usuario no existe o no tiene un rol asociado.");
+					session.put("MsgLigaDirecta", "El usuario no existe o no tiene un rol asociado.");
 				}
-				logger.info(new StringBuilder(
-						">>>> Redirigiendo a Acceso Directo: ").append(acceso));
+				logger.info(">>>> Redirigiendo a Acceso Directo: {}", acceso);
 			}
 
 		} else {
-			logger.warn(new StringBuilder(
-					">>>> No está definido el Acceso Directo: ").append(acceso));
+			logger.warn(">>>> No está definido el Acceso Directo: {}", acceso);
 			acceso = "login";
 		}
 
@@ -229,20 +214,20 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 		userVO.setUser(usuario);
 		userVO = loginManager.obtenerDatosUsuario(usuario);
 
-		logger.debug(">>>> DATOS USUARIO *****: " + userVO);
+		logger.debug(">>>> DATOS USUARIO *****: {}", userVO);
 
 		// userVO.setDecimalSeparator(decimalSeparator);
 		IsoVO isoVO = navigationManagerNuevo.getVariablesIso(userVO.getUser());
 
-		logger.debug(">>>> DATOS USUARIO222 *****: " + userVO);
+		logger.debug(">>>> DATOS USUARIO222 *****: {}", userVO);
 		userVO.setClientFormatDate(isoVO.getClientDateFormat());
 		userVO.setFormatDate(dateFormat);
 		userVO.setDecimalSeparator(isoVO.getFormatoNumerico());
 		// Se agrega la clave interna de GSeguros de usuario que captura:
-		logger.debug("claveUsuarioCaptura=" + e);
+		logger.debug("claveUsuarioCaptura={}", e);
 		userVO.setClaveUsuarioCaptura(e);
 
-		logger.debug(">>>> DATOS USUARIO333 *****: " + userVO);
+		logger.debug(">>>> DATOS USUARIO333 *****: {}", userVO);
 		session.put(Constantes.USER, userVO);
 		session.put("userVO", userVO);
 
@@ -278,9 +263,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 			usVO.setClaveUsuarioCaptura(e);
 		}
 
-		logger.warn(">>>> Usuarios totales: "
-				+ (userList != null ? userList.size() : "null")
-				+ " pero solo el de sesion se complemento");
+		logger.warn(">>>> Usuarios totales: {} pero solo el de sesion se complemento", userList != null ? userList.size() : "null");
 
 		complementaUsuario(usuario);
 		session.put("USUARIO", usuario);
@@ -338,7 +321,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 		} else
 		// tiene almenos dos clientes o dos roles distintos
 		{
-			logger.debug(">>>> listaRolCliente=" + listaRolCliente.size());
+			logger.debug(">>>> listaRolCliente={}", listaRolCliente.size());
 			for (RamaVO nodos : listaRolCliente) {
 				if (nodos.getChildren() != null) {
 					nodos.setLeaf(false);
@@ -346,7 +329,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 			}
 			session.put("CARGA_USUARIO_COMPLETO", userList);
 			success = true;
-			logger.debug(">>>> retorno=" + retorno);
+			logger.debug(">>>> retorno={}", retorno);
 		}
 		// //////////////////////////////////////////////
 
@@ -404,7 +387,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 				try {
 					String msg = principalManagerJdbcTemplate
 							.configuracionCompleta(_codigoCliente);
-					logger.debug(">>>> Configuración: " + msg);
+					logger.debug(">>>> Configuración: {}", msg);
 					codigoValido = true;
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
@@ -425,7 +408,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 		// o si se cargo un usuario, se cargo correctamente
 		{
 			logger.debug(">>>> Salida metodo getCodigoTree");
-			logger.debug(">>>> CODIGO VALIDO: " + codigoValido);
+			logger.debug(">>>> CODIGO VALIDO: {}", codigoValido);
 			UserVO usuario = (UserVO) session.get("USUARIO");
 			complementaUsuario(usuario);
 			session.put("USUARIO", usuario);
@@ -443,8 +426,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 	 * @param usuario
 	 */
 	private void complementaUsuario(UserVO usuario) throws Exception {
-		IsoVO isoLocal = navigationManagerNuevo.getVariablesIso(usuario
-				.getUser());
+		IsoVO isoLocal = navigationManagerNuevo.getVariablesIso(usuario.getUser());
 		BaseObjectVO languague = new BaseObjectVO();
 		languague.setValue(isoLocal.getCdIdioma());
 		languague.setLabel(isoLocal.getLanguague());
@@ -452,13 +434,12 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 		pais.setValue(isoLocal.getPais());
 		usuario.setPais(pais);
 		String cdPais = usuario.getPais().getValue();
-		logger.debug(">>>> El país del usuario es : " + cdPais);
+		logger.debug(">>>> El país del usuario es : {}", cdPais);
 		usuario.setFormatoFecha(isoLocal.getFormatoFecha());
 		usuario.setFormatoNumerico(isoLocal.getFormatoNumerico());
 		usuario.setIdioma(languague);
 		usuario.setTamagnoPaginacionGrid(numReg);
-		logger.debug(">>>> En seleccionaRolCliente: "
-				+ isoLocal.getClientDateFormat());
+		logger.debug(">>>> En seleccionaRolCliente: {}", isoLocal.getClientDateFormat());
 		usuario.setClientFormatDate(isoLocal.getClientDateFormat());
 		// Agregados códigos de Idioma y Región
 		// languague.setValue(iso.getCdIdioma());
@@ -546,8 +527,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 		this.numReg = numReg;
 	}
 
-	public void setPrincipalManagerJdbcTemplate(
-			PrincipalManager principalManagerJdbcTemplate) {
+	public void setPrincipalManagerJdbcTemplate(PrincipalManager principalManagerJdbcTemplate) {
 		this.principalManagerJdbcTemplate = principalManagerJdbcTemplate;
 	}
 

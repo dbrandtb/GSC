@@ -89,6 +89,10 @@
 		
 		<!-- Acceso directo desde la Oficina Virtual de GS para acceder sin el login: -->
         <action name="accesoDirecto" class="accesoDirectoAction" method="accesoDirecto">
+            <result name="codigosPostales" type="redirectAction">
+                <param name="namespace">/catalogos</param>
+                <param name="actionName">codigosPostales</param>
+            </result>
             <result name="login" type="redirectAction">
                 <param name="namespace">/seguridad</param>
                 <param name="actionName">login</param>
