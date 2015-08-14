@@ -186,7 +186,7 @@ public class CancelacionManagerImpl implements CancelacionManager
 			,String nmpoliza
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ validaCancelacionAProrrata @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -205,7 +205,7 @@ public class CancelacionManagerImpl implements CancelacionManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ validaCancelacionAProrrata @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -220,7 +220,7 @@ public class CancelacionManagerImpl implements CancelacionManager
 			,String cdrazon
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ validaRazonCancelacion @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -240,7 +240,7 @@ public class CancelacionManagerImpl implements CancelacionManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				"\n@@@@@@ validaRazonCancelacion @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));

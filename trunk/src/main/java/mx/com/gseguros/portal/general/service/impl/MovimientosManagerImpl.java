@@ -38,7 +38,7 @@ public class MovimientosManagerImpl implements MovimientosManager
 			,List<Map<String,String>> list
 			)throws Exception
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ ejecutar @@@@@@"
 				,"\n@@@@@@ cdusuari="   , usuario.getUser()
@@ -177,7 +177,7 @@ public class MovimientosManagerImpl implements MovimientosManager
 			logger.error("Error ejecutando movimiento",ex);
 			Utils.generaExcepcion(ex, paso);
 		}
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ ejecutar @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -191,7 +191,7 @@ public class MovimientosManagerImpl implements MovimientosManager
 			,List<Map<String,String>> list
 			)throws Exception
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ ejecutarRecuperandoMapa @@@@@@"
 				,"\n@@@@@@ cdusuari="   , usuario.getUser()
@@ -336,7 +336,7 @@ public class MovimientosManagerImpl implements MovimientosManager
 			logger.error("Error ejecutando movimiento",ex);
 			Utils.generaExcepcion(ex, paso);
 		}
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ mapa=",mapa
 				,"\n@@@@@@ ejecutarRecuperandoMapa @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

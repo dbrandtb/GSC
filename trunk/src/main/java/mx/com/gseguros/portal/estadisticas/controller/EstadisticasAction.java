@@ -53,7 +53,7 @@ public class EstadisticasAction extends PrincipalCoreAction
 			
 			items = estadisticasManager.cotizacionEmision(sb,user.getRolActivo().getClave());
 			
-			logger.info(Utils.join(
+			logger.debug(Utils.log(
 					 "\n###############################"
 					,"\n@@@*** cotizacionEmision ***@@@"
 					,"\n###############################"
@@ -106,7 +106,7 @@ public class EstadisticasAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			logger.info(Utils.join(
+			logger.debug(Utils.log(
 					 "\n############################################"
 					,"\n@@@*** recuperarCotizacionesEmisiones ***@@@"
 					,"\n############################################"
@@ -137,7 +137,7 @@ public class EstadisticasAction extends PrincipalCoreAction
 			
 			items = estadisticasManager.tareas(sb,user.getRolActivo().getClave());
 			
-			logger.info(Utils.join(
+			logger.debug(Utils.log(
 					 "\n####################"
 					,"\n@@@*** tareas ***@@@"
 					,"\n####################"
@@ -194,7 +194,7 @@ public class EstadisticasAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			logger.info(Utils.join(
+			logger.debug(Utils.log(
 					 "\n#############################"
 					,"\n@@@*** recuperarTareas ***@@@"
 					,"\n#############################"

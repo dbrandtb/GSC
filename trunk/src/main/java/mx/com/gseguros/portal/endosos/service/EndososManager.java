@@ -454,4 +454,11 @@ public interface EndososManager
 			,String contexto
 			)throws Exception;
 	
+	public Map<String,String> recuperarComponentesAltaAsegurado(
+			String cdramo
+			,String cdtipsit
+			,String depFam
+			,String cdsisrol
+			,String contexto
+			)throws Exception;
 }

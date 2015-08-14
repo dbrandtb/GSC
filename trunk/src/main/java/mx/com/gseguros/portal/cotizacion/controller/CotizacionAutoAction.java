@@ -1044,7 +1044,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cargarCotizacionAutoFlotilla()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n##########################################"
 				,"\n###### cargarCotizacionAutoFlotilla ######"
 				,"\n###### smap1=",smap1
@@ -1080,7 +1080,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### cargarCotizacionAutoFlotilla ######"
 				,"\n##########################################"
 				));
@@ -1155,7 +1155,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String guardarComplementariosAutoFlotilla()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n################################################"
 				,"\n###### guardarComplementariosAutoFlotilla ######"
 				,"\n###### smap1="  , smap1
@@ -1208,7 +1208,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### guardarComplementariosAutoFlotilla ######"
 				,"\n################################################"
 				));
@@ -1217,7 +1217,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String recotizarAutoFlotilla()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###################################"
 				,"\n###### recotizarAutoFlotilla ######"
 				,"\n###### smap1=",smap1
@@ -1272,7 +1272,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### recotizarAutoFlotilla ######"
 				,"\n###################################"
 				));
@@ -1281,7 +1281,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cargarObligatorioTractocamionRamo5()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n################################################"
 				,"\n###### cargarObligatorioTractocamionRamo5 ######"
 				,"\n###### smap1=",smap1
@@ -1309,7 +1309,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### cargarObligatorioTractocamionRamo5 ######"
 				,"\n################################################"
 				));
@@ -1318,7 +1318,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cargarDetalleNegocioRamo5()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n#######################################"
 				,"\n###### cargarDetalleNegocioRamo5 ######"
 				,"\n###### smap1=",smap1
@@ -1354,7 +1354,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### cargarDetalleNegocioRamo5 ######"
 				,"\n#######################################"
 				));
@@ -1363,7 +1363,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String guardarPantallaBeneficiarios()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n##########################################"
 				,"\n###### guardarPantallaBeneficiarios ######"
 				,"\n###### smap1="  , smap1
@@ -1406,7 +1406,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### guardarPantallaBeneficiarios ######"
 				,"\n##########################################"
 				));

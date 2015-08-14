@@ -491,7 +491,7 @@ public class CancelacionAction extends PrincipalCoreAction
 	
 	public String validaCancelacionAProrrata()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n########################################"
 				,"\n###### validaCancelacionAProrrata ######"
 				,"\n###### smap1=",smap1
@@ -522,7 +522,7 @@ public class CancelacionAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### respuesta=",respuesta
 				,"\n###### validaCancelacionAProrrata ######"
 				,"\n########################################"
@@ -532,7 +532,7 @@ public class CancelacionAction extends PrincipalCoreAction
 
 	public String validaRazonCancelacion()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				"\n########################################"
 				,"\n###### validaRazonCancelacion ######"
 				,"\n###### smap1=",smap1
@@ -565,7 +565,7 @@ public class CancelacionAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				"\n###### respuesta=",respuesta
 				,"\n###### validaRazonCancelacion ######"
 				,"\n########################################"

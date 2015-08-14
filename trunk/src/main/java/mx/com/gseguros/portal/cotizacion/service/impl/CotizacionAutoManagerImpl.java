@@ -1532,7 +1532,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				
 			}
 			situacionesCSV=situacionesCSV.substring(1);
-			logger.debug(Utils.join("situacionesCSV=",situacionesCSV));
+			logger.debug(Utils.log("situacionesCSV=",situacionesCSV));
 			resp.getSmap().put("situacionesCSV",situacionesCSV);
 			
 			setCheckpoint("Recuperando agrupacion de situaciones");
@@ -1684,7 +1684,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			tatripol=tatripolAux;
 			resp.getSmap().put("tatripolItemsLength" , String.valueOf(tatripol.size()));
-			logger.debug(Utils.join("tatripolItems=",tatripol));
+			logger.debug(Utils.log("tatripolItems=",tatripol));
 			
 			if(tatripol.size()>0)
 			{
@@ -1912,7 +1912,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				setCheckpoint("Insertando maestros de situacion en lote");
 				cotizacionDAO.movimientoMpolisitLote(listaPMovMpolisit);
-				logger.debug(Utils.join("Tiempo en mpolisit=",(System.currentTimeMillis()-inicioMpolisit)/1000d));
+				logger.debug(Utils.log("Tiempo en mpolisit=",(System.currentTimeMillis()-inicioMpolisit)/1000d));
 			}
 				
 			setCheckpoint("Construyendo lote de atributos de situacion");
@@ -1945,7 +1945,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			setCheckpoint("Insertando atributos de situacion en lote");
 			cotizacionDAO.movimientoTvalositLote(listaPMovTvalosit);
-			logger.debug(Utils.join("Tiempo en tvalosit=",(System.currentTimeMillis()-inicioTvalosit)/1000d));
+			logger.debug(Utils.log("Tiempo en tvalosit=",(System.currentTimeMillis()-inicioTvalosit)/1000d));
 				
 			setCheckpoint("Borrando situaciones base anteriores");
 			cotizacionDAO.borrarTbasvalsit(cdunieco, cdramo, estado, nmpoliza);
@@ -1979,7 +1979,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			setCheckpoint("Insertando situaciones base en lote");
 			cotizacionDAO.movimientoTbasvalsitLote(listaPInsertaTbasvalsit);
-			logger.debug(Utils.join("Tiempo en tbasvalsit=",(System.currentTimeMillis()-inicioTbasvalsit)/1000d));
+			logger.debug(Utils.log("Tiempo en tbasvalsit=",(System.currentTimeMillis()-inicioTbasvalsit)/1000d));
 			
 			if(noTarificar==false)
 			{
@@ -2018,7 +2018,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				setCheckpoint("Insertando configuracion de situaciones en lote");
 				cotizacionDAO.movimientoTconvalsitLote(listaPInsertaTconvalsit);
-				logger.debug(Utils.join("Tiempo en tconvalsit=",(System.currentTimeMillis()-inicioTconvalsit)/1000d));
+				logger.debug(Utils.log("Tiempo en tconvalsit=",(System.currentTimeMillis()-inicioTconvalsit)/1000d));
 				
 				
 				/**
@@ -2356,7 +2356,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						for(int i=0;i<splited.length/2;i++)
 						{
 							String splitedUsado=splited[i*2];
-							//logger.debug(Utils.join("valor=",valor,", contra=",splitedUsado,", lastIndexOf=",valor.lastIndexOf(splitedUsado)));
+							//logger.debug(Utils.log("valor=",valor,", contra=",splitedUsado,", lastIndexOf=",valor.lastIndexOf(splitedUsado)));
 							if(valor.lastIndexOf(splitedUsado)!=-1)
 							{
 								valor=splited[(i*2)+1];
@@ -2735,7 +2735,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									for(int i=0;i<splited.length/2;i++)
 									{
 										String splitedUsado=splited[i*2];
-										//logger.debug(Utils.join("valor=",valor,", contra=",splitedUsado,", lastIndexOf=",valor.lastIndexOf(splitedUsado)));
+										//logger.debug(Utils.log("valor=",valor,", contra=",splitedUsado,", lastIndexOf=",valor.lastIndexOf(splitedUsado)));
 										if(valor.lastIndexOf(splitedUsado)!=-1)
 										{
 											valor=splited[(i*2)+1];
@@ -2799,7 +2799,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String cdsisrol
 			)
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarCotizacionAutoFlotilla @@@@@@"
 				,"\n@@@@@@ cdramo="   , cdramo
@@ -2891,7 +2891,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				incisoBase.put("nmsituac" , incisoBase.get("NMSITUAC"));
 				if(incisoBase.get("CDTIPSIT").equals("XPOLX"))
 				{
-					logger.debug(Utils.join("Es XPOLX",incisoBase));
+					logger.debug(Utils.log("Es XPOLX",incisoBase));
 					for(Entry<String,String>en:incisoBase.entrySet())
 					{
 						incisoPoliza.put("parametros.pv_"+en.getKey().toLowerCase(),en.getValue());
@@ -2899,7 +2899,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				else
 				{
-					logger.debug(Utils.join("No es XPOLX",incisoBase));
+					logger.debug(Utils.log("No es XPOLX",incisoBase));
 					incisosBaseAux.add(incisoBase);
 				}
 			}
@@ -2993,7 +2993,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ ",resp
 				,"\n@@@@@@ cargarCotizacionAutoFlotilla @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3147,7 +3147,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String ntramite
 			)
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarComplementariosAutoFlotilla @@@@@@"
 				,"\n@@@@@@ cdunieco="    , cdunieco
@@ -3317,7 +3317,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ guardarComplementariosAutoIndividual @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3339,7 +3339,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String cdperpag
 			)
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recotizarAutoFlotilla @@@@@@"
 				,"\n@@@@@@ cdunieco="   , cdunieco
@@ -3407,7 +3407,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ ",resp
 				,"\n@@@@@@ recotizarAutoFlotilla @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3418,7 +3418,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	@Override
 	public ManagerRespuestaSmapVO cargarObligatorioTractocamionRamo5(String clave)
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarObligatorioTractocamionRamo5 @@@@@@"
 				,"\n@@@@@@ clave=",clave
@@ -3439,7 +3439,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ ",resp
 				,"\n@@@@@@ cargarObligatorioTractocamionRamo5 @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3450,7 +3450,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	@Override
 	public ManagerRespuestaSmapVO cargarDetalleNegocioRamo5(String negocio, String cdramo, String cdtipsit, String cdsisrol, String cdusuari)
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarDetalleNegocioRamo5 @@@@@@"
 				,"\n@@@@@@ negocio=",negocio
@@ -3471,7 +3471,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ cargarDetalleNegocioRamo5 @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -3488,7 +3488,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String nmsituac
 			,List<Map<String,String>>mpoliperMpersona)
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarPantallaBeneficiarios @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -3675,7 +3675,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			manejaException(ex, resp);
 		}	
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ ",resp
 				,"\n@@@@@@ guardarPantallaBeneficiarios @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

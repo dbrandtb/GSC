@@ -3588,7 +3588,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DIAS_ENDOSO_AUTORIZA", params);
 		Map<String,Object> procResult = ejecutaSP(new RecuperarDiasDiferenciaEndosoValidos(getDataSource()),params);
 		int dias = Integer.parseInt((String)procResult.get("pv_dias_endoso_o"));
-		logger.debug(Utils.join("PKG_CONSULTA.P_GET_DIAS_ENDOSO_AUTORIZA dias=",dias));
+		logger.debug(Utils.log("PKG_CONSULTA.P_GET_DIAS_ENDOSO_AUTORIZA dias=",dias));
 		return dias;
 	}
 	
@@ -4306,7 +4306,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			params.put("nmsituac" , nmsituac);
 			Map<String,Object>procRes = ejecutaSP(new EsMismaPersonaContratante(getDataSource()),params);
 			esMismo = "S".equals((String)procRes.get("pv_contrat_o"));
-			logger.debug(Utils.join("Es el contratante: ",esMismo));
+			logger.debug(Utils.log("Es el contratante: ",esMismo));
 		}
 		catch(Exception ex)
 		{
@@ -4352,7 +4352,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		{
 			throw new ApplicationException("No hay tipo de situaci\u00F3n para el primero inciso");
 		}
-		logger.debug(Utils.join("****** PKG_CONSULTA.P_GET_CDTIPSIT_PRIMER_INCISO {"
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_CDTIPSIT_PRIMER_INCISO {"
 				,cdunieco , ","
 				,cdramo   , ","
 				,estado   , ","

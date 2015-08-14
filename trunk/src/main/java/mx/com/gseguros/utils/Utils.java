@@ -473,6 +473,39 @@ public class Utils
 		}
 		return sb.toString();
 	}
+
+	public static String log(Object... args)
+	{
+		StringBuilder sb = new StringBuilder();
+		for(Object arg:args)
+		{
+			try
+			{
+				if(arg!=null && arg instanceof List)
+				{
+					sb.append("<tamanio de lista ").append(((List)arg).size()).append(">");
+				}
+				
+				if(arg==null)
+				{
+					sb.append("null");
+				}
+				else if(arg.toString().length()>1000)
+				{
+					sb.append(arg.toString().substring(0, 1000)).append("...");
+				}
+				else
+				{
+					sb.append(arg);
+				}
+			}
+			catch(Exception ex)
+			{
+			    sb.append(arg);
+			}
+		}
+		return sb.toString();
+	}
 	
 	public static Map<String,String>concatenarParametros(Map<String,String>otvalor,boolean filtrar)
 	{
@@ -497,7 +530,7 @@ public class Utils
 				concat.put(key,val);
 			}
 		}
-		logger.debug(Utils.join("\nconcatenarParametros ",otvalor,"\nen ",concat));
+		logger.debug(Utils.log("\nconcatenarParametros ",otvalor,"\nen ",concat));
 		return concat;
 	}
 	
@@ -516,7 +549,7 @@ public class Utils
 		int len = storedProcedureName.length();
 		logger.debug
 		(
-				Utils.join
+				Utils.log
 				(
 				 "\n*******",StringUtils.leftPad("",len,"*"),"*******"
 				,"\n****** ",storedProcedureName," ******"
@@ -531,7 +564,7 @@ public class Utils
     	int len = storedProcedureName.length();
     	logger.debug
     	(
-    			Utils.join
+    			Utils.log
     			(
     					 "\n*******",StringUtils.leftPad("",len,"*"),"*******"
     					,"\n****** params=",params
@@ -547,7 +580,7 @@ public class Utils
 		int len = storedProcedureName.length();
 		logger.debug
 		(
-				Utils.join
+				Utils.log
 				(
 				 "\n*******",StringUtils.leftPad("",len,"*"),"*******"
 				,"\n****** ",storedProcedureName," ******"
@@ -562,7 +595,7 @@ public class Utils
     	int len = storedProcedureName.length();
     	logger.debug
     	(
-    			Utils.join
+    			Utils.log
     			(
     					 "\n*******",StringUtils.leftPad("",len,"*"),"*******"
     					,"\n****** params=",params

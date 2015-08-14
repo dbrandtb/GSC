@@ -435,7 +435,7 @@ public class ComponenteVO
 	@Override
 	public String toString()
 	{
-		return Utils.join("NAME/CDATRIBU=",this.nameCdatribu
+		return Utils.log("NAME/CDATRIBU=",this.nameCdatribu
 				,",LABEL=",this.label
 				,",CATALOGO=",this.catalogo
 				,",SWPRESEN=",this.swpresen

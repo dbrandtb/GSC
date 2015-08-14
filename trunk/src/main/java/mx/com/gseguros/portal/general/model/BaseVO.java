@@ -2,6 +2,8 @@ package mx.com.gseguros.portal.general.model;
 
 import java.io.Serializable;
 
+import mx.com.gseguros.utils.Utils;
+
 public class BaseVO implements Serializable {
 
 	private static final long serialVersionUID = 7528394434792370991L;
@@ -38,6 +40,6 @@ public class BaseVO implements Serializable {
 	
 	@Override
 	public String toString() {
-		return new StringBuilder().append("key:").append(key).append(" value:").append(value).toString();
+		return Utils.log("key:",key," value:",value);
 	}
 }

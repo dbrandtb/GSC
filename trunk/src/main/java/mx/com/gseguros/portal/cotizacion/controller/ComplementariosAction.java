@@ -2260,6 +2260,15 @@ public class ComplementariosAction extends PrincipalCoreAction
 		{
 			try
 			{
+				String cdorddoc = emisionManager.insercionDocumentosParametrizados(
+						cdunieco
+						,cdramo
+						,"M"
+						,nmpolizaEmitida
+						,"0"
+						,nmsuplemEmitida
+						);
+				
 				List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
 						cdunieco
 						,cdramo

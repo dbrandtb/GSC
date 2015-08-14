@@ -13,4 +13,14 @@ public interface EmisionManager
 	public ManagerRespuestaImapVO construirPantallaClausulasPoliza();
 	
 	public ManagerRespuestaVoidVO guardarClausulasPoliza(List<Map<String,String>>clausulas);
+	
+	@Deprecated
+	public String insercionDocumentosParametrizados(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			)throws Exception;
 }

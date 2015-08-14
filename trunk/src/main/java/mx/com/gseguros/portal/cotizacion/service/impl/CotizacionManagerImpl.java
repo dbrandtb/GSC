@@ -761,7 +761,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String complemento
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarCensoCompleto @@@@@@"
 				,"\n@@@@@@ nombreArchivo=" , nombreArchivo
@@ -795,7 +795,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,complemento
 				);
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ guardarCensoCompleto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -2612,7 +2612,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                		{
 	                			throw new ApplicationException("El parentesco no se reconoce [T,C,P,H,D]");
 	                		}
-			                logger.debug(Utils.join("PARENTESCO: ",parentesco,"|"));
+			                logger.debug(Utils.log("PARENTESCO: ",parentesco,"|"));
 			                bufferLinea.append(Utils.join(parentesco,"|"));
 			                
 			                if("T".equals(parentesco))
@@ -4530,7 +4530,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                	logger.error("error al leer codigo postal como numero, se intentara como string:",ex2);
 	                	try
 	                	{
-	                		logger.debug(Utils.join("COD POSTAL: "
+	                		logger.debug(Utils.log("COD POSTAL: "
 	                				,row.getCell(8).getStringCellValue()
 			                		,"|"
 			                		));
@@ -4653,7 +4653,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                	{
 	                		throw new ApplicationException("Falta numero exterior");
 	                	}
-		                logger.debug(Utils.join("NUM EXT: ",numExt,"|"));
+		                logger.debug(Utils.log("NUM EXT: ",numExt,"|"));
 		                bufferLinea.append(Utils.join(numExt,"|"));
                 	}
 	                catch(Exception ex)
@@ -4669,7 +4669,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                try
                 	{
 		                String numInt = extraerStringDeCelda(row.getCell(14));
-		                logger.debug(Utils.join("NUM INT: ",numInt,"|"));
+		                logger.debug(Utils.log("NUM INT: ",numInt,"|"));
 		                bufferLinea.append(Utils.join(numInt,"|"));
                 	}
 	                catch(Exception ex)
@@ -4685,7 +4685,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                try
                 	{
 	                	auxCell = row.getCell(15);
-		                logger.debug(Utils.join("RFC: ",auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+		                logger.debug(Utils.log("RFC: ",auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
 		                bufferLinea.append(Utils.join(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
 		                if(
 		                		(auxCell==null||StringUtils.isBlank(auxCell.getStringCellValue()))
@@ -4838,7 +4838,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
 	                }
 	                
-	                logger.debug(Utils.join("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
+	                logger.debug(Utils.log("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
 	                
 	                if(filaBuena)
 	                {
@@ -4860,7 +4860,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                
 	                if(cdgrupo>0d)
 	                {
-	                	logger.debug(Utils.join("cdgrupo=",cdgrupo,", valido=",gruposValidos[((int)cdgrupo)-1]));
+	                	logger.debug(Utils.log("cdgrupo=",cdgrupo,", valido=",gruposValidos[((int)cdgrupo)-1]));
 	                }
 	            }
 	            
@@ -4868,7 +4868,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            {
 	            	for(int i=0;i<gruposValidos.length;i++)
 	            	{
-	            		logger.debug(Utils.join("gruposValidos[i]=",gruposValidos[i]));
+	            		logger.debug(Utils.log("gruposValidos[i]=",gruposValidos[i]));
 	            	}
 	            }
 	            
@@ -5222,7 +5222,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String nmnumero
 			,String nmnumint)
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarContratanteColectivo @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -5315,7 +5315,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ guardarContratanteColectivo @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -5327,7 +5327,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	@Override
 	public ManagerRespuestaSmapVO cargarTramite(String ntramite)
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarTramite @@@@@@"
 				,"\n@@@@@@ ntramite=" , ntramite
@@ -5367,7 +5367,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ cargarTramite @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -5378,7 +5378,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     @Override
     public boolean cargarBanderaCambioCuadroPorProducto(String cdramo)
     {
-    	logger.info(Utils.join(
+    	logger.debug(Utils.log(
     			 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     			,"\n@@@@@@ cargarBanderaCambioCuadroPorProducto @@@@@@"
     			,"\n@@@@@@ cdramo=",cdramo
@@ -5396,7 +5396,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     		bandera=false;
     	}
     	
-    	logger.info(Utils.join(
+    	logger.debug(Utils.log(
     		 "\n@@@@@@ bandera=",bandera
    			,"\n@@@@@@ cargarBanderaCambioCuadroPorProducto @@@@@@"
    			,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -5424,7 +5424,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdagente
 			)
     {
-    	logger.info(Utils.join(
+    	logger.debug(Utils.log(
     			 "\n@@@@@@@@@@@@@@@@@@@@@"
     			,"\n@@@@@@ cotizar @@@@@@"
     			,"\n@@@@@@ cdunieco="    , cdunieco
@@ -6243,7 +6243,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     		manejaException(ex, resp);
     	}
     	
-    	logger.info(Utils.join(
+    	logger.debug(Utils.log(
     		 "\n@@@@@@ ",resp
     		,"\n@@@@@@ cotizar @@@@@@"
    			,"\n@@@@@@@@@@@@@@@@@@@@@"
@@ -6304,7 +6304,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdperpag
 			)throws Exception
 	{
-    	logger.info(Utils.join(
+    	logger.debug(Utils.log(
     			 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     			,"\n@@@@@@ ejecutaValoresDefectoConcurrente @@@@@@"
     			,"\n@@@@@@ cdunieco=" , cdunieco
@@ -6332,7 +6332,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdperpag
 			)throws Exception
 	{
-    	logger.info(Utils.join(
+    	logger.debug(Utils.log(
     			 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     			,"\n@@@@@@ ejecutaTarificacionConcurrente @@@@@@"
     			,"\n@@@@@@ cdunieco=" , cdunieco
@@ -6360,7 +6360,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdperpag
 			)throws Exception
 	{
-    	logger.info(Utils.join(
+    	logger.debug(Utils.log(
     			 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     			,"\n@@@@@@ ejecutaValoresDefectoTarificacionConcurrente @@@@@@"
     			,"\n@@@@@@ cdunieco=" , cdunieco
@@ -6385,7 +6385,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String nmsuplem
 			)throws Exception
 	{
-    	logger.info(Utils.join(
+    	logger.debug(Utils.log(
    			 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
    			,"\n@@@@@@ actualizaValoresDefectoSituacion @@@@@@"
    			,"\n@@@@@@ cdunieco=" , cdunieco
@@ -6460,7 +6460,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdplan5
 			)throws Exception
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ complementoSaludGrupo @@@@@@"
 				,"\n@@@@@@ ntramite="               , ntramite
@@ -6764,7 +6764,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ complementoSaludGrupo @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -6780,7 +6780,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String nmpoliza
 			)throws Exception
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ validaPagoPolizaRepartido @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -6789,7 +6789,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@ nmpoliza=" , nmpoliza
 				));
 		boolean pagoRepartido = consultasDAO.validaPagoPolizaRepartido(cdunieco,cdramo,estado,nmpoliza);
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ pagoRepartido=" , pagoRepartido
 				,"\n@@@@@@ validaPagoPolizaRepartido @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -6805,7 +6805,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String status
 			)throws Exception
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ turnaPorCargaTrabajo @@@@@@"
 				,"\n@@@@@@ ntramite=" , ntramite
@@ -6815,7 +6815,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		
 		String nombre = mesaControlDAO.turnaPorCargaTrabajo(ntramite,cdsisrol,status);
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ nombre=",nombre
 				,"\n@@@@@@ turnaPorCargaTrabajo @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -6834,7 +6834,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,List<Map<String,String>>tvalogars
 			)throws Exception
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarConfiguracionGarantias @@@@@@"
 				,"\n@@@@@@ cdramo="    , cdramo
@@ -7522,7 +7522,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ cdPaqueteNuevo=",cdPaqueteNuevo
 				,"\n@@@@@@ guardarConfiguracionGarantias @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

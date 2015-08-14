@@ -294,7 +294,7 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////////////////////////*/
 	public String pantallaEndosoDomicilio()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 		         "\n#####################################"
 		        ,"\n###### pantallaEndosoDomicilio ######"
 		        ,"\n###### smap1="  , smap1
@@ -336,7 +336,7 @@ public class EndososAction extends PrincipalCoreAction
 			respuesta = ERROR;
 		}
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### respuesta=",respuesta
 				,"\n###### pantallaEndosoDomicilio ######"
 		        ,"\n#####################################"
@@ -653,7 +653,7 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////////////////////////*/
 	public String pantallaEndosoDomicilioSimple()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###########################################"
 				,"\n###### pantallaEndosoDomicilioSimple ######"
 				,"\n###### smap1="  , smap1
@@ -708,7 +708,7 @@ public class EndososAction extends PrincipalCoreAction
 			respuesta = ERROR;
 		}
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### pantallaEndosoDomicilioSimple ######"
 				,"\n###########################################"
 				));
@@ -748,7 +748,7 @@ public class EndososAction extends PrincipalCoreAction
 	/*///////////////////////////////////////*/
 	public String pantallaEndosoNombres()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###################################"
 				,"\n###### pantallaEndosoNombres ######"
 				,"\n###### smap1="  , smap1
@@ -772,7 +772,7 @@ public class EndososAction extends PrincipalCoreAction
 			logger.debug("Error al convertir entrada al endoso de nombres",ex);
 		}
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### pantallaEndosoNombres ######"
 				,"\n###################################"
 				));
@@ -812,7 +812,7 @@ public class EndososAction extends PrincipalCoreAction
 	/*///////////////////////////////////////*/
 	public String pantallaEndosoNombresSimple()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n#########################################"
 				,"\n###### pantallaEndosoNombresSimple ######"
 				,"\n###### smap1="  , smap1
@@ -857,7 +857,7 @@ public class EndososAction extends PrincipalCoreAction
 			error = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### pantallaEndosoNombresSimple ######"
 				,"\n#########################################"
 				));
@@ -2504,7 +2504,7 @@ public class EndososAction extends PrincipalCoreAction
 	/*/////////////////////////////*/
 	public String entrarEndosoValositBasico()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n#######################################"
 		        ,"\n###### entrarEndosoValositBasico ######"
 		        ,"\n###### smap1="  , smap1
@@ -2559,7 +2559,7 @@ public class EndososAction extends PrincipalCoreAction
 			error = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### respuesta=",respuesta
 				,"\n###### entrarEndosoValositBasico ######"
 				,"\n#######################################"
@@ -2584,7 +2584,7 @@ public class EndososAction extends PrincipalCoreAction
 	/*/////////////////////////////*/
 	public String entrarEndosoValositBasicoSimple()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 		         "\n#############################################"
 		        ,"\n###### entrarEndosoValositBasicoSimple ######"
 		        ,"\n###### smap1="  , smap1
@@ -2648,7 +2648,7 @@ public class EndososAction extends PrincipalCoreAction
 			logger.error("Error al mostrar la pantalla de valosit", ex);
 		}
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### respuesta=",respuesta
 				,"\n###### entrarEndosoValositBasicoSimple ######"
 		        ,"\n#############################################"
@@ -10029,7 +10029,7 @@ public class EndososAction extends PrincipalCoreAction
 	
 	public String guardarEndosoBeneficiarios()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n########################################"
 				,"\n###### guardarEndosoBeneficiarios ######"
 				,"\n###### smap1="  , smap1
@@ -10082,7 +10082,7 @@ public class EndososAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### guardarEndosoBeneficiarios ######"
 				,"\n########################################"
 				));
@@ -10299,7 +10299,7 @@ public class EndososAction extends PrincipalCoreAction
 	
 	public String reenviaRecibosAuto()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				"\n#################################"
 				,"\n###### reenviaRecibosAuto ######"
 				,"\n###### smap1="  , smap1
@@ -10326,7 +10326,7 @@ public class EndososAction extends PrincipalCoreAction
 			respuesta=Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				"\n###### reenviaRecibosAuto ######"
 				,"\n###############################"
 				));
@@ -10347,7 +10347,7 @@ public class EndososAction extends PrincipalCoreAction
 		Utils.validate(smap1  , "No se recibieron datos");
 		
 		boolean origenMarcoGeneral = "MARCO_ENDOSOS_GENERAL".equals(smap1.get("pantallaOrigen"));
-		logger.debug(Utils.join("\norigenMarcoGeneral=",origenMarcoGeneral));
+		logger.debug(Utils.log("\norigenMarcoGeneral=",origenMarcoGeneral));
 		
 		if(origenMarcoGeneral)
 		{

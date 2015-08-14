@@ -2,6 +2,8 @@ package mx.com.gseguros.portal.cotizacion.model;
 
 import java.util.Map;
 
+import mx.com.gseguros.utils.Utils;
+
 public class ManagerRespuestaSmapVO extends ManagerRespuestaBaseVO
 {
 	private Map<String,String> smap = null;
@@ -36,12 +38,12 @@ public class ManagerRespuestaSmapVO extends ManagerRespuestaBaseVO
 	@Override
 	public String toString()
 	{
-		return new StringBuilder()
-		.append("Exito=").append(exito)
-		.append("\nRespuesta=").append(respuesta)
-		.append("\nRespuestaOculta=").append(respuestaOculta)
-		.append("\nSmap=").append(smap)
-		.toString();
+		return Utils.log(
+				"Exito="              , exito
+				,"\nRespuesta="       , respuesta
+				,"\nRespuestaOculta=" , respuestaOculta
+				,"\nSmap="            , smap
+		);
 	}
 	
 }

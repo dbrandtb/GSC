@@ -64,7 +64,7 @@ public class ThreadCounter
 		{
 			generadores.put(key,gc);
 			contador--;
-			logger.debug(Utils.join("async ciclo ",contador));
+			logger.debug(Utils.log("async ciclo ",contador));
 		}
 	}
 	

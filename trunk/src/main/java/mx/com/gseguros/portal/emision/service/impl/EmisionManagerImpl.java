@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
@@ -16,16 +17,21 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class EmisionManagerImpl implements EmisionManager
 {
 	private Map<String,Object> session;
 	
-	private static Logger logger = Logger.getLogger(EmisionManagerImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(EmisionManagerImpl.class);
 	
 	private PantallasDAO pantallasDAO;
+	
+	@Autowired
+	private CotizacionDAO cotizacionDAO;
 	
 	/*
 	 * Utilitarios
@@ -114,7 +120,7 @@ public class EmisionManagerImpl implements EmisionManager
 	@Override
 	public ManagerRespuestaImapVO construirPantallaClausulasPoliza()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ construirPantallaClausulasPoliza @@@@@@"
 				));
@@ -146,7 +152,7 @@ public class EmisionManagerImpl implements EmisionManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ ",resp
 				,"\n@@@@@@ construirPantallaClausulasPoliza @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -157,7 +163,7 @@ public class EmisionManagerImpl implements EmisionManager
 	@Override
 	public ManagerRespuestaVoidVO guardarClausulasPoliza(List<Map<String,String>>clausulas)
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarClausulasPoliza @@@@@@"
 				,"\n@@@@@@ clausulas=",clausulas
@@ -165,12 +171,63 @@ public class EmisionManagerImpl implements EmisionManager
 		
 		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ ",resp
 				,"\n@@@@@@ guardarClausulasPoliza @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return resp;
+	}
+	
+	@Deprecated
+	@Override
+	public String insercionDocumentosParametrizados(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ insercionDocumentosParametrizados @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ nmsituac=" , nmsituac
+				,"\n@@@@@@ nmsuplem=" , nmsuplem
+				));
+		
+		String cdorddoc = null
+		       ,paso    = null;
+		try
+		{
+			paso = "Generando documentos parametrizados";
+			logger.debug("Paso: {}",paso);
+			cdorddoc = cotizacionDAO.insercionDocumentosParametrizados(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsituac
+					,nmsuplem
+					);
+			logger.debug("cdorddoc: {}",cdorddoc);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ cdorddoc=",cdorddoc
+				,"\n@@@@@@ insercionDocumentosParametrizados @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return cdorddoc;
 	}
 	
 	/*

@@ -1069,7 +1069,7 @@ public class MesaControlAction extends PrincipalCoreAction
 	
 	public String validarAntesDeTurnar()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n##################################"
 				,"\n###### validarAntesDeTurnar ######"
 				,"\n###### smap1=",smap1
@@ -1093,7 +1093,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### validarAntesDeTurnar ######"
 				,"\n##################################"
 				));

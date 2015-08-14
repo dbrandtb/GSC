@@ -907,7 +907,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		{
 			lista=new ArrayList<Map<String,String>>();
 		}
-		logger.debug(Utils.join("****** PKG_CONSULTA.P_GET_VEHICULOS_RAMO_5",lista));
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_VEHICULOS_RAMO_5",lista));
 		List<GenericVO>listaGeneric=new ArrayList<GenericVO>();
 		for(Map<String,String>descripcion:lista)
 		{

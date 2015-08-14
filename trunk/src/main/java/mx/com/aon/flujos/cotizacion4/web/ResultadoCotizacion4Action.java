@@ -816,7 +816,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     --pv_cdperpag   input
     */
     {
-    	logger.info(Utils.join(
+    	logger.debug(Utils.log(
     			 "\n################################"
     			,"\n###### comprar cotizacion ######"
     			,"\n###### smap1=",smap1
@@ -1562,7 +1562,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     		
     	}
     	
-        logger.info(Utils.join(
+        logger.debug(Utils.log(
     			 "\n###### comprar cotizacion ######"
         		,"\n################################"
     			));

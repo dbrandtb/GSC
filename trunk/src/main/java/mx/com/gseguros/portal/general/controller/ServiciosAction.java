@@ -65,7 +65,7 @@ public class ServiciosAction extends PrincipalCoreAction
 			
 			respuesta = serviciosManager.reemplazarDocumentoCotizacion(sb,cdunieco, cdramo, estado, nmpoliza);
 			
-			logger.info(Utils.join(
+			logger.debug(Utils.log(
 					 "\n###########################################"
 					,"\n@@@*** reemplazarDocumentoCotizacion ***@@@"
 					,"\n###########################################"
@@ -147,7 +147,7 @@ public class ServiciosAction extends PrincipalCoreAction
 					,cdsisrolDes
 					);
 			
-			logger.info(Utils.join(
+			logger.debug(Utils.log(
 					 "\n##########################"
 					,"\n@@@*** grabarEvento ***@@@"
 					,"\n@@@*** cdmodulo=" , cdmodulo , ", cdevento=" , cdevento , ", fecha="    , fecha

@@ -59,7 +59,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 	)
 	public String pantallaEndosoAltaBajaFamilia()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###########################################"
 				,"\n###### pantallaEndosoAltaBajaFamilia ######"
 				,"\n###### params=",params
@@ -126,6 +126,54 @@ public class EndososColectivosAction extends PrincipalCoreAction
 			message = Utils.manejaExcepcion(ex);
 		}
 		return result;
+	}
+	
+	@Action(value   = "recuperarComponentesAltaAsegurado",
+			results = { @Result(name="success", type="json") }
+			)
+	public String recuperarComponentesAltaAsegurado()
+	{
+		logger.debug(Utils.log(
+				 "\n###############################################"
+				,"\n###### recuperarComponentesAltaAsegurado ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			UserVO usuario  = Utils.validateSession(session);
+			String cdsisrol = usuario.getRolActivo().getClave();
+					
+			Utils.validate(params , "No se recibieron datos");
+			String cdramo   = params.get("cdramo");
+			String cdtipsit = params.get("cdtipsit");
+			String depFam   = params.get("depFam");
+			Utils.validate(
+					cdramo    , "No se recibi\u00F3 el producto"
+					,cdtipsit , "No se recibi\u00F3 la clave de situaci\u00F3n"
+					,depFam   , "No se recibi\u00F3 el tipo de formulario"
+					);
+			
+			params.putAll(endososManager.recuperarComponentesAltaAsegurado(
+					cdramo
+					,cdtipsit
+					,depFam
+					,cdsisrol
+					,ServletActionContext.getServletContext().getServletContextName()
+					));
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### recuperarComponentesAltaAsegurado ######"
+				,"\n###############################################"
+				));
+		return SUCCESS;
 	}
 	
 	/**

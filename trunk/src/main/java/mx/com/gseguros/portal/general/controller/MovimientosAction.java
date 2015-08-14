@@ -50,7 +50,7 @@ public class MovimientosAction extends PrincipalCoreAction
 	)
 	public String ejecutar()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n######################"
 				,"\n###### ejecutar ######"
 				,"\n###### params=",params
@@ -110,7 +110,7 @@ public class MovimientosAction extends PrincipalCoreAction
 			logger.error(Utils.join("Error al ejecutar movimiento {",params,"}"),ex);
 			message = Utils.manejaExcepcion(ex);
 		}
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### ejecutar ######"
 				,"\n######################"
 				));
@@ -125,7 +125,7 @@ public class MovimientosAction extends PrincipalCoreAction
 	)
 	public String ejecutarSMD()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n#########################"
 				,"\n###### ejecutarSMD ######"
 				,"\n###### params=" , params
@@ -186,7 +186,7 @@ public class MovimientosAction extends PrincipalCoreAction
 			logger.error(Utils.join("Error al ejecutar movimiento {",params,"}"),ex);
 			message = Utils.manejaExcepcion(ex);
 		}
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### ejecutarSMD ######"
 				,"\n#########################"
 				));

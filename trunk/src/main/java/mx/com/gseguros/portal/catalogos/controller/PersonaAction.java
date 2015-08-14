@@ -54,7 +54,7 @@ public class PersonaAction extends PrincipalCoreAction
 	})
 	public String pantallaPersona()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n#############################"
 				,"\n###### pantallaPersona ######"
 				,"\n###### params=",params
@@ -85,7 +85,7 @@ public class PersonaAction extends PrincipalCoreAction
 			message = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### result=",result
 				,"\n###### pantallaPersona ######"
 				,"\n#############################"
@@ -98,7 +98,7 @@ public class PersonaAction extends PrincipalCoreAction
 			)
 	public String guardarPantallaEspPersona()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n#######################################"
 				,"\n###### guardarPantallaEspPersona ######"
 				,"\n###### params=",params
@@ -168,7 +168,7 @@ public class PersonaAction extends PrincipalCoreAction
 			message = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### guardarPantallaEspPersona ######"
 				,"\n#######################################"
 				));
@@ -180,7 +180,7 @@ public class PersonaAction extends PrincipalCoreAction
 			)
 	public String recuperarEspPersona()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n#################################"
 				,"\n###### recuperarEspPersona ######"
 				,"\n###### params=",params
@@ -200,7 +200,7 @@ public class PersonaAction extends PrincipalCoreAction
 			message = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### params=",params
 				,"\n###### recuperarEspPersona ######"
 				,"\n#################################"

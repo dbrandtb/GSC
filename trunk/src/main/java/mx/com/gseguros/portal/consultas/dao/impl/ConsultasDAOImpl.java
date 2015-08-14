@@ -121,7 +121,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("nmsuplem" , nmsuplem);
 		params.put("nmsolici" , nmsolici);
 		params.put("cdramant" , cdramant);
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n*****************************************************"
 				,"\n****** PKG_SATELITES2.P_GET_MPOLIZAS_X_PAR_VAR ******"
 				,"\n****** params=",params
@@ -133,7 +133,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n*****************************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , lista
@@ -189,7 +189,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n*********************************************"
 				,"\n****** PKG_SATELITES2.P_GET_TCONVALSIT ******"
 				,"\n****** params=",params
@@ -201,7 +201,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n*********************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , lista
@@ -263,7 +263,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n*********************************************"
 				,"\n****** PKG_SATELITES2.P_GET_TBASVALSIT ******"
 				,"\n****** params=",params
@@ -275,7 +275,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n*********************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , lista
@@ -341,7 +341,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
 		params.put("nmsituac" , nmsituac);
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n**************************************************"
 				,"\n****** PKG_SATELITES2.P_GET_MPOLIPER_SITUAC ******"
 				,"\n****** params=",params
@@ -358,7 +358,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			throw new ApplicationException("Registro de relacion poliza-persona duplicado");
 		}
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n**************************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , mpoliper
@@ -407,7 +407,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
 		params.put("nmsituac" , nmsituac);
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n**************************************************"
 				,"\n****** PKG_SATELITES2.P_GET_MPOLISIT_SITUAC ******"
 				,"\n****** params=",params
@@ -424,7 +424,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			throw new ApplicationException("Registro de relacion poliza-situacion duplicado");
 		}
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n**************************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , mpoliper
@@ -801,7 +801,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	Utils.debugProcedure(logger, "PKG_SATELITES2.P_VERIFICA_CDPOSTAL_FRONTER", params);
     	Map<String,Object>procResult = ejecutaSP(new VerificarCodigoPostalFronterizo(getDataSource()),params);
     	boolean esFront = ((String)procResult.get("pv_fronterizo_o")).equals("S");
-    	logger.debug(Utils.join("verificarCodigoPostalFronterizo=",esFront));
+    	logger.debug(Utils.log("verificarCodigoPostalFronterizo=",esFront));
     	return esFront;
     }
     
@@ -927,7 +927,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     		throw new ApplicationException("Error al obtener recargo por forma de pago");
     	}
     	String sRecargo=String.format("%.2f", recargo);
-    	logger.debug(Utils.join("PKG_CONSULTA.P_GET_PORC_RECARGO result=",sRecargo));
+    	logger.debug(Utils.log("PKG_CONSULTA.P_GET_PORC_RECARGO result=",sRecargo));
     	return sRecargo;
     }
     
@@ -1345,7 +1345,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	{
     		otvalor="";
     	}
-    	logger.debug(Utils.join("PKG_SATELITES2.P_GET_OTVALOR_CAT_TATRISIT result=",otvalor));
+    	logger.debug(Utils.log("PKG_SATELITES2.P_GET_OTVALOR_CAT_TATRISIT result=",otvalor));
     	return otvalor;
 	}
     
@@ -1535,7 +1535,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	result.put("FECHA_MAXIMA" , (String)procResult.get("pv_fechamax_o"));
     	result.put("FECHA_REFERENCIA" , (String)procResult.get("pv_fecharef_o"));
     	result.put("EDITABLE"     , (String)procResult.get("pv_editable_o"));
-    	logger.debug(Utils.join("PKG_CONSULTA.P_GET_FECHAS_ENDOSO mapa=",result));
+    	logger.debug(Utils.log("PKG_CONSULTA.P_GET_FECHAS_ENDOSO mapa=",result));
     	return result;
 	}
     
@@ -1656,7 +1656,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("cdusuari" , cdusuari);
     	Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_PERM_DEVOL_PRI_X_USUA", params);
     	Map<String,Object> procResult = ejecutaSP(new RecuperarPermisoDevolucionPrimasUsuario(getDataSource()),params);
-    	logger.debug(Utils.join("****** PKG_CONSULTA.P_GET_PERM_DEVOL_PRI_X_USUA permiso=",procResult.get("pv_permiso_o")));
+    	logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_PERM_DEVOL_PRI_X_USUA permiso=",procResult.get("pv_permiso_o")));
     	return "S".equals((String)procResult.get("pv_permiso_o"));
     }
     
@@ -1686,7 +1686,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	{
     		valor = "9999999";
     	}
-    	logger.debug(Utils.join("\n****** PKG_CONSULTA.P_GET_VALMAX_X_ROL valor=",valor));
+    	logger.debug(Utils.log("\n****** PKG_CONSULTA.P_GET_VALMAX_X_ROL valor=",valor));
     	return valor;
     }
     
@@ -1713,7 +1713,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	Utils.debugProcedure(logger, "Pkg_Consulta.P_OBTIENE_SUBRAMO_X_CDTIPSIT", params);
     	Map<String,Object> procResult = ejecutaSP(new ObtieneSubramoGS(getDataSource()),params);
     	String valor = (String)procResult.get("pv_cdsubram_o");
-    	logger.debug(Utils.join("\n****** Pkg_Consulta.P_OBTIENE_SUBRAMO_X_CDTIPSIT=",valor));
+    	logger.debug(Utils.log("\n****** Pkg_Consulta.P_OBTIENE_SUBRAMO_X_CDTIPSIT=",valor));
     	return valor;
 	}
     
@@ -1745,7 +1745,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("param2" , param2);
     	params.put("param3" , param3);
     	Map<String,Object> procResult = ejecutaSP(new RecuperarCdtipsitExtraExcel(getDataSource(),proc),params);
-    	logger.debug(Utils.join("\n****** procedimiento=",proc,"resultado=",procResult));
+    	logger.debug(Utils.log("\n****** procedimiento=",proc,"resultado=",procResult));
     	String valor = (String) procResult.get("pv_cdtipsit_o");
     	if(StringUtils.isBlank(valor))
     	{
@@ -1789,7 +1789,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	result.put("fesolici" , (String)procResult.get("pv_fesolici_o"));
     	result.put("feini"    , (String)procResult.get("pv_feini_o"));
     	result.put("fefin"    , (String)procResult.get("pv_fefin_o"));
-    	logger.debug(Utils.join("\npoliza=",result));
+    	logger.debug(Utils.log("\npoliza=",result));
     	return result;
     }
     
@@ -1843,7 +1843,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	{
     		listaUnieco=new ArrayList<Map<String,String>>();
     	}
-    	logger.debug(Utils.join("\nlista unieco=",listaUnieco));
+    	logger.debug(Utils.log("\nlista unieco=",listaUnieco));
     	mapa.put("unieco",listaUnieco);
     	
     	List<Map<String,String>> listaRamo = (List<Map<String,String>>)procResult.get("pv_reg_ramo_o");
@@ -1851,7 +1851,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	{
     		listaRamo=new ArrayList<Map<String,String>>();
     	}
-    	logger.debug(Utils.join("\nlista ramo=",listaRamo));
+    	logger.debug(Utils.log("\nlista ramo=",listaRamo));
     	mapa.put("ramo",listaRamo);
     	
     	List<Map<String,String>> listaUsuario = (List<Map<String,String>>)procResult.get("pv_reg_usuario_o");
@@ -1859,7 +1859,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	{
     		listaUsuario=new ArrayList<Map<String,String>>();
     	}
-    	logger.debug(Utils.join("\nlista usuario=",listaUsuario));
+    	logger.debug(Utils.log("\nlista usuario=",listaUsuario));
     	mapa.put("usuario",listaUsuario);
     	
     	List<Map<String,String>> listaAgente = (List<Map<String,String>>)procResult.get("pv_reg_agente_o");
@@ -1867,7 +1867,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	{
     		listaAgente=new ArrayList<Map<String,String>>();
     	}
-    	logger.debug(Utils.join("\nlista agente=",listaAgente));
+    	logger.debug(Utils.log("\nlista agente=",listaAgente));
     	mapa.put("agente",listaAgente);
     	
     	return mapa;
@@ -1930,7 +1930,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	{
     		listaTarea=new ArrayList<Map<String,String>>();
     	}
-    	logger.debug(Utils.join("\nlista tarea=",listaTarea));
+    	logger.debug(Utils.log("\nlista tarea=",listaTarea));
     	mapa.put("tarea",listaTarea);
     	
     	List<Map<String,String>> listaUnieco = (List<Map<String,String>>)procResult.get("pv_reg_unieco_o");
@@ -1938,7 +1938,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	{
     		listaUnieco=new ArrayList<Map<String,String>>();
     	}
-    	logger.debug(Utils.join("\nlista unieco=",listaUnieco));
+    	logger.debug(Utils.log("\nlista unieco=",listaUnieco));
     	mapa.put("unieco",listaUnieco);
     	
     	List<Map<String,String>> listaRamo = (List<Map<String,String>>)procResult.get("pv_reg_ramo_o");
@@ -1946,7 +1946,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	{
     		listaRamo=new ArrayList<Map<String,String>>();
     	}
-    	logger.debug(Utils.join("\nlista ramo=",listaRamo));
+    	logger.debug(Utils.log("\nlista ramo=",listaRamo));
     	mapa.put("ramo",listaRamo);
     	
     	List<Map<String,String>> listaUsuario = (List<Map<String,String>>)procResult.get("pv_reg_usuari_o");
@@ -1954,7 +1954,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	{
     		listaUsuario=new ArrayList<Map<String,String>>();
     	}
-    	logger.debug(Utils.join("\nlista usuario=",listaUsuario));
+    	logger.debug(Utils.log("\nlista usuario=",listaUsuario));
     	mapa.put("usuario",listaUsuario);
     	
     	List<Map<String,String>> listaRol = (List<Map<String,String>>)procResult.get("pv_reg_sisrol_o");
@@ -1962,7 +1962,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	{
     		listaRol=new ArrayList<Map<String,String>>();
     	}
-    	logger.debug(Utils.join("\nlista rol=",listaRol));
+    	logger.debug(Utils.log("\nlista rol=",listaRol));
     	mapa.put("rol",listaRol);
     	
     	return mapa;
@@ -2025,7 +2025,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			conteo="0";
 		}
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n**************************************************"
 				,"\n****** PKG_CONSULTA.P_GET_TATRISIT_AMPARADO ******"
 				,"\n****** params=" , params
@@ -2077,7 +2077,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		Utils.debugProcedure(logger, "PKG_SATELITES2.P_VALIDA_SUPLEMENTO", params);
 		Map<String,Object> procResult = ejecutaSP(new ValidacionesSuplemento(getDataSource()),params);
 		String             error      = (String)procResult.get("pv_error_o");
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n************************************************"
 				,"\n****** params=" , params
 				,"\n****** error="  , error

@@ -4374,7 +4374,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	 if(buffer!=null&&buffer.containsKey(cdtabla))
     	 {
     		 lista = buffer.get(cdtabla);
-    		 logger.debug(Utils.join(
+    		 logger.debug(Utils.log(
     				  "\n*****************************************"
     				 ,"\n****** P_GET_CLAVE_TTAPVAT1 buffer ******"
     				 ,"\n****** lista="    , lista
@@ -4386,7 +4386,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	 {
     		 Map<String,String>params=new LinkedHashMap<String,String>();
         	 params.put("cdtabla" , cdtabla);
-        	 logger.debug(Utils.join(
+        	 logger.debug(Utils.log(
         			  "\n*************************************************"
         			 ,"\n****** PKG_SATELITES2.P_GET_CLAVE_TTAPVAT1 ******"
         			 ,"\n****** params=",params
@@ -4959,7 +4959,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		
 		boolean resValidacion =(StringUtils.isNotBlank(resVal)&&resVal.equalsIgnoreCase("S"));
 		
-		logger.debug(Utils.join("PKG_SATELITES2.P_VALIDA_DOMICILIO_TITULAR result=",resValidacion));
+		logger.debug(Utils.log("PKG_SATELITES2.P_VALIDA_DOMICILIO_TITULAR result=",resValidacion));
 		return resValidacion;
 	}
 	
@@ -4997,7 +4997,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		Map<String,Object>procResult=ejecutaSP(new ValidarCuadroComisionNatural(getDataSource()),params);
 		String cuadroNatural=(String)procResult.get("pv_swcamcua_o");
 		boolean cuadroNaturalBol=StringUtils.isNotBlank(cuadroNatural)&&cuadroNatural.equalsIgnoreCase("S");
-		logger.debug(Utils.join("PKG_SATELITES2.P_VALIDA_CUADRO_COM_NATURAL result=",cuadroNatural));
+		logger.debug(Utils.log("PKG_SATELITES2.P_VALIDA_CUADRO_COM_NATURAL result=",cuadroNatural));
 		return cuadroNaturalBol;
 	}
 	
@@ -5134,7 +5134,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		{
 			throw new ApplicationException("No se recupero cesion de comision para la poliza");
 		}
-		logger.debug(Utils.join("****** PKG_CONSULTA.P_GET_PORC_CESION_COMISION recupera: ",cesion));
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_PORC_CESION_COMISION recupera: ",cesion));
 		return cesion;
 	}
 	
@@ -5808,6 +5808,50 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					"CDGARANT" , "DSGARANT" , "SWOBLIGA"
 				};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String insercionDocumentosParametrizados(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("nmsuplem" , nmsuplem);
+		Map<String,Object> procRes  = ejecutaSP(new InsercionDocumentosParametrizados(getDataSource()),params);
+		String             cdorddoc = (String)procRes.get("pv_cdorddoc_o");
+		if(StringUtils.isBlank(cdorddoc))
+		{
+			throw new ApplicationException("No se gener\u00F3 el ordinal de documentos");
+		}
+		return cdorddoc;
+	}
+	
+	protected class InsercionDocumentosParametrizados extends StoredProcedure
+	{
+		protected InsercionDocumentosParametrizados(DataSource dataSource)
+		{
+			super(dataSource,"P_INSERT_DOCUMENTOS");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdorddoc_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
