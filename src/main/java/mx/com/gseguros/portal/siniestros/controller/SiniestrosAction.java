@@ -2105,8 +2105,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 									hPTIMPORT 	+= PTIMPORT;
 									hDESTO    	+= (PTIMPORT*(DESTOPOR/100d)) + (DESTOIMP);
 									
-									/*
-									 Cuando nos den el VoBo. lo tendremos que decomentar
+									//Cuando nos den el VoBo. lo tendremos que decomentar
 									 if(aplicaIVA.equalsIgnoreCase("S")){
 										//verificamos si aplica para el concepto 
 										if(concepto.get("APLICIVA").equalsIgnoreCase("S")){
@@ -2114,8 +2113,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 										}
 									}else{
 										hIVA      	+= PTIMPORT*(ivaprov/100d);
-									}*/
-									hIVA      	+= PTIMPORT*(ivaprov/100d);
+									}
+									//hIVA      	+= PTIMPORT*(ivaprov/100d);
 									hISR		+= PTIMPORT*(isrprov/100d);
 									hICED		+= PTIMPORT*(cedprov/100d);
 									hPRECIO 	+= PTPRECIO;
@@ -3687,8 +3686,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 									hPTIMPORT 	+= PTIMPORT;
 									hDESTO    	+= (PTIMPORT*(DESTOPOR/100d)) + (DESTOIMP);
 									
-									/*
-									Cuando nos den el VoBo. lo tendremos que decomentar
+									
+									//Cuando nos den el VoBo. lo tendremos que decomentar
 									if(aplicaIVA.equalsIgnoreCase("S")){
 										//verificamos si aplica para el concepto 
 										if(concepto.get("APLICIVA").equalsIgnoreCase("S")){
@@ -3696,8 +3695,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 										}
 									}else{
 										hIVA      	+= PTIMPORT*(ivaprov/100d);
-									}*/
-									hIVA      	+= PTIMPORT*(ivaprov/100d);
+									}
+									//hIVA      	+= PTIMPORT*(ivaprov/100d);
 									hISR		+= PTIMPORT*(isrprov/100d);
 									hICED		+= PTIMPORT*(cedprov/100d);
 									hPRECIO 	+= PTPRECIO;
