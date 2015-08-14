@@ -1522,7 +1522,7 @@
 								}
 							},
 							{
-								header: 'Aplica IVA', 				dataIndex: 'APLICIVA',	width : 90		,  allowBlank: false//, hidden : true
+								header: 'Aplica IVA', 				dataIndex: 'APLICIVA',	width : 90		,  allowBlank: false
 								,editor : cmbAplicaIVA
 								,renderer : function(v) {
 								var leyenda = '';
@@ -3919,7 +3919,7 @@
 		    	var isrFactura=0;
 		    	var impCedFactura=0;
 		    	var imporTotalFactura=0;
-		    	
+		    	 
 		    	for(var i = 0; i < aseguradosTotales.length; i++)
 		    	{
 		    	    totalPago = 0;
