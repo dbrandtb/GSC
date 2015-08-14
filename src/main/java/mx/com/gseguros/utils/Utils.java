@@ -466,32 +466,10 @@ public class Utils
 
 	public static String join(Object... args)
 	{
-		boolean debug    = false;
 		StringBuilder sb = new StringBuilder();
 		for(Object arg:args)
 		{
-			if(debug)
-			{
-				sb.append(arg);
-			}
-			else
-			{
-				try
-				{
-					if(arg.toString().length()>350)
-					{
-						sb.append(Utils.join(arg.toString().substring(0,350),"..."));
-					}
-					else
-					{
-						sb.append(arg);
-					}
-				}
-				catch(Exception ex)
-				{
-					sb.append(arg);
-				}
-			}
+			sb.append(arg);
 		}
 		return sb.toString();
 	}
