@@ -469,4 +469,11 @@ public interface CotizacionDAO {
 			,String nmsituac
 			,String nmsuplem
 			)throws Exception;
+	
+	public void actualizaCesionComision(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }

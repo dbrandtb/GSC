@@ -40,6 +40,7 @@ import net.sf.json.JSONArray;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -1062,6 +1063,19 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     			respuesta       = "Error al ligar la p&oacute;liza al agente #"+timestamp;
     			respuestaOculta = ex.getMessage();
     			logger.error(respuesta,ex);
+    		}
+    	}
+    	
+    	if(exito)
+    	{
+    		try
+    		{
+    			cotizacionManager.actualizaCesionComision(comprarCdunieco,comprarCdramo,"W",comprarNmpoliza);
+    			logger.info("El procedimiento de actualizacion de cesion de comision fue invocado exitosamente");
+    		}
+    		catch(Exception ex)
+    		{
+    			logger.warn(Utils.join("Hubo un error al actualizar cesion de comision:",ExceptionUtils.getStackTrace(ex)));
     		}
     	}
     	
