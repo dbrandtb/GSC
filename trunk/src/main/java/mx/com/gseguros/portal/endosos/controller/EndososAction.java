@@ -31,6 +31,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.endosos.model.RespuestaConfirmacionEndosoVO;
+import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
@@ -102,6 +103,9 @@ public class EndososAction extends PrincipalCoreAction
 	
 	@Autowired
 	private PersonasManager personasManager;
+	
+	@Autowired
+	private EndososAutoManager endososAutoManager;
 	
 	private boolean exito           = false;
 	private String  respuesta;
@@ -7943,6 +7947,12 @@ public class EndososAction extends PrincipalCoreAction
 			String proceso        = "END";
 			String cdtipsup       = TipoEndoso.CAMBIO_FORMA_PAGO.getCdTipSup().toString();
 			
+			boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
+			
+			if(!esProductoSalud){
+				endososAutoManager.validarEndosoPagados(cdunieco, cdramo, estado, nmpoliza);
+			}
+			
 			//PKG_ENDOSOS.P_ENDOSO_INICIA
 			Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, sFecha, cdelemento, cdusuari, proceso, cdtipsup);
 			
@@ -7970,7 +7980,6 @@ public class EndososAction extends PrincipalCoreAction
 				
 				String sucursal = cdunieco;
 				
-				boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
 				if(esProductoSalud) {
 					// Ejecutamos el Web Service de Recibos:
 					ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
@@ -8273,6 +8282,13 @@ public class EndososAction extends PrincipalCoreAction
 			String cdtipsit            = smap1.get("CDTIPSIT");
 			String ntramite            = smap1.get("NTRAMITE");
 			
+			
+			boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
+			
+			if(!esProductoSalud){
+				endososAutoManager.validarEndosoPagados(cdunieco, cdramo, estado, nmpoliza);
+			}
+			
 			//PKG_ENDOSOS.P_ENDOSO_INICIA
 			Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, sFecha, cdelemento, cdusuari, proceso, cdtipsup);
 			
@@ -8319,7 +8335,6 @@ public class EndososAction extends PrincipalCoreAction
 	   			
 				String sucursal = cdunieco;
 				
-				boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
 				if(esProductoSalud) {
 					// Ejecutamos el Web Service de Recibos:
 		   			ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
@@ -8621,6 +8636,11 @@ public class EndososAction extends PrincipalCoreAction
 		
 		long timestamp=System.currentTimeMillis();
 		
+		boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
+		
+		if(!esProductoSalud){
+			endososAutoManager.validarEndosoPagados(cdunieco, cdramo, estado, nmpoliza);
+		}
 		
 		Map<String,Object> managerResult = personasManager.obtenerDomicilioPorCdperson(smap2.get("cdpersonNvoContr"), timestamp);
 		Map<String,String> domicilioNvo  = (Map<String,String>)managerResult.get("domicilio");
@@ -8664,9 +8684,6 @@ public class EndososAction extends PrincipalCoreAction
 		paramsMpopliper.put("pv_accion_i", 	 Constantes.INSERT_MODE);
 		
 		kernelManager.movMpoliper(paramsMpopliper);
-		
-		
-		boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
 		
 		if(esProductoSalud){
 			endososManager.calcularRecibosCambioContratante(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
