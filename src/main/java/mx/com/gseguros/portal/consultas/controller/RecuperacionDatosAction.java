@@ -41,7 +41,7 @@ public class RecuperacionDatosAction extends PrincipalCoreAction
 	)
 	public String recuperar()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n#######################"
 				,"\n###### recuperar ######"
 				,"\n###### params=",params
@@ -86,7 +86,7 @@ public class RecuperacionDatosAction extends PrincipalCoreAction
 			logger.error(Utils.join("Error en la recuperacion {",params,"}"),ex);
 			message = Utils.manejaExcepcion(ex);
 		}
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### recuperar ######"
 				,"\n#######################"
 				));

@@ -781,7 +781,7 @@ public class PersonasManagerImpl implements PersonasManager
 	@Override
 	public ManagerRespuestaImapVO pantallaBeneficiarios(String cdunieco,String cdramo,String estado,String cdsisrol,String cdtipsup)
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ pantallaBeneficiarios @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -862,7 +862,7 @@ public class PersonasManagerImpl implements PersonasManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ ",resp
 				,"\n@@@@@@ pantallaBeneficiarios @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -873,7 +873,7 @@ public class PersonasManagerImpl implements PersonasManager
 	@Override
 	public Map<String,Item> pantallaPersona(String origen, String cdsisrol, String context) throws Exception
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ pantallaPersona @@@@@@"
 				,"\n@@@@@@ origen="   , origen
@@ -926,7 +926,7 @@ public class PersonasManagerImpl implements PersonasManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ items=",items.size()
 				,"\n@@@@@@ pantallaPersona @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -937,7 +937,7 @@ public class PersonasManagerImpl implements PersonasManager
 	@Override
 	public String guardarPantallaEspPersona(Map<String,String>params) throws Exception
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarPantallaEspPersona @@@@@@"
 				,"\n@@@@@@ params=",params
@@ -982,7 +982,7 @@ public class PersonasManagerImpl implements PersonasManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ mensaje=",paso
 				,"\n@@@@@@ guardarPantallaEspPersona @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -992,7 +992,7 @@ public class PersonasManagerImpl implements PersonasManager
 	
 	public Map<String,String>recuperarEspPersona(String cdperson) throws Exception
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarEspPersona @@@@@@"
 				,"\n@@@@@@ cdperson=",cdperson
@@ -1000,7 +1000,7 @@ public class PersonasManagerImpl implements PersonasManager
 		
 		Map<String,String> persona = personasDAO.recuperarEspPersona(cdperson);
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ persona=",persona
 				,"\n@@@@@@ recuperarEspPersona @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

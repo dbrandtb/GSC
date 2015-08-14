@@ -1103,7 +1103,7 @@ public class PersonasAction extends PrincipalCoreAction
 	
 	public String pantallaBeneficiarios()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###################################"
 				,"\n###### pantallaBeneficiarios ######"
 				,"\n###### smap1=",smap1
@@ -1174,7 +1174,7 @@ public class PersonasAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### pantallaBeneficiarios ######"
 				,"\n###################################"
 				));

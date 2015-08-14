@@ -36,7 +36,7 @@ public class PantallasManagerImpl implements PantallasManager
 			,String orden
 			) throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ obtenerComponentes @@@@@@"
 				,"\n@@@@@@ cdtiptra=" , cdtiptra
@@ -51,7 +51,7 @@ public class PantallasManagerImpl implements PantallasManager
 				));
 		List<ComponenteVO> lista=pantallasDAO.obtenerComponentes(cdtiptra, cdunieco, cdramo, cdtipsit, estado, cdsisrol, pantalla, seccion, orden);
 		lista=lista!=null?lista:new ArrayList<ComponenteVO>(0);
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ lista size=",lista.size()
 				,"\n@@@@@@ obtenerComponentes @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -75,7 +75,7 @@ public class PantallasManagerImpl implements PantallasManager
 			,String orden
 			) throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ obtenerParametros @@@@@@"
 				,"\n@@@@@@ cdtiptra=" , cdtiptra
@@ -90,7 +90,7 @@ public class PantallasManagerImpl implements PantallasManager
 				));
 		List<Map<String,String>> lista=pantallasDAO.obtenerParametros(cdtiptra, cdunieco, cdramo, cdtipsit, estado, cdsisrol, pantalla, seccion, orden);
 		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ lista size=",lista.size()
 				,"\n@@@@@@ obtenerParametros @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

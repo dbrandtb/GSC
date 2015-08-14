@@ -473,7 +473,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 	
 	public String actualizarNombreDocumento()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n#######################################"
 				,"\n###### actualizarNombreDocumento ######"
 				,"\n###### smap1=",smap1
@@ -518,7 +518,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 			logger.error(respuesta,ex);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### actualizarNombreDocumento ######"
 				,"\n#######################################"
 				));
@@ -529,7 +529,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 	
 	public String borrarDocumento()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n#############################"
 				,"\n###### borrarDocumento ######"
 				,"\n###### smap1=",smap1
@@ -573,7 +573,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 			logger.error(respuesta,ex);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### borrarDocumento ######"
 				,"\n#############################"
 				));

@@ -387,7 +387,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
 		params.put("nmsolici" , nmsolici);
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n*********************************************************"
 				,"\n****** PKG_SATELITES2.P_GET_TMESACONTROL_X_PAR_VAR ******"
 				,"\n****** params=",params
@@ -399,7 +399,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		{
 			registro=new ArrayList<Map<String,String>>();
 		}
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n*********************************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , registro

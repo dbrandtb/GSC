@@ -124,7 +124,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("pv_cdperson_i" , cdperson);
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n****************************************************"
 				,"\n****** PKG_CONSULTA.P_GET_MPERSONA_X_CDPERSON ******"
 				,"\n****** params=",params
@@ -140,7 +140,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		{
 			throw new ApplicationException("Persona duplicada");
 		}
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n****************************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , registro.get(0)

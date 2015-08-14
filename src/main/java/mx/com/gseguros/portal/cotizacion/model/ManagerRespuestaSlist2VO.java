@@ -3,6 +3,8 @@ package mx.com.gseguros.portal.cotizacion.model;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.utils.Utils;
+
 public class ManagerRespuestaSlist2VO extends ManagerRespuestaBaseVO
 {
 	private List<Map<String,String>> slist  = null;
@@ -53,13 +55,13 @@ public class ManagerRespuestaSlist2VO extends ManagerRespuestaBaseVO
 	@Override
 	public String toString()
 	{
-		return new StringBuilder()
-		.append("Exito=").append(exito)
-		.append("\nRespuesta=").append(respuesta)
-		.append("\nRespuestaOculta=").append(respuestaOculta)
-		.append("\nSlist=").append(slist!=null&&slist.size()>15?slist.size():slist)
-		.append("\nSlist2=").append(slist2!=null&&slist2.size()>15?slist2.size():slist2)
-		.toString();
+		return Utils.log(
+				"Exito="              , exito
+				,"\nRespuesta="       , respuesta
+				,"\nRespuestaOculta=" , respuestaOculta
+				,"\nSlist="           , slist
+				,"\nSlist2="          , slist2
+		);
 	}
 	
 }

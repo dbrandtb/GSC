@@ -34,7 +34,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 	 */
 	private void setCheckpoint(String checkpoint)
 	{
-		logger.debug(Utils.join("checkpoint-->",checkpoint));
+		logger.debug(Utils.log("checkpoint-->",checkpoint));
 		session.put("checkpoint",checkpoint);
 	}
 	
@@ -79,7 +79,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			,String cdusuari
 			)
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperacionSimple @@@@@@"
 				,"\n@@@@@@ procedimiento=" , proc
@@ -243,7 +243,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ recuperacionSimple @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -259,7 +259,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			,String cdusuari
 			)
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperacionSimpleLista @@@@@@"
 				,"\n@@@@@@ proc="     , proc
@@ -472,7 +472,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ recuperacionSimpleLista @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -488,7 +488,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			,Map<String,String> params
 	)throws Exception
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarMapa @@@@@@"
 				,"\n@@@@@@ cdusuari=" , cdusuari
@@ -506,7 +506,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 		{
 			Utils.generaExcepcion(ex, paso);
 		}
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ mapa=",mapa
 				,"\n@@@@@@ recuperarMapa @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -522,7 +522,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			,Map<String,String> params
 	)throws Exception
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarLista @@@@@@"
 				,"\n@@@@@@ cdusuari=" , cdusuari
@@ -577,7 +577,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 		{
 			Utils.generaExcepcion(ex, paso);
 		}
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ lista=",lista==null ? "null" : lista.size()
 				,"\n@@@@@@ recuperarLista @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

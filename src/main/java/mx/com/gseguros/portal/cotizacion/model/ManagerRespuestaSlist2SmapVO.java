@@ -3,6 +3,8 @@ package mx.com.gseguros.portal.cotizacion.model;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.utils.Utils;
+
 public class ManagerRespuestaSlist2SmapVO extends ManagerRespuestaBaseVO
 {
 	private Map<String,String>       smap   = null;
@@ -64,14 +66,14 @@ public class ManagerRespuestaSlist2SmapVO extends ManagerRespuestaBaseVO
 	@Override
 	public String toString()
 	{
-		return new StringBuilder()
-		.append("Exito=").append(exito)
-		.append("\nRespuesta=").append(respuesta)
-		.append("\nRespuestaOculta=").append(respuestaOculta)
-		.append("\nSmap=").append(smap)
-		.append("\nSlist1=").append(slist1!=null&&slist1.size()>15?slist1.size():slist1)
-		.append("\nSlist2=").append(slist2!=null&&slist2.size()>15?slist2.size():slist2)
-		.toString();
+		return Utils.log(
+				"Exito="              , exito
+				,"\nRespuesta="       , respuesta
+				,"\nRespuestaOculta=" , respuestaOculta
+				,"\nSmap="            , smap
+				,"\nSlist1="          , slist1
+				,"\nSlist2="          , slist2
+		);
 	}
 	
 }

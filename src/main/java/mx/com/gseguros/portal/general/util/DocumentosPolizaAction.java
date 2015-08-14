@@ -81,7 +81,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	
 	public String ventanaDocumentosPoliza()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n#####################################"
 				,"\n###### ventanaDocumentosPoliza ######"
 				,"\n###### smap1=",smap1
@@ -125,7 +125,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 			}
 		}
 
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### ventanaDocumentosPoliza ######"
 				,"\n#####################################"
 				));

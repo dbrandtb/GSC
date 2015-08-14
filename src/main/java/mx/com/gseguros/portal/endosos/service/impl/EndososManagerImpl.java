@@ -1732,7 +1732,7 @@ public class EndososManagerImpl implements EndososManager
 			,String ntramite
 			)
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
 				,"\n@@@@@@ cdunieco="         , cdunieco
@@ -1979,7 +1979,7 @@ public class EndososManagerImpl implements EndososManager
 			manejaException(ex, resp);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2010,7 +2010,7 @@ public class EndososManagerImpl implements EndososManager
 			,String nmsituac
 			)
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ esMismaPersonaContratante @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -2022,7 +2022,7 @@ public class EndososManagerImpl implements EndososManager
 		
 		boolean esContrat = endososDAO.esMismaPersonaContratante(cdunieco,cdramo,estado,nmpoliza,nmsituac);
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ esContrat=",esContrat
 				,"\n@@@@@@ esMismaPersonaContratante @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2039,7 +2039,7 @@ public class EndososManagerImpl implements EndososManager
 			,String nmpoliza
 			)throws Exception
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarCdtipsitInciso1 @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -2050,7 +2050,7 @@ public class EndososManagerImpl implements EndososManager
 		
 		String cdtipsit = endososDAO.recuperarCdtipsitInciso1(cdunieco,cdramo,estado,nmpoliza);
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ cdtipsit=",cdtipsit
 				,"\n@@@@@@ recuperarCdtipsitInciso1 @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2150,7 +2150,7 @@ public class EndososManagerImpl implements EndososManager
 			,String contexto
 			)throws Exception
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ pantallaEndosoAltaBajaFamilia @@@@@@"
 				,"\n@@@@@@ cdusuari=" , cdusuari
@@ -2268,10 +2268,115 @@ public class EndososManagerImpl implements EndososManager
 			logger.error("Error al construir pantalla de endoso de alta/baja de familias",ex);
 			Utils.generaExcepcion(ex, paso);
 		}
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ mapa=",mapa.keySet()
 				,"\n@@@@@@ pantallaEndosoAltaBajaFamilia @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return mapa;
+	}
+	
+	@Override
+	public Map<String,String> recuperarComponentesAltaAsegurado(
+			String cdramo
+			,String cdtipsit
+			,String depFam
+			,String cdsisrol
+			,String contexto
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarComponentesAltaAsegurado @@@@@@"
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ cdtipsit=" , cdtipsit
+				,"\n@@@@@@ depFam="   , depFam
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ contexto=" , contexto
+				));
+		
+		String             items = null;
+		String             paso  = "Recuperando componentes";
+		Map<String,String> mapa  = new HashMap<String,String>();
+		
+		try
+		{
+			List<ComponenteVO> mpersona = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,cdtipsit
+					,depFam //estado
+					,cdsisrol
+					,"ENDOSO_FAMILIA"
+					,"MPERSONA"
+					,null //orden
+					);
+			
+			List<ComponenteVO> tatrisit = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,cdtipsit
+					,depFam //estado
+					,cdsisrol
+					,"ENDOSO_FAMILIA"
+					,"TATRISIT"
+					,null //orden
+					);
+			
+			List<ComponenteVO> tatrirol = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,cdtipsit
+					,depFam //estado
+					,cdsisrol
+					,"ENDOSO_FAMILIA"
+					,"TATRIROL"
+					,null //orden
+					);
+			
+			List<ComponenteVO> validacion = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,cdtipsit
+					,depFam //estado
+					,cdsisrol
+					,"ENDOSO_FAMILIA"
+					,"VALIDACION"
+					,null //orden
+					);
+			if(validacion==null||validacion.size()==0)
+			{
+				throw new ApplicationException("No hay validaci\u00F3n definida");
+			}
+			
+			paso = "Construyendo componentes";
+			logger.debug("Paso: {}",paso);
+			
+			GeneradorCampos gc = new GeneradorCampos(contexto);
+			gc.generaComponentes(mpersona, true, false, true, false, false, false);
+			mapa.put("mpersona" , Utils.join("[",gc.getItems().toString(),"]"));
+			
+			gc.generaComponentes(tatrisit, true, false, true, false, false, false);
+			mapa.put("tatrisit" , Utils.join("[",gc.getItems().toString(),"]"));
+			
+			gc.generaComponentes(tatrirol, true, false, true, false, false, false);
+			mapa.put("tatrirol" , Utils.join("[",gc.getItems().toString(),"]"));
+			
+			gc.generaComponentes(validacion, true,false,false,false,false,true);
+			mapa.put("validacion" , gc.getButtons().toString());
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ recuperarComponentesAltaAsegurado @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return mapa;
 	}

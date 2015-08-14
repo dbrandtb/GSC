@@ -6,8 +6,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// urls //////
-var _p48_urlRecuperacion  = '<s:url namespace="/recuperacion" action="recuperar"   />';
-var _p48_urlMovimientoSMD = '<s:url namespace="/movimientos"  action="ejecutarSMD" />';
+var _p48_urlRecuperacion             = '<s:url namespace="/recuperacion" action="recuperar"                         />';
+var _p48_urlRecuperarItemsFormulario = '<s:url namespace="/endosos"      action="recuperarComponentesAltaAsegurado" />';
 ////// urls //////
 
 ////// variables //////
@@ -16,7 +16,7 @@ debug('_p48_params:',_p48_params);
 
 var _p48_store;
 var _p48_storeMov;
-var _p48_windowEsqueleto;
+var _p48_nfamilia = 0;
 ////// variables //////
 
 ////// overrides //////
@@ -29,10 +29,20 @@ var _p48_colsInciso   = [ <s:property value="items.colsInciso"   escapeHtml="fal
 var _p48_colsMovimi   = [
                             {
                                 xtype    : 'actioncolumn'
-                                ,width   : 30
-                                ,icon    : '${icons}arrow_undo.png'
-                                ,tooltip : 'Deshacer'
-                                ,handler : _p48_deshacerMov
+                                ,width   : 50
+                                ,items   :
+                                [
+                                    {
+                                        icon     : '${icons}arrow_undo.png'
+                                        ,tooltip : 'Deshacer'
+                                        ,handler : _p48_deshacerMov
+                                    }
+                                    ,{
+                                        icon     : '${icons}pencil.png'
+                                        ,tooltip : 'Editar'
+                                        ,handler : _p48_editarAsegurado
+                                    }
+                                ]
                             }
                             ,{
                                 text       : 'MOV.'
@@ -53,8 +63,7 @@ var _p48_colsMovimi   = [
                             }
                             ,<s:property value="items.colsInciso"   escapeHtml="false" />
                         ];
-var _p48_itemsEndoso    = [ <s:property value="items.itemsEndoso"    escapeHtml="false" /> ];
-var _p48_itemsEsqueleto = [ <s:property value="items.itemsEsqueleto" escapeHtml="false" /> ];
+var _p48_itemsEndoso = [ <s:property value="items.itemsEndoso"    escapeHtml="false" /> ];
 ////// componentes dinamicos //////
 
 Ext.onReady(function()
@@ -128,19 +137,6 @@ Ext.onReady(function()
     ////// stores //////
     
     ////// componentes //////
-    _p48_windowEsqueleto = Ext.create('Ext.window.Window',
-    {
-        modal  : true
-        ,title : 'NUEVO ASEGURADO'
-        ,items :
-        [
-            Ext.create('Ext.form.Panel',
-            {
-                defaults : { style : 'margin:5px;' }
-                ,items   : _p48_itemsEsqueleto 
-            })
-        ]
-    });
     ////// componentes //////
     
     ////// contenido //////
@@ -174,10 +170,16 @@ Ext.onReady(function()
                 ,tbar     :
                 [
                     {
-                        text     : 'Agregar'
+                        text     : 'Agregar dependiente'
                         ,icon    : '${icons}add.png'
                         ,hidden  : _p48_params.operacion!='alta'
-                        ,handler : _p48_agregarClic
+                        ,handler : _p48_agregarDepClic
+                    }
+                    ,{
+                        text     : 'Agregar familia'
+                        ,icon    : '${icons}add.png'
+                        ,hidden  : _p48_params.operacion!='alta'||Ext.isEmpty(_p48_params.TIPOFLOT)||_p48_params.TIPOFLOT=='I'
+                        ,handler : _p48_agregarFamClic
                     }
                     ,{
                         text     : 'Quitar'
@@ -206,19 +208,6 @@ Ext.onReady(function()
                     {
                         text  : 'Confirmar'
                         ,icon : '${icons}key.png'
-                    }
-                    ,{
-                        text       : 'Cancelar endoso'
-                        ,icon      : '${icons}cancel.png'
-                        ,itemId    : '_p48_botonCancelar'
-                        ,handler   : _p48_cancelarClic
-                        ,listeners :
-                        {
-                            render : function()
-                            {
-                                _p48_validarEstadoBotonCancelar();
-                            }
-                        }
                     }
                 ]
             })
@@ -279,49 +268,23 @@ function _p48_quitarAseguradoClic(me)
             }
         });
         
-        ck                   = 'Preparando par\u00E1metros para petici\u00F3n';
-        var params           = record.raw;
-        params['movimiento'] = 'PASO_QUITAR_ASEGURADO';
-        params['cdtipsup']   = _p48_params.cdtipsup;
-        debug('params:',params);
-        
-        _setLoading(true,gridAsegurados);
-        Ext.Ajax.request(
+        if(record.get('CVE_PARENTESCO')=='T')
         {
-            url       : _p48_urlMovimientoSMD
-            ,jsonData : { params : params }
-            ,success  : function(response)
+            _p48_store.each(function(rec)
             {
-                _setLoading(false,gridAsegurados);
-                var ck = 'Decodificando respuesta al quitar asegurado';
-                try
+                if(Number(rec.get('NMSITAUX'))==Number(record.get('NMSITAUX'))
+                   &&Number(rec.get('NMSITUAC'))!=Number(record.get('NMSITUAC'))
+                )
                 {
-                    var json = Ext.decode(response.responseText);
-                    debug('### quitar:',json);
-                    if(json.success==true)
-                    {
-                        _p48_params['nsuplogi']        = json.params.nsuplogi_endoso;
-                        _p48_params['nmsuplem_endoso'] = json.params.nmsuplem_endoso;
-                        debug('_p48_params modificado despues de quitar asegurado:',_p48_params);
-                        _p48_storeMov.proxy.extraParams['params.nmsuplem'] = _p48_params['nmsuplem_endoso'];
-                        _p48_cargarStoreMov();
-                        _p48_validarEstadoBotonCancelar();
-                    }
-                    else
-                    {
-                        mensajeError(json.message);
-                    }
+                    debugError('Aun hay NMSITAUX:',record.get('NMSITAUX'),'rec.data:',rec.data);
+                    throw 'No se puede quitar un titular si aun hay familiares';
                 }
-                catch(e)
-                {
-                    manejaException(e,ck);
-                }
-            }
-            ,failure  : function()
-            {
-                _setLoading(false,gridAsegurados);
-            }
-        });
+            });
+        }
+        
+        _p48_store.remove(record);
+        record.set('MOV','-');
+        _p48_storeMov.add(record);
     }
     catch(e)
     {
@@ -335,108 +298,40 @@ function _p48_deshacerMov(v,row,col,item,e,record)
     var ck = 'Revirtiendo movimiento';
     try
     {
-        var grid = _fieldById('_p48_gridMovimientos');
-        
-        var jsonData =
+        if(record.get('MOV')=='-')
         {
-            params : record.raw
-        };
-        jsonData.params.cdtipsup        = _p48_params.cdtipsup;
-        jsonData.params.nmsuplem_endoso = _p48_params.nmsuplem_endoso;
-        jsonData.params.movimiento      = 'DESHACER_PASO_ASEGURADO';
-        
-        _setLoading(true,grid);
-        Ext.Ajax.request(
-        {
-            url       : _p48_urlMovimientoSMD
-            ,jsonData : jsonData
-            ,success  : function(response)
+            //deshacer "QUITAR"
+            if(record.get('CVE_PARENTESCO')!='T')
             {
-                _setLoading(false,grid);
-                var ck = 'Decodificando respuesta al deshacer movimiento';
-                try
+                var hayFamilia = false;
+                _p48_store.each(function(rec)
                 {
-                    var json = Ext.decode(response.responseText);
-                    debug('### deshacer:',json);
-                    if(json.success==true)
+                    if(Number(rec.get('NMSITAUX'))==Number(record.get('NMSITAUX')))
                     {
-                        _p48_cargarStoreMov();
+                        hayFamilia = true;
                     }
-                    else
-                    {
-                        mensajeError(json.message);
-                    }
-                }
-                catch(e)
+                });
+                if(!hayFamilia)
                 {
-                    manejaException(e,ck);
+                    throw 'No se puede regresar un dependiente, sin el titular';
                 }
             }
-            ,failure : function()
+            
+            _p48_store.add(record);
+            _p48_storeMov.remove(record);
+        }
+        else if(record.get('MOV')=='+')
+        {
+            if(record.get('AUX1')=='DEP')
             {
-                _setLoading(false,grid);
-                errorComunicacion(null,'Error al deshacer movimiento');
+                _p48_storeMov.remove(record);
             }
-        });
+        }
     }
     catch(e)
     {
         manejaException(e,ck);
     }
-}
-
-function _p48_cancelarClic(me)
-{
-    debug('_p48_cancelarClic');
-    var form = me.up('form');
-    _setLoading(true,form);
-    Ext.Ajax.request(
-    {
-        url       : _p48_urlMovimientoSMD
-        ,jsonData :
-        {
-            params :
-            {
-                movimiento : 'SACAENDOSO'
-                ,cdunieco  : _p48_params.CDUNIECO
-                ,cdramo    : _p48_params.CDRAMO
-                ,estado    : _p48_params.ESTADO
-                ,nmpoliza  : _p48_params.NMPOLIZA
-                ,nsuplogi  : _p48_params.nsuplogi
-                ,nmsuplem  : _p48_params.nmsuplem_endoso
-            }
-        }
-        ,success  : function(response)
-        {
-            _setLoading(false,form);
-            var ck = 'Decodificando respuesta al cancelar endoso';
-            try
-            {
-                var json = Ext.decode(response.responseText);
-                debug('### cancelar:',json);
-                if(json.success==true)
-                {
-                    mensajeCorrecto('Endoso revertido','Se han revertido los cambios');
-                    _p48_params.nmsuplem_endoso = '';
-                    _p48_validarEstadoBotonCancelar();
-                    _p48_cargarStoreMov();
-                }
-                else
-                {
-                    mensajeError(json.message);
-                }
-            }
-            catch(e)
-            {
-                manejaException(e,ck);
-            }
-        }
-        ,failure : function()
-        {
-            _setLoading(false,form);
-            errorComunicacion(null,'Error al cancelar endoso');
-        }
-    });
 }
 
 function _p48_validarEstadoBotonCancelar()
@@ -461,17 +356,420 @@ function _p48_validarEstadoBotonCancelar()
     }
 }
 
-function _p48_agregarClic()
+function _p48_agregarDepClic()
 {
-    debug('_p48_agregarClic');
-    //hay que crear un mpersona vacio, un mpolisit, un tvalosit y un mpoliper
-    var familia;
-    var grupo;
-    if(!Ext.isEmpty(_p48_params.TIPOFLOT)&&_p48_params.TIPOFLOT!='I')//para colectivos
+    debug('_p48_agregarDepClic');
+    var ck = 'Agregando dependiente';
+    try
     {
-        qwe
+        var grid = _fieldById('_p48_gridAsegurados');
+        if(grid.getSelectionModel().getSelection().length==0
+            ||grid.getSelectionModel().getSelection()[0].get('CVE_PARENTESCO')!='T'
+        )
+        {
+            throw 'Seleccione un titular';
+        }
+        
+        var record = grid.getSelectionModel().getSelection()[0];
+        debug('record:',record);
+        
+        _p48_obtenerComponentes('DEP',record.get('CDTIPSIT'),function(mpersona,tatrisit,tatrirol,validacion)
+        {
+            centrarVentanaInterna(Ext.create('Ext.window.Window',
+            {
+                title  : 'AGREGAR DEPENDIENTE'
+                ,modal : true
+                ,items :
+                [
+                    Ext.create('Ext.form.Panel',
+                    {
+                        defaults : { style : 'margin:5px;' }
+                        ,autoScroll : true
+                        ,border  : 0
+                        ,width   : 600
+                        ,height  : 400
+                        ,items   :
+                        [
+                            {
+                                xtype  : 'fieldset'
+                                ,title : '<span style="font:bold 14px Calibri;">DATOS DE PERSONA</span>'
+                                ,items : mpersona
+                                ,layout  :
+                                {
+                                    type     : 'table'
+                                    ,columns : 2
+                                }
+                            }
+                            ,{
+                                xtype  : 'fieldset'
+                                ,title : '<span style="font:bold 14px Calibri;">DATOS DE P\u00D3LIZA</span>'
+                                ,items : tatrisit
+                                ,layout  :
+                                {
+                                    type     : 'table'
+                                    ,columns : 2
+                                }
+                            }
+                            ,{
+                                xtype  : 'fieldset'
+                                ,title : '<span style="font:bold 14px Calibri;">DATOS ADICIONALES</span>'
+                                ,items : tatrirol
+                                ,layout  :
+                                {
+                                    type     : 'table'
+                                    ,columns : 2
+                                }
+                            }
+                        ]
+                        ,listeners   :
+                        {
+                            afterrender : function(me)
+                            {
+                                var nmsitauxVal = record.get('NMSITAUX');
+                                var cdgrupoVal  = record.get('CDGRUPO');
+                                var nmsituacVal = record.get('NMSITUAC');
+                                var dsgrupoVal  = record.get('DSGRUPO');
+                                if(Ext.isEmpty(dsgrupoVal))
+                                {
+                                    dsgrupoVal = record.get('DES_NOMBRE_GRUPO');
+                                }
+                                
+                                var nmsitauxCmp   = me.down('[name=NMSITAUX]');
+                                var cdgrupoCmp    = me.down('[name=CDGRUPO]');
+                                var nmsituaextCmp = me.down('[name=NMSITUAEXT]');
+                                var dsgrupoCmp    = me.down('[name=DSGRUPO]');
+                                
+                                nmsitauxCmp.setValue(nmsitauxVal);
+                                cdgrupoCmp.setValue(cdgrupoVal);
+                                nmsituaextCmp.setValue(nmsituacVal);
+                                dsgrupoCmp.setValue(dsgrupoVal);
+                            }
+                        }
+                        ,buttonAlign : 'center'
+                        ,buttons     :
+                        [
+                            {
+                                text     : 'Aceptar'
+                                ,icon    : '${icons}accept.png'
+                                ,handler : function(me)
+                                {
+                                    var ck = 'Guardando asegurado';
+                                    try
+                                    {
+                                        var form = me.up('form');
+                                        if(!form.isValid())
+                                        {
+                                            throw 'Favor de verificar datos';
+                                        }
+                                        
+                                        var valores = form.getValues();
+                                        debug('valores:',valores);
+                                        
+                                        ck = 'Ejecutando validaci\u00F3 din\u00E1mica';
+                                        validacion(valores);
+                                        
+                                        var dependiente = new _p48_modelo(valores);
+                                        dependiente.set('AUX1','DEP');
+                                        dependiente.set('MOV','+');
+                                        debug('dependiente.raw:',dependiente.raw,'dependiente.data:',dependiente.data);
+                                        _p48_storeMov.add(dependiente);
+                                        form.up('window').destroy();
+                                    }
+                                    catch(e)
+                                    {
+                                        manejaException(e,ck);
+                                    }
+                                }
+                            }
+                        ]
+                    })
+                ]
+            }).show());
+        });
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
     }
 }
+
+function _p48_agregarFamClic()
+{
+    debug('_p48_agregarFamClic');
+    var ck = 'Agregando familia';
+    try
+    {
+        _p48_obtenerComponentes('FAM',_p48_store.getAt(0).get('CDTIPSIT'),function(mpersona,tatrisit,tatrirol,validacion)
+        {
+            centrarVentanaInterna(Ext.create('Ext.window.Window',
+            {
+                title  : 'AGREGAR FAMILIA'
+                ,modal : true
+                ,items :
+                [
+                    Ext.create('Ext.panel.Panel',
+                    {
+                        width     : 900
+                        ,height   : 500
+                        ,autoScroll : true
+                        ,border   : 0
+                        ,defaults : { style : 'margin:5px;' }
+                        ,items    :
+                        [
+                            _p48_crearFormulario(mpersona,tatrisit,tatrirol)
+                        ]
+                        ,tbar        :
+                        [
+                            {
+                                text     : 'Agregar otro'
+                                ,icon    : '${icons}add.png'
+                                ,handler : function(me)
+                                {
+                                    _p48_obtenerComponentes('FAM',_p48_store.getAt(0).get('CDTIPSIT'),function(mpersona,tatrisit,tatrirol,validacion)
+                                    {
+                                        var form = _p48_crearFormulario(mpersona,tatrisit,tatrirol);
+                                        me.up('panel').add(form);
+                                    });
+                                }
+                            }
+                        ]
+                        ,listeners :
+                        {
+                            afterrender : function(me)
+                            {
+                                var ck = 'Manejando consecutivo de familia';
+                                try
+                                {
+                                    _p48_nfamilia = _p48_nfamilia+1;
+                                    me.familia    = _p48_nfamilia;
+                                    me.down('form').down('[name=NMSITAUX]').setValue('NUEVA-'+me.familia);
+                                }
+                                catch(e)
+                                {
+                                    manejaException(e,ck);
+                                }                                    
+                            }
+                        }
+                        ,buttonAlign : 'center'
+                        ,buttons     :
+                        [
+                            {
+                                text     : 'Aceptar'
+                                ,icon    : '${icons}accept.png'
+                                ,handler : function(me)
+                                {
+                                    var ck = 'Revisando datos';
+                                    try
+                                    {
+                                        var panel = me.up('panel');
+                                        var forms = Ext.ComponentQuery.query('form',panel);
+                                        debug('forms:',forms);
+                                        
+                                        var errores = [];
+                                        for(var i in forms)
+                                        {
+                                            var form = forms[i];
+                                            if(!form.isValid())
+                                            {
+                                                throw 'Favor de revisar datos';
+                                            }
+                                        }
+                                        
+                                        var records = [];
+                                        for(var i in forms)
+                                        {
+                                            var form = forms[i];
+                                            records.push(new _p48_modelo(form.getValues()));
+                                        }
+                                        debug('records:',records);
+                                    }
+                                    catch(e)
+                                    {
+                                        manejaException(e,ck);
+                                    }
+                                }
+                            }
+                        ]
+                    })
+                ]
+            }).show());
+        });
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+}
+
+function _p48_crearFormulario(mpersona,tatrisit,tatrirol)
+{
+    debug('>_p48_crearFormulario');
+    return Ext.create('Ext.form.Panel',
+    {
+        title     : 'ASEGURADO'
+        ,defaults : { style : 'margin:5px;' }
+        ,width    : 850
+        ,items    :
+        [
+            {
+                xtype   : 'fieldset'
+                ,title  : '<span style="font:bold 14px Calibri;">DATOS DE PERSONA</span>'
+                ,items  : mpersona
+                ,layout :
+                {
+                    type     : 'table'
+                    ,columns : 3
+                }
+            }
+            ,{
+                xtype   : 'fieldset'
+                ,title  : '<span style="font:bold 14px Calibri;">DATOS DE P\u00D3LIZA</span>'
+                ,items  : tatrisit
+                ,layout :
+                {
+                    type     : 'table'
+                    ,columns : 3
+                }
+            }
+            ,{
+                xtype   : 'fieldset'
+                ,title  : '<span style="font:bold 14px Calibri;">DATOS ADICIONALES</span>'
+                ,items  : tatrirol
+                ,layout :
+                {
+                    type     : 'table'
+                    ,columns : 3
+                }
+            }
+        ]
+    });
+}
+
+function _p48_obtenerComponentes(depFam,cdtipsit,callback)
+{
+    var ck = 'Recuperando componentes';
+    try
+    {
+        if(Ext.isEmpty(cdtipsit))
+        {
+            throw 'Falta cdtipsit';
+        }
+        if(Ext.isEmpty(callback))
+        {
+            throw 'Falta callback';
+        }
+    
+        Ext.Ajax.request(
+        {
+            url      : _p48_urlRecuperarItemsFormulario
+            ,params  :
+            {
+                'params.cdramo'    : _p48_params.CDRAMO
+                ,'params.cdtipsit' : cdtipsit
+                ,'params.depFam'   : depFam
+            }
+            ,success : function(response)
+            {
+                var ck = 'Decodificando formularios';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### elementos:',json);
+                    if(json.success==true)
+                    {
+                        var mpersona    = Ext.decode(json.params.mpersona);
+                        var tatrisit    = Ext.decode(json.params.tatrisit);
+                        var tatrirol    = Ext.decode(json.params.tatrirol);
+                        var botonValDep = Ext.decode(json.params.validacion);
+                        debug('mpersona:'    , mpersona);
+                        debug('tatrisit:'    , tatrisit);
+                        debug('tatrirol:'    , tatrirol);
+                        debug('botonValDep:' , botonValDep.handler);
+                        callback(mpersona,tatrisit,tatrirol,botonValDep.handler);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                errorComunicacion(null,'Error al construir formularios');
+            }
+        });
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+}
+
+function _p48_editarAsegurado(v,row,col,item,e,record)
+{
+    debug('_p48_editarAsegurado record.data:',record.data);
+}
+
+/*
+function(valores)
+{
+    if(valores.CVE_PARENTESCO=='T')
+    {
+        throw 'No se puede agregar otro titular';
+    }
+    
+    if(valores.CVE_PARENTESCO=='C')
+    {
+        _p48_store.each(function(rec)
+        {
+            if(Number(rec.get('NMSITAUX'))==Number(valores.NMSITAUX)
+               &&rec.get('CVE_PARENTESCO')=='C'
+            )
+            {
+                throw 'Ya hay un(a) c\u00F3nyugue en la familia, en los asegurados';
+            }
+        });
+    
+        _p48_storeMov.each(function(rec)
+        {
+            if(Number(rec.get('NMSITAUX'))==Number(valores.NMSITAUX)
+               &&rec.get('CVE_PARENTESCO')=='C'
+            )
+            {
+                throw 'Ya hay un(a) c\u00F3nyugue en la familia, en los movimientos';
+            }
+        });
+    }
+    
+    valores['OTVALOR03']        = valores.CVE_PARENTESCO;
+    valores['DES_NOMBRE_GRUPO'] = valores.DSGRUPO;
+    if(valores.CVE_PARENTESCO=='T')
+    {
+        valores['DES_PARENTESCO'] = 'TITULAR';
+    }
+    else if(valores.CVE_PARENTESCO=='C')
+    {
+        valores['DES_PARENTESCO'] = 'C\u00D3NYUGUE';
+    }
+    else if(valores.CVE_PARENTESCO=='P')
+    {
+        valores['DES_PARENTESCO'] = 'PADRES';
+    }
+    else if(valores.CVE_PARENTESCO=='H')
+    {
+        valores['DES_PARENTESCO'] = 'HIJO';
+    }
+    else if(valores.CVE_PARENTESCO=='D')
+    {
+        valores['DES_PARENTESCO'] = 'DEPENDIENTE';
+    }
+    debug('final valores:',valores);
+}
+*/
 ////// funciones //////
 </script>
 </head>

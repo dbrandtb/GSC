@@ -90,7 +90,7 @@ public class ConsultasManagerImpl implements ConsultasManager
 			,String cdusuari
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarInformacionPoliza @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -102,7 +102,7 @@ public class ConsultasManagerImpl implements ConsultasManager
 		
 		Map<String,String>datos=consultasDAO.cargarInformacionPoliza(cdunieco,cdramo,estado,nmpoliza,cdusuari);
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ " , datos
 				,"\n@@@@@@ cargarInformacionPoliza @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -122,7 +122,7 @@ public class ConsultasManagerImpl implements ConsultasManager
 			,String cdramant
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarMpolizasPorParametrosVariables @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -144,7 +144,7 @@ public class ConsultasManagerImpl implements ConsultasManager
 				,cdramant
 				);
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ lista=" , lista
 				,"\n@@@@@@ cargarMpolizasPorParametrosVariables @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -163,7 +163,7 @@ public class ConsultasManagerImpl implements ConsultasManager
 			,String cdperson
 			)throws Exception
 			{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ obtieneContratantePoliza @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -185,7 +185,7 @@ public class ConsultasManagerImpl implements ConsultasManager
 				, cdperson
 				);
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				"\n@@@@@@ lista=" , lista
 				,"\n@@@@@@ obtieneContratantePoliza @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -210,7 +210,7 @@ public class ConsultasManagerImpl implements ConsultasManager
 			,String cdtipsup
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ validacionesSuplemento @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -221,7 +221,7 @@ public class ConsultasManagerImpl implements ConsultasManager
 		
 		String error=consultasDAO.validacionesSuplemento(cdunieco,cdramo,estado,nmpoliza,nmsituac,nmsuplem,cdtipsup);
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ error=",error
 				,"\n@@@@@@ validacionesSuplemento @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -290,7 +290,7 @@ public class ConsultasManagerImpl implements ConsultasManager
 			,String nmpoliza
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ validaClientePideNumeroEmpleado @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -301,7 +301,7 @@ public class ConsultasManagerImpl implements ConsultasManager
 		
 		boolean pide = consultasDAO.validaClientePideNumeroEmpleado(cdunieco,cdramo,estado,nmpoliza);
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ pide=",pide
 				,"\n@@@@@@ validaClientePideNumeroEmpleado @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -318,14 +318,14 @@ public class ConsultasManagerImpl implements ConsultasManager
 			,String cdsisrol
 			)throws Exception
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ validarVentanaDocumentosBloqueada @@@@@@"
 				));
 		
 		boolean bloqueada = consultasDAO.validarVentanaDocumentosBloqueada(ntramite,cdtiptra,cdusuari,cdsisrol);
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ bloqueada=",bloqueada
 				,"\n@@@@@@ validarVentanaDocumentosBloqueada @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

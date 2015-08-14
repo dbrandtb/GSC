@@ -39,7 +39,7 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 	 */
 	private void setCheckpoint(String checkpoint)
 	{
-		logger.debug(Utils.join("checkpoint-->",checkpoint));
+		logger.debug(Utils.log("checkpoint-->",checkpoint));
 		session.put("checkpoint",checkpoint);
 	}
 	
@@ -79,7 +79,7 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 	
 	public String recuperacionSimple()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n################################"
 				,"\n###### recuperacionSimple ######"
 				,"\n###### smap1=",smap1
@@ -118,7 +118,7 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### recuperacionSimple ######"
 				,"\n################################"
 				));
@@ -127,7 +127,7 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 	
 	public String recuperacionSimpleLista()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n#####################################"
 				,"\n###### recuperacionSimpleLista ######"
 				,"\n###### smap1=" , smap1
@@ -167,7 +167,7 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### recuperacionSimpleLista ######"
 				,"\n#####################################"
 				));

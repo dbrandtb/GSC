@@ -130,7 +130,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Override
 	public Map<String,Object> construirMarcoEndosos(String cdusuari,String cdsisrol) throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ construirMarcoEndosos @@@@@@"
 				,"\n@@@@@@ cdusuari=" , cdusuari
@@ -258,7 +258,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ valores=",valores
 				,"\n@@@@@@ construirMarcoEndosos @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -269,7 +269,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Override
 	public String recuperarColumnasIncisoRamo(String cdramo)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarColumnasIncisoRamo @@@@@@"
 				,"\n@@@@@@ cdramo=",cdramo
@@ -305,7 +305,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex,paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ columnas=",cols
 				,"\n@@@@@@ recuperarColumnasIncisoRamo @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -325,7 +325,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cdusuari
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarEndososClasificados @@@@@@"
 				,"\n@@@@@@ cdramo="    , cdramo
@@ -345,7 +345,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		{
 			String stamp  = Utils.generaTimestamp();
 			
-			logger.debug(Utils.join("stamp=",stamp));
+			logger.debug(Utils.log("stamp=",stamp));
 			
 			resp.getSmap().put("stamp" , stamp);
 			
@@ -378,7 +378,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				//parchamos, si el DSTIPSUP2 tiene algun *, lo metemos como DSTIPSUP
 				for(Map<String,String>endoso:resp.getSlist())
 				{
-					logger.debug(Utils.join("\nDSTIPSUP2=",endoso.get("DSTIPSUP2")));
+					logger.debug(Utils.log("\nDSTIPSUP2=",endoso.get("DSTIPSUP2")));
 					if(StringUtils.isNotBlank(endoso.get("DSTIPSUP2"))&&endoso.get("DSTIPSUP2").indexOf("*")!=-1)
 					{
 						endoso.put("DSTIPSUP",endoso.get("DSTIPSUP2"));
@@ -403,7 +403,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ ",resp
 				,"\n@@@@@@ recuperarEndososClasificados @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -414,7 +414,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Override
 	public Map<String,Item>pantallaEndosoValosit(String cdtipsup, String cdramo, String cdsisrol) throws Exception 
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ pantallaEndosoValosit @@@@@@"
 				,"\n@@@@@@ cdtipsup=" , cdtipsup
@@ -476,7 +476,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ pantallaEndosoValosit @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -515,7 +515,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String otvalor96,String otvalor97,String otvalor98,String otvalor99
 			,String tstamp)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarTvalositEndoso @@@@@@"
 				,"\n@@@@@@ cdunieco="  , cdunieco
@@ -668,7 +668,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		}
 		
 
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ guardarTvalositEndoso @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -690,7 +690,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,List<Map<String,String>> incisos
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ confirmarEndosoTvalositAuto @@@@@@"
 				,"\n@@@@@@ cdtipsup=" , cdtipsup
@@ -934,7 +934,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ confirmarEndosoTvalositAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -949,7 +949,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String nmsuplem
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarDatosEndosoAltaIncisoAuto @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -982,14 +982,14 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				incisoBase.put("nmsituac" , incisoBase.get("NMSITUAC"));
 				if(incisoBase.get("CDTIPSIT").equals("XPOLX"))
 				{
-					logger.debug(Utils.join("Es XPOLX",incisoBase));
+					logger.debug(Utils.log("Es XPOLX",incisoBase));
 					for(Entry<String,String>en:incisoBase.entrySet())
 					{
 						incisoPoliza.put("parametros.pv_"+en.getKey().toLowerCase(),en.getValue());
 					}
 				}
 			}
-			logger.debug(Utils.join("inciso poliza=",incisoPoliza));
+			logger.debug(Utils.log("inciso poliza=",incisoPoliza));
 			salida.put("incisoPoliza",incisoPoliza);
 			
 			paso = "Recuperando atributos adicionales de poliza";
@@ -1005,13 +1005,13 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			{
 				tvalopol.put(Utils.join("aux.",en.getKey().substring("parametros.pv_".length())),en.getValue());
 			}
-			logger.debug(Utils.join("tvalopol=",tvalopol));
+			logger.debug(Utils.log("tvalopol=",tvalopol));
 			salida.put("tvalopol",tvalopol);
 			
 			paso = "Recuperando configuracion de incisos";
 			logger.info(paso);
 			List<Map<String,String>> tconvalsit = Utils.concatenarParametros(consultasDAO.cargarTconvalsit(cdunieco,cdramo,estado,nmpoliza,nmsuplem),false);
-			logger.debug(Utils.join("tconvalsit=",tconvalsit));
+			logger.debug(Utils.log("tconvalsit=",tconvalsit));
 			salida.put("tconvalsit",tconvalsit);
 			
 			paso = "Recuperando relacion poliza-contratante";
@@ -1050,7 +1050,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				Map<String,String>contratante = personasDAO.cargarPersonaPorCdperson(cdperson);
 				cdideper = contratante.get("CDIDEPER");
 			}
-			logger.debug(Utils.join("cdperson=",cdperson,", cdideper=",cdideper));
+			logger.debug(Utils.log("cdperson=",cdperson,", cdideper=",cdideper));
 			salida.put("cdperson" , cdperson);
 			salida.put("cdideper" , cdideper);
 		}
@@ -1059,7 +1059,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ ",salida
 				,"\n@@@@@@ recuperarDatosEndosoAltaIncisoAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -1081,7 +1081,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,UserVO usuarioSesion
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ confirmarEndosoAltaIncisoAuto @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -1263,7 +1263,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ confirmarEndosoAltaIncisoAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -1274,7 +1274,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String cdramo
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ endosoBajaIncisos @@@@@@"
 				,"\n@@@@@@ cdramo=" , cdramo
@@ -1308,7 +1308,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ items=" , items
 				,"\n@@@@@@ endosoBajaIncisos @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -1331,7 +1331,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,boolean devolver
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ confirmarEndosoBajaIncisos @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -1514,7 +1514,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ confirmarEndosoBajaIncisos @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -1533,7 +1533,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,UserVO usuarioSesion
 			)throws Exception
 			{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarEndosoDespago      @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -1618,7 +1618,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				"\n@@@@@@ guardarEndosoDespago @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -2394,7 +2394,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,Map<String, String> otvalores
 		)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
 				,"\n@@@@@@ cdunieco="         , cdunieco
@@ -2462,7 +2462,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2488,7 +2488,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String nmsuplemOriginal
 		)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
 				,"\n@@@@@@ cdunieco="         , cdunieco
@@ -2576,7 +2576,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2602,7 +2602,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String dslinea
 			)throws Exception
 			{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarEndosoTextoLibre @@@@@@"
 				,"\n@@@@@@ cdunieco="         , cdunieco
@@ -2687,7 +2687,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				"\n@@@@@@ " , resp
 				,"\n@@@@@@ guardarEndosoTextoLibre @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2697,7 +2697,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Override
 	public void validarEndosoAnterior(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String cdtipsup) throws Exception {
-			logger.info(Utils.join(
+			logger.debug(Utils.log(
 					 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 					,"\n@@@@@@ 	 validaEndosoAnterior  	  @@@@@@"
 					,"\n@@@@@@ cdunieco="         , cdunieco
@@ -2719,7 +2719,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				Utils.generaExcepcion(ex, paso);
 			}
 			
-			logger.info(Utils.join(
+			logger.debug(Utils.log(
 					 "\n@@@@@@ " , resp
 					,"\n@@@@@@ 	  validaEndosoAnterior 	  @@@@@@"
 					,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2730,7 +2730,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Override
 	public void validarEndosoPagados(String cdunieco, String cdramo,
 			String estado, String nmpoliza) throws Exception {
-			logger.info(Utils.join(
+			logger.debug(Utils.log(
 					 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 					,"\n@@@@@@ 	 validaEndosoAnterior  	  @@@@@@"
 					,"\n@@@@@@ cdunieco="         , cdunieco
@@ -2751,7 +2751,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				Utils.generaExcepcion(ex, paso);
 			}
 			
-			logger.info(Utils.join(
+			logger.debug(Utils.log(
 					 "\n@@@@@@ " , resp
 					,"\n@@@@@@ 	  validaEndosoAnterior 	  @@@@@@"
 					,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2764,7 +2764,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cdtipsit
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ endosoClaveAuto @@@@@@"
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
@@ -2805,7 +2805,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ endosoClaveAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -2828,7 +2828,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,UserVO usuarioSesion
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarEndosoClaveAuto @@@@@@"
 				,"\n@@@@@@ cdtipsup="       , cdtipsup
@@ -2851,7 +2851,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			logger.info(paso);
 			
 			String tstamp = Utils.generaTimestamp();
-			logger.debug(Utils.join("stamp=",tstamp));
+			logger.debug(Utils.log("stamp=",tstamp));
 			
 			paso = "Guardando situacion temporal";
 			logger.info(paso);
@@ -2940,7 +2940,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ guardarEndosoClaveAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -2951,7 +2951,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String cdtipsup, String fechaProceso) throws Exception {
 		// TODO Auto-generated method stub
 		List<Map<String, String>> respRetroActividad = null;
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ 	 validaEndosoAnterior  	  @@@@@@"
 				,"\n@@@@@@ cdsisrol="         , cdsisrol
@@ -2972,7 +2972,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ 	  validaEndosoAnterior 	  @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2992,7 +2992,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cdramo
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ endosoDevolucionPrimas @@@@@@"
 				,"\n@@@@@@ cdtipsup=" , cdtipsup
@@ -3046,7 +3046,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ endosoDevolucionPrimas @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -3197,7 +3197,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cdramo
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ endosoRehabilitacionAuto @@@@@@"
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
@@ -3281,7 +3281,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ items=",items
 				,"\n@@@@@@ endosoRehabilitacionAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3313,7 +3313,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,UserVO usuarioSesion
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ confirmarEndosoRehabilitacionAuto @@@@@@"
 				,"\n@@@@@@ cdusuari=" , cdusuari
@@ -3389,7 +3389,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ confirmarEndosoRehabilitacionAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -3401,7 +3401,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cdramo
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ endosoCancelacionAuto @@@@@@"
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
@@ -3485,7 +3485,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ items=",items
 				,"\n@@@@@@ endosoCancelacionAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3497,7 +3497,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Override
 	public Map<String,String> buscarError(String codigo,String rutaLogs,String archivo) throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ buscarError @@@@@@"
 				,"\n@@@@@@ codigo="   , codigo
@@ -3577,7 +3577,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ buscarError @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -3608,7 +3608,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,UserVO usuarioSesion
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ confirmarEndosoCancelacionAuto @@@@@@"
 				,"\n@@@@@@ cdusuari=" , cdusuari
@@ -3685,7 +3685,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ confirmarEndosoCancelacionAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -3706,7 +3706,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,UserVO usuarioSesion
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarEndosoDevolucionPrimas @@@@@@"
 				,"\n@@@@@@ cdusuari=" , cdusuari
@@ -3794,7 +3794,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ guardarEndosoDevolucionPrimas @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -3803,7 +3803,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Override
 	public Map<String,Item> endosoCancelacionPolAuto(String cdsisrol, String cdramo) throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ endosoCancelacionPolAuto @@@@@@"
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
@@ -3869,7 +3869,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ endosoCancelacionPolAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -3879,7 +3879,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Override
 	public Map<String,String> marcarPolizaCancelarPorEndoso(String cdunieco, String cdramo, String nmpoliza) throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ marcarPolizaCancelarPorEndoso @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -3924,7 +3924,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ poliza=",poliza
 				,"\n@@@@@@ marcarPolizaCancelarPorEndoso @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3947,7 +3947,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,UserVO usuarioSesion
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ confirmarEndosoCancelacionPolAuto @@@@@@"
 				,"\n@@@@@@ cdusuari=" , cdusuari
@@ -4014,7 +4014,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ confirmarEndosoCancelacionPolAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -4028,7 +4028,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,List<Map<String,String>> incisos
 			) throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ endosoValositFormsAuto @@@@@@"
 				,"\n@@@@@@ cdtipsup=" , cdtipsup
@@ -4083,7 +4083,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ endosoValositFormsAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -4093,7 +4093,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Override
 	public void validaEndosoCambioVigencia(String cdunieco, String cdramo,
 		String estado, String nmpoliza) throws Exception {
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ 	 validaEndosoAnterior  	  @@@@@@"
 				,"\n@@@@@@ cdunieco="         , cdunieco
@@ -4114,7 +4114,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ 	  validaEndosoAnterior 	  @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -4136,7 +4136,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,UserVO usuarioSesion
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ confirmarEndosoValositFormsAuto @@@@@@"
 				,"\n@@@@@@ cdusuari=" , cdusuari
@@ -4383,7 +4383,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ confirmarEndosoValositFormsAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -4391,7 +4391,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	
 	public Map<String,Item> confirmarEndosoRehabilitacionPolAuto(String cdsisrol, String cdramo) throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ confirmarEndosoRehabilitacionPolAuto @@@@@@"
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
@@ -4457,7 +4457,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ confirmarEndosoRehabilitacionPolAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -4467,7 +4467,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Override
 	public Map<String,String> marcarPolizaParaRehabilitar(String cdunieco,String cdramo,String nmpoliza) throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ marcarPolizaParaRehabilitar @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -4506,7 +4506,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ poliza=",poliza
 				,"\n@@@@@@ marcarPolizaParaRehabilitar @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -4534,7 +4534,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,UserVO usuarioSesion
 			) throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ confirmarEndosoRehabilitacionPolAuto @@@@@@"
 				,"\n@@@@@@ cdtipsup=" , cdtipsup
@@ -4601,7 +4601,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ confirmarEndosoRehabilitacionPolAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -4627,7 +4627,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String tipoGrupoInciso
 		)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarEndosoAmpliacionVigencia @@@@@@"
 				,"\n@@@@@@ cdunieco="         , cdunieco
@@ -4751,7 +4751,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

@@ -755,7 +755,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	@Override
 	public List<GenericVO>cargarCargasPorNegocioRamo5(String cdsisrol,String negocio)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarCargasPorNegocioRamo5 @@@@@@"
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
@@ -766,7 +766,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		{
 			lista=catalogosDAO.cargarCargasPorNegocioRamo5(cdsisrol, negocio);
 		}
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ lista=",lista
 				,"\n@@@@@@ cargarCargasPorNegocioRamo5 @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -784,7 +784,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
     		,String tipoflot
 			)throws Exception
     {
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarPlanesPorNegocioModeloClavegsRamo5 @@@@@@"
 				,"\n@@@@@@ cdtipsit=" , cdtipsit
@@ -799,7 +799,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		{
 			lista=catalogosDAO.cargarPlanesPorNegocioModeloClavegsRamo5(cdtipsit,modelo,negocio,clavegs,servicio,tipoflot);
 		}
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ lista=",lista
 				,"\n@@@@@@ cargarPlanesPorNegocioModeloClavegsRamo5 @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -815,7 +815,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 			,String cdsisrol
 			) throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarNegociosPorTipoSituacionAgenteRamo5 @@@@@@"
 				,"\n@@@@@@ cdtipsit" , cdtipsit
@@ -830,7 +830,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 			lista=catalogosDAO.cargarNegociosPorTipoSituacionAgenteRamo5(cdtipsit,cdagente,producto,cdsisrol);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ lista=",lista
 				,"\n@@@@@@ cargarNegociosPorTipoSituacionAgenteRamo5 @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -841,7 +841,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	@Override
 	public List<GenericVO>cargarTiposSituacionPorNegocioRamo5(String negocio,String producto)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarTiposSituacionPorNegocioRamo5 @@@@@@"
 				,"\n@@@@@@ negocio="  , negocio
@@ -854,7 +854,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 			lista=catalogosDAO.cargarTiposSituacionPorNegocioRamo5(negocio,producto);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ lista=",lista
 				,"\n@@@@@@ cargarTiposSituacionPorNegocioRamo5 @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -865,7 +865,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	@Override
 	public List<GenericVO>cargarCuadrosPorSituacion(String cdtipsit)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarCuadrosPorSituacion @@@@@@"
 				,"\n@@@@@@ cdtipsit=",cdtipsit
@@ -877,7 +877,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 			lista=catalogosDAO.cargarCuadrosPorSituacion(cdtipsit);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ lista=",lista
 				,"\n@@@@@@ cargarCuadrosPorSituacion @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -888,7 +888,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	@Override
 	public List<GenericVO>cargarSumaAseguradaRamo4(String cdsisrol,String cdplan)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarSumaAseguradaRamo4 @@@@@@"
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
@@ -901,7 +901,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 			lista=catalogosDAO.recuperarSumaAseguradaRamo4(cdsisrol,cdplan);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ lista=",lista
 				,"\n@@@@@@ cargarSumaAseguradaRamo4 @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -919,7 +919,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 			,String nmsuplem
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarTiposServicioPorAuto @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -942,7 +942,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 			lista = catalogosDAO.recuperarTiposServicioPorAuto(cdunieco,cdramo,estado,nmpoliza,nmsituac,nmsuplem);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ lista=",lista
 				,"\n@@@@@@ recuperarTiposServicioPorAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -954,7 +954,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	@Override
 	public List<GenericVO> recuperarListaTiposValorRamo5PorRol(String cdtipsit,String cdsisrol,String cdusuari) throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarListaTiposValorRamo5PorRol @@@@@@"
 				,"\n@@@@@@ cdtipsit=" , cdtipsit
@@ -964,7 +964,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		
 		List<GenericVO> lista = catalogosDAO.recuperarListaTiposValorRamo5PorRol(cdtipsit, cdsisrol,cdusuari);
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ recuperarListaTiposValorRamo5PorRol @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -974,14 +974,14 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	@Override
 	public List<GenericVO> recuperarModulosEstadisticas() throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarModulosEstadisticas @@@@@@"
 				));
 		
 		List<GenericVO> lista = catalogosDAO.recuperarModulosEstadisticas();
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ recuperarModulosEstadisticas @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -991,7 +991,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	@Override
 	public List<GenericVO> recuperarTareasEstadisticas(String cdmodulo) throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarTareasEstadisticas @@@@@@"
 				,"\n@@@@@@ cdmodulo=",cdmodulo
@@ -999,7 +999,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		
 		List<GenericVO> lista = catalogosDAO.recuperarTareasEstadisticas(cdmodulo);
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ recuperarTareasEstadisticas @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -1010,7 +1010,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	public List<GenericVO> obtieneListaParentesco() throws Exception
 	{
 		List<GenericVO> lista = new ArrayList<GenericVO>();
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ obtieneListaParentesco @@@@@@"
 				));
@@ -1035,7 +1035,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 			
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				"\n@@@@@@ obtieneListaParentesco @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -1050,14 +1050,14 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	@Override
 	public List<GenericVO> recuperarListaPools() throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarListaPools @@@@@@"
 				));
 		
 		List<GenericVO> lista = catalogosDAO.recuperarListaPools();
 
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ lista=",lista.size()
 				,"\n@@@@@@ recuperarListaPools @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

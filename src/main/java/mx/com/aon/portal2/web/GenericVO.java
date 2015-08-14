@@ -50,7 +50,7 @@ public class GenericVO implements Serializable {
     @Override
     public String toString()
     {
-    	return Utils.join("key=",key,", value=",value,", aux=",aux);
+    	return Utils.log("key=",key,", value=",value,", aux=",aux);
     }
 
 	public String getAux() {

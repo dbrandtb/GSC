@@ -43,7 +43,7 @@ public class MesaControlManagerImpl implements MesaControlManager
 			,String cdsisrol
 			)throws Exception
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ movimientoDetalleTramite @@@@@@"
 				,"\n@@@@@@ ntramite=" , ntramite
@@ -57,7 +57,7 @@ public class MesaControlManagerImpl implements MesaControlManager
 		
 		mesaControlDAO.movimientoDetalleTramite(ntramite, feinicio, cdclausu, comments, cdusuari, cdmotivo, cdsisrol);
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ movimientoDetalleTramite @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -71,7 +71,7 @@ public class MesaControlManagerImpl implements MesaControlManager
     		,String cdsisrol
     		)throws Exception
     {
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ validarAntesDeTurnar @@@@@@"
 				,"\n@@@@@@ ntramite=" , ntramite
@@ -82,7 +82,7 @@ public class MesaControlManagerImpl implements MesaControlManager
 		
 		mesaControlDAO.validarAntesDeTurnar(ntramite,status,cdusuari,cdsisrol);
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ validarAntesDeTurnar @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));

@@ -30,6 +30,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
@@ -106,6 +107,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	private List<Map<String,Object>>         olist1;
 	private CotizacionManager                cotizacionManager;
 	private SiniestrosManager                siniestrosManager;
+	
+	@Autowired
+	private EmisionManager emisionManager;
 	
 	@Autowired
 	private ServiciosManager serviciosManager;
@@ -1103,6 +1107,16 @@ public class CotizacionAction extends PrincipalCoreAction
 	            	}
 	            }
 	            
+	            String cdorddoc = emisionManager.insercionDocumentosParametrizados(
+	            		cdunieco
+	            		,cdramo
+	            		,"M"
+	            		,nmpolizaEmi
+	            		,"0"
+	            		,nmsuplemEmi
+	            		);
+	            logger.debug("cdorddoc: {}",cdorddoc);
+	            
 	            List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
 						cdunieco
 						,cdramo
@@ -1438,7 +1452,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	/*/////////////////*/
 	public String cotizar()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n#####################"
 				,"\n###### cotizar ######"
 				,"\n###### smap1=",smap1
@@ -1523,7 +1537,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			error   = respuesta;
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### cotizar ######"
 				,"\n#####################"
 				));
@@ -4479,7 +4493,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
 	                }
 	                
-	                logger.debug(Utils.join("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
+	                logger.debug(Utils.log("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
 	                
 	                if(filaBuena)
 	                {
@@ -4501,7 +4515,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                if(cdgrupo>0d)
 	                {
-	                	logger.debug(Utils.join("cdgrupo=",cdgrupo,", valido=",gruposValidos[((int)cdgrupo)-1]));
+	                	logger.debug(Utils.log("cdgrupo=",cdgrupo,", valido=",gruposValidos[((int)cdgrupo)-1]));
 	                }
 	            }
 	            
@@ -4509,7 +4523,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            {
 	            	for(int i=0;i<gruposValidos.length;i++)
 	            	{
-	            		logger.debug(Utils.join("gruposValidos[i]=",gruposValidos[i]));
+	            		logger.debug(Utils.log("gruposValidos[i]=",gruposValidos[i]));
 	            	}
 	            }
 	            
@@ -8575,7 +8589,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String guardarContratanteColectivo()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n#########################################"
 				,"\n###### guardarContratanteColectivo ######"
 				,"\n###### smap1=",smap1
@@ -8634,7 +8648,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### guardarContratanteColectivo ######"
 				,"\n#########################################"
 				));
@@ -8643,7 +8657,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarTramite()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###########################"
 				,"\n###### cargarTramite ######"
 				,"\n###### smap1=",smap1
@@ -8670,7 +8684,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### cargarTramite ######"
 				,"\n###########################"
 				));
@@ -8679,7 +8693,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarTipoCambioWS()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n################################"
 				,"\n###### cargarTipoCambioWS ######"
 				));
@@ -8693,7 +8707,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			smap1.put("dolar" , rtc.getTipoCambio().getVenCam().toString());
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### smap1=",smap1
 				,"\n###### cargarTipoCambioWS ######"
 				,"\n################################"
@@ -8717,7 +8731,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String complementoSaludGrupo()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###################################"
 				,"\n###### complementoSaludGrupo ######"
 				,"\n###### smap1="         , smap1
@@ -8806,7 +8820,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			respuesta = Utils.manejaExcepcion(ex);
 		}
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### complementoSaludGrupo ######"
 				,"\n###################################"
 				));
@@ -8815,7 +8829,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String guardarConfiguracionGarantias()
 	{
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###########################################"
 				,"\n###### guardarConfiguracionGarantias ######"
 				,"\n###### smap1="  , smap1
@@ -8860,7 +8874,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### guardarConfiguracionGarantias ######"
 				,"\n###########################################"
 				));

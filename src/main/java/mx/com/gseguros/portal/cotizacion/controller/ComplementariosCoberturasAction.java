@@ -1149,13 +1149,13 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 						)
 						{
 							tatriTemp2[i++] = t;
-							logger.debug(Utils.join("ahora agregamos ",t.getLabel()));
+							logger.debug(Utils.log("ahora agregamos ",t.getLabel()));
 						}
 					}
 					tatrisit = new ArrayList<ComponenteVO>();
 					for(ComponenteVO c : tatriTemp2)
 					{
-						logger.debug(Utils.join("ahora movemos del array a la lista ",c.getLabel()));
+						logger.debug(Utils.log("ahora movemos del array a la lista ",c.getLabel()));
 						tatrisit.add(c);
 					}
 				}

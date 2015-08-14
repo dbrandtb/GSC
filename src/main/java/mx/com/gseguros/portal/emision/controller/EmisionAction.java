@@ -97,7 +97,7 @@ public class EmisionAction extends PrincipalCoreAction
 	
 	public String pantallaClausulasPoliza()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n#####################################"
 				,"\n###### pantallaClausulasPoliza ######"
 				,"\n###### smap1=",smap1
@@ -130,7 +130,7 @@ public class EmisionAction extends PrincipalCoreAction
 			result=ERROR;
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### result=",result
 				,"\n###### pantallaClausulasPoliza ######"
 				,"\n#####################################"
@@ -140,7 +140,7 @@ public class EmisionAction extends PrincipalCoreAction
 	
 	public String guardarClausulasPoliza()
 	{
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n####################################"
 				,"\n###### guardarClausulasPoliza ######"
 				,"\n###### slist1=",slist1
@@ -160,7 +160,7 @@ public class EmisionAction extends PrincipalCoreAction
 			manejaException(ex);
 		}
 		
-		logger.info(Utils.join(
+		logger.debug(Utils.log(
 				 "\n###### guardarClausulasPoliza ######"
 				,"\n####################################"
 				));
