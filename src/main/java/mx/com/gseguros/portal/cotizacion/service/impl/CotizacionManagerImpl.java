@@ -7540,6 +7540,17 @@ public class CotizacionManagerImpl implements CotizacionManager
 	{
 		return cotizacionDAO.obtenerCoberturasPlanColec(cdramo,cdtipsit,cdplan);
 	}
+	
+	@Override
+	public void actualizaCesionComision(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		cotizacionDAO.actualizaCesionComision(cdunieco,cdramo,estado,nmpoliza);
+	}
     
 	///////////////////////////////
 	////// getters y setters //////

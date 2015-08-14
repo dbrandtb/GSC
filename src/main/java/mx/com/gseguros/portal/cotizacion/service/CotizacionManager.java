@@ -570,4 +570,11 @@ public interface CotizacionManager
 			,String cdtipsit
 			,String cdplan
 			)throws Exception;
+	
+	public void actualizaCesionComision(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }
