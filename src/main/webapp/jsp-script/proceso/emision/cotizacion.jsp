@@ -2242,7 +2242,7 @@ Ext.onReady(function()
         	}
         	
             var vim = this.value;
-            if(this.minLength > 0 || (vim.length < this.minLength || vim.length > this.maxLength))
+            if( (this.minLength > 0 && vim.length < this.minLength) || (vim.length < this.minLength || vim.length > this.maxLength) )
             {
             	if(this.minLength == this.maxLength) {
             		mensajeWarning('La longitud del n&uacute;mero de serie debe ser ' + this.minLength);
