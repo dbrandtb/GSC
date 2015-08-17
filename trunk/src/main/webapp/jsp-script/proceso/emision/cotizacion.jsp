@@ -1043,6 +1043,24 @@ function _0_cargar()
                             	        _0_gmiPostalSelect(1,2,3,true);
                             	        _0_gmiCirchospSelect(1,2,3,true);
                             	    }
+                            	    if(_0_smap1.cdtipsit == 'AF') {
+                                    	if(_0_smap1.cdsisrol == 'SUSCRIAUTO') {
+                                            _fieldByLabel('AGENTE').getStore().load({
+                                                params : {
+                                                    'params.agente' : primerInciso.get('parametros.pv_otvalor32')
+                                                },
+                                                callback : function() {
+                                                    _fieldByLabel('AGENTE').setValue(
+                                                        _fieldByLabel('AGENTE').findRecord('key',primerInciso.get('parametros.pv_otvalor32'))
+                                                    );
+                                                }
+                                            });
+                                        } else {
+                                            _fieldByLabel('AGENTE').setValue(
+                                                _fieldByLabel('AGENTE').findRecord('key',primerInciso.get('parametros.pv_otvalor32'))
+                                            );
+                                        }
+                                    }
                                 }
                             };
                             _0_panelPri.setLoading(true);
