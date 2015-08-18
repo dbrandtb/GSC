@@ -723,7 +723,7 @@ Ext.onReady(function()
 										                'smap1.cargaTipoPersona' : '',
 										                'smap1.activaCveFamiliar': 'N',
 										                'smap1.modoRecuperaDanios': 'N',
-										                'smap1.modoSoloEdicion': 'S',
+										                'smap1.modoSoloEdicion': 'N',
 										                'smap1.contrantantePrincipal': 'S'
 										            }
 										     });
@@ -1700,7 +1700,7 @@ Ext.onReady(function()
 				                'smap1.cargaTipoPersona' : '',
 				                'smap1.activaCveFamiliar': 'N',
 				                'smap1.modoRecuperaDanios': 'N',
-				                'smap1.modoSoloEdicion': 'S',
+				                'smap1.modoSoloEdicion': 'N',
 				                'smap1.contrantantePrincipal': 'S'
 				            }
 			            });
