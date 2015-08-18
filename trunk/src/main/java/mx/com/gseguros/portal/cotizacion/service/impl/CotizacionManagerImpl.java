@@ -3533,14 +3533,19 @@ public class CotizacionManagerImpl implements CotizacionManager
 		{
 			try
 			{
-				String swexiper = "S";
-				if(StringUtils.isBlank(cdpersonCli))
-				{
+				String swexiper = "N";
+				boolean cdpersonNuevo = StringUtils.isBlank(cdpersonCli);
+				
+				if(cdpersonNuevo){
 					cdpersonCli = personasDAO.obtenerNuevoCdperson();
-					swexiper = "N";
+				}else{
+					Map<String,String> datosCont = this.obtieneDatosContratantePoliza(cdunieco, cdramo, "W", nmpoliza, "0");
+					if(datosCont != null && !datosCont.isEmpty() && Constantes.SI.equalsIgnoreCase(datosCont.get("SWEXIPER"))){
+						swexiper = "S";
+					}
 				}
 				
-				if(swexiper.equals("N")||reinsertaContratante||censoAtrasado||resubirCenso)
+				if(cdpersonNuevo||reinsertaContratante||censoAtrasado||resubirCenso)
 				{
 					personasDAO.movimientosMpersona(
 							cdpersonCli
@@ -5212,6 +5217,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			,String nmsuplem
 			,String rfc
 			,String cdperson
 			,String nombre
@@ -5220,7 +5226,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdmunici
 			,String dsdomici
 			,String nmnumero
-			,String nmnumint)
+			,String nmnumint
+			,boolean esConfirmaEmision)
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -5229,6 +5236,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@ cdramo="   , cdramo
 				,"\n@@@@@@ estado="   , estado
 				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ nmsuplem=" , nmsuplem
 				,"\n@@@@@@ rfc="      , rfc
 				,"\n@@@@@@ cdperson=" , cdperson
 				,"\n@@@@@@ nombre="   , nombre
@@ -5238,45 +5246,68 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@ dsdomici=" , dsdomici
 				,"\n@@@@@@ nmnumero=" , nmnumero
 				,"\n@@@@@@ nmnumint=" , nmnumint
+				,"\n@@@@@@ esConfirmaEmision=" , esConfirmaEmision
 				));
 		
 		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
 		
 		try
 		{
-			String swexiper = "S";
-			if(StringUtils.isBlank(cdperson))
-			{
-				cdperson = personasDAO.obtenerNuevoCdperson();
-				swexiper = "N";
+			String swexiper = "N";
+			
+			if(esConfirmaEmision){
+				swexiper = "S";
 			}
 			
-			personasDAO.movimientosMpersona(
-					cdperson
-					,"1"         //cdtipide
-					,null        //cdideper
-					,nombre
-					,"1"         //cdtipper
-					,"M"         //otfisjur
-					,"H"         //otsexo
-					,new Date()  //fenacimi
-					,rfc
-					,""          //dsemail
-					,null        //dsnombre1
-					,null        //dsapellido
-					,null        //dsapellido1
-					,new Date()  //feingreso
-					,null        //cdnacion
-					,null        //canaling
-					,null        //conducto
-					,null        //ptcumupr
-					,null        //residencia
-					,null		 //nongrata
-					,null		 //cdideext
-					,null		 //cdestcivil
-					,null		 //cdsucemi
-					,Constantes.INSERT_MODE
-					);
+			if(!esConfirmaEmision){
+				
+				if(StringUtils.isBlank(cdperson)){
+					cdperson = personasDAO.obtenerNuevoCdperson();
+				}
+				
+				personasDAO.movimientosMpersona(
+						cdperson
+						,"1"         //cdtipide
+						,null        //cdideper
+						,nombre
+						,"1"         //cdtipper
+						,"M"         //otfisjur
+						,"H"         //otsexo
+						,new Date()  //fenacimi
+						,rfc
+						,""          //dsemail
+						,null        //dsnombre1
+						,null        //dsapellido
+						,null        //dsapellido1
+						,new Date()  //feingreso
+						,null        //cdnacion
+						,null        //canaling
+						,null        //conducto
+						,null        //ptcumupr
+						,null        //residencia
+						,null		 //nongrata
+						,null		 //cdideext
+						,null		 //cdestcivil
+						,null		 //cdsucemi
+						,Constantes.INSERT_MODE
+						);
+				
+
+				personasDAO.movimientosMdomicil(
+						cdperson
+						,"1"        //nmorddom
+						,dsdomici
+						,null       //nmtelefo
+						,cdpostal
+						,cdedo
+						,cdmunici
+						,null       //cdcoloni
+						,nmnumero
+						,nmnumint
+						,Constantes.INSERT_MODE
+						);
+			
+			}
 			
 			cotizacionDAO.borrarMpoliperSituac0(cdunieco, cdramo, estado, nmpoliza, "0", "1");
 			
@@ -5296,19 +5327,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,swexiper
 					);
 			
-			personasDAO.movimientosMdomicil(
-					cdperson
-					,"1"        //nmorddom
-					,dsdomici
-					,null       //nmtelefo
-					,cdpostal
-					,cdedo
-					,cdmunici
-					,null       //cdcoloni
-					,nmnumero
-					,nmnumint
-					,Constantes.INSERT_MODE
-					);
+			cotizacionDAO.actualizaAseguradosColectivo(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdpostal, cdedo, cdmunici);
+			
 		}
 		catch(Exception ex)
 		{
@@ -7539,6 +7559,25 @@ public class CotizacionManagerImpl implements CotizacionManager
 			)throws Exception
 	{
 		return cotizacionDAO.obtenerCoberturasPlanColec(cdramo,cdtipsit,cdplan);
+	}
+
+	@Override
+	public Map<String,String> obtieneDatosContratantePoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception
+	{
+		List<Map<String,String>> res  = cotizacionDAO.obtieneDatosContratantePoliza(cdunieco,cdramo,estado,nmpoliza, nmsuplem);
+		
+		Map<String,String> datosCont = null;
+		if(res!= null && !res.isEmpty()){
+			datosCont = res.get(0);
+		}
+		
+		return datosCont;
 	}
 	
 	@Override

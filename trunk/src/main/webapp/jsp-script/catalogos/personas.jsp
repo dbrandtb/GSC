@@ -133,6 +133,7 @@ var _nombreComContratante;
 
 var _modoRecuperaDanios;
 var _modoSoloEdicion; // no es compatible con _esCargaClienteNvo
+var _contrantantePrincipal;
 
 if(!Ext.isEmpty(_p22_smap1)){
 	
@@ -148,6 +149,8 @@ if(!Ext.isEmpty(_p22_smap1)){
 	_activaCveFamiliar = !Ext.isEmpty(_p22_smap1.activaCveFamiliar) && _p22_smap1.activaCveFamiliar == "S" ? true : false ;
 	_modoRecuperaDanios = !Ext.isEmpty(_p22_smap1.modoRecuperaDanios) && _p22_smap1.modoRecuperaDanios == "S" ? true : false ;
 	_modoSoloEdicion = !Ext.isEmpty(_p22_smap1.modoSoloEdicion) && _p22_smap1.modoSoloEdicion == "S" ? true : false ;
+
+	_contrantantePrincipal = !Ext.isEmpty(_p22_smap1.contrantantePrincipal) && _p22_smap1.contrantantePrincipal == "S" ? true : false ;
 }
 
 ////// variables //////
@@ -1771,6 +1774,11 @@ function _p22_guardarClic(callback, autosave)
                     _p22_fieldCdperson().validado = _p22_fieldCdperson().validado||Ext.isEmpty(autosave)||autosave==false;
                     _p22_cdperson = json.smap1.CDPERSON;
                     
+                    json.smap1.CDPOSTAL = _p22_comboCodPostal().getValue();
+                    json.smap1.CDEDO    = _fieldByName('CDEDO',_PanelPrincipalPersonas).getValue();
+                    json.smap1.CDMUNICI = _fieldByName('CDMUNICI',_PanelPrincipalPersonas).getValue();
+                    
+                    
                     if(!Ext.isEmpty(municipioImportarTMP)){
 //						_fieldByName('CDMUNICI',_PanelPrincipalPersonas).forceSelection = false;
 						_fieldByName('CDMUNICI',_PanelPrincipalPersonas).setValue(municipioImportarTMP);
@@ -1791,6 +1799,14 @@ function _p22_guardarClic(callback, autosave)
                     try{
                     	if(_p22_cdperson!=false && !autosave && _p22_parentCallback){
                         	_p22_parentCallback(json);
+                    	}
+                    }catch(e){
+                    	debug('Error',e)
+                    }
+
+                    try{
+                    	if(_p22_cdperson!=false && !autosave && _contrantantePrincipal && _callbackContPrincipal){
+                        	_callbackContPrincipal(json);
                     	}
                     }catch(e){
                     	debug('Error',e)
@@ -3007,6 +3023,8 @@ obtieneDatosClienteContratante = function(){
 		cdideper: _fieldByName('CDIDEPER',_PanelPrincipalPersonas).getValue(),
 		cdideext: _fieldByName('CDIDEEXT',_PanelPrincipalPersonas).getValue(),
 		codpos:   _p22_comboCodPostal().getValue(),
+		cdedo:    _fieldByName('CDEDO',_PanelPrincipalPersonas).getValue(),
+		cdmunici: _fieldByName('CDMUNICI',_PanelPrincipalPersonas).getValue(),
 		nomRecupera: _nombreComContratante
 		
 	}
@@ -3030,6 +3048,8 @@ function obtDatLoaderContratante(){
 		cdideper: _fieldByName('CDIDEPER',_PanelPrincipalPersonas).getValue(),
 		cdideext: _fieldByName('CDIDEEXT',_PanelPrincipalPersonas).getValue(),
 		codpos:   _p22_comboCodPostal().getValue(),
+		cdedo:    _fieldByName('CDEDO',_PanelPrincipalPersonas).getValue(),
+		cdmunici: _fieldByName('CDMUNICI',_PanelPrincipalPersonas).getValue(),
 		nomRecupera: _nombreComContratante
 	}
 	

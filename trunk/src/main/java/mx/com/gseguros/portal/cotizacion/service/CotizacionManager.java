@@ -407,6 +407,7 @@ public interface CotizacionManager
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			,String nmsuplem
 			,String rfc
 			,String cdperson
 			,String nombre
@@ -415,7 +416,8 @@ public interface CotizacionManager
 			,String cdmunici
 			,String dsdomici
 			,String nmnumero
-			,String nmnumint);
+			,String nmnumint
+			,boolean esConfirmaEmision);
 	
 	public ManagerRespuestaSmapVO cargarTramite(String ntramite);
 	
@@ -569,6 +571,14 @@ public interface CotizacionManager
 			String cdramo
 			,String cdtipsit
 			,String cdplan
+			)throws Exception;
+
+	public Map<String,String> obtieneDatosContratantePoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
 			)throws Exception;
 	
 	public void actualizaCesionComision(

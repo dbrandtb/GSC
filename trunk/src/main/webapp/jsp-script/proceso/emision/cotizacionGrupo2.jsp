@@ -123,6 +123,8 @@ var _p25_resubirCenso    = 'N';
 var _p25_filtroCobTimeout;
 
 var _p22_parentCallback = false;
+var _callbackContPrincipal = false;
+var _contratanteSaved = false;
 var _callbackDomicilioAseg = false;
 
 var _ventanaClausulas;
@@ -674,6 +676,7 @@ Ext.onReady(function()
                         [
                             {
                                 xtype   : 'fieldset'
+                                ,hidden: (_p25_smap1.cdsisrol=='SUSCRIPTOR'&& (_p25_smap1.status-0==19 || _p25_smap1.status-0==21 || _p25_smap1.status-0==23) ) ? true :false
                                 ,title  : '<span style="font:bold 14px Calibri;">DATOS DEL CONTRATANTE</span>'
                                 ,layout :
                                 {
@@ -681,7 +684,132 @@ Ext.onReady(function()
                                     ,columns : 2
                                 }
                                 ,items  : [ <s:property value="imap.itemsContratante" /> ]
-                            }
+                            },
+                            Ext.create('Ext.panel.Panel',
+					        {
+					            itemId      : '_p29_clientePanel'
+					            ,title      : 'DATOS DEL CONTRATANTE'
+					            ,hidden: (_p25_smap1.cdsisrol=='SUSCRIPTOR'&& (_p25_smap1.status-0==19 || _p25_smap1.status-0==21 || _p25_smap1.status-0==23) ) ? false :true
+					            ,height     : 400
+					            ,autoScroll : true
+					            ,tbar     :
+					            [
+					                {
+					                    text     : 'Cambiar Contratante'
+					                    ,icon    : '${ctx}/resources/fam3icons/icons/user_go.png'
+					                    ,handler : function(){
+											destruirContLoaderPersona();	 
+											
+				                            _fieldById('_p29_clientePanel').getLoader().destroy();
+				                            
+				                            _fieldById('_p29_clientePanel').loader = new Ext.ComponentLoader({
+							                    url       : _p25_urlPantallaPersonas
+							                    ,scripts  : true
+							                    ,autoLoad : false
+							                    ,ajaxOptions: {
+							                            method: 'POST'
+							                     }
+							                });
+							                
+				                            _fieldById('_p29_clientePanel').getLoader().load({
+										            params: {
+										                'smap1.cdperson' : '',
+										                'smap1.cdideper' : '',
+										                'smap1.cdideext' : '',
+										                'smap1.esSaludDanios' : _RamoRecupera? 'D' : 'S',
+										                'smap1.esCargaClienteNvo' : 'N' ,
+										                'smap1.ocultaBusqueda' : 'S' ,
+										                'smap1.cargaCP' : '',
+										                'smap1.cargaTipoPersona' : '',
+										                'smap1.activaCveFamiliar': 'N',
+										                'smap1.modoRecuperaDanios': 'N',
+										                'smap1.modoSoloEdicion': 'S',
+										                'smap1.contrantantePrincipal': 'S'
+										            }
+										     });
+										     
+										     _fieldByName('cdperson').setValue('');
+										     
+										     _contratanteSaved = false;
+										     
+										     _callbackContPrincipal = function(json){
+    	
+										    	debug( 'Datos a cargar', json.smap1);
+										    	
+										    	_fieldByName('cdrfc')    .setValue(json.smap1.CDRFC);
+										        _fieldByName('cdperson') .setValue(json.smap1.CDPERSON);
+										        
+										//        _fieldByName('nombre')   .setValue(json.smap1.DSNOMBRE + ' ' +json.smap1.DSNOMBRE1 + ' ' + json.smap1.DSAPELLIDO + ' ' + json.smap1.DSAPELLIDO1);
+										//        _fieldByName('codpostal').setValue(record.get('CODPOSTAL'));
+										        
+										//        _fieldByName('cdedo').heredar(true,function()
+										//        {
+										//            _fieldByName('cdedo').setValue(record.get('CDEDO'));
+										//            _fieldByName('cdmunici') .heredar(true,function()
+										//            {
+										//                _fieldByName('cdmunici') .setValue(record.get('CDMUNICI'));
+										//            });
+										//        });
+										//        
+										//        _fieldByName('dsdomici') .setValue(record.get('DSDOMICIL'));
+										//        _fieldByName('nmnumero') .setValue(record.get('NMNUMERO'));
+										//        _fieldByName('nmnumint') .setValue(record.get('NMNUMINT'));
+										//        alert(_fieldByName('cdperson').getValue());
+										
+												var params = {
+												    smap1 :
+												    {
+												        cdunieco : _p25_smap1.cdunieco
+												        ,cdramo  : _p25_smap1.cdramo
+												        ,estado  : _p25_smap1.estado
+												        ,nmpoliza: _p25_smap1.nmpoliza
+												        ,nmsuplem: Ext.isEmpty(_p25_smap1.nmsuplem)?'0':_p25_smap1.nmsuplem
+												        ,cdperson: json.smap1.CDPERSON
+												        ,codpostal: json.smap1.CDPOSTAL
+												        ,cdedo: json.smap1.CDEDO
+												        ,cdmunici: json.smap1.CDMUNICI
+												        ,confirmaEmision: 'S'
+												    }
+												};
+											
+												Ext.Ajax.request(
+											        {
+										            url       : _p25_urlGuardarContratanteColectivo
+										            ,jsonData : params
+										            ,success  : function(response)
+										            {
+										                var json = Ext.decode(response.responseText);
+										                if(json.exito){
+										                	mensajeCorrecto('Aviso','Contratante Guardado Correctamente.');
+										                	_contratanteSaved = true;
+										                }
+										                else
+										                {
+										                    mensajeWarning(json.respuesta);
+										                }
+										            }
+										            ,failure  : function()
+										            {
+										                errorComunicacion();
+										            }
+										        });
+										        
+											};
+										     
+							            }
+					                    
+					                }
+					            ]
+					            ,loader     :
+					            {
+					                url       : _p25_urlPantallaPersonas
+				                    ,scripts  : true
+				                    ,autoLoad : false
+				                    ,ajaxOptions: {
+				                            method: 'POST'
+				                     }
+				                }
+					        })
                             ,{
                                 xtype     : 'fieldset'
                                 ,title    : '<span style="font:bold 14px Calibri;">INFORMACI&Oacute;N DEL RIESGO</span>'
@@ -927,6 +1055,70 @@ Ext.onReady(function()
             }
         }
     });
+    
+    _callbackContPrincipal = function(json){
+    	
+    	debug( 'Datos a cargar', json.smap1);
+    	
+    	_fieldByName('cdrfc')    .setValue(json.smap1.CDRFC);
+        _fieldByName('cdperson') .setValue(json.smap1.CDPERSON);
+        
+//        _fieldByName('nombre')   .setValue(json.smap1.DSNOMBRE + ' ' +json.smap1.DSNOMBRE1 + ' ' + json.smap1.DSAPELLIDO + ' ' + json.smap1.DSAPELLIDO1);
+//        _fieldByName('codpostal').setValue(record.get('CODPOSTAL'));
+        
+//        _fieldByName('cdedo').heredar(true,function()
+//        {
+//            _fieldByName('cdedo').setValue(record.get('CDEDO'));
+//            _fieldByName('cdmunici') .heredar(true,function()
+//            {
+//                _fieldByName('cdmunici') .setValue(record.get('CDMUNICI'));
+//            });
+//        });
+//        
+//        _fieldByName('dsdomici') .setValue(record.get('DSDOMICIL'));
+//        _fieldByName('nmnumero') .setValue(record.get('NMNUMERO'));
+//        _fieldByName('nmnumint') .setValue(record.get('NMNUMINT'));
+//        alert(_fieldByName('cdperson').getValue());
+
+		var params = {
+		    smap1 :
+		    {
+		        cdunieco : _p25_smap1.cdunieco
+		        ,cdramo  : _p25_smap1.cdramo
+		        ,estado  : _p25_smap1.estado
+		        ,nmpoliza: _p25_smap1.nmpoliza
+		        ,nmsuplem: Ext.isEmpty(_p25_smap1.nmsuplem)?'0':_p25_smap1.nmsuplem
+		        ,cdperson: json.smap1.CDPERSON
+		        ,codpostal: json.smap1.CDPOSTAL
+				,cdedo: json.smap1.CDEDO
+				,cdmunici: json.smap1.CDMUNICI
+		        ,confirmaEmision: 'S'
+		    }
+		};
+	
+		Ext.Ajax.request(
+	        {
+            url       : _p25_urlGuardarContratanteColectivo
+            ,jsonData : params
+            ,success  : function(response)
+            {
+                var json = Ext.decode(response.responseText);
+                if(json.exito){
+                	mensajeCorrecto('Aviso','Contratante Guardado Correctamente.');
+                	_contratanteSaved = true;
+                }
+                else
+                {
+                    mensajeWarning(json.respuesta);
+                }
+            }
+            ,failure  : function()
+            {
+                errorComunicacion();
+            }
+        });
+        
+	};
     
     if(_p25_smap1.VENTANA_DOCUMENTOS=='S')
     {
@@ -1396,7 +1588,7 @@ Ext.onReady(function()
                 {
                     for(var prop in json.params)
                     {
-                        if(prop!='cdedo'&&prop!='cdmunici'&&prop!='clasif')
+                        if(prop!='cdedo'&&prop!='cdmunici'&&prop!='clasif'&&prop!='swexiper')
                         {
                             if(prop=='pcpgocte')
                             {
@@ -1489,6 +1681,32 @@ Ext.onReady(function()
                             _fieldByName('cdmunici').setValue(json.params['cdmunici']);
                         });
                     });
+                    
+                    
+                    if(_p25_smap1.cdsisrol=='SUSCRIPTOR'&& (_p25_smap1.status-0==19 || _p25_smap1.status-0==21 || _p25_smap1.status-0==23)){
+                    	var cargacdperson = _fieldByName('cdperson').getValue();
+                    	
+                    	_fieldById('_p29_clientePanel').loader.load(
+			            {
+			                params:
+			                {
+				                'smap1.cdperson' : (!Ext.isEmpty(json.params['swexiper']) && (json.params['swexiper'] == 'S' || json.params['swexiper'] == 's') && !Ext.isEmpty(cargacdperson))? cargacdperson : '',
+				                'smap1.cdideper' : '',
+				                'smap1.cdideext' : '',
+				                'smap1.esSaludDanios' : _RamoRecupera? 'D' : 'S',
+				                'smap1.esCargaClienteNvo' : 'N' ,
+				                'smap1.ocultaBusqueda' : 'S' ,
+				                'smap1.cargaCP' : '',
+				                'smap1.cargaTipoPersona' : '',
+				                'smap1.activaCveFamiliar': 'N',
+				                'smap1.modoRecuperaDanios': 'N',
+				                'smap1.modoSoloEdicion': 'S',
+				                'smap1.contrantantePrincipal': 'S'
+				            }
+			            });
+                    }
+                    
+                    
                     _p25_clasif = json.params['clasif'];
                     debug('_p25_clasif:',_p25_clasif);
                     var auxCargarGrupos=function(callback)
@@ -2119,7 +2337,10 @@ function _p25_rfcBlur(field)
                                                 var record = grid.getStore().getAt(rowIndex);
                                                 debug('record:',record);
                                                 _fieldByName('cdrfc')    .setValue(record.get('RFCCLI'));
-                                                _fieldByName('cdperson') .setValue(record.get('CLAVECLI'));
+                                                
+												//SE GENERA UN NUEVO CDPERSON PARA PROSPECTOS
+                                                _fieldByName('cdperson') .setValue('');
+                                                
                                                 _fieldByName('nombre')   .setValue(record.get('NOMBRECLI'));
                                                 _fieldByName('codpostal').setValue(record.get('CODPOSTAL'));
                                                 
@@ -3177,6 +3398,13 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento)
 {
     debug('>_p25_generarTramiteClic',sincenso,'DUMMY');
     var valido = true;
+    
+    if(valido){
+		 if((_p25_smap1.cdsisrol=='SUSCRIPTOR'&& (_p25_smap1.status-0==19 || _p25_smap1.status-0==21 || _p25_smap1.status-0==23) ) && !_contratanteSaved){
+		 	valido = false;
+		 	mensajeWarning('Debe Guardar el Contratante.');
+		 }
+    }
     
     if(valido)
     {
@@ -4302,6 +4530,7 @@ function _p25_subirDetallePersonas()
         data.smap1['cdramo']   = _p25_smap1.cdramo;
         data.smap1['estado']   = _p25_smap1.estado;
         data.smap1['nmpoliza'] = _p25_smap1.nmpoliza;
+        data.smap1['nmsuplem'] = Ext.isEmpty(_p25_smap1.nmsuplem)?'0':_p25_smap1.nmsuplem;
         form.setLoading(true);
         Ext.Ajax.request(
         {
