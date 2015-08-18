@@ -460,6 +460,14 @@ public interface CotizacionDAO {
 			,String cdtipsit
 			,String cdplan
 			)throws Exception;
+
+	public List<Map<String,String>> obtieneDatosContratantePoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception;
 	
 	public String insercionDocumentosParametrizados(
 			String cdunieco
@@ -475,5 +483,16 @@ public interface CotizacionDAO {
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			)throws Exception;
+
+	public void actualizaAseguradosColectivo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdpostal
+			,String cdedo
+			,String cdmunici
 			)throws Exception;
 }

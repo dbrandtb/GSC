@@ -6127,8 +6127,10 @@ public class CotizacionAction extends PrincipalCoreAction
 			try
 			{
 				String cdperson = smap1.get("cdperson");
-				String exiper   = "S";
-				if(StringUtils.isBlank(cdperson))
+				String exiper   = "N";
+				
+				boolean nuevoCdperson = StringUtils.isBlank(cdperson);
+				if(nuevoCdperson)
 				{
 					Map<String,Object>cdpersonMap=storedProceduresManager.procedureParamsCall(
 							ObjetoBD.GENERAR_CDPERSON.getNombre(),
@@ -6137,10 +6139,14 @@ public class CotizacionAction extends PrincipalCoreAction
 							new String[]{"pv_cdperson_o"},
 							null);
 					cdperson = (String)cdpersonMap.get("pv_cdperson_o");
-					exiper   = "N";
+				}else{
+					Map<String,String> datosCont = cotizacionManager.obtieneDatosContratantePoliza(cdunieco, cdramo, "W", nmpoliza, "0");
+					if(datosCont != null && !datosCont.isEmpty() && Constantes.SI.equalsIgnoreCase(datosCont.get("SWEXIPER"))){
+						exiper = "S";
+					}
 				}
 				
-				if(exiper.equals("N")||reinsertaContratante||censoAtrasado||resubirCenso)
+				if(nuevoCdperson||reinsertaContratante||censoAtrasado||resubirCenso)
 				{
 					LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
 					parametros.put("param01_pv_cdperson_i"    , cdperson);
@@ -8624,6 +8630,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			String cdramo   = smap1.get("cdramo");
 			String estado   = smap1.get("estado");
 			String nmpoliza = smap1.get("nmpoliza");
+			String nmsuplem = smap1.get("nmsuplem");
 			String rfc      = smap1.get("cdrfc");
 			String cdperson = smap1.get("cdperson");
 			String nombre   = smap1.get("nombre");
@@ -8633,23 +8640,25 @@ public class CotizacionAction extends PrincipalCoreAction
 			String dsdomici = smap1.get("dsdomici");
 			String nmnumero = smap1.get("nmnumero");
 			String nmnumint = smap1.get("nmnumint");
+			String confirmaEmision = smap1.get("confirmaEmision");
+			boolean esConfirmaEmision = (StringUtils.isNotBlank(confirmaEmision) && Constantes.SI.equalsIgnoreCase(confirmaEmision));
 			
 			checkBlank(cdunieco , "No se recibio la sucursal");
 			checkBlank(cdramo   , "No se recibio el ramo");
 			checkBlank(estado   , "No se recibio el estado");
 			checkBlank(nmpoliza , "No se recibio el numero de poliza");
-			checkBlank(rfc      , "No se recibio el rfc");
-			checkBlank(nombre   , "No se recibio el nombre");
-			checkBlank(cdpostal , "No se recibio el codigo postal");
-			checkBlank(cdedo    , "No se recibio el estado");
-			checkBlank(cdmunici , "No se recibio el municipio");
-			checkBlank(dsdomici , "No se recibio el domicilio");
+			if(!esConfirmaEmision) checkBlank(nombre   , "No se recibio el nombre");
+			if(!esConfirmaEmision) checkBlank(cdpostal , "No se recibio el codigo postal");
+			if(!esConfirmaEmision) checkBlank(cdedo    , "No se recibio el estado");
+			if(!esConfirmaEmision) checkBlank(cdmunici , "No se recibio el municipio");
+			if(esConfirmaEmision)  checkBlank(cdperson , "No se recibio el cdperson");
 			
 			ManagerRespuestaVoidVO resp = cotizacionManager.guardarContratanteColectivo(
 					cdunieco
 					,cdramo
 					,estado
 					,nmpoliza
+					,nmsuplem
 					,rfc
 					,cdperson
 					,nombre
@@ -8658,7 +8667,8 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdmunici
 					,dsdomici
 					,nmnumero
-					,nmnumint);
+					,nmnumint
+					,esConfirmaEmision);
 			
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
