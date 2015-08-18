@@ -3005,15 +3005,20 @@ function _p21_query(regex)
     return Ext.ComponentQuery.query(regex);
 }
 
-function _p21_generarTramiteClic(callback,sincenso,revision,complemento)
+function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCensoParaConfirmar)
 {
-    debug('>_p21_generarTramiteClic:',sincenso,'DUMMY');
+    debug('>_p21_generarTramiteClic callback?:',!Ext.isEmpty(callback),',sincenso:',sincenso,'.');
+    debug('>_p21_generarTramiteClic revision:',revision,',complemento:',complemento,'.');
+    debug('>_p21_generarTramiteClic nombreCensoParaConfirmar:',nombreCensoParaConfirmar,'.');
     var valido = true;
     
     if(valido)
     {
         //parche para sin censo>
-        if(!Ext.isEmpty(sincenso)&&sincenso==true)
+        if(
+            (!Ext.isEmpty(sincenso)&&sincenso==true)
+            ||!Ext.isEmpty(nombreCensoParaConfirmar)
+        )
         {
             _fieldByName('censo').allowBlank=true;
         }
@@ -3022,7 +3027,10 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento)
         valido = _p21_tabConcepto().down('[xtype=form]').isValid();
         
         //parche para sin censo>
-        if(!Ext.isEmpty(sincenso)&&sincenso==true)
+        if(
+            (!Ext.isEmpty(sincenso)&&sincenso==true)
+            ||!Ext.isEmpty(nombreCensoParaConfirmar)
+        )
         {
             _fieldByName('censo').allowBlank=_p21_ntramite&&_p21_smap1.sincenso!='S' ? true : false;
         }
@@ -3093,18 +3101,28 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento)
         var micallback=function()
         {
                 var form=_p21_tabConcepto().down('[xtype=form]');
+                var disabled = _p21_tabpanel().isDisabled();
+                if(disabled)
+                {
+                    _p21_tabpanel().setDisabled(false);
+                }
                 var conceptos = form.getValues();
-                conceptos['timestamp']       = timestamp;
-                conceptos['clasif']          = _p21_clasif;
-                conceptos['LINEA_EXTENDIDA'] = _p21_smap1.LINEA_EXTENDIDA;
-                conceptos['cdunieco']        = _p21_smap1.cdunieco;
-                conceptos['cdramo']          = _p21_smap1.cdramo;
-                conceptos['cdtipsit']        = _p21_smap1.cdtipsit;
-                conceptos['ntramiteVacio']   = _p21_ntramiteVacio ? _p21_ntramiteVacio : '';
-                conceptos['sincenso']        = !Ext.isEmpty(sincenso)&&sincenso==true?'S':'N';
-                conceptos['censoAtrasado']   = !Ext.isEmpty(_p21_smap1.sincenso)&&_p21_smap1.sincenso=='S'?'S':'N';
-                conceptos['resubirCenso']    = _p21_resubirCenso;
-                conceptos['complemento']     = true==complemento?'S':'N';
+                if(disabled)
+                {
+                    _p21_tabpanel().setDisabled(true);
+                }
+                conceptos['timestamp']             = timestamp;
+                conceptos['clasif']                = _p21_clasif;
+                conceptos['LINEA_EXTENDIDA']       = _p21_smap1.LINEA_EXTENDIDA;
+                conceptos['cdunieco']              = _p21_smap1.cdunieco;
+                conceptos['cdramo']                = _p21_smap1.cdramo;
+                conceptos['cdtipsit']              = _p21_smap1.cdtipsit;
+                conceptos['ntramiteVacio']         = _p21_ntramiteVacio ? _p21_ntramiteVacio : '';
+                conceptos['sincenso']              = !Ext.isEmpty(sincenso)&&sincenso==true?'S':'N';
+                conceptos['censoAtrasado']         = !Ext.isEmpty(_p21_smap1.sincenso)&&_p21_smap1.sincenso=='S'?'S':'N';
+                conceptos['resubirCenso']          = _p21_resubirCenso;
+                conceptos['complemento']           = true==complemento?'S':'N';
+                conceptos['nombreCensoConfirmado'] = nombreCensoParaConfirmar;
                 var grupos = [];
                 _p21_storeGrupos.each(function(record)
                 {
@@ -3124,7 +3142,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento)
                     {
                         form.setLoading(false);
                         var json=Ext.decode(response.responseText);
-                        debug('json response:',json);
+                        debug('### generar tramite:',json);
                         if(json.exito)
                         {
                             if(_p21_ntramite||_p21_ntramiteVacio)
@@ -3136,8 +3154,11 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento)
                                         _p21_smap1.ntramite = _p21_ntramiteVacio;
                                         _p21_smap1.nmpoliza = json.smap1.nmpoliza;
                                     }
-                                    if(true==revision
+                                    debug('revision:',revision,'_p21_ntramite:',_p21_ntramite,'.');
+                                    debug('_p21_smap1.sincenso:',_p21_smap1.sincenso,'.');
+                                    if((true==revision||_p21_ntramiteVacio)
                                         &&!(_p21_ntramite&&_p21_smap1.sincenso!='S')
+                                        &&Ext.isEmpty(nombreCensoParaConfirmar)
                                     )
                                     {
                                         _p21_tabpanel().setDisabled(true);
@@ -3275,7 +3296,17 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento)
 	                                                            {
 	                                                                text     : 'Aceptar y continuar'
 	                                                                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-	                                                                ,handler : function(){ callback(json); }
+	                                                                ,handler : function(me)
+	                                                                {
+	                                                                    me.up('window').destroy();
+	                                                                    _p21_generarTramiteClic(
+                                                                            callback
+                                                                            ,sincenso
+                                                                            ,false //revision
+                                                                            ,complemento
+                                                                            ,json.smap1.nombreCensoParaConfirmar
+                                                                        );
+	                                                                }
 	                                                            }
 	                                                            ,{
 	                                                                text     : 'Modificar datos'
@@ -3323,220 +3354,238 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento)
                                 _p21_fieldNtramite().setValue(json.smap1.ntramite);
                                 _p21_tabpanel().setDisabled(true);
                                 
-                                mensajeCorrecto('Tr&aacute;mite generado',json.respuesta+'<br/>Para revisar los datos presiona aceptar',function()
+                                if(Ext.isEmpty(nombreCensoParaConfirmar))
                                 {
-                                    var ck = 'Recuperando asegurados para revision';
-                                    try
-                                    {
-                                        _p21_tabpanel().setLoading(true);
-                                        Ext.Ajax.request(
-                                        {
-                                            url      : _p21_urlRecuperacionSimpleLista
-                                            ,params  :
-                                            {
-                                                'smap1.procedimiento' : 'RECUPERAR_REVISION_COLECTIVOS'
-                                                ,'smap1.cdunieco'     : _p21_smap1.cdunieco
-                                                ,'smap1.cdramo'       : _p21_smap1.cdramo
-                                                ,'smap1.estado'       : 'W'
-                                                ,'smap1.nmpoliza'     : json.smap1.nmpoliza
-                                            }
-                                            ,success : function(response)
-                                            {
-                                                var ck = 'Decodificando datos de asegurados para revision';
-                                                try
-                                                {
-                                                    _p21_tabpanel().setLoading(false);
-                                                    var json2 = Ext.decode(response.responseText);
-                                                    debug('### asegurados:',json2);
-                                                    var store = Ext.create('Ext.data.Store',
+	                                mensajeCorrecto('Censo revisado',json.respuesta+'<br/>Para revisar los datos presiona aceptar',function()
+	                                {
+	                                    var ck = 'Recuperando asegurados para revision';
+	                                    try
+	                                    {
+	                                        _p21_tabpanel().setLoading(true);
+	                                        Ext.Ajax.request(
+	                                        {
+	                                            url      : _p21_urlRecuperacionSimpleLista
+	                                            ,params  :
+	                                            {
+	                                                'smap1.procedimiento' : 'RECUPERAR_REVISION_COLECTIVOS'
+	                                                ,'smap1.cdunieco'     : _p21_smap1.cdunieco
+	                                                ,'smap1.cdramo'       : _p21_smap1.cdramo
+	                                                ,'smap1.estado'       : 'W'
+	                                                ,'smap1.nmpoliza'     : json.smap1.nmpoliza
+	                                            }
+	                                            ,success : function(response)
+	                                            {
+	                                                var ck = 'Decodificando datos de asegurados para revision';
+	                                                try
 	                                                {
-	                                                    model : '_p21_modeloRevisionAsegurado'
-	                                                    ,data : json2.slist1
-	                                                });
-	                                                debug('store.getRange():',store.getRange());
-	                                                centrarVentanaInterna(Ext.create('Ext.window.Window',
-			                                        {
-			                                            width   : 600
-			                                            ,height : 500
-			                                            ,title  : 'Revisar asegurados del censo'
-			                                            ,closable : false
-			                                            ,items  :
-			                                            [
-			                                                Ext.create('Ext.panel.Panel',
-			                                                {
-			                                                    layout    : 'hbox'
-			                                                    ,border   : 0
-			                                                    ,defaults : { style : 'margin:5px;' }
-			                                                    ,height   : 40
-			                                                    ,items    :
-			                                                    [
-			                                                        {
-			                                                            xtype       : 'displayfield'
-			                                                            ,fieldLabel : 'Filas leidas'
-			                                                            ,value      : json.smap1.filasLeidas
-			                                                        }
-			                                                        ,{
-                                                                        xtype       : 'displayfield'
-                                                                        ,fieldLabel : 'Filas procesadas'
-                                                                        ,value      : json.smap1.filasProcesadas
-                                                                    }
-                                                                    ,{
-                                                                        xtype       : 'displayfield'
-                                                                        ,fieldLabel : 'Filas con error'
-                                                                        ,value      : json.smap1.filasErrores
-                                                                    }
-                                                                    ,{
-                                                                        xtype    : 'button'
-                                                                        ,text    : 'Ver errores'
-                                                                        ,hidden  : Number(json.smap1.filasErrores)==0
-                                                                        ,handler : function()
-                                                                        {
-                                                                            centrarVentanaInterna(Ext.create('Ext.window.Window',
-                                                                            {
-                                                                                modal        : true
-                                                                                ,closeAction : 'destroy'
-                                                                                ,title       : 'Errores al procesar censo'
-                                                                                ,width       : 800
-                                                                                ,height      : 500
-                                                                                ,items       :
-                                                                                [
-                                                                                    {
-                                                                                        xtype       : 'textarea'
-                                                                                        ,fieldStyle : 'font-family: monospace'
-                                                                                        ,value      : json.smap1.erroresCenso
-                                                                                        ,readOnly   : true
-                                                                                        ,width      : 780
-                                                                                        ,height     : 440
-                                                                                    }
-                                                                                ]
-                                                                            }).show());
-                                                                        }
-                                                                    }
-			                                                    ]
-			                                                })
-			                                                ,Ext.create('Ext.grid.Panel',
-			                                                {
-			                                                    height   : 350
-			                                                    ,columns :
-			                                                    [
-			                                                        {
-			                                                            text       : 'Grupo'
-			                                                            ,dataIndex : 'CDGRUPO'
-			                                                            ,width     : 60
-			                                                        }
-			                                                        ,{
-			                                                            text       : 'No.'
-			                                                            ,dataIndex : 'NMSITUAC'
-			                                                            ,width     : 40
-			                                                        }
-			                                                        ,{
-			                                                            text       : 'Parentesco'
-			                                                            ,dataIndex : 'PARENTESCO'
-			                                                            ,width     : 120
-			                                                        }
-                                                                    ,{
-                                                                        text       : 'Nombre'
-                                                                        ,dataIndex : 'NOMBRE'
-                                                                        ,width     : 200
-                                                                    }
-                                                                    ,{
-                                                                        text       : 'Sexo'
-                                                                        ,dataIndex : 'SEXO'
-                                                                        ,width     : 80
-                                                                    }
-                                                                    ,{
-                                                                        text       : 'Edad'
-                                                                        ,dataIndex : 'EDAD'
-                                                                        ,width     : 60
-                                                                    }
-			                                                    ]
-			                                                    ,store : store
-			                                                })
-			                                            ]
-			                                            ,buttonAlign : 'center'
-                                                        ,buttons     :
-                                                        [
-                                                            {
-                                                                text     : 'Aceptar y subir documentos'
-                                                                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                                                                ,handler : function()
-                                                                {
-                                                                    centrarVentanaInterna(Ext.create('Ext.window.Window',
-                                                                    {
-                                                                        width        : 600
-                                                                        ,height      : 440
-                                                                        ,title       : 'Subir documentos de tu tr&aacute;mite ('+json.smap1.ntramite+')'
-                                                                        ,closable    : false
-                                                                        ,modal       : true
-                                                                        ,loadingMask : true
-                                                                        ,loader      :
-                                                                        {
-                                                                            url       : _p21_urlVentanaDocumentos
-                                                                            ,scripts  : true
-                                                                            ,autoLoad : true
-                                                                            ,params   :
-                                                                            {
-                                                                                'smap1.cdunieco'  : json.smap1.cdunieco
-                                                                                ,'smap1.cdramo'   : json.smap1.cdramo
-                                                                                ,'smap1.estado'   : 'W'
-                                                                                ,'smap1.nmpoliza' : '0'
-                                                                                ,'smap1.nmsolici' : '0'
-                                                                                ,'smap1.nmsuplem' : '0'
-                                                                                ,'smap1.ntramite' : json.smap1.ntramite
-                                                                                ,'smap1.tipomov'  : '0'
-                                                                            }
-                                                                        }
-                                                                        ,buttonAlign : 'center'
-                                                                        ,buttons     :
-                                                                        [
-                                                                            {
-                                                                                text     : 'Continuar'
-                                                                                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                                                                                ,handler : function(me)
-                                                                                {
-                                                                                    location.reload();
-                                                                                }
-                                                                            }
-                                                                        ]
-                                                                    }).show());
-                                                                    if(!Ext.isEmpty(json.smap1.nombreUsuarioDestino))
-                                                                    {
-                                                                        mensajeCorrecto('Tr&aacute;mite asignado'
-                                                                            ,'El tr&aacute;mite fue asignado a '+json.smap1.nombreUsuarioDestino
-                                                                        );
-                                                                    }
-                                                                }
-                                                            }
-                                                            ,{
-                                                                text     : 'Modificar datos'
-                                                                ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
-                                                                ,handler : function(me)
-                                                                {
-                                                                    me.up('window').destroy();
-                                                                    _p21_tabpanel().setDisabled(false);
-                                                                    _p21_resubirCenso = 'S';
-                                                                }
-                                                            }
-                                                        ]
-			                                        }).show());
-                                                }
-                                                catch(e)
-                                                {
-                                                    manejaException(e,ck);
-                                                }
-                                            }
-                                            ,failure : function()
-                                            {
-                                                _p21_tabpanel().setLoading(false);
-                                                errorComunicacion(null,'Recuperando asegurados para revision');
-                                            }
-                                        });
-                                    }
-                                    catch(e)
+	                                                    _p21_tabpanel().setLoading(false);
+	                                                    var json2 = Ext.decode(response.responseText);
+	                                                    debug('### asegurados:',json2);
+	                                                    var store = Ext.create('Ext.data.Store',
+		                                                {
+		                                                    model : '_p21_modeloRevisionAsegurado'
+		                                                    ,data : json2.slist1
+		                                                });
+		                                                debug('store.getRange():',store.getRange());
+		                                                centrarVentanaInterna(Ext.create('Ext.window.Window',
+				                                        {
+				                                            width   : 600
+				                                            ,height : 500
+				                                            ,title  : 'Revisar asegurados del censo'
+				                                            ,closable : false
+				                                            ,items  :
+				                                            [
+				                                                Ext.create('Ext.panel.Panel',
+				                                                {
+				                                                    layout    : 'hbox'
+				                                                    ,border   : 0
+				                                                    ,defaults : { style : 'margin:5px;' }
+				                                                    ,height   : 40
+				                                                    ,items    :
+				                                                    [
+				                                                        {
+				                                                            xtype       : 'displayfield'
+				                                                            ,fieldLabel : 'Filas leidas'
+				                                                            ,value      : json.smap1.filasLeidas
+				                                                        }
+				                                                        ,{
+	                                                                        xtype       : 'displayfield'
+	                                                                        ,fieldLabel : 'Filas procesadas'
+	                                                                        ,value      : json.smap1.filasProcesadas
+	                                                                    }
+	                                                                    ,{
+	                                                                        xtype       : 'displayfield'
+	                                                                        ,fieldLabel : 'Filas con error'
+	                                                                        ,value      : json.smap1.filasErrores
+	                                                                    }
+	                                                                    ,{
+	                                                                        xtype    : 'button'
+	                                                                        ,text    : 'Ver errores'
+	                                                                        ,hidden  : Number(json.smap1.filasErrores)==0
+	                                                                        ,handler : function()
+	                                                                        {
+	                                                                            centrarVentanaInterna(Ext.create('Ext.window.Window',
+	                                                                            {
+	                                                                                modal        : true
+	                                                                                ,closeAction : 'destroy'
+	                                                                                ,title       : 'Errores al procesar censo'
+	                                                                                ,width       : 800
+	                                                                                ,height      : 500
+	                                                                                ,items       :
+	                                                                                [
+	                                                                                    {
+	                                                                                        xtype       : 'textarea'
+	                                                                                        ,fieldStyle : 'font-family: monospace'
+	                                                                                        ,value      : json.smap1.erroresCenso
+	                                                                                        ,readOnly   : true
+	                                                                                        ,width      : 780
+	                                                                                        ,height     : 440
+	                                                                                    }
+	                                                                                ]
+	                                                                            }).show());
+	                                                                        }
+	                                                                    }
+				                                                    ]
+				                                                })
+				                                                ,Ext.create('Ext.grid.Panel',
+				                                                {
+				                                                    height   : 350
+				                                                    ,columns :
+				                                                    [
+				                                                        {
+				                                                            text       : 'Grupo'
+				                                                            ,dataIndex : 'CDGRUPO'
+				                                                            ,width     : 60
+				                                                        }
+				                                                        ,{
+				                                                            text       : 'No.'
+				                                                            ,dataIndex : 'NMSITUAC'
+				                                                            ,width     : 40
+				                                                        }
+				                                                        ,{
+				                                                            text       : 'Parentesco'
+				                                                            ,dataIndex : 'PARENTESCO'
+				                                                            ,width     : 120
+				                                                        }
+	                                                                    ,{
+	                                                                        text       : 'Nombre'
+	                                                                        ,dataIndex : 'NOMBRE'
+	                                                                        ,width     : 200
+	                                                                    }
+	                                                                    ,{
+	                                                                        text       : 'Sexo'
+	                                                                        ,dataIndex : 'SEXO'
+	                                                                        ,width     : 80
+	                                                                    }
+	                                                                    ,{
+	                                                                        text       : 'Edad'
+	                                                                        ,dataIndex : 'EDAD'
+	                                                                        ,width     : 60
+	                                                                    }
+				                                                    ]
+				                                                    ,store : store
+				                                                })
+				                                            ]
+				                                            ,buttonAlign : 'center'
+	                                                        ,buttons     :
+	                                                        [
+	                                                            {
+	                                                                text     : 'Aceptar y subir documentos'
+	                                                                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+	                                                                ,handler : function(me)
+	                                                                {
+	                                                                    me.up('window').destroy();
+	                                                                    _p21_generarTramiteClic(
+	                                                                        null
+	                                                                        ,sincenso
+	                                                                        ,false //revision
+	                                                                        ,complemento
+	                                                                        ,json.smap1.nombreCensoParaConfirmar
+	                                                                    );
+	                                                                }
+	                                                            }
+	                                                            ,{
+	                                                                text     : 'Modificar datos'
+	                                                                ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
+	                                                                ,handler : function(me)
+	                                                                {
+	                                                                    me.up('window').destroy();
+	                                                                    _p21_tabpanel().setDisabled(false);
+	                                                                    _p21_resubirCenso = 'S';
+	                                                                }
+	                                                            }
+	                                                        ]
+				                                        }).show());
+	                                                }
+	                                                catch(e)
+	                                                {
+	                                                    manejaException(e,ck);
+	                                                }
+	                                            }
+	                                            ,failure : function()
+	                                            {
+	                                                _p21_tabpanel().setLoading(false);
+	                                                errorComunicacion(null,'Recuperando asegurados para revision');
+	                                            }
+	                                        });
+	                                    }
+	                                    catch(e)
+	                                    {
+	                                        manejaException(e,ck);
+	                                    }
+	                                });
+                                }
+                                else
+                                {
+                                    var callbackConfirmado = function()
                                     {
-                                        manejaException(e,ck);
-                                    }
-                                });
+                                        centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                        {
+                                            width        : 600
+                                            ,height      : 440
+                                            ,title       : 'Subir documentos de tu tr&aacute;mite ('+json.smap1.ntramite+')'
+                                            ,closable    : false
+                                            ,modal       : true
+                                            ,loadingMask : true
+                                            ,loader      :
+                                            {
+                                                url       : _p21_urlVentanaDocumentos
+                                                ,scripts  : true
+                                                ,autoLoad : true
+                                                ,params   :
+                                                {
+                                                    'smap1.cdunieco'  : json.smap1.cdunieco
+                                                    ,'smap1.cdramo'   : json.smap1.cdramo
+                                                    ,'smap1.estado'   : 'W'
+                                                    ,'smap1.nmpoliza' : '0'
+                                                    ,'smap1.nmsolici' : '0'
+                                                    ,'smap1.nmsuplem' : '0'
+                                                    ,'smap1.ntramite' : json.smap1.ntramite
+                                                    ,'smap1.tipomov'  : '0'
+                                                }
+                                            }
+                                            ,buttonAlign : 'center'
+                                            ,buttons     :
+                                            [
+                                                {
+                                                    text     : 'Continuar'
+                                                    ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                                    ,handler : function(me)
+                                                    {
+                                                        location.reload();
+                                                    }
+                                                }
+                                            ]
+                                        }).show());
+                                        if(!Ext.isEmpty(json.smap1.nombreUsuarioDestino))
+                                        {
+                                            mensajeCorrecto('Tr&aacute;mite asignado'
+                                                ,'El tr&aacute;mite '+json.smap1.ntramite+' fue asignado a '+json.smap1.nombreUsuarioDestino
+                                            );
+                                        }
+                                    };
+                                    callbackConfirmado();
+                                }
                             }
                         }
                         else
@@ -3552,7 +3601,10 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento)
                 });
         }
         
-        if(!Ext.isEmpty(sincenso)&&sincenso==true)
+        if(
+            (!Ext.isEmpty(sincenso)&&sincenso==true)
+            ||!Ext.isEmpty(nombreCensoParaConfirmar)
+        )
         {
             micallback();
         }
@@ -3704,7 +3756,7 @@ function _p21_turnar(status,titulo,closable)
                                             mensajeCorrecto('Tr&aacute;mite guardado'
                                                 ,json2.smap1.P1VALOR
                                                     +(!Ext.isEmpty(json.smap1.nombreUsuarioDestino)?
-                                                        '<br/>El tr&aacute;mite fue asignado a '+json.smap1.nombreUsuarioDestino:
+                                                        '<br/>El tr&aacute;mite '+_p21_smap1.ntramite+' fue asignado a '+json.smap1.nombreUsuarioDestino:
                                                         ''
                                                     )
                                                 ,function()

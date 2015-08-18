@@ -4941,10 +4941,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			
 			censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+inTimestamp);
 			
-			logger.info("inTimestamp "+inTimestamp);
-			logger.info("clasif "   +clasif);
+			String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 			
-			logger.info("censo "           +censo);
+			logger.info(Utils.log(
+					"\ninTimestamp: " , inTimestamp
+					,"\nclasif: "     , clasif
+					,"\ncenso: "      , censo
+					));
 			
 			//nmpoliza
 			if(exito && StringUtils.isBlank(nmpoliza))
@@ -4955,7 +4958,14 @@ public class CotizacionAction extends PrincipalCoreAction
 			
 			if(exito)
 			{
-				nombreCenso = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
+				if(StringUtils.isNotBlank(nombreCensoConfirmado))
+				{
+					nombreCenso = nombreCensoConfirmado;
+				}
+				else
+				{
+					nombreCenso = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
+				}
 			}
 			
 			//mpolizas
@@ -5048,7 +5058,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			
 			//enviar archivo
-			if(exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)&&!sincenso&&!complemento)
+			if(exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)&&!sincenso&&!complemento&&StringUtils.isBlank(nombreCensoConfirmado))
 			{
 				
 				FileInputStream input      = null;
@@ -5715,6 +5725,17 @@ public class CotizacionAction extends PrincipalCoreAction
 					respuestaOculta = ex.getMessage();
 					exito           = false;
 				}
+			}
+			
+			if((exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso))
+					&&StringUtils.isBlank(nombreCensoConfirmado)
+			)
+			{
+				smap1.put("nombreCensoParaConfirmar" , nombreCenso);
+				exito     = true;
+				respuesta = Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]");
+				logger.info(respuesta);
+				return SUCCESS;
 			}
 			
 			if(exito)
