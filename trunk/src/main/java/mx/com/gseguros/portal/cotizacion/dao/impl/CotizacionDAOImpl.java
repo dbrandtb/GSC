@@ -2559,7 +2559,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipoag" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("porredau" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("porredau" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmcuadro" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsucurs" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("accion"   , OracleTypes.VARCHAR));
