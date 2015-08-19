@@ -3706,6 +3706,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		String nmnumeroCli     = null;
 		String nmnumintCli     = null;
 		
+		String nombreCensoConfirmado = null;
+		
 		//datos completos
 		try
 		{
@@ -3736,6 +3738,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			dsdomiciCli     = smap1.get("dsdomici");
 			nmnumeroCli     = smap1.get("nmnumero");
 			nmnumintCli     = smap1.get("nmnumint");
+			
+			nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 			
 			if(session==null)
 			{
@@ -3805,6 +3809,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,ntramite
 					,ntramiteVacio
 					,cdelemen
+					,nombreCensoConfirmado
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -3964,7 +3969,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		String nombreCenso = null;
 		
-		if(exito&&StringUtils.isEmpty(nombreCensoConfirmado))
+		if(exito&&StringUtils.isBlank(nombreCensoConfirmado))
 		{
 			FileInputStream input       = null;
 			XSSFWorkbook    workbook    = null;
@@ -4656,7 +4661,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		if(exito&&StringUtils.isEmpty(nombreCensoConfirmado))
+		if(exito&&StringUtils.isBlank(nombreCensoConfirmado))
 		{
 			smap1.put("nombreCensoParaConfirmar", nombreCenso);
 			exito     = true;
@@ -4754,6 +4759,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		String nmnumintCli             = null;
 		String cdelemen                = null;
 		String cdpool                  = null;
+		String nombreCensoConfirmado   = null;
 		
 		boolean sincenso      = false;
 		boolean censoAtrasado = false;
@@ -4820,6 +4826,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			resubirCenso          = StringUtils.isNotBlank(resubirCensoS)&&resubirCensoS.equals("S");
 			
 			complemento = "S".equals(smap1.get("complemento"));
+			
+			nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 		}
 		catch(ApplicationException ax)
 		{
@@ -4881,6 +4889,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,resubirCenso
 					,complemento
 					,cdpool
+					,nombreCensoConfirmado
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -5240,7 +5249,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                	try
 		                	{
 		                		String sexo = row.getCell(5).getStringCellValue();
-		                		if(StringUtils.isEmpty(sexo)
+		                		if(StringUtils.isBlank(sexo)
 		                				||(!sexo.equals("H")&&!sexo.equals("M")))
 		                		{
 		                			throw new ApplicationException("El sexo no se reconoce [H,M]");
@@ -5261,7 +5270,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			                try
 		                	{
 		                		String parentesco = row.getCell(6).getStringCellValue();
-		                		if(StringUtils.isEmpty(parentesco)
+		                		if(StringUtils.isBlank(parentesco)
 		                				||(!parentesco.equals("T")
 		                						&&!parentesco.equals("H")
 		                						&&!parentesco.equals("P")
