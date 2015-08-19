@@ -7,11 +7,13 @@
 /*///////////////////*/
 var _ice_debug=false;
 
-function debug(a,b,c,d)
+function debug(a,b,c,d,e)
 {
 	if(_ice_debug)
 	{
-	    if(d!=undefined)
+	    if(e!=undefined)
+            console.log(a,b,c,d,e);
+	    else if(d!=undefined)
 	        console.log(a,b,c,d);
 	    else if(c!=undefined)
 	        console.log(a,b,c);
