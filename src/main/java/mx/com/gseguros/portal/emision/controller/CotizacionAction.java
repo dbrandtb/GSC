@@ -6169,42 +6169,44 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				if(nuevoCdperson||reinsertaContratante||censoAtrasado||resubirCenso)
 				{
-					LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
-					parametros.put("param01_pv_cdperson_i"    , cdperson);
-					parametros.put("param02_pv_cdtipide_i"    , "1");
-					parametros.put("param03_pv_cdideper_i"    , null);
-					parametros.put("param04_pv_dsnombre_i"    , smap1.get("nombre"));
-					parametros.put("param05_pv_cdtipper_i"    , "1");
-					parametros.put("param06_pv_otfisjur_i"    , "M");
-					parametros.put("param07_pv_otsexo_i"      , "H");
-					parametros.put("param08_pv_fenacimi_i"    , new Date());
-					parametros.put("param09_pv_cdrfc_i"       , smap1.get("cdrfc"));
-					parametros.put("param10_pv_dsemail_i"     , "");
-					parametros.put("param11_pv_dsnombre1_i"   , null);
-					parametros.put("param12_pv_dsapellido_i"  , null);
-					parametros.put("param13_pv_dsapellido1_i" , null);
-					parametros.put("param14_pv_feingreso_i"   , new Date());
-					parametros.put("param15_pv_cdnacion_i"    , null);
-					parametros.put("param16"                  , null);
-					parametros.put("param17"                  , null);
-					parametros.put("param18"                  , null);
-					parametros.put("param19"                  , null);
-					parametros.put("param18"                  , null);
-					parametros.put("param19"                  , null);
-					parametros.put("param20"                  , null);
-					parametros.put("param21"                  , null);
-					parametros.put("param22"                  , null);
-					parametros.put("param23"                  , null);
-					parametros.put("param24_pv_accion_i"      , "I");
-					String[] tipos=new String[]{
-							"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
-							"VARCHAR","VARCHAR","VARCHAR","DATE",
-							"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
-							"VARCHAR","DATE"   ,"VARCHAR","VARCHAR",
-							"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
-							"VARCHAR","VARCHAR","VARCHAR","VARCHAR"
-					};
-					storedProceduresManager.procedureVoidCall(ObjetoBD.MOV_MPERSONA.getNombre(), parametros, tipos);
+					if(!Constantes.SI.equalsIgnoreCase(exiper)){
+						LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
+						parametros.put("param01_pv_cdperson_i"    , cdperson);
+						parametros.put("param02_pv_cdtipide_i"    , "1");
+						parametros.put("param03_pv_cdideper_i"    , null);
+						parametros.put("param04_pv_dsnombre_i"    , smap1.get("nombre"));
+						parametros.put("param05_pv_cdtipper_i"    , "1");
+						parametros.put("param06_pv_otfisjur_i"    , "M");
+						parametros.put("param07_pv_otsexo_i"      , "H");
+						parametros.put("param08_pv_fenacimi_i"    , new Date());
+						parametros.put("param09_pv_cdrfc_i"       , smap1.get("cdrfc"));
+						parametros.put("param10_pv_dsemail_i"     , "");
+						parametros.put("param11_pv_dsnombre1_i"   , null);
+						parametros.put("param12_pv_dsapellido_i"  , null);
+						parametros.put("param13_pv_dsapellido1_i" , null);
+						parametros.put("param14_pv_feingreso_i"   , new Date());
+						parametros.put("param15_pv_cdnacion_i"    , "001");
+						parametros.put("param16"                  , null);
+						parametros.put("param17"                  , null);
+						parametros.put("param18"                  , null);
+						parametros.put("param19"                  , null);
+						parametros.put("param18"                  , null);
+						parametros.put("param19"                  , null);
+						parametros.put("param20"                  , null);
+						parametros.put("param21"                  , null);
+						parametros.put("param22"                  , null);
+						parametros.put("param23"                  , null);
+						parametros.put("param24_pv_accion_i"      , "I");
+						String[] tipos=new String[]{
+								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
+								"VARCHAR","VARCHAR","VARCHAR","DATE",
+								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
+								"VARCHAR","DATE"   ,"VARCHAR","VARCHAR",
+								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
+								"VARCHAR","VARCHAR","VARCHAR","VARCHAR"
+						};
+						storedProceduresManager.procedureVoidCall(ObjetoBD.MOV_MPERSONA.getNombre(), parametros, tipos);
+					}
 				}
 				
 				LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
@@ -6223,19 +6225,25 @@ public class CotizacionAction extends PrincipalCoreAction
 				parametros.put("param13_pv_swexiper_i" , exiper);
 				storedProceduresManager.procedureVoidCall(ObjetoBD.MOV_MPOLIPER.getNombre(), parametros, null);
 				
-				Map<String,String> paramDomicil = new HashMap<String, String>();
-				paramDomicil.put("pv_cdperson_i" , cdperson);
-				paramDomicil.put("pv_nmorddom_i" , "1");
-				paramDomicil.put("pv_msdomici_i" , smap1.get("dsdomici"));
-				paramDomicil.put("pv_nmtelefo_i" , null);
-				paramDomicil.put("pv_cdpostal_i" , smap1.get("codpostal"));
-				paramDomicil.put("pv_cdedo_i"    , smap1.get("cdedo"));
-				paramDomicil.put("pv_cdmunici_i" , smap1.get("cdmunici"));
-				paramDomicil.put("pv_cdcoloni_i" , null);
-				paramDomicil.put("pv_nmnumero_i" , smap1.get("nmnumero"));
-				paramDomicil.put("pv_nmnumint_i" , smap1.get("nmnumint"));
-				paramDomicil.put("pv_accion_i"   , Constantes.INSERT_MODE);
-				kernelManager.pMovMdomicil(paramDomicil);
+				
+				logger.debug("VALOR DE SWEXIPER : "+ exiper);
+				
+				if(!Constantes.SI.equalsIgnoreCase(exiper)){
+					Map<String,String> paramDomicil = new HashMap<String, String>();
+					paramDomicil.put("pv_cdperson_i" , cdperson);
+					paramDomicil.put("pv_nmorddom_i" , "1");
+					paramDomicil.put("pv_msdomici_i" , smap1.get("dsdomici"));
+					paramDomicil.put("pv_nmtelefo_i" , null);
+					paramDomicil.put("pv_cdpostal_i" , smap1.get("codpostal"));
+					paramDomicil.put("pv_cdedo_i"    , smap1.get("cdedo"));
+					paramDomicil.put("pv_cdmunici_i" , smap1.get("cdmunici"));
+					paramDomicil.put("pv_cdcoloni_i" , null);
+					paramDomicil.put("pv_nmnumero_i" , smap1.get("nmnumero"));
+					paramDomicil.put("pv_nmnumint_i" , smap1.get("nmnumint"));
+					paramDomicil.put("pv_accion_i"   , Constantes.INSERT_MODE);
+					kernelManager.pMovMdomicil(paramDomicil);
+				}
+				
 			}
 			catch(Exception ex)
 			{
