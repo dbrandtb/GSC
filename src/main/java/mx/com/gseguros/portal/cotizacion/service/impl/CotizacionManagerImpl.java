@@ -2157,6 +2157,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,boolean resubirCenso
 			,boolean complemento
 			,String cdpool
+			,String nombreCensoConfirmado
 			)
 	{
 		logger.info(
@@ -2202,6 +2203,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ resubirCenso=")           .append(resubirCenso)
 				.append("\n@@@@@@ complemento=")            .append(complemento)
 				.append("\n@@@@@@ cdpool=")                 .append(cdpool)
+				.append("\n@@@@@@ nombreCensoConfirmado=")  .append(nombreCensoConfirmado)
 				.toString()
 				);
 		
@@ -2352,10 +2354,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 		boolean hayTramite      = StringUtils.isNotBlank(ntramite);
 		boolean hayTramiteVacio = StringUtils.isNotBlank(ntramiteVacio);
 		boolean esCensoSolo     = StringUtils.isNotBlank(tipoCenso)&&tipoCenso.equalsIgnoreCase("solo");
-		String  nombreCenso     = null;
+		String  nombreCenso     = nombreCensoConfirmado;
 		
 		//enviar censo
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)&&!sincenso&&!complemento)
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)&&!sincenso&&!complemento&&StringUtils.isBlank(nombreCensoConfirmado))
 		{
 			FileInputStream input       = null;
 			XSSFSheet       sheet       = null;
@@ -2575,7 +2577,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                try
 	                	{
 		                	String sexo = row.getCell(5).getStringCellValue();
-		                	if(StringUtils.isEmpty(sexo)
+		                	if(StringUtils.isBlank(sexo)
 	                				||(!sexo.equals("H")&&!sexo.equals("M")))
 	                		{
 	                			throw new ApplicationException("El sexo no se reconoce [H,M]");
@@ -2601,7 +2603,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                try
 	                	{
 		                	String parentesco = row.getCell(6).getStringCellValue();
-		                	if(StringUtils.isEmpty(parentesco)
+		                	if(StringUtils.isBlank(parentesco)
 	                				||(!parentesco.equals("T")
 	                						&&!parentesco.equals("H")
 	                						&&!parentesco.equals("P")
@@ -3211,6 +3213,17 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            	logger.error(resp.getRespuesta(),ex);
 	            }
 			}
+		}
+		
+		if((resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso))
+				&&StringUtils.isBlank(nombreCensoConfirmado)
+		)
+		{
+			resp.getSmap().put("nombreCensoParaConfirmar" , nombreCenso);
+			resp.setExito(true);
+			resp.setRespuesta(Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]"));
+			logger.info(resp.getRespuesta());
+			return resp;
 		}
 		
 		if(resp.isExito())
@@ -4051,6 +4064,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String ntramite
 			,String ntramiteVacio
 			,String cdelemen
+			,String nombreCensoConfirmado
 			)
 	{
 		logger.info(
@@ -4088,6 +4102,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ ntramite=")            .append(ntramite)
 				.append("\n@@@@@@ ntramiteVacio=")       .append(ntramiteVacio)
 				.append("\n@@@@@@ cdelemen=")            .append(cdelemen)
+				.append("\n@@@@@@ nombreCensoConfirmado=").append(nombreCensoConfirmado)
 				.toString()
 				);
 		
@@ -4195,7 +4210,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//crear pipes
-		if(resp.isExito())
+		if(resp.isExito()&&StringUtils.isBlank(nombreCensoConfirmado))
 		{
 			
 			FileInputStream input       = null;
@@ -4296,7 +4311,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                try
                 	{
 	                	parentesco = row.getCell(1).getStringCellValue();
-	                	if(StringUtils.isEmpty(parentesco)
+	                	if(StringUtils.isBlank(parentesco)
                 				||(!parentesco.equals("T")
                 						&&!parentesco.equals("H")
                 						&&!parentesco.equals("P")
@@ -4449,7 +4464,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                try
                 	{
 	                	String sexo = row.getCell(6).getStringCellValue();
-	                	if(StringUtils.isEmpty(sexo)
+	                	if(StringUtils.isBlank(sexo)
                 				||(!sexo.equals("H")&&!sexo.equals("M")))
                 		{
                 			throw new ApplicationException("El sexo no se reconoce [H,M]");
@@ -4976,7 +4991,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//pl censo
-		if(resp.isExito())
+		if(resp.isExito()&&StringUtils.isBlank(nombreCensoConfirmado))
 		{
 			String nombreProcedureCenso = null;
 			String tipoCensoParam       = "COMPLETO";
@@ -5054,6 +5069,15 @@ public class CotizacionManagerImpl implements CotizacionManager
 		
 		boolean hayTramite      = StringUtils.isNotBlank(ntramite);
 		boolean hayTramiteVacio = StringUtils.isNotBlank(ntramiteVacio);
+		
+		if(resp.isExito()&&StringUtils.isBlank(nombreCensoConfirmado))
+		{
+			resp.getSmap().put("nombreCensoParaConfirmar", nombreCenso);
+			resp.setExito(true);
+			resp.setRespuesta(Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]"));
+			logger.info(resp.getRespuesta());
+			return resp;
+		}
 		
 		if(resp.isExito())
 		{

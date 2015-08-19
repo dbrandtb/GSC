@@ -331,6 +331,7 @@ public interface CotizacionManager
 			,boolean resubirCenso
 			,boolean complemento
 			,String cdpool
+			,String nombreCensoConfirmado
 			);
 	
 	public ManagerRespuestaSlistVO obtenerTiposSituacion();
@@ -379,6 +380,7 @@ public interface CotizacionManager
 			,String ntramite
 			,String ntramiteVacio
 			,String cdelemen
+			,String nombreCensoConfirmado
 			);
 	public ManagerRespuestaVoidVO validarCambioZonaGMI(
 			String cdunieco
