@@ -3560,32 +3560,35 @@ public class CotizacionManagerImpl implements CotizacionManager
 				
 				if(cdpersonNuevo||reinsertaContratante||censoAtrasado||resubirCenso)
 				{
-					personasDAO.movimientosMpersona(
-							cdpersonCli
-							,"1"         //cdtipide
-							,null        //cdideper
-							,nombreCli
-							,"1"         //cdtipper
-							,"M"         //otfisjur
-							,"H"         //otsexo
-							,new Date()  //fenacimi
-							,rfcCli
-							,""          //dsemail
-							,null        //dsnombre1
-							,null        //dsapellido
-							,null        //dsapellido1
-							,new Date()  //feingreso
-							,null        //cdnacion
-							,null        //canaling
-							,null        //conducto
-							,null        //ptcumupr
-							,null        //residencia
-							,null		 //nongrata
-							,null		 //cdideext
-							,null		 //cdestcivil
-							,null		 //cdsucemi
-							,Constantes.INSERT_MODE
-							);
+					
+					if(!Constantes.SI.equalsIgnoreCase(swexiper)){
+						personasDAO.movimientosMpersona(
+								cdpersonCli
+								,"1"         //cdtipide
+								,null        //cdideper
+								,nombreCli
+								,"1"         //cdtipper
+								,"M"         //otfisjur
+								,"H"         //otsexo
+								,new Date()  //fenacimi
+								,rfcCli
+								,""          //dsemail
+								,null        //dsnombre1
+								,null        //dsapellido
+								,null        //dsapellido1
+								,new Date()  //feingreso
+								,"001"        //cdnacion
+								,null        //canaling
+								,null        //conducto
+								,null        //ptcumupr
+								,null        //residencia
+								,null		 //nongrata
+								,null		 //cdideext
+								,null		 //cdestcivil
+								,null		 //cdsucemi
+								,Constantes.INSERT_MODE
+								);
+					}
 				}
 				
 				cotizacionDAO.movimientoMpoliper(
@@ -3604,19 +3607,23 @@ public class CotizacionManagerImpl implements CotizacionManager
 						,swexiper
 						);
 				
-				personasDAO.movimientosMdomicil(
-						cdpersonCli
-						,"1"        //nmorddom
-						,dsdomiciCli
-						,null       //nmtelefo
-						,codpostalCli
-						,cdedoCli
-						,cdmuniciCli
-						,null       //cdcoloni
-						,nmnumeroCli
-						,nmnumintCli
-						,Constantes.INSERT_MODE
-						);
+				logger.debug("VALOR DE SWEXIPER : "+ swexiper);
+				
+				if(!Constantes.SI.equalsIgnoreCase(swexiper)){
+					personasDAO.movimientosMdomicil(
+							cdpersonCli
+							,"1"        //nmorddom
+							,dsdomiciCli
+							,null       //nmtelefo
+							,codpostalCli
+							,cdedoCli
+							,cdmuniciCli
+							,null       //cdcoloni
+							,nmnumeroCli
+							,nmnumintCli
+							,Constantes.INSERT_MODE
+							);
+				}
 			}
             catch(Exception ex)
             {
