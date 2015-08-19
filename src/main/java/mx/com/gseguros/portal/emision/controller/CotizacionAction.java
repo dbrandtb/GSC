@@ -3827,12 +3827,12 @@ public class CotizacionAction extends PrincipalCoreAction
 	public String subirCensoCompleto()
 	{
 		this.session=ActionContext.getContext().getSession();
-		logger.info(""
-				+ "\n################################"
-				+ "\n###### subirCensoCompleto ######"
-				+ "\nsmap1 "+smap1
-				+ "\nolist1 "+olist1
-				);
+		logger.info(Utils.log(
+				 "\n################################"
+				,"\n###### subirCensoCompleto ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### olist1=" , olist1
+				));
 		
 		success = true;
 		exito   = true;
@@ -3860,6 +3860,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		String fefin            = smap1.get("fefin");
 		
 		censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+censoTimestamp);
+		
+		String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 		
 		//mpolizas
 		if(exito)
@@ -3960,13 +3962,14 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		if(exito)
+		String nombreCenso = null;
+		
+		if(exito&&StringUtils.isEmpty(nombreCensoConfirmado))
 		{
 			FileInputStream input       = null;
 			XSSFWorkbook    workbook    = null;
 			XSSFSheet       sheet       = null;
 			Long            inTimestamp = null;
-			String          nombreCenso = null;
 			File            archivoTxt  = null;
 			PrintStream     output      = null;
 			
@@ -4651,6 +4654,15 @@ public class CotizacionAction extends PrincipalCoreAction
 					}
 				}
 			}
+		}
+		
+		if(exito&&StringUtils.isEmpty(nombreCensoConfirmado))
+		{
+			smap1.put("nombreCensoParaConfirmar", nombreCenso);
+			exito     = true;
+			respuesta = Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]");
+			logger.info(respuesta);
+			return SUCCESS;
 		}
 		
 		if(exito)
