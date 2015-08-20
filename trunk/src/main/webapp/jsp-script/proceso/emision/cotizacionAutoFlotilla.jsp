@@ -475,8 +475,9 @@ Ext.onReady(function()
         ,autoLoad : _p30_smap1.cdramo+'x'=='5x'
         ,proxy    :
         {
-            type    : 'ajax'
-            ,url    : _p30_urlCargarCatalogo
+            type         : 'ajax'
+            ,url         : _p30_urlCargarCatalogo
+            ,timeout     : 1000*60*2
             ,extraParams :
             {
                 'catalogo' : 'RAMO_5_VERSIONES'
