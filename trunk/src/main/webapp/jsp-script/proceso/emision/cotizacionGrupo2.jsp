@@ -3130,6 +3130,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                         ,proxy    :
                                                         {
                                                             type         : 'ajax'
+                                                            ,timeout     : 1000*60*2
                                                             ,extraParams :
                                                             {
                                                                 'smap1.cdunieco'  : _p25_smap1.cdunieco
@@ -5494,6 +5495,7 @@ function _p25_generarVentanaVistaPrevia(sinBotones)
                 ,proxy    :
                 {
                     type         : 'ajax'
+                    ,timeout     : 1000*60*2
                     ,extraParams :
                     {
                         'smap1.cdunieco'  : _p25_smap1.cdunieco
