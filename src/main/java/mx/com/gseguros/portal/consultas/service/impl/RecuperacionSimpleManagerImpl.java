@@ -212,7 +212,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String cdunieco = params.get("cdunieco");
 				String cdramo   = params.get("cdramo");
 				String estado   = params.get("estado");
-				String nmpoliza   = params.get("nmpoliza");
+				String nmpoliza = params.get("nmpoliza");
 				String nmsituac = params.get("nmsituac");
 				String nmsuplem = params.get("nmsuplem");
 				String cdtipsit = params.get("cdtipsit");
@@ -234,6 +234,15 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String paquete = params.get("paquete");
 				resp.setSmap(new HashMap<String,String>());
 				resp.getSmap().put("DERECHOS" , consultasDAO.recuperarDerechosPolizaPorPaqueteRamo1(paquete));
+			}
+			else if(proc.equals(RecuperacionSimple.RECUPERAR_CONTEO_BLOQUEO))
+			{
+				String cdunieco = params.get("cdunieco");
+				String cdramo   = params.get("cdramo");
+				String estado   = params.get("estado");
+				String nmpoliza = params.get("nmpoliza");
+				resp.setSmap(new HashMap<String,String>());
+				resp.getSmap().put("CONTEO" , consultasDAO.recuperarConteoTbloqueo(cdunieco,cdramo,estado,nmpoliza));
 			}
 			
 			setCheckpoint("0");

@@ -5942,8 +5942,23 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
+		boolean asincrono = false;
+		if(resp.exito
+				&&(!hayTramite||hayTramiteVacio)
+				&&
+				(
+					RolSistema.AGENTE.getCdsisrol().equals(cdsisrol)
+					||RolSistema.EJECUTIVO_INTERNO.getCdsisrol().equals(cdsisrol)
+					||RolSistema.MESA_DE_CONTROL.getCdsisrol().equals(cdsisrol)
+					||RolSistema.SUSCRIPTOR.getCdsisrol().equals(cdsisrol)
+				)
+		)
+		{
+			asincrono = true;
+		}
+		
 		//sigsvdef
-		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento))
+		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento)&&asincrono==false)
 		{
 			try
 			{
@@ -6005,7 +6020,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		
 		//tvalogar
-		if(resp.exito)
+		if(resp.exito&&asincrono==false)
 		{
 			try
 			{
@@ -6403,7 +6418,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		
 		//sigsvalipol
-		if(resp.exito)
+		if(resp.exito&&asincrono==false)
 		{
 			try
 			{
@@ -6442,6 +6457,30 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
+		if(resp.exito&&asincrono==true)
+		{
+			cotizacionManager.procesoColectivoAsincrono(
+					hayTramite
+					,hayTramiteVacio
+					,censoAtrasado
+					,complemento
+					,cdunieco
+					,cdramo
+					,nmpoliza
+					,cdperpag
+					,clasif
+					,LINEA
+					,LINEA_EXTENDIDA
+					,olist1
+					,cdtipsit
+					);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### resp=",resp
+				,"\n###### tvalositSigsvdefTvalogarContratanteTramiteSigsvalipol ######"
+				,"\n###################################################################"
+				));
 		return resp;
 	}
 	
