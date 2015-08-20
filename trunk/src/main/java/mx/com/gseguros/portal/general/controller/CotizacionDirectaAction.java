@@ -136,23 +136,6 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 	public void setRespuesta(String respuesta) {
 		this.respuesta = respuesta;
 	}
-	/*
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getCdelemento() {
-		return cdelemento;
-	}
-
-	public void setCdelemento(String cdelemento) {
-		this.cdelemento = cdelemento;
-	}
-	*/
 
 	public Map<String, String> getParams() {
 		return params;
