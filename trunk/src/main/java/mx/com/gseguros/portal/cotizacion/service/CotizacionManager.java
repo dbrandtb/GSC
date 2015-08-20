@@ -589,4 +589,20 @@ public interface CotizacionManager
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+	
+	public void procesoColectivoAsincrono(
+			boolean hayTramite
+			,boolean hayTramiteVacio
+			,boolean censoAtrasado
+			,boolean complemento
+			,String cdunieco
+			,String cdramo
+			,String nmpoliza
+			,String cdperpag
+			,String clasif
+			,String LINEA
+			,String LINEA_EXTENDIDA
+			,List<Map<String,Object>> olist1
+			,String cdtipsit
+			);
 }

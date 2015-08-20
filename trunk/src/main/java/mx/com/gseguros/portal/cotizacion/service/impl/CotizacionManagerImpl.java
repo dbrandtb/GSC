@@ -7621,6 +7621,306 @@ public class CotizacionManagerImpl implements CotizacionManager
 	{
 		cotizacionDAO.actualizaCesionComision(cdunieco,cdramo,estado,nmpoliza);
 	}
+	
+	@Override
+	public void procesoColectivoAsincrono(
+			boolean hayTramite
+			,boolean hayTramiteVacio
+			,boolean censoAtrasado
+			,boolean complemento
+			,String cdunieco
+			,String cdramo
+			,String nmpoliza
+			,String cdperpag
+			,String clasif
+			,String LINEA
+			,String LINEA_EXTENDIDA
+			,List<Map<String,Object>> olist1
+			,String cdtipsit
+			)
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ procesoColectivoAsincrono @@@@@@"
+				,"\n@@@@@@ hayTramite="      , hayTramite
+				,"\n@@@@@@ hayTramiteVacio=" , hayTramiteVacio
+				,"\n@@@@@@ censoAtrasado="   , censoAtrasado
+				,"\n@@@@@@ complemento="     , complemento
+				,"\n@@@@@@ cdunieco="        , cdunieco
+				,"\n@@@@@@ cdramo="          , cdramo
+				,"\n@@@@@@ nmpoliza="        , nmpoliza
+				,"\n@@@@@@ cdperpag="        , cdperpag
+				,"\n@@@@@@ clasif="          , clasif
+				,"\n@@@@@@ LINEA="           , LINEA
+				,"\n@@@@@@ LINEA_EXTENDIDA=" , LINEA_EXTENDIDA
+				,"\n@@@@@@ olist1="          , olist1
+				,"\n@@@@@@ cdtipsit="        , cdtipsit
+				));
+		new ProcesoColectivoAsincrono(
+				hayTramite
+				,hayTramiteVacio
+				,censoAtrasado
+				,complemento
+				,cdunieco
+				,cdramo
+				,nmpoliza
+				,cdperpag
+				,clasif
+				,LINEA
+				,LINEA_EXTENDIDA
+				,olist1
+				,cdtipsit
+				).start();
+	}
+	
+	private class ProcesoColectivoAsincrono extends Thread
+	{
+		private boolean hayTramite
+		                ,hayTramiteVacio
+		                ,censoAtrasado
+		                ,resubirCenso
+		                ,complemento
+		                ;
+		
+		private String cdunieco
+		               ,cdramo
+		               ,nmpoliza
+		               ,cdperpag
+		               ,clasif
+		               ,LINEA
+		               ,LINEA_EXTENDIDA
+		               ,cdtipsit
+		               ;
+		
+		private List<Map<String,Object>> olist1;
+		
+		public ProcesoColectivoAsincrono(
+				boolean hayTramite
+				,boolean hayTramiteVacio
+				,boolean censoAtrasado
+				,boolean complemento
+				,String cdunieco
+				,String cdramo
+				,String nmpoliza
+				,String cdperpag
+				,String clasif
+				,String LINEA
+				,String LINEA_EXTENDIDA
+				,List<Map<String,Object>> olist1
+				,String cdtipsit
+				)
+		{
+			this.hayTramite      = hayTramite;
+			this.hayTramiteVacio = hayTramiteVacio;
+			this.censoAtrasado   = censoAtrasado;
+			this.complemento     = complemento;
+			this.cdunieco        = cdunieco;
+			this.cdramo          = cdramo;
+			this.nmpoliza        = nmpoliza;
+			this.cdperpag        = cdperpag;
+			this.clasif          = clasif;
+			this.LINEA           = LINEA;
+			this.LINEA_EXTENDIDA = LINEA_EXTENDIDA;
+			this.olist1          = olist1;
+			this.cdtipsit        = cdtipsit;
+		}
+		
+		@Override
+		public void run()
+		{
+			long timestamp = System.currentTimeMillis();
+			
+			logger.debug(Utils.log(
+					 "\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+					,"\n&&&&&& procesoColectivoAsincrono.RUN &&&&&&"
+					,"\n&&&&&& [id="             , timestamp ,"]"
+					,"\n&&&&&& hayTramite="      , hayTramite
+					,"\n&&&&&& hayTramiteVacio=" , hayTramiteVacio
+					,"\n&&&&&& censoAtrasado="   , censoAtrasado
+					,"\n&&&&&& complemento="     , complemento
+					,"\n&&&&&& cdunieco="        , cdunieco
+					,"\n&&&&&& cdramo="          , cdramo
+					,"\n&&&&&& nmpoliza="        , nmpoliza
+					,"\n&&&&&& cdperpag="        , cdperpag
+					,"\n&&&&&& clasif="          , clasif
+					,"\n&&&&&& LINEA="           , LINEA
+					,"\n&&&&&& LINEA_EXTENDIDA=" , LINEA_EXTENDIDA
+					,"\n&&&&&& olist1="          , olist1
+					,"\n&&&&&& cdtipsit="        , cdtipsit
+					));
+			try
+			{
+				if(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento)
+				{
+					logger.debug(Utils.log("\n&&&&&& ejecutaValoresDefectoConcurrente [id=",timestamp,"] &&&&&&"));		
+					cotizacionDAO.ejecutaValoresDefectoConcurrente(
+		            		cdunieco
+		            		,cdramo
+		            		,"W"
+		            		,nmpoliza
+		            		,"0"
+		            		,"0"
+		            		,"1"
+		            		,cdperpag
+		            		);
+				}
+				
+				if(clasif.equals(LINEA)&&LINEA_EXTENDIDA.equals("S"))
+				{
+					for(Map<String,Object>iGrupo:olist1)
+					{
+						String cdgrupo = (String)iGrupo.get("letra");
+						
+						//HOSPITALIZACION (DEDUCIBLE)
+						String cdgarant = "4HOS";
+						String cdatribu = "001";
+						String valor    = (String)iGrupo.get("deducible");
+						logger.debug(Utils.log("\n&&&&&& movimientoTvalogarGrupo [id=",timestamp,"] &&&&&&"));
+						movimientoTvalogarGrupo(cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", cdatribu, valor);
+						
+						//ASISTENCIA INTERNACIONAL VIAJES --AHORA MEDICAMENTOS
+						String asisinte = (String)iGrupo.get("asisinte");
+						cdgarant = "4MED";
+						if(Integer.parseInt(asisinte)>0)
+						{
+							logger.debug(Utils.log("\n&&&&&& movimientoMpoligarGrupo [id=",timestamp,"] &&&&&&"));
+							movimientoMpoligarGrupo(
+									cdunieco
+									,cdramo
+									,"W"
+									,nmpoliza
+									,"0"
+									,cdtipsit
+									,cdgrupo
+									,cdgarant
+									,"V"
+									,"001"
+									,Constantes.INSERT_MODE
+									,"S"
+									);
+							
+							logger.debug(Utils.log("\n&&&&&& movimientoTvalogarGrupo [id=",timestamp,"] &&&&&&"));
+							movimientoTvalogarGrupo(
+									cdunieco
+									,cdramo
+									,"W" //estado
+									,nmpoliza
+									,"0" //nmsuplem
+									,cdtipsit
+									,cdgrupo
+									,cdgarant
+									,"V" //status
+									,"001"
+									,asisinte
+									);
+						}
+						else
+						{
+							logger.debug(Utils.log("\n&&&&&& movimientoMpoligarGrupo [id=",timestamp,"] &&&&&&"));
+							movimientoMpoligarGrupo(
+									cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.DELETE_MODE, null);
+						}
+						
+						//EMERGENCIA EXTRANJERO
+						String emerextr = (String)iGrupo.get("emerextr");
+						cdgarant = "4EE";
+						if(emerextr.equalsIgnoreCase("S"))
+						{
+							logger.debug(Utils.log("\n&&&&&& movimientoMpoligarGrupo [id=",timestamp,"] &&&&&&"));
+							movimientoMpoligarGrupo(
+									cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.INSERT_MODE, null);
+						}
+						else
+						{
+							logger.debug(Utils.log("\n&&&&&& movimientoMpoligarGrupo [id=",timestamp,"] &&&&&&"));
+							movimientoMpoligarGrupo(
+									cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.DELETE_MODE, null);
+						}
+					}
+				}
+				else
+				{
+					for(Map<String,Object>iGrupo:olist1)
+					{
+						String cdgrupo = (String)iGrupo.get("letra");
+						
+						List<Map<String,String>>tvalogars=(List<Map<String,String>>)iGrupo.get("tvalogars");
+						for(Map<String,String>iTvalogar:tvalogars)
+						{
+							String cdgarant  = iTvalogar.get("cdgarant");
+							boolean amparada = StringUtils.isNotBlank(iTvalogar.get("amparada"))
+									&&iTvalogar.get("amparada").equalsIgnoreCase("S");
+							
+							//if(!cdgarant.equalsIgnoreCase("4AYM"))
+							//{
+								if(amparada)
+								{
+									logger.debug(Utils.log("\n&&&&&& movimientoMpoligarGrupo [id=",timestamp,"] &&&&&&"));
+									movimientoMpoligarGrupo(
+											cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.INSERT_MODE, null);
+									//buscar cdatribus
+									boolean hayAtributos=false;
+									Map<String,String>listaCdatribu=new HashMap<String,String>();
+									for(Entry<String,String>iAtribTvalogar:iTvalogar.entrySet())
+									{
+										String key=iAtribTvalogar.getKey();
+										if(key!=null
+												&&key.length()>"parametros.pv_otvalor".length()
+												&&key.substring(0, "parametros.pv_otvalor".length()).equalsIgnoreCase("parametros.pv_otvalor"))
+										{
+											hayAtributos=true;
+											listaCdatribu.put(key.substring("parametros.pv_otvalor".length(), key.length()),iAtribTvalogar.getValue());
+										}
+									}
+									if(hayAtributos)
+									{
+										for(Entry<String,String>atributo:listaCdatribu.entrySet())
+										{
+											if(StringUtils.isNotBlank(atributo.getValue()))
+											{
+												logger.debug(Utils.log("\n&&&&&& movimientoTvalogarGrupo [id=",timestamp,"] &&&&&&"));
+											    movimientoTvalogarGrupo(
+													cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V",
+													atributo.getKey(), atributo.getValue());
+											}
+										}
+									}
+								}
+								else
+								{
+									logger.debug(Utils.log("\n&&&&&& movimientoMpoligarGrupo [id=",timestamp,"] &&&&&&"));
+									movimientoMpoligarGrupo(
+											cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V", "001", Constantes.DELETE_MODE, null);
+								}
+							//}
+						}
+					}
+				}
+				
+				logger.debug(Utils.log("\n&&&&&& ejecutaTarificacionConcurrente [id=",timestamp,"] &&&&&&"));
+				ejecutaTarificacionConcurrente(
+	            		cdunieco
+	            		,cdramo
+	            		,"W"
+	            		,nmpoliza
+	            		,"0"
+	            		,"0"
+	            		,"1"
+	            		,cdperpag
+	            		);
+			}
+			catch(Exception ex)
+			{
+				logger.error(Utils.log("Error en el proceso colectivo asincrono [id=",timestamp,"]"),ex);
+			}
+			
+			logger.debug(Utils.log(
+					 "\n&&&&&& [id=",timestamp,"]"
+					,"\n&&&&&& procesoColectivoAsincrono.END &&&&&&"
+					,"\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+					));
+		}
+	}
     
 	///////////////////////////////
 	////// getters y setters //////

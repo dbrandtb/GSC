@@ -322,4 +322,11 @@ public interface ConsultasDAO
 			,String nmpoliza
 			,String nmsuplem
 			)throws Exception;
+	
+	public String recuperarConteoTbloqueo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }

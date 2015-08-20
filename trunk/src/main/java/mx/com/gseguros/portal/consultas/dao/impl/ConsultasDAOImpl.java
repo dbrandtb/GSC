@@ -2486,4 +2486,42 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			}
 		}
 	}
+	
+	@Override
+	public String recuperarConteoTbloqueo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarConteoTbloqueo(getDataSource()),params);
+		String             conteo  = (String)procRes.get("pv_conteo_o");
+		if(StringUtils.isBlank(conteo))
+		{
+			conteo = "0";
+		}
+		return conteo;
+	}
+	
+	protected class RecuperarConteoTbloqueo extends StoredProcedure
+	{
+		protected RecuperarConteoTbloqueo(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_COUNT_TBLOQUEO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_conteo_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
