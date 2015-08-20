@@ -36,6 +36,7 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
+import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
@@ -3399,8 +3400,23 @@ public class CotizacionManagerImpl implements CotizacionManager
             }
 		}
 		
+		boolean asincrono = false;
+		if(resp.isExito()
+				&&(!hayTramite||hayTramiteVacio)
+				&&
+				(
+					RolSistema.AGENTE.getCdsisrol().equals(cdsisrol)
+					||RolSistema.EJECUTIVO_INTERNO.getCdsisrol().equals(cdsisrol)
+					||RolSistema.MESA_DE_CONTROL.getCdsisrol().equals(cdsisrol)
+					||RolSistema.SUSCRIPTOR.getCdsisrol().equals(cdsisrol)
+				)
+		)
+		{
+			asincrono = true;
+		}
+		
 		//sigsvdef
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento))
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento)&&asincrono==false)
 		{
 			try
 			{
@@ -3467,6 +3483,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				(!clasif.equals(LINEA))
 				||LINEA_EXTENDIDA.equals("N")
 				)
+				&&asincrono==false
 				)
 		{
 			try
@@ -3781,7 +3798,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//sigsvalipol
-		if(resp.isExito())
+		if(resp.isExito()&&asincrono==false)
 		{
 			try
 			{
@@ -3816,6 +3833,25 @@ public class CotizacionManagerImpl implements CotizacionManager
             	resp.setRespuestaOculta(ex.getMessage());
             	logger.error(resp.getRespuesta(),ex);
 			}
+		}
+		
+		if(resp.isExito()&&asincrono==true)
+		{
+			procesoColectivoAsincrono2(
+					hayTramite
+					,hayTramiteVacio
+					,censoAtrasado
+					,complemento
+					,cdunieco
+					,cdramo
+					,nmpoliza
+					,cdperpag
+					,clasif
+					,LINEA
+					,LINEA_EXTENDIDA
+					,grupos
+					,cdtipsit
+					);
 		}
 		
 		if(resp.isExito())
@@ -7918,6 +7954,238 @@ public class CotizacionManagerImpl implements CotizacionManager
 					 "\n&&&&&& [id=",timestamp,"]"
 					,"\n&&&&&& procesoColectivoAsincrono.END &&&&&&"
 					,"\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+					));
+		}
+	}
+	
+	public void procesoColectivoAsincrono2(
+			boolean hayTramite
+			,boolean hayTramiteVacio
+			,boolean censoAtrasado
+			,boolean complemento
+			,String cdunieco
+			,String cdramo
+			,String nmpoliza
+			,String cdperpag
+			,String clasif
+			,String LINEA
+			,String LINEA_EXTENDIDA
+			,List<Map<String,Object>> grupos
+			,String cdtipsit
+			)
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ procesoColectivoAsincrono2 @@@@@@"
+				,"\n@@@@@@ hayTramite="      , hayTramite
+				,"\n@@@@@@ hayTramiteVacio=" , hayTramiteVacio
+				,"\n@@@@@@ censoAtrasado="   , censoAtrasado
+				,"\n@@@@@@ complemento="     , complemento
+				,"\n@@@@@@ cdunieco="        , cdunieco
+				,"\n@@@@@@ cdramo="          , cdramo
+				,"\n@@@@@@ nmpoliza="        , nmpoliza
+				,"\n@@@@@@ cdperpag="        , cdperpag
+				,"\n@@@@@@ clasif="          , clasif
+				,"\n@@@@@@ LINEA="           , LINEA
+				,"\n@@@@@@ LINEA_EXTENDIDA=" , LINEA_EXTENDIDA
+				,"\n@@@@@@ grupos="          , grupos
+				,"\n@@@@@@ cdtipsit="        , cdtipsit
+				));
+		new ProcesoColectivoAsincrono2(
+				hayTramite
+				,hayTramiteVacio
+				,censoAtrasado
+				,complemento
+				,cdunieco
+				,cdramo
+				,nmpoliza
+				,cdperpag
+				,clasif
+				,LINEA
+				,LINEA_EXTENDIDA
+				,grupos
+				,cdtipsit
+				).start();
+	}
+	
+	private class ProcesoColectivoAsincrono2 extends Thread
+	{
+		private boolean hayTramite
+		                ,hayTramiteVacio
+		                ,censoAtrasado
+		                ,resubirCenso
+		                ,complemento
+		                ;
+		
+		private String cdunieco
+		               ,cdramo
+		               ,nmpoliza
+		               ,cdperpag
+		               ,clasif
+		               ,LINEA
+		               ,LINEA_EXTENDIDA
+		               ,cdtipsit
+		               ;
+		
+		private List<Map<String,Object>> grupos;
+		
+		public ProcesoColectivoAsincrono2(
+				boolean hayTramite
+				,boolean hayTramiteVacio
+				,boolean censoAtrasado
+				,boolean complemento
+				,String cdunieco
+				,String cdramo
+				,String nmpoliza
+				,String cdperpag
+				,String clasif
+				,String LINEA
+				,String LINEA_EXTENDIDA
+				,List<Map<String,Object>> grupos
+				,String cdtipsit
+				)
+		{
+			this.hayTramite      = hayTramite;
+			this.hayTramiteVacio = hayTramiteVacio;
+			this.censoAtrasado   = censoAtrasado;
+			this.complemento     = complemento;
+			this.cdunieco        = cdunieco;
+			this.cdramo          = cdramo;
+			this.nmpoliza        = nmpoliza;
+			this.cdperpag        = cdperpag;
+			this.clasif          = clasif;
+			this.LINEA           = LINEA;
+			this.LINEA_EXTENDIDA = LINEA_EXTENDIDA;
+			this.grupos          = grupos;
+			this.cdtipsit        = cdtipsit;
+		}
+		
+		@Override
+		public void run()
+		{
+			long timestamp = System.currentTimeMillis();
+			
+			logger.debug(Utils.log(
+					 "\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+					,"\n&&&&&& procesoColectivoAsincrono2.RUN &&&&&&"
+					,"\n&&&&&& [id="             , timestamp ,"]"
+					,"\n&&&&&& hayTramite="      , hayTramite
+					,"\n&&&&&& hayTramiteVacio=" , hayTramiteVacio
+					,"\n&&&&&& censoAtrasado="   , censoAtrasado
+					,"\n&&&&&& complemento="     , complemento
+					,"\n&&&&&& cdunieco="        , cdunieco
+					,"\n&&&&&& cdramo="          , cdramo
+					,"\n&&&&&& nmpoliza="        , nmpoliza
+					,"\n&&&&&& cdperpag="        , cdperpag
+					,"\n&&&&&& clasif="          , clasif
+					,"\n&&&&&& LINEA="           , LINEA
+					,"\n&&&&&& LINEA_EXTENDIDA=" , LINEA_EXTENDIDA
+					,"\n&&&&&& grupos="          , grupos
+					,"\n&&&&&& cdtipsit="        , cdtipsit
+					));
+			try
+			{
+				if(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento)
+				{
+					logger.debug(Utils.log("\n&&&&&& ejecutaValoresDefectoConcurrente [id=",timestamp,"] &&&&&&"));
+					cotizacionDAO.ejecutaValoresDefectoConcurrente(
+							cdunieco
+							,cdramo
+							,"W" //estado
+							,nmpoliza
+							,"0" //nmsuplem
+							,"0" //nmsituac
+							,"1" //tipotari
+							,cdperpag
+							);
+				}
+				
+				if((!clasif.equals(LINEA))||LINEA_EXTENDIDA.equals("N"))
+				{
+					for(Map<String,Object>grupoIte:grupos)
+					{
+						String grupoIteCdgrupo                     = (String)grupoIte.get("letra");
+						List<Map<String,String>>grupoIteCoberturas = (List<Map<String,String>>)grupoIte.get("tvalogars");
+						for(Map<String,String>grupoIteCoberturaIte:grupoIteCoberturas)
+						{
+							String grupoIteCoberturaIteCdgarant = grupoIteCoberturaIte.get("cdgarant");
+							boolean grupoIteCoberturaIteAmparada = StringUtils.isNotBlank(grupoIteCoberturaIte.get("amparada"))
+									&&grupoIteCoberturaIte.get("amparada").equalsIgnoreCase("S");
+							if(grupoIteCoberturaIteAmparada)
+							{
+								logger.debug(Utils.log("\n&&&&&& movimientoMpoligarGrupo [id=",timestamp,"] &&&&&&"));
+								cotizacionDAO.movimientoMpoligarGrupo(
+										cdunieco
+										,cdramo
+										,"W"      //estado
+										,nmpoliza
+										,"0"      //nmsuplem
+										,cdtipsit
+										,grupoIteCdgrupo
+										,grupoIteCoberturaIteCdgarant
+										,"V"      //status
+										,"001"    //cdmoneda
+										,Constantes.INSERT_MODE, null
+										);
+								boolean grupoIteCoberturaIteTieneAtrib          = false;
+								Map<String,String>grupoIteCoberturaIteTvalogars = new HashMap<String,String>();
+								for(Entry<String,String>grupoIteCoberturaIteAtribIte:grupoIteCoberturaIte.entrySet())
+								{
+									String grupoIteCoberturaIteAtribIteKey=grupoIteCoberturaIteAtribIte.getKey();
+									if(StringUtils.isNotBlank(grupoIteCoberturaIteAtribIteKey)
+											&&grupoIteCoberturaIteAtribIteKey.length()>"parametros.pv_otvalor".length()
+											&&grupoIteCoberturaIteAtribIteKey.substring(0, "parametros.pv_otvalor".length()).equalsIgnoreCase("parametros.pv_otvalor")
+											&&grupoIteCoberturaIteAtribIte.getValue()!=null
+											)
+									{
+										grupoIteCoberturaIteTieneAtrib=true;
+										grupoIteCoberturaIteTvalogars.put(
+												grupoIteCoberturaIteAtribIteKey.substring("parametros.pv_".length()
+														,grupoIteCoberturaIteAtribIteKey.length()),String.valueOf(grupoIteCoberturaIteAtribIte.getValue()));
+									}
+								}
+								if(grupoIteCoberturaIteTieneAtrib)
+								{
+									logger.debug(Utils.log("\n&&&&&& movimientoTvalogarGrupoCompleto [id=",timestamp,"] &&&&&&"));
+									cotizacionDAO.movimientoTvalogarGrupoCompleto(
+											cdunieco
+											,cdramo
+											,"W"      //estado
+											,nmpoliza
+											,"0"      //nmsuplem
+											,cdtipsit
+											,grupoIteCdgrupo
+											,grupoIteCoberturaIteCdgarant
+											,"V"      //status
+											,grupoIteCoberturaIteTvalogars
+											);
+								}
+							}
+						}
+					}
+				}
+				
+				logger.debug(Utils.log("\n&&&&&& ejecutaTarificacionConcurrente [id=",timestamp,"] &&&&&&"));
+				cotizacionDAO.ejecutaTarificacionConcurrente(
+						cdunieco
+						,cdramo
+						,"W" //estado
+						,nmpoliza
+						,"0" //nmsuplem
+						,"0" //nmsituac
+						,"1" //tipotari
+						,cdperpag
+						);
+			}
+			catch(Exception ex)
+			{
+				logger.error(Utils.log("Error en el proceso colectivo asincrono 2 [id=",timestamp,"]"),ex);
+			}
+			
+			logger.debug(Utils.log(
+					 "\n&&&&&& [id=",timestamp,"]"
+					,"\n&&&&&& procesoColectivoAsincrono2.END &&&&&&"
+					,"\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
 					));
 		}
 	}
