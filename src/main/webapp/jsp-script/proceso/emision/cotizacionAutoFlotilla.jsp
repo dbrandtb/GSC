@@ -342,7 +342,7 @@ Ext.onReady(function()
 {
     _grabarEvento('COTIZACION','ACCCOTIZA',null,null,_p30_smap1.cdramo);
 
-    Ext.Ajax.timeout = 30*60*1000;
+    Ext.Ajax.timeout = 60*60*1000;
 
     ////// modelos //////
     Ext.define('_p30_modelo',
