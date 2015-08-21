@@ -164,6 +164,62 @@ public class ServiciosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	@Action(value   = "recibosSubsecuentes",
+		    results = {
+	        @Result(name="input"   , location="/jsp-script/servicios/input.jsp"),
+	        @Result(name="success" , location="/jsp-script/servicios/respuesta.jsp")
+	    })
+	public String recibosSubsecuentes()
+	{
+		logger.debug(Utils.log(
+				 "\n#################################"
+				,"\n###### recibosSubsecuentes ######"
+				));
+		
+		try
+		{
+			serviciosManager.recibosSubsecuentes(getText("ruta.documentos.temporal"),false);
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### recibosSubsecuentes ######"
+				,"\n#################################"
+				));
+		return SUCCESS;
+	}
+	
+	@Action(value   = "recibosSubsecuentesTest",
+		    results = {
+	        @Result(name="input"   , location="/jsp-script/servicios/input.jsp"),
+	        @Result(name="success" , location="/jsp-script/servicios/respuesta.jsp")
+	    })
+	public String recibosSubsecuentesTest()
+	{
+		logger.debug(Utils.log(
+				 "\n#####################################"
+				,"\n###### recibosSubsecuentesTest ######"
+				));
+		
+		try
+		{
+			serviciosManager.recibosSubsecuentes(getText("ruta.documentos.temporal"),true);
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### recibosSubsecuentesTest ######"
+				,"\n#####################################"
+				));
+		return SUCCESS;
+	}
+	
 	/*
 	 * Getters y setters
 	 */

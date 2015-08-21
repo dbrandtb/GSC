@@ -588,4 +588,9 @@ public interface EndososDAO
 			,String nsuplogi
 			,String nmsuplem
 			)throws Exception;
+	
+	public List<Map<String,String>> recuperarCorreoElectronicoSucursal(
+			String codigo
+			,String cdunieco
+			)throws Exception;
 }
