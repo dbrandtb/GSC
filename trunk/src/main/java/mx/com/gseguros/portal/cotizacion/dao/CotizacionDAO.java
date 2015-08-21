@@ -495,4 +495,44 @@ public interface CotizacionDAO {
 			,String cdedo
 			,String cdmunici
 			)throws Exception;
+	
+	
+	public void movimientoMsupleme(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			Date feinival,
+			String hhinival,
+			Date fefinval,
+			String hhfinval,
+			String swanula,
+			String nsuplogi,
+			String nsupusua,
+			String nsupsess,
+			String fesessio,
+			String swconfir,
+			String nmrenova,
+			String nsuplori,
+			String cdorddoc,
+			String swpolfro,
+			String pocofron,
+			String swpoldec,
+			String tippodec,
+			String accion) throws Exception;
+	
+	
+	public void procesaIncisoDefinitivo(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsituac,
+			String cdelement,
+			String cdperson,
+			String cdasegur,
+			String cdplan,
+			String cdperpag) throws Exception;
+	
 }
