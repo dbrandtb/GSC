@@ -23,4 +23,9 @@ public interface ServiciosManager
 			,String cdusuariDes
 			,String cdsisrolDes
 			)throws Exception;
+	
+	public void recibosSubsecuentes(
+			String rutaDocumentosTemporal
+			,boolean test
+			) throws Exception;
 }

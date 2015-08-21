@@ -611,6 +611,11 @@ public class Utils
     	return renderFechas.parse(fecha);
     }
     
+    public static String format(Date fecha) throws Exception
+    {
+    	return renderFechas.format(fecha);
+    }
+    
     public static String[][] convierteMapasEnArreglos(List<Map<String,String>>lista)
     {
     	String[][] arreglos = new String[lista.size()][];

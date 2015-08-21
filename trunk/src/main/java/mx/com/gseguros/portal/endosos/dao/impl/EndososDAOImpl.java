@@ -4461,4 +4461,37 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> recuperarCorreoElectronicoSucursal(
+			String codigo
+			,String cdunieco
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("codigo"   , codigo);
+		params.put("cdunieco" , cdunieco);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarCorreoElectronicoSucursal(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_OBTIENE_EMAIL", params, lista);
+		return lista;
+	}
+	
+	protected class RecuperarCorreoElectronicoSucursal extends StoredProcedure
+	{
+		protected RecuperarCorreoElectronicoSucursal(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_OBTIENE_EMAIL");
+			declareParameter(new SqlParameter("codigo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"DESCRIPL"})));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
