@@ -5976,4 +5976,132 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	
+	@Override
+	public void movimientoMsupleme(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			Date feinival,
+			String hhinival,
+			Date fefinval,
+			String hhfinval,
+			String swanula,
+			String nsuplogi,
+			String nsupusua,
+			String nsupsess,
+			String fesessio,
+			String swconfir,
+			String nmrenova,
+			String nsuplori,
+			String cdorddoc,
+			String swpolfro,
+			String pocofron,
+			String swpoldec,
+			String tippodec,
+			String accion) throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i"  , cdramo);
+		params.put("pv_estado_i"  , estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_feinival_i", feinival);
+		params.put("pv_hhinival_i", hhinival);
+		params.put("pv_fefinval_i", fefinval);
+		params.put("pv_hhfinval_i", hhfinval);
+		params.put("pv_swanula_i" , swanula);
+		params.put("pv_nsuplogi_i", nsuplogi);
+		params.put("pv_nsupusua_i", nsupusua);
+		params.put("pv_nsupsess_i", nsupsess);
+		params.put("pv_fesessio_i", fesessio);
+		params.put("pv_swconfir_i", swconfir);
+		params.put("pv_nmrenova_i", nmrenova);
+		params.put("pv_nsuplori_i", nsuplori);
+		params.put("pv_cdorddoc_i", cdorddoc);
+		params.put("pv_swpolfro_i", swpolfro);
+		params.put("pv_pocofron_i", pocofron);
+		params.put("pv_swpoldec_i", swpoldec);
+		params.put("pv_tippodec_i", tippodec);
+		params.put("pv_accion_i"  , accion);
+		ejecutaSP(new MovimientoMsupleme(getDataSource()),params);
+	}
+	
+	protected class MovimientoMsupleme extends StoredProcedure {
+		protected MovimientoMsupleme(DataSource dataSource) {
+			super(dataSource, "PKG_SATELITES.P_MOV_MSUPLEME");
+			
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feinival_i", OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_hhinival_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fefinval_i", OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_hhfinval_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swanula_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nsuplogi_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nsupusua_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nsupsess_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fesessio_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swconfir_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmrenova_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nsuplori_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdorddoc_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swpolfro_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_pocofron_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swpoldec_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tippodec_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			
+			compile();
+		}
+	}
+    
+	
+	@Override
+	public void procesaIncisoDefinitivo(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsituac,
+			String cdelement, String cdperson, String cdasegur, String cdplan, String cdperpag) throws Exception {
+		
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("pv_cdunieco", cdunieco);
+		params.put("pv_cdramo"  , cdramo);
+		params.put("pv_estado"  , estado);
+		params.put("pv_nmpoliza", nmpoliza);
+		params.put("pv_nmsituac", nmsituac);
+		params.put("pv_cdelement",cdelement);
+		params.put("pv_cdperson", cdperson);
+		params.put("pv_cdasegur", cdasegur);
+		params.put("pv_cdplan",   cdplan);
+		params.put("pv_cdperpag", cdperpag);
+		ejecutaSP(new ProcesaIncisoDefinitivoSP(getDataSource()),params);
+	}
+	
+	protected class ProcesaIncisoDefinitivoSP extends StoredProcedure {
+    	protected ProcesaIncisoDefinitivoSP(DataSource dataSource) {
+            super(dataSource,"PKG_COTIZA.P_PROC_INCISO_DEF");
+            declareParameter(new SqlParameter("pv_cdunieco",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsituac",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdelement", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdperson",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdasegur",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdplan",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdperpag",  OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",	OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",	OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+	
 }

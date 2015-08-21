@@ -605,4 +605,29 @@ public interface CotizacionManager
 			,List<Map<String,Object>> olist1
 			,String cdtipsit
 			);
+	
+	
+	public void procesoComprarCotizacion(
+			String comprarCdunieco,
+			String comprarCdramo,
+			String comprarNmpoliza,
+			String cdtipsit,
+			String fechaInicio,
+			String fechaFin,
+			String ntramite,
+			String cdagenteExt,
+			String comprarCdciaaguradora,
+			String comprarCdplan,
+			String comprarCdperpag,
+			String cdusuari,
+			String cdsisrol,
+			String cdelemen,
+			boolean esFlotilla,
+			String tipoflot,
+			String cdpersonCli,
+			String cdideperCli,
+			String nombreReporteCotizacion,
+			String nombreReporteCotizacionFlot) throws Exception;
+	
+	
 }
