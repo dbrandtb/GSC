@@ -1859,6 +1859,73 @@ Ext.onReady(function()
                 errorComunicacion();
             }
         });
+        
+        Ext.Ajax.request(
+        {
+            url     : _p25_urlRecuperacionSimple
+            ,params :
+            {
+                'smap1.procedimiento' : 'RECUPERAR_CONTEO_BLOQUEO'
+                ,'smap1.cdunieco'     : _p25_smap1.cdunieco
+                ,'smap1.cdramo'       : _p25_smap1.cdramo
+                ,'smap1.estado'       : _p25_smap1.estado
+                ,'smap1.nmpoliza'     : _p25_smap1.nmpoliza
+            }
+            ,success : function(response)
+            {
+                var ck = 'Decodificando conteo de bloqueos';
+                try
+                {
+                    var json=Ext.decode(response.responseText);
+                    debug('### conteo bloqueo:',json);
+                    if(json.exito)
+                    {
+                        if(Number(json.smap1.CONTEO)>0)
+                        {
+                            centrarVentanaInterna(Ext.create('Ext.window.Window',
+                            {
+                                title     : 'Cotizaci\u00F3n en proceso...'
+                                ,width    : 400
+                                ,height   : 150
+                                ,modal    : true
+                                ,closable : false
+                                ,html     : '<div style="padding:5px;border:0px solid black;">'
+                                            +'Su cotizaci\u00F3n a\u00FAn se encuentra generando tarifa ('
+                                            +json.smap1.CONTEO
+                                            +').<br/>Intente m\u00E1s tarde</div>'
+                                ,buttonAlign : 'center'
+                                ,buttons     :
+                                [
+                                    {
+                                        text     : 'Regresar'
+                                        ,icon    : '${icons}arrow_undo.png'
+                                        ,handler : function(){ history.back(); }
+                                    }
+                                    ,{
+                                        text     : 'Recargar'
+                                        ,icon    : '${icons}arrow_refresh.png'
+                                        ,handler : function(me){ me.up('window').setLoading(true); location.reload(); }
+                                    }
+                                ]
+                            }).show());
+                        }
+                    }
+                    else
+                    {
+                        mensajeError(json.respuesta);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                me.setLoading(false);
+                errorComunicacion(null,'Error al contar bloqueos');
+            }
+        });
     }
     
     _fieldByName('nmnumero').regex = /^[A-Za-z0-9-]*$/;
