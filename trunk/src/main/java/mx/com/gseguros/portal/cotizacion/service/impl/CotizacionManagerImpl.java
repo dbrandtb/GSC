@@ -6353,160 +6353,98 @@ public class CotizacionManagerImpl implements CotizacionManager
     
     
     @Override
-    public void procesoComprarCotizacion(
-    		String comprarCdunieco,
-			String comprarCdramo,
-			String comprarNmpoliza,
-			String cdtipsit,
-			String fechaInicio,
-			String fechaFin,
-			String ntramite,
-			String cdagenteExt,
-			String comprarCdciaaguradora,
-			String comprarCdplan,
-			String comprarCdperpag,
-			String cdusuari,
-			String cdsisrol,
-			String cdelemen,
-			boolean esFlotilla,
-			String tipoflot,
-			String cdpersonCli,
-			String cdideperCli,
-			String nombreReporteCotizacion,
-			String nombreReporteCotizacionFlot) throws Exception {
+    public String procesoComprarCotizacion(String cdunieco, String cdramo, String nmpoliza, String cdtipsit,
+			String fechaInicio, String fechaFin, String ntramite, String cdagenteExt, String cdciaaguradora,
+			String cdplan, String cdperpag, String cdusuari, String cdsisrol, String cdelemen,
+			boolean esFlotilla, String tipoflot, String cdpersonCli, String cdideperCli,
+			String nombreReporteCotizacion, String nombreReporteCotizacionFlot) throws Exception {
     	
     	String paso = null;
     	
-    	//datos de usuario
-    	paso = "Recuperando datos de usuario";
-    	DatosUsuario userData = cotizacionDAO.cargarInformacionUsuario(cdusuari, cdtipsit);
-    	String cdperson              = userData.getCdperson();
-		String cdagente              = userData.getCdagente();
-		String nmcuadro              = userData.getNmcuadro();
-    	
-    	
-		//datos de agente
-		paso = "Recuperando datos de agente";
-		
-		Map<String,String> datosAgenteExterno = cotizacionDAO.obtenerDatosAgente(cdagenteExt, comprarCdramo);
-		cdagente = datosAgenteExterno.get("CDAGENTE");
-		nmcuadro = datosAgenteExterno.get("NMCUADRO");
-    	
-    	//detalle suplemento
-		paso = "Insertando suplemento";
-		
-        Calendar calendarHoy = Calendar.getInstance();
-        cotizacionDAO.movimientoTdescsup(
-        		comprarCdunieco
-    			,comprarCdramo
-    			,"W"
-    			,comprarNmpoliza
-    			,"0"
-    			,"1"
-    			,calendarHoy.getTime()
-    			,null
-    			,calendarHoy.getTime()
-    			,null
-    			,null
-    			,cdusuari
-    			,null
-    			,null
-    			,cdperson
-    			,Constantes.INSERT_MODE);
-        
-    	
-    	//maestro historico poliza
-        paso = "Insertando histórico de póliza";
-        
-        SimpleDateFormat renderHora = new SimpleDateFormat("HH:mm");
-        cotizacionDAO.movimientoMsupleme(
-        		comprarCdunieco, 
-        		comprarCdramo, 
-        		"W", 
-        		comprarNmpoliza, 
-        		"0", 
-        		renderFechas.parse(fechaInicio), 
-        		renderHora.format(calendarHoy.getTime()), 
-        		renderFechas.parse(fechaFin), 
-        		renderHora.format(calendarHoy.getTime()), 
-        		null, 
-        		"0", 
-        		null, 
-        		null, 
-        		null, 
-        		null, 
-        		null, 
-        		null, 
-        		null, 
-        		null, 
-        		null, 
-        		null, 
-        		null, 
-        		"I");
-    	
-    	//mpoliage
-        paso = "Ligando la poliza al agente";
-    		String cesionComision = "0";
-    		Map<String,String> tipoSituacion = cotizacionDAO.cargarTipoSituacion(comprarCdramo, cdtipsit);
+    	try {
     		
-    		if(tipoSituacion.get("SITUACION").equals("AUTO")) {
-    			cesionComision = cotizacionDAO.cargarPorcentajeCesionComisionAutos(comprarCdunieco,comprarCdramo,"W",comprarNmpoliza);
+        	//datos de usuario
+        	paso = "Recuperando datos de usuario";
+        	DatosUsuario userData = cotizacionDAO.cargarInformacionUsuario(cdusuari, cdtipsit);
+        	String cdperson              = userData.getCdperson();
+    		String cdagente              = userData.getCdagente();
+    		String nmcuadro              = userData.getNmcuadro();
+        	
+    		//datos de agente
+    		paso = "Recuperando datos de agente";
+    		Map<String,String> datosAgenteExterno = cotizacionDAO.obtenerDatosAgente(cdagenteExt, cdramo);
+    		cdagente = datosAgenteExterno.get("CDAGENTE");
+    		nmcuadro = datosAgenteExterno.get("NMCUADRO");
+        	
+        	//detalle suplemento
+    		paso = "Insertando suplemento";
+            Calendar calendarHoy = Calendar.getInstance();
+            
+            cotizacionDAO.movimientoTdescsup(cdunieco, cdramo, "W", nmpoliza
+        			,"0", "1", calendarHoy.getTime(), null,calendarHoy.getTime(), 
+        			null, null, cdusuari, null, null,cdperson, Constantes.INSERT_MODE);
+            
+        	
+        	//maestro historico poliza
+            paso = "Insertando histórico de póliza";
+            
+            SimpleDateFormat renderHora = new SimpleDateFormat("HH:mm");
+            cotizacionDAO.movimientoMsupleme(
+            		cdunieco, cdramo, "W", nmpoliza, "0", 
+            		renderFechas.parse(fechaInicio), renderHora.format(calendarHoy.getTime()), 
+            		renderFechas.parse(fechaFin), renderHora.format(calendarHoy.getTime()), 
+            		null, "0", null, null, null, null, null, null, null, null, null, null, null, "I");
+        	
+        	//mpoliage
+            paso = "Ligando la poliza al agente";
+        		String cesionComision = "0";
+        		Map<String,String> tipoSituacion = cotizacionDAO.cargarTipoSituacion(cdramo, cdtipsit);
+        		
+        		if(tipoSituacion.get("SITUACION").equals("AUTO")) {
+        			cesionComision = cotizacionDAO.cargarPorcentajeCesionComisionAutos(cdunieco,cdramo,"W",nmpoliza);
+        		}
+                
+                cotizacionDAO.movimientoMpoliage(cdunieco, cdramo, "W", nmpoliza, 
+            			cdagente, "0", "V", "1", cesionComision, nmcuadro, null, 
+            			"I", StringUtils.isNotBlank(ntramite) ? ntramite : null, "100");
+        	
+            // Actualizando la cesion de comision:
+            paso = "Actualizando la cesion de comision";
+            try {
+            	cotizacionDAO.actualizaCesionComision(cdunieco, cdramo, "W", nmpoliza);
+                logger.info("El procedimiento de actualizacion de cesion de comision fue invocado exitosamente");
+            } catch(Exception ex) {
+    			logger.warn(Utils.join("Hubo un error al actualizar cesion de comision:", ExceptionUtils.getStackTrace(ex)));
     		}
             
-            cotizacionDAO.movimientoMpoliage(
-            		comprarCdunieco
-        			,comprarCdramo
-        			,"W"
-        			,comprarNmpoliza
-        			,cdagente
-        			,"0"
-        			,"V"
-        			,"1"
-        			,cesionComision
-        			,nmcuadro
-        			,null
-        			,"I"
-        			,StringUtils.isNotBlank(ntramite) ? ntramite : null
-        			,"100");
-    	
-        paso = "Actualizando la cesion de comision";
-        
-        try {
-        	cotizacionDAO.actualizaCesionComision(comprarCdunieco, comprarCdramo, "W", comprarNmpoliza);
-            logger.info("El procedimiento de actualizacion de cesion de comision fue invocado exitosamente");
-        } catch(Exception ex) {
-			logger.warn(Utils.join("Hubo un error al actualizar cesion de comision:", ExceptionUtils.getStackTrace(ex)));
-		}
-        
-    	
-    	//comprar
-        paso = "Generando poliza - Insertando inciso definitivo (comprar cotizacion)";
-        cotizacionDAO.procesaIncisoDefinitivo(comprarCdunieco, comprarCdramo, "W", comprarNmpoliza, "0", 
-        		cdelemen, cdperson, comprarCdciaaguradora, comprarCdplan, comprarCdperpag);
-    	
-    	
-        //acutalizar/generar tramite
-        paso = "Actualizando y generando trámite " + ntramite;
-        
-		//actualizar tramite
-        
-		if(StringUtils.isNotBlank(ntramite)) {
-			
-			paso = "Actualizando el trámite";
-			
-			mesaControlDAO.actualizarNmsoliciTramite(ntramite, comprarNmpoliza);
-        	logger.debug("se inserta detalle nuevo");
         	
-        	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null,
-        			"Se guard&oacute; una cotizaci&oacute;n nueva para el tr&aacute;mite", cdusuari, null, cdsisrol);
-    		
-		} else { //se genera un tramite
-			
-			paso = "Generando el trámite";
-			
-            	ntramite = mesaControlDAO.movimientoMesaControl(comprarCdunieco, comprarCdramo,"W", "0", "0", 
+        	//comprar
+            paso = "Generando poliza - Insertando inciso definitivo (comprar cotizacion)";
+            cotizacionDAO.procesaIncisoDefinitivo(cdunieco, cdramo, "W", nmpoliza, "0", 
+            		cdelemen, cdperson, cdciaaguradora, cdplan, cdperpag);
+        	
+            //acutalizar/generar tramite
+            paso = "Actualizando y generando trámite " + ntramite;
+            
+    		//actualizar tramite
+            
+    		if(StringUtils.isNotBlank(ntramite)) {
+    			
+    			paso = "Actualizando el trámite";
+    			
+    			mesaControlDAO.actualizarNmsoliciTramite(ntramite, nmpoliza);
+            	logger.debug("se inserta detalle nuevo");
+            	
+            	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null,
+            			"Se guard&oacute; una cotizaci&oacute;n nueva para el tr&aacute;mite", cdusuari, null, cdsisrol);
+        		
+    		} else { //se genera un tramite
+    			
+    			paso = "Generando el trámite";
+    			
+            	ntramite = mesaControlDAO.movimientoMesaControl(cdunieco, cdramo,"W", "0", "0", 
             			null, null, "1", new Date(), cdagente, null, "", new Date(), "2",
-            			"", comprarNmpoliza, cdtipsit, null, cdusuari, cdsisrol);
+            			"", nmpoliza, cdtipsit, null, cdusuari, cdsisrol);
             	
             	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null
             			,"Se guard&oacute; un nuevo tr&aacute;mite en mesa de control desde cotizaci&oacute;n de agente"
@@ -6515,227 +6453,203 @@ public class CotizacionManagerImpl implements CotizacionManager
             	try {
 	            	cotizacionDAO.grabarEvento(new StringBuilder("\nCotizar tramite grupo"), 
 	            			"EMISION", "COMTRAMITMC", new Date(), cdusuari, cdsisrol, ntramite, 
-	            			comprarCdunieco, comprarCdramo, "W", comprarNmpoliza, comprarNmpoliza, 
+	            			cdunieco, cdramo, "W", nmpoliza, nmpoliza, 
 	            			cdagente, null, null, null);
 	            } catch(Exception ex) {
-	            	logger.error("Error al grabar evento, sin impacto",ex);
+	            	logger.error("Error al grabar evento, sin impacto funcional", ex);
 	            }
-        }
-    	
-    	//generar cotizacion
-    	if(!comprarCdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo()) && (!esFlotilla||"P".equals(tipoflot))) {
-    		
-    		paso = "Generando la cotización";
-    		
-            File carpeta=new File(rutaDocumentosPoliza+"/"+ntramite);
-            if(!carpeta.exists()) {
-            	if(!carpeta.mkdir()) {
-            		throw new Exception("Error al crear la carpeta");
-            	}
             }
-            
-            StringBuilder urlReporteCotizacion=new StringBuilder()
-                   .append(rutaServidorReports)
-                   .append("?p_unieco=")  .append(comprarCdunieco)
-                   .append("&p_ramo=")    .append(comprarCdramo)
-                   .append("&p_subramo=") .append(cdtipsit)
-                   .append("&p_estado=")  .append("'W'")
-                   .append("&p_poliza=")  .append(comprarNmpoliza)
-                   .append("&p_suplem=")  .append("0")
-                   .append("&p_cdplan=")  .append(comprarCdplan)
-                   .append("&p_plan=")    .append(comprarCdplan)
-                   .append("&p_perpag=")  .append(comprarCdperpag)
-                   .append("&p_ntramite=").append(ntramite)
-                   .append("&p_cdusuari=").append(cdusuari)
-                   .append("&userid=")    .append(passServidorReports);
-            
-            if(!esFlotilla) {
-            	urlReporteCotizacion.append("&report=").append(nombreReporteCotizacion);
-            } else {
-            	urlReporteCotizacion.append("&report=").append(nombreReporteCotizacionFlot);
+        	
+        	//generar cotizacion
+        	if(!cdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo()) && (!esFlotilla||"P".equals(tipoflot))) {
+        		
+        		paso = "Generando la cotización";
+        		
+                File carpeta=new File(rutaDocumentosPoliza+"/"+ntramite);
+                if(!carpeta.exists()) {
+                	if(!carpeta.mkdir()) {
+                		throw new Exception("Error al crear la carpeta");
+                	}
+                }
+                
+                StringBuilder urlReporteCotizacion=new StringBuilder()
+                       .append(rutaServidorReports)
+                       .append("?p_unieco=")  .append(cdunieco)
+                       .append("&p_ramo=")    .append(cdramo)
+                       .append("&p_subramo=") .append(cdtipsit)
+                       .append("&p_estado=")  .append("'W'")
+                       .append("&p_poliza=")  .append(nmpoliza)
+                       .append("&p_suplem=")  .append("0")
+                       .append("&p_cdplan=")  .append(cdplan)
+                       .append("&p_plan=")    .append(cdplan)
+                       .append("&p_perpag=")  .append(cdperpag)
+                       .append("&p_ntramite=").append(ntramite)
+                       .append("&p_cdusuari=").append(cdusuari)
+                       .append("&userid=")    .append(passServidorReports);
+                
+                if(!esFlotilla) {
+                	urlReporteCotizacion.append("&report=").append(nombreReporteCotizacion);
+                } else {
+                	urlReporteCotizacion.append("&report=").append(nombreReporteCotizacionFlot);
+                }
+                
+                urlReporteCotizacion.append("&destype=cache").append("&desformat=PDF").append("&ACCESSIBLE=YES").append("&paramform=no");
+                
+                String nombreArchivoCotizacion="cotizacion.pdf";
+                String pathArchivoCotizacion=new StringBuilder()
+            					.append(rutaDocumentosPoliza)
+            					.append("/").append(ntramite)
+            					.append("/").append(nombreArchivoCotizacion)
+            					.toString();
+                HttpUtil.generaArchivo(urlReporteCotizacion.toString(), pathArchivoCotizacion);
+                
+                mesaControlDAO.guardarDocumento(cdunieco, cdramo, "W",
+            			"0", "0", new Date(), nombreArchivoCotizacion,
+            			"COTIZACI&Oacute;N", nmpoliza, ntramite, "1",
+            			null, null, "1");
             }
-            
-            urlReporteCotizacion.append("&destype=cache").append("&desformat=PDF").append("&ACCESSIBLE=YES").append("&paramform=no");
-            
-            String nombreArchivoCotizacion="cotizacion.pdf";
-            String pathArchivoCotizacion=new StringBuilder()
-        					.append(rutaDocumentosPoliza)
-        					.append("/").append(ntramite)
-        					.append("/").append(nombreArchivoCotizacion)
-        					.toString();
-            HttpUtil.generaArchivo(urlReporteCotizacion.toString(), pathArchivoCotizacion);
-            
-            mesaControlDAO.guardarDocumento(comprarCdunieco, comprarCdramo, "W",
-        			"0", "0", new Date(), nombreArchivoCotizacion,
-        			"COTIZACI&Oacute;N", comprarNmpoliza, ntramite, "1",
-        			null, null, "1");
-        }
-    	
-		if(StringUtils.isNotBlank(cdpersonCli)){
-			
-			paso = "Guardando el cliente";
-			
-			cotizacionDAO.borrarMpoliperTodos(comprarCdunieco, comprarCdramo, "W", comprarNmpoliza);
-			
-			cotizacionDAO.movimientoMpoliper(comprarCdunieco, comprarCdramo, "W", comprarNmpoliza,
-					"0", "1", cdpersonCli, "0", "V", "1", null, "I", "S");
-			
-		} else if(StringUtils.isNotBlank(cdideperCli)){
-			
-			paso = "Guardando el cliente en Base de Datos del WS";
-			
-			logger.debug("Persona proveniente de WS, Valor de cdperson en blanco, valor de cdIdeper: " + cdideperCli);
-			
-			/**
-	    	 * PARA GUARDAR CLIENTE EN BASE DE DATOS DEL WS 
-	    	 */
-	    	if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(comprarCdramo) 
-		    		|| Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(comprarCdramo)
-		    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(comprarCdramo)) {
-	    		
-		    	String cdtipsitGS = consultasDAO.obtieneSubramoGS(comprarCdramo, cdtipsit);
-		    	
-		    	ClienteGeneral clienteGeneral = new ClienteGeneral();
-		    	//clienteGeneral.setRfcCli((String)aseg.get("cdrfc"));
-		    	clienteGeneral.setRamoCli(Integer.parseInt(cdtipsitGS));
-		    	clienteGeneral.setNumeroExterno(cdideperCli);
-		    	
-		    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
-		    	
-		    	if(clientesRes !=null && ArrayUtils.isNotEmpty(clientesRes.getClientesGeneral())){
-		    		ClienteGeneral cli = null;
-		    		
-		    		if(clientesRes.getClientesGeneral().length == 1){
-		    			logger.debug("Cliente unico encontrado en WS, guardando informacion del WS...");
-		    			cli = clientesRes.getClientesGeneral()[0];
-		    		}else {
-		    			logger.error("Error, No se pudo obtener el cliente del WS. Se ha encontrado mas de Un elemento!");
-		    		}
-		    		
-		    		if(cli != null){
-		    			
-		    			//IR POR NUEVO CDPERSON:
-			    		String newCdPerson = personasDAO.obtieneCdperson();
-			    		
-			    		logger.debug("Insertando nueva persona, cdperson generado: " + newCdPerson);
-			    		
-			    		String apellidoPat = "";
-				    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
-				    		apellidoPat = cli.getApellidopCli();
-				    	}
-				    	
-				    	String apellidoMat = "";
-				    	if(StringUtils.isNotBlank(cli.getApellidomCli()) && !cli.getApellidomCli().trim().equalsIgnoreCase("null")){
-				    		apellidoMat = cli.getApellidomCli();
-				    	}
-				    	
-			    		Calendar calendar =  Calendar.getInstance();
-			    		
-			    		String sexo = "H"; //Hombre
-				    	if(cli.getSexoCli() > 0){
-				    		if(cli.getSexoCli() == 2) sexo = "M";
-				    	}
-				    	
-				    	String tipoPersona = "F"; //Fisica
-				    	if(cli.getFismorCli() > 0){
-				    		if(cli.getFismorCli() == 2){
-				    			tipoPersona = "M";
-				    		}else if(cli.getFismorCli() == 3){
-				    			tipoPersona = "S";
-				    		}
-				    	}
-				    	/*
-				    	String nacionalidad = "001";// Nacional
-				    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
-				    		nacionalidad = "002";
-				    	}
-				    	*/
-				    	
-				    	if(cli.getFecnacCli()!= null){
-				    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
-				    	}
-				    	
-				    	
-				    	Calendar calendarIngreso =  Calendar.getInstance();
-				    	if(cli.getFecaltaCli() != null){
-				    		calendarIngreso.set(cli.getFecaltaCli().get(Calendar.YEAR), cli.getFecaltaCli().get(Calendar.MONTH), cli.getFecaltaCli().get(Calendar.DAY_OF_MONTH));
-				    	}
-				    	
-				    	String nacionalidad = "001";// Nacional
-				    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
-				    		nacionalidad = "002";
-				    	}
-				    	
-			    		//GUARDAR MPERSONA
-						personasDAO.movimientosMpersona(
-								newCdPerson,
-								"1",
-								cli.getNumeroExterno(),
-								(cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc(),
-								"1",
-								tipoPersona,
-								sexo,
-								calendar.getTime(),
-								cli.getRfcCli(),
-								cli.getMailCli(),
-								null,
-								apellidoPat,
-								apellidoMat,
-								calendarIngreso.getTime(),
-								nacionalidad,
-								cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli())),
-								null,
-								null,
-								null,
-								null,
-								null,
-								null,
-								String.valueOf(cli.getSucursalCli()),
-								"I");
-			    		
-			    		//GUARDAR DOMICILIO
-			    		String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
-		    			if(edoAdosPos2.length() ==  1){
-		    				edoAdosPos2 = "0"+edoAdosPos2;
-		    			}
-		    			
-		    			personasDAO.movimientosMdomicil(
-		    					newCdPerson
-		    					,"1"
-		    					,cli.getCalleCli() +" "+ cli.getNumeroCli()
-		    					,cli.getTelefonoCli()
-		    					,cli.getCodposCli()
-		    					,cli.getCodposCli()+edoAdosPos2
-		    					,null
-		    					,null
-		    					,cli.getNumeroCli()
-		    					,null
-		    					,"I");
-		    			
-		    			personasDAO.insertaTvaloper("0", "0", null, "0", null,
-		    					null, null, "1", newCdPerson, null, null,
-		    					cli.getCveEle(), cli.getPasaporteCli(), null, null, null,
-		    					null, null, cli.getOrirecCli(), null, null,
-		    					cli.getNacCli(), null, null, null, null,
-		    					null, null, null, null, (cli.getOcuPro() > 0) ? Integer.toString(cli.getOcuPro()) : "0",
-		    					null, null, null, null, cli.getCurpCli(),
-		    					null, null, null, null, null,
-		    					null, null, null, null, null,
-		    					null, null, cli.getTelefonoCli(), cli.getMailCli(), null,
-		    					null, null, null, null, null,
-		    					null, null, null, null, null);
-	    				
-	    				cotizacionDAO.borrarMpoliperTodos(comprarCdunieco, comprarCdramo, "W", comprarNmpoliza);
-						
-						cotizacionDAO.movimientoMpoliper(comprarCdunieco, comprarCdramo, "W", comprarNmpoliza,
-								"0", "1", newCdPerson, "0", "V", "1", null, "I",
-								"N");//N por ser de WS
-		    			
-		    		}
-		    	}
-	    	}
-			
+        	
+    		if(StringUtils.isNotBlank(cdpersonCli)){
+    			
+    			paso = "Guardando el cliente";
+    			
+    			cotizacionDAO.borrarMpoliperTodos(cdunieco, cdramo, "W", nmpoliza);
+    			
+    			cotizacionDAO.movimientoMpoliper(cdunieco, cdramo, "W", nmpoliza,
+    					"0", "1", cdpersonCli, "0", "V", "1", null, "I", "S");
+    			
+    		} else if(StringUtils.isNotBlank(cdideperCli)){
+    			
+    			paso = "Guardando el cliente en Base de Datos del WS";
+    			
+    			logger.debug("Persona proveniente de WS, Valor de cdperson en blanco, valor de cdIdeper: " + cdideperCli);
+    			
+    			/**
+    	    	 * PARA GUARDAR CLIENTE EN BASE DE DATOS DEL WS 
+    	    	 */
+    	    	if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo) 
+    		    		|| Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)
+    		    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)) {
+    	    		
+    		    	String cdtipsitGS = consultasDAO.obtieneSubramoGS(cdramo, cdtipsit);
+    		    	
+    		    	ClienteGeneral clienteGeneral = new ClienteGeneral();
+    		    	//clienteGeneral.setRfcCli((String)aseg.get("cdrfc"));
+    		    	clienteGeneral.setRamoCli(Integer.parseInt(cdtipsitGS));
+    		    	clienteGeneral.setNumeroExterno(cdideperCli);
+    		    	
+    		    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
+    		    	
+    		    	if(clientesRes !=null && ArrayUtils.isNotEmpty(clientesRes.getClientesGeneral())){
+    		    		ClienteGeneral cli = null;
+    		    		
+    		    		if(clientesRes.getClientesGeneral().length == 1){
+    		    			logger.debug("Cliente unico encontrado en WS, guardando informacion del WS...");
+    		    			cli = clientesRes.getClientesGeneral()[0];
+    		    		}else {
+    		    			logger.error("Error, No se pudo obtener el cliente del WS. Se ha encontrado mas de Un elemento!");
+    		    		}
+    		    		
+    		    		if(cli != null){
+    		    			
+    		    			//IR POR NUEVO CDPERSON:
+    			    		String newCdPerson = personasDAO.obtieneCdperson();
+    			    		
+    			    		logger.debug("Insertando nueva persona, cdperson generado: " + newCdPerson);
+    			    		
+    			    		String apellidoPat = "";
+    				    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
+    				    		apellidoPat = cli.getApellidopCli();
+    				    	}
+    				    	
+    				    	String apellidoMat = "";
+    				    	if(StringUtils.isNotBlank(cli.getApellidomCli()) && !cli.getApellidomCli().trim().equalsIgnoreCase("null")){
+    				    		apellidoMat = cli.getApellidomCli();
+    				    	}
+    				    	
+    			    		Calendar calendar =  Calendar.getInstance();
+    			    		
+    			    		String sexo = "H"; //Hombre
+    				    	if(cli.getSexoCli() > 0){
+    				    		if(cli.getSexoCli() == 2) sexo = "M";
+    				    	}
+    				    	
+    				    	String tipoPersona = "F"; //Fisica
+    				    	if(cli.getFismorCli() > 0){
+    				    		if(cli.getFismorCli() == 2){
+    				    			tipoPersona = "M";
+    				    		}else if(cli.getFismorCli() == 3){
+    				    			tipoPersona = "S";
+    				    		}
+    				    	}
+    				    	/*
+    				    	String nacionalidad = "001";// Nacional
+    				    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
+    				    		nacionalidad = "002";
+    				    	}
+    				    	*/
+    				    	
+    				    	if(cli.getFecnacCli()!= null){
+    				    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
+    				    	}
+    				    	
+    				    	
+    				    	Calendar calendarIngreso =  Calendar.getInstance();
+    				    	if(cli.getFecaltaCli() != null){
+    				    		calendarIngreso.set(cli.getFecaltaCli().get(Calendar.YEAR), cli.getFecaltaCli().get(Calendar.MONTH), cli.getFecaltaCli().get(Calendar.DAY_OF_MONTH));
+    				    	}
+    				    	
+    				    	String nacionalidad = "001";// Nacional
+    				    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
+    				    		nacionalidad = "002";
+    				    	}
+    				    	
+    			    		//GUARDAR MPERSONA
+    						personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(),
+    								(cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc(),
+    								"1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(),
+    								null, apellidoPat, apellidoMat, calendarIngreso.getTime(), nacionalidad,
+    								cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli())),
+    								null, null, null, null, null, null, String.valueOf(cli.getSucursalCli()),"I");
+    			    		
+    			    		//GUARDAR DOMICILIO
+    			    		String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
+    		    			if(edoAdosPos2.length() ==  1){
+    		    				edoAdosPos2 = "0"+edoAdosPos2;
+    		    			}
+    		    			
+    		    			personasDAO.movimientosMdomicil(newCdPerson,"1", cli.getCalleCli() +" "+ cli.getNumeroCli()
+    		    					,cli.getTelefonoCli(), cli.getCodposCli(), cli.getCodposCli()+edoAdosPos2
+    		    					,null, null, cli.getNumeroCli(), null, "I");
+    		    			
+    		    			personasDAO.insertaTvaloper("0", "0", null, "0", null,
+    		    					null, null, "1", newCdPerson, null, null,
+    		    					cli.getCveEle(), cli.getPasaporteCli(), null, null, null,
+    		    					null, null, cli.getOrirecCli(), null, null,
+    		    					cli.getNacCli(), null, null, null, null,
+    		    					null, null, null, null, (cli.getOcuPro() > 0) ? Integer.toString(cli.getOcuPro()) : "0",
+    		    					null, null, null, null, cli.getCurpCli(),
+    		    					null, null, null, null, null,
+    		    					null, null, null, null, null,
+    		    					null, null, cli.getTelefonoCli(), cli.getMailCli(), null,
+    		    					null, null, null, null, null,
+    		    					null, null, null, null, null);
+    	    				
+    	    				cotizacionDAO.borrarMpoliperTodos(cdunieco, cdramo, "W", nmpoliza);
+    						
+    						cotizacionDAO.movimientoMpoliper(cdunieco, cdramo, "W", nmpoliza,
+    								"0", "1", newCdPerson, "0", "V", "1", null, "I",
+    								"N");//N por ser de WS
+    		    		}
+    		    	}
+    	    	}
+    		}
+    		
+		} catch (Exception e) {
+			Utils.generaExcepcion(e, paso);
 		}
+    	
+    	return ntramite;
     }
     
 	

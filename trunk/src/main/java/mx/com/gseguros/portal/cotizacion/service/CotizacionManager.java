@@ -606,8 +606,32 @@ public interface CotizacionManager
 			,String cdtipsit
 			);
 	
-	
-	public void procesoComprarCotizacion(
+	/**
+	 * 
+	 * @param comprarCdunieco
+	 * @param comprarCdramo
+	 * @param comprarNmpoliza
+	 * @param cdtipsit
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @param ntramite
+	 * @param cdagenteExt
+	 * @param comprarCdciaaguradora
+	 * @param comprarCdplan
+	 * @param comprarCdperpag
+	 * @param cdusuari
+	 * @param cdsisrol
+	 * @param cdelemen
+	 * @param esFlotilla
+	 * @param tipoflot
+	 * @param cdpersonCli
+	 * @param cdideperCli
+	 * @param nombreReporteCotizacion
+	 * @param nombreReporteCotizacionFlot
+	 * @return ntramite Numero de tramite creado
+	 * @throws Exception
+	 */
+	public String procesoComprarCotizacion(
 			String comprarCdunieco,
 			String comprarCdramo,
 			String comprarNmpoliza,
