@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.utils.Utils;
@@ -58,24 +57,20 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 	)
 	public String cotizarIndividual() throws Exception {
 		
-		logger.debug(Utils.log(
-				 "\n#####################"
-				,"\n###### cotizarIndividual Directa ######"
-				,"\n###### params=", params));
+		logger.debug("Inicio de cotizarIndividual Directa params={}", params);
 		
 		try {
-			
+			// Se validan datos:
 			Utils.validate(params, "No se recibieron datos para cotizar");
-			Utils.validate(list, "No se recibieron datos de incisos");
-
-			String cdusuari    = params.get("username");
-			String cdelemen    = params.get("cdelemento");
-			String cdunieco    = params.get("cdunieco");
-			String cdramo      = params.get("cdramo");
-			String cdtipsit    = params.get("cdtipsit");
-			String cdagente    = params.get("cdagenteAux");
-			String cdpersonCli = params.get("cdpersonCli");
-			String cdideperCli = params.get("cdideperCli");
+			Utils.validate(params.get("username"),    "No existe el parámetro params.username");
+			Utils.validate(params.get("cdelemento"),  "No existe el parámetro params.cdelemento");
+			Utils.validate(params.get("cdunieco"),    "No existe el parámetro params.cdunieco");
+			Utils.validate(params.get("cdramo"),      "No existe el parámetro params.cdramo");
+			Utils.validate(params.get("cdtipsit"),    "No existe el parámetro params.cdtipsit");
+			Utils.validate(params.get("cdagenteAux"), "No existe el parámetro params.cdagenteAux");
+			Utils.validate(params.get("cdpersonCli"), "No existe el parámetro params.cdpersonCli");
+			Utils.validate(params.get("cdideperCli"), "No existe el parámetro params.cdideperCli");
+			Utils.validate(list, "No se recibieron datos de incisos (list)");
 			
 			String nmpoliza = list.get(0).get("nmpoliza");
 			String feini    = list.get(0).get("feini");
@@ -83,20 +78,21 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 			
 			boolean noTarificar = StringUtils.isNotBlank(params.get("notarificar")) && params.get("notarificar").equals("si");			
 			boolean conIncisos = StringUtils.isNotBlank(params.get("conincisos")) && params.get("conincisos").equals("si");
-			
-			Map<String,String>tvalopol=new HashMap<String,String>();
-			for(Entry<String,String> en : list.get(0).entrySet()) {
-				String key=en.getKey();
-				if(key.length()>"aux.".length() && key.substring(0,"aux.".length()).equals("aux.")) {
-					tvalopol.put(key.substring("aux.".length()),en.getValue());
+			// Datos para TVALOPOL:
+			Map<String, String> tvalopol = new HashMap<String, String>();
+			for(Entry<String, String> en : list.get(0).entrySet()) {
+				String key = en.getKey();
+				if(key.length() > "aux.".length() && key.substring(0,"aux.".length()).equals("aux.")) {
+					tvalopol.put(key.substring("aux.".length()), en.getValue());
 				}
 			}
 			
 			ManagerRespuestaSlistSmapVO resp = cotizacionManager.cotizar(
-					cdunieco, cdramo, cdtipsit, cdusuari, cdelemen,
-					nmpoliza, feini, fefin, cdpersonCli, cdideperCli,
+					params.get("cdunieco"), params.get("cdramo"), params.get("cdtipsit"), 
+					params.get("username"), params.get("cdelemento"),
+					nmpoliza, feini, fefin, params.get("cdpersonCli"), params.get("cdideperCli"),
 					noTarificar, conIncisos, list, params.containsKey("movil"),
-					tvalopol, cdagente);
+					tvalopol, params.get("cdagenteAux"));
 			
 			respuesta = resp.getRespuesta();
 			
@@ -111,9 +107,8 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 			respuesta = Utils.manejaExcepcion(e);
 		}
 		
-		logger.debug(Utils.log(
-				 "\n###### cotizarIndividual Directa ######"
-				,"\n#####################"));
+		logger.debug("Fin de cotizarIndividual Directa");
+		
 		return SUCCESS;
 	}
 	
@@ -124,175 +119,89 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 			@Result(name="success", type="json")
 	    }
 	)
-    public String comprarCotizacion()
-    /*pv_cdunieco   input
-    --pv_cdramo     input
-    --pv_estado     W
-    --pv_nmpoliza   input
-    --pv_nmsituac   0
-    --pv_cdelement  Usuario sesion
-    --pv_cdperson   Usuario sesion
-    --pv_cdasegur   input
-    --pv_cdplan     input
-    --pv_cdperpag   input
-    */
-    {
+    public String comprarCotizacion() {
     	
-    	logger.debug(Utils.log(
-   			 "\n################################"
-   			,"\n###### comprar cotizacion ######"
-   			,"\n###### params=",params));
+		logger.debug("Inicio de comprarCotizacion Directa params={}", params);
     	
     	try {
-        	
-        	////////////
-        	//TODO: borrar variables, pues vienen como parametros:
-    		String cdunieco = params.get("cdunieco");
-    		String cdramo = params.get("cdramo");
-        	String cdtipsit = params.get("cdtipsit");
-        	String nmpoliza = params.get("nmpoliza");
-        	String cdciaaguradora = params.get("cdciaaguradora");
-        	String cdplan = params.get("cdplan");
-        	String cdperpag = params.get("cdperpag");
-        	String fechaInicio = params.get("fechaInicio");
-        	String fechaFin = params.get("fechaFin");
-        	////////////
-        	
-        	
         	// Se validan datos:
         	Utils.validate(params, "No hay parámetros");
-        	Utils.validate(params.get("cdusuari"), "No existe el parámetro params.cdusuari");
-        	Utils.validate(params.get("cdsisrol"), "No existe el parámetro params.cdsisrol");
-        	Utils.validate(params.get("cdelemento"), "No existe el parámetro params.cdelemento");
-        	Utils.validate(cdunieco, "No existe el parámetro cdunieco");
-        	Utils.validate(cdramo, "No existe el parámetro cdramo");
-        	Utils.validate(cdtipsit, "No existe el parámetro cdtipsit");
-        	Utils.validate(nmpoliza, "No existe el parámetro nmpoliza");
-        	Utils.validate(cdciaaguradora, "No existe el parámetro cdciaaguradora");
-        	Utils.validate(cdplan, "No existe el parámetro cdplan");
-        	Utils.validate(cdperpag, "No existe el parámetro cdperpag");
-        	Utils.validate(fechaInicio, "No existe el parámetro fechaInicio");
-        	Utils.validate(fechaFin, "No existe el parámetro fechaFin");
-        	Utils.validate(params.get("cdagenteExt"), "No existe el parámetro params.cdagenteExt");
-        	
-        	UserVO usuario     = null;
-        	String cdusuari    = params.get("cdusuari"); //TODO: Enviar como parametro
-        	String cdsisrol    = params.get("cdsisrol"); //TODO: Enviar como parametro
-        	String cdperson    = null;
-        	//String fechaInicio = null; //TODO: decomentar
-        	//String fechaFin    = null; //TODO: decomentar
-        	String ntramite    = null;
-        	String cdagente    = null;
-        	String nmcuadro    = null;
-        	String cdelemen    = params.get("cdelemento"); //TODO: Enviar como parametro
-        	String cdpersonCli = null;
-        	String cdideperCli = null;
-        	String cdagenteExt = null;
-        	boolean esFlotilla = false;
-        	String tipoflot    = null;
+        	Utils.validate(params.get("cdusuari"),      "No existe el parámetro params.cdusuari");
+        	Utils.validate(params.get("cdsisrol"),      "No existe el parámetro params.cdsisrol");
+        	Utils.validate(params.get("cdelemento"),    "No existe el parámetro params.cdelemento");
+        	Utils.validate(params.get("cdunieco"),      "No existe el parámetro params.cdunieco");
+        	Utils.validate(params.get("cdramo"),        "No existe el parámetro params.cdramo");
+        	Utils.validate(params.get("cdtipsit"),      "No existe el parámetro params.cdtipsit");
+        	Utils.validate(params.get("nmpoliza"),      "No existe el parámetro params.nmpoliza");
+        	Utils.validate(params.get("cdciaaguradora"),"No existe el parámetro params.cdciaaguradora");
+        	Utils.validate(params.get("cdplan"),        "No existe el parámetro params.cdplan");
+        	Utils.validate(params.get("cdperpag"),      "No existe el parámetro params.cdperpag");
+        	Utils.validate(params.get("fechaInicio"),   "No existe el parámetro params.fechaInicio");
+        	Utils.validate(params.get("fechaFin"),      "No existe el parámetro params.fechaFin");
+        	Utils.validate(params.get("cdagenteExt"),   "No existe el parámetro params.cdagenteExt");
         	
         	// Se llenan datos:
-        	ntramite    = params.get("ntramite");
-    		cdpersonCli = params.get("cdpersonCli");
-    		cdideperCli = params.get("cdideperCli");
-    		cdagenteExt = params.get("cdagenteExt");
-    		fechaInicio = params.get("fechaInicio");
-    		fechaFin    = params.get("fechaFin");
-    		esFlotilla  = StringUtils.isNotBlank(params.get("flotilla"))&&params.get("flotilla").equalsIgnoreCase("si");
-    		tipoflot    = params.get("tipoflot");
+    		boolean esFlotilla  = StringUtils.isNotBlank(params.get("flotilla"))&&params.get("flotilla").equalsIgnoreCase("si");
+    		String tipoflot    = params.get("tipoflot");
     		
-    		cotizacionManager.procesoComprarCotizacion(
-    				cdunieco,
-    				cdramo,
-    				nmpoliza,
-    				cdtipsit,
-    				fechaInicio,
-    				fechaFin,
-    				ntramite,
-    				cdagenteExt,
-    				cdciaaguradora,
-    				cdplan,
-    				cdperpag,
-    				cdusuari,
-    				cdsisrol,
-    				cdelemen,
-    				esFlotilla,
-    				tipoflot,
-    				cdpersonCli,
-    				cdideperCli,
-    				getText("rdf.cotizacion.nombre."+cdtipsit),
-    				getText("rdf.cotizacion.flot.nombre."+cdtipsit));
+    		String ntramite = cotizacionManager.procesoComprarCotizacion(params.get("cdunieco"), params.get("cdramo"), params.get("nmpoliza"), 
+    				params.get("cdtipsit"), params.get("fechaInicio"), params.get("fechaFin"), params.get("ntramite"), 
+    				params.get("cdagenteExt"),
+    				params.get("cdciaaguradora"), params.get("cdplan"), params.get("cdperpag"), 
+    				params.get("cdusuari"), params.get("cdsisrol"), params.get("cdelemento"),
+    				esFlotilla, tipoflot, params.get("cdpersonCli"), params.get("cdideperCli"),
+    				getText("rdf.cotizacion.nombre."+params.get("cdtipsit")),
+    				getText("rdf.cotizacion.flot.nombre."+params.get("cdtipsit")));
+    		
+    		params.put("ntramite", ntramite);
     		
     	} catch(Exception e) {
     		respuesta = Utils.manejaExcepcion(e);
     	}
     	
-        logger.debug(Utils.log(
-    			 "\n###### comprar cotizacion ######"
-        		,"\n################################"));
+        logger.debug("Fin de comprarCotizacion Directa");
     	
         return SUCCESS;
     }
-	///////////////////////
-
-
-	/*
-	 * Getters y setters
-	 */
+	
+	
+	// Getters y setters
 
 	public boolean isSuccess() {
 		return success;
 	}
 
-
-
 	public void setSuccess(boolean success) {
 		this.success = success;
 	}
-
-
 
 	public String getRespuesta() {
 		return respuesta;
 	}
 
-
-
 	public void setRespuesta(String respuesta) {
 		this.respuesta = respuesta;
 	}
-
-
 
 	public Map<String, String> getParams() {
 		return params;
 	}
 
-
-
 	public void setParams(Map<String, String> params) {
 		this.params = params;
 	}
-
-
 
 	public List<Map<String, String>> getList() {
 		return list;
 	}
 
-
-
 	public void setList(List<Map<String, String>> list) {
 		this.list = list;
 	}
 
-
-
 	public List<Map<String, String>> getTarifa() {
 		return tarifa;
 	}
-
-
 
 	public void setTarifa(List<Map<String, String>> tarifa) {
 		this.tarifa = tarifa;

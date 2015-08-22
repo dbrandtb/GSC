@@ -65,32 +65,32 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			) throws Exception
 	{
 		Map<String,Object>params=new LinkedHashMap<String,Object>();
-		params.put("cdunieco"   , cdunieco);
-		params.put("cdramo"     , cdramo);
-		params.put("estado"     , estado);
-		params.put("nmpoliza"   , nmpoliza);
-		params.put("nmsuplem"   , nmsuplem);
-		params.put("cdsucadm"   , cdsucadm);
-		params.put("cdsucdoc"   , cdsucdoc);
-		params.put("cdtiptra"   , cdtiptra);
-		params.put("ferecepc"   , ferecepc);
-		params.put("cdagente"   , cdagente);
-		params.put("referencia" , referencia);
-		params.put("nombre"     , nombre);
-		params.put("festatus"   , festatus);
-		params.put("status"     , status);
-		params.put("comments"   , comments);
-		params.put("nmsolici"   , nmsolici);
-		params.put("cdtipsit"   , cdtipsit);
-		params.put("cdusuari"   , cdusuari);
-		params.put("cdsisrol"   , cdsisrol);
+		params.put("cdunieco"  , cdunieco);
+		params.put("cdramo"    , cdramo);
+		params.put("estado"    , estado);
+		params.put("nmpoliza"  , nmpoliza);
+		params.put("nmsuplem"  , nmsuplem);
+		params.put("cdsucadm"  , cdsucadm);
+		params.put("cdsucdoc"  , cdsucdoc);
+		params.put("cdtiptra"  , cdtiptra);
+		params.put("ferecepc"  , ferecepc);
+		params.put("cdagente"  , cdagente);
+		params.put("referencia", referencia);
+		params.put("nombre"    , nombre);
+		params.put("festatus"  , festatus);
+		params.put("status"    , status);
+		params.put("comments"  , comments);
+		params.put("nmsolici"  , nmsolici);
+		params.put("cdtipsit"  , cdtipsit);
+		params.put("cdusuari"  , cdusuari);
+		params.put("cdsisrol"  , cdsisrol);
 		
-		for(int i=1;i<=50;i++)
-		{
+		for(int i=1; i <= 50; i++) {
 			params.put(new StringBuilder("otvalor").append(StringUtils.leftPad(String.valueOf(i),2,"0")).toString(),null);
 		}
-		
-		params.putAll(valores);
+		if(valores != null) {
+			params.putAll(valores);
+		}
 
 		logger.debug(
 				new StringBuilder()
@@ -620,5 +620,29 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			compile();
 		}
 	}
+	
+	
+	@Override
+	public void actualizaStatusMesaControlSP(String ntramite,String status,String cdusuari,String cdsisrol) throws Exception {
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("status"   , status);
+		params.put("cdusuari" , cdusuari);
+		params.put("cdsisrol" , cdsisrol);
+		ejecutaSP(new ActualizaStatusMesaControlSP(getDataSource()),params);
+    }
+	
+	protected class ActualizaStatusMesaControlSP extends StoredProcedure {
+		protected ActualizaStatusMesaControlSP(DataSource dataSource) {
+			
+			super(dataSource,"PKG_SATELITES.P_UPDATE_STATUS_MC");
+    		declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_status_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+    		compile();
+		}
+	}
+	
 			
 }
