@@ -67,9 +67,6 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 			Utils.validate(params.get("cdunieco"),    "No existe el parámetro params.cdunieco");
 			Utils.validate(params.get("cdramo"),      "No existe el parámetro params.cdramo");
 			Utils.validate(params.get("cdtipsit"),    "No existe el parámetro params.cdtipsit");
-			Utils.validate(params.get("cdagenteAux"), "No existe el parámetro params.cdagenteAux");
-			Utils.validate(params.get("cdpersonCli"), "No existe el parámetro params.cdpersonCli");
-			Utils.validate(params.get("cdideperCli"), "No existe el parámetro params.cdideperCli");
 			Utils.validate(list, "No se recibieron datos de incisos (list)");
 			
 			String nmpoliza = list.get(0).get("nmpoliza");
