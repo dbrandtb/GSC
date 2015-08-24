@@ -476,7 +476,8 @@ public class Utils
 
 	public static String log(Object... args)
 	{
-		StringBuilder sb = new StringBuilder();
+		boolean       debug = false;
+		StringBuilder sb    = new StringBuilder();
 		for(Object arg:args)
 		{
 			try
@@ -490,7 +491,7 @@ public class Utils
 				{
 					sb.append("null");
 				}
-				else if(arg.toString().length()>1000)
+				else if(arg.toString().length()>1000&&!debug)
 				{
 					sb.append(arg.toString().substring(0, 1000)).append("...");
 				}
