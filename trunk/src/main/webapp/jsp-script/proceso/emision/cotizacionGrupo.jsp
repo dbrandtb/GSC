@@ -781,6 +781,7 @@ Ext.onReady(function()
 										                'smap1.ocultaBusqueda' : 'S' ,
 										                'smap1.cargaCP' : '',
 										                'smap1.cargaTipoPersona' : '',
+										                'smap1.cargaSucursalEmi' : _p21_smap1.cdunieco,
 										                'smap1.activaCveFamiliar': 'N',
 										                'smap1.modoRecuperaDanios': 'N',
 										                'smap1.modoSoloEdicion': 'N',
@@ -1558,6 +1559,7 @@ Ext.onReady(function()
 				                'smap1.ocultaBusqueda' : 'S' ,
 				                'smap1.cargaCP' : '',
 				                'smap1.cargaTipoPersona' : '',
+				                'smap1.cargaSucursalEmi' : _p21_smap1.cdunieco,
 				                'smap1.activaCveFamiliar': 'N',
 				                'smap1.modoRecuperaDanios': 'N',
 				                'smap1.modoSoloEdicion': 'N',
@@ -5993,6 +5995,7 @@ function _p21_editarAsegurado(grid,rowIndex)
 									                'smap1.ocultaBusqueda' : 'S' ,
 									                'smap1.cargaCP' : '',
 									                'smap1.cargaTipoPersona' : '',
+									                'smap1.cargaSucursalEmi' : _p21_smap1.cdunieco,
 									                'smap1.activaCveFamiliar': 'N',
 									                'smap1.modoRecuperaDanios': 'N',
 									                'smap1.modoSoloEdicion': 'S'
