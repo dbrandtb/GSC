@@ -3340,7 +3340,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		try
 		{
 			paso = "Confirmando endoso";
-			Map<String,Object> resParams = endososDAO.confirmarEndosoRehabilitacionAuto(
+			Map<String,Object> resParams = endososDAO.confirmarEndosoRehabilitacion(
 					cdusuari
 					,cdsisrol
 					,cdunieco
@@ -3391,6 +3391,198 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		
 		logger.debug(Utils.log(
 				 "\n@@@@@@ confirmarEndosoRehabilitacionAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+
+	@Override
+	public Map<String,Item> endosoRehabilitacionSalud(
+			String cdsisrol
+			,String cdramo
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ endosoRehabilitacionSalud @@@@@@"
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdramo="   , cdramo
+				));
+		
+		Map<String,Item> items = new HashMap<String,Item>();
+		String           paso  = null;
+		try
+		{
+			paso = "Recuperando elementos formulario de lectura";
+			logger.info(paso);
+			
+			List<ComponenteVO>formLectura = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"ENDOSO_REHABILITACION_SALUD"
+					,"FORM_LECTURA"
+					,null
+					);
+			
+			paso = "Construyendo componentes del formulario de lectura";
+			logger.info(paso);
+			
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.generaComponentes(formLectura, true, false, true, false, false, false);
+			
+			items.put("formLecturaItems" , gc.getItems());
+			
+			paso = "Recuperando elementos formulario de endoso";
+			logger.info(paso);
+			
+			List<ComponenteVO>formEndoso = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"ENDOSO_REHABILITACION_SALUD"
+					,"FORM_ENDOSO"
+					,null
+					);
+			
+			paso = "Construyendo componentes del formulario de endoso";
+			logger.info(paso);
+			
+			gc.generaComponentes(formEndoso, true, false, true, false, false, false);
+			
+			items.put("formEndosoItems" , gc.getItems());
+			
+			paso = "Recuperando componentes de endoso";
+			logger.info(paso);
+			
+			List<ComponenteVO>endoso = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"ENDOSO_REHABILITACION_SALUD"
+					,"MODELO_ENDOSO"
+					,null
+					);
+			
+			paso = "Construyendo componentes de endoso";
+			logger.info(paso);
+			
+			gc.generaComponentes(endoso, true, true, false, true, false, false);
+			
+			items.put("modeloEndosoFields" , gc.getFields());
+			items.put("gridEndososColumns" , gc.getColumns());
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				"\n@@@@@@ items=",items
+				,"\n@@@@@@ endosoRehabilitacionSalud @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		return items;
+	}
+	
+	@Override
+	public void confirmarEndosoRehabilitacionSalud(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,String nsuplogi
+			,String cddevcia
+			,String cdgestor
+			,Date   feemisio
+			,Date   feinival
+			,Date   fefinval
+			,Date   feefecto
+			,Date   feproren
+			,String cdmoneda
+			,String nmsuplem
+			,String cdelemen
+			,UserVO usuarioSesion
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ confirmarEndosoRehabilitacionSalud @@@@@@"
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ cdtipsup=" , cdtipsup
+				,"\n@@@@@@ nsuplogi=" , nsuplogi
+				,"\n@@@@@@ cddevcia=" , cddevcia
+				,"\n@@@@@@ cdgestor=" , cdgestor
+				,"\n@@@@@@ feemisio=" , feemisio
+				,"\n@@@@@@ feinival=" , feinival
+				,"\n@@@@@@ fefinval=" , fefinval
+				,"\n@@@@@@ feefecto=" , feefecto
+				,"\n@@@@@@ feproren=" , feproren
+				,"\n@@@@@@ cdmoneda=" , cdmoneda
+				,"\n@@@@@@ nmsuplem=" , nmsuplem
+				,"\n@@@@@@ cdelemen=" , cdelemen
+				));
+		
+		String paso = null;
+		try
+		{
+			paso = "Confirmando endoso";
+			Map<String,Object> resParams = endososDAO.confirmarEndosoRehabilitacion(
+					cdusuari
+					,cdsisrol
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,cdtipsup
+					,nsuplogi
+					,cddevcia
+					,cdgestor
+					,feemisio
+					,feinival
+					,fefinval
+					,feefecto
+					,feproren
+					,cdmoneda
+					,nmsuplem
+					,cdelemen
+					);
+			
+			String nmsuplemGen = (String) resParams.get("pv_nmsuplem_o");
+			String ntramite = (String) resParams.get("pv_ntramite_o");
+//			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
+			
+			ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
+					estado, nmpoliza, 
+					nmsuplemGen, null, 
+					cdunieco, null, ntramite, 
+					true, cdtipsup, 
+					usuarioSesion);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				"\n@@@@@@ confirmarEndosoRehabilitacionSalud @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}

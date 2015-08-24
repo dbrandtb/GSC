@@ -248,8 +248,35 @@ public interface EndososAutoManager
 			String cdsisrol
 			,String cdramo
 			)throws Exception;
+
+	public Map<String,Item> endosoRehabilitacionSalud(
+			String cdsisrol
+			,String cdramo
+			)throws Exception;
 	
 	public void confirmarEndosoRehabilitacionAuto(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,String nsuplogi
+			,String cddevcia
+			,String cdgestor
+			,Date   feemisio
+			,Date   feinival
+			,Date   fefinval
+			,Date   feefecto
+			,Date   feproren
+			,String cdmoneda
+			,String nmsuplem
+			,String cdelemen
+			,UserVO usuarioSesion
+			)throws Exception;
+
+	public void confirmarEndosoRehabilitacionSalud(
 			String cdusuari
 			,String cdsisrol
 			,String cdunieco

@@ -446,6 +446,15 @@
             <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
             <result name="success">/jsp-script/proceso/endosos/endosoAgente.jsp </result>
         </action>
+
+        <action name="endosoRehabilitacionEnd" class="endososAutoAction" method="endosoRehabilitacionSalud">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">/jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoRehabilitacionEnd.jsp</result>
+        </action>
         
         <action name="guardarEndosoAgente" class="EndososAction" method="guardarEndosoAgente">
             <interceptor-ref name="json">
@@ -723,6 +732,10 @@
         </action>
         
         <action name="confirmarEndosoRehabilitacionAuto" class="endososAutoAction" method="confirmarEndosoRehabilitacionAuto">
+            <result type="json" />
+        </action>
+
+        <action name="confirmarEndosoRehabilitacionSalud" class="endososAutoAction" method="confirmarEndosoRehabilitacionSalud">
             <result type="json" />
         </action>
         

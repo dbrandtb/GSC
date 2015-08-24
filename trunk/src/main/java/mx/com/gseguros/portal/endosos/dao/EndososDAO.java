@@ -453,7 +453,7 @@ public interface EndososDAO
 			String status, String cdtipcla, String swmodi, String dslinea,
 			String accion) throws Exception;
 	
-	public Map<String,Object> confirmarEndosoRehabilitacionAuto(
+	public Map<String,Object> confirmarEndosoRehabilitacion(
 			String cdusuari
 			,String cdsisrol
 			,String cdunieco
