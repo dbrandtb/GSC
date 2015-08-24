@@ -3786,7 +3786,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public Map<String,Object> confirmarEndosoRehabilitacionAuto(
+	public Map<String,Object> confirmarEndosoRehabilitacion(
 			String cdusuari
 			,String cdsisrol
 			,String cdunieco
@@ -3827,17 +3827,17 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("nmsuplem" , nmsuplem);
 		params.put("cdelemen" , cdelemen);
 		params.put("idproces" , Utils.generaTimestamp());
-		Utils.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_REHABILITA_AUTO", params);
-		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoRehabilitacionAuto(getDataSource()),params);
+		Utils.debugProcedure(logger, "PKG_ENDOSOS.P_ENDOSO_REHABILITA", params);
+		Map<String,Object> resParams = ejecutaSP(new ConfirmarEndosoRehabilitacion(getDataSource()),params);
 		
 		return resParams;
 	}
 	
-	protected class ConfirmarEndosoRehabilitacionAuto extends StoredProcedure
+	protected class ConfirmarEndosoRehabilitacion extends StoredProcedure
 	{
-		protected ConfirmarEndosoRehabilitacionAuto(DataSource dataSource)
+		protected ConfirmarEndosoRehabilitacion(DataSource dataSource)
 		{
-			super(dataSource,"PKG_ENDOSOS.P_ENDOSO_REHABILITA_AUTO");
+			super(dataSource,"PKG_ENDOSOS.P_ENDOSO_REHABILITA");
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));

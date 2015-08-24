@@ -1547,6 +1547,126 @@ public class EndososAutoAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
+
+	public String endosoRehabilitacionSalud()
+	{
+		logger.debug(Utils.log(
+				"\n######################################"
+				,"\n###### endosoRehabilitacionSalud ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		String result = ERROR;
+		try
+		{
+			UserVO user = Utils.validateSession(session);
+			
+			Utils.validate(smap1 , "No se recibieron datos");
+			
+			String cdramo = smap1.get("CDRAMO");
+			
+			Utils.validate(cdramo , "No se recibio el producto");
+			
+			imap = endososAutoManager.endosoRehabilitacionSalud(user.getRolActivo().getClave(),cdramo);
+			
+			result = SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				"\n###### result=",result
+				,"\n###### endosoRehabilitacionSalud ######"
+				,"\n######################################"
+				));
+		return result;
+	}
+	
+	public String confirmarEndosoRehabilitacionSalud()
+	{
+		logger.debug(Utils.log(
+				"\n###############################################"
+				,"\n###### confirmarEndosoRehabilitacionSalud ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			UserVO user = Utils.validateSession(session);
+			
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
+			
+			Utils.validate(smap1 , "No se recibieron datos");
+			
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			String cdtipsup = TipoEndoso.REHABILITACION_ENDOSO.getCdTipSup().toString();
+			String nsuplogi = smap1.get("nsuplogi");
+			String cddevcia = smap1.get("cddevcia");
+			String cdgestor = smap1.get("cdgestor");
+			String feemisio = smap1.get("feemisio");
+			String feinival = smap1.get("feinival");
+			String fefinval = smap1.get("fefinval");
+			String feefecto = smap1.get("feefecto");
+			String feproren = smap1.get("feproren");
+			String cdmoneda = smap1.get("cdmoneda");
+			String nmsuplem = smap1.get("nmsuplem");
+			
+			Utils.validate(cdunieco , "No se recibio la sucursal");
+			Utils.validate(cdramo   , "No se recibio el producto");
+			Utils.validate(estado   , "No se recibio el estado de la poliza");
+			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
+			Utils.validate(cdtipsup , "No se recibio el codigo de endoso");
+			Utils.validate(nsuplogi , "No se recibio el consecutivo de endoso");
+			Utils.validate(cddevcia , "No se recibio el tipo de endoso");
+			Utils.validate(cdgestor , "No se recibio el numero de endoso");
+			Utils.validate(feemisio , "No se recibio la fecha de emision de endoso");
+			Utils.validate(feinival , "No se recibio la fecha de inicio de endoso");
+			Utils.validate(fefinval , "No se recibio la fecha de fin de endoso");
+			Utils.validate(feefecto , "No se recibio la fecha de efecto");
+			Utils.validate(feproren , "No se recibio la fecha de proxima renovacion");
+			Utils.validate(cdmoneda , "No se recibio la clave de moneda");
+			Utils.validate(nmsuplem , "No se recibio el numero de suplemento");
+			
+			endososAutoManager.confirmarEndosoRehabilitacionSalud(
+					user.getUser()
+					,user.getRolActivo().getClave()
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,cdtipsup
+					,nsuplogi
+					,cddevcia
+					,cdgestor
+					,renderFechas.parse(feemisio)
+					,renderFechas.parse(feinival)
+					,renderFechas.parse(fefinval)
+					,renderFechas.parse(feefecto)
+					,renderFechas.parse(fefinval)
+					,cdmoneda
+					,nmsuplem
+					,user.getEmpresa().getElementoId()
+					,usuarioSesion
+					);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				"\n###### confirmarEndosoRehabilitacionSalud ######"
+				,"\n###############################################"
+				));
+		return SUCCESS;
+	}
 	
 	public String endosoCancelacionAuto()
 	{
