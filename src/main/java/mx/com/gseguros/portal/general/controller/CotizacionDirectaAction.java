@@ -266,7 +266,7 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 			if(success)
 			{
 				params.putAll(resp.getSmap());
-				list = resp.getSlist();
+				tarifa = resp.getSlist();
 			}
 		}
 		catch(Exception ex)
@@ -323,6 +323,22 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 
 	public void setTarifa(List<Map<String, String>> tarifa) {
 		this.tarifa = tarifa;
+	}
+
+	public List<Map<String, String>> getListaValoresSituac() {
+		return listaValoresSituac;
+	}
+
+	public void setListaValoresSituac(List<Map<String, String>> listaValoresSituac) {
+		this.listaValoresSituac = listaValoresSituac;
+	}
+
+	public List<Map<String, String>> getListaConfigSituac() {
+		return listaConfigSituac;
+	}
+
+	public void setListaConfigSituac(List<Map<String, String>> listaConfigSituac) {
+		this.listaConfigSituac = listaConfigSituac;
 	}
 	
 }
