@@ -406,6 +406,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 							//tipvehica
 							incisoIterado.setTipVehiCA(Integer.valueOf(row.get("TIPVEHICA")));
 							
+							incisoIterado.setIdInciso(Integer.valueOf(row.get("NMSITUAC")));
+							
 							//tipovehiculo
 							TipoVehiculo tipoVehiculo=null;
 							
