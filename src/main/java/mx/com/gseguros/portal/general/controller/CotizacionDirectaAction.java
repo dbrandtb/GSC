@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
+import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.utils.Utils;
 
@@ -40,12 +41,23 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 	
 	private List<Map<String,String>> list;
 	
-	private List<Map<String,String>> tarifa;
+	/**
+	 * Lista que recibe los valores del grid de vehÃ­culos para flotillas
+	 */
+	private List<Map<String,String>> listaValoresSituac;
 	
+	/**
+	 * Lista que recibe los valores de los formularios de configuracion por situacion (botones)
+	 */
+	private List<Map<String,String>> listaConfigSituac;
+	
+	private List<Map<String,String>> tarifa;
 	
 	@Autowired
 	private CotizacionManager cotizacionManager;
 	
+	@Autowired
+	private CotizacionAutoManager cotizacionAutoManager;	
 	
 	@Action(value="cotizarIndividual",
 		results = {
@@ -62,11 +74,11 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 		try {
 			// Se validan datos:
 			Utils.validate(params, "No se recibieron datos para cotizar");
-			Utils.validate(params.get("username"),    "No existe el parámetro params.username");
-			Utils.validate(params.get("cdelemento"),  "No existe el parámetro params.cdelemento");
-			Utils.validate(params.get("cdunieco"),    "No existe el parámetro params.cdunieco");
-			Utils.validate(params.get("cdramo"),      "No existe el parámetro params.cdramo");
-			Utils.validate(params.get("cdtipsit"),    "No existe el parámetro params.cdtipsit");
+			Utils.validate(params.get("username"),    "No existe el parï¿½metro params.username");
+			Utils.validate(params.get("cdelemento"),  "No existe el parï¿½metro params.cdelemento");
+			Utils.validate(params.get("cdunieco"),    "No existe el parï¿½metro params.cdunieco");
+			Utils.validate(params.get("cdramo"),      "No existe el parï¿½metro params.cdramo");
+			Utils.validate(params.get("cdtipsit"),    "No existe el parï¿½metro params.cdtipsit");
 			Utils.validate(list, "No se recibieron datos de incisos (list)");
 			
 			String nmpoliza = list.get(0).get("nmpoliza");
@@ -122,20 +134,20 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
     	
     	try {
         	// Se validan datos:
-        	Utils.validate(params, "No hay parámetros");
-        	Utils.validate(params.get("cdusuari"),      "No existe el parámetro params.cdusuari");
-        	Utils.validate(params.get("cdsisrol"),      "No existe el parámetro params.cdsisrol");
-        	Utils.validate(params.get("cdelemento"),    "No existe el parámetro params.cdelemento");
-        	Utils.validate(params.get("cdunieco"),      "No existe el parámetro params.cdunieco");
-        	Utils.validate(params.get("cdramo"),        "No existe el parámetro params.cdramo");
-        	Utils.validate(params.get("cdtipsit"),      "No existe el parámetro params.cdtipsit");
-        	Utils.validate(params.get("nmpoliza"),      "No existe el parámetro params.nmpoliza");
-        	Utils.validate(params.get("cdciaaguradora"),"No existe el parámetro params.cdciaaguradora");
-        	Utils.validate(params.get("cdplan"),        "No existe el parámetro params.cdplan");
-        	Utils.validate(params.get("cdperpag"),      "No existe el parámetro params.cdperpag");
-        	Utils.validate(params.get("fechaInicio"),   "No existe el parámetro params.fechaInicio");
-        	Utils.validate(params.get("fechaFin"),      "No existe el parámetro params.fechaFin");
-        	Utils.validate(params.get("cdagenteExt"),   "No existe el parámetro params.cdagenteExt");
+        	Utils.validate(params, "No hay parï¿½metros");
+        	Utils.validate(params.get("cdusuari"),      "No existe el parï¿½metro params.cdusuari");
+        	Utils.validate(params.get("cdsisrol"),      "No existe el parï¿½metro params.cdsisrol");
+        	Utils.validate(params.get("cdelemento"),    "No existe el parï¿½metro params.cdelemento");
+        	Utils.validate(params.get("cdunieco"),      "No existe el parï¿½metro params.cdunieco");
+        	Utils.validate(params.get("cdramo"),        "No existe el parï¿½metro params.cdramo");
+        	Utils.validate(params.get("cdtipsit"),      "No existe el parï¿½metro params.cdtipsit");
+        	Utils.validate(params.get("nmpoliza"),      "No existe el parï¿½metro params.nmpoliza");
+        	Utils.validate(params.get("cdciaaguradora"),"No existe el parï¿½metro params.cdciaaguradora");
+        	Utils.validate(params.get("cdplan"),        "No existe el parï¿½metro params.cdplan");
+        	Utils.validate(params.get("cdperpag"),      "No existe el parï¿½metro params.cdperpag");
+        	Utils.validate(params.get("fechaInicio"),   "No existe el parï¿½metro params.fechaInicio");
+        	Utils.validate(params.get("fechaFin"),      "No existe el parï¿½metro params.fechaFin");
+        	Utils.validate(params.get("cdagenteExt"),   "No existe el parï¿½metro params.cdagenteExt");
         	
         	// Se llenan datos:
     		boolean esFlotilla  = StringUtils.isNotBlank(params.get("flotilla"))&&params.get("flotilla").equalsIgnoreCase("si");
@@ -161,6 +173,115 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
         return SUCCESS;
     }
 	
+	@Action(value="cotizarFlotillas",
+			results = {
+				@Result(name="success", type="json")
+		    },
+		    interceptorRefs = {
+		            @InterceptorRef(value = "json", params = {"enableSMD", "true", "ignoreSMDMethodInterfaces", "false" })
+		    }
+		)
+	public String cotizarFlotillas() throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n##############################"
+				,"\n###### cotizarFlotillas ######"
+				,"\n###### params=" , params
+				,"\n###### list="   , list
+				,"\n###### listaValoresSituac=" , listaValoresSituac
+				,"\n###### listaConfigSituac="  , listaConfigSituac
+				));
+		
+		try
+		{
+			Utils.validate(params             , "No se recibieron par\u00E1metros");
+			Utils.validate(list               , "No se recibieron los incisos mixtos");
+			Utils.validate(listaValoresSituac , "No se recibieron los incisos base");
+			Utils.validate(listaConfigSituac  , "No se recibieros las configuraciones de situaci\u00F3n");
+			
+			String cdusuari    = params.get("cdusuari");
+			String cdsisrol    = params.get("cdsisrol");
+			String cdelemen    = params.get("cdelemen");
+			String cdunieco    = params.get("cdunieco");
+			String cdramo      = params.get("cdramo");
+			String cdtipsit    = params.get("cdtipsit");
+			String estado      = params.get("estado");
+			String nmpoliza    = params.get("nmpoliza");
+			String feini       = params.get("feini");
+			String fefin       = params.get("fefin");
+			String cdagente    = params.get("cdagente");
+			String cdpersonCli = params.get("cdpersonCli");
+			String cdideperCli = params.get("cdideperCli");
+			String tipoflot    = params.get("tipoflot");
+			
+			Utils.validate(
+					cdunieco  , "No se recibi\u00F3 la sucursal"
+					,cdramo   , "No se recibi\u00F3 el producto"
+					,cdtipsit , "No se recibi\u00F3 la modalidad"
+					,estado   , "No se recibi\u00F3 el estado"
+					,feini    , "No se recibi\u00F3 el inicio de vigencia"
+					,fefin    , "No se recibi\u00F3 el fin de vigencia"
+					,cdagente , "No se recibi\u00F3 el agente"
+					,tipoflot , "No se recibi\u00F3 el tipo de cotizaci\u00F3n"
+					);
+			
+			boolean noTarificar = StringUtils.isNotBlank(params.get("notarificar"))&&params.get("notarificar").equals("si");
+			
+			Map<String,String>tvalopol=new HashMap<String,String>();
+			for(Entry<String,String>en:params.entrySet())
+			{
+				String key=en.getKey();
+				if(key.length()>"tvalopol_".length()
+						&&key.substring(0,"tvalopol_".length()).equals("tvalopol_")
+						)
+				{
+					tvalopol.put(Utils.join("otvalor",StringUtils.leftPad(key.substring("tvalopol_".length()),2,"0")),en.getValue());
+				}
+			}
+			
+			ManagerRespuestaSlistSmapVO resp = cotizacionAutoManager.cotizarAutosFlotilla(
+					cdusuari
+					,cdsisrol
+					,cdelemen
+					,cdunieco
+					,cdramo
+					,cdtipsit
+					,estado
+					,nmpoliza
+					,feini
+					,fefin
+					,cdagente
+					,cdpersonCli
+					,cdideperCli
+					,list
+					,listaValoresSituac
+					,listaConfigSituac
+					,noTarificar
+					,tipoflot
+					,tvalopol
+					);
+			
+			success         = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			if(success)
+			{
+				params.putAll(resp.getSmap());
+				list = resp.getSlist();
+			}
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### params=" , params
+				,"\n###### list="   , list
+				,"\n###### cotizarFlotillas ######"
+				,"\n##############################"
+				));
+		return SUCCESS;
+	}
 	
 	// Getters y setters
 
