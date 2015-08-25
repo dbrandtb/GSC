@@ -1767,6 +1767,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		ManagerRespuestaSlistSmapVO resp=new ManagerRespuestaSlistSmapVO(true);
 		resp.setSmap(new HashMap<String,String>());
 		
+		String paso = null;
+		
 		try
 		{
 			if(noTarificar==false)
@@ -1776,12 +1778,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				
 				if(isBlank(nmpoliza))
 				{
-					setCheckpoint("Generando numero de poliza");
+					paso = ("Generando numero de poliza");
+					logger.debug("\nPaso: "+paso);
 					nmpoliza = cotizacionDAO.calculaNumeroPoliza(cdunieco, cdramo, estado);
 					resp.getSmap().put("nmpoliza" , nmpoliza);
 				}
 				
-				setCheckpoint("Insertando maestro de poliza");
+				paso = ("Insertando maestro de poliza");
+				logger.debug("\nPaso: "+paso);
 				cotizacionDAO.movimientoPoliza(
 						cdunieco
 						,cdramo
@@ -1834,7 +1838,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			            ,"U"      //accion
 						);
 				
-				setCheckpoint("Insertando atributos adicionales de poliza");
+				paso = ("Insertando atributos adicionales de poliza");
+				logger.debug("\nPaso: "+paso);
 				cotizacionDAO.movimientoTvalopol(
 						cdunieco
 						,cdramo
@@ -1844,7 +1849,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						,"V" //status
 						,tvalopol);
 				
-				setCheckpoint("Insertando maestro de agrupadores de poliza");
+				paso = ("Insertando maestro de agrupadores de poliza");
+				logger.debug("\nPaso: "+paso);
 				cotizacionDAO.movimientoMpoliagr(
 						cdunieco
 						,cdramo
@@ -1882,7 +1888,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						,"I"  //accion
 						);
 				
-				setCheckpoint("Construyendo lote de maestros de situacion");
+				paso = ("Construyendo lote de maestros de situacion");
+				logger.debug("\nPaso: "+paso);
 				long                  inicioMpolisit    = System.currentTimeMillis();
 				List<PMovMpolisitDTO> listaPMovMpolisit = new ArrayList<PMovMpolisitDTO>();
 				for(Map<String,String>tvalositIte:tvalosit)
@@ -1910,12 +1917,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							,"I"                         //accion
 							));
 				}
-				setCheckpoint("Insertando maestros de situacion en lote");
+				paso = ("Insertando maestros de situacion en lote");
+				logger.debug("\nPaso: "+paso);
 				cotizacionDAO.movimientoMpolisitLote(listaPMovMpolisit);
 				logger.debug(Utils.log("Tiempo en mpolisit=",(System.currentTimeMillis()-inicioMpolisit)/1000d));
 			}
 				
-			setCheckpoint("Construyendo lote de atributos de situacion");
+			paso = ("Construyendo lote de atributos de situacion");
+			logger.debug("\nPaso: "+paso);
 			long                  inicioTvalosit    = System.currentTimeMillis();
 			List<PMovTvalositDTO> listaPMovTvalosit = new ArrayList<PMovTvalositDTO>();
 			for(Map<String,String>tvalositIte:tvalosit)
@@ -1943,14 +1952,17 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				listaPMovTvalosit.add(pMovTvalosit);
 			}
-			setCheckpoint("Insertando atributos de situacion en lote");
+			paso = ("Insertando atributos de situacion en lote");
+			logger.debug("\nPaso: "+paso);
 			cotizacionDAO.movimientoTvalositLote(listaPMovTvalosit);
 			logger.debug(Utils.log("Tiempo en tvalosit=",(System.currentTimeMillis()-inicioTvalosit)/1000d));
 				
-			setCheckpoint("Borrando situaciones base anteriores");
+			paso = ("Borrando situaciones base anteriores");
+			logger.debug("\nPaso: "+paso);
 			cotizacionDAO.borrarTbasvalsit(cdunieco, cdramo, estado, nmpoliza);
 		
-			setCheckpoint("Construyendo lote de situaciones base");
+			paso = ("Construyendo lote de situaciones base");
+			logger.debug("\nPaso: "+paso);
 			long                        inicioTbasvalsit        = System.currentTimeMillis();
 			List<PInsertaTbasvalsitDTO> listaPInsertaTbasvalsit = new ArrayList<PInsertaTbasvalsitDTO>();
 			for(Map<String,String>baseTvalositIte:baseTvalosit)
@@ -1977,16 +1989,19 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				listaPInsertaTbasvalsit.add(pInsertaTBasvalsit);
 			}
-			setCheckpoint("Insertando situaciones base en lote");
+			paso = ("Insertando situaciones base en lote");
+			logger.debug("\nPaso: "+paso);
 			cotizacionDAO.movimientoTbasvalsitLote(listaPInsertaTbasvalsit);
 			logger.debug(Utils.log("Tiempo en tbasvalsit=",(System.currentTimeMillis()-inicioTbasvalsit)/1000d));
 			
 			if(noTarificar==false)
 			{
-				setCheckpoint("Borrando configuracion de situaciones anteriores");
+				paso = ("Borrando configuracion de situaciones anteriores");
+				logger.debug("\nPaso: "+paso);
 				cotizacionDAO.borrarTconvalsit(cdunieco, cdramo, estado, nmpoliza);
 				
-				setCheckpoint("Construyendo lote de configuraciones de situacion");
+				paso = ("Construyendo lote de configuraciones de situacion");
+				logger.debug("\nPaso: "+paso);
 				long                        inicioTconvalsit        = System.currentTimeMillis();
 				List<PInsertaTconvalsitDTO> listaPInsertaTconvalsit = new ArrayList<PInsertaTconvalsitDTO>();
 				int aux=1;
@@ -2016,7 +2031,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					
 					aux=aux+1;
 				}
-				setCheckpoint("Insertando configuracion de situaciones en lote");
+				paso = ("Insertando configuracion de situaciones en lote");
+				logger.debug("\nPaso: "+paso);
 				cotizacionDAO.movimientoTconvalsitLote(listaPInsertaTconvalsit);
 				logger.debug(Utils.log("Tiempo en tconvalsit=",(System.currentTimeMillis()-inicioTconvalsit)/1000d));
 				
@@ -2160,7 +2176,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				
 				if(!isBlank(cdpersonCli))
 				{
-					setCheckpoint("Guardando contratante");
+					paso = ("Guardando contratante");
+					logger.debug("\nPaso: "+paso);
 					cotizacionDAO.movimientoMpoliper(
 							cdunieco
 							,cdramo
@@ -2178,10 +2195,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							);
 				}
 				
-				setCheckpoint("Aplicando ajustes de cotizacion");
+				paso = ("Aplicando ajustes de cotizacion");
+				logger.debug("\nPaso: "+paso);
 				cotizacionDAO.aplicarAjustesCotizacionPorProducto(cdunieco, cdramo, estado, nmpoliza, cdtipsit, tipoflot);
 				
-				setCheckpoint("Generando tarificacion concurrente");
+				paso = ("Generando tarificacion concurrente");
+				logger.debug("\nPaso: "+paso);
 				cotizacionDAO.ejecutaValoresDefectoTarificacionConcurrente(
 						cdunieco
 						,cdramo
@@ -2194,12 +2213,22 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						);
 			}
 			
-			setCheckpoint("Recuperando tarificacion");
+			paso = ("Recuperando tarificacion");
+			logger.debug("\nPaso: "+paso);
 			resp.setSlist(cotizacionDAO.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza));
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			try
+			{
+				Utils.generaExcepcion(ex, paso);
+			}
+			catch(Exception aex)
+			{
+				String error = Utils.manejaExcepcion(aex);
+				resp.setExito(false);
+				resp.setRespuesta(error);
+			}
 		}
 		
 		logger.info(
