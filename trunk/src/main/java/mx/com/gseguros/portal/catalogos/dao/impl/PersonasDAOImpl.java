@@ -1220,4 +1220,37 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		}
 	}
 	
+	
+	@Override
+	public void actualizaCdideper(String cdunieco, String cdramo, String estado, String nmpoliza, 
+			String nmsuplem, String cdideper) throws Exception {
+		
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_cdideper_i", cdideper);
+		ejecutaSP(new ActualizaCdideperSP(getDataSource()), params);
+	}
+	
+	protected class ActualizaCdideperSP extends StoredProcedure {
+
+		protected ActualizaCdideperSP(DataSource dataSource) {
+			super(dataSource, "PKG_SATELITES.P_ACTUALIZA_CODCLI_EXTERNO");
+
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdideper_i", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o",OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			
+			compile();
+		}
+	}
+	
 }

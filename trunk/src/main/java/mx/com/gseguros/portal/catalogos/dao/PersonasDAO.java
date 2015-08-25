@@ -138,4 +138,7 @@ public interface PersonasDAO
 	
 	public String obtieneCdperson() throws Exception;
 	
+	public void actualizaCdideper(String cdunieco, String cdramo, String estado, String nmpoliza, 
+			String nmsuplem, String cdideper) throws Exception;
+	
 }

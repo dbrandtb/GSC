@@ -168,11 +168,8 @@ public interface MesaControlDAO
 	 * Actualiza estatus de un tramite en la Mesa de Control
 	 * @param ntramite
 	 * @param status
-	 * @param cdusuari
-	 * @param cdsisrol
 	 * @throws Exception
 	 */
-	public void actualizaStatusMesaControlSP(String ntramite, String status,
-			String cdusuari, String cdsisrol) throws Exception;
+	public void actualizaStatusMesaControl(String ntramite, String status) throws Exception;
 	
 }
