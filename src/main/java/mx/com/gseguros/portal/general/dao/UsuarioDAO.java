@@ -34,5 +34,21 @@ public interface UsuarioDAO {
 	public IsoVO obtieneVariablesIso(String user) throws Exception;
 	
 	public void guardarSesion(String idSesion,String cdusuari,String cdsisrol,String userAgent,boolean esMovil,Date fecha) throws Exception;
+	
+	
+	/* *
+	 * Valida la edad de los asegurados en una poliza
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @return Lista de los asegurados de edad invalida
+	 * @throws Exception
+	 * /
+	public List<Map<String,String>> validaEdadAsegurados(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsuplem) throws Exception;
+	*/
+	
 
 }

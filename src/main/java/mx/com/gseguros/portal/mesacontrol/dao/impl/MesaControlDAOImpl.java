@@ -623,13 +623,11 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	
 	
 	@Override
-	public void actualizaStatusMesaControlSP(String ntramite,String status,String cdusuari,String cdsisrol) throws Exception {
-		Map<String,String> params = new LinkedHashMap<String,String>();
-		params.put("ntramite" , ntramite);
-		params.put("status"   , status);
-		params.put("cdusuari" , cdusuari);
-		params.put("cdsisrol" , cdsisrol);
-		ejecutaSP(new ActualizaStatusMesaControlSP(getDataSource()),params);
+	public void actualizaStatusMesaControl(String ntramite, String status) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("ntramite", ntramite);
+		params.put("status"  , status);
+		ejecutaSP(new ActualizaStatusMesaControlSP(getDataSource()), params);
     }
 	
 	protected class ActualizaStatusMesaControlSP extends StoredProcedure {
