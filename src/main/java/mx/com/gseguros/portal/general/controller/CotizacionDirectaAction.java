@@ -74,11 +74,11 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 		try {
 			// Se validan datos:
 			Utils.validate(params, "No se recibieron datos para cotizar");
-			Utils.validate(params.get("username"),    "No existe el par�metro params.username");
-			Utils.validate(params.get("cdelemento"),  "No existe el par�metro params.cdelemento");
-			Utils.validate(params.get("cdunieco"),    "No existe el par�metro params.cdunieco");
-			Utils.validate(params.get("cdramo"),      "No existe el par�metro params.cdramo");
-			Utils.validate(params.get("cdtipsit"),    "No existe el par�metro params.cdtipsit");
+			Utils.validate(params.get("username"),    "No existe el par\u00E1metro params.username");
+			Utils.validate(params.get("cdelemento"),  "No existe el par\u00E1metro params.cdelemento");
+			Utils.validate(params.get("cdunieco"),    "No existe el par\u00E1metro params.cdunieco");
+			Utils.validate(params.get("cdramo"),      "No existe el par\u00E1metro params.cdramo");
+			Utils.validate(params.get("cdtipsit"),    "No existe el par\u00E1metro params.cdtipsit");
 			Utils.validate(list, "No se recibieron datos de incisos (list)");
 			
 			String nmpoliza = list.get(0).get("nmpoliza");
@@ -134,7 +134,7 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
     	
     	try {
         	// Se validan datos:
-        	Utils.validate(params, "No hay par�metros");
+        	Utils.validate(params, "No hay par\u00E1metros");
         	Utils.validate(params.get("cdusuari"),      "No existe el par\u00E1metro params.cdusuari");
         	Utils.validate(params.get("cdsisrol"),      "No existe el par\u00E1metro params.cdsisrol");
         	Utils.validate(params.get("cdelemento"),    "No existe el par\u00E1metro params.cdelemento");
