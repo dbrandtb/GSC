@@ -6,9 +6,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import mx.com.aon.portal.dao.CustomStoredProcedure;
-import mx.com.aon.portal.dao.WrapperResultadosGeneric;
-import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.emision.model.EmisionVO;

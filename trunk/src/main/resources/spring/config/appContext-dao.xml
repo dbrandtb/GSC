@@ -71,4 +71,8 @@
 
     <bean id="WizardDAOImpl" class="mx.com.gseguros.wizard.dao.impl.WizardDAOImpl" parent="abstractManagerDAO"/>
     
+    <bean id="aseguradoDAOImpl" class="mx.com.gseguros.portal.general.dao.impl.AseguradoDAOImpl" parent="abstractManagerDAO"/>
+    
+    <bean id="emisionDAOImpl" class="mx.com.gseguros.portal.emision.dao.impl.EmisionDAOImpl" parent="abstractManagerDAO"/>
+    
 </beans>

@@ -18,7 +18,6 @@ import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.emision.model.EmisionVO;
 import mx.com.gseguros.portal.general.dao.AseguradoDAO;
-import mx.com.gseguros.portal.general.model.RespuestaEmisionIndividualVO;
 import mx.com.gseguros.portal.general.service.ProcesoEmisionManager;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
@@ -38,20 +37,14 @@ import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.convention.annotation.Namespace;
-import org.apache.struts2.convention.annotation.ParentPackage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
-@Controller
-@Scope("prototype")
-@ParentPackage(value="struts-default")
-@Namespace("/servicios")
+@Service
 public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	
 	private static Logger logger = LoggerFactory.getLogger(ProcesoEmisionManagerImpl.class);
@@ -96,6 +89,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	private Ice2sigsService ice2sigsService;
 	
 	@Autowired
+	@Qualifier("emisionAutosServiceImpl")
 	private EmisionAutosService emisionAutosService;
 	
 	@Autowired
@@ -124,11 +118,11 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	private PersonasDAO personasDAO;
 	
 	@Override
-	public RespuestaEmisionIndividualVO emitir(String cdunieco, String cdramo, String estado, String nmpoliza, 
+	public Map<String, String> emitir(String cdunieco, String cdramo, String estado, String nmpoliza, 
 			String cdtipsit, String ntramite, String cdusuari, String cdsisrol, String cdelemento,
 			boolean esFlotilla, String tipoGrupoInciso) throws Exception {
 		
-		RespuestaEmisionIndividualVO respEmiIndiv = new RespuestaEmisionIndividualVO();
+		Map<String, String> result = new HashMap<String, String>();
 		
 		String paso = null;
 		
@@ -155,9 +149,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				
 				necesitaAutorizacion = true;
 				
-				//TODO: Devolver variable al action:
-				//params.put("necesitaAutorizacion" , "S");
-				respEmiIndiv.setNecesitaAutorizacion(true);
+				result.put("necesitaAutorizacion" , "S");
 				
 				String msjeEnvio = "La p&oacute;liza se envi&oacute; a autorizaci&oacute;n debido a que:<br/>";
 				for(Map<String, String> iAseguradoEdadInvalida : listaAseguradosEdadInvalida) {
@@ -188,7 +180,6 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	        	
 	        	mesaControlDAO.actualizaStatusMesaControl(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
 	        	
-	        	// success = false;//TODO: analizar si se descomenta
 				throw new ApplicationException(msjeEnvio, "Error " + paso);
 			}
 			
@@ -199,9 +190,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				
 				if(!cuadroNatural) {
 					necesitaAutorizacion = true;
-					//TODO: Devolver variable al action:
-					//params.put("necesitaAutorizacion", "S");
-					respEmiIndiv.setNecesitaAutorizacion(true);
+					result.put("necesitaAutorizacion", "S");
 					String msjeAutorizacion = "La p&oacute;liza se envi&oacute; a autorizaci&oacute;n debido a que se cambio el cuadro de comisiones";
 					
 					Map<String, String> otvalores = new HashMap<String,String>();
@@ -226,14 +215,13 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					
 		        	mesaControlDAO.actualizaStatusMesaControl(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
 		        	
-					// success = false;//TODO: analizar si se descomenta
 					throw new ApplicationException(msjeAutorizacion, "Error " + paso);
 				}
 			}
 			
 			////// obtener forma de pago
 			paso = "Obteniendo forma de pago";
-			String cdperpag;//TODO: ver donde se declara esta variable, debería estar el inicio del action
+			String cdperpag;
 			Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, estado, nmpoliza, cdusuari);
 			logger.debug("poliza a emitir: " + infoPoliza);
 			cdperpag = infoPoliza.get("cdperpag");
@@ -248,22 +236,17 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 			logger.debug("emision obtenida " + emision);
 			
 			String nmpolizaEmitida = emision.getNmpoliza();
-			//this.nmpoliza   = nmpolizaEmitida;//TODO: pendiente asignar valor y/o devolverlo al action
-			respEmiIndiv.setNmpoliza(nmpolizaEmitida);
 			String nmpoliexEmitida = emision.getNmpoliex();
 			String nmsuplemEmitida = emision.getNmsuplem();
-			//this.nmsuplem   = nmsuplemEmitida;//TODO: pendiente asignar valor y/o devolverlo al action
-			respEmiIndiv.setNmsuplem(nmsuplemEmitida);
 			String esDxN           = emision.getEsDxN();
 			String cdIdeperRes     = emision.getCdideper();
-			//this.cdIdeper   =  cdIdeperRes;//TODO: pendiente asignar valor y/o devolverlo al action
-			respEmiIndiv.setCdideper(cdIdeperRes);
 			String tipoMov         = TipoTramite.POLIZA_NUEVA.getCdtiptra();
 			
-			//TODO: Devolver variables al action:
-			//params.put("nmpoliza",nmpolizaEmitida);
-			//params.put("nmpoliex",nmpoliexEmitida);
-			respEmiIndiv.setNmpoliex(nmpoliexEmitida);
+			result.put("nmpoliza", nmpolizaEmitida);
+			result.put("nmsuplem", nmsuplemEmitida);
+			result.put("cdIdeper", cdIdeperRes);
+			result.put("nmpoliza", nmpolizaEmitida);
+			result.put("nmpoliex", nmpoliexEmitida);
 			
 			try {
             	serviciosManager.grabarEvento(new StringBuilder("\nEmision")
@@ -329,8 +312,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							personasDAO.actualizaCdideper(_cdunieco, _cdramo, edoPoliza, _nmpoliza, 
 									_nmsuplem, cdIdeperRes);
 							
-							//this.cdIdeper = cdIdeperRes;//TODO: pendiente asignar valor y/o devolverlo al action
-							respEmiIndiv.setCdideper(cdIdeperRes);
+							result.put("cdIdeper", cdIdeperRes);
 							
 						} else {
 							//success = false;
@@ -362,14 +344,15 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				if(exitoWSEmision) {
 					
 					logger.debug("Emision de Auto en WS Exitosa, Numero de Poliza: " + aux.getNmpoliex());
-					nmpolAlt = aux.getNmpoliex();//TODO: pendiente asignar valor y/o devolverlo al action
-					sucursalGS = aux.getSucursal();//TODO: pendiente asignar valor y/o devolverlo al action
-					//TODO: Devolver variable al action:
-					//params.put("nmpoliex", nmpolAlt);
-					//TODO: Devolver variable al action:
+					nmpolAlt = aux.getNmpoliex();
+					sucursalGS = aux.getSucursal();
 					cdRamoGS = aux.getSubramo();
 					
-					//this.cdIdeper = cdIdeperRes;//TODO: pendiente asignar valor y/o devolverlo al action
+					result.put("nmpolAlt", nmpolAlt);
+					result.put("sucursalGS", sucursalGS);
+					result.put("nmpoliex", nmpolAlt);
+					result.put("cdRamoGS", cdRamoGS);
+					result.put("cdIdeper", cdIdeperRes);
 					
 					//Insertar Poliza Externa WS Auto
 					try{
@@ -644,8 +627,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		return respEmiIndiv;
-		
+		return result;
 	}
 	
 }
