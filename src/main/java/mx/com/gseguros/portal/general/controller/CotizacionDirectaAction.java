@@ -135,19 +135,19 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
     	try {
         	// Se validan datos:
         	Utils.validate(params, "No hay par�metros");
-        	Utils.validate(params.get("cdusuari"),      "No existe el par�metro params.cdusuari");
-        	Utils.validate(params.get("cdsisrol"),      "No existe el par�metro params.cdsisrol");
-        	Utils.validate(params.get("cdelemento"),    "No existe el par�metro params.cdelemento");
-        	Utils.validate(params.get("cdunieco"),      "No existe el par�metro params.cdunieco");
-        	Utils.validate(params.get("cdramo"),        "No existe el par�metro params.cdramo");
-        	Utils.validate(params.get("cdtipsit"),      "No existe el par�metro params.cdtipsit");
-        	Utils.validate(params.get("nmpoliza"),      "No existe el par�metro params.nmpoliza");
-        	Utils.validate(params.get("cdciaaguradora"),"No existe el par�metro params.cdciaaguradora");
-        	Utils.validate(params.get("cdplan"),        "No existe el par�metro params.cdplan");
-        	Utils.validate(params.get("cdperpag"),      "No existe el par�metro params.cdperpag");
-        	Utils.validate(params.get("fechaInicio"),   "No existe el par�metro params.fechaInicio");
-        	Utils.validate(params.get("fechaFin"),      "No existe el par�metro params.fechaFin");
-        	Utils.validate(params.get("cdagenteExt"),   "No existe el par�metro params.cdagenteExt");
+        	Utils.validate(params.get("cdusuari"),      "No existe el par\u00E1metro params.cdusuari");
+        	Utils.validate(params.get("cdsisrol"),      "No existe el par\u00E1metro params.cdsisrol");
+        	Utils.validate(params.get("cdelemento"),    "No existe el par\u00E1metro params.cdelemento");
+        	Utils.validate(params.get("cdunieco"),      "No existe el par\u00E1metro params.cdunieco");
+        	Utils.validate(params.get("cdramo"),        "No existe el par\u00E1metro params.cdramo");
+        	Utils.validate(params.get("cdtipsit"),      "No existe el par\u00E1metro params.cdtipsit");
+        	Utils.validate(params.get("nmpoliza"),      "No existe el par\u00E1metro params.nmpoliza");
+        	Utils.validate(params.get("cdciaaguradora"),"No existe el par\u00E1metro params.cdciaaguradora");
+        	Utils.validate(params.get("cdplan"),        "No existe el par\u00E1metro params.cdplan");
+        	Utils.validate(params.get("cdperpag"),      "No existe el par\u00E1metro params.cdperpag");
+        	Utils.validate(params.get("fechaInicio"),   "No existe el par\u00E1metro params.fechaInicio");
+        	Utils.validate(params.get("fechaFin"),      "No existe el par\u00E1metro params.fechaFin");
+        	Utils.validate(params.get("cdagenteExt"),   "No existe el par\u00E1metro params.cdagenteExt");
         	
         	// Se llenan datos:
     		boolean esFlotilla  = StringUtils.isNotBlank(params.get("flotilla"))&&params.get("flotilla").equalsIgnoreCase("si");
@@ -164,6 +164,8 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
     		
     		params.put("ntramite", ntramite);
     		
+    		respuesta = "Proceso correcto";
+    		success   = true;
     	} catch(Exception e) {
     		respuesta = Utils.manejaExcepcion(e);
     	}
