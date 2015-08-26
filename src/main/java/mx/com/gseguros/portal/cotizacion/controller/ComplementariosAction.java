@@ -2269,6 +2269,18 @@ public class ComplementariosAction extends PrincipalCoreAction
 						,nmsuplemEmitida
 						);
 				
+				List<Map<String,String>> docs = cotizacionManager.recuperarListaDocumentosParametrizados(
+	            		cdorddoc
+	            		,nmpoliza
+	            		,ntramite
+	            		);
+				
+				for(Map<String,String>doc:docs)
+				{
+					HttpUtil.generaArchivo(doc.get("C_COMMAND"),rutaCarpeta+"/"+doc.get("NOM_PDF"));
+				}
+				
+				/*
 				List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
 						cdunieco
 						,cdramo
@@ -2314,6 +2326,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							+ "\n################################"
 							+ "");
 				}
+				*/
 				
 				/**
 				 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas

@@ -2172,6 +2172,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,boolean complemento
 			,String cdpool
 			,String nombreCensoConfirmado
+			,boolean asincrono
 			)
 	{
 		logger.info(
@@ -2218,6 +2219,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ complemento=")            .append(complemento)
 				.append("\n@@@@@@ cdpool=")                 .append(cdpool)
 				.append("\n@@@@@@ nombreCensoConfirmado=")  .append(nombreCensoConfirmado)
+				.append("\n@@@@@@ asincrono=")              .append(asincrono)
 				.toString()
 				);
 		
@@ -3273,6 +3275,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,resubirCenso
 					,cdsisrol
 					,complemento
+					,asincrono
 					);
 			
 			resp.setExito(respInterna.isExito());
@@ -3325,6 +3328,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,boolean resubirCenso
 			,String cdsisrol
 			,boolean complemento
+			,boolean asincrono
 			)
 	{
 		logger.info(
@@ -3361,6 +3365,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ resubirCenso=")        .append(resubirCenso)
 				.append("\n@@@@@@ cdsisrol=")            .append(cdsisrol)
 				.append("\n@@@@@@ complemento=")         .append(complemento)
+				.append("\n@@@@@@ asincrono=")           .append(asincrono)
 				.toString()
 				);
 		
@@ -3413,7 +3418,6 @@ public class CotizacionManagerImpl implements CotizacionManager
             }
 		}
 		
-		boolean asincrono = false;
 		if(resp.isExito()
 				&&(!hayTramite||hayTramiteVacio)
 				&&
@@ -5168,6 +5172,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,false //resubirCenso
 					,cdsisrol
 					,false
+					,false //asincrono
 					);
 		}
 		
@@ -6386,7 +6391,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             
         	
         	//maestro historico poliza
-            paso = "Insertando histórico de póliza";
+            paso = "Insertando histï¿½rico de pï¿½liza";
             
             SimpleDateFormat renderHora = new SimpleDateFormat("HH:mm");
             cotizacionDAO.movimientoMsupleme(
@@ -6424,13 +6429,13 @@ public class CotizacionManagerImpl implements CotizacionManager
             		cdelemen, cdperson, cdciaaguradora, cdplan, cdperpag);
         	
             //acutalizar/generar tramite
-            paso = "Actualizando y generando trámite " + ntramite;
+            paso = "Actualizando y generando trï¿½mite " + ntramite;
             
     		//actualizar tramite
             
     		if(StringUtils.isNotBlank(ntramite)) {
     			
-    			paso = "Actualizando el trámite";
+    			paso = "Actualizando el trï¿½mite";
     			
     			mesaControlDAO.actualizarNmsoliciTramite(ntramite, nmpoliza);
             	logger.debug("se inserta detalle nuevo");
@@ -6440,7 +6445,7 @@ public class CotizacionManagerImpl implements CotizacionManager
         		
     		} else { //se genera un tramite
     			
-    			paso = "Generando el trámite";
+    			paso = "Generando el trï¿½mite";
     			
             	ntramite = mesaControlDAO.movimientoMesaControl(cdunieco, cdramo,"W", "0", "0", 
             			null, null, "1", new Date(), cdagente, null, "", new Date(), "2",
@@ -6463,7 +6468,7 @@ public class CotizacionManagerImpl implements CotizacionManager
         	//generar cotizacion
         	if(!cdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo()) && (!esFlotilla||"P".equals(tipoflot))) {
         		
-        		paso = "Generando la cotización";
+        		paso = "Generando la cotizaciï¿½n";
         		
                 File carpeta=new File(rutaDocumentosPoliza+"/"+ntramite);
                 if(!carpeta.exists()) {
@@ -8503,6 +8508,17 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,"\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
 					));
 		}
+	}
+	
+	@Deprecated
+	@Override
+	public List<Map<String,String>> recuperarListaDocumentosParametrizados(
+			String cdorddoc
+			,String nmsolici
+			,String ntramite
+			)throws Exception
+	{
+		return cotizacionDAO.recuperarListaDocumentosParametrizados(cdorddoc,nmsolici,ntramite);
 	}
     
 	///////////////////////////////

@@ -3293,11 +3293,11 @@ function _p21_query(regex)
     return Ext.ComponentQuery.query(regex);
 }
 
-function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCensoParaConfirmar)
+function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCensoParaConfirmar,asincrono)
 {
-    debug('>_p21_generarTramiteClic callback?:',!Ext.isEmpty(callback),',sincenso:',sincenso,'.');
-    debug('>_p21_generarTramiteClic revision:',revision,',complemento:',complemento,'.');
-    debug('>_p21_generarTramiteClic nombreCensoParaConfirmar:',nombreCensoParaConfirmar,'.');
+    debug('>_p21_generarTramiteClic callback?:'                , !Ext.isEmpty(callback)   , ',sincenso:'    , sincenso    , '.');
+    debug('>_p21_generarTramiteClic revision:'                 , revision                 , ',complemento:' , complemento , '.');
+    debug('>_p21_generarTramiteClic nombreCensoParaConfirmar:' , nombreCensoParaConfirmar , ',asincrono:'   , asincrono   , '.');
     var valido = true;
     
     if(valido){
@@ -3418,6 +3418,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                 conceptos['resubirCenso']          = _p21_resubirCenso;
                 conceptos['complemento']           = true==complemento?'S':'N';
                 conceptos['nombreCensoConfirmado'] = nombreCensoParaConfirmar;
+                conceptos['asincrono']             = asincrono;
                 var grupos = [];
                 _p21_storeGrupos.each(function(record)
                 {

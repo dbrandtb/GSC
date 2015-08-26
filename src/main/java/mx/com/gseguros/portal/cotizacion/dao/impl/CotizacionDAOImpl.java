@@ -5978,7 +5978,6 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		}
 	}
 	
-	
 	@Override
 	public void movimientoMsupleme(
 			String cdunieco,
@@ -6105,4 +6104,42 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	}
     }
 	
+	@Override
+	public List<Map<String,String>> recuperarListaDocumentosParametrizados(
+			String cdorddoc
+			,String nmsolici
+			,String ntramite
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdorddoc" , cdorddoc);
+		params.put("nmsolici" , nmsolici);
+		params.put("ntramite" , ntramite);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarListaDocumentosParametrizados(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		Utils.debugProcedure(logger, "pkg_imp_document.p_imp_doc", params, lista);
+		return lista;
+	}
+	
+	protected class RecuperarListaDocumentosParametrizados extends StoredProcedure
+	{
+		protected RecuperarListaDocumentosParametrizados(DataSource dataSource)
+		{
+			super(dataSource,"pkg_imp_document.p_imp_doc");
+			declareParameter(new SqlParameter("cdorddoc" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsolici" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"DSMODDOC","C_COMMAND","NOM_PDF"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

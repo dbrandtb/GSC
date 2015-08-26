@@ -496,7 +496,6 @@ public interface CotizacionDAO {
 			,String cdmunici
 			)throws Exception;
 	
-	
 	public void movimientoMsupleme(
 			String cdunieco,
 			String cdramo,
@@ -535,4 +534,9 @@ public interface CotizacionDAO {
 			String cdplan,
 			String cdperpag) throws Exception;
 	
+	public List<Map<String,String>> recuperarListaDocumentosParametrizados(
+			String cdorddoc
+			,String nmsolici
+			,String ntramite
+			)throws Exception;
 }
