@@ -1117,6 +1117,18 @@ public class CotizacionAction extends PrincipalCoreAction
 	            		);
 	            logger.debug("cdorddoc: {}",cdorddoc);
 	            
+	            List<Map<String,String>> docs = cotizacionManager.recuperarListaDocumentosParametrizados(
+	            		cdorddoc
+	            		,nmpoliza
+	            		,ntramite
+	            		);
+	            
+	            for(Map<String,String>doc:docs)
+				{
+					HttpUtil.generaArchivo(doc.get("C_COMMAND"),rutaCarpeta+"/"+doc.get("NOM_PDF"));
+				}
+	            
+	            /*
 	            List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
 						cdunieco
 						,cdramo
@@ -1163,6 +1175,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							+ "\n################################"
 							+ "");
 				}
+				*/
 			}
 			catch(Exception ex)
 			{
@@ -4684,6 +4697,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdperpag
 					,cdsisrol
 					,false
+					,false //asincrono
 					);
 			exito           = aux.exito;
 			respuesta       = aux.respuesta;
@@ -4765,6 +4779,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		boolean censoAtrasado = false;
 		boolean resubirCenso  = false;
 		boolean complemento   = false;
+		boolean asincrono     = false;
 		
 		//datos de entrada
 		try
@@ -4828,6 +4843,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			complemento = "S".equals(smap1.get("complemento"));
 			
 			nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
+			
+			asincrono = StringUtils.isNotBlank(smap1.get("asincrono"))&&smap1.get("asincrono").equalsIgnoreCase("si");
 		}
 		catch(ApplicationException ax)
 		{
@@ -4890,6 +4907,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,complemento
 					,cdpool
 					,nombreCensoConfirmado
+					,asincrono
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -4963,6 +4981,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+inTimestamp);
 			
 			String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
+			
+			boolean asincrono = StringUtils.isNotBlank(smap1.get("asincrono"))&&smap1.get("asincrono").equalsIgnoreCase("si");
 			
 			logger.info(Utils.log(
 					"\ninTimestamp: " , inTimestamp
@@ -5769,6 +5789,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,false    , ntramite      , cdagente
 						,sincenso , censoAtrasado , resubirCenso
 						,cdperpag , cdsisrol      , complemento
+						,asincrono
 						);
 				exito           = aux.exito;
 				respuesta       = aux.respuesta;
@@ -5822,6 +5843,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			,String cdperpag
 			,String cdsisrol
 			,boolean complemento
+			,boolean asincrono
 			)
 	{
 		logger.debug(
@@ -5849,6 +5871,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				.append("\n## cdperpag: ")            .append(cdperpag)
 				.append("\n## cdsisrol: ")            .append(cdsisrol)
 				.append("\n## complemento: ")         .append(complemento)
+				.append("\n## asincrono: ")           .append(asincrono)
 				.toString()
 				);
 		
@@ -5942,7 +5965,6 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		boolean asincrono = false;
 		if(resp.exito
 				&&(!hayTramite||hayTramiteVacio)
 				&&

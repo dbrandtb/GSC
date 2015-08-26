@@ -332,6 +332,7 @@ public interface CotizacionManager
 			,boolean complemento
 			,String cdpool
 			,String nombreCensoConfirmado
+			,boolean asincrono
 			);
 	
 	public ManagerRespuestaSlistVO obtenerTiposSituacion();
@@ -653,5 +654,10 @@ public interface CotizacionManager
 			String nombreReporteCotizacion,
 			String nombreReporteCotizacionFlot) throws Exception;
 	
-	
+	@Deprecated
+	public List<Map<String,String>> recuperarListaDocumentosParametrizados(
+			String cdorddoc
+			,String nmsolici
+			,String ntramite
+			)throws Exception;
 }

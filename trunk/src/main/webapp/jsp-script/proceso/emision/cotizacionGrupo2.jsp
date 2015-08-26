@@ -3464,11 +3464,11 @@ function _p25_setActiveResumen()
     debug('<_p25_setActiveResumen');
 }
 
-function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCensoParaConfirmar)
+function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCensoParaConfirmar,asincrono)
 {
-    debug('>_p25_generarTramiteClic callback?',!Ext.isEmpty(callback),'sincenso:',sincenso,'.');
-    debug('revision:',revision,'complemento:',complemento,'.');
-    debug('nombreCensoParaConfirmar:',nombreCensoParaConfirmar,'.');
+    debug('>_p25_generarTramiteClic callback?' , !Ext.isEmpty(callback)   , ',sincenso:'    , sincenso    , '.');
+    debug('revision:'                          , revision                 , ',complemento:' , complemento , '.');
+    debug('nombreCensoParaConfirmar:'          , nombreCensoParaConfirmar , ',asincrono:'   , asincrono   , '.');
     var valido = true;
     
     if(valido){
@@ -3589,6 +3589,7 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
             conceptos['resubirCenso']          = _p25_resubirCenso;
             conceptos['complemento']           = true==complemento?'S':'N';
             conceptos['nombreCensoConfirmado'] = nombreCensoParaConfirmar;
+            conceptos['asincrono']             = asincrono;
             var grupos = [];
             _p25_storeGrupos.each(function(record)
             {
