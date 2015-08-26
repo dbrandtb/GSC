@@ -417,45 +417,48 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 			
 			////// documentos
             paso = "Generando la documentación de emisión";
-				
-			String cdorddoc = cotizacionDAO.insercionDocumentosParametrizados(
-					cdunieco, cdramo, "M", nmpolizaEmitida, "0", nmsuplemEmitida);
-			
-			List<Map<String,String>> listaDocu = cotizacionDAO.impresionDocumentosPoliza(
-					cdunieco, cdramo, "M", nmpolizaEmitida, nmsuplemEmitida, ntramite);
+            List<Map<String,String>> listaDocu = null;
+			try {
+				listaDocu = cotizacionDAO.impresionDocumentosPoliza(
+						cdunieco, cdramo, "M", nmpolizaEmitida, nmsuplemEmitida, ntramite);
+			} catch (Exception e) {
+				logger.warn("Error en P_Imp_documentos", e);
+			}
 			
 			//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
-			for(Map<String, String> docu : listaDocu) {
-				
-				logger.debug("docu iterado: " + docu);
-				String descripc = docu.get("descripc");
-				String descripl = docu.get("descripl");
-				String url=rutaServidorReportes
-						+ "?destype=cache"
-						+ "&desformat=PDF"
-						+ "&userid="+passServidorReportes
-						+ "&report="+descripl
-						+ "&paramform=no"
-						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-						+ "&p_unieco="+cdunieco
-						+ "&p_ramo="+cdramo
-						+ "&p_estado='M'"
-						+ "&p_poliza="+nmpolizaEmitida
-						+ "&p_suplem="+nmsuplemEmitida
-						+ "&desname="+rutaCarpeta+"/"+descripc;
-				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN")) {
-					// C R E D E N C I A L _ X X X X X X . P D F
-					//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-					url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
+			if(listaDocu != null) {
+				for(Map<String, String> docu : listaDocu) {
+					
+					logger.debug("docu iterado: " + docu);
+					String descripc = docu.get("descripc");
+					String descripl = docu.get("descripl");
+					String url=rutaServidorReportes
+							+ "?destype=cache"
+							+ "&desformat=PDF"
+							+ "&userid="+passServidorReportes
+							+ "&report="+descripl
+							+ "&paramform=no"
+							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+							+ "&p_unieco="+cdunieco
+							+ "&p_ramo="+cdramo
+							+ "&p_estado='M'"
+							+ "&p_poliza="+nmpolizaEmitida
+							+ "&p_suplem="+nmsuplemEmitida
+							+ "&desname="+rutaCarpeta+"/"+descripc;
+					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN")) {
+						// C R E D E N C I A L _ X X X X X X . P D F
+						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
+					}
+					logger.debug("\n#################################"
+								+ "\n###### Se solicita reporte ######"
+								+ "\na "+url);
+					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+					logger.debug("\n######                    ######"
+								+ "\n###### reporte solicitado ######"
+								+ "\n################################"
+								+ "");
 				}
-				logger.debug("\n#################################"
-							+ "\n###### Se solicita reporte ######"
-							+ "\na "+url);
-				HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-				logger.debug("\n######                    ######"
-							+ "\n###### reporte solicitado ######"
-							+ "\n################################"
-							+ "");
 			}
 			
 			/**
