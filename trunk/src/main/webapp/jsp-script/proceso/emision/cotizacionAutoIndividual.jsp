@@ -1561,6 +1561,7 @@ function _p28_ramo5ClienteChange(combcl)
     var nombre  = _fieldLikeLabel('NOMBRE CLIENTE');
     var tipoper = _fieldByLabel('TIPO PERSONA');
     var codpos  = _fieldLikeLabel('CP CIRCULACI');
+    var fenacim = _fieldLikeLabel('FECHA DE NAC');
     
     //cliente nuevo
     if(combcl.getValue()=='S')
@@ -1568,10 +1569,12 @@ function _p28_ramo5ClienteChange(combcl)
         nombre.reset();
         tipoper.reset();
         codpos.reset();
+        fenacim.reset();
         
         nombre.setReadOnly(false);
         tipoper.setReadOnly(false);
         codpos.setReadOnly(false);
+        fenacim.setReadOnly(false);
         
         _p28_recordClienteRecuperado=null;
     }
@@ -1581,10 +1584,12 @@ function _p28_ramo5ClienteChange(combcl)
         nombre.reset();
         tipoper.reset();
         codpos.reset();
+        fenacim.reset();
         
         nombre.setReadOnly(true);
         tipoper.setReadOnly(true);
         codpos.setReadOnly(true);
+        fenacim.setReadOnly(true);
         
         var ventana=Ext.create('Ext.window.Window',
         {
@@ -1662,6 +1667,7 @@ function _p28_ramo5ClienteChange(combcl)
                                 nombre.setValue(record.raw.NOMBRECLI);
                                 tipoper.setValue(record.raw.TIPOPERSONA);
                                 codpos.setValue(record.raw.CODPOSTAL);
+                                fenacim.setValue(record.raw.FENACIMICLI);
                                 ventana.destroy();
                             }
                         }
