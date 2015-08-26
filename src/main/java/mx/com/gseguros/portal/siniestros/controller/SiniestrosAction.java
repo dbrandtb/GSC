@@ -2369,10 +2369,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							}
 							
 							importeSiniestroIte = subttDesto - copagoAplicadoSiniestroIte;
-							/*
-							Cambiarlo cuando nos del el Vo.Bo. de Siniestros
-							double hIVADesCopago  = Double.valueOf(hosp.get("IVA"));*/
-							double hIVADesCopago  = importeSiniestroIte*(ivaprov/100d);
+							//Cambiarlo cuando nos del el Vo.Bo. de Siniestros
+							double hIVADesCopago  = Double.valueOf(hosp.get("IVA"));
+							//double hIVADesCopago  = importeSiniestroIte*(ivaprov/100d);
 							logger.debug("IVA despues de Copago  : {} ",hIVADesCopago);
 							
 							hosp.put("PTIMPORT_DESCOPAGO" , importeSiniestroIte+"");
@@ -3950,10 +3949,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							}
 							
 							importeSiniestroIte = subttDesto - copagoAplicadoSiniestroIte;
-							/*
-							Cambiarlo cuando nos del el Vo.Bo. de Siniestros
-							double hIVADesCopago  = Double.valueOf(hosp.get("IVA"));*/
-							double hIVADesCopago  = importeSiniestroIte*(ivaprov/100d);
+							//Cambiarlo cuando nos del el Vo.Bo. de Siniestros
+							double hIVADesCopago  = Double.valueOf(hosp.get("IVA"));
+							//double hIVADesCopago  = importeSiniestroIte*(ivaprov/100d);
 							logger.debug("IVA despues de Copago  : {} ",hIVADesCopago);
 							
 							hosp.put("PTIMPORT_DESCOPAGO" , importeSiniestroIte+"");
