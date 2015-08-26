@@ -329,4 +329,6 @@ public interface ConsultasDAO
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+
+	public Map<String,String> consultaFeNacContratanteAuto(Map<String,String> params)throws Exception;
 }

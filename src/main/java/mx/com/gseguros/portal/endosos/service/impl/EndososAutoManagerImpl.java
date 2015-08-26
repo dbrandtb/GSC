@@ -3180,6 +3180,22 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								new Date(), "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf", "Gestoria GS", nmpoliza, 
 								ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
 					}
+
+					/**
+					 * Para cobertura de Seguro de Vida
+					 */
+					if(StringUtils.isNotBlank(endosoIt.get("COBVIDA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("COBVIDA"))){
+						
+						mesaControlDAO.guardarDocumento(
+								cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
+								new Date(), "https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf", "Especificaciones Seguro de Vida", nmpoliza, 
+								ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
+
+						mesaControlDAO.guardarDocumento(
+								cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
+								new Date(), "https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf", "Condiciones Generales Seguro de Vida", nmpoliza, 
+								ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra());
+					}
 				}
 			}
 			

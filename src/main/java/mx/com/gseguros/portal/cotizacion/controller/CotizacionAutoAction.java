@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2SmapVO;
@@ -21,6 +22,7 @@ import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -43,6 +45,10 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	private File                     excel            = null;
 	private String                   excelFileName    = null;
 	private String                   excelContentType = null;
+	
+	
+	@Autowired
+	private ConsultasManager         consultasManager;
 
 	/**
 	 * Constructor que se asegura de que el action tenga sesion
@@ -360,6 +366,21 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				smap1.putAll(resp.getSmap());
 				smap1.put("cdsisrol" , cdsisrol);
 				imap = resp.getImap();
+				
+				HashMap<String,String> params = new HashMap<String, String>();
+				params.put("cdunieco", cdunieco);
+				params.put("cdramo", cdramo);
+				params.put("estado", estado);
+				params.put("nmpoliza", nmpoliza);
+				params.put("nmsuplem", "0");
+				
+				Map<String,String> fechas = consultasManager.consultaFeNacContratanteAuto(params);
+				
+				if(fechas != null && !fechas.isEmpty()){
+					smap1.put("AplicaCobVida" , fechas.get("APLICA"));
+					smap1.put("FechaMinEdad"  , fechas.get("FECHAMIN"));
+					smap1.put("FechaMaxEdad"  , fechas.get("FECHAMAX"));
+				}
 			}
 		}
 		catch(Exception ex)
@@ -1130,6 +1151,21 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				smap1.putAll(resp.getSmap());
 				smap1.put("cdsisrol" , cdsisrol);
 				imap = resp.getImap();
+				
+				HashMap<String,String> params = new HashMap<String, String>();
+				params.put("cdunieco", cdunieco);
+				params.put("cdramo", cdramo);
+				params.put("estado", estado);
+				params.put("nmpoliza", nmpoliza);
+				params.put("nmsuplem", "0");
+				
+				Map<String,String> fechas = consultasManager.consultaFeNacContratanteAuto(params);
+				
+				if(fechas != null && !fechas.isEmpty()){
+					smap1.put("AplicaCobVida" , fechas.get("APLICA"));
+					smap1.put("FechaMinEdad"  , fechas.get("FECHAMIN"));
+					smap1.put("FechaMaxEdad"  , fechas.get("FECHAMAX"));
+				}
 			}
 		}
 		catch(Exception ex)

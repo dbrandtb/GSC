@@ -118,4 +118,6 @@ public interface ConsultasManager
 			,String cdusuari
 			,String cdsisrol
 			)throws Exception;
+
+	public Map<String,String> consultaFeNacContratanteAuto(Map<String,String> params)throws Exception;
 }

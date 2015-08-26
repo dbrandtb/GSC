@@ -2524,4 +2524,43 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	public Map<String,String> consultaFeNacContratanteAuto(Map<String,String> params)throws Exception{
+		Map<String,String> fechas = null;
+		
+		Map<String,Object>procResult  = ejecutaSP(new ConsultaFeNacContratanteAuto(getDataSource()), params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		
+		if(lista != null && !lista.isEmpty()){
+			fechas =  lista.get(0);
+		}else{
+			fechas =  new HashMap<String, String>();
+			fechas.put("APLICA", "N");
+			fechas.put("FECHAMIN", "");
+			fechas.put("FECHAMAX", "");
+		}
+		
+		return fechas;
+	}
+	
+	protected class ConsultaFeNacContratanteAuto extends StoredProcedure
+	{
+		protected ConsultaFeNacContratanteAuto(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_OBT_RANGOS_FECNAC");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			 String[] cols = new String[]{
+	            		"APLICA"  , "FECHAMIN"   , "FECHAMAX"
+            };
+	        
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

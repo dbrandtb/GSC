@@ -118,6 +118,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 
         	consulta.setReduceGS(rs.getString("reducegs"));
         	consulta.setGestoria(rs.getString("gestoria"));
+        	consulta.setCobvida (rs.getString("cobvida"));
         	
             return consulta;
         }
