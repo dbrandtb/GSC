@@ -29,6 +29,10 @@
             <result type="json" />
         </action>
         
+        <action name="conultaFeNacContratanteAuto" class="consultasAction" method="conultaFeNacContratanteAuto">
+            <result type="json" />
+        </action>
+        
     </package>
 
 </struts>

@@ -333,6 +333,28 @@ public class ConsultasManagerImpl implements ConsultasManager
 		return bloqueada;
 	}
 	
+	
+	public Map<String,String> consultaFeNacContratanteAuto(Map<String,String> params)throws Exception{
+		
+		Map<String,String> res = null;
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ consultaFeNacContratanteAuto @@@@@@"
+				,"\n@@@@@@ params=" , params
+				));
+		
+		res = consultasDAO.consultaFeNacContratanteAuto(params);
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ res=",res
+				,"\n@@@@@@ validaClientePideNumeroEmpleado @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		return res;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	///////////////////////////////

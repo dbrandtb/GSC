@@ -42,6 +42,10 @@ var _mensajeEmail;
 
 var _p31_storeCdtipsit       = null;
 var _p31_storeVersionesRamo5 = null;
+
+var _aplicaCobVida = !Ext.isEmpty(_p31_smap1.AplicaCobVida) && _p31_smap1.AplicaCobVida == "S" ? true : false ;
+var _FechaMinEdad  = _p31_smap1.FechaMinEdad;
+var _FechaMaxEdad  = _p31_smap1.FechaMaxEdad;
 ////// variables //////
 
 ////// dinamicos //////
@@ -553,7 +557,9 @@ Ext.onReady(function()
                         'smap1.esCargaClienteNvo' :(Ext.isEmpty(json.smap1.cdperson)? 'S' : 'N' ),
                         'smap1.cargaCP' : json.smap1.cdpostal,
                         'smap1.cargaTipoPersona' : json.smap1.otfisjur,
-                        'smap1.cargaSucursalEmi' : _p31_smap1.cdunieco
+                        'smap1.cargaSucursalEmi' : _p31_smap1.cdunieco,
+	                    'smap1.cargaFenacMin' : _aplicaCobVida?_FechaMinEdad:'',
+	                    'smap1.cargaFenacMax' : _aplicaCobVida?_FechaMaxEdad:''
                     }
                 });
                 

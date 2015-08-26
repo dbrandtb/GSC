@@ -2452,6 +2452,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					
 					boolean reduceGS = (StringUtils.isNotBlank(polRes.getReduceGS()) && Constantes.SI.equalsIgnoreCase(polRes.getReduceGS()))?true:false;
 					boolean gestoria = (StringUtils.isNotBlank(polRes.getGestoria()) && Constantes.SI.equalsIgnoreCase(polRes.getGestoria()))?true:false;
+					boolean cobVida  = (StringUtils.isNotBlank(polRes.getCobvida()) && Constantes.SI.equalsIgnoreCase(polRes.getCobvida()))?true:false;
 					
 					if(reduceGS){
 						/**
@@ -2474,6 +2475,26 @@ public class ComplementariosAction extends PrincipalCoreAction
 						
 						paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
 						paramsR.put("pv_dsdocume_i", "Gestoria GS");
+						
+						kernelManager.guardarArchivo(paramsR);
+					}
+					
+					if(cobVida){
+						/**
+						 * Para cobertura de Vida
+						 */
+						
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf\">Especificaciones Seguro de Vida</a>";
+						
+						paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
+						paramsR.put("pv_dsdocume_i", "Especificaciones Seguro de Vida");
+						
+						kernelManager.guardarArchivo(paramsR);
+
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf\">Condiciones Generales Seguro de Vida</a>";
+						
+						paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf");
+						paramsR.put("pv_dsdocume_i", "Condiciones Generales Seguro de Vida");
 						
 						kernelManager.guardarArchivo(paramsR);
 					}
@@ -3201,6 +3222,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						
 						boolean reduceGS = (StringUtils.isNotBlank(polRes.getReduceGS()) && Constantes.SI.equalsIgnoreCase(polRes.getReduceGS()))?true:false;
 						boolean gestoria = (StringUtils.isNotBlank(polRes.getGestoria()) && Constantes.SI.equalsIgnoreCase(polRes.getGestoria()))?true:false;
+						boolean cobVida  = (StringUtils.isNotBlank(polRes.getCobvida()) && Constantes.SI.equalsIgnoreCase(polRes.getCobvida()))?true:false;
 						
 						if(reduceGS){
 							/**
@@ -3223,6 +3245,26 @@ public class ComplementariosAction extends PrincipalCoreAction
 							
 							paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
 							paramsR.put("pv_dsdocume_i", "Gestoria GS");
+							
+							kernelManager.guardarArchivo(paramsR);
+						}
+						
+						if(cobVida){
+							/**
+							 * Para cobertura de Vida
+							 */
+							
+							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf\">Especificaciones Seguro de Vida</a>";
+							
+							paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
+							paramsR.put("pv_dsdocume_i", "Especificaciones Seguro de Vida");
+							
+							kernelManager.guardarArchivo(paramsR);
+
+							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf\">Condiciones Generales Seguro de Vida</a>";
+							
+							paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf");
+							paramsR.put("pv_dsdocume_i", "Condiciones Generales Seguro de Vida");
 							
 							kernelManager.guardarArchivo(paramsR);
 						}

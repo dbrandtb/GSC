@@ -209,6 +209,30 @@ public class ConsultasAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
+	
+	public String conultaFeNacContratanteAuto()
+	{
+		logger.info(""
+				+ "\n#########################################"
+				+ "\n###### conultaFeNacContratanteAuto ######"
+				);
+		try
+		{
+			mapaStringSalida = consultasManager.consultaFeNacContratanteAuto(mapaStringEntrada);
+		}
+		catch(Exception ex)
+		{
+			success = false;
+			error = ex.getMessage();
+			logger.error("error al consultar proveedores",ex);
+		}
+		logger.info(""
+				+ "\n###### conultaFeNacContratanteAuto ######"
+				+ "\n#########################################"
+				);
+		return SUCCESS;
+	}
+	
 
 	///////////////////////////////
 	////// getters y setters //////

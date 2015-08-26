@@ -10297,6 +10297,21 @@ public class EndososAction extends PrincipalCoreAction
 						
 						kernelManager.guardarArchivo(paramsR);
 					}
+
+					/**
+					 * Para cobertura de Seguro de Vida
+					 */
+					if(StringUtils.isNotBlank(endosoIt.get("COBVIDA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("COBVIDA"))){
+						paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
+						paramsR.put("pv_dsdocume_i", "Especificaciones Seguro de Vida");
+						
+						kernelManager.guardarArchivo(paramsR);
+
+						paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf");
+						paramsR.put("pv_dsdocume_i", "Condiciones Generales Seguro de Vida");
+						
+						kernelManager.guardarArchivo(paramsR);
+					}
 				}
 			}
 			

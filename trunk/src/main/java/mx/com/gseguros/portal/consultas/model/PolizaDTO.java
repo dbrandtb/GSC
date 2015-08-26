@@ -57,8 +57,19 @@ public class PolizaDTO implements Serializable{
 	 */
 	private String reduceGS;
 	private String gestoria;
+	private String cobvida;
 	
 	
+	public String getCobvida() {
+		return cobvida;
+	}
+
+
+	public void setCobvida(String cobvida) {
+		this.cobvida = cobvida;
+	}
+
+
 	/**
 	 * Modalidad
 	 */

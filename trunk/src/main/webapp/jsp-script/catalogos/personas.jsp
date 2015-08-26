@@ -120,6 +120,8 @@ var coloniaImportarTMP;
 var _esCargaClienteNvo = false;
 var _ocultaBusqueda    = false;
 var _cargaCompania;
+var _cargaFenacMin;
+var _cargaFenacMax;
 var _cargaCdPerson;
 var _cargaCP;
 var _cargaTipoPersona;
@@ -142,6 +144,8 @@ if(!Ext.isEmpty(_p22_smap1)){
 	_esCargaClienteNvo = !Ext.isEmpty(_p22_smap1.esCargaClienteNvo) && _p22_smap1.esCargaClienteNvo == "S" ? true : false ;
 	_ocultaBusqueda = !Ext.isEmpty(_p22_smap1.ocultaBusqueda) && _p22_smap1.ocultaBusqueda == "S" ? true : false ;
 	_cargaCompania  = _p22_smap1.esSaludDanios;	
+	_cargaFenacMin = _p22_smap1.cargaFenacMin;
+	_cargaFenacMax = _p22_smap1.cargaFenacMax;
 	_cargaCP = _p22_smap1.cargaCP;	
 	_cargaTipoPersona = _p22_smap1.cargaTipoPersona;	
 	_cargaSucursalEmi = _p22_smap1.cargaSucursalEmi;
@@ -1330,6 +1334,14 @@ function importaPersonaWS(esSaludD, codigoCliExt){
     		_p22_principalDatosAdicionales().hide();
 			
 		},1000);
+    }
+    
+    if(!Ext.isEmpty(_cargaFenacMin)){
+    	_fieldByName('FENACIMI',_PanelPrincipalPersonas).setMinValue(_cargaFenacMin);
+    }
+
+    if(!Ext.isEmpty(_cargaFenacMax)){
+    	_fieldByName('FENACIMI',_PanelPrincipalPersonas).setMaxValue(_cargaFenacMax);
     }
     
 });
