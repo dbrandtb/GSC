@@ -22,11 +22,11 @@ import org.springframework.stereotype.Controller;
 @Scope("prototype")
 @ParentPackage(value="seguridad")
 @Namespace("/emisionDirecta")
-public class ProcesoEmisionAction extends PrincipalCoreAction
+public class EmisionDirectaAction extends PrincipalCoreAction
 {
 	
 	private static final long serialVersionUID = 7996363816495572103L;
-	private static Logger     logger           = LoggerFactory.getLogger(ProcesoEmisionAction.class);
+	private static Logger     logger           = LoggerFactory.getLogger(EmisionDirectaAction.class);
 	
 	private Map<String,String> params;
 	private boolean            success;

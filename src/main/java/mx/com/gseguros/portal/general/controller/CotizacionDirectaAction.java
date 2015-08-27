@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.general.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +103,10 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 					nmpoliza, feini, fefin, params.get("cdpersonCli"), params.get("cdideperCli"),
 					noTarificar, conIncisos, list, params.containsKey("movil"),
 					tvalopol, params.get("cdagenteAux"));
+			
+			// Se vacían los datos de entrada para no devolverlos de nuevo:
+			params = new HashMap<String, String>();
+			list   = new ArrayList<Map<String,String>>();
 			
 			respuesta = resp.getRespuesta();
 			
@@ -262,6 +267,12 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 					,tipoflot
 					,tvalopol
 					);
+			
+			// Se vacían los datos de entrada para no devolverlos de nuevo:
+			params             = new HashMap<String, String>();
+			list               = new ArrayList<Map<String,String>>();
+			listaValoresSituac = new ArrayList<Map<String,String>>();
+			listaConfigSituac  = new ArrayList<Map<String,String>>();
 			
 			success         = resp.isExito();
 			respuesta       = resp.getRespuesta();
