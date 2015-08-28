@@ -49,27 +49,6 @@ public class EmisionDirectaAction extends PrincipalCoreAction
 		logger.debug("Inicio de emitirIndividual Directa params={}", params);
 		
 		try {
-			
-			////// variables 
-			success                = true;
-//			boolean retryWS        = false;
-//			boolean retryRec       = false;
-			
-//			UserVO us              = null;
-			String estado          = "W";
-//			String cdpersonSesion  = null;
-//			String cdusuari        = null;
-//			String cdsisrol        = null;
-//			String cdelemen        = null;
-//			String rutaCarpeta     = null;
-//			String cdperpag        = null;
-//			String nmpolizaEmitida = null;
-//			String nmpoliexEmitida = null;
-//			String nmsuplemEmitida = null;
-//			String esDxN           = null;
-//			String cdIdeperRes     = null;
-//			String tipoMov         = TipoTramite.POLIZA_NUEVA.getCdtiptra();
-			
 			// Se validan datos:
         	Utils.validate(params, "No hay parámetros");
         	Utils.validate(params.get("ntramite"),   "No existe el par\u00E1metro params.ntramite");
@@ -86,8 +65,7 @@ public class EmisionDirectaAction extends PrincipalCoreAction
         	String cdramo   = params.get("cdramo");
         	String cdtipsit = params.get("cdtipsit");
 			String nmpoliza = params.get("nmpoliza");
-			//TODO: asignar valores del usuario en sesion:
-			//success = success && (us       = (UserVO)session.get("USUARIO") )!=null;
+			String estado   = "W";
 			boolean esFlotilla = StringUtils.isNotBlank(params.get("flotilla"))
 					&&params.get("flotilla").equalsIgnoreCase("si");
 			String tipoGrupoInciso = "I";
