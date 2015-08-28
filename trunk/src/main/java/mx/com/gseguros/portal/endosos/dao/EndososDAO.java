@@ -593,4 +593,7 @@ public interface EndososDAO
 			String codigo
 			,String cdunieco
 			)throws Exception;
+	
+	public void validaDuplicidadParentesco(String cdunieco, String cdramo, String estado, 
+			String nmpoliza, String nmsuplem) throws Exception;
 }

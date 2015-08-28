@@ -4494,4 +4494,36 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	
+	
+	
+	
+	@Override
+	public void validaDuplicidadParentesco(String cdunieco, String cdramo, String estado, 
+			String nmpoliza, String nmsuplem) throws Exception {
+		
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		ejecutaSP(new ValidaDuplicidadParentescoSP(getDataSource()),params);
+	}
+	
+	protected class ValidaDuplicidadParentescoSP extends StoredProcedure {
+		protected ValidaDuplicidadParentescoSP(DataSource dataSource) {
+			super(dataSource, "PKG_SATELITES2.P_VALIDA_DUP_PARENTESCO");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

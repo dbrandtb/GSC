@@ -461,4 +461,12 @@ public interface EndososManager
 			,String cdsisrol
 			,String contexto
 			)throws Exception;
+	
+	public void validaDuplicidadParentesco(
+			String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem)
+			throws Exception;
+	
+	public void sacaEndoso(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nsuplogi, String nmsuplem) throws Exception;
+	
 }

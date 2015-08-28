@@ -830,6 +830,20 @@ public class EndososManagerImpl implements EndososManager
 	}
 	
 	@Override
+	public void validaDuplicidadParentesco(String cdunieco, String cdramo, String estado, 
+			String nmpoliza, String nmsuplem) throws Exception {
+		
+		endososDAO.validaDuplicidadParentesco(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+	}
+	
+	@Override
+	public void sacaEndoso(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nsuplogi, String nmsuplem) throws Exception {
+		
+		endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+	}
+	
+	@Override
 	public void calcularRecibosCambioAgente(
 			String cdunieco
 			,String cdramo

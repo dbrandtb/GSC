@@ -3890,6 +3890,17 @@ public class EndososAction extends PrincipalCoreAction
 				////// clausulas //////
 				///////////////////////
 				
+				// Validacion de duplicidad de parentesco:
+				try {
+					endososManager.validaDuplicidadParentesco(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+				} catch(ApplicationException ae) {
+					
+					// Si falla se elimina el endoso:
+					endososManager.sacaEndoso(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem);
+					// Se asigna el mensaje de error para el usuario:
+					throw new Exception(ae.getMessage());
+				}
+				
 				///////////////////////////////////
 				////// validacion extraprima //////
 				/*///////////////////////////////*/
@@ -3903,6 +3914,7 @@ public class EndososAction extends PrincipalCoreAction
 				logger.debug("tiene status la extraprima: "+statusValidacionExtraprimas);
 				if(statusValidacionExtraprimas.equalsIgnoreCase("N"))
 				{
+					// Se asigna el mensaje de error para el usuario:
 					error="Favor de verificar las extraprimas y los endosos de extraprima";
 					throw new Exception(error);
 				}
