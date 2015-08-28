@@ -2371,8 +2371,9 @@ Ext.onReady(function()
     }
     //fin [parche]
     
-    //parche para AUTOS FRONTERIZOS con rol SUSCRIPTOR AUTO:
-    if(_0_smap1.cdtipsit == TipoSituacion.AutosFronterizos && _0_smap1.cdsisrol=='SUSCRIAUTO') {
+    //parche para AUTOS FRONTERIZOS Y PICKUP Fronterizos con rol SUSCRIPTOR AUTO:
+    if(_0_smap1.cdtipsit == TipoSituacion.AutosFronterizos || _0_smap1.cdtipsit == TipoSituacion.AutosPickUp 
+        && _0_smap1.cdsisrol=='SUSCRIAUTO') {
         _0_formAgrupados.down('[name=parametros.pv_otvalor04]').setReadOnly(false);
         _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setReadOnly(false);
         _0_formAgrupados.down('[name=parametros.pv_otvalor06]').setReadOnly(false);
