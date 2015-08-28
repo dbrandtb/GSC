@@ -4029,6 +4029,7 @@ function _p21_turnar(status,titulo,closable)
 			                                ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
 			                                ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
 			                                ,'smap1.ntramite' : _p21_smap1.ntramite
+			                                ,'smap1.nGrupos'  : _p21_storeGrupos.getCount()
 			                            }
 			                        });
 			                    }

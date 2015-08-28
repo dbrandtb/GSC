@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.emision.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,14 +33,17 @@ import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.Reporte;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.general.service.ReportesManager;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
+import mx.com.gseguros.portal.general.util.TipoArchivo;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
@@ -113,6 +117,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	@Autowired
 	private ServiciosManager serviciosManager;
+	
+	@Autowired
+	private ReportesManager reportesManager;
 	
 	public CotizacionAction()
 	{
@@ -7361,6 +7368,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		success = true;
 		try
 		{
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			
 			String cdunieco = smap1.get("cdunieco");
 			String cdramo   = smap1.get("cdramo");
 			String estado   = smap1.get("estado");
@@ -7368,6 +7377,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			String cdperpag = smap1.get("cdperpag");
 			String cdtipsit = smap1.get("cdtipsit");
 			String ntramite = smap1.get("ntramite");
+			String nGrupos  = smap1.get("nGrupos");
 			
 			String urlReporteCotizacion=Utils.join(
 					  getText("ruta.servidor.reports")
@@ -7447,6 +7457,85 @@ public class CotizacionAction extends PrincipalCoreAction
 			mapArchivo2.put("pv_tipmov_i"    , "1");
 			mapArchivo2.put("pv_swvisible_i" , null);
 			kernelManager.guardarArchivo(mapArchivo2);
+			
+			if(Ramo.MULTISALUD.getCdramo().equals(cdramo))
+			{
+				//excel resumen
+				Map<String,String> paramsResumen = new LinkedHashMap<String,String>();
+				paramsResumen.put("pv_cdunieco_i" , cdunieco);
+				paramsResumen.put("pv_cdramo_i"   , cdramo);
+				paramsResumen.put("pv_estado_i"   , estado);
+				paramsResumen.put("pv_nmpoliza_i" , nmpoliza);
+				paramsResumen.put("pv_nmsuplem_i" , "0");
+				paramsResumen.put("pv_cdperpag_i" , cdperpag);
+				paramsResumen.put("pv_cdusuari_i" , cdusuari);
+				
+				InputStream excel = reportesManager.obtenerDatosReporte(Reporte.SALUD_COLECTIVO_RESUMEN_COTIZACION.getCdreporte()
+						,cdusuari
+						,paramsResumen
+						);
+				
+				String nombreResumen = Utils.join("RESUMEN_COTIZACION",TipoArchivo.XLS.getExtension());
+				
+				FileUtils.copyInputStreamToFile(excel, new File(Utils.join(
+								getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreResumen
+				)));
+				
+				Map<String,Object>mapaResumen = new LinkedHashMap<String,Object>(0);
+				mapaResumen.put("pv_cdunieco_i"  , cdunieco);
+				mapaResumen.put("pv_cdramo_i"    , cdramo);
+				mapaResumen.put("pv_estado_i"    , estado);
+				mapaResumen.put("pv_nmpoliza_i"  , "0");
+				mapaResumen.put("pv_nmsuplem_i"  , "0");
+				mapaResumen.put("pv_feinici_i"   , new Date());
+				mapaResumen.put("pv_cddocume_i"  , nombreResumen);
+				mapaResumen.put("pv_dsdocume_i"  , "RESUMEN COTIZACI&Oacute;N");
+				mapaResumen.put("pv_ntramite_i"  , ntramite);
+				mapaResumen.put("pv_nmsolici_i"  , nmpoliza);
+				mapaResumen.put("pv_tipmov_i"    , "1");
+				mapaResumen.put("pv_swvisible_i" , null);
+				kernelManager.guardarArchivo(mapaResumen);
+				
+				//exceles grupos
+				for(int i=1 ; i<=Integer.parseInt(nGrupos) ; i++)
+				{
+					Map<String,String> paramsGrupo = new LinkedHashMap<String,String>();
+					paramsGrupo.put("pv_cdunieco_i" , cdunieco);
+					paramsGrupo.put("pv_cdramo_i"   , cdramo);
+					paramsGrupo.put("pv_estado_i"   , estado);
+					paramsGrupo.put("pv_nmpoliza_i" , nmpoliza);
+					paramsGrupo.put("pv_nmsuplem_i" , "0");
+					paramsGrupo.put("pv_cdperpag_i" , cdperpag);
+					paramsGrupo.put("pv_cdgrupo_i"  , i+"");
+					paramsGrupo.put("pv_cdusuari_i" , cdusuari);
+					
+					InputStream excelGrupo = reportesManager.obtenerDatosReporte(Reporte.SALUD_COLECTIVO_COTIZACION_GRUPO.getCdreporte()
+							,cdusuari
+							,paramsGrupo
+							);
+					
+					String nombreCotGrupo = Utils.join("COTIZACION_GRUPO_",i,TipoArchivo.XLS.getExtension());
+					
+					FileUtils.copyInputStreamToFile(excelGrupo, new File(Utils.join(
+									getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreCotGrupo
+					)));
+					
+					Map<String,Object>mapaGrupo = new LinkedHashMap<String,Object>(0);
+					mapaGrupo.put("pv_cdunieco_i"  , cdunieco);
+					mapaGrupo.put("pv_cdramo_i"    , cdramo);
+					mapaGrupo.put("pv_estado_i"    , estado);
+					mapaGrupo.put("pv_nmpoliza_i"  , "0");
+					mapaGrupo.put("pv_nmsuplem_i"  , "0");
+					mapaGrupo.put("pv_feinici_i"   , new Date());
+					mapaGrupo.put("pv_cddocume_i"  , nombreCotGrupo);
+					mapaGrupo.put("pv_dsdocume_i"  , Utils.join("COTIZACI&Oacute;N GRUPO ",i));
+					mapaGrupo.put("pv_ntramite_i"  , ntramite);
+					mapaGrupo.put("pv_nmsolici_i"  , nmpoliza);
+					mapaGrupo.put("pv_tipmov_i"    , "1");
+					mapaGrupo.put("pv_swvisible_i" , null);
+					kernelManager.guardarArchivo(mapaGrupo);
+				}
+			}
 		}
 		catch(Exception ex)
 		{
