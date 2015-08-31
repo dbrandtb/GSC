@@ -89,6 +89,7 @@
 			var _URL_CONSULTA_BENEFICIARIO				= '<s:url namespace="/siniestros"		action="consultaDatosBeneficiario" />';
 			var _SINO									= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SINO" />';
 			var _URL_APLICA_IVA_CONCEPTO				= '<s:url namespace="/siniestros"		action="obtieneAplicacionIVA"/>';
+			var _TIPO_TRAMITE_SINIESTRO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra"/>';	
 			debug("VALOR DE _11_params --->",_11_params);
 			debug("VALOR DEL ROL ACTIVO --->",_CDROL);
 			var _11_itemsForm	=
@@ -4214,7 +4215,7 @@
 																,params         :
 																{
 																	'smap1.gridTitle'      : 'Siniestros en espera'
-																	,'smap2.pv_cdtiptra_i' : 16
+																	,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
 																}
 															});
 														});
@@ -4427,7 +4428,7 @@
 												,params         :
 												{
 													'smap1.gridTitle'      : 'Siniestros en espera'
-													,'smap2.pv_cdtiptra_i' : 16
+													,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
 												}
 											});
 										}));
@@ -4539,7 +4540,7 @@
 																									,params         :
 																									{
 																										'smap1.gridTitle'      : 'Siniestros en espera'
-																										,'smap2.pv_cdtiptra_i' : 16
+																										,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
 																									}
 																								});
 																							});
@@ -4931,7 +4932,7 @@
 																			,params         :
 																			{
 																				'smap1.gridTitle'      : 'Siniestros en espera'
-																				,'smap2.pv_cdtiptra_i' : 16
+																				,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
 																			}
 																		});
 																	}));

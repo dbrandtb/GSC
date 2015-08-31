@@ -2355,8 +2355,15 @@ Ext.onReady(function() {
 				if(json.cdmedico == '0'){
 					Ext.getCmp('medicoPExt').setValue(json.nombreMedico);					// Valor del Medico
 					Ext.getCmp('especialidadPExt').setValue(json.especialidadMedico);		// Valor de la especialidad
+					Ext.getCmp('medicoPExt').show();
+					Ext.getCmp('especialidadPExt').show();
+					Ext.getCmp('idEspecialidad').hide();
+					
 				}else{
 					especialidadMedico(json.cdmedico);
+					Ext.getCmp('medicoPExt').hide();
+					Ext.getCmp('especialidadPExt').hide();
+					Ext.getCmp('idEspecialidad').show();
 				}
 				Ext.getCmp('tratamiento').setValue(json.dstratam);							// Valor del Tratamiento
 				Ext.getCmp('observaciones').setValue(json.dsobserv);						// Valor de Observaciones
