@@ -7489,12 +7489,51 @@ public class CotizacionAction extends PrincipalCoreAction
 				mapaResumen.put("pv_nmsuplem_i"  , "0");
 				mapaResumen.put("pv_feinici_i"   , new Date());
 				mapaResumen.put("pv_cddocume_i"  , nombreResumen);
-				mapaResumen.put("pv_dsdocume_i"  , "RESUMEN COTIZACI&Oacute;N");
+				mapaResumen.put("pv_dsdocume_i"  , "RESUMEN DE COTIZACI&Oacute;N (XLS)");
 				mapaResumen.put("pv_ntramite_i"  , ntramite);
 				mapaResumen.put("pv_nmsolici_i"  , nmpoliza);
 				mapaResumen.put("pv_tipmov_i"    , "1");
 				mapaResumen.put("pv_swvisible_i" , null);
 				kernelManager.guardarArchivo(mapaResumen);
+				
+				//pdf resumen
+				String urlReporteResumenCotizacion=Utils.join(
+						  getText("ruta.servidor.reports")
+						, "?p_unieco="      , cdunieco
+						, "&p_ramo="        , cdramo
+						, "&p_estado="      , estado
+						, "&p_poliza="      , nmpoliza
+						, "&p_perpag="      , cdperpag
+						, "&p_suplem=0"
+	                    , "&destype=cache"
+	                    , "&desformat=PDF"
+	                    , "&userid="        , getText("pass.servidor.reports")
+	                    , "&ACCESSIBLE=YES"
+	                    , "&report="        , getText("rdf.cotizacion2.nombre."+cdtipsit)
+	                    , "&paramform=no"
+	                    );
+				String nombreArchivoResumenCotizacion = "resumen_cotizacion_col.pdf";
+				String pathArchivoResumenCotizacion=""
+						+ getText("ruta.documentos.poliza")
+						+ "/"+ntramite
+						+ "/"+nombreArchivoResumenCotizacion
+						;
+				HttpUtil.generaArchivo(urlReporteResumenCotizacion, pathArchivoResumenCotizacion);
+
+				Map<String,Object>mapArchivoResumen=new LinkedHashMap<String,Object>(0);
+				mapArchivoResumen.put("pv_cdunieco_i"  , cdunieco);
+				mapArchivoResumen.put("pv_cdramo_i"    , cdramo);
+				mapArchivoResumen.put("pv_estado_i"    , estado);
+				mapArchivoResumen.put("pv_nmpoliza_i"  , "0");
+				mapArchivoResumen.put("pv_nmsuplem_i"  , "0");
+				mapArchivoResumen.put("pv_feinici_i"   , new Date());
+				mapArchivoResumen.put("pv_cddocume_i"  , nombreArchivoResumenCotizacion);
+				mapArchivoResumen.put("pv_dsdocume_i"  , "RESUMEN DE COTIZACI&Oacute;N (PDF)");
+				mapArchivoResumen.put("pv_ntramite_i"  , ntramite);
+				mapArchivoResumen.put("pv_nmsolici_i"  , nmpoliza);
+				mapArchivoResumen.put("pv_tipmov_i"    , "1");
+				mapArchivoResumen.put("pv_swvisible_i" , null);
+				kernelManager.guardarArchivo(mapArchivoResumen);
 				
 				//exceles grupos
 				for(int i=1 ; i<=Integer.parseInt(nGrupos) ; i++)
