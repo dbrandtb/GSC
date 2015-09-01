@@ -110,7 +110,9 @@ _4_botonesGrid.push('->',
 <s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("17")}'>
 <%@ include file="/jsp-script/proceso/emision/scriptMesaAutorizacionEmisiones.jsp"%>
 </s:elseif>
-
+<s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("19")}'>
+<%@ include file="/jsp-script/proceso/siniestros/scriptMesaSISCO.jsp"%>
+</s:elseif>
 _4_botones.width = (_4_botones.items.length*20)+20;
 
 ///////////////////////
