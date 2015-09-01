@@ -100,7 +100,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 	private void setCheckpoint(String checkpoint)
 	{
 		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
-		session.put("checkpoint",checkpoint);
+		if(session != null) {
+			session.put("checkpoint",checkpoint);
+		}
 	}
 	
 	/**
