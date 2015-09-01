@@ -2830,7 +2830,7 @@
 											,params         :
 											{
 												'smap1.gridTitle'      : 'Siniestros en espera'
-												,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
+												,'smap2.pv_cdtiptra_i' : _11_params.CDTIPTRA
 											}
 										});
 									});
@@ -2888,7 +2888,7 @@
 			,params			:
 			{
 				'smap1.gridTitle'		: 'Siniestros'
-				,'smap2.pv_cdtiptra_i'	: _TIPO_TRAMITE_SINIESTRO
+				,'smap2.pv_cdtiptra_i'	: _11_params.CDTIPTRA
 			}
 		});
 	}
@@ -4215,7 +4215,7 @@
 																,params         :
 																{
 																	'smap1.gridTitle'      : 'Siniestros en espera'
-																	,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
+																	,'smap2.pv_cdtiptra_i' : _11_params.CDTIPTRA
 																}
 															});
 														});
@@ -4428,7 +4428,7 @@
 												,params         :
 												{
 													'smap1.gridTitle'      : 'Siniestros en espera'
-													,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
+													,'smap2.pv_cdtiptra_i' : _11_params.CDTIPTRA
 												}
 											});
 										}));
@@ -4540,7 +4540,7 @@
 																									,params         :
 																									{
 																										'smap1.gridTitle'      : 'Siniestros en espera'
-																										,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
+																										,'smap2.pv_cdtiptra_i' : _11_params.CDTIPTRA
 																									}
 																								});
 																							});
@@ -4932,7 +4932,7 @@
 																			,params         :
 																			{
 																				'smap1.gridTitle'      : 'Siniestros en espera'
-																				,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
+																				,'smap2.pv_cdtiptra_i' : _11_params.CDTIPTRA
 																			}
 																		});
 																	}));
