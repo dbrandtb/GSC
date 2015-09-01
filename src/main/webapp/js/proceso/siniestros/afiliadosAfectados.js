@@ -110,6 +110,7 @@ Ext.onReady(function() {
 				text     : 'Revisi&oacute;n de documentos'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/folder_table.png'
 				,handler : _11_revDocumentosWindow
+				,hidden  : _11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO
 			},
 			{
 				text     : 'Rechazar Tr&aacute;mite'
@@ -120,7 +121,7 @@ Ext.onReady(function() {
 				text     : 'Turnar &Aacute;rea M&eacute;dica'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/user_go.png'
 				,handler : _11_turnarAreaMedica
-				,hidden:  _CDROL == _ROL_MEDICO || _CDROL == _ROL_COORD_MEDICO
+				,hidden:  _CDROL == _ROL_MEDICO || _CDROL == _ROL_COORD_MEDICO || _11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO
 			},
 			{
 				text     : 'Solicitar Pago'
@@ -132,7 +133,7 @@ Ext.onReady(function() {
 				text     : 'Turnar Operador Reclamaci&oacute;n'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/user_go.png'
 				,handler : _11_retornarMedAjustadorAOperador
-				,hidden:  _CDROL ==  _OPERADOR_REC
+				,hidden:  _CDROL ==  _OPERADOR_REC || _11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO
 			},
 			{
 				text     : 'Historial'
@@ -143,7 +144,7 @@ Ext.onReady(function() {
 				text     : 'Devolver'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/note_go.png'
 				,handler : _11_turnarDevolucionTramite
-				,hidden:   _CDROL == _ROL_MEDICO || _CDROL == _ROL_COORD_MEDICO
+				,hidden  : _CDROL == _ROL_MEDICO || _CDROL == _ROL_COORD_MEDICO || _11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO
 			}
 		]
 	}); 
