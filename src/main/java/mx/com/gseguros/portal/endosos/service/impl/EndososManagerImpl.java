@@ -732,6 +732,28 @@ public class EndososManagerImpl implements EndososManager
 		logger.debug("EndososManager obtenerAgentesEndosoAgente lista size: "+lista.size());
 		return lista;
 	}
+
+	@Override
+	public List<Map<String,String>> obtenerAseguradosPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("PV_CDUNIECO_I" , cdunieco);
+		params.put("PV_CDRAMO_I"   , cdramo);
+		params.put("PV_ESTADO_I"   , estado);
+		params.put("PV_NMPOLIZA_I" , nmpoliza);
+		params.put("PV_NMSUPLEM_I" , nmsuplem);
+		List<Map<String,String>>lista=endososDAO.obtenerAseguradosPoliza(params);
+		lista=lista!=null?lista:new ArrayList<Map<String,String>>();
+		
+		logger.debug("Resultado de carga asegurados : "+lista);
+		
+		return lista;
+	}
 	
 	/**
 	 * PKG_SATELITES.P_MOV_MPOLIAGE
@@ -2148,6 +2170,10 @@ public class EndososManagerImpl implements EndososManager
 
 	public void reasignaParentescoTitular(Map<String, String> params)throws Exception{
 		endososDAO.reasignaParentescoTitular(params);
+	}
+
+	public String obtieneNumeroAtributo(String cdtipsit, String nombreAtributo) throws Exception{
+		return endososDAO.obtieneNumeroAtributo(cdtipsit, nombreAtributo);
 	}
 	
 	@Override

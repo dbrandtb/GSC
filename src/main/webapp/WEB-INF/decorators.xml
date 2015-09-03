@@ -24,6 +24,7 @@
         <pattern>/endosos/pantallaEndosoNombres.action</pattern>
         <pattern>/endosos/pantallaEndosoNombresSimple.action</pattern>
         <pattern>/endosos/entrarEndosoValositBasico.action</pattern>
+        <pattern>/endosos/entrarEndosoParentescoAntiguedad.action</pattern>
         <pattern>/endosos/entrarEndosoValositBasicoSimple.action</pattern>
         <pattern>/endosos/pantallaEndosoClausulas.action</pattern>
         <pattern>/endosos/pantallaEndosoAltaBajaAsegurado.action</pattern>

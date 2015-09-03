@@ -181,6 +181,23 @@
         <action name="guardarEndosoValositBasicoSimple" class="EndososAction" method="guardarEndosoValositBasicoSimple">
             <result name="success" type="json" />
         </action>
+
+        <action name="entrarEndosoParentescoAntiguedad" class="EndososAction" method="entrarEndosoParentescoAntiguedad">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoParentescoAntiguedad.jsp</result>
+        </action>
+        
+        <action name="guardarEndosoParentescoAntiguedad" class="EndososAction" method="guardarEndosoParentescoAntiguedad">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
         
         <action name="visorPantallas" class="EndososAction" method="visorPantallas">
             <result name="success">/jsp-script/proceso/endosos/visorPantallas.jsp</result>
@@ -808,6 +825,10 @@
         </action>
 
         <action name="reenviaRecibosAuto" class="EndososAction" method="reenviaRecibosAuto">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="cargaAsegurados" class="EndososAction" method="cargaAsegurados">
             <result name="success" type="json" />
         </action>
         

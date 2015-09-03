@@ -848,6 +848,49 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+
+	@Override
+	public String obtieneNumeroAtributo(String cdtipsit, String nombreAtributo) throws Exception
+	{
+		Map<String, Object> params = new LinkedHashMap<String,Object>();
+		params.put("pv_cdtipsit_i", cdtipsit);
+		params.put("pv_dsatribu_i", nombreAtributo);
+		
+		logger.debug(
+				new StringBuilder()
+				.append("\n***************************************")
+				.append("\n****** PKG_CONSULTA.P_OBT_CDATRIBU_DE_TATRISIT ******")
+				.append("\n****** params=").append(params)
+				.append("\n***************************************")
+				.toString()
+				);
+		
+		Map<String,Object> result = this.ejecutaSP(new ObtieneNumeroAtributo(this.getDataSource()), params);
+		List<Map<String,String>> lista = (List<Map<String,String>>) result.get("pv_registro_o");
+		
+		Map<String,String> mapaRes = lista.get(0);
+		
+		logger.debug("P_OBT_CDATRIBU_DE_TATRISIT :::: Resultado: "+mapaRes.get("CDATRIBU"));
+		
+		return mapaRes.get("CDATRIBU");
+	}
+	
+	protected class ObtieneNumeroAtributo extends StoredProcedure {
+		protected ObtieneNumeroAtributo(DataSource dataSource) {
+			
+			super(dataSource, "PKG_CONSULTA.P_OBT_CDATRIBU_DE_TATRISIT");
+			
+			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsatribu_i", OracleTypes.VARCHAR));
+			
+			String[] cols = new String[]{"CDATRIBU"};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			
+			compile();
+		}
+	}
 	
 	@Override
 	public void actualizaNombreCliente(Map<String, String> params) throws Exception
@@ -1650,6 +1693,45 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 					,"PORREDAU" , "PORPARTI"
 					,"NOMBRE"   , "CDSUCURS"
 					,"NMCUADRO" , "DESCRIPL"
+			};
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public List<Map<String,String>> obtenerAseguradosPoliza(Map<String, String> params) throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n**********************************************")
+				.append("\n****** PKG_CONSULTA.P_Get_Datos_Aseg ******")
+				.append("\n****** params=").append(params)
+				.append("\n**********************************************")
+				.toString()
+				);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerAseguradosPoliza(this.getDataSource()), params);
+		return (List<Map<String,String>>) resultadoMap.get("PV_REGISTRO_O");
+	}
+	
+	protected class ObtenerAseguradosPoliza extends StoredProcedure
+	{
+		
+		protected ObtenerAseguradosPoliza(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_Get_Datos_Aseg");
+			declareParameter(new SqlParameter("PV_CDUNIECO_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDRAMO_I"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_ESTADO_I"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_NMPOLIZA_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_NMSUPLEM_I" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDPERSON"  , "NMSITUAC"
+					,"CDROL"   , "DSROL"
+					,"PARENTESCO" , "CDPARENTESCO"
+					,"FECANTIG","TITULAR"
 			};
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));

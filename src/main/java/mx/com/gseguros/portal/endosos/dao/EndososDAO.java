@@ -154,6 +154,9 @@ public interface EndososDAO
 			nmcuadro
 	 */
 	public List<Map<String,String>> obtenerAgentesEndosoAgente(Map<String, String> params)     throws Exception;
+
+	public List<Map<String,String>> obtenerAseguradosPoliza(Map<String, String> params)throws Exception;
+	
 	/**
 	 * PKG_SATELITES.P_MOV_MPOLIAGE
 	 */
@@ -596,4 +599,6 @@ public interface EndososDAO
 	
 	public void validaDuplicidadParentesco(String cdunieco, String cdramo, String estado, 
 			String nmpoliza, String nmsuplem) throws Exception;
+	
+	public String obtieneNumeroAtributo(String cdtipsit, String nombreAtributo) throws Exception;
 }
