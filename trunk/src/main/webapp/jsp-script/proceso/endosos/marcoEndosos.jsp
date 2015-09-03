@@ -272,7 +272,7 @@
                 });
             }
     	}
-    	else if(recordOperacion.get('funcion')=='endosovalositbasico'||recordOperacion.get('funcion')=='endosovalositbasicosimple')
+    	else if(recordOperacion.get('funcion')=='endosovalositbasico')
         {
             debug('endoso valosit basico');
             var nAsegActivos=0;
@@ -1334,6 +1334,41 @@
                 mensajeError('Seleccione la p&oacute;liza');
             }
         }
+        else if(recordOperacion.get('funcion')=='endosoParentescoAntiguedad')
+        {
+            debug(recordOperacion.get('funcion'));
+            var nPolizasActivas=0;
+            var polizaActiva;
+            marendStorePolizas.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nPolizasActivas=nPolizasActivas+1;
+                    polizaActiva=record;
+                }
+            });
+            if(nPolizasActivas==1)
+            {
+                Ext.getCmp('marendMenuOperaciones').collapse();
+                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                var smap1 = polizaActiva.raw;
+                smap1['DSCOMENT']='';
+                Ext.getCmp('marendLoaderFrame').getLoader().load(
+                {
+                    url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,jsonData :
+                    {
+                        'smap1'  : smap1
+                    }
+                });
+            }
+            else
+            {
+                mensajeError('Seleccione la p&oacute;liza');
+            }
+        }
     }
     
     function marendNavegacion(nivel)
@@ -1568,8 +1603,8 @@ Ext.onReady(function()
                 },{
 					cdtipsup : '0'
                     ,texto   : 'CORRECI&Oacute;N ASEGURADOS ANTIGUEDAD Y PARENTESCO *'//valosit
-                    ,liga    : '<s:url namespace="/endosos" action="entrarEndosoValositBasicoSimple" />'
-                    ,funcion : 'endosovalositbasicosimple'
+                    ,liga    : '<s:url namespace="/endosos" action="entrarEndosoParentescoAntiguedad" />'
+                    ,funcion : 'endosoParentescoAntiguedad'
                 },{
                 	cdtipsup : '2'
                     ,texto   : '2'//nombres

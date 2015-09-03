@@ -247,6 +247,13 @@ public interface EndososManager
 			,String estado
 			,String nmpoliza
 			,String nmsuplem) throws Exception;
+
+	public List<Map<String,String>> obtenerAseguradosPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem) throws Exception;
 	/**
 	 * PKG_SATELITES.P_MOV_MPOLIAGE
 	 */
@@ -468,5 +475,7 @@ public interface EndososManager
 	
 	public void sacaEndoso(String cdunieco, String cdramo, String estado,
 			String nmpoliza, String nsuplogi, String nmsuplem) throws Exception;
+	
+	public String obtieneNumeroAtributo(String cdtipsit, String nombreAtributo) throws Exception;
 	
 }

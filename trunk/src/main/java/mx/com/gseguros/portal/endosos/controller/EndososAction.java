@@ -2570,6 +2570,71 @@ public class EndososAction extends PrincipalCoreAction
 		        ));
 		return respuesta;
 	}
+
+	public String entrarEndosoParentescoAntiguedad()
+	{
+		logger.debug(Utils.log(
+				"\n#############################################"
+				,"\n###### entrarEndosoParentescoAntiguedad ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### slist1=" , slist1
+				));
+		
+		String respuesta = ERROR;
+		
+		try
+		{
+			transformaEntrada(smap1, slist1, true);
+			
+			// Valida si hay un endoso anterior pendiente:
+			RespuestaVO resp = endososManager.validaEndosoAnterior(
+					smap1.get("cdunieco")
+					,smap1.get("cdramo")
+					,smap1.get("estado")
+					,smap1.get("nmpoliza")
+					,TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString());
+			error = resp.getMensaje();
+			if(!resp.isSuccess())
+			{
+				throw new ApplicationException(resp.getMensaje());
+			}
+			
+			String cdusuari;
+			{
+				UserVO usuario = (UserVO)session.get("USUARIO");
+				cdusuari=usuario.getUser();
+			}
+			List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"),cdusuari);
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.setCdtipsit(smap1.get("cdtipsit"));
+			List<ComponenteVO>tatriTemp=new ArrayList<ComponenteVO>(0);
+			//si es agrupado solo dejar los atributos con N, si es individual solo los que tengan S
+			for(ComponenteVO t:tatrisit) {
+				//S=individual
+				if(t.getSwsuscri().equalsIgnoreCase("S")&&t.getSwtarifi().equalsIgnoreCase("N")) {
+					tatriTemp.add(t);
+				}
+			}
+			tatrisit=tatriTemp;
+			gc.genera(tatrisit);
+			item1=gc.getFields();
+			item2=gc.getItems();
+			
+			respuesta = SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			logger.error("error al mostrar pantalla de endoso valosit basico",ex);
+			error = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				"\n###### respuesta=",respuesta
+				,"\n###### entrarEndosoParentescoAntiguedad ######"
+				,"\n#############################################"
+				));
+		return respuesta;
+	}
 	/*/////////////////////////////*/
 	////// endoso B de valosit //////
 	/////////////////////////////////
@@ -2908,6 +2973,235 @@ public class EndososAction extends PrincipalCoreAction
 				+ "\n###### guardarEndosoValositBasico ######"
 				+ "\n########################################"
 				+ "\n########################################"
+				);
+		return SUCCESS;
+	}
+
+	public String guardarEndosoParentescoAntiguedad(){
+		logger.debug(""
+				+ "\n#############################################"
+				+ "\n#############################################"
+				+ "\n###### guardarEndosoParentescoAntiguedad ####"
+				+ "\n######                            ###########"
+				);
+		logger.debug("smap1: "+smap1);
+		logger.debug("slist1: "+slist1);
+		logger.debug("parametros: "+parametros);
+		
+		try {
+			UserVO usuario=(UserVO)session.get("USUARIO");
+			/*
+			 * pv_cdunieco_i
+			 * pv_cdramo_i
+			 * pv_estado_i
+			 * pv_nmpoliza_i
+			 * pv_fecha_i
+			 * pv_cdelemen_i
+			 * pv_cdusuari_i
+			 * pv_proceso_i
+			 * pv_cdtipsup_i
+			 */
+			omap1=new LinkedHashMap<String,Object>();
+			omap1.put("pv_cdunieco_i" , smap1.get("cdunieco"));
+			omap1.put("pv_cdramo_i"   , smap1.get("cdramo"));
+			omap1.put("pv_estado_i"   , smap1.get("estado"));
+			omap1.put("pv_nmpoliza_i" , smap1.get("nmpoliza"));
+			omap1.put("pv_fecha_i"    , renderFechas.parse(smap1.get("fecha_endoso")));
+			omap1.put("pv_cdelemen_i" , usuario.getEmpresa().getElementoId());
+			omap1.put("pv_cdusuari_i" , usuario.getUser());
+			omap1.put("pv_proceso_i"  , "END");
+			omap1.put("pv_cdtipsup_i", TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString());
+			Map<String,String> respEnd=endososManager.iniciaEndoso(omap1);
+			
+			
+			for(Map<String,String> asegurado : slist1){
+				
+				//cargar anterior valosit
+				Map<String,String>paramsValositAsegurado=new LinkedHashMap<String,String>(0);
+				paramsValositAsegurado.put("pv_cdunieco_i", smap1.get("cdunieco"));
+				paramsValositAsegurado.put("pv_cdramo_i",   smap1.get("cdramo"));
+				paramsValositAsegurado.put("pv_estado_i",   smap1.get("estado"));
+				paramsValositAsegurado.put("pv_nmpoliza_i", smap1.get("nmpoliza"));
+				paramsValositAsegurado.put("pv_nmsituac_i", asegurado.get("NMSITUAC"));
+				Map<String,Object>valositAsegurado=kernelManager.obtieneValositSituac(paramsValositAsegurado);
+				logger.debug("valosit anterior: "+valositAsegurado);
+				
+				//poner pv_ al anterior
+				Map<String,Object>valositAseguradoIterado=new LinkedHashMap<String,Object>(0);
+				Iterator it=valositAsegurado.entrySet().iterator();
+				while(it.hasNext()) {
+					Entry en=(Entry)it.next();
+					valositAseguradoIterado.put("pv_"+(String)en.getKey(),en.getValue());//agregar pv_ a los anteriores
+				}
+				valositAsegurado=valositAseguradoIterado;
+				logger.debug("se puso pv_ en el anterior");
+				
+				try{
+					//Meter los nuevos valores de parentesco y antiguedad
+					String numParentesco = endososManager.obtieneNumeroAtributo(smap1.get("cdtipsit"), "PARENTESCO");
+					String numAntiguedad = endososManager.obtieneNumeroAtributo(smap1.get("cdtipsit"), "F. ANTIGÜEDAD");
+					
+					
+					String paramParent = new StringBuilder("pv_otvalor").append(StringUtils.leftPad(String.valueOf(numParentesco), 2, "0")).toString();
+					String paramAntig  = new StringBuilder("pv_otvalor").append(StringUtils.leftPad(String.valueOf(numAntiguedad), 2, "0")).toString();
+					
+					logger.debug("Insertando parametro: " + paramParent + " con valor de: "+asegurado.get("CDPARENTESCO"));
+					logger.debug("Insertando parametro: " + paramAntig + " con valor de: "+asegurado.get("FECANTIG"));
+					
+					valositAseguradoIterado.put(paramParent, asegurado.get("CDPARENTESCO"));
+					valositAseguradoIterado.put(paramAntig, asegurado.get("FECANTIG"));
+					
+					logger.debug("se agregaron los nuevos");
+				
+				}catch(Exception ex){
+					logger.error("Error al insertar los atributos de parentesco y antiguedad",ex);
+					throw new ApplicationException("Error al insertar los atributos de parentesco y antiguedad.");
+				}
+				
+				//convertir a string el total
+				Map<String,String>paramsNuevos=new LinkedHashMap<String,String>(0);
+				it=valositAsegurado.entrySet().iterator();
+				while(it.hasNext()) {
+					Entry en=(Entry)it.next();
+					paramsNuevos.put((String)en.getKey(),(String)en.getValue());
+				}
+				logger.debug("se pasaron a string");
+				
+				/*
+				pv_cdunieco
+	    		pv_cdramo
+	    		pv_estado
+	    		pv_nmpoliza
+	    		pv_nmsituac
+	    		pv_nmsuplem
+	    		pv_status
+	    		pv_cdtipsit
+	    		...pv_otvalor[01-50]
+	    		pv_accion_i
+				 */
+				paramsNuevos.put("pv_cdunieco" , smap1.get("cdunieco"));
+				paramsNuevos.put("pv_cdramo"   , smap1.get("cdramo"));
+				paramsNuevos.put("pv_estado"   , smap1.get("estado"));
+				paramsNuevos.put("pv_nmpoliza" , smap1.get("nmpoliza"));
+				paramsNuevos.put("pv_nmsituac" , asegurado.get("NMSITUAC"));
+				paramsNuevos.put("pv_nmsuplem" , respEnd.get("pv_nmsuplem_o"));
+				paramsNuevos.put("pv_status"   , "V");
+				paramsNuevos.put("pv_cdtipsit" , smap1.get("cdtipsit"));
+				paramsNuevos.put("pv_accion_i" , "I");
+				logger.debug("los actualizados seran: "+paramsNuevos);
+				kernelManager.insertaValoresSituaciones(paramsNuevos);
+				
+			}
+			
+			// Validacion de duplicidad de parentesco:
+			try {
+				endososManager.validaDuplicidadParentesco(smap1.get("cdunieco"), smap1.get("cdramo"), smap1.get("estado"), smap1.get("nmpoliza"), respEnd.get("pv_nmsuplem_o"));
+			} catch(Exception ae) {
+				
+				// Si falla se elimina el endoso:
+				endososManager.sacaEndoso(smap1.get("cdunieco"), smap1.get("cdramo"), smap1.get("estado"), smap1.get("nmpoliza"), respEnd.get("pv_nsuplogi_o"), respEnd.get("pv_nmsuplem_o"));
+				// Se asigna el mensaje de error para el usuario:
+				throw new ApplicationException(ae.getMessage());
+			}
+			
+			if(smap1.get("confirmar").equalsIgnoreCase("si")) {
+				// Se confirma el endoso si cumple la validacion de fechas: 
+				RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(
+						smap1.get("cdunieco"),
+						smap1.get("cdramo"),
+						smap1.get("estado"),
+						smap1.get("nmpoliza"),
+						respEnd.get("pv_nmsuplem_o"),
+						respEnd.get("pv_nsuplogi_o"),
+						TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString(),
+						"",
+						renderFechas.parse(smap1.get("fecha_endoso")),
+						smap1.get("cdtipsit")
+						);
+				
+				// Si el endoso fue confirmado:
+				if(respConfirmacionEndoso.isConfirmado()) {
+					
+					///////////////////////////////////////
+					////// re generar los documentos //////
+					/*///////////////////////////////////*/
+					List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
+							smap1.get("cdunieco")
+							,smap1.get("cdramo")
+							,smap1.get("estado")
+							,smap1.get("nmpoliza")
+							,respEnd.get("pv_nmsuplem_o")
+							,TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString()
+							);
+					logger.debug("documentos que se regeneran: "+listaDocu);
+					
+					String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
+					
+					//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+					for(Map<String,String> docu:listaDocu) {
+						logger.debug("docu iterado: "+docu);
+						String nmsolici=docu.get("nmsolici");
+						String nmsituac=docu.get("nmsituac");
+						String descripc=docu.get("descripc");
+						String descripl=docu.get("descripl");
+						String url=this.getText("ruta.servidor.reports")
+								+ "?destype=cache"
+								+ "&desformat=PDF"
+								+ "&userid="+this.getText("pass.servidor.reports")
+								+ "&report="+descripl
+								+ "&paramform=no"
+								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+								+ "&p_unieco="+smap1.get("cdunieco")
+								+ "&p_ramo="+smap1.get("cdramo")
+								+ "&p_estado="+smap1.get("estado")
+								+ "&p_poliza="+smap1.get("nmpoliza")
+								+ "&p_suplem="+respEnd.get("pv_nmsuplem_o")
+								+ "&desname="+rutaCarpeta+"/"+descripc;
+						if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN")) {
+							// C R E D E N C I A L _ X X X X X X . P D F
+							//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+							url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
+						}
+						logger.debug(""
+								+ "\n#################################"
+								+ "\n###### Se solicita reporte ######"
+								+ "\na "+url+""
+								+ "\n#################################");
+						HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+						logger.debug(""
+								+ "\n######                    ######"
+								+ "\n###### reporte solicitado ######"
+								+ "\na "+url+""
+								+ "\n################################"
+								+ "\n################################"
+								+ "");
+					}
+					/*///////////////////////////////////*/
+					////// re generar los documentos //////
+					///////////////////////////////////////
+					
+					mensaje="Se ha confirmado el endoso "+respEnd.get("pv_nsuplogi_o");
+					
+				} else {
+					mensaje="El endoso "+respEnd.get("pv_nsuplogi_o")
+					+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
+					+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+				}
+			} else {				
+				mensaje="Se ha guardado el endoso "+respEnd.get("pv_nsuplogi_o");
+			}
+			success=true;
+		} catch(Exception ex) {
+			logger.error("error al guardar endosos de valosit basico",ex);
+			success=false;
+			error=ex.getMessage();
+		}
+		
+		logger.debug(""
+				+ "\n######                                   ######"
+				+ "\n###### guardarEndosoParentescoAntiguedad ######"
+				+ "\n###############################################"
+				+ "\n###############################################"
 				);
 		return SUCCESS;
 	}
@@ -10749,6 +11043,44 @@ public class EndososAction extends PrincipalCoreAction
 			throw new ApplicationException(mensaje);
 		}
 	}
+	
+	public String cargaAsegurados()
+	{
+		logger.debug("\n"
+				+ "\n#############################"
+				+ "\n#############################"
+				+ "\n###### cargaAsegurados ######"
+				+ "\n######                 ######"
+				);
+		logger.debug("smap1: "+smap1);
+		try
+		{
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			String nmsuplem = smap1.get("nmsuplem");
+			
+			slist1=endososManager.obtenerAseguradosPoliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+			
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			logger.error("error al cargar asegurados para el endoso de parentesco",ex);
+			error=ex.getMessage();
+			success=false;
+		}
+		logger.debug("\n"
+				+ "\n######                 ######"
+				+ "\n###### cargaAsegurados ######"
+				+ "\n#############################"
+				+ "\n#############################"
+				);
+		return SUCCESS;
+	}
+	
+	
 	/****************************** BASE ACTION **********************************/
 	
 	///////////////////////////////
