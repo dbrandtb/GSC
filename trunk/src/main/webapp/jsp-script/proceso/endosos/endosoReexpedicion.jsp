@@ -38,6 +38,10 @@ debug('_8_smap1:',_8_smap1);
 
 Ext.onReady(function()
 {
+	
+	Ext.Ajax.timeout = 8*60*1000; // 8 min
+	
+	
     /////////////////////
     ////// modelos //////
     Ext.define('_8_ModeloPoliza',

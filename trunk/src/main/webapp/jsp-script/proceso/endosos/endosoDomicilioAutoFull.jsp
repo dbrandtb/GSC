@@ -57,6 +57,9 @@ var _cdTipSupCambioDomFull = '<s:property value="@mx.com.gseguros.portal.general
 
 Ext.onReady(function()
 {
+	
+	Ext.Ajax.timeout = 8*60*1000; // 8 min
+	
 	/////////////////////
 	////// modelos //////
 	Ext.define('_5_modeloDomicil',

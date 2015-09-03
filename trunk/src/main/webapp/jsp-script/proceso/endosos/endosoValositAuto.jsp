@@ -55,6 +55,9 @@ for(var i in _p36_gridColumns)
 
 Ext.onReady(function()
 {
+	
+	Ext.Ajax.timeout = 8*60*1000; // 8 min
+	
     ////// modelos //////
     Ext.define('_p36_modeloInciso',
     {
