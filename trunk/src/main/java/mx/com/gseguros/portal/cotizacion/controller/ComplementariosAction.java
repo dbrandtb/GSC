@@ -2260,73 +2260,76 @@ public class ComplementariosAction extends PrincipalCoreAction
 		{
 			try
 			{
-				String cdorddoc = emisionManager.insercionDocumentosParametrizados(
-						cdunieco
-						,cdramo
-						,"M"
-						,nmpolizaEmitida
-						,"0"
-						,nmsuplemEmitida
-						);
-				
-				List<Map<String,String>> docs = cotizacionManager.recuperarListaDocumentosParametrizados(
-	            		cdorddoc
-	            		,nmpoliza
-	            		,ntramite
-	            		);
-				
-				for(Map<String,String>doc:docs)
+				if("4".equals(cdramo)&&esFlotilla)
 				{
-					HttpUtil.generaArchivo(doc.get("C_COMMAND"),rutaCarpeta+"/"+doc.get("NOM_PDF"));
-				}
-				
-				/*
-				List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
-						cdunieco
-						,cdramo
-						,"M"
-						,nmpolizaEmitida
-						,nmsuplemEmitida
-						,ntramite
-						);
-				
-				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
-				for(Map<String,String> docu:listaDocu)
-				{
-					logger.debug("docu iterado: "+docu);
-					String descripc=docu.get("descripc");
-					String descripl=docu.get("descripl");
-					String url=this.getText("ruta.servidor.reports")
-							+ "?destype=cache"
-							+ "&desformat=PDF"
-							+ "&userid="+this.getText("pass.servidor.reports")
-							+ "&report="+descripl
-							+ "&paramform=no"
-							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-							+ "&p_unieco="+cdunieco
-							+ "&p_ramo="+cdramo
-							+ "&p_estado='M'"
-							+ "&p_poliza="+nmpolizaEmitida
-							+ "&p_suplem="+nmsuplemEmitida
-							+ "&desname="+rutaCarpeta+"/"+descripc;
-					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+					String cdorddoc = emisionManager.insercionDocumentosParametrizados(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,"0"
+							,nmsuplemEmitida
+							);
+					
+					List<Map<String,String>> docs = cotizacionManager.recuperarListaDocumentosParametrizados(
+		            		cdorddoc
+		            		,nmpoliza
+		            		,ntramite
+		            		);
+					
+					for(Map<String,String>doc:docs)
 					{
-						// C R E D E N C I A L _ X X X X X X . P D F
-						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
+						HttpUtil.generaArchivo(doc.get("C_COMMAND"),rutaCarpeta+"/"+doc.get("NOM_PDF"));
 					}
-					logger.debug(""
-							+ "\n#################################"
-							+ "\n###### Se solicita reporte ######"
-							+ "\na "+url);
-					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					logger.debug(""
-							+ "\n######                    ######"
-							+ "\n###### reporte solicitado ######"
-							+ "\n################################"
-							+ "");
 				}
-				*/
+				else
+				{
+					List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,ntramite
+							);
+					
+					//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+					for(Map<String,String> docu:listaDocu)
+					{
+						logger.debug("docu iterado: "+docu);
+						String descripc=docu.get("descripc");
+						String descripl=docu.get("descripl");
+						String url=this.getText("ruta.servidor.reports")
+								+ "?destype=cache"
+								+ "&desformat=PDF"
+								+ "&userid="+this.getText("pass.servidor.reports")
+								+ "&report="+descripl
+								+ "&paramform=no"
+								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+								+ "&p_unieco="+cdunieco
+								+ "&p_ramo="+cdramo
+								+ "&p_estado='M'"
+								+ "&p_poliza="+nmpolizaEmitida
+								+ "&p_suplem="+nmsuplemEmitida
+								+ "&desname="+rutaCarpeta+"/"+descripc;
+						if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+						{
+							// C R E D E N C I A L _ X X X X X X . P D F
+							//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+							url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
+						}
+						logger.debug(""
+								+ "\n#################################"
+								+ "\n###### Se solicita reporte ######"
+								+ "\na "+url);
+						HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+						logger.debug(""
+								+ "\n######                    ######"
+								+ "\n###### reporte solicitado ######"
+								+ "\n################################"
+								+ "");
+					}
+				}
 				
 				/**
 				 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
