@@ -42,6 +42,9 @@ debug('_9_smap1:',_9_smap1);
 
 Ext.onReady(function()
 {
+	
+	Ext.Ajax.timeout = 8*60*1000; // 8 min
+	
     /////////////////////
     ////// modelos //////
     ////// modelos //////
