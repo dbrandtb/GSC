@@ -482,7 +482,23 @@ function _p34_polizas()
             {
                 if(success)
                 {
-                    mensajeWarning('Sin resultados');
+                    centrarVentanaInterna(Ext.create('Ext.window.Window',
+                    {
+                        title        : 'Aviso'
+                        ,width       : 300
+                        ,html        : '<div style="padding:5px;text-align:center;">Sin resultados</div>'
+                        ,buttonAlign : 'center'
+                        ,buttons     :
+                        [
+                            {
+                                text : 'Aceptar'
+                                ,handler : function(me)
+                                {
+                                    me.up('window').destroy();
+                                }
+                            }
+                        ]
+                    }).show());
                 }
                 else
                 {
