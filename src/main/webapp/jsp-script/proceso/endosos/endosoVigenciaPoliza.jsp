@@ -9,6 +9,9 @@
 	debug('asegAlterno  -->:',asegAlterno);
 	
 	Ext.onReady(function() {
+		
+		Ext.Ajax.timeout = 8*60*1000; // 8 min
+		
 		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
 		
 		var panelInicialPral = Ext.create('Ext.form.Panel', {

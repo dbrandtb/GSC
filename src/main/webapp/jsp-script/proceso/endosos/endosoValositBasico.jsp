@@ -133,6 +133,7 @@ function endvalbasSumit(form,confirmar)
 
 Ext.onReady(function()
 {
+    Ext.Ajax.timeout = 8*60*1000; // 8 min
     
     /////////////////////
     ////// modelos //////
