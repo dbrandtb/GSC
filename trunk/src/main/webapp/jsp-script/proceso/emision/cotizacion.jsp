@@ -55,6 +55,7 @@ var _0_urlCargarSumaAsegurada      = '<s:url namespace="/emision"         action
 var _0_urlObtenerCliente           = '<s:url namespace="/emision"         action="cargarClienteCotizacion"     />';
 var _0_urlValidarCambioZonaGMI     = '<s:url namespace="/emision"         action="validarCambioZonaGMI"        />';
 var _0_urlValidarEnfermCatasGMI    = '<s:url namespace="/emision"         action="validarEnfermedadCatastGMI"  />';
+var _0_urlRecuperacionSimple       = '<s:url namespace="/emision"         action="recuperacionSimple"          />';
 
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
@@ -1572,6 +1573,85 @@ function agregaValidacionCPvsEstado() {
         });
     }
 }
+
+function _0_recuperarDescuento()
+{
+    var ck = 'Recuperando descuento';
+    try
+    {
+    	Ext.Ajax.request(
+	    {
+	        url     : _0_urlRecuperacionSimple
+	        ,params :
+	        {
+	            'smap1.procedimiento' : 'RECUPERAR_DESCUENTO_RECARGO_RAMO_5'
+	            ,'smap1.cdtipsit'     : _0_smap1.cdtipsit
+	            ,'smap1.cdagente'     : _fieldByLabel('AGENTE').getValue()
+	            ,'smap1.negocio'      : _0_smap1.cdsisrol == 'SUSCRIAUTO' ? '999999' : '0'
+	            ,'smap1.tipocot'      : 'I'
+	            ,'smap1.cdsisrol'     : _0_smap1.cdsisrol
+	            ,'smap1.cdusuari'     : _0_smap1.cdusuari
+	        }
+	        ,success : function(response)
+	        {
+	            var ck = 'Decodificando descuento por rol/usuario';
+	            try
+	            {
+	                var json = Ext.decode(response.responseText);
+	                debug('### cargar rango descuento fronterizo:',json);
+	                
+	                ck           = 'Recuperando componente de descuento';
+	                var itemDesc = _fieldLikeLabel('DESCUENTO',null,true);
+	                
+	                if(json.exito)
+	                {
+	                    itemDesc.minValue=100*Number(json.smap1.min);
+	                    itemDesc.maxValue=100*Number(json.smap1.max);
+	                    itemDesc.isValid();
+	                    debug('min:',itemDesc.minValue);
+	                    debug('max:',itemDesc.maxValue);
+	                    itemDesc.setReadOnly(false);
+	                }
+	                else
+	                {
+	                    itemDesc.minValue=0;
+	                    itemDesc.maxValue=0;
+	                    itemDesc.setValue(0);
+	                    itemDesc.isValid();
+	                    itemDesc.setReadOnly(true);
+	                    mensajeError(json.respuesta);
+	                }
+	            }
+	            catch(e)
+	            {
+	                manejaException(e,ck);
+	            }
+	        }
+	        ,failure : function()
+	        {
+	            var ck = 'Recuperando componente de descuento';
+	            try
+	            {
+	                var itemDesc = _fieldLikeLabel('DESCUENTO',null,true);
+	                itemDesc.minValue=0;
+	                itemDesc.maxValue=0;
+	                itemDesc.setValue(0);
+	                itemDesc.isValid();
+	                itemDesc.setReadOnly(true);
+	                errorComunicacion();
+	            }
+	            catch(e)
+	            {
+	                manejaException(e,ck);
+	            }
+	        }
+	    });
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+}
 /*///////////////////*/
 ////// funciones //////
 ///////////////////////
@@ -2368,6 +2448,21 @@ Ext.onReady(function()
                 errorComunicacion();
             }
         });
+        
+        if(_0_smap1.cdsisrol=='EJECUTIVOCUENTA')
+        {
+            _0_recuperarDescuento();
+        }
+        else
+        {
+            _fieldLikeLabel('AGENTE').on(
+            {
+                select : function()
+                {
+                    _0_recuperarDescuento();
+                }
+            });
+        }
     }
     //fin [parche]
     

@@ -500,7 +500,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					}
 					
 					//[parche] para fronterizos
-					if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
+					if(cdramo.equals(Ramo.AUTOS_FRONTERIZOS.getCdramo()))
 					{
 						logger.debug("tatriIte=" + tatriIte);
 						//agente

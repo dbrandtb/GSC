@@ -79,7 +79,7 @@ var _p30_gridCols =
 [
     {
         dataIndex     : 'nmsituac'
-        ,width        : 40
+        ,width        : 50
         ,menuDisabled : true
     }
     ,{
