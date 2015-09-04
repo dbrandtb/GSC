@@ -102,7 +102,7 @@ _p34_gridGruposColumns.push
 
 Ext.onReady(function()
 {
-    Ext.Ajax.timeout = 3*60*1000;
+    Ext.Ajax.timeout = 33*60*1000; //33 min
 
     ////// modelos //////
     Ext.define('_p34_modeloPoliza',

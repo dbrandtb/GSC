@@ -29,7 +29,7 @@ var _p38_items = [ <s:property value="imap.items" escapeHtml="false" /> ];
 Ext.onReady(function()
 {
 	
-	Ext.Ajax.timeout = 8*60*1000; // 8 min
+	Ext.Ajax.timeout = 33*60*1000; //33 min
 	
 	
     ////// modelos //////

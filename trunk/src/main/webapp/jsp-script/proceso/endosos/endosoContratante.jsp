@@ -49,7 +49,7 @@ debug('_35_smap1:',_35_smap1);
 Ext.onReady(function()
 {
 	
-	Ext.Ajax.timeout = 8*60*1000; // 8 min
+	Ext.Ajax.timeout = 33*60*1000; //33 min
 	
 	
 	function contratanteGuardado (){
