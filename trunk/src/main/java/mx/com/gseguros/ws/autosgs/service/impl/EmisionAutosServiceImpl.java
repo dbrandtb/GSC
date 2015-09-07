@@ -64,8 +64,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 
 	private static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EmisionAutosServiceImpl.class);
 	
-	private static final long WS_TIMEOUT =  180000;
-	private static final long WS_TIMEOUT_EXTENDED = 30*60*1000;
+	private static final long WS_TIMEOUT =  3*60*1000; //3 minutos
+	private static final long WS_TIMEOUT_EXTENDED = 55*60*1000;// 55 minutos, casi una hora por si hay otros procesos que suman la hora en las JSP
 	
 	@Value("${ws.cotizacion.autos.url}")
 	private String endpointCotiza;

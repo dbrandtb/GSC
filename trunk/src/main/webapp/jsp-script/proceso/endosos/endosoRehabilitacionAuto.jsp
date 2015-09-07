@@ -26,7 +26,7 @@ var _p40_modeloEndosoFields = [ <s:property value="imap.modeloEndosoFields" esca
 
 Ext.onReady(function()
 {
-	Ext.Ajax.timeout = 33*60*1000; //33 min
+	Ext.Ajax.timeout = 1*60*60*1000; // 1 hora
 	
     ////// overrides //////
     ////// overrides //////
