@@ -678,7 +678,7 @@ function _cargarForm(form,datos)
     var ck = 'Cargando formulario';
     try
     {
-        ck = 'Cargando '+((form.title).toLowerCase());
+        ck = 'Cargando '+((''+form.title).toLowerCase());
         for(var prop in datos)
         {
             var value = datos[prop];
