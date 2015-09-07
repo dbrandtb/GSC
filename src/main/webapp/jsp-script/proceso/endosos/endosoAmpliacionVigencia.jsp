@@ -9,7 +9,7 @@
 	
 	Ext.onReady(function() {
 		
-		Ext.Ajax.timeout = 33*60*1000; //33 min
+		Ext.Ajax.timeout = 1*60*60*1000; // 1 hora
 		
 		var panelInicialPral = Ext.create('Ext.form.Panel', {
 		    title: 'Apliaci&oacute;n Vigencia',

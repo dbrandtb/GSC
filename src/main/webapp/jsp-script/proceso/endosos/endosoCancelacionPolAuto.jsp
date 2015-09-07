@@ -30,7 +30,7 @@ var panCanInputFecha;
 
 Ext.onReady(function()
 {
-	Ext.Ajax.timeout = 33*60*1000; //33 min
+	Ext.Ajax.timeout = 1*60*60*1000; // 1 hora
 	
     ////// modelos //////
     ////// modelos //////
