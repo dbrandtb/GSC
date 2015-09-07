@@ -110,7 +110,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 	 */
 	private String getCheckpoint()
 	{
-		return (String)session.get("checkpoint");
+		if(session != null) {
+			return (String)session.get("checkpoint");
+		} else {
+			return "";
+		}
 	}
 	
 	/**
