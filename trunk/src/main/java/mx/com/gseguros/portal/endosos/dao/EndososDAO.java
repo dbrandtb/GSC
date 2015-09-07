@@ -40,7 +40,6 @@ public interface EndososDAO
     @Deprecated
     public Map<String, String>      iniciaEndoso(Map<String, Object> params)        throws Exception;
 	public List<Map<String,String>> obtenerAtributosCoberturas(Map<String, String> params)     throws Exception;
-	public Map<String,Object>       sigsvalipolEnd(Map<String, String> params)                 throws Exception;
 	public Map<String, String>      guardarEndosoClausulas(Map<String, Object> params)         throws Exception;
 	public Map<String, String>      calcularValorEndoso(Map<String, Object> params)            throws Exception;
 	@Deprecated
@@ -601,4 +600,16 @@ public interface EndososDAO
 			String nmpoliza, String nmsuplem) throws Exception;
 	
 	public String obtieneNumeroAtributo(String cdtipsit, String nombreAtributo) throws Exception;
+	
+	public Map<String,Object> sigsvalipolEnd(
+			String cdusuari
+			,String cdelemen
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdtipsup
+			)throws Exception;
 }

@@ -449,8 +449,28 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public Map<String,Object> sigsvalipolEnd(Map<String, String> params) throws Exception
+	public Map<String,Object> sigsvalipolEnd(
+			String cdusuari
+			,String cdelemen
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdtipsup
+			) throws Exception
 	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("pv_cdusuari_i" , cdusuari);
+		params.put("pv_cdelemen_i" , cdelemen);
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsituac_i" , nmsituac);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		params.put("pv_cdtipsup_i" , cdtipsup);
 		logger.debug(
 				new StringBuilder()
 				.append("\n**************************************************")

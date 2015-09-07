@@ -37,22 +37,18 @@ public interface EndososManager
 	/**
 	 * PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_END
 	 */
-	public Map<String,Object>        sigsvalipolEnd(Map<String, String> params)               throws Exception;
-	/**
-	 * PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_END
-	 */
-	public Map<String,Object>        sigsvalipolEnd(
+	@Deprecated
+	public Map<String,Object> sigsvalipolEnd(
 			String cdusuari
-			,String cdelemento
+			,String cdelemen
 			,String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza
 			,String nmsituac
 			,String nmsuplem
-			//,String cdtipsit
 			,String cdtipsup
-			) throws Exception;
+			)throws Exception;
 	public Map<String,String>        guardarEndosoClausulas(Map<String,Object>params)         throws Exception;
 	/**
 	 * PKG_ENDOSOS.P_CALC_VALOR_ENDOSO
@@ -477,5 +473,22 @@ public interface EndososManager
 			String nmpoliza, String nsuplogi, String nmsuplem) throws Exception;
 	
 	public String obtieneNumeroAtributo(String cdtipsit, String nombreAtributo) throws Exception;
+	
+	public String confirmarEndosoBajaFamilia(
+			String cdusuari
+			,String cdsisrol
+			,String cdelemen
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,Date fecha
+			,List<Map<String,String>>incisos
+			,String rutaDocumentosPoliza
+			,String rutaServidorReports
+			,String passServidorReports
+			,UserVO usuario
+			)throws Exception;
 	
 }

@@ -21,6 +21,7 @@ import org.apache.struts2.convention.annotation.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -47,6 +48,15 @@ public class EndososColectivosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private EndososManager endososManager;
+	
+	@Value("${ruta.documentos.poliza}")
+	private String rutaDocumentosPoliza;
+	
+	@Value("${ruta.servidor.reports}")
+	private String rutaServidorReports;
+	
+	@Value("${pass.servidor.reports}")
+	private String passServidorReports;
 
 	@Action(value   = "includes/pantallaEndosoAltaBajaFamilia",
 	        results = {
@@ -172,6 +182,92 @@ public class EndososColectivosAction extends PrincipalCoreAction
 		logger.debug(Utils.log(
 				 "\n###### recuperarComponentesAltaAsegurado ######"
 				,"\n###############################################"
+				));
+		return SUCCESS;
+	}
+	
+	@Action(value           = "confirmarEndosoFamilias",
+			results         = { @Result(name="success", type="json") },
+            interceptorRefs = {
+                @InterceptorRef(value = "json", params = {"enableSMD", "true", "ignoreSMDMethodInterfaces", "false" })
+            }
+	)
+	public String confirmarEndosoFamilias()
+	{
+		logger.debug(Utils.log(
+				 "\n#####################################"
+				,"\n###### confirmarEndosoFamilias ######"
+				,"\n###### params=" , params
+				,"\n###### list="   , list
+				));
+		
+		try
+		{
+			UserVO usuario = Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdunieco = params.get("cdunieco");
+			String cdramo   = params.get("cdramo");
+			String estado   = params.get("estado");
+			String nmpoliza = params.get("nmpoliza");
+			String cdtipsup = params.get("cdtipsup");
+			String fecha    = params.get("FEFECHA");
+			
+			Utils.validate(
+					cdunieco , "No se recibi\u00F3 la sucursal"
+					,cdramo  , "No se recibi\u00F3 el producto"
+					,estado  , "No se recibi\u00F3 el estado de p\u00F3liza"
+					,nmpoliza , "No se recibi\u00F3 la p\u00F3liza"
+					,cdtipsup , "No se recibi\u00F3 la clave de endoso"
+					,fecha    , "No se recibi\u00F3 la fecha de efecto"
+					);
+			
+			if(TipoEndoso.ALTA_ASEGURADOS.getCdTipSup()==Integer.parseInt(cdtipsup))
+			{
+				/*
+				endososManager.confirmarEndosoAltaFamilia(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,cdtipsup
+						,list
+						);
+				*/
+			}
+			else
+			{
+				message = endososManager.confirmarEndosoBajaFamilia(
+						usuario.getUser()
+						,usuario.getRolActivo().getClave()
+						,usuario.getEmpresa().getElementoId()
+						,cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,cdtipsup
+						,Utils.parse(fecha)
+						,list
+						,rutaDocumentosPoliza
+						,rutaServidorReports
+						,passServidorReports
+						,usuario
+						);
+			}
+			
+			success = true;
+			
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### message=",message
+				,"\n###### confirmarEndosoFamilias ######"
+				,"\n#####################################"
 				));
 		return SUCCESS;
 	}
