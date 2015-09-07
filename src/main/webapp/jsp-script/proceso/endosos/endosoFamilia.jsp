@@ -8,6 +8,7 @@
 ////// urls //////
 var _p48_urlRecuperacion             = '<s:url namespace="/recuperacion" action="recuperar"                         />';
 var _p48_urlRecuperarItemsFormulario = '<s:url namespace="/endosos"      action="recuperarComponentesAltaAsegurado" />';
+var _p48_urlConfirmarEndoso          = '<s:url namespace="/endosos"      action="confirmarEndosoFamilias"           />';
 ////// urls //////
 
 ////// variables //////
@@ -143,6 +144,7 @@ Ext.onReady(function()
     Ext.create('Ext.panel.Panel',
     {
         renderTo  : '_p48_divpri'
+        ,itemId   : '_p48_panelpri'
         ,defaults : { style : 'margin:5px;' }
         ,border   : 0
         ,items    :
@@ -200,16 +202,120 @@ Ext.onReady(function()
             ,Ext.create('Ext.form.Panel',
             {
                 title        : 'DATOS DEL ENDOSO'
+                ,itemId      : '_p48_formEndoso'
                 ,defaults    : { style : 'margin : 5px;' }
                 ,items       : _p48_itemsEndoso
                 ,buttonAlign : 'center'
                 ,buttons     :
                 [
                     {
-                        text  : 'Confirmar'
-                        ,icon : '${icons}key.png'
+                        text     : 'Confirmar'
+                        ,icon    : '${icons}key.png'
+                        ,handler : function(me)
+                        {
+                            Ext.MessageBox.confirm('Confirmar', '¿Desea confirmar el endoso?', function(btn)
+                            {
+                                if(btn === 'yes')
+                                {
+                                    var ck = 'Confirmando endoso';
+                                    try
+                                    {
+                                        if(_p48_storeMov.getCount()==0)
+                                        {
+                                            throw 'No hay cambios';
+                                        }
+                                        
+                                        if(!_fieldById('_p48_formEndoso').isValid())
+                                        {
+                                            throw 'Revisar datos del endoso';
+                                        }
+                                        
+                                        var json =
+                                        {
+                                            params :
+                                            {
+                                                cdunieco  : _p48_params.CDUNIECO
+                                                ,cdramo   : _p48_params.CDRAMO
+                                                ,estado   : _p48_params.ESTADO
+                                                ,nmpoliza : _p48_params.NMPOLIZA
+                                                ,cdtipsup : _p48_params.cdtipsup
+                                            }
+                                            ,list : []
+                                        }
+                                        
+                                        var values = _fieldById('_p48_formEndoso').getValues();
+                                        for(var att in values)
+                                        {
+                                            json.params[att] = values[att];
+                                        }
+                                        
+                                        _p48_storeMov.each(function(record)
+                                        {
+                                            json.list.push(parseaFechas(record.data));
+                                        });
+                                        
+                                        debug('json:',json);
+                                        
+                                        _setLoading(true,_fieldById('_p48_panelpri'));
+                                        Ext.Ajax.request(
+                                        {
+                                            url       : _p48_urlConfirmarEndoso
+                                            ,jsonData : json
+                                            ,success  : function(response)
+                                            {
+                                                _setLoading(false,_fieldById('_p48_panelpri'));
+                                                var ck = 'Decodificando respuesta al confirmar endoso';
+                                                try
+                                                {
+                                                    var json = Ext.decode(response.responseText);
+                                                    debug('### confirmar:',json);
+                                                    if(json.success)
+                                                    {
+                                                        marendNavegacion(2);
+                                                        mensajeCorrecto('Endoso generado',json.message);
+                                                    }
+                                                    else
+                                                    {
+                                                        mensajeError(json.message);
+                                                    }
+                                                }
+                                                catch(e)
+                                                {
+                                                    manejaException(e,ck);
+                                                }
+                                            }
+                                            ,failure  : function()
+                                            {
+                                                _setLoading(false,_fieldById('_p48_panelpri'));
+                                                errorComunicacion();
+                                            }
+                                        });
+                                    }
+                                    catch(e)
+                                    {
+                                        manejaException(e,ck);
+                                    }
+                                }
+                            });
+                        } 
                     }
                 ]
+                ,listeners :
+                {
+                    afterrender : function(me)
+                    {
+                        var ck = 'Limitando fecha de endoso';
+                        try
+                        {
+                            me.down('[name=FEFECHA]').minValue = Ext.Date.parse(_p48_params.FEEFECTO,'d/m/Y');
+                            me.down('[name=FEFECHA]').maxValue = Ext.Date.parse(_p48_params.FEPROREN,'d/m/Y');
+                        }
+                        catch(e)
+                        {
+                            manejaException(e);
+                        }
+                    }
+                }
             })
         ]
     });
@@ -326,6 +432,67 @@ function _p48_deshacerMov(v,row,col,item,e,record)
             {
                 _p48_storeMov.remove(record);
             }
+            else if(record.get('AUX1')=='FAM')
+            {
+                centrarVentanaInterna(Ext.create('Ext.window.Window',
+                {
+                    title        : 'Quitar asegurado/familia'
+                    ,modal       : true
+                    ,html        : '<div style="padding:5px;">¿Desea quitar el asegurado o la familia?</div>'
+                    ,buttonAlign : 'center'
+                    ,buttons     :
+                    [
+                        {
+                            text     : 'Asegurado'
+                            ,icon    : '${icons}user_delete.png'
+                            ,handler : function(me)
+                            {
+                                var ck = 'Revirtiendo asegurado';
+                                try
+                                {
+                                    var paren = record.get('CVE_PARENTESCO');
+                                    debug('validando parenteso:',paren);
+                                    if(paren=='T')
+                                    {
+                                        throw 'No se puede quitar el titular';
+                                    }
+                                    _p48_storeMov.remove(record);
+                                    me.up('window').destroy();
+                                }
+                                catch(e)
+                                {
+                                    manejaException(e,ck);
+                                }
+                            }
+                        }
+                        ,{
+                            text  : 'Familia'
+                            ,icon : '${icons}group_delete.png'
+                            ,handler : function(me)
+                            {
+                                var ck = 'Revirtiendo familia';
+                                try
+                                {
+                                    var familia = record.get('NMSITAUX');
+                                    debug('familia a quitar:',familia);
+                                    for(var i=_p48_storeMov.getCount()-1;i>=0;i--)
+                                    {
+                                        if(_p48_storeMov.getAt(i).get('NMSITAUX')==familia)
+                                        {
+                                            _p48_storeMov.remove(_p48_storeMov.getAt(i));
+                                        }
+                                    }
+                                    me.up('window').destroy();
+                                }
+                                catch(e)
+                                {
+                                    manejaException(e,ck);
+                                }
+                            }
+                        }
+                    ]
+                }).show());
+            }
         }
     }
     catch(e)
@@ -383,12 +550,12 @@ function _p48_agregarDepClic()
                 [
                     Ext.create('Ext.form.Panel',
                     {
-                        defaults : { style : 'margin:5px;' }
+                        defaults    : { style : 'margin:5px;' }
                         ,autoScroll : true
-                        ,border  : 0
-                        ,width   : 600
-                        ,height  : 400
-                        ,items   :
+                        ,border     : 0
+                        ,width      : 600
+                        ,height     : 400
+                        ,items      :
                         [
                             {
                                 xtype  : 'fieldset'
@@ -463,10 +630,11 @@ function _p48_agregarDepClic()
                                         }
                                         
                                         var valores = form.getValues();
+                                        valores['CDTIPSIT'] = record.get('CDTIPSIT');
                                         debug('valores:',valores);
                                         
                                         ck = 'Ejecutando validaci\u00F3 din\u00E1mica';
-                                        validacion(valores);
+                                        validacion(valores,false);
                                         
                                         var dependiente = new _p48_modelo(valores);
                                         dependiente.set('AUX1','DEP');
@@ -529,7 +697,9 @@ function _p48_agregarFamClic()
                                     {
                                         var form = _p48_crearFormulario(mpersona,tatrisit,tatrirol);
                                         me.up('panel').add(form);
-                                    });
+                                        form.down('[fieldLabel=FAMILIA]')
+                                            .setValue(me.up('panel').down('form').down('[fieldLabel=FAMILIA]').getValue());
+                                    },me.up('window'));
                                 }
                             }
                         ]
@@ -558,35 +728,84 @@ function _p48_agregarFamClic()
                                 ,icon    : '${icons}accept.png'
                                 ,handler : function(me)
                                 {
-                                    var ck = 'Revisando datos';
-                                    try
+                                    Ext.MessageBox.confirm('Confirmar', '¿Termin\u00F3 de agregar todos los asegurados de la familia?', function(btn)
                                     {
-                                        var panel = me.up('panel');
-                                        var forms = Ext.ComponentQuery.query('form',panel);
-                                        debug('forms:',forms);
-                                        
-                                        var errores = [];
-                                        for(var i in forms)
+                                        if(btn === 'yes')
                                         {
-                                            var form = forms[i];
-                                            if(!form.isValid())
-                                            {
-                                                throw 'Favor de revisar datos';
-                                            }
-                                        }
-                                        
-                                        var records = [];
-                                        for(var i in forms)
-                                        {
-                                            var form = forms[i];
-                                            records.push(new _p48_modelo(form.getValues()));
-                                        }
-                                        debug('records:',records);
-                                    }
-                                    catch(e)
-                                    {
-                                        manejaException(e,ck);
-                                    }
+		                                    var ck = 'Revisando datos';
+		                                    try
+		                                    {
+		                                        var panel = me.up('panel');
+		                                        var forms = Ext.ComponentQuery.query('form',panel);
+		                                        debug('forms:',forms);
+		                                        
+		                                        var errores = [];
+		                                        for(var i in forms)
+		                                        {
+		                                            var form = forms[i];
+		                                            if(!form.isValid())
+		                                            {
+		                                                throw 'Favor de revisar datos';
+		                                            }
+		                                        }
+		                                        
+		                                        var cdtipsit = _p48_store.getAt(0).get('CDTIPSIT');
+		                                        
+		                                        var records = [];
+		                                        for(var i in forms)
+		                                        {
+		                                            var form         = forms[i];
+		                                            var vals         = form.getValues();
+		                                            vals['CDTIPSIT'] = cdtipsit;
+		                                            records.push(new _p48_modelo(vals));
+		                                        }
+		                                        debug('records:',records);
+		                                        
+		                                        var maxGrupo = 0;
+		                                        _p48_store.each(function(record)
+		                                        {
+		                                            if(Number(record.get('CDGRUPO'))>maxGrupo)
+		                                            {
+		                                                maxGrupo = Number(record.get('CDGRUPO'));
+		                                            }
+		                                        });
+		                                        debug('maxGrupo:',maxGrupo);
+		                                        
+		                                        for(var i in records)
+		                                        {
+		                                            var cdgrupo = Number(records[i].get('CDGRUPO'));
+		                                            if(cdgrupo==0||cdgrupo>maxGrupo)
+		                                            {
+		                                                throw 'El grupo no es v\u00E1lido para '+
+		                                                    (
+		                                                        [
+		                                                            records[i].get('DSNOMBRE')
+		                                                            ,records[i].get('DSNOMBRE1')
+		                                                            ,records[i].get('DSAPELLIDO')
+		                                                            ,records[i].get('DSAPELLIDO1')
+		                                                        ].join(' ')
+		                                                    );
+		                                            }
+		                                        }
+		                                        
+		                                        ck = 'Ejecutando validaci\u00F3n din\u00E1mica';
+		                                        validacion(records);
+		                                        
+		                                        for(var i in records)
+		                                        {
+		                                            records[i].set('MOV'  , '+');
+		                                            records[i].set('AUX1' , 'FAM');
+		                                            _p48_storeMov.add(records[i]);
+		                                        }
+		                                        
+		                                        me.up('window').destroy();
+		                                    }
+		                                    catch(e)
+		                                    {
+		                                        manejaException(e,ck);
+		                                    }
+		                                }
+		                            });
                                 }
                             }
                         ]
@@ -645,7 +864,7 @@ function _p48_crearFormulario(mpersona,tatrisit,tatrirol)
     });
 }
 
-function _p48_obtenerComponentes(depFam,cdtipsit,callback)
+function _p48_obtenerComponentes(depFam,cdtipsit,callback,cmpLoading)
 {
     var ck = 'Recuperando componentes';
     try
@@ -658,7 +877,8 @@ function _p48_obtenerComponentes(depFam,cdtipsit,callback)
         {
             throw 'Falta callback';
         }
-    
+        
+        _setLoading(true,cmpLoading||_fieldById('_p48_gridAsegurados'));
         Ext.Ajax.request(
         {
             url      : _p48_urlRecuperarItemsFormulario
@@ -670,6 +890,7 @@ function _p48_obtenerComponentes(depFam,cdtipsit,callback)
             }
             ,success : function(response)
             {
+                _setLoading(false,cmpLoading||_fieldById('_p48_gridAsegurados'));
                 var ck = 'Decodificando formularios';
                 try
                 {
@@ -699,6 +920,7 @@ function _p48_obtenerComponentes(depFam,cdtipsit,callback)
             }
             ,failure : function()
             {
+                _setLoading(false,cmpLoading||_fieldById('_p48_gridAsegurados'));
                 errorComunicacion(null,'Error al construir formularios');
             }
         });
@@ -712,17 +934,140 @@ function _p48_obtenerComponentes(depFam,cdtipsit,callback)
 function _p48_editarAsegurado(v,row,col,item,e,record)
 {
     debug('_p48_editarAsegurado record.data:',record.data);
+    var ck = 'Validando registro';
+    try
+    {
+        if(record.get('AUX1')=='DEP'||record.get('AUX1')=='FAM')
+        {
+            _p48_obtenerComponentes('DEP',record.get('CDTIPSIT'),function(mpersona,tatrisit,tatrirol,validacion)
+	        {
+	            centrarVentanaInterna(Ext.create('Ext.window.Window',
+	            {
+	                title  : 'EDITAR ASEGURADO'
+	                ,modal : true
+	                ,items :
+	                [
+	                    Ext.create('Ext.form.Panel',
+	                    {
+	                        defaults : { style : 'margin:5px;' }
+	                        ,autoScroll : true
+	                        ,border  : 0
+	                        ,width   : 600
+	                        ,height  : 400
+	                        ,items   :
+	                        [
+	                            {
+	                                xtype  : 'fieldset'
+	                                ,title : '<span style="font:bold 14px Calibri;">DATOS DE PERSONA</span>'
+	                                ,items : mpersona
+	                                ,layout  :
+	                                {
+	                                    type     : 'table'
+	                                    ,columns : 2
+	                                }
+	                            }
+	                            ,{
+	                                xtype  : 'fieldset'
+	                                ,title : '<span style="font:bold 14px Calibri;">DATOS DE P\u00D3LIZA</span>'
+	                                ,items : tatrisit
+	                                ,layout  :
+	                                {
+	                                    type     : 'table'
+	                                    ,columns : 2
+	                                }
+	                            }
+	                            ,{
+	                                xtype  : 'fieldset'
+	                                ,title : '<span style="font:bold 14px Calibri;">DATOS ADICIONALES</span>'
+	                                ,items : tatrirol
+	                                ,layout  :
+	                                {
+	                                    type     : 'table'
+	                                    ,columns : 2
+	                                }
+	                            }
+	                        ]
+	                        ,listeners   :
+	                        {
+	                            afterrender : function(me)
+	                            {
+	                                me.down('[name=CVE_PARENTESCO]').setReadOnly(true);
+	                                me.down('[name=DSGRUPO]').allowBlank = true;
+	                                me.down('[name=DSGRUPO]').hide();
+	                                me.down('[name=NMSITUAEXT]').allowBlank = true;
+                                    me.down('[name=NMSITUAEXT]').hide();
+	                                _cargarForm(me,record.data);
+	                            }
+	                        }
+	                        ,buttonAlign : 'center'
+	                        ,buttons     :
+	                        [
+	                            {
+	                                text     : 'Aceptar'
+	                                ,icon    : '${icons}accept.png'
+	                                ,handler : function(me)
+	                                {
+	                                    var ck = 'Guardando asegurado';
+	                                    try
+	                                    {
+	                                        var form = me.up('form');
+	                                        if(!form.isValid())
+	                                        {
+	                                            throw 'Favor de verificar datos';
+	                                        }
+	                                        
+	                                        var valores = form.getValues();
+	                                        debug('valores:',valores);
+	                                        
+	                                        ck = 'Ejecutando validaci\u00F3n din\u00E1mica';
+	                                        validacion(valores,true);
+	                                        
+	                                        for(var att in valores)
+	                                        {
+	                                            record.set(att,valores[att]);
+	                                        }
+	                                        form.up('window').destroy();
+	                                    }
+	                                    catch(e)
+	                                    {
+	                                        manejaException(e,ck);
+	                                    }
+	                                }
+	                            }
+	                        ]
+	                    })
+	                ]
+	            }).show());
+	        });
+        }
+    }
+    catch(e)
+    {
+        manejaException(e);
+    }
 }
 
 /*
-function(valores)
+function(valores,editar)
 {
-    if(valores.CVE_PARENTESCO=='T')
+    debug('validacion DEP valores:',valores,'editar:',editar,'.');
+    
+    if(Ext.isEmpty(valores))
+    {
+        throw 'No hay valores';
+    }
+    
+    if(Ext.isEmpty(editar))
+    {
+        throw 'No hay flag de editar';
+    }
+    
+    if(valores.CVE_PARENTESCO=='T'&&!editar)
     {
         throw 'No se puede agregar otro titular';
     }
     
-    if(valores.CVE_PARENTESCO=='C')
+    if(valores.CVE_PARENTESCO=='C'&&!editar)
     {
         _p48_store.each(function(rec)
         {
@@ -753,7 +1098,7 @@ function(valores)
     }
     else if(valores.CVE_PARENTESCO=='C')
     {
-        valores['DES_PARENTESCO'] = 'C\u00D3NYUGUE';
+        valores['DES_PARENTESCO'] = 'C\u00D3NYUGE';
     }
     else if(valores.CVE_PARENTESCO=='P')
     {
@@ -768,6 +1113,69 @@ function(valores)
         valores['DES_PARENTESCO'] = 'DEPENDIENTE';
     }
     debug('final valores:',valores);
+}
+
+function(records)
+{
+    var nTit = 0;
+    var nCon = 0;
+    
+    for(var i in records)
+    {
+        if(records[i].get('CVE_PARENTESCO')=='T')
+        {
+            nTit = nTit + 1;
+        }
+        else if(records[i].get('CVE_PARENTESCO')=='C')
+        {
+            nCon = nCon + 1;
+        }
+    }
+    if(nTit==0)
+    {
+        throw 'Hace falta un titular';
+    }
+    else if(nTit>1)
+    {
+        throw 'Solo debe haber un titular';
+    }
+    if(nCon>1)
+    {
+        throw 'Solo puede haber un(a) c\u00F3nyuge';
+    }
+    
+    for(var i in records)
+    {
+        var record  = records[i];
+        var valores = record.raw;
+        
+        valores['OTVALOR03'] = valores.CVE_PARENTESCO;
+        
+	    if(valores.CVE_PARENTESCO=='T')
+	    {
+	        valores['DES_PARENTESCO'] = 'TITULAR';
+	    }
+	    else if(valores.CVE_PARENTESCO=='C')
+	    {
+	        valores['DES_PARENTESCO'] = 'C\u00D3NYUGE';
+	    }
+	    else if(valores.CVE_PARENTESCO=='P')
+	    {
+	        valores['DES_PARENTESCO'] = 'PADRES';
+	    }
+	    else if(valores.CVE_PARENTESCO=='H')
+	    {
+	        valores['DES_PARENTESCO'] = 'HIJO';
+	    }
+	    else if(valores.CVE_PARENTESCO=='D')
+	    {
+	        valores['DES_PARENTESCO'] = 'DEPENDIENTE';
+	    }
+	    
+	    record.set('OTVALOR03'      , valores['OTVALOR03']);
+	    record.set('DES_PARENTESCO' , valores['DES_PARENTESCO']);
+    }
+    debug('final records:',records);
 }
 */
 ////// funciones //////

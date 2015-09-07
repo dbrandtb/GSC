@@ -2320,17 +2320,17 @@ public class EndososAction extends PrincipalCoreAction
 			}
 			
 			// ****** Ejecutamos SIGSVDEF_END ******
-			Map<String,String> paramSigsvdefEnd = new LinkedHashMap<String,String>(0);
-			paramSigsvdefEnd.put("pv_cdusuari_i", usuario.getEmpresa().getElementoId());
-			paramSigsvdefEnd.put("pv_cdelemen_i", usuario.getUser());
-			paramSigsvdefEnd.put("pv_cdunieco_i", (String)omap1.get("pv_cdunieco_i"));
-			paramSigsvdefEnd.put("pv_cdramo_i"  , (String)omap1.get("pv_cdramo_i"));
-			paramSigsvdefEnd.put("pv_estado_i"  , (String)omap1.get("pv_estado_i"));
-			paramSigsvdefEnd.put("pv_nmpoliza_i", (String)omap1.get("pv_nmpoliza_i"));
-			paramSigsvdefEnd.put("pv_nmsituac_i", "0");
-			paramSigsvdefEnd.put("pv_nmsuplem_i", respEndCob.get("pv_nmsuplem_o"));
-			paramSigsvdefEnd.put("pv_cdtipsup_i", tipoEndoso.getCdTipSup().toString());
-			endososManager.sigsvalipolEnd(paramSigsvdefEnd);
+			endososManager.sigsvalipolEnd(
+					usuario.getUser()
+					,usuario.getEmpresa().getElementoId()
+					,(String)omap1.get("pv_cdunieco_i")
+					,(String)omap1.get("pv_cdramo_i")
+					,(String)omap1.get("pv_estado_i")
+					,(String)omap1.get("pv_nmpoliza_i")
+					,"0"
+					,respEndCob.get("pv_nmsuplem_o")
+					,tipoEndoso.getCdTipSup().toString()
+					);
 			
 			if(smap1.get("confirmar").equalsIgnoreCase("si")) {
 						
@@ -3039,7 +3039,7 @@ public class EndososAction extends PrincipalCoreAction
 				try{
 					//Meter los nuevos valores de parentesco y antiguedad
 					String numParentesco = endososManager.obtieneNumeroAtributo(smap1.get("cdtipsit"), "PARENTESCO");
-					String numAntiguedad = endososManager.obtieneNumeroAtributo(smap1.get("cdtipsit"), "F. ANTIGÜEDAD");
+					String numAntiguedad = endososManager.obtieneNumeroAtributo(smap1.get("cdtipsit"), "F. ANTIGï¿½EDAD");
 					
 					
 					String paramParent = new StringBuilder("pv_otvalor").append(StringUtils.leftPad(String.valueOf(numParentesco), 2, "0")).toString();
@@ -4303,18 +4303,17 @@ public class EndososAction extends PrincipalCoreAction
                 
                 //////////////////////////
                 ////// tarificacion //////
-                Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
-    			mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
-    			mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemen);
-    			mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
-    			mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
-    			mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
-    			mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
-    			mapaSigsvalipolEnd.put("pv_nmsituac_i" , nmsituac);
-    			mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
-    			//mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
-    			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString());
-    			endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
+    			endososManager.sigsvalipolEnd(
+    					cdusuari
+    					,cdelemen
+    					,cdunieco
+    					,cdramo
+    					,estado
+    					,nmpoliza
+    					,nmsituac
+    					,nmsuplem
+    					,TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString()
+    					);
                 ////// tarificacion //////
     			//////////////////////////
     			
@@ -4442,18 +4441,17 @@ public class EndososAction extends PrincipalCoreAction
                 
                 //////////////////////////
 		        ////// tarificacion //////
-		        Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
-				mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
-				mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemen);
-				mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
-				mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
-				mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
-				mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
-				mapaSigsvalipolEnd.put("pv_nmsituac_i" , nmsituac);
-				mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
-				//mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
-				mapaSigsvalipolEnd.put("pv_cdtipsup_i" , TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString());
-				endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
+				endososManager.sigsvalipolEnd(
+						cdusuari
+						,cdelemen
+						,cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,nmsituac
+						,nmsuplem
+						,TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString()
+						);
 		        ////// tarificacion //////
 				//////////////////////////
 				
@@ -4949,18 +4947,17 @@ public class EndososAction extends PrincipalCoreAction
                 
                 //////////////////////////
                 ////// tarificacion //////
-                Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
-    			mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
-    			mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemen);
-    			mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
-    			mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
-    			mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
-    			mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
-    			mapaSigsvalipolEnd.put("pv_nmsituac_i" , nmsituacIte);
-    			mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
-    			//mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
-    			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , cdtipsup);
-    			endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
+    			endososManager.sigsvalipolEnd(
+    					cdusuari
+    					,cdelemen
+    					,cdunieco
+    					,cdramo
+    					,estado
+    					,nmpoliza
+    					,nmsituacIte
+    					,nmsuplem
+    					,cdtipsup
+    					);
                 ////// tarificacion //////
     			//////////////////////////
     			
@@ -5318,18 +5315,17 @@ public class EndososAction extends PrincipalCoreAction
                 
                 //////////////////////////
                 ////// tarificacion //////
-                Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
-    			mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
-    			mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemen);
-    			mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
-    			mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
-    			mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
-    			mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
-    			mapaSigsvalipolEnd.put("pv_nmsituac_i" , nmsituacIte);
-    			mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
-    			//mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
-    			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , cdtipsup);
-    			endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
+    			endososManager.sigsvalipolEnd(
+    					cdusuari
+    					,cdelemen
+    					,cdunieco
+    					,cdramo
+    					,estado
+    					,nmpoliza
+    					,nmsituacIte
+    					,nmsuplem
+    					,cdtipsup
+    					);
                 ////// tarificacion //////
     			//////////////////////////
     			
@@ -5535,7 +5531,7 @@ public class EndososAction extends PrincipalCoreAction
 		paramsMesaControl.put("pv_nmsuplem_i"   , nmsuplem);
 		paramsMesaControl.put("pv_cdsucadm_i"   , cdunieco);
 		paramsMesaControl.put("pv_cdsucdoc_i"   , cdunieco);
-		paramsMesaControl.put("pv_cdtiptra_i"   , TipoTramite.ENDOSO_PARADO_POR_AUTORIZACION.getCdtiptra());
+		paramsMesaControl.put("pv_cdtiptra_i"   , TipoTramite.ENDOSO.getCdtiptra());
 		paramsMesaControl.put("pv_ferecepc_i"   , fechaEndoso);
 		paramsMesaControl.put("pv_cdagente_i"   , null);
 		paramsMesaControl.put("pv_referencia_i" , null);
@@ -6139,18 +6135,17 @@ public class EndososAction extends PrincipalCoreAction
             
             //////////////////////////
             ////// tarificacion //////
-            Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
-			mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
-			mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemento);
-			mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
-			mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
-			mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
-			mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
-			mapaSigsvalipolEnd.put("pv_nmsituac_i" , "0");
-			mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
-			//mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
-			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , cdtipsup);
-			endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
+			endososManager.sigsvalipolEnd(
+					cdusuari
+					,cdelemento
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,"0"
+					,nmsuplem
+					,cdtipsup
+					);
             ////// tarificacion //////
 			//////////////////////////
 			
@@ -6458,18 +6453,17 @@ public class EndososAction extends PrincipalCoreAction
 				logger.info("Codigo postal nuevo para Endoso de Domicilio Full, ejecutando SIGSVALIPOL, CALCULA_VALOR_ENDOSO");
 				//////////////////////////
 				////// tarificacion //////
-				Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
-				mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
-				mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemento);
-				mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
-				mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
-				mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
-				mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
-				mapaSigsvalipolEnd.put("pv_nmsituac_i" , "0");
-				mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
-				//mapaSigsvalipolEnd.put("pv_cdtipsit_i" , null);
-				mapaSigsvalipolEnd.put("pv_cdtipsup_i" , cdtipsup);
-				endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
+				endososManager.sigsvalipolEnd(
+						cdusuari
+						,cdelemento
+						,cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,"0"
+						,nmsuplem
+						,cdtipsup
+						);
 				////// tarificacion //////
 				//////////////////////////
 				
@@ -6971,18 +6965,17 @@ public class EndososAction extends PrincipalCoreAction
             //////////////////////////
             ////// tarificacion //////
             //PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_END
-            Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
-			mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
-			mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemento);
-			mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
-			mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
-			mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
-			mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
-			mapaSigsvalipolEnd.put("pv_nmsituac_i" , "0");
-			mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
-			//mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
-			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , cdtipsup);
-			endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
+			endososManager.sigsvalipolEnd(
+					cdusuari
+					,cdelemento
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,"0"
+					,nmsuplem
+					,cdtipsup
+					);
             ////// tarificacion //////
 			//////////////////////////
 			
@@ -7275,18 +7268,17 @@ public class EndososAction extends PrincipalCoreAction
             //////////////////////////
             ////// tarificacion //////
             //PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_END
-            Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
-			mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
-			mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemento);
-			mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
-			mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
-			mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
-			mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
-			mapaSigsvalipolEnd.put("pv_nmsituac_i" , "0");
-			mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
-			//mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
-			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , cdtipsup);
-			endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
+			endososManager.sigsvalipolEnd(
+					cdusuari
+					,cdelemento
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,"0"
+					,nmsuplem
+					,cdtipsup
+					);
             ////// tarificacion //////
 			//////////////////////////
 			
@@ -9040,18 +9032,17 @@ public class EndososAction extends PrincipalCoreAction
 			
 			//////////////////////////
 			////// tarificacion //////
-			Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
-			mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
-			mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemento);
-			mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
-			mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
-			mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
-			mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
-			mapaSigsvalipolEnd.put("pv_nmsituac_i" , "0");
-			mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
-			//mapaSigsvalipolEnd.put("pv_cdtipsit_i" , null);
-			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , cdtipsup);
-			endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
+			endososManager.sigsvalipolEnd(
+					cdusuari
+					,cdelemento
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,"0"
+					,nmsuplem
+					,cdtipsup
+					);
 			////// tarificacion //////
 			//////////////////////////
 			
