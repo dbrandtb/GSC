@@ -5533,7 +5533,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,boolean flagMovil
 			,Map<String,String>tvalopol
 			,String cdagente
-			)
+			)throws Exception
     {
     	logger.debug(Utils.log(
     			 "\n@@@@@@@@@@@@@@@@@@@@@"
@@ -5560,6 +5560,8 @@ public class CotizacionManagerImpl implements CotizacionManager
     	resp.setSmap(new HashMap<String,String>());
     	resp.getSmap().put("nmpoliza" , nmpoliza);
     	
+    	String paso = "Cotizando";
+    	
     	try
     	{
     		Date fechaHoy = new Date();
@@ -5577,6 +5579,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				{
 					try
 					{
+						paso = "Recuperando consecutivo de p\u00F3liza";
 						nmpoliza = cotizacionDAO.calculaNumeroPoliza(cdunieco,cdramo,"W");
 						resp.getSmap().put("nmpoliza" , nmpoliza);
 					}
@@ -5590,6 +5593,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				
 				//////////////////////
 	            ////// mpolizas //////
+				paso = "Insertando maestro de p\u00F3liza";
 				cotizacionDAO.movimientoPoliza(
 						cdunieco
 						,cdramo
@@ -5644,6 +5648,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            ////// mpolizas //////
 	            //////////////////////
 				
+				paso = "Insertando valores adicionales de p\u00F3liza";
 				cotizacionDAO.movimientoTvalopol(
 						cdunieco
 						,cdramo
@@ -5664,6 +5669,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            try {
 	            	LinkedHashMap<String,Object>p=new LinkedHashMap<String,Object>();
 	            	p.put("cdtipsit",cdtipsit);
+	            	
+	            	paso = "Recuperando atributos base de situaci\u00F3n";
 	            	Map<String,String>atributos=consultasDAO.cargarAtributosBaseCotizacion(cdtipsit);
 	            	if(atributos.get("PARENTESCO") != null) {
 	            		llaveRol=atributos.get("PARENTESCO");
@@ -5701,6 +5708,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            ////// parche. Validar codigo postal //////
 	            if(StringUtils.isNotBlank(llaveCodPostal)&&StringUtils.isNotBlank(incisos.get(0).get(llaveCodPostal)))
 	            {
+	            	paso = "Validando c\u00F3digo postal";
 	            	cotizacionDAO.validarCodpostalTarifa(incisos.get(0).get(llaveCodPostal),cdtipsit);
 	            }
 	            //// parche. Validar codigo postal //////
@@ -5735,6 +5743,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             	{
 		        	//////////////////////////////
 		        	////// mpolisit iterado //////
+            		paso = "Insertando relaci\u00F3n p\u00F3liza situaci\u00F3n";
 		        	cotizacionDAO.movimientoMpolisit(
 		        			cdunieco
 		        			,cdramo
@@ -5801,6 +5810,7 @@ public class CotizacionManagerImpl implements CotizacionManager
                 ////// 4. custom //////
             	try
             	{
+            		paso = "Recuperando valores constantes de situaci\u00F3n";
             		Map<String,String>tvalositConst=cotizacionDAO.obtenerParametrosCotizacion(
             			ParametroCotizacion.TVALOSIT_CONSTANTE
             			,cdramo
@@ -5836,6 +5846,7 @@ public class CotizacionManagerImpl implements CotizacionManager
                 	
             	if(cdtipsit.equals(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit()))
             	{
+            		paso = "Recuperando tabuladores de gastos m\u00E9dicos";
             		mapaValositIterado.put("otvalor22",
             				cotizacionDAO.cargarTabuladoresGMIParche(mapaValositIterado.get("otvalor16"), "22")
             		);
@@ -5845,6 +5856,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             	}
                 ////// 4. custom //////
                 
+            	paso = "Insertando valores adicionales de situaci\u00F3n";
             	cotizacionDAO.movimientoTvalosit(
             			cdunieco
             			,cdramo
@@ -5872,6 +5884,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            contador=1;
 	            for(Map<String,String> inciso : incisos)
 	            {
+	            	paso = "Clonando incisos";
 	                cotizacionDAO.clonarPersonas(
 	                		cdelemen
 	                		,cdunieco
@@ -6044,6 +6057,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            ////// mpoliper contratante recuperado //////
 	            if(StringUtils.isNotBlank(cdpersonCli))
 	            {
+	            	paso = "Insertando relaci\u00F3n p\u00F3liza persona";
 	            	cotizacionDAO.movimientoMpoliper(
 	            			cdunieco
 	            			,cdramo
@@ -6062,6 +6076,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            }
 	            ////// mpoliper contratante recuperado //////
 	            
+	            paso = "Aplicando ajustes de producto";
 	            cotizacionDAO.aplicarAjustesCotizacionPorProducto(
 	            		cdunieco
 	            		,cdramo
@@ -6074,6 +6089,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            ////////////////////////
 	            ////// coberturas //////
 	            /*////////////////////*/
+	            paso = "Ejecutando tarificaci\u00F3n";
 	            cotizacionDAO.valoresPorDefecto(
 	            		cdunieco
 	            		,cdramo
@@ -6092,6 +6108,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             ///////////////////////////////////
             ////// Generacion cotizacion //////
             /*///////////////////////////////*/
+            paso = "Recuperando resultados de cotizaci\u00F3n";
             List<Map<String,String>> listaResultados=cotizacionDAO.cargarResultadosCotizacion(
             		cdusuari
             		,cdunieco
@@ -6129,6 +6146,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			CDPLAN=M,                  <--(3)
 			DSUNIECO=PUEBLA
              */
+            
+            paso = "Agrupando tarifa";
             
             ////// 1. encontrar planes, formas de pago y algun nmsituac//////
             Map<String,String>formasPago = new LinkedHashMap<String,String>();
@@ -6351,7 +6370,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     	}
     	catch(Exception ex)
     	{
-    		manejaException(ex, resp);
+    		Utils.generaExcepcion(ex, paso);
     	}
     	
     	logger.debug(Utils.log(

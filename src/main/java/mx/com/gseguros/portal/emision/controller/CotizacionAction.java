@@ -1552,9 +1552,9 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex);
-			success = false;
-			error   = respuesta;
+			respuesta = Utils.manejaExcepcion(ex);
+			success   = false;
+			error     = respuesta;
 		}
 		
 		logger.debug(Utils.log(

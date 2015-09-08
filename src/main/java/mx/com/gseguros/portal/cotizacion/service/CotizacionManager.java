@@ -443,7 +443,7 @@ public interface CotizacionManager
 			,boolean flagMovil
 			,Map<String,String>tvalopol
 			,String cdagente
-			);
+			)throws Exception;
 	
 	
 	public boolean validaDomicilioCotizacionTitular(Map<String,String> params)throws Exception;
