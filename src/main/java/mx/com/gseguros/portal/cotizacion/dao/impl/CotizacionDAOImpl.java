@@ -5937,7 +5937,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 
 	@Override
-	public void actualizaAseguradosColectivo(
+	public void actualizaDomicilioAseguradosColectivo(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -5956,12 +5956,12 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("pv_cdpostal_i" , cdpostal);
 		params.put("pv_cdedo_i"    , cdedo);
 		params.put("pv_cdmunici_i" , cdmunici);
-		ejecutaSP(new ActualizaAseguradosColectivo(getDataSource()),params);
+		ejecutaSP(new ActualizaDomicilioAseguradosColectivo(getDataSource()),params);
 	}
 	
-	protected class ActualizaAseguradosColectivo extends StoredProcedure
+	protected class ActualizaDomicilioAseguradosColectivo extends StoredProcedure
 	{
-		protected ActualizaAseguradosColectivo(DataSource dataSource)
+		protected ActualizaDomicilioAseguradosColectivo(DataSource dataSource)
 		{
 			super(dataSource,"PKG_SATELITES2.P_ACT_TVALOSIT_ATRIB_DOMICILIO");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));

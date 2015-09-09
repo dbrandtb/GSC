@@ -5418,7 +5418,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,swexiper
 					);
 			
-			cotizacionDAO.actualizaAseguradosColectivo(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdpostal, cdedo, cdmunici);
+			cotizacionDAO.actualizaDomicilioAseguradosColectivo(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdpostal, cdedo, cdmunici);
 			
 		}
 		catch(Exception ex)
@@ -8001,6 +8001,21 @@ public class CotizacionManagerImpl implements CotizacionManager
 			)throws Exception
 	{
 		cotizacionDAO.actualizaCesionComision(cdunieco,cdramo,estado,nmpoliza);
+	}
+
+	@Override
+	public void actualizaDomicilioAseguradosColectivo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdpostal
+			,String cdedo
+			,String cdmunici
+			)throws Exception
+	{
+		cotizacionDAO.actualizaDomicilioAseguradosColectivo(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdpostal, cdedo, cdmunici);
 	}
 	
 	@Override
