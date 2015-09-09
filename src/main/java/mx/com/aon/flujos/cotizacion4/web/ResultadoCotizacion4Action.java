@@ -1,6 +1,7 @@
 package mx.com.aon.flujos.cotizacion4.web;
 
 import java.io.File;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,10 +25,13 @@ import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.web.model.IncisoSaludVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.general.model.Reporte;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
+import mx.com.gseguros.portal.general.service.ReportesManager;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.Rango;
+import mx.com.gseguros.portal.general.util.TipoArchivo;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.Constantes;
@@ -38,6 +42,7 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGen
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import net.sf.json.JSONArray;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -64,6 +69,9 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     private CotizacionManager cotizacionManager;
     
     private transient Ice2sigsService ice2sigsService;
+    
+    @Autowired
+    private ReportesManager reportesManager;
     
     //Constantes de catalogos
     public static final String cdatribuSexo                         ="1";
@@ -1290,6 +1298,87 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     			logger.error(respuesta,ex);
     		}
         }
+    	else if(exito && Ramo.AUTOS_RESIDENTES.getCdramo().equals(comprarCdramo) && esFlotilla && "F".equals(tipoflot))
+    	{
+    		try
+    		{
+	    		//guardar excel 1
+	    		Map<String,String> paramsExcel1 = new LinkedHashMap<String,String>();
+				paramsExcel1.put("pv_cdunieco_i" , comprarCdunieco);
+				paramsExcel1.put("pv_cdramo_i"   , comprarCdramo);
+				paramsExcel1.put("pv_estado_i"   , "W");
+				paramsExcel1.put("pv_nmpoliza_i" , comprarNmpoliza);
+				paramsExcel1.put("pv_nmsuplem_i" , "0");
+				paramsExcel1.put("pv_cdperpag_i" , comprarCdperpag);
+				paramsExcel1.put("pv_cdusuari_i" , cdusuari);
+				
+				InputStream excel = reportesManager.obtenerDatosReporte(Reporte.AUTOS_RESIDENTES_FLOTILLA_COTIZACION.getCdreporte()
+						,cdusuari
+						,paramsExcel1
+						);
+				
+				String nombreExcel1 = Utils.join("COTIZACION",TipoArchivo.XLS.getExtension());
+				
+				FileUtils.copyInputStreamToFile(excel, new File(Utils.join(
+								getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreExcel1
+				)));
+				
+				Map<String,Object>mapaExcel1 = new LinkedHashMap<String,Object>(0);
+				mapaExcel1.put("pv_cdunieco_i"  , comprarCdunieco);
+				mapaExcel1.put("pv_cdramo_i"    , comprarCdramo);
+				mapaExcel1.put("pv_estado_i"    , "W");
+				mapaExcel1.put("pv_nmpoliza_i"  , "0");
+				mapaExcel1.put("pv_nmsuplem_i"  , "0");
+				mapaExcel1.put("pv_feinici_i"   , new Date());
+				mapaExcel1.put("pv_cddocume_i"  , nombreExcel1);
+				mapaExcel1.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N (XLS)");
+				mapaExcel1.put("pv_ntramite_i"  , ntramite);
+				mapaExcel1.put("pv_nmsolici_i"  , comprarNmpoliza);
+				mapaExcel1.put("pv_tipmov_i"    , "1");
+				mapaExcel1.put("pv_swvisible_i" , null);
+				kernelManagerSustituto.guardarArchivo(mapaExcel1);
+	    		
+	    		//guardar excel 2
+				Map<String,String> paramsExcel2 = new LinkedHashMap<String,String>();
+				paramsExcel2.put("pv_cdunieco_i" , comprarCdunieco);
+				paramsExcel2.put("pv_cdramo_i"   , comprarCdramo);
+				paramsExcel2.put("pv_estado_i"   , "W");
+				paramsExcel2.put("pv_nmpoliza_i" , comprarNmpoliza);
+				paramsExcel2.put("pv_nmsuplem_i" , "0");
+				paramsExcel2.put("pv_cdperpag_i" , comprarCdperpag);
+				paramsExcel2.put("pv_cdusuari_i" , cdusuari);
+				
+				InputStream excel2 = reportesManager.obtenerDatosReporte(Reporte.AUTOS_RESIDENTES_FLOTILLA_RESUMEN.getCdreporte()
+						,cdusuari
+						,paramsExcel2
+						);
+				
+				String nombreExcel2 = Utils.join("RESUMEN DE COTIZACION",TipoArchivo.XLS.getExtension());
+				
+				FileUtils.copyInputStreamToFile(excel2, new File(Utils.join(
+								getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreExcel2
+				)));
+				
+				Map<String,Object>mapaExcel2 = new LinkedHashMap<String,Object>(0);
+				mapaExcel2.put("pv_cdunieco_i"  , comprarCdunieco);
+				mapaExcel2.put("pv_cdramo_i"    , comprarCdramo);
+				mapaExcel2.put("pv_estado_i"    , "W");
+				mapaExcel2.put("pv_nmpoliza_i"  , "0");
+				mapaExcel2.put("pv_nmsuplem_i"  , "0");
+				mapaExcel2.put("pv_feinici_i"   , new Date());
+				mapaExcel2.put("pv_cddocume_i"  , nombreExcel2);
+				mapaExcel2.put("pv_dsdocume_i"  , "RESUMEN DE COTIZACI&Oacute;N (XLS)");
+				mapaExcel2.put("pv_ntramite_i"  , ntramite);
+				mapaExcel2.put("pv_nmsolici_i"  , comprarNmpoliza);
+				mapaExcel2.put("pv_tipmov_i"    , "1");
+				mapaExcel2.put("pv_swvisible_i" , null);
+				kernelManagerSustituto.guardarArchivo(mapaExcel2);
+    		}
+    		catch(Exception ex)
+    		{
+    			Utils.manejaExcepcion(ex);
+    		}
+    	}
     	
     	if(exito)
     	{
