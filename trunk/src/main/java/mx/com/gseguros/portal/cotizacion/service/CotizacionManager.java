@@ -590,6 +590,29 @@ public interface CotizacionManager
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+
+	/**
+	 * Actualiza todos los registros de tvalosit para productos que tengan codigo postal, estado y municipio
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @param cdpostal
+	 * @param cdedo
+	 * @param cdmunici
+	 * @throws Exception
+	 */
+	public void actualizaDomicilioAseguradosColectivo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdpostal
+			,String cdedo
+			,String cdmunici
+			)throws Exception;
 	
 	public void procesoColectivoAsincrono(
 			boolean hayTramite

@@ -485,7 +485,7 @@ public interface CotizacionDAO {
 			,String nmpoliza
 			)throws Exception;
 
-	public void actualizaAseguradosColectivo(
+	public void actualizaDomicilioAseguradosColectivo(
 			String cdunieco
 			,String cdramo
 			,String estado
