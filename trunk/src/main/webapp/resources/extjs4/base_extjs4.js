@@ -741,6 +741,15 @@ function _setLoading(load,cmp)
         {
             throw 'No se recibi\u00F3 par\u00E1metro 2 de m\u00E1scara';
         }
+        if(typeof cmp == 'string')
+        {
+            var cmp2 = _fieldById(cmp);
+            if(Ext.isEmpty(cmp2))
+            {
+                throw 'No se encuentra el componente con id '+cmp;
+            }
+            cmp = cmp2;
+        }
         if(true==load)
         {
             ck = 'Poniendo m\u00E1scara';
@@ -757,6 +766,21 @@ function _setLoading(load,cmp)
     {
         manejaException(e,ck);
     }
+}
+
+/**
+ * RECORTA UNA CADENA HASTA SU PRIMER COMA, SIN INCLUIR LA PRIMER COMA
+ * SINO TIENE COMAS O VIENE VACIA LA REGRESA TAL CUAL LA RECIBE
+ *
+ */
+function _substringComa(cadena)
+{
+    //debug('_substringComa cadena:',cadena,'.');
+    if(!Ext.isEmpty(cadena)&&cadena.indexOf(',')!=-1)
+    {
+        cadena = cadena.substring(0,cadena.indexOf(','));
+    }
+    return cadena;
 }
 
 ////////////////////////////
