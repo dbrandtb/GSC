@@ -289,7 +289,7 @@ Ext.onReady(function()
             dataIndex     : 'nmsituac'
             ,menuDisabled : true
             ,sortable     : false
-            ,width        : 30
+            ,width        : 50
         }
     ];
     var _p31_incisoColumnsConf = [];
