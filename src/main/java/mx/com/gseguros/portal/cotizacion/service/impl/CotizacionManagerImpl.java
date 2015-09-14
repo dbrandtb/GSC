@@ -6351,7 +6351,14 @@ public class CotizacionManagerImpl implements CotizacionManager
             ////// 2. planes //////
             
             GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-            gc.setEsMovil(session!=null&&session.containsKey("ES_MOVIL")&&((Boolean)session.get("ES_MOVIL"))==true);
+            try
+            {
+            	gc.setEsMovil(session!=null&&session.containsKey("ES_MOVIL")&&((Boolean)session.get("ES_MOVIL"))==true);
+            }
+            catch(Exception ex)
+            {
+            	logger.warn("Warning! error manejado al intentar acceder a sesion",ExceptionUtils.getStackTrace(ex));
+            }
             if(!gc.isEsMovil()&&flagMovil)
             {
             	gc.setEsMovil(true);
