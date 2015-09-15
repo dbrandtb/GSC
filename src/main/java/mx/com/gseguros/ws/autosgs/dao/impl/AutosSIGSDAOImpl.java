@@ -685,8 +685,13 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 
 	@Override
 	public void revierteEndosoFallidoSigs(Map<String, Object> params) throws Exception {
-		Integer resp = null;
-		ejecutaSP(new RevierteEndosoFallidoSigs(getDataSource()), params);
+		String resp = null;
+		Map<String, Object> mapResult = ejecutaSP(new RevierteEndosoFallidoSigs(getDataSource()), params);
+		resp = (String) mapResult.get("rs");
+		
+		logger.info("Mensaje de respuesta de sprevierteemision: " + resp);
+		
+//		return resp;
 	}
 	
 	public class RevierteEndosoFallidoSigs extends StoredProcedure{
@@ -700,6 +705,17 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vNumEndoso", Types.INTEGER));
 			declareParameter(new SqlParameter("vError", Types.SMALLINT));
 			declareParameter(new SqlParameter("vDesError", Types.VARCHAR));
+			
+			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<String>(){  
+				@Override  
+				public String extractData(ResultSet rs) throws SQLException, DataAccessException {  
+					String result = null;
+					while(rs.next()){  
+						result = rs.getString(1);
+					}  
+					return result;  
+				}
+			}));
 			
 			compile();
 		}
