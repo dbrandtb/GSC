@@ -210,11 +210,11 @@ public class ConsultasAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	public String conultaFeNacContratanteAuto()
+	public String consultaFeNacContratanteAuto()
 	{
 		logger.info(""
 				+ "\n#########################################"
-				+ "\n###### conultaFeNacContratanteAuto ######"
+				+ "\n###### consultaFeNacContratanteAuto ######"
 				);
 		try
 		{
@@ -227,7 +227,7 @@ public class ConsultasAction extends PrincipalCoreAction
 			logger.error("error al consultar proveedores",ex);
 		}
 		logger.info(""
-				+ "\n###### conultaFeNacContratanteAuto ######"
+				+ "\n###### consultaFeNacContratanteAuto ######"
 				+ "\n#########################################"
 				);
 		return SUCCESS;

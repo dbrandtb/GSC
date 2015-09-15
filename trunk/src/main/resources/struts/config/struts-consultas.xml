@@ -29,7 +29,7 @@
             <result type="json" />
         </action>
         
-        <action name="conultaFeNacContratanteAuto" class="consultasAction" method="conultaFeNacContratanteAuto">
+        <action name="consultaFeNacContratanteAuto" class="consultasAction" method="consultaFeNacContratanteAuto">
             <result type="json" />
         </action>
         
