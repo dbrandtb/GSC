@@ -720,7 +720,7 @@ Ext.onReady(function()
 	_fieldByName('CDNACION',_PanelPrincipalPersonas).addListener('change',_p22_nacionalidadChange);
 	_p22_tipoPersonaChange(_p22_fieldTipoPersona(),'F');
 	_p22_nacionalidadChange(_fieldByName('CDNACION',_PanelPrincipalPersonas),'001');
-	_fieldByName('NMNUMERO',_PanelPrincipalPersonas).regex = /^[A-Za-z0-9-]*$/;
+	_fieldByName('NMNUMERO',_PanelPrincipalPersonas).regex = /^[A-Za-z0-9-\s]*$/;
 	_fieldByName('NMNUMERO',_PanelPrincipalPersonas).regexText = 'Solo d&iacute;gitos, letras y guiones';
     _fieldByName('NMNUMINT',_PanelPrincipalPersonas).regex = /^[A-Za-z0-9-]*$/;
     _fieldByName('NMNUMINT',_PanelPrincipalPersonas).regexText = 'Solo d&iacute;gitos, letras y guiones';
