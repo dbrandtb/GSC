@@ -120,7 +120,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	@Override
 	public Map<String, String> emitir(String cdunieco, String cdramo, String estado, String nmpoliza, 
 			String cdtipsit, String ntramite, String cdusuari, String cdsisrol, String cdelemento,
-			boolean esFlotilla, String tipoGrupoInciso) throws Exception {
+			String cveusuariocaptura, boolean esFlotilla, String tipoGrupoInciso) throws Exception {
 		
 		Map<String, String> result = new HashMap<String, String>();
 		
@@ -134,6 +134,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 			
 			UserVO us = new UserVO();
 			us.setUser(cdusuari);
+			us.setClaveUsuarioCaptura(cveusuariocaptura);
 			
 			String nmpolAlt   = null; //this.nmpolAlt
 			String sucursalGS = null; //this.sucursalGS
