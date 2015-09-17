@@ -72,9 +72,11 @@ public class EmisionDirectaAction extends PrincipalCoreAction
 			if(StringUtils.isNotBlank(params.get("tipoGrupoInciso")) && params.get("tipoGrupoInciso").equals("C")) {
 				tipoGrupoInciso = "C";
 			}
+			// Opcional, clave de usuario de captura:
+			String cveusuariocaptura = params.get("cveusuariocaptura");
 			
 			Map<String, String> result = procesoEmisionServiceImpl.emitir(cdunieco, cdramo, estado, nmpoliza, 
-					cdtipsit, ntramite, params.get("cdusuari"), params.get("cdsisrol"), params.get("cdelemento"), esFlotilla, tipoGrupoInciso);
+					cdtipsit, ntramite, params.get("cdusuari"), params.get("cdsisrol"), params.get("cdelemento"), cveusuariocaptura, esFlotilla, tipoGrupoInciso);
 			
 			logger.debug("Respuesta emision individual {}", result);
 			
