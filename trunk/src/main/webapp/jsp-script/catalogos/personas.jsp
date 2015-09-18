@@ -722,7 +722,7 @@ Ext.onReady(function()
 	_p22_nacionalidadChange(_fieldByName('CDNACION',_PanelPrincipalPersonas),'001');
 	_fieldByName('NMNUMERO',_PanelPrincipalPersonas).regex = /^[A-Za-z0-9-\s]*$/;
 	_fieldByName('NMNUMERO',_PanelPrincipalPersonas).regexText = 'Solo d&iacute;gitos, letras y guiones';
-    _fieldByName('NMNUMINT',_PanelPrincipalPersonas).regex = /^[A-Za-z0-9-]*$/;
+    _fieldByName('NMNUMINT',_PanelPrincipalPersonas).regex = /^[A-Za-z0-9-\s]*$/;
     _fieldByName('NMNUMINT',_PanelPrincipalPersonas).regexText = 'Solo d&iacute;gitos, letras y guiones';
     
     _p22_fieldCdperson().mpoliper = false;
