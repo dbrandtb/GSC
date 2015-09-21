@@ -4628,4 +4628,49 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	@Override
+	public String regeneraSuplemento(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nsuplogi
+			,Date fecha
+			)throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("nsuplogi" , nsuplogi);
+		params.put("fecha"    , fecha);
+		Map<String,Object> procRes = ejecutaSP(new RegeneraSuplemento(getDataSource()),params);
+		String nmsuplemNuevo = (String)procRes.get("pv_nmsuplem_o");
+		if(StringUtils.isBlank(nmsuplemNuevo))
+		{
+			throw new ApplicationException("No se gener\u00F3 el suplemento nuevo");
+		}
+		logger.debug("\nNuevo suplemento: {}",nmsuplemNuevo);
+		return nmsuplemNuevo;
+	}
+	
+	protected class RegeneraSuplemento extends StoredProcedure {
+		protected RegeneraSuplemento(DataSource dataSource) {
+			super(dataSource, "PKG_ENDOSOS.P_REGENERA_SUPLEMENTO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("nsuplogi" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("fecha"    , OracleTypes.DATE));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

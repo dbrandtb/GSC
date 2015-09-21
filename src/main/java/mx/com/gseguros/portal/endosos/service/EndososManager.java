@@ -483,12 +483,16 @@ public interface EndososManager
 			,String estado
 			,String nmpoliza
 			,String cdtipsup
+			,String nmsuplem
+			,String nsuplogi
 			,Date fecha
-			,List<Map<String,String>>incisos
 			,String rutaDocumentosPoliza
 			,String rutaServidorReports
 			,String passServidorReports
 			,UserVO usuario
+			,List<String> incisos
+			,String cdtipsitPrimerInciso
+			,String nmsolici
 			)throws Exception;
 	
 }
