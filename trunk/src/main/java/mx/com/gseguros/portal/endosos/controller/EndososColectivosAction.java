@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.endosos.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -189,9 +190,8 @@ public class EndososColectivosAction extends PrincipalCoreAction
 	@Action(value           = "confirmarEndosoFamilias",
 			results         = { @Result(name="success", type="json") },
             interceptorRefs = {
-                @InterceptorRef(value = "json", params = {"enableSMD", "true", "ignoreSMDMethodInterfaces", "false" })
-            }
-	)
+			    @InterceptorRef(value = "json", params = {"enableSMD", "true", "ignoreSMDMethodInterfaces", "false" })
+			})
 	public String confirmarEndosoFamilias()
 	{
 		logger.debug(Utils.log(
@@ -207,20 +207,28 @@ public class EndososColectivosAction extends PrincipalCoreAction
 			
 			Utils.validate(params , "No se recibieron datos");
 			
-			String cdunieco = params.get("cdunieco");
-			String cdramo   = params.get("cdramo");
-			String estado   = params.get("estado");
-			String nmpoliza = params.get("nmpoliza");
-			String cdtipsup = params.get("cdtipsup");
-			String fecha    = params.get("FEFECHA");
+			String cdunieco             = params.get("cdunieco"),
+			       cdramo               = params.get("cdramo"),
+			       estado               = params.get("estado"),
+			       nmpoliza             = params.get("nmpoliza"),
+			       cdtipsup             = params.get("cdtipsup"),
+			       nmsuplem             = params.get("nmsuplem"),
+			       nsuplogi             = params.get("nsuplogi"),
+			       fecha                = params.get("fecha"),
+			       cdtipsitPrimerInciso = params.get("cdtipsitPrimerInciso"),
+			       nmsolici             = params.get("nmsolici");
 			
 			Utils.validate(
-					cdunieco , "No se recibi\u00F3 la sucursal"
-					,cdramo  , "No se recibi\u00F3 el producto"
-					,estado  , "No se recibi\u00F3 el estado de p\u00F3liza"
-					,nmpoliza , "No se recibi\u00F3 la p\u00F3liza"
-					,cdtipsup , "No se recibi\u00F3 la clave de endoso"
-					,fecha    , "No se recibi\u00F3 la fecha de efecto"
+					cdunieco              , "No se recibi\u00F3 la sucursal"
+					,cdramo               , "No se recibi\u00F3 el producto"
+					,estado               , "No se recibi\u00F3 el estado de p\u00F3liza"
+					,nmpoliza             , "No se recibi\u00F3 la p\u00F3liza"
+					,cdtipsup             , "No se recibi\u00F3 la clave de endoso"
+					,nmsuplem             , "No se recibi\u00F3 el suplemento"
+					,nsuplogi             , "No se recibi\u00F3 el consecutivo de endoso"
+					,fecha                , "No se recibi\u00F3 la fecha de efecto"
+					,cdtipsitPrimerInciso , "No se recibi\u00F3 la modalidad del primer inciso"
+					,nmsolici             , "No se recibi\u00F3 la cotizaci\u00F3n"
 					);
 			
 			if(TipoEndoso.ALTA_ASEGURADOS.getCdTipSup()==Integer.parseInt(cdtipsup))
@@ -238,6 +246,12 @@ public class EndososColectivosAction extends PrincipalCoreAction
 			}
 			else
 			{
+				List<String> incisos = new ArrayList<String>();
+				for(Map<String,String> inciso : list)
+				{
+					incisos.add(inciso.get("nmsituac"));
+				}
+				
 				message = endososManager.confirmarEndosoBajaFamilia(
 						usuario.getUser()
 						,usuario.getRolActivo().getClave()
@@ -247,12 +261,16 @@ public class EndososColectivosAction extends PrincipalCoreAction
 						,estado
 						,nmpoliza
 						,cdtipsup
+						,nmsuplem
+						,nsuplogi
 						,Utils.parse(fecha)
-						,list
 						,rutaDocumentosPoliza
 						,rutaServidorReports
 						,passServidorReports
 						,usuario
+						,incisos
+						,cdtipsitPrimerInciso
+						,nmsolici
 						);
 			}
 			

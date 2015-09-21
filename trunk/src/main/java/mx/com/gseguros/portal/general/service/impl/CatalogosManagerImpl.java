@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.util.Catalogos;
@@ -29,6 +30,9 @@ public class CatalogosManagerImpl implements CatalogosManager {
 
 	@Autowired
 	private TablasApoyoDAO tablasApoyoDAO;
+	
+	@Autowired
+	private ConsultasDAO consultasDAO;
 	
 	private static final Logger logger = Logger.getLogger(CatalogosManagerImpl.class);
 	
@@ -1061,6 +1065,40 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				 "\n@@@@@@ lista=",lista.size()
 				,"\n@@@@@@ recuperarListaPools @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
+	
+	@Override
+	public List<GenericVO> recuperarGruposPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarGruposPoliza @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				
+				));
+		
+		String paso           = null;
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		try
+		{
+			paso = "Recuperando grupos";
+			List<Map<String,String>> listaMapas = consultasDAO.recuperarGruposPoliza(cdunieco,cdramo,estado,nmpoliza);
+			for(Map<String,String>grupo:listaMapas)
+			{
+				lista.add(new GenericVO(grupo.get("CDGRUPO"), grupo.get("DSGRUPO")));
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista=",lista
+				,"\n@@@@@@ recuperarGruposPoliza @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return lista;
 	}

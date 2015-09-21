@@ -2413,6 +2413,7 @@ public class EndososManagerImpl implements EndososManager
 		return mapa;
 	}
 	
+	@Override
 	public String confirmarEndosoBajaFamilia(
 			String cdusuari
 			,String cdsisrol
@@ -2422,12 +2423,16 @@ public class EndososManagerImpl implements EndososManager
 			,String estado
 			,String nmpoliza
 			,String cdtipsup
+			,String nmsuplem
+			,String nsuplogi
 			,Date fecha
-			,List<Map<String,String>>incisos
 			,String rutaDocumentosPoliza
 			,String rutaServidorReports
 			,String passServidorReports
 			,UserVO usuario
+			,List<String> incisos
+			,String cdtipsitPrimerInciso
+			,String nmsolici
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -2441,132 +2446,35 @@ public class EndososManagerImpl implements EndososManager
 				,"\n@@@@@@ estado="               , estado
 				,"\n@@@@@@ nmpoliza="             , nmpoliza
 				,"\n@@@@@@ cdtipsup="             , cdtipsup
+				,"\n@@@@@@ nmsuplem="             , nmsuplem
+				,"\n@@@@@@ nsuplogi="             , nsuplogi
 				,"\n@@@@@@ fecha="                , fecha
-				,"\n@@@@@@ incisos="              , incisos
 				,"\n@@@@@@ rutaDocumentosPoliza=" , rutaDocumentosPoliza
 				,"\n@@@@@@ rutaServidorReports="  , rutaServidorReports
 				,"\n@@@@@@ passServidorReports="  , passServidorReports
 				,"\n@@@@@@ usuario="              , usuario
+				,"\n@@@@@@ incisos="              , incisos
+				,"\n@@@@@@ cdtipsitPrimerInciso=" , cdtipsitPrimerInciso
+				,"\n@@@@@@ nmsolici="             , nmsolici
 				));
 		
 		String respuesta = null;
 		String paso      = "Iniciando endoso de baja de asegurados";
 		try
 		{
-			paso = "Iniciando endoso";
-			Map<String,String> datosEndoso = endososDAO.iniciarEndoso(
+			paso = "Regenerando suplemento";
+			String nmsuplemRegenerado = endososDAO.regeneraSuplemento(
 					cdunieco
 					,cdramo
 					,estado
 					,nmpoliza
+					,nmsuplem
+					,nsuplogi
 					,fecha
-					,cdelemen
-					,cdusuari
-					,"END" //proceso
-					,cdtipsup
 					);
-			String nmsuplemEnd = datosEndoso.get("pv_nmsuplem_o");
-			String nsuplogiEnd = datosEndoso.get("pv_nsuplogi_o");
 			
-			for(Map<String,String>inciso:incisos)
+			for(String nmsituac:incisos)
 			{
-				String nmsituac   = inciso.get("NMSITUAC");
-				String cdtipsit   = inciso.get("CDTIPSIT");
-				String swreduci   = inciso.get("SWREDUCI");
-				String cdagrupa   = inciso.get("CDAGRUPA");
-				String cdestado   = inciso.get("CDESTADO");
-				String cdgrupo    = inciso.get("CDGRUPO");
-				String nmsituaext = inciso.get("NMSITUAEXT");
-				String nmsitaux   = inciso.get("NMSITAUX");
-				String nmsbsitext = inciso.get("NMSBSITEXT");
-				String cdplan     = inciso.get("CDPLAN");
-				//String nmsuplem   = inciso.get("NMSUPLEM");
-				String cdrol      = inciso.get("CDROL");
-				String cdperson   = inciso.get("CDPERSON");
-				String nmorddom   = inciso.get("NMORDDOM");
-				String swreclam   = inciso.get("SWRECLAM");
-				String swexiper   = inciso.get("SWEXIPER");
-				
-				paso = "Quitando relaci\u00F3n p\u00F3liza situaci\u00F3n";
-				cotizacionDAO.movimientoMpolisit(
-						cdunieco
-						,cdramo
-						,estado
-						,nmpoliza
-						,nmsituac
-						,nmsuplemEnd
-						,"V" //status
-						,cdtipsit
-						,swreduci
-						,cdagrupa
-						,cdestado
-						,fecha //fefecsit
-						,fecha //fecharef
-						,cdgrupo
-						,nmsituaext
-						,nmsitaux
-						,nmsbsitext
-						,cdplan
-						,"30" //cdasegur
-						,"D"  //accion
-						);
-				
-				paso = "Quitando valores de situaci\u00F3n";
-				Map<String,String> tvalosit = new HashMap<String,String>();
-				for(Entry<String,String>en:inciso.entrySet())
-				{
-					String key = en.getKey();
-					String val = en.getValue();
-					if(StringUtils.isNotBlank(key)
-							&&key.length()>"OTVALOR".length()
-							&&key.substring(0, "OTVALOR".length()).equals("OTVALOR")
-					)
-					{
-						tvalosit.put(key.toLowerCase(),val);
-					}
-				}
-				logger.debug(Utils.log("\nvalores tvalosit=",tvalosit));
-				cotizacionDAO.movimientoTvalosit(
-						cdunieco
-						,cdramo
-						,estado
-						,nmpoliza
-						,nmsituac
-						,nmsuplemEnd
-						,"V" //status
-						,cdtipsit
-						,tvalosit
-						,"D" //accion
-						);
-				
-				paso = "Quitando relaci\u00F3n p\u00F3liza persona";
-				cotizacionDAO.movimientoMpoliper(
-						cdunieco
-						,cdramo
-						,estado
-						,nmpoliza
-						,nmsituac
-						,cdrol
-						,cdperson
-						,nmsuplemEnd
-						,"V" //status
-						,nmorddom
-						,swreclam
-						,"D" //accion
-						,swexiper
-						);
-				
-				paso = "Guardando temporal de endoso por inciso";
-				endososDAO.movimientoTworksupEnd(
-						cdunieco
-						,cdramo
-						,estado
-						,nmpoliza
-						,cdtipsup
-						,nmsuplemEnd
-						,nmsituac
-						,"I");
-				
 				paso = "Tarificando inciso";
 				endososDAO.sigsvalipolEnd(
 						cdusuari
@@ -2576,14 +2484,14 @@ public class EndososManagerImpl implements EndososManager
 						,estado
 						,nmpoliza
 						,nmsituac
-						,nmsuplemEnd
+						,nmsuplemRegenerado
 						,cdtipsup
 						);
 			}
 			
-			paso            = "Recuperando d\u00EDas v\u00E1lidos de cotizaci\u00F3n";
-			long maximos    = endososDAO.recuperarDiasDiferenciaEndosoValidos(cdramo, cdtipsup);
-			String ntramite = endososDAO.obtenerNtramiteEmision(cdunieco, cdramo, estado, nmpoliza);
+			paso               = "Recuperando d\u00EDas v\u00E1lidos de cotizaci\u00F3n";
+			long maximos       = endososDAO.recuperarDiasDiferenciaEndosoValidos(cdramo, cdtipsup);
+			String ntramiteEmi = endososDAO.obtenerNtramiteEmision(cdunieco, cdramo, estado, nmpoliza);
 			
 			Date fechaHoy                      = new Date();
 			long diferenciaFechaActualVSEndoso = fechaHoy.getTime() - fecha.getTime();
@@ -2610,8 +2518,8 @@ public class EndososManagerImpl implements EndososManager
 						,cdramo
 						,estado
 						,nmpoliza
-						,nmsuplemEnd
-						,nsuplogiEnd
+						,nmsuplemRegenerado
+						,nsuplogi
 						,cdtipsup
 						,null //dscoment
 						);
@@ -2621,10 +2529,10 @@ public class EndososManagerImpl implements EndososManager
 			
 			paso = "Guardando tr\u00E1mite de endoso";
 			Map<String,String> valoresMesaControl = new LinkedHashMap<String,String>();
-			valoresMesaControl.put("otvalor01" , ntramite);
+			valoresMesaControl.put("otvalor01" , ntramiteEmi);
 			valoresMesaControl.put("otvalor02" , cdtipsup);
 			valoresMesaControl.put("otvalor03" , descEndoso);
-			valoresMesaControl.put("otvalor04" , nsuplogiEnd);
+			valoresMesaControl.put("otvalor04" , nsuplogi);
 			valoresMesaControl.put("otvalor05" , cdusuari);
 			
 			String ntramiteEndoso = mesaControlDAO.movimientoMesaControl(
@@ -2632,7 +2540,7 @@ public class EndososManagerImpl implements EndososManager
 					,cdramo
 					,estado
 					,nmpoliza
-					,nmsuplemEnd
+					,nmsuplemRegenerado
 					,cdunieco //cdsucadm
 					,cdunieco //cdsucdoc
 					,TipoTramite.ENDOSO.getCdtiptra() //cdtiptra
@@ -2644,7 +2552,7 @@ public class EndososManagerImpl implements EndososManager
 					,estatusTramite
 					,null  //comments
 					,null //nmsolici
-					,incisos.get(0).get("CDTIPSIT")
+					,cdtipsitPrimerInciso
 					,valoresMesaControl
 					,cdusuari
 					,cdsisrol
@@ -2652,84 +2560,34 @@ public class EndososManagerImpl implements EndososManager
 			
 			if(!enEspera)
 			{
-				List<Map<String,String>>listaDocu=endososDAO.reimprimeDocumentos(
-			    		cdunieco
-			    		,cdramo
-			    		,estado
-			    		,nmpoliza
-			    		,nmsuplemEnd
-			    		,cdtipsup
-			    		);
-			    logger.debug("documentos que se regeneran: "+listaDocu);
-			    
-			    String rutaCarpeta=Utils.join(rutaDocumentosPoliza,"/",ntramite);
-			    
-				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
-				for(Map<String,String> docu:listaDocu)
-				{
-					logger.debug("docu iterado: "+docu);
-					String descripc=docu.get("descripc");
-					String descripl=docu.get("descripl");
-					String url = Utils.join(
-							rutaServidorReports
-							,"?destype=cache"
-							,"&desformat=PDF"
-							,"&userid=" , passServidorReports
-							,"&report=" , descripl
-							,"&paramform=no"
-							,"&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-							,"&p_unieco=" , cdunieco
-							,"&p_ramo="   , cdramo
-							,"&p_estado=" , estado
-							,"&p_poliza=" , nmpoliza
-							,"&p_suplem=" , nmsuplemEnd
-							,"&desname=",rutaCarpeta,"/",descripc
-							);
-					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
-					{
-						// C R E D E N C I A L _ X X X X X X . P D F
-						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
-					}
-					logger.debug(""
-							+ "\n#################################"
-							+ "\n###### Se solicita reporte ######"
-							+ "\na "+url+""
-							+ "\n#################################");
-					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					logger.debug(""
-							+ "\n######                    ######"
-							+ "\n###### reporte solicitado ######"
-							+ "\na "+url+""
-							+ "\n################################"
-							+ "\n################################"
-							+ "");
-				}
+				//DOCUMENTOS
+				//DOCUMENTOS
+				//DOCUMENTOS
+				//DOCUMENTOS
+				//DOCUMENTOS
 				
 				String sucursal = cdunieco;
 				
-				String nmsolici = listaDocu.size()>0?listaDocu.get(0).get("nmsolici"):nmpoliza;
-				//String nmtramite = listaDocu.get(0).get("ntramite");
+				String rutaCarpeta=Utils.join(rutaDocumentosPoliza,"/",ntramiteEmi);
 				
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
-						nmsuplemEnd, rutaCarpeta, 
-						sucursal, nmsolici, ntramite, 
+						nmsuplemRegenerado, rutaCarpeta, 
+						sucursal, nmsolici, ntramiteEmi, 
 						true, cdtipsup, 
 						usuario);
 				
-				respuesta = Utils.join("Se ha guardado el endoso ",nsuplogiEnd);
+				respuesta = Utils.join("Se ha guardado el endoso ",nsuplogi);
 			}
 			else
 			{
 				String mensajeInvalido = "";
-				respuesta = Utils.join("El endoso ",nsuplogiEnd
+				respuesta = Utils.join("El endoso ",nsuplogi
 						," se guard&oacute; en mesa de control para autorizaci&oacute;n"
 						," con n&uacute;mero de tr&aacute;mite ",ntramiteEndoso
 						+mensajeInvalido);
 			}
-			
 		}
 		catch(Exception ex)
 		{

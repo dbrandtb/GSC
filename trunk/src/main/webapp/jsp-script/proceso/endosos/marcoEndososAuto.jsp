@@ -1343,6 +1343,7 @@ function _p34_gridPolizasFamiliasClic(row)
                                     ,icon     : '${ctx}/resources/fam3icons/icons/book_addresses.png'
                                     ,disabled : true
                                     ,handler  : function(){ _p34_botonEndososFamiliasClic(); }
+                                    ,hidden   : true
                                 }
                                 ,'->'
                                 ,{

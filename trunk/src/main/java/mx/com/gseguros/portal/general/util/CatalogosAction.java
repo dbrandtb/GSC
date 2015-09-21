@@ -728,6 +728,18 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case AGRUPADOR_POLIZA:
 					lista = catalogosManager.recuperarListaPools();
 					break;
+				case GRUPOS_POLIZA:
+					if(params!=null)
+					{
+						
+						lista = catalogosManager.recuperarGruposPoliza(
+								params.get("cdunieco")
+								,params.get("cdramo")
+								,params.get("estado")
+								,params.get("nmpoliza")
+								);
+					}
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

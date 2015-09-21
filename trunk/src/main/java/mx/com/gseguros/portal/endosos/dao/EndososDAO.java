@@ -612,4 +612,14 @@ public interface EndososDAO
 			,String nmsuplem
 			,String cdtipsup
 			)throws Exception;
+	
+	public String regeneraSuplemento(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nsuplogi
+			,Date fecha
+			)throws Exception;
 }

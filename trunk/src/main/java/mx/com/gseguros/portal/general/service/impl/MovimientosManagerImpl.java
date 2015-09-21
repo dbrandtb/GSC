@@ -205,13 +205,16 @@ public class MovimientosManagerImpl implements MovimientosManager
 		{
 			if(movimiento.equals(Movimiento.PASO_QUITAR_ASEGURADO))
 			{
+				Utils.validate(params.get("FEPROREN") , "No hay fecha de inicio");
+				Utils.validate(params.get("cdtipsup") , "No hay clave de endoso");
+				
 				String cdusuari = usuario.getUser();
 				String cdelemen = usuario.getEmpresa().getElementoId();
-				Date   fechaDia = new Date();
+				Date   fechaEnd = Utils.parse(params.get("FEPROREN"));
 				String cdunieco = params.get("CDUNIECO");
 				String cdramo   = params.get("CDRAMO");
 				String estado   = params.get("ESTADO");
-				String nmpoliza =  params.get("NMPOLIZA");
+				String nmpoliza = params.get("NMPOLIZA");
 				String cdtipsup = params.get("cdtipsup");
 				String nmsituac = params.get("NMSITUAC");
 				String cdperson = params.get("CDPERSON");
@@ -247,7 +250,7 @@ public class MovimientosManagerImpl implements MovimientosManager
 						,cdramo
 						,estado
 						,nmpoliza
-						,fechaDia
+						,fechaEnd
 						,cdelemen
 						,cdusuari
 						,"END"
@@ -257,7 +260,7 @@ public class MovimientosManagerImpl implements MovimientosManager
 				String nsuplogiEndoso = endoso.get("pv_nsuplogi_o");
 				logger.debug("nmsuplemEndoso: {}, nsuplogiEndoso: {}",nmsuplemEndoso,nsuplogiEndoso);
 				mapa.put("nmsuplem_endoso" , nmsuplemEndoso);
-				mapa.put("nsuplogi_endoso" , nsuplogiEndoso);
+				mapa.put("nsuplogi"        , nsuplogiEndoso);
 				
 				paso = "Quitando relaci\u00F3n p\u00F3liza-situaci\u00F3n";
 				logger.debug("Paso: {}",paso);

@@ -148,4 +148,6 @@ public interface CatalogosManager {
     public List<GenericVO> obtieneAgenteEspecifico(String cdagente) throws Exception;
     
     public List<GenericVO> recuperarListaPools() throws Exception;
+    
+    public List<GenericVO> recuperarGruposPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
 }

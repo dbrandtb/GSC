@@ -9,6 +9,8 @@
 var _p48_urlRecuperacion             = '<s:url namespace="/recuperacion" action="recuperar"                         />';
 var _p48_urlRecuperarItemsFormulario = '<s:url namespace="/endosos"      action="recuperarComponentesAltaAsegurado" />';
 var _p48_urlConfirmarEndoso          = '<s:url namespace="/endosos"      action="confirmarEndosoFamilias"           />';
+var _p48_urlMovimientos              = '<s:url namespace="/movimientos"  action="ejecutar"                          />';
+var _p48_urlMovimientosSMD           = '<s:url namespace="/movimientos"  action="ejecutarSMD"                       />';
 ////// urls //////
 
 ////// variables //////
@@ -189,6 +191,39 @@ Ext.onReady(function()
                         ,hidden  : _p48_params.operacion!='baja'
                         ,handler : _p48_quitarAseguradoClic
                     }
+                    ,'->'
+                    ,{
+                        xtype      : 'textfield'
+                        ,listeners :
+                        {
+                            change : function(me,fil)
+                            {
+                                if(Ext.isEmpty(fil))
+							    {
+							        _p48_store.clearFilter();
+							    }
+							    else
+							    {
+	                                fil = fil.toUpperCase().replace(/ /g,'');
+							        debug('filtro:',fil);
+							        _p48_store.filterBy(function(record)
+							        {
+							            var incluido = false;
+							            for(var clave in record.raw)
+							            {
+							                var valor=(String(record.raw[clave])).toUpperCase().replace(/ /g,'');
+							                if(valor.lastIndexOf(fil)!=-1)
+							                {
+							                    incluido=true;
+							                    break;
+							                }
+							            }
+							            return incluido;
+							        });
+							    }
+                            }
+                        }
+                    }
                 ]
             })
             ,Ext.create('Ext.grid.Panel',
@@ -230,37 +265,35 @@ Ext.onReady(function()
                                             throw 'Revisar datos del endoso';
                                         }
                                         
-                                        var json =
+                                        var datos =
                                         {
-                                            params :
+                                            params : 
                                             {
-                                                cdunieco  : _p48_params.CDUNIECO
-                                                ,cdramo   : _p48_params.CDRAMO
-                                                ,estado   : _p48_params.ESTADO
-                                                ,nmpoliza : _p48_params.NMPOLIZA
-                                                ,cdtipsup : _p48_params.cdtipsup
+                                                cdunieco              : _p48_params.CDUNIECO
+                                                ,cdramo               : _p48_params.CDRAMO
+                                                ,estado               : _p48_params.ESTADO
+                                                ,nmpoliza             : _p48_params.NMPOLIZA
+                                                ,cdtipsup             : _p48_params.cdtipsup
+                                                ,nmsuplem             : _p48_params.nmsuplem_endoso
+                                                ,nsuplogi             : _p48_params.nsuplogi
+                                                ,fecha                : Ext.Date.format(_fieldByName('FEFECHA').getValue(),'d/m/Y')
+                                                ,cdtipsitPrimerInciso : _p48_store.getAt(0).get('CDTIPSIT')
+                                                ,nmsolici             : _p48_params.NMSOLICI
                                             }
                                             ,list : []
-                                        }
-                                        
-                                        var values = _fieldById('_p48_formEndoso').getValues();
-                                        for(var att in values)
-                                        {
-                                            json.params[att] = values[att];
-                                        }
+                                        };
                                         
                                         _p48_storeMov.each(function(record)
                                         {
-                                            json.list.push(parseaFechas(record.data));
+                                            datos.list.push({nmsituac:record.get('NMSITUAC')});
                                         });
-                                        
-                                        debug('json:',json);
+                                        debug('datos para confirmar:',datos);
                                         
                                         _setLoading(true,_fieldById('_p48_panelpri'));
                                         Ext.Ajax.request(
                                         {
                                             url       : _p48_urlConfirmarEndoso
-                                            ,jsonData : json
+                                            ,jsonData : datos
                                             ,success  : function(response)
                                             {
                                                 _setLoading(false,_fieldById('_p48_panelpri'));
@@ -284,7 +317,7 @@ Ext.onReady(function()
                                                     manejaException(e,ck);
                                                 }
                                             }
-                                            ,failure  : function()
+                                            ,failure : function()
                                             {
                                                 _setLoading(false,_fieldById('_p48_panelpri'));
                                                 errorComunicacion();
@@ -299,11 +332,19 @@ Ext.onReady(function()
                             });
                         } 
                     }
+                    ,{
+                        text     : 'Cancelar y borrar endoso'
+                        ,itemId  : '_p48_botonCancelar'
+                        ,icon    : '${icons}cancel.png'
+                        ,hidden  : true
+                        ,handler : _p48_cancelarEndosoClic
+                    }
                 ]
                 ,listeners :
                 {
                     afterrender : function(me)
                     {
+                        _p48_validarEstadoBotonCancelar();
                         var ck = 'Limitando fecha de endoso';
                         try
                         {
@@ -374,23 +415,99 @@ function _p48_quitarAseguradoClic(me)
             }
         });
         
+        var recordsQueSeQuitan = [];
+        
         if(record.get('CVE_PARENTESCO')=='T')
         {
+            var familia = Number(record.get('NMSITAUX'));
             _p48_store.each(function(rec)
             {
-                if(Number(rec.get('NMSITAUX'))==Number(record.get('NMSITAUX'))
-                   &&Number(rec.get('NMSITUAC'))!=Number(record.get('NMSITUAC'))
-                )
+                if(Number(rec.get('NMSITAUX'))==familia)//pertenece a la familia
                 {
-                    debugError('Aun hay NMSITAUX:',record.get('NMSITAUX'),'rec.data:',rec.data);
-                    throw 'No se puede quitar un titular si aun hay familiares';
+                    var yaSeQuito = false;
+                    for(var i=0;i<_p48_storeMov.getCount();i++)
+                    {
+                        if(Number(_p48_storeMov.getAt(i).get('NMSITUAC'))==Number(rec.get('NMSITUAC')))//buscar si ya se encuentra en movimientos
+                        {
+                            yaSeQuito = true;
+                            break;
+                        }
+                    }
+                    if(yaSeQuito==false)
+                    {
+                        recordsQueSeQuitan.push(rec);
+                        rec.set('MOV','-');
+                    }
                 }
             });
         }
+        else
+        {
+            record.set('MOV','-');
+            recordsQueSeQuitan.push(record);
+        }
+        debug('recordsQueSeQuitan:',recordsQueSeQuitan);
         
-        _p48_store.remove(record);
-        record.set('MOV','-');
-        _p48_storeMov.add(record);
+        var quitados = 0;
+        _setLoading(true,'_p48_gridAsegurados');
+        for(var i in recordsQueSeQuitan)
+        {
+            var datos           = parseaFechas(recordsQueSeQuitan[i].data);
+            datos['FEPROREN']   = _p48_params.FEPROREN;
+            datos['cdtipsup']   = _p48_params.cdtipsup;
+            datos['movimiento'] = 'PASO_QUITAR_ASEGURADO';
+            debug('datos:',datos);
+            Ext.Ajax.request(
+            {
+                url       : _p48_urlMovimientosSMD
+                ,jsonData : { params : datos }
+                ,success  : function(response)
+                {
+                    var ck = 'Decodificando respuesta al quitar asegurado';
+                    try
+                    {
+                        quitados = quitados + 1;
+                        if(quitados==recordsQueSeQuitan.length)
+                        {
+                            _setLoading(false,'_p48_gridAsegurados');
+                        }
+                        var json = Ext.decode(response.responseText);
+                        debug('### quitar:',json);
+                        if(json.success==true)
+                        {
+                            if(quitados==recordsQueSeQuitan.length)
+                            {
+                                _p48_params.nmsuplem_endoso = json.params.nmsuplem_endoso;
+                                _p48_params.nsuplogi        = json.params.nsuplogi;
+                                debug('_p48_params:',_p48_params);
+                                _p48_storeMov.proxy.extraParams['params.nmsuplem'] = _p48_params.nmsuplem_endoso;
+                                _p48_cargarStoreMov();
+                                mensajeCorrecto('Movimiento guardado','Se ha guardado el movimiento');
+                                
+                                _p48_validarEstadoBotonCancelar();
+                            }
+                        }
+                        else
+                        {
+                            mensajeError(json.message);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function()
+                {
+                    quitados = quitados + 1;
+                    if(quitados==recordsQueSeQuitan.length)
+                    {
+                        _setLoading(false,'_p48_gridAsegurados');
+                    }
+                    errorComunicacion(null,'Error al quitar asegurado');
+                }
+            });
+        }
     }
     catch(e)
     {
@@ -407,24 +524,92 @@ function _p48_deshacerMov(v,row,col,item,e,record)
         if(record.get('MOV')=='-')
         {
             //deshacer "QUITAR"
-            if(record.get('CVE_PARENTESCO')!='T')
+            //buscamos si hay titular de la famlia en los movimientos
+            var elTitularEstaEnMovimientos = false;
+            for(var i=0;i<_p48_storeMov.getCount();i++)
             {
-                var hayFamilia = false;
-                _p48_store.each(function(rec)
+                var rec = _p48_storeMov.getAt(i);
+                if(Number(rec.get('NMSITAUX'))==Number(record.get('NMSITAUX'))
+                    &&rec.get('CVE_PARENTESCO')=='T'
+                )
                 {
-                    if(Number(rec.get('NMSITAUX'))==Number(record.get('NMSITAUX')))
-                    {
-                        hayFamilia = true;
-                    }
-                });
-                if(!hayFamilia)
-                {
-                    throw 'No se puede regresar un dependiente, sin el titular';
+                    elTitularEstaEnMovimientos = true;
+                    break;
                 }
             }
+            debug('elTitularEstaEnMovimientos:',elTitularEstaEnMovimientos);
+            var recordsParaDeshacerMov = [];
+            if(elTitularEstaEnMovimientos)
+            {
+                var familia = Number(record.get('NMSITAUX'));
+                _p48_storeMov.each(function(rec)
+                {
+                    if(Number(rec.get('NMSITAUX'))==familia)
+                    {
+                        recordsParaDeshacerMov.push(rec);
+                    }
+                });
+            }
+            else
+            {
+                recordsParaDeshacerMov.push(record);
+            }
             
-            _p48_store.add(record);
-            _p48_storeMov.remove(record);
+            debug('recordsParaDeshacerMov:',recordsParaDeshacerMov);
+            
+            var revertidos = 0;
+            _setLoading(true,'_p48_panelpri');
+            for(var i=0;i<recordsParaDeshacerMov.length;i++)
+            {
+                var datos = parseaFechas(recordsParaDeshacerMov[i].data);
+                datos['movimiento']      = 'DESHACER_PASO_ASEGURADO';
+                datos['nmsuplem_endoso'] = _p48_params.nmsuplem_endoso;
+                datos['cdtipsup']        = _p48_params.cdtipsup;
+                Ext.Ajax.request(
+                {
+                    url       : _p48_urlMovimientosSMD
+                    ,jsonData : { params : datos }
+                    ,success  : function(response)
+                    {
+                        var ck = 'Decodificando respuesta al revertir movimiento';
+                        try
+                        {
+                            revertidos = revertidos + 1;
+                            if(revertidos==recordsParaDeshacerMov.length)
+                            {
+                                _setLoading(false,'_p48_panelpri');
+                            }
+                            var json = Ext.decode(response.responseText);
+	                        debug('### revertir:',json);
+	                        if(json.success==true)
+	                        {
+	                            if(revertidos==recordsParaDeshacerMov.length)
+	                            {
+	                                mensajeCorrecto('Movimiento(s) revertido(s)','Se ha(n) revertido el(los) movimiento(s)');
+	                                _p48_cargarStoreMov();
+	                            }
+	                        }
+	                        else
+	                        {
+	                            mensajeError(json.message);
+	                        }
+                        }
+                        catch(e)
+                        {
+                            manejaException(e,ck);
+                        }
+                    }
+                    ,failure  : function()
+                    {
+                        revertidos = revertidos + 1;
+                        if(revertidos==recordsParaDeshacerMov.length)
+                        {
+                            _setLoading(false,'_p48_panelpri');
+                        }
+                        errorComunicacion(null,'Error al revertir movimiento');
+                    }
+                });
+            }
         }
         else if(record.get('MOV')=='+')
         {
@@ -1045,6 +1230,60 @@ function _p48_editarAsegurado(v,row,col,item,e,record)
     {
         manejaException(e);
     }
+}
+
+function _p48_cancelarEndosoClic(button)
+{
+    Ext.MessageBox.confirm('Confirmar', '¿Desea cancelar y borrar los cambios del endoso?', function(btn)
+    {
+        if(btn === 'yes')
+        {
+            _setLoading(true,'_p48_panelpri');
+            Ext.Ajax.request(
+            {
+                url      : _p48_urlMovimientos
+                ,params  :
+                {
+                    'params.movimiento' : 'SACAENDOSO'
+                    ,'params.cdunieco'  : _p48_params.CDUNIECO
+                    ,'params.cdramo'    : _p48_params.CDRAMO
+                    ,'params.estado'    : _p48_params.ESTADO
+                    ,'params.nmpoliza'  : _p48_params.NMPOLIZA
+                    ,'params.nsuplogi'  : _p48_params.nsuplogi
+                    ,'params.nmsuplem'  : _p48_params.nmsuplem_endoso
+                }
+                ,success : function(response)
+                {
+                    _setLoading(false,'_p48_panelpri');
+                    var ck = 'Decodificando respuesta de cancelar endoso';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### cancelar:',json);
+                        if(json.success==true)
+                        {
+                            mensajeCorrecto('Endoso revertido','Endoso revertido');
+                            _setLoading(true,'_p48_panelpri');
+                            marendNavegacion(2);
+                        }
+                        else
+                        {
+                            mensajeError(json.message);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function()
+                {
+                    _setLoading(false,'_p48_panelpri');
+                    errorComunicacion(null,'Error al cancelar endoso');
+                }
+            });
+        }
+    });
 }
 
 /*
