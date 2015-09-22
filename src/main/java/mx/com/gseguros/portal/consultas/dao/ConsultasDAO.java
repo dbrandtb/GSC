@@ -331,4 +331,6 @@ public interface ConsultasDAO
 			)throws Exception;
 
 	public Map<String,String> consultaFeNacContratanteAuto(Map<String,String> params)throws Exception;
+	
+	public List<Map<String,String>> recuperarSubramos(String cdramo) throws Exception;
 }
