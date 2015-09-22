@@ -457,6 +457,7 @@ function _p48_quitarAseguradoClic(me)
             datos['FEPROREN']   = _p48_params.FEPROREN;
             datos['cdtipsup']   = _p48_params.cdtipsup;
             datos['movimiento'] = 'PASO_QUITAR_ASEGURADO';
+            datos['sleep']      = i*300;
             debug('datos:',datos);
             Ext.Ajax.request(
             {
