@@ -243,6 +243,12 @@ public class MovimientosManagerImpl implements MovimientosManager
 				String cdplan     = params.get("CDPLAN");
 				String cdasegur   = params.get("CDASEGUR");
 				
+				if(StringUtils.isNotBlank(params.get("sleep")))
+				{
+					paso  = "Procesando tiempo de espera";
+					Thread.sleep(Long.parseLong(params.get("sleep")));
+				}
+				
 				paso = "Guardando endoso";
 				logger.debug("Paso: {}",paso);
 				Map<String,String> endoso = endososDAO.iniciarEndoso(
