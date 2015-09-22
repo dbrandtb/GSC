@@ -407,7 +407,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 				docu.put("pv_cdconrec_i",claveReciboTabla);
 				kernelManager.preparaContrarecibo(docu);
 			}*/
-			String filePath=this.getText("ruta.documentos.temporal")+Constantes.SEPARADOR_ARCHIVO+smap1.get("ntramite")+Constantes.SEPARADOR_ARCHIVO+"contrarecibo_"+timestamp+"_"+random+".pdf";
+			String filePath=this.getText("ruta.documentos.poliza")+Constantes.SEPARADOR_ARCHIVO+smap1.get("ntramite")+Constantes.SEPARADOR_ARCHIVO+"contrarecibo_"+timestamp+"_"+random+".pdf";
 			String requestUrl=this.getText("ruta.servidor.reports")
 					+ "?destype=cache"
 					+ "&desformat=PDF"
