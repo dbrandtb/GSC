@@ -66,7 +66,8 @@ var _p48_colsMovimi   = [
                             }
                             ,<s:property value="items.colsInciso"   escapeHtml="false" />
                         ];
-var _p48_itemsEndoso = [ <s:property value="items.itemsEndoso"    escapeHtml="false" /> ];
+var _p48_itemsEndoso = [ <s:property value="items.itemsEndoso" escapeHtml="false" /> ];
+var _p48_comboGrupos = <s:property value="items.comboGrupos" escapeHtml="false" />;
 ////// componentes dinamicos //////
 
 Ext.onReady(function()
@@ -1284,6 +1285,47 @@ function _p48_cancelarEndosoClic(button)
             });
         }
     });
+}
+
+function _p48_rendererGrupos(val)
+{
+    debug('_p48_rendererGrupos val:',val);
+    //voy a buscar el valor val en el store del combo de grupos
+    //cuando no este cargando, regreso "cargando...", y agrego listener, (una sola vez)
+    //cuando si este cargado, regreso el valor, o "error"
+    if(_p48_comboGrupos.getStore().getCount()>0)
+    {
+        var recordGrupo = _p48_comboGrupos.findRecordByValue(val);
+        if(recordGrupo!=false)
+        {
+            val = recordGrupo.get('value');
+        }
+        else
+        {
+            val = '-Error-';
+        }
+    }
+    else
+    {
+        debug('_p48_rendererGrupos else');
+        val = 'Cargando...';
+        if(Ext.isEmpty(_p48_comboGrupos.getStore().tieneListener))
+        {
+            _p48_comboGrupos.getStore().tieneListener = true;
+            _p48_comboGrupos.getStore().on(
+            {
+                load : function(me,records,success)
+                {
+                    if(success)
+                    {
+                        _fieldById('_p48_gridAsegurados').getView().refresh();
+                    }
+                }
+            });
+        }
+    }
+    debug('_p48_rendererGrupos return:',val);
+    return val;
 }
 
 /*

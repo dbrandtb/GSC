@@ -2264,6 +2264,18 @@ public class EndososManagerImpl implements EndososManager
 					,null //orden
 					);
 			
+			List<ComponenteVO> comboGrupos = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,cdramo
+					,tipoflot+tipoflot //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"ENDOSO_FAMILIA"
+					,"COMBO_GRUPOS"
+					,null //orden
+					);
+			
 			paso = "Construyendo componentes de pantalla";
 			logger.debug("Paso: {}",paso);
 			GeneradorCampos gc = new GeneradorCampos(contexto);
@@ -2282,6 +2294,9 @@ public class EndososManagerImpl implements EndososManager
 			
 			gc.generaComponentes(itemsEsqueleto, true, false, true, false, false, false);
 			items.put("itemsEsqueleto" , gc.getItems());
+			
+			gc.generaComponentes(comboGrupos, true, false, true, false, false, false);
+			items.put("comboGrupos" , gc.getItems());
 			
 			paso = "Recuperando suplemento de endoso";
 			logger.debug("Paso: {}",paso);

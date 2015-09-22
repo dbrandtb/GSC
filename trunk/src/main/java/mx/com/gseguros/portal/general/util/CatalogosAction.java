@@ -731,12 +731,19 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case GRUPOS_POLIZA:
 					if(params!=null)
 					{
-						
 						lista = catalogosManager.recuperarGruposPoliza(
 								params.get("cdunieco")
 								,params.get("cdramo")
 								,params.get("estado")
 								,params.get("nmpoliza")
+								);
+					}
+					break;
+				case SUBRAMOS:
+					if(params!=null)
+					{
+						lista = catalogosManager.recuperarSubramos(
+								params.get("idPadre")
 								);
 					}
 					break;

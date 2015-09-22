@@ -150,4 +150,6 @@ public interface CatalogosManager {
     public List<GenericVO> recuperarListaPools() throws Exception;
     
     public List<GenericVO> recuperarGruposPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
+    
+    public List<GenericVO> recuperarSubramos(String cdramo) throws Exception;
 }

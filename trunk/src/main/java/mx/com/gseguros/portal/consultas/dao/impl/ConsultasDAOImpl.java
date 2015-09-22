@@ -2563,4 +2563,34 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> recuperarSubramos(String cdramo) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdramo" , cdramo);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarSubramos(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		return lista;
+	}
+	
+	protected class RecuperarSubramos extends StoredProcedure
+	{
+		protected RecuperarSubramos(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_OBT_RAMOS_X_PROD");
+			declareParameter(new SqlParameter("cdramo" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDSUBRAM"  , "DESCRIPCION"
+            };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

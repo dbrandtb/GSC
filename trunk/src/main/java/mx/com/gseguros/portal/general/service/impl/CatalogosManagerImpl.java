@@ -1102,4 +1102,38 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO> recuperarSubramos(String cdramo) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarSubramos @@@@@@"
+				,"\n@@@@@@ cdramo=" , cdramo
+				
+				));
+		
+		String paso           = null;
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		try
+		{
+			paso = "Recuperando grupos";
+			List<Map<String,String>> listaMapas = consultasDAO.recuperarSubramos(cdramo);
+			for(Map<String,String>grupo:listaMapas)
+			{
+				lista.add(new GenericVO(grupo.get("CDSUBRAM"), grupo.get("DESCRIPCION")));
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista=",lista
+				,"\n@@@@@@ recuperarSubramos @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
 }
