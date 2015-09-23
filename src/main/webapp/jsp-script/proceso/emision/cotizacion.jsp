@@ -311,10 +311,11 @@ function _0_comprar()
                         			'smap1.cdunieco'  : _0_smap1.cdunieco
                         			,'smap1.cdramo'   : _0_smap1.cdramo
                         			,'smap1.estado'   : 'W'
-                        			,'smap1.nmpoliza' : _0_fieldNmpoliza.getValue()
+                        			,'smap1.nmpoliza' : ''
                         			,'smap1.nmsuplem' : '0'
-                        			,'smap1.ntramite' : ntramite
+                        			,'smap1.ntramite' : json.smap1.ntramite
                         			,'smap1.tipomov'  : '0'
+                        			,'smap1.nmsolici' : _0_fieldNmpoliza.getValue()
                         		}
                         	}
                         	,buttons     :
