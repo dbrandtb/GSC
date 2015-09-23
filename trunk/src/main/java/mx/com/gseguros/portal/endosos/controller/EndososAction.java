@@ -9018,51 +9018,55 @@ public class EndososAction extends PrincipalCoreAction
 			
 			
 			//////////////////////////////
-			////// inserta tworksup //////
-			Map<String,String>mapaTworksupEnd=new LinkedHashMap<String,String>(0);
-			mapaTworksupEnd.put("pv_cdunieco_i" , cdunieco);
-			mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
-			mapaTworksupEnd.put("pv_estado_i"   , estado);
-			mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
-			mapaTworksupEnd.put("pv_cdtipsup_i" , cdtipsup);
-			mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
-			endososManager.insertarTworksupSitTodas(mapaTworksupEnd);
+			////// inserta tworksup ////// 
+//			SE COMENTA PARA NO TARIFICAR
+//			Map<String,String>mapaTworksupEnd=new LinkedHashMap<String,String>(0);
+//			mapaTworksupEnd.put("pv_cdunieco_i" , cdunieco);
+//			mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
+//			mapaTworksupEnd.put("pv_estado_i"   , estado);
+//			mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
+//			mapaTworksupEnd.put("pv_cdtipsup_i" , cdtipsup);
+//			mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
+//			endososManager.insertarTworksupSitTodas(mapaTworksupEnd);
 			////// inserta tworksup //////
 			//////////////////////////////
 			
 			//////////////////////////
 			////// tarificacion //////
-			endososManager.sigsvalipolEnd(
-					cdusuari
-					,cdelemento
-					,cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,"0"
-					,nmsuplem
-					,cdtipsup
-					);
+//			SE COMENTA PARA NO TARIFICAR
+//			endososManager.sigsvalipolEnd(
+//					cdusuari
+//					,cdelemento
+//					,cdunieco
+//					,cdramo
+//					,estado
+//					,nmpoliza
+//					,"0"
+//					,nmsuplem
+//					,cdtipsup
+//					);
 			////// tarificacion //////
 			//////////////////////////
 			
 			/*
 			 * Cancela Recibos Cambio Cliente.
 			 */
-			endososManager.cancelaRecibosCambioCliente(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+//			SE COMENTA PARA NO TARIFICAR
+//			endososManager.cancelaRecibosCambioCliente(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 			
 			//////////////////////////
 			////// valor endoso //////
-			Map<String,Object>mapaValorEndoso=new LinkedHashMap<String,Object>(0);
-			mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
-			mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
-			mapaValorEndoso.put("pv_estado_i"   , estado);
-			mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
-			mapaValorEndoso.put("pv_nmsituac_i" , "1");
-			mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
-			mapaValorEndoso.put("pv_feinival_i" , dFecha);
-			mapaValorEndoso.put("pv_cdtipsup_i" , cdtipsup);
-			endososManager.calcularValorEndoso(mapaValorEndoso);
+//			SE COMENTA PARA NO TARIFICAR
+//			Map<String,Object>mapaValorEndoso=new LinkedHashMap<String,Object>(0);
+//			mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
+//			mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
+//			mapaValorEndoso.put("pv_estado_i"   , estado);
+//			mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
+//			mapaValorEndoso.put("pv_nmsituac_i" , "1");
+//			mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
+//			mapaValorEndoso.put("pv_feinival_i" , dFecha);
+//			mapaValorEndoso.put("pv_cdtipsup_i" , cdtipsup);
+//			endososManager.calcularValorEndoso(mapaValorEndoso);
 			////// valor endoso //////
 			//////////////////////////
 		}
@@ -9126,31 +9130,33 @@ public class EndososAction extends PrincipalCoreAction
 				/**
 				 * PARA WS ENDOSO DE AUTOS
 				 */
-				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, (UserVO) session.get("USUARIO"));
-				
-				if(aux == null || (StringUtils.isBlank(aux.getNmpoliex()) && !aux.isEndosoSinRetarif())){
-					
-					mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
-					error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
-					logger.error("Error al ejecutar los WS de endoso");
-					
-					
-					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? 99999 : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+TipoEndoso.CAMBIO_CONTRATANTE.toString(), false);
-					if(endosoRevertido){
-						logger.error("Endoso revertido exitosamente.");
-						error+=" Favor de volver a itentar.";
-					}else{
-						logger.error("Error al revertir el endoso");
-						error+=" No se ha revertido el endoso.";
-					}
-					
-					success = false;
-					return SUCCESS;
-				}
+//				SE COMENTA PARA NO TARIFICAR
+//				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, (UserVO) session.get("USUARIO"));
+//				
+//				if(aux == null || (StringUtils.isBlank(aux.getNmpoliex()) && !aux.isEndosoSinRetarif())){
+//					
+//					mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
+//					error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
+//					logger.error("Error al ejecutar los WS de endoso");
+//					
+//					
+//					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? 99999 : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+TipoEndoso.CAMBIO_CONTRATANTE.toString(), false);
+//					if(endosoRevertido){
+//						logger.error("Endoso revertido exitosamente.");
+//						error+=" Favor de volver a itentar.";
+//					}else{
+//						logger.error("Error al revertir el endoso");
+//						error+=" No se ha revertido el endoso.";
+//					}
+//					
+//					success = false;
+//					return SUCCESS;
+//				}
 				
 				
 				int numEndRes = 0;
-				if(aux.isEndosoSinRetarif()){
+//				SE COMENTA PARA NO TARIFICAR
+//				if(aux.isEndosoSinRetarif()){
 					
 					/**
 					 * PARA WS ENDOSO DE AUTOS
@@ -9158,9 +9164,9 @@ public class EndososAction extends PrincipalCoreAction
 					numEndRes = emisionAutosService.endosoCambioClienteAutos(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 					
 					if(numEndRes == 0){
-						mensaje = "Error al generar el endoso, sigs. Consulte a Soporte.";
-						error = "Error al generar el endoso, sigs. Consulte a Soporte.";
-						logger.error("Error al ejecutar sp de endoso sigs");
+						mensaje = "Error al generar el endoso Cambio de Contratante, sigs. Consulte a Soporte.";
+						error = "Error al generar el endoso Cambio de Contratante, sigs. Consulte a Soporte.";
+						logger.error("Error al ejecutar sp de endoso Cambio de Contratante sigs");
 						
 						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.CAMBIO_CONTRATANTE.toString(), true);
 						
@@ -9178,21 +9184,22 @@ public class EndososAction extends PrincipalCoreAction
 						ejecutaCaratulaEndosoBsigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, Integer.toString(numEndRes));
 					}
 					
+//					SE COMENTA PARA NO TARIFICAR
 					
-				}else if(aux.isExitoRecibos()){
-					
-					String tipoGrupoInciso = smap1.get("TIPOFLOT");
-					
-					ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
-					
-				}else{
-					mensaje = "Error al generar el endoso, sigs. Consulte a Soporte.";
-					error = "Error al generar el endoso, sigs. Consulte a Soporte.";
-					logger.error("Error al ejecutar sp de endoso sigs");
-					
-					success = false;
-					return SUCCESS;
-				}
+//				}else if(aux.isExitoRecibos()){
+//					
+//					String tipoGrupoInciso = smap1.get("TIPOFLOT");
+//					
+//					ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
+//					
+//				}else{
+//					mensaje = "Error al generar el endoso, sigs. Consulte a Soporte.";
+//					error = "Error al generar el endoso, sigs. Consulte a Soporte.";
+//					logger.error("Error al ejecutar sp de endoso sigs");
+//					
+//					success = false;
+//					return SUCCESS;
+//				}
 			}else{
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
