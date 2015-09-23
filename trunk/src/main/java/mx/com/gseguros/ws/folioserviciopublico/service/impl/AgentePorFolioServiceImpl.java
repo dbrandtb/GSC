@@ -40,8 +40,8 @@ public class AgentePorFolioServiceImpl implements AgentePorFolioService {
 				ResponseFolio resFol = (ResponseFolio) resultWS.getResultadoWS();
 				
 				if( resFol != null && resFol.getExito()){
-					logger.debug("Respuesta de WS Cotizacion Codigo(): " +resFol.getCodigo());
-					logger.debug("Respuesta de WS Cotizacion Mensaje(): " +resFol.getMensaje());
+					logger.debug("Respuesta de WS AgentePorFolioYSucursal Codigo(): " +resFol.getCodigo());
+					logger.debug("Respuesta de WS AgentePorFolioYSucursal Mensaje(): " +resFol.getMensaje());
 					
 					resAgenteFolio = resFol.getFolio();
 					
@@ -53,7 +53,7 @@ public class AgentePorFolioServiceImpl implements AgentePorFolioService {
 					}
 					
 				}else{
-					logger.error("Error en la cotizacion de Autos WS, respuesta no exitosa");
+					logger.error("Error en Autos WS AgentePorFolioYSucursal, respuesta no exitosa");
 				}
 				
 			} catch(WSException wse){
