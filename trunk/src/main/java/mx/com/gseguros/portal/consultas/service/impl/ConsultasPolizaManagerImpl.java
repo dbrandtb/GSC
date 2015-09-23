@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.consultas.service.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
@@ -94,6 +95,22 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 				
 		return suplementos;
 	}
+
+	@Override
+	public List<SuplementoVO> obtieneHistoricoPolizaCorto(String sucursal, String producto, String polizacorto) 
+			throws Exception{
+		
+		List<SuplementoVO> suplementos;  
+		
+		// Si iCodPoliza viene vacio, es información de ICE, sino es de SISA:
+//		if(StringUtils.isBlank(polizaAsegurado.getIcodpoliza())){
+		suplementos = consultasPolizaDAOICE.obtieneHistoricoPolizaCorto(sucursal, producto, polizacorto);
+//		} else {
+//			suplementos = consultasPolizaDAOSISA.obtieneHistoricoPoliza(polizaAsegurado);
+//		}
+		
+		return suplementos;
+	}
 	
 	@Override
 	public List<HistoricoVO> obtieneHistoricoPolizaSISA(
@@ -122,6 +139,21 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 //		 }
 		 
 		 return datosPolizas;
+	}
+
+	@Override
+	public List<Map<String, String>> obtieneDatosPolizaTvalopol(
+			PolizaAseguradoVO polizaAsegurado) throws Exception {
+		List<Map<String, String>> datosPolizas;
+		
+		//Si iCodPoliza no es nulo, es información de SISA.
+//		 if(StringUtils.isBlank(polizaAsegurado.getIcodpoliza())){
+		datosPolizas = consultasPolizaDAOICE.obtieneDatosPolizaTvalopol(polizaAsegurado);
+//		 } else {
+//			 datosPolizas = consultasPolizaDAOSISA.obtieneDatosPoliza(polizaAsegurado);
+//		 }
+		
+		return datosPolizas;
 	}
 	
 	@Override

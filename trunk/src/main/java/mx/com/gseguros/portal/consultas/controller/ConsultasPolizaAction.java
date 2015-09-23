@@ -34,6 +34,7 @@ import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -175,6 +176,37 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	}
 
 	/**
+	 * Obtiene los datos generales de una p&oacute;liza
+	 * 
+	 * @return String result
+	 */
+	public String consultaDatosPolizaTvalopol() {
+		logger.debug(" **** Entrando a Consulta de Poliza Tvalopol ****");
+		try {
+			
+			PolizaAseguradoVO polizaAseguradoVO = new PolizaAseguradoVO();
+			polizaAseguradoVO.setCdunieco(params.get("cdunieco"));
+			polizaAseguradoVO.setCdramo(params.get("cdramo"));
+			polizaAseguradoVO.setEstado(params.get("estado"));
+			polizaAseguradoVO.setNmpoliza(params.get("nmpoliza"));
+			polizaAseguradoVO.setIcodpoliza(params.get("icodpoliza"));
+			polizaAseguradoVO.setNmsuplem(params.get("suplemento"));
+			
+			loadList = consultasPolizaManager
+					.obtieneDatosPolizaTvalopol(polizaAseguradoVO);
+			
+			logger.debug("Resultado de la consulta de poliza tvalopol :{}", loadList);
+			
+		} catch (Exception e) {
+			logger.error("Error al obtener los datos de la poliza  tvalopol ", e);
+			return SUCCESS;
+		}
+		
+		success = true;
+		return SUCCESS;
+	}
+
+	/**
 	 * Obtiene los datos complementarios de una p&oacute;liza
 	 * 
 	 * @return String result
@@ -229,13 +261,23 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	 */
 	public String consultaDatosSuplemento() {
 		logger.debug(" **** Entrando a consultaDatosSuplemento ****");
+		
+		logger.debug("Parametros de entrada: "+params);
+		
 		mensajeRes = "";
 		try {
-			PolizaAseguradoVO poliza = new PolizaAseguradoVO();
-			poliza.setIcodpoliza(params.get("icodpoliza"));
-			poliza.setNmpoliex(params.get("nmpoliex"));
-			datosSuplemento = consultasPolizaManager.obtieneHistoricoPoliza(poliza);
-
+			
+//			groupTipoBusqueda
+			
+			if(params.containsKey("numpolizacorto") && StringUtils.isNotBlank(params.get("numpolizacorto"))){
+				datosSuplemento = consultasPolizaManager.obtieneHistoricoPolizaCorto(params.get("sucursal"), params.get("producto"), params.get("numpolizacorto"));
+			}else{
+				PolizaAseguradoVO poliza = new PolizaAseguradoVO();
+				poliza.setIcodpoliza(params.get("icodpoliza"));
+				poliza.setNmpoliex(params.get("nmpoliex"));
+				datosSuplemento = consultasPolizaManager.obtieneHistoricoPoliza(poliza);
+			}
+			
 			if (datosSuplemento != null) {
 				logger.debug("Historicos encontrados: {}", datosSuplemento.size());
 			}

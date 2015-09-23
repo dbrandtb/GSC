@@ -22,7 +22,16 @@ public class PolizaAseguradoVO implements Serializable {
 	private String nombreAsegurado;
 	private String nombreAgente;
 	private String nmpoliex;
+	private String nmsuplem;
 	
+	public String getNmsuplem() {
+		return nmsuplem;
+	}
+
+	public void setNmsuplem(String nmsuplem) {
+		this.nmsuplem = nmsuplem;
+	}
+
 	/**
 	 * Descripci&oacute;n del Tipo de Producto
 	 */

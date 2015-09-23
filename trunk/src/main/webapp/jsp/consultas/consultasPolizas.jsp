@@ -10,6 +10,7 @@
             
             var _URL_TIPOS_CONSULTA               = _CONTEXT + '/resources/scripts/consultaPolizas/tiposConsulta.json';
             var _URL_CONSULTA_DATOS_POLIZA        = '<s:url namespace="/consultasPoliza" action="consultaDatosPoliza" />';
+            var _URL_CONSULTA_DATOS_POLIZA_TVALOPOL='<s:url namespace="/consultasPoliza" action="consultaDatosPolizaTvalopol" />';
             var _URL_CONSULTA_DATOS_SUPLEMENTO    = '<s:url namespace="/consultasPoliza" action="consultaDatosSuplemento" />';
             var _URL_CONSULTA_DATOS_TARIFA_POLIZA = '<s:url namespace="/consultasPoliza" action="consultaDatosTarifaPoliza" />';
             var _URL_CONSULTA_DATOS_ASEGURADO     = '<s:url namespace="/consultasPoliza" action="consultaDatosAsegurado" />';
@@ -22,6 +23,8 @@
             var _URL_LOADER_VER_EXCLUSIONES       = '<s:url namespace="/consultasPoliza" action="includes/verClausulas" />';
             var _URL_LOADER_VER_TATRISIT          = '<s:url namespace="/consultasPoliza" action="includes/verDatosTatrisit" />';
             var _URL_LOADER_HISTORIAL_RECLAMACIONES= '<s:url namespace="/siniestros"	 action="includes/historialReclamaciones" />';
+
+            var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
             
             var _MSG_ERROR                       = 'Error';
             var _MSG_INFO                        = 'Info';
