@@ -90,6 +90,8 @@ Ext.onReady(function() {
                                         panelPersona.getForm().findField('params.cdsisrol').setValue(_parametros.cdsisrol);
                                         
                                        var fieldPer = panelPersona.down('#fieldAgente');
+                                       panelPersona.getForm().findField('params.cdusuari').clearInvalid();
+                                       
                                        if(ROL_AGENTE != _parametros.cdsisrol){
                                            panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Id Usuario');
                                            panelPersona.getForm().findField('params.cdusuari').maxLength = 30;
@@ -135,7 +137,10 @@ Ext.onReady(function() {
                        listeners: {
                            select: function ( combo, records, eOpts ){
                                var cdrol = records[0].get('key');
+                               
                                var fieldPer = panelPersona.down('#fieldAgente');
+                               panelPersona.getForm().findField('params.cdusuari').clearInvalid();
+                               
                                if(ROL_AGENTE != cdrol){
                                    panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Id Usuario');
                                    panelPersona.getForm().findField('params.cdusuari').maxLength = 30;
