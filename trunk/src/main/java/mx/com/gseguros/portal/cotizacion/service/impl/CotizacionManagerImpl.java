@@ -3424,6 +3424,19 @@ public class CotizacionManagerImpl implements CotizacionManager
             }
 		}
 		
+		
+		if(resp.isExito() && StringUtils.isNotBlank(codpostalCli)){
+			try {
+				cotizacionDAO.actualizaDomicilioAseguradosColectivo(cdunieco, cdramo, "W", nmpoliza, "0", codpostalCli, cdedoCli, cdmuniciCli);
+			} catch (Exception ex) {
+            	long timestamp = System.currentTimeMillis();
+            	resp.setExito(false);
+            	resp.setRespuesta(new StringBuilder("Error al actualizar tvalopol domicilio #").append(timestamp).toString());
+            	resp.setRespuestaOculta(ex.getMessage());
+            	logger.error(resp.getRespuesta(),ex);
+            }
+		}
+		
 		if(resp.isExito()
 				&&(!hayTramite||hayTramiteVacio)
 				&&

@@ -1315,7 +1315,7 @@ Ext.onReady(function()
             {
                 if(items[i].name!='cdrfc'
                     &&items[i].name!='nombre'
-                    &&items[i].name!='codpostal'
+//                  &&items[i].name!='codpostal' //Tampoco se permite editar el codigo postal para ser homologo con estado y municipio
                     &&items[i].name!='dsdomici'
                     &&items[i].name!='nmnumero'
                     &&items[i].name!='nmnumint'
