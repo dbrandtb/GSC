@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.consultas.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
@@ -70,6 +71,16 @@ public interface ConsultasPolizaDAO {
 	public List<SuplementoVO> obtieneHistoricoPoliza(PolizaAseguradoVO polizaAsegurado) throws Exception;
 	
 	/**
+	 * Obtiene el historial de una poliza por medio de numero de poliza corto
+	 * @param sucursal
+	 * @param producto
+	 * @param polizacorto
+	 * @return
+	 * @throws Exception
+	 */
+	public List<SuplementoVO> obtieneHistoricoPolizaCorto(String sucursal, String producto, String polizacorto) throws Exception;
+	
+	/**
 	 * 
 	 * @param polizaAsegurado
 	 * @return
@@ -98,6 +109,14 @@ public interface ConsultasPolizaDAO {
      * @throws Exception
      */
     public List<PolizaDTO> obtieneDatosPoliza(PolizaAseguradoVO polizaAsegurado) throws Exception;
+
+    /**
+     * Obtiene los datos generales de la p&oacute;liza
+     * @param polizaAsegurado
+     * @return
+     * @throws Exception
+     */
+    public List<Map<String, String>> obtieneDatosPolizaTvalopol(PolizaAseguradoVO polizaAsegurado) throws Exception;
     
     
     /**

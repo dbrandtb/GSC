@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.consultas.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import mx.com.gseguros.portal.consultas.model.SuplementoVO;
 import mx.com.gseguros.portal.consultas.model.TarifaVO;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.ClausulaVO;
 import mx.com.gseguros.portal.general.model.DetalleReciboVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
@@ -123,6 +125,48 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
             return consulta;
         }
     }
+    
+    @SuppressWarnings("unchecked")
+	@Override
+	public List<Map<String, String>> obtieneDatosPolizaTvalopol(PolizaAseguradoVO polizaAsegurado) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", polizaAsegurado.getCdunieco());
+		params.put("pv_cdramo_i",   polizaAsegurado.getCdramo());
+		params.put("pv_estado_i",   polizaAsegurado.getEstado());
+		params.put("pv_nmpoliza_i", polizaAsegurado.getNmpoliza());
+		params.put("p_nmsuplem_i", polizaAsegurado.getNmsuplem());
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneDatosPolizaTvalopolSP(getDataSource()), params);
+		
+		List<Map<String,String>>listaAtributos=(List<Map<String,String>>)mapResult.get("pv_registro_o");
+		if(listaAtributos==null)
+		{
+			listaAtributos=new ArrayList<Map<String,String>>();
+		}
+		
+		return listaAtributos;
+	}
+	
+	protected class ObtieneDatosPolizaTvalopolSP extends StoredProcedure {
+
+		protected ObtieneDatosPolizaTvalopolSP(DataSource dataSource) {
+			
+			super(dataSource, "PKG_CONSULTA.P_GET_INF_TVALOPOL");
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("p_nmsuplem_i", OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+            		"OTVALOR"
+            		,"DSATRIBU"
+            		,"CDATRIBU"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
     @SuppressWarnings("unchecked")
 	@Override
@@ -232,6 +276,11 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmpoliex_i", polizaAsegurado.getNmpoliex());
+		params.put("pv_cdunieco_i", null);
+		params.put("pv_cdramo_i"  , null);
+		params.put("pv_nmpoliza_i", null);
+		params.put("pv_ramo_i"    , null);
+		
 		Map<String, Object> mapResult = ejecutaSP(new ConsultaSuplementosSP(getDataSource()), params);
 		return (List<SuplementoVO>) mapResult.get("pv_registro_o");
 	}
@@ -240,10 +289,46 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 		protected ConsultaSuplementosSP(DataSource dataSource) {
 			super(dataSource, "PKG_CONSULTA.p_get_datos_suplem");
 			declareParameter(new SqlParameter("pv_nmpoliex_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new SuplementoMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
     		compile();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<SuplementoVO> obtieneHistoricoPolizaCorto(String sucursal, String producto, String polizacorto) 
+			throws Exception{
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		params.put("pv_nmpoliex_i", null);
+		params.put("pv_cdunieco_i", sucursal);
+		params.put("pv_cdramo_i"  , producto);
+		params.put("pv_nmpoliza_i", polizacorto);
+		params.put("pv_ramo_i"    , null);
+		
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneHistoricoPolizaCorto(getDataSource()), params);
+		return (List<SuplementoVO>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ObtieneHistoricoPolizaCorto extends StoredProcedure {
+		protected ObtieneHistoricoPolizaCorto(DataSource dataSource) {
+			super(dataSource, "PKG_CONSULTA.p_get_datos_suplem");
+			declareParameter(new SqlParameter("pv_nmpoliex_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new SuplementoMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
 		}
 	}
 	

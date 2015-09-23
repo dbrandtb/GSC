@@ -244,6 +244,29 @@ Ext.onReady(function() {
 
                         }
                     });
+                    
+                    //Carga de datos de Tvalopol 
+                    storeDatosPolizaTvalopol.load({
+				        params : panelBusqueda.down('form').getForm().getValues(),
+				        callback : function(records, operation, success) {
+				            if (success) {
+				            	debug('*****Records de tvalopol: ' , records);
+				                if (records.length > 0) {
+				                 	   records.forEach(function (element, index, array){
+				                 	   		var campo = panelDatosPoliza.down('[name=otvalor'+element.get('CDATRIBU')+']');
+				                 	   		campo.show();
+				                 	   		campo.setFieldLabel(element.get('DSATRIBU'));
+				                 	   		campo.setValue(element.get('OTVALOR'));
+				                 	   });
+				                }
+				            } else {
+				                showMessage('Error', 
+				                    'Error al obtener datos de la p\u00F3liza elegida, intente m\u00E1s tarde',
+				                    Ext.Msg.OK, Ext.Msg.ERROR);
+				            }
+				
+				        }
+    				});
                 }
             }
         }
@@ -281,6 +304,16 @@ Ext.onReady(function() {
         ]
     });
 
+    // Modelo
+    Ext.define('DatosPolizaModelTvalopol', {
+        extend: 'Ext.data.Model',
+        fields: [
+            {type:'string', name:'OTVALOR'},
+            {type:'string', name:'CDATRIBU'},
+            {type:'string', name:'DSATRIBU'}
+        ]
+    });
+
     // Store
     var storeDatosPoliza = new Ext.data.Store({
         model: 'DatosPolizaModel',
@@ -293,10 +326,24 @@ Ext.onReady(function() {
             }
         }
     });
+
+    // Store
+    var storeDatosPolizaTvalopol = new Ext.data.Store({
+        model: 'DatosPolizaModelTvalopol',
+        proxy: {
+            type: 'ajax',
+            url : _URL_CONSULTA_DATOS_POLIZA_TVALOPOL,
+            reader: {
+                type: 'json',
+                root: 'loadList'
+            }
+        }
+    });
     
     // FORMULARIO DATOS DE LA POLIZA
     var panelDatosPoliza = Ext.create('Ext.form.Panel', {
         model : 'DatosPolizaModel',
+        title  : 'Datos Generales',
         width : 815 ,
         border : false,
         //height : 280,
@@ -350,12 +397,72 @@ Ext.onReady(function() {
                 {xtype: 'textfield', name: 'dsperpag', fieldLabel: 'Forma de Pago',  readOnly: true, labelWidth: 120, width: 300},
                 {xtype: 'textfield', name: 'dstempot', fieldLabel: 'Tipo de P&oacute;liza', readOnly: true, labelWidth: 120, width: 290, labelAlign: 'right'}
             ]
-        }
+        }, Ext.create('Ext.form.Panel',
+                    {
+            title  : 'Datos Adicionales'
+            ,defaults : { style : 'margin:5px' }
+            ,layout :
+            {
+                type     : 'table'
+                ,columns : 2
+            },
+            items : [ 
+                {xtype: 'textfield', name: 'otvalor1', fieldLabel: 'otvalor1',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor2', fieldLabel: 'otvalor2',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor3', fieldLabel: 'otvalor3',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor4', fieldLabel: 'otvalor4',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor5', fieldLabel: 'otvalor5',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor6', fieldLabel: 'otvalor6',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor7', fieldLabel: 'otvalor7',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor8', fieldLabel: 'otvalor8',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor9', fieldLabel: 'otvalor9',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor10', fieldLabel: 'otvalor10',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor11', fieldLabel: 'otvalor11',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor12', fieldLabel: 'otvalor12',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor13', fieldLabel: 'otvalor13',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor14', fieldLabel: 'otvalor14',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor15', fieldLabel: 'otvalor15',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor16', fieldLabel: 'otvalor16',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor17', fieldLabel: 'otvalor17',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor18', fieldLabel: 'otvalor18',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor19', fieldLabel: 'otvalor19',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor20', fieldLabel: 'otvalor20',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor21', fieldLabel: 'otvalor21',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor22', fieldLabel: 'otvalor22',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor23', fieldLabel: 'otvalor23',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor24', fieldLabel: 'otvalor24',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor25', fieldLabel: 'otvalor25',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor26', fieldLabel: 'otvalor26',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor27', fieldLabel: 'otvalor27',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor28', fieldLabel: 'otvalor28',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor29', fieldLabel: 'otvalor29',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor30', fieldLabel: 'otvalor30',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor31', fieldLabel: 'otvalor31',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor32', fieldLabel: 'otvalor32',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor33', fieldLabel: 'otvalor33',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor34', fieldLabel: 'otvalor34',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor35', fieldLabel: 'otvalor35',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor36', fieldLabel: 'otvalor36',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor37', fieldLabel: 'otvalor37',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor38', fieldLabel: 'otvalor38',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor39', fieldLabel: 'otvalor39',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor40', fieldLabel: 'otvalor40',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor41', fieldLabel: 'otvalor41',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor42', fieldLabel: 'otvalor42',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor43', fieldLabel: 'otvalor43',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor44', fieldLabel: 'otvalor44',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor45', fieldLabel: 'otvalor45',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor46', fieldLabel: 'otvalor46',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor47', fieldLabel: 'otvalor47',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor48', fieldLabel: 'otvalor48',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor49', fieldLabel: 'otvalor49',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
+                {xtype: 'textfield', name: 'otvalor50', fieldLabel: 'otvalor50',  readOnly: true, labelWidth: 120, width: 300, hidden: true}
+            ]
+        })
         ],
-		buttonAlign : 'center',
-		buttons:[
+		tbar:[
 			{
-				text: 'Siniestralidad',
+				text: 'Ver Siniestralidad',
 				icon:_CONTEXT+'/resources/fam3icons/icons/application_view_list.png',
 				handler: function(){
 					siniestralidad(panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(), panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
@@ -781,6 +888,13 @@ Ext.onReady(function() {
                         autoLoad : false,
                         ajaxOptions: {
                             method: 'POST'
+                        },
+                        listeners:{
+                        	load: function(){
+                        		var pnlDatosTatrisit = tabDatosGeneralesPoliza.down('panel[name=pnlDatosTatrisit]');
+                        		pnlDatosTatrisit.focus();
+                        		alert();
+                        	}
                         }
                     }
                 }
@@ -992,14 +1106,15 @@ Ext.onReady(function() {
                         {
                             xtype: 'radiogroup',
                             name: 'groupTipoBusqueda',
-                            flex: 15,
+                            flex: 20,
                             columns: 1,
                             vertical: true,
                             items: [
                                 {boxLabel: 'Por n\u00FAmero de p\u00F3liza', name: 'tipoBusqueda', inputValue: 1, checked: true, width: 160},
                                 {boxLabel: 'Por RFC', name: 'tipoBusqueda', inputValue: 2},
                                 {boxLabel: 'Por clave de asegurado', name: 'tipoBusqueda', inputValue: 3},
-                                {boxLabel: 'Por nombre', name: 'tipoBusqueda', inputValue: 4}
+                                {boxLabel: 'Por nombre', name: 'tipoBusqueda', inputValue: 4},
+                                {boxLabel: 'Por n\u00FAmero de p\u00F3liza corto', name: 'tipoBusqueda', inputValue: 5}
                                 
                             ],
                             listeners : {
@@ -1022,6 +1137,9 @@ Ext.onReady(function() {
                                             break;
                                         case 4:
                                             Ext.getCmp('subpanelBusquedaNombre').show();
+                                            break;
+                                        case 5:
+                                            Ext.getCmp('subpanelBusquedaPolCorto').show();
                                             break;
                                     }
                                 }
@@ -1141,6 +1259,77 @@ Ext.onReady(function() {
                                             allowBlank: false
                                         }
                                     ]
+                                },
+                                {
+                                    id: 'subpanelBusquedaPolCorto',
+                                    layout : 'vbox',
+                                    align:'stretch',
+                                    border: false,
+                                    hidden: true,
+                                    defaults: {
+                                        labelAlign: 'right',
+                                        enforceMaxLength: true,
+                                        msgTarget: 'side'
+                                    },
+                                    items : [
+                                        {
+                                            xtype: 'combo',
+                                            width: 280,
+                                            name : 'params.sucursal',
+                                            fieldLabel : 'Sucursal',
+                                            allowBlank: false,
+                                            typeAhead:true,
+											anyMatch:true,
+											displayField:'value',
+											valueField:'key',
+											forceSelection:false,
+											editable:false,
+											queryMode:'local',
+											store:Ext.create('Ext.data.Store',{
+											model:'Generic',
+											autoLoad:true,
+											proxy:{type:'ajax',
+											url: _URL_CARGA_CATALOGO,
+											reader:{type:'json',
+											root:'lista',
+											rootProperty:'lista'
+											},
+											extraParams:{catalogo:'MC_SUCURSALES_SALUD'}
+											}
+											})
+                                        },{
+                                            xtype: 'combo',
+                                            width: 280,
+                                            name : 'params.producto',
+                                            fieldLabel : 'Producto',
+                                            allowBlank: false,
+                                            typeAhead:true,
+											anyMatch:true,
+											displayField:'value',
+											valueField:'key',
+											forceSelection:false,
+											editable:false,
+											queryMode:'local',
+											store:Ext.create('Ext.data.Store',{
+											model:'Generic',
+											autoLoad:true,
+											proxy:{type:'ajax',
+											url: _URL_CARGA_CATALOGO,
+											reader:{type:'json',
+											root:'lista',
+											rootProperty:'lista'
+											},
+											extraParams:{catalogo:'RAMOS'}
+											}
+											})
+                                        },{
+                                            xtype: 'textfield',
+                                            name : 'params.numpolizacorto',
+                                            width: 280,
+                                            fieldLabel : 'N&uacute;mero de P&oacute;liza',
+                                            allowBlank: false
+                                        }
+                                    ]
                                 }
                             ]
                         },
@@ -1191,6 +1380,16 @@ Ext.onReady(function() {
                                             return;
                                         }
                                         cargaPolizasAsegurado(formBusqueda, btn);
+                                        
+                                    break;
+                                    
+                                    case 5:
+                                        // Busqueda de polizas por nombre:
+                                        if(!formBusqueda.findField('params.sucursal').isValid() || !formBusqueda.findField('params.producto').isValid() || !formBusqueda.findField('params.numpolizacorto').isValid()){
+                                            mensajeWarning('Llene los datos requeridos.');
+                                            return;
+                                        }
+                                        cargaStoreSuplementos(formBusqueda.getValues());
                                         
                                     break;
                                 }

@@ -19,6 +19,17 @@
 				</param>
 			</result>
 		</action>
+
+		<action name="consultaDatosPolizaTvalopol" class="ConsultasPolizaAction"
+			method="consultaDatosPolizaTvalopol">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					loadList.*,
+					success
+				</param>
+			</result>
+		</action>
 		
 		<action name="consultaDatosComplementarios" class="ConsultasPolizaAction"
             method="consultaDatosComplementarios">
