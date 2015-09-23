@@ -4705,6 +4705,9 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdsisrol
 					,false
 					,false //asincrono
+					,null
+					,null
+					,null
 					);
 			exito           = aux.exito;
 			respuesta       = aux.respuesta;
@@ -4990,6 +4993,10 @@ public class CotizacionAction extends PrincipalCoreAction
 			String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 			
 			boolean asincrono = StringUtils.isNotBlank(smap1.get("asincrono"))&&smap1.get("asincrono").equalsIgnoreCase("si");
+			
+			String cdedo         = smap1.get("cdedo");
+			String cdmunici      = smap1.get("cdmunici");
+			String codpostal      = smap1.get("codpostal");
 			
 			logger.info(Utils.log(
 					"\ninTimestamp: " , inTimestamp
@@ -5713,8 +5720,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			{
 				try
 				{
-					String cdedo         = smap1.get("cdedo");
-					String cdmunici      = smap1.get("cdmunici");
+					
 					String cdplanes[]    = new String[5];
 					
 					int nGru=0;
@@ -5796,7 +5802,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,false    , ntramite      , cdagente
 						,sincenso , censoAtrasado , resubirCenso
 						,cdperpag , cdsisrol      , complemento
-						,asincrono
+						,asincrono,cdmunici,cdedo,codpostal
 						);
 				exito           = aux.exito;
 				respuesta       = aux.respuesta;
@@ -5851,6 +5857,9 @@ public class CotizacionAction extends PrincipalCoreAction
 			,String cdsisrol
 			,boolean complemento
 			,boolean asincrono
+			,String cdmunici
+			,String cdedo
+			,String codpostal
 			)
 	{
 		logger.debug(
@@ -5971,6 +5980,20 @@ public class CotizacionAction extends PrincipalCoreAction
 				logger.error(respuesta,ex);
 			}
 		}
+		
+		
+		if(exito && StringUtils.isNotBlank(codpostal)){
+			try {
+				cotizacionManager.actualizaDomicilioAseguradosColectivo(cdunieco, cdramo, "W", nmpoliza, "0", codpostal, cdedo, cdmunici);
+			} catch (Exception ex) {
+				long timestamp       = System.currentTimeMillis();
+				resp.exito           = false;
+				resp.respuesta       = "Error al guardar domiciio tvalopol #"+timestamp;
+				resp.respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
 		
 		if(resp.exito
 				&&(!hayTramite||hayTramiteVacio)

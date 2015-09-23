@@ -721,7 +721,7 @@ Ext.onReady(function()
 										                'smap1.ocultaBusqueda' : 'S' ,
 										                'smap1.cargaCP' : '',
 										                'smap1.cargaTipoPersona' : '',
-										                'smap1.cargaSucursalEmi' : _p21_smap1.cdunieco,
+										                'smap1.cargaSucursalEmi' : _p25_smap1.cdunieco,
 										                'smap1.activaCveFamiliar': 'N',
 										                'smap1.modoRecuperaDanios': 'N',
 										                'smap1.modoSoloEdicion': 'N',
@@ -1176,7 +1176,7 @@ Ext.onReady(function()
             {
                 if(items[i].name!='cdrfc'
                     &&items[i].name!='nombre'
-                    &&items[i].name!='codpostal'
+//                  &&items[i].name!='codpostal' //Tampoco se permite editar el codigo postal para ser homologo con estado y municipio
                     &&items[i].name!='dsdomici'
                     &&items[i].name!='nmnumero'
                     &&items[i].name!='nmnumint'
@@ -1699,7 +1699,7 @@ Ext.onReady(function()
 				                'smap1.ocultaBusqueda' : 'S' ,
 				                'smap1.cargaCP' : '',
 				                'smap1.cargaTipoPersona' : '',
-				                'smap1.cargaSucursalEmi' : _p21_smap1.cdunieco,
+				                'smap1.cargaSucursalEmi' : _p25_smap1.cdunieco,
 				                'smap1.activaCveFamiliar': 'N',
 				                'smap1.modoRecuperaDanios': 'N',
 				                'smap1.modoSoloEdicion': 'N',
@@ -5097,7 +5097,7 @@ function _p25_editarAsegurado(grid,rowIndex)
 									                'smap1.ocultaBusqueda' : 'S' ,
 									                'smap1.cargaCP' : '',
 									                'smap1.cargaTipoPersona' : '',
-									                'smap1.cargaSucursalEmi' : _p21_smap1.cdunieco,
+									                'smap1.cargaSucursalEmi' : _p25_smap1.cdunieco,
 									                'smap1.activaCveFamiliar': 'N',
 									                'smap1.modoRecuperaDanios': 'N',
 									                'smap1.modoSoloEdicion': 'S'
