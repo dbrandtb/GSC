@@ -5103,11 +5103,18 @@ function _p21_generarVentanaVistaPrevia(sinBotones)
                             
                             for(var ij in records)
                             {
-                                prima  += Number(records[ij].get('TARIFA_TOTAL_HOMBRES')) + Number(records[ij].get('TARIFA_TOTAL_MUJERES'));
-                                derpol += Number(records[ij].get('DERPOL_TOTAL_GENERAL'));
-                                recar  += Number(records[ij].get('RECARGOS_TOTAL_GENERAL'));
-                                iva    += Number(records[ij].get('IVA_TOTAL_GENERAL'));
-                                pTot   += prima+derpol+recar+iva;
+                                var primaPaso  = Number(records[ij].get('TARIFA_TOTAL_HOMBRES')) + Number(records[ij].get('TARIFA_TOTAL_MUJERES'));
+                                var derpolPaso = Number(records[ij].get('DERPOL_TOTAL_GENERAL'));
+                                var recarPaso  = Number(records[ij].get('RECARGOS_TOTAL_GENERAL'));
+                                var ivaPaso    = Number(records[ij].get('IVA_TOTAL_GENERAL'));
+                                
+                                prima  += primaPaso;
+                                derpol += derpolPaso;
+                                recar  += recarPaso;
+                                iva    += ivaPaso;
+                                
+                                pTot   += primaPaso+derpolPaso+recarPaso+ivaPaso;
+                                
                                 hom    += Number(records[ij].get('HOMBRES'));
                                 muj    += Number(records[ij].get('MUJERES'));
                             }
