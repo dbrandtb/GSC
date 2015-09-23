@@ -2771,6 +2771,7 @@ Ext.onReady(function()
                                     else
                                     {
                                         mensajeWarning('El agente '+json.smap1.cdagente+' no se encuentra en la lista del promotor/suscriptor');
+                                        agente.reset();
                                     }
                                 }
                                 //para suscriptor y agente
@@ -2797,11 +2798,14 @@ Ext.onReady(function()
                                             }
                                             ,callback : function(records)
                                             {
-                                                debug('callback records:',records);
-                                                if(records.length>0)
-                                                {
-                                                    agente.setValue(records[0]);
-                                                }
+                                               debug('callback records:',records,records.length);
+                                               if(_fieldByLabel('AGENTE').findRecord('key',json.smap1.cdagente)){
+                                            	   agente.setValue(json.smap1.cdagente);
+                                               }else{
+                                            	   mensajeWarning('El agente '+json.smap1.cdagente+' no se encuentra en la lista del promotor/suscriptor');
+                                            	   folio.reset();
+                                            	   agente.reset();
+                                               }
                                             }
                                         });
                                     }
@@ -2811,6 +2815,7 @@ Ext.onReady(function()
                             {
                                 mensajeError(json.respuesta);
                                 folio.reset();
+                                agente.reset();
                             }
                         }
                         ,failure : function(response)
