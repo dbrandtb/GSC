@@ -6142,4 +6142,45 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> generarDocumentosBaseDatos(
+			String cdorddoc
+			,String nmsolici
+			,String ntramite
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdorddoc" , cdorddoc);
+		params.put("nmsolici" , nmsolici);
+		params.put("ntramite" , ntramite);
+		Map<String,Object>       procRes = ejecutaSP(new GenerarDocumentosBaseDatos(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			throw new ApplicationException("El movimiento no gener\u00F3 documentos");
+		}
+		logger.debug(Utils.log("\n****** pkg_db_report.set_data_report Lista de documentos a transferir=",lista));
+		return lista;
+	}
+	
+	protected class GenerarDocumentosBaseDatos extends StoredProcedure
+	{
+		protected GenerarDocumentosBaseDatos(DataSource dataSource)
+		{
+			super(dataSource,"pkg_db_report.set_data_report");
+			declareParameter(new SqlParameter("cdorddoc" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsolici" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"CDUNIECO"  , "CDRAMO"    , "ESTADO"   , "NMPOLIZA" , "NMSOLICI"
+					,"NMSUPLEM" , "NTRAMITE"  , "FEINICI"  , "CDDOCUME" , "DSDOCUME"
+					,"TIPMOV"   , "SWVISIBLE" , "CDTIPTRA" , "CODIDOCU" , "FEFECHA" , "CDORDDOC"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

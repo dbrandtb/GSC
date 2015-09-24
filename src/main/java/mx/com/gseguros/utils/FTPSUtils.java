@@ -77,7 +77,7 @@ public class FTPSUtils {
         try {
             File file = new File(localFilePath);
             if (!file.exists()) {
-                throw new RuntimeException("No se encontró el archivo local: " + localFilePath);
+                throw new RuntimeException("No se encontrï¿½ el archivo local: " + localFilePath);
             }
             
             manager.init();
@@ -157,6 +157,73 @@ public class FTPSUtils {
             localFile.copyFrom(remoteFile, Selectors.SELECT_SELF);
             
             logger.info("Archivo descargado exitosamente: " + localFilePath);
+            success = true;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            manager.close();
+        }
+        return success;
+    }
+    
+    
+    /**
+     * Descarga un los archivos de una carpeta remoto a una ruta local
+     * 
+     * @param hostName            Nombre del servidor
+     * @param username            Nombre de usuario
+     * @param password            Password de usuario
+     * @param localDirectoryPath  Ruta absoluta Y nombre de la carpeta local (usando \\ como separador)
+     * @param remoteDirectoryPath Ruta absoluta y nombre de la carpeta remoto (usando / como separador)
+     * @return true si el archivo se descarg&oacute; correctamente, false sino
+     */
+    public static boolean downloadChildrenFiles(String hostName, String username, String password, 
+            String localDirectoryPath, String remoteDirectoryPath) {
+
+        boolean success = false;
+        
+        StandardFileSystemManager manager = new StandardFileSystemManager();
+
+        try {
+            // Para evitar que sobreescriba una carpeta conviriendola en un archivo:
+            File directory = new File(localDirectoryPath);
+            logger.debug("existe? " + directory.exists());
+            logger.debug("es folder? " + directory.isDirectory());
+            logger.debug("es archivo? " + directory.isFile());
+            if(!directory.exists())
+            {
+            	throw new RuntimeException("No existe la carpeta local: " + localDirectoryPath);
+            }
+            if(!directory.isDirectory())
+            {
+                throw new RuntimeException("La ruta local debe ser carpeta: " + localDirectoryPath);
+            }
+            
+            manager.init();
+
+            // Append _downlaod_from_sftp to the given file name.
+            // String downloadFilePath = localFilePath.substring(0,
+            // localFilePath.lastIndexOf(".")) + "_downlaod_from_sftp" +
+            // localFilePath.substring(localFilePath.lastIndexOf("."),
+            // localFilePath.length());
+
+            // Create local file object. Change location if necessary for new
+            // downloadFilePath
+            FileObject localDirectory = manager.resolveFile(localDirectoryPath);
+
+            // Create remote file object
+            FileObject remoteDirectory = manager.resolveFile(
+                    createConnectionString(hostName, username, password,
+                            remoteDirectoryPath), createDefaultOptions());
+            
+            if (!remoteDirectory.exists()) {
+                throw new RuntimeException("No existe la carpeta origen: " + remoteDirectory);
+            }
+            
+            // Copy local file to sftp server
+            localDirectory.copyFrom(remoteDirectory, Selectors.SELECT_CHILDREN);
+            
+            logger.info("Archivos hijos descargados exitosamente: " + localDirectoryPath);
             success = true;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -268,7 +335,7 @@ public class FTPSUtils {
             String remoteFilePath) {
         
         String connectionString = "sftp://" + username + ":" + password + "@" + hostName + "/" + remoteFilePath;
-        logger.info(new StringBuilder("Cadena de conexión: ").append(connectionString));
+        logger.info(new StringBuilder("Cadena de conexiï¿½n: ").append(connectionString));
         return connectionString;
     }
     

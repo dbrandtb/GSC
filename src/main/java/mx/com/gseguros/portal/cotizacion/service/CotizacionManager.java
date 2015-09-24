@@ -683,4 +683,11 @@ public interface CotizacionManager
 			,String nmsolici
 			,String ntramite
 			)throws Exception;
+	
+	@Deprecated
+	public List<Map<String,String>> generarDocumentosBaseDatos(
+			String cdorddoc
+			,String nmsolici
+			,String ntramite
+			)throws Exception;
 }

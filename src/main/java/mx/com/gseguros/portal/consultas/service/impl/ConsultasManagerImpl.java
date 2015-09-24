@@ -8,6 +8,7 @@ import java.util.Map;
 
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
+import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
 import mx.com.gseguros.utils.Utils;
@@ -353,6 +354,13 @@ public class ConsultasManagerImpl implements ConsultasManager
 				));
 		
 		return res;
+	}
+	
+	@Override
+	@Deprecated
+	public String recuperarTparagen(ParametroGeneral paragen) throws Exception
+	{
+		return consultasDAO.recuperarTparagen(paragen);
 	}
 	
 	///////////////////////////////
