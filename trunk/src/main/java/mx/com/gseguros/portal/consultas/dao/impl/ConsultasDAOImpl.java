@@ -17,6 +17,7 @@ import mx.com.aon.portal.dao.WrapperResultadosGeneric;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
+import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.utils.Constantes;
@@ -2588,6 +2589,39 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 					"CDSUBRAM"  , "DESCRIPCION"
             };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String recuperarTparagen(ParametroGeneral paragen) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("nomparam" , paragen.getNomparam());
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarTparagen(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException(Utils.join("No existe el parametro general ",paragen.toString()));
+		}
+		if(lista.size()>1)
+		{
+			throw new ApplicationException(Utils.join("Parametro general ",paragen.toString()," repetido"));
+		}
+		String val = lista.get(0).get("VALPARAM");
+		logger.debug(Utils.join("\n****** PKG_CONSULTA.P_OBTIENE_TPARAGEN ",paragen.getNomparam()," = ",val," ******"));
+		return val;
+	}
+	
+	protected class RecuperarTparagen extends StoredProcedure
+	{
+		protected RecuperarTparagen(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_OBTIENE_TPARAGEN");
+			declareParameter(new SqlParameter("nomparam" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"VALPARAM"})));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

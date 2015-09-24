@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 
 public interface ConsultasManager
@@ -120,4 +121,7 @@ public interface ConsultasManager
 			)throws Exception;
 
 	public Map<String,String> consultaFeNacContratanteAuto(Map<String,String> params)throws Exception;
+	
+	@Deprecated
+	public String recuperarTparagen(ParametroGeneral paragen) throws Exception;
 }

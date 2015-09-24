@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
+
 public interface ConsultasDAO
 {
 	public List<Map<String,String>> consultaDinamica(String storedProcedure,LinkedHashMap<String,Object>params) throws Exception;
@@ -333,4 +335,6 @@ public interface ConsultasDAO
 	public Map<String,String> consultaFeNacContratanteAuto(Map<String,String> params)throws Exception;
 	
 	public List<Map<String,String>> recuperarSubramos(String cdramo) throws Exception;
+	
+	public String recuperarTparagen(ParametroGeneral paragen) throws Exception;
 }

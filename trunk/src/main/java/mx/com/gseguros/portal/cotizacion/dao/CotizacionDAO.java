@@ -539,4 +539,10 @@ public interface CotizacionDAO {
 			,String nmsolici
 			,String ntramite
 			)throws Exception;
+	
+	public List<Map<String,String>> generarDocumentosBaseDatos(
+					String cdorddoc
+					,String nmsolici
+					,String ntramite
+					)throws Exception;
 }

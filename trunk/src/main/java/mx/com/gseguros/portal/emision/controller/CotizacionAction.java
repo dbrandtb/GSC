@@ -30,6 +30,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
+import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -1124,6 +1125,34 @@ public class CotizacionAction extends PrincipalCoreAction
 	            		);
 	            logger.debug("cdorddoc: {}",cdorddoc);
 	            
+	            List<Map<String,String>> docsATransferir = cotizacionManager.generarDocumentosBaseDatos(
+	            		cdorddoc
+	            		,nmpoliza
+	            		,ntramite
+	            		);
+	            
+	            String rutaDocsBaseDatos = consultasManager.recuperarTparagen(ParametroGeneral.DIRECTORIO_REPORTES);
+	            logger.debug(Utils.join("\nrutaDocsBaseDatos:",rutaDocsBaseDatos));
+	            
+	            for(Map<String,String>doc:docsATransferir)
+	            {
+	            	try
+	            	{
+	            		String origen  = Utils.join(rutaDocsBaseDatos,doc.get("CDDOCUME"));
+	            		String destino = Utils.join(getText("ruta.documentos.poliza"),"/",ntramite,"/",doc.get("CDDOCUME"));
+	            		logger.debug(Utils.log("\nIntentando mover desde:",origen,",hacia:",destino));
+	            		FileUtils.moveFile(
+	            				new File(origen)
+	            				,new File(destino)
+	            				);
+	            	}
+	            	catch(Exception ex)
+	            	{
+	            		logger.error("Error al transferir archivo ",ex);
+	            	}
+	            }
+	            
+	            /*
 	            List<Map<String,String>> docs = cotizacionManager.recuperarListaDocumentosParametrizados(
 	            		cdorddoc
 	            		,nmpoliza
@@ -1134,6 +1163,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				{
 					HttpUtil.generaArchivo(doc.get("C_COMMAND"),rutaCarpeta+"/"+doc.get("NOM_PDF"));
 				}
+				*/
 	            
 	            /*
 	            List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
@@ -9339,6 +9369,11 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public void setServiciosManager(ServiciosManager serviciosManager) {
 		this.serviciosManager = serviciosManager;
+	}
+	
+	public static void main(String[] args)
+	{
+		FTPSUtils.downloadChildrenFiles("10.1.1.134", "weblogic", "weblogic123", "/home/jtezva/Escritorio/destino", "/export/home/weblogic/origen");
 	}
 
 }
