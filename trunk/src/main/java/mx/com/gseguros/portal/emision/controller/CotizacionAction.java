@@ -7562,7 +7562,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                    , "&desformat=PDF"
 	                    , "&userid="        , getText("pass.servidor.reports")
 	                    , "&ACCESSIBLE=YES"
-	                    , "&report="        , getText("rdf.cotizacion2.nombre."+cdtipsit)
+	                    , "&report="        , getText("rdf.resumen.cotizacion.col."+cdramo)
 	                    , "&paramform=no"
 	                    );
 				String nombreArchivoResumenCotizacion = "resumen_cotizacion_col.pdf";
