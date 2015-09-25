@@ -1116,14 +1116,15 @@ debug("validarYGuardar flag:2");
 	    editorRFCAp2=Ext.create('Ext.form.TextField',
         {
             allowBlank : false
+            ,enableKeyEvents: true
             ,listeners :
             {
-                'blur' : function( field )
+                specialkey : function( field, event )
                 {
 //                	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",'');
 //                	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'N');
 //                	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdideper",'');
-                    if(field.getValue().length>8)
+                    if( event.getKey() == event.ENTER && field.getValue().length>8)
                     {
                         clearTimeout(timeoutBuscarRFCBp2);
                         timeoutBuscarRFCBp2=setTimeout(function()
@@ -1249,9 +1250,10 @@ debug("validarYGuardar flag:2");
 	    editorRFCBp2=Ext.create('Ext.form.TextField',
         {
             allowBlank : false
+            ,enableKeyEvents: true
             ,listeners :
             {
-            	'blur' : function( field )
+            	specialkey : function( field, event )
             	{
             		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",'');
             		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'N');
@@ -1260,7 +1262,7 @@ debug("validarYGuardar flag:2");
 
             		var esContratante = gridPersonasp2.getSelectionModel().getLastSelected().get('estomador');
             		
-            		if(field.getValue().length>8)
+            		if( event.getKey() == event.ENTER && field.getValue().length>8)
             		{
             			clearTimeout(timeoutBuscarRFCBp2);
             			timeoutBuscarRFCBp2=setTimeout(function()
