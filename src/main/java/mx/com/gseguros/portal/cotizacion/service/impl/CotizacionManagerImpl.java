@@ -1096,7 +1096,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 	
 	@Override
-	public ManagerRespuestaSmapVO cargarAutoPorClaveGS(String cdramo,String clavegs,String cdtipsit,String cdsisrol) throws Exception
+	public ManagerRespuestaSmapVO cargarAutoPorClaveGS(String cdramo,String clavegs,String cdtipsit,String cdsisrol, String tipoUnidad) throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -1106,13 +1106,14 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ clave gs=").append(clavegs)
 				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
 				.append("\n@@@@@@ cdsisrol=").append(cdtipsit)
+				.append("\n@@@@@@ tipoUnidad=").append(tipoUnidad)
 				.toString()
 				);
 		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
 		
 		try
 		{
-			Map<String,String>valores=cotizacionDAO.cargarAutoPorClaveGS(cdramo,clavegs,cdtipsit,cdsisrol);
+			Map<String,String>valores=cotizacionDAO.cargarAutoPorClaveGS(cdramo,clavegs,cdtipsit,cdsisrol,tipoUnidad);
 			resp.setSmap(valores);
 		}
 		catch(Exception ex)
