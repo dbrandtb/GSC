@@ -1247,13 +1247,14 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
-	public Map<String,String> cargarAutoPorClaveGS(String cdramo,String clavegs,String cdtipsit,String cdsisrol)throws Exception
+	public Map<String,String> cargarAutoPorClaveGS(String cdramo,String clavegs,String cdtipsit,String cdsisrol,String tipoUnidad)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdramo"   , cdramo);
 		params.put("clavegs"  , clavegs);
 		params.put("cdtipsit" , cdtipsit);
 		params.put("cdsisrol" , cdsisrol);
+		params.put("tipounidad" , tipoUnidad);
 		logger.debug(
 				new StringBuilder()
 				.append("\n******************************************")
@@ -1292,6 +1293,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("clavegs"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipounidad" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"TIPUNI"
 					,"MARCA"

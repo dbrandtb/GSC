@@ -7806,6 +7806,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		String clavegs  = null;
 		String cdtipsit = null;
 		String cdsisrol = null;
+		String tipoUnidad = null;
 		
 		//datos
 		try
@@ -7828,6 +7829,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			cdramo   = smap1.get("cdramo");
 			clavegs  = smap1.get("clavegs");
 			cdtipsit = smap1.get("cdtipsit");
+			tipoUnidad = smap1.get("tipounidad");
 			if(StringUtils.isBlank(clavegs))
 			{
 				throw new ApplicationException("No se recibio el ramo");
@@ -7863,7 +7865,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			try
 			{
-				ManagerRespuestaSmapVO resp = cotizacionManager.cargarAutoPorClaveGS(cdramo,clavegs,cdtipsit,cdsisrol);
+				ManagerRespuestaSmapVO resp = cotizacionManager.cargarAutoPorClaveGS(cdramo,clavegs,cdtipsit,cdsisrol,tipoUnidad);
 				
 				exito           = resp.isExito();
 				respuesta       = resp.getRespuesta();

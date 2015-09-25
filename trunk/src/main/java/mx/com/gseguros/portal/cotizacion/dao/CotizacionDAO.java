@@ -102,7 +102,7 @@ public interface CotizacionDAO {
 			String clave4, String clave5) throws Exception;
 
 	public Map<String, String> cargarAutoPorClaveGS(String cdramo,
-			String clavegs, String cdtipsit, String cdsisrol) throws Exception;
+			String clavegs, String cdtipsit, String cdsisrol, String tipoUnidad) throws Exception;
 
 	public Map<String, String> cargarClaveGSPorAuto(Map<String, String> params)
 			throws Exception;
