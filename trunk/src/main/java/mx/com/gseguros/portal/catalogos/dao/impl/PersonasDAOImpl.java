@@ -62,6 +62,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
             super(dataSource,"PKG_CONSULTA.P_GET_MPERSONA");
             declareParameter(new SqlParameter("pv_cdrfc_i",OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_dsnombre_i",OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_validapol_i",OracleTypes.VARCHAR));
 //            declareParameter(new SqlParameter("pv_dsnombre1_i",OracleTypes.VARCHAR));
 //            declareParameter(new SqlParameter("pv_dsapellido_i",OracleTypes.VARCHAR));
 //            declareParameter(new SqlParameter("pv_dsapellido1_i",OracleTypes.VARCHAR));

@@ -127,6 +127,7 @@ public class PersonasAction extends PrincipalCoreAction
 					smap1.get("snombre"),
 					smap1.get("apat"),
 					smap1.get("amat"),
+					smap1.get("validaTienePoliza"),
 					timestamp);
 			exito           = (Boolean)managerResult.get("exito");
 			respuesta       = (String)managerResult.get("respuesta");

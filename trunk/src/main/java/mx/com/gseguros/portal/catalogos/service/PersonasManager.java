@@ -23,7 +23,7 @@ public interface PersonasManager
 	 * Buscar personas por RFC de PKG_CONSULTA.P_GET_MPERSONA
 	 * @return exito,respuesta,respuestaOculta,listaPersonas
 	 */
-	public Map<String,Object> obtenerPersonasPorRFC(String rfc,String nombre,String snombre,String apat,String amat,long timestamp) throws Exception;
+	public Map<String,Object> obtenerPersonasPorRFC(String rfc,String nombre,String snombre,String apat,String amat, String validaTienePoliza, long timestamp) throws Exception;
 	
 	public Map<String,Object> obtenerPersonaPorCdperson(String cdperson,long timestamp) throws Exception;
 	
