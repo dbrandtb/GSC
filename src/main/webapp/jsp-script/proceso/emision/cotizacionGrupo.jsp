@@ -125,6 +125,9 @@ var _callbackAseguradoExclusiones =  function (){
    	_ventanaClausulas.close();
 };
 
+var codpostalDefinitivo;
+var cdedoDefinitivo;
+var cdmuniciDefinitivo;
 
 var expande                 = function(){};
 
@@ -800,23 +803,10 @@ Ext.onReady(function()
 										    	_fieldByName('cdrfc')    .setValue(json.smap1.CDRFC);
 										        _fieldByName('cdperson') .setValue(json.smap1.CDPERSON);
 										        
-										//        _fieldByName('nombre')   .setValue(json.smap1.DSNOMBRE + ' ' +json.smap1.DSNOMBRE1 + ' ' + json.smap1.DSAPELLIDO + ' ' + json.smap1.DSAPELLIDO1);
-										//        _fieldByName('codpostal').setValue(record.get('CODPOSTAL'));
+										        codpostalDefinitivo = json.smap1.CDPOSTAL;
+												cdedoDefinitivo = json.smap1.CDEDO;
+												cdmuniciDefinitivo = json.smap1.CDMUNICI;
 										        
-										//        _fieldByName('cdedo').heredar(true,function()
-										//        {
-										//            _fieldByName('cdedo').setValue(record.get('CDEDO'));
-										//            _fieldByName('cdmunici') .heredar(true,function()
-										//            {
-										//                _fieldByName('cdmunici') .setValue(record.get('CDMUNICI'));
-										//            });
-										//        });
-										//        
-										//        _fieldByName('dsdomici') .setValue(record.get('DSDOMICIL'));
-										//        _fieldByName('nmnumero') .setValue(record.get('NMNUMERO'));
-										//        _fieldByName('nmnumint') .setValue(record.get('NMNUMINT'));
-										//        alert(_fieldByName('cdperson').getValue());
-										
 												var params = {
 												    smap1 :
 												    {
@@ -1117,23 +1107,10 @@ Ext.onReady(function()
     	_fieldByName('cdrfc')    .setValue(json.smap1.CDRFC);
         _fieldByName('cdperson') .setValue(json.smap1.CDPERSON);
         
-//        _fieldByName('nombre')   .setValue(json.smap1.DSNOMBRE + ' ' +json.smap1.DSNOMBRE1 + ' ' + json.smap1.DSAPELLIDO + ' ' + json.smap1.DSAPELLIDO1);
-//        _fieldByName('codpostal').setValue(record.get('CODPOSTAL'));
-        
-//        _fieldByName('cdedo').heredar(true,function()
-//        {
-//            _fieldByName('cdedo').setValue(record.get('CDEDO'));
-//            _fieldByName('cdmunici') .heredar(true,function()
-//            {
-//                _fieldByName('cdmunici') .setValue(record.get('CDMUNICI'));
-//            });
-//        });
-//        
-//        _fieldByName('dsdomici') .setValue(record.get('DSDOMICIL'));
-//        _fieldByName('nmnumero') .setValue(record.get('NMNUMERO'));
-//        _fieldByName('nmnumint') .setValue(record.get('NMNUMINT'));
-//        alert(_fieldByName('cdperson').getValue());
-
+		codpostalDefinitivo = json.smap1.CDPOSTAL;
+		cdedoDefinitivo = json.smap1.CDEDO;
+		cdmuniciDefinitivo = json.smap1.CDMUNICI;
+		
 		var params = {
 		    smap1 :
 		    {
@@ -3419,6 +3396,13 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                 conceptos['complemento']           = true==complemento?'S':'N';
                 conceptos['nombreCensoConfirmado'] = nombreCensoParaConfirmar;
                 conceptos['asincrono']             = asincrono;
+                
+                if(_p21_smap1.cdsisrol=='SUSCRIPTOR'&& (_p21_smap1.status-0==19 || _p21_smap1.status-0==21 || _p21_smap1.status-0==23)){
+                	conceptos.codpostal = codpostalDefinitivo; 
+                	conceptos.cdedo     = cdedoDefinitivo; 
+                	conceptos.cdmunici  = cdmuniciDefinitivo; 
+                }
+                
                 var grupos = [];
                 _p21_storeGrupos.each(function(record)
                 {
