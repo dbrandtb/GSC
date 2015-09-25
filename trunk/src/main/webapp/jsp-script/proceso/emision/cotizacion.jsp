@@ -140,6 +140,7 @@ function _0_cargarNumPasajerosAuto()
             'smap1.cdramo'    : _0_smap1.cdramo
             ,'smap1.clavegs'  : _fieldByName('parametros.pv_otvalor22').getValue()
             ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+            ,'smap1.tipounidad' : _fieldByLabel('TIPO DE UNIDAD').getValue()
         }
         ,success : function(response)
         {
