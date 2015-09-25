@@ -581,6 +581,72 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						,nmsuplem
 						);
 			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_POLIZAS_PARA_EXPLOTAR_DOCS))
+			{
+				paso = "Recuperando polizas para explotar documentos";
+				logger.debug("Paso: {}",paso);
+				
+				Map<String,String>poliza = new HashMap<String,String>();
+				poliza.put("cdunieco" , "1000");
+				poliza.put("cdramo"   , "4");
+				poliza.put("dsramo"   , "MULTISALUD");
+				poliza.put("ramo"     , "209");
+				poliza.put("nmpoliza" , "30012");
+				poliza.put("tipoflot" , "");
+				poliza.put("nsuplogi" , "0");
+				poliza.put("dstipsup" , "EMISION");
+				poliza.put("fechapro" , "01/01/2015");
+				
+				Map<String,String>poliza2 = new HashMap<String,String>();
+				poliza2.put("cdunieco" , "1000");
+				poliza2.put("cdramo"   , "4");
+				poliza2.put("dsramo"   , "MULTISALUD");
+				poliza2.put("ramo"     , "209");
+				poliza2.put("nmpoliza" , "30012");
+				poliza2.put("tipoflot" , "");
+				poliza2.put("nsuplogi" , "1");
+				poliza2.put("dstipsup" , "MODIFICACION DE EDAD ASEGURADOS");
+				poliza2.put("fechapro" , "02/01/2015");
+				
+				Map<String,String>poliza3 = new HashMap<String,String>();
+				poliza3.put("cdunieco" , "1000");
+				poliza3.put("cdramo"   , "4");
+				poliza3.put("dsramo"   , "MULTISALUD");
+				poliza3.put("ramo"     , "209");
+				poliza3.put("nmpoliza" , "30012");
+				poliza3.put("tipoflot" , "");
+				poliza3.put("nsuplogi" , "2");
+				poliza3.put("dstipsup" , "CAMBIO DE DOMICILIO DEL ASEGURADO TITULAR");
+				poliza3.put("fechapro" , "03/01/2015");
+				
+				Map<String,String>poliza4 = new HashMap<String,String>();
+				poliza4.put("cdunieco" , "1000");
+				poliza4.put("cdramo"   , "4");
+				poliza4.put("dsramo"   , "MULTISALUD");
+				poliza4.put("ramo"     , "209");
+				poliza4.put("nmpoliza" , "30013");
+				poliza4.put("tipoflot" , "F");
+				poliza4.put("nsuplogi" , "0");
+				poliza4.put("dstipsup" , "EMISION");
+				poliza4.put("fechapro" , "02/02/2015");
+				
+				Map<String,String>poliza5 = new HashMap<String,String>();
+				poliza5.put("cdunieco" , "1000");
+				poliza5.put("cdramo"   , "4");
+				poliza5.put("dsramo"   , "MULTISALUD");
+				poliza5.put("ramo"     , "209");
+				poliza5.put("nmpoliza" , "30013");
+				poliza5.put("tipoflot" , "F");
+				poliza5.put("nsuplogi" , "1");
+				poliza5.put("dstipsup" , "CAMBIO DE CONTRATANTE");
+				poliza5.put("fechapro" , "05/02/2015");
+				
+				lista.add(poliza);
+				lista.add(poliza2);
+				lista.add(poliza3);
+				lista.add(poliza4);
+				lista.add(poliza5);
+			}
 		}
 		catch(Exception ex)
 		{

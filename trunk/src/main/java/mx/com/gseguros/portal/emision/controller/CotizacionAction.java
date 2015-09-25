@@ -1151,68 +1151,6 @@ public class CotizacionAction extends PrincipalCoreAction
 	            		logger.error("Error al transferir archivo ",ex);
 	            	}
 	            }
-	            
-	            /*
-	            List<Map<String,String>> docs = cotizacionManager.recuperarListaDocumentosParametrizados(
-	            		cdorddoc
-	            		,nmpoliza
-	            		,ntramite
-	            		);
-	            
-	            for(Map<String,String>doc:docs)
-				{
-					HttpUtil.generaArchivo(doc.get("C_COMMAND"),rutaCarpeta+"/"+doc.get("NOM_PDF"));
-				}
-				*/
-	            
-	            /*
-	            List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
-						cdunieco
-						,cdramo
-						,"M"
-						,nmpolizaEmi
-						,nmsuplemEmi
-						,ntramite
-						);
-				
-				for(Map<String,String> docu:listaDocu)
-				{
-					logger.debug("docu iterado: "+docu);
-					String descripc=docu.get("descripc");
-					String descripl=docu.get("descripl");
-					String url=new StringBuilder()
-							.append(this.getText("ruta.servidor.reports"))
-							.append("?destype=cache")
-							.append("&desformat=PDF")
-							.append("&userid=")       .append(this.getText("pass.servidor.reports"))
-							.append("&report=")       .append(descripl)
-							.append("&paramform=no")
-							.append("&ACCESSIBLE=YES")
-							.append("&p_unieco=")     .append(cdunieco)
-							.append("&p_ramo=")       .append(cdramo)
-							.append("&p_estado='M'")
-							.append("&p_poliza=")     .append(nmpolizaEmi)
-							.append("&p_suplem=")     .append(nmsuplemEmi)
-							.append("&desname=")      .append(rutaCarpeta).append("/").append(descripc)
-							.toString();
-					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
-					{
-						// C R E D E N C I A L _ X X X X X X . P D F
-						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-						url = new StringBuilder(url).append("&p_cdperson=").append(descripc.substring(11, descripc.lastIndexOf("."))).toString();
-					}
-					logger.debug(""
-							+ "\n#################################"
-							+ "\n###### Se solicita reporte ######"
-							+ "\na "+url);
-					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					logger.debug(""
-							+ "\n######                    ######"
-							+ "\n###### reporte solicitado ######"
-							+ "\n################################"
-							+ "");
-				}
-				*/
 			}
 			catch(Exception ex)
 			{
