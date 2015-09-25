@@ -182,6 +182,8 @@
         <pattern>/jsp-script/proceso/estadisticas/*.jsp</pattern>
         
         <pattern>/persona/*.action*</pattern>
+        
+        <pattern>/jsp-script/consultas/*.jsp</pattern>
 
    	</decorator>
 	
