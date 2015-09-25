@@ -369,6 +369,7 @@ Ext.onReady(function()
 					                        		}
 				                        		};
 				                        		operation.params['smap1.esSalud'] = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue(); //SALUD o DAÑOS
+				                        		operation.params['smap1.validaTienePoliza'] = _esCargaClienteNvo?'S':'N';
 				                        		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].disable();
 				                        		Ext.ComponentQuery.query('#companiaGroupId')[Ext.ComponentQuery.query('#companiaGroupId').length-1].disable();
 				                        	},
@@ -478,6 +479,7 @@ Ext.onReady(function()
 				                        			}
 				                        		};
 				                        		operation.params['smap1.esSalud'] = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue(); //SALUD o DAÑOS
+				                        		operation.params['smap1.validaTienePoliza'] = _esCargaClienteNvo?'S':'N';
 				                        		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].disable();
 				                        		Ext.ComponentQuery.query('#companiaGroupId')[Ext.ComponentQuery.query('#companiaGroupId').length-1].disable();
 				                        	},
