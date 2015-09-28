@@ -6,9 +6,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// urls //////
-var _p43_urlMarcarPolizaCancelar = '<s:url namespace="/endosos"     action="marcarPolizaCancelarPorEndoso"     />';
-var _p43_urlConfirmar            = '<s:url namespace="/endosos"     action="confirmarEndosoCancelacionPolAuto" />';
-var _p43_urlValidaCancProrrata   = '<s:url namespace="/cancelacion" action="validaCancelacionAProrrata"        />';
+var _p43_urlMarcarPolizaCancelar   = '<s:url namespace="/endosos"     action="marcarPolizaCancelarPorEndoso"     />';
+var _p43_urlConfirmar              = '<s:url namespace="/endosos"     action="confirmarEndosoCancelacionPolAuto" />';
+var _p43_urlValidaRazonCancelacion = '<s:url namespace="/cancelacion" action="validaRazonCancelacion"            />';
 ////// urls //////
 
 ////// variables //////
@@ -86,45 +86,99 @@ Ext.onReady(function()
                                 return;
                             }
                             
-                            me.disable();
-                            me.setText('Cargando...');
-                            Ext.Ajax.request(
+                            try
                             {
-                                url      : _p43_urlConfirmar
-                                ,params  :
+                                var form = me.up('form');
+                                var ck   = 'Validando motivo';
+                                _setLoading(true,form);
+                                Ext.Ajax.request(
                                 {
-                                    'smap1.cdunieco'  : _p43_smap1.CDUNIECO
-                                    ,'smap1.cdramo'   : _p43_smap1.CDRAMO
-                                    ,'smap1.estado'   : _p43_smap1.ESTADO
-                                    ,'smap1.nmpoliza' : _p43_smap1.NMPOLIZA
-                                    ,'smap1.cdrazon'  : _fieldByName('cdrazon').getValue()
-                                    ,'smap1.feefecto' : _p43_smap1.FEEFECTO
-                                    ,'smap1.fevencim' : _p43_smap1.FEVENCIM
-                                    ,'smap1.fecancel' : Ext.Date.format(_fieldByName('fecancel').getValue(),'d/m/Y')
-                                    ,'smap1.cdtipsup' : _p43_smap1.cdtipsup
-                                }
-                                ,success : function(response)
-                                {
-                                    me.setText('Confirmar');
-                                    me.enable();
-                                    var json = Ext.decode(response.responseText);
-                                    debug('### confirmar:',json);
-                                    if(json.success)
+                                    url     : _p43_urlValidaRazonCancelacion
+                                    ,params :
                                     {
-                                        mensajeCorrecto('Endoso generado','Endoso generado');
-                                        marendNavegacion(2);
+                                        'smap1.cdunieco'  : _p43_smap1.CDUNIECO
+                                        ,'smap1.cdramo'   : _p43_smap1.CDRAMO
+                                        ,'smap1.estado'   : _p43_smap1.ESTADO
+                                        ,'smap1.nmpoliza' : _p43_smap1.NMPOLIZA
+                                        ,'smap1.cdrazon'  : _fieldByName('cdrazon').getValue()
                                     }
-                                    else
+                                    ,success : function(response)
                                     {
-                                        mensajeError(json.respuesta);
+                                        _setLoading(false,form);
+                                        var ck = 'Decodificando respuesta al validar motivo';
+                                        try
+                                        {
+                                            var json = Ext.decode(response.responseText);
+                                            debug('### validar:',json);
+                                            if(json.success==true)
+                                            {
+                                                _setLoading(true,form);
+                                                Ext.Ajax.request(
+					                            {
+					                                url      : _p43_urlConfirmar
+					                                ,params  :
+					                                {
+					                                    'smap1.cdunieco'  : _p43_smap1.CDUNIECO
+					                                    ,'smap1.cdramo'   : _p43_smap1.CDRAMO
+					                                    ,'smap1.estado'   : _p43_smap1.ESTADO
+					                                    ,'smap1.nmpoliza' : _p43_smap1.NMPOLIZA
+					                                    ,'smap1.cdrazon'  : _fieldByName('cdrazon').getValue()
+					                                    ,'smap1.feefecto' : _p43_smap1.FEEFECTO
+					                                    ,'smap1.fevencim' : _p43_smap1.FEVENCIM
+					                                    ,'smap1.fecancel' : Ext.Date.format(_fieldByName('fecancel').getValue(),'d/m/Y')
+					                                    ,'smap1.cdtipsup' : _p43_smap1.cdtipsup
+					                                }
+					                                ,success : function(response)
+					                                {
+					                                    _setLoading(false,form);
+					                                    var ck = 'Decodificando respuesta al cancelar';
+					                                    try
+					                                    {
+					                                        var json = Ext.decode(response.responseText);
+					                                        debug('### confirmar:',json);
+					                                        if(json.success)
+					                                        {
+					                                            mensajeCorrecto('Endoso generado','Endoso generado');
+					                                            marendNavegacion(2);
+					                                        }
+					                                        else
+					                                        {
+					                                            mensajeError(json.respuesta);
+					                                        }
+					                                    }
+					                                    catch(e)
+					                                    {
+					                                        manejaException(e,ck);
+					                                    }
+					                                }
+					                                ,failure : function()
+					                                {
+					                                    _setLoading(false,form);
+					                                    errorComunicacion(null,'Error cancelando');
+					                                }
+					                            });
+                                            }
+                                            else
+                                            {
+                                                mensajeError(json.respuesta);
+                                            }
+                                        }
+                                        catch(e)
+                                        {
+                                            manejaException(e,ck);
+                                        }
                                     }
-                                }
-                                ,failure : function()
-                                {
-                                    me.setText('Confirmar');
-                                    me.enable();
-                                }
-                            });
+                                    ,failure : function()
+                                    {
+                                        _setLoading(false,form);
+                                        errorComunicacion(null,'Error al validar motivo');
+                                    }
+                                });
+                            }
+                            catch(e)
+                            {
+                                manejaException(e,ck);
+                            }
                         }
                     }
                 ]
