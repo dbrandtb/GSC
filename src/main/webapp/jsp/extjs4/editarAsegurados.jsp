@@ -62,6 +62,8 @@
 	var editorRFCAp2;
 	var editorRFCBp2;
 	var timeoutBuscarRFCBp2;
+
+	var campoAactualizar;
 	
 	var destruirContLoaderPersona;
 	var obtieneDatosClienteContratante;
@@ -1258,12 +1260,12 @@ debug("validarYGuardar flag:2");
             	{
             		var valorFieldRFC = field.getValue();
             		
-            		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",'');
-            		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'N');
-            		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideper",'');
-            		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideext",'');
+            		campoAactualizar.set("cdperson",'');
+            		campoAactualizar.set("swexiper",'N');
+            		campoAactualizar.set("cdideper",'');
+            		campoAactualizar.set("cdideext",'');
 
-            		var esContratante = gridPersonasp2.getSelectionModel().getLastSelected().get('estomador');
+            		var esContratante = campoAactualizar.get('estomador');
             		
             		if(valorFieldRFC.length>8)
             		{
@@ -1332,16 +1334,16 @@ debug("validarYGuardar flag:2");
 			            		    		    	                               debug(record);
 			            		    		    	                               debug('cliente obtenido de WS? ', json.clienteWS);
 			            		    		    	                               
-			            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
+			            		    		    	                               campoAactualizar.set("cdrfc",record.get("RFCCLI"));
 			            		    		    	                               
 			            		    		    	                               if(json.clienteWS){
-			            		    		    	                            	   gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
-			            		    		    	                            	   gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideext",record.get("CDIDEEXT"));
+			            		    		    	                            	   campoAactualizar.set("cdideper",record.get("CDIDEPER"));
+			            		    		    	                            	   campoAactualizar.set("cdideext",record.get("CDIDEEXT"));
 			            		    		    	                               }else{
-			            		    		    	                            	   gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
-			            		    		    	                            	   gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CDIDEPER"));
-			            		    		    	                            	   gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideext",record.get("CDIDEEXT"));
-				            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'S');
+			            		    		    	                            	   campoAactualizar.set("cdperson",record.get("CLAVECLI"));
+			            		    		    	                            	   campoAactualizar.set("cdideper",record.get("CDIDEPER"));
+			            		    		    	                            	   campoAactualizar.set("cdideext",record.get("CDIDEEXT"));
+				            		    		    	                               campoAactualizar.set("swexiper",'S');
 			            		    		    	                               }
 			            		    		    	                               
 			            		    		    	                               grid.up().up().destroy();
@@ -1390,6 +1392,10 @@ debug("validarYGuardar flag:2");
 		            		});
             			},0);
                     }
+            	},
+            	'change' : function(field){
+            			//Ultimo record modificado
+            			campoAactualizar = gridPersonasp2.getSelectionModel().getLastSelected();
             	}
             }
         });
