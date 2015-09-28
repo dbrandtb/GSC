@@ -2395,8 +2395,8 @@ Ext.onReady(function()
         var changeFunction = function()
         {
             debug('>comboTipoValor change');
-            itemSumaAsegu.setValue('');
-            itemSumaAsegu.setReadOnly((comboTipoValor.getValue()+'x')=='2x');
+            //itemSumaAsegu.setValue('');
+            //itemSumaAsegu.setReadOnly((comboTipoValor.getValue()+'x')=='2x');
             
             debug('<comboTipoValor change');
         };
