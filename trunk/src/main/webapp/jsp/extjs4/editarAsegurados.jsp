@@ -1116,15 +1116,17 @@ debug("validarYGuardar flag:2");
 	    editorRFCAp2=Ext.create('Ext.form.TextField',
         {
             allowBlank : false
-            ,enableKeyEvents: true
             ,listeners :
             {
-                specialkey : function( field, event )
+                'blur' : function( field )
                 {
 //                	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",'');
 //                	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'N');
 //                	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdideper",'');
-                    if( event.getKey() == event.ENTER && field.getValue().length>8)
+                	
+                	var valorFieldRFC = field.getValue();
+                	
+                    if(valorFieldRFC.length>8)
                     {
                         clearTimeout(timeoutBuscarRFCBp2);
                         timeoutBuscarRFCBp2=setTimeout(function()
@@ -1136,7 +1138,7 @@ debug("validarYGuardar flag:2");
                                 ,timeout: 240000
                                 ,params :
                                 {
-                                    'map1.pv_rfc_i'     : field.getValue(),
+                                    'map1.pv_rfc_i'     : valorFieldRFC,
                                     'map1.cdtipsit'     : inputCdtipsitp2,
                                     'map1.pv_cdunieco_i':inputCduniecop2,
                    	        		'map1.pv_cdramo_i'  :inputCdramop2,
@@ -1250,11 +1252,12 @@ debug("validarYGuardar flag:2");
 	    editorRFCBp2=Ext.create('Ext.form.TextField',
         {
             allowBlank : false
-            ,enableKeyEvents: true
             ,listeners :
             {
-            	specialkey : function( field, event )
+            	'blur' : function( field , event)
             	{
+            		var valorFieldRFC = field.getValue();
+            		
             		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",'');
             		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'N');
             		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideper",'');
@@ -1262,7 +1265,7 @@ debug("validarYGuardar flag:2");
 
             		var esContratante = gridPersonasp2.getSelectionModel().getLastSelected().get('estomador');
             		
-            		if( event.getKey() == event.ENTER && field.getValue().length>8)
+            		if(valorFieldRFC.length>8)
             		{
             			clearTimeout(timeoutBuscarRFCBp2);
             			timeoutBuscarRFCBp2=setTimeout(function()
@@ -1274,7 +1277,7 @@ debug("validarYGuardar flag:2");
 		            			,timeout: 240000
 		            			,params :
 		            			{
-		            				'map1.pv_rfc_i'     : field.getValue(),
+		            				'map1.pv_rfc_i'     : valorFieldRFC,
 		            				'map1.cdtipsit'     : inputCdtipsitp2,
 		            				'map1.pv_cdunieco_i':inputCduniecop2,
                    	        		'map1.pv_cdramo_i'  :inputCdramop2,
