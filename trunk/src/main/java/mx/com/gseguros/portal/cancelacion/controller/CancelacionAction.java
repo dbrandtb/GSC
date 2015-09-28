@@ -549,10 +549,11 @@ public class CancelacionAction extends PrincipalCoreAction
 			String cdrazon  = smap1.get("cdrazon");
 			
 			Utils.validate(
-					cdunieco  , "No se recibio la sucursal"
-					,cdramo   , "No se recibio el producto"
-					,estado   , "No se recibio el estado de la poliza"
-					,nmpoliza , "No se recibio el numero de poliza"
+					cdunieco  , "No se recibi\u00F3 la sucursal"
+					,cdramo   , "No se recibi\u00F3 el producto"
+					,estado   , "No se recibi\u00F3 el estado de la p\u00F3liza"
+					,nmpoliza , "No se recibi\u00F3 el numero de p\u00F3liza"
+					,cdrazon  , "No se recibi\u00F3 el motivo"
 					);
 			
 			cancelacionManager.validaRazonCancelacion(cdunieco,cdramo,estado,nmpoliza,cdrazon);
