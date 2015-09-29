@@ -317,9 +317,9 @@ Ext.onReady(function()
 	    }
 	});
 	
-	_fieldByName('NMNUMERO').regex = /^[A-Za-z0-9-]*$/;
+	_fieldByName('NMNUMERO').regex = /^[A-Za-z0-9-\s]*$/;
     _fieldByName('NMNUMERO').regexText = 'Solo d&iacute;gitos, letras y guiones';
-    _fieldByName('NMNUMINT').regex = /^[A-Za-z0-9-]*$/;
+    _fieldByName('NMNUMINT').regex = /^[A-Za-z0-9-\s]*$/;
     _fieldByName('NMNUMINT').regexText = 'Solo d&iacute;gitos, letras y guiones';
     
     
