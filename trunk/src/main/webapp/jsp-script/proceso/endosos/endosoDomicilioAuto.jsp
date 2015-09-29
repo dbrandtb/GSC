@@ -491,9 +491,9 @@ Ext.onReady(function(){
     });
     
     
-    _fieldByName('smap1.NMNUMERO').regex = /^[A-Za-z0-9-]*$/;
+    _fieldByName('smap1.NMNUMERO').regex = /^[A-Za-z0-9-\s]*$/;
     _fieldByName('smap1.NMNUMERO').regexText = 'Solo d&iacute;gitos, letras y guiones';
-    _fieldByName('smap1.NMNUMINT').regex = /^[A-Za-z0-9-]*$/;
+    _fieldByName('smap1.NMNUMINT').regex = /^[A-Za-z0-9-\s]*$/;
     _fieldByName('smap1.NMNUMINT').regexText = 'Solo d&iacute;gitos, letras y guiones';
     
     Ext.ComponentQuery.query('[name=smap1.NMTELEFO]')[Ext.ComponentQuery.query('[name=smap1.NMTELEFO]').length-1].hide();
