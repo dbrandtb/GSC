@@ -701,17 +701,16 @@ public class EndososAutoAction extends PrincipalCoreAction
 			
 			String FEEFECTO[] = smap1.get("FEEFECTO").toString().split("\\/");
 			String FEPROREN[] = smap1.get("FEPROREN").toString().split("\\/");
-			Calendar cal1 = Calendar.getInstance();
-	        Calendar cal2 = Calendar.getInstance();
-	        // Establecer las fechas
-	        cal1.set(Integer.parseInt(FEEFECTO[2].toString()), Integer.parseInt(FEEFECTO[1].toString()) , Integer.parseInt(FEEFECTO[0].toString()));
-	        cal2.set(Integer.parseInt(FEPROREN[2].toString()), Integer.parseInt(FEPROREN[1].toString()) , Integer.parseInt(FEPROREN[0].toString()));
-	        long milis1 = cal1.getTimeInMillis();
-	        long milis2 = cal2.getTimeInMillis();
-	        long diff = milis2 - milis1;
-	        long diffDays = diff / (24 * 60 * 60 * 1000);
-	        
-			smap1.put("pv_difDate",diffDays+"");
+			
+			final long MILLSECS_PER_DAY = 24 * 60 * 60 * 1000;
+			Calendar feproren = new GregorianCalendar(Integer.parseInt(FEPROREN[2].toString()), Integer.parseInt(FEPROREN[1].toString()) - 1 ,Integer.parseInt(FEPROREN[0].toString())); 
+			java.sql.Date feprorenMod = new java.sql.Date(feproren.getTimeInMillis());
+			
+			Calendar fefecto = new GregorianCalendar(Integer.parseInt(FEEFECTO[2].toString()), Integer.parseInt(FEEFECTO[1].toString()) - 1 ,Integer.parseInt(FEEFECTO[0].toString()));  
+			java.sql.Date fefectoMod = new java.sql.Date(fefecto.getTimeInMillis());
+			
+			long diferencia = ( feprorenMod.getTime() - fefectoMod.getTime() )/MILLSECS_PER_DAY; 
+			smap1.put("pv_difDate",diferencia+"");
 			
 	        Date dateMin = java.sql.Date.valueOf(FEEFECTO[2].toString()+"-"+FEEFECTO[1].toString()+"-"+FEEFECTO[0].toString());
 	        Calendar calMin = new GregorianCalendar();
