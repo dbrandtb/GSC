@@ -6399,6 +6399,8 @@ public class CotizacionManagerImpl implements CotizacionManager
     		,"\n@@@@@@ cotizar @@@@@@"
    			,"\n@@@@@@@@@@@@@@@@@@@@@"
    			));
+    	
+    	resp.setRespuesta("El n\u00FAmero de p\u00F3liza es : "+nmpoliza);
     	return resp;
     }
     

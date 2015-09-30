@@ -173,7 +173,7 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
     		
     		params.put("ntramite", ntramite);
     		
-    		respuesta = "Proceso correcto";
+    		respuesta = "Proceso correcto no. tr\u00E1mite : "+ntramite+" no. p\u00F3liza : "+params.get("nmpoliza");
     		success   = true;
     	} catch(Exception e) {
     		respuesta = Utils.manejaExcepcion(e);
