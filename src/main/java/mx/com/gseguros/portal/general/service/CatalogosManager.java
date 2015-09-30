@@ -152,4 +152,10 @@ public interface CatalogosManager {
     public List<GenericVO> recuperarGruposPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
     
     public List<GenericVO> recuperarSubramos(String cdramo) throws Exception;
+    
+    @Deprecated
+    public List<GenericVO> recuperarTiposRamo() throws Exception;
+    
+    @Deprecated
+    public List<GenericVO> recuperarRamosPorTipoRamo(String cdtipram) throws Exception;
 }

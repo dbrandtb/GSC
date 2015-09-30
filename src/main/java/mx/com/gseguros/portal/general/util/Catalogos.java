@@ -118,7 +118,9 @@ public enum Catalogos {
 	SECUENCIA_IVA(""),
 	CVECOLUMNA("CVECOLUMNA"),
 	FORMATOFECHA("FORMFECHA"),
-	ATRIBUTOLAYOUT("")
+	ATRIBUTOLAYOUT(""),
+	TIPOS_RAMO(""),
+	RAMOS_X_TIPORAMO("")
 	;
 
 	private String cdTabla;
