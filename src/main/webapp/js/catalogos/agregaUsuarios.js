@@ -114,7 +114,7 @@ Ext.onReady(function() {
                                        }else {
                                            panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Id Agente');
                                            panelPersona.getForm().findField('params.cdusuari').maxLength = 15;
-                                           panelPersona.getForm().findField('params.cdusuari').regex = /^A[0-9]+[a-zA-Z0-9]*$/;
+                                           panelPersona.getForm().findField('params.cdusuari').regex = /^A[0-9]+$/;
                                            panelPersona.getForm().findField('params.cdusuari').regexText = 'La clave del Agente debe de comenzar con A y seguir de cualquier n&uacute;mero';
                                            
                                            fieldPer.show();
@@ -166,7 +166,7 @@ Ext.onReady(function() {
                                }else {
                                    panelPersona.getForm().findField('params.cdusuari').setFieldLabel('Id Agente');
                                    panelPersona.getForm().findField('params.cdusuari').maxLength = 15;
-                                   panelPersona.getForm().findField('params.cdusuari').regex = /^A[0-9]+[a-zA-Z0-9]*$/;
+                                   panelPersona.getForm().findField('params.cdusuari').regex = /^A[0-9]+$/;
                                    panelPersona.getForm().findField('params.cdusuari').regexText = 'La clave del Agente debe de comenzar con A y seguir de cualquier n&uacute;mero';
                                    
                                    fieldPer.show();
