@@ -8,6 +8,7 @@ import mx.com.gseguros.portal.general.service.ServiciosManager;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -31,7 +32,7 @@ public class EmisionDirectaAction extends PrincipalCoreAction
 	private Map<String,String> params;
 	private boolean            success;
 	private String             respuesta;
-	
+	private String             detalleRespuesta;
 	@Autowired
 	private ServiciosManager serviciosManager;
 	
@@ -87,6 +88,7 @@ public class EmisionDirectaAction extends PrincipalCoreAction
 			
 		} catch(Exception e) {
 			respuesta = Utils.manejaExcepcion(e);
+			detalleRespuesta = ExceptionUtils.getStackTrace(e);
 		}
 		
 		logger.debug("Fin de emitirIndividual Directa");
@@ -126,4 +128,11 @@ public class EmisionDirectaAction extends PrincipalCoreAction
 		this.serviciosManager = serviciosManager;
 	}
 	
+	public String getDetalleRespuesta() {
+		return detalleRespuesta;
+	}
+	
+	public void setDetalleRespuesta(String detalleRespuesta) {
+		this.detalleRespuesta = detalleRespuesta;
+	}
 }
