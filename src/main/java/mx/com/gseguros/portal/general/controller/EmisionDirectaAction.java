@@ -84,7 +84,7 @@ public class EmisionDirectaAction extends PrincipalCoreAction
 			params.putAll(result);
 			
 			success = true;
-			respuesta= "Emisi\u00F3n completa";
+			respuesta= "Emisi\u00F3n completa no. de p\u00F3liza : "+params.get("nmpoliza")+" , no. de p\u00F3liza externo : "+params.get("nmpoliex");
 			
 		} catch(Exception e) {
 			respuesta = Utils.manejaExcepcion(e);
