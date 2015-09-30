@@ -9,5 +9,7 @@
 
 <c:set var="icons" value="${pageContext.request.contextPath}/resources/fam3icons/icons/" />
 
+<c:set var="defines" value="${pageContext.request.contextPath}/resources/ext-defines/" />
+
 <c:set var="now" value="<%= new java.util.Date() %>" />
 <fmt:formatDate pattern="yyyyMMddHHmm" value="${now}" var="now" />

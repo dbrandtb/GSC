@@ -21,22 +21,56 @@ var _p49_dirIconos = '${icons}';
 ////// overrides //////
 
 ////// componentes dinamicos /////
+var _p49_itemCdunieco  = <s:property  value="items.itemCdunieco"      escapeHtml="false" />;
 var _p49_formBusqItems = [<s:property value="items.itemsFormBusq"     escapeHtml="false" />];
 var _p49_gridPolFields = [<s:property value="items.gridPolizasFields" escapeHtml="false" />];
 var _p49_gridPolCols   = [<s:property value="items.gridPolizasCols"   escapeHtml="false" />];
 
-_p49_gridPolCols.push(
+
+var _p49_formBusqItemsCustom = [];
+_p49_formBusqItemsCustom.push(_p49_itemCdunieco);
+for(var i in _p49_formBusqItems)
 {
-    xtype    : 'actioncolumn'
-    ,width   : 30
-    ,icon    : '${icons}printer.png'
-    ,tooltip : 'Ver documentos'
-});
+    if(i==2)
+    {
+        _p49_formBusqItemsCustom.push(Ext.create('Ext.grid.Panel',
+        {
+            itemId       : '_p49_gridSucursales'
+            ,width       : 255
+            ,height      : 80
+            ,hideHeaders : true
+            ,rowspan     : 2
+            ,store       : Ext.create('Ext.data.Store',
+            {
+                model : 'Generic'
+                ,data : []
+            })
+            ,columns :
+            [
+                {
+                    dataIndex : 'value'
+                    ,flex     : 1
+                }
+                ,{
+                    xtype    : 'actioncolumn'
+                    ,width   : 30
+                    ,icon    : '${icons}delete.png'
+                    ,handler : function(view,row,col,item,e,record){ _fieldById('_p49_gridSucursales').getStore().remove(record); }
+                }
+            ]
+        }));
+    }
+    _p49_formBusqItemsCustom.push(_p49_formBusqItems[i]);
+}
 
 ////// componentes dinamicos //////
 
 Ext.onReady(function()
 {
+    ////// requires //////
+    Ext.require('${defines}VentanaImpresionLote');
+    ////// requires //////
+
     ////// modelos //////
     Ext.define('_p49_modeloPoliza',
     {
@@ -86,7 +120,7 @@ Ext.onReady(function()
                 itemId       : '_p48_formBusq'
                 ,title       : 'B\u00DASQUEDA DE P\u00D3LIZAS'
                 ,defaults    : { style : 'margin:5px;' }
-                ,items       : _p49_formBusqItems
+                ,items       : _p49_formBusqItemsCustom
                 ,layout      :
                 {
                     type     : 'table'
@@ -104,6 +138,19 @@ Ext.onReady(function()
                             try
                             {
                                 var form = me.up('form');
+                                
+                                if(!form.isValid())
+                                {
+                                    throw 'Favor de capturar todos los campos requeridos';
+                                }
+                                
+                                if(_fieldById('_p49_gridSucursales').getStore().getCount()==0)
+                                {
+                                    throw 'Seleccione al menos una sucursal';
+                                }
+                                
+                                _fieldById('_p49_botonImprimir').disable();
+                                
                                 _setLoading(true,form);
                                 _p49_loadPolizas(
                                     {
@@ -124,23 +171,81 @@ Ext.onReady(function()
                         ,handler : function(me)
                         {
                             me.up('form').getForm().reset();
+                            _fieldById('_p49_gridSucursales').getStore().removeAll();
                         }
                     }
                 ]
             })
             ,Ext.create('Ext.grid.Panel',
             {
-                itemId   : '_p49_gridPolizas'
-                ,title   : 'RESULTADOS'
-                ,columns : _p49_gridPolCols
-                ,height  : 250
-                ,store   : _p49_storePolizas
+                itemId    : '_p49_gridPolizas'
+                ,title    : 'RESULTADOS'
+                ,columns  : _p49_gridPolCols
+                ,height   : 250
+                ,store    : _p49_storePolizas
+                ,selModel :
+                {
+                    selType    : 'checkboxmodel'
+                    ,mode      : 'SIMPLE'
+                    ,listeners :
+                    {
+                        selectionchange : function(me,selected,eOpts)
+	                    {
+	                        _fieldById('_p49_botonImprimir').setDisabled(selected.length==0);
+	                    }
+                    }
+                }
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text      : 'Imprimir'
+                        ,icon     : '${icons}printer.png'
+                        ,itemId   : '_p49_botonImprimir'
+                        ,disabled : true
+                        ,handler  : function(me)
+                        {
+                            var ck = 'Creando ventana de impresi\u00F3n';
+                            try
+                            {
+                                var venImp = Ext.create('VentanaImpresionLote',
+                                {
+                                    records : me.up('grid').getSelectionModel().getSelection()
+                                });
+                                centrarVentanaInterna(venImp.show());
+                            }
+                            catch(e)
+                            {
+                                manejaException(e,ck);
+                            }
+                        }
+                    }
+                ]
             })
         ]
     });
     ////// contenido //////
     
     ////// custom //////
+    _p49_itemCdunieco.on(
+    {
+        select : function(me,records)
+        {
+            var ck = 'Agregando sucursal';
+            try
+            {
+                if(_fieldById('_p49_gridSucursales').getStore().indexOf(records[0])==-1)
+                {
+                    _fieldById('_p49_gridSucursales').getStore().insert(0,records[0]);
+                }
+                me.reset();
+            }
+            catch(e)
+            {
+                manejaException(e,ck);
+            }
+        }
+    });
     ////// custom //////
     
     ////// loaders //////

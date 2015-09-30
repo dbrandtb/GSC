@@ -13,4 +13,6 @@
 	var _GLOBAL_OCULTA_EXTENSION_TIMEOUT   = '<s:text name="sesion.oculta.extension.timeout"/>';
 	var _GLOBAL_URL_GRABAR_EVENTO          = '<s:url namespace="/servicios" action="grabarEvento" />';
 	
+	var _GLOBAL_DIRECTORIO_ICONOS = '${icons}';
+	
 </script>

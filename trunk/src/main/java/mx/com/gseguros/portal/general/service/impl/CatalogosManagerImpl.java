@@ -1136,4 +1136,74 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
 	}
+	
+	@Deprecated
+	@Override
+	public List<GenericVO> recuperarTiposRamo() throws Exception
+	{
+
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarTiposRamo @@@@@@"
+				));
+		
+		String paso           = null;
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		try
+		{
+			paso = "Recuperando tipos de ramo";
+			List<Map<String,String>> listaMapas = consultasDAO.recuperarTiposRamo();
+			for(Map<String,String>tipoRamo:listaMapas)
+			{
+				lista.add(new GenericVO(tipoRamo.get("CDTIPRAM"), tipoRamo.get("DSTIPRAM")));
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista=",lista
+				,"\n@@@@@@ recuperarTiposRamo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
+	
+	@Deprecated
+	@Override
+    public List<GenericVO> recuperarRamosPorTipoRamo(String cdtipram) throws Exception
+    {
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarRamosPorTipoRamo @@@@@@"
+				,"\n@@@@@@ cdtipram=" , cdtipram
+				
+				));
+		
+		String paso           = null;
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		try
+		{
+			paso = "Recuperando ramos por tipo de ramo";
+			List<Map<String,String>> listaMapas = consultasDAO.recuperarRamosPorTipoRamo(cdtipram);
+			for(Map<String,String>ramo:listaMapas)
+			{
+				lista.add(new GenericVO(ramo.get("CDRAMO"), ramo.get("DSRAMO")));
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista=",lista
+				,"\n@@@@@@ recuperarRamosPorTipoRamo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+    }
+    
 }

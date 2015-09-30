@@ -337,4 +337,8 @@ public interface ConsultasDAO
 	public List<Map<String,String>> recuperarSubramos(String cdramo) throws Exception;
 	
 	public String recuperarTparagen(ParametroGeneral paragen) throws Exception;
+	
+	public List<Map<String,String>> recuperarTiposRamo() throws Exception;
+	
+	public List<Map<String,String>> recuperarRamosPorTipoRamo(String cdtipram) throws Exception;
 }
