@@ -13,6 +13,7 @@ import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -41,6 +42,8 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 	private Map<String,String> params;
 	
 	private List<Map<String,String>> list;
+	
+	private String detalleRespuesta;
 	
 	/**
 	 * Lista que recibe los valores del grid de vehículos para flotillas
@@ -119,6 +122,7 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 			
 		} catch(Exception e) {
 			respuesta = Utils.manejaExcepcion(e);
+			detalleRespuesta = ExceptionUtils.getStackTrace(e);
 		}
 		
 		logger.debug("Fin de cotizarIndividual Directa");
@@ -173,6 +177,7 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
     		success   = true;
     	} catch(Exception e) {
     		respuesta = Utils.manejaExcepcion(e);
+    		detalleRespuesta = ExceptionUtils.getStackTrace(e);
     	}
     	
         logger.debug("Fin de comprarCotizacion Directa");
@@ -352,6 +357,14 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 
 	public void setListaConfigSituac(List<Map<String, String>> listaConfigSituac) {
 		this.listaConfigSituac = listaConfigSituac;
+	}
+	
+	public String getDetalleRespuesta() {
+		return detalleRespuesta;
+	}
+	
+	public void setDetalleRespuesta(String detalleRespuesta) {
+		this.detalleRespuesta = detalleRespuesta;
 	}
 	
 }
