@@ -14,5 +14,6 @@
 	var _GLOBAL_URL_GRABAR_EVENTO          = '<s:url namespace="/servicios" action="grabarEvento" />';
 	
 	var _GLOBAL_DIRECTORIO_ICONOS = '${icons}';
-	
+	var _GLOBAL_URL_RECUPERACION  = '<s:url namespace="/recuperacion" action="recuperar"    />';
+	var _GLOBAL_URL_IMPRIMIR_LOTE = '<s:url namespace="/consultas"    action="imprimirLote" />';
 </script>
