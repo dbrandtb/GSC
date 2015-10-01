@@ -10,6 +10,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
@@ -69,6 +70,37 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 				,"\n###########################################"
 				));
 		return result;
+	}
+	
+	@Action(value           = "imprimirLote",
+			results         = { @Result(name="success", type="json") },
+            interceptorRefs = {
+			    @InterceptorRef(value = "json", params = {"enableSMD", "true", "ignoreSMDMethodInterfaces", "false" })
+			})
+	public String imprimirLote()
+	{
+		logger.debug(Utils.log(
+				 "\n##########################"
+				,"\n###### imprimirLote ######"
+				,"\n###### params=" , params
+				,"\n###### list="   , list
+				));
+		
+		try
+		{
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### imprimirLote ######"
+				,"\n##########################"
+				));
+		
+		return SUCCESS;
 	}
 	
 	////////////////// Getters y setters ///////////////////

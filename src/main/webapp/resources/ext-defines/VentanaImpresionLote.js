@@ -169,6 +169,219 @@ Ext.define('VentanaImpresionLote',
     }
     ,buscarImpresora : function(papel)
     {
-        alert(papel);
+        debug('buscarImpresora papel:',papel);
+        
+        var me = this;
+        
+        var ck = 'Buscando impresoras';
+        try
+        {
+            _setLoading(true,me);
+            Ext.Ajax.request(
+            {
+                url     : _GLOBAL_URL_RECUPERACION
+                ,params :
+                {
+                    'params.consulta' : 'RECUPERAR_IMPRESORAS'
+                    ,'params.papel'   : papel
+                }
+                ,success : function(response)
+                {
+                    _setLoading(false,me);
+                    var ck = 'Decodificando respuesta al recuperar impresoras';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### impresoras:',json);
+                        if(json.success==true)
+                        {
+                            centrarVentanaInterna(Ext.create('Ext.window.Window',
+                            {
+                                title  : 'IMPRESORAS DISPONIBLES'
+                                ,modal : true
+                                ,items :
+                                [
+                                    Ext.create('Ext.grid.Panel',
+                                    {
+                                        width    : 500
+                                        ,itemId  : '_c0_gridImpresoras'
+                                        ,height  : 250
+                                        ,columns :
+                                        [
+                                            {
+                                                text       : 'SUCURSAL'
+                                                ,width     : 80
+                                                ,dataIndex : 'cdunieco'
+                                            }
+                                            ,{
+                                                text       : 'IMPRESORA'
+                                                ,dataIndex : 'dsimpres'
+                                                ,flex      : 1
+                                            }
+                                            ,{
+                                                text       : 'TIPO'
+                                                ,width     : 100
+                                                ,dataIndex : 'dspapel'
+                                            }
+                                        ]
+                                        ,store : Ext.create('Ext.data.Store',
+                                        {
+                                            fields : [ 'cdunieco' ,'dsimpres' ,'dspapel' ]
+                                            ,data  : json.list
+                                        })
+                                        ,selModel :
+                                        {
+                                            selType        : 'checkboxmodel'
+                                            ,allowDeselect : true
+                                            ,mode          : 'SINGLE'
+                                            ,listeners     :
+                                            {
+                                                selectionchange : function(me,selected,eOpts)
+                                                {
+                                                    if(selected.length==1)
+                                                    {
+                                                        _fieldById('_c0_botonImprimir').enable();
+                                                    }
+                                                    else
+                                                    {
+                                                        _fieldById('_c0_botonImprimir').disable();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        ,buttonAlign : 'center'
+                                        ,buttons     :
+                                        [
+                                            {
+                                                text      : 'Imprimir'
+                                                ,itemId   : '_c0_botonImprimir'
+                                                ,icon     : _GLOBAL_DIRECTORIO_ICONOS+'printer.png'
+                                                ,disabled : true
+                                                ,handler  : function(boton){ me.imprimir(boton,_fieldById('_c0_gridImpresoras').getSelectionModel().getSelection(),papel); }
+                                            }
+                                            ,{
+                                                text    : 'Descargar'
+                                                ,icon   : _GLOBAL_DIRECTORIO_ICONOS+'disk.png'
+                                                ,hidden : true
+                                            }
+                                        ]
+                                    })
+                                ]
+                            }).show());
+                        }
+                        else
+                        {
+                            mensajeError(json.message);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function()
+                {
+                    _setLoading(false,me);
+                    errorComunicacion(null,'Error recuperando impresoras');
+                }
+            });
+        }
+        catch(e)
+        {
+            manejaException(e,ck);
+        }
+    }
+    ,imprimir : function(boton,printerRecords,papel)
+    {
+        debug('imprimir printerRecords:',printerRecords,',papel:',papel);
+        
+        var me = this;
+        
+        var ck = 'Imprimiendo';
+        try
+        {
+            if(Ext.isEmpty(papel))
+            {
+                throw 'No se recibi\u00F3 el tipo de impresi\u00F3n';
+            }
+            if(Ext.isEmpty(printerRecords)||Ext.isEmpty(printerRecords[0]))
+            {
+                throw 'No se recibi\u00F3 la impresora';
+            }
+            var printer = printerRecords[0];
+            
+            var jsonData =
+            {
+                params :
+                {
+                    printerCdunieco : printer.raw.cdunieco
+                    ,printerIp      : printer.raw.ip
+                    ,printerPuerto  : printer.raw.puerto
+                    ,printerCdpapel : printer.raw.cdpapel
+                    ,cdpapel        : papel
+                }
+                ,list : []
+            };
+            for(var i=0;i<me.down('grid').getStore().getCount();i++)
+            {
+                var record = me.down('grid').getStore().getAt(i);
+                jsonData.list.push(
+                {
+                    cdunieco  : record.get('cdunieco')
+                    ,cdramo   : record.get('cdramo')
+                    ,estado   : record.get('estado')
+                    ,nmpoliza : record.get('nmpoliza')
+                    ,nmsuplem : record.get('nmsuplem')
+                    ,nsuplogi : record.get('nsuplogi')
+                    ,cdtipsup : record.get('cdtipsup')
+                    ,ntramite : record.get('ntramite')
+                });
+            }
+            debug('jsonData imprimir:',jsonData);
+            
+            var window = boton.up('window');
+            _setLoading(true,window);
+            Ext.Ajax.request(
+            {
+                url       : _GLOBAL_URL_IMPRIMIR_LOTE
+                ,jsonData : jsonData
+                ,success  : function(response)
+                {
+                    _setLoading(false,window);
+                    var ck = 'Decodificando respuesta al imprimir';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        if(json.success==true)
+                        {
+                            mensajeCorrecto(
+                                'Documentos impresos'
+                                ,'Documentos impresos'
+                                ,function()
+                                {
+                                    window.destroy();
+                                });
+                        }
+                        else
+                        {
+                            mensajeError(json.message);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure  : function()
+                {
+                    _setLoading(false,window);
+                    errorComunicacion(null,'Error al imprimir');
+                }
+            });
+        }
+        catch(e)
+        {
+            manejaException(e,ck);
+        }
     }
 });
