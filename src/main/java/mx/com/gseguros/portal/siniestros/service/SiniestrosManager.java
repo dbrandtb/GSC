@@ -56,25 +56,20 @@ public interface SiniestrosManager {
 	 */
 	public List<ConsultaProveedorVO> getConsultaListaProveedorMedico(String tipoprov,String cdpresta) throws Exception;
 	
-	
-	//public List<GenericVO> getConsultaListaCausaSiniestro(String cdcausa) throws Exception;
-	
-	
 	public List<CoberturaPolizaVO> getConsultaListaCoberturaPoliza(HashMap<String, Object> paramCobertura) throws Exception;
 	
 	public List<CoberturaPolizaVO> getConsultaCoberturaAsegurado(HashMap<String, Object> paramCobertura) throws Exception;
 	
 	public List<DatosSiniestroVO> getConsultaListaDatSubGeneral(HashMap<String, Object> paramDatSubGral) throws Exception;
 	
-	public List<GenericVO> getConsultaListaSubcobertura(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsituac, String cdtipsit, String cdgarant, String cdsubcob) throws Exception;
+	public List<GenericVO> getConsultaListaSubcobertura(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String cdtipsit, String cdgarant, String cdsubcob) throws Exception;
 	
 	public List<GenericVO> getConsultaListaSubcoberturaTotales() throws Exception;
 	
 	public List<GenericVO> getConsultaListaCPTICD(String cdtabla, String otclave) throws Exception;
 	
 	public List<GenericVO> getConsultaListaTipoPago(String cdramo) throws Exception;
-	
-	//public List<GenericVO> getConsultaListaMotivoRechazo(String cdmotRechazo) throws Exception;
 	
 	public List<ConsultaTDETAUTSVO> getConsultaListaTDeTauts(String nmautser) throws Exception;
 	
@@ -85,9 +80,6 @@ public interface SiniestrosManager {
 	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson,String cdramo) throws Exception;
 	
 	public void getEliminacionRegistros(String nmautser) throws Exception;
-	
-	/* ############################################################################## 
-	 * ##################################### VERIFICAR ##############################*/
 	
 	public List<AutorizacionServicioVO> guardarAutorizacionServicio(HashMap<String, Object> paramsR) throws Exception;
 	
@@ -111,7 +103,7 @@ public interface SiniestrosManager {
 
 	public List<GenericVO> getConsultaListaPlaza() throws Exception;
 	
-	public String guardaListaFacMesaControl(
+	public String guardaListaFacturaSiniestro(
 			String ntramite,
 			String nfactura,
 			Date fefactura,
@@ -128,8 +120,29 @@ public interface SiniestrosManager {
 			String dctonuex,
 			Date feegreso,
 			String diasdedu,
-			String tipoAccion//,
-			//String nomProv
+			String nombProv,
+			String tipoAccion
+	) throws Exception;
+	
+	
+	/*public String guardaListaFacMesaControl(
+			String ntramite,
+			String nfactura,
+			Date fefactura,
+			String cdtipser,
+			String cdpresta,
+			String ptimport,
+			String cdgarant,
+			String cdconval,
+			String descporc,
+			String descnume,
+			String cdmoneda,
+			String tasacamb,
+			String ptimporta,
+			String dctonuex,
+			Date feegreso,
+			String diasdedu,
+			String tipoAccion
 			) throws Exception;
 	
 	public String guardaListaFacMesaControl2(
@@ -151,9 +164,9 @@ public interface SiniestrosManager {
 			String diasdedu,
 			String tipoAccion,
 			String nombProv
-			) throws Exception;
+			) throws Exception;*/
 
-	public String movFacMesaControl(
+	/*public String movFacMesaControl(
 			String ntramite,
 			String nfactura,
 			String fefactura,
@@ -169,7 +182,7 @@ public interface SiniestrosManager {
 			String tasacamb,
 			String ptimporta,
 			String dctonuex
-			) throws Exception;
+			) throws Exception;*/
 
 	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws Exception;
 
@@ -596,4 +609,15 @@ public interface SiniestrosManager {
 	public List<Map<String, String>> consultaConfiguracionLayout(String cdpresta) throws Exception;
 	
 	public List<Map<String, String>> guardaHistorialSiniestro(String ntramite, String nfactura) throws Exception;
+	
+	public String guardaListaRecupera(String ntramite, String nfactura, String cdgarant, String cdconval, String cantporc, String ptimport, String tipoAccion) throws Exception;
+	
+	public List<Map<String, String>> obtieneInformacionRecupera(String cdunieco,String cdramo, String estado, String nmpoliza, String nmsuplem,
+			String nmsituac, Date feEfecto, String ntramite, String nfactura) throws Exception;
+	
+	public List<Map<String, String>> obtieneEsquemaSumAseguradaRecupera(String cdunieco,String cdramo, String estado, String nmpoliza, String nmsuplem,
+			String nmsituac, Date feEfecto, String cdgarant, String cdconval) throws Exception;
+	
+	public void P_MOV_MRECUPERA(String ntramite,String nfactura, String cdgarant, String cdconval,
+			String cantporc,String ptimport, String accion) throws Exception;
 }

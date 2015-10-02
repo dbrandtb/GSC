@@ -55,7 +55,7 @@
           	var _URL_VALIDADOCCARGADOS					= '<s:url namespace="/siniestros" 		action="validaDocumentosCargados"/>';
             var _URL_GENERARCARTARECHAZO				= '<s:url namespace="/siniestros"		action="generaCartaRechazo" />';
             var _URL_LISTARECHAZOS						= '<s:url namespace="/siniestros"		action="loadListaRechazos" />';
-            var _URL_LISTAINCISOSRECHAZOS				= '<s:url namespace="/siniestros"		action="loadListaIncisosRechazos" />';            
+            var _URL_LISTAINCISOSRECHAZOS				= '<s:url namespace="/siniestros"		action="loadListaIncisosRechazos" />';
 			var _URL_LISTA_CPTICD						= '<s:url namespace="/siniestros"  		action="consultaListaCPTICD" />';
 			var _URL_GENERAR_CALCULO					= '<s:url namespace="/siniestros" 		action="generarCalculoSiniestros" />';
 			var _URL_CONCEPTOSASEG						= '<s:url namespace="/siniestros" 		action="obtenerMsinival" />';
@@ -91,6 +91,9 @@
 			var _URL_APLICA_IVA_CONCEPTO				= '<s:url namespace="/siniestros"		action="obtieneAplicacionIVA"/>';
 			var _TIPO_TRAMITE_SINIESTRO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra"/>';
 			var _TIPO_PAGO_AUTOMATICO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@PAGO_AUTOMATICO.cdtiptra"/>';
+			var _URL_MRECUPERA							= '<s:url namespace="/siniestros" 		action="obtenerMRecupera" />';
+			var _URL_SUMASEG_RECUPERA					= '<s:url namespace="/siniestros"		action="obtieneDatosRecupera"/>';
+			var _URL_GUARDA_CONCEPTO_RECUPERA			= '<s:url namespace="/siniestros"  		action="guardarMRecupera"/>';
 			debug("VALOR DE _11_params --->",_11_params);
 			debug("VALOR DEL ROL ACTIVO --->",_CDROL);
 			var _11_itemsForm	=
@@ -142,8 +145,12 @@
 			var storeSubcobertura;
 			var storeCoberturaxAsegurado;
 			var storeCoberturaxAseguradoRender;
+			var storeCoberturaRecupera;
+			var sstoreCoberturaRecuperaRender;
 			var storeSubcoberturaAsegurado;
 			var storeSubcoberturaAseguradoRender;
+			var storeSubcoberturaRecupera;
+			var storeSubcoberturaRecuperaRender;
 			var storeRechazos;
 			var storeIncisosRechazos;
 			var storeDestinoPago;
@@ -283,6 +290,17 @@
 						{type:'string',	name:'APLICIVA'}
 					]
 				});
+
+//MODELO DE RECUPERA
+				Ext.define('modelRecupera',{
+					extend: 'Ext.data.Model',
+					fields: [
+						{type:'string',	name:'NTRAMITE'},		{type:'string',	name:'NFACTURA'},		{type:'string',	name:'CDGARANT'},
+						{type:'string',	name:'CDCONVAL'},		{type:'string',	name:'CANTPORC'},		{type:'string',	name:'PTIMPORT'},
+						{type:'string',	name:'SUMAASEG'},		{type:'string',	name:'ESQUEMAASEG'}
+					]
+				});
+				
 //MODELO DEL LISTADO DE LAS COBERTURAS
 				Ext.define('modelListadoCobertura',{
 					extend: 'Ext.data.Model',
@@ -411,17 +429,54 @@
 				});
 //STORE DE COBERTURAS PARA LOS ASEGURADOS
 				storeCoberturaxAsegurado = Ext.create('Ext.data.Store', {
-			        model:'modelListadoCobertura',
-			        autoLoad:false,
-			        proxy: {
-			            type: 'ajax',
-			            url : _URL_LISTA_COBERTURA,
-			            reader: {
-			                type: 'json',
-			                root: 'listaCoberturaPoliza'
-			            }
-			        }
-			    });
+					model:'modelListadoCobertura',
+					autoLoad:false,
+					proxy: {
+						type: 'ajax',
+						url : _URL_LISTA_COBERTURA,
+						reader: {
+							type: 'json',
+							root: 'listaCoberturaPoliza'
+						}
+					}
+				});
+				
+//STORE DE COBERTURAS PARA LOS ASEGURADOS RECUPERA
+				storeCoberturaRecupera = Ext.create('Ext.data.Store', {
+					model:'modelListadoCobertura',
+					autoLoad:false,
+					proxy: {
+						type: 'ajax',
+						url : _URL_LISTA_COBERTURA,
+						reader: {
+							type: 'json',
+							root: 'listaCoberturaPoliza'
+						}
+					}
+				});
+				
+				sstoreCoberturaRecuperaRender = Ext.create('Ext.data.JsonStore', {
+					model:'Generic',
+					cargado:false,
+					proxy: {
+						type: 'ajax',
+						url: _URL_CATALOGOS,
+						extraParams : {catalogo:_CATALOGO_COBERTURASTOTALES},
+						reader: {
+							type: 'json',
+							root: 'lista'
+						}
+					},listeners: {
+						load : function(){
+							this.cargado=true;
+							if(!Ext.isEmpty(gridFacturaDirecto)){
+								gridFacturaDirecto.getView().refresh();
+							}
+						}
+					}
+				});
+				sstoreCoberturaRecuperaRender.load();
+				
 //STORE DE SUBCOBERTURAS PARA LOS ASEGURADOS
 				storeSubcoberturaAsegurado= Ext.create('Ext.data.Store', {
 			        model:'Generic',
@@ -435,7 +490,21 @@
 			            }
 			        }
 			    });
-			    
+
+//STORE DE SUBCOBERTURAS PARA RECUPERA
+				storeSubcoberturaRecupera= Ext.create('Ext.data.Store', {
+					model:'Generic',
+					autoLoad:false,
+					proxy: {
+						type: 'ajax',
+						url : _URL_LISTA_SUBCOBERTURA,
+						reader: {
+							type: 'json',
+							root: 'listaSubcobertura'
+						}
+					}
+				});
+				
 				storeCoberturaxAseguradoRender = Ext.create('Ext.data.JsonStore', {
 					model:'Generic',
 					//autoLoad:true,
@@ -481,6 +550,28 @@
 					}
 				});
 				storeSubcoberturaAseguradoRender.load();
+				
+				storeSubcoberturaRecuperaRender = Ext.create('Ext.data.JsonStore', {
+					model:'Generic',
+					cargado:false,
+					proxy: {
+						type: 'ajax',
+						url: _URL_CATALOGOS,
+						extraParams : {catalogo:_CATALOGO_SUBCOBERTURASTOTALES},
+						reader: {
+							type: 'json',
+							root: 'lista'
+						}
+					},listeners: {
+						load : function() {
+							this.cargado=true;
+							if(!Ext.isEmpty(gridFacturaDirecto)){
+								gridFacturaDirecto.getView().refresh();
+							}
+						}
+					}
+				});
+				storeSubcoberturaRecuperaRender.load();
 				
 // STORE PARA EL LISTADO DE LAS AUTORIZACIONES DE SERVICIO
 				storeListadoAutorizacion = new Ext.data.Store({
@@ -698,6 +789,20 @@
 						}
 					}
 				});
+				
+				storeRecupera = new Ext.data.Store( {
+					autoDestroy: true,
+					model: 'modelRecupera',
+					proxy: {
+						type: 'ajax',
+						url: _URL_MRECUPERA,
+						reader: {
+							type: 'json',
+							root: 'loadList'
+						}
+					}
+				});
+				
 //STORE DE LAS POLIZAS
 				var storeListadoPoliza = new Ext.data.Store({
 					pageSize : 5
@@ -884,10 +989,10 @@
 
 				
 				coberturaxAsegurado = Ext.create('Ext.form.field.ComboBox', {
-			    	allowBlank: false,			displayField : 'dsgarant',		id:'idCobAfectada',		name:'cdgarant',
-			    	valueField   : 'cdgarant',	forceSelection : true,			matchFieldWidth: false,
-			    	queryMode :'remote',				store : storeCoberturaxAsegurado,		triggerAction: 'all',			editable:true,
-			    	listeners : {
+					allowBlank: false,			displayField : 'dsgarant',		id:'idCobAfectada',		name:'cdgarant',
+					valueField   : 'cdgarant',	forceSelection : true,			matchFieldWidth: false,
+					queryMode :'remote',				store : storeCoberturaxAsegurado,		triggerAction: 'all',			editable:true,
+					listeners : {
 						'select' : function(combo, record) {
 							//banderaAsegurado = 1;
 							_11_aseguradoSeleccionado.set('CDGARANT',this.getValue());
@@ -895,20 +1000,45 @@
 							storeSubcoberturaAsegurado.load({
 								params:{
 									'params.cdunieco':_11_aseguradoSeleccionado.get('CDUNIECO'),
-					            	'params.cdramo':_11_aseguradoSeleccionado.get('CDRAMO'),
-					            	'params.estado':_11_aseguradoSeleccionado.get('ESTADO'),
-					            	'params.nmpoliza':_11_aseguradoSeleccionado.get('NMPOLIZA'),
-					            	'params.nmsituac':_11_aseguradoSeleccionado.get('NMSITUAC'),
-					            	'params.cdtipsit':_11_aseguradoSeleccionado.get('CDTIPSIT'),
-					            	'params.cdgarant' :this.getValue(),
-					            	'params.cdsubcob' :null
+									'params.cdramo':_11_aseguradoSeleccionado.get('CDRAMO'),
+									'params.estado':_11_aseguradoSeleccionado.get('ESTADO'),
+									'params.nmpoliza':_11_aseguradoSeleccionado.get('NMPOLIZA'),
+									'params.nmsituac':_11_aseguradoSeleccionado.get('NMSITUAC'),
+									'params.cdtipsit':_11_aseguradoSeleccionado.get('CDTIPSIT'),
+									'params.cdgarant' :this.getValue(),
+									'params.cdsubcob' :null
+								}
+							});
+						}
+					}
+				});
+				
+				
+				coberturaRecupera = Ext.create('Ext.form.field.ComboBox', {
+					allowBlank: false,			displayField : 'dsgarant',		id:'idCobAfectadaRec',		name:'cdgarantRec',
+					valueField   : 'cdgarant',	forceSelection : true,			matchFieldWidth: false,
+					queryMode :'remote',				store : storeCoberturaRecupera,		triggerAction: 'all',			editable:true,
+					listeners : {
+						'select' : function(combo, record) {
+							_11_conceptoSeleccionado.set('CDGARANT',this.getValue());
+							storeSubcoberturaRecupera.removeAll();
+							storeSubcoberturaRecupera.load({
+								params:{
+									'params.cdunieco':_11_aseguradoSeleccionado.get('CDUNIECO'),
+									'params.cdramo':_11_aseguradoSeleccionado.get('CDRAMO'),
+									'params.estado':_11_aseguradoSeleccionado.get('ESTADO'),
+									'params.nmpoliza':_11_aseguradoSeleccionado.get('NMPOLIZA'),
+									'params.nmsituac':_11_aseguradoSeleccionado.get('NMSITUAC'),
+									'params.cdtipsit':_11_aseguradoSeleccionado.get('CDTIPSIT'),
+									'params.cdgarant' :this.getValue(),
+									'params.cdsubcob' :null
 								}
 							});
 						}
 					}
 			    });
-				
-				var subCoberturaAsegurado = Ext.create('Ext.form.field.ComboBox', {
+			    
+			    var subCoberturaAsegurado = Ext.create('Ext.form.field.ComboBox', {
 			    	allowBlank: false,				displayField : 'value',			id:'idSubcobertura1',		name:'cdconval',
 			    	labelWidth: 170,				valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,
 			    	queryMode :'local',			store : storeSubcoberturaAsegurado,		triggerAction: 'all',			editable:true,
@@ -921,13 +1051,48 @@
 					}
 			    });
 
+				var subCoberturaRecupera = Ext.create('Ext.form.field.ComboBox', {
+					allowBlank: false,				displayField : 'value',			id:'idSubcoberturaRec',		name:'cdconval',
+					labelWidth: 170,				valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,
+					queryMode :'local',			store : storeSubcoberturaRecupera,		triggerAction: 'all',			editable:true
+					,listeners : {
+						select:function(e){
+							//ESQUEMA DE SUMA ASEGURADA
+							Ext.Ajax.request( {
+								url	 : _URL_SUMASEG_RECUPERA
+								,params:{
+									'params.cdunieco':_11_aseguradoSeleccionado.get('CDUNIECO'),
+									'params.cdramo':_11_aseguradoSeleccionado.get('CDRAMO'),
+									'params.estado':_11_aseguradoSeleccionado.get('ESTADO'),
+									'params.nmpoliza':_11_aseguradoSeleccionado.get('NMPOLIZA'),
+									'params.nmsituac':_11_aseguradoSeleccionado.get('NMSITUAC'),
+									'params.nmsuplem'	: _11_aseguradoSeleccionado.get('NMSUPLEM'),
+									'params.cdgarant' :_11_conceptoSeleccionado.get('CDGARANT'),
+									'params.cdconval' :this.getValue()
+								}
+								,success : function (response) {
+									var infRecupera = Ext.decode(response.responseText).loadList;
+									_11_conceptoSeleccionado.set('ESQUEMAASEG',infRecupera[0].ESQUEMAASEG);
+									_11_conceptoSeleccionado.set('SUMAASEG',infRecupera[0].SUMAASEG);
+								},
+								failure : function () {
+									//me.up().up().setLoading(false);
+									Ext.Msg.show({
+										title:'Error',
+										msg: 'Error de comunicaci&oacute;n',
+										buttons: Ext.Msg.OK,
+										icon: Ext.Msg.ERROR
+									});
+								}
+							});
+						}
+					}
+				});
 				var subCobertura = Ext.create('Ext.form.field.ComboBox', {
 					name:'params.cdconval',		fieldLabel : 'SUBCOBERTURA',	/*allowBlank: false,*/				displayField : 'value',			id:'idSubcobertura',
 					valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,		hidden: true,
 					queryMode :'remote',			store : storeSubcobertura,		triggerAction: 'all',			editable:false
 				});
-						
-				
 				
 				cmbCveTipoConcepto = Ext.create('Ext.form.ComboBox', {
 					name:'params.idconcep',		store: storeTipoConcepto,		queryMode:'local',
@@ -946,17 +1111,7 @@
 				
 				cmbAplicaIVA = Ext.create('Ext.form.ComboBox', {
 					name:'params.idAplicaIVA',		store: storeAplicaIVA,		queryMode:'local',
-					displayField: 'value',		valueField: 'key',				editable:false,				allowBlank:false/*,
-					listeners:{
-						select: function (combo, records, opts){
-							banderaConcepto = 1;
-							var cdTipo = records[0].get('key');
-							storeConceptosCatalogo.proxy.extraParams= {
-								'params.idPadre' : cdTipo
-								,catalogo		: _CATALOGO_CONCEPTOSMEDICOS
-							};
-						}
-					}*/
+					displayField: 'value',		valueField: 'key',				editable:false,				allowBlank:false
 				});
 
 				cmbCveConcepto = Ext.create('Ext.form.ComboBox', {
@@ -1120,10 +1275,10 @@
 								}
 							},
 							{
-								header: 'Id<br/>Sini. Existente',	dataIndex: 'NMSINREF',		width: 90, hidden : _tipoProducto != '7'
+								header: 'Id<br/>Sini. Existente',	dataIndex: 'NMSINREF',		width: 90, hidden : _tipoProducto != _GMMI
 							},
 							{
-								header: 'Complemento',	dataIndex: 'COMPLEMENTO',		width: 90, hidden : _tipoProducto != '7'
+								header: 'Complemento',	dataIndex: 'COMPLEMENTO',		width: 90, hidden : _tipoProducto != _GMMI
 							},
 							{
 								header: 'Fecha<br/>Ocurrencia',		dataIndex: 'FEOCURRE'
@@ -1158,6 +1313,7 @@
 							{
 								header: 'Cobertura',			dataIndex: 'CDGARANT',		allowBlank: false
 								,editor: coberturaxAsegurado
+								,hidden : _tipoProducto == _RECUPERA
 								,renderer : function(v) {
 									var leyenda = '';
 									if (typeof v == 'string') {
@@ -1185,6 +1341,7 @@
 							},
 							{
 								header: 'Subcobertura',			dataIndex: 'CDCONVAL',	allowBlank: false
+								,hidden : _tipoProducto == _RECUPERA
 								,editor: subCoberturaAsegurado
 								,renderer : function(v) {
 									var leyenda = '';
@@ -1335,78 +1492,94 @@
 							
 						listeners: {
 							select: function (grid, record, index, opts){
-								debug("VALOR DEL RECORD SELECCIONADO", record);
+								debug("VALOR DEL RECORD SELECCIONADO -->>>>", record);
 								debug("<--VALOR DE LA BANDERA DEL CONCEPTO-->",banderaConcepto,"<--VALOR DE LA BANDERA DEL ASEGURADO-->",banderaAsegurado);
-								if (banderaConcepto == "1"){
-									debug("Guardamos los conceptos ");
-									//Mandamos a guardar los conceptos
-									_guardarConceptosxFactura();
-									storeConceptos.removeAll();
-								}else if(banderaAsegurado == "1"){
-									debug("VALOR SELECCIONADO :)-->",_11_aseguradoSeleccionado);
-									guardaDatosComplementariosAsegurado(_11_aseguradoSeleccionado, banderaAsegurado);
-									storeConceptos.removeAll();
-								}else{
-									var numSiniestro = record.get('NMSINIES');
-									if(numSiniestro.length == "0"){
-										revisarDocumento(grid,index);
-									}else{
+								if(_11_params.CDRAMO != _RECUPERA){
+									debug("<<<<<--- DIFERENTE DE RECUPERA");
+									if (banderaConcepto == "1"){
+										debug("Guardamos los conceptos ");
+										//Mandamos a guardar los conceptos
+										_guardarConceptosxFactura();
 										storeConceptos.removeAll();
-										storeConceptos.load({
-											params: {
-												'params.nfactura'  : panelInicialPral.down('[name=params.nfactura]').getValue(),
-												'params.cdunieco'  : record.get('CDUNIECO'),
-												'params.cdramo'	: record.get('CDRAMO'),
-												'params.estado'	: record.get('ESTADO'),
-												'params.nmpoliza'  : record.get('NMPOLIZA'),
-												'params.nmsituac'  : record.get('NMSITUAC'),
-												'params.nmsuplem'  : record.get('NMSUPLEM'),
-												'params.status'	: record.get('STATUS'),
-												'params.aaapertu'  : record.get('AAAPERTU'),
-												'params.nmsinies'  : record.get('NMSINIES')
-											}
-										});
-										
-										Ext.Ajax.request( {
-											url	 : _URL_CONCEPTOSASEG
-											,params:{
-												'params.nfactura'  : panelInicialPral.down('[name=params.nfactura]').getValue(),
-												'params.cdunieco'  : record.get('CDUNIECO'),
-												'params.cdramo'	: record.get('CDRAMO'),
-												'params.estado'	: record.get('ESTADO'),
-												'params.nmpoliza'  : record.get('NMPOLIZA'),
-												'params.nmsituac'  : record.get('NMSITUAC'),
-												'params.nmsuplem'  : record.get('NMSUPLEM'),
-												'params.status'	: record.get('STATUS'),
-												'params.aaapertu'  : record.get('AAAPERTU'),
-												'params.nmsinies'  : record.get('NMSINIES')
-											}
-											,success : function (response) {
-												//Obtenemos los datos
-												var conceptos = Ext.decode(response.responseText).loadList;
-												var i = 0;
-												var totalConsumido = 0;
-												for(i = 0; i < conceptos.length; i++){
-													totalConsumido = (+ totalConsumido) + (+ conceptos[i].SUBTAJUSTADO);
+									}else if(banderaAsegurado == "1"){
+										debug("VALOR SELECCIONADO :)-->",_11_aseguradoSeleccionado);
+										guardaDatosComplementariosAsegurado(_11_aseguradoSeleccionado, banderaAsegurado);
+										storeConceptos.removeAll();
+									}else{
+										var numSiniestro = record.get('NMSINIES');
+										if(numSiniestro.length == "0"){
+											revisarDocumento(grid,index);
+										}else{
+											storeConceptos.removeAll();
+											storeConceptos.load({
+												params: {
+													'params.nfactura'  : panelInicialPral.down('[name=params.nfactura]').getValue(),
+													'params.cdunieco'  : record.get('CDUNIECO'),
+													'params.cdramo'	: record.get('CDRAMO'),
+													'params.estado'	: record.get('ESTADO'),
+													'params.nmpoliza'  : record.get('NMPOLIZA'),
+													'params.nmsituac'  : record.get('NMSITUAC'),
+													'params.nmsuplem'  : record.get('NMSUPLEM'),
+													'params.status'	: record.get('STATUS'),
+													'params.aaapertu'  : record.get('AAAPERTU'),
+													'params.nmsinies'  : record.get('NMSINIES')
 												}
-												if(record.get('CDRAMO') == _GMMI){
-													obtenerSumaAsegurada (record.get('CDUNIECO'), record.get('CDRAMO'), record.get('ESTADO'), 
-																		  record.get('NMPOLIZA'), record.get('CDPERSON'), record.get('NMSINREF'),
-																		  totalConsumido);
+											});
+											
+											Ext.Ajax.request( {
+												url	 : _URL_CONCEPTOSASEG
+												,params:{
+													'params.nfactura'  : panelInicialPral.down('[name=params.nfactura]').getValue(),
+													'params.cdunieco'  : record.get('CDUNIECO'),
+													'params.cdramo'	: record.get('CDRAMO'),
+													'params.estado'	: record.get('ESTADO'),
+													'params.nmpoliza'  : record.get('NMPOLIZA'),
+													'params.nmsituac'  : record.get('NMSITUAC'),
+													'params.nmsuplem'  : record.get('NMSUPLEM'),
+													'params.status'	: record.get('STATUS'),
+													'params.aaapertu'  : record.get('AAAPERTU'),
+													'params.nmsinies'  : record.get('NMSINIES')
 												}
-											},
-											failure : function () {
-												//me.up().up().setLoading(false);
-												Ext.Msg.show({
-													title:'Error',
-													msg: 'Error de comunicaci&oacute;n',
-													buttons: Ext.Msg.OK,
-													icon: Ext.Msg.ERROR
-												});
-											}
-										});
-										
+												,success : function (response) {
+													//Obtenemos los datos
+													var conceptos = Ext.decode(response.responseText).loadList;
+													var i = 0;
+													var totalConsumido = 0;
+													for(i = 0; i < conceptos.length; i++){
+														totalConsumido = (+ totalConsumido) + (+ conceptos[i].SUBTAJUSTADO);
+													}
+													if(record.get('CDRAMO') == _GMMI){
+														obtenerSumaAsegurada (record.get('CDUNIECO'), record.get('CDRAMO'), record.get('ESTADO'), 
+																			  record.get('NMPOLIZA'), record.get('CDPERSON'), record.get('NMSINREF'),
+																			  totalConsumido);
+													}
+												},
+												failure : function () {
+													//me.up().up().setLoading(false);
+													Ext.Msg.show({
+														title:'Error',
+														msg: 'Error de comunicaci&oacute;n',
+														buttons: Ext.Msg.OK,
+														icon: Ext.Msg.ERROR
+													});
+												}
+											});
+										}
 									}
+								}else{
+									debug("<<<<<--- RECUPERA");
+									storeRecupera.load({
+										params: {
+											'params.cdunieco'	: record.get('CDUNIECO'),
+											'params.cdramo'		: record.get('CDRAMO'),
+											'params.estado'		: record.get('ESTADO'),
+											'params.nmpoliza'	: record.get('NMPOLIZA'),
+											'params.nmsituac'	: record.get('NMSITUAC'),
+											'params.nmsuplem'	: record.get('NMSUPLEM'),
+											'params.ntramite'	: panelInicialPral.down('[name=params.ntramite]').getValue(),
+											'params.nfactura'	: panelInicialPral.down('[name=params.nfactura]').getValue()
+										}
+									});
 								}
 							}
 						}
@@ -1712,6 +1885,190 @@
 				});
 				gridEditorConceptos = new EditorConceptos();
 
+				Ext.define('EditorCoberturaRecupera', {
+				extend: 'Ext.grid.Panel',
+				name:'editorCoberturaRecupera',
+				title: 'RECUPERA',
+				icon		: '${ctx}/resources/fam3icons/icons/paste_plain.png',
+				frame: true,
+				selType  : 'rowmodel',
+				initComponent: function(){
+					Ext.apply(this, {
+					height: 250,
+					plugins  :
+					[
+						Ext.create('Ext.grid.plugin.CellEditing', {
+							clicksToEdit: 1
+							,listeners : {
+								beforeedit : function() {
+									_11_aseguradoSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
+									_11_conceptoSeleccionado = gridEditorCoberturaRecupera.getView().getSelectionModel().getSelection()[0];
+									debug("VALOR DE _11_conceptoSeleccionado --->>>>>>",_11_conceptoSeleccionado);
+									
+									storeCoberturaRecupera.proxy.extraParams= {
+										'params.cdunieco':_11_aseguradoSeleccionado.get('CDUNIECO'),
+										'params.estado':_11_aseguradoSeleccionado.get('ESTADO'),
+										'params.cdramo':_11_aseguradoSeleccionado.get('CDRAMO'),
+										'params.nmpoliza':_11_aseguradoSeleccionado.get('NMPOLIZA'),
+										'params.nmsituac':_11_aseguradoSeleccionado.get('NMSITUAC')
+									};
+									
+									storeSubcoberturaRecupera.load({
+										params:{
+											'params.cdunieco':_11_aseguradoSeleccionado.get('CDUNIECO'),
+											'params.cdramo':_11_aseguradoSeleccionado.get('CDRAMO'),
+											'params.estado':_11_aseguradoSeleccionado.get('ESTADO'),
+											'params.nmpoliza':_11_aseguradoSeleccionado.get('NMPOLIZA'),
+											'params.nmsituac':_11_aseguradoSeleccionado.get('NMSITUAC'),
+											'params.cdtipsit':_11_aseguradoSeleccionado.get('CDTIPSIT'),
+											'params.cdgarant' :_11_conceptoSeleccionado.get('CDGARANT'),
+											'params.cdsubcob' :null//_11_conceptoSeleccionado.get('CDCONVAL')
+										}
+									});
+								}
+							}
+						})
+					],
+					store: storeRecupera,
+					columns: 
+					[
+						{
+							xtype		 : 'actioncolumn'
+							,menuDisabled : true
+							,width		: 70
+							,items		:
+							[
+								{
+									icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+									tooltip: 'Eliminar',
+									scope: this,
+									handler: this.onRemoveClick
+								}
+							]
+						},
+						{
+							header: 'Cobertura',			dataIndex: 'CDGARANT',		allowBlank: false
+							,editor: coberturaRecupera
+							,renderer : function(v) {
+								var leyenda = '';
+								if (typeof v == 'string') {
+									if(sstoreCoberturaRecuperaRender.cargado) {
+										debug("sstoreCoberturaRecuperaRender :",sstoreCoberturaRecuperaRender);
+										sstoreCoberturaRecuperaRender.each(function(rec) {
+											if (rec.data.key == v) {
+												leyenda = rec.data.value;
+											}
+										});
+									}
+									else{
+										leyenda='Cargando...';
+									}
+								}else {
+									if (v.key && v.value) {
+										leyenda = v.value;
+									} else {
+										leyenda = v.data.value;
+									}
+									leyenda= v;
+								}
+								return leyenda;
+							}
+						},
+						{
+							header: 'Subcobertura',			dataIndex: 'CDCONVAL',	allowBlank: false
+							,editor: subCoberturaRecupera
+							,renderer : function(v) {
+								var leyenda = '';
+								if (typeof v == 'string') {
+									//debug("Valor de V : "+v);
+									//debug("Valor de storeSubcoberturaAseguradoRender.cargado : "+storeSubcoberturaAseguradoRender.cargado);
+									if(storeSubcoberturaRecuperaRender.cargado) {
+										debug("storeSubcoberturaAseguradoRender");
+										debug(storeSubcoberturaRecuperaRender);
+										storeSubcoberturaRecuperaRender.each(function(rec) {
+											//debug("rec.data.key -->",rec.data.key,"rec.data.value -->",rec.data.value);
+											if (rec.data.key == v){
+												leyenda = rec.data.value;
+											}
+										});
+									}
+									else{
+									    leyenda='Cargando...';
+									}
+								}else{
+									if (v.key && v.value){
+										leyenda = v.value;
+									} else {
+										leyenda = v.data.value;
+									}
+									leyenda= v;
+								}
+								return leyenda;
+							}
+						},
+						
+						{
+							header : 'Esquema de Suma',
+							dataIndex : 'ESQUEMAASEG',
+							width : 120
+						},{
+							header : 'Suma Asegurada',
+							dataIndex : 'SUMAASEG',
+							width : 120,
+							renderer : Ext.util.Format.usMoney
+						},
+						{
+							header: '% Pago', 				dataIndex: 'CANTPORC',		width : 60
+							,editor: {
+								xtype: 'numberfield',
+								decimalSeparator :'.',
+								//allowBlank: false,
+								listeners : {
+									change:function(e){
+										var porcentajePago = e.getValue();
+										var esquema = _11_conceptoSeleccionado.get('ESQUEMAASEG');
+										var sumaAsegurada = _11_conceptoSeleccionado.get('SUMAASEG');
+										var ImporteConcepto = ((+esquema * +sumaAsegurada) * (+porcentajePago/100));
+										_11_conceptoSeleccionado.set('PTIMPORT',ImporteConcepto);
+									}
+								}
+							}
+						},{
+							header : 'Total a Pagar',
+							dataIndex : 'PTIMPORT',
+							width : 120,
+							renderer : Ext.util.Format.usMoney
+						}
+					],
+					selModel: {
+						selType: 'cellmodel'
+					},
+					tbar:[
+							{
+								text	: 'Agregar Conceptos'
+								,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
+								,handler : _p21_agregarConcepto
+							},
+							{
+								text	: 'Guardar Concepto'
+								,icon:_CONTEXT+'/resources/fam3icons/icons/disk.png'
+								,handler : function() {
+									_guardarConceptosxFactura();
+								}
+							}
+						]
+				 });
+					this.callParent();
+				}
+				,onRemoveClick: function(grid, rowIndex){
+					/*Eliminamos el record del store*/
+					var record=this.getStore().getAt(rowIndex);
+					this.getStore().removeAt(rowIndex);
+					//banderaConcepto = "1";
+				}
+				});
+				gridEditorCoberturaRecupera = new EditorCoberturaRecupera();
+
 				gridAutorizacionMod = Ext.create('Ext.grid.Panel',
 				{
 					id			 : 'clausulasGridId'
@@ -1899,13 +2256,13 @@
 					,items	:
 					[
 						{
-							xtype		: 'displayfield',			fieldLabel	: 'Suma Asegurada',			name	: 'params.sumaAsegurada', value : '0.00', 	hidden : _tipoProducto != '7',
+							xtype		: 'displayfield',			fieldLabel	: 'Suma Asegurada',			name	: 'params.sumaAsegurada', value : '0.00', 	hidden : _tipoProducto != _GMMI,
     	    	    		valueToRaw : function(value){
 	    	                    return Ext.util.Format.usMoney(value);
 	    	                }
 						},
 						{
-							xtype		: 'displayfield',			fieldLabel	: 'Suma Disponible',			name	: 'params.sumaGastada', value : '0.00',		hidden : _tipoProducto != '7',
+							xtype		: 'displayfield',			fieldLabel	: 'Suma Disponible',			name	: 'params.sumaGastada', value : '0.00',		hidden : _tipoProducto != _GMMI,
     	    	    		valueToRaw : function(value){
 	    	                    return Ext.util.Format.usMoney(value);
 	    	                }
@@ -2124,6 +2481,7 @@
 						,gridFacturaDirecto
 						,panelComplementos
 						,gridEditorConceptos
+						,gridEditorCoberturaRecupera
 					],
 					listeners:{
 						 close:function(){
@@ -2978,11 +3336,13 @@
 				var valorRequerido = true;
 				if(_tipoPago ==_TIPO_PAGO_INDEMNIZACION){
 					gridEditorConceptos.hide();
+					gridEditorCoberturaRecupera.hide();
 					panelInicialPral.down('[name="parametros.pv_otvalor01"]').hide();
 					panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();
 					panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();
 					if(_11_params.CDRAMO == _RECUPERA){
-						//panelInicialPral.down('[name=params.feegreso]').hide(); 
+						//panelInicialPral.down('[name=params.feegreso]').hide();
+						gridEditorCoberturaRecupera.show();
 						panelInicialPral.down('[name=params.diasdedu]').hide();
 						valorRequerido = true;
 					}else{
@@ -2993,6 +3353,7 @@
 					
 				}else if(_tipoPago ==_TIPO_PAGO_REEMBOLSO){
 					gridEditorConceptos.show();
+					gridEditorCoberturaRecupera.hide();
 					panelInicialPral.down('[name="parametros.pv_otvalor01"]').hide();
 					panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();
 					panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();
@@ -3001,6 +3362,7 @@
 					valorRequerido = true;
 				}else{
 					gridEditorConceptos.show();
+					gridEditorCoberturaRecupera.hide();
 					panelInicialPral.down('[name="parametros.pv_otvalor01"]').show();
 					panelInicialPral.down('[name="parametros.pv_otvalor02"]').show();
 					panelInicialPral.down('[name="parametros.pv_otvalor03"]').show();
@@ -3802,100 +4164,181 @@
 	
 	function _guardarConceptosxFactura(){
 		var obtener = [];
-		storeConceptos.each(function(record) {
-			obtener.push(record.data);
-		});
-		if(obtener.length <= 0){
-			centrarVentanaInterna(Ext.Msg.show({
-				title:'Error',
-				msg: 'Se requiere al menos un concepto',
-				buttons: Ext.Msg.OK,
-				icon: Ext.Msg.ERROR
-			}).defer(100));
-			storeConceptos.reload();
-			return false;
-		}else{
-			
-			for(i=0;i < obtener.length;i++){
-				if(obtener[i].IDCONCEP == null ||obtener[i].CDCONCEP == null ||obtener[i].PTMTOARA == null ||obtener[i].PTPRECIO == null ||obtener[i].CANTIDAD == null ||
-					obtener[i].IDCONCEP == "" ||obtener[i].CDCONCEP == "" ||obtener[i].PTMTOARA == ""||obtener[i].PTPRECIO == "" || obtener[i].CANTIDAD ==""){
-					centrarVentanaInterna(Ext.Msg.show({
-						title:'Concepto',
-						msg: 'Favor de introducir los campos requeridos en el concepto.',
-						buttons: Ext.Msg.OK,
-						icon: Ext.Msg.WARNING
-					}).defer(100));
-					return false;
-				}
-			}
-			var submitValues={};
-			var formulario=panelInicialPral.form.getValues();
-			submitValues['params']=formulario;
-			var datosTablas = [];
-			var _11_aseguradoSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
-			debug("VALORES -->",_11_aseguradoSeleccionado)
-			storeConceptos.each(function(record,index){
-				datosTablas.push({
-					cdunieco  : record.get('CDUNIECO')
-					,cdramo   : record.get('CDRAMO')
-					,estado   : record.get('ESTADO')
-					,nmpoliza : record.get('NMPOLIZA')
-					,nmsuplem : record.get('NMSUPLEM')
-					,nmsituac : record.get('NMSITUAC')
-					,aaapertu : record.get('AAAPERTU')
-					,status   : record.get('STATUS')
-					,nmsinies : record.get('NMSINIES')
-					,nfactura : panelInicialPral.down('[name=params.nfactura]').getValue()
-					,cdgarant : record.get('CDGARANT')
-					,cdconval : record.get('CDCONVAL')
-					,cdconcep : record.get('CDCONCEP')
-					,idconcep : record.get('IDCONCEP')
-					,cdcapita : record.get('CDCAPITA')
-					,nmordina : record.get('NMORDINA')
-					,cdmoneda : "001"
-					,ptprecio : record.get('PTPRECIO')
-					,cantidad : record.get('CANTIDAD')
-					,destopor : record.get('DESTOPOR')
-					,destoimp : record.get('DESTOIMP')
-					,ptimport : record.get('PTIMPORT')
-					,ptrecobr : record.get('PTRECOBR')
-					,nmapunte : record.get('NMAPUNTE')
-					,feregist : record.get('FEREGIST')
-					,operacion: "I"
-					,ptpcioex : record.get('PTPCIOEX')
-					,dctoimex : record.get('DCTOIMEX')
-					,ptimpoex : record.get('PTIMPOEX')
-					,mtoArancel : record.get('PTMTOARA')
-					,aplicaIVA : record.get('APLICIVA')
-				});
+		if(_11_params.CDRAMO != _RECUPERA){
+			storeConceptos.each(function(record) {
+				obtener.push(record.data);
 			});
-			submitValues['datosTablas']=datosTablas;
-			panelInicialPral.setLoading(true);
-			Ext.Ajax.request(
-			{
-				url: _URL_GUARDA_CONCEPTO_TRAMITE,
-				jsonData:Ext.encode(submitValues),
-				success:function(response,opts){
-					panelInicialPral.setLoading(false);
-					var jsonResp = Ext.decode(response.responseText);
-					if(jsonResp.success==true){
-						panelInicialPral.setLoading(false);
-						banderaConcepto = "0";
-						storeConceptos.reload();
+			if(obtener.length <= 0){
+				centrarVentanaInterna(Ext.Msg.show({
+					title:'Error',
+					msg: 'Se requiere al menos un concepto',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				}).defer(100));
+				storeConceptos.reload();
+				return false;
+			}else{
+				for(i=0;i < obtener.length;i++){
+					if(obtener[i].IDCONCEP == null ||obtener[i].CDCONCEP == null ||obtener[i].PTMTOARA == null ||obtener[i].PTPRECIO == null ||obtener[i].CANTIDAD == null ||
+						obtener[i].IDCONCEP == "" ||obtener[i].CDCONCEP == "" ||obtener[i].PTMTOARA == ""||obtener[i].PTPRECIO == "" || obtener[i].CANTIDAD ==""){
+						centrarVentanaInterna(Ext.Msg.show({
+							title:'Concepto',
+							msg: 'Favor de introducir los campos requeridos en el concepto.',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.WARNING
+						}).defer(100));
+						return false;
 					}
-				},
-				failure:function(response,opts)
-				{
-					panelInicialPrincipal.setLoading(false);
-					Ext.Msg.show({
-						title:'Error',
-						msg: 'Error de comunicaci&oacute;n',
-						buttons: Ext.Msg.OK,
-						icon: Ext.Msg.ERROR
-					});
 				}
+				var submitValues={};
+				var formulario=panelInicialPral.form.getValues();
+				submitValues['params']=formulario;
+				var datosTablas = [];
+				var _11_aseguradoSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
+				debug("VALORES -->",_11_aseguradoSeleccionado)
+				storeConceptos.each(function(record,index){
+					datosTablas.push({
+						cdunieco  : record.get('CDUNIECO')
+						,cdramo   : record.get('CDRAMO')
+						,estado   : record.get('ESTADO')
+						,nmpoliza : record.get('NMPOLIZA')
+						,nmsuplem : record.get('NMSUPLEM')
+						,nmsituac : record.get('NMSITUAC')
+						,aaapertu : record.get('AAAPERTU')
+						,status   : record.get('STATUS')
+						,nmsinies : record.get('NMSINIES')
+						,nfactura : panelInicialPral.down('[name=params.nfactura]').getValue()
+						,cdgarant : record.get('CDGARANT')
+						,cdconval : record.get('CDCONVAL')
+						,cdconcep : record.get('CDCONCEP')
+						,idconcep : record.get('IDCONCEP')
+						,cdcapita : record.get('CDCAPITA')
+						,nmordina : record.get('NMORDINA')
+						,cdmoneda : "001"
+						,ptprecio : record.get('PTPRECIO')
+						,cantidad : record.get('CANTIDAD')
+						,destopor : record.get('DESTOPOR')
+						,destoimp : record.get('DESTOIMP')
+						,ptimport : record.get('PTIMPORT')
+						,ptrecobr : record.get('PTRECOBR')
+						,nmapunte : record.get('NMAPUNTE')
+						,feregist : record.get('FEREGIST')
+						,operacion: "I"
+						,ptpcioex : record.get('PTPCIOEX')
+						,dctoimex : record.get('DCTOIMEX')
+						,ptimpoex : record.get('PTIMPOEX')
+						,mtoArancel : record.get('PTMTOARA')
+						,aplicaIVA : record.get('APLICIVA')
+					});
+				});
+				submitValues['datosTablas']=datosTablas;
+				panelInicialPral.setLoading(true);
+				Ext.Ajax.request(
+				{
+					url: _URL_GUARDA_CONCEPTO_TRAMITE,
+					jsonData:Ext.encode(submitValues),
+					success:function(response,opts){
+						panelInicialPral.setLoading(false);
+						var jsonResp = Ext.decode(response.responseText);
+						if(jsonResp.success==true){
+							panelInicialPral.setLoading(false);
+							banderaConcepto = "0";
+							storeConceptos.reload();
+						}
+					},
+					failure:function(response,opts)
+					{
+						panelInicialPrincipal.setLoading(false);
+						Ext.Msg.show({
+							title:'Error',
+							msg: 'Error de comunicaci&oacute;n',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+						});
+					}
+				});
+			}
+		}else{
+			storeRecupera.each(function(record) {
+				obtener.push(record.data);
 			});
+			if(obtener.length <= 0){
+				centrarVentanaInterna(Ext.Msg.show({
+					title:'Error',
+					msg: 'Se requiere al menos una cobertura',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				}).defer(100));
+				storeRecupera.reload();
+				return false;
+			}else{
+				for(i=0;i < obtener.length;i++){
+					debug("obtener[i]--->>>>",obtener[i]);
+					if(obtener[i].CANTPORC == null ||obtener[i].CANTPORC == "" ){
+						centrarVentanaInterna(Ext.Msg.show({
+							title:'Concepto',
+							msg: 'Favor de introducir los campos requeridos en el concepto.',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.WARNING
+						}).defer(100));
+						return false;
+					}
+				}
+				var submitValues={};
+				var formulario=panelInicialPral.form.getValues();
+				submitValues['params']=formulario;
+				var datosTablas = [];
+				var _11_aseguradoSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
+				debug("VALORES -->",_11_aseguradoSeleccionado);
+				
+				storeRecupera.each(function(record,index){
+					datosTablas.push({
+						cantporc     : record.get('CANTPORC')
+						,cdconval    : record.get('CDCONVAL')
+						,cdgarant    : record.get('CDGARANT')
+						,esquemaaseg : record.get('ESQUEMAASEG')
+						,nfactura    : record.get('NFACTURA')
+						,ntramite    : record.get('NTRAMITE')
+						,ptimport    : record.get('PTIMPORT')
+						,sumaaseg    : record.get('SUMAASEG')
+						,operacion   : "I"
+					});
+				});
+				submitValues['datosTablas']=datosTablas;
+				panelInicialPral.setLoading(true);
+				Ext.Ajax.request(
+				{
+					url: _URL_GUARDA_CONCEPTO_RECUPERA,
+					jsonData:Ext.encode(submitValues),
+					success:function(response,opts){
+						panelInicialPral.setLoading(false);
+						var jsonResp = Ext.decode(response.responseText);
+						if(jsonResp.success==true){
+							panelInicialPral.setLoading(false);
+							//banderaConcepto = "0";
+							storeRecupera.reload();
+						}
+					},
+					failure:function(response,opts)
+					{
+						panelInicialPrincipal.setLoading(false);
+						Ext.Msg.show({
+							title:'Error',
+							msg: 'Error de comunicaci&oacute;n',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+						});
+					}
+				});
+			}
 		}
+		
+
+		
+		
+		
+		
+		
 	}
 
 	function _p21_agregarAsegurado(){
@@ -4030,47 +4473,52 @@
 	{
 		if(gridFacturaDirecto.getSelectionModel().hasSelection()){
 			var recordFactura = gridFacturaDirecto.getSelectionModel().getSelection()[0];
-			debug("VALOR DEL RECORD PARA LOS CONCEPTOS -->",recordFactura);
-			var idReclamacion = recordFactura.get('NMSINIES');
-			valido = idReclamacion && idReclamacion>0;
-			if(valido){
-				var idCobertura = recordFactura.get('CDGARANT');
-				var idSubcobertura = recordFactura.get('CDCONVAL');
-				var idcausaSiniestro = recordFactura.get('CDCAUSA');
-				var idICDP = recordFactura.get('CDICD');
-				
-				if(recordFactura.get('CDGARANT').length > 0 && recordFactura.get('CDCONVAL').length > 0 && 
-				   recordFactura.get('CDCAUSA').length > 0 && recordFactura.get('CDICD').length > 0){
-						banderaConcepto = "1";
-						storeConceptos.add(new modelConceptos(
-						{
-							PTPRECIO : '0.00',
-							DESTOPOR : '0.00',
-							DESTOIMP : '0.00',
-							CDUNIECO : recordFactura.get('CDUNIECO'),
-							CDRAMO   : recordFactura.get('CDRAMO'),
-							ESTADO   : recordFactura.get('ESTADO'),
-							NMPOLIZA : recordFactura.get('NMPOLIZA'),
-							NMSUPLEM : recordFactura.get('NMSUPLEM'),
-							NMSITUAC : recordFactura.get('NMSITUAC'),
-							AAAPERTU : recordFactura.get('AAAPERTU'),
-							STATUS   : recordFactura.get('STATUS'),
-							NMSINIES : recordFactura.get('NMSINIES'),
-							PTPCIOEX : '0.00',
-							DCTOIMEX : '0.00',
-							PTIMPOEX : '0.00',
-							CDGARANT : recordFactura.get('CDGARANT'),
-							CDCONVAL : recordFactura.get('CDCONVAL')
-						}));
-						
+			if(_11_params.CDRAMO != _RECUPERA){
+				debug("VALOR DEL RECORD PARA LOS CONCEPTOS -->",recordFactura);
+				var idReclamacion = recordFactura.get('NMSINIES');
+				valido = idReclamacion && idReclamacion>0;
+				if(valido){
+					var idCobertura = recordFactura.get('CDGARANT');
+					var idSubcobertura = recordFactura.get('CDCONVAL');
+					var idcausaSiniestro = recordFactura.get('CDCAUSA');
+					var idICDP = recordFactura.get('CDICD');
+					
+					if(recordFactura.get('CDGARANT').length > 0 && recordFactura.get('CDCONVAL').length > 0 && 
+					   recordFactura.get('CDCAUSA').length > 0 && recordFactura.get('CDICD').length > 0){
+							banderaConcepto = "1";
+							storeConceptos.add(new modelConceptos(
+							{
+								PTPRECIO : '0.00',
+								DESTOPOR : '0.00',
+								DESTOIMP : '0.00',
+								CDUNIECO : recordFactura.get('CDUNIECO'),
+								CDRAMO   : recordFactura.get('CDRAMO'),
+								ESTADO   : recordFactura.get('ESTADO'),
+								NMPOLIZA : recordFactura.get('NMPOLIZA'),
+								NMSUPLEM : recordFactura.get('NMSUPLEM'),
+								NMSITUAC : recordFactura.get('NMSITUAC'),
+								AAAPERTU : recordFactura.get('AAAPERTU'),
+								STATUS   : recordFactura.get('STATUS'),
+								NMSINIES : recordFactura.get('NMSINIES'),
+								PTPCIOEX : '0.00',
+								DCTOIMEX : '0.00',
+								PTIMPOEX : '0.00',
+								CDGARANT : recordFactura.get('CDGARANT'),
+								CDCONVAL : recordFactura.get('CDCONVAL')
+							}));
+							
+					}else{
+						mensajeWarning('Complemente la informaci&oacute;n del Asegurado');
+					}
 				}else{
-					mensajeWarning(
-						'Complemente la informaci&oacute;n del Asegurado');
+					mensajeWarning('Debes generar una autorizaci&oacute;n para el asegurado');
 				}
 			}else{
-				mensajeWarning(
-						'Debes generar una autorizaci&oacute;n para el asegurado'
-				);
+				storeRecupera.add(new modelRecupera(
+				{
+					'NTRAMITE'	: panelInicialPral.down('[name=params.ntramite]').getValue() ,
+					'NFACTURA'	: panelInicialPral.down('[name=params.nfactura]').getValue()
+				}));
 			}
 		}else{
 			centrarVentanaInterna(mensajeWarning("Debe seleccionar un asegurado para agregar sus conceptos"));

@@ -30,6 +30,7 @@
             var _URL_CONSULTA_FACTURA_PAGADA        = '<s:url namespace="/siniestros"       action="consultaFacturaPagada" />';
             var _p12_urlMesaControl                 = '<s:url namespace="/mesacontrol" 		action="mcdinamica"               />';
             var _UR_LISTA_RAMO_SALUD				= '<s:url namespace="/siniestros"  		action="consultaRamosSalud"/>';
+            var _RECUPERA							= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo" />';
             
 			//var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
 			// Obtenemos el contenido en formato JSON de la propiedad solicitada:

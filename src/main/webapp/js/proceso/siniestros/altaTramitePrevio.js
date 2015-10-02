@@ -115,7 +115,7 @@ Ext.onReady(function() {
 	
 	var storeTipoAtencion = Ext.create('Ext.data.Store', {
 		model:'Generic',
-		autoLoad:true,
+		autoLoad:false,
 		proxy: {
 			type: 'ajax',
 			url:_UR_TIPO_ATENCION,
@@ -230,6 +230,11 @@ Ext.onReady(function() {
 						'params.tipoPago':panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
 					}
 				});
+				
+				if(panelInicialPral.down('combo[name=cmbRamos]').getValue() == _RECUPERA){
+    				panelInicialPral.down('combo[name=cmbTipoPago]').setValue('3');
+    				panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue('9');
+    			}
     		}
     	}
 	});
@@ -247,7 +252,12 @@ Ext.onReady(function() {
 						'params.tipoPago':panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
 					}
 				});
-	    		if(e.getValue() == _TIPO_PAGO_DIRECTO){
+				
+	    		if(panelInicialPral.down('combo[name=cmbRamos]').getValue() == _RECUPERA){
+    				panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue('9');
+    			}
+				
+				if(e.getValue() == _TIPO_PAGO_DIRECTO){
     				//PAGO DIRECTO
 	    			limpiarRegistrosTipoPago(e.getValue());
 					panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
@@ -275,7 +285,14 @@ Ext.onReady(function() {
 	var comboTipoAte = Ext.create('Ext.form.ComboBox',{
         name:'cmbTipoAtencion',					fieldLabel: 'Tipo atenci&oacute;n',	allowBlank : false,			editable:true,
         displayField: 'value',					emptyText:'Seleccione...',			valueField: 'key',			forceSelection : true,
-        width		 : 300,						queryMode      :'local',			store: storeTipoAtencion
+        width		 : 300,						queryMode      :'local',			store: storeTipoAtencion,
+        listeners : {
+    		'change':function(e){
+    			if(panelInicialPral.down('combo[name=cmbRamos]').getValue() == _RECUPERA){
+    				panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue('9');
+    			}
+    		}
+    	}
     });
     
     var cmbOficinaReceptora = Ext.create('Ext.form.field.ComboBox',{

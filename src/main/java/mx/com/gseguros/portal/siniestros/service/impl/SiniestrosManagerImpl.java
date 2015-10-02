@@ -342,81 +342,12 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	public String guardaListaFacMesaControl(
-			String ntramite,
-			String nfactura,
-			Date fefactura,
-			String cdtipser,
-			String cdpresta,
-			String ptimport,
-			String cdgarant,
-			String cdconval,
-			String descporc,
-			String descnume,
-			String cdmoneda,
-			String tasacamb,
-			String ptimporta,
-			String dctonuex,
-			Date feegreso,
-			String diasdedu,
+	public String guardaListaFacturaSiniestro(String ntramite, String nfactura,
+			Date fefactura, String cdtipser, String cdpresta, String ptimport,
+			String cdgarant, String cdconval, String descporc, String descnume,
+			String cdmoneda, String tasacamb, String ptimporta,
+			String dctonuex, Date feegreso, String diasdedu, String nombProv,
 			String tipoAccion) throws Exception {
-		// TODO Auto-generated method stub
-		try {
-			String accion = null;
-			log.debug("Entra a esta parte --> : "+feegreso);
-			if(tipoAccion == null || tipoAccion == ""){
-				accion = Constantes.INSERT_MODE;
-			}else{
-				accion = Constantes.UPDATE_MODE;
-			}
-			
-			HashMap<String,Object> paramsFacMesaCtrl=new HashMap<String,Object>();
-			paramsFacMesaCtrl.put("pv_accion_i", accion);
-			paramsFacMesaCtrl.put("pv_ntramite_i",ntramite);
-			paramsFacMesaCtrl.put("pv_nfactura_i",nfactura);
-			paramsFacMesaCtrl.put("pv_ffactura_i",fefactura);
-			paramsFacMesaCtrl.put("pv_cdtipser_i",cdtipser);
-			paramsFacMesaCtrl.put("pv_cdpresta_i",cdpresta);
-			paramsFacMesaCtrl.put("pv_ptimport_i",ptimport);
-			paramsFacMesaCtrl.put("pv_cdgarant_i",cdgarant);
-			paramsFacMesaCtrl.put("pv_cdconval_i",cdconval);
-			paramsFacMesaCtrl.put("pv_descporc_i",descporc);
-			paramsFacMesaCtrl.put("pv_descnume_i",descnume);
-			paramsFacMesaCtrl.put("pv_cdmoneda_i",cdmoneda);
-			paramsFacMesaCtrl.put("pv_tasacamb_i",tasacamb);
-			paramsFacMesaCtrl.put("pv_ptimporta_i",ptimporta);
-			paramsFacMesaCtrl.put("pv_dctonuex_i",dctonuex);
-			paramsFacMesaCtrl.put("pv_feegreso_i", feegreso);
-			paramsFacMesaCtrl.put("pv_diasdedu_i",diasdedu);
-			log.debug("guardaListaFacMesaControl params: "+paramsFacMesaCtrl);
-			return siniestrosDAO.guardaFacMesaControl(paramsFacMesaCtrl);
-		} catch (ParseException parseExc) {
-			throw new Exception(parseExc.getMessage(), parseExc);
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-	
-	@Override
-	public String guardaListaFacMesaControl2(
-			String ntramite,
-			String nfactura,
-			Date fefactura,
-			String cdtipser,
-			String cdpresta,
-			String ptimport,
-			String cdgarant,
-			String cdconval,
-			String descporc,
-			String descnume,
-			String cdmoneda,
-			String tasacamb,
-			String ptimporta,
-			String dctonuex,
-			Date feegreso,
-			String diasdedu,
-			String tipoAccion,
-			String nombProv) throws Exception {
 		// TODO Auto-generated method stub
 		try {
 			String accion = null;
@@ -447,15 +378,15 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			paramsFacMesaCtrl.put("pv_diasdedu_i",diasdedu);
 			paramsFacMesaCtrl.put("pv_nombprov_i",nombProv);
 			log.debug("guardaListaFacMesaControl params: "+paramsFacMesaCtrl);
-			return siniestrosDAO.guardaFacMesaControl2(paramsFacMesaCtrl);
+			return siniestrosDAO.guardaListaFacturaSiniestro(paramsFacMesaCtrl);
 		} catch (ParseException parseExc) {
 			throw new Exception(parseExc.getMessage(), parseExc);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
-
-	@Override
+	
+	/*@Override
 	public String movFacMesaControl(
 			String ntramite,
 			String nfactura,
@@ -479,7 +410,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			paramsFacMesaCtrl.put("pv_ntramite_i",ntramite);
 			paramsFacMesaCtrl.put("pv_nfactura_i",nfactura);
 				paramsFacMesaCtrl.put("pv_ffactura_i",DateUtils.parseDate(fefactura, Constantes.FORMATO_FECHA));
-				// TODO Auto-generated catch block
 			paramsFacMesaCtrl.put("pv_cdtipser_i",cdtipser);
 			paramsFacMesaCtrl.put("pv_cdpresta_i",cdpresta);
 			paramsFacMesaCtrl.put("pv_ptimport_i",ptimport);
@@ -498,7 +428,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
-	}
+	}*/
 
 	@Override
 	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws Exception {
@@ -1903,5 +1833,68 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		params.put("pv_nfactura_i",   nfactura);
 		log.debug("guardaHistorialSiniestro params: "+params);
 		return siniestrosDAO.guardaHistorialSiniestro(params);
+	}
+	
+	@Override
+	public String guardaListaRecupera(String ntramite,
+			String nfactura,
+			String cdgarant, 
+			String cdconval, 
+			String cantporc, 
+			String ptimport, 
+			String tipoAccion) throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			
+			HashMap<String,Object> paramsMRecupera=new HashMap<String,Object>();
+			paramsMRecupera.put("pv_ntramite_i",ntramite);
+			paramsMRecupera.put("pv_nfactura_i",nfactura);
+			paramsMRecupera.put("pv_cdgarant_i",cdgarant);
+			paramsMRecupera.put("pv_cdconval_i",cdconval);
+			paramsMRecupera.put("pv_cantporc_i",cantporc);
+			paramsMRecupera.put("pv_ptimport_i",ptimport);
+			paramsMRecupera.put("pv_accion_i", tipoAccion);
+			log.debug("guardaListaMRECUPERA params: "+paramsMRecupera);
+			return siniestrosDAO.guardaInfoRecupera(paramsMRecupera);
+		} catch (ParseException parseExc) {
+			throw new Exception(parseExc.getMessage(), parseExc);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>>obtieneInformacionRecupera(String cdunieco,String cdramo, String estado, String nmpoliza, String nmsuplem,
+			String nmsituac, Date feEfecto, String ntramite, String nfactura) throws Exception
+	{
+		List<Map<String,String>>lista=siniestrosDAO.obtieneInformacionRecupera(cdunieco,cdramo, estado, nmpoliza, nmsuplem,
+				nmsituac, feEfecto, ntramite, nfactura);
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		log.debug("obtieneInformacionRecupera lista size:"+lista.size());
+		return lista;
+	}
+	
+	@Override
+	public List<Map<String,String>>obtieneEsquemaSumAseguradaRecupera(String cdunieco,String cdramo, String estado, String nmpoliza, String nmsuplem,
+			String nmsituac, Date feEfecto, String cdgarant, String cdconval) throws Exception
+	{
+		List<Map<String,String>>lista=siniestrosDAO.obtieneEsquemaSumAseguradaRecupera(cdunieco,cdramo, estado, nmpoliza, nmsuplem,
+				nmsituac, feEfecto, cdgarant, cdconval);
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		log.debug("obtieneInformacionRecupera lista size:"+lista.size());
+		return lista;
+	}
+	
+	@Override
+	public void P_MOV_MRECUPERA(String ntramite,String nfactura, String cdgarant, String cdconval,
+			String cantporc,String ptimport, String accion) throws Exception
+	{
+		siniestrosDAO.P_MOV_MRECUPERA(ntramite, nfactura, cdgarant, cdconval, cantporc, ptimport, accion);
 	}
 }
