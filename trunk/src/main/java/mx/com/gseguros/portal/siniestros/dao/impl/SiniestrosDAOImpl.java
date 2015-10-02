@@ -1011,50 +1011,16 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				compile();
 			}
 		}
-
+		
 		@Override
-		public String guardaFacMesaControl(HashMap<String, Object> paramsFacMesaCtrl) throws Exception {
-				Map<String, Object> mapResult = ejecutaSP(new guardaFacMesaControlSP(getDataSource()), paramsFacMesaCtrl);
+		public String guardaListaFacturaSiniestro(HashMap<String, Object> paramsFacMesaCtrl) throws Exception {
+				Map<String, Object> mapResult = ejecutaSP(new guardaListaFacturaSiniestro(getDataSource()), paramsFacMesaCtrl);
 				return (String) mapResult.get("pv_msg_id_o");
 		}
 		
-		protected class guardaFacMesaControlSP extends StoredProcedure {
-			protected guardaFacMesaControlSP(DataSource dataSource) {
-				super(dataSource, "PKG_SATELITES.P_MOV_TFACMESCTRL2");
-				//super(dataSource, "PKG_SATELITES.P_MOV_TFACMESCTRL");
-				declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_ffactura_i", OracleTypes.DATE));
-				declareParameter(new SqlParameter("pv_cdtipser_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_cdpresta_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_ptimport_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_cdconval_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_descporc_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_descnume_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_cdmoneda_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_tasacamb_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_ptimporta_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_dctonuex_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_feegreso_i", OracleTypes.DATE));
-				declareParameter(new SqlParameter("pv_diasdedu_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-				compile();
-			}
-		}
-		
-		@Override
-		public String guardaFacMesaControl2(HashMap<String, Object> paramsFacMesaCtrl) throws Exception {
-				Map<String, Object> mapResult = ejecutaSP(new guardaFacMesaControl2SP(getDataSource()), paramsFacMesaCtrl);
-				return (String) mapResult.get("pv_msg_id_o");
-		}
-		
-		protected class guardaFacMesaControl2SP extends StoredProcedure {
-			protected guardaFacMesaControl2SP(DataSource dataSource) {
-				super(dataSource, "PKG_SATELITES.P_MOV_TFACMESCTRLMOD");
-				//super(dataSource, "PKG_SATELITES.P_MOV_TFACMESCTRL");
+		protected class guardaListaFacturaSiniestro extends StoredProcedure {
+			protected guardaListaFacturaSiniestro(DataSource dataSource) {
+				super(dataSource, "PKG_SATELITES2.P_MOV_TFACMESCTRL");
 				declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
@@ -2757,9 +2723,10 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"LIMITES"
 					,"TIPOCOPAGO"
 					,"UNIDAD"
-					//,"LV_PENALIZA"
+					,"LV_PENALIZA"
 					,"FORMATOCALCULO"
 					,"PENALIZACIONES"
+					,"VALSESIONES"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -4609,7 +4576,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		declareParameter(new SqlParameter("pv_secuenciaIVA_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_aplicaIVARet_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_accion_i",   OracleTypes.VARCHAR));
-    		//declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
     		compile();
@@ -4721,6 +4687,151 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String guardaInfoRecupera(HashMap<String, Object> paramsMRecupera) throws Exception {
+			Map<String, Object> mapResult = ejecutaSP(new guardaInfoRecupera(getDataSource()), paramsMRecupera);
+			return (String) mapResult.get("pv_msg_id_o");
+	}
+	
+	
+	protected class guardaInfoRecupera extends StoredProcedure {
+		protected guardaInfoRecupera(DataSource dataSource) {
+			super(dataSource, "PKG_SINIESTRO.P_MOV_MRECUPERA");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdconval_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cantporc_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptimport_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>>obtieneInformacionRecupera(String cdunieco,String cdramo, String estado, String nmpoliza, String nmsuplem,
+			String nmsituac, Date feEfecto, String ntramite, String nfactura) throws Exception
+	{
+		Map<String,Object>p=new HashMap<String,Object>();
+		p.put("pv_cdunieco_i" , cdunieco);
+		p.put("pv_cdramo_i" , cdramo);
+		p.put("pv_estado_i" , estado);
+		p.put("pv_nmpoliza_i" , nmpoliza);
+		p.put("pv_nmsuplem_i" , nmsuplem);
+		p.put("pv_nmsituac_i" , nmsituac);
+		p.put("pv_feefecto_i" , feEfecto);
+		p.put("pv_ntramite_i" , ntramite);
+		p.put("pv_nfactura_i" , nfactura);
+		logger.debug("P_GET_MSINIVAL params: "+p);
+		Map<String, Object> mapResult = ejecutaSP(new obtieneInformacionRecupera(this.getDataSource()), p);
+		return (List<Map<String,String>>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class obtieneInformacionRecupera extends StoredProcedure
+	{
+		protected obtieneInformacionRecupera(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_OBTIENE_INF_RECUPERA");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i" ,   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i" ,   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feefecto_i" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i" , OracleTypes.VARCHAR));
+			String cols[] = new String[]{
+					"NTRAMITE","NFACTURA","CDGARANT","CDCONVAL","CANTPORC","ESQUEMAASEG", "SUMAASEG", "PTIMPORT" 
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>>obtieneEsquemaSumAseguradaRecupera(String cdunieco,String cdramo, String estado, String nmpoliza, String nmsuplem,
+			String nmsituac, Date feEfecto, String cdgarant, String cdconval) throws Exception
+	{
+		Map<String,Object>p=new HashMap<String,Object>();
+		p.put("pv_cdunieco_i" , cdunieco);
+		p.put("pv_cdramo_i" , cdramo);
+		p.put("pv_estado_i" , estado);
+		p.put("pv_nmpoliza_i" , nmpoliza);
+		p.put("pv_nmsuplem_i" , nmsuplem);
+		p.put("pv_nmsituac_i" , nmsituac);
+		p.put("pv_cdgarant_i" , cdgarant);
+		p.put("pv_cdconval_i" , cdconval);
+		p.put("pv_feefecto_i" , feEfecto);
+		logger.debug("obtieneEsquemaSumAseguradaRecupera params: "+p);
+		Map<String, Object> mapResult = ejecutaSP(new obtieneEsquemaSumAseguradaRecupera(this.getDataSource()), p);
+		return (List<Map<String,String>>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class obtieneEsquemaSumAseguradaRecupera extends StoredProcedure
+	{
+		protected obtieneEsquemaSumAseguradaRecupera(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_GET_ESQSUMA_RECUPERA");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i" ,   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i" ,   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgarant_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdconval_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feefecto_i" , OracleTypes.DATE));
+			String cols[] = new String[]{
+					"SUMAASEG", "ESQUEMAASEG" 
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+
+	@Override
+	public void P_MOV_MRECUPERA(String ntramite, String nfactura,
+			String cdgarant, String cdconval, String cantporc, String ptimport,
+			String accion) throws Exception {
+		Map<String,Object>p=new HashMap<String,Object>();
+		p.put("pv_ntramite_i" , ntramite);
+		p.put("pv_nfactura_i" , nfactura);
+		p.put("pv_cdgarant_i" , cdgarant);
+		p.put("pv_cdconval_i" , cdconval);
+		p.put("pv_cantporc_i" , cantporc);
+		p.put("pv_ptimport_i" , ptimport);
+		p.put("pv_accion_i"   , accion);
+		logger.debug("P_MOV_MRECUPERA params: "+p);
+		ejecutaSP(new PMOVMRECUPERA(this.getDataSource()), p);
+		logger.debug("PMOVMRECUPERA end");
+	}
+	
+	protected class PMOVMRECUPERA extends StoredProcedure
+	{
+		protected PMOVMRECUPERA(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_MOV_MRECUPERA");
+			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgarant_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdconval_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cantporc_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptimport_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_accion_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

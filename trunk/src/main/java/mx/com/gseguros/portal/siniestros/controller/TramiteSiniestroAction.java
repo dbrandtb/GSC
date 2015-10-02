@@ -233,7 +233,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 		// si tipo de pago es Directo
 		if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.DIRECTO.getCodigo())){
 			for(int i=0;i<datosTablas.size();i++) {
-				siniestrosManager.guardaListaFacMesaControl(
+				siniestrosManager.guardaListaFacturaSiniestro(
 					msgResult, 
 					datosTablas.get(i).get("nfactura"),
 					renderFechas.parse(datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4)),
@@ -247,6 +247,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					datosTablas.get(i).get("cdmoneda"),
 					datosTablas.get(i).get("tasacamb"),
 					datosTablas.get(i).get("ptimporta"),
+					null,
 					null,
 					null,
 					null,
@@ -277,7 +278,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				}else{
 					nfactura= msgResult+""+i;
 				}
-				siniestrosManager.guardaListaFacMesaControl2(
+				siniestrosManager.guardaListaFacturaSiniestro(
 					msgResult, 
 					nfactura,
 					renderFechas.parse(datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4)),
@@ -294,8 +295,8 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					null,
 					null,
 					null,
-					null,
-					(cdramo.equalsIgnoreCase(Ramo.RECUPERA.getCdramo()))?datosTablas.get(i).get("nombprov"):null
+					(cdramo.equalsIgnoreCase(Ramo.RECUPERA.getCdramo()))?datosTablas.get(i).get("nombprov"):null ,
+					null
 				);
 			}
 	
@@ -348,12 +349,12 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					valorFactura = datosTablas.get(i).get("nfactura");
 				}
 				
-				siniestrosManager.guardaListaFacMesaControl(
+				siniestrosManager.guardaListaFacturaSiniestro(
 					params.get("nmtramite"),
 					valorFactura,
 					renderFechas.parse(datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4)),
 					datosTablas.get(i).get("cdtipser"),
-					datosTablas.get(i).get("cdpresta"),
+					(cdramo.equalsIgnoreCase(Ramo.RECUPERA.getCdramo()))?"0":datosTablas.get(i).get("cdpresta"),
 					datosTablas.get(i).get("ptimport"),
 					((cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) && tipoPago.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()))?"7RDH":null),
 					((cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) && tipoPago.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()))?"7RDH001":null),
@@ -365,6 +366,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					null,
 					null,
 					null,
+					(cdramo.equalsIgnoreCase(Ramo.RECUPERA.getCdramo()))?datosTablas.get(i).get("nombprov"):null ,
 					null
 				);
 				actualizaMesaControlSiniestro(params.get("nmtramite"));
@@ -529,7 +531,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			//Realizamos la eliminaci�n de las facturas
 			siniestrosManager.getEliminacionFacturaTramite(params.get("idNumTramite"), null, "0");
 			for(int i=0;i<datosTablas.size();i++) {
-				siniestrosManager.guardaListaFacMesaControl(
+				siniestrosManager.guardaListaFacturaSiniestro(
 					params.get("idNumTramite"), 
 					datosTablas.get(i).get("nfactura"),
 					renderFechas.parse(datosTablas.get(i).get("ffactura").substring(8,10)+"/"+datosTablas.get(i).get("ffactura").substring(5,7)+"/"+datosTablas.get(i).get("ffactura").substring(0,4)),
@@ -543,6 +545,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					datosTablas.get(i).get("cdmoneda"),
 					datosTablas.get(i).get("tasacamb"),
 					datosTablas.get(i).get("ptimporta"),
+					null,
 					null,
 					null,
 					null,

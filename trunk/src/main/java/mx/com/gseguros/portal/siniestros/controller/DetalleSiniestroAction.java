@@ -91,7 +91,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				params.get("nmsinies"), params.get("nmsiniesRef"));
 			success = true;
 		} catch(Exception e) {
-			logger.error("Error en actualizaDatosGeneralesSiniestro : {}", e.getMessage(), e);
+			logger.error("Error en asociaMsiniestroReferenciado : {}", e.getMessage(), e);
 		}
 		return SUCCESS;
 	}
@@ -130,7 +130,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			Date dFeFactura = renderFechas.parse(formatoFechaFactura);
 			Date dFeEgreso = renderFechas.parse(formatoFeEgreso); 
 			
-			siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), dFeFactura , params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),dFeEgreso, params.get("diasdedu"),null);
+			siniestrosManager.guardaListaFacturaSiniestro(params.get("ntramite"), params.get("nfactura"), dFeFactura , params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),dFeEgreso, params.get("diasdedu"),null,null);
 			success = true;
 		}catch(Exception e){
 			logger.error("Error en actualizaDatosGeneralesSiniestro {}", e.getMessage(), e);
@@ -152,7 +152,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			}else{
 				feegreso = renderFechas.parse(params.get("fefactura"));
 			}
-			siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), renderFechas.parse(params.get("fefactura")), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),feegreso,params.get("diasdedu"),null);
+			siniestrosManager.guardaListaFacturaSiniestro(params.get("ntramite"), params.get("nfactura"), renderFechas.parse(params.get("fefactura")), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),feegreso,params.get("diasdedu"),null,null);
 			
 			List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(params.get("ntramite"), params.get("nfactura"),null);
 			

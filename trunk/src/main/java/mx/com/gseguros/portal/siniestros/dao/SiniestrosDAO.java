@@ -79,9 +79,7 @@ public interface SiniestrosDAO {
 
 	public List<GenericVO> obtieneListadoPlaza() throws Exception;
 
-	public String guardaFacMesaControl(HashMap<String, Object> paramsFacMesaCtrl) throws Exception;
-	
-	public String guardaFacMesaControl2(HashMap<String, Object> paramsFacMesaCtrl) throws Exception;
+	public String guardaListaFacturaSiniestro(HashMap<String, Object> paramsFacMesaCtrl) throws Exception;
 
 	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws Exception;
 
@@ -481,4 +479,16 @@ public interface SiniestrosDAO {
 	public List<Map<String, String>> obtieneConfiguracionLayout(Map<String, Object> params) throws Exception;
 	
 	public List<Map<String, String>> guardaHistorialSiniestro(Map<String, Object> params) throws Exception;
+
+	public String guardaInfoRecupera(HashMap<String, Object> paramsMRecupera) throws Exception;
+	
+	public List<Map<String,String>>obtieneInformacionRecupera(String cdunieco,String cdramo, String estado, String nmpoliza, String nmsuplem,
+			String nmsituac, Date feEfecto, String ntramite, String nfactura) throws Exception;
+	
+	public List<Map<String,String>>obtieneEsquemaSumAseguradaRecupera(String cdunieco,String cdramo, String estado, String nmpoliza, String nmsuplem,
+			String nmsituac, Date feEfecto, String cdgarant, String cdconval) throws Exception;
+	
+	public void P_MOV_MRECUPERA(String ntramite,String nfactura, String cdgarant, String cdconval,
+			String cantporc,String ptimport, String accion) throws Exception;
+
 }

@@ -42,6 +42,7 @@
             var dctonuex = null;
             var cdmoneda = null;
             var tipoAccion = null;
+            var nombProv = null;
 
             debug('_selCobParams:',_selCobParams);
             ////// variables //////
@@ -249,6 +250,7 @@
                     },
                     onEditClick: function(grid, rowIndex){
                         var record=grid.getStore().getAt(rowIndex);
+                       debug("VALOR DEL RECORD --->",record);
                         //_selCobForm.hiden(false);
                         if(record.data.CDGARANT == null ||record.data.CDGARANT == "")
                         {
@@ -261,6 +263,7 @@
                         ffactura = record.data.FFACTURA;
                         cdtipser = record.data.CDTIPSER;
                         cdpresta = record.data.CDPRESTA;
+                        nombProv = record.data.NOMBREPROVEEDOR;
                         ptimport = record.data.PTIMPORT;
                         descporc = record.data.DESCPORC;
                         descnume = record.data.DESCNUME;
@@ -434,7 +437,9 @@
                                             'params.cdmoneda'    : cdmoneda,
                                             'params.cdgarant'    : _selCobForm.items.items[3].getValue(),
                                             'params.cdconval'    : _selCobForm.items.items[4].getValue(),
-                                            'params.tipoAccion'  : tipoAccion
+                                            'params.tipoAccion'  : tipoAccion,
+                                            'params.cdramo'      : _selCobParams.cdramo,
+                                            'params.nombProv'    : nombProv
                                         },
                                         failure: function(form, action) {
                                             centrarVentanaInterna(mensajeError("Error al guardar la cobertura y subcobertura "));
