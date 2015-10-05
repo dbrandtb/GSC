@@ -3039,7 +3039,7 @@ public class EndososAction extends PrincipalCoreAction
 				try{
 					//Meter los nuevos valores de parentesco y antiguedad
 					String numParentesco = endososManager.obtieneNumeroAtributo(smap1.get("cdtipsit"), "PARENTESCO");
-					String numAntiguedad = endososManager.obtieneNumeroAtributo(smap1.get("cdtipsit"), "F. ANTIG�EDAD");
+					String numAntiguedad = endososManager.obtieneNumeroAtributo(smap1.get("cdtipsit"), "F. ANTIG");
 					
 					
 					String paramParent = new StringBuilder("pv_otvalor").append(StringUtils.leftPad(String.valueOf(numParentesco), 2, "0")).toString();
@@ -3054,7 +3054,7 @@ public class EndososAction extends PrincipalCoreAction
 					logger.debug("se agregaron los nuevos");
 				
 				}catch(Exception ex){
-					logger.error("Error al insertar los atributos de parentesco y antiguedad",ex);
+					logger.error("Error al insertar los atributos de parentesco y antig&#252;edad",ex);
 					throw new ApplicationException("Error al insertar los atributos de parentesco y antiguedad.");
 				}
 				
