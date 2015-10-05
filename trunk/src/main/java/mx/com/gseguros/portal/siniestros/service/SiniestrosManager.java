@@ -67,6 +67,8 @@ public interface SiniestrosManager {
 	
 	public List<GenericVO> getConsultaListaSubcoberturaTotales() throws Exception;
 	
+	public List<GenericVO> getConsultaListaSubcoberturaRecupera() throws Exception;
+	
 	public List<GenericVO> getConsultaListaCPTICD(String cdtabla, String otclave) throws Exception;
 	
 	public List<GenericVO> getConsultaListaTipoPago(String cdramo) throws Exception;

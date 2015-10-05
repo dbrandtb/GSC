@@ -149,6 +149,21 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
+	public List<GenericVO> getConsultaListaSubcoberturaRecupera() throws Exception {
+		try {
+			List<GenericVO> lista = siniestrosDAO.obtieneListadoSubcoberturaRecupera();
+			if(lista==null)
+			{
+				lista= new ArrayList<GenericVO>();
+			}
+			log.debug("getConsultaListaSubcoberturaTotales lista size: "+lista.size());
+			return lista;
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
 	public List<GenericVO> getConsultaListaCPTICD(String cdtabla, String otclave)
 			throws Exception {
 		try {

@@ -379,6 +379,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case SUBCOBERTURASTOTALES:
 					lista = siniestrosManager.getConsultaListaSubcoberturaTotales();
 					break;
+				case SUBCOBERTURASRECUPERA:
+					lista = siniestrosManager.getConsultaListaSubcoberturaRecupera();
+					break;
 				case MEDICOS:
 					List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(
 							TipoPrestadorServicio.MEDICO.getCdtipo(), params != null ? params.get("cdpresta") : null);
