@@ -144,7 +144,7 @@ public class PersonasAction extends PrincipalCoreAction
 		    	clienteGeneral.setRfcCli(smap1.get("rfc"));
 		    	//clienteGeneral.setRamoCli(213);
 		    	clienteGeneral.setClaveCia(saludDanios);
-		    	clienteGeneral.setNombreCli(smap1.get("snombre"));
+		    	clienteGeneral.setNombreCli(smap1.get("nombre"));
 		    	
 		    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
 		    	
