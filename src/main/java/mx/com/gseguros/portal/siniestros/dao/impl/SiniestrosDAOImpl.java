@@ -408,7 +408,25 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         }
     }
     
-    
+	@Override
+	public List<GenericVO> obtieneListadoSubcoberturaRecupera() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoSubcoberturaRecupera(getDataSource()), params);
+		return (List<GenericVO>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ObtieneListadoSubcoberturaRecupera extends StoredProcedure
+	{
+		protected ObtieneListadoSubcoberturaRecupera(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.P_GET_SUBCOBERTURA_RECUPERA");
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaSubcobertura()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 	public List<GenericVO> obtieneListadoCPTICD(String cdtabla, String otclave)
 			throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();

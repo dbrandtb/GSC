@@ -10,6 +10,7 @@
 			var _CATALOGO_TIPOMONEDA					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA"/>';
 			var _CATALOGO_COBERTURASTOTALES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURASTOTALES"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASTOTALES"/>';
+			var _CATALOGO_SUBCOBERTURASRECUPERA			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASRECUPERA"/>';
 			var _ROL_MEDICO								= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MEDICO_AJUSTADOR.cdsisrol" />';
 			var _ROL_COORD_MEDICO						= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@GERENTE_MEDICO_MULTIREGIONAL.cdsisrol" />';
 			var _OPERADOR_REC							= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@OPERADOR_SINIESTROS.cdsisrol" />';
@@ -557,7 +558,7 @@
 					proxy: {
 						type: 'ajax',
 						url: _URL_CATALOGOS,
-						extraParams : {catalogo:_CATALOGO_SUBCOBERTURASTOTALES},
+						extraParams : {catalogo:_CATALOGO_SUBCOBERTURASRECUPERA},
 						reader: {
 							type: 'json',
 							root: 'lista'
@@ -1074,6 +1075,11 @@
 									var infRecupera = Ext.decode(response.responseText).loadList;
 									_11_conceptoSeleccionado.set('ESQUEMAASEG',infRecupera[0].ESQUEMAASEG);
 									_11_conceptoSeleccionado.set('SUMAASEG',infRecupera[0].SUMAASEG);
+									var esquema = _11_conceptoSeleccionado.get('ESQUEMAASEG');
+									var sumaAsegurada = _11_conceptoSeleccionado.get('SUMAASEG');
+									var porcentajePago = _11_conceptoSeleccionado.get('CANTPORC');
+									var ImporteConcepto = ((+esquema * +sumaAsegurada) * (+porcentajePago/100));
+									_11_conceptoSeleccionado.set('PTIMPORT',ImporteConcepto);
 								},
 								failure : function () {
 									//me.up().up().setLoading(false);

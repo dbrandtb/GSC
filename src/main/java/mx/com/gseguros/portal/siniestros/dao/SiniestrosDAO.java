@@ -43,6 +43,8 @@ public interface SiniestrosDAO {
 	
 	public List<GenericVO> obtieneListadoSubcoberturaTotales() throws Exception;
 	
+	public List<GenericVO> obtieneListadoSubcoberturaRecupera() throws Exception;
+	
 	public List<GenericVO> obtieneListadoCPTICD(String cdtabla, String otclave) throws Exception;
 	
 	public List<GenericVO> obtieneListadoTipoPago(String cdramo) throws Exception;

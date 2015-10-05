@@ -120,7 +120,8 @@ public enum Catalogos {
 	FORMATOFECHA("FORMFECHA"),
 	ATRIBUTOLAYOUT(""),
 	TIPOS_RAMO(""),
-	RAMOS_X_TIPORAMO("")
+	RAMOS_X_TIPORAMO(""),
+	SUBCOBERTURASRECUPERA("")
 	;
 
 	private String cdTabla;
