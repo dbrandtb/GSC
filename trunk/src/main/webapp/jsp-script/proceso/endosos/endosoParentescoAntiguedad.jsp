@@ -23,6 +23,7 @@ var pantallaValositInput                 = [];
     pantallaValositInput['nmsituac']     = '';
     pantallaValositInput['ntramite']     = '<s:property value="smap1.NTRAMITE" />';
     pantallaValositInput['nmsuplem']     = '<s:property value="smap1.NMSUPLEM" />';
+    pantallaValositInput['feinival']     = '<s:property value="smap1.FEINIVAL" />';
     pantallaValositInput['endososimple'] = <s:property value="endosoSimple" />;
     pantallaValositInput['fechainicio']  = pantallaValositInput['endososimple'] ? '<s:property value="mensaje" />' : new Date();
     
@@ -32,6 +33,7 @@ if(pantallaValositInput['cdtipsit']=='MS')
 {
 	pantallaValositIndiceParentesco = 'parametros.pv_otvalor03';
 }
+
 
 var _storeAsegurados;
 var _storeParentescos;
@@ -373,10 +375,10 @@ Ext.onReady(function()
                         xtype       : 'datefield'
                         ,fieldLabel : 'Fecha de efecto'
                         ,format     : 'd/m/Y'
-                        ,value      : pantallaValositInput['fechainicio']
+                        ,value      : pantallaValositInput['feinival']
                         ,allowBlank : false
                         ,name       : 'smap1.fecha_endoso'
-                        ,readOnly   : pantallaValositInput['endososimple']
+                        ,readOnly   : true//pantallaValositInput['endososimple']
                     }
             	]
             })
