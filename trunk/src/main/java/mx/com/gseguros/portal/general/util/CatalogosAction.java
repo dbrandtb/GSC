@@ -759,6 +759,12 @@ public class CatalogosAction extends PrincipalCoreAction {
 						lista = catalogosManager.recuperarRamosPorTipoRamo(params.get("idPadre"));
 					}
 					break;
+				case SUCURSALES_X_TIPORAMO:
+					if(params!=null)
+					{
+						lista = catalogosManager.recuperarSucursalesPorTipoRamo(params.get("idPadre"));
+					}
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

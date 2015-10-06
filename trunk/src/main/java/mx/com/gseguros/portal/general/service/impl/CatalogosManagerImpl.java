@@ -1205,5 +1205,40 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
     }
+	
+	@Deprecated
+	@Override
+    public List<GenericVO> recuperarSucursalesPorTipoRamo(String cdtipram) throws Exception
+    {
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarSucursalesPorTipoRamo @@@@@@"
+				,"\n@@@@@@ cdtipram=" , cdtipram
+				
+				));
+		
+		String paso           = null;
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		try
+		{
+			paso = "Recuperando sucursales por tipo de ramo";
+			List<Map<String,String>> listaMapas = consultasDAO.recuperarSucursalesPorTipoRamo(cdtipram);
+			for(Map<String,String>ramo:listaMapas)
+			{
+				lista.add(new GenericVO(ramo.get("CDUNIECO"), ramo.get("DSUNIECO")));
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista=",lista
+				,"\n@@@@@@ recuperarSucursalesPorTipoRamo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+    }
     
 }

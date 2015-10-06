@@ -2684,4 +2684,34 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> recuperarSucursalesPorTipoRamo(String cdtipram) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdtipram" , cdtipram);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarSucursalesPorTipoRamo(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		return lista;
+	}
+	
+	protected class RecuperarSucursalesPorTipoRamo extends StoredProcedure
+	{
+		protected RecuperarSucursalesPorTipoRamo(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_SUCURSALES_X_CDTIPRAM");
+			declareParameter(new SqlParameter("cdtipram" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDUNIECO"  , "DSUNIECO"
+            };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
