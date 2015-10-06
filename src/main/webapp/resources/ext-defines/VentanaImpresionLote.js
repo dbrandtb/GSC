@@ -1,26 +1,27 @@
 /**
  * Ventana para mostrar la impresión de pólizas
  * COMPONENTE 0 => #C0
- * recibe ntramite
- * o records {cdunieco,cdramo,estado,nmpoliza,nmsuplem,nsuplogi,cdtipsup,ntramite}
+ * recibe
+ *   ntramite
+ *   ,records {cdunieco,cdramo,estado,nmpoliza,nmsuplem,nsuplogi,cdtipsup,ntramite}
  */
 Ext.define('VentanaImpresionLote',
 {
-    extend       : 'Ext.window.Window'
-    ,title       : 'Impresi\u00F3n'
-    ,width       : 750
-    ,height      : 400
-    ,modal       : true
-    ,items       :
+    extend    : 'Ext.window.Window'
+    ,title    : 'Impresi\u00F3n'
+    ,modal    : true
+    ,closable : false
+    ,items    :
     [
         {
             xtype   : 'panel'
             ,layout :
             {
                 type     : 'table'
-                ,columns : 2
+                ,columns : 3
             }
             ,defaults : { style : 'margin:5px;' }
+            ,border   : 0
             ,items    :
             [
                 {
@@ -33,6 +34,11 @@ Ext.define('VentanaImpresionLote',
                     ,icon : _GLOBAL_DIRECTORIO_ICONOS+'page_go.png'
                 }
                 ,{
+                    xtype   : 'image'
+                    ,src    : _GLOBAL_DIRECTORIO_ICONOS+'cancel.png'
+                    ,itemId : '_c0_img_P'
+                }
+                ,{
                     xtype  : 'displayfield'
                     ,value : 'Credenciales: para todos los asegurados'
                 }
@@ -40,6 +46,11 @@ Ext.define('VentanaImpresionLote',
                     xtype : 'button'
                     ,text : 'Imprimir credenciales'
                     ,icon : _GLOBAL_DIRECTORIO_ICONOS+'group_key.png'
+                }
+                ,{
+                    xtype   : 'image'
+                    ,src    : _GLOBAL_DIRECTORIO_ICONOS+'cancel.png'
+                    ,itemId : '_c0_img_C'
                 }
                 ,{
                     xtype  : 'displayfield'
@@ -51,78 +62,36 @@ Ext.define('VentanaImpresionLote',
                     ,icon : _GLOBAL_DIRECTORIO_ICONOS+'coins.png'
                 }
                 ,{
-                    xtype    : 'grid'
-                    ,title   : 'ORDEN DE IMPRESI\u00D3N'
-                    ,width   : 700
-                    ,height  : 220
-                    ,colspan : 2
-                    ,columns :
-                    [
-                        {
-                            xtype  : 'actioncolumn'
-                            ,width : 60
-                            ,items :
-                            [
-                                {
-                                    icon    : _GLOBAL_DIRECTORIO_ICONOS+'arrow_up.png'
-                                    ,tooltip : 'Subir'
-                                    ,handler : function(grid,row,col,item,e,record)
-                                    {
-                                        if(grid.getStore().indexOf(record)>0)
-                                        {
-                                            grid.getStore().removeAt(row);
-                                            grid.getStore().insert(row-1,record);
-                                        }
-                                    }
-                                }
-                                ,{
-                                    icon    : _GLOBAL_DIRECTORIO_ICONOS+'arrow_down.png'
-                                    ,tooltip : 'Bajar'
-                                    ,handler : function(grid,row,col,item,e,record)
-                                    {
-                                        if(grid.getStore().indexOf(record)<grid.getStore().getCount()-1)
-                                        {
-                                            grid.getStore().removeAt(row);
-                                            grid.getStore().insert(row+1,record);
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                        ,{
-                            text       : 'SUCURSAL'
-                            ,dataIndex : 'cdunieco'
-                            ,width     : 80
-                        }
-                        ,{
-                            text       : 'PRODUCTO'
-                            ,dataIndex : 'dsramo'
-                            ,width     : 120
-                        }
-                        ,{
-                            text       : 'P\u00D3LIZA'
-                            ,dataIndex : 'nmpoliza'
-                            ,width     : 80
-                        }
-                        ,{
-                            text       : 'NO. MOV.'
-                            ,dataIndex : 'nsuplogi'
-                            ,width     : 80
-                        }
-                        ,{
-                            text       : 'MOVIMIENTO'
-                            ,dataIndex : 'dstipsup'
-                            ,flex      : 1
-                        }
-                    ]
-                    ,store :
-                    {
-                        xtype   : 'store'
-                        ,fields : []
-                        ,data   : []
-                    }
+                    xtype   : 'image'
+                    ,src    : _GLOBAL_DIRECTORIO_ICONOS+'cancel.png'
+                    ,itemId : '_c0_img_R'
                 }
             ]
+        }
+    ]
+    ,buttonAlign : 'center'
+    ,buttons     :
+    [
+        {
+            itemId  : '_c0_botonContrarecibo'
+            ,text   : 'Generar contrarecibo'
+            ,icon   : _GLOBAL_DIRECTORIO_ICONOS+'page_refresh.png'
+            ,hidden : true
+        }
+        ,{
+            itemId   : '_c0_botonCerrar'
+            ,text    : 'Continuar'
+            ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'accept.png'
+            ,hidden  : true
+            ,handler : function(me)
+            {
+                var ven = me.up('window');
+                ven.destroy();
+                if(!Ext.isEmpty(ven.callback))
+                {
+                    ven.callback();
+                }
+            }
         }
     ]
     ,constructor : function(config)
@@ -161,10 +130,22 @@ Ext.define('VentanaImpresionLote',
         afterrender : function(me)
         {
             debug('records:',me.records);
-            me.down('grid').getStore().add(me.records);
             me.down('[text*=Imprimir pape]').handler = function(){ me.buscarImpresora('P'); }
             me.down('[text*=Imprimir cred]').handler = function(){ me.buscarImpresora('C'); }
             me.down('[text*=Imprimir reci]').handler = function(){ me.buscarImpresora('R'); }
+            
+            me.impresiones=[];
+            
+            if(Ext.isEmpty(me.tramite))
+            {
+                _setLoading(true,me);
+                setTimeout(function()
+                {
+                    mensajeCorrecto('Tr\u00E1mite generado','Se gener\u00F3 el tr\u00E1mite 1234');
+                    _setLoading(false,me);
+                },1000);
+                me.setTitle('Impresi\u00F3n (Tr\u00E1mite 1234)');
+            }
         }
     }
     ,buscarImpresora : function(papel)
@@ -322,9 +303,9 @@ Ext.define('VentanaImpresionLote',
                 }
                 ,list : []
             };
-            for(var i=0;i<me.down('grid').getStore().getCount();i++)
+            for(var i in me.records)
             {
-                var record = me.down('grid').getStore().getAt(i);
+                var record = me.records[i];
                 jsonData.list.push(
                 {
                     cdunieco  : record.get('cdunieco')
@@ -359,6 +340,8 @@ Ext.define('VentanaImpresionLote',
                                 ,'Documentos impresos'
                                 ,function()
                                 {
+                                    me.impresiones[papel] = 'S';
+                                    me.onImpresion();
                                     window.destroy();
                                 });
                         }
@@ -382,6 +365,29 @@ Ext.define('VentanaImpresionLote',
         catch(e)
         {
             manejaException(e,ck);
+        }
+    }
+    ,onImpresion : function()
+    {
+        var me = this;
+        debug('onImpresion impresiones:',me.impresiones);
+        if(me.impresiones['P']=='S')
+        {
+            _fieldById('_c0_img_P').setSrc(_GLOBAL_DIRECTORIO_ICONOS+'accept.png');
+        }
+        if(me.impresiones['C']=='S')
+        {
+            _fieldById('_c0_img_C').setSrc(_GLOBAL_DIRECTORIO_ICONOS+'accept.png');
+        }
+        if(me.impresiones['R']=='S')
+        {
+            _fieldById('_c0_img_R').setSrc(_GLOBAL_DIRECTORIO_ICONOS+'accept.png');
+        }
+        
+        if(me.impresiones['P']=='S'&&me.impresiones['C']=='S'&&me.impresiones['R']=='S')
+        {
+            _fieldById('_c0_botonContrarecibo').show();
+            _fieldById('_c0_botonCerrar').show();
         }
     }
 });

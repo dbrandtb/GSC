@@ -21,17 +21,16 @@ var _p49_dirIconos = '${icons}';
 ////// overrides //////
 
 ////// componentes dinamicos /////
-var _p49_itemCdunieco  = <s:property  value="items.itemCdunieco"      escapeHtml="false" />;
 var _p49_formBusqItems = [<s:property value="items.itemsFormBusq"     escapeHtml="false" />];
 var _p49_gridPolFields = [<s:property value="items.gridPolizasFields" escapeHtml="false" />];
 var _p49_gridPolCols   = [<s:property value="items.gridPolizasCols"   escapeHtml="false" />];
 
+_fieldByName('cdtipram').rowspan = 5;
 
 var _p49_formBusqItemsCustom = [];
-_p49_formBusqItemsCustom.push(_p49_itemCdunieco);
 for(var i in _p49_formBusqItems)
 {
-    if(i==2)
+    if(i==3)
     {
         _p49_formBusqItemsCustom.push(Ext.create('Ext.grid.Panel',
         {
@@ -117,7 +116,7 @@ Ext.onReady(function()
         [
             Ext.create('Ext.form.Panel',
             {
-                itemId       : '_p48_formBusq'
+                itemId       : '_p49_formBusq'
                 ,title       : 'B\u00DASQUEDA DE P\u00D3LIZAS'
                 ,defaults    : { style : 'margin:5px;' }
                 ,items       : _p49_formBusqItemsCustom
@@ -131,6 +130,7 @@ Ext.onReady(function()
                 [
                     {
                         text     : 'Buscar'
+                        ,name    : 'botonbuscar'
                         ,icon    : '${icons}zoom.png'
                         ,handler : function(me)
                         {
@@ -167,11 +167,13 @@ Ext.onReady(function()
                     }
                     ,{
                         text     : 'Limpiar'
+                        ,name    : 'botonlimpiar'
                         ,icon    : '${icons}arrow_refresh.png'
                         ,handler : function(me)
                         {
                             me.up('form').getForm().reset();
                             _fieldById('_p49_gridSucursales').getStore().removeAll();
+                            _p49_navega(1);
                         }
                     }
                 ]
@@ -208,11 +210,19 @@ Ext.onReady(function()
                             var ck = 'Creando ventana de impresi\u00F3n';
                             try
                             {
-                                var venImp = Ext.create('VentanaImpresionLote',
+                                centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Se generar\u00E1 un tr\u00E1mite de impresi\u00F3n ¿Desea continuar?', function(btn)
                                 {
-                                    records : me.up('grid').getSelectionModel().getSelection()
-                                });
-                                centrarVentanaInterna(venImp.show());
+                                    if(btn === 'yes')
+                                    {   
+                                        var venImp = Ext.create('VentanaImpresionLote',
+                                        {
+                                            records   : me.up('grid').getSelectionModel().getSelection()
+                                            ,ntramite : ''
+                                            ,callback : function(){ _fieldById('_p49_gridPolizas').getStore().removeAll(); }
+                                        });
+                                        centrarVentanaInterna(venImp.show());
+                                    }
+                                }));
                             }
                             catch(e)
                             {
@@ -227,7 +237,37 @@ Ext.onReady(function()
     ////// contenido //////
     
     ////// custom //////
-    _p49_itemCdunieco.on(
+    _fieldByName('cdramo').heredar = function(cdtipram)
+    {
+        this.getStore().load(
+        {
+            params :
+            {
+                'params.idPadre' : cdtipram
+            }
+        });
+    }
+    
+    _fieldByName('cdtipram').on(
+    {
+        select : function(me,records)
+        {
+            var ck = 'Heredando producto';
+            try
+            {
+                var cdtipram = records[0].get('key');
+                debug('cdtipram:',cdtipram);
+                _fieldByName('cdramo').heredar(cdtipram);
+                _p49_navega(2);
+            }
+            catch(e)
+            {
+                manejaExeption(e,ck);
+            }
+        }
+    });
+    
+    _fieldByName('cdunieco').on(
     {
         select : function(me,records)
         {
@@ -249,6 +289,7 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
+    _p49_navega(1);
     ////// loaders //////
 });
 
@@ -275,6 +316,35 @@ function _p49_loadPolizas(params,callback)
             }
         }
     });
+}
+
+function _p49_navega(nivel)
+{
+    if(nivel==1)
+    {
+        var cmps = Ext.ComponentQuery.query('[name][name!=cdtipram]',_fieldById('_p49_formBusq'));
+        debug('cmps:',cmps);
+        for(var i in cmps)
+        {
+            cmps[i].hide();
+        }
+        _fieldById('_p49_gridSucursales').hide();
+        _fieldByName('cdtipram').enable();
+        _fieldById('_p49_gridPolizas').hide();
+        _fieldById('_p49_gridPolizas').getStore().removeAll();
+    }
+    else if(nivel==2)
+    {
+        var cmps = Ext.ComponentQuery.query('[name][fieldLabel!=TIPO DE RAMO]',_fieldById('_p49_formBusq'));
+        debug('cmps:',cmps);
+        for(var i in cmps)
+        {
+            cmps[i].show();
+        }
+        _fieldById('_p49_gridSucursales').show();
+        _fieldByName('cdtipram').disable();
+        _fieldById('_p49_gridPolizas').show();
+    }
 }
 ////// funciones //////
 </script>

@@ -341,4 +341,6 @@ public interface ConsultasDAO
 	public List<Map<String,String>> recuperarTiposRamo() throws Exception;
 	
 	public List<Map<String,String>> recuperarRamosPorTipoRamo(String cdtipram) throws Exception;
+	
+	public List<Map<String,String>> recuperarSucursalesPorTipoRamo(String cdtipram) throws Exception;
 }

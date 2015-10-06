@@ -43,18 +43,6 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			paso = "Recuperando componentes";
 			logger.debug(paso);
 			
-			List<ComponenteVO> itemCdunieco = pantallasDAO.obtenerComponentes(
-					null  //cdtiptra
-					,null //cdunieco
-					,null //cdramo
-					,null //cdtipsit
-					,null //estado
-					,cdsisrol
-					,"EXPLOTACION_DOCUMENTOS"
-					,"ITEM_CDUNIECO"
-					,null //orden
-					);
-			
 			List<ComponenteVO> itemsFormBusq = pantallasDAO.obtenerComponentes(
 					null  //cdtiptra
 					,null //cdunieco
@@ -83,9 +71,6 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			logger.debug(paso);
 			
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-			
-			gc.generaComponentes(itemCdunieco, true, false, true, false, false, false);
-			items.put("itemCdunieco" , gc.getItems());
 			
 			gc.generaComponentes(itemsFormBusq, true, false, true, false, false, false);
 			items.put("itemsFormBusq" , gc.getItems());
