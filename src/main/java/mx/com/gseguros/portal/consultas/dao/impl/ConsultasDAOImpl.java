@@ -2714,4 +2714,111 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> recuperarPolizasParaImprimir(
+			String cdtipram
+			,String cduniecos
+			,String cdramo
+			,String ramo
+			,String nmpoliza
+			,Date fecha
+			,String cdusuariLike
+			,String cdagente
+			)throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("cdtipram"  , cdtipram);
+		params.put("cduniecos" , cduniecos);
+		params.put("cdramo"    , cdramo);
+		params.put("ramo"      , ramo);
+		params.put("nmpoliza"  , nmpoliza);
+		params.put("fecha"     , fecha);
+		params.put("cdusuari"  , cdusuariLike);
+		params.put("cdagente"  , cdagente);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarPolizasParaImprimir(getDataSource()),params);
+		List<Map<String,String>> lista = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		logger.debug(Utils.log("\n****** PKG_CONSULTA.P_GET_POLIZAS_PARA_IMPRIMIR lista: ",lista.size()," ******"));
+		return lista;
+	}
+	
+	protected class RecuperarPolizasParaImprimir extends StoredProcedure
+	{
+		protected RecuperarPolizasParaImprimir(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_POLIZAS_PARA_IMPRIMIR");
+			declareParameter(new SqlParameter("cdtipram"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cduniecos" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ramo"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fecha"     , OracleTypes.DATE));
+			declareParameter(new SqlParameter("cdusuari"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdagente"  , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"cdtipram"
+					,"dstipram"
+					,"cdunieco"
+					,"dsunieco"
+					,"cdramo"
+					,"dsramo"
+					,"estado"
+					,"nmpoliza"
+					,"nmsuplem"
+					,"cdtipsup"
+					,"DSTIPSUP"
+					,"nsuplogi"
+					,"cdgestor"
+					,"cddevcia"
+					,"feinival"
+					,"ntramite"
+            };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String recuperarUltimoNmsuplem(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Map<String,Object> procRes  = ejecutaSP(new RecuperarUltimoNmsuplem(getDataSource()),params);
+		String             nmsuplem = (String)procRes.get("pv_nmsuplem_o");
+		if(StringUtils.isBlank(nmsuplem))
+		{
+			throw new ApplicationException("No se encuentra el suplemento reciente");
+		}
+		return nmsuplem;
+	}
+	
+	protected class RecuperarUltimoNmsuplem extends StoredProcedure
+	{
+		protected RecuperarUltimoNmsuplem(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_ULTIMO_NMSUPLEM");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

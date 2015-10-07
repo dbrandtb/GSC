@@ -343,4 +343,22 @@ public interface ConsultasDAO
 	public List<Map<String,String>> recuperarRamosPorTipoRamo(String cdtipram) throws Exception;
 	
 	public List<Map<String,String>> recuperarSucursalesPorTipoRamo(String cdtipram) throws Exception;
+	
+	public List<Map<String,String>> recuperarPolizasParaImprimir(
+			String cdtipram
+			,String cduniecos
+			,String cdramo
+			,String ramo
+			,String nmpoliza
+			,Date fecha
+			,String cdusuariLike
+			,String cdagente
+			)throws Exception;
+	
+	public String recuperarUltimoNmsuplem(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }

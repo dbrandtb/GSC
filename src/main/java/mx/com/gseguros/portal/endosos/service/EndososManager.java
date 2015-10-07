@@ -495,4 +495,11 @@ public interface EndososManager
 			,String nmsolici
 			)throws Exception;
 	
+	@Deprecated
+	public String recuperarUltimoNmsuplem(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }

@@ -1,6 +1,5 @@
 package mx.com.gseguros.portal.endosos.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,6 +11,7 @@ import java.util.Map.Entry;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
+import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
@@ -78,7 +78,8 @@ public class EndososManagerImpl implements EndososManager
 	@Autowired
 	private Ice2sigsService ice2sigsService;
 	
-	private static final SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+	@Autowired
+	private ConsultasDAO consultasDAO;
 
 	@Override
 	public List<Map<String, String>> obtenerEndosos(Map<String, String> params) throws Exception
@@ -1344,7 +1345,7 @@ public class EndososManagerImpl implements EndososManager
 		//procesar datos
 		try
 		{
-			fechaEfecto = renderFechas.parse(feefecto);
+			fechaEfecto = Utils.parse(feefecto);
 			
 			//Creamos un enum en base al tipo de endoso elegido:
 			for (TipoEndoso te : TipoEndoso.values()) {
@@ -1612,7 +1613,7 @@ public class EndososManagerImpl implements EndososManager
 				mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
 				mapaValorEndoso.put("pv_nmsituac_i" , "0");
 				mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplemEndoso);
-				mapaValorEndoso.put("pv_feinival_i" , renderFechas.parse(feefecto));
+				mapaValorEndoso.put("pv_feinival_i" , Utils.parse(feefecto));
 				mapaValorEndoso.put("pv_cdtipsup_i" , cdtipsup);
 				logger.debug("mapaValorEndoso=" + mapaValorEndoso);
 				endososDAO.calcularValorEndoso(mapaValorEndoso);
@@ -1822,7 +1823,7 @@ public class EndososManagerImpl implements EndososManager
 							,rec.get("OTFISJUR")
 							,rec.get("OTSEXO")
 							,StringUtils.isNotBlank(rec.get("FENACIMI"))?
-									renderFechas.parse(rec.get("FENACIMI"))
+									Utils.parse(rec.get("FENACIMI"))
 									:null
 							,rec.get("CDRFC")
 							,rec.get("DSEMAIL")
@@ -1888,7 +1889,7 @@ public class EndososManagerImpl implements EndososManager
 							,rec.get("OTFISJUR")
 							,rec.get("OTSEXO")
 							,StringUtils.isNotBlank(rec.get("FENACIMI"))?
-									renderFechas.parse(rec.get("FENACIMI"))
+									Utils.parse(rec.get("FENACIMI"))
 									:null
 							,rec.get("CDRFC")
 							,rec.get("DSEMAIL")
@@ -1936,7 +1937,7 @@ public class EndososManagerImpl implements EndososManager
 							,rec.get("OTFISJUR")
 							,rec.get("OTSEXO")
 							,StringUtils.isNotBlank(rec.get("FENACIMI"))?
-									renderFechas.parse(rec.get("FENACIMI"))
+									Utils.parse(rec.get("FENACIMI"))
 									:null
 							,rec.get("CDRFC")
 							,rec.get("DSEMAIL")
@@ -2615,6 +2616,18 @@ public class EndososManagerImpl implements EndososManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return respuesta;
+	}
+	
+	@Override
+	@Deprecated
+	public String recuperarUltimoNmsuplem(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		return consultasDAO.recuperarUltimoNmsuplem(cdunieco,cdramo,estado,nmpoliza);
 	}
 	
 	/***********************************************************/

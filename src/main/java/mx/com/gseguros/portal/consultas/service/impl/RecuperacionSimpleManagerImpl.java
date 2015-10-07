@@ -586,6 +586,32 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				paso = "Recuperando polizas para explotar documentos";
 				logger.debug("Paso: {}",paso);
 				
+				String cdtipram     = params.get("cdtipram");
+				String cduniecos    = params.get("cduniecos");
+				String cdramo       = params.get("cdramo");
+				String ramo         = params.get("ramo");
+				String nmpoliza     = params.get("nmpoliza");
+				String fefecha      = params.get("fefecha");
+				String cdusuariLike = params.get("cdusuari");
+				String cdagente     = params.get("cdagente");
+				
+				Utils.validate(
+						cdtipram   , "No se recibi\u00F3 el tipo de ramo"
+						,cduniecos , "No se recibieron sucursales"
+						,fefecha   , "No se recibi\u00F3 la fecha"
+						);
+				
+				lista = consultasDAO.recuperarPolizasParaImprimir(
+						cdtipram
+						,cduniecos
+						,cdramo
+						,ramo
+						,nmpoliza
+						,Utils.parse(fefecha)
+						,cdusuariLike
+						,cdagente
+						);
+				
 				Map<String,String>poliza = new HashMap<String,String>();
 				poliza.put("cdtipram" , "10");
 				poliza.put("dstipram" , "SALUD");

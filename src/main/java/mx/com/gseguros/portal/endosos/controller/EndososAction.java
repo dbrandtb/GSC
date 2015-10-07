@@ -10732,6 +10732,16 @@ public class EndososAction extends PrincipalCoreAction
 				{
 					smap2.put("alta" , "no");
 				}
+				
+				//necesitamos el NMSUPLEM mas nuevo
+				String nmsuplem = endososManager.recuperarUltimoNmsuplem(
+						smap1.get("CDUNIECO")
+						,smap1.get("CDRAMO")
+						,smap1.get("ESTADO")
+						,smap1.get("NMPOLIZA")
+						);
+				smap1.put("NMSUPLEM" , nmsuplem);
+				smap1.put("nmsuplem" , nmsuplem);
 			}
 			else if(smap1.get("cdtipsup").equals(TipoEndoso.INCREMENTO_EDAD_ASEGURADO.getCdTipSup().toString())
 					||smap1.get("cdtipsup").equals(TipoEndoso.DECREMENTO_EDAD_ASEGURADO.getCdTipSup().toString())
