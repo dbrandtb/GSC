@@ -128,14 +128,13 @@ Ext.onReady(function()
     ////// custom //////
     _fieldLikeLabel('CLAVE').on(
     {
-        select : function()
+        select : function(me,records)
         {
-            var me          = _fieldLikeLabel('CLAVE');
             var marcaCmp    = _fieldByLabel('MARCA');
             var submarcaCmp = _fieldByLabel('SUBMARCA');
             var modeloCmp   = _fieldByLabel('MODELO');
             var versionCmp  = _fieldLikeLabel('VERSI');
-            var record      = me.findRecordByValue(me.getValue());
+            var record      = records[0];
             
             debug('marcaCmp:'            , marcaCmp);
             debug('submarcaCmp:'         , submarcaCmp);
