@@ -202,6 +202,7 @@ public interface EndososAutoManager
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			,String cdtipsup
 			)throws Exception;
 	
 	public Map<String,Item>endosoClaveAuto(

@@ -8247,7 +8247,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
 			
-			endososAutoManager.validarEndosoPagados(cdunieco, cdramo, estado, nmpoliza);
+			endososAutoManager.validarEndosoPagados(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
 			
 			//PKG_ENDOSOS.P_ENDOSO_INICIA
 			Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, sFecha, cdelemento, cdusuari, proceso, cdtipsup);
@@ -8581,7 +8581,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
 			
-			endososAutoManager.validarEndosoPagados(cdunieco, cdramo, estado, nmpoliza);
+			endososAutoManager.validarEndosoPagados(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
 			
 			//PKG_ENDOSOS.P_ENDOSO_INICIA
 			Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, sFecha, cdelemento, cdusuari, proceso, cdtipsup);
@@ -8932,7 +8932,7 @@ public class EndososAction extends PrincipalCoreAction
 		
 		boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
 		
-		endososAutoManager.validarEndosoPagados(cdunieco, cdramo, estado, nmpoliza);
+		endososAutoManager.validarEndosoPagados(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
 		
 		Map<String,Object> managerResult = personasManager.obtenerDomicilioPorCdperson(smap2.get("cdpersonNvoContr"), timestamp);
 		Map<String,String> domicilioNvo  = (Map<String,String>)managerResult.get("domicilio");
