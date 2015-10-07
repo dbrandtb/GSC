@@ -99,6 +99,7 @@ public interface EndososDAO
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			,String cdtipsup
 			)throws Exception;
 	public void                     actualizaDeducibleValosit(Map<String, String> params)      throws Exception;
 	

@@ -2729,7 +2729,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	
 	@Override
 	public void validarEndosoPagados(String cdunieco, String cdramo,
-			String estado, String nmpoliza) throws Exception {
+			String estado, String nmpoliza,String cdtipsup) throws Exception {
 			logger.debug(Utils.log(
 					 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 					,"\n@@@@@@ 	 validaEndosoAnterior  	  @@@@@@"
@@ -2737,6 +2737,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,"\n@@@@@@ cdramo="           , cdramo
 					,"\n@@@@@@ estado="           , estado
 					,"\n@@@@@@ nmpoliza="         , nmpoliza
+					,"\n@@@@@@ cdtipsup="         , cdtipsup
 					));
 			ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
 			String paso = "";
@@ -2744,7 +2745,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			{
 				paso = "Iniciando valida endoso anterior";
 				logger.info(paso);
-				endososDAO.validaEndosoPagados(cdunieco, cdramo, estado, nmpoliza);
+				endososDAO.validaEndosoPagados(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
 			}
 			catch(Exception ex)
 			{
