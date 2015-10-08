@@ -263,10 +263,13 @@ function _p38_cargarSumaAseguradaRamo5()
             debug('### cargar suma asegurada:',json);
             if(json.exito)
             {
+                /*
+                Se comenta porque no quieren el aviso de error en pantalla
                 if(!Ext.isEmpty(json.respuesta))
                 {
                     mensajeWarning(json.respuesta);
                 }
+                */
                 var sumaseg = _fieldByLabel('VALOR');
                 sumaseg.setValue(json.smap1.sumaseg);
                 sumaseg.valorCargado=json.smap1.sumaseg;
