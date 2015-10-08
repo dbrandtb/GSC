@@ -5934,6 +5934,10 @@ public class EndososAction extends PrincipalCoreAction
 				imap1.put("itemsDomicil"  , gc.getItems());
 				imap1.put("fieldsDomicil" , gc.getFields());
 				
+				String cdtipsit1 = endososManager.recuperarCdtipsitInciso1(cdunieco, cdramo, estado, smap1.get("NMPOLIZA"));
+				
+				smap1.put("CDTIPSIT1",cdtipsit1);
+				
 			} catch(Exception ex) {
 				logger.error("Error al cargar la pantalla de domicilio full",ex);
 			}
@@ -6558,135 +6562,167 @@ public class EndososAction extends PrincipalCoreAction
 				////// re generar los documentos //////
 				///////////////////////////////////////
 				
-				/**
-				 * PARA WS ENDOSO DE AUTOS
-				 */
-				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, (UserVO) session.get("USUARIO"));
-				
-				if(aux == null || (StringUtils.isBlank(aux.getNmpoliex()) && !aux.isEndosoSinRetarif())){
-					success = false;
-					mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
-					error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
-					logger.error("Error al ejecutar los WS de endoso");
+				if(consultasManager.esProductoSalud(cdramo)){
 					
+					logger.debug("Es producto de salud, llamando Web Services para endoso de Cambio de Domicilio");
 					
-					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? 99999 : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.toString(), false);
-					if(endosoRevertido){
-						
-						Map<String,String> paramRevDom = new HashMap<String, String>();
-						paramRevDom.put("pv_cdperson_i" , smap3.get("cdperson"));
-						paramRevDom.put("pv_dsdomici_i" , smap3.get("calle"));
-						paramRevDom.put("pv_cdpostal_i" , smap3.get("cp"));
-						paramRevDom.put("pv_nmnumero_i" , smap3.get("numext"));
-						paramRevDom.put("pv_nmnumint_i" , smap3.get("numint"));
-						paramRevDom.put("pv_cdedo_i"    , smap3.get("cdedo"));
-						paramRevDom.put("pv_cdmunici_i" , smap3.get("cdmunici"));
-						paramRevDom.put("pv_cdcoloni_i" , smap3.get("cdcoloni"));
-						endososManager.revierteDomicilio(paramRevDom);
-						
-						logger.error("Endoso revertido exitosamente.");
-						error+=" Favor de volver a itentar.";
-					}else{
-						logger.error("Error al revertir el endoso");
-						error+=" No se ha revertido el endoso.";
-					}
+					String saludDanios = "S";
 					
-					return SUCCESS;
-				}
-				
-				
-				int numEndRes = 0;
-				if(aux.isEndosoSinRetarif()){
+					ClienteGeneral clienteGeneral = new ClienteGeneral();
+					clienteGeneral.setClaveCia(saludDanios);
+					
+					// Ejecutamos el Web Service de Cliente Salud:
+					ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, cdperson, Ice2sigsService.Operacion.ACTUALIZA, null, (UserVO) session.get("USUARIO"), true);
+//					ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+					//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
+					
+					String sucursal = cdunieco;
+					String nmsolici = listaDocu.get(0).get("nmsolici");
+					String nmtramite = ntramite;
+					
+					String tipomov = TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString();
+					
+					// Ejecutamos el Web Service de Recibos:
+					ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
+							estado, nmpoliza, 
+							nmsuplem, rutaCarpeta, 
+							sucursal, nmsolici, nmtramite, 
+							true, tipomov, 
+							(UserVO) session.get("USUARIO"));
+				}else{
+					
+					logger.debug("Es producto de autos, llamando Web Services para endoso de Cambio de Domicilio");
 					
 					/**
-					 * PARA WS ENDOSO DE AUTOS SIN TARIFICACION DONDE PUEDE INCLUIR LA COLONIA y con o sin cambio de CP
+					 * PARA WS ENDOSO DE AUTOS
 					 */
-					numEndRes = emisionAutosService.actualizaDatosCambioDomicilSinCP(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+					EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, (UserVO) session.get("USUARIO"));
 					
-					if(numEndRes == 0){
+					if(aux == null || (StringUtils.isBlank(aux.getNmpoliex()) && !aux.isEndosoSinRetarif())){
+						success = false;
+						mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
+						error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
+						logger.error("Error al ejecutar los WS de endoso");
+						
+						
+						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? 99999 : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.toString(), false);
+						if(endosoRevertido){
+							
+							Map<String,String> paramRevDom = new HashMap<String, String>();
+							paramRevDom.put("pv_cdperson_i" , smap3.get("cdperson"));
+							paramRevDom.put("pv_dsdomici_i" , smap3.get("calle"));
+							paramRevDom.put("pv_cdpostal_i" , smap3.get("cp"));
+							paramRevDom.put("pv_nmnumero_i" , smap3.get("numext"));
+							paramRevDom.put("pv_nmnumint_i" , smap3.get("numint"));
+							paramRevDom.put("pv_cdedo_i"    , smap3.get("cdedo"));
+							paramRevDom.put("pv_cdmunici_i" , smap3.get("cdmunici"));
+							paramRevDom.put("pv_cdcoloni_i" , smap3.get("cdcoloni"));
+							endososManager.revierteDomicilio(paramRevDom);
+							
+							logger.error("Endoso revertido exitosamente.");
+							error+=" Favor de volver a itentar.";
+						}else{
+							logger.error("Error al revertir el endoso");
+							error+=" No se ha revertido el endoso.";
+						}
+						
+						return SUCCESS;
+					}
+					
+					
+					int numEndRes = 0;
+					if(aux.isEndosoSinRetarif()){
+						
+						/**
+						 * PARA WS ENDOSO DE AUTOS SIN TARIFICACION DONDE PUEDE INCLUIR LA COLONIA y con o sin cambio de CP
+						 */
+						numEndRes = emisionAutosService.actualizaDatosCambioDomicilSinCP(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+						
+						if(numEndRes == 0){
+							mensaje = "Error al generar el endoso, sigs. Consulte a Soporte.";
+							error = "Error al generar el endoso, sigs. Consulte a Soporte.";
+							logger.error("Error al ejecutar sp de endoso sigs");
+							
+							boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.CAMBIO_DOMICILIO.toString(), true);
+							
+							if(endosoRevertido){
+								
+								Map<String,String> paramRevDom = new HashMap<String, String>();
+								paramRevDom.put("pv_cdperson_i" , smap3.get("cdperson"));
+								paramRevDom.put("pv_dsdomici_i" , smap3.get("calle"));
+								paramRevDom.put("pv_cdpostal_i" , smap3.get("cp"));
+								paramRevDom.put("pv_nmnumero_i" , smap3.get("numext"));
+								paramRevDom.put("pv_nmnumint_i" , smap3.get("numint"));
+								paramRevDom.put("pv_cdedo_i"    , smap3.get("cdedo"));
+								paramRevDom.put("pv_cdmunici_i" , smap3.get("cdmunici"));
+								paramRevDom.put("pv_cdcoloni_i" , smap3.get("cdcoloni"));
+								endososManager.revierteDomicilio(paramRevDom);
+								
+								logger.error("Endoso revertido exitosamente.");
+								error+=" Favor de volver a itentar.";
+							}else{
+								logger.error("Error al revertir el endoso");
+								error+=" No se ha revertido el endoso.";
+							}
+							
+							success = false;
+							return SUCCESS;
+						}else{
+							ejecutaCaratulaEndosoBsigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, Integer.toString(numEndRes));
+						}
+						
+						
+					}else if(aux.isExitoRecibos()){
+						
+						/**
+						 * PARA WS ENDOSO CAMBIO DE DOMICILIO CON TARIFICACION, ACTUALIZA DOMICILIO CON SP ESPECIFICO PARA CODIGO POSTAL
+						 */
+						numEndRes = emisionAutosService.actualizaDatosCambioDomicilCP(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+						
+						if(numEndRes == 0){
+							mensaje = "Error al generar el endoso, sigs. Consulte a Soporte.";
+							error = "Error al generar el endoso, sigs. Consulte a Soporte.";
+							logger.error("Error al ejecutar SP de endoso DOMICILIO CP sigs, ENDOSO EN 0");
+							
+							boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.CAMBIO_DOMICILIO.toString(), true);
+							
+							if(endosoRevertido){
+								
+								Map<String,String> paramRevDom = new HashMap<String, String>();
+								paramRevDom.put("pv_cdperson_i" , smap3.get("cdperson"));
+								paramRevDom.put("pv_dsdomici_i" , smap3.get("calle"));
+								paramRevDom.put("pv_cdpostal_i" , smap3.get("cp"));
+								paramRevDom.put("pv_nmnumero_i" , smap3.get("numext"));
+								paramRevDom.put("pv_nmnumint_i" , smap3.get("numint"));
+								paramRevDom.put("pv_cdedo_i"    , smap3.get("cdedo"));
+								paramRevDom.put("pv_cdmunici_i" , smap3.get("cdmunici"));
+								paramRevDom.put("pv_cdcoloni_i" , smap3.get("cdcoloni"));
+								endososManager.revierteDomicilio(paramRevDom);
+								
+								logger.error("Endoso revertido exitosamente.");
+								error+=" Favor de volver a itentar.";
+							}else{
+								logger.error("Error al revertir el endoso");
+								error+=" No se ha revertido el endoso.";
+							}
+							
+							success = false;
+							return SUCCESS;
+						}else{
+							String tipoGrupoInciso = smap1.get("TIPOFLOT");
+							ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
+						}
+						
+					}else{
 						mensaje = "Error al generar el endoso, sigs. Consulte a Soporte.";
 						error = "Error al generar el endoso, sigs. Consulte a Soporte.";
 						logger.error("Error al ejecutar sp de endoso sigs");
 						
-						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.CAMBIO_DOMICILIO.toString(), true);
-						
-						if(endosoRevertido){
-							
-							Map<String,String> paramRevDom = new HashMap<String, String>();
-							paramRevDom.put("pv_cdperson_i" , smap3.get("cdperson"));
-							paramRevDom.put("pv_dsdomici_i" , smap3.get("calle"));
-							paramRevDom.put("pv_cdpostal_i" , smap3.get("cp"));
-							paramRevDom.put("pv_nmnumero_i" , smap3.get("numext"));
-							paramRevDom.put("pv_nmnumint_i" , smap3.get("numint"));
-							paramRevDom.put("pv_cdedo_i"    , smap3.get("cdedo"));
-							paramRevDom.put("pv_cdmunici_i" , smap3.get("cdmunici"));
-							paramRevDom.put("pv_cdcoloni_i" , smap3.get("cdcoloni"));
-							endososManager.revierteDomicilio(paramRevDom);
-							
-							logger.error("Endoso revertido exitosamente.");
-							error+=" Favor de volver a itentar.";
-						}else{
-							logger.error("Error al revertir el endoso");
-							error+=" No se ha revertido el endoso.";
-						}
-						
 						success = false;
 						return SUCCESS;
-					}else{
-						ejecutaCaratulaEndosoBsigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, Integer.toString(numEndRes));
 					}
 					
-					
-				}else if(aux.isExitoRecibos()){
-					
-					/**
-					 * PARA WS ENDOSO CAMBIO DE DOMICILIO CON TARIFICACION, ACTUALIZA DOMICILIO CON SP ESPECIFICO PARA CODIGO POSTAL
-					 */
-					numEndRes = emisionAutosService.actualizaDatosCambioDomicilCP(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
-					
-					if(numEndRes == 0){
-						mensaje = "Error al generar el endoso, sigs. Consulte a Soporte.";
-						error = "Error al generar el endoso, sigs. Consulte a Soporte.";
-						logger.error("Error al ejecutar SP de endoso DOMICILIO CP sigs, ENDOSO EN 0");
-						
-						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.CAMBIO_DOMICILIO.toString(), true);
-						
-						if(endosoRevertido){
-							
-							Map<String,String> paramRevDom = new HashMap<String, String>();
-							paramRevDom.put("pv_cdperson_i" , smap3.get("cdperson"));
-							paramRevDom.put("pv_dsdomici_i" , smap3.get("calle"));
-							paramRevDom.put("pv_cdpostal_i" , smap3.get("cp"));
-							paramRevDom.put("pv_nmnumero_i" , smap3.get("numext"));
-							paramRevDom.put("pv_nmnumint_i" , smap3.get("numint"));
-							paramRevDom.put("pv_cdedo_i"    , smap3.get("cdedo"));
-							paramRevDom.put("pv_cdmunici_i" , smap3.get("cdmunici"));
-							paramRevDom.put("pv_cdcoloni_i" , smap3.get("cdcoloni"));
-							endososManager.revierteDomicilio(paramRevDom);
-							
-							logger.error("Endoso revertido exitosamente.");
-							error+=" Favor de volver a itentar.";
-						}else{
-							logger.error("Error al revertir el endoso");
-							error+=" No se ha revertido el endoso.";
-						}
-						
-						success = false;
-						return SUCCESS;
-					}else{
-						String tipoGrupoInciso = smap1.get("TIPOFLOT");
-						ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
-					}
-					
-				}else{
-					mensaje = "Error al generar el endoso, sigs. Consulte a Soporte.";
-					error = "Error al generar el endoso, sigs. Consulte a Soporte.";
-					logger.error("Error al ejecutar sp de endoso sigs");
-					
-					success = false;
-					return SUCCESS;
 				}
-				
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 				
