@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.print.Doc;
 import javax.print.DocFlavor;
@@ -41,6 +42,8 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 	
 	private List<PrintService> printServices;
 	
+	private Map<String, String> params;
+	
 	/**
 	 * Lista las impresoras disponibles desde el servidor
 	 * @return
@@ -60,6 +63,54 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 		
 		return SUCCESS;
 	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String imprimeImagen() throws Exception {
+		
+		// Discover the printers that can print the format according to the instructions in the attribute set
+		PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
+        logger.debug("Printer Services found:");
+        printService(services);
+		
+		// Input the file
+		FileInputStream textStream = null; 
+		try {
+			textStream = new FileInputStream(params.get("filename")); 
+		} catch (FileNotFoundException ffne) {
+			logger.error(ffne.getMessage(), ffne);
+		}
+		if (textStream == null) {
+			logger.info("No existe el documento: {}", params.get("filename"));
+		    return SUCCESS;
+		} else {
+			logger.info("Si existe el documento: {}", params.get("filename"));
+		}
+		// Set the document type
+		DocFlavor myFormat = DocFlavor.INPUT_STREAM.JPEG;
+		// Create a Doc
+		Doc myDoc = new SimpleDoc(textStream, myFormat, null); 
+		// Build a set of attributes
+		PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet(); 
+		aset.add(new Copies(5)); 
+		aset.add(MediaSize.ISO.A4.getMediaSizeName());
+		aset.add(Sides.DUPLEX);
+		
+		DocPrintJob job = services[1].createPrintJob(); 
+		try { 
+        	logger.info("Antes de imprimir");
+            job.print(myDoc, aset);
+            logger.info("Después de imprimir");
+        } catch (PrintException pe) {
+        	logger.error(pe.getMessage(), pe);
+        }
+		return SUCCESS;
+	}
+	
 	
 	public static void main(String[] args) {
 		
@@ -129,6 +180,16 @@ public class TestImpresionesAction extends PrincipalCoreAction {
             }
         }
     }
+	
+	
+	public Map<String, String> getParams() {
+		return params;
+	}
+
+	public void setParams(Map<String, String> params) {
+		this.params = params;
+	}
+
 
 	public List<PrintService> getPrintServices() {
 		return printServices;
