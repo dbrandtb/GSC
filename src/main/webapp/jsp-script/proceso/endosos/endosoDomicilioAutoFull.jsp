@@ -183,6 +183,19 @@ Ext.onReady(function()
 	_5_panelEndoso   = new _5_PanelEndoso();
 	//_5_panelTatriper = new _5_PanelTatriper();
 	
+	if(!Ext.isEmpty(_5_smap1.CDTIPSIT1) && _5_smap1.CDTIPSIT1 == 'MSC'){
+		_fieldByName('CDEDO',_5_formDomicil).getStore().addListener('beforeload',function( store, operation, eOpts){
+			_fieldByName('CDEDO',_5_formDomicil).getStore().getProxy().extraParams['params.cdtipsit']='MSC';
+		});
+		
+		_fieldByName('CDMUNICI',_5_formDomicil).getStore().addListener('beforeload',function(store, operation){
+			_fieldByName('CDMUNICI',_5_formDomicil).getStore().getProxy().extraParams['params.cdtipsit']='MSC';
+		});
+		
+		_fieldByName('CDEDO',_5_formDomicil).value1 = 'MSC';		
+		_fieldByName('CDMUNICI',_5_formDomicil).value1 = 'MSC';
+	}
+	
 	_5_panelPri=Ext.create('Ext.panel.Panel',
 	{
 		renderTo  : 'divEndDomCP'
@@ -240,6 +253,8 @@ Ext.onReady(function()
 	    	datosIniciales = json.smap1;
 	    	
 	    	_5_formDomicil.loadRecord(new _5_modeloDomicil(json.smap1));
+	    	
+	    	heredarPanel(_5_formDomicil);
 	    	
 	    	debug('codpost:',_codPosEnd());
 	    	debug('colonia:',_comboColoniasEnd());
