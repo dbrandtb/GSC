@@ -383,85 +383,102 @@ Ext.onReady(function()
 function _5_confirmar(boton)
 {
 	
-	centrarVentana(Ext.Msg.show({
-        title: 'Confirmar acci&oacute;n',
-        msg: '&iquest;Esta seguro de cambiar este domicilio?',
-        buttons: Ext.Msg.YESNO,
-        fn: function(buttonId, text, opt) {
-        	if(buttonId == 'yes') {
-	debug('_5_confirmar');
+	setTimeout(function(){
 	
-	var valido=true;
-	
-	if(valido)
-	{
-		valido=_5_formDomicil.isValid()&&_5_panelEndoso.isValid();//&&_5_panelTatriper.isValid()
-		if(!valido)
-		{
-			datosIncompletos();
-		}
-	}
-	
-	if(valido)
-	{
-		var json=
-		{
-			smap1       : _5_smap1
-			,smap2      : _5_formDomicil.getValues()
-			,smap3      :
+		centrarVentana(Ext.Msg.show({
+	        title: 'Confirmar acci&oacute;n',
+	        msg: '&iquest;Esta seguro de cambiar este domicilio?',
+	        buttons: Ext.Msg.YESNO,
+	        fn: function(buttonId, text, opt) {
+	        	if(buttonId == 'yes') {
+			debug('_5_confirmar');
+			
+			var valido=true;
+			
+			if(valido)
 			{
-				fecha_endoso : Ext.Date.format(_5_fieldFechaEndoso.getValue(),'d/m/Y'),
-				cdperson     : _5_smap1.cdperson,
-				calle        : datosIniciales.DSDOMICI,
-				cp           : datosIniciales.CODPOSTAL,
-				numext       : datosIniciales.NMNUMERO,
-				numint       : datosIniciales.NMNUMINT,
-				cdedo        : datosIniciales.CDEDO,
-				cdmunici     : datosIniciales.CDMUNICI,
-				cdcoloni     : datosIniciales.CDCOLONI
-			}
-			//,parametros : _5_panelTatriper.getValues()
-		};
-		debug('datos a enviar:',json);
-		var panelMask = new Ext.LoadMask('divEndDomCP', {msg:"Confirmando..."});
-		panelMask.show();
-		Ext.Ajax.request(
-		{
-			url       : _5_urlGuardar
-			,jsonData : json
-			,success  : function(response)
-			{
-				panelMask.hide();
-				json=Ext.decode(response.responseText);
-				if(json.success==true)
+				var nuevosDatos = _5_formDomicil.getForm().getValues();
+				
+				valido = ( datosIniciales.CODPOSTAL != nuevosDatos.CODPOSTAL || datosIniciales.NMNUMERO != nuevosDatos.NMNUMERO || datosIniciales.NMNUMINT != nuevosDatos.NMNUMINT
+				||  datosIniciales.CDEDO != nuevosDatos.CDEDO || datosIniciales.CDMUNICI != nuevosDatos.CDMUNICI || datosIniciales.CDCOLONI != nuevosDatos.CDCOLONI || datosIniciales.DSDOMICI != nuevosDatos.DSDOMICI );
+				
+				if(!valido)
 				{
-					mensajeCorrecto('Endoso generado',json.mensaje);
-					//////////////////////////////////
-                    ////// usa codigo del padre //////
-                    /*//////////////////////////////*/
-                    marendNavegacion(2);
-                    /*//////////////////////////////*/
-                    ////// usa codigo del padre //////
-                    //////////////////////////////////
-				}
-				else
-				{
-					mensajeError(json.error);
+					mensajeWarning('No ha realizado cambios en el domicilio.');
 				}
 			}
-		    ,failure  : function()
-		    {
-		    	panelMask.hide();
-		    	errorComunicacion();
-		    }
-		});
-	}
-}else{
-        		return;
-        	}
-		},
-        icon: Ext.Msg.QUESTION
-	}).defer(300));
+			
+			if(valido)
+			{
+				valido=_5_formDomicil.isValid()&&_5_panelEndoso.isValid();//&&_5_panelTatriper.isValid()
+				if(!valido)
+				{
+					datosIncompletos();
+				}
+			}
+			
+			if(valido)
+			{
+				var json=
+				{
+					smap1       : _5_smap1
+					,smap2      : _5_formDomicil.getValues()
+					,smap3      :
+					{
+						fecha_endoso : Ext.Date.format(_5_fieldFechaEndoso.getValue(),'d/m/Y'),
+						cdperson     : _5_smap1.cdperson,
+						calle        : datosIniciales.DSDOMICI,
+						cp           : datosIniciales.CODPOSTAL,
+						numext       : datosIniciales.NMNUMERO,
+						numint       : datosIniciales.NMNUMINT,
+						cdedo        : datosIniciales.CDEDO,
+						cdmunici     : datosIniciales.CDMUNICI,
+						cdcoloni     : datosIniciales.CDCOLONI
+					}
+					//,parametros : _5_panelTatriper.getValues()
+				};
+				debug('datos a enviar:',json);
+				var panelMask = new Ext.LoadMask('divEndDomCP', {msg:"Confirmando..."});
+				panelMask.show();
+				Ext.Ajax.request(
+				{
+					url       : _5_urlGuardar
+					,jsonData : json
+					,success  : function(response)
+					{
+						panelMask.hide();
+						json=Ext.decode(response.responseText);
+						if(json.success==true)
+						{
+							mensajeCorrecto('Endoso generado',json.mensaje);
+							//////////////////////////////////
+		                    ////// usa codigo del padre //////
+		                    /*//////////////////////////////*/
+		                    marendNavegacion(2);
+		                    /*//////////////////////////////*/
+		                    ////// usa codigo del padre //////
+		                    //////////////////////////////////
+						}
+						else
+						{
+							mensajeError(json.error);
+						}
+					}
+				    ,failure  : function()
+				    {
+				    	panelMask.hide();
+				    	errorComunicacion();
+				    }
+				});
+			}
+		}else{
+    		return;
+    	}
+	},
+    icon: Ext.Msg.QUESTION
+	}));
+	
+	},1500);
 
 }
 
