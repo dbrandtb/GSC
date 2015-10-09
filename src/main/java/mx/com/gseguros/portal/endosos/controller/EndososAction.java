@@ -298,6 +298,40 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////////////////////////*/
 	public String pantallaEndosoDomicilio()
 	{
+		
+		if(!smap1.containsKey("pv_nmpoliza") && smap1.containsKey("NMPOLIZA")){
+			String cdtipsit1 = null;
+			String nombrePersona = null;
+			try {
+				cdtipsit1 = endososManager.recuperarCdtipsitInciso1((String)smap1.get("CDUNIECO"), (String)smap1.get("CDRAMO"), (String)smap1.get("ESTADO"), (String)smap1.get("NMPOLIZA"));
+				
+				long timestamp = System.currentTimeMillis();
+				Map<String, Object> datos = personasManager.obtenerPersonaPorCdperson(smap1.get("CDPERSON"), timestamp);
+				Map<String,String> persona = (Map<String,String>)datos.get("persona");
+				
+				nombrePersona = persona.get("DSNOMBRE")+" "+(StringUtils.isNotBlank(persona.get("DSAPELLIDO1"))?persona.get("DSAPELLIDO1"):"");
+				
+			} catch (Exception e) {
+				logger.error("Error al obtener el cdtipsit de la poliza para el primer inciso",e);
+			}
+			
+			smap1.put("pv_nmpoliza", smap1.get("NMPOLIZA"));
+			smap1.put("pv_estado", smap1.get("ESTADO"));
+			smap1.put("cdrfc", smap1.get("CDRFC"));
+			smap1.put("pv_nmsituac", null);
+			smap1.put("pv_cdrol", null);
+			smap1.put("pv_cdunieco", smap1.get("CDUNIECO"));
+			smap1.put("ntramite", smap1.get("NTRAMITE"));
+			smap1.put("habilitaEdicion", "0");
+			smap1.put("botonCopiar", "0");
+			smap1.put("pv_cdramo", smap1.get("CDRAMO"));
+			smap1.put("cdtipsit", cdtipsit1);
+			smap1.put("pv_cdperson", smap1.get("CDPERSON"));
+			smap1.put("nombreAsegurado", nombrePersona);
+			
+			smap1.put("pantallaOrigen", "MARCO_ENDOSOS_NUEVO");
+		}
+		
 		logger.debug(Utils.log(
 		         "\n#####################################"
 		        ,"\n###### pantallaEndosoDomicilio ######"
@@ -1553,15 +1587,23 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteSalud(
-						smap1.get("pv_cdunieco"), 
-						smap1.get("pv_cdramo"), 
-						smap1.get("pv_estado"), 
-						smap1.get("pv_nmpoliza"), 
-						resEndDomi.get("pv_nmsuplem_o"), 
-						respConfirmacionEndoso.getNumeroTramite(),
-						Ice2sigsService.Operacion.ACTUALIZA, 
-						(UserVO) session.get("USUARIO"));
+//				ice2sigsService.ejecutaWSclienteSalud(
+//						smap1.get("pv_cdunieco"), 
+//						smap1.get("pv_cdramo"), 
+//						smap1.get("pv_estado"), 
+//						smap1.get("pv_nmpoliza"), 
+//						resEndDomi.get("pv_nmsuplem_o"), 
+//						respConfirmacionEndoso.getNumeroTramite(),
+//						Ice2sigsService.Operacion.ACTUALIZA, 
+//						(UserVO) session.get("USUARIO"));
+				
+				String saludDanios = "S";
+				
+				ClienteGeneral clienteGeneral = new ClienteGeneral();
+				clienteGeneral.setClaveCia(saludDanios);
+				
+				// Ejecutamos el Web Service de Cliente Salud:
+				ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("pv_cdperson"), Ice2sigsService.Operacion.ACTUALIZA, null, (UserVO) session.get("USUARIO"), true);
 				
 			    mensaje="Se ha guardado el endoso "+resEndDomi.get("pv_nsuplogi_o");
 			    
