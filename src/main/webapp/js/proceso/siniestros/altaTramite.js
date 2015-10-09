@@ -205,7 +205,7 @@ Ext.onReady(function() {
 				root: 'listaAsegurado'
 			}
 		}
-    });
+	});
 
 	var storeTipoPago = Ext.create('Ext.data.JsonStore', {
 		model:'Generic',
@@ -407,7 +407,7 @@ Ext.onReady(function() {
 							msg: 'Error al obtener los datos.',
 							buttons: Ext.Msg.OK,
 							icon: Ext.Msg.ERROR
-							});
+						});
 					}
 				});
 				modPolizasAltaTramite.show();
@@ -609,8 +609,7 @@ Ext.onReady(function() {
 //.....
 	
 /**		PAGO REEMBOLSO						**/
-	cmbProveedorReembolso = Ext.create('Ext.form.field.ComboBox',
-	{
+	cmbProveedorReembolso = Ext.create('Ext.form.field.ComboBox', {
 		displayField : 'nombre',			name:'cmbProveedorReembolso',		valueField   : 'cdpresta',
 		forceSelection : true,				matchFieldWidth: false,				queryMode :'remote',
 		queryParam: 'params.cdpresta',		minChars  : 2,						store : storeProveedor,
@@ -619,8 +618,7 @@ Ext.onReady(function() {
 	
 
 /**		PAGO INDEMNIZATORIOS				**/
-	cmbProveedorIndemnizatorio = Ext.create('Ext.form.field.ComboBox',
-	{
+	cmbProveedorIndemnizatorio = Ext.create('Ext.form.field.ComboBox', {
 		displayField : 'nombre',			name:'cmbProveedorIndemnizatorio',		valueField   : 'cdpresta',
 		forceSelection : true,				matchFieldWidth: false,				queryMode :'remote',
 		queryParam: 'params.cdpresta',		minChars  : 2,						store : storeProveedor,
@@ -629,8 +627,7 @@ Ext.onReady(function() {
 	
 
 /**		PAGO REEMBOLSO / INDEMNIZATORIOS	**/
-	cmbTipoMoneda = Ext.create('Ext.form.ComboBox',
-	{
+	cmbTipoMoneda = Ext.create('Ext.form.ComboBox', {
 		id:'cmbTipoMoneda',			store: storeTipoMoneda,		value:'001',		queryMode:'local',  
 		displayField: 'value',		valueField: 'key',			editable:false,		allowBlank:false
 		,listeners : {
@@ -639,8 +636,6 @@ Ext.onReady(function() {
 					// EL TIPO DE MONEDA ES PESO
 					valorIndexSeleccionado.set('tasaCambio','0.00');
 					valorIndexSeleccionado.set('importeFactura','0.00');
-					
-					//valorIndexSeleccionado.set('PTMTOARA','0');
 				}else{
 					var tasaCambio = valorIndexSeleccionado.get('tasaCambio');
 					var importeFactura = valorIndexSeleccionado.get('importeFactura');
@@ -648,7 +643,7 @@ Ext.onReady(function() {
 					valorIndexSeleccionado.set('importe',importeMxn);
 				}
 			}
-        }
+		}
 	});
 
 	/**		CAMPOS PARA RECHAZO			**/
@@ -786,14 +781,12 @@ Ext.onReady(function() {
 					text		:'Restaurar Facturas'
 					,icon		:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png'
 					,handler	:function() {
-						Ext.Ajax.request(
-						{
+						Ext.Ajax.request( {
 							url		:	_URL_CONSULTA_FACTURAS
 							,params	:	{
 									'smap.ntramite' : panelInicialPral.down('[name=idNumTramite]').getValue()
 							}
-							,success : function (response)
-							{
+							,success : function (response) {
 								storeFacturaDirecto.removeAll();
 								var json = Ext.decode(response.responseText).slist1;
 								for(var i = 0; i < json.length; i++){
@@ -815,8 +808,7 @@ Ext.onReady(function() {
 									storeFacturaDirecto.add(rec);
 								}
 							},
-							failure : function ()
-							{
+							failure : function () {
 								me.up().up().setLoading(false);
 								centrarVentanaInterna(Ext.Msg.show({
 									title:'Error',
@@ -841,18 +833,15 @@ Ext.onReady(function() {
 						var noFactura= rowSelected.get('noFactura');
 						storeListAsegPagDirecto.removeAll();
 						//REALIZAMOS EL LLAMADO POR EL NUMERO DE FACTURA Y TRÁMITE
-						Ext.Ajax.request(
-						{
+						Ext.Ajax.request( {
 							url		: _URL_ASEGURADO_FACTURA
 							,params	: {
 								'params.nfactura'  : rowSelected.get('noFactura'),
 								'params.ntramite'  : panelInicialPral.down('[name=idNumTramite]').getValue()
 							}
-							,success : function (response)
-							{
+							,success : function (response) {
 								var json=Ext.decode(response.responseText).slist1;
-								if(Ext.decode(response.responseText).slist1 != null)
-								{
+								if(Ext.decode(response.responseText).slist1 != null) {
 									for(var i = 0; i < json.length; i++){
 										var fechaFacturaM = json[i].MODFECHAOCURRENCIA.match(/\d+/g); 
 										var rec = new modelListAsegPagDirecto({
@@ -875,8 +864,7 @@ Ext.onReady(function() {
 									}
 								}
 							},
-							failure : function ()
-							{
+							failure : function () {
 								me.up().up().setLoading(false);
 								Ext.Msg.show({
 									title:'Error',
@@ -938,16 +926,13 @@ Ext.onReady(function() {
  				height: 250
  				,plugins  :
 				[
-					Ext.create('Ext.grid.plugin.CellEditing',
-					{
+					Ext.create('Ext.grid.plugin.CellEditing', {
 						clicksToEdit: 1
-						,listeners :
-							{
-								beforeedit : function()
-								{
-									valorIndexSeleccionado = gridFacturaReembolso.getView().getSelectionModel().getSelection()[0];
-								}
+						,listeners : {
+							beforeedit : function() {
+								valorIndexSeleccionado = gridFacturaReembolso.getView().getSelectionModel().getSelection()[0];
 							}
+						}
 					})
 				],
 				store: storeFacturaReembolso,
@@ -985,26 +970,19 @@ Ext.onReady(function() {
 						,editor : cmbProveedorReembolso
 						,renderer : function(v) {
 							var leyenda = '';
-							if (typeof v == 'string')// tengo solo el indice
-							{
-								if(storeProveedorReembolsoRender.cargado)
-								{
-									storeProveedorReembolsoRender.each(function(rec)
-								    {
-										if (rec.data.cdpresta == v)
-									    {
+							if (typeof v == 'string'){
+								if(storeProveedorReembolsoRender.cargado) {
+									storeProveedorReembolsoRender.each(function(rec) {
+										if (rec.data.cdpresta == v) {
 											leyenda = rec.data.nombre;
 										}
 									});
 								}
-								else
-								{
-								    leyenda='Cargando...';
+								else {
+									leyenda='Cargando...';
 								}
-							}else // tengo objeto que puede venir como Generic u otro mas complejo
-							{
-								if (v.key && v.value)
-								{
+							}else{
+								if (v.key && v.value) {
 									leyenda = v.value;
 								} else {
 									leyenda = v.data.value;
@@ -1019,17 +997,14 @@ Ext.onReady(function() {
 						,editor : cmbTipoMoneda
 						,renderer : function(v) {
 							var leyenda = '';
-							if (typeof v == 'string')// tengo solo el indice
-							{
+							if (typeof v == 'string'){
 								storeTipoMoneda.each(function(rec) {
 									if (rec.data.key == v) {
 										leyenda = rec.data.value;
 									}
 								});
-							}else // tengo objeto que puede venir como Generic u otro mas complejo
-							{
-								if (v.key && v.value)
-								{
+							}else {
+								if (v.key && v.value) {
 									leyenda = v.value;
 								} else {
 									leyenda = v.data.value;
@@ -1109,7 +1084,7 @@ Ext.onReady(function() {
 			});
 			this.callParent();
 		},
-	 	onRemoveClick: function(grid, rowIndex){
+		onRemoveClick: function(grid, rowIndex){
 			var record=this.getStore().getAt(rowIndex);
 			this.getStore().removeAt(rowIndex);
 			banderaFactura = "1";
@@ -1118,46 +1093,43 @@ Ext.onReady(function() {
 	gridFacturaReembolso =new EditorFacturaReembolso();
 
 	Ext.define('EditorPagoIndemnizatorio', {
- 		extend: 'Ext.grid.Panel',
+		extend: 'Ext.grid.Panel',
 		name:'editorPagoIndemnizatorio',
- 		title: 'Alta de Pago Indemnizatorio',
- 		frame: true,
+		title: 'Alta de Pago Indemnizatorio',
+		frame: true,
 		selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true },
-	 	initComponent: function(){
-	 			Ext.apply(this, {
-	 			width: 750,
-	 			height: 250
-	 			,plugins  :
-		        [
-		            Ext.create('Ext.grid.plugin.CellEditing',
-		            {
-		                clicksToEdit: 1
-		                ,listeners :
-							{
-								beforeedit : function()
-								{
-									valorIndexSeleccionado = gridPagoIndemnizatorio.getView().getSelectionModel().getSelection()[0];
-								}
+		initComponent: function(){
+				Ext.apply(this, {
+				width: 750,
+				height: 250
+				,plugins  :
+				[
+					Ext.create('Ext.grid.plugin.CellEditing', {
+						clicksToEdit: 1
+						,listeners : {
+							beforeedit : function() {
+								valorIndexSeleccionado = gridPagoIndemnizatorio.getView().getSelectionModel().getSelection()[0];
 							}
-		            })
-		        ],
-	 			store: storePagoIndemnizatorio,
-	 			columns: 
-	 			[
-				 	{
-					 	xtype: 'actioncolumn',
-					 	width: 40,
-					 	sortable: false,
-					 	menuDisabled: true,
-					 	items: [{
-					 		icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
-					 		tooltip: 'Quitar inciso',
-					 		scope: this,
-					 		handler: this.onRemoveClick
-				 		}]
-				 	},
-				 	{	
-				 		header: 'No. de Factura',			dataIndex: 'noFactura',			flex:2, 		hidden:true
+						}
+					})
+				],
+				store: storePagoIndemnizatorio,
+				columns: 
+				[
+					{
+						xtype: 'actioncolumn',
+						width: 40,
+						sortable: false,
+						menuDisabled: true,
+						items: [{
+							icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+							tooltip: 'Quitar inciso',
+							scope: this,
+							handler: this.onRemoveClick
+						}]
+					},
+					{	
+						header: 'No. de Factura',			dataIndex: 'noFactura',			flex:2, 		hidden:true
 				 	},
 				 	{
 				 		header: 'Fecha de Factura',			dataIndex: 'fechaFactura',		flex:2,			 	renderer: Ext.util.Format.dateRenderer('d/m/Y')
@@ -1167,26 +1139,19 @@ Ext.onReady(function() {
 						,editor : cmbProveedorIndemnizatorio
 						,renderer : function(v) {
 							var leyenda = '';
-							if (typeof v == 'string')// tengo solo el indice
-							{
-								if(storeProveedorIndemnizatorioRender.cargado)
-								{
-									storeProveedorIndemnizatorioRender.each(function(rec)
-								    {
-										if (rec.data.cdpresta == v)
-									    {
+							if (typeof v == 'string') {
+								if(storeProveedorIndemnizatorioRender.cargado) {
+									storeProveedorIndemnizatorioRender.each(function(rec) {
+										if (rec.data.cdpresta == v) {
 											leyenda = rec.data.nombre;
 										}
 									});
 								}
-								else
-								{
-								    leyenda='Cargando...';
+								else {
+									leyenda='Cargando...';
 								}
-							}else // tengo objeto que puede venir como Generic u otro mas complejo
-							{
-								if (v.key && v.value)
-								{
+							}else {
+								if (v.key && v.value) {
 									leyenda = v.value;
 								} else {
 									leyenda = v.data.value;
@@ -1201,17 +1166,14 @@ Ext.onReady(function() {
 						,editor : cmbTipoMoneda
 						,renderer : function(v) {
 						var leyenda = '';
-							if (typeof v == 'string')// tengo solo el indice
-							{
+							if (typeof v == 'string') {
 								storeTipoMoneda.each(function(rec) {
 									if (rec.data.key == v) {
 										leyenda = rec.data.value;
 									}
 								});
-							}else // tengo objeto que puede venir como Generic u otro mas complejo
-							{
-								if (v.key && v.value)
-								{
+							}else {
+								if (v.key && v.value) {
 									leyenda = v.value;
 								} else {
 									leyenda = v.data.value;
@@ -1220,58 +1182,58 @@ Ext.onReady(function() {
 							return leyenda;
 						}
 					}
-				 	,
-				 	{
-					 	header: 'Tasa cambio', 				dataIndex: 'tasaCambio',	flex:2,				renderer: Ext.util.Format.usMoney
-					 	,editor: {
-				                xtype: 'textfield',
-				                allowBlank: false,
-				                listeners : {
-									change:function(e){
-										var tipoMoneda = valorIndexSeleccionado.get('tipoMonedaName');
-										if(tipoMoneda =='001'){
-											// EL TIPO DE MONEDA ES PESO
-											valorIndexSeleccionado.set('tasaCambio','0.00');
-											valorIndexSeleccionado.set('importeFactura','0.00');
-											
-											//valorIndexSeleccionado.set('PTMTOARA','0');
-										}else{
-											var tasaCambio = e.getValue();
-											var importeFactura = valorIndexSeleccionado.get('importeFactura');
-											var importeMxn = +tasaCambio * +importeFactura;
-											valorIndexSeleccionado.set('importe',importeMxn);
-											validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
-										}
+					,
+					{
+						header: 'Tasa cambio', 				dataIndex: 'tasaCambio',	flex:2,				renderer: Ext.util.Format.usMoney
+						,editor: {
+							xtype: 'textfield',
+							allowBlank: false,
+							listeners : {
+								change:function(e){
+									var tipoMoneda = valorIndexSeleccionado.get('tipoMonedaName');
+									if(tipoMoneda =='001'){
+										// EL TIPO DE MONEDA ES PESO
+										valorIndexSeleccionado.set('tasaCambio','0.00');
+										valorIndexSeleccionado.set('importeFactura','0.00');
+										
+										//valorIndexSeleccionado.set('PTMTOARA','0');
+									}else{
+										var tasaCambio = e.getValue();
+										var importeFactura = valorIndexSeleccionado.get('importeFactura');
+										var importeMxn = +tasaCambio * +importeFactura;
+										valorIndexSeleccionado.set('importe',importeMxn);
+										validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 									}
-						        }
-			            }
-				 	},
-				 	{
+								}
+							}
+						}
+					},
+					{
 					 	header: 'Importe Factura', 				dataIndex: 'importeFactura',		 	flex:2,				renderer: Ext.util.Format.usMoney
 					 	,editor: {
-				                xtype: 'textfield',
-				                allowBlank: false,
-				                listeners : {
-									change:function(e){
-										var tipoMoneda = valorIndexSeleccionado.get('tipoMonedaName');
-										if(tipoMoneda =='001'){
-											// EL TIPO DE MONEDA ES PESO
-											valorIndexSeleccionado.set('tasaCambio','0.00');
-											valorIndexSeleccionado.set('importeFactura','0.00');
-										}else{
-											var tasaCambio = valorIndexSeleccionado.get('tasaCambio');
-											var importeFactura = e.getValue();
-											var importeMxn = +tasaCambio * +importeFactura;
-											valorIndexSeleccionado.set('importe',importeMxn);
-											validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
-										}
+							xtype: 'textfield',
+							allowBlank: false,
+							listeners : {
+								change:function(e){
+									var tipoMoneda = valorIndexSeleccionado.get('tipoMonedaName');
+									if(tipoMoneda =='001'){
+										// EL TIPO DE MONEDA ES PESO
+										valorIndexSeleccionado.set('tasaCambio','0.00');
+										valorIndexSeleccionado.set('importeFactura','0.00');
+									}else{
+										var tasaCambio = valorIndexSeleccionado.get('tasaCambio');
+										var importeFactura = e.getValue();
+										var importeMxn = +tasaCambio * +importeFactura;
+										valorIndexSeleccionado.set('importe',importeMxn);
+										validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 									}
-						        }
-			            }
-				 	},
-				 	{
-					 	header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney
-					 	,editor: {
+								}
+							}
+						}
+					},
+					{
+						header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney
+						,editor: {
 							xtype: 'textfield',
 							allowBlank: false,
 							listeners : {
@@ -1280,73 +1242,71 @@ Ext.onReady(function() {
 								}
 							}
 						}
-				 	}
-		 		],
-		 		tbar: [
-			 		{
-	                    text     : 'Agregar Documento'
-	                    ,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
-	                    ,handler : _p21_agregarFactura
-	                }
-		 		]
-		 	});
- 			this.callParent();
-	 	},
-	 	onRemoveClick: function(grid, rowIndex){
-	 		var record=this.getStore().getAt(rowIndex);
-	 		this.getStore().removeAt(rowIndex);
+					}
+				],
+				tbar: [
+					{
+						text     : 'Agregar Documento'
+						,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
+						,handler : _p21_agregarFactura
+					}
+				]
+			});
+			this.callParent();
+		},
+		onRemoveClick: function(grid, rowIndex){
+			var record=this.getStore().getAt(rowIndex);
+			this.getStore().removeAt(rowIndex);
 			banderaFactura = "1";
-	 	}
- 	});
-    gridPagoIndemnizatorio =new EditorPagoIndemnizatorio();
+		}
+	});
+	gridPagoIndemnizatorio =new EditorPagoIndemnizatorio();
 
 		Ext.define('EditorPagoIndemnizatorioRecupera', {
- 		extend: 'Ext.grid.Panel',
+		extend: 'Ext.grid.Panel',
 		name:'editorPagoIndemnizatorioRecupera',
- 		title: 'Alta de Pago Indemnizatorio',
- 		frame: true,
+		title: 'Alta de Pago Indemnizatorio',
+		frame: true,
 		selModel: { selType: 'checkboxmodel', mode: 'SINGLE', checkOnly: true },
-	 	initComponent: function(){
-	 			Ext.apply(this, {
-	 			width: 750,
-	 			height: 250
-	 			,plugins  :
-		        [
-		            Ext.create('Ext.grid.plugin.CellEditing',
-		            {
-		                clicksToEdit: 1
-		                ,listeners :
+		initComponent: function(){
+				Ext.apply(this, {
+				width: 750,
+				height: 250
+				,plugins  :
+				[
+					Ext.create('Ext.grid.plugin.CellEditing', {
+						clicksToEdit: 1
+						,listeners : {
+							beforeedit : function()
 							{
-								beforeedit : function()
-								{
-									valorIndexSeleccionado = gridPagoIndemnizatorioRecupera.getView().getSelectionModel().getSelection()[0];
-								}
+								valorIndexSeleccionado = gridPagoIndemnizatorioRecupera.getView().getSelectionModel().getSelection()[0];
 							}
-		            })
-		        ],
-	 			store: storePagoIndemnizatorioRecupera,
-	 			columns: 
-	 			[
-				 	{
-					 	xtype: 'actioncolumn',
-					 	width: 40,
-					 	sortable: false,
-					 	menuDisabled: true,
-					 	items: [{
-					 		icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
-					 		tooltip: 'Quitar inciso',
-					 		scope: this,
-					 		handler: this.onRemoveClick
-				 		}]
-				 	},
-				 	{	
-				 		header: 'No. de Factura',			dataIndex: 'noFactura',			flex:2, 		hidden:true
-				 	},
-				 	{
-				 		header: 'Fecha de Factura',			dataIndex: 'fechaFactura',		flex:2,			 	renderer: Ext.util.Format.dateRenderer('d/m/Y')
-				 	},
-				 	{	header: 'Proveedor',			dataIndex: 'proveedorName',			flex:2
-					 	,editor: {
+						}
+					})
+				],
+				store: storePagoIndemnizatorioRecupera,
+				columns: 
+				[
+					{
+						xtype: 'actioncolumn',
+						width: 40,
+						sortable: false,
+						menuDisabled: true,
+						items: [{
+							icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+							tooltip: 'Quitar inciso',
+							scope: this,
+							handler: this.onRemoveClick
+						}]
+					},
+					{	
+						header: 'No. de Factura',			dataIndex: 'noFactura',			flex:2, 		hidden:true
+					},
+					{
+						header: 'Fecha de Factura',			dataIndex: 'fechaFactura',		flex:2,			 	renderer: Ext.util.Format.dateRenderer('d/m/Y')
+					},
+					{	header: 'Proveedor',			dataIndex: 'proveedorName',			flex:2
+						,editor: {
 							xtype: 'textfield',
 							allowBlank: false
 						}
@@ -1356,17 +1316,14 @@ Ext.onReady(function() {
 						,editor : cmbTipoMoneda
 						,renderer : function(v) {
 						var leyenda = '';
-							if (typeof v == 'string')// tengo solo el indice
-							{
+							if (typeof v == 'string') {
 								storeTipoMoneda.each(function(rec) {
 									if (rec.data.key == v) {
 										leyenda = rec.data.value;
 									}
 								});
-							}else // tengo objeto que puede venir como Generic u otro mas complejo
-							{
-								if (v.key && v.value)
-								{
+							}else {
+								if (v.key && v.value) {
 									leyenda = v.value;
 								} else {
 									leyenda = v.data.value;
@@ -1375,58 +1332,56 @@ Ext.onReady(function() {
 							return leyenda;
 						}
 					}
-				 	,
-				 	{
-					 	header: 'Tasa cambio', 				dataIndex: 'tasaCambio',	flex:2,				renderer: Ext.util.Format.usMoney
-					 	,editor: {
-				                xtype: 'textfield',
-				                allowBlank: false,
-				                listeners : {
-									change:function(e){
-										var tipoMoneda = valorIndexSeleccionado.get('tipoMonedaName');
-										if(tipoMoneda =='001'){
-											// EL TIPO DE MONEDA ES PESO
-											valorIndexSeleccionado.set('tasaCambio','0.00');
-											valorIndexSeleccionado.set('importeFactura','0.00');
-											
-											//valorIndexSeleccionado.set('PTMTOARA','0');
-										}else{
-											var tasaCambio = e.getValue();
-											var importeFactura = valorIndexSeleccionado.get('importeFactura');
-											var importeMxn = +tasaCambio * +importeFactura;
-											valorIndexSeleccionado.set('importe',importeMxn);
-											//validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
-										}
+					,
+					{
+						header: 'Tasa cambio', 				dataIndex: 'tasaCambio',	flex:2,				renderer: Ext.util.Format.usMoney
+						,editor: {
+							xtype: 'textfield',
+							allowBlank: false,
+							listeners : {
+								change:function(e){
+									var tipoMoneda = valorIndexSeleccionado.get('tipoMonedaName');
+									if(tipoMoneda =='001'){
+										// EL TIPO DE MONEDA ES PESO
+										valorIndexSeleccionado.set('tasaCambio','0.00');
+										valorIndexSeleccionado.set('importeFactura','0.00');
+									}else{
+										var tasaCambio = e.getValue();
+										var importeFactura = valorIndexSeleccionado.get('importeFactura');
+										var importeMxn = +tasaCambio * +importeFactura;
+										valorIndexSeleccionado.set('importe',importeMxn);
+										//validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 									}
-						        }
-			            }
-				 	},
-				 	{
-					 	header: 'Importe Factura', 				dataIndex: 'importeFactura',		 	flex:2,				renderer: Ext.util.Format.usMoney
-					 	,editor: {
-				                xtype: 'textfield',
-				                allowBlank: false,
-				                listeners : {
-									change:function(e){
-										var tipoMoneda = valorIndexSeleccionado.get('tipoMonedaName');
-										if(tipoMoneda =='001'){
-											// EL TIPO DE MONEDA ES PESO
-											valorIndexSeleccionado.set('tasaCambio','0.00');
-											valorIndexSeleccionado.set('importeFactura','0.00');
-										}else{
-											var tasaCambio = valorIndexSeleccionado.get('tasaCambio');
-											var importeFactura = e.getValue();
-											var importeMxn = +tasaCambio * +importeFactura;
-											valorIndexSeleccionado.set('importe',importeMxn);
-											//validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
-										}
+								}
+							}
+						}
+					},
+					{
+						header: 'Importe Factura', 				dataIndex: 'importeFactura',		 	flex:2,				renderer: Ext.util.Format.usMoney
+						,editor: {
+							xtype: 'textfield',
+							allowBlank: false,
+							listeners : {
+								change:function(e){
+									var tipoMoneda = valorIndexSeleccionado.get('tipoMonedaName');
+									if(tipoMoneda =='001'){
+										// EL TIPO DE MONEDA ES PESO
+										valorIndexSeleccionado.set('tasaCambio','0.00');
+										valorIndexSeleccionado.set('importeFactura','0.00');
+									}else{
+										var tasaCambio = valorIndexSeleccionado.get('tasaCambio');
+										var importeFactura = e.getValue();
+										var importeMxn = +tasaCambio * +importeFactura;
+										valorIndexSeleccionado.set('importe',importeMxn);
+										//validarFacturaPagada(valorIndexSeleccionado.get('proveedorName') ,valorIndexSeleccionado.get('noFactura'), valorIndexSeleccionado.get('importe'));
 									}
-						        }
-			            }
-				 	},
-				 	{
-					 	header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney
-					 	,editor: {
+								}
+							}
+						}
+					},
+					{
+						header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney
+						,editor: {
 							xtype: 'textfield',
 							allowBlank: false,
 							listeners : {
@@ -1436,31 +1391,31 @@ Ext.onReady(function() {
 							}
 						}
 				 	}
-		 		],
-		 		tbar: [
-			 		{
-	                    text     : 'Agregar Documento'
-	                    ,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
-	                    ,handler : _p21_agregarFactura
-	                }
-		 		]
-		 	});
- 			this.callParent();
-	 	},
-	 	onRemoveClick: function(grid, rowIndex){
-	 		var record=this.getStore().getAt(rowIndex);
-	 		this.getStore().removeAt(rowIndex);
+				],
+				tbar: [
+					{
+						text     : 'Agregar Documento'
+						,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
+						,handler : _p21_agregarFactura
+					}
+				]
+			});
+			this.callParent();
+		},
+		onRemoveClick: function(grid, rowIndex){
+			var record=this.getStore().getAt(rowIndex);
+			this.getStore().removeAt(rowIndex);
 			banderaFactura = "1";
-	 	}
- 	});
-    gridPagoIndemnizatorioRecupera =new EditorPagoIndemnizatorioRecupera();
-    
+		}
+	});
+	gridPagoIndemnizatorioRecupera =new EditorPagoIndemnizatorioRecupera();
+	
 	/*GENERACION DE LA TABLA PARA LOS ASEGURADOS*/
 	Ext.define('EditorAsegPagDirecto', {
- 		extend: 'Ext.grid.Panel',
+		extend: 'Ext.grid.Panel',
 		name:'editorAsegPagDirecto',
- 		title: 'Asegurados',
- 		frame: true,
+		title: 'Asegurados',
+		frame: true,
 		//selType  : 'rowmodel',
 		initComponent: function(){
 				Ext.apply(this, {
@@ -1518,42 +1473,40 @@ Ext.onReady(function() {
 		onRemoveClick: function(grid, rowIndex){
 			var record=this.getStore().getAt(rowIndex);
 			this.getStore().removeAt(rowIndex);
-            banderaAsegurado = "1";
+			banderaAsegurado = "1";
 		},
 		onHistorialClick: function(grid, rowIndex){
 			var record=this.getStore().getAt(rowIndex);
 			//this.getStore().removeAt(rowIndex);
 			var windowHistSinies = Ext.create('Ext.window.Window',{
-	        modal       : true,
-	        buttonAlign : 'center',
-	        width       : 800,
-	        height      : 500,
-	        autoScroll  : true,
-	        loader      : {
-	            url     : _URL_LOADER_HISTORIAL_RECLAMACIONES,
-	            params  : {
-	                'params.cdperson'  : record.get('modCdperson'),
-	                'params.cdramo'    : null,
-	                'params.nmpoliza'  : null,
-	                'params.cdunieco'  : null
-	            },
-	            scripts  : true,
-	            loadMask : true,
-	            autoLoad : true,
-	            ajaxOptions: {
-	            	method: 'POST'
-	            }
-	        },
-	        buttons: [{
-	        	 icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
-			     text: 'Cerrar',
-			     handler: function() {windowHistSinies.close();}
-	        }]
-	    }).show();
-	    centrarVentana(windowHistSinies);
-			
-		}
-		
+			modal       : true,
+			buttonAlign : 'center',
+			width       : 800,
+			height      : 500,
+			autoScroll  : true,
+			loader      : {
+				url     : _URL_LOADER_HISTORIAL_RECLAMACIONES,
+				params  : {
+					'params.cdperson'  : record.get('modCdperson'),
+					'params.cdramo'    : null,
+					'params.nmpoliza'  : null,
+					'params.cdunieco'  : null
+				},
+				scripts  : true,
+				loadMask : true,
+				autoLoad : true,
+				ajaxOptions: {
+					method: 'POST'
+				}
+			},
+			buttons: [{
+				icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+				text: 'Cerrar',
+				handler: function() {windowHistSinies.close();}
+			}]
+		}).show();
+			centrarVentana(windowHistSinies);
+		}		
 	});
 	gridAsegPagDirecto=new EditorAsegPagDirecto();
 
@@ -1681,10 +1634,9 @@ Ext.onReady(function() {
 			gridPolizasAltaTramite
 		]
 	});
-    
 	
 	//PANEL PRINCIPAL DEL PROCESO DE SINIESTRO
-    var panelInicialPral= Ext.create('Ext.form.Panel', {
+	var panelInicialPral= Ext.create('Ext.form.Panel', {
 		border    : 0
 		,id : 'panelInicialPral'
 		,renderTo : 'div_clau'
@@ -1789,7 +1741,6 @@ Ext.onReady(function() {
 			text: 'Guardar cambios',
 			handler: function() {
 				var form = this.up('form').getForm();
-				//verificarFacturaAsegurado(); //Guardar cambios
 				
 				if (form.isValid()){
 					retornaMC = "1";
@@ -2957,12 +2908,14 @@ Ext.onReady(function() {
 					limpiarRegistros();
 					var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];
 					var noFactura= rowSelected.get('noFactura');
-					ventanaAgregarAsegurado.show();
+					//ventanaAgregarAsegurado.show();
+					storeListAsegPagDirecto.add(new modelListAsegPagDirecto({modFechaOcurrencia :new Date() }));
 				}else{
 					limpiarRegistros();
 					var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];
 					var noFactura= rowSelected.get('noFactura');
-					ventanaAgregarAsegurado.show();
+					//ventanaAgregarAsegurado.show();
+					storeListAsegPagDirecto.add(new modelListAsegPagDirecto({modFechaOcurrencia :new Date() }));
 				}
 			}else{
 				if(banderaAsegurado =="1"){
@@ -2970,12 +2923,14 @@ Ext.onReady(function() {
 					limpiarRegistros();
 					var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];
 					var noFactura= rowSelected.get('noFactura');
-					ventanaAgregarAsegurado.show();
+					//ventanaAgregarAsegurado.show();
+					storeListAsegPagDirecto.add(new modelListAsegPagDirecto({modFechaOcurrencia :new Date() }));
 				}else{
 					limpiarRegistros();
 					var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];
 					var noFactura= rowSelected.get('noFactura');
-					ventanaAgregarAsegurado.show();
+					//ventanaAgregarAsegurado.show();
+					storeListAsegPagDirecto.add(new modelListAsegPagDirecto({modFechaOcurrencia :new Date() }));
 				}
 			}
 		}else{
