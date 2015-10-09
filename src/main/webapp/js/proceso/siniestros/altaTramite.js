@@ -2908,14 +2908,14 @@ Ext.onReady(function() {
 					limpiarRegistros();
 					var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];
 					var noFactura= rowSelected.get('noFactura');
-					//ventanaAgregarAsegurado.show();
-					storeListAsegPagDirecto.add(new modelListAsegPagDirecto({modFechaOcurrencia :new Date() }));
+					ventanaAgregarAsegurado.show();
+					//storeListAsegPagDirecto.add(new modelListAsegPagDirecto({modFechaOcurrencia :new Date() }));
 				}else{
 					limpiarRegistros();
 					var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];
 					var noFactura= rowSelected.get('noFactura');
-					//ventanaAgregarAsegurado.show();
-					storeListAsegPagDirecto.add(new modelListAsegPagDirecto({modFechaOcurrencia :new Date() }));
+					ventanaAgregarAsegurado.show();
+					//storeListAsegPagDirecto.add(new modelListAsegPagDirecto({modFechaOcurrencia :new Date() }));
 				}
 			}else{
 				if(banderaAsegurado =="1"){
@@ -2923,14 +2923,14 @@ Ext.onReady(function() {
 					limpiarRegistros();
 					var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];
 					var noFactura= rowSelected.get('noFactura');
-					//ventanaAgregarAsegurado.show();
-					storeListAsegPagDirecto.add(new modelListAsegPagDirecto({modFechaOcurrencia :new Date() }));
+					ventanaAgregarAsegurado.show();
+					//storeListAsegPagDirecto.add(new modelListAsegPagDirecto({modFechaOcurrencia :new Date() }));
 				}else{
 					limpiarRegistros();
 					var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];
 					var noFactura= rowSelected.get('noFactura');
-					//ventanaAgregarAsegurado.show();
-					storeListAsegPagDirecto.add(new modelListAsegPagDirecto({modFechaOcurrencia :new Date() }));
+					ventanaAgregarAsegurado.show();
+					//storeListAsegPagDirecto.add(new modelListAsegPagDirecto({modFechaOcurrencia :new Date() }));
 				}
 			}
 		}else{
