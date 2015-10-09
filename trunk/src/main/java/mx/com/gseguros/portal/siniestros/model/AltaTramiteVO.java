@@ -44,8 +44,8 @@ public class AltaTramiteVO implements Serializable{
 	private String ptimporta;
 	private String nombreAsegurado;
 	private String nombProv;
-	
-	
+	private String email;
+	private String telefono;
 
 	
 	public String getNtramite() {
@@ -369,6 +369,26 @@ public class AltaTramiteVO implements Serializable{
 
 	public void setNombProv(String nombProv) {
 		this.nombProv = nombProv;
+	}
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
 	}	
 	
 }

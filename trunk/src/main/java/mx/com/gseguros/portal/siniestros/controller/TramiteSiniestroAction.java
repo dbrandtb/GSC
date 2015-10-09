@@ -324,6 +324,20 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			paramsTworkSinPagRem.put("pv_nfactura_i",null);
 			paramsTworkSinPagRem.put("pv_nmautser_i",null);
 			siniestrosManager.guardaListaTworkSin(paramsTworkSinPagRem);
+			
+			//Guardamos la información del asegurado
+			HashMap<String, Object> paramsAsegurado = new HashMap<String, Object>();
+			paramsAsegurado.put("pv_cdunieco_i",params.get("cdunieco"));
+			paramsAsegurado.put("pv_cdramo_i",params.get("cmbRamos"));
+			paramsAsegurado.put("pv_estado_i",params.get("estado"));
+			paramsAsegurado.put("pv_nmpoliza_i",params.get("polizaAfectada"));
+			paramsAsegurado.put("pv_nmsuplem_i",params.get("idNmsuplem"));
+			paramsAsegurado.put("pv_nmsituac_i",params.get("nmsituac"));
+			paramsAsegurado.put("pv_cdperson_i",params.get("cmbAseguradoAfectado"));
+			paramsAsegurado.put("pv_nmtelefo_i",params.get("txtTelefono"));
+			paramsAsegurado.put("pv_dsemail_i",params.get("txtEmail"));
+			siniestrosManager.actualizaTelefonoEmailAsegurado(paramsAsegurado);
+			
 		}
 		success = true;
 		return SUCCESS;

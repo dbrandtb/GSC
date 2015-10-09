@@ -834,6 +834,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setDsplan(rs.getString("DSPLAN"));
         	consulta.setMesesAsegurado(rs.getString("MESESASEGURADO"));
         	consulta.setDiasAsegurado(rs.getString("DIASASEGURADO"));
+        	consulta.setTelefono(rs.getString("TELEFONO"));
+        	consulta.setEmail(rs.getString("EMAIL"));
             return consulta;
         }
     }
@@ -3092,6 +3094,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setTasacamb(rs.getString("TASACAMB"));
         	consulta.setPtimporta(rs.getString("PTIMPORTA"));
         	consulta.setNombProv(rs.getString("NOMBPROV"));
+        	consulta.setEmail(rs.getString("EMAIL"));
+        	consulta.setTelefono(rs.getString("TELEFONO"));
             return consulta;
         }
     }
@@ -4850,6 +4854,30 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_accion_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String actualizaTelefonoEmailAsegurado(HashMap<String, Object> paramsAsegurado) throws Exception {
+		Map<String, Object> mapResult = ejecutaSP(new ActualizaTelefonoEmailAsegurado(getDataSource()), paramsAsegurado);
+		return (String) mapResult.get("pv_msg_id_o");
+	}
+	
+	protected class ActualizaTelefonoEmailAsegurado extends StoredProcedure {
+		protected ActualizaTelefonoEmailAsegurado(DataSource dataSource) {
+			super(dataSource, "PKG_CONSULTA.P_ACTUALIZA_INFASEG");
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmtelefo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsemail_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			compile();
 		}
 	}

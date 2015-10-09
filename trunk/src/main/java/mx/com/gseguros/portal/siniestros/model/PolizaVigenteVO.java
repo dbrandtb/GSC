@@ -37,6 +37,8 @@ public class PolizaVigenteVO implements Serializable {
 	private String dsplan;
 	private String mesesAsegurado;
 	private String diasAsegurado;
+	private String email;
+	private String telefono;
 	
 	 
 	
@@ -342,6 +344,26 @@ public class PolizaVigenteVO implements Serializable {
 
 	public void setDiasAsegurado(String diasAsegurado) {
 		this.diasAsegurado = diasAsegurado;
+	}
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
 	}
 	
 }
