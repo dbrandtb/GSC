@@ -949,6 +949,10 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 					param.put(key,null);
 				}
 			}
+			if(!param.containsKey("swimpres"))
+			{
+				param.put("swimpres",null);
+			}
 		}
 		log.debug("### kernel PMovMesacontrol map: "+param);
         WrapperResultados res=this.returnBackBoneInvoke(param, ProcesoDAO.P_MOV_MESACONTROL);

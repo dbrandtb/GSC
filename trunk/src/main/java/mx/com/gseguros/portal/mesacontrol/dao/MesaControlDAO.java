@@ -34,6 +34,7 @@ public interface MesaControlDAO
 	 * @param nmsolici
 	 * @param cdtipsit
 	 * @param valores
+	 * @param swimpres
 	 * @return
 	 * @throws Exception
 	 */
@@ -44,7 +45,7 @@ public interface MesaControlDAO
 			String comments, String nmsolici, String cdtipsit,
 			Map<String, String> valores
 			,String cdusuari
-			,String cdsisrol
+			,String cdsisrol, String swimpres
 			) throws Exception;
 	
 	/**

@@ -3719,7 +3719,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,cdtipsit
 							,otvalorMesaControl
 							,cdusuari
-							,cdsisrol
+							,cdsisrol, null
 							);
 					resp.getSmap().put("ntramite" , ntramite);
 					
@@ -6497,7 +6497,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     			
             	ntramite = mesaControlDAO.movimientoMesaControl(cdunieco, cdramo,"W", "0", "0", 
             			null, null, "1", new Date(), cdagente, null, "", new Date(), "2",
-            			"", nmpoliza, cdtipsit, null, cdusuari, cdsisrol);
+            			"", nmpoliza, cdtipsit, null, cdusuari, cdsisrol, null);
             	
             	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null
             			,"Se guard&oacute; un nuevo tr&aacute;mite en mesa de control desde cotizaci&oacute;n de agente"

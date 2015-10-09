@@ -1533,7 +1533,7 @@ public class EndososManagerImpl implements EndososManager
 						,cdtipsit
 						,valores
 						,cdusuari
-						,cdsisrol
+						,cdsisrol, null
 						);
 			}
 			catch(Exception ex)
@@ -2571,7 +2571,7 @@ public class EndososManagerImpl implements EndososManager
 					,cdtipsitPrimerInciso
 					,valoresMesaControl
 					,cdusuari
-					,cdsisrol
+					,cdsisrol, null
 					);
 			
 			if(!enEspera)

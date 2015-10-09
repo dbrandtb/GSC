@@ -151,12 +151,31 @@ Ext.onReady(function()
                                 
                                 _fieldById('_p49_botonImprimir').disable();
                                 
+                                var cduniecos = '|';
+                                _fieldById('_p49_gridSucursales').getStore().each(function(record)
+                                {
+                                    cduniecos = cduniecos + record.get('key') + '|';
+                                });
+                                
+                                _fieldByName('cdtipram').enable();
+                                
                                 _setLoading(true,form);
                                 _p49_loadPolizas(
                                     {
-                                        'params.cdunieco' : 1000
+                                        'params.cdtipram'   : form.getValues()['cdtipram']
+                                        ,'params.cduniecos' : cduniecos
+                                        ,'params.cdramo'    : form.getValues()['cdramo']
+                                        ,'params.ramo'      : form.getValues()['ramo']
+                                        ,'params.nmpoliza'  : form.getValues()['nmpoliza']
+                                        ,'params.fefecha'   : form.getValues()['fefecha']
+                                        ,'params.cdusuari'  : form.getValues()['cdusuari']
+                                        ,'params.cdagente'  : form.getValues()['cdagente']
                                     }
-                                    ,function(){ _setLoading(false,form); }
+                                    ,function()
+                                    {
+                                        _fieldByName('cdtipram').disable();
+                                        _setLoading(false,form);
+                                    }
                                 );
                             }
                             catch(e)

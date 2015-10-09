@@ -61,7 +61,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			String comments, String nmsolici, String cdtipsit,
 			Map<String, String> valores
 			,String cdusuari
-			,String cdsisrol
+			,String cdsisrol, String swimpres
 			) throws Exception
 	{
 		Map<String,Object>params=new LinkedHashMap<String,Object>();
@@ -84,6 +84,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("cdtipsit"  , cdtipsit);
 		params.put("cdusuari"  , cdusuari);
 		params.put("cdsisrol"  , cdsisrol);
+		params.put("swimpres"  , swimpres);
 		
 		for(int i=1; i <= 50; i++) {
 			params.put(new StringBuilder("otvalor").append(StringUtils.leftPad(String.valueOf(i),2,"0")).toString(),null);
@@ -176,6 +177,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("otvalor48"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("otvalor49"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("otvalor50"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swimpres"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_tramite_o" , OracleTypes.VARCHAR));
