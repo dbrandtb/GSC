@@ -171,7 +171,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				String ntramiteAutorizacion = mesaControlDAO.movimientoMesaControl(cdunieco, cdramo, estado, nmpoliza, 
 						"0", cdunieco, cdunieco, TipoTramite.EMISION_EN_ESPERA.getCdtiptra(), new Date(), null,
 						null, null, new Date(), EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo(),
-						msjeEnvio, null, cdtipsit, otvalores, cdusuari, cdsisrol);
+						msjeEnvio, null, cdtipsit, otvalores, cdusuari, cdsisrol, null);
 				
 				msjeEnvio = msjeEnvio + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
 	        	
@@ -186,7 +186,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 			
 			
 			if(!necesitaAutorizacion) {
-				paso = "Validando cuadro de comisión natural";
+				paso = "Validando cuadro de comisiï¿½n natural";
 				boolean cuadroNatural = cotizacionDAO.validarCuadroComisionNatural(cdunieco, cdramo, estado, nmpoliza);
 				
 				if(!cuadroNatural) {
@@ -206,7 +206,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo(),
 							msjeAutorizacion, null, cdtipsit,
 							otvalores,
-							cdusuari, cdsisrol);
+							cdusuari, cdsisrol, null);
 					
 					msjeAutorizacion = msjeAutorizacion + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
 					
@@ -331,7 +331,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 			}
 				
 			////// ws de cotizacion y emision para autos
-			paso ="Invocando WS de emisión";
+			paso ="Invocando WS de emisiï¿½n";
 			if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo) 
 				    		|| Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)
 				    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)) {
@@ -417,7 +417,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
             }
 			
 			////// documentos
-            paso = "Generando la documentación de emisión";
+            paso = "Generando la documentaciï¿½n de emisiï¿½n";
             List<Map<String,String>> listaDocu = null;
 			try {
 				listaDocu = cotizacionDAO.impresionDocumentosPoliza(
@@ -621,7 +621,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 			}
 			
 			////// detalle emision
-			paso = "Insertando detalle de emisión";
+			paso = "Insertando detalle de emisiï¿½n";
 			logger.debug("se inserta detalle nuevo para emision");
 	        	
 	        mesaControlDAO.movimientoDetalleTramite(ntramite,new Date(),null,

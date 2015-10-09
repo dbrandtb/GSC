@@ -2770,12 +2770,15 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 					,"nmpoliza"
 					,"nmsuplem"
 					,"cdtipsup"
-					,"DSTIPSUP"
+					,"dstipsup"
 					,"nsuplogi"
 					,"cdgestor"
 					,"cddevcia"
 					,"feinival"
 					,"ntramite"
+					,"dssuplog"
+					,"ramo"
+					,"cdusuari"
             };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
