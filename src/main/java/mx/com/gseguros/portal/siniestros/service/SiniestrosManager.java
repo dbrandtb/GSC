@@ -622,4 +622,6 @@ public interface SiniestrosManager {
 	
 	public void P_MOV_MRECUPERA(String ntramite,String nfactura, String cdgarant, String cdconval,
 			String cantporc,String ptimport, String accion) throws Exception;
+	
+	public String actualizaTelefonoEmailAsegurado(HashMap<String, Object> paramsAsegurado) throws Exception;
 }

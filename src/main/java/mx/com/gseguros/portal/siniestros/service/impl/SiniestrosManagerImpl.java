@@ -1912,4 +1912,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	{
 		siniestrosDAO.P_MOV_MRECUPERA(ntramite, nfactura, cdgarant, cdconval, cantporc, ptimport, accion);
 	}
+	
+	@Override
+	public String actualizaTelefonoEmailAsegurado(HashMap<String, Object> paramsAsegurado) throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			return siniestrosDAO.actualizaTelefonoEmailAsegurado(paramsAsegurado);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
 }

@@ -28,7 +28,8 @@ Ext.onReady(function() {
 			{type:'string',		name:'noFactura'},			{type:'date',		name:'fechaFactura'},		{type:'string',		name:'tipoServicio'},
 			{type:'string',		name:'tipoServicioName'},	{type:'string',		name:'proveedor'},			{type:'string',		name:'proveedorName'},
 			{type:'string',		name:'importe'},			{type:'string',		name:'tipoMoneda'},			{type:'string',		name:'tipoMonedaName'},
-			{type:'string',		name:'tasaCambio'},			{type:'string',		name:'importeFactura'}
+			{type:'string',		name:'tasaCambio'},			{type:'string',		name:'importeFactura'},		{type:'string',		name:'telefono'},
+			{type:'string',		name:'email'}
 		]
 	});
 	
@@ -467,6 +468,8 @@ Ext.onReady(function() {
 							panelInicialPral.down('[name="idNmsuplem"]').setValue(record.get('nmsuplem'));
 							panelInicialPral.down('[name="idCdtipsit"]').setValue(record.get('cdtipsit'));
 							panelInicialPral.down('[name="idNumPolizaInt"]').setValue(record.get('numPoliza'));
+							panelInicialPral.down('[name="txtTelefono"]').setValue(record.get('telefono'));
+							panelInicialPral.down('[name="txtEmail"]').setValue(record.get('email'));
 							modPolizasAltaTramite.hide();
 						}else{
 							// No se cumple la condición la fecha de ocurrencia es mayor a la fecha de alta de tramite
@@ -1732,6 +1735,12 @@ Ext.onReady(function() {
 					}
 				}
 			},
+			{	xtype: 'numberfield',				fieldLabel: 'Tel&eacute;fono'				,name		: 'txtTelefono' 
+				,width		 : 350
+			},
+			{	xtype: 'textfield',					fieldLabel: 'Correo Electr&oacute;nico'	,name		: 'txtEmail'
+				,width		 : 350
+			},
 			{
 				colspan:2
 				,border: false
@@ -2210,6 +2219,8 @@ Ext.onReady(function() {
 									//PAGO POR REEMBOLSO
 									storeProveedor.load();
 									panelInicialPral.down('[name="nmsituac"]').setValue(json[0].nmsituac);
+									panelInicialPral.down('[name="txtTelefono"]').setValue(json[0].telefono);
+									panelInicialPral.down('[name="txtEmail"]').setValue(json[0].email);
 									for(var i = 0; i < json.length; i++){
 										var fechaFacturaM = json[i].ffactura.match(/\d+/g); 
 										var dateFac = new Date(fechaFacturaM[2], fechaFacturaM[1]-1,fechaFacturaM[0]);
@@ -2232,6 +2243,8 @@ Ext.onReady(function() {
 									//Indemnizacion
 									storeProveedor.load();
 									panelInicialPral.down('[name="nmsituac"]').setValue(json[0].nmsituac);
+									panelInicialPral.down('[name="txtTelefono"]').setValue(json[0].telefono);
+									panelInicialPral.down('[name="txtEmail"]').setValue(json[0].email);
 									for(var i = 0; i < json.length; i++){
 										var fechaFacturaM = json[i].ffactura.match(/\d+/g); 
 										var dateFac = new Date(fechaFacturaM[2], fechaFacturaM[1]-1,fechaFacturaM[0]);
@@ -2673,6 +2686,8 @@ Ext.onReady(function() {
 			panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
 			panelInicialPral.down('[name=dtFechaOcurrencia]').setValue('');
 			panelInicialPral.down('combo[name=cmbProveedor]').show();
+			panelInicialPral.down('[name=txtTelefono]').hide();
+			panelInicialPral.down('[name=txtEmail]').hide();
 		}else if(tipoPago == _TIPO_PAGO_REEMBOLSO){
 			pagoDirecto = true;
 			pagoReembolso = false;
@@ -2686,6 +2701,8 @@ Ext.onReady(function() {
 			panelInicialPral.down('combo[name=cmbBeneficiario]').show();
 			panelInicialPral.down('combo[name=cmbAseguradoAfectado]').show();
 			panelInicialPral.down('[name=dtFechaOcurrencia]').show();
+			panelInicialPral.down('[name=txtTelefono]').show();
+			panelInicialPral.down('[name=txtEmail]').show();
 		}else{
 			pagoDirecto = true;
 			pagoReembolso = false;
@@ -2700,6 +2717,8 @@ Ext.onReady(function() {
 				panelInicialPral.down('combo[name=cmbBeneficiario]').show();
 				panelInicialPral.down('combo[name=cmbAseguradoAfectado]').show();
 				panelInicialPral.down('[name=dtFechaOcurrencia]').show();
+				panelInicialPral.down('[name=txtTelefono]').show();
+				panelInicialPral.down('[name=txtEmail]').show();
 			}else{
 				panelInicialPral.down('[name=editorPagoIndemnizatorio]').show();
 				panelInicialPral.down('[name=editorPagoIndemnizatorioRecupera]').hide();
@@ -2711,6 +2730,8 @@ Ext.onReady(function() {
 				panelInicialPral.down('combo[name=cmbBeneficiario]').show();
 				panelInicialPral.down('combo[name=cmbAseguradoAfectado]').show();
 				panelInicialPral.down('[name=dtFechaOcurrencia]').show();
+				panelInicialPral.down('[name=txtTelefono]').show();
+				panelInicialPral.down('[name=txtEmail]').show();
 			}
 		}
 		panelInicialPral.down('combo[name=cmbBeneficiario]').allowBlank = pagoReembolso;

@@ -27,7 +27,8 @@ Ext.onReady(function() {
 			{type:'string',    name:'dsramo'},				{type:'string',    name:'estatus'},					{type:'string',    name:'dsestatus'},
 			{type:'string',    name:'nmsolici'},			{type:'string',    name:'nmsuplem'},				{type:'string',    name:'cdtipsit'},
 			{type:'string',    name:'dsestatus'},			{type:'string',    name:'vigenciaPoliza'},			{type:'string',    name:'faltaAsegurado'},
-			{type:'string',    name:'fcancelacionAfiliado'},{type:'string',    name:'desEstatusCliente'},		{type:'string',    name:'numPoliza'}]
+			{type:'string',    name:'fcancelacionAfiliado'},{type:'string',    name:'desEstatusCliente'},		{type:'string',    name:'numPoliza'},
+			{type:'string',    name:'telefono'},			{type:'string',    name:'email'}]
 	});
 	
 	Ext.define('modelListAsegPagDirecto',{
@@ -1051,6 +1052,8 @@ Ext.onReady(function() {
 	            					panelInicialPral.down('[name="idNmsuplem"]').setValue(record.get('nmsuplem'));
 	            					panelInicialPral.down('[name="idCdtipsit"]').setValue(record.get('cdtipsit'));
 	            					panelInicialPral.down('[name="idNumPolizaInt"]').setValue(record.get('numPoliza'));
+	            					panelInicialPral.down('[name="txtTelefono"]').setValue(record.get('telefono'));
+	            					panelInicialPral.down('[name="txtEmail"]').setValue(record.get('email'));
 	            					
 	            					storeAsegurados2.load({
 										params:{
@@ -1217,6 +1220,12 @@ Ext.onReady(function() {
 							}
 						}
 					},
+					{	xtype: 'numberfield',				fieldLabel: 'Tel&eacute;fono'				,name		: 'txtTelefono' 
+		                ,width		 : 300,					value		:'PENDIENTE'
+		            },
+		            {	xtype: 'textfield',					fieldLabel: 'Correo Electr&oacute;nico'	,name		: 'txtEmail'
+		                ,width		 : 300,					value		:'PENDIENTE'
+		            },
 					{	colspan:2
 				 		,border: false
 				 		,items    :
@@ -1624,6 +1633,8 @@ Ext.onReady(function() {
 		    panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
 		    panelInicialPral.down('[name=dtFechaOcurrencia]').setValue('');
 		    panelInicialPral.down('combo[name=cmbProveedor]').show();
+		    panelInicialPral.down('[name=txtTelefono]').hide();
+		    panelInicialPral.down('[name=txtEmail]').hide();
 		}else if(tipoPago == _TIPO_PAGO_REEMBOLSO){
 		    pagoDirecto = true;
 		    pagoReembolso = false;
@@ -1633,9 +1644,12 @@ Ext.onReady(function() {
 			panelInicialPral.down('[name=editorPagoIndemnizatorioRecupera]').hide();
 		    panelInicialPral.down('combo[name=cmbProveedor]').hide();
 		    panelInicialPral.down('combo[name=cmbProveedor]').setValue('');
+		    panelInicialPral.down('[name=idnombreBeneficiarioProv]').hide();
 		    panelInicialPral.down('combo[name=cmbBeneficiario]').show();
 		    panelInicialPral.down('combo[name=cmbAseguradoAfectado]').show();
 		    panelInicialPral.down('[name=dtFechaOcurrencia]').show();
+		    panelInicialPral.down('[name=txtTelefono]').show();
+		    panelInicialPral.down('[name=txtEmail]').show();
 		}else{
 			pagoDirecto = true;
 		    pagoReembolso = false;
@@ -1646,9 +1660,12 @@ Ext.onReady(function() {
 				panelInicialPral.down('[name=editorPagoIndemnizatorioRecupera]').show();
 				panelInicialPral.down('combo[name=cmbProveedor]').hide();
 				panelInicialPral.down('combo[name=cmbProveedor]').setValue('');
+				panelInicialPral.down('[name=idnombreBeneficiarioProv]').hide();
 				panelInicialPral.down('combo[name=cmbBeneficiario]').show();
 				panelInicialPral.down('combo[name=cmbAseguradoAfectado]').show();
 				panelInicialPral.down('[name=dtFechaOcurrencia]').show();
+				panelInicialPral.down('[name=txtTelefono]').show();
+				panelInicialPral.down('[name=txtEmail]').show();
 		    }else{
 				panelInicialPral.down('[name=editorFacturaDirecto]').hide();
 				panelInicialPral.down('[name=editorFacturaReembolso]').hide();
@@ -1656,9 +1673,12 @@ Ext.onReady(function() {
 				panelInicialPral.down('[name=editorPagoIndemnizatorio]').show();
 				panelInicialPral.down('combo[name=cmbProveedor]').hide();
 				panelInicialPral.down('combo[name=cmbProveedor]').setValue('');
+				panelInicialPral.down('[name=idnombreBeneficiarioProv]').hide();
 				panelInicialPral.down('combo[name=cmbBeneficiario]').show();
 				panelInicialPral.down('combo[name=cmbAseguradoAfectado]').show();
 				panelInicialPral.down('[name=dtFechaOcurrencia]').show();
+				panelInicialPral.down('[name=txtTelefono]').show();
+				panelInicialPral.down('[name=txtEmail]').show();
 			}
 		}
 		panelInicialPral.down('combo[name=cmbBeneficiario]').allowBlank = pagoReembolso;
