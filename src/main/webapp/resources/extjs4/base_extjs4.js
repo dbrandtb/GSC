@@ -29,13 +29,13 @@ function debugError(a,b,c,d)
     if(_ice_debug)
     {
         if(d!=undefined)
-            console.error(a,b,c,d);
+            console.error('error manejado:',a,b,c,d);
         else if(c!=undefined)
-            console.error(a,b,c);
+            console.error('error manejado:',a,b,c);
         else if(b!=undefined)
-            console.error(a,b);
+            console.error('error manejado:',a,b);
         else
-            console.error(a);
+            console.error('error manejado:',a);
     }
 }
 
