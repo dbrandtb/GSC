@@ -66,16 +66,21 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 	
 	
 	/**
-	 * 
+	 * Imprime una imagen
 	 * @return
 	 * @throws Exception
 	 */
+	@Action(value="imprimeImagen",
+			results={@Result(name="success", type="json")}
+	)
 	public String imprimeImagen() throws Exception {
 		
 		// Discover the printers that can print the format according to the instructions in the attribute set
 		PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
         logger.debug("Printer Services found:");
         printService(services);
+        
+        int iPrinter = Integer.parseInt(params.get("iPrinter"));
 		
 		// Input the file
 		FileInputStream textStream = null; 
@@ -100,7 +105,7 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 		aset.add(MediaSize.ISO.A4.getMediaSizeName());
 		aset.add(Sides.DUPLEX);
 		
-		DocPrintJob job = services[1].createPrintJob(); 
+		DocPrintJob job = services[iPrinter].createPrintJob(); 
 		try { 
         	logger.info("Antes de imprimir");
             job.print(myDoc, aset);
