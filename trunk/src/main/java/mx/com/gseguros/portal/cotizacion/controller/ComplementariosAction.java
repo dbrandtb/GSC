@@ -574,17 +574,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 	            paramsPoliage.put("pv_cdramo_i"   , map1.get("pv_cdramo"));
 	            paramsPoliage.put("pv_estado_i"   , panel2.get("estado"));
 	            paramsPoliage.put("pv_nmpoliza_i" , panel2.get("nmpoliza"));
-	            paramsPoliage.put("pv_cdagente_i" , (String)anterior.get("cdagente"));
 	            paramsPoliage.put("pv_nmsuplem_i" , "0");
 	            paramsPoliage.put("pv_status_i"   , "V");
-	            paramsPoliage.put("pv_cdtipoag_i" , "1");
-	            paramsPoliage.put("pv_porredau_i" , "0");
 	            paramsPoliage.put("pv_nmcuadro_i" , panel2.get("nmcuadro"));
-	            paramsPoliage.put("pv_cdsucurs_i" , null);
-	            paramsPoliage.put("pv_accion_i"   , "I");
-	            paramsPoliage.put("pv_ntramite_i" , null);
-	            paramsPoliage.put("pv_porparti_i" , "100");
-	            kernelManager.movMPoliage(paramsPoliage);
+	            emisionManager.getActualizaCuadroComision(paramsPoliage);
             }
             
             if(parametros==null){

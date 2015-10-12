@@ -23,4 +23,6 @@ public interface EmisionManager
 			,String nmsituac
 			,String nmsuplem
 			)throws Exception;
+
+	public void getActualizaCuadroComision(Map<String, Object> paramsPoliage)throws Exception;
 }

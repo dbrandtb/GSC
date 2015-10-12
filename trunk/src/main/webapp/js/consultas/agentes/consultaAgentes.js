@@ -540,8 +540,44 @@ Ext.onReady(function() {
 
     function actualizacionInsercion(claveAgente,tipoAgente,valorparticipacion,valorsesionComision)
     {
-    	debug("VALORES ---> ",claveAgente,tipoAgente,valorparticipacion,valorsesionComision);
-        if(bandera == 0)
+		var params = {
+			'params.cdunieco' : Ext.getCmp('unieco').getValue(),
+			'params.cdramo' : Ext.getCmp('ramo').getValue(),
+			'params.estado' : Ext.getCmp('estado').getValue(),
+			'params.nmpoliza' : Ext.getCmp('poliza').getValue()
+		};
+		
+		storGridClau.load({
+			params: params,
+			callback: function(records, operation, success){
+				if(success){
+					if(records.length <= 0){
+						Ext.getCmp('btnAgregarAgente').disable();
+						Ext.getCmp('btnRecargar').disable();
+						Ext.Msg.show({
+							 title: 'Aviso',
+							 msg: 'No se encontraron datos',
+							 buttons: Ext.Msg.OK,
+							 icon: Ext.Msg.ERROR
+						 });
+					}else{
+						Ext.getCmp('btnAgregarAgente').enable();
+						Ext.getCmp('btnRecargar').enable();
+					}
+				}else{
+					Ext.getCmp('btnAgregarAgente').disable();
+					Ext.getCmp('btnRecargar').disable();
+					Ext.Msg.show({
+						 title: 'Error',
+						 msg: 'Error al obtener los datos',
+						 buttons: Ext.Msg.OK,
+						 icon: Ext.Msg.ERROR
+					 });
+				}
+			}
+		});
+		
+    	if(bandera == 0)
         {
             panelModificacionInsercion.getForm().reset();
             centrarVentanaInterna(ventanaGrid.show());
