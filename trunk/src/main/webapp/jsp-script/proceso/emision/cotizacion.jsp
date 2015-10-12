@@ -32,30 +32,31 @@ var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtip
 var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
-var _0_urlCotizar                  = '<s:url namespace="/emision"         action="cotizar"                     />';
-var _0_urlCotizarExterno           = '<s:url namespace="/externo"         action="cotizar"                     />';
-var _0_urlDetalleCotizacion        = '<s:url namespace="/"                action="detalleCotizacion"           />';
-var _0_urlCoberturas               = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"          />';
-var _0_urlDetalleCobertura         = '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4"     />';
-var _0_urlEnviarCorreo             = '<s:url namespace="/general"         action="enviaCorreo"                 />';
-var _0_urlViewDoc                  = '<s:url namespace ="/documentos"     action="descargaDocInline"           />';
-var _0_urlComprar                  = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"          />';
-var _0_urlVentanaDocumentos        = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"     />';
-var _0_urlDatosComplementarios     = '<s:url namespace="/"                action="datosComplementarios"        />';
-var _0_urlUpdateStatus             = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"     />';
-var _0_urlMesaControl              = '<s:url namespace="/mesacontrol"     action="mcdinamica"                  />';
-var _0_urlLoad                     = '<s:url namespace="/emision"         action="cargarCotizacion"            />';
-var _0_urlNada                     = '<s:url namespace="/emision"         action="webServiceNada"              />';
-var _0_urlCargarCduniecoAgenteAuto = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"    />';
-var _0_urlRecuperarCliente         = '<s:url namespace="/"                action="buscarPersonasRepetidas"     />';
-var _0_urlCargarAgentePorFolio     = '<s:url namespace="/emision"         action="cargarCdagentePorFolio"      />';
-var _0_urlObtenerParametros        = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion" />';
-var _0_urlCargarAutoPorClaveGS     = '<s:url namespace="/emision"         action="cargarAutoPorClaveGS"        />';
-var _0_urlCargarSumaAsegurada      = '<s:url namespace="/emision"         action="cargarSumaAseguradaAuto"     />';
-var _0_urlObtenerCliente           = '<s:url namespace="/emision"         action="cargarClienteCotizacion"     />';
-var _0_urlValidarCambioZonaGMI     = '<s:url namespace="/emision"         action="validarCambioZonaGMI"        />';
-var _0_urlValidarEnfermCatasGMI    = '<s:url namespace="/emision"         action="validarEnfermedadCatastGMI"  />';
-var _0_urlRecuperacionSimple       = '<s:url namespace="/emision"         action="recuperacionSimple"          />';
+var _0_urlCotizar                  = '<s:url namespace="/emision"         action="cotizar"                        />';
+var _0_urlCotizarExterno           = '<s:url namespace="/externo"         action="cotizar"                        />';
+var _0_urlDetalleCotizacion        = '<s:url namespace="/"                action="detalleCotizacion"              />';
+var _0_urlCoberturas               = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"             />';
+var _0_urlDetalleCobertura         = '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4"        />';
+var _0_urlEnviarCorreo             = '<s:url namespace="/general"         action="enviaCorreo"                    />';
+var _0_urlViewDoc                  = '<s:url namespace ="/documentos"     action="descargaDocInline"              />';
+var _0_urlComprar                  = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"             />';
+var _0_urlVentanaDocumentos        = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"        />';
+var _0_urlDatosComplementarios     = '<s:url namespace="/"                action="datosComplementarios"           />';
+var _0_urlUpdateStatus             = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"        />';
+var _0_urlMesaControl              = '<s:url namespace="/mesacontrol"     action="mcdinamica"                     />';
+var _0_urlLoad                     = '<s:url namespace="/emision"         action="cargarCotizacion"               />';
+var _0_urlNada                     = '<s:url namespace="/emision"         action="webServiceNada"                 />';
+var _0_urlCargarCduniecoAgenteAuto = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"       />';
+var _0_urlRecuperarCliente         = '<s:url namespace="/"                action="buscarPersonasRepetidas"        />';
+var _0_urlCargarAgentePorFolio     = '<s:url namespace="/emision"         action="cargarCdagentePorFolio"         />';
+var _0_urlObtenerParametros        = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"    />';
+var _0_urlCargarAutoPorClaveGS     = '<s:url namespace="/emision"         action="cargarAutoPorClaveGS"           />';
+var _0_urlCargarSumaAsegurada      = '<s:url namespace="/emision"         action="cargarSumaAseguradaAuto"        />';
+var _0_urlObtenerCliente           = '<s:url namespace="/emision"         action="cargarClienteCotizacion"        />';
+var _0_urlValidarCambioZonaGMI     = '<s:url namespace="/emision"         action="validarCambioZonaGMI"           />';
+var _0_urlValidarEnfermCatasGMI    = '<s:url namespace="/emision"         action="validarEnfermedadCatastGMI"     />';
+var _0_urlRecuperacionSimple       = '<s:url namespace="/emision"         action="recuperacionSimple"             />';
+var _0_urlRetroactividadDifer      = '<s:url namespace="/emision"         action="cargarRetroactividadSuplemento" />';
 
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
@@ -694,7 +695,7 @@ function _0_detalles()
             if (json.success == true)
             {
             	var orden = 0;
-                var parentescoAnterior = 'qwerty';
+                var parentescoAnterior = 'werty';
                 for ( var i = 0; i < json.slist1.length; i++)
                 {
                     if (json.slist1[i].parentesco != parentescoAnterior)
@@ -3278,26 +3279,36 @@ Ext.onReady(function()
     {
         Ext.Ajax.request(
         {
-            url      : _0_urlObtenerParametros
+            url      : _0_urlRetroactividadDifer
             ,params  :
             { 
-                'smap1.parametro' : 'RANGO_VIGENCIA'
+                'smap1.cdunieco'  : _0_smap1.cdunieco
                 ,'smap1.cdramo'   : _0_smap1.cdramo
+                ,'smap1.cdtipsup' : '1'
+                ,'smap1.cdusuari' : _0_smap1.cdusuari
                 ,'smap1.cdtipsit' : _0_smap1.cdtipsit
             }
             ,success : function(response)
             {
                 _0_panelPri.setLoading(false);
-                var json=Ext.decode(response.responseText);
-                debug('### respuesta obtener rango vigencia:',json);
-                if(json.exito)
+                var ck = 'Recuperando retroactividad';
+                try
                 {
-                    _fieldByName('feini').setMinValue(Ext.Date.add(new Date(),Ext.Date.MONTH,json.smap1.P1VALOR*-1));
-                    _fieldByName('feini').setMaxValue(Ext.Date.add(new Date(),Ext.Date.MONTH,json.smap1.P2VALOR));
+                    var json=Ext.decode(response.responseText);
+                    debug('### respuesta obtener rango vigencia:',json);
+                    if(json.exito)
+                    {
+                        _fieldByName('feini').setMinValue(Ext.Date.add(new Date(),Ext.Date.DAY,json.smap1.retroac*-1));
+                        _fieldByName('feini').setMaxValue(Ext.Date.add(new Date(),Ext.Date.DAY,json.smap1.diferi));
+                    }
+                    else
+                    {
+                        mensajeWarning('Falta definir rango de vigencia para el producto (RANGOVIGENCIA)');
+                    }
                 }
-                else
+                catch(e)
                 {
-                    mensajeWarning('Falta definir rango de vigencia para el producto (RANGOVIGENCIA)');
+                    manejaException(e,ck);
                 }
             }
             ,failure : function()
