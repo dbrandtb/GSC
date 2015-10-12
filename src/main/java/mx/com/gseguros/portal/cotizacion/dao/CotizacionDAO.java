@@ -545,4 +545,10 @@ public interface CotizacionDAO {
 					,String nmsolici
 					,String ntramite
 					)throws Exception;
+	
+	public Map<String, String>  obtieneValidacionRetroactividad(
+			String numSerie
+			,String feini)throws Exception;
+
+	public void getActualizaCuadroComision(Map<String, Object> paramsPoliage) throws Exception;
 }

@@ -6185,4 +6185,34 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+
+	@Override
+	public Map<String, String> obtieneValidacionRetroactividad(String numSerie,
+			String feini) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void getActualizaCuadroComision(Map<String, Object> params) throws Exception
+	{
+		ejecutaSP(new GetActualizaCuadroComision(this.getDataSource()), params);
+	}
+	
+	protected class GetActualizaCuadroComision extends StoredProcedure
+	{
+		protected GetActualizaCuadroComision(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES2.P_ACTUALIZA_CUADROCOMISION");
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmcuadro_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+		}
+	}
 }
