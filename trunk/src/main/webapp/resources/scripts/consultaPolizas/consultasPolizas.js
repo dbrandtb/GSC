@@ -245,6 +245,13 @@ Ext.onReady(function() {
                         }
                     });
                     
+                    for(numAtribu = 1 ; numAtribu <= 50 ; numAtribu++){
+                    	var campo = panelDatosPoliza.down('[name=otvalor'+numAtribu+']');
+						campo.hide();
+             	   		campo.setFieldLabel('otvalor'+numAtribu);
+             	   		campo.setValue('');
+                    }
+                    
                     //Carga de datos de Tvalopol 
                     storeDatosPolizaTvalopol.load({
 				        params : panelBusqueda.down('form').getForm().getValues(),
@@ -880,7 +887,7 @@ Ext.onReady(function() {
                 {
                     xtype  : 'panel',
                     name   : 'pnlDatosTatrisit',
-                    autoScroll : true,
+                    height : 900,
                     loader: {
                         url: _URL_LOADER_VER_TATRISIT,
                         scripts  : true,
