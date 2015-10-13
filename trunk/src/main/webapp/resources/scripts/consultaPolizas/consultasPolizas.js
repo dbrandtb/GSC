@@ -899,7 +899,7 @@ Ext.onReady(function() {
                         listeners:{
                         	load: function(){
                         		var pnlDatosTatrisit = tabDatosGeneralesPoliza.down('panel[name=pnlDatosTatrisit]');
-                        		pnlDatosTatrisit.focus();
+                        		pnlDatosTatrisit.getHeader().focus(false,200);
                         	}
                         }
                     }
