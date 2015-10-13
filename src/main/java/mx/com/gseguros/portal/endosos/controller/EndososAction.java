@@ -5821,6 +5821,69 @@ public class EndososAction extends PrincipalCoreAction
 	/*///////////////////////////////*/
 	public String endosoDomicilioFull() {
 		
+		
+		if(!smap1.containsKey("cdperson") && smap1.containsKey("CDPERSON")){
+			String cdtipsit1 = null;
+			String nombrePersona = null;
+			String primerNombre = null;
+			String segundoNombre = null;
+			String appat = null;
+			String apmat = null;
+			
+			try {
+				cdtipsit1 = endososManager.recuperarCdtipsitInciso1((String)smap1.get("CDUNIECO"), (String)smap1.get("CDRAMO"), (String)smap1.get("ESTADO"), (String)smap1.get("NMPOLIZA"));
+				
+				long timestamp = System.currentTimeMillis();
+				Map<String, Object> datos = personasManager.obtenerPersonaPorCdperson(smap1.get("CDPERSON"), timestamp);
+				Map<String,String> persona = (Map<String,String>)datos.get("persona");
+				
+				nombrePersona = persona.get("DSNOMBRE")+" "+(StringUtils.isNotBlank(persona.get("DSAPELLIDO"))?persona.get("DSAPELLIDO"):"");
+				
+				primerNombre = persona.get("DSNOMBRE");
+				segundoNombre = persona.get("DSNOMBRE1");
+				appat = persona.get("DSAPELLIDO");
+				apmat = persona.get("DSAPELLIDO1");
+				
+				
+			} catch (Exception e) {
+				logger.error("Error al obtener el cdtipsit de la poliza para el primer inciso",e);
+			}
+			
+			smap1.put("pv_nmpoliza", smap1.get("NMPOLIZA"));
+			smap1.put("pv_estado", smap1.get("ESTADO"));
+			smap1.put("cdrfc", smap1.get("CDRFC"));
+			smap1.put("pv_nmsituac", null);
+			smap1.put("pv_cdrol", null);
+			smap1.put("pv_cdunieco", smap1.get("CDUNIECO"));
+			smap1.put("ntramite", smap1.get("NTRAMITE"));
+//			smap1.put("habilitaEdicion", "0");
+//			smap1.put("botonCopiar", "0");
+			smap1.put("pv_cdramo", smap1.get("CDRAMO"));
+			smap1.put("cdtipsit", cdtipsit1);
+			smap1.put("cdperson", smap1.get("CDPERSON"));
+			smap1.put("pv_cdperson_i", smap1.get("CDPERSON"));
+			smap1.put("nombreAsegurado", nombrePersona);
+			
+			
+			smap1.put("Apellido_Materno", apmat);
+			smap1.put("Apellido_Paterno", appat);
+			smap1.put("CDTIPSIT", cdtipsit1);
+			
+			/**
+			 * TODO: obtener el parentesco del inciso seleccionado
+			 */
+			smap1.put("Parentesco", "T");
+			smap1.put("cdrol", "2");
+			smap1.put("activo", "true");
+			smap1.put("fenacimi", smap1.get("FENACIMI"));
+			smap1.put("nombre", primerNombre);
+			smap1.put("nombrecompleto", nombrePersona);
+			smap1.put("segundo_nombre", segundoNombre);
+			smap1.put("nombreAsegurado", nombrePersona);
+			
+			smap1.put("pantallaOrigen", "MARCO_ENDOSOS_NUEVO");
+		}
+		
 		logger.info("endosoDomicilioFull()");
 		logger.debug(new StringBuilder("\n")
 	        .append("\n#################################")
@@ -6284,9 +6347,19 @@ public class EndososAction extends PrincipalCoreAction
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
 
+				
+				String saludDanios = "S";
+				
+				ClienteGeneral clienteGeneral = new ClienteGeneral();
+				clienteGeneral.setClaveCia(saludDanios);
+				String cdpersonCli = smap1.get("CDPERSON");
+				if(StringUtils.isBlank(cdpersonCli)){
+					cdpersonCli = smap1.get("cdperson");
+				}
+				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
-				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
+				ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, cdpersonCli, Ice2sigsService.Operacion.ACTUALIZA, null, (UserVO) session.get("USUARIO"), true);
+
 				
 				String sucursal = cdunieco;
 				String nmsolici = listaDocu.get(0).get("nmsolici");
