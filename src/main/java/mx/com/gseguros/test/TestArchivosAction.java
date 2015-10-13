@@ -63,11 +63,52 @@ public class TestArchivosAction extends PrincipalCoreAction {
 			
 			// Campos a validar:
 			List<CampoVO> campos = new ArrayList<CampoVO>();
-			campos.add(new CampoVO(CampoVO.NUMERICO, 1, 4, false));
-			campos.add(new CampoVO(CampoVO.NUMERICO, 1, 2, true));
-			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 1, true));
-			campos.add(new CampoVO(CampoVO.FECHA, null, null, false));
-			campos.add(new CampoVO(CampoVO.PORCENTAJE, 0, 20, true));
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	1
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	2
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	3
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	4
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	5
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	6
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 20, false));		//	7
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 5, false));			//	8
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	9
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	10
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	11
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	12
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, false));		//	13
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, false));		//	14
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, false));		//	15
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 0, 100, true));	//	16
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 20, false));		//	17
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	18
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	19
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	20
+			campos.add(new CampoVO(CampoVO.NUMERICO, 1, 10, false));			//	21
+			campos.add(new CampoVO(CampoVO.PORCENTAJE, 1, 20, false));			//	22
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	23
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	24
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	25
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	26
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	27
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	28
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	29
+			campos.add(new CampoVO(CampoVO.FECHA, null, null, false));			//	30
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	31
+			campos.add(new CampoVO(CampoVO.PORCENTAJE, 1, 20, false));			//	32
+			campos.add(new CampoVO(CampoVO.PORCENTAJE, 1, 10, false));			//	33
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	34
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	35
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	36
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	37
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	38
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	39
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 20, false));		//	40
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	41
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	42
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	43
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true));	//	44
+			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 20, false));		//	45
+			campos.add(new CampoVO(CampoVO.FECHA, null, null, false,"yyyy-MM-dd"));			//	46
 			
 			// VALIDACION DE FORMATO:
 			logger.info("Se valida el formato de los campos: " + campos);
