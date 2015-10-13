@@ -11063,6 +11063,8 @@ public class EndososAction extends PrincipalCoreAction
 			}
 			else if(smap1.get("cdtipsup").equals(TipoEndoso.COASEGURO_INCREMENTO.getCdTipSup().toString())
 					||smap1.get("cdtipsup").equals(TipoEndoso.COASEGURO_DECREMENTO.getCdTipSup().toString())
+					||smap1.get("cdtipsup").equals(TipoEndoso.CIRCULO_HOSPITALARIO_COASEGURO_INCREMENTO.getCdTipSup().toString())
+					||smap1.get("cdtipsup").equals(TipoEndoso.CIRCULO_HOSPITALARIO_COASEGURO_DECREMENTO.getCdTipSup().toString())
 			)
 			{
 				//necesitamos CDTIPSIT en el smap1
