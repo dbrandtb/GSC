@@ -21,6 +21,7 @@ import javax.print.attribute.standard.Sides;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -95,13 +96,30 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 		} else {
 			logger.info("Si existe el documento: {}", params.get("filename"));
 		}
-		// Set the document type
-		DocFlavor myFormat = DocFlavor.INPUT_STREAM.JPEG;
-		// Create a Doc
-		Doc myDoc = new SimpleDoc(textStream, myFormat, null); 
-		// Build a set of attributes
+		
+		
+		String formatoArchivo = params.get("formato");
+		Integer numCopias = 1;
+		
+		if(StringUtils.isNotBlank(params.get("numCopias"))){
+			numCopias  = Integer.parseInt(params.get("numCopias"));
+		}else{
+			numCopias  = 1;
+		}
+		
+		Doc myDoc = null;
+		if(formatoArchivo.equalsIgnoreCase("PDF")){
+			DocFlavor myFormat = DocFlavor.INPUT_STREAM.PDF;
+			myDoc = new SimpleDoc(textStream, myFormat, null);
+		}else if(formatoArchivo.equalsIgnoreCase("JPEG")){
+			DocFlavor myFormat = DocFlavor.INPUT_STREAM.JPEG;
+			myDoc = new SimpleDoc(textStream, myFormat, null);
+		}else if(formatoArchivo.equalsIgnoreCase("PNG")){
+			DocFlavor myFormat = DocFlavor.INPUT_STREAM.PNG;
+			myDoc = new SimpleDoc(textStream, myFormat, null);
+		}
 		PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet(); 
-		aset.add(new Copies(5)); 
+		aset.add(new Copies(numCopias)); 
 		aset.add(MediaSize.ISO.A4.getMediaSizeName());
 		aset.add(Sides.DUPLEX);
 		
