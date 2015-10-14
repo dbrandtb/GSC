@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.consultas.service;
 
+import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -8,5 +9,27 @@ public interface ExplotacionDocumentosManager
 {
 	
 	public Map<String,Item> pantallaExplotacionDocumentos(String cdusuari, String cdsisrol) throws Exception;
+	
+	public String generarLote(
+			String cdusuari
+			,String cdsisrol
+			,String cdtipram
+			,String cdtipimp
+			,List<Map<String, String>> movs
+			)throws Exception;
+	
+	public void imprimirLote(
+			String lote
+			,String hoja
+			,String peso
+			,String cdtipram
+			,String cdtipimp
+			,String tipolote
+			,String cdunieco
+			,String ip
+			,String nmimpres
+			)throws Exception;
+
+	public Map<String,Item> pantallaExplotacionRecibos(String cdusuari, String cdsisrol) throws Exception;
 	
 }

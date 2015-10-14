@@ -7,11 +7,10 @@
  */
 Ext.define('VentanaImpresionLote',
 {
-    extend    : 'Ext.window.Window'
-    ,title    : 'Impresi\u00F3n'
-    ,modal    : true
-    ,closable : false
-    ,items    :
+    extend : 'Ext.window.Window'
+    ,title : 'Impresi\u00F3n'
+    ,modal : true
+    ,items :
     [
         {
             xtype   : 'panel'
@@ -25,46 +24,108 @@ Ext.define('VentanaImpresionLote',
             ,items    :
             [
                 {
-                    xtype  : 'displayfield'
-                    ,value : 'Papeler\u00EDa: incluye car\u00E1tulas y endosos'
+                    xtype    : 'displayfield'
+                    ,value   : 'Papeler\u00EDa completa: incluye car\u00E1tulas, endosos, remesas y recibos'
+                    ,hoja    : 'BM'
+                    ,tipoimp : 'I'
+                    ,suma    : 2
+                    ,sumaHab : 2
                 }
                 ,{
-                    xtype : 'button'
-                    ,text : 'Imprimir papeler\u00EDa'
-                    ,icon : _GLOBAL_DIRECTORIO_ICONOS+'page_go.png'
+                    xtype    : 'button'
+                    ,text    : 'Imprimir papeler\u00EDa completa'
+                    ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'page_lightning.png'
+                    ,hoja    : 'BM'
+                    ,tipoimp : 'I'
+                    ,suma    : 2
+                    ,sumaHab : 2
+                    ,peso    : 11
                 }
                 ,{
-                    xtype   : 'image'
-                    ,src    : _GLOBAL_DIRECTORIO_ICONOS+'cancel.png'
-                    ,itemId : '_c0_img_P'
+                    xtype    : 'image'
+                    ,src     : _GLOBAL_DIRECTORIO_ICONOS+'cancel.png'
+                    ,hoja    : 'BM'
+                    ,tipoimp : 'I' 
+                    ,suma    : 2
+                    ,sumaHab : 2
                 }
                 ,{
-                    xtype  : 'displayfield'
-                    ,value : 'Credenciales: para todos los asegurados'
+                    xtype    : 'displayfield'
+                    ,value   : 'Papeler\u00EDa: incluye car\u00E1tulas, endosos y remesas'
+                    ,hoja    : 'B'
+                    ,tipoimp : 'G'
+                    ,suma    : 1
+                    ,sumaHab : 1
                 }
                 ,{
-                    xtype : 'button'
-                    ,text : 'Imprimir credenciales'
-                    ,icon : _GLOBAL_DIRECTORIO_ICONOS+'group_key.png'
+                    xtype    : 'button'
+                    ,text    : 'Imprimir papeler\u00EDa'
+                    ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'page_go.png'
+                    ,hoja    : 'B'
+                    ,tipoimp : 'G'
+                    ,suma    : 1
+                    ,sumaHab : 1
+                    ,peso    : 1
                 }
                 ,{
-                    xtype   : 'image'
-                    ,src    : _GLOBAL_DIRECTORIO_ICONOS+'cancel.png'
-                    ,itemId : '_c0_img_C'
+                    xtype    : 'image'
+                    ,src     : _GLOBAL_DIRECTORIO_ICONOS+'cancel.png'
+                    ,hoja    : 'B'
+                    ,tipoimp : 'G' 
+                    ,suma    : 1
+                    ,sumaHab : 1
                 }
                 ,{
-                    xtype  : 'displayfield'
-                    ,value : 'Recibos: impresi\u00F3n de recibos de pago'
+                    xtype    : 'displayfield'
+                    ,value   : 'Credenciales: impresi\u00F3n en tarjeta especial'
+                    ,hoja    : 'C'
+                    ,tipoimp : 'GI'
+                    ,suma    : 1
+                    ,sumaHab : 1
                 }
                 ,{
-                    xtype : 'button'
-                    ,text : 'Imprimir recibos'
-                    ,icon : _GLOBAL_DIRECTORIO_ICONOS+'coins.png'
+                    xtype    : 'button'
+                    ,text    : 'Imprimir credenciales'
+                    ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'group_key.png'
+                    ,hoja    : 'C'
+                    ,tipoimp : 'GI'
+                    ,suma    : 1
+                    ,sumaHab : 1
+                    ,peso    : 100
                 }
                 ,{
-                    xtype   : 'image'
-                    ,src    : _GLOBAL_DIRECTORIO_ICONOS+'cancel.png'
-                    ,itemId : '_c0_img_R'
+                    xtype    : 'image'
+                    ,src     : _GLOBAL_DIRECTORIO_ICONOS+'cancel.png'
+                    ,hoja    : 'C'
+                    ,tipoimp : 'GI'
+                    ,suma    : 1
+                    ,sumaHab : 1
+                }
+                ,{
+                    xtype    : 'displayfield'
+                    ,value   : 'Recibos: impresi\u00F3n de recibos de pago'
+                    ,hoja    : 'M'
+                    ,tipoimp : 'G'
+                    ,suma    : 1
+                    ,sumaHab : 1
+                }
+                ,{
+                    xtype    : 'button'
+                    ,text    : 'Imprimir recibos'
+                    ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'coins.png'
+                    ,hoja    : 'M'
+                    ,tipoimp : 'G'
+                    ,suma    : 1
+                    ,sumaHab : 1
+                    ,peso    : 10
+                }
+                ,{
+                    xtype    : 'image'
+                    ,src     : _GLOBAL_DIRECTORIO_ICONOS+'cancel.png'
+                    ,hoja    : 'M'
+                    ,tipoimp : 'G'
+                    ,suma    : 1
+                    ,sumaHab : 1
                 }
             ]
         }
@@ -73,13 +134,7 @@ Ext.define('VentanaImpresionLote',
     ,buttons     :
     [
         {
-            itemId  : '_c0_botonContrarecibo'
-            ,text   : 'Generar contrarecibo'
-            ,icon   : _GLOBAL_DIRECTORIO_ICONOS+'page_refresh.png'
-            ,hidden : true
-        }
-        ,{
-            itemId   : '_c0_botonCerrar'
+            itemId   : '_c0_botonContinuar'
             ,text    : 'Continuar'
             ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'accept.png'
             ,hidden  : true
@@ -99,29 +154,23 @@ Ext.define('VentanaImpresionLote',
         debug('config:',config,',arguments:',arguments);
         if(Ext.isEmpty(config))
         {
-            throw '#C0 - No hay configuraci\u00F3n para la ventana de impresi\u00F3n';
+            throw '#C0 - No se recibi\u00F3 configuraci\u00F3n';
         }
-        if(Ext.isEmpty(config.records)||config.records.length==0)
+        if(Ext.isEmpty(config.lote))
         {
-            throw '#C0 - La ventana de impresi\u00F3n necesita los registros de suplementos';
+            throw '#C0 - No se recibi\u00F3 el lote';
         }
-        for(var i in config.records)
+        if(Ext.isEmpty(config.cdtipram))
         {
-            var record = config.records[i];
-            if(   Ext.isEmpty(record.get('cdunieco'))
-                ||Ext.isEmpty(record.get('cdramo'))
-                ||Ext.isEmpty(record.get('dsramo'))
-                ||Ext.isEmpty(record.get('estado'))
-                ||Ext.isEmpty(record.get('nmpoliza'))
-                ||Ext.isEmpty(record.get('nmsuplem'))
-                ||Ext.isEmpty(record.get('nsuplogi'))
-                ||Ext.isEmpty(record.get('cdtipsup'))
-                ||Ext.isEmpty(record.get('dstipsup'))
-                ||Ext.isEmpty(record.get('ntramite'))
-            )
-            {
-                throw '#C0 - Los registros recibidos no cumplen con el formato';
-            }
+            throw '#C0 - No se recibi\u00F3 el tipo de ramo';
+        }
+        if(Ext.isEmpty(config.tipolote))
+        {
+            throw '#C0 - No se recibi\u00F3 el tipo de lote';
+        }
+        if(Ext.isEmpty(config.cdtipimp))
+        {
+            throw '#C0 - No se recibi\u00F3 el tipo de impresi\u00F3n';
         }
         this.callParent(arguments);
     }
@@ -129,30 +178,135 @@ Ext.define('VentanaImpresionLote',
     {
         afterrender : function(me)
         {
-            debug('records:',me.records);
-            me.down('[text*=Imprimir pape]').handler = function(){ me.buscarImpresora('P'); }
-            me.down('[text*=Imprimir cred]').handler = function(){ me.buscarImpresora('C'); }
-            me.down('[text*=Imprimir reci]').handler = function(){ me.buscarImpresora('R'); }
-            
-            me.impresiones=[];
-            
-            if(Ext.isEmpty(me.tramite))
+            var ck = 'Construyendo ventana';
+            try
             {
-                _setLoading(true,me);
-                setTimeout(function()
+                debug('afterrender lote,cdtipram,cdtipimp:',me.lote,me.cdtipram,me.cdtipimp,'.');
+                
+                me.setTitle('Impresi\u00F3n de lote '+me.lote);
+            
+                //ocultar comps que no vayan con el tipo de imp
+                var cmps = Ext.ComponentQuery.query('[tipoimp]',me);
+                debug('cmps:',cmps);
+                for(var i in cmps)
                 {
-                    mensajeCorrecto('Tr\u00E1mite generado','Se gener\u00F3 el tr\u00E1mite 1234');
-                    _setLoading(false,me);
-                },1000);
-                me.setTitle('Impresi\u00F3n (Tr\u00E1mite 1234)');
+                    var cmp = cmps[i];
+                    debug('tipoimp:',cmp.tipoimp,'indexof',me.cdtipimp,cmp.tipoimp.indexOf(me.cdtipimp));
+                    if(cmp.tipoimp.indexOf(me.cdtipimp)==-1)
+                    {
+                        cmp.hide();
+                    }
+                }
+                
+                ck = 'Recuperando impresiones disponibles';
+                _setLoading(true,me);
+                Ext.Ajax.request(
+                {
+                    url     : _GLOBAL_URL_RECUPERACION
+                    ,params :
+                    {
+                        'params.consulta'  : 'RECUPERAR_IMPRESIONES_DISPONIBLES'
+                        ,'params.cdtipram' : me.cdtipram
+                        ,'params.tipolote' : me.tipolote
+                    }
+                    ,success : function(response)
+                    {
+                        _setLoading(false,me);
+                        var ck = 'Decodificando respuesta de impresiones disponibles';
+                        try
+                        {
+                            var json = Ext.decode(response.responseText);
+                            debug('### impr disp:',json);
+                            if(json.success==true)
+                            {
+                                var perm = json.params.imprdisp;
+                                debug('perm:',perm);
+                                // 1 1 1 (1 = si, 0 = no)
+                                // C M B (C = credencial, M = membrete, B = blanca)
+                                if(perm%10==0)
+                                {
+                                    var blan = Ext.ComponentQuery.query('[hoja*=B]');
+                                    debug('quitar blanca:',blan);
+                                    for(var i in blan)
+                                    {
+                                        blan[i].suma = blan[i].suma-1;
+                                        debug('suma blan:',blan[i].suma);
+                                        if(Number(blan[i].suma)<1)
+                                        {
+                                            blan[i].hide();
+                                        }
+                                    }
+                                }
+                                perm = Math.floor(perm/10);
+                                if(perm%10==0)
+                                {
+                                    var mem = Ext.ComponentQuery.query('[hoja*=M]');
+                                    debug('quitar membrete:',mem);
+                                    for(var i in mem)
+                                    {
+                                        mem[i].suma = mem[i].suma-1;
+                                        debug('suma mem:',mem[i].suma);
+                                        if(Number(mem[i].suma)<1)
+                                        {
+                                            mem[i].hide();
+                                        }
+                                    }
+                                }
+                                perm = Math.floor(perm/10);
+                                if(perm%10==0)
+                                {
+                                    var cred = Ext.ComponentQuery.query('[hoja*=C]');
+                                    debug('quitar credencial:',cred);
+                                    for(var i in cred)
+                                    {
+                                        cred[i].suma = cred[i].suma-1;
+                                        debug('suma cred:',cred[i].suma);
+                                        if(Number(cred[i].suma)<1)
+                                        {
+                                            cred[i].hide();
+                                        }
+                                    }
+                                }
+                                me.doLayout();
+                                
+                                me.actualizarBotones();
+                            }
+                            else
+                            {
+                                mensajeError(json.message);
+                            }
+                        }
+                        catch(e)
+                        {
+                            manejaException(e,ck);
+                        }
+                    }
+                    ,failure : function()
+                    {
+                        _setLoading(false,me);
+                        errorComunicacion(null,'Error recuperando impresiones disponibles');
+                    }
+                });
+                
+                var buttons = Ext.ComponentQuery.query('[xtype=button][peso]',me);
+                debug('buttons:',buttons);
+                
+                for(var i in buttons)
+                {
+                    buttons[i].handler=me.buscarImpresora;
+                }
+            }
+            catch(e)
+            {
+                manejaException(e,ck);
             }
         }
     }
-    ,buscarImpresora : function(papel)
+    ,buscarImpresora : function(bot)
     {
-        debug('buscarImpresora papel:',papel);
+        debug('buscarImpresora bot:',bot);
         
-        var me = this;
+        var me = bot.up('window');
         
         var ck = 'Buscando impresoras';
         try
@@ -163,8 +317,9 @@ Ext.define('VentanaImpresionLote',
                 url     : _GLOBAL_URL_RECUPERACION
                 ,params :
                 {
-                    'params.consulta' : 'RECUPERAR_IMPRESORAS'
-                    ,'params.papel'   : papel
+                    'params.consulta'  : 'RECUPERAR_IMPRESORAS'
+                    ,'params.papel'    : bot.hoja
+                    ,'params.swactivo' : 'S'
                 }
                 ,success : function(response)
                 {
@@ -195,19 +350,27 @@ Ext.define('VentanaImpresionLote',
                                                 ,dataIndex : 'cdunieco'
                                             }
                                             ,{
-                                                text       : 'IMPRESORA'
-                                                ,dataIndex : 'dsimpres'
+                                                text       : 'NOMBRE'
+                                                ,dataIndex : 'nombre'
                                                 ,flex      : 1
                                             }
                                             ,{
-                                                text       : 'TIPO'
-                                                ,width     : 100
-                                                ,dataIndex : 'dspapel'
+                                                text       : 'DESCRIPCI\u00D3N'
+                                                ,dataIndex : 'descrip'
+                                                ,flex      : 2
                                             }
                                         ]
                                         ,store : Ext.create('Ext.data.Store',
                                         {
-                                            fields : [ 'cdunieco' ,'dsimpres' ,'dspapel' ]
+                                            fields :
+                                            [
+                                                "cdunieco"
+                                                ,"ip"
+                                                ,"nmimpres"
+                                                ,"nombre"
+                                                ,"descrip"
+                                                ,"swactivo"
+                                            ]
                                             ,data  : json.list
                                         })
                                         ,selModel :
@@ -238,12 +401,14 @@ Ext.define('VentanaImpresionLote',
                                                 ,itemId   : '_c0_botonImprimir'
                                                 ,icon     : _GLOBAL_DIRECTORIO_ICONOS+'printer.png'
                                                 ,disabled : true
-                                                ,handler  : function(boton){ me.imprimir(boton,_fieldById('_c0_gridImpresoras').getSelectionModel().getSelection(),papel); }
-                                            }
-                                            ,{
-                                                text    : 'Descargar'
-                                                ,icon   : _GLOBAL_DIRECTORIO_ICONOS+'disk.png'
-                                                ,hidden : true
+                                                ,handler  : function(boton)
+                                                {
+                                                    me.imprimir(
+                                                        bot
+                                                        ,boton
+                                                        ,_fieldById('_c0_gridImpresoras').getSelectionModel().getSelection()
+                                                    );
+                                                }
                                             }
                                         ]
                                     })
@@ -272,18 +437,18 @@ Ext.define('VentanaImpresionLote',
             manejaException(e,ck);
         }
     }
-    ,imprimir : function(boton,printerRecords,papel)
+    ,imprimir : function(botPap,botImp,printerRecords)
     {
-        debug('imprimir printerRecords:',printerRecords,',papel:',papel);
+        debug('imprimir botPap,botImp,printerRecords:',botPap,botImp,printerRecords,'.');
         
         var me = this;
         
         var ck = 'Imprimiendo';
         try
         {
-            if(Ext.isEmpty(papel))
+            if(Ext.isEmpty(botPap))
             {
-                throw 'No se recibi\u00F3 el tipo de impresi\u00F3n';
+                throw 'Se perdi\u00F3 el componente de impresi\u00F3n';
             }
             if(Ext.isEmpty(printerRecords)||Ext.isEmpty(printerRecords[0]))
             {
@@ -291,59 +456,32 @@ Ext.define('VentanaImpresionLote',
             }
             var printer = printerRecords[0];
             
-            var jsonData =
-            {
-                params :
-                {
-                    printerCdunieco : printer.raw.cdunieco
-                    ,printerIp      : printer.raw.ip
-                    ,printerPuerto  : printer.raw.puerto
-                    ,printerCdpapel : printer.raw.cdpapel
-                    ,cdpapel        : papel
-                }
-                ,list : []
-            };
-            for(var i in me.records)
-            {
-                var record = me.records[i];
-                jsonData.list.push(
-                {
-                    cdunieco  : record.get('cdunieco')
-                    ,cdramo   : record.get('cdramo')
-                    ,estado   : record.get('estado')
-                    ,nmpoliza : record.get('nmpoliza')
-                    ,nmsuplem : record.get('nmsuplem')
-                    ,nsuplogi : record.get('nsuplogi')
-                    ,cdtipsup : record.get('cdtipsup')
-                    ,ntramite : record.get('ntramite')
-                });
-            }
-            debug('jsonData imprimir:',jsonData);
-            
-            var window = boton.up('window');
-            _setLoading(true,window);
+            _setLoading(true,me);
             Ext.Ajax.request(
             {
-                url       : _GLOBAL_URL_IMPRIMIR_LOTE
-                ,jsonData : jsonData
-                ,success  : function(response)
+                url      : _GLOBAL_URL_IMPRIMIR_LOTE
+                ,params  :
                 {
-                    _setLoading(false,window);
+                    'params.lote'      : me.lote
+                    ,'params.hoja'     : botPap.hoja
+                    ,'params.peso'     : botPap.peso
+                    ,'params.cdtipram' : me.cdtipram
+                    ,'params.cdtipimp' : me.cdtipimp
+                    ,'params.tipolote' : me.tipolote
+                    ,'params.cdunieco' : printer.get('cdunieco')
+                    ,'params.ip'       : printer.get('ip')
+                    ,'params.nmimpres' : printer.get('nmimpres')
+                }
+                ,success : function(response)
+                {
+                    _setLoading(false,me);
                     var ck = 'Decodificando respuesta al imprimir';
                     try
                     {
                         var json = Ext.decode(response.responseText);
                         if(json.success==true)
                         {
-                            mensajeCorrecto(
-                                'Documentos impresos'
-                                ,'Documentos impresos'
-                                ,function()
-                                {
-                                    me.impresiones[papel] = 'S';
-                                    me.onImpresion();
-                                    window.destroy();
-                                });
+                            alert(1);
                         }
                         else
                         {
@@ -357,7 +495,7 @@ Ext.define('VentanaImpresionLote',
                 }
                 ,failure  : function()
                 {
-                    _setLoading(false,window);
+                    _setLoading(false,me);
                     errorComunicacion(null,'Error al imprimir');
                 }
             });
@@ -367,27 +505,144 @@ Ext.define('VentanaImpresionLote',
             manejaException(e,ck);
         }
     }
-    ,onImpresion : function()
+    ,actualizarBotones : function()
     {
         var me = this;
-        debug('onImpresion impresiones:',me.impresiones);
-        if(me.impresiones['P']=='S')
+        var ck = 'Recuperando estado de impresi\u00F3n';
+        try
         {
-            _fieldById('_c0_img_P').setSrc(_GLOBAL_DIRECTORIO_ICONOS+'accept.png');
+            _setLoading(true,me);
+            Ext.Ajax.request(
+            {
+                url      : _GLOBAL_URL_RECUPERACION
+                ,params  :
+                {
+                    'params.consulta' : 'RECUPERAR_DETALLE_IMPRESION_LOTE'
+                    ,'params.lote'    : me.lote
+                }
+                ,success : function(response)
+                {
+                    _setLoading(false,me);
+                    var ck = 'Decodificando respuesta de impresiones anteriores';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### impresiones anteriores:',json);
+                        if(json.success==true)
+                        {
+                            var req  = json.params.requeridas
+                                ,eje = json.params.ejecutadas;
+                            
+                            debug('req:',req,',eje:',eje);
+                            
+                            var modReq = req%10;
+                            var modEje = eje%10;
+                            
+                            if(modReq-modEje==0)//B ejecutada
+                            {
+                                var comps = Ext.ComponentQuery.query('[hoja*=B]');
+                                debug('quitar B:',comps);
+                                for(var i in comps)
+                                {
+                                    comps[i].sumaHab = comps[i].sumaHab-1;
+                                    debug('sumaHab B:',comps[i].sumaHab);
+                                    if(Number(comps[i].sumaHab)<1)
+                                    {
+                                        comps[i].disable();
+                                        if(comps[i].xtype=='image')
+                                        {
+                                            comps[i].setSrc(_GLOBAL_DIRECTORIO_ICONOS+'accept.png');
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            req = Math.floor(req/10);
+                            eje = Math.floor(eje/10);
+                            modReq = req%10;
+                            modEje = eje%10;
+                            
+                            if(modReq-modEje==0)//M ejecutada
+                            {
+                                var comps = Ext.ComponentQuery.query('[hoja*=M]');
+                                debug('quitar M:',comps);
+                                for(var i in comps)
+                                {
+                                    comps[i].sumaHab = comps[i].sumaHab-1;
+                                    debug('sumaHab M:',comps[i].sumaHab);
+                                    if(Number(comps[i].sumaHab)<1)
+                                    {
+                                        comps[i].disable();
+                                        if(comps[i].xtype=='image')
+                                        {
+                                            comps[i].setSrc(_GLOBAL_DIRECTORIO_ICONOS+'accept.png');
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            req = Math.floor(req/10);
+                            eje = Math.floor(eje/10);
+                            modReq = req%10;
+                            modEje = eje%10;
+                            
+                            if(modReq-modEje==0)//C ejecutada
+                            {
+                                var comps = Ext.ComponentQuery.query('[hoja*=C]');
+                                debug('quitar C:',comps);
+                                for(var i in comps)
+                                {
+                                    comps[i].sumaHab = comps[i].sumaHab-1;
+                                    debug('sumaHab C:',comps[i].sumaHab);
+                                    if(Number(comps[i].sumaHab)<1)
+                                    {
+                                        comps[i].disable();
+                                        if(comps[i].xtype=='image')
+                                        {
+                                            comps[i].setSrc(_GLOBAL_DIRECTORIO_ICONOS+'accept.png');
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            var images = Ext.ComponentQuery.query('[xtype=image][hidden=false]',me);
+                            debug('images:',images);
+                            var todos = true;
+                            for(var i in images)
+                            {
+                                var image = images[i];
+                                if(image.src.indexOf('accept')==-1)
+                                {
+                                    todos = false;
+                                    break;
+                                }
+                            }
+                            if(todos)
+                            {
+                                _fieldById('_c0_botonContinuar').show();
+                            }
+                            
+                        }
+                        else
+                        {
+                            mensajeError(json.message);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function()
+                {
+                    _setLoading(false,me);
+                    errorComunicacion(null,'Error al recuperar impresiones anteriores');
+                }
+            });
         }
-        if(me.impresiones['C']=='S')
+        catch(e)
         {
-            _fieldById('_c0_img_C').setSrc(_GLOBAL_DIRECTORIO_ICONOS+'accept.png');
-        }
-        if(me.impresiones['R']=='S')
-        {
-            _fieldById('_c0_img_R').setSrc(_GLOBAL_DIRECTORIO_ICONOS+'accept.png');
-        }
-        
-        if(me.impresiones['P']=='S'&&me.impresiones['C']=='S'&&me.impresiones['R']=='S')
-        {
-            _fieldById('_c0_botonContrarecibo').show();
-            _fieldById('_c0_botonCerrar').show();
+            manejaException(e,ck);
         }
     }
 });

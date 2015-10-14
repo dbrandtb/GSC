@@ -45,5 +45,18 @@ public interface EmisionDAO {
 	 */
 	public void actualizaNmpoliexAutos(String cdunieco, String cdramo, String estado, String nmpoliza, 
 			String nmsuplem, String nmpoliex, String cduniext, String ramoGS) throws Exception;
+
+	public void insertarMpoliimp(
+			String ntramite
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String tipo
+			,String nmtraope
+			,String nmrecibo
+			)throws Exception;
 	
+	public void marcarTramiteImpreso(String ntramite, String swimpres) throws Exception;
 }

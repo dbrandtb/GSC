@@ -68,11 +68,11 @@ public class RecuperacionDatosAction extends PrincipalCoreAction
 			
 			if("M".equals(rec.getTipo()))
 			{
-				params.putAll(recuperacionSimpleManager.recuperarMapa(cdusuari,cdsisrol,rec,params));
+				params.putAll(recuperacionSimpleManager.recuperarMapa(cdusuari,cdsisrol,rec,params,usuario));
 			}
 			else if("L".equals(rec.getTipo()))
 			{
-				list=recuperacionSimpleManager.recuperarLista(cdusuari,cdsisrol,rec,params);
+				list=recuperacionSimpleManager.recuperarLista(cdusuari,cdsisrol,rec,params,usuario);
 			}
 			else
 			{

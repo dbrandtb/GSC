@@ -124,4 +124,71 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 		}
 	}
 	
+	@Override
+	public void insertarMpoliimp(
+			String ntramite
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String tipo
+			,String nmtraope
+			,String nmrecibo
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("tipo"     , tipo);
+		params.put("nmtraope" , nmtraope);
+		params.put("nmrecibo" , nmrecibo);
+		ejecutaSP(new InsertarMpoliimp(getDataSource()),params);
+	}
+	
+	protected class InsertarMpoliimp extends StoredProcedure
+	{
+		protected InsertarMpoliimp(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES2.P_INSERTA_MPOLIIMP");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipo"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmtraope" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmrecibo" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void marcarTramiteImpreso(String ntramite, String swimpres) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("swimpres" , swimpres);
+		ejecutaSP(new MarcarTramiteImpreso(getDataSource()),params);
+	}
+	
+	protected class MarcarTramiteImpreso extends StoredProcedure
+	{
+		protected MarcarTramiteImpreso(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES2.P_IMPRIMIR_TRAMITE");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swimpres" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
