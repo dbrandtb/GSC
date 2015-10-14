@@ -5,41 +5,41 @@
 <head>
 <script>
 ////// urls //////
-var _p49_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"   />';
-var _p49_urlGenerarLote  = '<s:url namespace="/consultas"    action="generarLote" />';
+var _p50_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"          />';
+var _p50_urlGenerarLote  = '<s:url namespace="/consultas"    action="generarLoteRecibos" />';
 ////// urls //////
 
 ////// variables //////
-var _p49_params = <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
-debug('_p49_params:',_p49_params);
+var _p50_params = <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
+debug('_p50_params:',_p50_params);
 
-var _p49_storePolizas;
+var _p50_storeRecibos;
 
-var _p49_dirIconos = '${icons}';
+var _p50_dirIconos = '${icons}';
 ////// variables //////
 
 ////// overrides //////
 ////// overrides //////
 
 ////// componentes dinamicos /////
-var _p49_formBusqItems = [<s:property value="items.itemsFormBusq"     escapeHtml="false" />];
-var _p49_gridPolFields = [<s:property value="items.gridPolizasFields" escapeHtml="false" />];
-var _p49_gridPolCols   = [<s:property value="items.gridPolizasCols"   escapeHtml="false" />];
+var _p50_formBusqItems = [<s:property value="items.itemsFormBusq"     escapeHtml="false" />];
+var _p50_gridRecFields = [<s:property value="items.gridRecibosFields" escapeHtml="false" />];
+var _p50_gridRecCols   = [<s:property value="items.gridRecibosCols"   escapeHtml="false" />];
 
-_fieldByName('cdtipram').rowspan = 5;
+_fieldByName('cdtipram').rowspan = 2;
 
-var _p49_formBusqItemsCustom = [];
-for(var i in _p49_formBusqItems)
+var _p50_formBusqItemsCustom = [];
+for(var i in _p50_formBusqItems)
 {
     if(i==3)
     {
-        _p49_formBusqItemsCustom.push(Ext.create('Ext.grid.Panel',
+        _p50_formBusqItemsCustom.push(Ext.create('Ext.grid.Panel',
         {
-            itemId       : '_p49_gridSucursales'
+            itemId       : '_p50_gridSucursales'
             ,width       : 255
             ,height      : 80
             ,hideHeaders : true
-            ,rowspan     : 2
+            //,rowspan     : 2
             ,store       : Ext.create('Ext.data.Store',
             {
                 model : 'Generic'
@@ -55,12 +55,12 @@ for(var i in _p49_formBusqItems)
                     xtype    : 'actioncolumn'
                     ,width   : 30
                     ,icon    : '${icons}delete.png'
-                    ,handler : function(view,row,col,item,e,record){ _fieldById('_p49_gridSucursales').getStore().remove(record); }
+                    ,handler : function(view,row,col,item,e,record){ _fieldById('_p50_gridSucursales').getStore().remove(record); }
                 }
             ]
         }));
     }
-    _p49_formBusqItemsCustom.push(_p49_formBusqItems[i]);
+    _p50_formBusqItemsCustom.push(_p50_formBusqItems[i]);
 }
 
 ////// componentes dinamicos //////
@@ -72,25 +72,25 @@ Ext.onReady(function()
     ////// requires //////
 
     ////// modelos //////
-    Ext.define('_p49_modeloPoliza',
+    Ext.define('_p50_modeloRecibo',
     {
         extend  : 'Ext.data.Model'
-        ,fields : _p49_gridPolFields
+        ,fields : _p50_gridRecFields
     });
     ////// modelos //////
     
     ////// stores //////
-    _p49_storePolizas = Ext.create('Ext.data.Store',
+    _p50_storeRecibos = Ext.create('Ext.data.Store',
     {
-        model     : '_p49_modeloPoliza'
+        model     : '_p50_modeloRecibo'
         ,autoLoad : false
         ,proxy    :
         {
-            url          : _p49_urlRecuperacion
+            url          : _p50_urlRecuperacion
             ,type        : 'ajax'
             ,extraParams :
             {
-                'params.consulta' : 'RECUPERAR_POLIZAS_PARA_EXPLOTAR_DOCS'
+                'params.consulta' : 'RECUPERAR_RECIBOS_PARA_EXPLOTAR_DOCS'
             }
             ,reader :
             {
@@ -109,18 +109,18 @@ Ext.onReady(function()
     ////// contenido //////
     Ext.create('Ext.panel.Panel',
     {
-        renderTo  : '_p49_divpri'
-        ,itemId   : '_p49_panelpri'
+        renderTo  : '_p50_divpri'
+        ,itemId   : '_p50_panelpri'
         ,defaults : { style : 'margin:5px;' }
         ,border   : 0
         ,items    :
         [
             Ext.create('Ext.form.Panel',
             {
-                itemId       : '_p49_formBusq'
-                ,title       : 'B\u00DASQUEDA DE P\u00D3LIZAS'
+                itemId       : '_p50_formBusq'
+                ,title       : 'B\u00DASQUEDA DE RECIBOS'
                 ,defaults    : { style : 'margin:5px;' }
-                ,items       : _p49_formBusqItemsCustom
+                ,items       : _p50_formBusqItemsCustom
                 ,layout      :
                 {
                     type     : 'table'
@@ -135,7 +135,7 @@ Ext.onReady(function()
                         ,icon    : '${icons}zoom.png'
                         ,handler : function(me)
                         {
-                            var ck = 'Buscando p\u00F3lizas';
+                            var ck = 'Buscando recibos';
                             try
                             {
                                 var form = me.up('form');
@@ -145,16 +145,16 @@ Ext.onReady(function()
                                     throw 'Favor de capturar todos los campos requeridos';
                                 }
                                 
-                                if(_fieldById('_p49_gridSucursales').getStore().getCount()==0)
+                                if(_fieldById('_p50_gridSucursales').getStore().getCount()==0)
                                 {
                                     throw 'Seleccione al menos una sucursal';
                                 }
                                 
-                                _fieldById('_p49_botonImprimir1').disable();
-                                _fieldById('_p49_botonImprimir2').disable();
+                                _fieldById('_p50_botonImprimir1').disable();
+                                _fieldById('_p50_botonImprimir2').disable();
                                 
                                 var cduniecos = '|';
-                                _fieldById('_p49_gridSucursales').getStore().each(function(record)
+                                _fieldById('_p50_gridSucursales').getStore().each(function(record)
                                 {
                                     cduniecos = cduniecos + record.get('key') + '|';
                                 });
@@ -162,7 +162,7 @@ Ext.onReady(function()
                                 _fieldByName('cdtipram').enable();
                                 
                                 _setLoading(true,form);
-                                _p49_loadPolizas(
+                                _p50_loadRecibos(
                                     {
                                         'params.cdtipram'   : form.getValues()['cdtipram']
                                         ,'params.cduniecos' : cduniecos
@@ -193,19 +193,19 @@ Ext.onReady(function()
                         ,handler : function(me)
                         {
                             me.up('form').getForm().reset();
-                            _fieldById('_p49_gridSucursales').getStore().removeAll();
-                            _p49_navega(1);
+                            _fieldById('_p50_gridSucursales').getStore().removeAll();
+                            _p50_navega(1);
                         }
                     }
                 ]
             })
             ,Ext.create('Ext.grid.Panel',
             {
-                itemId    : '_p49_gridPolizas'
+                itemId    : '_p50_gridRecibos'
                 ,title    : 'RESULTADOS'
-                ,columns  : _p49_gridPolCols
+                ,columns  : _p50_gridRecCols
                 ,height   : 250
-                ,store    : _p49_storePolizas
+                ,store    : _p50_storeRecibos
                 ,selModel :
                 {
                     selType    : 'checkboxmodel'
@@ -213,10 +213,10 @@ Ext.onReady(function()
                     ,listeners :
                     {
                         selectionchange : function(me,selected,eOpts)
-	                    {
-	                        _fieldById('_p49_botonImprimir1').setDisabled(selected.length==0);
-	                        _fieldById('_p49_botonImprimir2').setDisabled(selected.length==0);
-	                    }
+                        {
+                            _fieldById('_p50_botonImprimir1').setDisabled(selected.length==0);
+                            _fieldById('_p50_botonImprimir2').setDisabled(selected.length==0);
+                        }
                     }
                 }
                 ,buttonAlign : 'center'
@@ -225,21 +225,21 @@ Ext.onReady(function()
                     {
                         text      : 'Impresi\u00F3n gen\u00E9rica'
                         ,icon     : '${icons}printer.png'
-                        ,itemId   : '_p49_botonImprimir1'
+                        ,itemId   : '_p50_botonImprimir1'
                         ,disabled : true
                         ,handler  : function(me)
                         {
-                            _p49_impresionClic('G');
+                            _p50_impresionClic('G');
                         }
                     }
                     ,{
                         text      : 'Impresi\u00F3n intercalada'
                         ,icon     : '${icons}printer.png'
-                        ,itemId   : '_p49_botonImprimir2'
+                        ,itemId   : '_p50_botonImprimir2'
                         ,disabled : true
                         ,handler  : function(me)
                         {
-                            _p49_impresionClic('I');
+                            _p50_impresionClic('I');
                         }
                     }
                 ]
@@ -249,17 +249,6 @@ Ext.onReady(function()
     ////// contenido //////
     
     ////// custom //////
-    _fieldByName('cdramo').heredar = function(cdtipram)
-    {
-        this.getStore().load(
-        {
-            params :
-            {
-                'params.idPadre' : cdtipram
-            }
-        });
-    }
-    
     _fieldByName('cdtipram').on(
     {
         select : function(me,records)
@@ -269,8 +258,7 @@ Ext.onReady(function()
             {
                 var cdtipram = records[0].get('key');
                 debug('cdtipram:',cdtipram);
-                _fieldByName('cdramo').heredar(cdtipram);
-                _p49_navega(2);
+                _p50_navega(2);
             }
             catch(e)
             {
@@ -286,9 +274,9 @@ Ext.onReady(function()
             var ck = 'Agregando sucursal';
             try
             {
-                if(_fieldById('_p49_gridSucursales').getStore().indexOf(records[0])==-1)
+                if(_fieldById('_p50_gridSucursales').getStore().indexOf(records[0])==-1)
                 {
-                    _fieldById('_p49_gridSucursales').getStore().insert(0,records[0]);
+                    _fieldById('_p50_gridSucursales').getStore().insert(0,records[0]);
                 }
                 me.reset();
             }
@@ -298,10 +286,12 @@ Ext.onReady(function()
             }
         }
     });
+    
+    _fieldByName('feimpres').minValue=Ext.Date.add(new Date(),Ext.Date.DAY,1);
     ////// custom //////
     
     ////// loaders //////
-    _p49_navega(1);
+    _p50_navega(1);
     
     /*
     setTimeout(function(){
@@ -313,8 +303,8 @@ Ext.onReady(function()
                                                     lote      : 19
                                                     ,cdtipram : 10
                                                     ,cdtipimp : 'G'
-                                                    ,tipolote : 'P'
-                                                    ,callback : function(){ _fieldById('_p49_gridPolizas').getStore().removeAll(); }
+                                                    ,tipolote : 'R'
+                                                    ,callback : function(){ _fieldById('_p50_gridRecibos').getStore().removeAll(); }
                                                     ,closable : false
                                                 });
                                                 centrarVentanaInterna(venImp.show());
@@ -330,10 +320,10 @@ Ext.onReady(function()
 });
 
 ////// funciones //////
-function _p49_loadPolizas(params,callback)
+function _p50_loadRecibos(params,callback)
 {
-    debug('_p49_loadPolizas params:',params,'callback?:',!Ext.isEmpty(callback));
-    _p49_storePolizas.load(
+    debug('_p50_loadRecibos params:',params,'callback?:',!Ext.isEmpty(callback));
+    _p50_storeRecibos.load(
     {
         params    : params
         ,callback : function(records,op,success)
@@ -354,41 +344,41 @@ function _p49_loadPolizas(params,callback)
     });
 }
 
-function _p49_navega(nivel)
+function _p50_navega(nivel)
 {
     if(nivel==1)
     {
-        var cmps = Ext.ComponentQuery.query('[name][name!=cdtipram]',_fieldById('_p49_formBusq'));
+        var cmps = Ext.ComponentQuery.query('[name][name!=cdtipram]',_fieldById('_p50_formBusq'));
         debug('cmps:',cmps);
         for(var i in cmps)
         {
             cmps[i].hide();
         }
-        _fieldById('_p49_gridSucursales').hide();
+        _fieldById('_p50_gridSucursales').hide();
         _fieldByName('cdtipram').enable();
-        _fieldById('_p49_gridPolizas').hide();
-        _fieldById('_p49_gridPolizas').getStore().removeAll();
+        _fieldById('_p50_gridRecibos').hide();
+        _fieldById('_p50_gridRecibos').getStore().removeAll();
     }
     else if(nivel==2)
     {
-        var cmps = Ext.ComponentQuery.query('[name][fieldLabel!=TIPO DE RAMO]',_fieldById('_p49_formBusq'));
+        var cmps = Ext.ComponentQuery.query('[name][fieldLabel!=TIPO DE RAMO]',_fieldById('_p50_formBusq'));
         debug('cmps:',cmps);
         for(var i in cmps)
         {
             cmps[i].show();
         }
-        _fieldById('_p49_gridSucursales').show();
+        _fieldById('_p50_gridSucursales').show();
         _fieldByName('cdtipram').disable();
-        _fieldById('_p49_gridPolizas').show();
+        _fieldById('_p50_gridRecibos').show();
     }
 }
 
-function _p49_impresionClic(tipoimp)
+function _p50_impresionClic(tipoimp)
 {
     var ck = 'Generando tr\u00E1mite';
     try
     {
-        debug('_p49_impresionClic timoimp:',tipoimp);
+        debug('_p50_impresionClic timoimp:',tipoimp);
         centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Se generar\u00E1 el lote y los tr\u00E1mites de impresi\u00F3n ¿Desea continuar?', function(btn)
         {
             if(btn === 'yes')
@@ -405,7 +395,7 @@ function _p49_impresionClic(tipoimp)
                         ,list  : []
                     };
                 
-                    var grid    = _fieldById('_p49_gridPolizas');
+                    var grid    = _fieldById('_p50_gridRecibos');
                     var records = grid.getSelectionModel().getSelection();
                     debug('records:',records);
                     
@@ -430,7 +420,7 @@ function _p49_impresionClic(tipoimp)
                     _setLoading(true,grid);
                     Ext.Ajax.request(
                     {
-                        url : _p49_urlGenerarLote
+                        url : _p50_urlGenerarLote
                         ,jsonData : jsonData
                         ,success  : function(response)
                         {
@@ -456,7 +446,7 @@ function _p49_impresionClic(tipoimp)
                                                     ,cdtipram : json.params.cdtipram
                                                     ,cdtipimp : json.params.cdtipimp
                                                     ,tipolote : 'P'
-                                                    ,callback : function(){ _fieldById('_p49_gridPolizas').getStore().removeAll(); }
+                                                    ,callback : function(){ _fieldById('_p50_gridRecibos').getStore().removeAll(); }
                                                     ,closable : false
                                                 });
                                                 centrarVentanaInterna(venImp.show());
@@ -500,6 +490,6 @@ function _p49_impresionClic(tipoimp)
 </script>
 </head>
 <body>
-<div id="_p49_divpri" style="height:600px;border:1px solid #CCCCCC;"></div>
+<div id="_p50_divpri" style="height:600px;border:1px solid #CCCCCC;"></div>
 </body>
 </html>

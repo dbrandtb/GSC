@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
@@ -495,6 +496,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			,String cdsisrol
 			,RecuperacionSimple consulta
 			,Map<String,String> params
+			,UserVO usuario
 	)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -504,12 +506,42 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
 				,"\n@@@@@@ consulta=" , consulta
 				,"\n@@@@@@ params="   , params
+				,"\n@@@@@@ usuario="  , usuario
 				));
 		Map<String,String> mapa = new HashMap<String,String>();
 		String             paso = "Recuperando datos";
 		try
 		{
-			
+			if(consulta.equals(RecuperacionSimple.RECUPERAR_IMPRESIONES_DISPONIBLES))
+			{
+				paso = "Recuperando impresiones disponibles";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				String cdtipram = params.get("cdtipram");
+				String tipolote = params.get("tipolote");
+				
+				Utils.validate(
+						cdtipram  , "No se recibi\u00F3 el tipo de ramo"
+						,tipolote , "No se recibi\u00F3 el tipo de lote"
+						);
+				
+				String impdisp = consultasDAO.recuperarImpresionesDisponiblesPorTipoRamo(cdtipram, tipolote);
+				
+				mapa.put("imprdisp" , impdisp);
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_DETALLE_IMPRESION_LOTE))
+			{
+				paso = "Recuperando detalle de impresiones de lote";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				String lote = params.get("lote");
+				
+				Utils.validate(lote, "No se recibi\u00F3 el lote");
+				
+				Map<String,String>requeridasYEjecutadas = consultasDAO.recuperarDetalleImpresionLote(lote);
+				
+				mapa.putAll(requeridasYEjecutadas);
+			}
 		}
 		catch(Exception ex)
 		{
@@ -529,6 +561,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			,String cdsisrol
 			,RecuperacionSimple consulta
 			,Map<String,String> params
+			,UserVO usuario
 	)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -538,6 +571,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
 				,"\n@@@@@@ consulta=" , consulta
 				,"\n@@@@@@ params="   , params
+				,"\n@@@@@@ usuario="  , usuario
 				));
 		List<Map<String,String>> lista = new ArrayList<Map<String,String>>();
 		String                   paso  = "Recuperando datos";
@@ -617,50 +651,16 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				paso = "Recuperando impresoras por papel";
 				logger.debug("Paso: {}",paso);
 				
-				Map<String,String> imp1 = new HashMap<String,String>();
-				imp1.put("cdunieco" , "1205");
-				imp1.put("ip"       , "12.12.12.12");
-				imp1.put("puerto"   , "1234");
-				imp1.put("dsimpres" , "Compaq HJK54 - Primer piso");
-				imp1.put("cdpapel"  , "");
-				imp1.put("dspapel"  , "CREDENCIALES");
-				lista.add(imp1);
+				String papel    = params.get("papel");
+				String cdunieco = usuario.getCdUnieco();
+				String swactivo = params.get("swactivo");
 				
-				Map<String,String> imp2 = new HashMap<String,String>();
-				imp2.put("cdunieco" , "1205");
-				imp2.put("ip"       , "1.1.1.1");
-				imp2.put("puerto"   , "1234");
-				imp2.put("dsimpres" , "Lexmark H25 - Recepcion");
-				imp2.put("cdpapel"  , "C");
-				imp2.put("dspapel"  , "CREDENCIALES");
-				lista.add(imp2);
+				Utils.validate(
+						papel     , "No se recibi\u00F3 el tipo de papel"
+						,cdunieco , "No hay sucursal de usuario"
+						);
 				
-				Map<String,String> imp3 = new HashMap<String,String>();
-				imp3.put("cdunieco" , "1000");
-				imp3.put("ip"       , "3.3.3.3");
-				imp3.put("puerto"   , "1234");
-				imp3.put("dsimpres" , "Lexmark H25 - Principal");
-				imp3.put("cdpapel"  , "C");
-				imp3.put("dspapel"  , "CREDENCIALES");
-				lista.add(imp3);
-				
-				Map<String,String> imp4 = new HashMap<String,String>();
-				imp4.put("cdunieco" , "1001");
-				imp4.put("ip"       , "2.2.2.2");
-				imp4.put("puerto"   , "1234");
-				imp4.put("dsimpres" , "HP LaserJet 2200 - Papeleria");
-				imp4.put("cdpapel"  , "P");
-				imp4.put("dspapel"  , "PAPELERIA");
-				lista.add(imp4);
-				
-				Map<String,String> imp5 = new HashMap<String,String>();
-				imp5.put("cdunieco" , "1000");
-				imp5.put("ip"       , "1.1.1.1");
-				imp5.put("puerto"   , "1234");
-				imp5.put("dsimpres" , "HP LaserJet 1100 - Papeleria 2");
-				imp5.put("cdpapel"  , "P");
-				imp5.put("dspapel"  , "PAPELERIA");
-				lista.add(imp5);
+				lista = consultasDAO.recuperarImpresorasPorPapelYSucursal(cdunieco,papel,swactivo);
 			}
 		}
 		catch(Exception ex)

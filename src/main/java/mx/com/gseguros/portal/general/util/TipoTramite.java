@@ -19,7 +19,8 @@ public enum TipoTramite {
 	ENDOSO("15"),
 	SINIESTRO("16"),
 	EMISION_EN_ESPERA("17"),
-	PAGO_AUTOMATICO("19");
+	PAGO_AUTOMATICO("19"),
+	IMPRESION("20");
 
 	private String cdtiptra;
 

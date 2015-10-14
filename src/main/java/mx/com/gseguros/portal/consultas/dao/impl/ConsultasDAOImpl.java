@@ -2779,6 +2779,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 					,"dssuplog"
 					,"ramo"
 					,"cdusuari"
+					,"cdagente"
             };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -2819,6 +2820,139 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String recuperarSecuenciaLote() throws Exception
+	{
+		Map<String,Object> procRes = ejecutaSP(new RecuperarSecuenciaLote(getDataSource()),new HashMap<String,String>());
+		String             lote    = (String)procRes.get("pv_seqlote_o");
+		if(StringUtils.isBlank(lote))
+		{
+			throw new ApplicationException("Error al generar la secuencia de lote");
+		}
+		return lote;
+	}
+	
+	protected class RecuperarSecuenciaLote extends StoredProcedure
+	{
+		protected RecuperarSecuenciaLote(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_SEQLOTE");
+			declareParameter(new SqlOutParameter("pv_seqlote_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String recuperarImpresionesDisponiblesPorTipoRamo(
+			String cdtipram
+			,String tipolote
+			) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdtipram" , cdtipram);
+		params.put("tipolote" , tipolote);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarImpresionesDisponiblesPorTipoRamo(getDataSource()),params);
+		String             impdis  = (String)procRes.get("pv_impdis_o");
+		if(StringUtils.isBlank(impdis))
+		{
+			throw new ApplicationException("Error al recuperar impresiones disponibles");
+		}
+		return impdis;
+	}
+	
+	protected class RecuperarImpresionesDisponiblesPorTipoRamo extends StoredProcedure
+	{
+		protected RecuperarImpresionesDisponiblesPorTipoRamo(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_IMP_DISP_X_CDTIPRAM");
+			declareParameter(new SqlParameter("cdtipram" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipolote" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_impdis_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String,String>recuperarDetalleImpresionLote(String lote) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("lote" , lote);
+		Map<String,Object> procRes    = ejecutaSP(new RecuperarDetalleImpresionLote(getDataSource()),params);
+		String             requeridas = (String)procRes.get("pv_permiso_o");
+		String             ejecutadas = (String)procRes.get("pv_suma_o");
+		if(StringUtils.isBlank(requeridas)||StringUtils.isBlank(ejecutadas))
+		{
+			throw new ApplicationException("No se recuper\u00F3 el detalle de impresi\u00F3n de lote");
+		}
+		Map<String,String> result = new HashMap<String,String>();
+		result.put("requeridas" , requeridas);
+		result.put("ejecutadas" , ejecutadas);
+		logger2.debug("****** PKG_CONSULTA.P_GET_DET_IMP_LOTE salida: {}",result);
+		return result;
+	}
+	
+	protected class RecuperarDetalleImpresionLote extends StoredProcedure
+	{
+		protected RecuperarDetalleImpresionLote(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_DET_IMP_LOTE");
+			declareParameter(new SqlParameter("lote" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_permiso_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_suma_o"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> recuperarImpresorasPorPapelYSucursal(
+			String cdunieco
+			,String papel
+			,String activo
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("papel"    , papel);
+		params.put("activo"   , activo);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarImpresorasPorPapelYSucursal(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_IMPRESORAS lista=",lista));
+		return lista;
+	}
+	
+	protected class RecuperarImpresorasPorPapelYSucursal extends StoredProcedure
+	{
+		protected RecuperarImpresorasPorPapelYSucursal(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_IMPRESORAS");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("papel"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("activo"   , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"cdunieco"
+					,"ip"
+					,"nmimpres"
+					,"nombre"
+					,"descrip"
+					,"swactivo"
+            };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

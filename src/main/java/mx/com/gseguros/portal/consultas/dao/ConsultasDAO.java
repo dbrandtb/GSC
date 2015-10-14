@@ -361,4 +361,19 @@ public interface ConsultasDAO
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+	
+	public String recuperarSecuenciaLote() throws Exception;
+	
+	public String recuperarImpresionesDisponiblesPorTipoRamo(
+			String cdtipram
+			,String tipolote
+			) throws Exception;
+	
+	public Map<String,String>recuperarDetalleImpresionLote(String lote) throws Exception;
+	
+	public List<Map<String,String>> recuperarImpresorasPorPapelYSucursal(
+			String cdunieco
+			,String papel
+			,String activo
+			)throws Exception;
 }
