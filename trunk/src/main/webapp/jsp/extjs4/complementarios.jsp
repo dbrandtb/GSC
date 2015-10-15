@@ -56,7 +56,7 @@
             var _urlEnviarCorreo             = '<s:url namespace="/general"         action="enviaCorreo"                 />';
             var _URL_CONSULTA_CLAUSU_DETALLE = '<s:url namespace="/catalogos"       action="consultaClausulaDetalle"     />';
             var _URL_CONSULTA_CLAUSU         = '<s:url namespace="/catalogos"       action="consultaClausulas"           />';
-            
+            var _URL_ObtieneValNumeroSerie   = '<s:url namespace="/emision" 		action="obtieneValNumeroSerie"       />';
             var urlEditarAsegurados = '${ctx}<s:property value="map1.urlAsegurados" />';
             var urlServidorReports  = '<s:text name="ruta.servidor.reports"         />';
             var complerepSrvUsr     = '<s:text name="pass.servidor.reports"         />';
@@ -2006,7 +2006,36 @@ function _datComTurnarSuscripcion()
                             	expand:function( p, eOpts )
                             	{
                             		window.parent.scrollTo(0,150+p.y);
-                            	}
+                            	},
+                            	afterrender:function(tab)
+                                {
+                                    debug('afterrender tabPanelAsegurados');
+                                    Ext.Ajax.request({
+                              			url     : _URL_ObtieneValNumeroSerie
+                              			,params :
+                              			{
+                              				'smap1.numSerie'  : _fieldByName('parametros.pv_otvalor03').getValue()
+                              				,'smap1.feini'   : _fieldByName('panel2.feefec').getValue()
+                              			}
+                              			,success : function(response)
+                              			{
+                              				var json=Ext.decode(response.responseText);
+                              				if(json.exito!=true)
+                              				{
+                              					if(sesionDsrol!='SUSCRIAUTO'){
+                              						mensajeError(json.respuesta);
+                              						 _fieldById('panDatComBotonRetarificar').setDisabled(true);//Deshabilita el boton
+                              					}else{
+                              						mensajeWarning(json.respuesta);
+                              						_fieldById('panDatComBotonRetarificar').setDisabled(false);
+                              					}
+                              				}else{
+                              					_fieldById('panDatComBotonRetarificar').setDisabled(false);
+                              				}
+                              			}
+                              			,failure : errorComunicacion
+                              		});
+                                }
                             }
 		                })
                         ,Ext.create('Ext.panel.Panel',
