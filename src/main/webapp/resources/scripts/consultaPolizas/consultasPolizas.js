@@ -1288,8 +1288,8 @@ Ext.onReady(function() {
 											anyMatch:true,
 											displayField:'value',
 											valueField:'key',
-											forceSelection:false,
-											editable:false,
+											forceSelection:true,
+											editable:true,
 											queryMode:'local',
 											store:Ext.create('Ext.data.Store',{
 											model:'Generic',
@@ -1313,8 +1313,8 @@ Ext.onReady(function() {
 											anyMatch:true,
 											displayField:'value',
 											valueField:'key',
-											forceSelection:false,
-											editable:false,
+											forceSelection:true,
+											editable:true,
 											queryMode:'local',
 											store:Ext.create('Ext.data.Store',{
 											model:'Generic',
