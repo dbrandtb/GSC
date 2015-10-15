@@ -1,6 +1,9 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
 import java.io.File;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +48,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	private File                     excel            = null;
 	private String                   excelFileName    = null;
 	private String                   excelContentType = null;
-	
+	private DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	@Autowired
 	private ConsultasManager         consultasManager;
@@ -1487,6 +1490,48 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				new StringBuilder()
 				.append("\n###### cargarParamerizacionConfiguracionCoberturasRol ######")
 				.append("\n############################################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String obtieneValNumeroSerie()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n###################################")
+				.append("\n###### obtieneValNumeroSerie ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		exito = true;
+		
+		try
+		{
+			setCheckpoint("Validando datos de entrada");
+			checkNull(smap1, "No se recibieron datos de poliza");
+			String feini    = smap1.get("feini");
+			String numSerie      = smap1.get("numSerie");
+			checkBlank(feini , "No se recibio la fecha inicial");
+			checkBlank(numSerie   , "No se recibio el número de serie");
+			String iCodAviso = "exito";
+			String feAutorizacion= feini.substring(8,10)+"/"+feini.substring(5,7)+"/"+feini.substring(0,4);
+			iCodAviso = cotizacionAutoManager.obtieneValidacionRetroactividad(numSerie, renderFechas.parse(feAutorizacion));
+			exito           = StringUtils.isNotBlank(iCodAviso)?false:true;
+			respuesta       = iCodAviso;
+			respuestaOculta = iCodAviso;
+			logger.debug("respuesta--->"+respuesta+" : "+iCodAviso.length());
+		}
+		catch(Exception ex)
+		{
+			manejaException(ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n###### obtieneValNumeroSerie ######")
+				.append("\n###################################")
 				.toString()
 				);
 		return SUCCESS;

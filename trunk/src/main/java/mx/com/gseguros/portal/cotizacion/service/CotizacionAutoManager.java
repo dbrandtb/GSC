@@ -1,9 +1,11 @@
 package mx.com.gseguros.portal.cotizacion.service;
 
+import java.util.Date;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2SmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
@@ -195,4 +197,8 @@ public interface CotizacionAutoManager
 			String cdtipsit
 			,String cdsisrol
 			);
+	
+	public String obtieneValidacionRetroactividad(
+			String numSerie
+			,Date feini) throws ApplicationException;
 }

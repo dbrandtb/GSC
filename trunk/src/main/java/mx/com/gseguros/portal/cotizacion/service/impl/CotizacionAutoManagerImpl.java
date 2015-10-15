@@ -18,6 +18,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
+import mx.com.gseguros.portal.cotizacion.dao.ValidacionesCotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
@@ -65,10 +66,17 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	private static final DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	private CotizacionDAO  cotizacionDAO;
+	
+	private ValidacionesCotizacionDAO  validacionesCotizacionDAOSIGS;
+	
 	private PantallasDAO   pantallasDAO;
+	
 	private ConsultasDAO   consultasDAO;
+	
 	private PersonasDAO    personasDAO;
+	
 	private MesaControlDAO mesaControlDAO;
+
 	private EndososDAO     endososDAO;
 	
 	@Autowired
@@ -3826,5 +3834,21 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 
 	public void setEndososDAO(EndososDAO endososDAO) {
 		this.endososDAO = endososDAO;
+	}
+
+	public void setValidacionesCotizacionDAOSIGS(
+			ValidacionesCotizacionDAO setValidacionesCotizacionDAOSIGS) {
+		this.validacionesCotizacionDAOSIGS = setValidacionesCotizacionDAOSIGS;
+	}
+
+	@Override
+	public String obtieneValidacionRetroactividad(String numSerie, Date feini) throws ApplicationException {
+		try{
+			String iCodAviso;
+			iCodAviso = validacionesCotizacionDAOSIGS.obtieneValidacionRetroactividad(numSerie, feini);
+			return iCodAviso;
+		}catch (Exception e){
+			throw new ApplicationException("1", e);
+		}
 	}
 }
