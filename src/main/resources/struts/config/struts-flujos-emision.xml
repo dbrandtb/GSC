@@ -430,6 +430,10 @@
             </interceptor-ref>
             <result name="success" type="json"/>
         </action>
+        
+        <action name="obtieneValNumeroSerie" class="cotizacionAutoAction" method="obtieneValNumeroSerie"><!--cargarValoresSituacion -->
+            <result name="success" type="json" />
+        </action>
        
     </package>
     

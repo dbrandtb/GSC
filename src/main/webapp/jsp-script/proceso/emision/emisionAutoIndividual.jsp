@@ -19,6 +19,7 @@ var _p29_urlDocumentosPoliza               = '<s:url namespace="/documentos" act
 var _p29_urlRecuperacionSimple             = '<s:url namespace="/emision"    action="recuperacionSimple"                   />';
 var _p29_urlCotizacionAutoIndividual       = '<s:url namespace="/emision"    action="cotizacionAutoIndividual"             />';
 var _p29_urlDocumentosPolizaClon           = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon"          />';
+var _p29_urlObtieneValNumeroSerie          = '<s:url namespace="/emision" action="obtieneValNumeroSerie"                />';
 
 var urlReintentarWS  = '<s:url namespace="/"        action="reintentaWSautos" />';
 var _urlEnviarCorreo = '<s:url namespace="/general" action="enviaCorreo"      />';
@@ -381,7 +382,51 @@ Ext.onReady(function()
 	    }
 	    ,failure : errorComunicacion
 	});
+	
 	////// loaders //////
+	
+	var folio  = _fieldByName('parametros.pv_otvalor37');
+	debug("Valor del Folio --->",folio);
+	folio.on(
+	{
+		'change' : function(comp,val)
+		{
+			debug('folio change val:',val,'dummy');
+		}
+		,'blur' : function()
+		{
+			
+			Ext.Ajax.request(
+			{
+				url     : _p29_urlObtieneValNumeroSerie
+				,params :
+				{
+					'smap1.numSerie'  : folio.getValue()
+					,'smap1.feini'   : _fieldByName('feini').getValue()
+				}
+				,success : function(response)
+				{
+					var json=Ext.decode(response.responseText);
+        	    	debug(json);
+        	    	debug("VALOR DE RESPUESTA--->",json.success);
+        	    	
+        	    	if(json.exito!=true)
+        	    	{
+        	    		if(_p29_smap1.cdsisrol!='SUSCRIAUTO'){
+        	    			mensajeError(json.respuesta);
+        					 _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
+        				}else{
+        					mensajeWarning(json.respuesta);
+        					_fieldById('_p29_botonEmitir').setDisabled(false);
+        				}
+        	    	}else{
+        	    		_fieldById('_p29_botonEmitir').setDisabled(false);
+        	    	}
+				}
+				,failure : errorComunicacion
+			});
+		}
+	});
 });
 
 ////// funciones //////
@@ -447,6 +492,32 @@ function _p29_loadCallback()
                 feini.setMinValue(Ext.Date.add(new Date(),Ext.Date.DAY,(json.smap1.retroac-0)*-1));
                 feini.setMaxValue(Ext.Date.add(new Date(),Ext.Date.DAY,json.smap1.diferi-0));
                 feini.isValid();
+                if(_fieldByName('parametros.pv_otvalor37').getValue().length>0){
+                	Ext.Ajax.request({
+           				url     : _p29_urlObtieneValNumeroSerie
+           				,params : {
+           					'smap1.numSerie'  : _fieldByName('parametros.pv_otvalor37').getValue()
+           					,'smap1.feini'   : _fieldByName('feini').getValue()
+           				}
+           				,success : function(response){
+           					var json=Ext.decode(response.responseText);
+           		      	    	debug(json);
+           		      	    	if(json.exito!=true)
+           		      	    	{
+           		      	    		if(_p29_smap1.cdsisrol!='SUSCRIAUTO'){
+           		      	    			mensajeError(json.respuesta);
+           		      					 _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
+           		      				}else{
+           		      					mensajeWarning(json.respuesta);
+           		      					_fieldById('_p29_botonEmitir').setDisabled(false);
+           		      				}
+           		      	    	}else{
+           		      	    		_fieldById('_p29_botonEmitir').setDisabled(false);
+           		      	    	}
+           				}
+           				,failure : errorComunicacion
+           			});
+                }
             }
             else
             {
