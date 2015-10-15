@@ -407,9 +407,6 @@ Ext.onReady(function()
 				,success : function(response)
 				{
 					var json=Ext.decode(response.responseText);
-        	    	debug(json);
-        	    	debug("VALOR DE RESPUESTA--->",json.success);
-        	    	
         	    	if(json.exito!=true)
         	    	{
         	    		if(_p29_smap1.cdsisrol!='SUSCRIAUTO'){

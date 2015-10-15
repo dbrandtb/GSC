@@ -75,4 +75,5 @@
     
     <bean id="emisionDAOImpl" class="mx.com.gseguros.portal.emision.dao.impl.EmisionDAOImpl" parent="abstractManagerDAO"/>
     
+    <bean id="validacionesCotizacionDAOSIGSImpl" class="mx.com.gseguros.portal.cotizacion.dao.impl.ValidacionesCotizacionDAOSIGSImpl" parent="abstractManagerDAOSIGS"/>
 </beans>

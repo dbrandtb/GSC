@@ -18,7 +18,8 @@
     </bean>
     
     <bean id="cotizacionAutoManagerImpl" class="mx.com.gseguros.portal.cotizacion.service.impl.CotizacionAutoManagerImpl">
-        <property name="cotizacionDAO"  ref="cotizacionDAOImpl"  />
+        <property name="cotizacionDAO"   ref="cotizacionDAOImpl"  />
+        <property name="validacionesCotizacionDAOSIGS"  ref="validacionesCotizacionDAOSIGSImpl"  />
         <property name="pantallasDAO"   ref="pantallasDAOImpl"   />
         <property name="consultasDAO"   ref="consultasDAOImpl"   />
         <property name="personasDAO"    ref="personasDAOImpl"    />

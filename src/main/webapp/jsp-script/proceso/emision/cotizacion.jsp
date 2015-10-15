@@ -57,7 +57,7 @@ var _0_urlValidarCambioZonaGMI     = '<s:url namespace="/emision"         action
 var _0_urlValidarEnfermCatasGMI    = '<s:url namespace="/emision"         action="validarEnfermedadCatastGMI"     />';
 var _0_urlRecuperacionSimple       = '<s:url namespace="/emision"         action="recuperacionSimple"             />';
 var _0_urlRetroactividadDifer      = '<s:url namespace="/emision"         action="cargarRetroactividadSuplemento" />';
-
+var _0_urlObtieneValNumeroSerie    = '<s:url namespace="/emision" 		  action="obtieneValNumeroSerie"          />';
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
     <s:property value="imap.modeloExtraFields" />
@@ -2390,6 +2390,28 @@ Ext.onReady(function()
                 }
             });
             debug('<llamando a nada');
+            Ext.Ajax.request({
+				url     : _0_urlObtieneValNumeroSerie
+				,params :
+				{
+					'smap1.numSerie'  :  _0_formAgrupados.down('[name=parametros.pv_otvalor03]').getValue()
+					,'smap1.feini'   :  Ext.getCmp('fechaInicioVigencia').getValue()
+				}
+				,success : function(response)
+				{
+					var json=Ext.decode(response.responseText);
+        	    	if(json.exito!=true)
+        	    	{
+        	    		if(_0_smap1.cdsisrol!='SUSCRIAUTO'){
+        	    			mensajeError(json.respuesta);
+        				}else{
+        					mensajeWarning(json.respuesta);
+        				}
+        	    	}
+				}
+				,failure : errorComunicacion
+			});
+            
         });
         var comboTipoValor =_0_formAgrupados.down('[name=parametros.pv_otvalor02]');
         var itemSumaAsegu  =_0_formAgrupados.down('[name=parametros.pv_otvalor07]');
