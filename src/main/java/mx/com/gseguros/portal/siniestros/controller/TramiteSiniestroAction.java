@@ -668,10 +668,25 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				paramsTworkSin.put("pv_nmsituac_i",	datosTablas.get(i).get("modNmsituac"));
 				paramsTworkSin.put("pv_cdtipsit_i",	datosTablas.get(i).get("modCdtipsit"));
 				paramsTworkSin.put("pv_cdperson_i",	datosTablas.get(i).get("modCdperson"));
-				paramsTworkSin.put("pv_feocurre_i",	renderFechas.parse(datosTablas.get(i).get("modFechaOcurrencia")));
+				paramsTworkSin.put("pv_feocurre_i",	renderFechas.parse(datosTablas.get(i).get("modFechaOcurrencia").substring(8,10)+"/"+datosTablas.get(i).get("modFechaOcurrencia").substring(5,7)+"/"+datosTablas.get(i).get("modFechaOcurrencia").substring(0,4)));
 				paramsTworkSin.put("pv_nmautser_i",	null);
 				paramsTworkSin.put("pv_nfactura_i",	datosTablas.get(i).get("modFactura"));
 				siniestrosManager.guardaListaTworkSin(paramsTworkSin);
+				
+				//Guardamos la información del asegurado
+				HashMap<String, Object> paramsAsegurado = new HashMap<String, Object>();
+				paramsAsegurado.put("pv_cdunieco_i",datosTablas.get(i).get("modUnieco"));
+				paramsAsegurado.put("pv_cdramo_i",datosTablas.get(i).get("modRamo"));
+				paramsAsegurado.put("pv_estado_i",datosTablas.get(i).get("modEstado"));
+				paramsAsegurado.put("pv_nmpoliza_i",datosTablas.get(i).get("modPolizaAfectada"));
+				paramsAsegurado.put("pv_nmsuplem_i",datosTablas.get(i).get("modNmsuplem"));
+				paramsAsegurado.put("pv_nmsituac_i",datosTablas.get(i).get("modNmsituac"));
+				paramsAsegurado.put("pv_cdperson_i",datosTablas.get(i).get("modCdperson"));
+				paramsAsegurado.put("pv_nmtelefo_i",datosTablas.get(i).get("modTelefono"));
+				paramsAsegurado.put("pv_dsemail_i",datosTablas.get(i).get("modEmail"));
+				siniestrosManager.actualizaTelefonoEmailAsegurado(paramsAsegurado);
+				
+				
 			}
 			mensaje = "Asegurado guardado";
 			success = true;

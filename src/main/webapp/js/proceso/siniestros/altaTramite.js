@@ -49,7 +49,9 @@ Ext.onReady(function() {
 					{type:'string',		name:'dsramo'},				{type:'string',		name:'estatus'},				{type:'string',		name:'dsestatus'},
 					{type:'string',		name:'nmsolici'},			{type:'string',		name:'nmsuplem'},				{type:'string',		name:'cdtipsit'},
 					{type:'string',		name:'dsestatus'},			{type:'string',		name:'vigenciaPoliza'},			{type:'string',		name:'faltaAsegurado'},
-					{type:'string',		name:'fcancelacionAfiliado'},{type:'string',	name:'desEstatusCliente'},		{type:'string',		name:'numPoliza'}]
+					{type:'string',		name:'fcancelacionAfiliado'},{type:'string',	name:'desEstatusCliente'},		{type:'string',		name:'numPoliza'},
+					{type:'string',		name:'nombAsegurado'},		{type:'string',		name:'telefono'},				{type:'string',		name:'email'}
+		]
 	});
 	
 	Ext.define('modelListAsegPagDirecto',{
@@ -58,8 +60,9 @@ Ext.onReady(function() {
 					{type:'string',		name:'modUnieco'},			{type:'string',		name:'modEstado'},				{type:'string',		name:'modRamo'},
 					{type:'string',		name:'modNmsituac'},		{type:'string',		name:'modPolizaAfectada'},		{type:'string',		name:'modCdpersondesc'},
 					{type:'string',		name:'modNmsolici'},		{type:'string',		name:'modNmsuplem'},			{type:'string',		name:'modCdtipsit'},
-					{type:'string',		name:'modNmautserv'},		{type:'string',		name:'modFechaOcurrencia'},		{type:'string',		name:'modCdperson'},
-					{type:'string',		name:'modnumPoliza'},		{type:'string',		name:'modFactura'}
+					{type:'string',		name:'modNmautserv'},		{type:'Date',		name:'modFechaOcurrencia', dateFormat:'d/m/Y'},		{type:'string',		name:'modCdperson'},
+					{type:'string',		name:'modnumPoliza'},		{type:'string',		name:'modFactura'},				{type:'string',		name:'modTelefono'},
+					{type:'string',		name:'modEmail'}
 				]
 	});
 	
@@ -415,6 +418,49 @@ Ext.onReady(function() {
 		}
 	});
 	
+	cmbAseguradosPagDirecto = Ext.create('Ext.form.field.ComboBox', {
+		displayField : 'value',				name:'cmbAseguradoPagoDirecto',		valueField   : 'key',
+		forceSelection : true,				matchFieldWidth: false,				queryMode :'remote',
+		queryParam: 'params.cdperson',		minChars  : 2,						store : storeAsegurados,
+		triggerAction: 'all',				hideTrigger:true,					allowBlank:false,
+		listeners : {
+			'select' : function(combo, record) {
+				obtieneCDPerson = this.getValue();
+				var params = {
+						'params.cdperson'	:	this.getValue(),
+						'params.cdramo'		:	panelInicialPral.down('combo[name=cmbRamos]').getValue()
+				};
+				cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
+					if(success){
+						var jsonResponse = Ext.decode(response.responseText);
+						if(jsonResponse.listaPoliza == null) {
+							Ext.Msg.show({
+								title: 'Aviso',
+								msg: 'No existen p&oacute;lizas para el asegurado elegido.',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.WARNING,
+								fn: function() {
+									valorIndexSeleccionado.set('modCdperson','');
+									valorIndexSeleccionado.set('modCdpersondesc','');
+								}
+							});
+							panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
+							modPolizasAltaTramite.hide();
+							return;
+						}
+					}else{
+						Ext.Msg.show({
+							title: 'Aviso',
+							msg: 'Error al obtener los datos.',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+							});
+					}
+				});
+				modPolizasAltaTramite.show();
+			}
+		}
+	});
 	
 	/* PANEL PARA LA BUSQUEDA DE LA INFORMACIÓN DEL ASEGURADO PARA LA BUSQUEDA DE LAS POLIZAS */
 	gridPolizasAltaTramite= Ext.create('Ext.grid.Panel', {
@@ -447,15 +493,16 @@ Ext.onReady(function() {
 				if(record.get('desEstatusCliente')=="Vigente"){
 					var valorFechaOcurrencia;
 					if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
-						var valorFechaOcu = panelListadoAsegurado.query('datefield[name=dtfechaOcurrencias]')[0].rawValue;
-						valorFechaOcurrencia = new Date(valorFechaOcu.substring(6,10)+"/"+valorFechaOcu.substring(3,5)+"/"+valorFechaOcu.substring(0,2));
+						valorFechaOcurrencia = new Date(valorIndexSeleccionado.get('modFechaOcurrencia'));
 					}else{
 						valorFechaOcurrencia = panelInicialPral.down('[name=dtFechaOcurrencia]').getValue();
 					}
 					var valorFechaInicial = new Date(record.get('feinicio').substring(6,10)+"/"+record.get('feinicio').substring(3,5)+"/"+record.get('feinicio').substring(0,2));
 					var valorFechaFinal =   new Date(record.get('fefinal').substring(6,10)+"/"+record.get('fefinal').substring(3,5)+"/"+record.get('fefinal').substring(0,2));
 					var valorFechaAltaAsegurado = new Date(record.get('faltaAsegurado').substring(6,10)+"/"+record.get('faltaAsegurado').substring(3,5)+"/"+record.get('faltaAsegurado').substring(0,2));
-	
+					var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];
+					var noFactura= rowSelected.get('noFactura');
+					
 					if( (valorFechaOcurrencia <= valorFechaFinal) && (valorFechaOcurrencia >= valorFechaInicial)){
 						if( valorFechaOcurrencia >= valorFechaAltaAsegurado ){
 							//cumple la condición la fecha de ocurrencia es menor igual a la fecha de alta de tramite
@@ -470,6 +517,25 @@ Ext.onReady(function() {
 							panelInicialPral.down('[name="idNumPolizaInt"]').setValue(record.get('numPoliza'));
 							panelInicialPral.down('[name="txtTelefono"]').setValue(record.get('telefono'));
 							panelInicialPral.down('[name="txtEmail"]').setValue(record.get('email'));
+							// realizamos la asignacion de las variables JOSE
+							
+							valorIndexSeleccionado.set('modUnieco',record.get('cdunieco'));
+							valorIndexSeleccionado.set('modEstado',record.get('estado'));
+							valorIndexSeleccionado.set('modRamo',record.get('cdramo'));
+							valorIndexSeleccionado.set('modNmsituac',record.get('nmsituac'));
+							valorIndexSeleccionado.set('polizaAfectada',record.get('nmpoliza'));
+							valorIndexSeleccionado.set('modNmsolici',record.get('nmsolici'));
+							valorIndexSeleccionado.set('modNmsuplem',record.get('nmsuplem'));
+							valorIndexSeleccionado.set('modCdtipsit',record.get('cdtipsit'));
+							valorIndexSeleccionado.set('modNmautserv',null);
+							valorIndexSeleccionado.set('modCdpersondesc',record.get('nombAsegurado'));
+							valorIndexSeleccionado.set('modnumPoliza',record.get('numPoliza'));
+							valorIndexSeleccionado.set('modTelefono',record.get('telefono'));
+							valorIndexSeleccionado.set('modEmail',record.get('email'));
+							valorIndexSeleccionado.set('modFactura',noFactura);
+							valorIndexSeleccionado.set('modPolizaAfectada',record.get('nmpoliza'));
+							banderaAsegurado = "1";
+							limpiarRegistros();							
 							modPolizasAltaTramite.hide();
 						}else{
 							// No se cumple la condición la fecha de ocurrencia es mayor a la fecha de alta de tramite
@@ -477,7 +543,11 @@ Ext.onReady(function() {
 								title:'Error',
 								msg: 'La fecha de ocurrencia es mayor a la fecha de alta del asegurado',
 								buttons: Ext.Msg.OK,
-								icon: Ext.Msg.ERROR
+								icon: Ext.Msg.ERROR,
+								fn: function() {
+									valorIndexSeleccionado.set('modCdperson','');
+									valorIndexSeleccionado.set('modCdpersondesc','');
+								}
 							});
 							modPolizasAltaTramite.hide();
 							limpiarRegistros();
@@ -493,7 +563,11 @@ Ext.onReady(function() {
 							title:'Error',
 							msg: 'La fecha de ocurrencia no se encuentra en el rango de la p&oacute;liza vigente',
 							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.ERROR
+							icon: Ext.Msg.ERROR,
+							fn: function() {
+								valorIndexSeleccionado.set('modCdperson','');
+								valorIndexSeleccionado.set('modCdpersondesc','');
+							}
 						});
 						modPolizasAltaTramite.hide();
 						limpiarRegistros();
@@ -509,7 +583,11 @@ Ext.onReady(function() {
 						title:'Error',
 						msg: 'El asegurado de la p&oacute;liza seleccionado no se encuentra vigente',
 						buttons: Ext.Msg.OK,
-						icon: Ext.Msg.ERROR
+						icon: Ext.Msg.ERROR,
+						fn: function() {
+							valorIndexSeleccionado.set('modCdperson','');
+							valorIndexSeleccionado.set('modCdpersondesc','');
+						}
 					});
 					modPolizasAltaTramite.hide();
 					limpiarRegistros();
@@ -606,8 +684,8 @@ Ext.onReady(function() {
 			}
 		}
 	});	
-//.....
-	
+
+
 /**		PAGO REEMBOLSO						**/
 	cmbProveedorReembolso = Ext.create('Ext.form.field.ComboBox', {
 		displayField : 'nombre',			name:'cmbProveedorReembolso',		valueField   : 'cdpresta',
@@ -768,7 +846,7 @@ Ext.onReady(function() {
 			tbar:[
 				{	text	: 'Agregar Factura'
 					,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
-					,handler : _p21_agregarFactura//...
+					,handler : _p21_agregarFactura
 				},
 				{	/*1.- MANDAMOS A GUARDAR LA INFORMACIÓN DE LAS FACTURAS UNICAMENTE EN EL TRAMITE*/
 					text	: 'Guardar Cambios Factura'
@@ -844,13 +922,13 @@ Ext.onReady(function() {
 								if(Ext.decode(response.responseText).slist1 != null) {
 									for(var i = 0; i < json.length; i++){
 										var fechaFacturaM = json[i].MODFECHAOCURRENCIA.match(/\d+/g); 
-										var rec = new modelListAsegPagDirecto({
+										var rec = new modelListAsegPagDirecto({///////
 											modUnieco: json[i].MODUNIECO,
 											modEstado: json[i].MODESTADO,
 											modFechaOcurrencia:fechaFacturaM[2]+"/"+fechaFacturaM[1]+"/"+fechaFacturaM[0] ,
 											modCdtipsit: json[i].MODCDTIPSIT,
 											modCdperson: json[i].MODCDPERSON,
-											modCdpersondesc: json[i].MODCDPERSON+" "+json[i].MODCDPERSONDESC,
+											modCdpersondesc: json[i].MODCDPERSONDESC,
 											modNmsituac: json[i].MODNMSITUAC,
 											modNmsolici: json[i].MODNMSOLICI,
 											modNmsuplem: json[i].MODNMSUPLEM,
@@ -858,7 +936,10 @@ Ext.onReady(function() {
 											modRamo: json[i].MODRAMO,
 											modFactura: json[i].NOFACTURAINT,
 											modnumPoliza: json[i].NMPOLIEX,
-											modNmautserv: json[i].MODNMAUTSERV
+											modNmautserv: json[i].MODNMAUTSERV,
+											modTelefono: json[i].MODTELEFONO,
+											modEmail: json[i].MODEMAIL
+											
 										});
 										storeListAsegPagDirecto.add(rec);
 									}
@@ -1411,16 +1492,27 @@ Ext.onReady(function() {
 	gridPagoIndemnizatorioRecupera =new EditorPagoIndemnizatorioRecupera();
 	
 	/*GENERACION DE LA TABLA PARA LOS ASEGURADOS*/
-	Ext.define('EditorAsegPagDirecto', {
+	Ext.define('EditorAsegPagoDirecto', {
 		extend: 'Ext.grid.Panel',
-		name:'editorAsegPagDirecto',
-		title: 'Asegurados',
+		name:'editorAsegPagoDirecto',
+		title: 'Asegurados Modificado',
 		frame: true,
 		//selType  : 'rowmodel',
 		initComponent: function(){
 				Ext.apply(this, {
 				width: 750,
 				height: 250,
+				plugins  : [
+					Ext.create('Ext.grid.plugin.CellEditing',{
+						clicksToEdit: 1
+						,listeners : {
+							beforeedit : function() {
+								valorIndexSeleccionado = gridAsegPagoDirecto.getView().getSelectionModel().getSelection()[0];
+								debug("Valor seleccionado gridAsegPagoDirecto --->",valorIndexSeleccionado);
+							}
+						}
+					})
+				],
 				store: storeListAsegPagDirecto,
 				columns: 
 				[
@@ -1442,14 +1534,35 @@ Ext.onReady(function() {
 							handler: this.onHistorialClick
 						}]
 					},
-					{
-						header: 'Fecha Ocurrencia',	dataIndex: 'modFechaOcurrencia',			width:150
+					{	header: 'Fecha <br/> Ocurrencia',		dataIndex: 'modFechaOcurrencia',		width:100,		renderer: Ext.util.Format.dateRenderer('d/m/Y')
+						,editor : {
+							xtype : 'datefield',
+							format : 'd/m/Y',
+							editable : true
+						}
 					},
 					{
-						header: 'Asegurado',		dataIndex: 'modCdpersondesc',			width:350//,		hidden:	true
+						header: 'Cve<br/>Asegurado', 		dataIndex: 'modCdperson',			width:110,				editor : cmbAseguradosPagDirecto
 					},
 					{
-						header: 'N&uacute;mero P&oacute;liza',	dataIndex: 'modnumPoliza',			width:200//,		hidden:true
+						header: 'Nombre <br/> Asegurado',		dataIndex: 'modCdpersondesc',			width:250
+					},
+					{
+						header: 'N&uacute;mero <br/>P&oacute;liza',	dataIndex: 'modnumPoliza',			width:150//,		hidden:true
+					},
+					{
+						header: 'Tel&eacute;fono',	dataIndex: 'modTelefono',			width:150
+						,editor: {
+							xtype: 'numberfield',
+							allowBlank: false
+						}
+					},
+					{
+						header: 'Correo electr&oacute;nico',	dataIndex: 'modEmail',			width:150
+						,editor: {
+							xtype: 'textfield',
+							allowBlank: false
+						}
 					}
 				],
 				tbar: [
@@ -1462,7 +1575,7 @@ Ext.onReady(function() {
 						text     : 'Guardar cambios Asegurado'
 						,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png'
 						,handler : function() {
-							guardarAseguradosFactura(); //Guardar cambios Asegurados
+							guardarAseguradosFactura();
 						}
 					}
 				]
@@ -1508,9 +1621,9 @@ Ext.onReady(function() {
 			centrarVentana(windowHistSinies);
 		}		
 	});
-	gridAsegPagDirecto=new EditorAsegPagDirecto();
-
-
+	gridAsegPagoDirecto=new EditorAsegPagoDirecto();
+	
+	
 	/* PANEL PARA EL PAGO DIRECTO */
 	var panelListadoAsegurado= Ext.create('Ext.form.Panel',{
 		border  : 0
@@ -1561,7 +1674,7 @@ Ext.onReady(function() {
 		]
 	});
 	/*PANTALLA EMERGENTE PARA EL PAGO DIRECTO */
-	var ventanaAgregarAsegurado = Ext.create('Ext.window.Window', {
+	/*var ventanaAgregarAsegurado = Ext.create('Ext.window.Window', {
 		title: 'Asegurados',
 		closeAction: 'hide',
 		modal: true, 
@@ -1577,7 +1690,7 @@ Ext.onReady(function() {
 						var datos=panelListadoAsegurado.form.getValues();
 						var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];
 						var noFactura= rowSelected.get('noFactura');
-						var rec = new modelListAsegPagDirecto({
+						var rec = new modelListAsegPagDirecto({.
 							modUnieco: panelInicialPral.down('[name="cdunieco"]').getValue(),
 							modEstado: panelInicialPral.down('[name="estado"]').getValue(),
 							modRamo: panelInicialPral.down('[name="cdramo"]').getValue(),
@@ -1617,7 +1730,7 @@ Ext.onReady(function() {
 				}
 			}
 		]
-	});
+	});*/
 
 	var modPolizasAltaTramite = Ext.create('Ext.window.Window',
 	{
@@ -1709,12 +1822,20 @@ Ext.onReady(function() {
 					gridFacturaReembolso
 				]
 			},
-			{
+			/*{
 				colspan:2
 				,border: false
 				,items    :
 				[
 					gridAsegPagDirecto
+				]
+			},*/
+			{
+				colspan:2
+				,border: false
+				,items    :
+				[
+					gridAsegPagoDirecto
 				]
 			},
 			{
@@ -2384,7 +2505,7 @@ Ext.onReady(function() {
 									panelInicialPral.down('[name="idNmsuplem"]').setValue('');
 									panelInicialPral.down('[name="idNmsolici"]').setValue('');
 									panelInicialPral.down('[name="nmsituac"]').setValue('');
-									panelInicialPral.down('[name="idCdtipsit"]').setValue(listadoAsegurado[0].MODCDTIPSIT);//...
+									panelInicialPral.down('[name="idCdtipsit"]').setValue(listadoAsegurado[0].MODCDTIPSIT);
 									panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
 									panelInicialPral.down('[name=dtFechaOcurrencia]').setValue('');
 							}
@@ -2626,7 +2747,7 @@ Ext.onReady(function() {
 			pagoDirecto = false;
 			pagoReembolso = true;
 			panelInicialPral.down('[name=editorFacturaDirecto]').show();
-			panelInicialPral.down('[name=editorAsegPagDirecto]').show();
+			panelInicialPral.down('[name=editorAsegPagoDirecto]').show();
 			panelInicialPral.down('[name=editorFacturaReembolso]').hide();
 			panelInicialPral.down('[name=editorPagoIndemnizatorioRecupera]').hide();
 			panelInicialPral.down('[name=editorPagoIndemnizatorio]').hide();
@@ -2643,7 +2764,7 @@ Ext.onReady(function() {
 			pagoDirecto = true;
 			pagoReembolso = false;
 			panelInicialPral.down('[name=editorFacturaDirecto]').hide();
-			panelInicialPral.down('[name=editorAsegPagDirecto]').hide();
+			panelInicialPral.down('[name=editorAsegPagoDirecto]').hide();
 			panelInicialPral.down('[name=editorPagoIndemnizatorioRecupera]').hide();
 			panelInicialPral.down('[name=editorPagoIndemnizatorio]').hide();
 			panelInicialPral.down('[name=editorFacturaReembolso]').show();
@@ -2661,7 +2782,7 @@ Ext.onReady(function() {
 				panelInicialPral.down('[name=editorPagoIndemnizatorio]').hide();
 				panelInicialPral.down('[name=editorPagoIndemnizatorioRecupera]').show();
 				panelInicialPral.down('[name=editorFacturaDirecto]').hide();
-				panelInicialPral.down('[name=editorAsegPagDirecto]').hide();
+				panelInicialPral.down('[name=editorAsegPagoDirecto]').hide();
 				panelInicialPral.down('[name=editorFacturaReembolso]').hide();
 				panelInicialPral.down('combo[name=cmbProveedor]').hide();
 				panelInicialPral.down('combo[name=cmbProveedor]').setValue('');
@@ -2674,7 +2795,7 @@ Ext.onReady(function() {
 				panelInicialPral.down('[name=editorPagoIndemnizatorio]').show();
 				panelInicialPral.down('[name=editorPagoIndemnizatorioRecupera]').hide();
 				panelInicialPral.down('[name=editorFacturaDirecto]').hide();
-				panelInicialPral.down('[name=editorAsegPagDirecto]').hide();
+				panelInicialPral.down('[name=editorAsegPagoDirecto]').hide();
 				panelInicialPral.down('[name=editorFacturaReembolso]').hide();
 				panelInicialPral.down('combo[name=cmbProveedor]').hide();
 				panelInicialPral.down('combo[name=cmbProveedor]').setValue('');
@@ -2713,7 +2834,9 @@ Ext.onReady(function() {
 	        submitValues['params']=formulario;
 	        var datosTablas = [];
 	        storeListAsegPagDirecto.each(function(record,index){
-	            datosTablas.push({
+	        	debug("VALOR DEL RECORD ===> ",record);
+	        	
+	        	datosTablas.push({
 	                modUnieco: record.get('modUnieco'),
 	                modEstado: record.get('modEstado'),
 	                modFechaOcurrencia: record.get('modFechaOcurrencia'),
@@ -2727,7 +2850,9 @@ Ext.onReady(function() {
 	                modRamo: record.get('modRamo'),
 	                modFactura: record.get('modFactura'),
 	                modnumPoliza: record.get('modnumPoliza'),
-	                modNmautserv: record.get('modNmautserv')
+	                modNmautserv: record.get('modNmautserv'),
+	                modTelefono: record.get('modTelefono'),
+	                modEmail: record.get('modEmail')
 	            });
 	        });
 	        submitValues['datosTablas']=datosTablas;
@@ -2757,7 +2882,7 @@ Ext.onReady(function() {
 	            },
 	            failure:function(response,opts)
 	            {
-	                panelInicialPrincipal.setLoading(false);
+	                panelInicialPrincipal.setLoading(true);
 	                Ext.Msg.show({
 	                    title:'Error',
 	                    msg: 'Error de comunicaci&oacute;n',
@@ -2908,14 +3033,12 @@ Ext.onReady(function() {
 					limpiarRegistros();
 					var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];
 					var noFactura= rowSelected.get('noFactura');
-					ventanaAgregarAsegurado.show();
-					//storeListAsegPagDirecto.add(new modelListAsegPagDirecto({modFechaOcurrencia :new Date() }));
+					storeListAsegPagDirecto.add(new modelListAsegPagDirecto({ }));
 				}else{
 					limpiarRegistros();
 					var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];
 					var noFactura= rowSelected.get('noFactura');
-					ventanaAgregarAsegurado.show();
-					//storeListAsegPagDirecto.add(new modelListAsegPagDirecto({modFechaOcurrencia :new Date() }));
+					storeListAsegPagDirecto.add(new modelListAsegPagDirecto({ }));
 				}
 			}else{
 				if(banderaAsegurado =="1"){
@@ -2923,14 +3046,12 @@ Ext.onReady(function() {
 					limpiarRegistros();
 					var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];
 					var noFactura= rowSelected.get('noFactura');
-					ventanaAgregarAsegurado.show();
-					//storeListAsegPagDirecto.add(new modelListAsegPagDirecto({modFechaOcurrencia :new Date() }));
+					storeListAsegPagDirecto.add(new modelListAsegPagDirecto({ }));
 				}else{
 					limpiarRegistros();
 					var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];
 					var noFactura= rowSelected.get('noFactura');
-					ventanaAgregarAsegurado.show();
-					//storeListAsegPagDirecto.add(new modelListAsegPagDirecto({modFechaOcurrencia :new Date() }));
+					storeListAsegPagDirecto.add(new modelListAsegPagDirecto({ }));
 				}
 			}
 		}else{
