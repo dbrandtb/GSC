@@ -2418,9 +2418,10 @@ Ext.onReady(function()
         var changeFunction = function()
         {
             debug('>comboTipoValor change');
-            //itemSumaAsegu.setValue('');
-            //itemSumaAsegu.setReadOnly((comboTipoValor.getValue()+'x')=='2x');
-            
+            if(_0_smap1.cdsisrol!='SUSCRIAUTO'){
+            	itemSumaAsegu.setValue('');
+                itemSumaAsegu.setReadOnly((comboTipoValor.getValue()+'x')=='2x');
+            }
             debug('<comboTipoValor change');
         };
         comboTipoValor.addListener('change',changeFunction);
@@ -2492,7 +2493,7 @@ Ext.onReady(function()
     //fin [parche]
     
     //parche para AUTOS FRONTERIZOS Y PICKUP Fronterizos con rol SUSCRIPTOR AUTO:
-    if(_0_smap1.cdtipsit == TipoSituacion.AutosFronterizos || _0_smap1.cdtipsit == TipoSituacion.AutosPickUp 
+    if((_0_smap1.cdtipsit == TipoSituacion.AutosFronterizos || _0_smap1.cdtipsit == TipoSituacion.AutosPickUp) 
         && _0_smap1.cdsisrol=='SUSCRIAUTO') {
         _0_formAgrupados.down('[name=parametros.pv_otvalor04]').setReadOnly(false);
         _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setReadOnly(false);
