@@ -2725,17 +2725,21 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			,Date fecha
 			,String cdusuariLike
 			,String cdagente
+			,String cdusuariSesion
+			,String cduniecoSesion
 			)throws Exception
 	{
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
-		params.put("cdtipram"  , cdtipram);
-		params.put("cduniecos" , cduniecos);
-		params.put("cdramo"    , cdramo);
-		params.put("ramo"      , ramo);
-		params.put("nmpoliza"  , nmpoliza);
-		params.put("fecha"     , fecha);
-		params.put("cdusuari"  , cdusuariLike);
-		params.put("cdagente"  , cdagente);
+		params.put("cdtipram"       , cdtipram);
+		params.put("cduniecos"      , cduniecos);
+		params.put("cdramo"         , cdramo);
+		params.put("ramo"           , ramo);
+		params.put("nmpoliza"       , nmpoliza);
+		params.put("fecha"          , fecha);
+		params.put("cdusuari"       , cdusuariLike);
+		params.put("cdagente"       , cdagente);
+		params.put("cdusuariSesion" , cdusuariSesion);
+		params.put("cduniecoSesion" , cduniecoSesion);
 		Map<String,Object> procRes = ejecutaSP(new RecuperarPolizasParaImprimir(getDataSource()),params);
 		List<Map<String,String>> lista = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		if(lista==null)
@@ -2751,14 +2755,16 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		protected RecuperarPolizasParaImprimir(DataSource dataSource)
 		{
 			super(dataSource,"PKG_CONSULTA.P_GET_POLIZAS_PARA_IMPRIMIR");
-			declareParameter(new SqlParameter("cdtipram"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cduniecos" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("ramo"      , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("nmpoliza"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("fecha"     , OracleTypes.DATE));
-			declareParameter(new SqlParameter("cdusuari"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdagente"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipram"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cduniecos"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ramo"           , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fecha"          , OracleTypes.DATE));
+			declareParameter(new SqlParameter("cdusuari"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdagente"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuariSesion" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cduniecoSesion" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"cdtipram"
 					,"dstipram"
@@ -2951,6 +2957,38 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 					,"nombre"
 					,"descrip"
 					,"swactivo"
+            };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> recuperarComboUsuarios(String cadena) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cadena" , cadena);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarComboUsuarios(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		return lista;
+	}
+	
+	protected class RecuperarComboUsuarios extends StoredProcedure
+	{
+		protected RecuperarComboUsuarios(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.pendiente");
+			declareParameter(new SqlParameter("cadena" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"cdusuari"
+					,"nombre"
+					,"cdunieco"
             };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

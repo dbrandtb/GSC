@@ -32,4 +32,6 @@ public interface ExplotacionDocumentosManager
 
 	public Map<String,Item> pantallaExplotacionRecibos(String cdusuari, String cdsisrol) throws Exception;
 	
+	public Map<String,Item> pantallaPermisosImpresion(String cdusuari, String cdsisrol) throws Exception;
+	
 }

@@ -644,6 +644,8 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						,Utils.parse(fefecha)
 						,cdusuariLike
 						,cdagente
+						,cdusuari
+						,usuario.getCdUnieco()
 						);
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_IMPRESORAS))

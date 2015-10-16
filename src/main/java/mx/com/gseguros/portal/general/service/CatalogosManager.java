@@ -161,4 +161,7 @@ public interface CatalogosManager {
     
     @Deprecated
     public List<GenericVO> recuperarSucursalesPorTipoRamo(String cdtipram) throws Exception;
+    
+    @Deprecated
+    public List<GenericVO> recuperarComboUsuarios(String cadena) throws Exception;
 }
