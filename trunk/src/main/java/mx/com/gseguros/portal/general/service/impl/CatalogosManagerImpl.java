@@ -1240,5 +1240,36 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
     }
-    
+
+	@Deprecated
+	@Override
+    public List<GenericVO> recuperarComboUsuarios(String cadena) throws Exception
+    {
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarComboUsuarios @@@@@@"
+				,"\n@@@@@@ cadena=",cadena
+				));
+		
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		String          paso  = "Recuperando usuarios";
+		try
+		{
+			List<Map<String,String>> listaUsuarios = consultasDAO.recuperarComboUsuarios(cadena);
+			for(Map<String,String> usuario : listaUsuarios)
+			{
+				lista.add(new GenericVO(usuario.get("cdusuari"),usuario.get("nombre"),usuario.get("cdunieco")));
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ recuperarComboUsuarios @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+    }
 }

@@ -765,6 +765,12 @@ public class CatalogosAction extends PrincipalCoreAction {
 						lista = catalogosManager.recuperarSucursalesPorTipoRamo(params.get("idPadre"));
 					}
 					break;
+				case USUARIOS:
+					if(params!=null&&params.containsKey("cadena")&&StringUtils.isNotBlank(params.get("cadena")))
+					{
+						lista = catalogosManager.recuperarComboUsuarios(params.get("cadena"));
+					}
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

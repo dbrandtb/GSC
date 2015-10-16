@@ -245,6 +245,41 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 		return result;
 	}
 	
+	@Action(value   = "pantallaPermisosImpresion",
+	        results = {
+			    @Result(name="error"   , location="/jsp-script/general/errorPantalla.jsp"),
+                @Result(name="success" , location="/jsp-script/consultas/pantallaPermisosImpresion.jsp")
+            }
+	)
+	public String pantallaPermisosImpresion()
+	{
+		logger.debug(Utils.log(
+				 "\n#######################################"
+				,"\n###### pantallaPermisosImpresion ######"
+				));
+		
+		String result = ERROR;
+		
+		try
+		{
+			UserVO usuario = Utils.validateSession(session);
+			
+			items = explotacionDocumentosManager.pantallaPermisosImpresion(usuario.getUser(),usuario.getRolActivo().getClave());
+			
+			result = SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### pantallaPermisosImpresion ######"
+				,"\n#######################################"
+				));
+		return result;
+	}
+	
 	////////////////// Getters y setters ///////////////////
 	                                                      //
 	public Map<String, String> getParams() {              //

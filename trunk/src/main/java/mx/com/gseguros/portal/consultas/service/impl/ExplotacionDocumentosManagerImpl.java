@@ -368,4 +368,54 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				));
 		return items;
 	}
+	
+	@Override
+	public Map<String,Item> pantallaPermisosImpresion(String cdusuari, String cdsisrol) throws Exception
+	{
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ pantallaPermisosImpresion @@@@@@"
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				));
+		
+		Map<String,Item> items = new HashMap<String,Item>();
+		String           paso  = null;
+		
+		try
+		{
+			paso = "Recuperando componentes";
+			logger.debug(paso);
+			
+			List<ComponenteVO> itemsFormBusq = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,null //cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"EXPLOTACION_PERMISOS"
+					,"FORM_BUSQUEDA"
+					,null //orden
+					);
+			
+			paso = "Construyendo componentes";
+			logger.debug(paso);
+			
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			gc.generaComponentes(itemsFormBusq, true, false, true, false, false, false);
+			items.put("itemsFormBusq" , gc.getItems());
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.join(
+				 "\n@@@@@@ pantallaPermisosImpresion @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return items;
+	}
 }

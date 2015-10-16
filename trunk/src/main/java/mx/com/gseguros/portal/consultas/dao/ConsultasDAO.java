@@ -353,6 +353,8 @@ public interface ConsultasDAO
 			,Date fecha
 			,String cdusuariLike
 			,String cdagente
+			,String cdusuariSesion
+			,String cduniecoSesion
 			)throws Exception;
 	
 	public String recuperarUltimoNmsuplem(
@@ -376,4 +378,6 @@ public interface ConsultasDAO
 			,String papel
 			,String activo
 			)throws Exception;
+	
+	public List<Map<String,String>> recuperarComboUsuarios(String cadena) throws Exception;
 }
