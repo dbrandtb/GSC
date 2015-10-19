@@ -167,33 +167,34 @@ public class RenovacionManagerImpl implements RenovacionManager
 		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
 		
 		//marcar polizas
-		try
-		{
-			for(Map<String,String>poliza:polizas)
-			{
-				renovacionDAO.marcarPoliza(
-						poliza.get("anio")
-						,poliza.get("mes")
-						,poliza.get("cdtipopc")
-						,"1"//cdtipacc
-						,poliza.get("cdunieco")
-						,poliza.get("cdramo")
-						,poliza.get("nmpoliza")
-						,new Date()//feemisio
-						,"S"//swrenova
-						,"S"//swaproba
-						,"1"//nmsituac
-						,poliza.get("cducreno")
-						);
-			}
-		}
-		catch(Exception ex)
-		{
-			long timestamp = System.currentTimeMillis();
-			resp.setExito(false);
-			resp.setRespuesta(new StringBuilder("Error al marcar polizas #").append(timestamp).toString());
-			resp.setRespuestaOculta(ex.getMessage());
-			logger.error(resp.getRespuesta(),ex);
+		for(Map<String,String>poliza:polizas){
+			try
+				{
+					
+						renovacionDAO.marcarPoliza(
+								poliza.get("anio")
+								,poliza.get("mes")
+								,poliza.get("cdtipopc")
+								,"1"//cdtipacc
+								,poliza.get("cdunieco")
+								,poliza.get("cdramo")
+								,poliza.get("nmpoliza")
+								,new Date()//feemisio
+								,"S"//swrenova
+								,"S"//swaproba
+								,"1"//nmsituac
+								,poliza.get("cducreno")
+								);
+					
+				}
+				catch(Exception ex)
+				{
+					long timestamp = System.currentTimeMillis();
+					resp.setExito(false);
+					resp.setRespuesta(new StringBuilder("Error al marcar polizas #").append(timestamp).append(". Detalle: ").append(ex.getMessage()).append(" para la poliza ").append(poliza.get("nmpoliza")).toString());
+					resp.setRespuestaOculta(ex.getMessage());
+					logger.error(resp.getRespuesta(),ex);
+				}
 		}
 		
 		List<Map<String,String>>polizasRenovadas=null;
