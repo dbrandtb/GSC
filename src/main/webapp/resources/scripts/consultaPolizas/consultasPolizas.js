@@ -81,6 +81,12 @@ Ext.onReady(function() {
                                 storeAsegurados.load({
                                     params: panelBusqueda.down('form').getForm().getValues(),
                                     callback: function(records, operation, success){
+                                    	
+                                    	_fieldByName('filtrarFam',gridDatosAsegurado).setValue('');
+                                    	_fieldByName('filtrarAseg',gridDatosAsegurado).setValue('');
+                                    	
+                                    	storeAsegurados.clearFilter();
+                                    	
                                         if(!success){
                                             showMessage('Error', 'Error al obtener los datos del asegurado', Ext.Msg.OK, Ext.Msg.ERROR);
                                         }
