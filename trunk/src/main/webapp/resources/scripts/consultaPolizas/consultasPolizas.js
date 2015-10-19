@@ -1,5 +1,7 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
 
+var gridDatosAsegurado;
+
 Ext.onReady(function() {
 
     Ext.selection.CheckboxModel.override( {
@@ -231,6 +233,15 @@ Ext.onReady(function() {
                                     
                                     // Se llenan los datos generales de la poliza elegida
                                     panelDatosPoliza.getForm().loadRecord(records[0]);
+                                    
+                                    if('COLECTIVA' == records[0].get('tipopol')){
+//										gridDatosAsegurado.getView().headerCt.child("#grupo").setVisible(true);
+                                    	gridDatosAsegurado.getView().headerCt.child("#familia").setVisible(true);                                    	
+                                    }else{
+//                                    	gridDatosAsegurado.getView().headerCt.child("#grupo").setVisible(false);
+                                    	gridDatosAsegurado.getView().headerCt.child("#familia").setVisible(false);
+                                    }
+                                    
                                 } else {
                                     showMessage('Aviso', 
                                         'No existen datos generales de la p\u00F3liza elegida. La P&oacute;iza no existe, verifique sus datos', 
@@ -307,6 +318,7 @@ Ext.onReady(function() {
             {type:'string', name:'dsunieco'},
             {type:'string', name:'dsramo'},
             {type:'string', name:'dsplan'},
+            {type:'string', name:'tipopol'},
             {type:'string', name:'dstipsit'}
         ]
     });
@@ -629,6 +641,10 @@ Ext.onReady(function() {
             {type:'string', name:'sexo'},
             {type:'string', name:'nombre'},
             {type:'string', name:'status'},
+            {type:'string', name:'grupo'},
+            {type:'string', name:'cdgrupo'},
+            {type:'string', name:'familia'},
+            {type:'string', name:'cdfamilia'},
             {type:'string', name:'parentesco'}
         ]
     });
@@ -636,6 +652,7 @@ Ext.onReady(function() {
     // Store
     var storeAsegurados = new Ext.data.Store({
      model: 'AseguradosModel',
+     groupField : 'grupo',
      proxy:
      {
           type: 'ajax',
@@ -648,11 +665,11 @@ Ext.onReady(function() {
      }
     });
     
-    var gridDatosAsegurado = Ext.create('Ext.grid.Panel', {
+    gridDatosAsegurado = Ext.create('Ext.grid.Panel', {
         title   : 'DATOS DE LOS ASEGURADOS',
         store   : storeAsegurados,
         id      : 'gridDatosAsegurado',
-        width   : 830,
+        width   : 1030,
         autoScroll:true,
         items:[{
            xtype:'textfield', name:'cdrfc', fieldLabel: 'RFC', readOnly: true, labelWidth: 120
@@ -665,6 +682,8 @@ Ext.onReady(function() {
             {text:'Estatus',dataIndex:'status',width:100,align:'left'},
             {text:'RFC',dataIndex:'cdrfc',width:100,align:'left'},
             {text:'Sexo',dataIndex:'sexo',width:60 , align:'left'},
+            {text:'Grupo',dataIndex:'grupo', itemId: 'grupo',width:100, align:'left', hidden: true},
+            {text:'Familia',dataIndex:'familia', itemId: 'familia',width:100, align:'left', hidden: true},
             {text:'Fecha Nac.',dataIndex:'fenacimi',width:100, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
             ,{
                 xtype        : 'actioncolumn',
@@ -732,7 +751,67 @@ Ext.onReady(function() {
                     siniestralidad(null, null,record.get('cdperson'),null,"0");//cdunieco,cdramo, cdperson, nmpoliza
                 }
             }
-        ]
+        ],
+        tbar: [{
+                xtype : 'textfield',
+                name : 'filtrarFam',
+                fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Familia:</span>',
+                labelWidth : 80,
+                width: 250,
+                maxLength : 50,
+                listeners:{
+                	change: function(elem,newValue,oldValue){
+                		newValue = Ext.util.Format.uppercase(newValue);
+                		
+                		//Validacion de valor anterior ya que la pantalla hace lowercase en automatico y manda doble change
+						if( newValue == Ext.util.Format.uppercase(oldValue)){
+							return false;
+						}
+						
+						try{
+//			        		storeAsegurados.clearFilter();
+//	                		storeAsegurados.filter('familia',newValue);
+//							storeAsegurados.filter(storeAsegurados.createFilterFn('familia',newValue, true));
+							storeAsegurados.removeFilter('filtroFam');
+	                		storeAsegurados.filter(Ext.create('Ext.util.Filter', {property: 'familia', anyMatch: true, value: newValue, root: 'data', id:'filtroFam'}));
+						}catch(e){
+							error('Error al filtrar por familia',e);
+						}
+                	}
+                }
+            },'-',{
+                xtype : 'textfield',
+                name : 'filtrarAseg',
+                fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Asegurado:</span>',
+                labelWidth : 100,
+                width: 280,
+                maxLength : 50,
+                listeners:{
+                	change: function(elem,newValue,oldValue){
+                		newValue = Ext.util.Format.uppercase(newValue);
+                		
+	            		//Validacion de valor anterior ya que la pantalla hace lowercase en automatico y manda doble change
+						if( newValue == Ext.util.Format.uppercase(oldValue)){
+							return false;
+						}
+						
+						try{
+//	                		storeAsegurados.clearFilter();
+//	                		storeAsegurados.filter('nombre',newValue);
+//	                		storeAsegurados.filter(storeAsegurados.createFilterFn('nombre',newValue, true));
+	                		storeAsegurados.removeFilter('filtroAseg');
+	                		storeAsegurados.filter(Ext.create('Ext.util.Filter', {property: 'nombre', anyMatch: true, value: newValue, root: 'data', id:'filtroAseg'}));
+						}catch(e){
+							error('Error al filtrar por asegurado',e);
+						}
+                	}
+                }
+            }]
+        ,features: [{
+            groupHeaderTpl: '{name}',
+            ftype:          'grouping',
+            startCollapsed: false
+        }]
     });
     
     
@@ -862,7 +941,7 @@ Ext.onReady(function() {
     
    
     var tabDatosGeneralesPoliza = Ext.create('Ext.tab.Panel', {
-        width: 830,
+        width: 1030,
         items: [{
             title : 'DATOS DE LA POLIZA',
             border:false,
@@ -887,6 +966,7 @@ Ext.onReady(function() {
                 {
                     xtype  : 'panel',
                     name   : 'pnlDatosTatrisit',
+                    titleAlign: 'center',
                     height : 900,
                     loader: {
                         url: _URL_LOADER_VER_TATRISIT,

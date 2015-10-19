@@ -51,6 +51,7 @@ public class PolizaDTO implements Serializable{
 	private String cdunieco;
 	private String dsunieco;
 	private String nmpolant;
+	private String tipopol;
 	
 	/**
 	 * TODO: Datos Temporales, quitar cuando las caratulas de autos ya tengan la informacion completa
@@ -532,6 +533,16 @@ public class PolizaDTO implements Serializable{
 
 	public void setGestoria(String gestoria) {
 		this.gestoria = gestoria;
+	}
+
+
+	public String getTipopol() {
+		return tipopol;
+	}
+
+
+	public void setTipopol(String tipopol) {
+		this.tipopol = tipopol;
 	}
 	
 	
