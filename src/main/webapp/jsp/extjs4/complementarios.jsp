@@ -2010,31 +2010,33 @@ function _datComTurnarSuscripcion()
                             	afterrender:function(tab)
                                 {
                                     debug('afterrender tabPanelAsegurados');
-                                    Ext.Ajax.request({
-                              			url     : _URL_ObtieneValNumeroSerie
-                              			,params :
-                              			{
-                              				'smap1.numSerie'  : _fieldByName('parametros.pv_otvalor03').getValue()
-                              				,'smap1.feini'   : _fieldByName('panel2.feefec').getValue()
-                              			}
-                              			,success : function(response)
-                              			{
-                              				var json=Ext.decode(response.responseText);
-                              				if(json.exito!=true)
-                              				{
-                              					if(sesionDsrol!='SUSCRIAUTO'){
-                              						mensajeError(json.respuesta);
-                              						 _fieldById('panDatComBotonRetarificar').setDisabled(true);//Deshabilita el boton
-                              					}else{
-                              						mensajeWarning(json.respuesta);
-                              						_fieldById('panDatComBotonRetarificar').setDisabled(false);
-                              					}
-                              				}else{
-                              					_fieldById('panDatComBotonRetarificar').setDisabled(false);
-                              				}
-                              			}
-                              			,failure : errorComunicacion
-                              		});
+                                    if(inputCdtipsit=='AF'){
+                                    	Ext.Ajax.request({
+                                  			url     : _URL_ObtieneValNumeroSerie
+                                  			,params :
+                                  			{
+                                  				'smap1.numSerie'  : _fieldByName('parametros.pv_otvalor03').getValue()
+                                  				,'smap1.feini'   : _fieldByName('panel2.feefec').getValue()
+                                  			}
+                                  			,success : function(response)
+                                  			{
+                                  				var json=Ext.decode(response.responseText);
+                                  				if(json.exito!=true)
+                                  				{
+                                  					if(sesionDsrol!='SUSCRIAUTO'){
+                                  						mensajeError(json.respuesta);
+                                  						 _fieldById('panDatComBotonRetarificar').setDisabled(true);//Deshabilita el boton
+                                  					}else{
+                                  						mensajeWarning(json.respuesta);
+                                  						_fieldById('panDatComBotonRetarificar').setDisabled(false);
+                                  					}
+                                  				}else{
+                                  					_fieldById('panDatComBotonRetarificar').setDisabled(false);
+                                  				}
+                                  			}
+                                  			,failure : errorComunicacion
+                                  		});
+                                    }
                                 }
                             }
 		                })
