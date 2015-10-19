@@ -121,6 +121,8 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
         	consulta.setReduceGS(rs.getString("reducegs"));
         	consulta.setGestoria(rs.getString("gestoria"));
         	consulta.setCobvida (rs.getString("cobvida"));
+
+        	consulta.setTipopol(rs.getString("TIPOPOLIZA"));
         	
             return consulta;
         }
@@ -446,6 +448,10 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     		consulta.setSexo(rs.getString("Sexo"));
     		consulta.setStatus(rs.getString("status"));
     		consulta.setParentesco(rs.getString("parentesco"));
+    		consulta.setGrupo(rs.getString("desgrupo"));
+    		consulta.setCdgrupo(rs.getString("cvegrupo"));
+    		consulta.setFamilia(rs.getString("desfamilia"));
+    		consulta.setCdfamilia(rs.getString("cvefamilia"));
     		return consulta;
     	}
     }

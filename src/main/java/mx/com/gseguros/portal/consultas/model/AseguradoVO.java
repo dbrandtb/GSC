@@ -28,6 +28,10 @@ public class AseguradoVO implements Serializable{
 	private String fenacimi;
 	private String status;
 	private String parentesco;
+	private String grupo;
+	private String cdgrupo;
+	private String familia;
+	private String cdfamilia;
 	
 	//TODO: Agregar atributos para el Afiliado en SISA o crear un AfiliadoVO con ellos
 	/*
@@ -40,6 +44,38 @@ public class AseguradoVO implements Serializable{
 	
 
 		
+	public String getGrupo() {
+		return grupo;
+	}
+
+	public void setGrupo(String grupo) {
+		this.grupo = grupo;
+	}
+
+	public String getFamilia() {
+		return familia;
+	}
+
+	public void setFamilia(String familia) {
+		this.familia = familia;
+	}
+
+	public String getCdgrupo() {
+		return cdgrupo;
+	}
+
+	public void setCdgrupo(String cdgrupo) {
+		this.cdgrupo = cdgrupo;
+	}
+
+	public String getCdfamilia() {
+		return cdfamilia;
+	}
+
+	public void setCdfamilia(String cdfamilia) {
+		this.cdfamilia = cdfamilia;
+	}
+
 	public String getSexo() {
 		return sexo;
 	}
