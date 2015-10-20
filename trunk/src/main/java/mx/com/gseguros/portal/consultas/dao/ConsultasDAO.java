@@ -380,4 +380,35 @@ public interface ConsultasDAO
 			)throws Exception;
 	
 	public List<Map<String,String>> recuperarComboUsuarios(String cadena) throws Exception;
+	
+	public List<Map<String,String>> recuperarConfigImpresionSucursales(String cdusuari, String cdunieco, String cdtipram) throws Exception;
+	
+	public List<Map<String,String>> recuperarConfigImpresionAgentes(String cdusuari, String cdunieco, String cdtipram) throws Exception;
+	
+	public void movPermisoImpresionSucursal(
+			String cdusuari
+			,String cdunieco
+			,String cdtipram
+			,String cduniecoPer
+			,String swaplica
+			,String accion
+			)throws Exception;
+	
+	public void movPermisoImpresionAgente(
+			String cdusuari
+			,String cdunieco
+			,String cdtipram
+			,String cduniecoPer
+			,String swaplica
+			,String accion
+			)throws Exception;
+	
+	public List<Map<String,String>> recuperarRecibosLote(
+			String cdtipram
+			,String cduniecos
+			,Date feinicio
+			,Date fefin
+			,String cdusuari
+			,String cdunieco
+			)throws Exception;
 }

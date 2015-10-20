@@ -5,7 +5,8 @@
 <head>
 <script>
 ////// urls //////
-var _p51_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar" />';
+var _p51_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"           />';
+var _p51_urlMov          = '<s:url namespace="/consultas"    action="movPermisoImpresion" />';
 ////// urls //////
 
 ////// variables //////
@@ -16,13 +17,31 @@ var _p51_storeIncSuc
     ,_p51_storeIncAge
     ,_p51_storeExcSuc
     ,_p51_storeExcAge;
+
+var _p51_venAgregarPermiso;
+
 ////// variables //////
 
 ////// overrides //////
 ////// overrides //////
 
 ////// componentes dinamicos /////
-var _p51_formBusqItems = [<s:property value="items.itemsFormBusq"     escapeHtml="false" />];
+var _p51_formBusqItems          = [<s:property value="items.itemsFormBusq"    escapeHtml="false" />];
+var _p51_venAgregarPermisoItems = [<s:property value="items.itemsAgregarPerm" escapeHtml="false" />];
+
+var _p51_venAgregarPermisoItemsCustom =
+[
+    Ext.create('Ext.form.field.Display',
+    {
+        fieldLabel : 'TIPO'
+        ,value     : 'error'
+        ,name      : 'dstipo'
+    })
+];
+for(var i in _p51_venAgregarPermisoItems)
+{
+    _p51_venAgregarPermisoItemsCustom.push(_p51_venAgregarPermisoItems[i]);
+}
 ////// componentes dinamicos //////
 
 Ext.onReady(function()
@@ -71,6 +90,61 @@ Ext.onReady(function()
     ////// stores //////
     
     ////// componentes //////
+    _p51_venAgregarPermiso = Ext.create('Ext.window.Window',
+    {
+        title        : 'AGREGAR PERMISO'
+        ,modal       : true
+        ,closeAction : 'hide'
+        ,items       :
+        [
+            Ext.create('Ext.form.Panel',
+            {
+                border       : 0
+                ,defaults    : { style : 'margin:5px;' }
+                ,items       : _p51_venAgregarPermisoItemsCustom
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text     : 'Agregar'
+                        ,icon    : '${icons}disk.png'
+                        ,handler : function(me)
+                        {
+                            var form = me.up('form');
+                            
+                            var ck = 'Validando datos';
+                            try
+                            {
+                                if(!form.isValid())
+                                {
+                                    return datosIncompletos();
+                                }
+                                
+                                var values = form.getValues();
+                                debug('values:',values);
+                                
+                                _p51_mov(
+                                    form
+                                    ,values.tipo
+                                    ,values.cdusuari
+                                    ,values.cdunieco
+                                    ,values.cdtipram
+                                    ,values.clave
+                                    ,values.funcion
+                                    ,'I'
+                                    ,function(){ _p51_venAgregarPermiso.close(); }
+                                    );
+                            }
+                            catch(e)
+                            {
+                                manejaException(e,ck);
+                            }
+                        }
+                    }
+                ]
+            })
+        ]
+    });
     ////// componentes //////
     
     ////// contenido //////
@@ -109,7 +183,7 @@ Ext.onReady(function()
                         ,icon    : '${icons}zoom.png'
                         ,handler : function(me)
                         {
-                            var ck = 'Buscando recibos';
+                            var ck = 'Buscando permisos';
                             try
                             {
                                 var form = me.up('form');
@@ -118,6 +192,91 @@ Ext.onReady(function()
                                 {
                                     throw 'Favor de capturar todos los campos requeridos';
                                 }
+                                
+                                _setLoading(true,form);
+                                Ext.Ajax.request(
+                                {
+                                    url     : _p51_urlRecuperacion
+                                    ,params :
+                                    {
+                                        'params.consulta'  : 'RECUPERAR_PERMISOS_IMPRESION'
+                                        ,'params.cdusuari' : form.down('[name=cdusuari]').getValue()
+                                        ,'params.cdunieco' : form.down('[name=cdunieco]').getValue()
+                                        ,'params.cdtipram' : form.down('[name=cdtipram]').getValue()
+                                    }
+                                    ,success : function(response)
+                                    {
+                                        _setLoading(false,form);
+                                        var ck = 'Decodificando permisos';
+                                        try
+                                        {
+                                            var json = Ext.decode(response.responseText);
+                                            debug('### permisos:',json);
+                                            if(json.success==true)
+                                            {
+                                                if(json.list.length==0)
+                                                {
+                                                    mensajeWarning('Sin resultados');
+                                                }
+                                                
+                                                var bot = Ext.ComponentQuery.query('[xtype=button][text=Agregar]',_fieldById('_p51_panelpri'));
+                                                debug('bot:',bot);
+                                                for(var i in bot)
+                                                {
+                                                    bot[i].enable();
+                                                    bot[i].cdusuari = json.params.cdusuari;
+                                                    bot[i].cdunieco = json.params.cdunieco;
+                                                    bot[i].cdtipram = json.params.cdtipram;
+                                                }
+                                                debug('bot:',bot);
+                                                
+                                                _p51_storeIncSuc.removeAll();
+                                                _p51_storeIncAge.removeAll();
+                                                _p51_storeExcSuc.removeAll();
+                                                _p51_storeExcAge.removeAll();
+                                                for(var i in json.list)
+                                                {
+                                                    var raw = json.list[i];
+                                                    if(raw.tipo=='S')
+                                                    {
+                                                        if(raw.funcion=='S')
+                                                        {
+                                                            _p51_storeIncSuc.add(raw);
+                                                        }
+                                                        else
+                                                        {
+                                                            _p51_storeExcSuc.add(raw);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if(raw.funcion=='S')
+                                                        {
+                                                            _p51_storeIncAge.add(raw);
+                                                        }
+                                                        else
+                                                        {
+                                                            _p51_storeExcAge.add(raw);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                mensajeError(json.message);
+                                            }
+                                        }
+                                        catch(e)
+                                        {
+                                            manejaException(e,ck);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        _setLoading(false,form);
+                                        errorComunicacion(null,'Error al recuperar permisos');
+                                    }
+                                });
                             }
                             catch(e)
                             {
@@ -143,10 +302,10 @@ Ext.onReady(function()
             ,Ext.create('Ext.grid.Panel',
             {
                 itemId   : '_p51_gridIncSuc'
-                ,title   : 'SOLO IMPRIMIR SUCURSALES:'
+                ,title   : 'LIMITAR POR SUCURSALES:'
                 ,store   : _p51_storeIncSuc
                 ,width   : 350
-                ,height  : 200
+                ,height  : 230
                 ,columns :
                 [
                     {
@@ -154,21 +313,85 @@ Ext.onReady(function()
                         ,dataIndex : 'cduniecoPer'
                         ,flex      : 1
                     }
+                    ,{
+                        xtype    : 'actioncolumn'
+                        ,icon    : '${icons}delete.png'
+                        ,width   : 30
+                        ,handler : function(grid,row,col,item,e,record)
+                        {
+                            var store = grid.getStore();
+                            debug('store:',store,'record:',record);
+                            _p51_mov(
+                                grid
+                                ,record.get('tipo')
+                                ,record.get('cdusuari')
+                                ,record.get('cdunieco')
+                                ,record.get('cdtipram')
+                                ,record.get('tipo')=='S' ? record.get('cduniecoPer') : record.get('cdagentePer')
+                                ,record.get('funcion')
+                                ,'D'
+                                );
+                        }
+                    }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text      : 'Agregar'
+                        ,icon     : '${icons}add.png'
+                        ,disabled : true
+                        ,tipo     : 'S'
+                        ,funcion  : 'S'
+                        ,handler  : _p51_agregarClic
+                    }
                 ]
             })
             ,Ext.create('Ext.grid.Panel',
             {
                 itemId   : '_p51_gridIncAge'
-                ,title   : 'SOLO IMPRIMIR AGENTES:'
+                ,title   : 'LIMITAR POR AGENTES:'
                 ,store   : _p51_storeIncAge
                 ,width   : 350
-                ,height  : 200
+                ,height  : 230
                 ,columns :
                 [
                     {
                         text       : 'AGENTE'
                         ,dataIndex : 'cdagentePer'
                         ,flex      : 1
+                    }
+                    ,{
+                        xtype    : 'actioncolumn'
+                        ,icon    : '${icons}delete.png'
+                        ,width   : 30
+                        ,handler : function(grid,row,col,item,e,record)
+                        {
+                            var store = grid.getStore();
+                            debug('store:',store,'record:',record);
+                            _p51_mov(
+                                grid
+                                ,record.get('tipo')
+                                ,record.get('cdusuari')
+                                ,record.get('cdunieco')
+                                ,record.get('cdtipram')
+                                ,record.get('tipo')=='S' ? record.get('cduniecoPer') : record.get('cdagentePer')
+                                ,record.get('funcion')
+                                ,'D'
+                                );
+                        }
+                    }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text      : 'Agregar'
+                        ,icon     : '${icons}add.png'
+                        ,disabled : true
+                        ,tipo     : 'A'
+                        ,funcion  : 'S'
+                        ,handler  : _p51_agregarClic
                     }
                 ]
             })
@@ -178,13 +401,45 @@ Ext.onReady(function()
                 ,title   : 'DESCARTAR SUCURSALES:'
                 ,store   : _p51_storeExcSuc
                 ,width   : 350
-                ,height  : 200
+                ,height  : 230
                 ,columns :
                 [
                     {
                         text       : 'SUCURSAL'
                         ,dataIndex : 'cduniecoPer'
                         ,flex      : 1
+                    }
+                    ,{
+                        xtype    : 'actioncolumn'
+                        ,icon    : '${icons}delete.png'
+                        ,width   : 30
+                        ,handler : function(grid,row,col,item,e,record)
+                        {
+                            var store = grid.getStore();
+                            debug('store:',store,'record:',record);
+                            _p51_mov(
+                                grid
+                                ,record.get('tipo')
+                                ,record.get('cdusuari')
+                                ,record.get('cdunieco')
+                                ,record.get('cdtipram')
+                                ,record.get('tipo')=='S' ? record.get('cduniecoPer') : record.get('cdagentePer')
+                                ,record.get('funcion')
+                                ,'D'
+                                );
+                        }
+                    }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text      : 'Agregar'
+                        ,icon     : '${icons}add.png'
+                        ,disabled : true
+                        ,tipo     : 'S'
+                        ,funcion  : 'N'
+                        ,handler  : _p51_agregarClic
                     }
                 ]
             })
@@ -194,13 +449,45 @@ Ext.onReady(function()
                 ,title   : 'DESCARTAR AGENTES:'
                 ,store   : _p51_storeExcAge
                 ,width   : 350
-                ,height  : 200
+                ,height  : 230
                 ,columns :
                 [
                     {
                         text       : 'AGENTE'
                         ,dataIndex : 'cdagentePer'
                         ,flex      : 1
+                    }
+                    ,{
+                        xtype    : 'actioncolumn'
+                        ,icon    : '${icons}delete.png'
+                        ,width   : 30
+                        ,handler : function(grid,row,col,item,e,record)
+                        {
+                            var store = grid.getStore();
+                            debug('store:',store,'record:',record);
+                            _p51_mov(
+                                grid
+                                ,record.get('tipo')
+                                ,record.get('cdusuari')
+                                ,record.get('cdunieco')
+                                ,record.get('cdtipram')
+                                ,record.get('tipo')=='S' ? record.get('cduniecoPer') : record.get('cdagentePer')
+                                ,record.get('funcion')
+                                ,'D'
+                                );
+                        }
+                    }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text      : 'Agregar'
+                        ,icon     : '${icons}add.png'
+                        ,disabled : true
+                        ,tipo     : 'A'
+                        ,funcion  : 'N'
+                        ,handler  : _p51_agregarClic
                     }
                 ]
             })
@@ -209,13 +496,13 @@ Ext.onReady(function()
     ////// contenido //////
     
     ////// custom //////
-    _fieldByName('cdusuari').on(
+    _fieldByName('cdusuari',_fieldById('_p51_formBusq')).on(
     {
         select : function(me,selected)
         {
-            var records = selected[0];
-            debug('rec.',record);
-            _fieldByName('cdunieco').setValue(rec.get('aux'));
+            var record = selected[0];
+            debug('record:',record);
+            _fieldByName('cdunieco',_fieldById('_p51_formBusq')).setValue(record.get('aux'));
         }
     });
     ////// custom //////
@@ -225,6 +512,138 @@ Ext.onReady(function()
 });
 
 ////// funciones //////
+function _p51_mov(cmp,tipo,cdusuari,cdunieco,cdtipram,clave,funcion,accion,callback)
+{
+    _setLoading(true,cmp);
+    Ext.Ajax.request(
+    {
+        url     : _p51_urlMov
+        ,params :
+        {
+            'params.tipo'      : tipo
+            ,'params.cdusuari' : cdusuari
+            ,'params.cdunieco' : cdunieco
+            ,'params.cdtipram' : cdtipram
+            ,'params.clave'    : clave
+            ,'params.funcion'  : funcion
+            ,'params.accion'   : accion
+        }
+        ,success : function(response)
+        {
+            _setLoading(false,cmp);
+            var ck = 'Decodificando respuesta al movimiento de permiso';
+            try
+            {
+                var json = Ext.decode(response.responseText);
+                debug('### mov:',json);
+                if(json.success==true)
+                {
+                    var bot = Ext.ComponentQuery.query('[xtype=button][text=Buscar]',_fieldById('_p51_panelpri'))[0];
+                    bot.handler(bot);
+                    
+                    if(!Ext.isEmpty(callback))
+                    {
+                        callback();
+                    }
+                }
+                else
+                {
+                    mensajeError(json.message);
+                }
+            }
+            catch(e)
+            {
+                manejaException(e);
+            }
+        }
+        ,failure : function()
+        {
+            _setLoading(false,cmp);
+            errorComunicacion(null,'Error realizando movimiento de permiso');
+        }
+    });
+}
+
+function _p51_agregarClic(bot)
+{
+    debug('_p51_agregarClic bot:',bot,'.');
+    var ck = 'Revisando datos antes de agregar permiso';
+    try
+    {
+        if(Ext.isEmpty(bot.cdusuari)
+            ||Ext.isEmpty(bot.cdunieco)
+            ||Ext.isEmpty(bot.cdtipram)
+        )
+        {
+            throw 'Favor de buscar primero el usuario y ramo';
+        }
+        
+        var tipo = 'error';
+        if(bot.tipo=='S')
+        {
+            if(bot.funcion=='S')
+            {
+                tipo = 'LIMITAR POR SUCURSAL';
+            }
+            else
+            {
+                tipo = 'DESCARTAR SUCURSAL';
+            }
+        }
+        else
+        {
+            if(bot.funcion=='S')
+            {
+                tipo = 'LIMITAR POR AGENTE';
+            }
+            else
+            {
+                tipo = 'DESCARTAR AGENTE';
+            }
+        }
+
+        _p51_venAgregarPermiso.down('form').getForm().reset();
+
+        _p51_venAgregarPermiso.down('[name=dstipo]').setValue(tipo);
+        
+        _p51_venAgregarPermiso.down('[name=tipo]').setValue(bot.tipo);
+            
+        _p51_venAgregarPermiso.down('[name=cdusuari]').setValue(bot.cdusuari);
+        
+        _p51_venAgregarPermiso.down('[name=cdunieco]').setValue(bot.cdunieco);
+        
+        _p51_venAgregarPermiso.down('[name=cdtipram]').setValue(bot.cdtipram);
+        
+        _p51_venAgregarPermiso.down('[name=funcion]').setValue(bot.funcion);
+        
+        if(bot.tipo=='S')
+        {
+            var cdunieco = _p51_venAgregarPermiso.down('[fieldLabel=SUCURSAL PERMISO]');
+            cdunieco.enable();
+            cdunieco.show();
+            
+            var cdagente = _p51_venAgregarPermiso.down('[fieldLabel=AGENTE PERMISO]');
+            cdagente.disable();
+            cdagente.hide();
+        }
+        else
+        {
+            var cdunieco = _p51_venAgregarPermiso.down('[fieldLabel=SUCURSAL PERMISO]');
+            cdunieco.disable();
+            cdunieco.hide();
+            
+            var cdagente = _p51_venAgregarPermiso.down('[fieldLabel=AGENTE PERMISO]');
+            cdagente.enable();
+            cdagente.show();
+        }
+        
+        centrarVentanaInterna(_p51_venAgregarPermiso.show());
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+}
 ////// funciones //////
 </script>
 </head>
