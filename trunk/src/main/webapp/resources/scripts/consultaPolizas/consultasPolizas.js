@@ -1,6 +1,7 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
 
 var gridDatosAsegurado;
+var windowCoberturas;
 
 Ext.onReady(function() {
 
@@ -65,17 +66,6 @@ Ext.onReady(function() {
                                 
                                 //Mostrar seccion de datos generales:
                                 tabDatosGeneralesPoliza.show();
-                                
-                                //Datos de Copagos de poliza
-                                storeCopagosPoliza.load({
-                                    params: panelBusqueda.down('form').getForm().getValues(),
-                                    callback: function(records, operation, success){
-                                        if(!success){
-                                            showMessage('Error', 'Error al obtener los copagos de la p\u00F3liza', 
-                                                Ext.Msg.OK, Ext.Msg.ERROR)
-                                        }              
-                                    }
-                                });
                                 
                                 //Datos para asegurados
                                 storeAsegurados.load({
@@ -630,6 +620,17 @@ Ext.onReady(function() {
         }
     ]);
     
+    windowCoberturas = Ext.create('Ext.window.Window', {
+                        title       : 'COBERTURAS',
+                        buttonAlign : 'center',
+                        autoScroll  : true,
+                        modal       : true,
+                        closeAction : 'hide',
+                        width       : 600,
+                        height      : 500,
+                        items: [gridCopagosPoliza]
+                     });
+    
     
     /**INFORMACION DE LA SECCION DE ASEGURADOS**/
     //-------------------------------------------------------------------------------------------------------------
@@ -692,6 +693,39 @@ Ext.onReady(function() {
             {text:'Familia',dataIndex:'familia', itemId: 'familia',width:100, align:'left', hidden: true},
             {text:'Fecha Nac.',dataIndex:'fenacimi',width:100, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
             ,{
+                xtype        : 'actioncolumn',
+                icon         : _CONTEXT+'/resources/fam3icons/icons/page.png',
+                tooltip      : 'Ver Coberturas',
+                width        : 20,
+                menuDisabled : true,
+                sortable     : false,
+                handler      : function(grid,rowIndex)
+                {
+                    var record = grid.getStore().getAt(rowIndex);
+                    var values = panelBusqueda.down('form').getForm().getValues();
+                    
+                    debug('record nmsituac:',record.get('nmsituac'));
+                    values['params.nmsituac']=record.get('nmsituac');
+                    
+                    debug('form values:',values);
+                    
+//                    panelBusqueda.down('form').getForm().getValues()
+                    
+                    //Datos de Copagos de poliza
+                    storeCopagosPoliza.load({
+                        params: values,
+                        callback: function(records, operation, success){
+                            if(!success){
+                                showMessage('Error', 'Error al obtener los copagos de la p\u00F3liza', 
+                                    Ext.Msg.OK, Ext.Msg.ERROR)
+                            }              
+                        }
+                    });
+                    
+                    windowCoberturas.setTitle('COBERTURAS DE ' + record.get('nombre'));
+                    windowCoberturas.show();
+                }
+            },{
                 xtype        : 'actioncolumn',
                 icon         : _CONTEXT+'/resources/fam3icons/icons/lock.png',
                 tooltip      : 'Ver endosos',
@@ -955,7 +989,7 @@ Ext.onReady(function() {
                 items: [panelDatosPoliza]
                    
             }]
-        }, {
+        },/* {
             //title: 'DATOS TARIFICACION',
             title: 'COBERTURAS',
             //itemId: 'tabDatosTarificacion',
@@ -964,7 +998,7 @@ Ext.onReady(function() {
                 //items: [gridDatosTarificacion]
                 items: [gridCopagosPoliza]
             }]
-        },{
+        },*/{
             title: 'ASEGURADOS',
             itemId: 'tabDatosAsegurados',
             items:[

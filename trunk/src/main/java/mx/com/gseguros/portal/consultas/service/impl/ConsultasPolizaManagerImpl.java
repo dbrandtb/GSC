@@ -171,13 +171,13 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 
 	
 	@Override
-	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza) throws Exception {
+	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza, String nmsituac) throws Exception {
 		
 		List<CopagoVO> copagos;
 		// Si iCodPoliza viene vacio, es información de ICE:
 //		if(StringUtils.isBlank(poliza.getIcodpoliza())){
 			
-			copagos = consultasPolizaDAOICE.obtieneCopagosPoliza(poliza);
+			copagos = consultasPolizaDAOICE.obtieneCopagosPoliza(poliza,nmsituac);
 			
 			// Agregamos un campo que agrupe los resultados:
 			String agrupador = null;
