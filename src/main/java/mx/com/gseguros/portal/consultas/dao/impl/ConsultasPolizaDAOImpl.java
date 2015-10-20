@@ -357,7 +357,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza) throws Exception {
+	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza, String nmsituac) throws Exception {
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdunieco_i", poliza.getCdunieco());
@@ -365,6 +365,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 		params.put("pv_estado_i", poliza.getEstado());
 		params.put("pv_nmpoliza_i", poliza.getNmpoliza());
 		params.put("pv_nmsuplem_i", poliza.getNmsuplem());
+		params.put("pv_nmsituac_i", nmsituac);
 		Map<String, Object> mapResult = ejecutaSP(new ObtieneCopagosSP(getDataSource()), params);
 		return (List<CopagoVO>) mapResult.get("pv_registro_o");
 	}
@@ -378,6 +379,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CopagosMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));

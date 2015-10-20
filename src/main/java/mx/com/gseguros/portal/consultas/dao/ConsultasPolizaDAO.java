@@ -132,7 +132,7 @@ public interface ConsultasPolizaDAO {
      * @param poliza
      * @return
      */
-    public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza) throws Exception;
+    public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza, String nmsituac) throws Exception;
     
     /**
      * Obtiene las coberturas

@@ -639,6 +639,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	 */
 	public String consultaCopagosPoliza() {
 		logger.debug(" **** Entrando a consultaCopagosPoliza ****");
+		logger.debug(" **** parametros: "+params);
 		try {
 			PolizaVO poliza = new PolizaVO();
 			poliza.setCdunieco(params.get("cdunieco"));
@@ -647,7 +648,10 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			poliza.setNmpoliza(params.get("nmpoliza"));
 			poliza.setNmsuplem(params.get("suplemento"));
 			poliza.setIcodpoliza(params.get("icodpoliza"));
-			datosCopagosPoliza = consultasPolizaManager.obtieneCopagosPoliza(poliza);
+
+			String nmsituac = params.get("nmsituac");
+			
+			datosCopagosPoliza = consultasPolizaManager.obtieneCopagosPoliza(poliza, nmsituac);
 			logger.debug("Resultado de consultaCopagosPoliza:{}", datosCopagosPoliza);
 		} catch (Exception e) {
 			logger.error("Error al obtener los copagos de la poliza ", e);

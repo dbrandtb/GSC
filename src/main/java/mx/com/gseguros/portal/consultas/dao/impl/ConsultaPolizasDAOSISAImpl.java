@@ -319,7 +319,7 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 
 	// Copagos de la p�liza.
 	@Override
-	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza)
+	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza, String nmsituac)
 			throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmpoliza_i", poliza.getIcodpoliza());
