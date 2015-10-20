@@ -623,4 +623,11 @@ public interface EndososDAO
 			,String nsuplogi
 			,Date fecha
 			)throws Exception;
+	
+	public List<Map<String,String>> obtieneRecibosDespagados(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }

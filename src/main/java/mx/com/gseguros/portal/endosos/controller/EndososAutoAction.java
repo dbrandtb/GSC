@@ -2235,6 +2235,102 @@ public class EndososAutoAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
+	
+	public String obtieneRecibosDespagados()
+	{
+		logger.debug(Utils.log(
+				 "\n##########################################"
+				,"\n###### obtieneRecibosDespagados        ######"
+				,"\n###### smap1="  , smap1
+				));
+		
+		try
+		{
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+			
+			slist1 = endososAutoManager.obtieneRecibosDespagados(cdunieco, cdramo,estado, nmpoliza);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta=Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### obtieneRecibosPagados ######"
+				,"\n##########################################"
+				));
+		return SUCCESS;
+	}
+	
+	public String guardarEndosoRehabilitacionDespago() {
+		
+		logger.debug(Utils.log(
+				"\n##########################################################"
+				,"\n#########################################################"
+				,"\n######  guardarEndosoRehabilitacionDespago         ######"
+				,"\n###### smap1="  , smap1
+				,"\n######                               			   ######"));
+		try
+		{
+			logger.debug("Validando datos de entrada");
+			Utils.validate(smap1, "No se recibieron datos");
+			
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+//			String status   = smap1.get("STATUS");
+//			String ntramite = smap1.get("NTRAMITE");
+			String nmsuplemOriginal = smap1.get("NMSUPLEM");
+			String nmrecibo = smap1.get("NMRECIBO");
+			String nmimpres = smap1.get("NMIMPRES");
+			
+			Utils.validate(cdunieco , "No se recibio la sucursal");
+			Utils.validate(cdramo   , "No se recibio el producto");
+			Utils.validate(estado   , "No se recibio el estado de la poliza");
+			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
+//			Utils.validate(status   , "No se recibio el status");
+			
+			
+			Utils.validate(session                , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+			
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
+			
+			String cdtipsup      = TipoEndoso.REHABILITACION_DESPAGO.getCdTipSup().toString();
+			String fechaEndoso   = smap1.get("FEINIVAL");
+//			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
+			
+			endososAutoManager.guardarEndosoRehabilitacionDespago(
+					cdunieco,
+					cdramo,
+					estado,
+					nmpoliza,
+					nmsuplemOriginal,
+					nmrecibo,
+					nmimpres,
+					cdtipsup,
+					usuarioSesion
+					);
+			respuesta = "Endoso generado correctamente";
+			success   = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				"\n###### guardarEndosoRehabilitacionDespago ######"
+				,"\n###############################################"
+				));
+		return SUCCESS;
+	}
 
 	/*
 	 * Getters y setters

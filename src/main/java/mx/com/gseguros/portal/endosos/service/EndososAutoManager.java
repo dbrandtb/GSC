@@ -431,4 +431,23 @@ public interface EndososAutoManager
 			,UserVO usuarioSesion
 			,String tipoGrupoInciso
 			)throws Exception;
+	
+	public List<Map<String,String>> obtieneRecibosDespagados(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
+	
+	public void guardarEndosoRehabilitacionDespago(
+			 String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmrecibo
+			,String nmimpres
+			,String cdtipsup
+			,UserVO usuarioSesion
+			)throws Exception;
 }

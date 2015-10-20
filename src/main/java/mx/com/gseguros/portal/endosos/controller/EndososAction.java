@@ -11074,6 +11074,15 @@ public class EndososAction extends PrincipalCoreAction
 						,smap1.get("ESTADO")
 						,smap1.get("NMPOLIZA")));
 			}
+			else if(smap1.get("cdtipsup").equals(TipoEndoso.REHABILITACION_DESPAGO.getCdTipSup().toString()))
+			{
+				//necesitamos CDTIPSIT en el smap1
+				smap1.put("CDTIPSIT" , endososManager.recuperarCdtipsitInciso1(
+						smap1.get("CDUNIECO")
+						,smap1.get("CDRAMO")
+						,smap1.get("ESTADO")
+						,smap1.get("NMPOLIZA")));
+			}
 			
 			if(validaLista)
 			{
