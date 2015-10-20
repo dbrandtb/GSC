@@ -360,6 +360,7 @@
             </interceptor-ref>
             <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
             <result name="success">/jsp-script/proceso/endosos/endosoDespago.jsp</result>
+            <!--<result name="success">/jsp-script/proceso/endosos/endosoRehabilitacionDespago.jsp</result>-->
         </action>
         
         <action name="guardarEndosoDomicilioAutoFull" class="EndososAction" method="guardarEndosoDomicilioAutoFull">
@@ -829,6 +830,27 @@
         </action>
         
         <action name="cargaAsegurados" class="EndososAction" method="cargaAsegurados">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="includes/endosoRehabilitacionDespago" class="endososAutoAction" method="endosoDespago">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoRehabilitacionDespago.jsp</result>
+        </action>
+        
+        <action name="obtieneRecibosDespagados" class="endososAutoAction" method="obtieneRecibosDespagados">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="guardarEndosoRehabilitacionDespago" class="endososAutoAction" method="guardarEndosoRehabilitacionDespago">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
             <result name="success" type="json" />
         </action>
         
