@@ -76,14 +76,14 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 	
 	
 	/**
-	 * Imprime una imagen
+	 * Imprime un documento
 	 * @return
 	 * @throws Exception
 	 */
-	@Action(value="imprimeImagen",
+	@Action(value="imprimeDocumento",
 			results={@Result(name="success", type="json")}
 	)
-	public String imprimeImagen() throws Exception {
+	public String imprimeDocumento() throws Exception {
 		
 		// Discover the printers that can print the format according to the instructions in the attribute set
 		PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
@@ -91,6 +91,8 @@ public class TestImpresionesAction extends PrincipalCoreAction {
         printService(services);
         
         int iPrinter = Integer.parseInt(params.get("iPrinter"));
+        
+        int mediaId = Integer.parseInt(params.get("mediaId"));
 		
 		// Input the file
 		FileInputStream textStream = null; 
@@ -131,6 +133,35 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 		aset.add(new Copies(numCopias)); 
 		aset.add(MediaSize.ISO.A4.getMediaSizeName());
 		aset.add(Sides.DUPLEX);
+		
+		////////////////////////////////////////
+        // we store all the tray in a hashmap
+        Map<Integer, Media> trayMap = new HashMap<Integer, Media>(10);
+
+        // we chose something compatible with the printable interface
+        DocFlavor flavor = DocFlavor.SERVICE_FORMATTED.PRINTABLE;
+        logger.debug("Service: {}", services[iPrinter]);
+        
+        // we retrieve all the supported attributes of type Media
+        // we can receive MediaTray, MediaSizeName, ...
+        Object o = services[iPrinter].getSupportedAttributeValues(Media.class, flavor, null);
+        if (o != null && o.getClass().isArray()) {
+            for (Media media : (Media[]) o) {
+                // we collect the MediaTray available
+                if (media instanceof MediaTray) {
+                    logger.debug("{} : {} - {}", media.getValue(), media, media.getClass().getName());
+                    trayMap.put(media.getValue(), media);
+                }
+            }
+        }
+
+        // Tray target id:
+        MediaTray selectedTray = (MediaTray) trayMap.get(Integer.valueOf(mediaId));
+        logger.debug("Selected tray : {}", selectedTray.toString());
+        
+        // we have to add the MediaTray selected as attribute
+        aset.add(selectedTray);
+		////////////////////////////////////////
 		
 		DocPrintJob job = services[iPrinter].createPrintJob(); 
 		try { 
