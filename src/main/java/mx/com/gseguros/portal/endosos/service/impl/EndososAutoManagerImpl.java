@@ -1566,6 +1566,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						,nmrecibo
 						,nmimpres
 						,usuarioSesion.getUser()
+						,cdtipsup
 						);
 			
 			String nmsuplemGen = (String) resParams.get("pv_nmsuplem_o");
@@ -5018,6 +5019,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						,nmrecibo
 						,nmimpres
 						,usuarioSesion.getUser()
+						,cdtipsup
 						);
 			
 			String nmsuplemGen = (String) resParams.get("pv_nmsuplem_o");

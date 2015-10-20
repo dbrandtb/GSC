@@ -3459,6 +3459,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			,String nmrecibo
 			,String nmimpres
 			,String cdusuari
+			,String cdtipsup
 			)throws Exception
 			{
 		Map<String,Object>params = new LinkedHashMap<String,Object>();
@@ -3470,6 +3471,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("pv_nmrecibo_i", nmrecibo);
 		params.put("pv_nmimpres_i", nmimpres);
 		params.put("pv_cduser_i"  , cdusuari);
+		params.put("pv_cdtipsup_i"  , cdtipsup);
 		Utils.debugProcedure(logger, "P_CALC_RECIBOS_DESPAGOS", params);
 		Map<String,Object> resParams = ejecutaSP(new GuardaEndosoDespago(getDataSource()),params);
 		
@@ -3489,6 +3491,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_nmrecibo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmimpres_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cduser_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsup_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_ntramite_o"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_tipoflot_o"   , OracleTypes.VARCHAR));
