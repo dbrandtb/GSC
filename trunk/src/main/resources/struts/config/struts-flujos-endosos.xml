@@ -360,7 +360,6 @@
             </interceptor-ref>
             <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
             <result name="success">/jsp-script/proceso/endosos/endosoDespago.jsp</result>
-            <!--<result name="success">/jsp-script/proceso/endosos/endosoRehabilitacionDespago.jsp</result>-->
         </action>
         
         <action name="guardarEndosoDomicilioAutoFull" class="EndososAction" method="guardarEndosoDomicilioAutoFull">

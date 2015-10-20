@@ -383,6 +383,7 @@ public interface EndososDAO
 			,String nmrecibo
 			,String nmimpres
 			,String cdusuari
+			,String cdtipsup
 			)throws Exception;
 	
 	public List<Map<String,String>> obtenerRetroactividad(
