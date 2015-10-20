@@ -280,6 +280,65 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 		return result;
 	}
 	
+	@Action(value   = "movPermisoImpresion",
+			results = { @Result(name="success", type="json") }
+	)
+	public String movPermisoImpresion()
+	{
+		logger.debug(Utils.log(
+				 "\n#################################"
+				,"\n###### movPermisoImpresion ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String tipo     = params.get("tipo");
+			String cdusuari = params.get("cdusuari");
+			String cdunieco = params.get("cdunieco");
+			String cdtipram = params.get("cdtipram");
+			String clave    = params.get("clave");
+			String funcion  = params.get("funcion");
+			String accion   = params.get("accion");
+			
+			Utils.validate(
+					tipo      , "No se recibi\u00F3 el tipo"
+					,cdusuari , "No se recibi\u00F3 el usuario"
+					,cdunieco , "No se recibi\u00F3 la sucursal"
+					,cdtipram , "No se recibi\u00F3 el tipo de ramo"
+					,clave    , "No se recibi\u00F3 la clave"
+					,funcion  , "No se recibi\u00F3 el switch"
+					,accion   , "No se recibi\u00F3 la operaci\u00F3n"
+					);
+			
+			explotacionDocumentosManager.movPermisoImpresion(
+					tipo
+					,cdusuari
+					,cdunieco
+					,cdtipram
+					,clave
+					,funcion
+					,accion
+					);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### movPermisoImpresion ######"
+				,"\n#################################"
+				));
+		return SUCCESS;
+	}
+	
 	////////////////// Getters y setters ///////////////////
 	                                                      //
 	public Map<String, String> getParams() {              //

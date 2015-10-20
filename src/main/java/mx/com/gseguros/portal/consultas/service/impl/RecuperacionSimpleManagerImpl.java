@@ -664,6 +664,78 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				
 				lista = consultasDAO.recuperarImpresorasPorPapelYSucursal(cdunieco,papel,swactivo);
 			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_PERMISOS_IMPRESION))
+			{
+				paso = "Recuperando permisos por sucursal";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				String cdusuariPer = params.get("cdusuari");
+				String cdunieco    = params.get("cdunieco");
+				String cdtipram    = params.get("cdtipram");
+				
+				Utils.validate(
+						cdusuariPer , "No se recibi\u00F3 el usuario"
+						,cdunieco   , "No se recibi\u00F3 la sucursal"
+						,cdtipram   , "No se recibi\u00F3 el tipo de ramo"
+						);
+				
+				List<Map<String,String>> sucursales = consultasDAO.recuperarConfigImpresionSucursales(cdusuariPer,cdunieco,cdtipram);
+				
+				paso = "Recuperando permisos por agente";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				List<Map<String,String>> agentes = consultasDAO.recuperarConfigImpresionAgentes(cdusuariPer,cdunieco,cdtipram);
+				
+				paso = "Integrando permisos";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				List<Map<String,String>> resumen = new ArrayList<Map<String,String>>();
+				for(Map<String,String>sucursal:sucursales)
+				{
+					Map<String,String>nuevo = new HashMap<String,String>();
+					nuevo.put("tipo"        , "S");
+					nuevo.put("cdusuari"    , sucursal.get("COD_USUARIO"));
+					nuevo.put("cdunieco"    , sucursal.get("SUC_USUARIO"));
+					nuevo.put("cdtipram"    , sucursal.get("TIPO_RAMO"));
+					nuevo.put("cduniecoPer" , sucursal.get("SUC_PERMITIDA"));
+					nuevo.put("funcion"     , sucursal.get("SWAPLICA"));
+					resumen.add(nuevo);
+				}
+				
+				for(Map<String,String> agente:agentes)
+				{
+					Map<String,String>nuevo = new HashMap<String,String>();
+					nuevo.put("tipo"        , "A");
+					nuevo.put("cdusuari"    , agente.get("COD_USUARIO"));
+					nuevo.put("cdunieco"    , agente.get("SUC_USUARIO"));
+					nuevo.put("cdtipram"    , agente.get("TIPO_RAMO"));
+					nuevo.put("cdagentePer" , agente.get("AGENTE"));
+					nuevo.put("funcion"     , agente.get("SWAPLICA"));
+					resumen.add(nuevo);
+				}
+				
+				logger.debug(Utils.log("@@@@@@ lista permisos=",resumen));
+				lista = resumen;
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_RECIBOS_PARA_EXPLOTAR_DOCS))
+			{
+				paso = "Recuperando recibos en lote";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				String cdtipram  = params.get("cdtipram");
+				String cduniecos = params.get("cduniecos");
+				String feproces  = params.get("feproces");
+				String feimpres  = params.get("feimpres");
+				
+				lista = consultasDAO.recuperarRecibosLote(
+						cdtipram
+						,cduniecos
+						,Utils.parse(feproces)
+						,Utils.parse(feimpres)
+						,cdusuari
+						,usuario.getCdUnieco()
+						);
+			}
 		}
 		catch(Exception ex)
 		{

@@ -166,12 +166,8 @@ Ext.onReady(function()
                                     {
                                         'params.cdtipram'   : form.getValues()['cdtipram']
                                         ,'params.cduniecos' : cduniecos
-                                        ,'params.cdramo'    : form.getValues()['cdramo']
-                                        ,'params.ramo'      : form.getValues()['ramo']
-                                        ,'params.nmpoliza'  : form.getValues()['nmpoliza']
-                                        ,'params.fefecha'   : form.getValues()['fefecha']
-                                        ,'params.cdusuari'  : form.getValues()['cdusuari']
-                                        ,'params.cdagente'  : form.getValues()['cdagente']
+                                        ,'params.feproces'  : form.getValues()['feproces']
+                                        ,'params.feimpres'  : form.getValues()['feimpres']
                                     }
                                     ,function()
                                     {

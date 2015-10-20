@@ -2983,12 +2983,231 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarComboUsuarios(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.pendiente");
+			super(dataSource,"PKG_CONSULTA.P_GET_USUARIOS");
 			declareParameter(new SqlParameter("cadena" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"cdusuari"
 					,"nombre"
 					,"cdunieco"
+            };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public List<Map<String,String>> recuperarConfigImpresionSucursales(String cdusuari, String cdunieco, String cdtipram) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdusuari" , cdusuari);
+		params.put("cdunieco" , cdunieco);
+		params.put("cdtipram" , cdtipram);
+		params.put("swaplica" , null);
+		Map<String,Object>      procRes = ejecutaSP(new RecuperarConfigImpresionSucursales(getDataSource()),params);
+		List<Map<String,String>> lista  = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_TCNFIMPINCEXCSUC lista=",lista));
+		return lista;
+	}
+	
+	protected class RecuperarConfigImpresionSucursales extends StoredProcedure
+	{
+		protected RecuperarConfigImpresionSucursales(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_TCNFIMPINCEXCSUC");
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipram" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swaplica" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"COD_USUARIO"
+					,"SUC_USUARIO"
+					,"TIPO_RAMO"
+					,"SUC_PERMITIDA"
+					,"SWAPLICA"
+            };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public List<Map<String,String>> recuperarConfigImpresionAgentes(String cdusuari, String cdunieco, String cdtipram) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdusuari" , cdusuari);
+		params.put("cdunieco" , cdunieco);
+		params.put("cdtipram" , cdtipram);
+		params.put("swaplica" , null);
+		Map<String,Object>      procRes = ejecutaSP(new RecuperarConfigImpresionAgentes(getDataSource()),params);
+		List<Map<String,String>> lista  = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_TCNFIMPINCEXCAGT lista=",lista));
+		return lista;
+	}
+	
+	protected class RecuperarConfigImpresionAgentes extends StoredProcedure
+	{
+		protected RecuperarConfigImpresionAgentes(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_TCNFIMPINCEXCAGT");
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipram" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swaplica" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"COD_USUARIO"
+					,"SUC_USUARIO"
+					,"TIPO_RAMO"
+					,"AGENTE"
+					,"SWAPLICA"
+            };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void movPermisoImpresionSucursal(
+			String cdusuari
+			,String cdunieco
+			,String cdtipram
+			,String cduniecoPer
+			,String swaplica
+			,String accion
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdusuari"    , cdusuari);
+		params.put("cdunieco"    , cdunieco);
+		params.put("cdtipram"    , cdtipram);
+		params.put("cduniecoPer" , cduniecoPer);
+		params.put("swaplica"    , swaplica);
+		params.put("accion"      , accion);
+		ejecutaSP(new MovPermisoImpresionSucursal(getDataSource()),params);
+	}
+	
+	protected class MovPermisoImpresionSucursal extends StoredProcedure
+	{
+		protected MovPermisoImpresionSucursal(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_MOV_TCNFIMPINCEXCSUC");
+			declareParameter(new SqlParameter("cdusuari"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipram"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cduniecoPer" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swaplica"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void movPermisoImpresionAgente(
+			String cdusuari
+			,String cdunieco
+			,String cdtipram
+			,String cdagentePer
+			,String swaplica
+			,String accion
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdusuari"    , cdusuari);
+		params.put("cdunieco"    , cdunieco);
+		params.put("cdtipram"    , cdtipram);
+		params.put("cdagentePer" , cdagentePer);
+		params.put("swaplica"    , swaplica);
+		params.put("accion"      , accion);
+		ejecutaSP(new MovPermisoImpresionAgente(getDataSource()),params);
+	}
+	
+	protected class MovPermisoImpresionAgente extends StoredProcedure
+	{
+		protected MovPermisoImpresionAgente(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_MOV_TCNFIMPINCEXCAGT");
+			declareParameter(new SqlParameter("cdusuari"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipram"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdagentePer" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swaplica"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> recuperarRecibosLote(
+			String cdtipram
+			,String cduniecos
+			,Date feinicio
+			,Date fefin
+			,String cdusuari
+			,String cdunieco
+			)throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("cdtipram"  , cdtipram);
+		params.put("cduniecos" , cduniecos);
+		params.put("feinicio"  , feinicio);
+		params.put("fefin"     , fefin);
+		params.put("cdusuari"  , cdusuari);
+		params.put("cdunieco"  , cdunieco);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarRecibosLote(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_RECIBOS_PARA_HABILITAR lista=",lista));
+		return lista;
+	}
+	
+	protected class RecuperarRecibosLote extends StoredProcedure
+	{
+		protected RecuperarRecibosLote(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_RECIBOS_PARA_HABILITAR");
+			declareParameter(new SqlParameter("cdtipram"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cduniecos" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feinicio"  , OracleTypes.DATE));
+			declareParameter(new SqlParameter("fefin"     , OracleTypes.DATE));
+			declareParameter(new SqlParameter("cdusuari"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"cdunieco"
+					,"dsunieco"
+					,"cdramo"
+					,"dsramo"
+					,"estado"
+					,"nmpoliza"
+					,"nmsuplem"
+					,"nmrecibo"
+					,"cdgestor"
+					,"cddevcia"
+					,"primatot"
+					,"feemisio"
+					,"feinicio"
+					,"fefinal"
+					,"nmimpres"
+					,"cdagente"
             };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

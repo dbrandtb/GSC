@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.service.ExplotacionDocumentosManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -399,6 +400,18 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					,null //orden
 					);
 			
+			List<ComponenteVO> itemsAgregarPerm = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,null //cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"EXPLOTACION_PERMISOS"
+					,"FORM_PERMISO"
+					,null //orden
+					);
+			
 			paso = "Construyendo componentes";
 			logger.debug(paso);
 			
@@ -406,6 +419,9 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			
 			gc.generaComponentes(itemsFormBusq, true, false, true, false, false, false);
 			items.put("itemsFormBusq" , gc.getItems());
+			
+			gc.generaComponentes(itemsAgregarPerm, true, false, true, false, false, false);
+			items.put("itemsAgregarPerm" , gc.getItems());
 		}
 		catch(Exception ex)
 		{
@@ -417,5 +433,66 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return items;
+	}
+	
+	@Override
+	public void movPermisoImpresion(
+			String tipo
+			,String cdusuari
+			,String cdunieco
+			,String cdtipram
+			,String clave
+			,String funcion
+			,String accion
+			)throws Exception
+	{
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ movPermisoImpresion @@@@@@"
+				,"\n@@@@@@ tipo="     , tipo
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdtipram=" , cdtipram
+				,"\n@@@@@@ clave="    , clave
+				,"\n@@@@@@ funcion="  , funcion
+				,"\n@@@@@@ accion="   , accion
+				));
+		String paso = null;
+		try
+		{
+			paso = "Borrando permiso";
+			logger.debug("@@@@@@ paso: {}",paso);
+			
+			if("S".equals(tipo))
+			{
+				consultasDAO.movPermisoImpresionSucursal(
+						cdusuari
+						,cdunieco
+						,cdtipram
+						,clave
+						,funcion
+						,accion
+						);
+			}
+			else if("A".equals(tipo))
+			{
+				consultasDAO.movPermisoImpresionAgente(
+						cdusuari
+						,cdunieco
+						,cdtipram
+						,clave
+						,funcion
+						,accion
+						);
+			}
+			else
+			{
+				throw new ApplicationException("Tipo de permiso no soportado");
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
 	}
 }

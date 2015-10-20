@@ -34,4 +34,13 @@ public interface ExplotacionDocumentosManager
 	
 	public Map<String,Item> pantallaPermisosImpresion(String cdusuari, String cdsisrol) throws Exception;
 	
+	public void movPermisoImpresion(
+			String tipo
+			,String cdusuari
+			,String cdunieco
+			,String cdtipram
+			,String clave
+			,String funcion
+			,String accion
+			)throws Exception;
 }
