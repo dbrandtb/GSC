@@ -92,8 +92,6 @@ public class TestImpresionesAction extends PrincipalCoreAction {
         
         int iPrinter = Integer.parseInt(params.get("iPrinter"));
         
-        int mediaId = Integer.parseInt(params.get("mediaId"));
-		
 		// Input the file
 		FileInputStream textStream = null; 
 		try {
@@ -135,32 +133,36 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 		aset.add(Sides.DUPLEX);
 		
 		////////////////////////////////////////
-        // we store all the tray in a hashmap
-        Map<Integer, Media> trayMap = new HashMap<Integer, Media>(10);
+		if(params.get("mediaId") != null) {
+			
+			int mediaId = Integer.parseInt(params.get("mediaId"));
+			// we store all the tray in a hashmap
+	        Map<Integer, Media> trayMap = new HashMap<Integer, Media>(10);
 
-        // we chose something compatible with the printable interface
-        DocFlavor flavor = DocFlavor.SERVICE_FORMATTED.PRINTABLE;
-        logger.debug("Service: {}", services[iPrinter]);
-        
-        // we retrieve all the supported attributes of type Media
-        // we can receive MediaTray, MediaSizeName, ...
-        Object o = services[iPrinter].getSupportedAttributeValues(Media.class, flavor, null);
-        if (o != null && o.getClass().isArray()) {
-            for (Media media : (Media[]) o) {
-                // we collect the MediaTray available
-                if (media instanceof MediaTray) {
-                    logger.debug("{} : {} - {}", media.getValue(), media, media.getClass().getName());
-                    trayMap.put(media.getValue(), media);
-                }
-            }
-        }
+	        // we chose something compatible with the printable interface
+	        DocFlavor flavor = DocFlavor.SERVICE_FORMATTED.PRINTABLE;
+	        logger.debug("Service: {}", services[iPrinter]);
+	        
+	        // we retrieve all the supported attributes of type Media
+	        // we can receive MediaTray, MediaSizeName, ...
+	        Object o = services[iPrinter].getSupportedAttributeValues(Media.class, flavor, null);
+	        if (o != null && o.getClass().isArray()) {
+	            for (Media media : (Media[]) o) {
+	                // we collect the MediaTray available
+	                if (media instanceof MediaTray) {
+	                    logger.debug("{} : {} - {}", media.getValue(), media, media.getClass().getName());
+	                    trayMap.put(media.getValue(), media);
+	                }
+	            }
+	        }
 
-        // Tray target id:
-        MediaTray selectedTray = (MediaTray) trayMap.get(Integer.valueOf(mediaId));
-        logger.debug("Selected tray : {}", selectedTray.toString());
-        
-        // we have to add the MediaTray selected as attribute
-        aset.add(selectedTray);
+	        // Tray target id:
+	        MediaTray selectedTray = (MediaTray) trayMap.get(Integer.valueOf(mediaId));
+	        logger.debug("Selected tray : {}", selectedTray.toString());
+	        
+	        // we have to add the MediaTray selected as attribute
+	        aset.add(selectedTray);
+		}
 		////////////////////////////////////////
 		
 		DocPrintJob job = services[iPrinter].createPrintJob(); 
