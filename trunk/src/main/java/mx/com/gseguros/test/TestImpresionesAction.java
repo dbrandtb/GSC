@@ -215,6 +215,14 @@ public class TestImpresionesAction extends PrincipalCoreAction {
     }
 	
 	
+	/**
+	 * Elige una bandeja para imprmir
+	 * @return
+	 * @throws Exception
+	 */
+	@Action(value="eligeBandeja",
+			results={@Result(name="success", type="json")}
+	)
 	public String eligeBandeja() throws Exception {
 
 		// Params:
