@@ -1,8 +1,12 @@
 package mx.com.gseguros.test;
 
+import java.awt.Graphics;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,10 +17,15 @@ import javax.print.PrintException;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.SimpleDoc;
+import javax.print.attribute.AttributeSet;
+import javax.print.attribute.HashAttributeSet;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.Copies;
+import javax.print.attribute.standard.Media;
 import javax.print.attribute.standard.MediaSize;
+import javax.print.attribute.standard.MediaTray;
+import javax.print.attribute.standard.PrinterName;
 import javax.print.attribute.standard.Sides;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
@@ -134,7 +143,7 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
-	
+	/*
 	public static void main(String[] args) {
 		
 		PrintService[] services2 = PrintServiceLookup.lookupPrintServices(null, null);
@@ -181,26 +190,117 @@ public class TestImpresionesAction extends PrincipalCoreAction {
         } 
 		//System.out.println("services=" + services);
 		//System.out.println("services.length=" + services.length);
-		/*
-		// Create a print job from one of the print services
-		if (services.length > 0) { 
-		        DocPrintJob job = services[0].createPrintJob(); 
-		        try { 
-		        	System.out.println("Antes de print");
-		            job.print(myDoc, aset);
-		            System.out.println("Despues de print");
-		        } catch (PrintException pe) {
-		        	pe.printStackTrace();
-		        } 
-		}
-		*/
+		
+//		// Create a print job from one of the print services
+//		if (services.length > 0) { 
+//		        DocPrintJob job = services[0].createPrintJob(); 
+//		        try { 
+//		        	System.out.println("Antes de print");
+//		            job.print(myDoc, aset);
+//		            System.out.println("Despues de print");
+//		        } catch (PrintException pe) {
+//		        	pe.printStackTrace();
+//		        } 
+//		}
+		
 	}
+	*/
 	
 	private static void printService(PrintService[] services) {
         if (services!=null && services.length>0) {
             for (int i = 0; i < services.length; i++) {
                 logger.debug("{}", services[i]);
             }
+        }
+    }
+	
+	
+	public String eligeBandeja() throws Exception {
+
+		// Params:
+		String printerName = params.get("printerName");
+        String mediaId     = params.get("mediaId");
+        String printPage   = params.get("printTestPage");
+		
+        // get default printer
+        PrintService defaultPrintService = PrintServiceLookup.lookupDefaultPrintService();
+
+        // suggest the use of the default printer
+        logger.debug("Default Print Service: {}", defaultPrintService.getName());
+
+        // if there is no input, use the default printer
+        if (printerName == null || printerName.equals("")) {
+        	logger.debug("Se toma la impresora por default: {}", defaultPrintService.getName());
+            printerName = defaultPrintService.getName();
+        }
+
+        // the printer is selected
+        AttributeSet aset = new HashAttributeSet();
+        aset.add(new PrinterName(printerName, null));
+
+        // selection of all print services
+        PrintService[] services = PrintServiceLookup.lookupPrintServices(null, aset);
+        // we store all the tray in a hashmap
+        Map<Integer, Media> trayMap = new HashMap<Integer, Media>(10);
+
+        // we chose something compatible with the printable interface
+        DocFlavor flavor = DocFlavor.SERVICE_FORMATTED.PRINTABLE;
+
+        for (PrintService service : services) {
+            logger.debug("Service: {}", service);
+
+            // we retrieve all the supported attributes of type Media
+            // we can receive MediaTray, MediaSizeName, ...
+            Object o = service.getSupportedAttributeValues(Media.class, flavor, null);
+            if (o != null && o.getClass().isArray()) {
+                for (Media media : (Media[]) o) {
+                    // we collect the MediaTray available
+                    if (media instanceof MediaTray) {
+                        logger.debug("{} : {} - {}", media.getValue(), media, media.getClass().getName());
+                        trayMap.put(media.getValue(), media);
+                    }
+                }
+            }
+        }
+
+        // Tray target id:
+        MediaTray selectedTray = (MediaTray) trayMap.get(Integer.valueOf(mediaId));
+        logger.debug("Selected tray : {}", selectedTray.toString());
+
+        if (printPage.equalsIgnoreCase("Y")) {
+
+            // we have to add the MediaTray selected as attribute
+            PrintRequestAttributeSet attributes = new HashPrintRequestAttributeSet();
+            attributes.add(selectedTray);
+
+            // we create the printer job, it print a specified document with a set of job attributes
+            DocPrintJob job = services[0].createPrintJob();
+
+            try {
+                logger.debug("Trying to print an empty page on : {}", selectedTray.toString());
+                // we create a document that implements the printable interface
+                Doc doc = new SimpleDoc(new PrintableDemo(), DocFlavor.SERVICE_FORMATTED.PRINTABLE, null);
+
+                // we print using the selected attributes (paper tray)
+                job.print(doc, attributes);
+
+            } catch (Exception e) {
+            	logger.error(e.getMessage(), e);
+            }
+        }
+        return SUCCESS;
+    }
+
+
+    static class PrintableDemo implements Printable {
+
+        @Override
+        public int print(Graphics pg, PageFormat pf, int pageNum) {
+            // we print an empty page
+            if (pageNum >= 1)
+                return Printable.NO_SUCH_PAGE;
+            pg.drawString("", 10, 10);
+            return Printable.PAGE_EXISTS;
         }
     }
 	
