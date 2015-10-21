@@ -68,11 +68,24 @@ public class ReciboVO implements Serializable {
 	 */
 	private String consecutivo;
 
+	/**
+	 * cliente que paga el recibo
+	 */
+	private String cliente;
+
 	
 	//Getters and setters:
 	
 	public String getNmrecibo() {
 		return nmrecibo;
+	}
+
+	public String getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(String cliente) {
+		this.cliente = cliente;
 	}
 
 	public void setNmrecibo(String nmrecibo) {

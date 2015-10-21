@@ -56,6 +56,7 @@ Ext.onReady(function(){
 		fields: [
 			'cdestado',
 			'dsestado',
+			'cliente',
 			'dstipore',
 			'feemisio',
 			'fefinal',
@@ -121,13 +122,14 @@ Ext.onReady(function(){
 		}],
 		columns: [
 			//{text: 'nmrecibo', dataIndex:'nmrecibo', width:100},
-			{text: '#', dataIndex:'consecutivo', width:100},
-			{text: 'Estado', dataIndex:'dsestado', width:120},
-			{text: 'Tipo de recibo', dataIndex:'dstipore', width:120},
+			{text: '#', dataIndex:'consecutivo', width:60},
+			{text: 'Cliente', dataIndex:'cliente', width:160},
+			{text: 'Estado', dataIndex:'dsestado', width:100},
 			{text: 'Fecha emisi\u00F3n', dataIndex:'feemisio', width:100},
 			{text: 'Fecha inicio', dataIndex:'feinicio', width:100},
 			{text: 'Fecha final', dataIndex:'fefinal', width:100},
-			{text: 'Importe total', dataIndex:'ptimport', width:100, renderer : 'usMoney', align:'right'}
+			{text: 'Importe total', dataIndex:'ptimport', width:100, renderer : 'usMoney', align:'right'},
+			{text: 'Tipo de recibo', dataIndex:'dstipore', width:120}
 		],
 		listeners: {
 			selectionchange: function(view, nodes) {
