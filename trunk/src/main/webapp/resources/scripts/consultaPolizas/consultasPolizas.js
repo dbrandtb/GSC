@@ -593,7 +593,7 @@ Ext.onReady(function() {
     
     // GRID PARA LOS DATOS DE COPAGOS/COBERTURAS
     var gridCopagosPoliza = Ext.create('Ext.grid.Panel', {
-        width   : 500,
+        width   : 570,
         viewConfig: {
             stripeRows: false,
             enableTextSelection: true
@@ -604,7 +604,7 @@ Ext.onReady(function() {
         id      : 'gridCopagosPoliza',
         columns: [
             //{text:'Orden',            dataIndex:'orden',       width:50, sortable:false, hidden:true},
-            {text:'Descripci\u00F3n', dataIndex:'descripcion', width:300, align:'left', sortable:false},
+            {text:'Descripci\u00F3n', dataIndex:'descripcion', width:370, align:'left', sortable:false},
             {text:'Valor',            dataIndex:'valor',       width:200, align:'left', sortable:false}
         ]
         ,features: [{
@@ -676,7 +676,7 @@ Ext.onReady(function() {
         title   : 'DATOS DE LOS ASEGURADOS',
         store   : storeAsegurados,
         id      : 'gridDatosAsegurado',
-        width   : 1030,
+        width   : 950,
         autoScroll:true,
         items:[{
            xtype:'textfield', name:'cdrfc', fieldLabel: 'RFC', readOnly: true, labelWidth: 120
@@ -981,7 +981,7 @@ Ext.onReady(function() {
     
    
     var tabDatosGeneralesPoliza = Ext.create('Ext.tab.Panel', {
-        width: 1030,
+        width: 950,
         items: [{
             title : 'DATOS DE LA POLIZA',
             border:false,
