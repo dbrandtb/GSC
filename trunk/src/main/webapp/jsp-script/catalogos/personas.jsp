@@ -524,11 +524,34 @@ Ext.onReady(function()
                          ,handler : function (){
 										var form = _p22_formBusqueda();
 										
-										var valorRFC = form.down('[name=smap1.rfc]').getValue(); 
-										var valorNombre = form.down('[name=smap1.nombre]').getValue();
+										var valorRFC = form.down('[name=smap1.rfc]').getValue();
+										var valorRFCRaw = form.down('[name=smap1.rfc]').getRawValue();
 										
-										if(Ext.isEmpty(valorRFC) && Ext.isEmpty(valorNombre)){
+										debug('valorRFC: ',valorRFC);
+										debug('valorRFCRaw: ',valorRFCRaw);
+										
+										var valorNombre = form.down('[name=smap1.nombre]').getValue();
+										var valorNombreRaw = form.down('[name=smap1.nombre]').getRawValue();
+										
+										debug('valorNombre: ',valorNombre);
+										debug('valorNombreRaw: ',valorNombreRaw);
+										
+										/**
+										 * PARA PROBLEMA CUANDO AVECES NO SE SELECCIONA CORRECTAMENTE
+										 */
+										
+										if(Ext.isEmpty(valorRFC) && Ext.isEmpty(valorNombre) && Ext.isEmpty(valorRFCRaw) && Ext.isEmpty(valorNombreRaw)){
 											mensajeWarning('Llene la informaci&oacute;n solicitada para continuar.');
+											return;
+										}
+										
+										if((!Ext.isEmpty(valorRFCRaw) && Ext.isEmpty(valorRFC)) || (!Ext.isEmpty(valorNombreRaw) && Ext.isEmpty(valorNombre))){
+											mensajeWarning('Hubo un problema al seleccionar el Cliente. Vuelva a intentarlo.');
+											form.down('[name=smap1.rfc]').reset();
+								    		form.down('[name=smap1.nombre]').reset();
+								    		form.down('[name=smap1.rfc]').getStore().removeAll();
+								    		form.down('[name=smap1.nombre]').getStore().removeAll();
+								    		return;
 										}
 										
 										debug('valorRFC:',valorRFC);
@@ -655,7 +678,15 @@ Ext.onReady(function()
 										    }
 										    
 										}else if(!Ext.isEmpty(valorNombre)){
-											mensajeWarning('Para agregar una persona nueva llene el campo de RFC.');
+											
+											if(!Ext.isEmpty(_nombreComContratante) && !Ext.isEmpty(valorNombre) && _nombreComContratante != valorNombre){
+												mensajeWarning('Hubo un problema al seleccionar el Cliente. Vuelva a intentarlo.');
+												form.down('[name=smap1.nombre]').reset();
+												form.down('[name=smap1.nombre]').getStore().removeAll();
+											}else{
+												mensajeWarning('Para agregar una persona nueva llene el campo de RFC.');
+											}
+											
 											return;
 										}
 									}
@@ -1094,7 +1125,7 @@ function irModoEdicion(){
 	                }
 	                else
 	                {
-	                    mensajeError("En recuperar c&oacute;digo externo. Consulte a soporte.");
+	                    mensajeError("Error al recuperar el c&oacute;digo externo del cliente. Datos incompletos.");
 	                }
 	            }
 	            ,failure  : function()
