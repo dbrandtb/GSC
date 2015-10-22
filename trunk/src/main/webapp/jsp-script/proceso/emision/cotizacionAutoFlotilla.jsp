@@ -5762,6 +5762,7 @@ function _p30_confirmarEndoso()
             var cdtipsitPanel  = _p30_smap1['destino_'+cdtipsit];
             var recordBase     = recordsCdtipsit[cdtipsitPanel];
             var recordTvalosit = new _p30_modelo(record.data);
+            /*
             for(var prop in recordTvalosit.data)
             {
                 var valor = recordTvalosit.get(prop);
@@ -5771,6 +5772,64 @@ function _p30_confirmarEndoso()
                     recordTvalosit.set(prop,base);
                 }
             }
+            */
+            
+            //---
+            if(cdtipsitPanel==cdtipsit)
+            {
+                for(var prop in recordTvalosit.getData())
+                {
+                    var valor = recordTvalosit.get(prop);
+                    var base  = recordBase.get(prop);
+                    if(Ext.isEmpty(valor)&&!Ext.isEmpty(base))
+                    {
+                        recordTvalosit.set(prop,base);
+                    }
+                }
+            }
+            else
+            {
+                for(var prop in recordTvalosit.getData())
+                {
+                    var base = recordBase.get(prop);
+                    debug('base:',base);
+                    
+                    var valorValosit = recordTvalosit.get(prop);
+                    debug('valorValosit:',valorValosit);
+                    
+                    var cmpPanel = _p30_paneles[cdtipsitPanel].down('[name='+prop+']'); <<--esta buscando name 46 en panel de CR y no lo encuentra TODO
+                    debug('cmpPanel:',cmpPanel,'.');
+                    if(!Ext.isEmpty(cmpPanel))
+                    {
+                        if(cmpPanel.auxiliar=='adicional'
+                            &&Ext.isEmpty(valorValosit)
+                            &&!Ext.isEmpty(base)
+                        )
+                        {
+                            debug('set normal, porque es adicional');
+                            //alert('ADIC!-'+fieldLabel+'-'+prop);
+                            recordTvalosit.set(prop,base);
+                        }
+                        else
+                        {
+                            var cmpPanelLabel = cmpPanel.fieldLabel;
+                            debug('cmpPanelLabel:',cmpPanelLabel,'.');
+                            var cmpByLabel = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel*='+_substringComa(cmpPanelLabel)+']');
+                            if(!Ext.isEmpty(cmpByLabel))
+                            {
+                                var nameByLabel = cmpByLabel.name;
+                                var valor       = recordTvalosit.get(nameByLabel);
+                                debug('valor:',valor);
+                                if(Ext.isEmpty(valor)&&!Ext.isEmpty(base))
+                                {
+                                    recordTvalosit.set(nameByLabel,base);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            //---
             
             if(_p30_smap1.mapeo=='DIRECTO')
             {
