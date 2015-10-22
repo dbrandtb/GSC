@@ -5797,7 +5797,7 @@ function _p30_confirmarEndoso()
                     var valorValosit = recordTvalosit.get(prop);
                     debug('valorValosit:',valorValosit);
                     
-                    var cmpPanel = _p30_paneles[cdtipsitPanel].down('[name='+prop+']'); <<--esta buscando name 46 en panel de CR y no lo encuentra TODO
+                    var cmpPanel = _p30_paneles[cdtipsitPanel].down('[name='+prop+']');
                     debug('cmpPanel:',cmpPanel,'.');
                     if(!Ext.isEmpty(cmpPanel))
                     {
