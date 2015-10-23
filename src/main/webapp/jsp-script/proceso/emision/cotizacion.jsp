@@ -102,6 +102,12 @@ var _parentescoTitular = 'T';
 
 debug('_0_smap1: ',_0_smap1);
 
+var image = Ext.create('Ext.Img', {
+	src: '../../images/confpantallas/icon/paneles.png',rowspan: 2
+});
+
+var _CONTEXT = "${ctx}";
+
 //parche para RAMO 16 (FRONTERIZOS) con rol distinto de SUSCRIPTOR AUTO, se oculta el botón Detalle:
 var ocultarDetalleCotizacion = false; 
 if(_0_smap1.cdramo == Ramo.AutosFronterizos && _0_smap1.cdsisrol != 'SUSCRIAUTO') {
@@ -1655,6 +1661,48 @@ function _0_recuperarDescuento()
         manejaException(e,ck);
     }
 }
+
+
+function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
+	var validacionNumSerie = Ext.create('Ext.window.Window', {
+		title       : titulo,
+		layout      : {
+			type    : 'table',
+			align   : 'center', 
+			columns : 2
+		}
+		,defaults 	: {
+			style   : 'margin:5px;'
+		},
+		items: [
+				{
+					xtype   : 'image'
+					,src    : imagenSeccion
+				},
+				{
+					xtype  : 'label'
+					,text  : txtRespuesta
+					,style : 'color:red;margin:5px;'
+				},
+				{
+					xtype   : 'image'
+					,colspan: 2
+					,src    : '${ctx}/images/cotizacionautos/menu_endosos.png'
+				}
+		],
+		buttonAlign:'center',
+		buttons: [{
+			text: 'Aceptar',
+			icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
+			buttonAlign : 'center',
+			handler: function() {
+				validacionNumSerie.close();
+			}
+		}]
+		});
+		centrarVentanaInterna(validacionNumSerie.show());
+}
+
 /*///////////////////*/
 ////// funciones //////
 ///////////////////////
@@ -2403,9 +2451,9 @@ Ext.onReady(function()
         	    	if(json.exito!=true)
         	    	{
         	    		if(_0_smap1.cdsisrol!='SUSCRIAUTO'){
-        	    			mensajeError(json.respuesta);
+        	    			mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
         				}else{
-        					mensajeWarning(json.respuesta);
+        					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
         				}
         	    	}
 				}
@@ -3342,7 +3390,7 @@ Ext.onReady(function()
         });
     }
     //VIGENCIA
-    
+   
     //para gmi
     if(_0_smap1.cdramo=='7'&&_0_smap1.cdtipsit=='GMI')
     {
