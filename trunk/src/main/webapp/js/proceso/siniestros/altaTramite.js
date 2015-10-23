@@ -1,5 +1,6 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
 Ext.onReady(function() {
+	Ext.Ajax.timeout = 5*60*1000;
 	var valorIndexSeleccionado= null;
 	var banderaFactura = "0";
 	var banderaAsegurado = "0";
