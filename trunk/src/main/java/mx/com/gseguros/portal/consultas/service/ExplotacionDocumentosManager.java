@@ -15,6 +15,7 @@ public interface ExplotacionDocumentosManager
 			,String cdsisrol
 			,String cdtipram
 			,String cdtipimp
+			,String tipolote
 			,List<Map<String, String>> movs
 			)throws Exception;
 	

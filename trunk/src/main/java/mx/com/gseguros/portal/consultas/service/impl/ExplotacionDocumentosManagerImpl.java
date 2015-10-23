@@ -116,6 +116,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			,String cdsisrol
 			,String cdtipram
 			,String cdtipimp
+			,String tipolote
 			,List<Map<String, String>> movs
 			)throws Exception
 	{
@@ -126,6 +127,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
 				,"\n@@@@@@ cdtipram=" , cdtipram
 				,"\n@@@@@@ cdtipimp=" , cdtipimp
+				,"\n@@@@@@ tipolote=" , tipolote
 				,"\n@@@@@@ movs="     , movs
 				));
 		
@@ -159,7 +161,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			paso = "Recuperando impresiones disponibles";
 			logger.debug("@@@@@@ paso: {}",paso);
 			
-			String impDis = consultasDAO.recuperarImpresionesDisponiblesPorTipoRamo(cdtipram,"P");
+			String impDis = consultasDAO.recuperarImpresionesDisponiblesPorTipoRamo(cdtipram,tipolote);
 			
 			paso = "Generando tr\u00E1mites de agentes";
 			logger.debug("@@@@@@ paso: {}",paso);
@@ -170,7 +172,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			valores.put("otvalor03" , cdtipram);
 			valores.put("otvalor04" , impDis); //impresiones disponibles
 			valores.put("otvalor05" , "0");    //impresiones ejecutadas
-			valores.put("otvalor06" , "P");    //POLIZA - RECIBO
+			valores.put("otvalor06" , tipolote);    //POLIZA - RECIBO
 			
 			for(Entry<String,Object>agente:agentes.entrySet())
 			{
@@ -226,18 +228,21 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 							,movAgente.get("estado")
 							,movAgente.get("nmpoliza")
 							,movAgente.get("nmsuplem")
-							,"P"
-							,movAgente.get("ntramite")
-							,null
+							,tipolote
+							,"P".equals(tipolote) ? movAgente.get("ntramite") : null
+							,"R".equals(tipolote) ? movAgente.get("nmrecibo") : null
 							);
 					
-					paso = "Marcando tr\u00E1mite original iterado";
-					logger.debug("@@@@@@ paso: {}",paso);
-					
-					emisionDAO.marcarTramiteImpreso(
-							movAgente.get("ntramite")
-							,"S"
-							);
+					if("P".equals(tipolote))
+					{
+						paso = "Marcando tr\u00E1mite original iterado";
+						logger.debug("@@@@@@ paso: {}",paso);
+						
+						emisionDAO.marcarTramiteImpreso(
+								movAgente.get("ntramite")
+								,"S"
+								);
+					}
 				}
 			}
 			

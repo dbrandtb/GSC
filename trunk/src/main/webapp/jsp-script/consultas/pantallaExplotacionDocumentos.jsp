@@ -400,7 +400,8 @@ function _p49_impresionClic(tipoimp)
                     {
                         params :
                         {
-                            cdtipimp : tipoimp
+                            cdtipimp  : tipoimp
+                            ,tipolote : 'P'
                         }
                         ,list  : []
                     };
@@ -430,7 +431,7 @@ function _p49_impresionClic(tipoimp)
                     _setLoading(true,grid);
                     Ext.Ajax.request(
                     {
-                        url : _p49_urlGenerarLote
+                        url       : _p49_urlGenerarLote
                         ,jsonData : jsonData
                         ,success  : function(response)
                         {

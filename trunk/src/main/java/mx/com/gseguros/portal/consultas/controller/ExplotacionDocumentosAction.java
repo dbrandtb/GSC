@@ -5,6 +5,7 @@ import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.service.ExplotacionDocumentosManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.utils.Utils;
@@ -100,12 +101,20 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 			Utils.validate(params , "No se recibieron par\u00E1metros");
 			
 			String cdtipram  = params.get("cdtipram")
-			       ,cdtipimp = params.get("cdtipimp");
+			       ,cdtipimp = params.get("cdtipimp")
+			       ,tipolote = params.get("tipolote");
 			
 			Utils.validate(
 					cdtipram  , "No se recibi\u00F3 el tipo de ramo"
 					,cdtipimp , "No se recibi\u00F3 el tipo de impresi\u00F3n"
+					,tipolote , "No se recibi\u00F3 el tipo de lote"
 					);
+			
+			if(!"P".equals(tipolote)
+					&&!"R".equals(tipolote))
+			{
+				throw new ApplicationException("Tipo de lote incorrecto");
+			}
 			
 			Utils.validate(list , "No se recibieron movimientos");
 			
@@ -118,8 +127,17 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 						,mov.get("nmpoliza") , "Los movimientos no tienen p\u00F3liza"
 						,mov.get("nmsuplem") , "Los movimientos no tienen suplemento"
 						,mov.get("cdagente") , "Los movimientos no tienen agente"
-						,mov.get("ntramite") , "Los movimientos no tienen tr\u00E1mite"
 						);
+				
+				if("P".equals(tipolote))
+				{
+					Utils.validate(mov.get("ntramite") , "Los movimientos no tienen tr\u00E1mite");
+				}
+				else
+				{
+					Utils.validate(mov.get("nmrecibo") , "Los movimientos no tienen n\u00FAmero de recibo");
+				}
+				
 			}
 			
 			String lote = explotacionDocumentosManager.generarLote(
@@ -127,6 +145,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					,usuario.getRolActivo().getClave()
 					,cdtipram
 					,cdtipimp
+					,tipolote
 					,list
 					);
 			
