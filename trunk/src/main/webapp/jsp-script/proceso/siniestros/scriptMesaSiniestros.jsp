@@ -77,7 +77,7 @@ var msgWindow;
 	        modal       : true,
 	        buttonAlign : 'center',
 	        width       : 830,
-	        height      : 620,
+	        height      : 570,
 	        title: 'Alta de Tr&aacute;mite Previo',
 	        autoScroll  : true,
 	        loader      : {
