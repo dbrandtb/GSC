@@ -77,7 +77,7 @@ var msgWindow;
 	        modal       : true,
 	        buttonAlign : 'center',
 	        width       : 830,
-	        height      : 570,
+	        height      : 620,
 	        title: 'Alta de Tr&aacute;mite Previo',
 	        autoScroll  : true,
 	        loader      : {
@@ -1806,7 +1806,7 @@ function turnarDevolucionTramite(grid,rowIndex,colIndex){
 
 Ext.onReady(function()
 		{
-			
+			Ext.Ajax.timeout = 5*60*1000;
 			/////////////////////
 			////// modelos //////
 			Ext.define('DetalleMC',{
