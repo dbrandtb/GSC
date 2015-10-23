@@ -24,6 +24,7 @@
         <script>
             var contexto='${ctx}';
             
+            
             var panDatComMap1 = <s:property value="%{convertToJSON('map1')}" escapeHtml="false" />;
             debug('panDatComMap1:',panDatComMap1);
             
@@ -2024,10 +2025,12 @@ function _datComTurnarSuscripcion()
                                   				if(json.exito!=true)
                                   				{
                                   					if(sesionDsrol!='SUSCRIAUTO'){
-                                  						mensajeError(json.respuesta);
+                                  						//mensajeError(json.respuesta);
+                                  						mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
                                   						 _fieldById('panDatComBotonRetarificar').setDisabled(true);//Deshabilita el boton
                                   					}else{
-                                  						mensajeWarning(json.respuesta);
+                                  						//mensajeWarning(json.respuesta);
+                                  						mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
                                   						_fieldById('panDatComBotonRetarificar').setDisabled(false);
                                   					}
                                   				}else{
@@ -2178,6 +2181,48 @@ function _datComTurnarSuscripcion()
                 	});
                 	                	
                 }
+                
+                
+                function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
+                	var validacionNumSerie = Ext.create('Ext.window.Window', {
+                		title       : titulo,
+                		layout      : {
+                			type    : 'table',
+                			align   : 'center', 
+                			columns : 2
+                		}
+                		,defaults 	: {
+                			style   : 'margin:5px;'
+                		},
+                		items: [
+                				{
+                					xtype   : 'image'
+                					,src    : imagenSeccion
+                				},
+                				{
+                					xtype  : 'label'
+                					,text  : txtRespuesta
+                					,style : 'color:red;margin:5px;'
+                				},
+                				{
+                					xtype   : 'image'
+                					,colspan: 2
+                					,src    : contexto+'/images/cotizacionautos/menu_endosos.png'
+                				}
+                		],
+                		buttonAlign:'center',
+                		buttons: [{
+                			text: 'Aceptar',
+                			icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
+                			buttonAlign : 'center',
+                			handler: function() {
+                				validacionNumSerie.close();
+                			}
+                		}]
+                		});
+                		centrarVentanaInterna(validacionNumSerie.show());
+                }
+                
                 
                 //para ver documentos en vivo
                 var venDocuTramite=Ext.create('Ext.window.Window',

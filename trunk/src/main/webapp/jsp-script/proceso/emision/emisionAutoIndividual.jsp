@@ -410,10 +410,10 @@ Ext.onReady(function()
         	    	if(json.exito!=true)
         	    	{
         	    		if(_p29_smap1.cdsisrol!='SUSCRIAUTO'){
-        	    			mensajeError(json.respuesta);
+        	    			mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
         					 _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
         				}else{
-        					mensajeWarning(json.respuesta);
+        					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
         					_fieldById('_p29_botonEmitir').setDisabled(false);
         				}
         	    	}else{
@@ -502,10 +502,10 @@ function _p29_loadCallback()
            		      	    	if(json.exito!=true)
            		      	    	{
            		      	    		if(_p29_smap1.cdsisrol!='SUSCRIAUTO'){
-           		      	    			mensajeError(json.respuesta);
+           		      	    			mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
            		      					 _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
            		      				}else{
-           		      					mensajeWarning(json.respuesta);
+           		      					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
            		      					_fieldById('_p29_botonEmitir').setDisabled(false);
            		      				}
            		      	    	}else{
@@ -1258,6 +1258,47 @@ function reintentarWSAuto(loading, params){
        }
 	});
 	                	
+}
+
+function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){ 
+	var validacionNumSerie = Ext.create('Ext.window.Window', {
+		title       : titulo,
+	    layout      : {
+	    	type    : 'table',
+	    	align: 'center', 
+	    	columns : 2
+		}
+		,defaults 	: {
+			style : 'margin:5px;'
+		},
+	    items: 
+	    [{
+	        xtype   : 'image'
+	        ,src    : imagenSeccion
+	        },
+	        {
+	        xtype   : 'label'
+	            ,text  : txtRespuesta
+	            ,style : 'color:red;margin:5px;'
+	        },
+	    {
+	        	
+			xtype   : 'image'
+	        ,colspan:2
+	        ,src    : '${ctx}/images/cotizacionautos/menu_endosos.png'
+	    }
+	    ],
+	    buttonAlign:'center',
+		buttons: [{
+				text: 'Aceptar',
+				icon:'${ctx}/resources/fam3icons/icons/accept.png',
+				buttonAlign : 'center',
+				handler: function() {
+					validacionNumSerie.close();
+				}
+			}]		
+	});
+	centrarVentanaInterna(validacionNumSerie.show());
 }
 
 ////// funciones //////
