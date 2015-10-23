@@ -34,6 +34,7 @@ import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -60,10 +61,12 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGen
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -76,7 +79,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 {
 
 	private static final long serialVersionUID = -1269892388621564059L;
-	private final static Logger logger = Logger.getLogger(ComplementariosAction.class);
+	private final static Logger logger = LoggerFactory.getLogger(ComplementariosAction.class);
 	private Item items;
 	private Item fields;
 	
@@ -377,6 +380,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				.append("\nresult: ").append(result)
 				.append("\n###### ComplementariosAction mostrarPantalla ######")
 				.append("\n###################################################")
+				.toString()
 				);
 		return result;
 	}
@@ -1141,8 +1145,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String guardarPantallaAsegurados()
 	{
-		logger.debug(map1);
-		logger.debug(list1);
+		logger.debug(Utils.log("map1="  , map1));
+		logger.debug(Utils.log("list1=" , list1));
 		try
 		{
 			/**
@@ -2253,76 +2257,90 @@ public class ComplementariosAction extends PrincipalCoreAction
 		{
 			try
 			{
-				if("4".equals(cdramo)&&esFlotilla)
+				String cdorddoc = emisionManager.insercionDocumentosParametrizados(
+	            		cdunieco
+	            		,cdramo
+	            		,"M"
+	            		,nmpolizaEmitida
+	            		,"0"
+	            		,nmsuplemEmitida
+	            		);
+	            logger.debug("cdorddoc: {}",cdorddoc);
+	            
+	            List<Map<String,String>> docsATransferir = cotizacionManager.generarDocumentosBaseDatos(
+	            		cdorddoc
+	            		,nmpoliza
+	            		,ntramite
+	            		);
+	            
+	            String rutaDocsBaseDatos = consultasManager.recuperarTparagen(ParametroGeneral.DIRECTORIO_REPORTES);
+	            logger.debug(Utils.join("\nrutaDocsBaseDatos:",rutaDocsBaseDatos));
+	            
+	            for(Map<String,String>doc:docsATransferir)
+	            {
+	            	try
+	            	{
+	            		String origen  = Utils.join(rutaDocsBaseDatos,doc.get("CDDOCUME"));
+	            		String destino = Utils.join(getText("ruta.documentos.poliza"),"/",ntramite,"/",doc.get("CDDOCUME"));
+	            		logger.debug(Utils.log("\nIntentando mover desde:",origen,",hacia:",destino));
+	            		FileUtils.moveFile(
+	            				new File(origen)
+	            				,new File(destino)
+	            				);
+	            	}
+	            	catch(Exception ex)
+	            	{
+	            		logger.error("Error al transferir archivo ",ex);
+	            	}
+	            }
+				
+				/*
+				List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
+						cdunieco
+						,cdramo
+						,"M"
+						,nmpolizaEmitida
+						,nmsuplemEmitida
+						,ntramite
+						);
+				
+				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+				for(Map<String,String> docu:listaDocu)
 				{
-					String cdorddoc = emisionManager.insercionDocumentosParametrizados(
-							cdunieco
-							,cdramo
-							,"M"
-							,nmpolizaEmitida
-							,"0"
-							,nmsuplemEmitida
-							);
-					
-					List<Map<String,String>> docs = cotizacionManager.recuperarListaDocumentosParametrizados(
-		            		cdorddoc
-		            		,nmpoliza
-		            		,ntramite
-		            		);
-					
-					for(Map<String,String>doc:docs)
+					logger.debug("docu iterado: "+docu);
+					String descripc=docu.get("descripc");
+					String descripl=docu.get("descripl");
+					String url=this.getText("ruta.servidor.reports")
+							+ "?destype=cache"
+							+ "&desformat=PDF"
+							+ "&userid="+this.getText("pass.servidor.reports")
+							+ "&report="+descripl
+							+ "&paramform=no"
+							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+							+ "&p_unieco="+cdunieco
+							+ "&p_ramo="+cdramo
+							+ "&p_estado='M'"
+							+ "&p_poliza="+nmpolizaEmitida
+							+ "&p_suplem="+nmsuplemEmitida
+							+ "&desname="+rutaCarpeta+"/"+descripc;
+					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
 					{
-						HttpUtil.generaArchivo(doc.get("C_COMMAND"),rutaCarpeta+"/"+doc.get("NOM_PDF"));
+						// C R E D E N C I A L _ X X X X X X . P D F
+						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
 					}
+					logger.debug(""
+							+ "\n#################################"
+							+ "\n###### Se solicita reporte ######"
+							+ "\na "+url);
+					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+					logger.debug(""
+							+ "\n######                    ######"
+							+ "\n###### reporte solicitado ######"
+							+ "\n################################"
+							+ "");
 				}
-				else
-				{
-					List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
-							cdunieco
-							,cdramo
-							,"M"
-							,nmpolizaEmitida
-							,nmsuplemEmitida
-							,ntramite
-							);
-					
-					//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
-					for(Map<String,String> docu:listaDocu)
-					{
-						logger.debug("docu iterado: "+docu);
-						String descripc=docu.get("descripc");
-						String descripl=docu.get("descripl");
-						String url=this.getText("ruta.servidor.reports")
-								+ "?destype=cache"
-								+ "&desformat=PDF"
-								+ "&userid="+this.getText("pass.servidor.reports")
-								+ "&report="+descripl
-								+ "&paramform=no"
-								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-								+ "&p_unieco="+cdunieco
-								+ "&p_ramo="+cdramo
-								+ "&p_estado='M'"
-								+ "&p_poliza="+nmpolizaEmitida
-								+ "&p_suplem="+nmsuplemEmitida
-								+ "&desname="+rutaCarpeta+"/"+descripc;
-						if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
-						{
-							// C R E D E N C I A L _ X X X X X X . P D F
-							//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-							url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
-						}
-						logger.debug(""
-								+ "\n#################################"
-								+ "\n###### Se solicita reporte ######"
-								+ "\na "+url);
-						HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-						logger.debug(""
-								+ "\n######                    ######"
-								+ "\n###### reporte solicitado ######"
-								+ "\n################################"
-								+ "");
-					}
-				}
+				*/
 				
 				/**
 				 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
@@ -2782,6 +2800,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		{
 			try
 			{
+				/*
 				List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
 						cdunieco
 						,cdramo
@@ -2826,6 +2845,44 @@ public class ComplementariosAction extends PrincipalCoreAction
 							+ "\n################################"
 							+ "");
 				}
+				*/
+				
+				String cdorddoc = emisionManager.insercionDocumentosParametrizados(
+	            		cdunieco
+	            		,cdramo
+	            		,"M"
+	            		,nmpolizaEmitida
+	            		,"0"
+	            		,nmsuplemEmitida
+	            		);
+	            logger.debug("cdorddoc: {}",cdorddoc);
+	            
+	            List<Map<String,String>> docsATransferir = cotizacionManager.generarDocumentosBaseDatos(
+	            		cdorddoc
+	            		,nmpoliza
+	            		,ntramite
+	            		);
+	            
+	            String rutaDocsBaseDatos = consultasManager.recuperarTparagen(ParametroGeneral.DIRECTORIO_REPORTES);
+	            logger.debug(Utils.join("\nrutaDocsBaseDatos:",rutaDocsBaseDatos));
+	            
+	            for(Map<String,String>doc:docsATransferir)
+	            {
+	            	try
+	            	{
+	            		String origen  = Utils.join(rutaDocsBaseDatos,doc.get("CDDOCUME"));
+	            		String destino = Utils.join(getText("ruta.documentos.poliza"),"/",ntramite,"/",doc.get("CDDOCUME"));
+	            		logger.debug(Utils.log("\nIntentando mover desde:",origen,",hacia:",destino));
+	            		FileUtils.moveFile(
+	            				new File(origen)
+	            				,new File(destino)
+	            				);
+	            	}
+	            	catch(Exception ex)
+	            	{
+	            		logger.error("Error al transferir archivo ",ex);
+	            	}
+	            }
 				
 			}
 			catch(Exception ex)

@@ -5,8 +5,8 @@
 <head>
 <script>
 ////// urls //////
-var _p50_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"          />';
-var _p50_urlGenerarLote  = '<s:url namespace="/consultas"    action="generarLoteRecibos" />';
+var _p50_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"   />';
+var _p50_urlGenerarLote  = '<s:url namespace="/consultas"    action="generarLote" />';
 ////// urls //////
 
 ////// variables //////
@@ -386,7 +386,8 @@ function _p50_impresionClic(tipoimp)
                     {
                         params :
                         {
-                            cdtipimp : tipoimp
+                            cdtipimp  : tipoimp
+                            ,tipolote : 'R'
                         }
                         ,list  : []
                     };
@@ -408,7 +409,7 @@ function _p50_impresionClic(tipoimp)
                             ,nmpoliza : rec.get('nmpoliza')
                             ,nmsuplem : rec.get('nmsuplem')
                             ,cdagente : rec.get('cdagente')
-                            ,ntramite : rec.get('ntramite')
+                            ,nmrecibo : rec.get('nmrecibo')
                         });
                     }
                     debug('jsonData:',jsonData);
@@ -416,7 +417,7 @@ function _p50_impresionClic(tipoimp)
                     _setLoading(true,grid);
                     Ext.Ajax.request(
                     {
-                        url : _p50_urlGenerarLote
+                        url       : _p50_urlGenerarLote
                         ,jsonData : jsonData
                         ,success  : function(response)
                         {
@@ -441,7 +442,7 @@ function _p50_impresionClic(tipoimp)
                                                     lote      : json.params.lote
                                                     ,cdtipram : json.params.cdtipram
                                                     ,cdtipimp : json.params.cdtipimp
-                                                    ,tipolote : 'P'
+                                                    ,tipolote : 'R'
                                                     ,callback : function(){ _fieldById('_p50_gridRecibos').getStore().removeAll(); }
                                                     ,closable : false
                                                 });
