@@ -701,7 +701,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		logger.debug("*** Empieza generacion de URLs para Recibos ***");
 		
 		String visible = null;
-		int contVisible = 0;
+		HashMap<String,String> imprimir = new HashMap<String, String>(); 
 		for(ReciboWrapper recVO: recibos){
 			
 			recibo = recVO.getRecibo();
@@ -714,8 +714,16 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 			/**
 			 * Por default se permite imprimir solo el primer recibo y los demas se guardan ocultos.
 			 */
-			contVisible++;
-			visible = (1 == contVisible) ? Constantes.SI : Constantes.NO;
+
+			
+			String llave = recVO.getRecibo().getTipEnd() + Integer.toString(recVO.getRecibo().getNumEnd());
+			
+			if(!imprimir.containsKey(llave)){
+				visible = Constantes.SI;
+				imprimir.put(llave, Integer.toString(recVO.getRecibo().getNumRec()));
+			}else{
+				visible = Constantes.NO;
+			}
 			
 			try{
 				int numEndoso;
