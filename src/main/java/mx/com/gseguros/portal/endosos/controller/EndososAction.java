@@ -6566,6 +6566,10 @@ public class EndososAction extends PrincipalCoreAction
 			//////////////////////////////
 			logger.info("Codigo Postal Original:>"+valorCodPosOriginal+"<Codigo Postal Nuevo:>"+cdpostal+"<");
 
+			
+			/**
+			 *SE COMENTA PARA YA NO TARIFICAR 
+			 * 
 			if(cdpostal.equalsIgnoreCase(valorCodPosOriginal)){
 				logger.info("El codigo Postal para Endoso de Domicilio Full no ha cambiado, no se ejecuta SIGSVALIPOL, CALCULA_VALOR_ENDOSO");
 			}else{
@@ -6602,6 +6606,8 @@ public class EndososAction extends PrincipalCoreAction
 				//////////////////////////
 				
 			}
+			
+			*/
 			
 			// Se confirma el endoso si cumple la validacion de fechas: 
 			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(
