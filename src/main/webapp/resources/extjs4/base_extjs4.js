@@ -98,7 +98,7 @@ function validarRFC(rfc,tper)
 	debug('validacion inicial:',valido);
 	if(valido)
 	{
-		var regexLetras=/^[a-zA-Z]*$/;
+		var regexLetras=/^[a-zA-Z&]*$/;
 		var regexNumeros=/^[0-9]*$/;
 		var regexLetrasNumeros=/^[a-zA-Z0-9]*$/;
 		if(tper=='F'||tper=='S')
