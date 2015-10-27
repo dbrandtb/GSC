@@ -15,7 +15,7 @@ storeIncisos=new Ext.data.Store(
 
 Ext.onReady(function() {
 	Ext.selection.CheckboxModel.override( {
-		mode: 'SINGLE',
+		mode: 'SINGLE', 
 		allowDeselect: true
 	});
 	///// NUEVOS

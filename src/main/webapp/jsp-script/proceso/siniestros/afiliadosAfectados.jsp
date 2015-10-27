@@ -7,6 +7,7 @@
 		<script type="text/javascript">
 		/*LLAMADO Y ASIGNACION DE LAS VARIABLES*/
 			var _CONTEXT 								= '${ctx}';
+			var numAutServ								= null;
 			var _CATALOGO_TIPOMONEDA					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA"/>';
 			var _CATALOGO_COBERTURASTOTALES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURASTOTALES"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASTOTALES"/>';
@@ -95,6 +96,7 @@
 			var _URL_MRECUPERA							= '<s:url namespace="/siniestros" 		action="obtenerMRecupera" />';
 			var _URL_SUMASEG_RECUPERA					= '<s:url namespace="/siniestros"		action="obtieneDatosRecupera"/>';
 			var _URL_GUARDA_CONCEPTO_RECUPERA			= '<s:url namespace="/siniestros"  		action="guardarMRecupera"/>';
+			var _URL_LOADER_HISTORIAL_CPTPAGADO 	= '<s:url namespace="/siniestros"			action="includes/historialCPTPagados" />';
 			debug("VALOR DE _11_params --->",_11_params);
 			debug("VALOR DEL ROL ACTIVO --->",_CDROL);
 			var _11_itemsForm	=
@@ -1500,6 +1502,8 @@
 							select: function (grid, record, index, opts){
 								debug("VALOR DEL RECORD SELECCIONADO -->>>>", record);
 								debug("<--VALOR DE LA BANDERA DEL CONCEPTO-->",banderaConcepto,"<--VALOR DE LA BANDERA DEL ASEGURADO-->",banderaAsegurado);
+								//panelInicialPral.down('[name=historialCPT]').setDisabled(true);
+								
 								if(_11_params.CDRAMO != _RECUPERA){
 									debug("<<<<<--- DIFERENTE DE RECUPERA");
 									if (banderaConcepto == "1"){
@@ -1512,7 +1516,13 @@
 										guardaDatosComplementariosAsegurado(_11_aseguradoSeleccionado, banderaAsegurado);
 										storeConceptos.removeAll();
 									}else{
-										var numSiniestro = record.get('NMSINIES');
+										numSiniestro = record.get('NMSINIES');
+										numAutServ   = record.get('NMAUTSER');
+										if(+numAutServ  > 0){
+											Ext.getCmp('historialCPT').enable();
+										}else{
+											Ext.getCmp('historialCPT').disable();
+										}
 										if(numSiniestro.length == "0"){
 											revisarDocumento(grid,index);
 										}else{
@@ -1875,6 +1885,43 @@
 									,icon:_CONTEXT+'/resources/fam3icons/icons/disk.png'
 									,handler : function() {
 										_guardarConceptosxFactura();
+									}
+								},
+								{
+									text	: 'Historial Autorizaci&oacute;n'
+									,icon	: _CONTEXT+'/resources/fam3icons/icons/disk.png'
+									,id		: 'historialCPT'
+									,name  	: 'historialCPT'
+									,hidden : _tipoPago != _TIPO_PAGO_DIRECTO
+									,handler : function() {
+										//_guardarConceptosxFactura();
+										debug("numAutServ   ===> :",numAutServ);
+										var windowHistSinies = Ext.create('Ext.window.Window',{
+											modal       : true,
+											buttonAlign : 'center',
+											width       : 850,
+											height      : 500,
+											autoScroll  : true,
+											loader      : {
+												url     : _URL_LOADER_HISTORIAL_CPTPAGADO,
+												params  : {
+													'params.nmautser'  : numAutServ 
+												},
+												scripts  : true,
+												loadMask : true,
+												autoLoad : true,
+												ajaxOptions: {
+													method: 'POST'
+												}
+											},
+											buttons: [{
+												icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+												text: 'Cerrar',
+												handler: function() {windowHistSinies.close();}
+											}]
+										}).show();
+											centrarVentana(windowHistSinies);
+										
 									}
 								}
 							]
@@ -3327,6 +3374,7 @@
 
 	function _11_llenaFormulario()
 	{
+		Ext.getCmp('historialCPT').disable();
 		Ext.Ajax.request({
 			url	 : _URL_DATOS_VALIDACION
 			,params:{
@@ -3628,9 +3676,10 @@
 		});
 	}
 
-	function guardaCambiosAutorizacionServ(record, numeroAutorizacion, tipoProceso){
+	function guardaCambiosAutorizacionServ(record, numeroAutorizacion, tipoProceso, actMisiniper){
 		debug("Valores de entrada para el guardado ",record);
 		debug("Numero de Autorizacion : ",numeroAutorizacion);
+		debug("Actualiza  actMisiniper : ",actMisiniper);
 		
 		Ext.Ajax.request({
 			url     : _URL_CONSULTA_AUTORIZACION_ESP
@@ -3641,7 +3690,7 @@
 				var jsonAutServ = Ext.decode(response.responseText).datosAutorizacionEsp;
 				debug("VALOR DE RESPUESTA :: ",jsonAutServ);
 				
-				_11_guardarDatosComplementario(record.data.CDUNIECO, 
+				_11_guardarDatosComplementario(record.data.CDUNIECO,
 											record.data.CDRAMO,
 											record.data.ESTADO,
 											record.data.NMPOLIZA,
@@ -3658,7 +3707,8 @@
 											jsonAutServ.nmautser,
 											record.data.CDPERSON,
 											tipoProceso,
-											record.data.COMPLEMENTO
+											record.data.COMPLEMENTO,
+											actMisiniper
 											);
 				
 			},
@@ -3692,7 +3742,7 @@
 			if(banderaAsegurado == "1"){
 				valorRegistro = "0";
 			}
-			_11_guardarDatosComplementario(record.data.CDUNIECO, 
+			_11_guardarDatosComplementario(record.data.CDUNIECO,
 											record.data.CDRAMO,
 											record.data.ESTADO,
 											record.data.NMPOLIZA,
@@ -3709,7 +3759,9 @@
 											record.data.NMAUTSER,
 											record.data.CDPERSON,
 											valorRegistro,
-											record.data.COMPLEMENTO);
+											record.data.COMPLEMENTO,
+											"0"
+											);
 		}else{
 			mensajeWarning(
 				'Complemente la informaci&oacute;n del Asegurado');
@@ -3719,7 +3771,7 @@
 	function _11_guardarDatosComplementario(cdunieco,cdramo, estado, nmpoliza, nmsuplem,
 										aaapertu, nmsinies,feocurre, nmreclamo, cdicd,
 										cdicd2,cdcausa, cdgarant,cdconval, nmautser,
-										cdperson, tipoProceso, complemento){
+										cdperson, tipoProceso, complemento, actMisiniper){
 		Ext.Ajax.request(
 		{
 			url	 : _URL_ACTUALIZA_INFO_GRAL_SIN
@@ -3756,7 +3808,8 @@
 				'params.dctonuex' : null,
 				'params.cdperson' : cdperson,
 				'params.tipoProceso' : tipoProceso,
-				'params.complemento' : complemento
+				'params.complemento' : complemento,
+				'params.actMisiniper' : actMisiniper
 			}
 			,success : function (response)
 			{
@@ -4539,12 +4592,13 @@
 			datosIncompletos();
 		}else{
 			_11_windowModificarAut.close();
-			guardaCambiosAutorizacionServ(_11_aseguradoSeleccionado, _11_textfieldNmautservMod.getValue(),"0");
+			guardaCambiosAutorizacionServ(_11_aseguradoSeleccionado, _11_textfieldNmautservMod.getValue(),"0","1");
 		}
 	}
 	
 	function _11_asociarAutorizacion()
 	{
+		debug("_11_recordActivo ===> ",_11_recordActivo);
 		var valido = _11_formPedirAuto.isValid();
 		if(!valido)
 		{
@@ -4561,7 +4615,12 @@
 				,'params.ntramite' : panelInicialPral.down('[name=params.ntramite]').getValue()
 				,'params.nfactura' : panelInicialPral.down('[name=params.nfactura]').getValue()
 				,'params.feocurrencia' : _11_recordActivo.get('FEOCURRE')
+				,'params.cdunieco' : _11_recordActivo.get('CDUNIECO')
+				,'params.cdramo' : _11_recordActivo.get('CDRAMO')
+				,'params.estado' : _11_recordActivo.get('ESTADO')
+				,'params.cdpresta' : panelInicialPral.down('combo[name=params.cdpresta]').getValue()
 			};
+			
 			_11_formPedirAuto.setLoading(true);
 			_11_windowPedirAut.close();
 			Ext.Ajax.request(
@@ -4573,6 +4632,7 @@
 					_11_formPedirAuto.setLoading(false);
 					
 					json = Ext.decode(response.responseText);
+					debug("Valor de respuesta del guardado ===>>",json);
 					if(json.success==true)
 					{
 						_11_guardarInformacionAdicional();

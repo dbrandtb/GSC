@@ -624,4 +624,8 @@ public interface SiniestrosManager {
 			String cantporc,String ptimport, String accion) throws Exception;
 	
 	public String actualizaTelefonoEmailAsegurado(HashMap<String, Object> paramsAsegurado) throws Exception;
+	
+	public void guardaAutorizacionConceptos(String cdunieco, String cdramo, String estado, String nfactura, String nmautser, String cdpresta, String cdperson) throws Exception;
+	
+	public List<Map<String,String>> cargaHistorialCPTPagados(Map<String,String> params) throws Exception;
 }

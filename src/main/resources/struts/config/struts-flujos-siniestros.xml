@@ -923,6 +923,33 @@
 				</param>
 			</result>
 		</action>
+		
+		<action name="includes/historialCPTPagados" class="detalleSiniestroAction">
+			<result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/verHistorialCPTPagados.jsp</result>
+		</action>
+		
+		<action name="cargaHistorialCPTPagados" class="detalleSiniestroAction" method="cargaHistorialCPTPagados">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					loadList.*,
+					success,
+					msgResult
+				</param>
+			</result>
+		</action>
+		
+		
+		<action name="cargaHistorialSiniestros" class="detalleSiniestroAction" method="cargaHistorialSiniestros">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					loadList.*,
+					success,
+					msgResult
+				</param>
+			</result>
+		</action>
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>
