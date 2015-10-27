@@ -1664,43 +1664,59 @@ function _0_recuperarDescuento()
 
 
 function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
-	var validacionNumSerie = Ext.create('Ext.window.Window', {
-		title       : titulo,
-		layout      : {
-			type    : 'table',
-			align   : 'center', 
-			columns : 2
-		}
-		,defaults 	: {
+	var panelImagen = new Ext.Panel({
+		defaults 	: {
 			style   : 'margin:5px;'
 		},
-		items: [
-				{
-					xtype   : 'image'
-					,src    : imagenSeccion
-				},
-				{
-					xtype  : 'label'
-					,text  : txtRespuesta
-					,style : 'color:red;margin:5px;'
-				},
-				{
-					xtype   : 'image'
-					,colspan: 2
-					,src    : '${ctx}/images/cotizacionautos/menu_endosos.png'
-				}
+		layout: {
+             type: 'hbox'
+             ,align: 'center'
+             ,pack: 'center'
+         }
+        ,border: false
+        ,items:[
+	        {	        	
+				xtype   : 'image'
+			    ,src    : '${ctx}/images/cotizacionautos/menu_endosos.png'
+		    }
+	    ]
+	});
+	
+	
+	var validacionNumSerie = Ext.create('Ext.window.Window', {
+		title			: titulo
+		,modal			: true
+		,buttonAlign	: 'center'
+		,width			: 510
+		,height		:	220
+		,defaults 	: {
+			style   : 'margin:5px;'
+		}
+		,items    : [
+			{
+			xtype   : 'image'
+			,src    : imagenSeccion
+		},{
+			xtype  : 'label'
+			,text  : txtRespuesta
+			,style : 'color:red;margin:5px;'
+		},{
+				border: false
+				,items    :
+				[	panelImagen		]
+			}            
 		],
 		buttonAlign:'center',
 		buttons: [{
 			text: 'Aceptar',
-			icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
+			icon: _CONTEXT+'/resources/fam3icons/icons/accept.png',
 			buttonAlign : 'center',
 			handler: function() {
 				validacionNumSerie.close();
 			}
 		}]
-		});
-		centrarVentanaInterna(validacionNumSerie.show());
+	});
+	centrarVentanaInterna(validacionNumSerie.show());
 }
 
 /*///////////////////*/
