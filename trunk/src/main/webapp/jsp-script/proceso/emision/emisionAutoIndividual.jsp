@@ -395,33 +395,37 @@ Ext.onReady(function()
 		}
 		,'blur' : function()
 		{
-			
-			Ext.Ajax.request(
-			{
-				url     : _p29_urlObtieneValNumeroSerie
-				,params :
+			debug("Valor 1 -->",!Ext.isEmpty(folio.getValue()));
+			if(!Ext.isEmpty(folio.getValue())){
+				Ext.Ajax.request(
 				{
-					'smap1.numSerie'  : folio.getValue()
-					,'smap1.feini'   : _fieldByName('feini').getValue()
-				}
-				,success : function(response)
-				{
-					var json=Ext.decode(response.responseText);
-        	    	if(json.exito!=true)
-        	    	{
-        	    		if(_p29_smap1.cdsisrol!='SUSCRIAUTO'){
-        	    			mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
-        					 _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
-        				}else{
-        					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
-        					_fieldById('_p29_botonEmitir').setDisabled(false);
-        				}
-        	    	}else{
-        	    		_fieldById('_p29_botonEmitir').setDisabled(false);
-        	    	}
-				}
-				,failure : errorComunicacion
-			});
+					url     : _p29_urlObtieneValNumeroSerie
+					,params :
+					{
+						'smap1.numSerie'  : folio.getValue()
+						,'smap1.feini'   : _fieldByName('feini').getValue()
+					}
+					,success : function(response)
+					{
+						var json=Ext.decode(response.responseText);
+	        	    	if(json.exito!=true)
+	        	    	{
+	        	    		if(_p29_smap1.cdsisrol!='SUSCRIAUTO'){
+	        	    			mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
+	        					 _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
+	        				}else{
+	        					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
+	        					_fieldById('_p29_botonEmitir').setDisabled(false);
+	        				}
+	        	    	}else{
+	        	    		_fieldById('_p29_botonEmitir').setDisabled(false);
+	        	    	}
+					}
+					,failure : errorComunicacion
+				});	
+			}else{
+				mensajeError("No se recibio el número de serie");
+			}
 		}
 	});
 });
@@ -1269,7 +1273,7 @@ function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
 	    	columns : 2
 		}
 		,defaults 	: {
-			style : 'margin:5px;'
+			style: 'display: table-cell; vertical-align: middle; text-align: center'
 		},
 	    items: 
 	    [{
@@ -1281,9 +1285,12 @@ function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
 	            ,text  : txtRespuesta
 	            ,style : 'color:red;margin:5px;'
 	        },
-	    {
-	        	
+	    {	        	
 			xtype   : 'image'
+			,layout: {
+			       type: 'box',
+			       pack: 'center'
+		     }
 	        ,colspan:2
 	        ,src    : '${ctx}/images/cotizacionautos/menu_endosos.png'
 	    }

@@ -2213,7 +2213,7 @@ function _datComTurnarSuscripcion()
                 		buttonAlign:'center',
                 		buttons: [{
                 			text: 'Aceptar',
-                			icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
+                			icon:contexto+'/resources/fam3icons/icons/accept.png',
                 			buttonAlign : 'center',
                 			handler: function() {
                 				validacionNumSerie.close();
