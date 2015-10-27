@@ -1069,6 +1069,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 						if(t.getSwsuscri().equalsIgnoreCase("N"))//N=Agrupado
 						{
 							tatriTemp.add(t);
+							t.setMenorCero(true);
 							if(mapaAtributosReadonly.containsKey(t.getNameCdatribu()))
 							{
 								t.setSoloLectura(true);
@@ -1084,6 +1085,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 						if(t.getSwsuscri().equalsIgnoreCase("S"))//S=individual
 						{
 							tatriTemp.add(t);
+							t.setMenorCero(true);
 							if(mapaAtributosReadonly.containsKey(t.getNameCdatribu()))
 							{
 								t.setSoloLectura(true);
