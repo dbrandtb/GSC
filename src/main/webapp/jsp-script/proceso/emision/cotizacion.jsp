@@ -2413,6 +2413,29 @@ Ext.onReady(function()
                         _0_formAgrupados.down('[name=parametros.pv_otvalor26]').setValue((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2));
                         debug('set min value:',((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1-(json.smap1.FACTOR_MIN-0)));
                         debug('set max value:',((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0)));
+                        
+                        Ext.Ajax.request({
+            				url     : _0_urlObtieneValNumeroSerie
+            				,params :
+            				{
+            					'smap1.numSerie'  :  _0_formAgrupados.down('[name=parametros.pv_otvalor03]').getValue()
+            					,'smap1.feini'   :  Ext.getCmp('fechaInicioVigencia').getValue()
+            				}
+            				,success : function(response)
+            				{
+            					var json=Ext.decode(response.responseText);
+            					debug(json);
+                    	    	if(json.exito!=true)
+                    	    	{
+                    	    		if(_0_smap1.cdsisrol!='SUSCRIAUTO'){
+                    	    			mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
+                    				}else{
+                    					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
+                    				}
+                    	    	}
+            				}
+            				,failure : errorComunicacion
+            			});
                     }
                     else
                     {
@@ -2434,32 +2457,11 @@ Ext.onReady(function()
                 ,failure : function()
                 {
                     _0_formAgrupados.setLoading(false);
+                    debug("Entra a esta parte");
                     errorComunicacion();
                 }
             });
-            debug('<llamando a nada');
-            Ext.Ajax.request({
-				url     : _0_urlObtieneValNumeroSerie
-				,params :
-				{
-					'smap1.numSerie'  :  _0_formAgrupados.down('[name=parametros.pv_otvalor03]').getValue()
-					,'smap1.feini'   :  Ext.getCmp('fechaInicioVigencia').getValue()
-				}
-				,success : function(response)
-				{
-					var json=Ext.decode(response.responseText);
-        	    	if(json.exito!=true)
-        	    	{
-        	    		if(_0_smap1.cdsisrol!='SUSCRIAUTO'){
-        	    			mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
-        				}else{
-        					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
-        				}
-        	    	}
-				}
-				,failure : errorComunicacion
-			});
-            
+            debug('<llamando a nada');            
         });
         var comboTipoValor =_0_formAgrupados.down('[name=parametros.pv_otvalor02]');
         var itemSumaAsegu  =_0_formAgrupados.down('[name=parametros.pv_otvalor07]');
