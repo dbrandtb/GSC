@@ -159,6 +159,8 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TRAZCANAU:
 				case CVECOLUMNA:
 				case FORMATOFECHA:
+				case TIPOS_IMP_LOTE:
+				case TIPOS_LOTE_IMPR:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case MC_SUCURSALES_ADMIN:

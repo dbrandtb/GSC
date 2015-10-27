@@ -123,7 +123,9 @@ public enum Catalogos {
 	RAMOS_X_TIPORAMO(""),
 	SUCURSALES_X_TIPORAMO(""),
 	SUBCOBERTURASRECUPERA(""),
-	USUARIOS("")
+	USUARIOS(""),
+	TIPOS_IMP_LOTE("TIPOIMPR"),
+	TIPOS_LOTE_IMPR("TIPOLOTE")
 	;
 
 	private String cdTabla;

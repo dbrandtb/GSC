@@ -113,6 +113,9 @@ _4_botonesGrid.push('->',
 <s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("19")}'>
 <%@ include file="/jsp-script/proceso/siniestros/scriptMesaSISCO.jsp"%>
 </s:elseif>
+<s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("20")}'>
+<%@ include file="/jsp-script/proceso/emision/scriptMesaImpresion.jsp"%>
+</s:elseif>
 _4_botones.width = (_4_botones.items.length*20)+20;
 
 ///////////////////////
@@ -682,22 +685,26 @@ Ext.onReady(function()
 		    	    		{
 		    	    			var params=
 		    	    			{
-		    	    				'smap1.pv_cdunieco_i'  : _fieldByName('smap2.pv_cdunieco_i').getValue()
-		    	    			    ,'smap1.pv_cdramo_i'   : _fieldByName('smap2.pv_cdramo_i').getValue()
-		    	                    ,'smap1.pv_cdtipsit_i' : _fieldByName('smap2.pv_cdtipsit_i').getValue()
-		    	                    ,'smap1.pv_estado_i'   : _fieldByName('smap2.pv_estado_i').getValue()
-		    	    			    ,'smap1.pv_nmpoliza_i' : _fieldByName('smap2.pv_nmpoliza_i').getValue()
-		    	                    ,'smap1.pv_cdagente_i' : _fieldByName('smap2.pv_cdagente_i').getValue()
-		    	    			    ,'smap1.pv_ntramite_i' : _fieldByName('smap2.pv_ntramite_i').getValue()
-		    	                    ,'smap1.pv_status_i'   : _fieldByName('smap2.pv_status_i').getValue()
-		    	                    ,'smap1.pv_fedesde_i'  : Ext.isEmpty(_fieldByName('smap2.pv_fedesde_i').getValue())?'':Ext.Date.format(_fieldByName('smap2.pv_fedesde_i').getValue(),'d/m/Y')
-		    	                    ,'smap1.pv_fehasta_i'  : Ext.isEmpty(_fieldByName('smap2.pv_fehasta_i').getValue())?'':Ext.Date.format(_fieldByName('smap2.pv_fehasta_i').getValue(),'d/m/Y')
-		    	                    ,'smap1.pv_cdtiptra_i' : mcdinInput['tiptra']
-		    	    				,'smap1.pv_contrarecibo_i'	: Ext.isEmpty(_fieldByName('smap2.pv_contrarecibo_i').getValue())?'':_fieldByName('smap2.pv_contrarecibo_i').getValue()
-		    	    				,'smap1.pv_tipoPago_i'	: Ext.isEmpty(_fieldByName('smap2.pv_tipoPago_i').getValue())?'':_fieldByName('smap2.pv_tipoPago_i').getValue()
-		    	    				,'smap1.pv_nfactura_i'	: Ext.isEmpty(_fieldByName('smap2.pv_nfactura_i').getValue())?'':_fieldByName('smap2.pv_nfactura_i').getValue()
-		    	    				,'smap1.pv_cdpresta_i'	: Ext.isEmpty(_fieldByName('smap2.pv_cdpresta_i').getValue())?'':_fieldByName('smap2.pv_cdpresta_i').getValue()
-		    	    				,'smap1.filtro'         : loadMcdinStoreFiltro
+		    	    				'smap1.pv_cdunieco_i'      : _fieldByName('smap2.pv_cdunieco_i').getValue()
+		    	    			    ,'smap1.pv_cdramo_i'       : _fieldByName('smap2.pv_cdramo_i').getValue()
+		    	                    ,'smap1.pv_cdtipsit_i'     : _fieldByName('smap2.pv_cdtipsit_i').getValue()
+		    	                    ,'smap1.pv_estado_i'       : _fieldByName('smap2.pv_estado_i').getValue()
+		    	    			    ,'smap1.pv_nmpoliza_i'     : _fieldByName('smap2.pv_nmpoliza_i').getValue()
+		    	                    ,'smap1.pv_cdagente_i'     : _fieldByName('smap2.pv_cdagente_i').getValue()
+		    	    			    ,'smap1.pv_ntramite_i'     : _fieldByName('smap2.pv_ntramite_i').getValue()
+		    	                    ,'smap1.pv_status_i'       : _fieldByName('smap2.pv_status_i').getValue()
+		    	                    ,'smap1.pv_fedesde_i'      : Ext.isEmpty(_fieldByName('smap2.pv_fedesde_i').getValue())?'':Ext.Date.format(_fieldByName('smap2.pv_fedesde_i').getValue(),'d/m/Y')
+		    	                    ,'smap1.pv_fehasta_i'      : Ext.isEmpty(_fieldByName('smap2.pv_fehasta_i').getValue())?'':Ext.Date.format(_fieldByName('smap2.pv_fehasta_i').getValue(),'d/m/Y')
+		    	                    ,'smap1.pv_cdtiptra_i'     : mcdinInput['tiptra']
+		    	    				,'smap1.pv_contrarecibo_i' : Ext.isEmpty(_fieldByName('smap2.pv_contrarecibo_i').getValue())?'':_fieldByName('smap2.pv_contrarecibo_i').getValue()
+		    	    				,'smap1.pv_tipoPago_i'	   : Ext.isEmpty(_fieldByName('smap2.pv_tipoPago_i').getValue())?'':_fieldByName('smap2.pv_tipoPago_i').getValue()
+		    	    				,'smap1.pv_nfactura_i'	   : Ext.isEmpty(_fieldByName('smap2.pv_nfactura_i').getValue())?'':_fieldByName('smap2.pv_nfactura_i').getValue()
+		    	    				,'smap1.pv_cdpresta_i'	   : Ext.isEmpty(_fieldByName('smap2.pv_cdpresta_i').getValue())?'':_fieldByName('smap2.pv_cdpresta_i').getValue()
+		    	    				,'smap1.filtro'            : loadMcdinStoreFiltro
+		    	    				,'smap1.lote'              : _getValueByName('smap1.lote'          , false)
+		    	    				,'smap1.tipolote'          : _getValueByName('smap1.tipolote'      , false)
+		    	    				,'smap1.tipoimpr'          : _getValueByName('smap1.tipoimpr'      , false)
+		    	    				,'smap1.cdusuari_busq'     : _getValueByName('smap1.cdusuari_busq' , false)
 		    	    			};
 		    	    			cargaStorePaginadoLocal(mcdinStore, mcdinUrlCargar, 'olist1', params, function (options, success, response){
 		    	    			    loadMcdinStoreFiltro = '';
@@ -825,21 +832,26 @@ Ext.onReady(function()
     /*//////////////////*/
     loadMcdinStore = function (){
     	var params = {
-	            'smap1.pv_cdunieco_i'   : mcdinInput['cdunieco']
-		        ,'smap1.pv_ntramite_i' : mcdinInput['ntramite']
-		        ,'smap1.pv_cdramo_i'   : mcdinInput['cdramo']
-		        ,'smap1.pv_nmpoliza_i' : mcdinInput['nmpoliza']
-		        ,'smap1.pv_estado_i'   : mcdinInput['estado']
-		        ,'smap1.pv_cdagente_i' : mcdinInput['cdagente']
-		        ,'smap1.pv_status_i'   : mcdinInput['status']
-		        ,'smap1.pv_cdtipsit_i' : mcdinInput['cdtipsit']
-		        ,'smap1.pv_fedesde_i'  : mcdinInput['fedesde']
-		        ,'smap1.pv_fehasta_i'  : mcdinInput['fehasta']
-		        ,'smap1.pv_cdtiptra_i' : mcdinInput['tiptra']
+	            'smap1.pv_cdunieco_i'     : mcdinInput['cdunieco']
+		        ,'smap1.pv_ntramite_i'    : mcdinInput['ntramite']
+		        ,'smap1.pv_cdramo_i'      : mcdinInput['cdramo']
+		        ,'smap1.pv_nmpoliza_i'    : mcdinInput['nmpoliza']
+		        ,'smap1.pv_estado_i'      : mcdinInput['estado']
+		        ,'smap1.pv_cdagente_i'    : mcdinInput['cdagente']
+		        ,'smap1.pv_status_i'      : mcdinInput['status']
+		        ,'smap1.pv_cdtipsit_i'    : mcdinInput['cdtipsit']
+		        ,'smap1.pv_fedesde_i'     : mcdinInput['fedesde']
+		        ,'smap1.pv_fehasta_i'     : mcdinInput['fehasta']
+		        ,'smap1.pv_cdtiptra_i'    : mcdinInput['tiptra']
     			,'smap1.pv_contrarecibo_i': mcdinInput['contrarecibo']
-    			,'smap1.pv_tipoPago_i'	:mcdinInput['tipoPago']
-		    	,'smap1.pv_nfactura_i'	:mcdinInput['nfactura']
-		    	,'smap1.pv_cdpresta_i'	:mcdinInput['cdpresta']
+    			,'smap1.pv_tipoPago_i'	  : mcdinInput['tipoPago']
+		    	,'smap1.pv_nfactura_i'	  : mcdinInput['nfactura']
+		    	,'smap1.pv_cdpresta_i'	  : mcdinInput['cdpresta']
+		    	,'smap1.cdtipram'         : mcdinInput['cdtipram']
+		    	,'smap1.lote'             : mcdinInput['lote']
+                ,'smap1.tipolote'         : mcdinInput['tipolote']
+                ,'smap1.tipoimpr'         : mcdinInput['tipoimpr']
+                ,'smap1.cdusuari_busq'    : mcdinInput['cdusuari_busq']
 		   };
     	
     	cargaStorePaginadoLocal(mcdinStore, mcdinUrlCargar, 'olist1', params, function (options, success, response){

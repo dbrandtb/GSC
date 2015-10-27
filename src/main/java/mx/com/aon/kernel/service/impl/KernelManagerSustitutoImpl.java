@@ -995,9 +995,9 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
 	}
 	
-	public List<Map<String, String>> loadMesaControl(Map<String,String> param) throws ApplicationException
+	public List<Map<String, String>> loadMesaControl(Map<String,String> params) throws ApplicationException
 	{
-		log.debug("### kernel sustituto loadMesaControl map: "+param);
+		log.debug("### kernel sustituto loadMesaControl map: "+params);
 		/////////////////////////////////////////////////////////////////
 		////// transformacion de mapa de strings a mapa de objetos //////
 		/*/////////////////////////////////////////////////////////////*
@@ -1034,7 +1034,32 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		/*/////////////////////////////////////////////////////////////*/
 		////// transformacion de mapa de strings a mapa de objetos //////
 		/////////////////////////////////////////////////////////////////
-        List<Map<String,String>> lista= this.getAllBackBoneInvoke(param, ProcesoDAO.LOAD_MESA_CONTROL);
+		
+		if(params!=null)
+		{
+			if(!params.containsKey("cdtipram"))
+			{
+				params.put("cdtipram" , null);
+			}
+			if(!params.containsKey("lote"))
+			{
+				params.put("lote" , null);
+			}
+			if(!params.containsKey("tipolote"))
+			{
+				params.put("tipolote" , null);
+			}
+			if(!params.containsKey("tipoimpr"))
+			{
+				params.put("tipoimpr" , null);
+			}
+			if(!params.containsKey("cdusuari_busq"))
+			{
+				params.put("cdusuari_busq" , null);
+			}
+		}
+		
+        List<Map<String,String>> lista= this.getAllBackBoneInvoke(params, ProcesoDAO.LOAD_MESA_CONTROL);
         lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
         log.debug("### kernel sustituto loadMesaControl lista size: "+lista.size());
         return lista;

@@ -171,6 +171,10 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 				{
 					renderer = ComponenteVO.RENDERER_MONEY_EXT;
 				}
+				else if((String.valueOf(sRenderer.charAt(0)).equals("[")))
+				{
+					renderer = Utils.join("function(v){ return rendererSplits(v,'",sRenderer,"')}");
+				}
 				else if(!sRenderer.equalsIgnoreCase(Constantes.NO))
 				{
 					renderer = sRenderer;
