@@ -132,6 +132,12 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			
 			siniestrosManager.guardaListaFacturaSiniestro(params.get("ntramite"), params.get("nfactura"), dFeFactura , params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),dFeEgreso, params.get("diasdedu"),null,null);
 			success = true;
+			
+			if(params.get("actMisiniper").equalsIgnoreCase("1")){
+				siniestrosManager.guardaAutorizacionConceptos(params.get("cdunieco"),params.get("cdramo"),params.get("estado"),params.get("nfactura"),
+						params.get("nmautser"),params.get("cdpresta"),params.get("cdperson"));
+			}
+			
 		}catch(Exception e){
 			logger.error("Error en actualizaDatosGeneralesSiniestro {}", e.getMessage(), e);
 		}
@@ -471,6 +477,24 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			logger.error("Error en obtieneDatosGeneralesSiniestro : {}", e.getMessage(), e);
 			
 		}
+		return SUCCESS;
+	}
+	
+	/**
+	* Funcion que visualiza la informacion del historial de reclamaciones
+	* @param params
+	* @return Historial de reclamaciones de siniestros
+	*/
+	public String cargaHistorialCPTPagados(){
+		logger.debug("Entra a cargaHistorialSiniestros Params: {}", params);
+		try {
+			loadList = siniestrosManager.cargaHistorialCPTPagados(params); 
+		}catch( Exception e){
+			logger.error("Error en loadListaFacturasTramite : {}", e.getMessage(), e);
+			success =  false;
+			return SUCCESS;
+		}
+		success = true;
 		return SUCCESS;
 	}
 	

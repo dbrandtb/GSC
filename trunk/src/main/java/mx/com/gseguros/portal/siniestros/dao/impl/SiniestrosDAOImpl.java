@@ -4884,4 +4884,55 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	@Override
+	public void guardaAutorizacionConceptos(Map<String, Object> params) throws Exception
+	{
+		ejecutaSP(new GuardaAutorizacionConceptos(this.getDataSource()), params);
+	}
+	
+	protected class GuardaAutorizacionConceptos extends StoredProcedure
+	{
+		protected GuardaAutorizacionConceptos(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_INSERTA_AUTMSINIVAL");
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdpresta_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>>cargaHistorialCPTPagados(Map<String,String> params) throws Exception
+	{
+		Map<String, Object> mapResult = ejecutaSP(new CargaHistorialCPTPagados(this.getDataSource()), params);
+		return (List<Map<String,String>>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class CargaHistorialCPTPagados extends StoredProcedure
+	{
+		protected CargaHistorialCPTPagados(DataSource dataSource)
+		{
+			super(dataSource, "PKG_DESARROLLO.P_OBTIENE_CPTPAGADO");
+			declareParameter(new SqlParameter("pv_nmautser_i" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NTRAMITE",			"CONTRARECIBO",			"NFACTURA",			"NMSINIES",
+					"DSGARANT",			"DSCONVAL",				"SUBTOTAL",			"IVA",
+					"IVARETENIDO",		"ISR",					"IMPCEDULAR",		"PAGADO",
+					"DSESTATUS",		"NOMBREASEG",			"POLIZA"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

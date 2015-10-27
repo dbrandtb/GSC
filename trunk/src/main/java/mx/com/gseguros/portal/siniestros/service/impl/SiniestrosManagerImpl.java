@@ -1922,4 +1922,34 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	public void guardaAutorizacionConceptos(String cdunieco, String cdramo, String estado, String nfactura,
+			String nmautser, String cdpresta, String cdperson) throws Exception
+	{
+		//Map<String,String> params = new HashMap<String,String>();
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i",cdunieco);
+		params.put("pv_cdramo_i",cdramo);
+		params.put("pv_estado_i",estado);
+		params.put("pv_nfactura_i",nfactura);
+		params.put("pv_nmautser_i",nmautser);
+		params.put("pv_cdpresta_i",cdpresta);
+		params.put("pv_cdperson_i",cdperson);
+		log.debug("guardaAutorizacionConceptos params: "+params);
+		siniestrosDAO.guardaAutorizacionConceptos(params);
+		log.debug("guardaAutorizacionConceptos end");
+	}
+	
+	@Override
+	public List<Map<String,String>> cargaHistorialCPTPagados(Map<String,String> params) throws Exception
+	{
+		List<Map<String,String>>lista=siniestrosDAO.cargaHistorialCPTPagados(params);
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		log.debug("cargaHistorial lista size:"+lista.size());
+		return lista;
+	}
 }

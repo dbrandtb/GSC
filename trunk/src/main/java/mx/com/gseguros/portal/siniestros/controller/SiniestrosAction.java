@@ -1050,6 +1050,11 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	public String iniciarSiniestroTworksin() {
 		logger.debug("Entra a iniciarSiniestroTworksin params de entrada :{}",params);
 		try {
+			String cdunieco = params.get("cdunieco");
+			String cdramo = params.get("cdramo");
+			String estado = params.get("estado");
+			String cdpresta = params.get("cdpresta");
+			
 			String nmautser = params.get("nmautser");
 			String cdperson = params.get("cdperson");
 			String nmpoliza = params.get("nmpoliza");
@@ -1062,8 +1067,11 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			siniestrosManager.actualizarAutorizacionTworksin(ntramite,nmpoliza,cdperson,nmautser,nfactura,feocurrencia);
 			//CREA UN MSINIEST A PARTIR DE TWORKSIN
 			siniestrosManager.getAltaSiniestroAutServicio(nmautser,nfactura);
+			
+			
 			mensaje = "Se ha asociado el siniestro con la autorizaci&oacute;n";
 			success=true;
+			siniestrosManager.guardaAutorizacionConceptos(cdunieco,cdramo,estado,nfactura,nmautser,cdpresta,cdperson);
 		}
 		catch(Exception ex){
 			logger.error("error al inicar siniestro desde tworksin : {}", ex.getMessage(), ex);
@@ -4915,6 +4923,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		}
 		return SUCCESS;
 	}
+	
 /****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {
 		return listaTipoAtencion;

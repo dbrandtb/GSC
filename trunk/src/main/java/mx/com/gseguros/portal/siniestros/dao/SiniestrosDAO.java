@@ -494,4 +494,8 @@ public interface SiniestrosDAO {
 			String cantporc,String ptimport, String accion) throws Exception;
 
 	public String actualizaTelefonoEmailAsegurado(HashMap<String, Object> paramsAsegurado) throws Exception;
+	
+	public void guardaAutorizacionConceptos(Map<String, Object>params) throws Exception;
+	
+	public List<Map<String,String>>cargaHistorialCPTPagados(Map<String,String> params) throws Exception;
 }
