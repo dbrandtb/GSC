@@ -2183,44 +2183,60 @@ function _datComTurnarSuscripcion()
                 }
                 
                 
-                function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
-                	var validacionNumSerie = Ext.create('Ext.window.Window', {
-                		title       : titulo,
-                		layout      : {
-                			type    : 'table',
-                			align   : 'center', 
-                			columns : 2
-                		}
-                		,defaults 	: {
+                function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){              	
+                	var panelImagen = new Ext.Panel({
+                		defaults 	: {
                 			style   : 'margin:5px;'
                 		},
-                		items: [
-                				{
-                					xtype   : 'image'
-                					,src    : imagenSeccion
-                				},
-                				{
-                					xtype  : 'label'
-                					,text  : txtRespuesta
-                					,style : 'color:red;margin:5px;'
-                				},
-                				{
-                					xtype   : 'image'
-                					,colspan: 2
-                					,src    : contexto+'/images/cotizacionautos/menu_endosos.png'
-                				}
+                		layout: {
+                             type: 'hbox'
+                             ,align: 'center'
+                             ,pack: 'center'
+                         }
+                        ,border: false
+                        ,items:[
+                	        {	        	
+                				xtype   : 'image'
+                			    ,src    : contexto+'/images/cotizacionautos/menu_endosos.png'
+                		    }
+                	    ]
+                	});
+                	
+                	var validacionNumSerie = Ext.create('Ext.window.Window', {
+                		title			: titulo
+                		,modal			: true
+                		,buttonAlign	: 'center'
+                		,width			: 510
+                		,height		:	220
+                		,defaults 	: {
+                			style   : 'margin:5px;'
+                		}
+                		,items    : [
+                			{
+                			xtype   : 'image'
+                			,src    : imagenSeccion
+                		},{
+                			xtype  : 'label'
+                			,text  : txtRespuesta
+                			,style : 'color:red;margin:5px;'
+                		},{
+                				border: false
+                				,items    :
+                				[	panelImagen		]
+                			}            
                 		],
                 		buttonAlign:'center',
                 		buttons: [{
                 			text: 'Aceptar',
-                			icon:contexto+'/resources/fam3icons/icons/accept.png',
+                			icon: contexto+'/resources/fam3icons/icons/accept.png',
                 			buttonAlign : 'center',
                 			handler: function() {
                 				validacionNumSerie.close();
                 			}
                 		}]
-                		});
-                		centrarVentanaInterna(validacionNumSerie.show());
+                	});
+               	
+              		centrarVentanaInterna(validacionNumSerie.show());
                 }
                 
                 
