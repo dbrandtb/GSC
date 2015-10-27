@@ -445,7 +445,7 @@ function _fieldByName(name,parent,ocultarErrores)
     //debug('ocultarErrores:',ocultarErrores,'DUMMY');
     var comp;
     var arr = [];
-    if(parent)
+    if(!Ext.isEmpty(parent))
     {
         arr = Ext.ComponentQuery.query('[name='+name+']',parent);
     }
@@ -781,6 +781,42 @@ function _substringComa(cadena)
         cadena = cadena.substring(0,cadena.indexOf(','));
     }
     return cadena;
+}
+
+/**
+ * RECIBE SPLIT COMO UN DECODE
+ * [1|UNO|2|DOS|3|TRES]
+ * viene en pares clave|valor
+ *
+ */
+function rendererSplits(value,splits)
+{
+    return value+'split';
+}
+
+/**
+ * FUNCION PARA RECUPRAR VALOR DE UN COMPONENTE
+ * PUEDE NO EXISTIR
+ */
+function _getValueByName(compName,showError,parent)
+{
+    debug('_getValueByName(compName,showError,parent)[',compName,showError,parent,']');
+    if(Ext.isEmpty(showError)
+        ||(showError!=true && showError!=false)
+    )
+    {
+        showError = true;
+    }
+    
+    var cmp = _fieldByName(compName,parent,!showError);
+    var val;
+    
+    if(!Ext.isEmpty(cmp))
+    {
+        val = cmp.getValue();
+    }
+    
+    return val;
 }
 
 ////////////////////////////
