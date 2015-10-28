@@ -961,7 +961,7 @@ Ext.onReady(function()
 	                    debug('validar contra ',me.maximoTotal);
 	                    if(Number(val)>Number(me.maximoTotal))
 	                    {
-	                        return 'El valor m&aacute;ximo es '+me.maximoTotal;
+	                        return 'El valor m&aacute;ximo es ===>1 '+me.maximoTotal;
 	                    }
 	                    return true;
 	                };
@@ -2241,15 +2241,36 @@ function _p28_cargarRangoValorRamo5(callback)
                 debug('### obtener rango valor:',json);
                 if(json.exito)
                 {
-                    valormin = valorCargado*(1+(json.smap1.P1VALOR-0));
+                    /*valormin = valorCargado*(1+(json.smap1.P1VALOR-0));
                     valormax = valorCargado*(1+(json.smap1.P2VALOR-0));
                     valor.setMinValue(valormin);
                     valor.setMaxValue(valormax);
                     valor.isValid();
                     debug('valor:',valorCargado);
                     debug('valormin:',valormin);
-                    debug('valormax:',valormax);
+                    debug('valormax:',valormax);*/
                     
+                    valor.validator=function(value){
+                    	var r = true;
+                    	valormin = valorCargado*(1+(json.smap1.P1VALOR-0));
+                        valormax = valorCargado*(1+(json.smap1.P2VALOR-0));
+                        debug('valormin:',valormin);
+                        debug('valormax:',valormax);
+                        if(value<valormin||value>valormax)
+                        {
+                        	if(_p28_smap1.cdsisrol =='EJECUTIVOCUENTA'){
+                        		r='Favor de acudir a Mesa de Control para realizar la cotización';
+                        	}else{
+                        		if(value<valormin){
+                        			r= valor.setMinValue(valormin);
+                        		}else{
+                        			r= valor.setMaxValue(valormax);
+                        		}
+                        	}
+                        }
+                        return r;
+                    }
+                    valor.isValid();
                     _p28_cargarParametrizacionCoberturas(callback);
                 }
                 else
