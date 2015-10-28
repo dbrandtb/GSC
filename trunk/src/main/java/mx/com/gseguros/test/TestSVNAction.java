@@ -94,6 +94,8 @@ public class TestSVNAction extends PrincipalCoreAction {
         logger.debug("Printer Services found:");
         printService(services);
         
+//        OTRA PRUEBA DOS SLG
+        
         int iPrinter = Integer.parseInt(params.get("iPrinter"));
         
 		// Input the file
