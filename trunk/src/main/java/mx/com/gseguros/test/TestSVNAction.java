@@ -54,6 +54,8 @@ public class TestSVNAction extends PrincipalCoreAction {
 	
 	private Map<String, String> params;
 	
+	//RAGR
+	
 	/**
 	 * Lista las impresoras disponibles desde el servidor
 	 * @return
