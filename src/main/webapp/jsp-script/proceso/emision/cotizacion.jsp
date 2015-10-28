@@ -2423,12 +2423,37 @@ Ext.onReady(function()
                         _0_formAgrupados.down('[name=parametros.pv_otvalor04]').setValue(json.smap1.AUTO_MARCA);
                         _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setValue(json.smap1.AUTO_ANIO);
                         _0_formAgrupados.down('[name=parametros.pv_otvalor06]').setValue(json.smap1.AUTO_DESCRIPCION);
-                        _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMinValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1-(json.smap1.FACTOR_MIN-0)));
-                        _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMaxValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0)));
                         _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setValue((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2));
                         _0_formAgrupados.down('[name=parametros.pv_otvalor26]').setValue((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2));
                         debug('set min value:',((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1-(json.smap1.FACTOR_MIN-0)));
                         debug('set max value:',((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0)));
+                        
+                        _0_formAgrupados.down('[name=parametros.pv_otvalor07]').validator=function(value)
+                        {
+                            var r = true;
+                            var anioActual = new Date().getFullYear();
+                            var max = ((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0));
+                            var min = ((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0));
+                            debug('max:',max);
+                            debug('min:',min);
+                            debug('value:',value);
+                            if(value<min||value>max)
+                            {
+                            	if(_0_smap1.cdsisrol=='EJECUTIVOCUENTA'){
+                            		r='Favor de acudir a Mesa de Control para realizar la cotización';
+                            	}else{
+                            		if(value<min){
+                            			r= _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMinValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1-(json.smap1.FACTOR_MIN-0)));
+                            		}else{
+                            			r= _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMaxValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0)));
+                            		}
+                            	}
+                            }
+                            return r;
+                        };
+                        
+                        
+                        
                         
                         Ext.Ajax.request({
             				url     : _0_urlObtieneValNumeroSerie
