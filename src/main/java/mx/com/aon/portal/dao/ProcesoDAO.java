@@ -3254,15 +3254,18 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
 		{
-			String cols[]=new String[]{"ntramite","cdunieco","cdramo","dsramo","estado","nmpoliza",
-					"nmsolici","cdsucadm","dssucadm","cdsucdoc","dssucdoc","cdsubram","cdtiptra","ferecepc","cdagente",
-					"Nombre_agente","referencia","nombre","fecstatu","status","comments","cdtipsit","comi","prima_neta","prima_total","nmsuplem",
-					"otvalor01","otvalor02","otvalor03","otvalor04","otvalor05","otvalor06","otvalor07","otvalor08","otvalor09","otvalor10",
-					"otvalor11","otvalor12","otvalor13","otvalor14","otvalor15","otvalor16","otvalor17","otvalor18","otvalor19","otvalor20",
-					"otvalor21","otvalor22","otvalor23","otvalor24","otvalor25","otvalor26","otvalor27","otvalor28","otvalor29","otvalor30",
-					"otvalor31","otvalor32","otvalor33","otvalor34","otvalor35","otvalor36","otvalor37","otvalor38","otvalor39","otvalor40",
-					"otvalor41","otvalor42","otvalor43","otvalor44","otvalor45","otvalor46","otvalor47","otvalor48","otvalor49","otvalor50",
-					"contratante"
+			String cols[]=new String[]{
+					"ntramite"     , "cdunieco" , "cdramo"   , "dsramo"        , "estado"     , "nmpoliza"
+					,"nmsolici"    , "cdsucadm" , "dssucadm" , "cdsucdoc"      , "dssucdoc"   , "cdsubram"
+					,"cdtiptra"    , "ferecepc" , "cdagente" , "Nombre_agente" , "referencia" , "nombre"
+					,"fecstatu"    , "status"   , "comments" , "cdtipsit"      , "comi"       , "prima_neta"
+					,"prima_total" , "nmsuplem"
+					,"otvalor01","otvalor02","otvalor03","otvalor04","otvalor05","otvalor06","otvalor07","otvalor08","otvalor09","otvalor10"
+					,"otvalor11","otvalor12","otvalor13","otvalor14","otvalor15","otvalor16","otvalor17","otvalor18","otvalor19","otvalor20"
+					,"otvalor21","otvalor22","otvalor23","otvalor24","otvalor25","otvalor26","otvalor27","otvalor28","otvalor29","otvalor30"
+					,"otvalor31","otvalor32","otvalor33","otvalor34","otvalor35","otvalor36","otvalor37","otvalor38","otvalor39","otvalor40"
+					,"otvalor41","otvalor42","otvalor43","otvalor44","otvalor45","otvalor46","otvalor47","otvalor48","otvalor49","otvalor50"
+					,"contratante" , "cdusuari"
 					};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)

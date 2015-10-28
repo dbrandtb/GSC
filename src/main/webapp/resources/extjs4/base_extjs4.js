@@ -791,7 +791,24 @@ function _substringComa(cadena)
  */
 function rendererSplits(value,splits)
 {
-    return value+'split';
+    try
+    {
+        var tokens = splits.replace('[','').replace(']','').split('|');
+        for(var i=0;i<tokens.length;i=i+2)
+        {
+            if(tokens[i]==value)
+            {
+                value = tokens[i+1];
+                break;
+            }
+        }
+    }
+    catch(e)
+    {
+        debugError(e);
+        mensajeError('Split incorrecto ('+value+','+splits+')');
+    }
+    return value;
 }
 
 /**

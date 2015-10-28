@@ -2264,6 +2264,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	            		,nmpolizaEmitida
 	            		,"0"
 	            		,nmsuplemEmitida
+	            		,"EMISION"
 	            		);
 	            logger.debug("cdorddoc: {}",cdorddoc);
 	            
@@ -2854,6 +2855,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	            		,nmpolizaEmitida
 	            		,"0"
 	            		,nmsuplemEmitida
+	            		,"EMISION"
 	            		);
 	            logger.debug("cdorddoc: {}",cdorddoc);
 	            

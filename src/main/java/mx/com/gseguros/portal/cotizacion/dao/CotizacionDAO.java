@@ -476,6 +476,7 @@ public interface CotizacionDAO {
 			,String nmpoliza
 			,String nmsituac
 			,String nmsuplem
+			,String proceso
 			)throws Exception;
 	
 	public void actualizaCesionComision(

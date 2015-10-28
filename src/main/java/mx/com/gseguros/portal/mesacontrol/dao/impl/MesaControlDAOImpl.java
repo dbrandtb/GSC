@@ -644,5 +644,33 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		}
 	}
 	
+	@Override
+	public void actualizarStatusRemesa(
+			String ntramite
+			,String status
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("status"   , status);
+		Map<String,Object> procRes = ejecutaSP(new ActualizarStatusRemesa(getDataSource()),params);
+		String error = (String)procRes.get("pv_error_o");
+		if(StringUtils.isNotBlank(error))
+		{
+			throw new ApplicationException(error);
+		}
+	}
+	
+	protected class ActualizarStatusRemesa extends StoredProcedure {
+		protected ActualizarStatusRemesa(DataSource dataSource) {
 			
+			super(dataSource,"PKG_SATELITES2.P_ACT_ESTATUS_REMESA");
+    		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));
+    		compile();
+		}
+	}
 }

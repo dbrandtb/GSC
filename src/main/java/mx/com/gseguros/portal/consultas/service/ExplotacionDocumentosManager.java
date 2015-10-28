@@ -44,4 +44,11 @@ public interface ExplotacionDocumentosManager
 			,String funcion
 			,String accion
 			)throws Exception;
+	
+	public void actualizarStatusRemesa(
+			String ntramite
+			,String status
+			,String cdusuari
+			,String cdsisrol
+			)throws Exception;
 }

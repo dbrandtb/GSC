@@ -7,19 +7,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.service.ExplotacionDocumentosManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
+import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.util.Catalogos;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +46,9 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 	
 	@Autowired
 	private EmisionDAO emisionDAO;
+	
+	@Autowired
+	private CatalogosDAO catalogosDAO;
 	
 	@Override
 	public Map<String,Item> pantallaExplotacionDocumentos(String cdusuari, String cdsisrol) throws Exception
@@ -499,5 +506,71 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		{
 			Utils.generaExcepcion(ex, paso);
 		}
+	}
+	
+	@Override
+	public void actualizarStatusRemesa(
+			String ntramite
+			,String status
+			,String cdusuari
+			,String cdsisrol
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ actualizarStatusRemesa @@@@@@"
+				,"\n@@@@@@ ntramite=" , ntramite
+				,"\n@@@@@@ status="   , status
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				));
+		
+		String paso = null;
+		try
+		{
+			paso = "Actualizando status de remesa";
+			logger.debug("@@@@@@ paso: {}",paso);
+			
+			mesaControlDAO.actualizarStatusRemesa(ntramite,status);
+			
+			paso = "Recuperando status";
+			logger.debug("@@@@@@ paso: {}",paso);
+			
+			List<GenericVO> statuses = catalogosDAO.obtieneTmanteni(Catalogos.MC_ESTATUS_TRAMITE.getCdTabla());
+			String          dsStatus = null;
+			for(GenericVO statusIte : statuses)
+			{
+				if(statusIte.getKey().equals(status))
+				{
+					dsStatus = statusIte.getValue();
+					break;
+				}
+			}
+			if(StringUtils.isBlank(dsStatus))
+			{
+				throw new ApplicationException("No se encuentra el status");
+			}
+			
+			paso = "Guardando detalle";
+			logger.debug("@@@@@@ paso: {}",paso);
+			
+			mesaControlDAO.movimientoDetalleTramite(
+					ntramite
+					,new Date() //feinicio
+					,null       //cdclausu
+					,Utils.join("Remesa actualizada a status '",dsStatus,"'")
+					,cdusuari
+					,null       //cdmotivo
+					,cdsisrol);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ actualizarStatusRemesa @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
 	}
 }
