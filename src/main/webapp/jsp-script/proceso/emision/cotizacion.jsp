@@ -10,7 +10,7 @@ Ext.override(Ext.form.TextField,
 {
     initComponent:function()
     {
-        Ext.apply(this,
+        Ext.apply(this,  
         {
         	labelWidth : 250
         });
@@ -2432,8 +2432,8 @@ Ext.onReady(function()
                         {
                             var r = true;
                             var anioActual = new Date().getFullYear();
+                            var min = ((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1-(json.smap1.FACTOR_MIN-0));
                             var max = ((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0));
-                            var min = ((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MIN-0));
                             debug('max:',max);
                             debug('min:',min);
                             debug('value:',value);
