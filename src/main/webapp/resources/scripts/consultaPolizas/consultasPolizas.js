@@ -1215,7 +1215,7 @@ Ext.onReady(function() {
             colspan:2,
             collapsible:true,
             width:990,
-            height:170,
+            height:190,
             items: [
                 {
                     xtype: 'form',
