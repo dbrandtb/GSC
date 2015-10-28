@@ -2433,19 +2433,19 @@ Ext.onReady(function()
                             var r = true;
                             var anioActual = new Date().getFullYear();
                             var max = ((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0));
-                            var min = ((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0));
+                            var min = ((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MIN-0));
                             debug('max:',max);
                             debug('min:',min);
                             debug('value:',value);
                             if(value<min||value>max)
                             {
                             	if(_0_smap1.cdsisrol=='EJECUTIVOCUENTA'){
-                            		r='Favor de acudir a Mesa de Control para realizar la cotización';
+                            		r='Favor de acudir a Mesa de Control para realizar la cotización.Debe estar en el rango '+min+'-'+max;
                             	}else{
                             		if(value<min){
-                            			r= _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMinValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1-(json.smap1.FACTOR_MIN-0)));
+                            			r= _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMinValue(min);
                             		}else{
-                            			r= _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMaxValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0)));
+                            			r= _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMaxValue(max);
                             		}
                             	}
                             }

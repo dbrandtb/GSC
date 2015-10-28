@@ -2259,7 +2259,7 @@ function _p28_cargarRangoValorRamo5(callback)
                         if(value<valormin||value>valormax)
                         {
                         	if(_p28_smap1.cdsisrol =='EJECUTIVOCUENTA'){
-                        		r='Favor de acudir a Mesa de Control para realizar la cotización';
+                        		r='Favor de acudir a Mesa de Control para realizar la cotización. Debe estar en el rango '+valormin+'-'+valormax;
                         	}else{
                         		if(value<valormin){
                         			r= valor.setMinValue(valormin);
