@@ -45,6 +45,7 @@ import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoArchivo;
+import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
@@ -1099,12 +1100,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
+		String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
 		//documentos
 		if(exito)
 		{
 			try
 			{
-				String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
 				File   carpeta     = new File(rutaCarpeta);
 	            if(!carpeta.exists())
 	            {
@@ -1184,6 +1185,28 @@ public class CotizacionAction extends PrincipalCoreAction
 				long timestamp  = System.currentTimeMillis();
 				exito           = false;
 				respuesta       = "Error al guardar detalle #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		if(exito){
+			try
+			{
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo,
+						"M", nmpolizaEmi, 
+						nmsuplemEmi, rutaCarpeta,
+						cdunieco, nmpoliza,ntramite, 
+						true, TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(),
+						usuario);
+			
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al lanzar ws recibos para colectivos"+timestamp;
 				respuestaOculta = ex.getMessage();
 				logger.error(respuesta,ex);
 			}
