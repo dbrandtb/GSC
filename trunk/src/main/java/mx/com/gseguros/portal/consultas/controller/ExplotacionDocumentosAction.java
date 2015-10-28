@@ -358,6 +358,49 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	@Action(value   = "actualizarStatusRemesa",
+			results = { @Result(name="success", type="json") }
+	)
+	public String actualizarStatusRemesa()
+	{
+		logger.debug(Utils.log(
+				 "\n####################################"
+				,"\n###### actualizarStatusRemesa ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			UserVO usuario  = Utils.validateSession(session);
+			String cdusuari = usuario.getUser();
+			String cdsisrol = usuario.getRolActivo().getClave();
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String ntramite = params.get("ntramite");
+			String status   = params.get("status");
+			
+			Utils.validate(
+					ntramite , "No se recibi\u00F3 la remesa"
+					,status  , "No se recibi\u00F3 el status"
+					);
+			
+			explotacionDocumentosManager.actualizarStatusRemesa(ntramite,status,cdusuari,cdsisrol);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### actualizarStatusRemesa ######"
+				,"\n####################################"
+				));
+		return SUCCESS;
+	}
+	
 	////////////////// Getters y setters ///////////////////
 	                                                      //
 	public Map<String, String> getParams() {              //

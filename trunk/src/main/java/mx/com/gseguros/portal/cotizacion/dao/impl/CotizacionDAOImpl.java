@@ -5871,8 +5871,16 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,String nmpoliza
 			,String nmsituac
 			,String nmsuplem
+			,String proceso
 			)throws Exception
 	{
+		if(!"EMISION".equals(proceso)
+				&&!"ENDOSOS".equals(proceso)
+				)
+		{
+			throw new ApplicationException("El proceso no es correcto");
+		}
+		
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdunieco" , cdunieco);
 		params.put("cdramo"   , cdramo);
@@ -5900,6 +5908,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("qwe" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_cdorddoc_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

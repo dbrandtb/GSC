@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.portal.dao.ProcesoDAO;
-import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
@@ -191,6 +189,7 @@ public class EmisionManagerImpl implements EmisionManager
 			,String nmpoliza
 			,String nmsituac
 			,String nmsuplem
+			,String proceso
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -202,6 +201,7 @@ public class EmisionManagerImpl implements EmisionManager
 				,"\n@@@@@@ nmpoliza=" , nmpoliza
 				,"\n@@@@@@ nmsituac=" , nmsituac
 				,"\n@@@@@@ nmsuplem=" , nmsuplem
+				,"\n@@@@@@ proceso="  , proceso
 				));
 		
 		String cdorddoc = null
@@ -217,6 +217,7 @@ public class EmisionManagerImpl implements EmisionManager
 					,nmpoliza
 					,nmsituac
 					,nmsuplem
+					,proceso
 					);
 			logger.debug("cdorddoc: {}",cdorddoc);
 		}

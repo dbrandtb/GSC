@@ -173,4 +173,8 @@ public interface MesaControlDAO
 	 */
 	public void actualizaStatusMesaControl(String ntramite, String status) throws Exception;
 	
+	public void actualizarStatusRemesa(
+			String ntramite
+			,String status
+			)throws Exception;
 }
