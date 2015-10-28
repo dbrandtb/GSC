@@ -5888,6 +5888,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsituac" , nmsituac);
 		params.put("nmsuplem" , nmsuplem);
+		params.put("proceso"  , proceso);
 		Map<String,Object> procRes  = ejecutaSP(new InsercionDocumentosParametrizados(getDataSource()),params);
 		String             cdorddoc = (String)procRes.get("pv_cdorddoc_o");
 		if(StringUtils.isBlank(cdorddoc))
@@ -5908,7 +5909,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("qwe" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("proceso"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_cdorddoc_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
