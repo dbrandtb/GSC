@@ -70,7 +70,8 @@ public class TestSVNAction extends PrincipalCoreAction {
         printService(services);
         
         printServices = Arrays.asList(services);
-		
+	
+        //AQUI ESTUVE YO
 		return SUCCESS;
 	}
 	
