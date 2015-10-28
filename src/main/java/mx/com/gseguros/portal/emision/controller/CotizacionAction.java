@@ -1122,6 +1122,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            		,nmpolizaEmi
 	            		,"0"
 	            		,nmsuplemEmi
+	            		,"EMISION"
 	            		);
 	            logger.debug("cdorddoc: {}",cdorddoc);
 	            
