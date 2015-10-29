@@ -1103,7 +1103,7 @@ Ext.onReady(function() {
       reader:
       {
            type: 'json',
-           root: 'agentePoliza'
+           root: 'agentesPoliza'
       }
      }
     });
@@ -1115,11 +1115,11 @@ Ext.onReady(function() {
 //        width   : 830,
 //        autoScroll:true,
         columns: [
-            {text:'Agente',dataIndex:'cdagente', flex:1},
-            {text:'Nombre',dataIndex:'nombre', flex:2},
-            {text:'Tipo Agente',dataIndex:'descripl',flex:1},
-            {text:'Cesi&oacute;n de Comisi&oacute;n',dataIndex:'porredau',flex:1},
-            {text:'Participaci&oacute;n',dataIndex:'porparti',flex:1}
+            {text:'Agente',dataIndex:'cdagente', width:80},
+            {text:'Nombre',dataIndex:'nombre', width:300},
+            {text:'Tipo Agente',dataIndex:'descripl',width:150},
+            {text:'Cesi&oacute;n de Comisi&oacute;n',dataIndex:'porredau',width:150},
+            {text:'Participaci&oacute;n',dataIndex:'porparti',width:150}
         ]
     });
     

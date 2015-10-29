@@ -115,7 +115,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 
 	private List<PeriodoVigenciaVO> periodosVigencia;
 
-	private AgentePolizaVO agentePoliza;
+	ArrayList<AgentePolizaVO> agentesPoliza;
 
 	private Map<String, Item> itemMap;
 
@@ -592,12 +592,9 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			poliza.setNmsuplem(params.get("suplemento"));
 			poliza.setIcodpoliza(params.get("icodpoliza"));
 
-			ArrayList<AgentePolizaVO> lista = (ArrayList<AgentePolizaVO>) consultasPolizaManager.obtieneAgentesPoliza(poliza);
+			agentesPoliza = (ArrayList<AgentePolizaVO>) consultasPolizaManager.obtieneAgentesPoliza(poliza);
 
-			if (lista != null && !lista.isEmpty()) {
-				agentePoliza = lista.get(0);
-			}
-			logger.debug("Resultado de la consultaAgentesPoliza={}", agentePoliza);
+			logger.debug("Resultado de la consultaAgentesPoliza={}", agentesPoliza);
 		} catch (Exception e) {
 			logger.error("Error en consultaAgentesPoliza", e);
 			success = false;
@@ -1155,13 +1152,13 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			List<CoberturaBasicaVO> datosCoberturasPoliza) {
 		this.datosCoberturasPoliza = datosCoberturasPoliza;
 	}
-
-	public AgentePolizaVO getAgentePoliza() {
-		return agentePoliza;
+	
+	public ArrayList<AgentePolizaVO> getAgentesPoliza() {
+		return agentesPoliza;
 	}
 
-	public void setAgentePoliza(AgentePolizaVO agentePoliza) {
-		this.agentePoliza = agentePoliza;
+	public void setAgentesPoliza(ArrayList<AgentePolizaVO> agentesPoliza) {
+		this.agentesPoliza = agentesPoliza;
 	}
 
 }
