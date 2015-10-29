@@ -31,7 +31,8 @@ var _p30_urlCargarDatosEndoso              = '<s:url namespace="/emision"       
 var _p30_urlConfirmarEndoso                = '<s:url namespace="/endosos"         action="confirmarEndosoAltaIncisoAuto"      />';
 var _p30_urlObtencionReporteExcel          = '<s:url namespace="/reportes"        action="procesoObtencionReporte"            />';
 var _p30_urlObtencionReporteExcel2         = '<s:url namespace="/reportes"        action="procesoObtencionReporte2"           />';
-
+var MontoMaximo = 0;
+var MontoMinimo = 0;
 var _p30_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p30_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 ////// urls //////
@@ -2192,6 +2193,8 @@ Ext.onReady(function()
                                             		debug('json.smap1.P2VALOR=', Number(json.smap1.P2VALOR));
                                             		var valormin = Number(me.valorCargado)*(1+Number(json.smap1.P1VALOR));
                                                     var valormax = Number(me.valorCargado)*(1+Number(json.smap1.P2VALOR));
+                                                    MontoMaximo = valormin;
+                                                    MontoMinimo = valormax;
                                                     me.setMinValue(valormin);
                                                     me.setMaxValue(valormax);
                                                     me.isValid();
@@ -2266,7 +2269,16 @@ Ext.onReady(function()
                                 var me = this;
                                 if(Number(val)>Number(me.maximoTotal))
                                 {
-                                    return 'El valor m&aacute;ximo es '+me.maximoTotal;
+                                	if(_p30_smap1.cdsisrol =='EJECUTIVOCUENTA'){
+                                		me.setMinValue(false);
+                            			me.setMaxValue(false);
+                                		return 'Favor de acudir a Mesa de Control para realizar la cotización.';
+                                	}else{
+                                		return 'El valor m&aacute;ximo es '+me.maximoTotal;
+                                	}
+                                }else{
+                                	me.setMinValue(MontoMinimo);
+                        			me.setMaxValue(MontoMaximo);
                                 }
                                 return true;
                             };
