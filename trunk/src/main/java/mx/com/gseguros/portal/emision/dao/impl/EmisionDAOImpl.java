@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.emision.model.EmisionVO;
+import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
@@ -188,6 +189,38 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 			declareParameter(new SqlParameter("swimpres" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	/**
+	 * SUMA A LAS REMESAS LA IMPRESION ACTUAL
+	 * SI LA SUMA RESULTA ESTAR COMPLETA: ACTUALIZA LAS REMESAS, Y LOS HIJOS EMISION/ENDOSOS SI HAY
+	 */
+	@Override
+	public boolean sumarImpresiones(String lote, String tipolote, String peso) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("lote"     , lote);
+		params.put("tipolote" , tipolote);
+		params.put("peso"     , peso);
+		Map<String,Object> procRes = ejecutaSP(new SumarImpresiones(getDataSource()),params);
+		boolean            impreso = "S".equals((String)procRes.get("pv_impreso_o"));
+		logger.debug(Utils.log("PKG_SATELITES2.P_SUMA_IMPRESIONES impreso:",impreso));
+		return impreso;
+	}
+	
+	protected class SumarImpresiones extends StoredProcedure
+	{
+		protected SumarImpresiones(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES2.P_SUMA_IMPRESIONES");
+			declareParameter(new SqlParameter("lote"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipolote" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("peso"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_impreso_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

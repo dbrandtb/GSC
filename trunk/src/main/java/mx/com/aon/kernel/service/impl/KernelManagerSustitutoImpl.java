@@ -812,21 +812,29 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 	}
 
 	@Deprecated
-	public WrapperResultados guardarArchivo(Map<String, Object> param) throws ApplicationException
+	public WrapperResultados guardarArchivo(Map<String, Object> params) throws ApplicationException
 	{
-		if(param!=null)
+		if(params!=null)
 		{
-			if(!param.containsKey("pv_codidocu_i"))
+			if(!params.containsKey("pv_codidocu_i"))
 			{
-				param.put("pv_codidocu_i",null);
+				params.put("pv_codidocu_i",null);
 			}
-			if(!param.containsKey("pv_cdtiptra_i"))
+			if(!params.containsKey("pv_cdtiptra_i"))
 			{
-				param.put("pv_cdtiptra_i","1");
+				params.put("pv_cdtiptra_i","1");
+			}
+			if(!params.containsKey("cdorddoc"))
+			{
+				params.put("cdorddoc" , null);
+			}
+			if(!params.containsKey("cdmoddoc"))
+			{
+				params.put("cdmoddoc" , null);
 			}
 		}
-		log.debug("### kernel sustituto guardarArchivo map: "+param);
-        WrapperResultados res=this.returnBackBoneInvoke(param, ProcesoDAO.GUARDAR_ARCHIVO_POLIZA);
+		log.debug("### kernel sustituto guardarArchivo map: "+params);
+        WrapperResultados res=this.returnBackBoneInvoke(params, ProcesoDAO.GUARDAR_ARCHIVO_POLIZA);
         log.debug("### kernel sustituto guardarArchivo id:"+res.getMsgId());
         log.debug("### kernel sustituto guardarArchivo mesage:"+res.getMsgText());
         return res;

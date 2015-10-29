@@ -147,6 +147,10 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					,cdtipimp
 					,tipolote
 					,list
+					,getText("ruta.documentos.poliza")
+					,getText("ruta.servidor.reports")
+					,getText("pass.servidor.reports")
+					,getText("rdf.impresion.remesa")
 					);
 			
 			params.put("lote" , lote);
@@ -166,6 +170,9 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	@Action(value   = "imprimirLote",
+			results = { @Result(name="success", type="json") }
+	)
 	public String imprimirLote()
 	{
 		logger.debug(Utils.log(
@@ -213,6 +220,8 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					,cdunieco
 					,ip
 					,nmimpres
+					,cdusuari
+					,cdsisrol
 					);
 			
 			success = true;

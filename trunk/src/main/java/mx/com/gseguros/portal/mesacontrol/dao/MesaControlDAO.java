@@ -144,12 +144,14 @@ public interface MesaControlDAO
 	 * @param swvisible Indica si sera visible en la lista de documentos
 	 * @param codidocu Codigo de documento
 	 * @param cdtiptra Tipo de tramite
+	 * @param cdorddoc TODO
+	 * @param cdmoddoc TODO
 	 * @throws Exception
 	 */
 	public void guardarDocumento(String cdunieco, String cdramo, String estado,
 			String nmpoliza, String nmsuplem, Date feinici, String cddocume,
 			String dsdocume, String nmsolici, String ntramite, String tipmov,
-			String swvisible, String codidocu, String cdtiptra) throws Exception;
+			String swvisible, String codidocu, String cdtiptra, String cdorddoc, String cdmoddoc) throws Exception;
 	
 	public String turnaPorCargaTrabajo(
 			String ntramite
@@ -175,6 +177,37 @@ public interface MesaControlDAO
 	
 	public void actualizarStatusRemesa(
 			String ntramite
+			,String status
+			)throws Exception;
+	
+	public List<Map<String,String>> recuperarTramites(
+			String cdunieco
+			,String ntramite
+			,String cdramo
+			,String nmpoliza
+			,String estado
+			,String cdagente
+			,String status
+			,String cdtipsit
+			,Date fedesde
+			,Date fehasta
+			,String cdsisrol
+			,String cdtiptra
+			,String contrarecibo
+			,String tipoPago
+			,String nfactura
+			,String cdpresta
+			,String cdusuari
+			,String cdtipram
+			,String lote
+			,String tipolote
+			,String tipoimpr
+			,String cdusuari_busq
+			)throws Exception;
+	
+	public void actualizarHijosRemesa(
+			String lote
+			,String ntramite
 			,String status
 			)throws Exception;
 }

@@ -17,6 +17,10 @@ public interface ExplotacionDocumentosManager
 			,String cdtipimp
 			,String tipolote
 			,List<Map<String, String>> movs
+			,String rutaDocumentosPoliza
+			,String rutaServidorReports
+			,String passServidorReports
+			,String nombreReporteRemesa
 			)throws Exception;
 	
 	public void imprimirLote(
@@ -29,6 +33,8 @@ public interface ExplotacionDocumentosManager
 			,String cdunieco
 			,String ip
 			,String nmimpres
+			,String cdusuari
+			,String cdsisrol
 			)throws Exception;
 
 	public Map<String,Item> pantallaExplotacionRecibos(String cdusuari, String cdsisrol) throws Exception;
