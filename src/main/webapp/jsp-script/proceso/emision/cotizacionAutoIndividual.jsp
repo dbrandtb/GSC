@@ -961,7 +961,11 @@ Ext.onReady(function()
 	                    debug('validar contra ',me.maximoTotal);
 	                    if(Number(val)>Number(me.maximoTotal))
 	                    {
-	                        return 'El valor m&aacute;ximo es ===>1 '+me.maximoTotal;
+	                    	if(_p28_smap1.cdsisrol =='EJECUTIVOCUENTA'){
+                        		return 'Favor de acudir a Mesa de Control para realizar la cotización';
+                        	}else{
+                        		return 'El valor m&aacute;ximo es '+me.maximoTotal;
+                        	}
 	                    }
 	                    return true;
 	                };
@@ -2256,10 +2260,23 @@ function _p28_cargarRangoValorRamo5(callback)
                         valormax = valorCargado*(1+(json.smap1.P2VALOR-0));
                         debug('valormin:',valormin);
                         debug('valormax:',valormax);
+                        var me = _fieldLikeLabel('VALOR VEH');
+	                    
                         if(value<valormin||value>valormax)
                         {
                         	if(_p28_smap1.cdsisrol =='EJECUTIVOCUENTA'){
-                        		r='Favor de acudir a Mesa de Control para realizar la cotización. Debe estar en el rango '+valormin+'-'+valormax;
+                        		if(Number(value)>Number(me.maximoTotal))
+        	                    {
+                        			valor.setMinValue(false);
+                        			valor.setMaxValue(false);
+                        			r='Favor de acudir a Mesa de Control para realizar la cotización.';
+        	                    }else{
+        	                    	if(value<valormin){
+                            			r= valor.setMinValue(valormin);
+                            		}else{
+                            			r= valor.setMaxValue(valormax);
+                            		}
+        	                    }
                         	}else{
                         		if(value<valormin){
                         			r= valor.setMinValue(valormin);
