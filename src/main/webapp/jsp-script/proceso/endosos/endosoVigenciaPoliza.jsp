@@ -48,7 +48,11 @@
 					maxValue: asegAlterno.pv_fechaMaxima ,
 					listeners:{
 			    	    change:function(field,value) {
-			    	    	panelInicialPral.down('[name="feFin"]').setValue(Ext.Date.add(value, Ext.Date.DAY, asegAlterno.pv_difDate));
+			    	    	var fecha1 = panelInicialPral.down('[name="feVigencia"]').getValue();
+			    	    	var fecha2 = panelInicialPral.down('[name="finVigencia"]').getValue();
+			    	    	var diasDif = fecha2.getTime() - fecha1.getTime();
+			    	    	var dias = Math.round(diasDif/(1000 * 60 * 60 * 24));
+			    	    	panelInicialPral.down('[name="feFin"]').setValue(Ext.Date.add(value, Ext.Date.DAY, dias));
 			    	    }
 			    	}
 				},
