@@ -43,6 +43,6 @@
         
     </head>
     <body>
-        <div id="dvConsultasPolizas" style="height:600px"></div>
+        <div id="dvConsultasPolizas" style="height:650px"></div>
     </body>
 </html>

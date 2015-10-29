@@ -683,16 +683,7 @@ Ext.onReady(function() {
         }],
         columns: [
             //{text:'Rol',dataIndex:'dsrol',width:130 , align:'left'},
-            {text:'Tipo de <br/>asegurado',dataIndex:'parentesco',width:100 , align:'left'},
-            {text:'Clave <br/>Asegurado',dataIndex:'cdperson',width:100,align:'left'},
-            {text:'Nombre',dataIndex:'nombre',width:180,align:'left'},
-            {text:'Estatus',dataIndex:'status',width:100,align:'left'},
-            {text:'RFC',dataIndex:'cdrfc',width:100,align:'left'},
-            {text:'Sexo',dataIndex:'sexo',width:60 , align:'left'},
-            {text:'Grupo',dataIndex:'grupo', itemId: 'grupo',width:100, align:'left', hidden: true},
-            {text:'Familia',dataIndex:'familia', itemId: 'familia',width:100, align:'left', hidden: true},
-            {text:'Fecha Nac.',dataIndex:'fenacimi',width:100, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
-            ,{
+        	{
                 xtype        : 'actioncolumn',
                 icon         : _CONTEXT+'/resources/fam3icons/icons/page.png',
                 tooltip      : 'Ver Coberturas',
@@ -725,7 +716,8 @@ Ext.onReady(function() {
                     windowCoberturas.setTitle('COBERTURAS DE ' + record.get('nombre'));
                     windowCoberturas.show();
                 }
-            },{
+            },
+            {
                 xtype        : 'actioncolumn',
                 icon         : _CONTEXT+'/resources/fam3icons/icons/lock.png',
                 tooltip      : 'Ver endosos',
@@ -790,7 +782,16 @@ Ext.onReady(function() {
                     var values = panelBusqueda.down('form').getForm().getValues();
                     siniestralidad(null, null,record.get('cdperson'),null,"0");//cdunieco,cdramo, cdperson, nmpoliza
                 }
-            }
+            },
+            {text:'Tipo de <br/>asegurado',dataIndex:'parentesco',width:100 , align:'left'},
+            {text:'Clave <br/>Asegurado',dataIndex:'cdperson',width:100,align:'left'},
+            {text:'Nombre',dataIndex:'nombre',width:180,align:'left'},
+            {text:'Estatus',dataIndex:'status',width:100,align:'left'},
+            {text:'RFC',dataIndex:'cdrfc',width:100,align:'left'},
+            {text:'Sexo',dataIndex:'sexo',width:60 , align:'left'},
+            {text:'Grupo',dataIndex:'grupo', itemId: 'grupo',width:100, align:'left', hidden: true},
+            {text:'Familia',dataIndex:'familia', itemId: 'familia',width:100, align:'left', hidden: true},
+            {text:'Fecha Nac.',dataIndex:'fenacimi',width:100, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
         ],
         tbar: [{
                 xtype : 'textfield',
