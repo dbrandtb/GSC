@@ -2908,7 +2908,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	
 		protected GuardarArchivoPoliza(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES.P_MOV_DOCUMENTOS");
+			super(dataSource,"PKG_SATELITES2.P_MOV_DOCUMENTOS");
 			declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -2923,6 +2923,8 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_swvisible_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_codidocu_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtiptra_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdorddoc"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdmoddoc"       , OracleTypes.VARCHAR));
 	
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));

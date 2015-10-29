@@ -506,7 +506,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 						nmpolizaEmitida, nmsuplemEmitida, new Date(), urlCaratula + parametros,
 						"Car&aacute;tula de P&oacute;liza", nmpoliza, ntramite, 
 						String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup()),
-						Constantes.SI, null, "1");
+						Constantes.SI, null, "1", null, null);
 				
 				/**
 				 * Para Recibo 1
@@ -518,7 +518,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				mesaControlDAO.guardarDocumento(cdunieco, cdramo, "M",
 						nmpolizaEmitida, nmsuplemEmitida, new Date(), urlRecibo + parametros,
 						"Recibo 1", nmpoliza, ntramite, String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup()),
-						Constantes.SI, null, "1");
+						Constantes.SI, null, "1", null, null);
 				
 				/**
 				 * Para AP inciso 1
@@ -530,7 +530,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				mesaControlDAO.guardarDocumento(cdunieco, cdramo, "M",
 						nmpolizaEmitida, nmsuplemEmitida, new Date(), urlAp + parametros,
 						"AP", nmpoliza, ntramite, String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup()),
-						Constantes.SI, null, "1");
+						Constantes.SI, null, "1", null, null);
 				
 				/**
 				 * Para CAIC inciso 1
@@ -542,7 +542,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				mesaControlDAO.guardarDocumento(cdunieco, cdramo, "M",
 						nmpolizaEmitida, nmsuplemEmitida, new Date(), urlCaic + parametros,
 						"CAIC", nmpoliza, ntramite, String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup()),
-						Constantes.SI, null, "1");
+						Constantes.SI, null, "1", null, null);
 				
 				if("C".equalsIgnoreCase(tipoGrupoInciso)){
 					/**
@@ -555,7 +555,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					mesaControlDAO.guardarDocumento(cdunieco, cdramo, "M",
 							nmpolizaEmitida, nmsuplemEmitida, new Date(), urlIncisosFlot + parametros,
 							"Incisos Flotillas", nmpoliza, ntramite, String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup()),
-							Constantes.SI, null, "1");
+							Constantes.SI, null, "1", null, null);
 					
 					/**
 					 * Para Tarjeta Identificacion
@@ -567,7 +567,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					mesaControlDAO.guardarDocumento(cdunieco, cdramo, "M",
 							nmpolizaEmitida, nmsuplemEmitida, new Date(), urlTarjIdent + parametros,
 							"Tarjeta de Identificacion", nmpoliza, ntramite, String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup()),
-							Constantes.SI, null, "1");
+							Constantes.SI, null, "1", null, null);
 				}
 				
 				/**
@@ -596,7 +596,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							nmpolizaEmitida, nmsuplemEmitida, new Date(), 
 							"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf",
 							"Reduce GS", nmpoliza, ntramite, String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup()),
-							Constantes.SI, null, "1");
+							Constantes.SI, null, "1", null, null);
 					
 				}
 				if(gestoria) {
@@ -610,7 +610,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							nmpolizaEmitida, nmsuplemEmitida, new Date(), 
 							"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf",
 							"Gestoria GS", nmpoliza, ntramite, String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup()),
-							Constantes.SI, null, "1");
+							Constantes.SI, null, "1", null, null);
 					
 				}
 				

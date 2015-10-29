@@ -59,4 +59,10 @@ public interface EmisionDAO {
 			)throws Exception;
 	
 	public void marcarTramiteImpreso(String ntramite, String swimpres) throws Exception;
+	
+	/**
+	 * SUMA A LAS REMESAS LA IMPRESION ACTUAL
+	 * SI LA SUMA RESULTA ESTAR COMPLETA: ACTUALIZA LAS REMESAS, Y LOS HIJOS EMISION/ENDOSOS SI HAY
+	 */
+	public boolean sumarImpresiones(String lote, String tipolote, String peso) throws Exception;
 }

@@ -1,8 +1,11 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,13 +19,18 @@ import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.Reporte;
+import mx.com.gseguros.portal.general.service.ReportesManager;
 import mx.com.gseguros.portal.general.util.Catalogos;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.TipoArchivo;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
+import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
@@ -49,6 +57,9 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 	
 	@Autowired
 	private CatalogosDAO catalogosDAO;
+	
+	@Autowired
+	private ReportesManager reportesManager;
 	
 	@Override
 	public Map<String,Item> pantallaExplotacionDocumentos(String cdusuari, String cdsisrol) throws Exception
@@ -125,17 +136,25 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			,String cdtipimp
 			,String tipolote
 			,List<Map<String, String>> movs
+			,String rutaDocumentosPoliza
+			,String rutaServidorReports
+			,String passServidorReports
+			,String nombreReporteRemesa
 			)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ generarLote @@@@@@"
-				,"\n@@@@@@ cdusuari=" , cdusuari
-				,"\n@@@@@@ cdsisrol=" , cdsisrol
-				,"\n@@@@@@ cdtipram=" , cdtipram
-				,"\n@@@@@@ cdtipimp=" , cdtipimp
-				,"\n@@@@@@ tipolote=" , tipolote
-				,"\n@@@@@@ movs="     , movs
+				,"\n@@@@@@ cdusuari="             , cdusuari
+				,"\n@@@@@@ cdsisrol="             , cdsisrol
+				,"\n@@@@@@ cdtipram="             , cdtipram
+				,"\n@@@@@@ cdtipimp="             , cdtipimp
+				,"\n@@@@@@ tipolote="             , tipolote
+				,"\n@@@@@@ movs="                 , movs
+				,"\n@@@@@@ rutaDocumentosPoliza=" , rutaDocumentosPoliza
+				,"\n@@@@@@ rutaServidorReports="  , rutaServidorReports
+				,"\n@@@@@@ passServidorReports="  , passServidorReports
+				,"\n@@@@@@ nombreReporteRemesa="  , nombreReporteRemesa
 				));
 		
 		String lote  = null
@@ -251,6 +270,102 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 								);
 					}
 				}
+				
+				paso = "Generando carpeta de tr\u00E1mite de agentes";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				String rutaCarpeta = Utils.join(rutaDocumentosPoliza,"/",ntramite);
+				File   carpeta     = new File(rutaCarpeta);
+				if(!carpeta.exists())
+				{
+					logger.info(Utils.log("@@@@@@ Se va a crear la carpeta ",carpeta));
+					if(!carpeta.mkdir())
+					{
+						throw new ApplicationException("No se pudo crear la carpeta para los documentos");
+					}
+				}
+				
+				paso = "Generando remesa pdf";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				String urlReporteCotizacion = Utils.join(
+						  rutaServidorReports
+						, "?p_lote="     , lote
+						, "&p_usr_imp="  , cdusuari
+						, "&p_ntramite=" , ntramite
+	                    , "&destype=cache"
+	                    , "&desformat=PDF"
+	                    , "&userid="        , passServidorReports
+	                    , "&ACCESSIBLE=YES"
+	                    , "&report="        , nombreReporteRemesa
+	                    , "&paramform=no"
+	                    );
+				
+				String pathRemesa=Utils.join(
+						rutaDocumentosPoliza
+						,"/",ntramite
+						,"/remesa.pdf"
+						);
+				
+				HttpUtil.generaArchivo(urlReporteCotizacion, pathRemesa);
+				
+				mesaControlDAO.guardarDocumento(
+						null          //cdunieco
+						,null         //cdramo
+						,null         //estado
+						,null         //nmpoliza
+						,null         //nmsuplem
+						,new Date()   //feinici
+						,"remesa.pdf" //cddocume
+						,"REMESA PDF" //dsdocume
+						,null         //nmsolici
+						,ntramite
+						,"1"          //tipmov
+						,null         //swvisible
+						,null         //codidocu
+						,TipoTramite.IMPRESION.getCdtiptra()
+						,"0"
+						,"59" // <<< 59 es el CDMODDOCU de REMESA
+						);
+				
+				paso = "Generando remesa excel";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				Map<String,String> paramsExcel = new LinkedHashMap<String,String>();
+				paramsExcel.put("pv_lote_i"     , lote);
+				paramsExcel.put("pv_usr_imp_i"  , cdusuari);
+				paramsExcel.put("pv_ntramite_i" , ntramite);
+				
+				InputStream excel = reportesManager.obtenerDatosReporte(Reporte.REMESA.getCdreporte()
+						,cdusuari
+						,paramsExcel
+						);
+				
+				String nombreExcel = Utils.join("remesa",TipoArchivo.XLS.getExtension());
+				
+				FileUtils.copyInputStreamToFile(excel, new File(Utils.join(
+								rutaDocumentosPoliza,"/",ntramite,"/",nombreExcel
+				)));
+				
+				mesaControlDAO.guardarDocumento(
+						null            //cdunieco
+						,null           //cdramo
+						,null           //estado
+						,null           //nmpoliza
+						,null           //nmsuplem
+						,new Date()     //feinici
+						,nombreExcel    //cddocume
+						,"REMESA EXCEL" //dsdocume
+						,null           //nmsolici
+						,ntramite
+						,"1"            //tipmov
+						,null           //swvisible
+						,null           //codidocu
+						,TipoTramite.IMPRESION.getCdtiptra()
+						,null           //cdorddoc
+						,null           //cdmoddoc
+						);
+				
 			}
 			
 		}
@@ -278,6 +393,8 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			,String cdunieco
 			,String ip
 			,String nmimpres
+			,String cdusuari
+			,String cdsisrol
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -292,17 +409,92 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			    ,"\n@@@@@@ cdunieco=" , cdunieco
 			    ,"\n@@@@@@ ip="       , ip
 			    ,"\n@@@@@@ nmimpres=" , nmimpres
+			    ,"\n@@@@@@ cdusuari=" , cdusuari
+			    ,"\n@@@@@@ cdsisrol=" , cdsisrol
 				));
 		
 		String paso = "Iniciando impresi\u00F3n";
 		try
 		{
-			boolean blanca = hoja.indexOf("B")!=-1;
+			paso = "Recuperando archivos";
+			logger.debug("@@@@@@ paso: {}",paso);
 			
-			if(blanca)
+			//qwe TODO alex
+			
+			paso = "Imprimiendo archivos";
+			logger.debug("@@@@@@ paso: {}",paso);
+			
+			//qwe TODO ricardo
+			
+			paso = "Actualizando remesas, emisiones y endosos";
+			logger.debug("@@@@@@ paso: {}",paso);
+			
+			/*
+			 * en este procedimiento se actualizan las sumas,
+			 * y si estan completas: se marcan las remesas como impresas, y tambien los hijos cuando son emisiones/endosos
+			 */
+			boolean impresos = emisionDAO.sumarImpresiones(lote,tipolote,peso);
+			
+			paso = "Recuperando remesas del lote";
+			logger.debug("@@@@@@ paso: {}",paso);
+			
+			List<Map<String,String>> remesas = mesaControlDAO.recuperarTramites(
+					null  //cdunieco
+					,null //ntramite
+					,null //cdramo
+					,null //nmpoliza
+					,null //estado
+					,null //cdagente
+					,"0"  //status
+					,null //cdtipsit
+					,null //fedesde
+					,null //fehasta
+					,cdsisrol
+					,TipoTramite.IMPRESION.getCdtiptra()
+					,null //contrarecibo
+					,null //tipoPago
+					,null //nfactura
+					,null //cdpresta
+					,null //cdusuari
+					,null //cdtipram
+					,lote
+					,null //tipolote
+					,null //tipoimpr
+					,null //cdusuari_busq
+					);
+			
+			for(Map<String,String> remesa : remesas)
 			{
-				//
+				paso = "Guardando detalle de remesa";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				mesaControlDAO.movimientoDetalleTramite(
+						remesa.get("ntramite")
+						,new Date() //feinicio
+						,null       //cdclausu
+						,Utils.join(
+								impresos ?
+										"Se realiz\u00F3 la impresi\u00F3n final de la remesa ("
+										: "Se realiz\u00F3 una impresi\u00F3n de la remesa ("
+								,"B".equals(hoja) ?
+										("papeler\u00EDa")
+										:(
+												"M".equals(hoja) ?
+														("recibos")
+														:(
+																"C".equals(hoja) ?
+																		("credenciales")
+																		: ("papeler\u00EDa y recibos")
+														)
+										)
+								,")"
+								)
+						,cdusuari
+						,null       //cdmotivo
+						,cdsisrol
+						);
 			}
+			
 		}
 		catch(Exception ex)
 		{
@@ -532,6 +724,11 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			logger.debug("@@@@@@ paso: {}",paso);
 			
 			mesaControlDAO.actualizarStatusRemesa(ntramite,status);
+			
+			paso = "Actualizando status de hijos de remesa";
+			logger.debug("@@@@@@ paso: {}",paso);
+			
+			mesaControlDAO.actualizarHijosRemesa(null, ntramite, status);
 			
 			paso = "Recuperando status";
 			logger.debug("@@@@@@ paso: {}",paso);

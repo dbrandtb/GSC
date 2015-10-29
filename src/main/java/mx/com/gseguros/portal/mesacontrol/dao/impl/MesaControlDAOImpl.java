@@ -516,46 +516,50 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	public void guardarDocumento(String cdunieco, String cdramo, String estado,
 			String nmpoliza, String nmsuplem, Date feinici, String cddocume,
 			String dsdocume, String nmsolici, String ntramite, String tipmov,
-			String swvisible, String codidocu, String cdtiptra) throws Exception {
+			String swvisible, String codidocu, String cdtiptra, String cdorddoc, String cdmoddoc) throws Exception {
 		
 		HashMap<String, Object> params =  new HashMap<String, Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i",   cdramo);
-		params.put("pv_estado_i",   estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", nmsuplem);
-		params.put("pv_feinici_i",  feinici);
-		params.put("pv_cddocume_i", cddocume);
-		params.put("pv_dsdocume_i", dsdocume);
-		params.put("pv_nmsolici_i", nmsolici);
-		params.put("pv_ntramite_i", ntramite);
-		params.put("pv_tipmov_i",   tipmov);
-		params.put("pv_swvisible_i",swvisible);
-		params.put("pv_codidocu_i", codidocu);
-		params.put("pv_cdtiptra_i", cdtiptra);
-		Utils.debugProcedure(logger, "PKG_SATELITES.P_MOV_DOCUMENTOS", params);
+		params.put("pv_cdunieco_i"  , cdunieco);
+		params.put("pv_cdramo_i"    , cdramo);
+		params.put("pv_estado_i"    , estado);
+		params.put("pv_nmpoliza_i"  , nmpoliza);
+		params.put("pv_nmsuplem_i"  , nmsuplem);
+		params.put("pv_feinici_i"   , feinici);
+		params.put("pv_cddocume_i"  , cddocume);
+		params.put("pv_dsdocume_i"  , dsdocume);
+		params.put("pv_nmsolici_i"  , nmsolici);
+		params.put("pv_ntramite_i"  , ntramite);
+		params.put("pv_tipmov_i"    , tipmov);
+		params.put("pv_swvisible_i" , swvisible);
+		params.put("pv_codidocu_i"  , codidocu);
+		params.put("pv_cdtiptra_i"  , cdtiptra);
+		params.put("cdorddoc"       , cdorddoc);
+		params.put("cdmoddoc"       , cdmoddoc);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_MOV_DOCUMENTOS", params);
 		ejecutaSP(new GuardarDocumentoPolizaSP(getDataSource()), params);
 	}
 	
 	protected class GuardarDocumentoPolizaSP extends StoredProcedure {
 		protected GuardarDocumentoPolizaSP(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_MOV_DOCUMENTOS");
-			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_estado_i"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_feinici_i" , OracleTypes.DATE));
-			declareParameter(new SqlParameter("pv_cddocume_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_dsdocume_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsolici_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_tipmov_i"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_swvisible_i",OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_codidocu_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtiptra_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o",OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			super(dataSource, "PKG_SATELITES2.P_MOV_DOCUMENTOS");
+			declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feinici_i"   , OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_cddocume_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsdocume_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsolici_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipmov_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swvisible_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_codidocu_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtiptra_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdorddoc"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdmoddoc"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
@@ -668,6 +672,144 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
     		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));
+    		compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> recuperarTramites(
+			String cdunieco
+			,String ntramite
+			,String cdramo
+			,String nmpoliza
+			,String estado
+			,String cdagente
+			,String status
+			,String cdtipsit
+			,Date fedesde
+			,Date fehasta
+			,String cdsisrol
+			,String cdtiptra
+			,String contrarecibo
+			,String tipoPago
+			,String nfactura
+			,String cdpresta
+			,String cdusuari
+			,String cdtipram
+			,String lote
+			,String tipolote
+			,String tipoimpr
+			,String cdusuari_busq
+			)throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("cdunieco"      , cdunieco);
+		params.put("ntramite"      , ntramite);
+		params.put("cdramo"        , cdramo);
+		params.put("nmpoliza"      , nmpoliza);
+		params.put("estado"        , estado);
+		params.put("cdagente"      , cdagente);
+		params.put("status"        , status);
+		params.put("cdtipsit"      , cdtipsit);
+		params.put("fedesde"       , fedesde);
+		params.put("fehasta"       , fehasta);
+		params.put("cdsisrol"      , cdsisrol);
+		params.put("cdtiptra"      , cdtiptra);
+		params.put("contrarecibo"  , contrarecibo);
+		params.put("tipoPago"      , tipoPago);
+		params.put("nfactura"      , nfactura);
+		params.put("cdpresta"      , cdpresta);
+		params.put("cdusuari"      , cdusuari);
+		params.put("cdtipram"      , cdtipram);
+		params.put("lote"          , lote);
+		params.put("tipolote"      , tipolote);
+		params.put("tipoimpr"      , tipoimpr);
+		params.put("cdusuari_busq" , cdusuari_busq);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarTramites(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		logger.debug(Utils.log("****** PKG_SATELITES2.P_OBTIENE_MESACONTROL lista=",lista));
+		return lista;
+	}
+	
+	protected class RecuperarTramites extends StoredProcedure
+	{
+		protected RecuperarTramites(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES2.P_OBTIENE_MESACONTROL");
+			declareParameter(new SqlParameter("cdunieco"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ntramite"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdagente"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fedesde"       , OracleTypes.DATE));
+			declareParameter(new SqlParameter("fehasta"       , OracleTypes.DATE));
+			declareParameter(new SqlParameter("cdsisrol"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtiptra"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("contrarecibo"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipoPago"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nfactura"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdpresta"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipram"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("lote"          , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipolote"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipoimpr"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari_busq" , OracleTypes.VARCHAR));
+			String cols[]=new String[]{
+					"ntramite"     , "cdunieco" , "cdramo"   , "dsramo"        , "estado"     , "nmpoliza"
+					,"nmsolici"    , "cdsucadm" , "dssucadm" , "cdsucdoc"      , "dssucdoc"   , "cdsubram"
+					,"cdtiptra"    , "ferecepc" , "cdagente" , "Nombre_agente" , "referencia" , "nombre"
+					,"fecstatu"    , "status"   , "comments" , "cdtipsit"      , "comi"       , "prima_neta"
+					,"prima_total" , "nmsuplem"
+					,"otvalor01","otvalor02","otvalor03","otvalor04","otvalor05","otvalor06","otvalor07","otvalor08","otvalor09","otvalor10"
+					,"otvalor11","otvalor12","otvalor13","otvalor14","otvalor15","otvalor16","otvalor17","otvalor18","otvalor19","otvalor20"
+					,"otvalor21","otvalor22","otvalor23","otvalor24","otvalor25","otvalor26","otvalor27","otvalor28","otvalor29","otvalor30"
+					,"otvalor31","otvalor32","otvalor33","otvalor34","otvalor35","otvalor36","otvalor37","otvalor38","otvalor39","otvalor40"
+					,"otvalor41","otvalor42","otvalor43","otvalor44","otvalor45","otvalor46","otvalor47","otvalor48","otvalor49","otvalor50"
+					,"contratante" , "cdusuari"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void actualizarHijosRemesa(
+			String lote
+			,String ntramite
+			,String status
+			)throws Exception
+	{
+		if(StringUtils.isBlank(lote)&&StringUtils.isBlank(ntramite))
+		{
+			throw new ApplicationException("No puede ir vacios ambos valores");
+		}
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("lote"     , lote);
+		params.put("ntramite" , ntramite);
+		params.put("status"   , status);
+		ejecutaSP(new ActualizarHijosRemesa(getDataSource()),params);
+	}
+	
+	protected class ActualizarHijosRemesa extends StoredProcedure
+	{
+		protected ActualizarHijosRemesa(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_ACTUALIZA_HIJOS_REMESA");
+    		declareParameter(new SqlParameter("lote"     , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));
     		compile();
