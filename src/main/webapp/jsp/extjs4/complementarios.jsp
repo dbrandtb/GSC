@@ -2189,41 +2189,52 @@ function _datComTurnarSuscripcion()
                 			style   : 'margin:5px;'
                 		},
                 		layout: {
-                             type: 'hbox'
-                             ,align: 'center'
-                             ,pack: 'center'
-                         }
-                        ,border: false
-                        ,items:[
-                	        {	        	
-                				xtype   : 'image'
-                			    ,src    : contexto+'/images/cotizacionautos/menu_endosos.png'
-                		    }
-                	    ]
-                	});
-                	
-                	var validacionNumSerie = Ext.create('Ext.window.Window', {
-                		title			: titulo
-                		,modal			: true
-                		,buttonAlign	: 'center'
-                		,width			: 510
-                		,height		:	220
-                		,defaults 	: {
-                			style   : 'margin:5px;'
+                			type: 'hbox'
+                			,align: 'center'
+                			,pack: 'center'
                 		}
-                		,items    : [
-                			{
+                		,border: false
+                		,items:[{	        	
                 			xtype   : 'image'
-                			,src    : imagenSeccion
-                		},{
-                			xtype  : 'label'
-                			,text  : txtRespuesta
-                			,style : 'color:red;margin:5px;'
-                		},{
-                				border: false
-                				,items    :
-                				[	panelImagen		]
-                			}            
+                			,src    : contexto+'/images/cotizacionautos/menu_endosos.png'
+                			,width: 200
+                			,height: 100
+                		}]
+                	});
+
+                	validacionNumSerie = Ext.create('Ext.window.Window',{
+                		title        : titulo
+                		,modal       : true
+                		,buttonAlign : 'center'
+                		,width		 : 520
+                		,icon 		 : imagenSeccion
+                		,resizable	 : false
+                		,height      : 250
+                		,items       :[
+                			Ext.create('Ext.form.Panel', {
+                				id: 'panelClausula'
+                				,width		 : 500
+                				,height      : 150
+                				,bodyPadding: 5
+                				,renderTo: Ext.getBody()
+                				,defaults 	 : {
+                					style : 'margin:5px;'
+                				}
+                				,border: false
+                				,items: [
+                				{
+                					xtype  : 'label'
+                					,text  : txtRespuesta
+                					,width : 100
+                					,height: 100
+                					,style : 'color:red;margin:10px;'
+                				}
+                				,{
+                					border: false
+                					,items    :
+                						[	panelImagen		]
+                				}]
+                			})
                 		],
                 		buttonAlign:'center',
                 		buttons: [{
@@ -2235,8 +2246,7 @@ function _datComTurnarSuscripcion()
                 			}
                 		}]
                 	});
-               	
-              		centrarVentanaInterna(validacionNumSerie.show());
+                	centrarVentanaInterna(validacionNumSerie.show());
                 }
                 
                 
