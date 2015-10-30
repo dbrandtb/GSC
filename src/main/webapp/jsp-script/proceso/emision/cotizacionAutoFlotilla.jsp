@@ -2277,8 +2277,10 @@ Ext.onReady(function()
                                 		return 'El valor m&aacute;ximo es '+me.maximoTotal;
                                 	}
                                 }else{
-                                	me.setMinValue(MontoMinimo);
-                        			me.setMaxValue(MontoMaximo);
+                                	if(_p30_smap1.cdsisrol =='EJECUTIVOCUENTA'){
+                                		me.setMinValue(MontoMinimo);
+                                		me.setMaxValue(MontoMaximo);
+                                	}
                                 }
                                 return true;
                             };
@@ -2865,11 +2867,15 @@ Ext.onReady(function()
             {
                 //5100
                 //6001
-                _p30_smap1.remolquesPorTracto=json.smap1.P1VALOR;
+                _p30_smap1.remolquesPorTracto=json.smap1.P1VALOR; // Remolques x tractocamion
+                _p30_smap1.totalTractocamion =json.smap1.P2VALOR; // Total de Tractocamiones
+                _p30_smap1.totalCamiones =json.smap1.P3VALOR; // total de camiones
             }
             else
             {
                 _p30_smap1.remolquesPorTracto=0;
+                _p30_smap1.totalTractocamion = 0;
+                _p30_smap1.totalCamiones = 0;
                 mensajeError(json.respuesta);
             }
             debug('_p30_smap1:',_p30_smap1);
@@ -3637,31 +3643,54 @@ function _p30_cotizar(sinTarificar)
     
     if(valido)
     {
-        var nTipo4  = 0;
+        var ncamiones = 0;
+        var ntractocamiones = 0;
+        var nsemiremolques = 0;
+    	
+    	var nTipo2  = 0;
+    	var nTipo4  = 0;
         var nTipo13 = 0;
         _p30_store.each(function(record)
         {
-            if(record.get('cdtipsit')+'x'=='CRx')
+            
+        	if(record.get('cdtipsit')+'x'=='CRx')
             {
-                var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
-                if(record.get(tipoVehiName)-0==4)
+        		var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
+        		if(record.get(tipoVehiName)-0==2){
+        			ncamiones = ncamiones+1;
+        		}
+        		else if(record.get(tipoVehiName)-0==4)
                 {
-                    nTipo4=nTipo4+1;
-                }
-                else if(record.get(tipoVehiName)-0==13)
+                    ncamiones = ncamiones+1;
+                    ntractocamiones = ntractocamiones+1;
+                }else if(record.get(tipoVehiName)-0==13)
                 {
-                    nTipo13=nTipo13+1;
+                	nsemiremolques = nsemiremolques+1;
                 }
+                
+            }else if(record.get('cdtipsit')+'x'=='TCx'){
+            	ncamiones = ncamiones+1;
+            	ntractocamiones = ntractocamiones+1;
+            	
+            }else if(record.get('cdtipsit')+'x'=='RQx'){
+            	nsemiremolques = nsemiremolques+1;
             }
         });
-        if(nTipo13>nTipo4*_p30_smap1.remolquesPorTracto)
-        {
-            valido=false;
-        }
-        if(!valido)
-        {
-            mensajeWarning('Se permiten '+_p30_smap1.remolquesPorTracto+' remolques por cada tractocami&oacute;n<br/>'
-                           +'Y en la cotizaci&oacute;n hay '+nTipo13+' remolques y '+nTipo4+' tractocamiones');
+        
+        if(ncamiones > _p30_smap1.totalCamiones){
+        	valido = false;
+        	mensajeWarning("&Uacute;nicamente se puede amparar "+_p30_smap1.totalCamiones+" Camiones en la autorización. <br/>Intente nuevamente.");
+        }else{
+        	if(ntractocamiones > _p30_smap1.totalTractocamion){
+            	valido = false;
+            	mensajeWarning("&Uacute;nicamente se puede amparar "+_p30_smap1.totalTractocamion+" Tractocamiones en la autorización. <br/>Intente nuevamente.");
+            }else{
+            	if(nsemiremolques > (+ntractocamiones * +_p30_smap1.remolquesPorTracto)){
+            		valido = false;
+            		mensajeWarning('Se permiten '+_p30_smap1.remolquesPorTracto+' remolques por cada tractocami&oacute;n<br/>'
+                            +'Y en la cotizaci&oacute;n hay '+nsemiremolques+' remolques y '+ntractocamiones+' tractocamiones');
+            	}
+            }
         }
     }
     
