@@ -32,6 +32,9 @@ public class AseguradoVO implements Serializable{
 	private String cdgrupo;
 	private String familia;
 	private String cdfamilia;
+
+	private String cdplan;
+	private String dsplan;
 	
 	//TODO: Agregar atributos para el Afiliado en SISA o crear un AfiliadoVO con ellos
 	/*
@@ -165,6 +168,22 @@ public class AseguradoVO implements Serializable{
 		this.parentesco = parentesco;
 	}
 
+
+	public String getCdplan() {
+		return cdplan;
+	}
+
+	public void setCdplan(String cdplan) {
+		this.cdplan = cdplan;
+	}
+
+	public String getDsplan() {
+		return dsplan;
+	}
+
+	public void setDsplan(String dsplan) {
+		this.dsplan = dsplan;
+	}
 
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
