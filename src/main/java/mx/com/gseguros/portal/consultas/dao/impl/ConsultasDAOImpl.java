@@ -3216,4 +3216,53 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> recuperarDetalleRemesa(String ntramite, String tipolote) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("tipolote" , tipolote);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarDetalleRemesa(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_DETALLE_REMESAS lista=",lista));
+		return lista;
+	}
+	
+	protected class RecuperarDetalleRemesa extends StoredProcedure
+	{
+		protected RecuperarDetalleRemesa(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_DETALLE_REMESAS");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipolote" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"ntramite"
+					,"cdunieco"
+					,"cdramo"
+					,"estado"
+					,"nmpoliza"
+					,"nmsuplem"
+					,"tipotram"
+					,"nmtraope"
+					,"nmrecibo"
+					,"cddevcia"
+					,"cdgestor"
+					,"nmimpres"
+					,"ptimport"
+					,"cdagente"
+					,"nombagte"
+					,"nsuplogi"
+					,"descrip"
+            };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
