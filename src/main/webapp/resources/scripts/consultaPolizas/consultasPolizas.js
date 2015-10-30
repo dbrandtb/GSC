@@ -652,6 +652,7 @@ Ext.onReady(function() {
             {type:'string', name:'cdgrupo'},
             {type:'string', name:'familia'},
             {type:'string', name:'cdfamilia'},
+            {type:'string', name:'dsplan'},
             {type:'string', name:'parentesco'}
         ]
     });
@@ -783,6 +784,7 @@ Ext.onReady(function() {
                     siniestralidad(null, null,record.get('cdperson'),null,"0");//cdunieco,cdramo, cdperson, nmpoliza
                 }
             },
+            {text:'Plan',dataIndex:'dsplan',width:100 , align:'left'},
             {text:'Tipo de <br/>asegurado',dataIndex:'parentesco',width:100 , align:'left'},
             {text:'Clave <br/>Asegurado',dataIndex:'cdperson',width:100,align:'left'},
             {text:'Nombre',dataIndex:'nombre',width:180,align:'left'},
@@ -794,33 +796,6 @@ Ext.onReady(function() {
             {text:'Fecha Nac.',dataIndex:'fenacimi',width:100, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
         ],
         tbar: [{
-                xtype : 'textfield',
-                name : 'filtrarFam',
-                fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Familia:</span>',
-                labelWidth : 80,
-                width: 250,
-                maxLength : 50,
-                listeners:{
-                	change: function(elem,newValue,oldValue){
-                		newValue = Ext.util.Format.uppercase(newValue);
-                		
-                		//Validacion de valor anterior ya que la pantalla hace lowercase en automatico y manda doble change
-						if( newValue == Ext.util.Format.uppercase(oldValue)){
-							return false;
-						}
-						
-						try{
-//			        		storeAsegurados.clearFilter();
-//	                		storeAsegurados.filter('familia',newValue);
-//							storeAsegurados.filter(storeAsegurados.createFilterFn('familia',newValue, true));
-							storeAsegurados.removeFilter('filtroFam');
-	                		storeAsegurados.filter(Ext.create('Ext.util.Filter', {property: 'familia', anyMatch: true, value: newValue, root: 'data', id:'filtroFam'}));
-						}catch(e){
-							error('Error al filtrar por familia',e);
-						}
-                	}
-                }
-            },'-',{
                 xtype : 'textfield',
                 name : 'filtrarAseg',
                 fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Asegurado:</span>',
@@ -844,6 +819,33 @@ Ext.onReady(function() {
 	                		storeAsegurados.filter(Ext.create('Ext.util.Filter', {property: 'nombre', anyMatch: true, value: newValue, root: 'data', id:'filtroAseg'}));
 						}catch(e){
 							error('Error al filtrar por asegurado',e);
+						}
+                	}
+                }
+            },'-',{
+                xtype : 'textfield',
+                name : 'filtrarFam',
+                fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Familia:</span>',
+                labelWidth : 80,
+                width: 250,
+                maxLength : 50,
+                listeners:{
+                	change: function(elem,newValue,oldValue){
+                		newValue = Ext.util.Format.uppercase(newValue);
+                		
+                		//Validacion de valor anterior ya que la pantalla hace lowercase en automatico y manda doble change
+						if( newValue == Ext.util.Format.uppercase(oldValue)){
+							return false;
+						}
+						
+						try{
+//			        		storeAsegurados.clearFilter();
+//	                		storeAsegurados.filter('familia',newValue);
+//							storeAsegurados.filter(storeAsegurados.createFilterFn('familia',newValue, true));
+							storeAsegurados.removeFilter('filtroFam');
+	                		storeAsegurados.filter(Ext.create('Ext.util.Filter', {property: 'familia', anyMatch: true, value: newValue, root: 'data', id:'filtroFam'}));
+						}catch(e){
+							error('Error al filtrar por familia',e);
 						}
                 	}
                 }

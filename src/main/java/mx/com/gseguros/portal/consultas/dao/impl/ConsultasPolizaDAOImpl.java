@@ -454,6 +454,10 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     		consulta.setCdgrupo(rs.getString("cvegrupo"));
     		consulta.setFamilia(rs.getString("desfamilia"));
     		consulta.setCdfamilia(rs.getString("cvefamilia"));
+    		
+    		consulta.setCdplan(rs.getString("CDPLAN"));
+    		consulta.setDsplan(rs.getString("DSPLAN"));
+    		
     		return consulta;
     	}
     }
