@@ -129,7 +129,7 @@ function _4_imagenStatus(record,imagen,texto,estados,funcion,row)
 	debug('estados:' , estados);
 	debug('funcion:' , funcion);
 	debug('row:'     , row);
-	var indice   = $.inArray(record.get('status'),estados);
+	var indice   = $.inArray(Number(record.get('status')),estados);
 	debug('indice: ',indice);
 	if(indice>=0)
 	{

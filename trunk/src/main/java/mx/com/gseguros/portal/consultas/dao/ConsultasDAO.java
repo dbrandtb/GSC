@@ -411,4 +411,6 @@ public interface ConsultasDAO
 			,String cdusuari
 			,String cdunieco
 			)throws Exception;
+	
+	public List<Map<String,String>> recuperarDetalleRemesa(String ntramite, String tipolote) throws Exception;
 }

@@ -736,6 +736,16 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						,usuario.getCdUnieco()
 						);
 			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_DETALLE_REMESA))
+			{
+				paso = "Recuperando detalle de remesa";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				String ntramite = params.get("ntramite");
+				String tipolote = params.get("tipolote");
+				
+				lista = consultasDAO.recuperarDetalleRemesa(ntramite,tipolote);
+			}
 		}
 		catch(Exception ex)
 		{

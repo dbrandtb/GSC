@@ -1,9 +1,6 @@
 /**
  * Ventana para mostrar la impresión de pólizas
  * COMPONENTE 0 => #C0
- * recibe
- *   ntramite
- *   ,records {cdunieco,cdramo,estado,nmpoliza,nmsuplem,nsuplogi,cdtipsup,ntramite}
  */
 Ext.define('VentanaImpresionLote',
 {
@@ -141,11 +138,26 @@ Ext.define('VentanaImpresionLote',
             ,handler : function(me)
             {
                 var ven = me.up('window');
-                ven.destroy();
                 if(!Ext.isEmpty(ven.callback))
                 {
                     ven.callback();
                 }
+                ven.destroy();
+            }
+        }
+        ,{
+            itemId   : '_c0_botonRegresar'
+            ,text    : 'Regresar y buscar otro'
+            ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'control_repeat_blue.png'
+            ,hidden  : true
+            ,handler : function(me)
+            {
+                var ven = me.up('window');
+                if(!Ext.isEmpty(ven.callback))
+                {
+                    ven.callback();
+                }
+                ven.destroy();
             }
         }
     ]
@@ -295,6 +307,11 @@ Ext.define('VentanaImpresionLote',
                 {
                     buttons[i].handler=me.buscarImpresora;
                 }
+                
+                if(true==me.cancelable)
+                {
+                    me.down('[xtype=button][text*=Regresar]').show();
+                }
             }
             catch(e)
             {
@@ -441,7 +458,8 @@ Ext.define('VentanaImpresionLote',
     {
         debug('imprimir botPap,botImp,printerRecords:',botPap,botImp,printerRecords,'.');
         
-        var me = this;
+        var me  = this;
+        var win = botImp.up('window');
         
         var ck = 'Imprimiendo';
         try
@@ -456,7 +474,7 @@ Ext.define('VentanaImpresionLote',
             }
             var printer = printerRecords[0];
             
-            _setLoading(true,me);
+            _setLoading(true,win);
             Ext.Ajax.request(
             {
                 url      : _GLOBAL_URL_IMPRIMIR_LOTE
@@ -474,14 +492,22 @@ Ext.define('VentanaImpresionLote',
                 }
                 ,success : function(response)
                 {
-                    _setLoading(false,me);
+                    _setLoading(false,win);
                     var ck = 'Decodificando respuesta al imprimir';
                     try
                     {
                         var json = Ext.decode(response.responseText);
                         if(json.success==true)
                         {
-                            alert(1);
+                            mensajeCorrecto(
+                                'Impresi\u00F3n correcta'
+                                ,'Impresi\u00F3n correcta'
+                                ,function()
+                                {
+                                    win.destroy();
+                                    me.actualizarBotones();
+                                }
+                            );
                         }
                         else
                         {
@@ -495,7 +521,7 @@ Ext.define('VentanaImpresionLote',
                 }
                 ,failure  : function()
                 {
-                    _setLoading(false,me);
+                    _setLoading(false,win);
                     errorComunicacion(null,'Error al imprimir');
                 }
             });
