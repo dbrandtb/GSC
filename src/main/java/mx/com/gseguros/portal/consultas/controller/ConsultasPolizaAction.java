@@ -894,24 +894,24 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			List<ComponenteVO> tatrisitTemp = new ArrayList<ComponenteVO>();
 			// buscar cp
 			for (ComponenteVO t : camposTatrisit)
-				if (t.getNameCdatribu().equals("3"))
+				if (t.getLabel().contains("POSTAL"))
 					tatrisitTemp.add(t);
 			// buscar estado
 			for (ComponenteVO t : camposTatrisit)
-				if (t.getNameCdatribu().equals("4"))
+				if (t.getLabel().contains("ESTADO"))
 					tatrisitTemp.add(t);
 			// buscar municipio
 			for (ComponenteVO t : camposTatrisit)
-				if (t.getNameCdatribu().equals("17"))
+				if (t.getLabel().contains("MUNICIPIO"))
 					tatrisitTemp.add(t);
 			// agregar todos los demas
 			for (ComponenteVO comp : camposTatrisit) {
 				comp.setSoloLectura(true);
 				comp.setObligatorio(false);
 				comp.setMinLength(0);
-				if (!comp.getNameCdatribu().equals("3")
-						&& !comp.getNameCdatribu().equals("4")
-						&& !comp.getNameCdatribu().equals("17")) {
+				if (!comp.getLabel().contains("POSTAL")
+						&& !comp.getLabel().contains("ESTADO")
+						&& !comp.getLabel().contains("MUNICIPIO")) {
 					tatrisitTemp.add(comp);
 				}
 			}
