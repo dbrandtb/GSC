@@ -2194,9 +2194,23 @@ Ext.onReady(function()
                                             		var valormin = Number(me.valorCargado)*(1+Number(json.smap1.P1VALOR));
                                                     var valormax = Number(me.valorCargado)*(1+Number(json.smap1.P2VALOR));
                                                     MontoMaximo = valormin;
-                                                    MontoMinimo = valormax;
-                                                    me.setMinValue(valormin);
-                                                    me.setMaxValue(valormax);
+													MontoMinimo = valormax;
+													
+                                                    
+                                                    if(_p30_smap1.cdsisrol =='EJECUTIVOCUENTA'){
+                                                    	if((Number(valormin)>= Number(me.maximoTotal)) && (Number(valormax)>= Number(me.maximoTotal))){
+                                                    		MontoMaximo = me.maximoTotal;
+    														MontoMinimo = me.maximoTotal;
+                                                    		me.setMinValue(me.maximoTotal);
+                                                   			me.setMaxValue(me.maximoTotal);
+                                   	                    }else{
+                                   	                    	me.setMaxValue(valormax);
+                                   	                    	me.setMinValue(valormin);
+                                   	                    }
+                                                	}else{
+														me.setMinValue(valormin);
+														me.setMaxValue(valormax);
+                                                	}
                                                     me.isValid();
                                                     debug('valor:',me.valorCargado);
                                                     debug('valormin:',valormin);

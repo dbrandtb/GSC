@@ -2245,15 +2245,6 @@ function _p28_cargarRangoValorRamo5(callback)
                 debug('### obtener rango valor:',json);
                 if(json.exito)
                 {
-                    /*valormin = valorCargado*(1+(json.smap1.P1VALOR-0));
-                    valormax = valorCargado*(1+(json.smap1.P2VALOR-0));
-                    valor.setMinValue(valormin);
-                    valor.setMaxValue(valormax);
-                    valor.isValid();
-                    debug('valor:',valorCargado);
-                    debug('valormin:',valormin);
-                    debug('valormax:',valormax);*/
-                    
                     valor.validator=function(value){
                     	var r = true;
                     	valormin = valorCargado*(1+(json.smap1.P1VALOR-0));
@@ -2261,31 +2252,26 @@ function _p28_cargarRangoValorRamo5(callback)
                         debug('valormin:',valormin);
                         debug('valormax:',valormax);
                         var me = _fieldLikeLabel('VALOR VEH');
-	                    
-                        if(value<valormin||value>valormax)
-                        {
-                        	if(_p28_smap1.cdsisrol =='EJECUTIVOCUENTA'){
-                        		if(Number(value)>Number(me.maximoTotal))
-        	                    {
-                        			valor.setMinValue(false);
-                        			valor.setMaxValue(false);
-                        			r='Favor de acudir a Mesa de Control para realizar la cotización.';
-        	                    }else{
-        	                    	if(value<valormin){
-                            			r= valor.setMinValue(valormin);
-                            		}else{
-                            			r= valor.setMaxValue(valormax);
-                            		}
-        	                    }
-                        	}else{
-                        		if(value<valormin){
-                        			r= valor.setMinValue(valormin);
-                        		}else{
-                        			r= valor.setMaxValue(valormax);
-                        		}
-                        	}
-                        }
-                        return r;
+
+                       	if(_p28_smap1.cdsisrol =='EJECUTIVOCUENTA'){
+                       		if(Number(value)>Number(me.maximoTotal)){
+                       			valor.setMinValue(me.maximoTotal);
+                       			valor.setMaxValue(me.maximoTotal);
+                       			valor.setMinValue(false);
+                       			valor.setMaxValue(false);
+                       			r='Favor de acudir a Mesa de Control para realizar la cotización.';
+       	                    }else if((Number(valormin)>= Number(me.maximoTotal)) && (Number(valormax)>= Number(me.maximoTotal))){
+       	                    	valor.setMinValue(me.maximoTotal);
+                       			valor.setMaxValue(me.maximoTotal);
+       	                    }else{
+       	                    	valor.setMaxValue(valormax);
+       	                    	valor.setMinValue(valormin);
+       	                    }
+                       	}else{
+                       		valor.setMinValue(valormin);
+                       		valor.setMaxValue(valormax);
+                       	}
+                       return r;
                     }
                     valor.isValid();
                     _p28_cargarParametrizacionCoberturas(callback);
