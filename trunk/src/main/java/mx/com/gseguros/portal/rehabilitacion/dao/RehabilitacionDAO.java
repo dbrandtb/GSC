@@ -17,7 +17,7 @@ public interface RehabilitacionDAO
 			,String nmsituac
 			) throws Exception;
 	
-	public Map<String,Object> rehabilitarPoliza(Map<String, String> params) throws Exception;
+	public Map<String,Object> rehabilitarPoliza(Map<String, String> params, String cdusuari) throws Exception;
 	
 	/**
 	 * pkg_satelites.p_valida_antiguedad
@@ -44,5 +44,6 @@ public interface RehabilitacionDAO
 			,String nmcancel
 			,String comments
 			,String nmsuplem
+			,String cdusuari
 			)throws Exception;
 }

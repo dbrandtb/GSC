@@ -4782,6 +4782,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,nmcancel
 					,comments
 					,nmsuplem
+					,usuarioSesion.getUser()
 					);
 			
 			String nmsuplemGen = (String) resParams.get("pv_nmsuplem_o");

@@ -83,8 +83,12 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 	
 	@Deprecated
 	@Override
-	public Map<String,Object> rehabilitarPoliza(Map<String,String>params) throws Exception
+	public Map<String,Object> rehabilitarPoliza(Map<String,String>params,String cdusuari) throws Exception
 	{
+		if(params!=null)
+		{
+			params.put("pv_cdusuari_i" , cdusuari);
+		}
 		return this.ejecutaSP(new RehabilitarPoliza(this.getDataSource()), Utils.ponFechas(params));
 	}
 	
@@ -104,6 +108,7 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 			,String nmcancel
 			,String comments
 			,String nmsuplem
+			,String cdusuari
 			)throws Exception
 	{
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
@@ -121,6 +126,7 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 		params.put("pv_nmcancel_i" , nmcancel);
 		params.put("pv_comments_i" , comments);
 		params.put("pv_nmsuplem_i" , nmsuplem);
+		params.put("pv_cdusuari_i" , cdusuari);
 		Utils.debugProcedure(logger, "pkg_cancela.p_rehabilita_poliza", params);
 		Map<String,Object> procResult = ejecutaSP(new RehabilitarPoliza(getDataSource()),params);
 		return procResult;
@@ -145,6 +151,7 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 			declareParameter(new SqlParameter("pv_nmcancel_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_comments_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
             
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
