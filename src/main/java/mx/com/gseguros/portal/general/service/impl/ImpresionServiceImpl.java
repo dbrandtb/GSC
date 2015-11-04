@@ -194,7 +194,7 @@ public class ImpresionServiceImpl implements ImpresionService {
         */
 		ImpresionServiceImpl imprSrvImpl = new ImpresionServiceImpl();
 		try {
-			imprSrvImpl.imprimeDocumento("/biosnet logo.png", "Microsoft XPS Document Writer", 1, null);
+			imprSrvImpl.imprimeDocumento("/biosnet logo.png", "Microsoft XPS Document Writer", 3, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

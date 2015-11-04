@@ -59,10 +59,10 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 	 * @return
 	 * @throws Exception
 	 */
-	@Action(value="listaImpresorasServer",
+	@Action(value="listaImpresoras",
 			results={@Result(name="success", type="json")}
 	)
-	public String listaImpresorasServer() throws Exception {
+	public String listaImpresoras() throws Exception {
 		
 		PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
 		
@@ -129,8 +129,16 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 		}
 		PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet(); 
 		aset.add(new Copies(numCopias)); 
+		//aset.add(MediaSize.NA.ISO.A4.getMediaSizeName());
 		aset.add(MediaSize.ISO.A4.getMediaSizeName());
 		aset.add(Sides.DUPLEX);
+		/*
+		float printableX = someSize;
+		float printableY = someSize;
+		printSet = new HashPrintRequestAttributeSet();
+		mediaSizeName = MediaSize.findMedia(printableX,printableY,MediaPrintableArea.INCH);
+		printSet.add(mediaSizeName);
+		*/
 		
 		////////////////////////////////////////
 		if(params.get("mediaId") != null) {
@@ -176,68 +184,6 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
-	/*
-	public static void main(String[] args) {
-		
-		PrintService[] services2 = PrintServiceLookup.lookupPrintServices(null, null);
-        logger.debug("Printer Services found:");
-        printService(services2);
-		
-		// Input the file
-		FileInputStream textStream = null; 
-		try {
-			textStream = new FileInputStream("E:\\R\\Pictures\\Beatles-Hard-Days-Night-cover.jpg"); 
-		} catch (FileNotFoundException ffne) {
-			ffne.printStackTrace();
-		} 
-		if (textStream == null) { 
-			System.out.println("no existe el documento");
-		    return; 
-		} else {
-			System.out.println("SI existe el documento");
-		}
-		// Set the document type
-		DocFlavor myFormat = DocFlavor.INPUT_STREAM.JPEG;
-		// Create a Doc
-		Doc myDoc = new SimpleDoc(textStream, myFormat, null); 
-		// Build a set of attributes
-		PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet(); 
-		aset.add(new Copies(5)); 
-		aset.add(MediaSize.ISO.A4.getMediaSizeName());
-		aset.add(Sides.DUPLEX); 
-		// discover the printers that can print the format according to the
-		// instructions in the attribute set
-		PrintService [] //services = PrintServiceLookup.lookupDefaultPrintService();//PrintServiceLookup.lookupPrintServices(myFormat, aset);
-		services = PrintServiceLookup.lookupPrintServices(DocFlavor.INPUT_STREAM.PDF, null);
-		System.out.println("***");
-		printService(services);
-		System.out.println("***");
-		
-		DocPrintJob job = services2[1].createPrintJob(); 
-		try { 
-        	System.out.println("Antes de print");
-            job.print(myDoc, aset);
-            System.out.println("Despues de print");
-        } catch (PrintException pe) {
-        	pe.printStackTrace();
-        } 
-		//System.out.println("services=" + services);
-		//System.out.println("services.length=" + services.length);
-		
-//		// Create a print job from one of the print services
-//		if (services.length > 0) { 
-//		        DocPrintJob job = services[0].createPrintJob(); 
-//		        try { 
-//		        	System.out.println("Antes de print");
-//		            job.print(myDoc, aset);
-//		            System.out.println("Despues de print");
-//		        } catch (PrintException pe) {
-//		        	pe.printStackTrace();
-//		        } 
-//		}
-		
-	}
-	*/
 	
 	private static void printService(PrintService[] services) {
         if (services!=null && services.length>0) {
@@ -263,17 +209,20 @@ public class TestImpresionesAction extends PrincipalCoreAction {
         String mediaId     = params.get("mediaId");
         String printPage   = params.get("printTestPage");
 		
+        /*
         // get default printer
         PrintService defaultPrintService = PrintServiceLookup.lookupDefaultPrintService();
 
         // suggest the use of the default printer
         logger.debug("Default Print Service: {}", defaultPrintService.getName());
+        
 
         // if there is no input, use the default printer
         if (printerName == null || printerName.equals("")) {
         	logger.debug("Se toma la impresora por default: {}", defaultPrintService.getName());
             printerName = defaultPrintService.getName();
         }
+        */
 
         // the printer is selected
         AttributeSet aset = new HashAttributeSet();
@@ -344,6 +293,70 @@ public class TestImpresionesAction extends PrincipalCoreAction {
             return Printable.PAGE_EXISTS;
         }
     }
+    
+    
+	/*
+	public static void main(String[] args) {
+		
+		PrintService[] services2 = PrintServiceLookup.lookupPrintServices(null, null);
+        logger.debug("Printer Services found:");
+        printService(services2);
+		
+		// Input the file
+		FileInputStream textStream = null; 
+		try {
+			textStream = new FileInputStream("E:\\R\\Pictures\\Beatles-Hard-Days-Night-cover.jpg"); 
+		} catch (FileNotFoundException ffne) {
+			ffne.printStackTrace();
+		} 
+		if (textStream == null) { 
+			System.out.println("no existe el documento");
+		    return; 
+		} else {
+			System.out.println("SI existe el documento");
+		}
+		// Set the document type
+		DocFlavor myFormat = DocFlavor.INPUT_STREAM.JPEG;
+		// Create a Doc
+		Doc myDoc = new SimpleDoc(textStream, myFormat, null); 
+		// Build a set of attributes
+		PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet(); 
+		aset.add(new Copies(5)); 
+		aset.add(MediaSize.ISO.A4.getMediaSizeName());
+		aset.add(Sides.DUPLEX); 
+		// discover the printers that can print the format according to the
+		// instructions in the attribute set
+		PrintService [] //services = PrintServiceLookup.lookupDefaultPrintService();//PrintServiceLookup.lookupPrintServices(myFormat, aset);
+		services = PrintServiceLookup.lookupPrintServices(DocFlavor.INPUT_STREAM.PDF, null);
+		System.out.println("***");
+		printService(services);
+		System.out.println("***");
+		
+		DocPrintJob job = services2[1].createPrintJob(); 
+		try { 
+        	System.out.println("Antes de print");
+            job.print(myDoc, aset);
+            System.out.println("Despues de print");
+        } catch (PrintException pe) {
+        	pe.printStackTrace();
+        } 
+		//System.out.println("services=" + services);
+		//System.out.println("services.length=" + services.length);
+		
+//		// Create a print job from one of the print services
+//		if (services.length > 0) { 
+//		        DocPrintJob job = services[0].createPrintJob(); 
+//		        try { 
+//		        	System.out.println("Antes de print");
+//		            job.print(myDoc, aset);
+//		            System.out.println("Despues de print");
+//		        } catch (PrintException pe) {
+//		        	pe.printStackTrace();
+//		        } 
+//		}
+		
+	}
+	*/
 	
 	
 	public Map<String, String> getParams() {
