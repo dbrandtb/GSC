@@ -498,4 +498,7 @@ public interface SiniestrosDAO {
 	public void guardaAutorizacionConceptos(Map<String, Object>params) throws Exception;
 	
 	public List<Map<String,String>>cargaHistorialCPTPagados(Map<String,String> params) throws Exception;
+	
+	public List<Map<String,String>> listaSiniestrosInfAsegurados(Map<String, String> params) throws Exception;
+	
 }

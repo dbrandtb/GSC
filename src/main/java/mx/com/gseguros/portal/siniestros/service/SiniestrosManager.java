@@ -628,4 +628,6 @@ public interface SiniestrosManager {
 	public void guardaAutorizacionConceptos(String cdunieco, String cdramo, String estado, String nfactura, String nmautser, String cdpresta, String cdperson) throws Exception;
 	
 	public List<Map<String,String>> cargaHistorialCPTPagados(Map<String,String> params) throws Exception;
+	
+	public List<Map<String,String>> listaSiniestrosInfAsegurados(String ntramite) throws Exception;
 }

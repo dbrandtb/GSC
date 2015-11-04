@@ -1041,6 +1041,7 @@ Ext.onReady(function() {
 										storeFacturaDirecto.removeAll();
 										storeFacturaReembolso.removeAll();
 										storePagoIndemnizatorio.removeAll();
+										storePagoIndemnizatorioRecupera.removeAll();
 									}
 									else{
 										myMask.hide();
@@ -1102,6 +1103,7 @@ Ext.onReady(function() {
 		    pagoReembolso = true;
 		    panelInicialPral.down('[name=editorFacturaDirecto]').show();
 		    panelInicialPral.down('[name=editorPagoIndemnizatorio]').hide();
+		    panelInicialPral.down('[name=editorPagoIndemnizatorioRecupera]').hide();
 		    panelInicialPral.down('[name=editorFacturaReembolso]').hide();
 		    panelInicialPral.down('[name=dtFechaOcurrencia]').hide();
 		    panelInicialPral.down('[name=dtFechaOcurrencia]').setValue('');
@@ -1112,6 +1114,7 @@ Ext.onReady(function() {
 		    panelInicialPral.down('[name=editorFacturaDirecto]').hide();
 		    panelInicialPral.down('[name=editorFacturaReembolso]').show();
 		    panelInicialPral.down('[name=editorPagoIndemnizatorio]').hide();
+		    panelInicialPral.down('[name=editorPagoIndemnizatorioRecupera]').hide();
 		    panelInicialPral.down('combo[name=cmbProveedor]').hide();
 		    panelInicialPral.down('combo[name=cmbProveedor]').setValue('');
 		    panelInicialPral.down('[name=dtFechaOcurrencia]').hide();
@@ -1120,7 +1123,13 @@ Ext.onReady(function() {
 		    pagoReembolso = false;
 		    panelInicialPral.down('[name=editorFacturaDirecto]').hide();
 		    panelInicialPral.down('[name=editorFacturaReembolso]').hide();
-		    panelInicialPral.down('[name=editorPagoIndemnizatorio]').show();
+		    if(valorAction.cdramo == _RECUPERA){
+		    	panelInicialPral.down('[name=editorPagoIndemnizatorio]').hide();
+			    panelInicialPral.down('[name=editorPagoIndemnizatorioRecupera]').show();
+		    }else{
+		    	panelInicialPral.down('[name=editorPagoIndemnizatorio]').show();
+			    panelInicialPral.down('[name=editorPagoIndemnizatorioRecupera]').hide();
+		    }
 		    panelInicialPral.down('combo[name=cmbProveedor]').hide();
 		    panelInicialPral.down('combo[name=cmbProveedor]').setValue('');
 		    panelInicialPral.down('[name=dtFechaOcurrencia]').hide();

@@ -1001,13 +1001,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				null, null, null, null, null, cdrol, pantalla, seccion, null);
 			gc.generaComponentes(componentes, true, false, true, false, false, false);
 			imap.put("itemsEdicion",gc.getItems());
-
-			//obtenemos los valores de las facturas y de ahi la informaci�n de los asegurados
-			List<Map<String,String>> facturasAux = siniestrosManager.obtenerFacturasTramite(ntramite);
-			logger.debug("Valor de facturasAux : {}",facturasAux);
-			List<Map<String,String>> siniestros = siniestrosManager.listaSiniestrosTramite2(ntramite,facturasAux.get(0).get("NFACTURA"),null);
+			List<Map<String,String>> siniestros = siniestrosManager.listaSiniestrosInfAsegurados(ntramite);
 			logger.debug("Valor de siniestros : {}",siniestros);
-			
 			List<ComponenteVO>tatrisin=kernelManagerSustituto.obtenerTatrisinPoliza(siniestros.get(0).get("CDUNIECO"),siniestros.get(0).get("CDRAMO"),siniestros.get(0).get("ESTADO"),siniestros.get(0).get("NMPOLIZA"));
 			gc.generaComponentes(tatrisin, true, false, true, false, false, false);
 			imap.put("tatrisinItems",gc.getItems());
@@ -1535,7 +1530,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				paramsTworkSin.put("pv_cdperson_i",params.get("cdperson"));
 				paramsTworkSin.put("pv_feocurre_i",renderFechas.parse(params.get("feocurre")));
 				paramsTworkSin.put("pv_nmsinies_i",params.get("nmsinies"));
-				
+				paramsTworkSin.put("pv_accion_i",params.get("accion"));
 				siniestrosManager.eliminarAsegurado(paramsTworkSin);
 			mensaje = "Asegurado eliminado";
 			success = true;
@@ -2459,8 +2454,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								}
 								
 								importeSiniestroIte = subttDesto - copagoAplicadoSiniestroIte;
-								/*
-								Cambiarlo cuando nos del el Vo.Bo. de Siniestros
+								/*Cambiarlo cuando nos del el Vo.Bo. de Siniestros
 								double hIVADesCopago  = Double.valueOf(hosp.get("IVA"));*/
 								double hIVADesCopago  = importeSiniestroIte*(ivaprov/100d);
 								logger.debug("IVA despues de Copago  : {} ",hIVADesCopago);
@@ -2593,8 +2587,17 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				smap.put("PAGODIRECTO","N");
 				
 				conceptos  = siniestrosManager.P_GET_CONCEPTOS_FACTURA(
-						siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"), siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSUPLEM"),
-						siniestro.get("NMSITUAC"), siniestro.get("AAAPERTU"), siniestro.get("STATUS"), siniestro.get("NMSINIES"), null, siniestro.get("CDTIPSIT"));
+						siniestro.get("CDUNIECO"),
+						siniestro.get("CDRAMO"),
+						siniestro.get("ESTADO"),
+						siniestro.get("NMPOLIZA"),
+						siniestro.get("NMSUPLEM"),
+						siniestro.get("NMSITUAC"),
+						siniestro.get("AAAPERTU"),
+						siniestro.get("STATUS"),
+						siniestro.get("NMSINIES"),
+						null,
+						siniestro.get("CDTIPSIT"));
 				logger.debug("Paso 7.- Obtenemos los Conceptos de la Factura : {} ",conceptos);
 				slist1     = facturasAux;
 				
@@ -2675,9 +2678,16 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					
 					//1.- Obtenemos la informacion de Autorizacion de Factura
 					Map<String,String>autorizacionesFacturaIte = siniestrosManager.obtenerAutorizacionesFactura(
-							siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"), siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"),
-							siniestro.get("NMSUPLEM"), siniestro.get("NMSITUAC"), siniestro.get("AAAPERTU"), siniestro.get("STATUS"),
-							siniestro.get("NMSINIES"), facturaIte.get("NFACTURA"));
+							siniestro.get("CDUNIECO"),
+							siniestro.get("CDRAMO"),
+							siniestro.get("ESTADO"),
+							siniestro.get("NMPOLIZA"),
+							siniestro.get("NMSUPLEM"),
+							siniestro.get("NMSITUAC"),
+							siniestro.get("AAAPERTU"),
+							siniestro.get("STATUS"),
+							siniestro.get("NMSINIES"),
+							facturaIte.get("NFACTURA"));
 					facturaObj.put("AUTMEDIC",autorizacionesFacturaIte.get("AUTMEDIC"));
 					facturaObj.put("COMMENME",autorizacionesFacturaIte.get("COMMENME"));
 					facturaObj.put("AUTRECLA",autorizacionesFacturaIte.get("AUTRECLA"));
@@ -3118,10 +3128,25 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					String isrIte      = importe.get("isr");
 					String cedularIte  = importe.get("cedular");
 					siniestrosManager.movTimpsini(
-							Constantes.INSERT_MODE, cduniecoIte, cdramoIte, estadoIte, nmpolizaIte
-							,nmsuplemIte, nmsituacIte, aaapertuIte, statusIte, nmsiniesIte, ntramiteIte
-							,importeIte, ivaIte, ivrIte, isrIte, cedularIte, false, nmsecsin+"");
-					nmsecsin++;
+							Constantes.INSERT_MODE
+							,cduniecoIte
+							,cdramoIte
+							,estadoIte
+							,nmpolizaIte
+							,nmsuplemIte
+							,nmsituacIte
+							,aaapertuIte
+							,statusIte
+							,nmsiniesIte
+							,ntramiteIte
+							,importeIte
+							,ivaIte
+							,ivrIte
+							,isrIte
+							,cedularIte
+							,false
+							,nmsecsin+"");
+						nmsecsin++;
 				}
 				logger.debug("VALORES DE LAS FACTURAS---->");
 				logger.debug("Total de registros :{}",facturasxSiniestro.size());
@@ -4161,8 +4186,17 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				smap.put("PAGODIRECTO","N");
 				
 				conceptos  = siniestrosManager.P_GET_CONCEPTOS_FACTURA(
-				siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"), siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSUPLEM"),
-				siniestro.get("NMSITUAC"), siniestro.get("AAAPERTU"), siniestro.get("STATUS"), siniestro.get("NMSINIES"), null, siniestro.get("CDTIPSIT"));
+					siniestro.get("CDUNIECO"),
+					siniestro.get("CDRAMO"),
+					siniestro.get("ESTADO"),
+					siniestro.get("NMPOLIZA"),
+					siniestro.get("NMSUPLEM"),
+					siniestro.get("NMSITUAC"),
+					siniestro.get("AAAPERTU"),
+					siniestro.get("STATUS"),
+					siniestro.get("NMSINIES"),
+					null,
+					siniestro.get("CDTIPSIT"));
 				logger.debug("Paso 7.- Obtenemos los Conceptos de la Factura : {} ",conceptos);
 				slist1     = facturasAux;
 
@@ -4245,9 +4279,16 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				
 				//1.- Obtenemos la informaci�n de Autorizaci�n de Factura
 				Map<String,String>autorizacionesFacturaIte = siniestrosManager.obtenerAutorizacionesFactura(
-					siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"), siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"),
-					siniestro.get("NMSUPLEM"), siniestro.get("NMSITUAC"), siniestro.get("AAAPERTU"), siniestro.get("STATUS"),
-					siniestro.get("NMSINIES"), facturaIte.get("NFACTURA"));
+						siniestro.get("CDUNIECO"),
+						siniestro.get("CDRAMO"),
+						siniestro.get("ESTADO"),
+						siniestro.get("NMPOLIZA"),
+						siniestro.get("NMSUPLEM"),
+						siniestro.get("NMSITUAC"),
+						siniestro.get("AAAPERTU"),
+						siniestro.get("STATUS"),
+						siniestro.get("NMSINIES"),
+						facturaIte.get("NFACTURA"));
 					facturaObj.put("AUTMEDIC",autorizacionesFacturaIte.get("AUTMEDIC"));
 					facturaObj.put("COMMENME",autorizacionesFacturaIte.get("COMMENME"));
 					facturaObj.put("AUTRECLA",autorizacionesFacturaIte.get("AUTRECLA"));
