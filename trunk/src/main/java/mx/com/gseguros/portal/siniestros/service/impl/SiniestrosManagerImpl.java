@@ -1952,4 +1952,20 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		log.debug("cargaHistorial lista size:"+lista.size());
 		return lista;
 	}
+	
+	@Override
+	public List<Map<String,String>> listaSiniestrosInfAsegurados(String ntramite) throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("pv_ntramite_i" , ntramite);
+		log.debug("listaSiniestrosTramite params: "+params);
+		List<Map<String,String>> lista = siniestrosDAO.listaSiniestrosInfAsegurados(params);
+		if(lista == null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		log.debug("listaSiniestrosTramite lista size: "+lista.size());
+		return lista;
+	}
+
 }

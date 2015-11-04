@@ -3680,7 +3680,7 @@
 		debug("Valores de entrada para el guardado ",record);
 		debug("Numero de Autorizacion : ",numeroAutorizacion);
 		debug("Actualiza  actMisiniper : ",actMisiniper);
-		
+		gridFacturaDirecto.setLoading(true);
 		Ext.Ajax.request({
 			url     : _URL_CONSULTA_AUTORIZACION_ESP
 			,params : {
@@ -3710,10 +3710,11 @@
 											record.data.COMPLEMENTO,
 											actMisiniper
 											);
+				gridFacturaDirecto.setLoading(false);
 				
 			},
 			failure : function (){
-				//me.up().up().setLoading(false);
+				gridFacturaDirecto.setLoading(false);
 				centrarVentanaInterna(Ext.Msg.show({
 					title:'Error',
 					msg: 'Error de comunicaci&oacute;n',
@@ -4493,6 +4494,7 @@
 	
 	function _p21_generarCalculo(){
 		// Se manda a llamar al procedimiento y se guarda
+		gridFacturaDirecto.setLoading(true);
 		Ext.Ajax.request(
 		{
 			url	 : _URL_GENERAR_CALCULO
@@ -4501,7 +4503,7 @@
 			}
 			,success : function (response)
 			{
-				
+				gridFacturaDirecto.setLoading(false);
 				storeAseguradoFactura.load({
 					params: {
 						'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue() ,
@@ -4515,7 +4517,7 @@
 			},
 			failure : function ()
 			{
-				//me.up().up().setLoading(false);
+				gridFacturaDirecto.setLoading(false);
 				Ext.Msg.show({
 					title:'Error',
 					msg: 'Error de comunicaci&oacute;n',
@@ -4621,7 +4623,7 @@
 				,'params.cdpresta' : panelInicialPral.down('combo[name=params.cdpresta]').getValue()
 			};
 			
-			_11_formPedirAuto.setLoading(true);
+			gridFacturaDirecto.setLoading(true);
 			_11_windowPedirAut.close();
 			Ext.Ajax.request(
 			{
@@ -4629,14 +4631,12 @@
 				,params  : json
 				,success : function(response)
 				{
-					_11_formPedirAuto.setLoading(false);
-					
 					json = Ext.decode(response.responseText);
 					debug("Valor de respuesta del guardado ===>>",json);
 					if(json.success==true)
 					{
 						_11_guardarInformacionAdicional();
-						
+						gridFacturaDirecto.setLoading(false);
 						mensajeCorrecto('Autorizaci&oacute;n Servicio',json.mensaje,function(){
 							storeAseguradoFactura.removeAll();
 							storeAseguradoFactura.load({
@@ -4649,12 +4649,13 @@
 					}
 					else
 					{
+						gridFacturaDirecto.setLoading(false);
 						mensajeError(json.mensaje);
 					}
 				}
 				,failure : function()
 				{
-					_11_formPedirAuto.setLoading(false);
+					gridFacturaDirecto.setLoading(false);
 					errorComunicacion();
 				}
 			});
@@ -5527,7 +5528,8 @@
 								'params.cdtipsit'   : record.get('CDTIPSIT'),
 								'params.cdperson'   : record.get('CDPERSON'),
 								'params.feocurre'   : record.get('FEOCURRE'),
-								'params.nmsinies'   : record.get('NMSINIES')
+								'params.nmsinies'   : record.get('NMSINIES'),
+								'params.accion'   : "0"
 							},
 							success: function(response) {
 								var res = Ext.decode(response.responseText);

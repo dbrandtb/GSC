@@ -464,9 +464,29 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				siniestrosManager.getEliminacionAsegurado(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
 				success=true;
 			}else{
+				List<Map<String,String>> aseguradosFactura = siniestrosManager.listaSiniestrosTramite2(params.get("ntramite"),params.get("nfactura"),null);
+				logger.debug("Paso 8.- Obtenemos los Asegurados (MSINIEST) : {}",aseguradosFactura);
+				
 				siniestrosManager.getEliminacionFacturaTramite(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
 				if(TipoPago.DIRECTO.getCodigo().equals(tipoPagoTramite)){
-					siniestrosManager.getEliminacionAsegurado(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
+					//siniestrosManager.getEliminacionAsegurado(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
+					for(int a=0; a< aseguradosFactura.size();a++){
+						HashMap<String, Object> paramsTworkSin = new HashMap<String, Object>();
+						paramsTworkSin.put("pv_nmtramite_i",params.get("ntramite"));
+						paramsTworkSin.put("pv_nfactura_i",params.get("nfactura"));
+						paramsTworkSin.put("pv_cdunieco_i",aseguradosFactura.get(a).get("CDUNIECO"));
+						paramsTworkSin.put("pv_cdramo_i", aseguradosFactura.get(a).get("CDRAMO"));
+						paramsTworkSin.put("pv_estado_i", aseguradosFactura.get(a).get("ESTADO"));
+						paramsTworkSin.put("pv_nmpoliza_i", aseguradosFactura.get(a).get("NMPOLIZA"));
+						paramsTworkSin.put("pv_nmsuplem_i", aseguradosFactura.get(a).get("NMSUPLEM"));
+						paramsTworkSin.put("pv_nmsituac_i", aseguradosFactura.get(a).get("NMSITUAC"));
+						paramsTworkSin.put("pv_cdtipsit_i", aseguradosFactura.get(a).get("CDTIPSIT"));
+						paramsTworkSin.put("pv_cdperson_i", aseguradosFactura.get(a).get("CDPERSON"));
+						paramsTworkSin.put("pv_feocurre_i",renderFechas.parse(aseguradosFactura.get(a).get("FEOCURRE")));
+						paramsTworkSin.put("pv_nmsinies_i",aseguradosFactura.get(a).get("NMSINIES"));
+						paramsTworkSin.put("pv_accion_i","1");
+						siniestrosManager.eliminarAsegurado(paramsTworkSin);
+					}
 					actualizaMesaControlSiniestro(params.get("ntramite"));
 					success=true;
 				}else{
