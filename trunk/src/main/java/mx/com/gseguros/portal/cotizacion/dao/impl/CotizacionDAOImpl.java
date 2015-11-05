@@ -1654,6 +1654,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		}
 	}
 	
+	/*
 	@Override
 	public List<Map<String,String>>impresionDocumentosPoliza(
 			String cdunieco
@@ -1704,6 +1705,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	*/
 	
 	@Override
 	public void movimientoTdescsup(

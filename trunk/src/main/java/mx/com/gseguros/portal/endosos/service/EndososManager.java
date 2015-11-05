@@ -19,7 +19,7 @@ public interface EndososManager
     public Map<String,String>        guardarEndosoDomicilio(Map<String,Object>params)         throws Exception;
     /**
      * PKG_CONSULTA.P_reImp_documentos
-     */
+     *
     public List<Map<String, String>> reimprimeDocumentos(
 			String cdunieco
 			,String cdramo
@@ -28,6 +28,7 @@ public interface EndososManager
 			,String nmsuplem
 			,String tipmov
 			)          throws Exception;
+	*/
     public List<Map<String, String>> obtieneCoberturasDisponibles(Map<String, String> params) throws Exception;
     
     @Deprecated

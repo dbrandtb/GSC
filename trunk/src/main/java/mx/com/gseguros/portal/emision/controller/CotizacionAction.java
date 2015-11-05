@@ -30,8 +30,8 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
-import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.Reporte;
@@ -122,6 +122,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	@Autowired
 	private ReportesManager reportesManager;
+	
+	@Autowired
+	private DocumentosManager documentosManager;
 	
 	public CotizacionAction()
 	{
@@ -1106,6 +1109,19 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			try
 			{
+				documentosManager.generarDocumentosParametrizados(
+						cdunieco
+	            		,cdramo
+	            		,"M"
+	            		,nmpolizaEmi
+	            		,"0"
+	            		,nmsuplemEmi
+	            		,DocumentosManager.PROCESO_EMISION //proceso
+	            		,ntramite
+	            		,nmpoliza //nmsolici
+	            		);
+				
+				/*
 				File   carpeta     = new File(rutaCarpeta);
 	            if(!carpeta.exists())
 	            {
@@ -1153,6 +1169,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            		logger.error("Error al transferir archivo ",ex);
 	            	}
 	            }
+	            */
 			}
 			catch(Exception ex)
 			{

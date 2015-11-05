@@ -34,8 +34,8 @@ import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
@@ -61,7 +61,6 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGen
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -146,6 +145,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private ServiciosManager serviciosManager;
+	
+	@Autowired
+	private DocumentosManager documentosManager;
 
 	public String mostrarPantalla()
 	{
@@ -2228,6 +2230,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		}
 				
 		////// crear carpeta para los documentos
+		/*
 		if(success)
 		{
             File carpeta = new File(rutaCarpeta);
@@ -2251,12 +2254,26 @@ public class ComplementariosAction extends PrincipalCoreAction
             	logger.debug("existe la carpeta   ::: "+rutaCarpeta);
             }
 		}
+		*/
 		
 		////// documentos
 		if(success)
 		{
 			try
 			{
+				documentosManager.generarDocumentosParametrizados(
+						cdunieco
+						,cdramo
+						,"M" //estado
+						,nmpolizaEmitida
+						,"0" //nmsituac
+						,nmsuplemEmitida
+						,DocumentosManager.PROCESO_EMISION //proceso
+						,ntramite
+						,nmpoliza //nmsolici
+						);
+				
+				/*
 				String cdorddoc = emisionManager.insercionDocumentosParametrizados(
 	            		cdunieco
 	            		,cdramo
@@ -2294,6 +2311,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	            		logger.error("Error al transferir archivo ",ex);
 	            	}
 	            }
+	            */
 				
 				/*
 				List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
@@ -2763,7 +2781,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 				}
 		
 		////// carpeta documentos
-		if(success)
+	    /*	
+	    if(success)
 		{
 			try
 			{
@@ -2795,6 +2814,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				success          = false;
 			}
 		}
+		*/
 		
 		////// documentacion
 		if(success)
@@ -2848,6 +2868,19 @@ public class ComplementariosAction extends PrincipalCoreAction
 				}
 				*/
 				
+				documentosManager.generarDocumentosParametrizados(
+						cdunieco
+						,cdramo
+						,"M" //estado
+						,nmpolizaEmitida
+						,"0" //nmsituac
+						,nmsuplemEmitida
+						,DocumentosManager.PROCESO_EMISION //proceso
+						,ntramite
+						,nmpoliza //nmsolici
+						);
+				
+				/*
 				String cdorddoc = emisionManager.insercionDocumentosParametrizados(
 	            		cdunieco
 	            		,cdramo
@@ -2885,6 +2918,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	            		logger.error("Error al transferir archivo ",ex);
 	            	}
 	            }
+	            */
 				
 			}
 			catch(Exception ex)
@@ -3077,6 +3111,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		}
 		
 		////// crear carpeta para los documentos
+			/*
 			if(success)
 			{
 	            File carpeta = new File(rutaCarpeta);
@@ -3100,12 +3135,26 @@ public class ComplementariosAction extends PrincipalCoreAction
 	            	logger.debug("existe la carpeta   ::: "+rutaCarpeta);
 	            }
 			}
+			*/
 			
 			////// documentos
 			if(success)
 			{
 				try
 				{
+					documentosManager.generarDocumentosParametrizados(
+							_cdunieco
+							,_cdramo
+							,"M" //estado
+							,_nmpoliza
+							,"0" //nmsituac
+							,_nmsuplem
+							,documentosManager.PROCESO_EMISION //proceso
+							,ntramite
+							,nmsolici
+							);
+					
+					/*
 					List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
 							_cdunieco
 							,_cdramo
@@ -3151,6 +3200,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								+ "\n################################"
 								+ "");
 					}
+					*/
 					
 					/**
 					 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas

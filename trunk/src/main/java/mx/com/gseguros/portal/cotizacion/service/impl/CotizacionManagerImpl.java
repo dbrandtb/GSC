@@ -8584,6 +8584,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return cotizacionDAO.recuperarListaDocumentosParametrizados(cdorddoc,nmsolici,ntramite);
 	}
 	
+	/*
 	@Deprecated
 	@Override
 	public List<Map<String,String>> generarDocumentosBaseDatos(
@@ -8594,6 +8595,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	{
 		return cotizacionDAO.generarDocumentosBaseDatos(cdorddoc,nmsolici,ntramite);
 	}
+	*/
     
 	///////////////////////////////
 	////// getters y setters //////

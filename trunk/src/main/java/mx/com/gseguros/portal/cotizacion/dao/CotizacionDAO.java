@@ -129,9 +129,11 @@ public interface CotizacionDAO {
 			String zona, String promotoria, String cdagente, String descuento)
 			throws Exception;
 
+	/*
 	public List<Map<String, String>> impresionDocumentosPoliza(String cdunieco,
 			String cdramo, String estado, String nmpoliza, String nmsuplem,
 			String ntramite) throws Exception;
+	*/
 
 	public void movimientoTdescsup(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nsuplogi, String cdtipsup,

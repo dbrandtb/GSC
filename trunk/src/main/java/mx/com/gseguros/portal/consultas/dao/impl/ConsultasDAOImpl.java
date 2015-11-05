@@ -2957,6 +2957,8 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 					,"nombre"
 					,"descrip"
 					,"swactivo"
+					,"charola1"
+					,"charola2"
             };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -3260,6 +3262,103 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 					,"descrip"
             };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> recuperarArchivosParaImprimirLote(
+			String lote
+			,String papel
+			,String tipolote
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("lote"     , lote);
+		params.put("papel"    , papel);
+		params.put("tipolote" , tipolote);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarArchivosParaImprimirLote(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_DOCUMENTOS_X_LOTE lista=",lista));
+		return lista;
+	}
+	
+	protected class RecuperarArchivosParaImprimirLote extends StoredProcedure
+	{
+		protected RecuperarArchivosParaImprimirLote(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_DOCUMENTOS_X_LOTE");
+			declareParameter(new SqlParameter("lote"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("papel"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipolote" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"cdagente"
+					,"ordenimp"
+					,"cdsubram"
+					,"tipend"
+					,"nmpoliza"
+					,"cddocume"
+					,"dsdocume"
+					,"nmcopias"
+					,"nmordina"
+					,"ntramite"
+					,"tipodoc"
+            };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String,String> recuperarDatosPolizaParaDocumentos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Map<String,Object> procRes  = ejecutaSP(new RecuperarDatosPolizaParaDocumentos(getDataSource()),params);
+		Map<String,String> result   = new HashMap<String,String>();
+		String             ntramite = (String)procRes.get("pv_ntramite_o");
+		String             nmsolici = (String)procRes.get("pv_nmsolici_o");
+		if(StringUtils.isBlank(ntramite))
+		{
+			throw new ApplicationException("No hay tramite de emision");
+		}
+		if(StringUtils.isBlank(ntramite))
+		{
+			throw new ApplicationException("No hay solicitud");
+		}
+		result.put("ntramite" , ntramite);
+		result.put("nmsolici" , nmsolici);
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_RECUPERA_DATOS_EMI result=",result));
+		return result;
+	}
+	
+	protected class RecuperarDatosPolizaParaDocumentos extends StoredProcedure
+	{
+		protected RecuperarDatosPolizaParaDocumentos(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_RECUPERA_DATOS_EMI");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmsolici_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

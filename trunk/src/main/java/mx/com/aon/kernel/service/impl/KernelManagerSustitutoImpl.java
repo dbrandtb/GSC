@@ -872,6 +872,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return lista;
 	}
 	
+	/*
 	public List<Map<String, String>> obtenerListaDocumentos(
 			String cdunieco
 			,String cdramo
@@ -894,6 +895,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.info("### kernel sustituto obtenerListaDocumentos lista: "+lista);
         return lista;
 	}
+	*/
 	
 	public WrapperResultados insertaMaestroHistoricoPoliza(Map<String, Object> param) throws ApplicationException
 	{

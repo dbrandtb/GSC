@@ -180,6 +180,7 @@ public class EmisionManagerImpl implements EmisionManager
 		return resp;
 	}
 	
+	/*
 	@Deprecated
 	@Override
 	public String insercionDocumentosParametrizados(
@@ -233,6 +234,7 @@ public class EmisionManagerImpl implements EmisionManager
 				));
 		return cdorddoc;
 	}
+	*/
 	
 	/*
 	 * Getters y setters

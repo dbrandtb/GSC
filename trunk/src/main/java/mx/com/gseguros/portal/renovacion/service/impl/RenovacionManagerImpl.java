@@ -14,12 +14,12 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
+import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
 import mx.com.gseguros.portal.renovacion.service.RenovacionManager;
-import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
 
@@ -27,6 +27,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class RenovacionManagerImpl implements RenovacionManager
 {
@@ -40,6 +41,9 @@ public class RenovacionManagerImpl implements RenovacionManager
 	
 	private transient Ice2sigsService ice2sigsService;
 	private transient RecibosSigsService recibosSigsService;
+	
+	@Autowired
+	private DocumentosManager documentosManager;
 	
 	@Override
 	public ManagerRespuestaImapVO pantallaRenovacion(String cdsisrol)
@@ -286,6 +290,19 @@ public class RenovacionManagerImpl implements RenovacionManager
 
 					logger.debug(new StringBuilder("\n@@@@@@ Documentacion para poliza=").append(iPoliza));
 					
+					documentosManager.generarDocumentosParametrizados(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,"0" //nmsituac
+							,nmsuplem
+							,DocumentosManager.PROCESO_EMISION
+							,ntramite
+							,null //nmsolici
+							);
+					
+					/*
 					List<Map<String,String>>iPolizaDocs =
 							cotizacionDAO.impresionDocumentosPoliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite);
 					
@@ -328,6 +345,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 						String url = urlBuilder.toString();
 						HttpUtil.generaArchivo(url,iPolizaRutaCarpeta+"/"+descripc);
 					}
+					*/
 					
 					//copiar documentos de usuario
 					List<Map<String,String>>iPolizaUserDocs=renovacionDAO.cargarDocumentosSubidosPorUsuario(uniecoant,cdramo,estado,nmpolant);

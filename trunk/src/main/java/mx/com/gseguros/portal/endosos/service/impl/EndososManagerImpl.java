@@ -19,6 +19,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroEndoso;
+import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
@@ -32,7 +33,6 @@ import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
-import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
@@ -80,6 +80,9 @@ public class EndososManagerImpl implements EndososManager
 	
 	@Autowired
 	private ConsultasDAO consultasDAO;
+	
+	@Autowired
+	private DocumentosManager documentosManager;
 
 	@Override
 	public List<Map<String, String>> obtenerEndosos(Map<String, String> params) throws Exception
@@ -120,7 +123,7 @@ public class EndososManagerImpl implements EndososManager
 	
 	/**
 	 * PKG_CONSULTA.P_reImp_documentos
-	 */
+	 *
 	@Override
 	public List<Map<String, String>> reimprimeDocumentos(
 			String cdunieco
@@ -144,6 +147,7 @@ public class EndososManagerImpl implements EndososManager
 		logger.debug("EndososManager reimprimeDocumentos lista size: "+lista.size());
 		return lista;
 	}
+	*/
 	
 	@Override
 	public List<Map<String, String>> obtieneCoberturasDisponibles(Map<String, String> params) throws Exception
@@ -1649,6 +1653,31 @@ public class EndososManagerImpl implements EndososManager
 		//reimprimir documentos
 		if(resp.isExito()&&fechaValida)
 		{
+			
+			try
+			{
+				documentosManager.generarDocumentosParametrizados(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,"0" //nmsituac
+						,nmsuplemEndoso
+						,DocumentosManager.PROCESO_ENDOSO //proceso
+						,ntramiteEmision
+						,nmsolici
+						);
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Error al generar documentos #").append(timestamp).toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
+			
+			/*
 			List<Map<String,String>>listaDocu=null;
 			
 			try
@@ -1716,6 +1745,7 @@ public class EndososManagerImpl implements EndososManager
 						.toString()
 						);
 			}
+			*/
 		}
 		
 		if(resp.isExito()) {
@@ -1962,6 +1992,20 @@ public class EndososManagerImpl implements EndososManager
 			endososDAO.confirmarEndosoB(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nsuplogi,cdtipsup,"");
 			
 			setCheckpoint("Reimprimiendo documentos");
+			
+			documentosManager.generarDocumentosParametrizados(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,"0" //nmsituac
+					,nmsuplem
+					,DocumentosManager.PROCESO_ENDOSO //proceso
+					,ntramite
+					,null //nmsolici
+					);
+			
+			/*
 			List<Map<String,String>>listaDocu=null;
 			listaDocu=endososDAO.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup);	
 			String rutaCarpeta=new StringBuilder(rutaDocumentosPoliza).append("/").append(ntramite).toString();
@@ -2000,6 +2044,7 @@ public class EndososManagerImpl implements EndososManager
 						.append("\n###### a ").append(url).append("\n###### reporte solicitado ######")
 						.append("\n################################").toString());
 			}
+			*/
 			
 			setCheckpoint("0");
 		}
