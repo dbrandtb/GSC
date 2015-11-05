@@ -5,7 +5,7 @@ var windowCoberturas;
 
 Ext.onReady(function() {
 
-    Ext.selection.CheckboxModel.override( {
+    Ext.selection.CheckboxModel.override({
         mode: 'SINGLE',
         allowDeselect: true
     });
@@ -572,13 +572,14 @@ Ext.onReady(function() {
               {type:'int',    name:'orden'      },
               {type:'string',    name:'descripcion' },
               {type:'string',    name:'valor' },
-              {type:'string',    name:'agrupador' }
+              {type:'string',    name:'agrupador' , id:'agrupadorId'},
+              {type:'string',    name:'ordenAgrupador' }
         ]
     });
     // Store
     var storeCopagosPoliza = new Ext.data.Store({
         model: 'CopagosPolizaModel',
-        groupField : 'agrupador',
+        groupField : 'ordenAgrupador',
         proxy: {
            type: 'ajax',
            url : _URL_CONSULTA_COPAGOS_POLIZA,
@@ -608,7 +609,7 @@ Ext.onReady(function() {
             {text:'Valor',            dataIndex:'valor',       width:200, align:'left', sortable:false}
         ]
         ,features: [{
-            groupHeaderTpl: '{name}',
+            groupHeaderTpl: '{[values.children[0].get("agrupador")]}',
             ftype:          'grouping',
             startCollapsed: false
         }]
@@ -711,8 +712,15 @@ Ext.onReady(function() {
                                 showMessage('Error', 'Error al obtener los copagos de la p\u00F3liza', 
                                     Ext.Msg.OK, Ext.Msg.ERROR)
                             }              
+                            gridCopagosPoliza.store.sort([
+						        { 
+						            property    : 'orden',
+						            direction   : 'ASC'
+						        }
+						    ]);
                         }
                     });
+                    
                     
                     windowCoberturas.setTitle('COBERTURAS DE ' + record.get('nombre'));
                     windowCoberturas.show();
