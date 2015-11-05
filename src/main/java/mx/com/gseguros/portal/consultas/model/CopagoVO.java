@@ -28,6 +28,8 @@ public class CopagoVO implements Serializable {
 	private String valor;
 	
 	private String agrupador;
+
+	private String ordenAgrupador;
 	
 	/**
 	 * Indica el nivel del elemento
@@ -71,6 +73,14 @@ public class CopagoVO implements Serializable {
 		this.agrupador = agrupador;
 	}
 	
+	public String getOrdenAgrupador() {
+		return ordenAgrupador;
+	}
+
+	public void setOrdenAgrupador(String ordenAgrupador) {
+		this.ordenAgrupador = ordenAgrupador;
+	}
+
 	public int getNivel() {
 		return nivel;
 	}

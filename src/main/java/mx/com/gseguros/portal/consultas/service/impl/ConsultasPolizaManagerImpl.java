@@ -182,17 +182,23 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 			// Agregamos un campo que agrupe los resultados:
 			String agrupador = null;
 			Iterator<CopagoVO> itCopagos = copagos.iterator();
+		
+			int ordenOrig = 0;
+			String[] arrayLetras = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","x","y","z"};
+			
 			while (itCopagos.hasNext()) {
 				CopagoVO copagoVO = itCopagos.next();
 				// Si el copago tiene Nivel Padre se asigna como agrupador:
 				if(copagoVO.getNivel() == 1) {
 					agrupador = copagoVO.getDescripcion();
+					ordenOrig++;
 				}
 				// Si el copago no es visible o no hay descripcion, lo eliminamos:
 				if(!copagoVO.isVisible() || StringUtils.isBlank(copagoVO.getDescripcion())) {
 					itCopagos.remove();
 				}
 				copagoVO.setAgrupador(agrupador);
+				copagoVO.setOrdenAgrupador(arrayLetras[ordenOrig-1]+" "+agrupador);
 			}
 //		} else {
 //			copagos = consultasPolizaDAOSISA.obtieneCopagosPoliza(poliza);
