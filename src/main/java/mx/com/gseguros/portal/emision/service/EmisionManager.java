@@ -14,6 +14,7 @@ public interface EmisionManager
 	
 	public ManagerRespuestaVoidVO guardarClausulasPoliza(List<Map<String,String>>clausulas);
 	
+	/*
 	@Deprecated
 	public String insercionDocumentosParametrizados(
 			String cdunieco
@@ -24,6 +25,7 @@ public interface EmisionManager
 			,String nmsuplem
 			,String proceso
 			)throws Exception;
+	*/
 
 	public void getActualizaCuadroComision(Map<String, Object> paramsPoliage)throws Exception;
 }

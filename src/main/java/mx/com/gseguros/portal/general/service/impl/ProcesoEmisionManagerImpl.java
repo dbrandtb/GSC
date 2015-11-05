@@ -1,6 +1,5 @@
 package mx.com.gseguros.portal.general.service.impl;
 
-import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +14,7 @@ import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.emision.model.EmisionVO;
 import mx.com.gseguros.portal.general.dao.AseguradoDAO;
@@ -27,7 +27,6 @@ import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
 import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
@@ -116,6 +115,9 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	
 	@Autowired
 	private PersonasDAO personasDAO;
+	
+	@Autowired
+	private DocumentosManager documentosManager;
 	
 	@Override
 	public Map<String, String> emitir(String cdunieco, String cdramo, String estado, String nmpoliza, 
@@ -401,6 +403,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 			
 			
 			////// crear carpeta para los documentos
+			/*
 			paso = "Creando carpeta de documentos";
             File carpeta = new File(rutaCarpeta);
             if(!carpeta.exists()) {
@@ -415,9 +418,23 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
             } else {
             	logger.debug("existe la carpeta   ::: "+rutaCarpeta);
             }
+            */
 			
 			////// documentos
-            paso = "Generando la documentaci�n de emisi�n";
+            paso = "Generando la documentaci\u00F3n de emisi\u00F3n";
+            documentosManager.generarDocumentosParametrizados(
+            		cdunieco
+            		,cdramo
+            		,"M"
+            		,nmpolizaEmitida
+            		,"0" //nmsituac
+            		,nmsuplemEmitida
+            		,DocumentosManager.PROCESO_EMISION
+            		,ntramite
+            		,nmpoliza
+            		);
+            
+            /*
             List<Map<String,String>> listaDocu = null;
 			try {
 				listaDocu = cotizacionDAO.impresionDocumentosPoliza(
@@ -461,6 +478,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 								+ "");
 				}
 			}
+			*/
 			
 			/**
 			 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas

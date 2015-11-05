@@ -30,6 +30,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
+import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.endosos.model.RespuestaConfirmacionEndosoVO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
@@ -53,7 +54,6 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGen
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -106,6 +106,9 @@ public class EndososAction extends PrincipalCoreAction
 	
 	@Autowired
 	private EndososAutoManager endososAutoManager;
+	
+	@Autowired
+	private DocumentosManager documentosManager;
 	
 	private boolean exito           = false;
 	private String  respuesta;
@@ -998,6 +1001,20 @@ public class EndososAction extends PrincipalCoreAction
 				/*///////////////////////////////////*/
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
+				
+				documentosManager.generarDocumentosParametrizados(
+						(String)omap1.get("pv_cdunieco_i")
+						,(String)omap1.get("pv_cdramo_i")
+						,(String)omap1.get("pv_estado_i")
+						,(String)omap1.get("pv_nmpoliza_i")
+						,"0" //nmsituac
+						,respuestaEndosoNombres.get("pv_nmsuplem_o")
+						,documentosManager.PROCESO_ENDOSO
+						,null //ntramite
+						,null //nmsolici
+						);
+				
+				/*
 			    List<Map<String,String>>listaDocu = endososManager.reimprimeDocumentos(
 			    		(String)omap1.get("pv_cdunieco_i")
 			    		,(String)omap1.get("pv_cdramo_i")
@@ -1049,6 +1066,7 @@ public class EndososAction extends PrincipalCoreAction
 							+ "\n################################"
 							+ "");
 				}
+				*/
 			    /*///////////////////////////////////*/
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
@@ -1289,6 +1307,19 @@ public class EndososAction extends PrincipalCoreAction
 				    ///////////////////////////////////////
 				    ////// re generar los documentos //////
 				    /*///////////////////////////////////*/
+					documentosManager.generarDocumentosParametrizados(
+							smap1.get("pv_cdunieco_i")
+							,smap1.get("pv_cdramo_i")
+							,smap1.get("pv_estado_i")
+							,smap1.get("pv_nmpoliza_i")
+							,"0" //nmsituac
+							,resEnd.get("pv_nmsuplem_o")
+							,DocumentosManager.PROCESO_ENDOSO
+							,null //ntramite
+							,null //nmsolici
+							);
+					
+					/*
 				    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
 				    		smap1.get("pv_cdunieco_i")
 				    		,smap1.get("pv_cdramo_i")
@@ -1340,6 +1371,7 @@ public class EndososAction extends PrincipalCoreAction
 								+ "\n################################"
 								+ "");
 					}
+					*/
 				    /*///////////////////////////////////*/
 					////// re generar los documentos //////
 				    ///////////////////////////////////////
@@ -1531,6 +1563,19 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 			    ////// re generar los documentos //////
 			    /*///////////////////////////////////*/
+				documentosManager.generarDocumentosParametrizados(
+						smap1.get("pv_cdunieco")
+						,smap1.get("pv_cdramo")
+						,smap1.get("pv_estado")
+						,smap1.get("pv_nmpoliza")
+						,"0" //nmsituac
+						,resEndDomi.get("pv_nmsuplem_o")
+						,DocumentosManager.PROCESO_ENDOSO
+						,null //ntramite
+						,null //nmsolici
+						);
+				
+				/*
 			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
 			    		smap1.get("pv_cdunieco")
 			    		,smap1.get("pv_cdramo")
@@ -1582,6 +1627,7 @@ public class EndososAction extends PrincipalCoreAction
 							+ "\n################################"
 							+ "");
 				}
+				*/
 			    /*///////////////////////////////////*/
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
@@ -1790,6 +1836,19 @@ public class EndososAction extends PrincipalCoreAction
 				///////////////////////////////////////
 				////// re generar los documentos //////
 				/*///////////////////////////////////*/
+				documentosManager.generarDocumentosParametrizados(
+						smap1.get("pv_cdunieco")
+						,smap1.get("pv_cdramo")
+						,smap1.get("pv_estado")
+						,smap1.get("pv_nmpoliza")
+						,"0" //nmsituac
+						,resEndDomi.get("pv_nmsuplem_o")
+						,DocumentosManager.PROCESO_ENDOSO
+						,null //ntramite
+						,null //nmsolici
+						);
+				
+				/*
 				List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
 						smap1.get("pv_cdunieco")
 						,smap1.get("pv_cdramo")
@@ -1840,7 +1899,7 @@ public class EndososAction extends PrincipalCoreAction
 							+ "\n################################"
 							+ "");
 				}
-				
+				*/
 				
 				
 				
@@ -2401,6 +2460,22 @@ public class EndososAction extends PrincipalCoreAction
 				    ///////////////////////////////////////
 				    ////// re generar los documentos //////
 				    /*///////////////////////////////////*/
+					Map<String,String> datosPoliza = documentosManager.generarDocumentosParametrizados(
+							(String)omap1.get("pv_cdunieco_i")
+							,(String)omap1.get("pv_cdramo_i")
+							,(String)omap1.get("pv_estado_i")
+							,(String)omap1.get("pv_nmpoliza_i")
+							,"0" //nmsituac
+							,respEndCob.get("pv_nmsuplem_o")
+							,DocumentosManager.PROCESO_ENDOSO
+							,null //ntramite
+							,null //nmsolici
+							);
+					
+					String ntramite = datosPoliza.get("ntramite");
+					String nmsolici = datosPoliza.get("nmsolici");
+					
+					/*
 				    List<Map<String,String>> docs = endososManager.reimprimeDocumentos(
 				    		(String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
 				    		(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
@@ -2453,6 +2528,7 @@ public class EndososAction extends PrincipalCoreAction
 								.append("\n################################").toString());
 						}
 				    }
+				    */
 				    /*///////////////////////////////////*/
 					////// re generar los documentos //////
 				    ///////////////////////////////////////
@@ -2460,12 +2536,12 @@ public class EndososAction extends PrincipalCoreAction
 				    if(consultasManager.esProductoSalud((String)omap1.get("pv_cdramo_i"))) {
 				    	// Si el producto es de Salud, ejecutamos el Web Service de Recibos:
 						String sucursal = (String)omap1.get("pv_cdunieco_i");
-						String nmsolici = docs.get(0).get("nmsolici");
-						String nmtramite = docs.get(0).get("ntramite");
+						//String nmsolici = docs.get(0).get("nmsolici");
+						String nmtramite = ntramite;//docs.get(0).get("ntramite");
 						// En este caso tipomov y cdtipsup son iguales: 
 						String tipomov = tipoEndoso.getCdTipSup().toString();
 						String rutaCarpeta= new StringBuilder(this.getText("ruta.documentos.poliza"))
-	    				.append("/").append(docs.get(0).get("ntramite")).toString();
+	    				.append("/").append(nmtramite).toString();
 						
 						ice2sigsService.ejecutaWSrecibos((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), 
 								(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), 
@@ -2480,7 +2556,7 @@ public class EndososAction extends PrincipalCoreAction
 				    	String nmpoliza = (String)omap1.get("pv_nmpoliza_i");
 				    	String nmsuplem = respEndCob.get("pv_nmsuplem_o");
 				    	String nsuplogi = respEndCob.get("pv_nsuplogi_o");
-				    	String ntramite = (String)omap1.get("pv_ntramite_i");
+				    	       ntramite = (String)omap1.get("pv_ntramite_i");
 				    	
 				    	EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, (UserVO) session.get("USUARIO"));
 						if(aux == null || !aux.isExitoRecibos()){
@@ -2938,6 +3014,19 @@ public class EndososAction extends PrincipalCoreAction
 				    ///////////////////////////////////////
 				    ////// re generar los documentos //////
 				    /*///////////////////////////////////*/
+					documentosManager.generarDocumentosParametrizados(
+							smap1.get("cdunieco")
+							,smap1.get("cdramo")
+							,smap1.get("estado")
+							,smap1.get("nmpoliza")
+							,"0" //nmsituac
+							,respEnd.get("pv_nmsuplem_o")
+							,DocumentosManager.PROCESO_ENDOSO
+							,null //ntramite
+							,null //nmsolici
+							);
+					
+					/*
 				    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
 				    		smap1.get("cdunieco")
 				    		,smap1.get("cdramo")
@@ -2989,6 +3078,7 @@ public class EndososAction extends PrincipalCoreAction
 								+ "\n################################"
 								+ "");
 					}
+					*/
 				    /*///////////////////////////////////*/
 					////// re generar los documentos //////
 				    ///////////////////////////////////////
@@ -3167,6 +3257,19 @@ public class EndososAction extends PrincipalCoreAction
 					///////////////////////////////////////
 					////// re generar los documentos //////
 					/*///////////////////////////////////*/
+					documentosManager.generarDocumentosParametrizados(
+							smap1.get("cdunieco")
+							,smap1.get("cdramo")
+							,smap1.get("estado")
+							,smap1.get("nmpoliza")
+							,"0" //nmsituac
+							,respEnd.get("pv_nmsuplem_o")
+							,DocumentosManager.PROCESO_ENDOSO
+							,null //ntramite
+							,null //nmsolici
+							);
+					
+					/*
 					List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
 							smap1.get("cdunieco")
 							,smap1.get("cdramo")
@@ -3218,6 +3321,7 @@ public class EndososAction extends PrincipalCoreAction
 								+ "\n################################"
 								+ "");
 					}
+					*/
 					/*///////////////////////////////////*/
 					////// re generar los documentos //////
 					///////////////////////////////////////
@@ -4626,6 +4730,22 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 			    ////// re generar los documentos //////
 			    /*///////////////////////////////////*/
+				Map<String,String> datosPoliza = documentosManager.generarDocumentosParametrizados(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,"0" //nmsituac
+						,nmsuplem
+						,DocumentosManager.PROCESO_ENDOSO
+						,ntramite
+						,null //nmsolici
+						);
+				
+				String nmsolici    = datosPoliza.get("nmsolici");
+				String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramite);
+				
+				/*
 			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
 			    		cdunieco
 			    		,cdramo
@@ -4679,13 +4799,14 @@ public class EndososAction extends PrincipalCoreAction
 							+ "\n################################"
 							+ "");
 				}
+				*/
 			    /*///////////////////////////////////*/
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
 				
 				String sucursal = cdunieco;
 				
-				String nmsolici = listaDocu.size()>0?listaDocu.get(0).get("nmsolici"):nmpoliza;
+				//String nmsolici = listaDocu.size()>0?listaDocu.get(0).get("nmsolici"):nmpoliza;
 				//String nmtramite = listaDocu.get(0).get("ntramite");
 				
 				String tipomov = alta?"9":"10";
@@ -5038,6 +5159,22 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 			    ////// re generar los documentos //////
 			    /*///////////////////////////////////*/
+				Map<String,String> datosPoliza = documentosManager.generarDocumentosParametrizados(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,"0" //nmsituac
+						,nmsuplem
+						,DocumentosManager.PROCESO_ENDOSO
+						,ntramite
+						,null //nmsolici
+						);
+				
+				String nmsolici    = datosPoliza.get("nmsolici");
+				String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramite);
+				
+				/*
 			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
 			    		cdunieco
 			    		,cdramo
@@ -5087,6 +5224,7 @@ public class EndososAction extends PrincipalCoreAction
 							+ "\n################################"
 							+ "");
 				}
+				*/
 			    /*///////////////////////////////////*/
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
@@ -5096,8 +5234,8 @@ public class EndososAction extends PrincipalCoreAction
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				String sucursal = cdunieco;
-				String nmsolici = listaDocu.get(0).get("nmsolici");
-				String nmtramite = listaDocu.get(0).get("ntramite");
+				//String nmsolici = listaDocu.get(0).get("nmsolici");
+				String nmtramite = ntramite;//listaDocu.get(0).get("ntramite");
 				
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
@@ -5406,6 +5544,22 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 			    ////// re generar los documentos //////
 			    /*///////////////////////////////////*/
+				Map<String,String> datosPoliza = documentosManager.generarDocumentosParametrizados(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,"0" //nmsituac
+						,nmsuplem
+						,DocumentosManager.PROCESO_ENDOSO
+						,ntramite
+						,null //nmsolici
+						);
+				
+				String nmsolici    = datosPoliza.get("nmsolici");
+				String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramite);
+				
+				/*
 			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
 			    		cdunieco
 			    		,cdramo
@@ -5455,6 +5609,7 @@ public class EndososAction extends PrincipalCoreAction
 							+ "\n################################"
 							+ "");
 				}
+				*/
 			    /*///////////////////////////////////*/
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
@@ -5464,8 +5619,8 @@ public class EndososAction extends PrincipalCoreAction
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				String sucursal = cdunieco;
-				String nmsolici = listaDocu.get(0).get("nmsolici");
-				String nmtramite = listaDocu.get(0).get("ntramite");
+				//String nmsolici = listaDocu.get(0).get("nmsolici");
+				String nmtramite = ntramite;//listaDocu.get(0).get("ntramite");
 				
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
@@ -5651,6 +5806,22 @@ public class EndososAction extends PrincipalCoreAction
 			///////////////////////////////////////
 		    ////// re generar los documentos //////
 		    /*///////////////////////////////////*/
+			Map<String,String> datosPoliza = documentosManager.generarDocumentosParametrizados(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,"0" //nmsituac
+					,nmsuplem
+					,DocumentosManager.PROCESO_ENDOSO
+					,ntramiteEmi
+					,null //nmsolici
+					);
+			
+			String nmsolici    = datosPoliza.get("nmsolici");
+			String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramiteEmi);
+			
+			/*
 		    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
 		    		cdunieco
 		    		,cdramo
@@ -5703,6 +5874,7 @@ public class EndososAction extends PrincipalCoreAction
 						+ "\n################################"
 						+ "");
 			}
+			*/
 		    /*///////////////////////////////////*/
 			////// re generar los documentos //////
 		    ///////////////////////////////////////
@@ -6292,6 +6464,22 @@ public class EndososAction extends PrincipalCoreAction
 				///////////////////////////////////////
 			    ////// re generar los documentos //////
 			    /*///////////////////////////////////*/
+				Map<String,String> datosPoliza = documentosManager.generarDocumentosParametrizados(
+						cdunieco
+						,cdramo
+						,cdestado
+						,nmpoliza
+						,"0" //nmsituac
+						,nmsuplem
+						,DocumentosManager.PROCESO_ENDOSO
+						,ntramite
+						,null //nmsolici
+						);
+				
+				String nmsolici    = datosPoliza.get("nmsolici");
+				String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramite);
+				
+				/*
 			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
 			    		cdunieco
 			    		,cdramo
@@ -6343,6 +6531,7 @@ public class EndososAction extends PrincipalCoreAction
 							+ "\n################################"
 							+ "");
 				}
+				*/
 			    /*///////////////////////////////////*/
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
@@ -6362,7 +6551,7 @@ public class EndososAction extends PrincipalCoreAction
 
 				
 				String sucursal = cdunieco;
-				String nmsolici = listaDocu.get(0).get("nmsolici");
+				//String nmsolici = listaDocu.get(0).get("nmsolici");
 				String nmtramite = ntramite;
 				
 				String tipomov = TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString();
@@ -6628,6 +6817,22 @@ public class EndososAction extends PrincipalCoreAction
 				///////////////////////////////////////
 				////// re generar los documentos //////
 				/*///////////////////////////////////*/
+				Map<String,String> datosPoliza = documentosManager.generarDocumentosParametrizados(
+						cdunieco
+						,cdramo
+						,cdestado
+						,nmpoliza
+						,"0" //nmsituac
+						,nmsuplem
+						,DocumentosManager.PROCESO_ENDOSO
+						,ntramite
+						,null //nmsolici
+						);
+				
+				String nmsolici    = datosPoliza.get("nmsolici");
+				String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramite);
+				
+				/*
 				List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
 						cdunieco
 						,cdramo
@@ -6679,6 +6884,7 @@ public class EndososAction extends PrincipalCoreAction
 							+ "\n################################"
 							+ "");
 				}
+				*/
 				/*///////////////////////////////////*/
 				////// re generar los documentos //////
 				///////////////////////////////////////
@@ -6698,7 +6904,7 @@ public class EndososAction extends PrincipalCoreAction
 					//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 					
 					String sucursal = cdunieco;
-					String nmsolici = listaDocu.get(0).get("nmsolici");
+					//String nmsolici = listaDocu.get(0).get("nmsolici");
 					String nmtramite = ntramite;
 					
 					String tipomov = TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString();
@@ -7433,6 +7639,21 @@ public class EndososAction extends PrincipalCoreAction
 	    /*///////////////////////////////////*/
 		
 		//PKG_CONSULTA.P_reImp_documentos
+		Map<String,String> datosPoliza = documentosManager.generarDocumentosParametrizados(
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,"0" //nmsituac
+				,nmsuplem
+				,DocumentosManager.PROCESO_ENDOSO
+				,ntramite
+				,nmsolici
+				);
+		
+		nmsolici = datosPoliza.get("nmsolici");
+		
+		/*
 	    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
 	    		cdunieco
 	    		,cdramo
@@ -7490,7 +7711,7 @@ public class EndososAction extends PrincipalCoreAction
 					+ "\n################################"
 					+ "");
 		}
-		
+		*/
 		return nmsolici;
 	    /*///////////////////////////////////*/
 		////// re generar los documentos //////

@@ -370,6 +370,7 @@ Ext.define('VentanaImpresionLote',
                                                 text       : 'NOMBRE'
                                                 ,dataIndex : 'nombre'
                                                 ,flex      : 1
+                                                ,hidden    : true
                                             }
                                             ,{
                                                 text       : 'DESCRIPCI\u00D3N'

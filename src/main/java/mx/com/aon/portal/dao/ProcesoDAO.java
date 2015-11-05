@@ -200,7 +200,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTENER_TMANTENI, new ObtenerTmanteni(getDataSource()));
         addStoredProcedure(OBTENER_ASEGURADOS, new ObtenerAsegurados(getDataSource()));
         addStoredProcedure(OBTENER_DOCUMENTOS_POLIZA, new ObtenerDocumentosPoliza(getDataSource()));
-        addStoredProcedure(OBTENER_LISTA_DOC_POLIZA_NUEVA, new ObtenerListaDocPolizaNueva(getDataSource()));
+        //addStoredProcedure(OBTENER_LISTA_DOC_POLIZA_NUEVA, new ObtenerListaDocPolizaNueva(getDataSource()));
         addStoredProcedure(OBTENER_POLIZA_COMPLETA, new ObtenerPolizaCompleta(getDataSource()));
         addStoredProcedure(P_MOV_TVALOPOL, new PMovTvalopol(getDataSource()));
         addStoredProcedure(P_MOV_TVALOGAR, new PMovTvalogar(getDataSource()));
@@ -3041,6 +3041,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	//////////////////////////////////////////////
 	////// obtiene documentos de poliza //////////
 	/*//////////////////////////////////////////*/
+	/*
 	protected class ObtenerListaDocPolizaNueva extends CustomStoredProcedure
 	{
 		protected ObtenerListaDocPolizaNueva(DataSource dataSource)
@@ -3080,6 +3081,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			return map;
 		}
 	}
+	*/
 	/*//////////////////////////////////////////*/
 	////// obtiene documentos de poliza //////////
 	//////////////////////////////////////////////

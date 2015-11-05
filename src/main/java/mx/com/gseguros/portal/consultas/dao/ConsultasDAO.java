@@ -413,4 +413,17 @@ public interface ConsultasDAO
 			)throws Exception;
 	
 	public List<Map<String,String>> recuperarDetalleRemesa(String ntramite, String tipolote) throws Exception;
+	
+	public List<Map<String,String>> recuperarArchivosParaImprimirLote(
+			String lote
+			,String papel
+			,String tipolote
+			)throws Exception;
+	
+	public Map<String,String> recuperarDatosPolizaParaDocumentos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 }
