@@ -1071,16 +1071,18 @@ public class EndososAction extends PrincipalCoreAction
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
 				        
+				String saludDanios = "S";
+				ClienteGeneral clienteGeneral = new ClienteGeneral();
+				clienteGeneral.setClaveCia(saludDanios);
+				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteSalud(
-						(String) omap1.get("pv_cdunieco_i"),
+				ice2sigsService.ejecutaWSclienteGeneral((String) omap1.get("pv_cdunieco_i"),
 						(String) omap1.get("pv_cdramo_i"),
 						(String) omap1.get("pv_estado_i"),
 						(String) omap1.get("pv_nmpoliza_i"),
 						respuestaEndosoNombres.get("pv_nmsuplem_o"),
-						respConfirmacionEndoso.getNumeroTramite(),
-						Ice2sigsService.Operacion.ACTUALIZA,
-						(UserVO) session.get("USUARIO"));
+						respConfirmacionEndoso.getNumeroTramite(), null,
+						Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), false);
 				
 				mensaje="Se ha guardado el endoso "+respuestaEndosoNombres.get("pv_nsuplogi_o");
 			} else {
@@ -1189,8 +1191,12 @@ public class EndososAction extends PrincipalCoreAction
 				this.regeneraDocumentos(
 						cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, null,cdusuari);
 				
+				String saludDanios = "S";
+				ClienteGeneral clienteGeneral = new ClienteGeneral();
+				clienteGeneral.setClaveCia(saludDanios);
+				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				ice2sigsService.ejecutaWSclienteGeneral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), null, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), false);
 				
 				mensaje = "Endoso generado";
 				
@@ -2135,8 +2141,12 @@ public class EndososAction extends PrincipalCoreAction
 				
 				// TODO: preguntarle a Alvaro si aqui no se generan documentos:
 				
+				String saludDanios = "S";
+				ClienteGeneral clienteGeneral = new ClienteGeneral();
+				clienteGeneral.setClaveCia(saludDanios);
+				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				ice2sigsService.ejecutaWSclienteGeneral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), null, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), false);
 				
 				mensaje = "Endoso generado";
 			} else {
@@ -3520,8 +3530,12 @@ public class EndososAction extends PrincipalCoreAction
 				// Regeneramos los documentos:
 				this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, null,cdusuari);
 				
+				String saludDanios = "S";
+				ClienteGeneral clienteGeneral = new ClienteGeneral();
+				clienteGeneral.setClaveCia(saludDanios);
+				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				ice2sigsService.ejecutaWSclienteGeneral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), null, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), false);
 				
 				mensaje = "Endoso generado";
 			} else {
@@ -5229,9 +5243,12 @@ public class EndososAction extends PrincipalCoreAction
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
 				
+				String saludDanios = "S";
+				ClienteGeneral clienteGeneral = new ClienteGeneral();
+				clienteGeneral.setClaveCia(saludDanios);
+				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
-				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
+				ice2sigsService.ejecutaWSclienteGeneral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), null, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), false);
 				
 				String sucursal = cdunieco;
 				//String nmsolici = listaDocu.get(0).get("nmsolici");
@@ -5614,9 +5631,12 @@ public class EndososAction extends PrincipalCoreAction
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
 				
+				String saludDanios = "S";
+				ClienteGeneral clienteGeneral = new ClienteGeneral();
+				clienteGeneral.setClaveCia(saludDanios);
+				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
-				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
+				ice2sigsService.ejecutaWSclienteGeneral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), null, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), false);
 				
 				String sucursal = cdunieco;
 				//String nmsolici = listaDocu.get(0).get("nmsolici");
@@ -5890,13 +5910,18 @@ public class EndososAction extends PrincipalCoreAction
 			    }
 			}
 			
+			String saludDanios = "S";
+			ClienteGeneral clienteGeneral = new ClienteGeneral();
+			clienteGeneral.setClaveCia(saludDanios);
+			
 			switch (enumTipoEndoso) {
 			case CORRECCION_DATOS_ASEGURADOS:
 			case CORRECCION_NOMBRE_Y_RFC:
 			case CAMBIO_DOMICILIO:
 				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramiteEnd, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				ice2sigsService.ejecutaWSclienteGeneral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramiteEnd, null, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), false);
+				
 				break;
 							
 			case ALTA_COBERTURAS:
@@ -5922,10 +5947,9 @@ public class EndososAction extends PrincipalCoreAction
 			case MODIFICACION_SEXO_H_A_M:
 			case MODIFICACION_SEXO_M_A_H:
 			case CAMBIO_DOMICILIO_ASEGURADO_TITULAR:
-				
+
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramiteEnd, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
-				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
+				ice2sigsService.ejecutaWSclienteGeneral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramiteEnd, null, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), false);
 				
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
