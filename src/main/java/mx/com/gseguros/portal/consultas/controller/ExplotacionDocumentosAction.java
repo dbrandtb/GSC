@@ -194,9 +194,10 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 			String cdtipram = params.get("cdtipram");
 			String cdtipimp = params.get("cdtipimp");
 			String tipolote = params.get("tipolote");
-			String cdunieco = params.get("cdunieco");
-			String ip       = params.get("ip");
-			String nmimpres = params.get("nmimpres");
+			String dsimpres = params.get("dsimpres");
+			String charola1 = params.get("charola1");
+			String charola2 = params.get("charola2");
+			String test     = params.get("test");
 			
 			Utils.validate(
 					lote      , "No se recibi\u00F3 el lote"
@@ -205,9 +206,8 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					,cdtipram , "No se recibi\u00F3 el tipo de ramo"
 					,cdtipimp , "No se recibi\u00F3 el tipo de impresi\u00F3n"
 					,tipolote , "No se recibi\u00F3 el tipo de lote"
-					,cdunieco , "No se recibi\u00F3 la sucursal de la impresora"
-					,ip       , "No se recibi\u00F3 la ip de la impresora"
-					,nmimpres , "No se recibi\u00F3 el ordinal de impresora"
+					,dsimpres , "No se recibi\u00F3 la impresora"
+					,charola1 , "No se recibi\u00F3 la charola"
 					);
 			
 			explotacionDocumentosManager.imprimirLote(
@@ -217,11 +217,12 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					,cdtipram
 					,cdtipimp
 					,tipolote
-					,cdunieco
-					,ip
-					,nmimpres
+					,dsimpres
+					,charola1
+					,charola2
 					,cdusuari
 					,cdsisrol
+					,"S".equals(test)
 					);
 			
 			success = true;

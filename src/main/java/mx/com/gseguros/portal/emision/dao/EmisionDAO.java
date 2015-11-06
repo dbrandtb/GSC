@@ -1,7 +1,9 @@
 package mx.com.gseguros.portal.emision.dao;
 
 import java.util.Date;
+import java.util.List;
 
+import mx.com.gseguros.portal.consultas.model.DocumentoReciboParaMostrarDTO;
 import mx.com.gseguros.portal.emision.model.EmisionVO;
 
 
@@ -65,4 +67,6 @@ public interface EmisionDAO {
 	 * SI LA SUMA RESULTA ESTAR COMPLETA: ACTUALIZA LAS REMESAS, Y LOS HIJOS EMISION/ENDOSOS SI HAY
 	 */
 	public boolean sumarImpresiones(String lote, String tipolote, String peso) throws Exception;
+	
+	public void mostrarRecibosImpresosListaDeListas(List<DocumentoReciboParaMostrarDTO> lista)throws Exception;
 }

@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
+import mx.com.gseguros.portal.consultas.model.DocumentoReciboParaMostrarDTO;
 import mx.com.gseguros.portal.consultas.service.ExplotacionDocumentosManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
@@ -20,6 +21,7 @@ import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.Reporte;
+import mx.com.gseguros.portal.general.service.ImpresionService;
 import mx.com.gseguros.portal.general.service.ReportesManager;
 import mx.com.gseguros.portal.general.util.Catalogos;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
@@ -36,6 +38,7 @@ import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -60,6 +63,12 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 	
 	@Autowired
 	private ReportesManager reportesManager;
+	
+	@Autowired
+	private ImpresionService impresionService;
+	
+	@Value("${ruta.documentos.poliza}")
+	private String rutaDocumentosPoliza;
 	
 	@Override
 	public Map<String,Item> pantallaExplotacionDocumentos(String cdusuari, String cdsisrol) throws Exception
@@ -390,11 +399,12 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			,String cdtipram
 			,String cdtipimp
 			,String tipolote
-			,String cdunieco
-			,String ip
-			,String nmimpres
+			,String dsimpres
+			,String charola1
+			,String charola2
 			,String cdusuari
 			,String cdsisrol
+			,boolean test
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -406,11 +416,12 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			    ,"\n@@@@@@ cdtipram=" , cdtipram
 			    ,"\n@@@@@@ cdtipimp=" , cdtipimp
 			    ,"\n@@@@@@ tipolote=" , tipolote
-			    ,"\n@@@@@@ cdunieco=" , cdunieco
-			    ,"\n@@@@@@ ip="       , ip
-			    ,"\n@@@@@@ nmimpres=" , nmimpres
+			    ,"\n@@@@@@ dsimpres=" , dsimpres
+			    ,"\n@@@@@@ charola1=" , charola1
+			    ,"\n@@@@@@ charola2=" , charola2
 			    ,"\n@@@@@@ cdusuari=" , cdusuari
 			    ,"\n@@@@@@ cdsisrol=" , cdsisrol
+			    ,"\n@@@@@@ test="     , test
 				));
 		
 		String paso = "Iniciando impresi\u00F3n";
@@ -419,12 +430,75 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			paso = "Recuperando archivos";
 			logger.debug("@@@@@@ paso: {}",paso);
 			
-			//qwe TODO alex
+			List<Map<String,String>> listaArchivos = consultasDAO.recuperarArchivosParaImprimirLote(
+					lote
+					,hoja
+					,tipolote
+					);
 			
 			paso = "Imprimiendo archivos";
 			logger.debug("@@@@@@ paso: {}",paso);
 			
-			//qwe TODO ricardo
+			boolean apagado = false;
+			
+			if("P".equals(tipolote))
+			{
+				for(Map<String,String>archivo:listaArchivos)
+				{
+					//qwe TODO si el papel es multiple hay que mandar por charola especifica (B por la 1, M por la 2)
+					if(hoja.length()>1)
+					{
+						throw new ApplicationException("No soporta intercalada, consulte a desarrollo");
+					}
+					
+					if(!apagado)
+					{
+						impresionService.imprimeDocumento(
+								Utils.join(rutaDocumentosPoliza,"/",archivo.get("ntramite"),"/",archivo.get("cddocume"))
+								,dsimpres
+								,Integer.parseInt(archivo.get("nmcopias")) //numCopias
+								,null                                      //mediaId
+								);
+						if(test)
+						{
+							apagado = true;
+						}
+					}
+				}
+			}
+			else
+			{
+				for(Map<String,String>archivo:listaArchivos)
+				{
+					//qwe TODO si el papel es multiple hay que mandar por charola especifica (B por la 1, M por la 2)
+					if(hoja.length()>1)
+					{
+						throw new ApplicationException("No soporta intercalada, consulte a desarrollo");
+					}
+					
+					if(!apagado)
+					{
+						if("B".equals(archivo.get("tipodoc")))
+						{
+							impresionService.imprimeDocumento(
+									Utils.join(rutaDocumentosPoliza,"/",archivo.get("ntramite"),"/",archivo.get("cddocume"))
+									,dsimpres
+									,Integer.parseInt(archivo.get("nmcopias")) //numCopias
+									,null                                      //mediaId
+									);
+							if(test)
+							{
+								apagado = true;
+							}
+						}
+						else if("M".equals(archivo.get("tipodoc")))
+						{
+							//qwe TODO Ricardo hay que bajar los recibos a un archivo local temporal y luego imprimir
+							throw new ApplicationException("No soporta recibos remotos, consulte a desarrollo");
+						}
+					}
+				}
+			}
 			
 			paso = "Actualizando remesas, emisiones y endosos";
 			logger.debug("@@@@@@ paso: {}",paso);
@@ -434,6 +508,20 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			 * y si estan completas: se marcan las remesas como impresas, y tambien los hijos cuando son emisiones/endosos
 			 */
 			boolean impresos = emisionDAO.sumarImpresiones(lote,tipolote,peso);
+			
+			if("R".equals(tipolote))
+			{
+				paso = "Actualizando recibos";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				List<DocumentoReciboParaMostrarDTO> listaRecibos = new ArrayList<DocumentoReciboParaMostrarDTO>();
+				for(Map<String,String> archivo : listaArchivos)
+				{
+					listaRecibos.add(new DocumentoReciboParaMostrarDTO(archivo.get("ntramite"),archivo.get("cddocume")));
+				}
+				
+				emisionDAO.mostrarRecibosImpresosListaDeListas(listaRecibos);
+			}
 			
 			paso = "Recuperando remesas del lote";
 			logger.debug("@@@@@@ paso: {}",paso);
