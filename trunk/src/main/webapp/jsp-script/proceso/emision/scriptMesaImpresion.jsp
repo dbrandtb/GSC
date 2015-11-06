@@ -808,5 +808,5 @@ function _4_onVerDetalleRemesaClic(row)
 </script>
 </s:if>
 </script>
-<script type="text/javascript" src="${defines}VentanaImpresionLote.js"></script>
+<script type="text/javascript" src="${defines}VentanaImpresionLote.js?n=${now}"></script>
 <script>

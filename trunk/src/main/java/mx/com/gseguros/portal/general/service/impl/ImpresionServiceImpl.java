@@ -29,7 +29,9 @@ import mx.com.gseguros.portal.general.service.ImpresionService;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ImpresionServiceImpl implements ImpresionService {
 	
 	final static Logger logger = LoggerFactory.getLogger(ImpresionServiceImpl.class);
@@ -131,7 +133,7 @@ public class ImpresionServiceImpl implements ImpresionService {
 		try { 
         	logger.info("Antes de imprimir");
             job.print(myDoc, aset);
-            logger.info("Después de imprimir");
+            logger.info("Despuï¿½s de imprimir");
         } catch (PrintException pe) {
         	logger.error(pe.getMessage(), pe);
         }
@@ -313,7 +315,7 @@ public class ImpresionServiceImpl implements ImpresionService {
 		try { 
         	logger.info("Antes de imprimir");
             job.print(myDoc, aset);
-            logger.info("Después de imprimir");
+            logger.info("Despuï¿½s de imprimir");
         } catch (PrintException pe) {
         	logger.error(pe.getMessage(), pe);
         }

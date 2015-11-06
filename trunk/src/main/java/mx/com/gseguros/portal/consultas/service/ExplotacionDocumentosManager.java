@@ -30,11 +30,12 @@ public interface ExplotacionDocumentosManager
 			,String cdtipram
 			,String cdtipimp
 			,String tipolote
-			,String cdunieco
-			,String ip
-			,String nmimpres
+			,String dsimpres
+			,String charola1
+			,String charola2
 			,String cdusuari
 			,String cdsisrol
+			,boolean test
 			)throws Exception;
 
 	public Map<String,Item> pantallaExplotacionRecibos(String cdusuari, String cdsisrol) throws Exception;

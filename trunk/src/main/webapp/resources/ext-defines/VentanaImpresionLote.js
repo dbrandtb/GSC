@@ -18,6 +18,7 @@ Ext.define('VentanaImpresionLote',
             }
             ,defaults : { style : 'margin:5px;' }
             ,border   : 0
+            ,height   : 150
             ,items    :
             [
                 {
@@ -388,6 +389,8 @@ Ext.define('VentanaImpresionLote',
                                                 ,"nombre"
                                                 ,"descrip"
                                                 ,"swactivo"
+                                                ,"charola1"
+                                                ,"charola2"
                                             ]
                                             ,data  : json.list
                                         })
@@ -403,10 +406,12 @@ Ext.define('VentanaImpresionLote',
                                                     if(selected.length==1)
                                                     {
                                                         _fieldById('_c0_botonImprimir').enable();
+                                                        _fieldById('_c0_botonImprimir2').enable();
                                                     }
                                                     else
                                                     {
                                                         _fieldById('_c0_botonImprimir').disable();
+                                                        _fieldById('_c0_botonImprimir2').disable();
                                                     }
                                                 }
                                             }
@@ -415,6 +420,21 @@ Ext.define('VentanaImpresionLote',
                                         ,buttons     :
                                         [
                                             {
+                                                text      : 'Imprimir (test 1 hoja)'
+                                                ,itemId   : '_c0_botonImprimir2'
+                                                ,icon     : _GLOBAL_DIRECTORIO_ICONOS+'printer.png'
+                                                ,disabled : true
+                                                ,handler  : function(boton)
+                                                {
+                                                    me.imprimir(
+                                                        bot
+                                                        ,boton
+                                                        ,_fieldById('_c0_gridImpresoras').getSelectionModel().getSelection()
+                                                        ,'S'
+                                                    );
+                                                }
+                                            }
+                                            ,{
                                                 text      : 'Imprimir'
                                                 ,itemId   : '_c0_botonImprimir'
                                                 ,icon     : _GLOBAL_DIRECTORIO_ICONOS+'printer.png'
@@ -455,9 +475,10 @@ Ext.define('VentanaImpresionLote',
             manejaException(e,ck);
         }
     }
-    ,imprimir : function(botPap,botImp,printerRecords)
+    ,imprimir : function(botPap,botImp,printerRecords,test)
     {
         debug('imprimir botPap,botImp,printerRecords:',botPap,botImp,printerRecords,'.');
+        debug('imprimir test:',test,'.');
         
         var me  = this;
         var win = botImp.up('window');
@@ -487,9 +508,10 @@ Ext.define('VentanaImpresionLote',
                     ,'params.cdtipram' : me.cdtipram
                     ,'params.cdtipimp' : me.cdtipimp
                     ,'params.tipolote' : me.tipolote
-                    ,'params.cdunieco' : printer.get('cdunieco')
-                    ,'params.ip'       : printer.get('ip')
-                    ,'params.nmimpres' : printer.get('nmimpres')
+                    ,'params.dsimpres' : printer.get('nombre')
+                    ,'params.charola1' : printer.get('charola1')
+                    ,'params.charola2' : printer.get('charola2')
+                    ,'params.test'     : test
                 }
                 ,success : function(response)
                 {

@@ -2,10 +2,12 @@ package mx.com.gseguros.portal.emision.dao.impl;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
+import mx.com.gseguros.portal.consultas.model.DocumentoReciboParaMostrarDTO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.emision.model.EmisionVO;
@@ -13,6 +15,7 @@ import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
+import org.springframework.data.jdbc.support.oracle.SqlArrayValue;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -221,6 +224,33 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 			declareParameter(new SqlOutParameter("pv_impreso_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void mostrarRecibosImpresosListaDeListas(List<DocumentoReciboParaMostrarDTO> lista)throws Exception
+	{
+		String[][] array = new String[lista.size()][];
+		int        i     = 0;
+		for(DocumentoReciboParaMostrarDTO pMovIte : lista)
+		{
+			array[i++] = pMovIte.indexar();
+		}
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("array" , new SqlArrayValue(array));
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_MUESTRA_RECIBOS_IMPRESOS", params);
+		ejecutaSP(new MostrarRecibosImpresosListaDeListas(getDataSource()),params);
+	}
+	
+	protected class MostrarRecibosImpresosListaDeListas extends StoredProcedure
+	{
+		protected MostrarRecibosImpresosListaDeListas(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_MUESTRA_RECIBOS_IMPRESOS");
+			declareParameter(new SqlParameter("array" , OracleTypes.ARRAY , "LISTA_LISTAS_VARCHAR2"));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
