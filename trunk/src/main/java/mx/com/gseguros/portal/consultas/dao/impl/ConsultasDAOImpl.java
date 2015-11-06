@@ -3309,6 +3309,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 					,"nmordina"
 					,"ntramite"
 					,"tipodoc"
+					,"remesa"
             };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
