@@ -92,8 +92,6 @@ public interface SiniestrosDAO {
 	public String guardaAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
 			  String nmsuplem,String nmsituac, String cdtipsit, Date fechaOcurrencia,String nfactura) throws Exception;
 	
-	public String guardaAltaMsinival(HashMap<String, Object> paramMsinival) throws Exception;
-
 	public List<ListaFacturasVO> obtieneListadoFacturas(HashMap<String, Object> paramFact) throws Exception;
 
 	public String bajaMsinival(HashMap<String, Object> paramBajasinival) throws Exception;

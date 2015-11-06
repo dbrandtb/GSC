@@ -1140,42 +1140,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 	}
 
-
-	@Override
-	public String guardaAltaMsinival(HashMap<String, Object> paramMsinival) throws Exception {
-		Map<String, Object> mapResult = ejecutaSP(new guardaAltaMsinivalSP(getDataSource()), paramMsinival);
-		return (String) mapResult.get("pv_msg_id_o");
-	}
-	
-	protected class guardaAltaMsinivalSP extends StoredProcedure {
-		protected guardaAltaMsinivalSP(DataSource dataSource) {
-			super(dataSource, "PKG_SINIESTRO.P_GEN_MSINIVAL");
-			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_aaapertu_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_status_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsinies_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdconval_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdcapita_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmordina_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_femovimi_i", OracleTypes.DATE));
-			declareParameter(new SqlParameter("pv_cdmoneda_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_ptpagos_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_ptrecobr_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_ptimprec_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_ptimpimp_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_factura_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_swlibera_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtipmov_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdidemov_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-
-
 	@Override
 	public List<ListaFacturasVO> obtieneListadoFacturas(HashMap<String, Object> paramFact) throws Exception {
 		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoFacturasSP(getDataSource()), paramFact);

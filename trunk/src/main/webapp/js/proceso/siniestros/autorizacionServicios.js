@@ -1891,7 +1891,8 @@ Ext.onReady(function() {
 										'params.estado':Ext.getCmp('idEstado').getValue(),
 										'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
 										'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
-										'params.suplemento':Ext.getCmp('idNmsuplem').getValue()
+										'params.suplemento':Ext.getCmp('idNmsuplem').getValue(),
+										'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
 									}
 								}
 							}).show());
@@ -1931,7 +1932,8 @@ Ext.onReady(function() {
 															'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
 															'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
 															'params.estado'  : Ext.getCmp('idEstado').getValue(),
-															'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue()
+															'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
+															'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
 														}
 													});
 												}

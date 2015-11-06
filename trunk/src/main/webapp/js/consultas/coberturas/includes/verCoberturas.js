@@ -82,7 +82,8 @@ Ext.onReady(function() {
         	'params.estado':_7_smap1.estado,
         	'params.cdramo':_7_smap1.cdramo,
         	'params.nmpoliza':_7_smap1.nmpoliza,
-        	'params.suplemento':_7_smap1.suplemento
+        	'params.suplemento':_7_smap1.suplemento,
+        	'params.nmsituac':_7_smap1.nmsituac
     };
     
     storeCopagosPoliza.load({
