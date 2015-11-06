@@ -195,8 +195,6 @@ public interface SiniestrosManager {
 	public String getAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
 			  									  String nmsuplem,String nmsituac, String cdtipsit, Date fechaOcurrencia,String nfactura) throws Exception;
 	
-	public String getAltaMsinival(HashMap<String, Object> paramMsinival) throws Exception;
-
 	public List<ListaFacturasVO> getConsultaListaFacturas(HashMap<String, Object> paramFact) throws Exception;
 
 	public String getBajaMsinival(HashMap<String, Object> paramBajasinival) throws Exception;

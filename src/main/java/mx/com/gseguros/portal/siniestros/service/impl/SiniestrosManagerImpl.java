@@ -488,16 +488,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	public String getAltaMsinival(HashMap<String, Object> paramMsinival) throws Exception {
-		// TODO Auto-generated method stub
-		try {
-			return siniestrosDAO.guardaAltaMsinival(paramMsinival);
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-
-	@Override
 	public List<ListaFacturasVO> getConsultaListaFacturas(HashMap<String, Object> paramFact) throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoFacturas(paramFact);
