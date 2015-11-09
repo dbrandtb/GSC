@@ -13,6 +13,7 @@ import mx.com.gseguros.portal.general.model.ReporteVO;
 import mx.com.gseguros.portal.general.service.ReportesManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoArchivo;
+import mx.com.gseguros.utils.HttpUtil;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -109,6 +110,43 @@ public class ReportesAction extends PrincipalCoreAction {
 		
 		success = true;
 		return SUCCESS;
+	}
+	
+	public String generaBytesArchivo() throws Exception {
+		
+		/*
+		//Un texto cualquiera guardado en una variable
+		contentType = TipoArchivo.TXT.getContentType();
+		setFilename("archivoPrueba" + TipoArchivo.TXT.getExtension());
+		String saludo="Prueba de generación de texto desde ICE.";
+		try
+		{
+			//Crear un objeto File se encarga de crear o abrir acceso a un archivo que se especifica en su constructor
+			File archivo = new File("C:\\Users\\Ricardo\\Desktop\\SPs de prueba2.txt");
+			//Crear objeto FileWriter que sera el que nos ayude a escribir sobre archivo
+			FileWriter escribir = new FileWriter(archivo, true);
+			//Escribimos en el archivo con el metodo write 
+			escribir.write(saludo);
+			//Cerramos la conexion
+			escribir.close();
+			setFileInputStream(new FileInputStream(archivo));
+		}catch(Exception e){ //Si existe un problema al escribir cae aqui
+			logger.error("Error al generar archivo TXT, ", e);
+		}
+		return SUCCESS;
+		*/
+		
+		String url = "http://docs.oracle.com/javase/specs/jvms/se8/jvms8.pdf";
+		if(params != null && params.get("url")!= null) {
+			url = params.get("url");
+		}
+		
+		contentType = TipoArchivo.PDF.getContentType();
+		filename    = "archivoPrueba" + TipoArchivo.PDF.getExtension();
+		// TODO: Reemplazar por el código de Jasper Reports que devuelve el inputstream:
+		fileInputStream = HttpUtil.obtenInputStream(url);
+		return SUCCESS;
+		
 	}
 	
 	
