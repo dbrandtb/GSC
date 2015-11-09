@@ -6844,7 +6844,7 @@ public class EndososAction extends PrincipalCoreAction
 				Map<String,String> datosPoliza = documentosManager.generarDocumentosParametrizados(
 						cdunieco
 						,cdramo
-						,cdestado
+						,estado
 						,nmpoliza
 						,"0" //nmsituac
 						,nmsuplem

@@ -1214,6 +1214,9 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vIdMotivo"  , datosEnd.get("IDMOTIVO"));
 				paramsEnd.put("vCalle"     , datosEnd.get("CALLE"));
 				paramsEnd.put("vNumero"    , datosEnd.get("NUMERO"));
+
+				paramsEnd.put("vNumInt"    , datosEnd.get("NUMINT"));
+			
 				paramsEnd.put("vColonia"   , datosEnd.get("COLONIA"));
 				paramsEnd.put("vTelefono1" , datosEnd.get("TELEFONO1"));
 				paramsEnd.put("vTelefono2" , datosEnd.get("TELEFONO2"));
@@ -1371,6 +1374,11 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vTelefono1" , datosEnd.get("TELEFONO1"));
 				paramsEnd.put("vTelefono2" , datosEnd.get("TELEFONO2"));
 				paramsEnd.put("vTelefono3" , datosEnd.get("TELEFONO3"));
+
+				paramsEnd.put("vCveEdo" , datosEnd.get("CVEEDO"));
+				paramsEnd.put("vMpioSPM", datosEnd.get("MPIOSPM"));
+				paramsEnd.put("vNumInt" , datosEnd.get("NUMINT"));
+				
 				paramsEnd.put("vFEndoso"   , datosEnd.get("FENDOSO"));
 				
 				Integer res = autosSIGSDAO.cambioDomicilioSinCPColonia(paramsEnd);
