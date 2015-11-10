@@ -35,6 +35,7 @@ import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -2403,21 +2404,40 @@ public class ComplementariosAction extends PrincipalCoreAction
 					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
 					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car&aacute;tula de p&oacute;liza</a>";
 					
-					HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-					paramsR.put("pv_cdunieco_i", cdunieco);
-					paramsR.put("pv_cdramo_i",   cdramo);
-					paramsR.put("pv_estado_i",   "M");
-					paramsR.put("pv_nmpoliza_i", nmpolizaEmitida);
-					paramsR.put("pv_nmsuplem_i", nmsuplemEmitida);
-					paramsR.put("pv_feinici_i",  new Date());
-					paramsR.put("pv_cddocume_i", urlCaratula + parametros);
-					paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
-					paramsR.put("pv_nmsolici_i", nmpoliza);
-					paramsR.put("pv_ntramite_i", ntramite);
-					paramsR.put("pv_tipmov_i",   TipoEndoso.EMISION_POLIZA.getCdTipSup());
-					paramsR.put("pv_swvisible_i", Constantes.SI);
+					//HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+					//paramsR.put("pv_cdunieco_i", cdunieco);
+					//paramsR.put("pv_cdramo_i",   cdramo);
+					//paramsR.put("pv_estado_i",   "M");
+					//paramsR.put("pv_nmpoliza_i", nmpolizaEmitida);
+					//paramsR.put("pv_nmsuplem_i", nmsuplemEmitida);
+					//paramsR.put("pv_feinici_i",  new Date());
+					//paramsR.put("pv_cddocume_i", urlCaratula + parametros);
+					//paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
+					//paramsR.put("pv_nmsolici_i", nmpoliza);
+					//paramsR.put("pv_ntramite_i", ntramite);
+					//paramsR.put("pv_tipmov_i",   TipoEndoso.EMISION_POLIZA.getCdTipSup());
+					//paramsR.put("pv_swvisible_i", Constantes.SI);
 					
-					kernelManager.guardarArchivo(paramsR);
+					//kernelManager.guardarArchivo(paramsR);
+					
+					documentosManager.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,urlCaratula + parametros
+							,"Car\u00e1tula de P\u00f3liza"
+							,nmpoliza
+							,ntramite
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+							,Constantes.SI
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,null
+							,null
+							);
 					
 					/**
 					 * Para Recibo 1
@@ -2426,10 +2446,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 					logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
 					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlRecibo + parametros+"\">Recibo provisional de primas</a>";
 					
-					paramsR.put("pv_cddocume_i", urlRecibo + parametros);
-					paramsR.put("pv_dsdocume_i", "Recibo 1");
+					//paramsR.put("pv_cddocume_i", urlRecibo + parametros);
+					//paramsR.put("pv_dsdocume_i", "Recibo 1");
 					
-					kernelManager.guardarArchivo(paramsR);
+					//kernelManager.guardarArchivo(paramsR);
+					
+					documentosManager.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,urlRecibo + parametros
+							,"Recibo 1"
+							,nmpoliza
+							,ntramite
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+							,Constantes.SI
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,"0"
+							,Documento.RECIBO.getCdmoddoc()
+							);
 					
 					/**
 					 * Para AP inciso 1
@@ -2438,10 +2477,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 					logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
 					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAp + parametros+"\">Anexo cobertura de AP</a>";
 					
-					paramsR.put("pv_cddocume_i", urlAp + parametros);
-					paramsR.put("pv_dsdocume_i", "AP");
+					//paramsR.put("pv_cddocume_i", urlAp + parametros);
+					//paramsR.put("pv_dsdocume_i", "AP");
 					
-					kernelManager.guardarArchivo(paramsR);
+					//kernelManager.guardarArchivo(paramsR);
+					
+					documentosManager.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,urlAp + parametros
+							,"AP"
+							,nmpoliza
+							,ntramite
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+							,Constantes.SI
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,null
+							,null
+							);
 					
 					/**
 					 * Para CAIC inciso 1
@@ -2450,10 +2508,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 					logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
 					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaic + parametros+"\">Anexo de cobertura RC USA</a>";
 					
-					paramsR.put("pv_cddocume_i", urlCaic + parametros);
-					paramsR.put("pv_dsdocume_i", "CAIC");
+					//paramsR.put("pv_cddocume_i", urlCaic + parametros);
+					//paramsR.put("pv_dsdocume_i", "CAIC");
 					
-					kernelManager.guardarArchivo(paramsR);
+					//kernelManager.guardarArchivo(paramsR);
+					
+					documentosManager.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,urlCaic + parametros
+							,"CAIC"
+							,nmpoliza
+							,ntramite
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+							,Constantes.SI
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,null
+							,null
+							);
 					
 					if("C".equalsIgnoreCase(tipoGrupoInciso)){
 						/**
@@ -2463,10 +2540,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 						logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosFlot + parametros+"\">Relaci&oacute;n de Incisos Flotillas</a>";
 						
-						paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
-						paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
+						//paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
+						//paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,"M"
+								,nmpolizaEmitida
+								,nmsuplemEmitida
+								,new Date()
+								,urlIncisosFlot + parametros
+								,"Incisos Flotillas"
+								,nmpoliza
+								,ntramite
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,null
+								,null
+								);
 						
 						/**
 						 * Para Tarjeta Identificacion
@@ -2475,10 +2571,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 						logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci&oacute;n</a>";
 						
-						paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
-						paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
+						//paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
+						//paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,"M"
+								,nmpolizaEmitida
+								,nmsuplemEmitida
+								,new Date()
+								,urlTarjIdent + parametros
+								,"Tarjeta de Identificacion"
+								,nmpoliza
+								,ntramite
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,null
+								,null
+								);
 						
 					}
 					
@@ -2507,10 +2622,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 						
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf\">Reduce GS</a>";
 						
-						paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
-						paramsR.put("pv_dsdocume_i", "Reduce GS");
+						//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
+						//paramsR.put("pv_dsdocume_i", "Reduce GS");
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,"M"
+								,nmpolizaEmitida
+								,nmsuplemEmitida
+								,new Date()
+								,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
+								,"Reduce GS"
+								,nmpoliza
+								,ntramite
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,null
+								,null
+								);
 					}
 					if(gestoria){
 						/**
@@ -2519,10 +2653,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 						
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf\">Gestoria GS</a>";
 						
-						paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
-						paramsR.put("pv_dsdocume_i", "Gestoria GS");
+						//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
+						//paramsR.put("pv_dsdocume_i", "Gestoria GS");
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,"M"
+								,nmpolizaEmitida
+								,nmsuplemEmitida
+								,new Date()
+								,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
+								,"Gestoria GS"
+								,nmpoliza
+								,ntramite
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,null
+								,null
+								);
 					}
 					
 					if(cobVida){
@@ -2532,17 +2685,55 @@ public class ComplementariosAction extends PrincipalCoreAction
 						
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf\">Especificaciones Seguro de Vida</a>";
 						
-						paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
-						paramsR.put("pv_dsdocume_i", "Especificaciones Seguro de Vida");
+						//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
+						//paramsR.put("pv_dsdocume_i", "Especificaciones Seguro de Vida");
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,"M"
+								,nmpolizaEmitida
+								,nmsuplemEmitida
+								,new Date()
+								,"https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf"
+								,"Especificaciones Seguro de Vida"
+								,nmpoliza
+								,ntramite
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,null
+								,null
+								);
 
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf\">Condiciones Generales Seguro de Vida</a>";
 						
-						paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf");
-						paramsR.put("pv_dsdocume_i", "Condiciones Generales Seguro de Vida");
+						//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf");
+						//paramsR.put("pv_dsdocume_i", "Condiciones Generales Seguro de Vida");
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
+
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,"M"
+								,nmpolizaEmitida
+								,nmsuplemEmitida
+								,new Date()
+								,"https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf"
+								,"Condiciones Generales Seguro de Vida"
+								,nmpoliza
+								,ntramite
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,null
+								,null
+								);
 					}
 					
 					this.mensajeEmail += "<br/><br/><br/>Agradecemos su preferencia.<br/>"+
@@ -3244,21 +3435,40 @@ public class ComplementariosAction extends PrincipalCoreAction
 						logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car&aacute;tula de p&oacute;liza</a>";
 						
-						HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-						paramsR.put("pv_cdunieco_i", _cdunieco);
-						paramsR.put("pv_cdramo_i",   _cdramo);
-						paramsR.put("pv_estado_i",   "M");
-						paramsR.put("pv_nmpoliza_i", _nmpoliza);
-						paramsR.put("pv_nmsuplem_i", _nmsuplem);
-						paramsR.put("pv_feinici_i",  new Date());
-						paramsR.put("pv_cddocume_i", urlCaratula + parametros);
-						paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
-						paramsR.put("pv_nmsolici_i", nmsolici);
-						paramsR.put("pv_ntramite_i", ntramite);
-						paramsR.put("pv_tipmov_i",   TipoEndoso.EMISION_POLIZA.getCdTipSup());
-						paramsR.put("pv_swvisible_i", Constantes.SI);
+						//HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+						//paramsR.put("pv_cdunieco_i", _cdunieco);
+						//paramsR.put("pv_cdramo_i",   _cdramo);
+						//paramsR.put("pv_estado_i",   "M");
+						//paramsR.put("pv_nmpoliza_i", _nmpoliza);
+						//paramsR.put("pv_nmsuplem_i", _nmsuplem);
+						//paramsR.put("pv_feinici_i",  new Date());
+						//paramsR.put("pv_cddocume_i", urlCaratula + parametros);
+						//paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
+						//paramsR.put("pv_nmsolici_i", nmsolici);
+						//paramsR.put("pv_ntramite_i", ntramite);
+						//paramsR.put("pv_tipmov_i",   TipoEndoso.EMISION_POLIZA.getCdTipSup());
+						//paramsR.put("pv_swvisible_i", Constantes.SI);
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								_cdunieco
+								,_cdramo
+								,"M"
+								,_nmpoliza
+								,_nmsuplem
+								,new Date()
+								,urlCaratula + parametros
+								,"Car\u00e1tula de P\u00f3liza"
+								,nmsolici
+								,ntramite
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,null
+								,null
+								);
 						
 						/**
 						 * Para Recibo 1
@@ -3267,10 +3477,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 						logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlRecibo + parametros+"\">Recibo provisional de primas</a>";
 						
-						paramsR.put("pv_cddocume_i", urlRecibo + parametros);
-						paramsR.put("pv_dsdocume_i", "Recibo 1");
+						//paramsR.put("pv_cddocume_i", urlRecibo + parametros);
+						//paramsR.put("pv_dsdocume_i", "Recibo 1");
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								_cdunieco
+								,_cdramo
+								,"M"
+								,_nmpoliza
+								,_nmsuplem
+								,new Date()
+								,urlRecibo + parametros
+								,"Recibo 1"
+								,nmsolici
+								,ntramite
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.RECIBO.getCdmoddoc()
+								);
 						
 						/**
 						 * Para AP inciso 1
@@ -3279,10 +3508,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 						logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAp + parametros+"\">Anexo cobertura de AP</a>";
 						
-						paramsR.put("pv_cddocume_i", urlAp + parametros);
-						paramsR.put("pv_dsdocume_i", "AP");
+						//paramsR.put("pv_cddocume_i", urlAp + parametros);
+						//paramsR.put("pv_dsdocume_i", "AP");
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								_cdunieco
+								,_cdramo
+								,"M"
+								,_nmpoliza
+								,_nmsuplem
+								,new Date()
+								,urlAp + parametros
+								,"AP"
+								,nmsolici
+								,ntramite
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,null
+								,null
+								);
 						
 						/**
 						 * Para CAIC inciso 1
@@ -3291,11 +3539,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 						logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaic + parametros+"\">Anexo de cobertura RC USA</a>";
 						
-						paramsR.put("pv_cddocume_i", urlCaic + parametros);
-						paramsR.put("pv_dsdocume_i", "CAIC");
+						//paramsR.put("pv_cddocume_i", urlCaic + parametros);
+						//paramsR.put("pv_dsdocume_i", "CAIC");
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
 						
+						documentosManager.guardarDocumento(
+								_cdunieco
+								,_cdramo
+								,"M"
+								,_nmpoliza
+								,_nmsuplem
+								,new Date()
+								,urlCaic + parametros
+								,"CAIC"
+								,nmsolici
+								,ntramite
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,null
+								,null
+								);
 						
 						if("C".equalsIgnoreCase(tipoGrupoInciso)){
 							/**
@@ -3305,10 +3571,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 							logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
 							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosFlot + parametros+"\">Relaci&oacute;n de Incisos Flotillas</a>";
 							
-							paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
-							paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
+							//paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
+							//paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
 							
-							kernelManager.guardarArchivo(paramsR);
+							//kernelManager.guardarArchivo(paramsR);
+							
+							documentosManager.guardarDocumento(
+									_cdunieco
+									,_cdramo
+									,"M"
+									,_nmpoliza
+									,_nmsuplem
+									,new Date()
+									,urlIncisosFlot + parametros
+									,"Incisos Flotillas"
+									,nmsolici
+									,ntramite
+									,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+									,Constantes.SI
+									,null
+									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+									,null
+									,null
+									);
 							
 							/**
 							 * Para Tarjeta Identificacion
@@ -3317,10 +3602,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 							logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
 							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci&oacute;n</a>";
 							
-							paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
-							paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
+							//paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
+							//paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
 							
-							kernelManager.guardarArchivo(paramsR);
+							//kernelManager.guardarArchivo(paramsR);
+							
+							documentosManager.guardarDocumento(
+									_cdunieco
+									,_cdramo
+									,"M"
+									,_nmpoliza
+									,_nmsuplem
+									,new Date()
+									,urlTarjIdent + parametros
+									,"Tarjeta de Identificacion"
+									,nmsolici
+									,ntramite
+									,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+									,Constantes.SI
+									,null
+									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+									,null
+									,null
+									);
 							
 						}
 						
@@ -3349,10 +3653,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 							
 							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf\">Reduce GS</a>";
 							
-							paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
-							paramsR.put("pv_dsdocume_i", "Reduce GS");
+							//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
+							//paramsR.put("pv_dsdocume_i", "Reduce GS");
 							
-							kernelManager.guardarArchivo(paramsR);
+							//kernelManager.guardarArchivo(paramsR);
+							
+							documentosManager.guardarDocumento(
+									_cdunieco
+									,_cdramo
+									,"M"
+									,_nmpoliza
+									,_nmsuplem
+									,new Date()
+									,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
+									,"Reduce GS"
+									,nmsolici
+									,ntramite
+									,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+									,Constantes.SI
+									,null
+									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+									,null
+									,null
+									);
 						}
 						if(gestoria){
 							/**
@@ -3361,10 +3684,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 							
 							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf\">Gestoria GS</a>";
 							
-							paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
-							paramsR.put("pv_dsdocume_i", "Gestoria GS");
+							//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
+							//paramsR.put("pv_dsdocume_i", "Gestoria GS");
 							
-							kernelManager.guardarArchivo(paramsR);
+							//kernelManager.guardarArchivo(paramsR);
+							
+							documentosManager.guardarDocumento(
+									_cdunieco
+									,_cdramo
+									,"M"
+									,_nmpoliza
+									,_nmsuplem
+									,new Date()
+									,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
+									,"Gestoria GS"
+									,nmsolici
+									,ntramite
+									,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+									,Constantes.SI
+									,null
+									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+									,null
+									,null
+									);
 						}
 						
 						if(cobVida){
@@ -3374,17 +3716,55 @@ public class ComplementariosAction extends PrincipalCoreAction
 							
 							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf\">Especificaciones Seguro de Vida</a>";
 							
-							paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
-							paramsR.put("pv_dsdocume_i", "Especificaciones Seguro de Vida");
+							//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
+							//paramsR.put("pv_dsdocume_i", "Especificaciones Seguro de Vida");
 							
-							kernelManager.guardarArchivo(paramsR);
+							//kernelManager.guardarArchivo(paramsR);
+							
+							documentosManager.guardarDocumento(
+									_cdunieco
+									,_cdramo
+									,"M"
+									,_nmpoliza
+									,_nmsuplem
+									,new Date()
+									,"https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf"
+									,"Especificaciones Seguro de Vida"
+									,nmsolici
+									,ntramite
+									,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+									,Constantes.SI
+									,null
+									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+									,null
+									,null
+									);
 
 							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf\">Condiciones Generales Seguro de Vida</a>";
 							
-							paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf");
-							paramsR.put("pv_dsdocume_i", "Condiciones Generales Seguro de Vida");
+							//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf");
+							//paramsR.put("pv_dsdocume_i", "Condiciones Generales Seguro de Vida");
 							
-							kernelManager.guardarArchivo(paramsR);
+							//kernelManager.guardarArchivo(paramsR);
+							
+							documentosManager.guardarDocumento(
+									_cdunieco
+									,_cdramo
+									,"M"
+									,_nmpoliza
+									,_nmsuplem
+									,new Date()
+									,"https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf"
+									,"Condiciones Generales Seguro de Vida"
+									,nmsolici
+									,ntramite
+									,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+									,Constantes.SI
+									,null
+									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+									,null
+									,null
+									);
 						}
 
 						this.mensajeEmail += "<br/><br/><br/>Agradecemos su preferencia.<br/>"+
@@ -4133,20 +4513,39 @@ public class ComplementariosAction extends PrincipalCoreAction
 				);
 		try
 		{
-			HashMap<String, Object> paramsR = new HashMap<String, Object>();
-			paramsR.put("pv_cdunieco_i"  , cdunieco);
-			paramsR.put("pv_cdramo_i"    , cdramo);
-			paramsR.put("pv_estado_i"    , estado);
-			paramsR.put("pv_nmpoliza_i"  , nmpoliza);
-			paramsR.put("pv_nmsuplem_i"  , 0);
-			paramsR.put("pv_feinici_i"   , new Date());
-			paramsR.put("pv_cddocume_i"  , this.getText("pdf.emision.rechazo.nombre"));
-			paramsR.put("pv_dsdocume_i"  , "CARTA RECHAZO");
-			paramsR.put("pv_nmsolici_i"  , nmpoliza);
-			paramsR.put("pv_ntramite_i"  , ntramite);
-			paramsR.put("pv_tipmov_i"    , TipoTramite.POLIZA_NUEVA.getCdtiptra());
-			paramsR.put("pv_swvisible_i" , Constantes.SI);
-			kernelManager.guardarArchivo(paramsR);
+			//HashMap<String, Object> paramsR = new HashMap<String, Object>();
+			//paramsR.put("pv_cdunieco_i"  , cdunieco);
+			//paramsR.put("pv_cdramo_i"    , cdramo);
+			//paramsR.put("pv_estado_i"    , estado);
+			//paramsR.put("pv_nmpoliza_i"  , nmpoliza);
+			//paramsR.put("pv_nmsuplem_i"  , 0);
+			//paramsR.put("pv_feinici_i"   , new Date());
+			//paramsR.put("pv_cddocume_i"  , this.getText("pdf.emision.rechazo.nombre"));
+			//paramsR.put("pv_dsdocume_i"  , "CARTA RECHAZO");
+			//paramsR.put("pv_nmsolici_i"  , nmpoliza);
+			//paramsR.put("pv_ntramite_i"  , ntramite);
+			//paramsR.put("pv_tipmov_i"    , TipoTramite.POLIZA_NUEVA.getCdtiptra());
+			//paramsR.put("pv_swvisible_i" , Constantes.SI);
+			//kernelManager.guardarArchivo(paramsR);
+			
+			documentosManager.guardarDocumento(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,"0"
+					,new Date()
+					,this.getText("pdf.emision.rechazo.nombre")
+					,"CARTA RECHAZO"
+					,nmpoliza
+					,ntramite
+					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+					,Constantes.SI
+					,null
+					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+					,null
+					,null
+					);
 	    }
 		catch(Exception ex)
 		{

@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.documentos.service;
 
+import java.util.Date;
 import java.util.Map;
 
 public interface DocumentosManager
@@ -17,5 +18,25 @@ public interface DocumentosManager
 			,int proceso
 			,String ntramite
 			,String nmsolici
+			)throws Exception;
+	
+	@Deprecated
+	public void guardarDocumento(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,Date feinici
+			,String cddocume
+			,String dsdocume
+			,String nmsolici
+			,String ntramite
+			,String tipmov
+			,String swvisible
+			,String codidocu
+			,String cdtiptra
+			,String cdorddoc
+			,String cdmoddoc
 			)throws Exception;
 }

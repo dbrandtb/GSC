@@ -21,6 +21,7 @@ import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasAseguradoManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
@@ -33,7 +34,6 @@ import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoPago;
 import mx.com.gseguros.portal.general.util.TipoPrestadorServicio;
 import mx.com.gseguros.portal.general.util.TipoTramite;
-import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
@@ -129,6 +129,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	@Autowired
 	@Qualifier("consultasAseguradoManagerImpl")
 	private ConsultasAseguradoManager consultasAseguradoManager;
+	
+	@Autowired
+	private DocumentosManager documentosManager;
 
 	/**
 	* metodo para consultar la poliza en especifico
@@ -758,7 +761,27 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			paramsO.put("pv_swvisible_i"   , null);
 			paramsO.put("pv_codidocu_i"   , null);
 			paramsO.put("pv_cdtiptra_i"   , TipoTramite.SINIESTRO.getCdtiptra());
-			kernelManagerSustituto.guardarArchivo(paramsO);
+			//kernelManagerSustituto.guardarArchivo(paramsO);
+			
+			documentosManager.guardarDocumento(
+					(String)paramsO.get("pv_cdunieco_i")
+					,(String)paramsO.get("pv_cdramo_i")
+					,(String)paramsO.get("pv_estado_i")
+					,(String)paramsO.get("pv_nmpoliza_i")
+					,(String)paramsO.get("pv_nmsuplem_i")
+					,new Date()
+					,nombreArchivo
+					,"Carta Rechazo"
+					,(String)paramsO.get("pv_nmsolici_i")
+					,(String)paramsO.get("pv_ntramite_i")
+					,(String)paramsO.get("pv_tipmov_i")
+					,null
+					,null
+					,TipoTramite.SINIESTRO.getCdtiptra()
+					,null
+					,null
+					);
+			
 		}catch( Exception e){
 			logger.error("Error en generaCartaRechazo: {}", e.getMessage(), e);
 			success =  false;
@@ -1185,7 +1208,27 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					paramsO.put("pv_swvisible_i"   , null);
 					paramsO.put("pv_codidocu_i"   , null);
 					paramsO.put("pv_cdtiptra_i"   , TipoTramite.SINIESTRO.getCdtiptra());
-					kernelManagerSustituto.guardarArchivo(paramsO);
+					//kernelManagerSustituto.guardarArchivo(paramsO);
+					
+					documentosManager.guardarDocumento(
+							siniestro.getCdunieco()
+							,siniestro.getCdramo()
+							,siniestro.getEstado()
+							,siniestro.getNmpoliza()
+							,siniestro.getNmsuplem()
+							,new Date()
+							,nombreArchivo
+							,"Carta Finiquito"
+							,siniestro.getNmpoliza()
+							,(String)paramsO.get("pv_ntramite_i")
+							,(String)paramsO.get("pv_tipmov_i")
+							,null
+							,null
+							,TipoTramite.SINIESTRO.getCdtiptra()
+							,null
+							,null
+							);
+					
 				}
 			}
 		}catch( Exception e){
@@ -4820,7 +4863,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	public String guardaConfiguracionLayout(){
 		logger.debug("Entra a guardaAltaTramite Params: {} datosTablas {}", params,datosTablas);
 		try{
-			//Realizamos la inserción de los guardados
+			//Realizamos la inserciï¿½n de los guardados
 			siniestrosManager.guardaLayoutProveedor(params.get("cmbProveedor"), null,null,null,null,null,null,null,"D");
 			for(int i=0;i<datosTablas.size();i++) {
 				siniestrosManager.guardaLayoutProveedor(

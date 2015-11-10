@@ -14,6 +14,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
@@ -21,8 +22,8 @@ import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.Rango;
-import mx.com.gseguros.portal.general.util.TipoPrestadorServicio;
 import mx.com.gseguros.portal.general.util.RolSistema;
+import mx.com.gseguros.portal.general.util.TipoPrestadorServicio;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
@@ -40,6 +41,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -76,6 +78,9 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	private String autorizarProceso;
 	private Map<String, String> map1;
 	private String mensaje;
+	
+	@Autowired
+	private DocumentosManager documentosManager;
 	
 	public String autorizacionServicios() {
 		logger.debug("Entra a autorizacionServicios Params: {}", params);
@@ -440,7 +445,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	* @param Map que contiene la informacion del tramite
 	* @return Autorizacion de Servicio
 	*/
-	public String generarAutoriServicio(Map<String, Object> paramsO){
+	private String generarAutoriServicio(Map<String, Object> paramsO){
 		logger.debug("Entra a generarAutoriServicio Valores para generarAutoriServicio: {}", paramsO);
 		try {
 			File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
@@ -495,16 +500,36 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 				;
 			HttpUtil.generaArchivo(urlAutorizacionServicio, pathArchivo);
 			
-			paramsO.put("pv_feinici_i"  , new Date());
-			paramsO.put("pv_cddocume_i" , nombreArchivoModificado);
-			paramsO.put("pv_dsdocume_i" , "Autorizacion Servicio "+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
-			paramsO.put("pv_swvisible_i"   , null);
-			paramsO.put("pv_codidocu_i"   , null);
-			paramsO.put("pv_cdtiptra_i"   , TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra());
-			paramsO.put("pv_nmsolici_i",null);
-			paramsO.put("pv_tipmov_i",TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra());
-			logger.debug("Valor de paramsO {}", paramsO);
-			kernelManagerSustituto.guardarArchivo(paramsO);
+			//paramsO.put("pv_feinici_i"  , new Date());
+			//paramsO.put("pv_cddocume_i" , nombreArchivoModificado);
+			//paramsO.put("pv_dsdocume_i" , "Autorizacion Servicio "+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
+			//paramsO.put("pv_swvisible_i"   , null);
+			//paramsO.put("pv_codidocu_i"   , null);
+			//paramsO.put("pv_cdtiptra_i"   , TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra());
+			//paramsO.put("pv_nmsolici_i",null);
+			//paramsO.put("pv_tipmov_i",TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra());
+			//logger.debug("Valor de paramsO {}", paramsO);
+			//kernelManagerSustituto.guardarArchivo(paramsO);
+			
+			documentosManager.guardarDocumento(
+					(String)paramsO.get("pv_cdunieco_i")
+					,(String)paramsO.get("pv_cdramo_i")
+					,(String)paramsO.get("pv_estado_i")
+					,(String)paramsO.get("pv_nmpoliza_i")
+					,(String)paramsO.get("pv_nmsuplem_i")
+					,new Date()
+					,nombreArchivoModificado
+					,"Autorizacion Servicio "+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())
+					,null
+					,(String)paramsO.get("pv_ntramite_i")
+					,TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra()
+					,null
+					,null
+					,TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra()
+					,null
+					,null
+					);
+			
 		}catch( Exception e){
 			logger.error("Error generarAutoriServicio {}", e.getMessage(), e);
 			success =  false;
@@ -824,20 +849,40 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		logger.debug("Se solicita reporte : {}", url);
 		HttpUtil.generaArchivo(url,rutaCarpeta+"/"+this.getText("pdf.emision.rechazo.nombre"));
 		try{
-			HashMap<String, Object> paramsR = new HashMap<String, Object>();
-			paramsR.put("pv_cdunieco_i"  , cdunieco);
-			paramsR.put("pv_cdramo_i"    , cdramo);
-			paramsR.put("pv_estado_i"    , estado);
-			paramsR.put("pv_nmpoliza_i"  , nmpoliza);
-			paramsR.put("pv_nmsuplem_i"  , 0);
-			paramsR.put("pv_feinici_i"   , new Date());
-			paramsR.put("pv_cddocume_i"  , this.getText("pdf.emision.rechazo.nombre"));
-			paramsR.put("pv_dsdocume_i"  , "CARTA RECHAZO");
-			paramsR.put("pv_nmsolici_i"  , nmpoliza);
-			paramsR.put("pv_ntramite_i"  , ntramite);
-			paramsR.put("pv_tipmov_i"    , TipoTramite.POLIZA_NUEVA.getCdtiptra());
-			paramsR.put("pv_swvisible_i" , Constantes.SI);
-			kernelManagerSustituto.guardarArchivo(paramsR);
+			//HashMap<String, Object> paramsR = new HashMap<String, Object>();
+			//paramsR.put("pv_cdunieco_i"  , cdunieco);
+			//paramsR.put("pv_cdramo_i"    , cdramo);
+			//paramsR.put("pv_estado_i"    , estado);
+			//paramsR.put("pv_nmpoliza_i"  , nmpoliza);
+			//paramsR.put("pv_nmsuplem_i"  , 0);
+			//paramsR.put("pv_feinici_i"   , new Date());
+			//paramsR.put("pv_cddocume_i"  , this.getText("pdf.emision.rechazo.nombre"));
+			//paramsR.put("pv_dsdocume_i"  , "CARTA RECHAZO");
+			//paramsR.put("pv_nmsolici_i"  , nmpoliza);
+			//paramsR.put("pv_ntramite_i"  , ntramite);
+			//paramsR.put("pv_tipmov_i"    , TipoTramite.POLIZA_NUEVA.getCdtiptra());
+			//paramsR.put("pv_swvisible_i" , Constantes.SI);
+			//kernelManagerSustituto.guardarArchivo(paramsR);
+			
+			documentosManager.guardarDocumento(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,"0"
+					,new Date()
+					,this.getText("pdf.emision.rechazo.nombre")
+					,"CARTA RECHAZO"
+					,nmpoliza
+					,ntramite
+					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+					,Constantes.SI
+					,null
+					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+					,null
+					,null
+					);
+			
 		}
 		catch(Exception ex){
 			logger.error("Error guardarCartaRechazoAutServ : {}", ex.getMessage(), ex);
