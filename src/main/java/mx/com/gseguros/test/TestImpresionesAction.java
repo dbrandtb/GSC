@@ -26,7 +26,6 @@ import javax.print.attribute.standard.Media;
 import javax.print.attribute.standard.MediaSize;
 import javax.print.attribute.standard.MediaTray;
 import javax.print.attribute.standard.PrinterName;
-import javax.print.attribute.standard.Sides;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 
@@ -127,11 +126,33 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 			DocFlavor myFormat = DocFlavor.INPUT_STREAM.PNG;
 			myDoc = new SimpleDoc(textStream, myFormat, null);
 		}
-		PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet(); 
+		PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
+		
+		// Configuracion de numero de copias:
 		aset.add(new Copies(numCopias)); 
-		//aset.add(MediaSize.NA.ISO.A4.getMediaSizeName());
-		aset.add(MediaSize.ISO.A4.getMediaSizeName());
-		aset.add(Sides.DUPLEX);
+		
+		// Configuracion de tipo de hoja:
+		if(params != null && params.get("mediaSize") != null) {
+			if( "A0".equals(params.get("mediaSize")) ) {
+				aset.add(MediaSize.ISO.A0.getMediaSizeName());
+				logger.debug("Se configura tipo de hoja a {}", params.get("mediaSize"));
+			} else if( "A1".equals(params.get("mediaSize")) ) {
+				aset.add(MediaSize.ISO.A1.getMediaSizeName());
+				logger.debug("Se configura tipo de hoja a {}", params.get("mediaSize"));
+			} else if( "A2".equals(params.get("mediaSize")) ) {
+				aset.add(MediaSize.ISO.A2.getMediaSizeName());
+				logger.debug("Se configura tipo de hoja a {}", params.get("mediaSize"));
+			} else if( "A3".equals(params.get("mediaSize")) ) {
+				aset.add(MediaSize.ISO.A3.getMediaSizeName());
+				logger.debug("Se configura tipo de hoja a {}", params.get("mediaSize"));
+			} else if( "A4".equals(params.get("mediaSize")) ) {
+				aset.add(MediaSize.ISO.A4.getMediaSizeName());
+				logger.debug("Se configura tipo de hoja a {}", params.get("mediaSize"));
+			}
+		}
+		//aset.add(MediaSize.NA.LETTER.getMediaSizeName());
+		
+		//aset.add(Sides.DUPLEX);
 		/*
 		float printableX = someSize;
 		float printableY = someSize;
