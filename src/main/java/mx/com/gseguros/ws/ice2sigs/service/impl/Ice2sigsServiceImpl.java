@@ -9,8 +9,11 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.WSException;
+import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
+import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub;
@@ -47,6 +50,7 @@ import mx.com.gseguros.ws.model.WrapperResultadosWS;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -65,6 +69,8 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 	private transient KernelManagerSustituto kernelManager;
 	private SiniestrosManager siniestrosManager;
 	
+	@Autowired
+	private MesaControlDAO mesaControlDAO;
 
 	private WrapperResultadosWS ejecutaClienteSaludGS(Operacion operacion,
 			ClienteSalud cliente, HashMap<String, Object> params, boolean async) throws Exception {
@@ -760,7 +766,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 					logger.debug("URL Generada para Recibo: "+ urlImpresionRecibos + parametros);
 					//HttpRequestUtil.generaReporte(this.getText("recibos.impresion.url")+parametros, rutaPoliza+"/Recibo_"+recibo.getRmdbRn()+"_"+recibo.getNumRec()+".pdf");
 					
-					HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+					/*HashMap<String, Object> paramsR =  new HashMap<String, Object>();
 					paramsR.put("pv_cdunieco_i", cdunieco);
 					paramsR.put("pv_cdramo_i", cdramo);
 					paramsR.put("pv_estado_i", estado);
@@ -772,9 +778,29 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 					paramsR.put("pv_nmsolici_i", nmsolici);
 					paramsR.put("pv_ntramite_i", ntramite);
 					paramsR.put("pv_tipmov_i", tipoMov);
-					paramsR.put("pv_swvisible_i", visible);
+					paramsR.put("pv_swvisible_i", visible);*/					
 					
-					kernelManager.guardarArchivo(paramsR);
+					//kernelManager.guardarArchivo(paramsR);
+					
+					mesaControlDAO.guardarDocumento
+					(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsuplem
+							,new Date()
+							,urlImpresionRecibos + parametros
+							,"Recibo "+recibo.getNumRec()
+							,nmsolici
+							,ntramite
+							,tipoMov
+							,visible
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,"0"
+							,Documento.RECIBO.getCdmoddoc()
+							);
 				//}
 			}catch(Exception e){
 				logger.error("Error al guardar indexaxion de recibo: " + recibo.getRmdbRn(), e);

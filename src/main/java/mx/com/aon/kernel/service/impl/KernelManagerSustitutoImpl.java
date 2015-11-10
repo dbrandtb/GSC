@@ -811,7 +811,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
 	}
 
-	@Deprecated
+	/*@Deprecated
 	public WrapperResultados guardarArchivo(Map<String, Object> params) throws ApplicationException
 	{
 		if(params!=null)
@@ -839,6 +839,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto guardarArchivo mesage:"+res.getMsgText());
         return res;
 	}
+	*/
 	
 	public WrapperResultados guardarArchivoPersona(String cdperson, Date fecha, String cddocume, String dsdocume,String codidocu) throws ApplicationException
 	{

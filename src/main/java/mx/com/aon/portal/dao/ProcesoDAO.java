@@ -116,7 +116,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String P_GET_DOMICIL_GENERAL="P_GET_DOMICIL_GENERAL";
     public static final String P_MOV_MDOMICIL="P_MOV_MDOMICIL";
     public static final String EMITIR = "EMITIR";
-    public static final String GUARDAR_ARCHIVO_POLIZA = "GUARDAR_ARCHIVO_POLIZA";
+    //public static final String GUARDAR_ARCHIVO_POLIZA = "GUARDAR_ARCHIVO_POLIZA";
     public static final String GUARDAR_ARCHIVO_PERSONA = "GUARDAR_ARCHIVO_PERSONA";
     public static final String OBTENER_TIPOS_CLAUSULAS_EXCLUSION = "OBTENER_TIPOS_CLAUSULAS_EXCLUSION";
     public static final String LOAD_MESA_CONTROL = "LOAD_MESA_CONTROL";
@@ -221,7 +221,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(P_GET_DOMICIL_GENERAL, new ObtenerDomicilioGeneral(getDataSource()));
         addStoredProcedure(P_MOV_MDOMICIL, new PMovMdomicil(getDataSource()));
         addStoredProcedure(EMITIR, new Emitir(getDataSource()));
-        addStoredProcedure(GUARDAR_ARCHIVO_POLIZA, new GuardarArchivoPoliza(getDataSource()));
+        //addStoredProcedure(GUARDAR_ARCHIVO_POLIZA, new GuardarArchivoPoliza(getDataSource()));
         addStoredProcedure(GUARDAR_ARCHIVO_PERSONA, new GuardarArchivoPersona(getDataSource()));
         addStoredProcedure(OBTENER_TIPOS_CLAUSULAS_EXCLUSION, new ObtenerTiposClausulasExclusion(getDataSource()));
         addStoredProcedure(LOAD_MESA_CONTROL, new ObtenerMesaControl(getDataSource()));
@@ -2903,6 +2903,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	/////////////////////////////
 	////// guardar archivo //////
 	/*/////////////////////////*/
+	/*
 	protected class GuardarArchivoPoliza extends CustomStoredProcedure
 	{
 	
@@ -2937,6 +2938,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			return mapper.build(map);
 		}
 	}
+	*/
 	/*/////////////////////////*/
 	////// guardar archivo //////
 	/////////////////////////////

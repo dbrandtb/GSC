@@ -14,6 +14,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
@@ -31,6 +32,7 @@ import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -55,6 +57,9 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 	private List<HashMap<String, String>> loadList;
 	private HashMap<String,Object> paramsO;
 	private String validaCdTipsitTramite;
+	
+	@Autowired
+	private DocumentosManager documentosManager;
 	
 	/**
 	* Funcion para cargar la pantalla principal del alta de tramite
@@ -325,7 +330,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			paramsTworkSinPagRem.put("pv_nmautser_i",null);
 			siniestrosManager.guardaListaTworkSin(paramsTworkSinPagRem);
 			
-			//Guardamos la información del asegurado
+			//Guardamos la informaciï¿½n del asegurado
 			HashMap<String, Object> paramsAsegurado = new HashMap<String, Object>();
 			paramsAsegurado.put("pv_cdunieco_i",params.get("cdunieco"));
 			paramsAsegurado.put("pv_cdramo_i",params.get("cmbRamos"));
@@ -693,7 +698,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				paramsTworkSin.put("pv_nfactura_i",	datosTablas.get(i).get("modFactura"));
 				siniestrosManager.guardaListaTworkSin(paramsTworkSin);
 				
-				//Guardamos la información del asegurado
+				//Guardamos la informaciï¿½n del asegurado
 				HashMap<String, Object> paramsAsegurado = new HashMap<String, Object>();
 				paramsAsegurado.put("pv_cdunieco_i",datosTablas.get(i).get("modUnieco"));
 				paramsAsegurado.put("pv_cdramo_i",datosTablas.get(i).get("modRamo"));
@@ -796,7 +801,27 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			paramsO.put("pv_swvisible_i"   , null);
 			paramsO.put("pv_codidocu_i"   , null);
 			paramsO.put("pv_cdtiptra_i"   , TipoTramite.SINIESTRO.getCdtiptra());
-			kernelManagerSustituto.guardarArchivo(paramsO);
+			//kernelManagerSustituto.guardarArchivo(paramsO);
+			
+			documentosManager.guardarDocumento(
+					(String)paramsO.get("pv_cdunieco_i")
+					,(String)paramsO.get("pv_cdramo_i")
+					,(String)paramsO.get("pv_estado_i")
+					,(String)paramsO.get("pv_nmpoliza_i")
+					,(String)paramsO.get("pv_nmsuplem_i")
+					,new Date()
+					,nombreArchivo
+					,"Contra Recibo"
+					,(String)paramsO.get("pv_nmsolici_i")
+					,(String)paramsO.get("pv_ntramite_i")
+					,(String)paramsO.get("pv_tipmov_i")
+					,null
+					,null
+					,TipoTramite.SINIESTRO.getCdtiptra()
+					,null
+					,null
+					);
+			
 		}catch( Exception e){
 			logger.error("Error en generarContrarecibo : {}", e.getMessage(), e);
 			success =  false;

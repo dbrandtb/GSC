@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.documentos.service.impl;
 
 import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
+import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.io.FileUtils;
@@ -33,6 +35,9 @@ public class DocumentosManagerImpl implements DocumentosManager
 	
 	@Autowired
 	private ConsultasDAO consultasDAO;
+	
+	@Autowired
+	private MesaControlDAO mesaControlDAO;
 	
 	@Override
 	public Map<String,String> generarDocumentosParametrizados(
@@ -182,4 +187,44 @@ public class DocumentosManagerImpl implements DocumentosManager
 		return result;
 	}
 	
+	@Override
+	@Deprecated
+	public void guardarDocumento(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,Date feinici
+			,String cddocume
+			,String dsdocume
+			,String nmsolici
+			,String ntramite
+			,String tipmov
+			,String swvisible
+			,String codidocu
+			,String cdtiptra
+			,String cdorddoc
+			,String cdmoddoc
+			)throws Exception
+	{
+		mesaControlDAO.guardarDocumento(
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,nmsuplem
+				,feinici
+				,cddocume
+				,dsdocume
+				,nmsolici
+				,ntramite
+				,tipmov
+				,swvisible
+				,codidocu
+				,cdtiptra
+				,cdorddoc
+				,cdmoddoc
+				);
+	}
 }

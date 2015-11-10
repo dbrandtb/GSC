@@ -10,8 +10,11 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.WSException;
+import mx.com.gseguros.portal.documentos.model.Documento;
+import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
+import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.model.WrapperResultadosWS;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub;
@@ -28,6 +31,7 @@ import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -47,6 +51,9 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 	private String urlImpresionRecibos;
 	
 	private KernelManagerSustituto kernelManager;
+	
+	@Autowired
+	private DocumentosManager documentosManager;
 
 	/**
 	 * Recibos DXN solo se utiliza en emision para obtener los calendarios en la emision, luego de esto en endosos se utiliza el WS de Recibos normal 
@@ -249,22 +256,42 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 			String parametros = "?9999,"+modalidad+","+sucursal+","+cdtipsitGS+","+nmpoliza+",0,0,,"+cont;
 			logger.debug("URL Generada para Recibo: "+ urlImpresionRecibos + parametros);
 			
-			HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-			paramsR.put("pv_cdunieco_i", cdunieco);
-			paramsR.put("pv_cdramo_i", cdramo);
-			paramsR.put("pv_estado_i", estado);
-			paramsR.put("pv_nmpoliza_i", nmpoliza);
-			paramsR.put("pv_nmsuplem_i", nmsuplem);
-			paramsR.put("pv_feinici_i", new Date());
-			paramsR.put("pv_cddocume_i", urlImpresionRecibos + parametros);
-			paramsR.put("pv_dsdocume_i", "Recibo "+cont);
-			paramsR.put("pv_nmsolici_i", nmsolici);
-			paramsR.put("pv_ntramite_i", ntramite);
-			paramsR.put("pv_tipmov_i", "1");
-			paramsR.put("pv_swvisible_i", Constantes.NO);
+			//HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+			//paramsR.put("pv_cdunieco_i", cdunieco);
+			//paramsR.put("pv_cdramo_i", cdramo);
+			//paramsR.put("pv_estado_i", estado);
+			//paramsR.put("pv_nmpoliza_i", nmpoliza);
+			//paramsR.put("pv_nmsuplem_i", nmsuplem);
+			//paramsR.put("pv_feinici_i", new Date());
+			//paramsR.put("pv_cddocume_i", urlImpresionRecibos + parametros);
+			//paramsR.put("pv_dsdocume_i", "Recibo "+cont);
+			//paramsR.put("pv_nmsolici_i", nmsolici);
+			//paramsR.put("pv_ntramite_i", ntramite);
+			//paramsR.put("pv_tipmov_i", "1");
+			//paramsR.put("pv_swvisible_i", Constantes.NO);
 			
 			try{
-				kernelManager.guardarArchivo(paramsR);
+				//kernelManager.guardarArchivo(paramsR);
+				
+				documentosManager.guardarDocumento(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,nmsuplem
+						,new Date()
+						,urlImpresionRecibos + parametros
+						,"Recibo "+cont
+						,nmsolici
+						,ntramite
+						,"1"
+						,Constantes.NO
+						,null
+						,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+						,"0"
+						,Documento.RECIBO.getCdmoddoc()
+						);
+				
 			} catch (Exception e) {
 				logger.error("Error en llamado a PL", e);
 			}

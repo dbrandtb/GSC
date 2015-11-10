@@ -20,6 +20,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
@@ -29,6 +30,7 @@ import mx.com.gseguros.utils.Utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.interceptor.ServletRequestAware;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -57,6 +59,9 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     private boolean exito;
     private String respuesta;
     private String respuestaOculta;
+    
+    @Autowired
+    private DocumentosManager documentosManager;
     
     public String mostrarPanel()
     {
@@ -154,22 +159,42 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
             pv_cddocume_i
             pv_dsdocume_i
             */
-            Map<String,Object>paramMovDocu=new LinkedHashMap<String,Object>(0);
-            paramMovDocu.put("pv_cdunieco_i"  , smap1.get("cdunieco"));
-            paramMovDocu.put("pv_cdramo_i"    , smap1.get("cdramo"));
-            paramMovDocu.put("pv_estado_i"    , smap1.get("estado"));
-            paramMovDocu.put("pv_nmpoliza_i"  , smap1.get("nmpoliza"));
-            paramMovDocu.put("pv_nmsolici_i"  , smap1.get("nmsolici"));
-            paramMovDocu.put("pv_nmsuplem_i"  , smap1.get("nmsuplem"));
-            paramMovDocu.put("pv_ntramite_i"  , smap1.get("ntramite"));
-            paramMovDocu.put("pv_feinici_i"   , renderFechas.parse(smap1.get("fecha")));
-            paramMovDocu.put("pv_cddocume_i"  , nombreArchivo);
-            paramMovDocu.put("pv_dsdocume_i"  , smap1.get("descripcion"));
-            paramMovDocu.put("pv_tipmov_i"    , smap1.get("tipomov"));
-            paramMovDocu.put("pv_swvisible_i" , null);
-            paramMovDocu.put("pv_codidocu_i"  , smap1.get("codidocu"));
-            paramMovDocu.put("pv_cdtiptra_i"  , smap1.get("cdtiptra"));
-            kernelManager.guardarArchivo(paramMovDocu);
+            //Map<String,Object>paramMovDocu=new LinkedHashMap<String,Object>(0);
+            //paramMovDocu.put("pv_cdunieco_i"  , smap1.get("cdunieco"));
+            //paramMovDocu.put("pv_cdramo_i"    , smap1.get("cdramo"));
+            //paramMovDocu.put("pv_estado_i"    , smap1.get("estado"));
+            //paramMovDocu.put("pv_nmpoliza_i"  , smap1.get("nmpoliza"));
+            //paramMovDocu.put("pv_nmsolici_i"  , smap1.get("nmsolici"));
+            //paramMovDocu.put("pv_nmsuplem_i"  , smap1.get("nmsuplem"));
+            //paramMovDocu.put("pv_ntramite_i"  , smap1.get("ntramite"));
+            //paramMovDocu.put("pv_feinici_i"   , renderFechas.parse(smap1.get("fecha")));
+            //paramMovDocu.put("pv_cddocume_i"  , nombreArchivo);
+            //paramMovDocu.put("pv_dsdocume_i"  , smap1.get("descripcion"));
+            //paramMovDocu.put("pv_tipmov_i"    , smap1.get("tipomov"));
+            //paramMovDocu.put("pv_swvisible_i" , null);
+            //paramMovDocu.put("pv_codidocu_i"  , smap1.get("codidocu"));
+            //paramMovDocu.put("pv_cdtiptra_i"  , smap1.get("cdtiptra"));
+            //kernelManager.guardarArchivo(paramMovDocu);
+            
+            documentosManager.guardarDocumento(
+            		smap1.get("cdunieco")
+            		,smap1.get("cdramo")
+            		,smap1.get("estado")
+            		,smap1.get("nmpoliza")
+            		,smap1.get("nmsuplem")
+            		,renderFechas.parse(smap1.get("fecha"))
+            		,nombreArchivo
+            		,smap1.get("descripcion")
+            		,smap1.get("nmsolici")
+            		,smap1.get("ntramite")
+            		,smap1.get("tipomov")
+            		,null
+            		,smap1.get("codidocu")
+            		,smap1.get("cdtiptra")
+            		,null
+            		,null
+            		);
+            
         }
         
         catch(Exception ex)

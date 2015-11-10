@@ -7436,20 +7436,39 @@ public class CotizacionAction extends PrincipalCoreAction
 					;
 			HttpUtil.generaArchivo(urlReporteCotizacion, pathArchivoCotizacion);
 
-			Map<String,Object>mapArchivo=new LinkedHashMap<String,Object>(0);
-			mapArchivo.put("pv_cdunieco_i"  , cdunieco);
-			mapArchivo.put("pv_cdramo_i"    , cdramo);
-			mapArchivo.put("pv_estado_i"    , estado);
-			mapArchivo.put("pv_nmpoliza_i"  , "0");
-			mapArchivo.put("pv_nmsuplem_i"  , "0");
-			mapArchivo.put("pv_feinici_i"   , new Date());
-			mapArchivo.put("pv_cddocume_i"  , nombreArchivoCotizacion);
-			mapArchivo.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N EN RESUMEN");
-			mapArchivo.put("pv_ntramite_i"  , ntramite);
-			mapArchivo.put("pv_nmsolici_i"  , nmpoliza);
-			mapArchivo.put("pv_tipmov_i"    , "1");
-			mapArchivo.put("pv_swvisible_i" , null);
-			kernelManager.guardarArchivo(mapArchivo);
+			//Map<String,Object>mapArchivo=new LinkedHashMap<String,Object>(0);
+			//mapArchivo.put("pv_cdunieco_i"  , cdunieco);
+			//mapArchivo.put("pv_cdramo_i"    , cdramo);
+			//mapArchivo.put("pv_estado_i"    , estado);
+			//mapArchivo.put("pv_nmpoliza_i"  , "0");
+			//mapArchivo.put("pv_nmsuplem_i"  , "0");
+			//mapArchivo.put("pv_feinici_i"   , new Date());
+			//mapArchivo.put("pv_cddocume_i"  , nombreArchivoCotizacion);
+			//mapArchivo.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N EN RESUMEN");
+			//mapArchivo.put("pv_ntramite_i"  , ntramite);
+			//mapArchivo.put("pv_nmsolici_i"  , nmpoliza);
+			//mapArchivo.put("pv_tipmov_i"    , "1");
+			//mapArchivo.put("pv_swvisible_i" , null);
+			//kernelManager.guardarArchivo(mapArchivo);
+			
+			documentosManager.guardarDocumento(
+					cdunieco
+					,cdramo
+					,estado
+					,"0"
+					,"0"
+					,new Date()
+					,nombreArchivoCotizacion
+					,"COTIZACI\u00d3N EN RESUMEN"
+					,nmpoliza
+					,ntramite
+					,"1"
+					,null
+					,null
+					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+					,null
+					,null
+					);
 			
 			String urlReporteCotizacion2=Utils.join(
 					  getText("ruta.servidor.reports")
@@ -7475,20 +7494,39 @@ public class CotizacionAction extends PrincipalCoreAction
 					;
 			HttpUtil.generaArchivo(urlReporteCotizacion2, pathArchivoCotizacion2);
 
-			Map<String,Object>mapArchivo2=new LinkedHashMap<String,Object>(0);
-			mapArchivo2.put("pv_cdunieco_i"  , cdunieco);
-			mapArchivo2.put("pv_cdramo_i"    , cdramo);
-			mapArchivo2.put("pv_estado_i"    , estado);
-			mapArchivo2.put("pv_nmpoliza_i"  , "0");
-			mapArchivo2.put("pv_nmsuplem_i"  , "0");
-			mapArchivo2.put("pv_feinici_i"   , new Date());
-			mapArchivo2.put("pv_cddocume_i"  , nombreArchivoCotizacion2);
-			mapArchivo2.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N A DETALLE");
-			mapArchivo2.put("pv_ntramite_i"  , ntramite);
-			mapArchivo2.put("pv_nmsolici_i"  , nmpoliza);
-			mapArchivo2.put("pv_tipmov_i"    , "1");
-			mapArchivo2.put("pv_swvisible_i" , null);
-			kernelManager.guardarArchivo(mapArchivo2);
+			//Map<String,Object>mapArchivo2=new LinkedHashMap<String,Object>(0);
+			//mapArchivo2.put("pv_cdunieco_i"  , cdunieco);
+			//mapArchivo2.put("pv_cdramo_i"    , cdramo);
+			//mapArchivo2.put("pv_estado_i"    , estado);
+			//mapArchivo2.put("pv_nmpoliza_i"  , "0");
+			//mapArchivo2.put("pv_nmsuplem_i"  , "0");
+			//mapArchivo2.put("pv_feinici_i"   , new Date());
+			//mapArchivo2.put("pv_cddocume_i"  , nombreArchivoCotizacion2);
+			//mapArchivo2.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N A DETALLE");
+			//mapArchivo2.put("pv_ntramite_i"  , ntramite);
+			//mapArchivo2.put("pv_nmsolici_i"  , nmpoliza);
+			//mapArchivo2.put("pv_tipmov_i"    , "1");
+			//mapArchivo2.put("pv_swvisible_i" , null);
+			//kernelManager.guardarArchivo(mapArchivo2);
+			
+			documentosManager.guardarDocumento(
+					cdunieco
+					,cdramo
+					,estado
+					,"0"
+					,"0"
+					,new Date()
+					,nombreArchivoCotizacion2
+					,"COTIZACI\u00d3N A DETALLE"
+					,nmpoliza
+					,ntramite
+					,"1"
+					,null
+					,null
+					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+					,null
+					,null
+					);
 			
 			if(Ramo.MULTISALUD.getCdramo().equals(cdramo))
 			{
@@ -7513,20 +7551,39 @@ public class CotizacionAction extends PrincipalCoreAction
 								getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreResumen
 				)));
 				
-				Map<String,Object>mapaResumen = new LinkedHashMap<String,Object>(0);
-				mapaResumen.put("pv_cdunieco_i"  , cdunieco);
-				mapaResumen.put("pv_cdramo_i"    , cdramo);
-				mapaResumen.put("pv_estado_i"    , estado);
-				mapaResumen.put("pv_nmpoliza_i"  , "0");
-				mapaResumen.put("pv_nmsuplem_i"  , "0");
-				mapaResumen.put("pv_feinici_i"   , new Date());
-				mapaResumen.put("pv_cddocume_i"  , nombreResumen);
-				mapaResumen.put("pv_dsdocume_i"  , "RESUMEN DE COTIZACI&Oacute;N (XLS)");
-				mapaResumen.put("pv_ntramite_i"  , ntramite);
-				mapaResumen.put("pv_nmsolici_i"  , nmpoliza);
-				mapaResumen.put("pv_tipmov_i"    , "1");
-				mapaResumen.put("pv_swvisible_i" , null);
-				kernelManager.guardarArchivo(mapaResumen);
+				//Map<String,Object>mapaResumen = new LinkedHashMap<String,Object>(0);
+				//mapaResumen.put("pv_cdunieco_i"  , cdunieco);
+				//mapaResumen.put("pv_cdramo_i"    , cdramo);
+				//mapaResumen.put("pv_estado_i"    , estado);
+				//mapaResumen.put("pv_nmpoliza_i"  , "0");
+				//mapaResumen.put("pv_nmsuplem_i"  , "0");
+				//mapaResumen.put("pv_feinici_i"   , new Date());
+				//mapaResumen.put("pv_cddocume_i"  , nombreResumen);
+				//mapaResumen.put("pv_dsdocume_i"  , "RESUMEN DE COTIZACI&Oacute;N (XLS)");
+				//mapaResumen.put("pv_ntramite_i"  , ntramite);
+				//mapaResumen.put("pv_nmsolici_i"  , nmpoliza);
+				//mapaResumen.put("pv_tipmov_i"    , "1");
+				//mapaResumen.put("pv_swvisible_i" , null);
+				//kernelManager.guardarArchivo(mapaResumen);
+				
+				documentosManager.guardarDocumento(
+						cdunieco
+						,cdramo
+						,estado
+						,"0"
+						,"0"
+						,new Date()
+						,nombreResumen
+						,"RESUMEN DE COTIZACI\u00d3N (EXCEL)"
+						,nmpoliza
+						,ntramite
+						,"1"
+						,null
+						,null
+						,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+						,null
+						,null
+						);
 				
 				//pdf resumen
 				String urlReporteResumenCotizacion=Utils.join(
@@ -7552,20 +7609,39 @@ public class CotizacionAction extends PrincipalCoreAction
 						;
 				HttpUtil.generaArchivo(urlReporteResumenCotizacion, pathArchivoResumenCotizacion);
 
-				Map<String,Object>mapArchivoResumen=new LinkedHashMap<String,Object>(0);
-				mapArchivoResumen.put("pv_cdunieco_i"  , cdunieco);
-				mapArchivoResumen.put("pv_cdramo_i"    , cdramo);
-				mapArchivoResumen.put("pv_estado_i"    , estado);
-				mapArchivoResumen.put("pv_nmpoliza_i"  , "0");
-				mapArchivoResumen.put("pv_nmsuplem_i"  , "0");
-				mapArchivoResumen.put("pv_feinici_i"   , new Date());
-				mapArchivoResumen.put("pv_cddocume_i"  , nombreArchivoResumenCotizacion);
-				mapArchivoResumen.put("pv_dsdocume_i"  , "RESUMEN DE COTIZACI&Oacute;N (PDF)");
-				mapArchivoResumen.put("pv_ntramite_i"  , ntramite);
-				mapArchivoResumen.put("pv_nmsolici_i"  , nmpoliza);
-				mapArchivoResumen.put("pv_tipmov_i"    , "1");
-				mapArchivoResumen.put("pv_swvisible_i" , null);
-				kernelManager.guardarArchivo(mapArchivoResumen);
+				//Map<String,Object>mapArchivoResumen=new LinkedHashMap<String,Object>(0);
+				//mapArchivoResumen.put("pv_cdunieco_i"  , cdunieco);
+				//mapArchivoResumen.put("pv_cdramo_i"    , cdramo);
+				//mapArchivoResumen.put("pv_estado_i"    , estado);
+				//mapArchivoResumen.put("pv_nmpoliza_i"  , "0");
+				//mapArchivoResumen.put("pv_nmsuplem_i"  , "0");
+				//mapArchivoResumen.put("pv_feinici_i"   , new Date());
+				//mapArchivoResumen.put("pv_cddocume_i"  , nombreArchivoResumenCotizacion);
+				//mapArchivoResumen.put("pv_dsdocume_i"  , "RESUMEN DE COTIZACI&Oacute;N (PDF)");
+				//mapArchivoResumen.put("pv_ntramite_i"  , ntramite);
+				//mapArchivoResumen.put("pv_nmsolici_i"  , nmpoliza);
+				//mapArchivoResumen.put("pv_tipmov_i"    , "1");
+				//mapArchivoResumen.put("pv_swvisible_i" , null);
+				//kernelManager.guardarArchivo(mapArchivoResumen);
+				
+				documentosManager.guardarDocumento(
+						cdunieco
+						,cdramo
+						,estado
+						,"0"
+						,"0"
+						,new Date()
+						,nombreArchivoResumenCotizacion
+						,"RESUMEN DE COTIZACI\u00d3N (PDF)"
+						,nmpoliza
+						,ntramite
+						,"1"
+						,null
+						,null
+						,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+						,null
+						,null
+						);
 				
 				//exceles grupos
 				for(int i=1 ; i<=Integer.parseInt(nGrupos) ; i++)
@@ -7591,20 +7667,39 @@ public class CotizacionAction extends PrincipalCoreAction
 									getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreCotGrupo
 					)));
 					
-					Map<String,Object>mapaGrupo = new LinkedHashMap<String,Object>(0);
-					mapaGrupo.put("pv_cdunieco_i"  , cdunieco);
-					mapaGrupo.put("pv_cdramo_i"    , cdramo);
-					mapaGrupo.put("pv_estado_i"    , estado);
-					mapaGrupo.put("pv_nmpoliza_i"  , "0");
-					mapaGrupo.put("pv_nmsuplem_i"  , "0");
-					mapaGrupo.put("pv_feinici_i"   , new Date());
-					mapaGrupo.put("pv_cddocume_i"  , nombreCotGrupo);
-					mapaGrupo.put("pv_dsdocume_i"  , Utils.join("COTIZACI&Oacute;N GRUPO ",i));
-					mapaGrupo.put("pv_ntramite_i"  , ntramite);
-					mapaGrupo.put("pv_nmsolici_i"  , nmpoliza);
-					mapaGrupo.put("pv_tipmov_i"    , "1");
-					mapaGrupo.put("pv_swvisible_i" , null);
-					kernelManager.guardarArchivo(mapaGrupo);
+					//Map<String,Object>mapaGrupo = new LinkedHashMap<String,Object>(0);
+					//mapaGrupo.put("pv_cdunieco_i"  , cdunieco);
+					//mapaGrupo.put("pv_cdramo_i"    , cdramo);
+					//mapaGrupo.put("pv_estado_i"    , estado);
+					//mapaGrupo.put("pv_nmpoliza_i"  , "0");
+					//mapaGrupo.put("pv_nmsuplem_i"  , "0");
+					//mapaGrupo.put("pv_feinici_i"   , new Date());
+					//mapaGrupo.put("pv_cddocume_i"  , nombreCotGrupo);
+					//mapaGrupo.put("pv_dsdocume_i"  , Utils.join("COTIZACI&Oacute;N GRUPO ",i));
+					//mapaGrupo.put("pv_ntramite_i"  , ntramite);
+					//mapaGrupo.put("pv_nmsolici_i"  , nmpoliza);
+					//mapaGrupo.put("pv_tipmov_i"    , "1");
+					//mapaGrupo.put("pv_swvisible_i" , null);
+					//kernelManager.guardarArchivo(mapaGrupo);
+					
+					documentosManager.guardarDocumento(
+							cdunieco
+							,cdramo
+							,estado
+							,"0"
+							,"0"
+							,new Date()
+							,nombreCotGrupo
+							,Utils.join("COTIZACI\u00d3N GRUPO ",i)
+							,nmpoliza
+							,ntramite
+							,"1"
+							,null
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,null
+							,null
+							);
 				}
 			}
 		}

@@ -30,6 +30,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
+import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.endosos.model.RespuestaConfirmacionEndosoVO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
@@ -10743,22 +10744,41 @@ public class EndososAction extends PrincipalCoreAction
 			parametros = "?"+polRes.getCduniext()+","+polRes.getCdramoext()+","+polRes.getNmpoliex()+",,0,"+ numEnd+",0";
 			logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
 	
-			HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-			paramsR.put("pv_cdunieco_i", cdunieco);
-			paramsR.put("pv_cdramo_i",   cdramo);
-			paramsR.put("pv_estado_i",   estado);
-			paramsR.put("pv_nmpoliza_i", nmpoliza);
-			paramsR.put("pv_nmsuplem_i", nmsuplem);
-			paramsR.put("pv_feinici_i",  new Date());
-			paramsR.put("pv_cddocume_i", urlCaratula + parametros);
-			paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
-			paramsR.put("pv_nmsolici_i", nmpoliza);
-			paramsR.put("pv_ntramite_i",  ntramite);
-			paramsR.put("pv_tipmov_i",    cdtipsup);
-			paramsR.put("pv_swvisible_i", Constantes.SI);
+			//HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+			//paramsR.put("pv_cdunieco_i", cdunieco);
+			//paramsR.put("pv_cdramo_i",   cdramo);
+			//paramsR.put("pv_estado_i",   estado);
+			//paramsR.put("pv_nmpoliza_i", nmpoliza);
+			//paramsR.put("pv_nmsuplem_i", nmsuplem);
+			//paramsR.put("pv_feinici_i",  new Date());
+			//paramsR.put("pv_cddocume_i", urlCaratula + parametros);
+			//paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
+			//paramsR.put("pv_nmsolici_i", nmpoliza);
+			//paramsR.put("pv_ntramite_i",  ntramite);
+			//paramsR.put("pv_tipmov_i",    cdtipsup);
+			//paramsR.put("pv_swvisible_i", Constantes.SI);
 			
-		
-			kernelManager.guardarArchivo(paramsR);
+			//kernelManager.guardarArchivo(paramsR);
+			
+			documentosManager.guardarDocumento(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,new Date()
+					,urlCaratula + parametros
+					,"Car\u00e1tula de P\u00f3liza"
+					,nmpoliza
+					,ntramite
+					,cdtipsup
+					,Constantes.SI
+					,null
+					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+					,null
+					,null
+					);
+			
 		} catch (Exception e) {
 			logger.error("Error al generar la Caratula tipo B para el tipo de endoso: " + cdtipsup,e);
 			return false;
@@ -10814,21 +10834,40 @@ public class EndososAction extends PrincipalCoreAction
 					parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"));
 					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
 					
-					HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-					paramsR.put("pv_cdunieco_i", cdunieco);
-					paramsR.put("pv_cdramo_i",   cdramo);
-					paramsR.put("pv_estado_i",   estado);
-					paramsR.put("pv_nmpoliza_i", nmpoliza);
-					paramsR.put("pv_nmsuplem_i", nmsuplem);
-					paramsR.put("pv_feinici_i",  new Date());
-					paramsR.put("pv_cddocume_i", urlCaratula + parametros);
-					paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")");
-					paramsR.put("pv_nmsolici_i", nmpoliza);
-					paramsR.put("pv_ntramite_i", ntramite);
-					paramsR.put("pv_tipmov_i",   cdtipsup);
-					paramsR.put("pv_swvisible_i", Constantes.SI);
+					//HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+					//paramsR.put("pv_cdunieco_i", cdunieco);
+					//paramsR.put("pv_cdramo_i",   cdramo);
+					//paramsR.put("pv_estado_i",   estado);
+					//paramsR.put("pv_nmpoliza_i", nmpoliza);
+					//paramsR.put("pv_nmsuplem_i", nmsuplem);
+					//paramsR.put("pv_feinici_i",  new Date());
+					//paramsR.put("pv_cddocume_i", urlCaratula + parametros);
+					//paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")");
+					//paramsR.put("pv_nmsolici_i", nmpoliza);
+					//paramsR.put("pv_ntramite_i", ntramite);
+					//paramsR.put("pv_tipmov_i",   cdtipsup);
+					//paramsR.put("pv_swvisible_i", Constantes.SI);
 					
-					kernelManager.guardarArchivo(paramsR);
+					//kernelManager.guardarArchivo(paramsR);
+					
+					documentosManager.guardarDocumento(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsuplem
+							,new Date()
+							,urlCaratula + parametros
+							,"Car\u00e1tula de P\u00f3liza ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")"
+							,nmpoliza
+							,ntramite
+							,cdtipsup
+							,Constantes.SI
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,null
+							,null
+							);
 					
 					/**
 					 * Para Recibo 1
@@ -10836,10 +10875,29 @@ public class EndososAction extends PrincipalCoreAction
 					parametros = "?9999,0,"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",0,"+(StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+endosoIt.get("TIPOEND")+",1";
 					logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
 					
-					paramsR.put("pv_cddocume_i", urlRecibo + parametros);
-					paramsR.put("pv_dsdocume_i", "Recibo 1 ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")");
+					//paramsR.put("pv_cddocume_i", urlRecibo + parametros);
+					//paramsR.put("pv_dsdocume_i", "Recibo 1 ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")");
 					
-					kernelManager.guardarArchivo(paramsR);
+					//kernelManager.guardarArchivo(paramsR);
+					
+					documentosManager.guardarDocumento(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsuplem
+							,new Date()
+							,urlRecibo + parametros
+							,"Recibo 1 ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")"
+							,nmpoliza
+							,ntramite
+							,cdtipsup
+							,Constantes.SI
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,"0"
+							,Documento.RECIBO.getCdmoddoc()
+							);
 					
 					/**
 					 * Para AP inciso 1
@@ -10849,10 +10907,29 @@ public class EndososAction extends PrincipalCoreAction
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
 						logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
 						
-						paramsR.put("pv_cddocume_i", urlAp + parametros);
-						paramsR.put("pv_dsdocume_i", "AP");
+						//paramsR.put("pv_cddocume_i", urlAp + parametros);
+						//paramsR.put("pv_dsdocume_i", "AP");
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,urlAp + parametros
+								,"AP"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,null
+								,null
+								);
 					}
 					
 					/**
@@ -10863,10 +10940,29 @@ public class EndososAction extends PrincipalCoreAction
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
 						logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
 						
-						paramsR.put("pv_cddocume_i", urlCaic + parametros);
-						paramsR.put("pv_dsdocume_i", "CAIC");
+						//paramsR.put("pv_cddocume_i", urlCaic + parametros);
+						//paramsR.put("pv_dsdocume_i", "CAIC");
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,urlCaic + parametros
+								,"CAIC"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,null
+								,null
+								);
 					}
 					
 					
@@ -10877,10 +10973,29 @@ public class EndososAction extends PrincipalCoreAction
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"));
 						logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
 						
-						paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
-						paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
+						//paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
+						//paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,urlIncisosFlot + parametros
+								,"Incisos Flotillas"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,null
+								,null
+								);
 						
 						/**
 						 * Para Tarjeta Identificacion
@@ -10888,10 +11003,29 @@ public class EndososAction extends PrincipalCoreAction
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
 						logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
 						
-						paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
-						paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
+						//paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
+						//paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,urlTarjIdent + parametros
+								,"Tarjeta de Identificacion"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,null
+								,null
+								);
 						
 					}
 					
@@ -10899,35 +11033,111 @@ public class EndososAction extends PrincipalCoreAction
 					 * Para cobertura de reduce GS
 					 */
 					if(StringUtils.isNotBlank(endosoIt.get("REDUCEGS")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("REDUCEGS"))){
-						paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
-						paramsR.put("pv_dsdocume_i", "Reduce GS");
+						//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
+						//paramsR.put("pv_dsdocume_i", "Reduce GS");
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
+								,"Reduce GS"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,null
+								,null
+								);
 					}
 					
 					/**
 					 * Para cobertura de gestoria GS
 					 */
 					if(StringUtils.isNotBlank(endosoIt.get("GESTORIA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("GESTORIA"))){
-						paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
-						paramsR.put("pv_dsdocume_i", "Gestoria GS");
+						//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
+						//paramsR.put("pv_dsdocume_i", "Gestoria GS");
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
+								,"Gestoria GS"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,null
+								,null
+								);
 					}
 
 					/**
 					 * Para cobertura de Seguro de Vida
 					 */
 					if(StringUtils.isNotBlank(endosoIt.get("COBVIDA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("COBVIDA"))){
-						paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
-						paramsR.put("pv_dsdocume_i", "Especificaciones Seguro de Vida");
+						//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
+						//paramsR.put("pv_dsdocume_i", "Especificaciones Seguro de Vida");
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,"https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf"
+								,"Especificaciones Seguro de Vida"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,null
+								,null
+								);
 
-						paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf");
-						paramsR.put("pv_dsdocume_i", "Condiciones Generales Seguro de Vida");
+						//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf");
+						//paramsR.put("pv_dsdocume_i", "Condiciones Generales Seguro de Vida");
 						
-						kernelManager.guardarArchivo(paramsR);
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,"https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf"
+								,"Condiciones Generales Seguro de Vida"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,null
+								,null
+								);
 					}
 				}
 			}

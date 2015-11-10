@@ -25,6 +25,7 @@ import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.web.model.IncisoSaludVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.model.Reporte;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.ReportesManager;
@@ -72,6 +73,9 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     
     @Autowired
     private ReportesManager reportesManager;
+    
+    @Autowired
+    private DocumentosManager documentosManager;
     
     //Constantes de catalogos
     public static final String cdatribuSexo                         ="1";
@@ -1274,20 +1278,39 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             					.toString();
 	            HttpUtil.generaArchivo(urlReporteCotizacion.toString(), pathArchivoCotizacion);
             
-	            Map<String,Object>mapArchivo=new LinkedHashMap<String,Object>(0);
-	            mapArchivo.put("pv_cdunieco_i"  , comprarCdunieco);
-	            mapArchivo.put("pv_cdramo_i"    , comprarCdramo);
-	            mapArchivo.put("pv_estado_i"    , "W");
-	            mapArchivo.put("pv_nmpoliza_i"  , "0");
-	            mapArchivo.put("pv_nmsuplem_i"  , "0");
-	            mapArchivo.put("pv_feinici_i"   , new Date());
-	            mapArchivo.put("pv_cddocume_i"  , nombreArchivoCotizacion);
-	            mapArchivo.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N");
-	            mapArchivo.put("pv_ntramite_i"  , ntramite);
-	            mapArchivo.put("pv_nmsolici_i"  , comprarNmpoliza);
-	            mapArchivo.put("pv_tipmov_i"    , "1");
-	            mapArchivo.put("pv_swvisible_i" , null);
-	            kernelManagerSustituto.guardarArchivo(mapArchivo);
+	            //Map<String,Object>mapArchivo=new LinkedHashMap<String,Object>(0);
+	            //mapArchivo.put("pv_cdunieco_i"  , comprarCdunieco);
+	            //mapArchivo.put("pv_cdramo_i"    , comprarCdramo);
+	            //mapArchivo.put("pv_estado_i"    , "W");
+	            //mapArchivo.put("pv_nmpoliza_i"  , "0");
+	            //mapArchivo.put("pv_nmsuplem_i"  , "0");
+	            //mapArchivo.put("pv_feinici_i"   , new Date());
+	            //mapArchivo.put("pv_cddocume_i"  , nombreArchivoCotizacion);
+	            //mapArchivo.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N");
+	            //mapArchivo.put("pv_ntramite_i"  , ntramite);
+	            //mapArchivo.put("pv_nmsolici_i"  , comprarNmpoliza);
+	            //mapArchivo.put("pv_tipmov_i"    , "1");
+	            //mapArchivo.put("pv_swvisible_i" , null);
+	            //kernelManagerSustituto.guardarArchivo(mapArchivo);
+	            
+	            documentosManager.guardarDocumento(
+	            		comprarCdunieco
+	            		,comprarCdramo
+	            		,"W"
+	            		,"0"
+	            		,"0"
+	            		,new Date()
+	            		,nombreArchivoCotizacion
+	            		,"COTIZACI\u00D3N"
+	            		,comprarNmpoliza
+	            		,ntramite
+	            		,"1"
+	            		,null
+	            		,null
+	            		,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+	            		,null
+	            		,null
+	            		);
             }
     		catch(Exception ex)
     		{
@@ -1323,20 +1346,39 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 								getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreExcel1
 				)));
 				
-				Map<String,Object>mapaExcel1 = new LinkedHashMap<String,Object>(0);
-				mapaExcel1.put("pv_cdunieco_i"  , comprarCdunieco);
-				mapaExcel1.put("pv_cdramo_i"    , comprarCdramo);
-				mapaExcel1.put("pv_estado_i"    , "W");
-				mapaExcel1.put("pv_nmpoliza_i"  , "0");
-				mapaExcel1.put("pv_nmsuplem_i"  , "0");
-				mapaExcel1.put("pv_feinici_i"   , new Date());
-				mapaExcel1.put("pv_cddocume_i"  , nombreExcel1);
-				mapaExcel1.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N (XLS)");
-				mapaExcel1.put("pv_ntramite_i"  , ntramite);
-				mapaExcel1.put("pv_nmsolici_i"  , comprarNmpoliza);
-				mapaExcel1.put("pv_tipmov_i"    , "1");
-				mapaExcel1.put("pv_swvisible_i" , null);
-				kernelManagerSustituto.guardarArchivo(mapaExcel1);
+				//Map<String,Object>mapaExcel1 = new LinkedHashMap<String,Object>(0);
+				//mapaExcel1.put("pv_cdunieco_i"  , comprarCdunieco);
+				//mapaExcel1.put("pv_cdramo_i"    , comprarCdramo);
+				//mapaExcel1.put("pv_estado_i"    , "W");
+				//mapaExcel1.put("pv_nmpoliza_i"  , "0");
+				//mapaExcel1.put("pv_nmsuplem_i"  , "0");
+				//mapaExcel1.put("pv_feinici_i"   , new Date());
+				//mapaExcel1.put("pv_cddocume_i"  , nombreExcel1);
+				//mapaExcel1.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N (XLS)");
+				//mapaExcel1.put("pv_ntramite_i"  , ntramite);
+				//mapaExcel1.put("pv_nmsolici_i"  , comprarNmpoliza);
+				//mapaExcel1.put("pv_tipmov_i"    , "1");
+				//mapaExcel1.put("pv_swvisible_i" , null);
+				//kernelManagerSustituto.guardarArchivo(mapaExcel1);
+				
+				documentosManager.guardarDocumento(
+						comprarCdunieco
+						,comprarCdramo
+						,"W"
+						,"0"
+						,"0"
+						,new Date()
+						,nombreExcel1
+						,"COTIZACI\u00D3N (EXCEL)"
+						,comprarNmpoliza
+						,ntramite
+						,"1"
+						,null
+						,null
+						,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+						,null
+						,null
+						);
 	    		
 	    		//guardar excel 2
 				Map<String,String> paramsExcel2 = new LinkedHashMap<String,String>();
@@ -1359,20 +1401,39 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 								getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreExcel2
 				)));
 				
-				Map<String,Object>mapaExcel2 = new LinkedHashMap<String,Object>(0);
-				mapaExcel2.put("pv_cdunieco_i"  , comprarCdunieco);
-				mapaExcel2.put("pv_cdramo_i"    , comprarCdramo);
-				mapaExcel2.put("pv_estado_i"    , "W");
-				mapaExcel2.put("pv_nmpoliza_i"  , "0");
-				mapaExcel2.put("pv_nmsuplem_i"  , "0");
-				mapaExcel2.put("pv_feinici_i"   , new Date());
-				mapaExcel2.put("pv_cddocume_i"  , nombreExcel2);
-				mapaExcel2.put("pv_dsdocume_i"  , "RESUMEN DE COTIZACI&Oacute;N (XLS)");
-				mapaExcel2.put("pv_ntramite_i"  , ntramite);
-				mapaExcel2.put("pv_nmsolici_i"  , comprarNmpoliza);
-				mapaExcel2.put("pv_tipmov_i"    , "1");
-				mapaExcel2.put("pv_swvisible_i" , null);
-				kernelManagerSustituto.guardarArchivo(mapaExcel2);
+				//Map<String,Object>mapaExcel2 = new LinkedHashMap<String,Object>(0);
+				//mapaExcel2.put("pv_cdunieco_i"  , comprarCdunieco);
+				//mapaExcel2.put("pv_cdramo_i"    , comprarCdramo);
+				//mapaExcel2.put("pv_estado_i"    , "W");
+				//mapaExcel2.put("pv_nmpoliza_i"  , "0");
+				//mapaExcel2.put("pv_nmsuplem_i"  , "0");
+				//mapaExcel2.put("pv_feinici_i"   , new Date());
+				//mapaExcel2.put("pv_cddocume_i"  , nombreExcel2);
+				//mapaExcel2.put("pv_dsdocume_i"  , "RESUMEN DE COTIZACI&Oacute;N (XLS)");
+				//mapaExcel2.put("pv_ntramite_i"  , ntramite);
+				//mapaExcel2.put("pv_nmsolici_i"  , comprarNmpoliza);
+				//mapaExcel2.put("pv_tipmov_i"    , "1");
+				//mapaExcel2.put("pv_swvisible_i" , null);
+				//kernelManagerSustituto.guardarArchivo(mapaExcel2);
+				
+				documentosManager.guardarDocumento(
+						comprarCdunieco
+						,comprarCdramo
+						,"W"
+						,"0"
+						,"0"
+						,new Date()
+						,nombreExcel2
+						,"RESUMEN DE COTIZACI\u00D3N (EXCEL)"
+						,comprarNmpoliza
+						,ntramite
+						,"1"
+						,null
+						,null
+						,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+						,null
+						,null
+						);
     		}
     		catch(Exception ex)
     		{
