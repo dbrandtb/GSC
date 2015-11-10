@@ -70,6 +70,8 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 	@Value("${ruta.documentos.poliza}")
 	private String rutaDocumentosPoliza;
 	
+	@Value("${ruta.documentos.temporal}")
+	private String rutaDocumentosTemporal;
 	@Override
 	public Map<String,Item> pantallaExplotacionDocumentos(String cdusuari, String cdsisrol) throws Exception
 	{
@@ -407,7 +409,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			,boolean test
 			)throws Exception
 	{
-		logger.debug(Utils.log(
+		StringBuilder sb = new StringBuilder(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@"
 			    ,"\n@@@@@@ imprimirLote @@@@@@"
 			    ,"\n@@@@@@ lote="     , lote
@@ -425,10 +427,20 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				));
 		
 		String paso = "Iniciando impresi\u00F3n";
+		sb.append("\n").append(paso);
+		
 		try
 		{
+			//TODO si el papel es multiple hay que mandar por charola especifica (B por la 1, M por la 2)
+			if(hoja.length()>1)
+			{
+				throw new ApplicationException("No soporta intercalada, consulte a desarrollo");
+			}
+			
+			Thread.sleep(1000l*60l*6l);
+			
 			paso = "Recuperando archivos";
-			logger.debug("@@@@@@ paso: {}",paso);
+			sb.append("\n").append(paso);
 			
 			List<Map<String,String>> listaArchivos = consultasDAO.recuperarArchivosParaImprimirLote(
 					lote
@@ -436,36 +448,59 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					,tipolote
 					);
 			
+			sb.append(Utils.log("\nlista=",listaArchivos));
+			
 			paso = "Imprimiendo archivos";
-			logger.debug("@@@@@@ paso: {}",paso);
+			sb.append("\n").append(paso);
 			
 			boolean apagado = false;
 			
-			if("P".equals(tipolote))
+			for(Map<String,String>archivo:listaArchivos)
 			{
-				for(Map<String,String>archivo:listaArchivos)
+				if(!apagado)
 				{
-					//qwe TODO si el papel es multiple hay que mandar por charola especifica (B por la 1, M por la 2)
-					if(hoja.length()>1)
+					String ntramite = archivo.get("ntramite");
+					String cddocume = archivo.get("cddocume");
+					String filePath = Utils.join(rutaDocumentosPoliza,"/",ntramite,"/",cddocume);
+					
+					sb.append(Utils.log("\ntramite,archivo=",ntramite,cddocume));
+					
+					if(cddocume.toLowerCase().indexOf("://")!=-1)
 					{
-						throw new ApplicationException("No soporta intercalada, consulte a desarrollo");
+						paso = "Descargando archivo remoto";
+						sb.append("\n").append(paso);
+						long timestamp = System.currentTimeMillis();
+						long rand      = new Double(1000d*Math.random()).longValue();
+						filePath       = Utils.join(
+								rutaDocumentosTemporal
+								,"/lote_"    , lote
+								,"_remesa_"  , archivo.get("remesa")
+								,"_tramite_" , ntramite
+								,"_t_"       , timestamp , "_" , rand
+								,".pdf"
+								);
+						
+						File local = new File(filePath);
+						
+						InputStream remoto = HttpUtil.obtenInputStream(cddocume);
+						FileUtils.copyInputStreamToFile(remoto, local);
 					}
 					
-					if(!apagado)
+					impresionService.imprimeDocumento(
+							filePath
+							,dsimpres
+							,Integer.parseInt(archivo.get("nmcopias")) //numCopias
+							,null                                      //mediaId
+							);
+					
+					if(test)
 					{
-						impresionService.imprimeDocumento(
-								Utils.join(rutaDocumentosPoliza,"/",archivo.get("ntramite"),"/",archivo.get("cddocume"))
-								,dsimpres
-								,Integer.parseInt(archivo.get("nmcopias")) //numCopias
-								,null                                      //mediaId
-								);
-						if(test)
-						{
-							apagado = true;
-						}
+						apagado = true;
 					}
 				}
 			}
+			
+			/*
 			else
 			{
 				for(Map<String,String>archivo:listaArchivos)
@@ -499,9 +534,10 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					}
 				}
 			}
+			*/
 			
 			paso = "Actualizando remesas, emisiones y endosos";
-			logger.debug("@@@@@@ paso: {}",paso);
+			sb.append("\n").append(paso);
 			
 			/*
 			 * en este procedimiento se actualizan las sumas,
@@ -512,7 +548,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			if("R".equals(tipolote))
 			{
 				paso = "Actualizando recibos";
-				logger.debug("@@@@@@ paso: {}",paso);
+				sb.append("\n").append(paso);
 				
 				List<DocumentoReciboParaMostrarDTO> listaRecibos = new ArrayList<DocumentoReciboParaMostrarDTO>();
 				for(Map<String,String> archivo : listaArchivos)
@@ -524,7 +560,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			}
 			
 			paso = "Recuperando remesas del lote";
-			logger.debug("@@@@@@ paso: {}",paso);
+			sb.append("\n").append(paso);
 			
 			List<Map<String,String>> remesas = mesaControlDAO.recuperarTramites(
 					null  //cdunieco
@@ -554,7 +590,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			for(Map<String,String> remesa : remesas)
 			{
 				paso = "Guardando detalle de remesa";
-				logger.debug("@@@@@@ paso: {}",paso);
+				sb.append("\n").append(paso);
 				
 				mesaControlDAO.movimientoDetalleTramite(
 						remesa.get("ntramite")
@@ -586,13 +622,15 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso);
+			Utils.generaExcepcion(ex, paso, sb.toString());
 		}
 		
-		logger.debug(Utils.log(
+		sb.append(Utils.log(
 			     "\n@@@@@@ imprimirLote @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
+		
+		logger.debug(sb.toString());
 	}
 	
 	@Override

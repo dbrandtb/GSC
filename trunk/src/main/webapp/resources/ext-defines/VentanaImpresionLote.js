@@ -500,6 +500,7 @@ Ext.define('VentanaImpresionLote',
             Ext.Ajax.request(
             {
                 url      : _GLOBAL_URL_IMPRIMIR_LOTE
+                ,timeout : 1000*60*5
                 ,params  :
                 {
                     'params.lote'      : me.lote
