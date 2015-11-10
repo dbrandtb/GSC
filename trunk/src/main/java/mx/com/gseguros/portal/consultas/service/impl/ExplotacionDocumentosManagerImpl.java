@@ -437,8 +437,6 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				throw new ApplicationException("No soporta intercalada, consulte a desarrollo");
 			}
 			
-			Thread.sleep(1000l*60l*6l);
-			
 			paso = "Recuperando archivos";
 			sb.append("\n").append(paso);
 			
