@@ -17,6 +17,7 @@ import javax.print.PrintException;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.SimpleDoc;
+import javax.print.attribute.Attribute;
 import javax.print.attribute.AttributeSet;
 import javax.print.attribute.HashAttributeSet;
 import javax.print.attribute.HashPrintRequestAttributeSet;
@@ -119,12 +120,15 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 		if(formatoArchivo.equalsIgnoreCase("PDF")){
 			DocFlavor myFormat = DocFlavor.INPUT_STREAM.PDF;
 			myDoc = new SimpleDoc(textStream, myFormat, null);
+			logger.debug("Flavor encontrado: {}", myFormat);
 		}else if(formatoArchivo.equalsIgnoreCase("JPEG")){
 			DocFlavor myFormat = DocFlavor.INPUT_STREAM.JPEG;
 			myDoc = new SimpleDoc(textStream, myFormat, null);
+			logger.debug("Flavor encontrado: {}", myFormat);
 		}else if(formatoArchivo.equalsIgnoreCase("PNG")){
 			DocFlavor myFormat = DocFlavor.INPUT_STREAM.PNG;
 			myDoc = new SimpleDoc(textStream, myFormat, null);
+			logger.debug("Flavor encontrado: {}", myFormat);
 		}
 		PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
 		
@@ -203,7 +207,11 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 		DocPrintJob job = services[iPrinter].createPrintJob(); 
 		try { 
         	logger.info("Antes de imprimir");
-        	logger.info("configuracion de impresion: {}", aset);
+        	logger.debug("configuracion de impresion:");
+        	Attribute[] attrs = aset.toArray();
+            for (int i = 0; i < attrs.length; i++) {
+            	logger.info("\t\t{}: {}", attrs[i].getName(), attrs[i]);
+            }
             job.print(myDoc, aset);
             logger.info("Después de imprimir");
         } catch (PrintException pe) {
