@@ -203,6 +203,7 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 		DocPrintJob job = services[iPrinter].createPrintJob(); 
 		try { 
         	logger.info("Antes de imprimir");
+        	logger.info("configuracion de impresion: {}", aset);
             job.print(myDoc, aset);
             logger.info("Después de imprimir");
         } catch (PrintException pe) {

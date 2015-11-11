@@ -80,8 +80,8 @@ public class ImpresionServiceImpl implements ImpresionService {
 		PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet(); 
 		aset.add(new Copies(numCopias)); 
 		//aset.add(MediaSize.NA.ISO.A4.getMediaSizeName());
-		aset.add(MediaSize.ISO.A4.getMediaSizeName());
-		aset.add(Sides.DUPLEX);
+		//aset.add(MediaSize.ISO.A4.getMediaSizeName());
+		//aset.add(Sides.DUPLEX);
 		
 		
 		/*
@@ -132,8 +132,9 @@ public class ImpresionServiceImpl implements ImpresionService {
 		DocPrintJob job = services[iPrinter].createPrintJob(); 
 		try { 
         	logger.info("Antes de imprimir");
+        	logger.info("configuracion de impresion: {}", aset);
             job.print(myDoc, aset);
-            logger.info("Despu�s de imprimir");
+            logger.info("Despues de imprimir");
         } catch (PrintException pe) {
         	logger.error(pe.getMessage(), pe);
         }
@@ -314,8 +315,9 @@ public class ImpresionServiceImpl implements ImpresionService {
 		DocPrintJob job = printSrv.createPrintJob(); 
 		try { 
         	logger.info("Antes de imprimir");
+        	logger.info("configuracion de impresion: {}", aset);
             job.print(myDoc, aset);
-            logger.info("Despu�s de imprimir");
+            logger.info("Despues de imprimir");
         } catch (PrintException pe) {
         	logger.error(pe.getMessage(), pe);
         }
