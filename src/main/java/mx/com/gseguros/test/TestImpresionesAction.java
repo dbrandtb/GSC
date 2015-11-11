@@ -117,18 +117,20 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 		}
 		
 		Doc myDoc = null;
-		if(formatoArchivo.equalsIgnoreCase("PDF")){
+		if(formatoArchivo.equalsIgnoreCase("PDF")) {
 			DocFlavor myFormat = DocFlavor.INPUT_STREAM.PDF;
 			myDoc = new SimpleDoc(textStream, myFormat, null);
 			logger.debug("Flavor encontrado: {}", myFormat);
-		}else if(formatoArchivo.equalsIgnoreCase("JPEG")){
+		} else if(formatoArchivo.equalsIgnoreCase("JPEG")) {
 			DocFlavor myFormat = DocFlavor.INPUT_STREAM.JPEG;
 			myDoc = new SimpleDoc(textStream, myFormat, null);
 			logger.debug("Flavor encontrado: {}", myFormat);
-		}else if(formatoArchivo.equalsIgnoreCase("PNG")){
+		} else if(formatoArchivo.equalsIgnoreCase("PNG")) {
 			DocFlavor myFormat = DocFlavor.INPUT_STREAM.PNG;
 			myDoc = new SimpleDoc(textStream, myFormat, null);
 			logger.debug("Flavor encontrado: {}", myFormat);
+		} else {
+			logger.error("Formato inexistente: {}. No hay un Flavor definido", formatoArchivo);
 		}
 		PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
 		
