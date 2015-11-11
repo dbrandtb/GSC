@@ -148,6 +148,12 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 			} else if( "A4".equals(params.get("mediaSize")) ) {
 				aset.add(MediaSize.ISO.A4.getMediaSizeName());
 				logger.debug("Se configura tipo de hoja a {}", params.get("mediaSize"));
+			} else if( "LETTER".equals(params.get("mediaSize")) ) {
+				aset.add(MediaSize.NA.LETTER.getMediaSizeName());
+				logger.debug("Se configura tipo de hoja a {}", params.get("mediaSize"));
+			} else if( "LEGAL".equals(params.get("mediaSize")) ) {
+				aset.add(MediaSize.NA.LEGAL.getMediaSizeName());
+				logger.debug("Se configura tipo de hoja a {}", params.get("mediaSize"));
 			}
 		}
 		//aset.add(MediaSize.NA.LETTER.getMediaSizeName());
