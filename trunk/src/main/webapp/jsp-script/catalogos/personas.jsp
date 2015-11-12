@@ -275,9 +275,7 @@ Ext.onReady(function()
 					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_modoRecuperaDanios?'Continuar y Recuperar Cliente':'Continuar y Editar Cliente');
 					            	}, 
 					            	keydown: function( com, e, eOpts ){
-					            		_RFCsel = '';
 					            		var form=_p22_formBusqueda();
-					            		form.down('[name=smap1.nombre]').reset();
 					            		
 					            		if(e.isSpecialKey() || e.isNavKeyPress() || e.getKey() == e.CONTEXT_MENU || e.getKey() == e.HOME || e.getKey() == e.NUM_CENTER 
 						            		|| e.getKey() == e.F1 || e.getKey() == e.F2 || e.getKey() == e.F3 || e.getKey() == e.F4 || e.getKey() == e.F5 || e.getKey() == e.F6 
@@ -286,12 +284,13 @@ Ext.onReady(function()
 						            				form.down('[name=smap1.rfc]').getStore().removeAll();
 						            			}
 					            		}else{
+					            			_RFCsel = '';
+						            		form.down('[name=smap1.nombre]').reset();
 					            			form.down('[name=smap1.rfc]').getStore().removeAll();
-					            		}
 					            			
+					            			Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_esCargaClienteNvo?'Continuar': (_modoSoloEdicion?'Seleccione...' : 'Continuar y Agregar Cliente') );
+					            		}
 					            		
-					            		
-					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_esCargaClienteNvo?'Continuar': (_modoSoloEdicion?'Seleccione...' : 'Continuar y Agregar Cliente') );
 					            	},
 					            	change: function(me, val, oldVal, eopts){
 						    				try{
@@ -428,13 +427,22 @@ Ext.onReady(function()
 					            		form.down('[name=smap1.rfc]').reset();
 					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_modoRecuperaDanios?'Continuar y Recuperar Cliente':'Continuar y Editar Cliente');
 					            	}, 
-					            	keydown: function(){
-					            		_RFCnomSel = '';
+					            	keydown: function( com, e, eOpts ){
 					            		var form=_p22_formBusqueda();
-					            		form.down('[name=smap1.rfc]').reset();
-					            		form.down('[name=smap1.nombre]').getStore().removeAll();
 					            		
-					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_esCargaClienteNvo?'Continuar': (_modoSoloEdicion?'Seleccione...' : 'Continuar y Agregar Cliente') );
+					            		if(e.isSpecialKey() || e.isNavKeyPress() || e.getKey() == e.CONTEXT_MENU || e.getKey() == e.HOME || e.getKey() == e.NUM_CENTER 
+						            		|| e.getKey() == e.F1 || e.getKey() == e.F2 || e.getKey() == e.F3 || e.getKey() == e.F4 || e.getKey() == e.F5 || e.getKey() == e.F6 
+						            		|| e.getKey() == e.F7 || e.getKey() == e.F8 || e.getKey() == e.F9 || e.getKey() == e.F10 || e.getKey() == e.F11 || e.getKey() == e.F12){
+						            			if(e.getKey() == e.BACKSPACE){
+						            				form.down('[name=smap1.nombre]').getStore().removeAll();
+						            			}
+					            		}else{
+					            			_RFCnomSel = '';
+						            		form.down('[name=smap1.rfc]').reset();
+						            		form.down('[name=smap1.nombre]').getStore().removeAll();
+					            			
+					            			Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_esCargaClienteNvo?'Continuar': (_modoSoloEdicion?'Seleccione...' : 'Continuar y Agregar Cliente') );
+					            		}
 					            	},
 					            	change: function(me, val){
 						    				try{
@@ -619,7 +627,7 @@ Ext.onReady(function()
 										    	
 										    	var confirm = Ext.Msg.show({
 							    		            title: 'Confirmar acci&oacute;n',
-							    		            msg: 'Este RFC ya existe. &iquest;Desea duplicar este cliente?, de no ser as&iacute; seleccione un elemento de la lista.',
+							    		            msg: 'Este RFC ya est&aacute; registrado. &iquest;Desea capturar otro cliente con este mismo RFC?<br/> De no ser as&iacute; vuelva a seleccionar un cliente de la b&uacute;squeda.',
 							    		            buttons: Ext.Msg.YESNO,
 							    		            fn: function(buttonId, text, opt) {
 							    		            	if(buttonId == 'yes') {
@@ -684,7 +692,7 @@ Ext.onReady(function()
 												form.down('[name=smap1.nombre]').reset();
 												form.down('[name=smap1.nombre]').getStore().removeAll();
 											}else{
-												mensajeWarning('Para agregar una persona nueva llene el campo de RFC.');
+												mensajeWarning('Seleccione un cliente de la b&uacute;squeda.');
 											}
 											
 											return;
