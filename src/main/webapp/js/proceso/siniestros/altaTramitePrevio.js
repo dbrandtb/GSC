@@ -3,7 +3,7 @@ Ext.onReady(function() {
 	var valorIndexSeleccionado= null;
 	Ext.selection.CheckboxModel.override( {
 		mode: 'SINGLE',
-		allowDeselect: true
+		allowDeselect: true 
 	});
 
 	//Models:
@@ -1054,7 +1054,7 @@ Ext.onReady(function() {
 	            					panelInicialPral.down('[name="idNumPolizaInt"]').setValue(record.get('numPoliza'));
 	            					panelInicialPral.down('[name="txtTelefono"]').setValue(record.get('telefono'));
 	            					panelInicialPral.down('[name="txtEmail"]').setValue(record.get('email'));
-	            					
+	            					panelInicialPral.down('[name="txtAutEspecial"]').setValue("0");
 	            					storeAsegurados2.load({
 										params:{
 											'params.cdunieco': record.get('cdunieco'),
@@ -1083,9 +1083,50 @@ Ext.onReady(function() {
                 			}
                 		}else{
                 			// La fecha de ocurrencia no se encuentra en el rango de la poliza vigente
-                			Ext.Msg.show({
+                	 		centrarVentanaInterna(Ext.Msg.show({
+                		        title: 'Aviso',
+                		        msg: 'La fecha de ocurrencia se encuentra fuera del rango de la p&oacute;liza vigente.<br/> &iquest;Desea continuar ?',
+                		        buttons: Ext.Msg.YESNO,
+                		        icon: Ext.Msg.QUESTION,
+                		        fn: function(buttonId, text, opt){
+                		        	if(buttonId == 'yes'){
+                		        		panelInicialPral.down('[name="cdunieco"]').setValue(record.get('cdunieco'));
+    	            					panelInicialPral.down('[name="estado"]').setValue(record.get('estado'));
+    	            					panelInicialPral.down('[name="cdramo"]').setValue(record.get('cdramo'));
+    	            					panelInicialPral.down('[name="nmsituac"]').setValue(record.get('nmsituac'));
+    	            					panelInicialPral.down('[name="polizaAfectada"]').setValue(record.get('nmpoliza'));
+    	            					panelInicialPral.down('[name="idNmsolici"]').setValue(record.get('nmsolici'));
+    	            					panelInicialPral.down('[name="idNmsuplem"]').setValue(record.get('nmsuplem'));
+    	            					panelInicialPral.down('[name="idCdtipsit"]').setValue(record.get('cdtipsit'));
+    	            					panelInicialPral.down('[name="idNumPolizaInt"]').setValue(record.get('numPoliza'));
+    	            					panelInicialPral.down('[name="txtTelefono"]').setValue(record.get('telefono'));
+    	            					panelInicialPral.down('[name="txtEmail"]').setValue(record.get('email'));
+    	            					panelInicialPral.down('[name="txtAutEspecial"]').setValue("1");
+    	            					storeAsegurados2.load({
+    										params:{
+    											'params.cdunieco': record.get('cdunieco'),
+    											'params.cdramo': record.get('cdramo'),
+    											'params.estado': record.get('estado'),
+    											'params.nmpoliza': record.get('nmpoliza')
+    										}
+    									});
+    	            					
+    	            					modPolizasAltaTramite.hide();
+                		        	}else{
+                						modPolizasAltaTramite.hide();
+                						limpiarRegistros();
+                						if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
+                							panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
+                						}else{
+                							panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
+                						}
+                					}
+                		        	
+                		        }
+                		    }));
+                			/*Ext.Msg.show({
     	                    	title:'Error',
-    	                    	msg: 'La fecha de ocurrencia no se encuentra en el rango de la p&oacute;liza vigente',
+    	                    	msg: '2.- La fecha de ocurrencia no se encuentra en el rango de la p&oacute;liza vigente',
     	                    	buttons: Ext.Msg.OK,
     	                    	icon: Ext.Msg.ERROR
     	                	});
@@ -1095,13 +1136,13 @@ Ext.onReady(function() {
                 				panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
                 			}else{
                 				panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
-                			}
+                			}*/
                 		}
             		}else{
             			// El asegurado no se encuentra vigente
             			Ext.Msg.show({
 	                    	title:'Error',
-	                    	msg: 'El asegurado de la p&oacute;liza seleccionado no se encuentra vigente',
+	                    	msg: '3.- El asegurado de la p&oacute;liza seleccionado no se encuentra vigente',
 	                    	buttons: Ext.Msg.OK,
 	                    	icon: Ext.Msg.ERROR
 	                	});
@@ -1221,10 +1262,13 @@ Ext.onReady(function() {
 						}
 					},
 					{	xtype: 'numberfield',				fieldLabel: 'Tel&eacute;fono'				,name		: 'txtTelefono' 
-		                ,width		 : 300,					value		:'PENDIENTE'
+		                ,width		 : 300
 		            },
 		            {	xtype: 'textfield',					fieldLabel: 'Correo Electr&oacute;nico'	,name		: 'txtEmail'
-		                ,width		 : 300,					value		:'PENDIENTE'
+		                ,width		 : 300
+		            },
+		            {	xtype: 'textfield',					fieldLabel: 'Autorizacion'	,name		: 'txtAutEspecial'
+		                ,width		 : 300,					value: "0",			hidden:true
 		            },
 					{	colspan:2
 				 		,border: false

@@ -628,4 +628,14 @@ public interface SiniestrosManager {
 	public List<Map<String,String>> cargaHistorialCPTPagados(Map<String,String> params) throws Exception;
 	
 	public List<Map<String,String>> listaSiniestrosInfAsegurados(String ntramite) throws Exception;
+	
+	public List<GenericVO> getConsultaListaAseguraAutEspecial(String ntramite, String nfactura) throws Exception;
+	
+	public List<CoberturaPolizaVO> getConsultaListaCoberturaProducto(HashMap<String, Object> paramCobertura) throws Exception;
+	
+	public String guardaListaAutorizacionEspecial(HashMap<String, Object> paramsAutoriEspecial) throws Exception;
+	
+	public List<Map<String,String>> obtenerConfiguracionAutEspecial(HashMap<String, Object> paramsAutoriEspecial) throws Exception;
+	
+	public String asociarAutorizacionEspecial(HashMap<String, Object> paramAutEspecial) throws Exception;
 }

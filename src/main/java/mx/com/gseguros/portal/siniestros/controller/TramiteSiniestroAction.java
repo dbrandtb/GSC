@@ -147,6 +147,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			parMesCon.put("pv_otvalor09",params.get("cmbAseguradoAfectado"));
 			parMesCon.put("pv_otvalor10",params.get("dtFechaOcurrencia"));
 			parMesCon.put("pv_otvalor20",params.get("cmbRamos"));
+			parMesCon.put("pv_otvalor22",params.get("txtAutEspecial"));
 			parMesCon.put("pv_otvalor11",params.get("cmbProveedor"));
 			parMesCon.put("cdusuari"    ,usuario.getUser());
 			parMesCon.put("cdsisrol"    ,usuario.getRolActivo());
@@ -208,6 +209,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				modMesaControl.put("pv_otvalor11_i",params.get("cmbProveedor"));
 				modMesaControl.put("pv_otvalor15_i",params.get("idnombreBeneficiarioProv"));
 				modMesaControl.put("pv_otvalor20_i",params.get("cmbRamos"));
+				modMesaControl.put("pv_otvalor22_i",params.get("txtAutEspecial"));
 				
 				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 					modMesaControl.put("pv_otvalor12","7RDH");
@@ -328,9 +330,10 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			paramsTworkSinPagRem.put("pv_feocurre_i",renderFechas.parse(params.get("dtFechaOcurrencia")));
 			paramsTworkSinPagRem.put("pv_nfactura_i",null);
 			paramsTworkSinPagRem.put("pv_nmautser_i",null);
+			paramsTworkSinPagRem.put("pv_reqautes_i",params.get("txtAutEspecial"));
 			siniestrosManager.guardaListaTworkSin(paramsTworkSinPagRem);
 			
-			//Guardamos la informaciï¿½n del asegurado
+			//Guardamos la información del asegurado
 			HashMap<String, Object> paramsAsegurado = new HashMap<String, Object>();
 			paramsAsegurado.put("pv_cdunieco_i",params.get("cdunieco"));
 			paramsAsegurado.put("pv_cdramo_i",params.get("cmbRamos"));
@@ -696,9 +699,10 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				paramsTworkSin.put("pv_feocurre_i",	renderFechas.parse(datosTablas.get(i).get("modFechaOcurrencia").substring(8,10)+"/"+datosTablas.get(i).get("modFechaOcurrencia").substring(5,7)+"/"+datosTablas.get(i).get("modFechaOcurrencia").substring(0,4)));
 				paramsTworkSin.put("pv_nmautser_i",	null);
 				paramsTworkSin.put("pv_nfactura_i",	datosTablas.get(i).get("modFactura"));
+				paramsTworkSin.put("pv_reqautes_i", datosTablas.get(i).get("modtxtAutEspecial"));
 				siniestrosManager.guardaListaTworkSin(paramsTworkSin);
 				
-				//Guardamos la informaciï¿½n del asegurado
+				//Guardamos la información del asegurado
 				HashMap<String, Object> paramsAsegurado = new HashMap<String, Object>();
 				paramsAsegurado.put("pv_cdunieco_i",datosTablas.get(i).get("modUnieco"));
 				paramsAsegurado.put("pv_cdramo_i",datosTablas.get(i).get("modRamo"));
