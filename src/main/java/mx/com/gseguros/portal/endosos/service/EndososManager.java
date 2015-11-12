@@ -382,6 +382,7 @@ public interface EndososManager
 			,String cdusuari
 			,String cdtipsup
 			,String ntramite
+			,String cdsisrol
 			);
 	
 	/**

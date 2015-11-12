@@ -445,4 +445,6 @@ public interface ConsultasDAO
 			,String nmsuplem
 			,String ntramite
 			)throws Exception;
+	
+	public String recuperarDstipsupPorCdtipsup(String cdtipsup) throws Exception;
 }

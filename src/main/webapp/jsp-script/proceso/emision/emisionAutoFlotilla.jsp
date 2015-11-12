@@ -1118,7 +1118,7 @@ function _p31_mostrarVistaPrevia()
 	                                        }).show());
                                         };
                                         _generarRemesaClic(
-                                            me.up('panel')
+                                            false
                                             ,_p31_smap1.cdunieco
                                             ,_p31_smap1.cdramo
                                             ,'M'

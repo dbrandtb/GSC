@@ -260,8 +260,21 @@ function _p37_confirmar(boton)
             debug('### confirmar:',json);
             if(json.success)
             {
-                marendNavegacion(2);
-                mensajeCorrecto('Endoso generado',json.respuesta);
+                var callbackRemesa = function()
+                {
+                    marendNavegacion(2);
+                };
+                mensajeCorrecto('Endoso generado',json.respuesta,function()
+                {
+                    _generarRemesaClic(
+                        true
+                        ,_p37_smap1.CDUNIECO
+                        ,_p37_smap1.CDRAMO
+                        ,_p37_smap1.ESTADO
+                        ,_p37_smap1.NMPOLIZA
+                        ,callbackRemesa
+                    );
+                });
             }
             else
             {
@@ -322,6 +335,7 @@ function _p37_renderer(valor,mapeo,view)
     return valor;
 }
 ////// funciones //////
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 </head>
 <body><div id="_p37_divpri" style="height:500px;border:1px solid #999999;"></div></body>

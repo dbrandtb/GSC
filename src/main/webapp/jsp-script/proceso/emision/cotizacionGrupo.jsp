@@ -5244,7 +5244,7 @@ function _p21_emitir2(ventana,button)
 	                            }).show());
                             };
                             _generarRemesaClic(
-                                me.up('panel')
+                                false
                                 ,_p21_smap1.cdunieco
                                 ,_p21_smap1.cdramo
                                 ,'M'

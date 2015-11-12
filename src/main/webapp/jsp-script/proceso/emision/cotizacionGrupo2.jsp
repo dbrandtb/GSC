@@ -5743,7 +5743,7 @@ function _p25_emitir2(ventana,button)
 	                            }).show());
                             };
                             _generarRemesaClic(
-                                me.up('panel')
+                                false
                                 ,_p25_smap1.cdunieco
                                 ,_p25_smap1.cdramo
                                 ,'M'

@@ -6048,8 +6048,18 @@ function _p30_confirmarEndoso()
                 debug('### confirmar endoso:',json2);
                 if(json2.success)
                 {
-                    marendNavegacion(2);
-                    mensajeCorrecto('Endoso generado',json2.respuesta);
+                    var callbackRemesa = function() { marendNavegacion(2); };
+                    mensajeCorrecto('Endoso generado',json2.respuesta,function()
+                    {
+                        _generarRemesaClic(
+                            true
+                            ,_p30_smap1.CDUNIECO
+                            ,_p30_smap1.CDRAMO
+                            ,_p30_smap1.ESTADO
+                            ,_p30_smap1.NMPOLIZA
+                            ,callbackRemesa
+                        );
+                    });
                 }
                 else
                 {
@@ -6311,6 +6321,7 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json)
     }
 }
 ////// funciones //////
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 </head>
 <body><div id="_p30_divpri" style="height:1000px;"</body>

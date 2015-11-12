@@ -68,12 +68,26 @@ function _1_confirmar()
                 json=Ext.decode(response.responseText);
                 if(json.success==true)
                 {
-                    mensajeCorrecto('Guardar endoso',json.mensaje);
-                    //////////////////////////////
-                    ////// usa codigo padre //////
-                    marendNavegacion(2);
-                    ////// usa codigo padre //////
-                    //////////////////////////////
+                    var callbackRemesa = function()
+                    {
+                        //////////////////////////////
+                        ////// usa codigo padre //////
+                        marendNavegacion(2);
+                        ////// usa codigo padre //////
+                        //////////////////////////////
+                    };
+                    
+                    mensajeCorrecto('Guardar endoso',json.mensaje,function()
+                    {
+                        _generarRemesaClic(
+                            true
+                            ,_1_smap1.cdunieco
+                            ,_1_smap1.cdramo
+                            ,_1_smap1.estado
+                            ,_1_smap1.nmpoliza
+                            ,callbackRemesa
+                        );
+                    });
                 }
                 else
                 {
@@ -251,5 +265,6 @@ Ext.onReady(function()
     ////// contenido //////
     ///////////////////////
 });
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="_1_divPri"></div>

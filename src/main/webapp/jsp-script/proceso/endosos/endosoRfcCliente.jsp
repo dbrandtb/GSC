@@ -426,19 +426,32 @@ function _35_confirmar()
                 debug('datos recibidos:',json);
                 if(json.success==true)
                 {
-                    mensajeCorrecto('Endoso generado',json.mensaje);
+                    var callbackRemesa = function()
+                    {
+                        //////////////////////////////////
+                        ////// usa codigo del padre //////
+                        /*//////////////////////////////*/
+                        marendNavegacion(2);
                     
-                    //////////////////////////////////
-                    ////// usa codigo del padre //////
-                    /*//////////////////////////////*/
-                    marendNavegacion(2);
+    //                    if(!Ext.isEmpty(destruirContLoaderPersona)){
+    //							destruirContLoaderPersona();	                                
+    //	                }
+                        /*//////////////////////////////*/
+                        ////// usa codigo del padre //////
+                        //////////////////////////////////
+                    };
                     
-//                    if(!Ext.isEmpty(destruirContLoaderPersona)){
-//							destruirContLoaderPersona();	                                
-//	                }
-                    /*//////////////////////////////*/
-                    ////// usa codigo del padre //////
-                    //////////////////////////////////
+                    mensajeCorrecto('Endoso generado',json.mensaje,function()
+                    {
+                        _generarRemesaClic(
+                            true
+                            ,_35_smap1.CDUNIECO
+                            ,_35_smap1.CDRAMO
+                            ,_35_smap1.ESTADO
+                            ,_35_smap1.NMPOLIZA
+                            ,callbackRemesa
+                        );
+                    });
                 }
                 else
                 {
@@ -455,5 +468,6 @@ function _35_confirmar()
 };
 ////// funciones //////
 ///////////////////////
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="_35_divPri" style="height:1000px;"></div>

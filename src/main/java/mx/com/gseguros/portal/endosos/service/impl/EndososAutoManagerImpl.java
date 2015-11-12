@@ -31,6 +31,7 @@ import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.ThreadCounter;
+import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
@@ -1236,9 +1237,44 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,fechaEfecto
 					);
 			
-			String nmsuplem = (String) resParams.get("pv_nmsuplem_o");
-			String ntramite = (String) resParams.get("pv_ntramite_o");
+			String nmsuplem        = (String) resParams.get("pv_nmsuplem_o");
+			String ntramite        = (String) resParams.get("pv_ntramite_o");
 			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
+			String nsuplogi        = (String) resParams.get("pv_nsuplogi_o");
+			
+			Map<String,String> datosPoliza = consultasDAO.recuperarDatosPolizaParaDocumentos(cdunieco, cdramo, estado, nmpoliza);
+			String ntramiteEmi = datosPoliza.get("ntramite");
+			
+			Map<String,String> valores = new HashMap<String,String>();
+			valores.put("otvalor01" , ntramiteEmi);
+			valores.put("otvalor02" , cdtipsup);
+			valores.put("otvalor03" , consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup));
+			valores.put("otvalor04" , nsuplogi);
+			valores.put("otvalor05" , cdusuari);
+			
+			mesaControlDAO.movimientoMesaControl(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,cdunieco
+					,cdunieco
+					,TipoTramite.ENDOSO.getCdtiptra()
+					,fechaEfecto
+					,null //cdagente
+					,null //referencia
+					,null //nombre
+					,fechaEfecto
+					,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
+					,null //comments
+					,null //nmsolici
+					,null //cdtipsit
+					,valores
+					,cdusuari
+					,usuarioSesion.getRolActivo().getClave()
+					,null
+					);
 			
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
@@ -1486,10 +1522,44 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,fechaEfecto
 					);
 			
-			String nmsuplem = (String) resParams.get("pv_nmsuplem_o");
-			String ntramite = (String) resParams.get("pv_ntramite_o");
-			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
+			String nmsuplem        = (String)resParams.get("pv_nmsuplem_o");
+			String ntramite        = (String)resParams.get("pv_ntramite_o");
+			String tipoGrupoInciso = (String)resParams.get("pv_tipoflot_o");
+			String nsuplogi        = (String)resParams.get("pv_nsuplogi_o");
 			
+			Map<String,String> datosPoliza = consultasDAO.recuperarDatosPolizaParaDocumentos(cdunieco, cdramo, estado, nmpoliza);
+			String             ntramiteEmi = datosPoliza.get("ntramite");
+			
+			Map<String,String> valores = new HashMap<String,String>();
+			valores.put("otvalor01" , ntramiteEmi);
+			valores.put("otvalor02" , cdtipsup);
+			valores.put("otvalor03" , consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup));
+			valores.put("otvalor04" , nsuplogi);
+			valores.put("otvalor05" , cdusuari);
+			
+			mesaControlDAO.movimientoMesaControl(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,cdunieco
+					,cdunieco
+					,TipoTramite.ENDOSO.getCdtiptra()
+					,fechaEfecto
+					,null //cdagente
+					,null //referencia
+					,null //nombre
+					,fechaEfecto
+					,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
+					,null //comments
+					,null //nmsolici
+					,null //cdtipsit
+					,valores
+					,cdusuari
+					,usuarioSesion.getRolActivo().getClave()
+					,null
+					);
 
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
@@ -2394,21 +2464,23 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String fechaEndoso
 			,Date dFechaEndoso
 			,Map<String, String> otvalores
+			,String cdsisrol
 		)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
-				,"\n@@@@@@ cdunieco="         , cdunieco
-				,"\n@@@@@@ cdramo="           , cdramo
-				,"\n@@@@@@ estado="           , estado
-				,"\n@@@@@@ nmpoliza="         , nmpoliza
-				,"\n@@@@@@ cdelemen="         , cdelemen
-				,"\n@@@@@@ cdusuari="         , cdusuari
-				,"\n@@@@@@ cdtipsup="         , cdtipsup
-				,"\n@@@@@@ fechaEndoso="      , fechaEndoso
-				,"\n@@@@@@ dFechaEndoso="     , dFechaEndoso
-				,"\n@@@@@@ otvalores="        , otvalores
+				,"\n@@@@@@ cdunieco="     , cdunieco
+				,"\n@@@@@@ cdramo="       , cdramo
+				,"\n@@@@@@ estado="       , estado
+				,"\n@@@@@@ nmpoliza="     , nmpoliza
+				,"\n@@@@@@ cdelemen="     , cdelemen
+				,"\n@@@@@@ cdusuari="     , cdusuari
+				,"\n@@@@@@ cdtipsup="     , cdtipsup
+				,"\n@@@@@@ fechaEndoso="  , fechaEndoso
+				,"\n@@@@@@ dFechaEndoso=" , dFechaEndoso
+				,"\n@@@@@@ otvalores="    , otvalores
+				,"\n@@@@@@ cdsisrol="     , cdsisrol
 				));
 		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
 		String paso = "";
@@ -2441,6 +2513,36 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			logger.info(paso);
 			endososDAO.confirmarEndosoB(cdunieco,cdramo,estado,nmpoliza,nmsuplem, nsuplogi, cdtipsup, null);
 			
+			Map<String,String> valores = new HashMap<String,String>();
+			valores.put("otvalor01" , ntramite);
+			valores.put("otvalor02" , cdtipsup);
+			valores.put("otvalor03" , consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup));
+			valores.put("otvalor04" , nsuplogi);
+			valores.put("otvalor05" , cdusuari);
+			
+			mesaControlDAO.movimientoMesaControl(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,cdunieco
+					,cdunieco
+					,TipoTramite.ENDOSO.getCdtiptra()
+					,dFechaEndoso
+					,null //cdagente
+					,null //referencia
+					,null //nombre
+					,dFechaEndoso
+					,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
+					,null //comments
+					,null //nmsolici
+					,null //cdtipsit
+					,valores
+					,cdusuari
+					,cdsisrol
+					,null
+					);
 			
 			if(this.endosoAseguradoAlterno(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup)){
 				logger.info("Endoso de endosoAseguradoAlterno exitoso...");
@@ -2915,10 +3017,44 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			Map<String,Object> resParams = endososDAO.guardarEndosoClaveAuto(cdunieco, cdramo, estado, nmpoliza, feefectoD, tstamp, cdusuari, cdelemen, cdtipsup);
 			
+			String nmsuplemGen     = (String)resParams.get("pv_nmsuplem_o");
+			String ntramite        = (String)resParams.get("pv_ntramite_o");
+			String tipoGrupoInciso = (String)resParams.get("pv_tipoflot_o");
+			String nsuplogi        = (String)resParams.get("pv_nsuplogi_o");
 			
-			String nmsuplemGen = (String) resParams.get("pv_nmsuplem_o");
-			String ntramite = (String) resParams.get("pv_ntramite_o");
-			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
+			Map<String,String> datosPoliza = consultasDAO.recuperarDatosPolizaParaDocumentos(cdunieco, cdramo, estado, nmpoliza);
+			String ntramiteEmi = datosPoliza.get("ntramite");
+			
+			Map<String,String> valoresTra = new HashMap<String,String>();
+			valoresTra.put("otvalor01" , ntramiteEmi);
+			valoresTra.put("otvalor02" , cdtipsup);
+			valoresTra.put("otvalor03" , consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup));
+			valoresTra.put("otvalor04" , nsuplogi);
+			valoresTra.put("otvalor05" , cdusuari);
+			
+			mesaControlDAO.movimientoMesaControl(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplemGen
+					,cdunieco
+					,cdunieco
+					,TipoTramite.ENDOSO.getCdtiptra()
+					,feefectoD
+					,null //cdagente
+					,null //referencia
+					,null //nombre
+					,feefectoD
+					,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
+					,null //comments
+					,null //nmsolici
+					,null //cdtipsit
+					,valoresTra
+					,cdusuari
+					,usuarioSesion.getRolActivo().getClave()
+					,null
+					);
 			
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
@@ -4957,6 +5093,36 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			endososDAO.confirmarEndosoB(cdunieco,cdramo,estado,nmpoliza,nmsuplem, nsuplogi, cdtipsup, null);
 			
+			Map<String,String> valores = new HashMap<String,String>();
+			valores.put("otvalor01" , ntramite);
+			valores.put("otvalor02" , cdtipsup);
+			valores.put("otvalor03" , consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup));
+			valores.put("otvalor04" , nsuplogi);
+			valores.put("otvalor05" , cdusuari);
+			
+			mesaControlDAO.movimientoMesaControl(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,cdunieco
+					,cdunieco
+					,TipoTramite.ENDOSO.getCdtiptra()
+					,dFechaEndoso
+					,null //cdagente
+					,null //referencia
+					,null //nombre
+					,dFechaEndoso
+					,status
+					,null //comments
+					,null //nmsolici
+					,null //cdtipsit
+					,valores
+					,cdusuari
+					,usuarioSesion.getRolActivo().getClave()
+					,null
+					);
 
 			String nmsuplemGen = nmsuplem;
 
