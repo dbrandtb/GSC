@@ -3839,6 +3839,13 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		SimpleDateFormat spdf = new SimpleDateFormat("dd/MM/yyyy");
     		Calendar cal;
     		
+    		String llaveCli = rs.getString("llaveCli"); 
+    		Integer claveCli = null;
+    		
+    		if(StringUtils.isNotBlank(llaveCli)){
+    			claveCli = Integer.valueOf(llaveCli.substring(llaveCli.length()-10));
+    		}
+    		
     		cliente.setAgrupaCli(rs.getInt("agrupaCli"));
     		cliente.setApellidomCli(rs.getString("apellidomCli"));
     		cliente.setApellidopCli(rs.getString("apellidopCli"));
@@ -3848,7 +3855,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setCanconCli(rs.getInt("canconCli"));
     		cliente.setCelularCli(rs.getString("celularCli"));
     		cliente.setCheqdevCli(rs.getInt("cheqdevCli"));
-    		cliente.setClaveCli(rs.getInt("claveCli"));
+    		cliente.setClaveCli(claveCli);//cliente.setClaveCli(rs.getInt("claveCli"));
     		cliente.setCodcarCli(rs.getInt("codcarCli"));
     		cliente.setCodposCli(rs.getString("codposCli"));
     		cliente.setColcarCli(rs.getString("colcarCli"));
