@@ -1,4 +1,5 @@
 <%@ include file="/taglibs.jsp"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <script>
 ///////////////////////
 ////// variables //////
@@ -86,18 +87,33 @@ function endvalbasSumit(form,confirmar)
                     {
                         title   : 'Endoso generado',
                         msg     : json.mensaje,
-                        buttons : Ext.Msg.OK
+                        buttons : Ext.Msg.OK,
+                        fn      : function()
+                        {
+                            if(confirmar=='si')
+                            {
+                                var callbackRemesa = function()
+                                {
+                                    //////////////////////////////////
+                                    ////// usa codigo del padre //////
+                                    /*//////////////////////////////*/
+                                    marendNavegacion(2);
+                                    /*//////////////////////////////*/
+                                    ////// usa codigo del padre //////
+                                    //////////////////////////////////
+                                };
+                                
+                                _generarRemesaClic(
+                                    true
+                                    ,pantallaValositInput['cdunieco']
+                                    ,pantallaValositInput['cdramo']
+                                    ,pantallaValositInput['estado']
+                                    ,pantallaValositInput['nmpoliza']
+                                    ,callbackRemesa
+                                );
+                            }
+                        }
                     });
-                    if(confirmar=='si')
-                    {
-                    	//////////////////////////////////
-                        ////// usa codigo del padre //////
-                        /*//////////////////////////////*/
-                        marendNavegacion(2);
-                        /*//////////////////////////////*/
-                        ////// usa codigo del padre //////
-                        //////////////////////////////////
-                    }
                 },
                 failure:function(action,response)
                 {
@@ -328,5 +344,6 @@ Ext.onReady(function()
     ////// cargador //////
     //////////////////////
 });
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="maindivpantallavalosit" style="min-height:150px;"></div>

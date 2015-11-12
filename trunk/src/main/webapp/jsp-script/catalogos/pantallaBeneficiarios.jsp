@@ -1,5 +1,5 @@
 <%@ include file="/taglibs.jsp"%>
-<%@page contentType="text/html" pageEncoding="utf-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -444,21 +444,35 @@ function _p32_guardarClic()
                     }
                     else
                     {
-                        mensajeCorrecto('Datos guardados','Endoso generado');
-                        try
+                        var callbackRemesa = function()
                         {
-                            //////////////////////////////////
-                            ////// usa codigo del padre //////
-                            /*//////////////////////////////*/
-                            marendNavegacion(2);
-                            /*//////////////////////////////*/
-                            ////// usa codigo del padre //////
-                            //////////////////////////////////
-                        }
-                        catch(e)
+                            try
+                            {
+                                //////////////////////////////////
+                                ////// usa codigo del padre //////
+                                /*//////////////////////////////*/
+                                marendNavegacion(2);
+                                /*//////////////////////////////*/
+                                ////// usa codigo del padre //////
+                                //////////////////////////////////
+                            }
+                            catch(e)
+                            {
+                                manejaException(e,'Reiniciando navegacion');
+                            }
+                        };
+                        
+                        mensajeCorrecto('Datos guardados','Endoso generado',function()
                         {
-                            manejaException(e,'Reiniciando navegacion');
-                        }
+                            _generarRemesaClic(
+                                true
+                                ,_p32_smap1.cdunieco
+                                ,_p32_smap1.cdramo
+                                ,_p32_smap1.estado
+                                ,_p32_smap1.nmpoliza
+                                ,callbackRemesa
+                            );
+                        });
                     }
                 }
                 else
@@ -481,6 +495,7 @@ function _p32_guardarClic()
     debug('<_p32_guardarClic');
 }
 ////// funciones //////
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 </head>
 <body>

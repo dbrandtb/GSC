@@ -11,12 +11,12 @@ var _impLotUrlGenerarRemesa = '<s:url namespace="/consultas"    action="generarR
 ////// variables //////
 
 ////// funciones //////
-function _generarRemesaClic(loadCmp,cdunieco,cdramo,estado,nmpoliza,callback)
+function _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback)
 {
     var ck = 'Iniciando generaci\u00F3n de remesa';
     try
     {
-        debug('loadCmp?'+!Ext.isEmpty(loadCmp)+','+cdunieco+','+cdramo+','+estado+','+nmpoliza+',callback?'+!Ext.isEmpty(callback));
+        alert('required?'+required+','+cdunieco+','+cdramo+','+estado+','+nmpoliza+',callback?'+!Ext.isEmpty(callback));
         
         var _impLot_impresionClic;
         
@@ -28,6 +28,7 @@ function _generarRemesaClic(loadCmp,cdunieco,cdramo,estado,nmpoliza,callback)
             ,height      : 200
             ,closeAction : 'destroy'
             ,modal       : true
+            ,closable    : !required
             ,items       :
             [
                 {

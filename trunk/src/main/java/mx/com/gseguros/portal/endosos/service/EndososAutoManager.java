@@ -152,6 +152,7 @@ public interface EndososAutoManager
 			,String fechaEndoso
 			,Date dFechaEndoso
 			,Map<String, String> otvalores
+			,String cdsisrol
 			)throws Exception;
 	
 	public void guardarEndosoVigenciaPoliza(

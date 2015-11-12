@@ -996,7 +996,7 @@ function _p29_mostrarVistaPrevia()
 	                                        }).show());
                                         };
                                         _generarRemesaClic(
-                                            me.up('panel')
+                                            false
                                             ,_p29_smap1.cdunieco
                                             ,_p29_smap1.cdramo
                                             ,'M'

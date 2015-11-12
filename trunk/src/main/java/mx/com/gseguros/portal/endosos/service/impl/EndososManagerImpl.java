@@ -1788,7 +1788,8 @@ public class EndososManagerImpl implements EndososManager
 			,String cdelemen
 			,String cdusuari
 			,String cdtipsup
-			,String ntramite
+			,String ntramiteEmi
+			,String cdsisrol
 			)
 	{
 		logger.debug(Utils.log(
@@ -1803,6 +1804,8 @@ public class EndososManagerImpl implements EndososManager
 				,"\n@@@@@@ cdelemen="         , cdelemen
 				,"\n@@@@@@ cdusuari="         , cdusuari
 				,"\n@@@@@@ cdtipsup="         , cdtipsup
+				,"\n@@@@@@ ntramiteEmi="      , ntramiteEmi
+				,"\n@@@@@@ cdsisrol="         , cdsisrol
 				));
 
 		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
@@ -1991,6 +1994,37 @@ public class EndososManagerImpl implements EndososManager
 			setCheckpoint("Confirmando endoso");
 			endososDAO.confirmarEndosoB(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nsuplogi,cdtipsup,"");
 			
+			setCheckpoint("Guardando tr\u00e1mite");
+			Map<String,String>valores=new HashMap<String,String>();
+			valores.put("otvalor01" , ntramiteEmi);
+			valores.put("otvalor02" , cdtipsup);
+			valores.put("otvalor03" , consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup));
+			valores.put("otvalor04" , nsuplogi);
+			valores.put("otvalor05" , cdusuari);
+			
+			mesaControlDAO.movimientoMesaControl(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,cdunieco
+					,cdunieco
+					,TipoTramite.ENDOSO.getCdtiptra()
+					,new Date()
+					,null
+					,null
+					,null
+					,new Date()
+					,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
+					,""
+					,null
+					,null //cdtipsit << no lo tengo
+					,valores
+					,cdusuari
+					,cdsisrol, null
+					);
+			
 			setCheckpoint("Reimprimiendo documentos");
 			
 			documentosManager.generarDocumentosParametrizados(
@@ -2001,7 +2035,7 @@ public class EndososManagerImpl implements EndososManager
 					,"0" //nmsituac
 					,nmsuplem
 					,DocumentosManager.PROCESO_ENDOSO //proceso
-					,ntramite
+					,ntramiteEmi
 					,null //nmsolici
 					);
 			

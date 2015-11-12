@@ -251,15 +251,28 @@ function _6_confirmar()
 				debug('datos recibidos:',json);
 				if(json.success==true)
 				{
-					mensajeCorrecto('Endoso generado',json.mensaje);
-					
-					//////////////////////////////////
-                    ////// usa codigo del padre //////
-                    /*//////////////////////////////*/
-                    marendNavegacion(2);
-                    /*//////////////////////////////*/
-                    ////// usa codigo del padre //////
-                    //////////////////////////////////
+					var callbackRemesa = function()
+					{
+					    //////////////////////////////////
+                        ////// usa codigo del padre //////
+                        /*//////////////////////////////*/
+                        marendNavegacion(2);
+                        /*//////////////////////////////*/
+                        ////// usa codigo del padre //////
+                        //////////////////////////////////
+                    };
+                    
+                    mensajeCorrecto('Endoso generado',json.mensaje,function()
+                    {
+                        _generarRemesaClic(
+                            true
+                            ,_6_smap1.CDUNIECO
+                            ,_6_smap1.CDRAMO
+                            ,_6_smap1.ESTADO
+                            ,_6_smap1.NMPOLIZA
+                            ,callbackRemesa
+                        );
+                    });
 				}
 				else
 				{
@@ -276,5 +289,6 @@ function _6_confirmar()
 };
 ////// funciones //////
 ///////////////////////
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="_6_divPri" style="height:1000px;"></div>

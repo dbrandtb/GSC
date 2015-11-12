@@ -3488,4 +3488,31 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public String recuperarDstipsupPorCdtipsup(String cdtipsup) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdtipsup" , cdtipsup);
+		Map<String,Object> procRes  = ejecutaSP(new RecuperarDstipsupPorCdtipsup(getDataSource()),params);
+		String             dstipsup = (String)procRes.get("pv_dstipsup_o");
+		if(StringUtils.isBlank(dstipsup))
+		{
+			throw new ApplicationException(Utils.join("No hay nombre de suplemento para clave ",cdtipsup));
+		}
+		return dstipsup;
+	}
+	
+	protected class RecuperarDstipsupPorCdtipsup extends StoredProcedure
+	{
+		protected RecuperarDstipsupPorCdtipsup(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_DSTIPSUP_X_CDTIPSUP");
+			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_dstipsup_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

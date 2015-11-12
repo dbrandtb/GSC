@@ -97,8 +97,23 @@
 				   						    success:function(response,opts){
 				   						    	 panelMask.hide();
 				   						         var jsonResp = Ext.decode(response.responseText);
-				   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,null);
-				   						      	 marendNavegacion(2);
+				   						         
+				   						         var callbackRemesa = function()
+				   						         {
+				   						             marendNavegacion(2);
+				   						         };
+				   						         
+				   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,function()
+				   						      	 {
+				   						      	     _generarRemesaClic(
+				   						      	         true
+				   						      	         ,paramsEntrada.CDUNIECO
+				   						      	         ,paramsEntrada.CDRAMO
+				   						      	         ,paramsEntrada.ESTADO
+				   						      	         ,paramsEntrada.NMPOLIZA
+				   						      	         ,callbackRemesa
+				   						      	     );
+				   						      	 });
 				   						    },
 				   						    failure:function(response,opts){
 				   						        panelMask.hide();
@@ -134,5 +149,6 @@
             
 
     });
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="mainDivDespago" style="height:1000px;"></div>

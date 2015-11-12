@@ -1392,7 +1392,7 @@ function _datComTurnarSuscripcion()
 									                                                                        }).show();
 								                                                                        };
 								                                                                        _generarRemesaClic(
-								                                                                            me.up('panel')
+								                                                                            false
 								                                                                            ,inputCdunieco
 								                                                                            ,inputCdramo
 								                                                                            ,'M'

@@ -892,7 +892,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 					status,
 					fechaEndoso,
 					dFechaEndoso,
-					otvalores);
+					otvalores,
+					cdsisrol
+					);
 			
 			respuesta = "Endoso generado correctamente";
 			success   = true;

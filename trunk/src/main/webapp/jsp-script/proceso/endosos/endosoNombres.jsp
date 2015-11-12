@@ -314,7 +314,7 @@ Ext.onReady(function(){
                     						//////////////////////////////////
                     						////// usa codigo del padre //////
                     						/*//////////////////////////////*/
-                    						marendNavegacion(2);
+                    						var callbackRemesa = function(){ marendNavegacion(2); };
                                             /*//////////////////////////////*/
                                             ////// usa codigo del padre //////
                     						//////////////////////////////////
@@ -323,6 +323,17 @@ Ext.onReady(function(){
                                                 title   : 'Endoso generado',
                                                 msg     : json.mensaje,
                                                 buttons : Ext.Msg.OK
+                                                ,fn     : function()
+                                                {
+                                                    _generarRemesaClic(
+                                                        true
+                                                        ,endnomInput['cdunieco']
+                                                        ,endnomInput['cdramo']
+                                                        ,endnomInput['estado']
+                                                        ,endnomInput['nmpoliza']
+                                                        ,callbackRemesa
+                                                    );
+                                                }
                                             });
                     					}
                     					else
@@ -404,5 +415,6 @@ Ext.onReady(function(){
 	//////////////////////
 
 });
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="endnomDivPri"></div>

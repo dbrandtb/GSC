@@ -180,8 +180,21 @@ Ext.onReady(function()
                                     debug('### confirmar:',json);
                                     if(json.success)
                                     {
-                                        marendNavegacion(2);
-                                        mensajeCorrecto('Endoso generado','Endoso generado');
+                                        var callbackRemesa = function()
+                                        {
+                                            marendNavegacion(2);
+                                        };
+                                        mensajeCorrecto('Endoso generado','Endoso generado',function()
+                                        {
+                                            _generarRemesaClic(
+                                                true
+                                                ,_p41_smap1.CDUNIECO
+                                                ,_p41_smap1.CDRAMO
+                                                ,_p41_smap1.ESTADO
+                                                ,_p41_smap1.NMPOLIZA
+                                                ,callbackRemesa
+                                            );
+                                        });
                                     }
                                     else
                                     {
@@ -227,6 +240,7 @@ Ext.onReady(function()
 
 ////// funciones //////
 ////// funciones //////
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 </head>
 <body><div id="_p41_divpri" style="height:300px;border:1px solid #999999;"></div></body>

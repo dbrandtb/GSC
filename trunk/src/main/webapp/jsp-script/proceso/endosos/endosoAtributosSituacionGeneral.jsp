@@ -258,12 +258,26 @@ function _p27_confirmar(me)
                 debug('### confirmar endoso atributos general:',json);
                 if(json.exito)
                 {
-                    //////////////////////////////////
-                    ////// USA CODIGO DEL PADRE //////
-                    marendNavegacion(2);
-                    ////// USA CODIGO DEL PADRE //////
-                    //////////////////////////////////
-                    mensajeCorrecto('Endoso generado',json.respuesta);
+                    var callbackRemesa = function()
+                    {
+                        //////////////////////////////////
+                        ////// USA CODIGO DEL PADRE //////
+                        marendNavegacion(2);
+                        ////// USA CODIGO DEL PADRE //////
+                        //////////////////////////////////
+                    };
+                    
+                    mensajeCorrecto('Endoso generado',json.respuesta,function()
+                    {
+                        _generarRemesaClic(
+                            true
+                            ,_p27_smap1.CDUNIECO
+                            ,_p27_smap1.CDRAMO
+                            ,_p27_smap1.ESTADO
+                            ,_p27_smap1.NMPOLIZA
+                            ,callbackRemesa
+                        );
+                    });
                 }
                 else
                 {
@@ -280,5 +294,6 @@ function _p27_confirmar(me)
     debug('<_p27_confirmar');
 }
 ////// funciones //////
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="_p27_divpri"></div>

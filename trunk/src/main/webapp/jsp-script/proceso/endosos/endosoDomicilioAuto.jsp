@@ -313,12 +313,28 @@ Ext.onReady(function(){
                                 /*//////////////////////////////*/
                                 ////// usa codigo del padre //////
                                 //////////////////////////////////
+                                
+                                var callbackRemesa = function()
+                                {
+                                    marendNavegacion(2);
+                                };
+                                
                                 Ext.Msg.show({
                                     title:'Endoso generado',
                                     msg: json.mensaje,
                                     buttons: Ext.Msg.OK
+                                    ,fn    : function()
+                                    {
+                                        _generarRemesaClic(
+                                            true
+                                            ,inputCduniecop4
+                                            ,inputCdramop4
+                                            ,inputEstadop4
+                                            ,inputNmpolizap4
+                                            ,callbackRemesa
+                                        );
+                                    }
                                 });
-                                marendNavegacion(2);
                             },
                             failure:function(response,opts)
                             {
@@ -553,6 +569,7 @@ Ext.onReady(function(){
 	}
 
 });
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <%--
     </head>

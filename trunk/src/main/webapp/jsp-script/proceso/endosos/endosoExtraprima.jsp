@@ -683,15 +683,28 @@ function _8_confirmar()
                 debug('datos recibidos:',json);
                 if(json.success==true)
                 {
-                    mensajeCorrecto('Endoso generado',json.mensaje);
+                    var callbackRemesa = function()
+                    {
+                        //////////////////////////////////
+                        ////// usa codigo del padre //////
+                        /*//////////////////////////////*/
+                        marendNavegacion(2);
+                        /*//////////////////////////////*/
+                        ////// usa codigo del padre //////
+                        //////////////////////////////////
+                    };
                     
-                    //////////////////////////////////
-                    ////// usa codigo del padre //////
-                    /*//////////////////////////////*/
-                    marendNavegacion(2);
-                    /*//////////////////////////////*/
-                    ////// usa codigo del padre //////
-                    //////////////////////////////////
+                    mensajeCorrecto('Endoso generado',json.mensaje,function()
+                    {
+                        _generarRemesaClic(
+                            true
+                            ,_8_smap1.CDUNIECO
+                            ,_8_smap1.CDRAMO
+                            ,_8_smap1.ESTADO
+                            ,_8_smap1.NMPOLIZA
+                            ,callbackRemesa
+                        );
+                    });
                 }
                 else
                 {
@@ -708,5 +721,6 @@ function _8_confirmar()
 };
 ////// funciones //////
 ///////////////////////
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="_8_divPri" style="height:1000px;"></div>

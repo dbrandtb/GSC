@@ -6492,7 +6492,7 @@ public class EndososAction extends PrincipalCoreAction
 				Map<String,String> datosPoliza = documentosManager.generarDocumentosParametrizados(
 						cdunieco
 						,cdramo
-						,cdestado
+						,estado
 						,nmpoliza
 						,"0" //nmsituac
 						,nmsuplem
@@ -10689,6 +10689,7 @@ public class EndososAction extends PrincipalCoreAction
 			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
 			String cdelemen = ((UserVO)session.get("USUARIO")).getCdElemento();
 			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 			
 			ManagerRespuestaVoidVO resp=endososManager.guardarEndosoBeneficiarios(
 					cdunieco
@@ -10701,6 +10702,7 @@ public class EndososAction extends PrincipalCoreAction
 					,cdusuari
 					,cdtipsup
 					,ntramite
+					,cdsisrol
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
