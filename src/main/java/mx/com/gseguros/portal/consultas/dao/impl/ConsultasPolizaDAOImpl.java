@@ -681,7 +681,54 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     	}
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Map<String,String>> obtieneRecibosPolizaAuto(String cdunieco,String cdramo,String cdestado,String nmpoliza,String nmsuplem) throws Exception {
+    	HashMap<String, Object> params = new HashMap<String, Object>();
+    	params.put("pv_cdunieco_i", cdunieco);
+    	params.put("pv_cdramo_i"  , cdramo);
+    	params.put("pv_estado_i"  , cdestado);
+    	params.put("pv_nmpoliza_i", nmpoliza);
+    	params.put("pv_nmsuplem_i", nmsuplem);
+    	Map<String, Object> mapResult = ejecutaSP(new ObtieneRecibosPolizaAuto(getDataSource()), params);
+    	return (List<Map<String,String>>) mapResult.get("pv_registro_o");
+    	
+    }
+    
+    protected class ObtieneRecibosPolizaAuto extends StoredProcedure {
+    	protected ObtieneRecibosPolizaAuto(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA.P_GET_RECIBOS_AUTOS");
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
 
+    		String[] cols=new String[]{
+            		"FECINI"
+            		,"FECTER"
+            		,"TIPEND"
+            		,"NUMEND"
+            		,"NUMREC"
+            		,"TOTALREC"
+            		,"PRIMA"
+            		,"IVA"
+            		,"RECARGOS"
+            		,"DERECHOS"
+            		,"CESIONCOM"
+            		,"COMISIONPRIMA"
+            		,"COMISIONRECARGO"
+            		,"MODO"
+            		,"ESTATUS"
+            		,"CDESTADO"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
 	@Override
 	public List<AseguradoDetalleVO> obtieneAseguradoDetalle(
 			AseguradoVO asegurado) throws Exception {

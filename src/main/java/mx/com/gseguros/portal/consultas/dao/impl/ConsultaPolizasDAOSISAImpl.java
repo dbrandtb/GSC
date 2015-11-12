@@ -893,4 +893,11 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		return null;
 	}
 
+	@Override
+	public List<Map<String, String>> obtieneRecibosPolizaAuto(String cdunieco, String cdramo, String cdestado,
+			String nmpoliza, String nmsuplem) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

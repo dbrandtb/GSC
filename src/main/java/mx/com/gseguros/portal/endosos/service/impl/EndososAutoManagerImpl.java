@@ -23,6 +23,7 @@ import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
+import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.endosos.model.PropiedadesDeEndosoParaWS;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
@@ -3105,14 +3106,42 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 							cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, null);
 					
 					/**
-					 * Para Recibo 1
+					 * Para Recibos
 					 */
-					parametros = "?9999,0,"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",0,"+(StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+endosoIt.get("TIPOEND")+",1";
-					logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
-					mesaControlDAO.guardarDocumento(
-							cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-							new Date(), urlRecibo + parametros, "Recibo 1 ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")", nmpoliza, 
-							ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, null);
+					String visible = null;
+					HashMap<String,String> imprimir = new HashMap<String, String>(); 
+					
+					List<Map<String,String>> recibos = consultasPolizaDAO.obtieneRecibosPolizaAuto(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+					
+					if(recibos!= null && !recibos.isEmpty()){
+						for(Map<String,String> reciboIt : recibos){
+							
+							/**
+							 * Si el Recibo Tiene estatus 1 se guarda en tdocupol como documento de la poliza, excepto algunos endosos como el de forma de pago,
+							 * donde se generan recibos negativos para cancelar y esos no deben de guardarse, estos casos el estatus es distinto de 1
+							 */
+							if(!"1".equals(reciboIt.get("CDESTADO"))) continue;
+							
+							String llave = reciboIt.get("TIPEND") + reciboIt.get("NUMEND");
+							
+							if(!imprimir.containsKey(llave)){
+								visible = Constantes.SI;
+								imprimir.put(llave, reciboIt.get("NUMREC"));
+							}else{
+								visible = Constantes.NO;
+							}
+							
+							parametros = "?9999,0,"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",0,"+(StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+endosoIt.get("TIPOEND")+","+reciboIt.get("NUMREC");
+							
+							logger.debug("URL Generada para Recibo "+reciboIt.get("NUMREC")+": "+ urlRecibo + parametros);
+							mesaControlDAO.guardarDocumento(
+									cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
+									new Date(), urlRecibo + parametros, "Recibo  "+reciboIt.get("NUMREC")+"  ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")", nmpoliza, 
+									ntramite, cdtipsup, visible, null,
+									((TipoEndoso.EMISION_POLIZA.getCdTipSup().intValue() == Integer.parseInt(cdtipsup)) || (TipoEndoso.RENOVACION.getCdTipSup().intValue() == Integer.parseInt(cdtipsup)))?TipoTramite.POLIZA_NUEVA.getCdtiptra() : TipoTramite.ENDOSO.getCdtiptra()
+									, "0", Documento.RECIBO.getCdmoddoc());
+						}
+					}
 					
 					/**
 					 * Para AP inciso 1

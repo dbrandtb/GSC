@@ -408,5 +408,10 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 		return consultasPolizaDAOICE.obtieneTarifasPoliza(poliza);
 	}
 
+	@Override
+    public List<Map<String,String>> obtieneRecibosPolizaAuto(String cdunieco,String cdramo,String cdestado,String nmpoliza,String nmsuplem) throws Exception{
+		return consultasPolizaDAOICE.obtieneRecibosPolizaAuto(cdunieco, cdramo, cdestado, nmpoliza, nmsuplem);
+	}
+
 
 }
