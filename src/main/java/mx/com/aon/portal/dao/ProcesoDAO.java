@@ -3840,10 +3840,10 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		Calendar cal;
     		
     		String llaveCli = rs.getString("llaveCli"); 
-    		Integer claveCli = null;
+    		int claveCli = 0;
     		
     		if(StringUtils.isNotBlank(llaveCli)){
-    			claveCli = Integer.valueOf(llaveCli.substring(llaveCli.length()-10));
+    			claveCli = Integer.parseInt(llaveCli.substring(llaveCli.length()-10));
     		}
     		
     		cliente.setAgrupaCli(rs.getInt("agrupaCli"));
