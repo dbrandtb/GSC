@@ -499,4 +499,13 @@ public interface SiniestrosDAO {
 	
 	public List<Map<String,String>> listaSiniestrosInfAsegurados(Map<String, String> params) throws Exception;
 	
+	public List<GenericVO> obtieneListaAseguraAutEspecial(String ntramite, String nfactura) throws Exception;
+	
+	public List<CoberturaPolizaVO> obtieneListadoCoberturaProducto(HashMap<String, Object> paramCobertura) throws Exception;
+	
+	public String guardaListaAutorizacionEspecial(HashMap<String, Object> paramsAutoriEspecial) throws Exception;
+	
+	public List<Map<String,String>> obtenerConfiguracionAutEspecial(HashMap<String, Object> paramsAutoriEspecial) throws Exception;
+	
+	public String asociarAutorizacionEspecial(HashMap<String, Object> paramAutEspecial) throws Exception;
 }

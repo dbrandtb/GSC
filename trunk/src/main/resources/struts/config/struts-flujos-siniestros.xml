@@ -950,6 +950,65 @@
 				</param>
 			</result>
 		</action>
+		
+		<action name="consultaListaAsegAutEspecial" class="siniestrosAction" method="consultaListaAseguraAutEspecial">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaAsegurado.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="guardaAutorizacionEspecial" class="siniestrosAction" method="guardaAutorizacionEspecial">
+			<interceptor-ref name="json">
+				<param name="enableSMD">true</param>
+				<param name="ignoreSMDMethodInterfaces">false</param>
+			</interceptor-ref>
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					msgResult
+				</param>
+			</result>
+		</action>
+		
+		<action name="obtenerConfiguracionAutEspecial" class="siniestrosAction" method="obtenerConfiguracionAutEspecial">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosValidacion.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="validaAutorizacionEspecial" class="siniestrosAction" method="validaAutorizacionEspecial">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					validacionGeneral
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaListaCoberturaProducto" class="siniestrosAction" method="consultaListaCoberturaProducto">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaCoberturaPoliza.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="autorizacionEspecial" class="siniestrosAction"  method="entradaRevisionAdmin">
+			<result>/jsp-script/proceso/siniestros/autorizacionEspecial.jsp</result>
+		</action>
+		
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>

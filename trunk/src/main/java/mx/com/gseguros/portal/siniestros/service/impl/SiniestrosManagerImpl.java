@@ -1957,5 +1957,55 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		log.debug("listaSiniestrosTramite lista size: "+lista.size());
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO> getConsultaListaAseguraAutEspecial(String ntramite, String nfactura) throws Exception {
+		try {
+			return siniestrosDAO.obtieneListaAseguraAutEspecial(ntramite,nfactura);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
 
+	@Override
+	public List<CoberturaPolizaVO> getConsultaListaCoberturaProducto(
+			HashMap<String, Object> paramCobertura) throws Exception {
+		try {
+			return siniestrosDAO.obtieneListadoCoberturaProducto(paramCobertura);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public String guardaListaAutorizacionEspecial(HashMap<String, Object> paramsAutoriEspecial) throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			return siniestrosDAO.guardaListaAutorizacionEspecial(paramsAutoriEspecial);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> obtenerConfiguracionAutEspecial(HashMap<String, Object> paramsAutoriEspecial) throws Exception
+	{
+		List<Map<String,String>> lista = siniestrosDAO.obtenerConfiguracionAutEspecial(paramsAutoriEspecial);
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		log.debug("lista: "+lista);
+		log.debug("obtenerFacturasTramite lista size: "+lista.size());
+		return lista;
+	}
+	
+	@Override
+	public String asociarAutorizacionEspecial(HashMap<String, Object> paramAutEspecial) throws Exception {
+		try {
+			return siniestrosDAO.asociarAutorizacionEspecial(paramAutEspecial);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
 }

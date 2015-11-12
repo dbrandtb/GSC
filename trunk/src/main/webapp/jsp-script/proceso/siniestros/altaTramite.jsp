@@ -66,7 +66,7 @@
             var _URL_CONSULTA_BENEFICIARIO				= '<s:url namespace="/siniestros"		action="consultaDatosBeneficiario" />';
             var _URL_LISTADO_ASEGURADO_POLIZA			= '<s:url namespace="/siniestros"       action="consultaListaAseguradoPoliza" />';
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
-            
+            debug("valorAction ====>", valorAction);
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/altaTramite.js?${now}"></script>
