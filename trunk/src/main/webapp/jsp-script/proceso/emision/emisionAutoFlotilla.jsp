@@ -1086,34 +1086,45 @@ function _p31_mostrarVistaPrevia()
                                     ,text     : 'Imprimir'
                                     ,icon     : '${ctx}/resources/fam3icons/icons/printer.png'
                                     ,disabled : true
-                                    ,handler  : function()
+                                    ,handler  : function(me)
                                     {
-                                        centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                        var callbackRemesa = function()
                                         {
-                                            title        : 'Documentos del tr&aacute;mite'
-                                            ,modal       : true
-                                            ,buttonAlign : 'center'
-                                            ,width       : 600
-                                            ,height      : 400
-                                            ,autoScroll  : true
-                                            ,loader      :
-                                            {
-                                                url       : _p31_urlDocumentosPoliza
-                                                ,params   :
-                                                {
-                                                    'smap1.nmpoliza'  : _p31_smap1.nmpolizaEmitida
-                                                    ,'smap1.cdunieco' : _p31_smap1.cdunieco
-                                                    ,'smap1.cdramo'   : _p31_smap1.cdramo
-                                                    ,'smap1.estado'   : 'M'
-                                                    ,'smap1.nmsuplem' : '0'
-                                                    ,'smap1.ntramite' : ''
-                                                    ,'smap1.nmsolici' : _p31_smap1.nmpoliza
-                                                    ,'smap1.tipomov'  : '0'
-                                                }
-                                                ,scripts  : true
-                                                ,autoLoad : true
-                                            }
-                                        }).show());
+	                                        centrarVentanaInterna(Ext.create('Ext.window.Window',
+	                                        {
+	                                            title        : 'Documentos del tr&aacute;mite'
+	                                            ,modal       : true
+	                                            ,buttonAlign : 'center'
+	                                            ,width       : 600
+	                                            ,height      : 400
+	                                            ,autoScroll  : true
+	                                            ,loader      :
+	                                            {
+	                                                url       : _p31_urlDocumentosPoliza
+	                                                ,params   :
+	                                                {
+	                                                    'smap1.nmpoliza'  : _p31_smap1.nmpolizaEmitida
+	                                                    ,'smap1.cdunieco' : _p31_smap1.cdunieco
+	                                                    ,'smap1.cdramo'   : _p31_smap1.cdramo
+	                                                    ,'smap1.estado'   : 'M'
+	                                                    ,'smap1.nmsuplem' : '0'
+	                                                    ,'smap1.ntramite' : ''
+	                                                    ,'smap1.nmsolici' : _p31_smap1.nmpoliza
+	                                                    ,'smap1.tipomov'  : '0'
+	                                                }
+	                                                ,scripts  : true
+	                                                ,autoLoad : true
+	                                            }
+	                                        }).show());
+                                        };
+                                        _generarRemesaClic(
+                                            me.up('panel')
+                                            ,_p31_smap1.cdunieco
+                                            ,_p31_smap1.cdramo
+                                            ,'M'
+                                            ,_p31_smap1.nmpolizaEmitida
+                                            ,callbackRemesa
+                                        );
                                     }
                                 }
                                 ,{
@@ -1541,6 +1552,7 @@ function _p31_editarAutoAceptar(bot)
     }
 }
 ////// funciones //////
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 </head>
 <body><div id="_p31_divpri" style="height:1000px;"></div></body>

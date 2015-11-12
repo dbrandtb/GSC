@@ -148,7 +148,7 @@ Ext.define('VentanaImpresionLote',
         }
         ,{
             itemId   : '_c0_botonRegresar'
-            ,text    : 'Regresar y buscar otro'
+            ,text    : 'Regresar'
             ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'control_repeat_blue.png'
             ,hidden  : true
             ,handler : function(me)

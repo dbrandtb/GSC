@@ -426,4 +426,23 @@ public interface ConsultasDAO
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+	
+	public String recuperarTipoRamoPorCdramo(String cdramo) throws Exception;
+	
+	public String recuperarTramitePorNmsuplem(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception;
+	
+	public Map<String,String> recuperarRemesaEmisionEndoso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String ntramite
+			)throws Exception;
 }

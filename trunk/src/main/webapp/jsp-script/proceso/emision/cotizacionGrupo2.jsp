@@ -5712,33 +5712,44 @@ function _p25_emitir2(ventana,button)
                         xtype    : 'button'
                         ,text    : 'Documentos'
                         ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
-                        ,handler : function()
+                        ,handler : function(me)
                         {
-                            centrarVentanaInterna(Ext.create('Ext.window.Window',
+                            var callbackRemesa = function()
                             {
-                                title       : 'Documentos de la p&oacute;liza ' + json.smap1.nmpolizaEmi + ' [' + json.smap1.nmpoliexEmi + ']'
-                                ,width      : 500
-                                ,height     : 400
-                                ,autoScroll : true
-                                ,modal      : true
-                                ,loader     :
-                                {
-                                    scripts   : true
-                                    ,autoLoad : true
-                                    ,url      : _p25_urlVentanaDocumentosClon
-                                    ,params   :
-                                    {
-                                        'smap1.cdunieco'  : _p25_smap1.cdunieco
-                                        ,'smap1.cdramo'   : _p25_smap1.cdramo
-                                        ,'smap1.estado'   : 'M'
-                                        ,'smap1.nmpoliza' : json.smap1.nmpolizaEmi
-                                        ,'smap1.nmsuplem' : json.smap1.nmsuplemEmi
-                                        ,'smap1.nmsolici' : json.smap1.nmpoliza
-                                        ,'smap1.ntramite' : _p25_ntramite
-                                        ,'smap1.tipomov'  : '0'
-                                    }
-                                }
-                            }).show());
+	                            centrarVentanaInterna(Ext.create('Ext.window.Window',
+	                            {
+	                                title       : 'Documentos de la p&oacute;liza ' + json.smap1.nmpolizaEmi + ' [' + json.smap1.nmpoliexEmi + ']'
+	                                ,width      : 500
+	                                ,height     : 400
+	                                ,autoScroll : true
+	                                ,modal      : true
+	                                ,loader     :
+	                                {
+	                                    scripts   : true
+	                                    ,autoLoad : true
+	                                    ,url      : _p25_urlVentanaDocumentosClon
+	                                    ,params   :
+	                                    {
+	                                        'smap1.cdunieco'  : _p25_smap1.cdunieco
+	                                        ,'smap1.cdramo'   : _p25_smap1.cdramo
+	                                        ,'smap1.estado'   : 'M'
+	                                        ,'smap1.nmpoliza' : json.smap1.nmpolizaEmi
+	                                        ,'smap1.nmsuplem' : json.smap1.nmsuplemEmi
+	                                        ,'smap1.nmsolici' : json.smap1.nmpoliza
+	                                        ,'smap1.ntramite' : _p25_ntramite
+	                                        ,'smap1.tipomov'  : '0'
+	                                    }
+	                                }
+	                            }).show());
+                            };
+                            _generarRemesaClic(
+                                me.up('panel')
+                                ,_p25_smap1.cdunieco
+                                ,_p25_smap1.cdramo
+                                ,'M'
+                                ,json.smap1.nmpolizaEmi
+                                ,callbackRemesa
+                            );
                         }
                     }
                     ,{
@@ -6414,6 +6425,7 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
     }
 }
 ////// funciones //////
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 </head>
 <body><div id="_p25_divpri" style="height:1400px;"></div></body>

@@ -13,13 +13,16 @@ import java.util.Map.Entry;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
+import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.DocumentoReciboParaMostrarDTO;
 import mx.com.gseguros.portal.consultas.service.ExplotacionDocumentosManager;
+import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.Reporte;
 import mx.com.gseguros.portal.general.service.ImpresionService;
 import mx.com.gseguros.portal.general.service.ReportesManager;
@@ -38,6 +41,7 @@ import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -72,6 +76,20 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 	
 	@Value("${ruta.documentos.temporal}")
 	private String rutaDocumentosTemporal;
+	
+	@Value("${ruta.servidor.reports}")
+	private String rutaServidorReports;
+	
+	@Value("${pass.servidor.reports}")
+	private String passServidorReports;
+	
+	@Value("${rdf.impresion.remesa}")
+	private String nombreReporteRemesa;
+	
+	@Autowired
+	@Qualifier("consultasDAOICEImpl")
+	private ConsultasPolizaDAO consultasPolizaDAO;
+	
 	@Override
 	public Map<String,Item> pantallaExplotacionDocumentos(String cdusuari, String cdsisrol) throws Exception
 	{
@@ -147,25 +165,17 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			,String cdtipimp
 			,String tipolote
 			,List<Map<String, String>> movs
-			,String rutaDocumentosPoliza
-			,String rutaServidorReports
-			,String passServidorReports
-			,String nombreReporteRemesa
 			)throws Exception
 	{
-		logger.debug(Utils.log(
+		StringBuilder sb = new StringBuilder(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ generarLote @@@@@@"
-				,"\n@@@@@@ cdusuari="             , cdusuari
-				,"\n@@@@@@ cdsisrol="             , cdsisrol
-				,"\n@@@@@@ cdtipram="             , cdtipram
-				,"\n@@@@@@ cdtipimp="             , cdtipimp
-				,"\n@@@@@@ tipolote="             , tipolote
-				,"\n@@@@@@ movs="                 , movs
-				,"\n@@@@@@ rutaDocumentosPoliza=" , rutaDocumentosPoliza
-				,"\n@@@@@@ rutaServidorReports="  , rutaServidorReports
-				,"\n@@@@@@ passServidorReports="  , passServidorReports
-				,"\n@@@@@@ nombreReporteRemesa="  , nombreReporteRemesa
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdtipram=" , cdtipram
+				,"\n@@@@@@ cdtipimp=" , cdtipimp
+				,"\n@@@@@@ tipolote=" , tipolote
+				,"\n@@@@@@ movs="     , movs
 				));
 		
 		String lote  = null
@@ -174,12 +184,12 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		try
 		{
 			paso = "Generando secuencia";
-			logger.debug("@@@@@@ paso: {}",paso);
+			sb.append("\n").append(paso);
 			
 			lote = consultasDAO.recuperarSecuenciaLote();
 			
 			paso = "Agrupando movimientos por agente";
-			logger.debug("@@@@@@ paso: {}",paso);
+			sb.append("\n").append(paso);
 			
 			Map<String,Object> agentes = new HashMap<String,Object>();
 			
@@ -189,27 +199,27 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				if(!agentes.containsKey(cdagente))
 				{
 					agentes.put(cdagente,new ArrayList<Map<String,String>>());
-					logger.debug("@@@@@@ se crea el agrupador para el agente {}",cdagente);
+					sb.append(Utils.log("\n@@@@@@ se crea el agrupador para el agente {}",cdagente));
 				}
-				logger.debug("@@@@@@ se agrega mov. al agente {}",cdagente);
+				sb.append(Utils.log("\n@@@@@@ se agrega mov. al agente {}",cdagente));
 				((List<Map<String,String>>)agentes.get(cdagente)).add(mov);
 			}
 			
-			paso = "Recuperando impresiones disponibles";
-			logger.debug("@@@@@@ paso: {}",paso);
+			paso = "Recuperando impresiones requeridas";
+			sb.append("\n").append(paso);
 			
-			String impDis = consultasDAO.recuperarImpresionesDisponiblesPorTipoRamo(cdtipram,tipolote);
+			String impReq = consultasDAO.recuperarImpresionesDisponiblesPorTipoRamo(cdtipram,tipolote);
 			
 			paso = "Generando tr\u00E1mites de agentes";
-			logger.debug("@@@@@@ paso: {}",paso);
+			sb.append("\n").append(paso);
 			
 			Map<String,String> valores = new HashMap<String,String>();
 			valores.put("otvalor01" , lote);
 			valores.put("otvalor02" , cdtipimp);
 			valores.put("otvalor03" , cdtipram);
-			valores.put("otvalor04" , impDis); //impresiones disponibles
-			valores.put("otvalor05" , "0");    //impresiones ejecutadas
-			valores.put("otvalor06" , tipolote);    //POLIZA - RECIBO
+			valores.put("otvalor04" , impReq);   //impresiones requeridas
+			valores.put("otvalor05" , "0");      //impresiones ejecutadas
+			valores.put("otvalor06" , tipolote); //POLIZA - RECIBO
 			
 			for(Entry<String,Object>agente:agentes.entrySet())
 			{
@@ -217,7 +227,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				List<Map<String,String>> movsAgente = (List<Map<String,String>>)agente.getValue();
 				
 				paso = "Generando tr\u00E1mite iterado";
-				logger.debug("@@@@@@ paso: {}",paso);
+				sb.append("\n").append(paso);
 				
 				String ntramite = mesaControlDAO.movimientoMesaControl(
 						null  //cdunieco
@@ -256,7 +266,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				for(Map<String,String>movAgente:movsAgente)
 				{
 					paso = "Registrando relaci\u00F3n de movimiento iterado";
-					logger.debug("@@@@@@ paso: {}",paso);
+					sb.append("\n").append(paso);
 					
 					emisionDAO.insertarMpoliimp(
 							ntramite
@@ -273,7 +283,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					if("P".equals(tipolote))
 					{
 						paso = "Marcando tr\u00E1mite original iterado";
-						logger.debug("@@@@@@ paso: {}",paso);
+						sb.append("\n").append(paso);
 						
 						emisionDAO.marcarTramiteImpreso(
 								movAgente.get("ntramite")
@@ -283,13 +293,13 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				}
 				
 				paso = "Generando carpeta de tr\u00E1mite de agentes";
-				logger.debug("@@@@@@ paso: {}",paso);
+				sb.append("\n").append(paso);
 				
 				String rutaCarpeta = Utils.join(rutaDocumentosPoliza,"/",ntramite);
 				File   carpeta     = new File(rutaCarpeta);
 				if(!carpeta.exists())
 				{
-					logger.info(Utils.log("@@@@@@ Se va a crear la carpeta ",carpeta));
+					sb.append(Utils.log("\n@@@@@@ Se va a crear la carpeta ",carpeta));
 					if(!carpeta.mkdir())
 					{
 						throw new ApplicationException("No se pudo crear la carpeta para los documentos");
@@ -297,7 +307,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				}
 				
 				paso = "Generando remesa pdf";
-				logger.debug("@@@@@@ paso: {}",paso);
+				sb.append("\n").append(paso);
 				
 				String urlReporteCotizacion = Utils.join(
 						  rutaServidorReports
@@ -340,7 +350,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						);
 				
 				paso = "Generando remesa excel";
-				logger.debug("@@@@@@ paso: {}",paso);
+				sb.append("\n").append(paso);
 				
 				Map<String,String> paramsExcel = new LinkedHashMap<String,String>();
 				paramsExcel.put("pv_lote_i"     , lote);
@@ -382,14 +392,17 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso);
+			Utils.generaExcepcion(ex, paso, sb.toString());
 		}
 		
-		logger.debug(Utils.log(
+		sb.append(Utils.log(
 				 "\n@@@@@@ lote=",lote
 			    ,"\n@@@@@@ generarLote @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
+		
+		logger.debug(sb.toString());
+		
 		return lote;
 	}
 	
@@ -893,5 +906,292 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				 "\n@@@@@@ actualizarStatusRemesa @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
+	}
+	
+	@Override
+	public Map<String,String> generarRemesaEmisionEndoso(
+			String cdusuari
+			,String cdsisrol
+			,String cdtipimp
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ generarRemesaEmisionEndoso @@@@@@"
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdtipimp=" , cdtipimp
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				));
+		
+		String             paso     = null;
+		Map<String,String> result   = new HashMap<String,String>();
+		String             lote     = null;
+		String             cdtipram = null;
+		String             remesa   = null;
+		
+		try
+		{
+			paso = "Recuperando suplemento";
+			sb.append("\n").append(paso);
+			
+			String nmsuplem = consultasDAO.recuperarUltimoNmsuplem(cdunieco,cdramo,estado,nmpoliza);
+			
+			paso = "Recuperando tr\u00e1mite";
+			sb.append("\n").append(paso);
+			
+			String ntramiteOpe = consultasDAO.recuperarTramitePorNmsuplem(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+			
+			paso = "Recuperando tipo de ramo";
+			sb.append("\n").append(paso);
+			
+			cdtipram = consultasDAO.recuperarTipoRamoPorCdramo(cdramo);
+			
+			result.put("cdtipram" , cdtipram);
+			
+			paso = "Verificando remesa existente";
+			sb.append("\n").append(paso);
+			
+			Map<String,String> datosRemesa = consultasDAO.recuperarRemesaEmisionEndoso(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,ntramiteOpe
+					);
+			
+			if(datosRemesa!=null)
+			{
+				lote     = datosRemesa.get("lote");
+				remesa   = datosRemesa.get("remesa");
+				cdtipimp = datosRemesa.get("cdtipimp");
+				
+				result.put("lote"     , lote);
+				result.put("remesa"   , remesa);
+				result.put("cdtipimp" , cdtipimp);
+				result.put("nueva"    , "N");
+			}
+			else
+			{
+				paso = "Recuperando agente";
+				sb.append("\n").append(paso);
+				
+				String cdagente = null;
+				
+				List<AgentePolizaVO> agentes = consultasPolizaDAO.obtieneAgentesPoliza(new PolizaVO(cdunieco,cdramo,estado,nmpoliza));
+				for(AgentePolizaVO agente : agentes)
+				{
+					if("1".equals(agente.getCdtipoAg()))
+					{
+						cdagente = agente.getCdagente();
+					}
+				}
+				if(StringUtils.isBlank(cdagente))
+				{
+					throw new ApplicationException("No se encuentra el agente principal");
+				}
+				
+				paso = "Generando secuencia";
+				sb.append("\n").append(paso);
+				
+				lote = consultasDAO.recuperarSecuenciaLote();
+				
+				result.put("lote"  , lote);
+				result.put("nueva" , "S");
+				
+				paso = "Recuperando impresiones requeridas";
+				sb.append("\n").append(paso);
+				
+				String impReq = consultasDAO.recuperarImpresionesDisponiblesPorTipoRamo(cdtipram, "P");
+				
+				paso = "Generando tr\u00E1mite de agente";
+				sb.append("\n").append(paso);
+				
+				Map<String,String> valores = new HashMap<String,String>();
+				valores.put("otvalor01" , lote);
+				valores.put("otvalor02" , cdtipimp);
+				valores.put("otvalor03" , cdtipram);
+				valores.put("otvalor04" , impReq); //impresiones requeridas
+				valores.put("otvalor05" , "0");    //impresiones ejecutadas
+				valores.put("otvalor06" , "P");    //POLIZA - RECIBO
+				
+				remesa = mesaControlDAO.movimientoMesaControl(
+						null  //cdunieco
+						,null //cdramo
+						,null //estado
+						,null //nmpoliza
+						,null //nmsuplem
+						,null //cdsucadm
+						,null //cdsucdoc
+						,TipoTramite.IMPRESION.getCdtiptra()
+						,new Date() //ferecepc
+						,cdagente
+						,null //referencia
+						,null //nombre
+						,new Date() //festatus
+						,EstatusTramite.IMPRESION_PENDIENTE.getCodigo()
+						,null //comments
+						,null //nmsolici
+						,null //cdtipsit
+						,valores
+						,cdusuari
+						,cdsisrol
+						,null //swimpres
+						);
+				
+				result.put("remesa" , remesa);
+				
+				mesaControlDAO.movimientoDetalleTramite(
+						remesa
+						,new Date()                //feinicio
+						,null                      //cdclausu
+						,"Nuevo registro de lote desde emisi\u00F3n/endoso"  //comments
+						,cdusuari
+						,null                      //cdmotivo
+						,cdsisrol
+						);
+				
+				paso = "Registrando relaci\u00F3n de movimiento";
+				sb.append("\n").append(paso);
+				
+				emisionDAO.insertarMpoliimp(
+						remesa
+						,cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,nmsuplem
+						,"P"
+						,ntramiteOpe
+						,null
+						);
+				
+				paso = "Marcando tr\u00E1mite original";
+				sb.append("\n").append(paso);
+				
+				emisionDAO.marcarTramiteImpreso(
+						ntramiteOpe
+						,"S"
+						);
+				
+				paso = "Generando carpeta de tr\u00E1mite de agente";
+				sb.append("\n").append(paso);
+				
+				String rutaCarpeta = Utils.join(rutaDocumentosPoliza,"/",remesa);
+				File   carpeta     = new File(rutaCarpeta);
+				if(!carpeta.exists())
+				{
+					sb.append(Utils.log("\n@@@@@@ Se va a crear la carpeta ",carpeta));
+					if(!carpeta.mkdir())
+					{
+						throw new ApplicationException("No se pudo crear la carpeta para los documentos");
+					}
+				}
+				
+				paso = "Generando remesa pdf";
+				sb.append("\n").append(paso);
+				
+				String urlReporteCotizacion = Utils.join(
+						  rutaServidorReports
+						, "?p_lote="     , lote
+						, "&p_usr_imp="  , cdusuari
+						, "&p_ntramite=" , remesa
+	                    , "&destype=cache"
+	                    , "&desformat=PDF"
+	                    , "&userid="        , passServidorReports
+	                    , "&ACCESSIBLE=YES"
+	                    , "&report="        , nombreReporteRemesa
+	                    , "&paramform=no"
+	                    );
+				
+				String pathRemesa=Utils.join(
+						rutaDocumentosPoliza
+						,"/",remesa
+						,"/remesa.pdf"
+						);
+				
+				HttpUtil.generaArchivo(urlReporteCotizacion, pathRemesa);
+				
+				mesaControlDAO.guardarDocumento(
+						null          //cdunieco
+						,null         //cdramo
+						,null         //estado
+						,null         //nmpoliza
+						,null         //nmsuplem
+						,new Date()   //feinici
+						,"remesa.pdf" //cddocume
+						,"REMESA PDF" //dsdocume
+						,null         //nmsolici
+						,remesa
+						,"1"          //tipmov
+						,null         //swvisible
+						,null         //codidocu
+						,TipoTramite.IMPRESION.getCdtiptra()
+						,"0"
+						,"59" // <<< 59 es el CDMODDOCU de REMESA
+						);
+				
+				paso = "Generando remesa excel";
+				sb.append("\n").append(paso);
+				
+				Map<String,String> paramsExcel = new LinkedHashMap<String,String>();
+				paramsExcel.put("pv_lote_i"     , lote);
+				paramsExcel.put("pv_usr_imp_i"  , cdusuari);
+				paramsExcel.put("pv_ntramite_i" , remesa);
+				
+				InputStream excel = reportesManager.obtenerDatosReporte(Reporte.REMESA.getCdreporte()
+						,cdusuari
+						,paramsExcel
+						);
+				
+				String nombreExcel = Utils.join("remesa",TipoArchivo.XLS.getExtension());
+				
+				FileUtils.copyInputStreamToFile(excel, new File(Utils.join(
+								rutaDocumentosPoliza,"/",remesa,"/",nombreExcel
+				)));
+				
+				mesaControlDAO.guardarDocumento(
+						null            //cdunieco
+						,null           //cdramo
+						,null           //estado
+						,null           //nmpoliza
+						,null           //nmsuplem
+						,new Date()     //feinici
+						,nombreExcel    //cddocume
+						,"REMESA EXCEL" //dsdocume
+						,null           //nmsolici
+						,remesa
+						,"1"            //tipmov
+						,null           //swvisible
+						,null           //codidocu
+						,TipoTramite.IMPRESION.getCdtiptra()
+						,null           //cdorddoc
+						,null           //cdmoddoc
+						);
+			}
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		sb.append(Utils.log(
+				 "\n@@@@@@ result=",result
+			    ,"\n@@@@@@ generarRemesaEmisionEndoso @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		logger.debug(sb.toString());
+		
+		return result;
 	}
 }

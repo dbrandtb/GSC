@@ -1,5 +1,5 @@
 <%@ include file="/taglibs.jsp"%>
-<%@page contentType="text/html" pageEncoding="utf-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -1359,35 +1359,46 @@ function _datComTurnarSuscripcion()
 										                                                            ,text     : 'Imprimir'
 										                                                            ,icon     : contexto+'/resources/fam3icons/icons/printer.png'
 										                                                            ,disabled : true
-										                                                            ,handler  : function()
+										                                                            ,handler  : function(me)
 										                                                            {
-										                                                            	venDocuTramite.destroy();
-										                                                            	Ext.create('Ext.window.Window',
-								                                                                        {
-								                                                                            title        : 'Documentos del tr&aacute;mite '+inputNtramite
-								                                                                            ,modal       : true
-								                                                                            ,buttonAlign : 'center'
-								                                                                            ,width       : 600
-								                                                                            ,height      : 400
-								                                                                            ,autoScroll  : true
-								                                                                            ,loader      :
-								                                                                            {
-								                                                                                url       : panDatComUrlDoc2
-								                                                                                ,params   :
-								                                                                                {
-								                                                                                	'smap1.nmpoliza'  : datComPolizaMaestra
-								                                                                                    ,'smap1.cdunieco' : inputCdunieco
-								                                                                                    ,'smap1.cdramo'   : inputCdramo
-								                                                                                    ,'smap1.estado'   : 'M'
-								                                                                                    ,'smap1.nmsuplem' : '0'
-								                                                                                    ,'smap1.ntramite' : inputNtramite
-								                                                                                    ,'smap1.nmsolici' : inputNmpoliza
-								                                                                                    ,'smap1.tipomov'  : '0'
-								                                                                                }
-								                                                                                ,scripts  : true
-								                                                                                ,autoLoad : true
-								                                                                            }
-								                                                                        }).show();
+										                                                                var callbackRemesa = function()
+										                                                                {
+											                                                            	venDocuTramite.destroy();
+											                                                            	Ext.create('Ext.window.Window',
+									                                                                        {
+									                                                                            title        : 'Documentos del tr&aacute;mite '+inputNtramite
+									                                                                            ,modal       : true
+									                                                                            ,buttonAlign : 'center'
+									                                                                            ,width       : 600
+									                                                                            ,height      : 400
+									                                                                            ,autoScroll  : true
+									                                                                            ,loader      :
+									                                                                            {
+									                                                                                url       : panDatComUrlDoc2
+									                                                                                ,params   :
+									                                                                                {
+									                                                                                	'smap1.nmpoliza'  : datComPolizaMaestra
+									                                                                                    ,'smap1.cdunieco' : inputCdunieco
+									                                                                                    ,'smap1.cdramo'   : inputCdramo
+									                                                                                    ,'smap1.estado'   : 'M'
+									                                                                                    ,'smap1.nmsuplem' : '0'
+									                                                                                    ,'smap1.ntramite' : inputNtramite
+									                                                                                    ,'smap1.nmsolici' : inputNmpoliza
+									                                                                                    ,'smap1.tipomov'  : '0'
+									                                                                                }
+									                                                                                ,scripts  : true
+									                                                                                ,autoLoad : true
+									                                                                            }
+									                                                                        }).show();
+								                                                                        };
+								                                                                        _generarRemesaClic(
+								                                                                            me.up('panel')
+								                                                                            ,inputCdunieco
+								                                                                            ,inputCdramo
+								                                                                            ,'M'
+								                                                                            ,datComPolizaMaestra
+								                                                                            ,callbackRemesa
+								                                                                            );
 										                                                            }
 										                                                        }
 										                                                        ,{
@@ -2404,6 +2415,7 @@ function _datComTurnarSuscripcion()
                 
                 //Ext.getCmp('formPanel').loadRecord(storeLoader.getAt(0));
             });
+        <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
         </script>
     </head>
     <body>
