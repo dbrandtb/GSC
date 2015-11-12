@@ -3365,4 +3365,127 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public String recuperarTipoRamoPorCdramo(String cdramo) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdramo" , cdramo);
+		Map<String,Object> procRes  = ejecutaSP(new RecuperarTipoRamoPorCdramo(getDataSource()),params);
+		String             cdtipram = (String)procRes.get("pv_cdtipram_o");
+		if(StringUtils.isBlank(cdtipram))
+		{
+			throw new ApplicationException(Utils.join("Error al recuperar el tipo de ramo para el ramo ",cdramo));
+		}
+		logger.debug(Utils.log("\n****** PKG_CONSULTA.P_GET_CDTIPRAM_X_CDRAMO cdtipram=",cdtipram," ******"));
+		return cdtipram;
+	}
+	
+	protected class RecuperarTipoRamoPorCdramo extends StoredProcedure
+	{
+		protected RecuperarTipoRamoPorCdramo(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_CDTIPRAM_X_CDRAMO");
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdtipram_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String recuperarTramitePorNmsuplem(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		Map<String,Object> procRes  = ejecutaSP(new RecuperarTramitePorNmsuplem(getDataSource()),params);
+		String             ntramite = (String)procRes.get("pv_ntramite_o");
+		if(StringUtils.isBlank(ntramite))
+		{
+			throw new ApplicationException("No se puedo recuperar el tr\u00e1mite");
+		}
+		logger.debug(Utils.log("\n****** PKG_CONSULTA.P_GET_TRAMITE_X_NMSUPLEM ntramite=",ntramite," ******"));
+		return ntramite;
+	}
+	
+	protected class RecuperarTramitePorNmsuplem extends StoredProcedure
+	{
+		protected RecuperarTramitePorNmsuplem(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_TRAMITE_X_NMSUPLEM");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String,String> recuperarRemesaEmisionEndoso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String ntramite
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("ntramite" , ntramite);
+		Map<String,Object> procRes  = ejecutaSP(new VerificarRemesaEmisionEndosoAnterior(getDataSource()),params);
+		String             lote     = (String)procRes.get("pv_lote_o");
+		String             remesa   = (String)procRes.get("pv_remesa_o");
+		String             cdtipimp = (String)procRes.get("pv_cdtipimp_o");
+		Map<String,String> datos    = null;
+		if(StringUtils.isNotBlank(lote)&&StringUtils.isNotBlank(remesa))
+		{
+			datos = new HashMap<String,String>();
+			datos.put("lote"     , lote);
+			datos.put("remesa"   , remesa);
+			datos.put("cdtipimp" , cdtipimp);
+		}
+		logger.debug(Utils.log("\n****** PKG_CONSULTA.P_GET_DATOS_REMESA_UNICA datos=",datos));
+		return datos;
+	}
+	
+	protected class VerificarRemesaEmisionEndosoAnterior extends StoredProcedure
+	{
+		protected VerificarRemesaEmisionEndosoAnterior(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_DATOS_REMESA_UNICA");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_lote_o"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_remesa_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdtipimp_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

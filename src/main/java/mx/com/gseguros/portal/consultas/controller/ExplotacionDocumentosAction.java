@@ -147,10 +147,6 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					,cdtipimp
 					,tipolote
 					,list
-					,getText("ruta.documentos.poliza")
-					,getText("ruta.servidor.reports")
-					,getText("pass.servidor.reports")
-					,getText("rdf.impresion.remesa")
 					);
 			
 			params.put("lote" , lote);
@@ -407,6 +403,66 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 		logger.debug(Utils.log(
 				 "\n###### actualizarStatusRemesa ######"
 				,"\n####################################"
+				));
+		return SUCCESS;
+	}
+	
+	@Action(value   = "generarRemesaEmisionEndoso",
+			results = { @Result(name="success", type="json") }
+	)
+	public String generarRemesaEmisionEndoso()
+	{
+		logger.debug(Utils.log(
+				 "\n########################################"
+				,"\n###### generarRemesaEmisionEndoso ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			UserVO usuario = Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdunieco = params.get("cdunieco");
+			String cdramo   = params.get("cdramo");
+			String estado   = params.get("estado");
+			String nmpoliza = params.get("nmpoliza");
+			String cdtipimp = params.get("cdtipimp");
+			
+			Utils.validate(
+					cdunieco  , "No se recibi\u00F3 la sucursal"
+					,cdramo   , "No se recibi\u00F3 el producto"
+					,estado   , "No se recibi\u00F3 el estado de p\u00F3liza"
+					,nmpoliza , "No se recibi\u00F3 el n\u00famero de p\u00F3liza"
+					,cdtipimp , "No se recibi\u00F3 el tipo de impresi\u00F3n"
+			);
+			
+			Map<String,String> datosRemesa = explotacionDocumentosManager.generarRemesaEmisionEndoso(
+					usuario.getUser()
+					,usuario.getRolActivo().getClave()
+					,cdtipimp
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					);
+			
+			params.putAll(datosRemesa);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### success=" , success
+				,"\n###### message=" , message
+				,"\n###### params="  , params
+				,"\n###### generarRemesaEmisionEndoso ######"
+				,"\n########################################"
 				));
 		return SUCCESS;
 	}
