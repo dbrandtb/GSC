@@ -104,6 +104,16 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
+	public List<CoberturaPolizaVO> getConsultaCoberturaAsegurado2(
+			HashMap<String, Object> paramCobertura) throws Exception {
+		try {
+			return siniestrosDAO.obtieneListadoCoberturaAsegurado2(paramCobertura);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
 	public List<DatosSiniestroVO> getConsultaListaDatSubGeneral(
 			HashMap<String, Object> paramDatSubGral)
 			throws Exception {
@@ -1129,7 +1139,8 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	public Map<String,String>obtenerCopagoDeducible(
+	public Map<String,String>obtenerCopagoDeducible2(
+			String ntramite,
 			String cdunieco,
 			String cdramo,
 			String estado,
@@ -1143,7 +1154,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			String tipopago,
 			String cdtipsit) throws Exception
 	{
-		return siniestrosDAO.obtenerCopagoDeducible(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,nfactura,tipopago,cdtipsit);
+		return siniestrosDAO.obtenerCopagoDeducible2(ntramite,cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,nfactura,tipopago,cdtipsit);
 	}
 	
 	@Override
@@ -2007,5 +2018,21 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
+	}
+	
+	@Override
+	public List<Map<String,String>> obtenerDatosAutorizacionEspecial(String nmautespecial) throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("pv_nmautesp_i" , nmautespecial);
+		log.debug("obtenerDatosAutorizacionEspecial params: "+params);
+		List<Map<String,String>> lista = siniestrosDAO.obtenerDatosAutorizacionEspecial(params);
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		log.debug("lista: "+lista);
+		log.debug("obtenerDatosAutorizacionEspecial lista size: "+lista.size());
+		return lista;
 	}
 }
