@@ -246,6 +246,9 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 
 		protected ObtieneListadoCoberturaSP(DataSource dataSource) {
 			super(dataSource, "PKG_PRESINIESTRO.P_LISTA_COBERT_POL");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipopago_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
@@ -284,6 +287,36 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 			compile();
 		}
 	}
+	
+	@Override
+	public List<CoberturaPolizaVO> obtieneListadoCoberturaAsegurado2(
+			HashMap<String, Object> paramCobertura) throws Exception {
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoCoberturaAsegurado2(getDataSource()), paramCobertura);
+		
+		@SuppressWarnings("unchecked")
+		List<CoberturaPolizaVO> listaDatosPoliza = (List<CoberturaPolizaVO>)mapResult.get("pv_registro_o");
+		return listaDatosPoliza;
+	}
+	protected class ObtieneListadoCoberturaAsegurado2 extends StoredProcedure {
+
+		protected ObtieneListadoCoberturaAsegurado2(DataSource dataSource) {
+			super(dataSource, "PKG_DESARROLLO.P_LISTA_COBERT_ASEG");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipopago_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosListaCoberturasMapper()));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
     protected class DatosListaCoberturasMapper  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	CoberturaPolizaVO consulta = new CoberturaPolizaVO();
@@ -1520,6 +1553,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"CDCAUSA",			"CDGARANT",			"CDCONVAL",			"NMSINREF"
 					,"IMPORTEASEG",		"PTIVAASEG",		"PTIVARETASEG",		"PTISRASEG"
 					,"PTIMPCEDASEG",	"DEDUCIBLE",		"IMPORTETOTALPAGO",	"COMPLEMENTO"
+					,"REQAUTES",		"NMAUTESP"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -2636,7 +2670,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 	
 	@Override
-	public Map<String,String>obtenerCopagoDeducible(
+	public Map<String,String>obtenerCopagoDeducible2(
+			String ntramite,
 			String cdunieco,
 			String cdramo,
 			String estado,
@@ -2651,6 +2686,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			String cdtipsit) throws Exception
 	{
 		Map<String,Object>p=new HashMap<String,Object>();
+		p.put("ntramite" , ntramite);
 		p.put("cdunieco" , cdunieco);
 		p.put("cdramo"   , cdramo);
 		p.put("estado"   , estado);
@@ -2664,7 +2700,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		p.put("tipopago" , tipopago);
 		p.put("cdtipsit" , cdtipsit);
 		logger.debug("obtenerCopagoDeducible params: "+p);
-		Map<String, Object> mapResult = ejecutaSP(new ObtenerCopagoDeducible(this.getDataSource()), p);
+		Map<String, Object> mapResult = ejecutaSP(new ObtenerCopagoDeducible2(this.getDataSource()), p);
 		List<Map<String,String>> lista = (List<Map<String,String>>) mapResult.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
 		{
@@ -2679,11 +2715,12 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		return copagoDeducible;
 	}
 	
-	protected class ObtenerCopagoDeducible extends StoredProcedure
+	protected class ObtenerCopagoDeducible2 extends StoredProcedure
 	{
-		protected ObtenerCopagoDeducible(DataSource dataSource)
+		protected ObtenerCopagoDeducible2(DataSource dataSource)
 		{
-			super(dataSource, "PKG_PRESINIESTRO.P_GET_DATOS_SUBG");
+			super(dataSource, "PKG_DESARROLLO.P_GET_DATOS_SUBG");
+			declareParameter(new SqlParameter("ntramite", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2709,7 +2746,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"LIMITES"
 					,"TIPOCOPAGO"
 					,"UNIDAD"
-					,"LV_PENALIZA"
+					//,"LV_PENALIZA"
 					,"FORMATOCALCULO"
 					,"PENALIZACIONES"
 					,"VALSESIONES"
@@ -5072,4 +5109,26 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     	}
     }
 	
+	@Override
+	public List<Map<String,String>> obtenerDatosAutorizacionEspecial(Map<String, String> params) throws Exception
+	{
+		Map<String, Object> mapResult = ejecutaSP(new ObtenerDatosAutorizacionEspecial(this.getDataSource()), params);
+		return (List<Map<String,String>>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ObtenerDatosAutorizacionEspecial extends StoredProcedure
+	{
+		protected ObtenerDatosAutorizacionEspecial(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_VALIDA_AUTESP_USUARIO");
+			declareParameter(new SqlParameter("pv_nmautesp_i", OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NMAUTESP","VALRANGO","VALCOBER","CDGARANT","DSGARANT"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

@@ -261,11 +261,15 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case COBERTURASXVALORES:
 					try{
 						if(params!=null){
+							logger.debug("Valor de params ==>"+params);
 							String tipoPago = params.get("tipopago").toString();
 							if(TipoPago.DIRECTO.getCodigo().equals(tipoPago)){
 								//Verificamos en tworksin y si no en msiniest
 								List<Map<String,String>> datosCobertura = siniestrosManager.obtenerDatosAdicionalesCobertura(params.get("ntramite"));
 								HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
+								paramCobertura.put("pv_ntramite_i",params.get("ntramite"));
+								paramCobertura.put("pv_tipopago_i",params.get("tipopago"));
+								paramCobertura.put("pv_nfactura_i",null);
 								paramCobertura.put("pv_cdunieco_i",datosCobertura.get(0).get("CDUNIECO"));
 								paramCobertura.put("pv_estado_i",datosCobertura.get(0).get("ESTADO"));
 								paramCobertura.put("pv_cdramo_i",datosCobertura.get(0).get("CDRAMO"));
@@ -289,6 +293,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 								}
 								
 								HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
+								paramCobertura.put("pv_ntramite_i",params.get("ntramite"));
+								paramCobertura.put("pv_tipopago_i",params.get("tipopago"));
+								paramCobertura.put("pv_nfactura_i",null);
 								paramCobertura.put("pv_cdunieco_i",params.get("cdunieco"));
 								paramCobertura.put("pv_estado_i",params.get("estado"));
 								paramCobertura.put("pv_cdramo_i",params.get("cdramo"));
@@ -301,50 +308,14 @@ public class CatalogosAction extends PrincipalCoreAction {
 								for(CoberturaPolizaVO nombre:listaCobertura) {
 									lista.add(new GenericVO(nombre.getCdgarant(), nombre.getDsgarant()));
 								}
+								//lista.add(new GenericVO("18CN", "Cobertura no amparada"));
 								break;
 							}
 						}
 					}catch(Exception ex){
 						logger.error("error al obtener clave de siniestro para la pantalla del tabed panel",ex);
 					}
-				case COBERTURASXTRAMITE:
-					
-					try{
-						if(params!=null)
-						{
-							String tipoPago = params.get("tipopago").toString();
-							if(TipoPago.DIRECTO.getCodigo().equals(tipoPago)){
-								lista = siniestrosManager.obtieneListadoCobertura(params.get("cdramo"), params.get("cdtipsit"));
-								break;
-							}else{
-								String ntramite = params.get("ntramite");
-								Map<String,String> paramsRes = (HashMap<String, String>) siniestrosManager.obtenerLlaveSiniestroReembolso(ntramite);
-								
-								for(Entry<String,String>en:paramsRes.entrySet()){
-									params.put(en.getKey().toLowerCase(),en.getValue());
-								}
-								
-								HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
-								paramCobertura.put("pv_cdunieco_i",params.get("cdunieco"));
-								paramCobertura.put("pv_estado_i",params.get("estado"));
-								paramCobertura.put("pv_cdramo_i",params.get("cdramo"));
-								paramCobertura.put("pv_nmpoliza_i",params.get("nmpoliza"));
-								paramCobertura.put("pv_nmsituac_i",params.get("nmsituac"));
-								paramCobertura.put("pv_cdgarant_i",params.get("cdgarant"));
-								
-								List<CoberturaPolizaVO> listaCobertura = siniestrosManager.getConsultaListaCoberturaPoliza(paramCobertura);
-								lista=new ArrayList<GenericVO>(0);
-								for(CoberturaPolizaVO nombre:listaCobertura) {
-									lista.add(new GenericVO(nombre.getCdgarant(), nombre.getDsgarant()));
-								}
-								break;
-							}
-						}
-					}catch(Exception ex){
-						logger.error("error al obtener clave de siniestro para la pantalla del tabed panel",ex);
-					}
-					
-					
+				
 				case SUBCOBERTURAS:
 					String cdunieco = null;
 					String estado = null;

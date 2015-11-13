@@ -1009,6 +1009,15 @@
 			<result>/jsp-script/proceso/siniestros/autorizacionEspecial.jsp</result>
 		</action>
 		
+		<action name="consultaDatosAutorizacionEspecial" class="siniestrosAction" method="consultaDatosAutorizacionEspecial">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosValidacion.*,
+					success
+				</param>
+			</result>
+		</action>
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>
