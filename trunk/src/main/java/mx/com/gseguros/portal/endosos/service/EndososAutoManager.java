@@ -170,6 +170,7 @@ public interface EndososAutoManager
 			,String feefecto
 			,String feproren
 			,String nmsuplemOriginal
+			,String cdsisrol
 			)throws Exception;
 
 	public void guardarEndosoTextoLibre(
@@ -188,6 +189,7 @@ public interface EndososAutoManager
 			,String feproren
 			,List<Map<String,String>> situaciones
 			,String dslinea
+			,String cdsisrol
 			)throws Exception;
 	
 	public void validarEndosoAnterior(

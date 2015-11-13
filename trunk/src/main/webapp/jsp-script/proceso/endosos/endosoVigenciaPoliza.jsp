@@ -3,8 +3,8 @@
 <script>
 	var _CONTEXT = '${ctx}';
 	var asegAlterno          = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
-	var guarda_Aseg_alterno  = '<s:url namespace="/endosos" action=" guardarEndosoAseguradoAlterno"       />';
-	var guarda_Vigencia_Poliza = '<s:url namespace="/endosos" action=" guardarEndosoVigenciaPoliza"       />';
+	var guarda_Aseg_alterno  = '<s:url namespace="/endosos" action="guardarEndosoAseguradoAlterno"       />';
+	var guarda_Vigencia_Poliza = '<s:url namespace="/endosos" action="guardarEndosoVigenciaPoliza"       />';
 	
 	debug('asegAlterno  -->:',asegAlterno);
 	
@@ -81,9 +81,24 @@
 	   						    	 myMask.hide();
 	   						    	 panelInicialPral.setLoading(false);
 	   						         var jsonResp = Ext.decode(response.responseText);
-	   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,null);
-	   						      	 //usa codigo del marcoEndososAuto.jsp
-	   						      	 marendNavegacion(2);
+	   						      	 
+	   						      	 var callbackRemesa = function()
+	   						      	 {
+	   						      	     //usa codigo del marcoEndososAuto.jsp
+	   						      	     marendNavegacion(2);
+	   						      	 };
+	   						      	 
+	   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,function()
+	   						      	 {
+	   						      	     _generarRemesaClic(
+	   						      	         true
+	   						      	         ,asegAlterno.CDUNIECO
+	   						      	         ,asegAlterno.CDRAMO
+	   						      	         ,asegAlterno.ESTADO
+	   						      	         ,asegAlterno.NMPOLIZA
+	   						      	         ,callbackRemesa
+	   						      	     );
+	   						      	 });
 	   						    },
 	   						    failure:function(response,opts){
 	   						    	myMask.hide();
@@ -108,5 +123,6 @@
 			}]
 		});
     });
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="maindivHist" style="height:1000px;"></div>

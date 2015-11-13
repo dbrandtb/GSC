@@ -5,6 +5,7 @@ public class PropiedadesDeEndosoParaWS
 	private String ntramite;
 	private String nmsuplem;
 	private String tipoflot;
+	private String nsuplogi;
 	
 	public String getNtramite() {
 		return ntramite;
@@ -23,5 +24,11 @@ public class PropiedadesDeEndosoParaWS
 	}
 	public void setTipoflot(String tipoflot) {
 		this.tipoflot = tipoflot;
+	}
+	public String getNsuplogi() {
+		return nsuplogi;
+	}
+	public void setNsuplogi(String nsuplogi) {
+		this.nsuplogi = nsuplogi;
 	}
 }

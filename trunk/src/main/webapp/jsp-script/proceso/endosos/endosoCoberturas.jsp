@@ -110,13 +110,7 @@
                     debug(json);
                     if(json.success==true)
                     {
-                        Ext.Msg.show(
-                        {
-                            title   : 'Endoso generado',
-                            msg     : json.mensaje,
-                            buttons : Ext.Msg.OK
-                        });
-                        if(confirmar=='si')
+                        var callbackRemesa = function()
                         {
                             //////////////////////////////////
                             ////// usa codigo del padre //////
@@ -125,17 +119,37 @@
                             /*//////////////////////////////*/
                             ////// usa codigo del padre //////
                             //////////////////////////////////
-                        }
-                        else
+                        };
+                        Ext.Msg.show(
                         {
-                            //////////////////////////////////
-                            ////// usa codigo del padre //////
-                            /*//////////////////////////////*/
-                            marendNavegacion(4);
-                            /*//////////////////////////////*/
-                            ////// usa codigo del padre //////
-                            //////////////////////////////////
-                        }
+                            title   : 'Endoso generado',
+                            msg     : json.mensaje,
+                            buttons : Ext.Msg.OK,
+                            fn      : function()
+                            {
+                                if(confirmar=='si')
+                                {
+                                    _generarRemesaClic(
+                                        true
+                                        ,inputCduniecop3
+                                        ,inputCdramop3
+                                        ,inputEstadop3
+                                        ,inputNmpolizap3
+                                        ,callbackRemesa
+                                    );
+                                }
+                                else
+                                {
+                                    //////////////////////////////////
+                                    ////// usa codigo del padre //////
+                                    /*//////////////////////////////*/
+                                    marendNavegacion(4);
+                                    /*//////////////////////////////*/
+                                    ////// usa codigo del padre //////
+                                    //////////////////////////////////
+                                }
+                            }
+                        });
                     }
                     else
                     {
@@ -1008,5 +1022,6 @@
         }
         ////// loader //////
     });
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="pan_usu_cob_divgrid"></div>

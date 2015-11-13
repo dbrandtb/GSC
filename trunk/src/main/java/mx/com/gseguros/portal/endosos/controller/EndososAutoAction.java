@@ -968,7 +968,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 					dFechaEndoso,
 					feefecto,
 					feproren,
-					nmsuplemOriginal);
+					nmsuplemOriginal,
+					cdsisrol
+					);
 			respuesta = "Endoso generado correctamente";
 			success   = true;
 		}
@@ -1200,7 +1202,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 					feefecto,
 					feproren,
 					situaciones,
-					dslinea);
+					dslinea,
+					cdsisrol
+					);
 			respuesta = "Endoso generado correctamente";
 			success   = true;
 		}

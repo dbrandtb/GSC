@@ -2961,6 +2961,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nsuplogi_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_error_o"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -4221,10 +4222,12 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		String tipoflot = (String)procResult.get("pv_tipoflot_o");
 		String ntramite = (String)procResult.get("pv_ntramite_o");
 		String nmsuplem = (String)procResult.get("pv_nmsuplem_o");
+		String nsuplogi = (String)procResult.get("pv_nsuplogi_o");
 		PropiedadesDeEndosoParaWS prop = new PropiedadesDeEndosoParaWS();
 		prop.setTipoflot(tipoflot);
 		prop.setNtramite(ntramite);
 		prop.setNmsuplem(nmsuplem);
+		prop.setNsuplogi(nsuplogi);
 		return prop;
 	}
 	
@@ -4247,6 +4250,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nsuplogi_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

@@ -983,14 +983,29 @@ Ext.onReady(function()
 	    				if(json.success==true)
 	    				{
 	    					Ext.getCmp('panEndAltBajAseBotConfirmar').hide();
-	    					mensajeCorrecto('Confirmar endoso',json.mensaje);
-	    					//////////////////////////////////
-                            ////// usa codigo del padre //////
-                            /*//////////////////////////////*/
-                            marendNavegacion(2);
-                            /*//////////////////////////////*/
-                            ////// usa codigo del padre //////
-                            //////////////////////////////////
+	    					
+	    					var callbackRemesa = function()
+	    					{
+	    					    //////////////////////////////////
+                                ////// usa codigo del padre //////
+                                /*//////////////////////////////*/
+                                marendNavegacion(2);
+                                /*//////////////////////////////*/
+                                ////// usa codigo del padre //////
+                                //////////////////////////////////
+                            };
+                            
+                            mensajeCorrecto('Confirmar endoso',json.mensaje,function()
+                            {
+                                _generarRemesaClic(
+                                    true
+                                    ,panendabaseguInputSmap1.CDUNIECO
+                                    ,panendabaseguInputSmap1.CDRAMO
+                                    ,panendabaseguInputSmap1.ESTADO
+                                    ,panendabaseguInputSmap1.NMPOLIZA
+                                    ,callbackRemesa
+                                );
+                            });
 	    				}
 	    				else
 	    				{
@@ -1045,5 +1060,6 @@ Ext.onReady(function()
 	//////////////////////
 	
 });
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="panendabaseDivPri" style="height:1500px;"></div>
