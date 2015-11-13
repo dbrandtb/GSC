@@ -16,7 +16,9 @@ function _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback)
     var ck = 'Iniciando generaci\u00F3n de remesa';
     try
     {
-        alert('required?'+required+','+cdunieco+','+cdramo+','+estado+','+nmpoliza+',callback?'+!Ext.isEmpty(callback));
+        debug('required?'+required+','+cdunieco+','+cdramo+','+estado+','+nmpoliza+',callback?'+!Ext.isEmpty(callback));
+        
+        return callback();
         
         var _impLot_impresionClic;
         
