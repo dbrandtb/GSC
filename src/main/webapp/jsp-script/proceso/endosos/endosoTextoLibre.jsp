@@ -4,7 +4,7 @@
 	var _CONTEXT = '${ctx}';
 	var paramsEntrada          = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 	var situaciones          = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
-	var guardaTextoLibre = '<s:url namespace="/endosos" action=" guardarEndosoTextoLibre"       />';
+	var guardaTextoLibre = '<s:url namespace="/endosos" action="guardarEndosoTextoLibre"       />';
 	
 	var _p44_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple" />';
 	var _cdTipSupEndLibre = '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@ENDOSO_B_LIBRE.cdTipSup" />';
@@ -72,8 +72,24 @@
 	   						    success:function(response,opts){
 	   						    	 panelMask.hide();
 	   						         var jsonResp = Ext.decode(response.responseText);
-	   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,null);
-	   						      	 marendNavegacion(2);
+	   						         
+	   						         var callbackRemesa = function()
+	   						         {
+	   						             marendNavegacion(2);
+	   						         };
+	   						         
+	   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,function()
+	   						      	 {
+	   						      	     _generarRemesaClic(
+	   						      	         true
+	   						      	         ,paramsEntrada.CDUNIECO
+	   						      	         ,paramsEntrada.CDRAMO
+	   						      	         ,paramsEntrada.ESTADO
+	   						      	         ,paramsEntrada.NMPOLIZA
+	   						      	         ,callbackRemesa
+	   						      	     );
+	   						      	 });
+	   						      	 
 	   						    },
 	   						    failure:function(response,opts){
 	   						        panelMask.hide();
@@ -135,5 +151,6 @@
     });
 		
     });
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="maindivText" style="height:1000px;"></div>

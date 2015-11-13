@@ -324,17 +324,31 @@ Ext.onReady(function(){
                             {
                                 _setLoading(false,formPanelp4);
                                 var json=Ext.decode(opts.response.responseText);
-                            	//////////////////////////////////
-                                ////// usa codigo del padre //////
-                                /*//////////////////////////////*/
-                                marendNavegacion(2);
-                                /*//////////////////////////////*/
-                                ////// usa codigo del padre //////
-                                //////////////////////////////////
+                                var callbackRemesa = function()
+                                {
+                            	    //////////////////////////////////
+                                    ////// usa codigo del padre //////
+                                    /*//////////////////////////////*/
+                                    marendNavegacion(2);
+                                    /*//////////////////////////////*/
+                                    ////// usa codigo del padre //////
+                                    //////////////////////////////////
+                                };
                                 Ext.Msg.show({
-                                    title:'Endoso generado',
-                                    msg: json.mensaje,
-                                    buttons: Ext.Msg.OK
+                                    title   : 'Endoso generado',
+                                    msg     : json.mensaje,
+                                    buttons : Ext.Msg.OK,
+                                    fn      : function()
+                                    {
+                                        _generarRemesaClic(
+                                            true
+                                            ,inputCduniecop4
+                                            ,inputCdramop4
+                                            ,inputEstadop4
+                                            ,inputNmpolizap4
+                                            ,callbackRemesa
+                                        );
+                                    }
                                 });
                             },
                             failure:function(response,opts)
@@ -566,6 +580,7 @@ Ext.onReady(function(){
     //////////////////////
 
 });
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <%--
     </head>

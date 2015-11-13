@@ -305,8 +305,21 @@ Ext.onReady(function()
                                                     debug('### confirmar:',json);
                                                     if(json.success)
                                                     {
-                                                        marendNavegacion(2);
-                                                        mensajeCorrecto('Endoso generado',json.message);
+                                                        var callbackRemesa = function()
+                                                        {
+                                                            marendNavegacion(2);
+                                                        };
+                                                        mensajeCorrecto('Endoso generado',json.message,function()
+                                                        {
+                                                            _generarRemesaClic(
+                                                                true
+                                                                ,_p48_params.CDUNIECO
+                                                                ,_p48_params.CDRAMO
+                                                                ,_p48_params.ESTADO
+                                                                ,_p48_params.NMPOLIZA
+                                                                ,callbackRemesa
+                                                            );
+                                                        });
                                                     }
                                                     else
                                                     {
@@ -1461,6 +1474,7 @@ function(records)
 }
 */
 ////// funciones //////
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 </head>
 <body>
