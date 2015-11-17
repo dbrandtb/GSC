@@ -2471,20 +2471,20 @@ public class EndososAction extends PrincipalCoreAction
 				    ///////////////////////////////////////
 				    ////// re generar los documentos //////
 				    /*///////////////////////////////////*/
-//					Map<String,String> datosPoliza = documentosManager.generarDocumentosParametrizados(
-//							(String)omap1.get("pv_cdunieco_i")
-//							,(String)omap1.get("pv_cdramo_i")
-//							,(String)omap1.get("pv_estado_i")
-//							,(String)omap1.get("pv_nmpoliza_i")
-//							,"0" //nmsituac
-//							,respEndCob.get("pv_nmsuplem_o")
-//							,DocumentosManager.PROCESO_ENDOSO
-//							,null //ntramite
-//							,null //nmsolici
-//							);
+					Map<String,String> datosPoliza = documentosManager.generarDocumentosParametrizados(
+							(String)omap1.get("pv_cdunieco_i")
+							,(String)omap1.get("pv_cdramo_i")
+							,(String)omap1.get("pv_estado_i")
+							,(String)omap1.get("pv_nmpoliza_i")
+							,"0" //nmsituac
+							,respEndCob.get("pv_nmsuplem_o")
+							,DocumentosManager.PROCESO_ENDOSO
+							,null //ntramite
+							,null //nmsolici
+							);
 					
-					String ntramite = null;
-					String nmsolici = null;
+					String ntramite = datosPoliza.get("ntramite");
+					String nmsolici = datosPoliza.get("nmsolici");
 					
 					/*
 				    List<Map<String,String>> docs = endososManager.reimprimeDocumentos(
