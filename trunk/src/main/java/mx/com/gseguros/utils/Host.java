@@ -50,7 +50,7 @@ public class Host {
 					FileWriter writerOut = null;
 					try {
 						//File archivo = new File("/ice/tmp/out.log");
-						File archivo = new File("/u01/wlserver/wlapplogs/gseguros/out.log");
+						File archivo = new File("/u01/wlserver/wlapplogs/gseguros/cmd_out.log");
 						writerOut = new FileWriter(archivo, true);
 						writerOut.write(new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(new Date()) + " Inicio" + "\n");
 						
@@ -85,7 +85,7 @@ public class Host {
 					FileWriter writerErr = null;
 					try {
 						//File archivo = new File("/ice/tmp/err.log");
-						File archivo = new File("/u01/wlserver/wlapplogs/gseguros/err.log");
+						File archivo = new File("/u01/wlserver/wlapplogs/gseguros/cmd_err.log");
 						writerErr = new FileWriter(archivo, true);
 						writerErr.write(new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(new Date()) + " Inicio" + "\n");
 						
