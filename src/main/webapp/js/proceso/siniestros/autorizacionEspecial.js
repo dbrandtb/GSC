@@ -181,7 +181,12 @@ Ext.onReady(function() {
 				
 				storeCobertura.load({
 					params:{
+						'params.cdunieco':record.get('cdunieco'),
 						'params.cdramo':record.get('cdramo'),
+						'params.estado':record.get('estado'),
+						'params.nmpoliza':record.get('nmpoliza'),
+						'params.nmsituac':record.get('nmsituac'),
+						'params.nmsuplem':record.get('nmsuplem'),
 						'params.cdtipsit':record.get('cdtipsit')
 					}
 				});

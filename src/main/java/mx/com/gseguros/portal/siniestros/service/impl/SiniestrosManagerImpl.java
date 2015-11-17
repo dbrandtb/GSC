@@ -104,16 +104,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	public List<CoberturaPolizaVO> getConsultaCoberturaAsegurado2(
-			HashMap<String, Object> paramCobertura) throws Exception {
-		try {
-			return siniestrosDAO.obtieneListadoCoberturaAsegurado2(paramCobertura);
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-	
-	@Override
 	public List<DatosSiniestroVO> getConsultaListaDatSubGeneral(
 			HashMap<String, Object> paramDatSubGral)
 			throws Exception {
@@ -1139,7 +1129,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	public Map<String,String>obtenerCopagoDeducible2(
+	public Map<String,String>obtenerCopagoDeducible(
 			String ntramite,
 			String cdunieco,
 			String cdramo,
@@ -1154,7 +1144,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			String tipopago,
 			String cdtipsit) throws Exception
 	{
-		return siniestrosDAO.obtenerCopagoDeducible2(ntramite,cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,nfactura,tipopago,cdtipsit);
+		return siniestrosDAO.obtenerCopagoDeducible(ntramite,cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,nfactura,tipopago,cdtipsit);
 	}
 	
 	@Override
@@ -2034,5 +2024,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		log.debug("lista: "+lista);
 		log.debug("obtenerDatosAutorizacionEspecial lista size: "+lista.size());
 		return lista;
+	}
+	
+	@Override
+	public List<Map<String, String>> getConsultaExisteCoberturaTramite(String ntramite, String tipoPago) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_ntramite_i", ntramite);
+		params.put("pv_formapago_i", tipoPago);
+		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
+		return siniestrosDAO.obtieneListaExisteCoberturaTramite(params);
 	}
 }
