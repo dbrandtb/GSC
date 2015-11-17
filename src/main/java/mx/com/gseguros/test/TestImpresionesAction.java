@@ -29,6 +29,7 @@ import javax.print.attribute.standard.MediaTray;
 import javax.print.attribute.standard.PrinterName;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.gseguros.utils.Host;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.convention.annotation.Action;
@@ -331,6 +332,20 @@ public class TestImpresionesAction extends PrincipalCoreAction {
             return Printable.PAGE_EXISTS;
         }
     }
+    
+    
+	@Action(value="testComando",
+			results={@Result(name="success", type="json")}
+	)
+	public String ejecutaComando() throws Exception {
+		
+		logger.debug("params={}", params);
+		logger.debug("Antes de ejecutar comando {}", params.get("comando"));
+		Host.executeCommand(params.get("comando"));
+		logger.debug("Despues de ejecutar comando {}", params.get("comando"));
+		
+		return SUCCESS;
+	}
     
     
 	/*

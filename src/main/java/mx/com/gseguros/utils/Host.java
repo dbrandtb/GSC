@@ -16,7 +16,8 @@ public class Host {
 		FileWriter writer = null;
 		
 		try {
-			archivo = new File("/ice/tmp/hostCommand.log");
+			//archivo = new File("/ice/tmp/hostCommand.log");
+			archivo = new File("/u01/wlserver/wlapplogs/gseguros/hostCommand.log");
 			writer = new FileWriter(archivo, true); 
 			writer.write(new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(new Date()) + " Iniciando   ejecucion de Host Command..." + "\n");
 			
@@ -48,7 +49,8 @@ public class Host {
 				public void run() {
 					FileWriter writerOut = null;
 					try {
-						File archivo = new File("/ice/tmp/out.log");
+						//File archivo = new File("/ice/tmp/out.log");
+						File archivo = new File("/u01/wlserver/wlapplogs/gseguros/out.log");
 						writerOut = new FileWriter(archivo, true);
 						writerOut.write(new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(new Date()) + " Inicio" + "\n");
 						
@@ -82,7 +84,8 @@ public class Host {
 				public void run() {
 					FileWriter writerErr = null;
 					try {
-						File archivo = new File("/ice/tmp/err.log");
+						//File archivo = new File("/ice/tmp/err.log");
+						File archivo = new File("/u01/wlserver/wlapplogs/gseguros/err.log");
 						writerErr = new FileWriter(archivo, true);
 						writerErr.write(new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(new Date()) + " Inicio" + "\n");
 						
