@@ -354,6 +354,7 @@ function centrarVentanaInterna(ventana)
     } catch(e) {
         debug(e);
     }
+    return ventana;
 }
 
 /** 

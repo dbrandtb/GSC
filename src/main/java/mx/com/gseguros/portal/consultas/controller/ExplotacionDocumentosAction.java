@@ -467,6 +467,65 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	@Action(value   = "marcarImpresionOperacion",
+			results = { @Result(name="success", type="json") }
+	)
+	public String marcarImpresionOperacion()
+	{
+		logger.debug(Utils.log(
+				 "\n######################################"
+				,"\n###### marcarImpresionOperacion ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			UserVO usuario = Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdunieco = params.get("cdunieco");
+			String cdramo   = params.get("cdramo");
+			String estado   = params.get("estado");
+			String nmpoliza = params.get("nmpoliza");
+			String marcar   = params.get("marcar");
+			
+			Utils.validate(
+					cdunieco  , "No se recibi\u00F3 la sucursal"
+					,cdramo   , "No se recibi\u00F3 el producto"
+					,estado   , "No se recibi\u00F3 el estado de p\u00F3liza"
+					,nmpoliza , "No se recibi\u00F3 el n\u00famero de p\u00F3liza"
+			);
+			
+			Map<String,String> preguntarMarcado = explotacionDocumentosManager.marcarImpresionOperacion(
+					usuario.getUser()
+					,usuario.getRolActivo().getClave()
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,marcar
+					);
+			
+			params.putAll(preguntarMarcado);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### success=" , success
+				,"\n###### message=" , message
+				,"\n###### params="  , params
+				,"\n###### marcarImpresionOperacion ######"
+				,"\n######################################"
+				));
+		return SUCCESS;
+	}
+	
 	////////////////// Getters y setters ///////////////////
 	                                                      //
 	public Map<String, String> getParams() {              //

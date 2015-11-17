@@ -1044,10 +1044,22 @@ function _p31_mostrarVistaPrevia()
                                                                     {
                                                                         Ext.Msg.show(
                                                                         {
-                                                                            title : 'Correo enviado'
-                                                                            ,msg : 'El correo ha sido enviado'
+                                                                            title    : 'Correo enviado'
+                                                                            ,msg     : 'El correo ha sido enviado'
                                                                             ,buttons : Ext.Msg.OK
-                                                                            ,icon: 'x-message-box-ok'
+                                                                            ,icon    : 'x-message-box-ok'
+                                                                            ,fn      : function()
+                                                                            {
+                                                                                _generarRemesaClic(
+                                                                                    false
+                                                                                    ,_p31_smap1.cdunieco
+                                                                                    ,_p31_smap1.cdramo
+                                                                                    ,'M'
+                                                                                    ,_p31_smap1.nmpolizaEmitida
+                                                                                    ,function(){}
+                                                                                    ,'S'
+                                                                                );
+                                                                            }
                                                                         });
                                                                     }
                                                                     else

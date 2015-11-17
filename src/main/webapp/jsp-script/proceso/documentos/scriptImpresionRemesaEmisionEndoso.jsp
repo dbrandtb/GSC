@@ -7,19 +7,101 @@
 //_generarRemesaClic({xtype:'1'},1000,2,'M',282,function(){alert('fin');});
 
 ////// variables //////
-var _impLotUrlGenerarRemesa = '<s:url namespace="/consultas"    action="generarRemesaEmisionEndoso" />';
+//var _impLotUrlGenerarRemesa   = '<s:url namespace="/consultas" action="generarRemesaEmisionEndoso" />';
+var _impLotUrlMarcarImpresion = '<s:url namespace="/consultas" action="marcarImpresionOperacion" />';
 ////// variables //////
 
 ////// funciones //////
-function _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback)
+function _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback,marcar)
 {
-    var ck = 'Iniciando generaci\u00F3n de remesa';
+    var ck = 'Revisando impresi\u00f3n';
     try
     {
         debug('required?'+required+','+cdunieco+','+cdramo+','+estado+','+nmpoliza+',callback?'+!Ext.isEmpty(callback));
         
-        return callback();
+        var ven = centrarVentanaInterna(Ext.create('Ext.window.Window',
+        {
+            title     : 'Verificando impresi\u00f3n'
+            ,html     : '<span style="padding:5px;">Verificando impresi\u00f3n</span>'
+            ,width    : 200
+            ,height   : 100
+            ,modal    : true
+            ,closable : false
+        }).show());
         
+        _setLoading(true,ven);
+        
+        Ext.Ajax.request(
+        {
+            url      : _impLotUrlMarcarImpresion
+            ,params  :
+            {
+                'params.cdunieco'  : cdunieco
+                ,'params.cdramo'   : cdramo
+                ,'params.estado'   : estado
+                ,'params.nmpoliza' : nmpoliza
+                ,'params.marcar'   : marcar
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,ven);
+                ven.destroy();
+                var ck = 'Decodificando respuesta al marcar impresi\u00f3n';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### marcar impresion:',json);
+                    if(json.success==true)
+                    {
+                        if(json.params.preguntar=='S')
+                        {
+                            centrarVentanaInterna(Ext.MessageBox.confirm(
+                                'Confirmar'
+                                ,'¿Desea marcar el tr\u00e1mite como impreso y entregado?'
+                                ,function(btn)
+                                {
+                                    if(btn === 'yes')
+                                    {
+                                        _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback,'S');
+                                    }
+                                    else
+                                    {
+                                        debug('no quiso marcar');
+                                        callback();
+                                    }
+                                }
+                            ));
+                        }
+                        else if(json.params.marcado=='S')
+                        {
+                            debug('marcado');
+                            mensajeCorrecto('Aviso','La emisi\u00f3n/endoso se marc\u00f3 como impresa',function(){ callback(); });
+                        }
+                        else
+                        {
+                            debug('no preguntar');
+                            callback();
+                        }
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,ven);
+                ven.destroy();
+                errorComunicacion(null,'Error marcando impresi\u00f3n');
+            }
+        });
+        
+        /*
         var _impLot_impresionClic;
         
         centrarVentanaInterna(Ext.create('Ext.window.Window',
@@ -139,6 +221,7 @@ function _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback)
                 }
             }));
         };
+        */
     }
     catch(e)
     {

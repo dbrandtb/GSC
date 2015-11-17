@@ -64,4 +64,14 @@ public interface ExplotacionDocumentosManager
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+	
+	public Map<String,String> marcarImpresionOperacion(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String marcar
+			)throws Exception;
 }

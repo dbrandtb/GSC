@@ -815,4 +815,41 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
     		compile();
 		}
 	}
+	
+	@Override
+	public Map<String,Boolean> marcarImpresionOperacion(
+			String cdsisrol
+			,String ntramite
+			,String marcar
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdsisrol" , cdsisrol);
+		params.put("ntramite" , ntramite);
+		params.put("marcar"   , marcar);
+		Map<String,Object>  procRes   = ejecutaSP(new MarcarImpresionOperacion(getDataSource()),params);
+		String              preguntar = (String)procRes.get("pv_preguntar_o");
+		String              marcado   = (String)procRes.get("pv_marcado_o");
+		Map<String,Boolean> result    = new HashMap<String,Boolean>();
+		result.put("preguntar" , "S".equals(preguntar));
+		result.put("marcado"   , "S".equals(marcado));
+		logger.debug(Utils.log("\n****** PKG_SATELITES2.P_MARCA_IMPRESION_OPE result=",result));
+		return result;
+	}
+	
+	protected class MarcarImpresionOperacion extends StoredProcedure
+	{
+		protected MarcarImpresionOperacion(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_MARCA_IMPRESION_OPE");
+    		declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("marcar"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_preguntar_o" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_marcado_o"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("PV_MSG_ID_O"    , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("PV_TITLE_O"     , OracleTypes.VARCHAR));
+    		compile();
+		}
+	}
 }
