@@ -958,7 +958,7 @@ function _datComTurnarSuscripcion()
 									                                        {
 									                                        	
 										                                        var orden=0;
-															                    var parentescoAnterior='qwerty';
+															                    var parentescoAnterior='werty';
 															                    for(var i=0;i<json.slist1.length;i++)
 															                    {
 															                        if(json.slist1[i].parentesco!=parentescoAnterior)
@@ -1273,9 +1273,21 @@ function _datComTurnarSuscripcion()
 										                                                        		    			    		{
 										                                                        		    			    			Ext.Msg.show(
 										                                                        		    			    			{
-										                                                        		    			    				title : 'Correo enviado'
-										                                                        		    			    				,msg : 'El correo ha sido enviado'
+										                                                        		    			    				title    : 'Correo enviado'
+										                                                        		    			    				,msg     : 'El correo ha sido enviado'
 										                                                        		    			    				,buttons : Ext.Msg.OK
+										                                                        		    			    				,fn      : function()
+										                                                        		    			    				{
+										                                                        		    			    				    _generarRemesaClic(
+										                                                        		    			    				        false
+										                                                        		    			    				        ,inputCdunieco
+										                                                        		    			    				        ,inputCdramo
+										                                                        		    			    				        ,'M'
+										                                                        		    			    				        ,datComPolizaMaestra
+										                                                        		    			    				        ,function(){}
+										                                                        		    			    				        ,'S'
+										                                                        		    			    				        );
+										                                                        		    			    				}
 										                                                        		    			    			});
 										                                                        		    			    		}
 										                                                        		    			    		else

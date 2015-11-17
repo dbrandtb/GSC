@@ -1194,4 +1194,94 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		
 		return result;
 	}
+	
+	@Override
+	public Map<String,String> marcarImpresionOperacion(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String marcar
+			)throws Exception
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ marcarImpresionOperacion @@@@@@"
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ marcar="   , marcar
+				));
+		
+		Map<String,String> result = new HashMap<String,String>();
+		String             paso   = null;
+		
+		try
+		{
+			paso = "Recuperando suplemento";
+			sb.append("\n").append(paso);
+			
+			String nmsuplem = consultasDAO.recuperarUltimoNmsuplem(cdunieco,cdramo,estado,nmpoliza);
+			
+			paso = "Recuperando tr\u00e1mite";
+			sb.append("\n").append(paso);
+			
+			String ntramite = consultasDAO.recuperarTramitePorNmsuplem(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+			
+			paso = "Marcando tr\u00e1mite";
+			sb.append("\n").append(paso);
+			
+			Map<String,Boolean> preguntarMarcado = mesaControlDAO.marcarImpresionOperacion(
+					cdsisrol
+					,ntramite
+					,marcar
+					);
+			
+			Boolean preguntar = preguntarMarcado.get("preguntar");
+			Boolean marcado   = preguntarMarcado.get("marcado");
+			
+			if(preguntar==null||marcado==null)
+			{
+				throw new ApplicationException("No se pudo recuperar status de operaci\u00f3n");
+			}
+			
+			result.put("preguntar" , preguntar.equals(Boolean.TRUE) ? "S" : "N");
+			result.put("marcado"   , marcado.equals(Boolean.TRUE)   ? "S" : "N");
+			
+			if(marcado.equals(Boolean.TRUE))
+			{
+				paso = "Guardando detalle";
+				sb.append("\n").append(paso);
+				
+				mesaControlDAO.movimientoDetalleTramite(
+						ntramite
+						,new Date()                //feinicio
+						,null                      //cdclausu
+						,"El tr\u00e1mite se marc\u00f3 como impreso"  //comments
+						,cdusuari
+						,null                      //cdmotivo
+						,cdsisrol
+						);
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		sb.append(Utils.log(
+				 "\n@@@@@@ result=",result
+				,"\n@@@@@@ marcarImpresionOperacion @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		logger.debug(sb.toString());
+		
+		return result;
+	}
 }

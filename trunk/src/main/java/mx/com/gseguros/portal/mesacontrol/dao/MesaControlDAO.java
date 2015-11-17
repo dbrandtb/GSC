@@ -210,4 +210,10 @@ public interface MesaControlDAO
 			,String ntramite
 			,String status
 			)throws Exception;
+	
+	public Map<String,Boolean> marcarImpresionOperacion(
+			String cdsisrol
+			,String ntramite
+			,String marcar
+			)throws Exception;
 }
