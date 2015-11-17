@@ -1616,6 +1616,7 @@ Ext.onReady(function() {
 						header: 'Correo electr&oacute;nico',	dataIndex: 'modEmail',			width:150
 						,editor: {
 							xtype: 'textfield',
+							vtype: 'email',
 							allowBlank: false
 						}
 					}/*,
@@ -1862,11 +1863,11 @@ Ext.onReady(function() {
 					}
 				}
 			},
-			{	xtype: 'numberfield',				fieldLabel: 'Tel&eacute;fono'				,name		: 'txtTelefono' 
+			{	xtype: 'numberfield',				fieldLabel: 'Tel&eacute;fono'			,name		: 'txtTelefono' 
 				,width		 : 350
 			},
 			{	xtype: 'textfield',					fieldLabel: 'Correo Electr&oacute;nico'	,name		: 'txtEmail'
-				,width		 : 350
+				,width		 : 350,					vtype: 'email'
 			},
 			{	xtype: 'textfield',					fieldLabel: 'Autorizacion'	,name		: 'txtAutEspecial'
                 ,width		 : 300,					value: "0",			hidden:true
@@ -2875,6 +2876,8 @@ Ext.onReady(function() {
 		panelInicialPral.down('combo[name=cmbBeneficiario]').allowBlank = pagoReembolso;
 		panelInicialPral.down('combo[name=cmbAseguradoAfectado]').allowBlank = pagoReembolso;
 		panelInicialPral.down('[name=dtFechaOcurrencia]').allowBlank = pagoReembolso;
+		panelInicialPral.down('[name=txtTelefono]').allowBlank = pagoReembolso;
+		panelInicialPral.down('[name=txtEmail]').allowBlank = pagoReembolso;
 		panelInicialPral.down('combo[name=cmbProveedor]').allowBlank = pagoDirecto;
 		return true;
 	}
@@ -2895,6 +2898,19 @@ Ext.onReady(function() {
 	        });
 	        return false;
 	    }else{
+		    for(i=0;i < obtener.length;i++){
+				if(obtener[i].modTelefono == null ||obtener[i].modEmail == null ||
+					obtener[i].modTelefono == "" ||obtener[i].modEmail == ""){
+					centrarVentanaInterna(Ext.Msg.show({
+						title:'Concepto',
+						msg: 'Los siguientes campos son requeridos: tel&eacute;fono / Correo electr&oacute;nico.',
+						buttons: Ext.Msg.OK,
+						icon: Ext.Msg.WARNING
+					}).defer(100));
+					return false;
+				}
+			}
+		    
 	        var submitValues={};
 	        var formulario=panelInicialPral.form.getValues();
 	        submitValues['params']=formulario;

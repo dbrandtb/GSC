@@ -60,8 +60,6 @@ public interface SiniestrosManager {
 	
 	public List<CoberturaPolizaVO> getConsultaCoberturaAsegurado(HashMap<String, Object> paramCobertura) throws Exception;
 	
-	public List<CoberturaPolizaVO> getConsultaCoberturaAsegurado2(HashMap<String, Object> paramCobertura) throws Exception;
-	
 	public List<DatosSiniestroVO> getConsultaListaDatSubGeneral(HashMap<String, Object> paramDatSubGral) throws Exception;
 	
 	public List<GenericVO> getConsultaListaSubcobertura(String cdunieco, String cdramo, String estado, String nmpoliza,
@@ -436,7 +434,7 @@ public interface SiniestrosManager {
 	 * {CDGARANT=18SD, OTCLAVE2=18SD003, CDCAPITA=4,
  LUC=SI, DEDUCIBLE=NA, COPAGO=25, BENEFMAX=NA, ICD=SI, CPT=SI, LIMITES=NA, TIPOCOPAGO=%, UNIDAD=null, :B11=0}
 	 */
-	public Map<String,String>obtenerCopagoDeducible2(
+	public Map<String,String>obtenerCopagoDeducible(
 			String ntramite,
 			String cdunieco,
 			String cdramo,
@@ -644,4 +642,6 @@ public interface SiniestrosManager {
 	public String asociarAutorizacionEspecial(HashMap<String, Object> paramAutEspecial) throws Exception;
 	
 	public List<Map<String,String>> obtenerDatosAutorizacionEspecial(String nmautespecial) throws Exception;
+	
+	public List<Map<String, String>> getConsultaExisteCoberturaTramite(String ntramite, String tipoPago)throws Exception;
 }

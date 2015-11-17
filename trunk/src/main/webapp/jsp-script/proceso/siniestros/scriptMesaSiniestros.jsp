@@ -65,7 +65,8 @@ var _URL_POLIZA_UNICA					= '<s:url namespace="/siniestros"	action="consultaPoli
 var _URL_MONTO_PAGO_SINIESTRO			= '<s:url namespace="/siniestros"	action="obtieneMontoPagoSiniestro"/>';
 var _URL_P_MOV_MAUTSINI					= '<s:url namespace="/siniestros"	action="obtieneMensajeMautSini"/>';
 var _URL_VALIDA_AUTESPECIFICA			= '<s:url namespace="/siniestros"	action="validaAutorizacionEspecial"/>';
-var _URL_MESACONTROL					= '<s:url namespace="/mesacontrol" 		action="mcdinamica" />';
+var _URL_MESACONTROL					= '<s:url namespace="/mesacontrol" 	action="mcdinamica" />';
+var _URL_EXISTE_COBERTURA				= '<s:url namespace="/siniestros" 	action="consultaExisteCoberturaTramite" />';
 var windowLoader;
 var msgWindow;
 
@@ -1108,70 +1109,103 @@ var msgWindow;
 			mensajeWarning('Ya se ha solicitado el pago para este tr&aacute;mite.');	
 			return;
 		}else{
-			//validamos los montos 
 			Ext.Ajax.request({
-				url	: _URL_MONTO_PAGO_SINIESTRO
+				url	 : _URL_EXISTE_COBERTURA
 				,params:{
-					'params.ntramite' : record.get('ntramite'),
-					'params.cdramo'   : record.get('cdramo'),
-					'params.tipoPago' : record.get('parametros.pv_otvalor02')
+					'params.ntramite'  : record.get('ntramite'),
+					'params.tipoPago'  : record.get('parametros.pv_otvalor02')
 				}
-				,success : function (response){
-					var jsonRespuesta =Ext.decode(response.responseText);//.datosInformacionAdicional[0];
-					debug("Valor de Respuesta", jsonRespuesta);
-					
-					if(jsonRespuesta.success == true){
-						if( record.get('parametros.pv_otvalor02') ==_PAGO_DIRECTO){
-							mostrarSolicitudPago(grid,rowIndex,colIndex);
-						}else{
-							Ext.Ajax.request({
-								url	 : _URL_VAL_AJUSTADOR_MEDICO
-								,params:{
-									'params.ntramite': record.get('ntramite')
-								}
-								,success : function (response)
-								{
-									if(Ext.decode(response.responseText).datosValidacion != null){
-										var autAM = null;
-										var result ="";
-										banderaValidacion = "0";
-										var json = Ext.decode(response.responseText).datosValidacion;
-										if(json.length > 0){
-											for(var i = 0; i < json.length; i++){
-												if(json[i].AREAAUTO =="ME"){
-													var valorValidacion = json[i].SWAUTORI+"";
-													if(valorValidacion == null || valorValidacion == ''|| valorValidacion == 'null'){
-														banderaValidacion = "1";
-														result = result + 'El m&eacute;dico no autoriza la factura ' + json[i].NFACTURA + '<br/>';
+				,success : function (response) {
+					//Obtenemos los datos
+					var valCobertura = Ext.decode(response.responseText).datosValidacion;
+					var i = 0;
+					var banderaExisteCobertura = 0;
+					var resultCobertura= "";
+					if(valCobertura.length > 0){
+						//Mostramos el mensaje de Error y no podra continuar
+						debug("Valor de Respuesta ===>",valCobertura.length);
+						for(var i = 0; i < valCobertura.length; i++){
+							banderaExisteCobertura = "1";
+							resultCobertura = resultCobertura + 'La Factura ' + valCobertura[i].NFACTURA + ' del siniestro '+ valCobertura[i].NMSINIES+ ' tiene cobertura no amparada. <br/>';
+						}
+						if(banderaExisteCobertura == "1"){
+							centrarVentanaInterna(mensajeWarning(resultCobertura));
+						}
+					}else{
+						//validamos los montos 
+						Ext.Ajax.request({
+							url	: _URL_MONTO_PAGO_SINIESTRO
+							,params:{
+								'params.ntramite' : record.get('ntramite'),
+								'params.cdramo'   : record.get('cdramo'),
+								'params.tipoPago' : record.get('parametros.pv_otvalor02')
+							}
+							,success : function (response){
+								var jsonRespuesta =Ext.decode(response.responseText);//.datosInformacionAdicional[0];
+								debug("Valor de Respuesta", jsonRespuesta);
+								
+								if(jsonRespuesta.success == true){
+									if( record.get('parametros.pv_otvalor02') ==_PAGO_DIRECTO){
+										mostrarSolicitudPago(grid,rowIndex,colIndex);
+									}else{
+										Ext.Ajax.request({
+											url	 : _URL_VAL_AJUSTADOR_MEDICO
+											,params:{
+												'params.ntramite': record.get('ntramite')
+											}
+											,success : function (response)
+											{
+												if(Ext.decode(response.responseText).datosValidacion != null){
+													var autAM = null;
+													var result ="";
+													banderaValidacion = "0";
+													var json = Ext.decode(response.responseText).datosValidacion;
+													if(json.length > 0){
+														for(var i = 0; i < json.length; i++){
+															if(json[i].AREAAUTO =="ME"){
+																var valorValidacion = json[i].SWAUTORI+"";
+																if(valorValidacion == null || valorValidacion == ''|| valorValidacion == 'null'){
+																	banderaValidacion = "1";
+																	result = result + 'El m&eacute;dico no autoriza la factura ' + json[i].NFACTURA + '<br/>';
+																}
+															}
+														}
+														if(banderaValidacion == "1"){
+															centrarVentanaInterna(mensajeWarning(result));
+														}else{
+															mostrarSolicitudPago(grid,rowIndex,colIndex);
+														}
+													}else{
+														centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
 													}
 												}
+											},
+											failure : function (){
+												me.up().up().setLoading(false);
+												Ext.Msg.show({
+													title:'Error',
+													msg: 'Error de comunicaci&oacute;n',
+													buttons: Ext.Msg.OK,
+													icon: Ext.Msg.ERROR
+												});
 											}
-											if(banderaValidacion == "1"){
-												centrarVentanaInterna(mensajeWarning(result));
-											}else{
-												mostrarSolicitudPago(grid,rowIndex,colIndex);
-											}
-										}else{
-											centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
-										}
+										});
 									}
-								},
-								failure : function (){
-									me.up().up().setLoading(false);
-									Ext.Msg.show({
-										title:'Error',
-										msg: 'Error de comunicaci&oacute;n',
-										buttons: Ext.Msg.OK,
-										icon: Ext.Msg.ERROR
-									});
+								}else {
+									centrarVentanaInterna(mensajeWarning(jsonRespuesta.mensaje));
 								}
-							});
-						}
-					}else {
-						centrarVentanaInterna(mensajeWarning(jsonRespuesta.mensaje));
+							},
+							failure : function (){
+								Ext.Msg.show({
+									title:'Error',
+									msg: 'Error de comunicaci&oacute;n',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.ERROR
+								});
+							}
+						});
 					}
-				},
-				failure : function (){
+				},failure : function () {
 					Ext.Msg.show({
 						title:'Error',
 						msg: 'Error de comunicaci&oacute;n',
@@ -1276,6 +1310,9 @@ var msgWindow;
 			}
 		});
 		
+		//1.- Validamos que no existe 
+		
+		
 		msgWindow = Ext.Msg.show({
 	        title: 'Aviso',
 	        msg: '&iquest;Esta seguro que desea solicitar el pago?',
@@ -1285,9 +1322,6 @@ var msgWindow;
 	        	if(buttonId == 'yes'){
 	        		var record = grid.getStore().getAt(rowIndex);
 	        		var recordAdicional = grid.getStore().getAt(rowIndex);
-	        		
-	        		debug("VALOR DEL RECORD :",record);
-	        		debug("VALOR DEL RECORD :",record.raw);
 	        		
 	        		storeConceptoPago.load({
 						params : {

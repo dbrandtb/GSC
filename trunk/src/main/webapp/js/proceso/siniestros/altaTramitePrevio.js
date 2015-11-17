@@ -1262,10 +1262,10 @@ Ext.onReady(function() {
 						}
 					},
 					{	xtype: 'numberfield',				fieldLabel: 'Tel&eacute;fono'				,name		: 'txtTelefono' 
-		                ,width		 : 300
+		                ,width		 : 300,					allowBlank : false
 		            },
-		            {	xtype: 'textfield',					fieldLabel: 'Correo Electr&oacute;nico'	,name		: 'txtEmail'
-		                ,width		 : 300
+		            {	xtype: 'textfield',					fieldLabel: 'Correo Electr&oacute;nico'	,	name		: 'txtEmail'
+		                ,width		 : 300,					allowBlank : false,							vtype: 'email'
 		            },
 		            {	xtype: 'textfield',					fieldLabel: 'Autorizacion'	,name		: 'txtAutEspecial'
 		                ,width		 : 300,					value: "0",			hidden:true
@@ -1728,6 +1728,8 @@ Ext.onReady(function() {
 		panelInicialPral.down('combo[name=cmbBeneficiario]').allowBlank = pagoReembolso;
 		panelInicialPral.down('combo[name=cmbAseguradoAfectado]').allowBlank = pagoReembolso;
 		panelInicialPral.down('[name=dtFechaOcurrencia]').allowBlank = pagoReembolso;
+		panelInicialPral.down('[name=txtTelefono]').allowBlank = pagoReembolso;
+		panelInicialPral.down('[name=txtEmail]').allowBlank = pagoReembolso;
 		panelInicialPral.down('combo[name=cmbProveedor]').allowBlank = pagoDirecto;
     	return true;
 	}

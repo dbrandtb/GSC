@@ -36,8 +36,6 @@ public interface SiniestrosDAO {
 
 	public List<CoberturaPolizaVO> obtieneListadoCoberturaAsegurado(HashMap<String, Object> paramCobertura) throws Exception;
 	
-	public List<CoberturaPolizaVO> obtieneListadoCoberturaAsegurado2(HashMap<String, Object> paramCobertura) throws Exception;
-	
 	public List<DatosSiniestroVO> obtieneListadoDatSubGeneral(HashMap<String, Object> paramDatSubGral) throws Exception;
 	
 	public List<GenericVO> obtieneListadoSubcobertura(String cdunieco, String cdramo, String estado, String nmpoliza,
@@ -301,7 +299,7 @@ public interface SiniestrosDAO {
 			String nfactura,
 			String cdtipsit) throws Exception;
 	
-	public Map<String,String>obtenerCopagoDeducible2(
+	public Map<String,String>obtenerCopagoDeducible(
 			String ntramite,
 			String cdunieco,
 			String cdramo,
@@ -513,4 +511,6 @@ public interface SiniestrosDAO {
 	public String asociarAutorizacionEspecial(HashMap<String, Object> paramAutEspecial) throws Exception;
 	
 	public List<Map<String,String>> obtenerDatosAutorizacionEspecial(Map<String, String> params) throws Exception;
+	
+	public List<Map<String, String>> obtieneListaExisteCoberturaTramite(HashMap<String, Object> params) throws Exception;
 }

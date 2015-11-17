@@ -1956,7 +1956,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 										paramCobertura.put("pv_nmpoliza_i",nmpoliza);
 										paramCobertura.put("pv_nmsituac_i",nmsituac);
 										paramCobertura.put("pv_cdgarant_i",null);
-										List<CoberturaPolizaVO> listaCobertura = siniestrosManager.getConsultaCoberturaAsegurado2(paramCobertura);
+										List<CoberturaPolizaVO> listaCobertura = siniestrosManager.getConsultaCoberturaAsegurado(paramCobertura);
 										logger.debug("Paso 13.- Listado de Coberturas  : {} ",listaCobertura);
 										for(int j1 = 0 ;j1 < listaCobertura.size();j1++){
 											if(listaCobertura.get(j1).getCdgarant().toString().equalsIgnoreCase("7EDA")){
@@ -1969,8 +1969,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								aseguradoObj.put("CAUSASINIESTRO", CausaSiniestro.ENFERMEDAD.getCodigo());
 							}
 							// Obtenemos la informacion del Deducible y Copago
-							Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible2(
-									ntramite, cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, (tramite.get("OTVALOR02") =="1"?nfactura:null),tramite.get("OTVALOR02"), cdtipsit);
+							Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(
+									ntramite, cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies,nfactura,tramite.get("OTVALOR02"), cdtipsit);
 							logger.debug("Paso 13.- Informacion Deducible/Copago : {}",copagoDeducibleSiniestroIte);
 							
 							String tipoFormatoCalculo			= copagoDeducibleSiniestroIte.get("FORMATOCALCULO");
@@ -2678,8 +2678,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					
 					boolean existeCobertura = false;
 					
-					Map<String,String>copagoDeducibleFacturaIte =siniestrosManager.obtenerCopagoDeducible2(
-							ntramite,cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, (tramite.get("OTVALOR02") =="1"?nfactura:null),tramite.get("OTVALOR02"),cdtipsit);
+					Map<String,String>copagoDeducibleFacturaIte =siniestrosManager.obtenerCopagoDeducible(
+							ntramite,cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura ,tramite.get("OTVALOR02"),cdtipsit);
 					
 					//1.- Obtenemos la informacion de Autorizacion de Factura
 					Map<String,String>autorizacionesFacturaIte = siniestrosManager.obtenerAutorizacionesFactura(
@@ -2703,9 +2703,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"),siniestro.get("NMSITUAC"), siniestro.get("NMSUPLEM"), siniestro.get("STATUS"), siniestro.get("AAAPERTU"), siniestro.get("NMSINIES") , facturaIte.get("NTRAMITE"));
 					
 					//3.- Guardamos los valores en calculosPenalizaciones
-					Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible2(ntramite, siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"),
+					Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(ntramite, siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"),
 							siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSUPLEM"),siniestro.get("NMSITUAC"),
-							siniestro.get("AAAPERTU"),siniestro.get("STATUS"),siniestro.get("NMSINIES") ,(tramite.get("OTVALOR02") =="1"?facturaIte.get("NFACTURA"):null) ,tramite.get("OTVALOR02"),siniestro.get("CDTIPSIT"));
+							siniestro.get("AAAPERTU"),siniestro.get("STATUS"),siniestro.get("NMSINIES") ,facturaIte.get("NFACTURA") ,tramite.get("OTVALOR02"),siniestro.get("CDTIPSIT"));
 					
 					String tipoFormatoCalculo = copagoDeducibleSiniestroIte.get("FORMATOCALCULO");
 					String calculosPenalizaciones = copagoDeducibleSiniestroIte.get("PENALIZACIONES");
@@ -2726,7 +2726,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							paramDatosCo.put("pv_nmsituac_i",siniestro.get("NMSITUAC"));
 							paramDatosCo.put("pv_cdgarant_i",null);
 							
-							List<CoberturaPolizaVO> listadoCobertura = siniestrosManager.getConsultaCoberturaAsegurado2(paramDatosCo);
+							List<CoberturaPolizaVO> listadoCobertura = siniestrosManager.getConsultaCoberturaAsegurado(paramDatosCo);
 							//logger.debug("VALOR DE LAS COBERTURAS  P. REEMBOLSO : {} ",listaCobertura);
 							for(int j2 = 0 ;j2 < listadoCobertura.size();j2++){
 								if(listadoCobertura.get(j2).getCdgarant().toString().equalsIgnoreCase("7EDA")){
@@ -3066,9 +3066,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						facturaObj.put("TOTALFACTURAIND",totalFactura+"");
 						importeSiniestroUnico += totalFactura;
 					}else{
-						Map<String,String>copagoDeducibleFacturaIte =siniestrosManager.obtenerCopagoDeducible2(
+						Map<String,String>copagoDeducibleFacturaIte =siniestrosManager.obtenerCopagoDeducible(
 								ntramite, siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"), siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSUPLEM"), siniestro.get("NMSITUAC"),
-								siniestro.get("AAAPERTU"), siniestro.get("STATUS"), siniestro.get("NMSINIES"), (tramite.get("OTVALOR02") =="1"?facturaIte.get("NFACTURA"):null) ,tramite.get("OTVALOR02"),siniestro.get("CDTIPSIT"));
+								siniestro.get("AAAPERTU"), siniestro.get("STATUS"), siniestro.get("NMSINIES"), facturaIte.get("NFACTURA"),tramite.get("OTVALOR02"),siniestro.get("CDTIPSIT"));
 						logger.debug("copagoDeducibleFacturaIte : {} ",copagoDeducibleFacturaIte);
 						
 						Map<String,String>rentaDiariaxHospitalizacion =siniestrosManager.obtenerRentaDiariaxHospitalizacion(
@@ -3576,7 +3576,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 									paramCobertura.put("pv_nmpoliza_i",nmpoliza);
 									paramCobertura.put("pv_nmsituac_i",nmsituac);
 									paramCobertura.put("pv_cdgarant_i",null);
-									List<CoberturaPolizaVO> listaCobertura = siniestrosManager.getConsultaCoberturaAsegurado2(paramCobertura);
+									List<CoberturaPolizaVO> listaCobertura = siniestrosManager.getConsultaCoberturaAsegurado(paramCobertura);
 									logger.debug("Paso 13.- Listado de Coberturas  : {} ",listaCobertura);
 									for(int j1 = 0 ;j1 < listaCobertura.size();j1++){
 										if(listaCobertura.get(j1).getCdgarant().toString().equalsIgnoreCase("7EDA")){
@@ -3589,8 +3589,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							aseguradoObj.put("CAUSASINIESTRO", CausaSiniestro.ENFERMEDAD.getCodigo());
 						}
 						
-						Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible2(
-									ntramite,cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, (tramite.get("OTVALOR02") =="1"?nfactura:null) ,tramite.get("OTVALOR02"), cdtipsit);
+						Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(
+									ntramite,cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,tramite.get("OTVALOR02"), cdtipsit);
 						logger.debug("Paso 13.- Informacion Deducible/Copago : {}",copagoDeducibleSiniestroIte);
 						
 						String tipoFormatoCalculo         = copagoDeducibleSiniestroIte.get("FORMATOCALCULO");
@@ -4298,8 +4298,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				
 				boolean existeCobertura = false;
 				
-				Map<String,String>copagoDeducibleFacturaIte =siniestrosManager.obtenerCopagoDeducible2(
-					ntramite, cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, (tramite.get("OTVALOR02") =="1"?nfactura:null) ,tramite.get("OTVALOR02"),cdtipsit);
+				Map<String,String>copagoDeducibleFacturaIte =siniestrosManager.obtenerCopagoDeducible(
+					ntramite, cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,tramite.get("OTVALOR02"),cdtipsit);
 				
 				//1.- Obtenemos la informaci�n de Autorizaci�n de Factura
 				Map<String,String>autorizacionesFacturaIte = siniestrosManager.obtenerAutorizacionesFactura(
@@ -4323,9 +4323,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"),siniestro.get("NMSITUAC"), siniestro.get("NMSUPLEM"), siniestro.get("STATUS"), siniestro.get("AAAPERTU"), siniestro.get("NMSINIES") , facturaIte.get("NTRAMITE"));
 
 				//3.- Guardamos los valores en calculosPenalizaciones
-				Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible2(ntramite,siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"),
+				Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(ntramite,siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"),
 				siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSUPLEM"),siniestro.get("NMSITUAC"),
-				siniestro.get("AAAPERTU"),siniestro.get("STATUS"),siniestro.get("NMSINIES") ,(tramite.get("OTVALOR02") =="1"?facturaIte.get("NFACTURA"):null) ,tramite.get("OTVALOR02"),siniestro.get("CDTIPSIT"));
+				siniestro.get("AAAPERTU"),siniestro.get("STATUS"),siniestro.get("NMSINIES"),facturaIte.get("NFACTURA"),tramite.get("OTVALOR02"),siniestro.get("CDTIPSIT"));
 
 				String tipoFormatoCalculo = copagoDeducibleSiniestroIte.get("FORMATOCALCULO");
 				String calculosPenalizaciones = copagoDeducibleSiniestroIte.get("PENALIZACIONES");
@@ -4346,7 +4346,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						paramDatosCo.put("pv_nmsituac_i",siniestro.get("NMSITUAC"));
 						paramDatosCo.put("pv_cdgarant_i",null);
 
-						List<CoberturaPolizaVO> listadoCobertura = siniestrosManager.getConsultaCoberturaAsegurado2(paramDatosCo);
+						List<CoberturaPolizaVO> listadoCobertura = siniestrosManager.getConsultaCoberturaAsegurado(paramDatosCo);
 						//logger.debug("VALOR DE LAS COBERTURAS  P. REEMBOLSO : {} ",listaCobertura);
 						for(int j2 = 0 ;j2 < listadoCobertura.size();j2++){
 							if(listadoCobertura.get(j2).getCdgarant().toString().equalsIgnoreCase("7EDA")){
@@ -4687,9 +4687,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					importeSiniestroUnico += totalFactura;
 					
 				}else{
-					Map<String,String>copagoDeducibleFacturaIte =siniestrosManager.obtenerCopagoDeducible2(
+					Map<String,String>copagoDeducibleFacturaIte =siniestrosManager.obtenerCopagoDeducible(
 							ntramite,siniestro.get("CDUNIECO"), siniestro.get("CDRAMO"), siniestro.get("ESTADO"), siniestro.get("NMPOLIZA"), siniestro.get("NMSUPLEM"), siniestro.get("NMSITUAC"),
-							siniestro.get("AAAPERTU"), siniestro.get("STATUS"), siniestro.get("NMSINIES"), (tramite.get("OTVALOR02") =="1"?facturaIte.get("NFACTURA"):null),tramite.get("OTVALOR02"),siniestro.get("CDTIPSIT"));
+							siniestro.get("AAAPERTU"), siniestro.get("STATUS"), siniestro.get("NMSINIES"), facturaIte.get("NFACTURA"),tramite.get("OTVALOR02"),siniestro.get("CDTIPSIT"));
 					logger.debug("copagoDeducibleFacturaIte : {} ",copagoDeducibleFacturaIte);
 					
 					Map<String,String>rentaDiariaxHospitalizacion =siniestrosManager.obtenerRentaDiariaxHospitalizacion(
@@ -5087,7 +5087,12 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		logger.debug("Entra a consultaListaCoberturaProducto params de entrada :{}",params);
 		try {
 			HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
+			paramCobertura.put("pv_cdunieco_i",params.get("cdunieco"));
 			paramCobertura.put("pv_cdramo_i",params.get("cdramo"));
+			paramCobertura.put("pv_estado_i",params.get("estado"));
+			paramCobertura.put("pv_nmpoliza_i",params.get("nmpoliza"));
+			paramCobertura.put("pv_nmsuplem_i",params.get("nmsuplem"));
+			paramCobertura.put("pv_nmsituac_i",params.get("nmsituac"));
 			paramCobertura.put("pv_cdtipsit_i",params.get("cdtipsit"));
 			
 			List<CoberturaPolizaVO> lista = siniestrosManager.getConsultaListaCoberturaProducto(paramCobertura);
@@ -5164,19 +5169,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	public String validaAutorizacionEspecial(){
 		logger.debug("Entra a validaAutorizacionEspecial  Params: {}", params);
 		try {
-			
-			/*'params.ntramite'  : json.NTRAMITE,
-																		'params.'  : json.OTVALOR02,
-																		'params.'  : json.NFACTURA,
-																		'params.'  : json.CDUNIECO,
-																		'params.'    : json.CDRAMO,
-																		'params.'    : json.ESTADO,
-																		'params.nmpoliza'  : json.NMPOLIZA,
-																		'params.'  : json.NMSUPLEM,
-																		'params.'  : json.NMSITUAC,
-																		'params.'  : datos.txtAutEspecial,
-																		'params.nmsinies'  : json.NMSINIES
-																		*/
 			HashMap<String, Object> paramAutEspecial = new HashMap<String, Object>();
 			paramAutEspecial.put("pv_ntramite_i",params.get("ntramite"));
 			paramAutEspecial.put("pv_tipoPago_i",params.get("tipoPago"));
@@ -5208,6 +5200,19 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.debug("Respuesta datosValidacion : {}", datosValidacion);
 		}catch( Exception e){
 			logger.error("Error al obtener los datos de la validacion del Siniestro : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	public String consultaExisteCoberturaTramite(){
+		logger.debug("Entra a consultaExisteCoberturaTramite params de entrada :{}",params);
+		try {
+			datosValidacion = siniestrosManager.getConsultaExisteCoberturaTramite(params.get("ntramite"),params.get("tipoPago"));
+			logger.debug("Respuesta datosValidacion : {}", datosValidacion);
+		}catch( Exception e){
+			logger.error("Error al obtener las consultaExisteCoberturaTramite : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
 		success = true;

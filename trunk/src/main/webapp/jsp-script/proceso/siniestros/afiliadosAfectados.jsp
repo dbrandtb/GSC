@@ -96,7 +96,11 @@
 			var _URL_MRECUPERA							= '<s:url namespace="/siniestros" 		action="obtenerMRecupera" />';
 			var _URL_SUMASEG_RECUPERA					= '<s:url namespace="/siniestros"		action="obtieneDatosRecupera"/>';
 			var _URL_GUARDA_CONCEPTO_RECUPERA			= '<s:url namespace="/siniestros"  		action="guardarMRecupera"/>';
-			var _URL_LOADER_HISTORIAL_CPTPAGADO 	= '<s:url namespace="/siniestros"			action="includes/historialCPTPagados" />';
+			var _URL_LOADER_HISTORIAL_CPTPAGADO 		= '<s:url namespace="/siniestros"		action="includes/historialCPTPagados" />';
+			var _URL_VALIDA_AUTESPECIFICA				= '<s:url namespace="/siniestros"		action="validaAutorizacionEspecial"/>';
+			var _URL_INF_AUT_ESPECIFICO					= '<s:url namespace="/siniestros" 		action="consultaDatosAutorizacionEspecial" />';
+			var _URL_EXISTE_COBERTURA					= '<s:url namespace="/siniestros" 		action="consultaExisteCoberturaTramite" />';
+			
 			debug("VALOR DE _11_params --->",_11_params);
 			debug("VALOR DEL ROL ACTIVO --->",_CDROL);
 			var _11_itemsForm	=
@@ -270,7 +274,8 @@
 						{type:'string',	name:'PTIVAASEG'},		{type:'string',	name:'PTIVARETASEG'},
 						{type:'string',	name:'PTISRASEG'},		{type:'string',	name:'PTIMPCEDASEG'},
 						{type:'string',	name:'DEDUCIBLE'},		{type:'string',	name:'IMPORTETOTALPAGO'},
-						{type:'string',	name:'COMPLEMENTO'}
+						{type:'string',	name:'COMPLEMENTO'},	{type:'string',	name:'REQAUTES'},
+						{type:'string',	name:'NMAUTESP'}
 					]
 				});
 //MODELO DE LOS CONCEPTOS
@@ -1217,6 +1222,9 @@
 										}else{
 											_11_aseguradoSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
 											storeCoberturaxAsegurado.proxy.extraParams= {
+												'params.ntramite'	: panelInicialPral.down('[name=params.ntramite]').getValue(),
+												'params.nfactura'	: panelInicialPral.down('[name=params.nfactura]').getValue(),
+												'params.tipoPago'   : _tipoPago,
 												'params.cdunieco':_11_aseguradoSeleccionado.get('CDUNIECO'),
 								            	'params.estado':_11_aseguradoSeleccionado.get('ESTADO'),
 								            	'params.cdramo':_11_aseguradoSeleccionado.get('CDRAMO'),
@@ -1271,6 +1279,13 @@
 							{
 								header: 'Id<br/>Sini.',				dataIndex: 'NMSINIES',		width: 50 
 							},
+							{
+								header: 'Req. Aut Especial',		dataIndex: 'REQAUTES',		width: 50 
+							},
+							{
+								header: 'No. Aut',		dataIndex: 'NMAUTESP',		width: 50 
+							},
+							
 							{
 								header: '# Auto.',					dataIndex: 'NMAUTSER',		width: 70
 								,editor: {
@@ -1503,7 +1518,6 @@
 								debug("VALOR DEL RECORD SELECCIONADO -->>>>", record);
 								debug("<--VALOR DE LA BANDERA DEL CONCEPTO-->",banderaConcepto,"<--VALOR DE LA BANDERA DEL ASEGURADO-->",banderaAsegurado);
 								//panelInicialPral.down('[name=historialCPT]').setDisabled(true);
-								
 								if(_11_params.CDRAMO != _RECUPERA){
 									debug("<<<<<--- DIFERENTE DE RECUPERA");
 									if (banderaConcepto == "1"){
@@ -1524,8 +1538,106 @@
 											Ext.getCmp('historialCPT').disable();
 										}
 										if(numSiniestro.length == "0"){
-											revisarDocumento(grid,index);
+											revisarDocumento(grid,index);// Para pago Directo
 										}else{
+											
+											if((record.get('REQAUTES') == 1 && record.get('NMAUTESP') == 0) ||(record.get('CDGARANT') == '18CN' && record.get('NMAUTESP') == 0 ))
+											{
+												reqAutorizacionEspecial(panelInicialPral.down('[name=params.ntramite]').getValue(), _11_params.OTVALOR02, 
+														panelInicialPral.down('[name=params.nfactura]').getValue(), record.get('CDUNIECO'), record.get('CDRAMO'),
+														record.get('ESTADO'), record.get('NMPOLIZA'), record.get('NMSUPLEM'), record.get('NMSITUAC'),
+														record.get('NMSINIES'), record.get('CDPERSON'), record.get('CDTIPSIT'));
+											}
+											
+											if(record.get('REQAUTES') == 1 && record.get('NMAUTESP') > 0){
+												Ext.Ajax.request( {
+													url	 : _URL_INF_AUT_ESPECIFICO 
+													,params:{
+														'params.nmautespecial'  : record.get('NMAUTESP')
+													}
+													,success : function (response) {
+														//Obtenemos los datos
+														if(Ext.decode(response.responseText).datosValidacion != null){
+															var jsonValidacion =Ext.decode(response.responseText).datosValidacion;
+															if(+jsonValidacion[0].VALRANGO <= 0){
+																debug("Valor 1 ==>");
+																mensajeWarning('La autorizaci&oacute;n '+jsonValidacion[0].NMAUTESP+' no contempla el rango de fecha.<br/> '+
+																	'Favor de validarlo con el Gerente de Siniestros.',function(){
+																	storeAseguradoFactura.load({
+																		params: {
+																			'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue(),
+																			'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
+																		}
+																	});
+																});
+															}
+															
+															if(+jsonValidacion[0].VALRANGO > 0){
+																debug("Valor 2 ==>");
+																if(record.get('CDGARANT') == '18CN' )
+																{
+																	debug("Valor 3 ==>");
+																	if(jsonValidacion[0].VALCOBER =="0"){
+																		mensajeWarning('La autorizaci&oacute;n '+jsonValidacion[0].NMAUTESP+' no cuenta con una cobertura NO amparada.<br/> '+
+																			'Favor de validarlo con el Gerente de operaci&oacute;n de siniestros.');
+																		
+																	}else{
+																		mensajeWarning('La autorizaci&oacute;n '+jsonValidacion[0].NMAUTESP+' cuenta con una cobertura amparada :'+jsonValidacion[0].DSGARANT+
+																		'<br/>Favor de realizar el cambio.');
+																	}
+																}
+																
+															}
+															
+														}
+													},
+													failure : function () {
+														//me.up().up().setLoading(false);
+														Ext.Msg.show({
+															title:'Error',
+															msg: 'Error de comunicaci&oacute;n',
+															buttons: Ext.Msg.OK,
+															icon: Ext.Msg.ERROR
+														});
+													}
+												});											
+											}else{
+												if(record.get('CDGARANT') == '18CN' && record.get('NMAUTESP') > 0 )
+												{
+													Ext.Ajax.request( {
+														url	 : _URL_INF_AUT_ESPECIFICO 
+														,params:{
+															'params.nmautespecial'  : record.get('NMAUTESP')
+														}
+														,success : function (response) {
+															//Obtenemos los datos
+															debug("Valor de respuesta ==> ",Ext.decode(response.responseText).datosValidacion);
+															if(Ext.decode(response.responseText).datosValidacion != null){
+																var jsonValidacion =Ext.decode(response.responseText).datosValidacion;
+																debug("Valor de respuesta ==> ",jsonValidacion);
+																if(+jsonValidacion[0].VALCOBER <= 0){
+																	mensajeWarning('La autorizaci&oacute;n '+jsonValidacion[0].NMAUTESP+' no cuenta con una cobertura no amparada.<br/> '+
+																		'Favor de validarlo con el Gerente de operaci&oacute;n de siniestros.');
+																}
+																if(+jsonValidacion[0].VALCOBER > 0){
+																	mensajeWarning('La autorizaci&oacute;n '+jsonValidacion[0].NMAUTESP+' cuenta con una cobertura amparada :'+jsonValidacion[0].DSGARANT+
+																	'<br/>Favor de realizar el cambio.');
+																}
+															}
+														},
+														failure : function () {
+															//me.up().up().setLoading(false);
+															Ext.Msg.show({
+																title:'Error',
+																msg: 'Error de comunicaci&oacute;n',
+																buttons: Ext.Msg.OK,
+																icon: Ext.Msg.ERROR
+															});
+														}
+													});											
+												}
+											}
+											
 											storeConceptos.removeAll();
 											storeConceptos.load({
 												params: {
@@ -1580,7 +1692,18 @@
 													});
 												}
 											});
+											
+											
+											
+											
+											
 										}
+										
+										
+										
+										
+										
+										
 									}
 								}else{
 									debug("<<<<<--- RECUPERA");
@@ -5195,70 +5318,105 @@
 		}else{
 			debug("VALORES DE ENTRADA ===> ",_11_params);
 			Ext.Ajax.request({
-				url	: _URL_MONTO_PAGO_SINIESTRO
+				url	 : _URL_EXISTE_COBERTURA
 				,params:{
-					'params.ntramite' : _11_params.NTRAMITE,
-					'params.cdramo'   : _11_params.CDRAMO,
-					'params.tipoPago' : _11_params.OTVALOR02
+					'params.ntramite'  : _11_params.NTRAMITE,
+					'params.tipoPago'  : _11_params.OTVALOR02
 				}
-				,success : function (response){
-					var jsonRespuesta =Ext.decode(response.responseText);
-					debug("Valor de Respuesta", jsonRespuesta);
-					
-					if(jsonRespuesta.success == true){
-						if( _11_params.OTVALOR02 ==_TIPO_PAGO_DIRECTO){
-							_11_mostrarSolicitudPago();
-						}else{
-							//Verificamos si tiene la validacion del dictaminador medico
-							Ext.Ajax.request({
-								url	 : _URL_VAL_AJUSTADOR_MEDICO
-								,params:{
-									'params.ntramite': _11_params.NTRAMITE
-								}
-								,success : function (response)
-								{
-									if(Ext.decode(response.responseText).datosValidacion != null){
-										var autAM = null;
-										var result ="";
-										banderaValidacion = "0";
-										var json = Ext.decode(response.responseText).datosValidacion;
-										if(json.length > 0){
-											for(var i = 0; i < json.length; i++){
-												if(json[i].AREAAUTO =="ME"){
-													var valorValidacion = json[i].SWAUTORI+"";
-													if(valorValidacion == null || valorValidacion == ''|| valorValidacion == 'null'){
-														banderaValidacion = "1";
-														result = result + 'El m&eacute;dico no autoriza la factura ' + json[i].NFACTURA + '<br/>';
-													}
-													
-												}
-											}
-											if(banderaValidacion == "1"){
-												centrarVentanaInterna(mensajeWarning(result));
-											}else{
-												_11_mostrarSolicitudPago();
-											}
-										}else{
-											centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
-										}
-									}
-								},
-								failure : function (){
-									//me.up().up().setLoading(false);
-									Ext.Msg.show({
-										title:'Error',
-										msg: 'Error de comunicaci&oacute;n',
-										buttons: Ext.Msg.OK,
-										icon: Ext.Msg.ERROR
-									});
-								}
-							});
+				,success : function (response) {
+					//Obtenemos los datos
+					var valCobertura = Ext.decode(response.responseText).datosValidacion;
+					var i = 0;
+					var totalConsumido = 0;
+					var banderaExisteCobertura = 0;
+					var resultCobertura= "";
+					if(valCobertura.length > 0){
+						//Mostramos el mensaje de Error y no podra continuar
+						debug("Valor de Respuesta ===>",valCobertura.length);
+						for(var i = 0; i < valCobertura.length; i++){
+							banderaExisteCobertura = "1";
+							resultCobertura = resultCobertura + 'La Factura ' + valCobertura[i].NFACTURA + ' del siniestro '+ valCobertura[i].NMSINIES+ ' tiene cobertura no amparada. <br/>';
 						}
-					}else {
-						centrarVentanaInterna(mensajeWarning(jsonRespuesta.mensaje));
+						if(banderaExisteCobertura == "1"){
+							centrarVentanaInterna(mensajeWarning(resultCobertura));
+						}
+					}else{
+						Ext.Ajax.request({
+							url	: _URL_MONTO_PAGO_SINIESTRO
+							,params:{
+								'params.ntramite' : _11_params.NTRAMITE,
+								'params.cdramo'   : _11_params.CDRAMO,
+								'params.tipoPago' : _11_params.OTVALOR02
+							}
+							,success : function (response){
+								var jsonRespuesta =Ext.decode(response.responseText);
+								debug("Valor de Respuesta", jsonRespuesta);
+								
+								if(jsonRespuesta.success == true){
+									if( _11_params.OTVALOR02 ==_TIPO_PAGO_DIRECTO){
+										_11_mostrarSolicitudPago();
+									}else{
+										//Verificamos si tiene la validacion del dictaminador medico
+										Ext.Ajax.request({
+											url	 : _URL_VAL_AJUSTADOR_MEDICO
+											,params:{
+												'params.ntramite': _11_params.NTRAMITE
+											}
+											,success : function (response)
+											{
+												if(Ext.decode(response.responseText).datosValidacion != null){
+													var autAM = null;
+													var result ="";
+													banderaValidacion = "0";
+													var json = Ext.decode(response.responseText).datosValidacion;
+													if(json.length > 0){
+														for(var i = 0; i < json.length; i++){
+															if(json[i].AREAAUTO =="ME"){
+																var valorValidacion = json[i].SWAUTORI+"";
+																if(valorValidacion == null || valorValidacion == ''|| valorValidacion == 'null'){
+																	banderaValidacion = "1";
+																	result = result + 'El m&eacute;dico no autoriza la factura ' + json[i].NFACTURA + '<br/>';
+																}
+																
+															}
+														}
+														if(banderaValidacion == "1"){
+															centrarVentanaInterna(mensajeWarning(result));
+														}else{
+															_11_mostrarSolicitudPago();
+														}
+													}else{
+														centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
+													}
+												}
+											},
+											failure : function (){
+												//me.up().up().setLoading(false);
+												Ext.Msg.show({
+													title:'Error',
+													msg: 'Error de comunicaci&oacute;n',
+													buttons: Ext.Msg.OK,
+													icon: Ext.Msg.ERROR
+												});
+											}
+										});
+									}
+								}else {
+									centrarVentanaInterna(mensajeWarning(jsonRespuesta.mensaje));
+								}
+							},
+							failure : function (){
+								Ext.Msg.show({
+									title:'Error',
+									msg: 'Error de comunicaci&oacute;n',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.ERROR
+								});
+							}
+						});
 					}
 				},
-				failure : function (){
+				failure : function () {
 					Ext.Msg.show({
 						title:'Error',
 						msg: 'Error de comunicaci&oacute;n',
@@ -5499,6 +5657,129 @@
 				}
 		});
 		centrarVentana(msgWindow);
+	}
+	
+	function reqAutorizacionEspecial(ntramite, tipoPago, nfactura, cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, nmsinies, cdperson, cdtipsit){
+		setTimeout(function(){
+			var ventanaTmp = centrarVentana(Ext.Msg.show({
+				title:'Aviso del sistema',
+				msg: 'Se requere una autorizaci&oacute;n especial para continuar.',
+				buttons: Ext.Msg.OK,
+				icon: Ext.Msg.WARNING,
+				fn: function(){
+					windowAutEsp = Ext.create('Ext.window.Window',{
+						modal       : true,
+						buttonAlign : 'center',
+						title: 'Autorizaci&oacute;n Especial',
+						autoScroll  : true,
+						items       : [
+							panelModificacion = Ext.create('Ext.form.Panel', {
+								bodyPadding: 5,
+								items: [
+									{	xtype: 'numberfield'
+										,fieldLabel: 'N&uacute;mero de autorizaci&oacute;n'
+										,name		: 'txtAutEspecial'
+										,allowBlank : false
+									}
+								],
+								buttonAlign:'center',
+								buttons: [
+									{
+										text: 'Aceptar'
+										,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
+										,buttonAlign : 'center',
+										handler: function() {
+											if (panelModificacion.form.isValid()) {
+												var datos=panelModificacion.form.getValues();
+												Ext.Ajax.request({
+													url     : _URL_VALIDA_AUTESPECIFICA
+													,params:{
+														'params.ntramite'  : ntramite,
+														'params.tipoPago'  : tipoPago,
+														'params.nfactura'  : nfactura,
+														'params.cdunieco'  : cdunieco,
+														'params.cdramo'    : cdramo,
+														'params.estado'    : estado,
+														'params.nmpoliza'  : nmpoliza,
+														'params.nmsuplem'  : nmsuplem,
+														'params.nmsituac'  : nmsituac,
+														'params.nmautesp'  : datos.txtAutEspecial,
+														'params.nmsinies'  : nmsinies,
+														'params.cdperson'  : cdperson,
+														'params.cdtipsit'  : cdtipsit
+													}
+													,success : function (response){
+														debug("Valor Ext.decode(response.responseText).validacionGeneral ====>",Ext.decode(response.responseText).validacionGeneral);
+														if(Ext.decode(response.responseText).validacionGeneral =="1"){
+															//Exito y debe de dejar  pasar 
+															
+															mensajeCorrecto('&Eacute;XITO','Se ha asociado correctamente.',function(){
+																windowAutEsp.close();
+																storeAseguradoFactura.load({
+																	params: {
+																		'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue(),
+																		'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
+																	}
+																});
+															});
+														}else{
+															mensajeError("No se puede asociar el tr&aacute;mite con la autorizaci&oacute;n especial");
+														}
+													},
+													failure : function (){
+														me.up().up().setLoading(false);
+														centrarVentanaInterna(Ext.Msg.show({
+															title:'Error',
+															msg: 'Error de comunicaci&oacute;n',
+															buttons: Ext.Msg.OK,
+															icon: Ext.Msg.ERROR
+														}));
+													}
+												});
+											}else {
+												Ext.Msg.show({
+													title: 'Aviso',
+													msg: 'Complete la informaci&oacute;n requerida',
+													buttons: Ext.Msg.OK,
+													icon: Ext.Msg.WARNING
+												});
+											}
+										}
+									},{
+										text: 'Cancelar',
+										icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+										buttonAlign : 'center',
+										handler: function() {
+											windowAutEsp.close();
+											storeAseguradoFactura.load({
+												params: {
+													'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue(),
+													'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
+												}
+											});
+										}
+									}
+								]
+							})  
+						],
+						listeners:{
+							 close:function(){
+								 if(true){
+									 storeAseguradoFactura.load({
+										params: {
+											'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue(),
+											'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
+										}
+									});
+								 }
+							 }
+						}
+					});
+					centrarVentana(windowAutEsp.show());
+				}
+			}))
+		},100);
+		
 	}
 	
 	function eliminarAsegurado(grid,rowIndex){
