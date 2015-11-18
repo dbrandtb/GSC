@@ -2715,6 +2715,12 @@ public class EndososAction extends PrincipalCoreAction
 		{
 			transformaEntrada(smap1, slist1, true);
 			
+			if(smap1 != null && !smap1.isEmpty()){
+				if(!smap1.containsKey("FEINIVAL") && smap1.containsKey("FEEFECTO")){
+					smap1.put("FEINIVAL", smap1.get("FEEFECTO"));
+				}
+			}
+			
 			// Valida si hay un endoso anterior pendiente:
 			RespuestaVO resp = endososManager.validaEndosoAnterior(
 					smap1.get("cdunieco")
