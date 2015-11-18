@@ -74,4 +74,10 @@ public interface ExplotacionDocumentosManager
 			,String nmpoliza
 			,String marcar
 			)throws Exception;
+	
+	public String recuperarColumnasGridPol(
+			String cdsisrol
+			,String cdtipram
+			,String pantalla
+			)throws Exception;
 }

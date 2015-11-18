@@ -142,7 +142,6 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			
 			gc.generaComponentes(compsGridPolizas, true, true, false, true, false, false);
 			items.put("gridPolizasFields" , gc.getFields());
-			items.put("gridPolizasCols"   , gc.getColumns());
 			
 		}
 		catch(Exception ex)
@@ -696,7 +695,6 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			
 			gc.generaComponentes(compsGridPolizas, true, true, false, true, false, false);
 			items.put("gridRecibosFields" , gc.getFields());
-			items.put("gridRecibosCols"   , gc.getColumns());
 			
 		}
 		catch(Exception ex)
@@ -1283,5 +1281,64 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		logger.debug(sb.toString());
 		
 		return result;
+	}
+	
+	@Override
+	public String recuperarColumnasGridPol(
+			String cdsisrol
+			,String cdtipram
+			,String pantalla
+			)throws Exception
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarColumnasGridPol @@@@@@"
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdtipram=" , cdtipram
+				,"\n@@@@@@ pantalla=" , pantalla
+				));
+		
+		String columns = null
+		       ,paso   = null;
+		
+		try
+		{
+			paso = "Recuperando componentes";
+			logger.debug(paso);
+			
+			List<ComponenteVO> compsGridPolizas = pantallasDAO.obtenerComponentes(
+					cdtipram 
+					,null //cdunieco
+					,null //cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,pantalla
+					,"GRID_POLIZAS_CDTIPRAM"
+					,null //orden
+					);
+			
+			paso = "Construyendo componentes";
+			logger.debug(paso);
+			
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			gc.generaComponentes(compsGridPolizas, true, false, false, true, false, false);
+			columns = gc.getColumns().toString();
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		sb.append(Utils.log(
+				 "\n@@@@@@ columns=",columns
+				,"\n@@@@@@ recuperarColumnasGridPol @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		logger.debug(sb.toString());
+		
+		return columns;
 	}
 }

@@ -5,8 +5,9 @@
 <head>
 <script>
 ////// urls //////
-var _p50_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"   />';
-var _p50_urlGenerarLote  = '<s:url namespace="/consultas"    action="generarLote" />';
+var _p50_urlRecuperacion  = '<s:url namespace="/recuperacion" action="recuperar"                />';
+var _p50_urlGenerarLote   = '<s:url namespace="/consultas"    action="generarLote"              />';
+var _p50_urlRecuperarCols = '<s:url namespace="/consultas"    action="recuperarColumnasGridPol" />';
 ////// urls //////
 
 ////// variables //////
@@ -24,7 +25,7 @@ var _p50_dirIconos = '${icons}';
 ////// componentes dinamicos /////
 var _p50_formBusqItems = [<s:property value="items.itemsFormBusq"     escapeHtml="false" />];
 var _p50_gridRecFields = [<s:property value="items.gridRecibosFields" escapeHtml="false" />];
-var _p50_gridRecCols   = [<s:property value="items.gridRecibosCols"   escapeHtml="false" />];
+var _p50_gridRecCols   = [];
 
 _fieldByName('cdtipram').rowspan = 2;
 
@@ -364,8 +365,56 @@ function _p50_navega(nivel)
             cmps[i].show();
         }
         _fieldById('_p50_gridSucursales').show();
+        
+        var cdtipram = _fieldByName('cdtipram').getValue();
+        
         _fieldByName('cdtipram').disable();
         _fieldById('_p50_gridRecibos').show();
+        
+        var grid = _fieldById('_p50_gridRecibos');
+        
+        _setLoading(true,grid);
+        Ext.Ajax.request(
+        {
+            url      : _p50_urlRecuperarCols
+            ,params  :
+            {
+                'params.cdtipram'  : cdtipram
+                ,'params.pantalla' : 'EXPLOTACION_RECIBOS'
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,grid);
+                var ck = 'Decodificando respuesta al recuperar columnas';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### cols:',json);
+                    if(json.success==true)
+                    {
+                        ck       = 'Transformando columnas';
+                        var cols = Ext.decode('['+json.params.columns+']');
+                        debug('cols:',cols);
+                        
+                        ck = 'Mostrando columnas';
+                        grid.reconfigure(_p50_storeRecibos,cols);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,grid);
+                errorComunicacion(null,'Error recuperando columnas');
+            }
+        });
     }
 }
 
