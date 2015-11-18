@@ -7958,7 +7958,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			// Se confirma el endoso si cumple la validacion de fechas: 
 			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza
-					,nmsuplem, nsuplogi, cdtipsup, comentaReexp, dFecha, cdtipsit);
+					,nmsuplemCancela, nsuplogi, cdtipsup, comentaReexp, dFecha, cdtipsit);
 			
 			
 			consultasManager.copiarArchivosUsuarioTramite(cdunieco, cdramo, estado, nmpoliza, ntramiteNuevaPoliza, this.getText("ruta.documentos.poliza"));
