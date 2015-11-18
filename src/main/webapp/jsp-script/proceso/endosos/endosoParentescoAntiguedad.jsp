@@ -108,6 +108,7 @@ function endvalbasSumit(form,confirmar){
                     ,fecha_endoso  : fechaEndoso.getRawValue()
 //                    ,nmsituac  : pantallaValositInput['nmsituac']
                     ,confirmar : confirmar
+                    ,simple    : true == pantallaValositInput['endososimple'] ? 'S' : 'N'
             }
             ,slist1 : slist1
         }
