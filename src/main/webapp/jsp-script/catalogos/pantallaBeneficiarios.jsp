@@ -430,7 +430,12 @@ function _p32_guardarClic()
                                 //////////////////////////////////
                                 ////// usa codigo del padre //////
                                 /*//////////////////////////////*/
-                                expande(2);
+                                try{
+                                	expande(2);
+                                }catch(e)
+                                {
+                                    //manejaException(e,'Manejando navegacion');
+                                }
                                 /*//////////////////////////////*/
                                 ////// usa codigo del padre //////
                                 //////////////////////////////////
@@ -499,6 +504,6 @@ function _p32_guardarClic()
 </script>
 </head>
 <body>
-<div id="_p32_divpri" style="height:600px;"></div>
+<div id="_p32_divpri" style="height:100px;"></div>
 </body>
 </html>

@@ -20,6 +20,7 @@ var _p29_urlRecuperacionSimple             = '<s:url namespace="/emision"    act
 var _p29_urlCotizacionAutoIndividual       = '<s:url namespace="/emision"    action="cotizacionAutoIndividual"             />';
 var _p29_urlDocumentosPolizaClon           = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon"          />';
 var _p29_urlObtieneValNumeroSerie          = '<s:url namespace="/emision" action="obtieneValNumeroSerie"                />';
+var urlPantallaBeneficiarios			   = '<s:url namespace="/catalogos"  action="includes/pantallaBeneficiarios" />';
 
 var urlReintentarWS  = '<s:url namespace="/"        action="reintentaWSautos" />';
 var _urlEnviarCorreo = '<s:url namespace="/general" action="enviaCorreo"      />';
@@ -34,6 +35,7 @@ var _p29_adicionalesItems       = null;
 var _p22_parentCallback         = false;
 var _p22_parentCallbackCallback = null;
 var _p29_ventanaDocs            = null;
+var _p29_validaSeguro			= "N";
 
 var _SWexiper = _p29_smap1.swexiper;
 
@@ -209,6 +211,31 @@ Ext.onReady(function()
 	        })
 	        ,Ext.create('Ext.panel.Panel',
 	        {
+	            itemId      : '_p29_BeneficiarioPanel'
+	            ,height     : 300
+	            ,autoScroll : true
+	            ,hidden 	: true
+	            ,loader:
+                {
+                    url : urlPantallaBeneficiarios
+                    ,params   :
+                    {
+                        'smap1.cdunieco'      : _p29_smap1.cdunieco
+                        ,'smap1.cdramo'       : _p29_smap1.cdramo
+                        ,'smap1.estado'       : _p29_smap1.estado
+                        ,'smap1.nmpoliza'     : _p29_smap1.nmpoliza
+                        ,'smap1.nmsuplem'     : '1'
+                        ,'smap1.nmsituac'     : '0'
+                        ,'smap1.cdrolPipes'   : '3'
+                        ,'smap1.cdtipsup'     : '1'
+                        ,'smap1.ultimaImagen' : 'N'
+                    }
+                    ,autoLoad:true
+                    ,scripts:true
+                }
+	        })
+	        ,Ext.create('Ext.panel.Panel',
+	        {
 	            itemId       : '_p29_panelBotones'
 	            ,border      : 0
 	            ,buttonAlign : 'center'
@@ -368,6 +395,13 @@ Ext.onReady(function()
 	                        if(item.fieldLabel=='CONDUCTOR'&&Ext.isEmpty(json.smap1[i]))
 	                        {
 	                            item.setValue(json.smap1['parametros.pv_otvalor15']);
+	                        }
+							
+	                        _p29_validaSeguro = json.smap1['parametros.pv_otvalor63'];
+	                        if(_p29_validaSeguro =="S"){
+	                        	_fieldById('_p29_BeneficiarioPanel').show();
+	                        }else{
+	                        	_fieldById('_p29_BeneficiarioPanel').hide();
 	                        }
 	                    }
 	                }
@@ -1357,5 +1391,5 @@ function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 </head>
-<body><div id="_p29_divpri" style="height:1000px;"></div></body>
+<body><div id="_p29_divpri" style="height:1500px;"></div></body>
 </html>
