@@ -699,6 +699,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 					nuevo.put("cdtipram"    , sucursal.get("TIPO_RAMO"));
 					nuevo.put("cduniecoPer" , sucursal.get("SUC_PERMITIDA"));
 					nuevo.put("funcion"     , sucursal.get("SWAPLICA"));
+					nuevo.put("descrip"     , sucursal.get("DESCRIP"));
 					resumen.add(nuevo);
 				}
 				
@@ -711,6 +712,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 					nuevo.put("cdtipram"    , agente.get("TIPO_RAMO"));
 					nuevo.put("cdagentePer" , agente.get("AGENTE"));
 					nuevo.put("funcion"     , agente.get("SWAPLICA"));
+					nuevo.put("descrip"     , agente.get("DESCRIP"));
 					resumen.add(nuevo);
 				}
 				
