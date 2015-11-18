@@ -1334,7 +1334,7 @@
                 mensajeError('Seleccione la p&oacute;liza');
             }
         }
-        else if(recordOperacion.get('funcion')=='endosoParentescoAntiguedad')
+        else if(recordOperacion.get('funcion')=='endosoParentescoAntiguedad'||recordOperacion.get('funcion')=='endosoParentescoAntiguedadSimple')
         {
             debug(recordOperacion.get('funcion'));
             var nPolizasActivas=0;
@@ -1360,7 +1360,8 @@
                     ,autoLoad : true
                     ,jsonData :
                     {
-                        'smap1'  : smap1
+                        'smap1'         : smap1
+                        ,'endosoSimple' : recordOperacion.get('funcion')=='endosoParentescoAntiguedadSimple'
                     }
                 });
             }
@@ -1604,7 +1605,7 @@ Ext.onReady(function()
 					cdtipsup : '0'
                     ,texto   : 'CORRECI&Oacute;N ASEGURADOS ANTIGUEDAD Y PARENTESCO *'//valosit
                     ,liga    : '<s:url namespace="/endosos" action="entrarEndosoParentescoAntiguedad" />'
-                    ,funcion : 'endosoParentescoAntiguedad'
+                    ,funcion : 'endosoParentescoAntiguedadSimple'
                 },{
                 	cdtipsup : '2'
                     ,texto   : '2'//nombres
@@ -1618,8 +1619,8 @@ Ext.onReady(function()
                 },{
                     cdtipsup : '4'
                     ,texto   : '4'//valosit
-                    ,liga    : '<s:url namespace="/endosos" action="entrarEndosoValositBasico" />'
-                    ,funcion : 'endosovalositbasico'
+                    ,liga    : '<s:url namespace="/endosos" action="entrarEndosoParentescoAntiguedad" />'
+                    ,funcion : 'endosoParentescoAntiguedad'
                 },{
                     cdtipsup : '6'
                     ,texto   : '6'//alta coberturas
