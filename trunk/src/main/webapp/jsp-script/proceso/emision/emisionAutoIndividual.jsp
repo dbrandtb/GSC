@@ -397,7 +397,7 @@ Ext.onReady(function()
 	                            item.setValue(json.smap1['parametros.pv_otvalor15']);
 	                        }
 							
-	                        _p29_validaSeguro = json.smap1['parametros.pv_otvalor63'];
+	                        _p29_validaSeguro = json.smap1['parametros.pv_seguroVida'];
 	                        if(_p29_validaSeguro =="S"){
 	                        	_fieldById('_p29_BeneficiarioPanel').show();
 	                        }else{
