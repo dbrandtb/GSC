@@ -3144,6 +3144,12 @@ public class EndososAction extends PrincipalCoreAction
 			 * pv_proceso_i
 			 * pv_cdtipsup_i
 			 */
+			
+			boolean simple   = "S".equals(smap1.get("simple"));
+			String  cdtipsup = simple ?
+                                   TipoEndoso.CORRECCION_DATOS_ASEGURADOS.getCdTipSup().toString() :
+                                   TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString();
+			
 			omap1=new LinkedHashMap<String,Object>();
 			omap1.put("pv_cdunieco_i" , smap1.get("cdunieco"));
 			omap1.put("pv_cdramo_i"   , smap1.get("cdramo"));
@@ -3153,7 +3159,7 @@ public class EndososAction extends PrincipalCoreAction
 			omap1.put("pv_cdelemen_i" , usuario.getEmpresa().getElementoId());
 			omap1.put("pv_cdusuari_i" , usuario.getUser());
 			omap1.put("pv_proceso_i"  , "END");
-			omap1.put("pv_cdtipsup_i", TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString());
+			omap1.put("pv_cdtipsup_i" , cdtipsup);
 			Map<String,String> respEnd=endososManager.iniciaEndoso(omap1);
 			
 			
@@ -3256,7 +3262,7 @@ public class EndososAction extends PrincipalCoreAction
 						smap1.get("nmpoliza"),
 						respEnd.get("pv_nmsuplem_o"),
 						respEnd.get("pv_nsuplogi_o"),
-						TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString(),
+						cdtipsup,
 						"",
 						renderFechas.parse(smap1.get("fecha_endoso")),
 						smap1.get("cdtipsit")
@@ -11257,6 +11263,12 @@ public class EndososAction extends PrincipalCoreAction
 						,smap1.get("ESTADO")
 						,smap1.get("NMPOLIZA")
 						,slist1.get(0).get("NMSITUAC")) ? "1" : "0");
+				
+				if(smap1.get("cdtipsup").equals(TipoEndoso.CORRECCION_DATOS_ASEGURADOS.getCdTipSup().toString()))
+				{
+					endosoSimple = true;
+				}
+				
 			}
 			else if(smap1.get("cdtipsup").equals(TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString())
 					||smap1.get("cdtipsup").equals(TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString())
