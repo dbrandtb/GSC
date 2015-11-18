@@ -526,6 +526,56 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	@Action(value   = "recuperarColumnasGridPol",
+			results = { @Result(name="success", type="json") }
+	)
+	public String recuperarColumnasGridPol()
+	{
+		logger.debug(Utils.log(
+				 "\n######################################"
+				,"\n###### recuperarColumnasGridPol ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			UserVO usuario = Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdtipram = params.get("cdtipram");
+			String pantalla = params.get("pantalla");
+			
+			Utils.validate(
+					cdtipram  , "No se recibi\u00F3 el tipo de ramo"
+					,pantalla , "No se recibi\u00F3 la pantalla"
+			);
+			
+			String columns = explotacionDocumentosManager.recuperarColumnasGridPol(
+					usuario.getRolActivo().getClave()
+					,cdtipram
+					,pantalla
+					);
+			
+			params.put("columns" , columns);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### success=" , success
+				,"\n###### message=" , message
+				,"\n###### params="  , params
+				,"\n###### recuperarColumnasGridPol ######"
+				,"\n######################################"
+				));
+		return SUCCESS;
+	}
+	
 	////////////////// Getters y setters ///////////////////
 	                                                      //
 	public Map<String, String> getParams() {              //
