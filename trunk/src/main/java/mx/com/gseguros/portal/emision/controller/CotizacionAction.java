@@ -5109,15 +5109,15 @@ public class CotizacionAction extends PrincipalCoreAction
 				params.put("pv_nmpoliza"  , nmpoliza);
 				params.put("pv_nmsuplem"  , "0");
 				params.put("pv_status"    , "V");
-				params.put("pv_otvalor01" , smap1.get("cdgiro"));
-				params.put("pv_otvalor02" , smap1.get("cdrelconaseg"));
-				params.put("pv_otvalor03" , smap1.get("cdformaseg"));
-				params.put("pv_otvalor04" , smap1.get("cdperpag"));
 				params.put("pv_otvalor09" , smap1.get("dctocmer"));
 				params.put("pv_otvalor10" , smap1.get("tipoDerPol"));
 				params.put("pv_otvalor11" , smap1.get("montoDerPol"));
 				params.put("pv_otvalor12" , smap1.get("recargoPers"));
 				params.put("pv_otvalor13" , smap1.get("recargoPago"));
+				params.put("pv_otvalor14" , smap1.get("cdgiro"));
+				params.put("pv_otvalor15" , smap1.get("cdrelconaseg"));
+				params.put("pv_otvalor16" , smap1.get("cdformaseg"));
+				params.put("pv_otvalor17" , smap1.get("cdperpag"));
 				kernelManager.pMovTvalopol(params);
 			}
 			
