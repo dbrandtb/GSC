@@ -5,6 +5,7 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,7 @@ import javax.print.attribute.standard.PrinterName;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.utils.Host;
+import mx.com.gseguros.utils.cmd.SystemCommandExecutor;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.convention.annotation.Action;
@@ -346,6 +348,40 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 		
 		return SUCCESS;
 	}
+	
+	
+	@Action(value="testComando2",
+			results={@Result(name="success", type="json")}
+	)
+	public String ejecutaComando2() throws Exception {
+		
+		List<String> commands = new ArrayList<String>();
+	    commands.add("/bin/sh");
+	    commands.add("-c");
+	    commands.add(params.get("comando"));
+	    //commands.add("ls -l /var/tmp | grep tmp");
+
+	    // execute the command
+	    SystemCommandExecutor commandExecutor = new SystemCommandExecutor(commands);
+	    logger.debug("Antes de ejecutar comando {}", params.get("comando"));
+	    int result = commandExecutor.executeCommand();
+		logger.debug("Despues de ejecutar comando {}", params.get("comando"));
+
+	    // get the stdout and stderr from the command that was run
+	    StringBuilder stdout = commandExecutor.getStandardOutputFromCommand();
+	    StringBuilder stderr = commandExecutor.getStandardErrorFromCommand();
+	    
+	    // print the stdout and stderr
+	    logger.debug("The numeric result of the command was: " + result);
+	    logger.debug("STDOUT:");
+	    logger.debug(stdout.toString());
+	    logger.debug("STDERR:");
+	    logger.debug(stderr.toString());
+		
+		return SUCCESS;
+	}
+
+	
     
     
 	/*
