@@ -1280,10 +1280,10 @@
 								header: 'Id<br/>Sini.',				dataIndex: 'NMSINIES',		width: 50 
 							},
 							{
-								header: 'Req. Aut Especial',		dataIndex: 'REQAUTES',		width: 50 
+								header: 'Req. Aut Especial',		dataIndex: 'REQAUTES',		width: 50, 		hidden : true
 							},
 							{
-								header: 'No. Aut',		dataIndex: 'NMAUTESP',		width: 50 
+								header: 'No. Aut',					dataIndex: 'NMAUTESP',		width: 50, 		hidden : true
 							},
 							
 							{
