@@ -482,7 +482,7 @@ function _p34_polizas()
             {
                 if(success)
                 {
-                    centrarVentanaInterna(Ext.create('Ext.window.Window',
+                    /*centrarVentanaInterna(Ext.create('Ext.window.Window',
                     {
                         title        : 'Aviso'
                         ,width       : 300
@@ -498,7 +498,7 @@ function _p34_polizas()
                                 }
                             }
                         ]
-                    }).show());
+                    }).show());*/
                 }
                 else
                 {
