@@ -63,7 +63,7 @@ Ext.onReady(function() {
 					{type:'string',		name:'modNmsolici'},		{type:'string',		name:'modNmsuplem'},			{type:'string',		name:'modCdtipsit'},
 					{type:'string',		name:'modNmautserv'},		{type:'Date',		name:'modFechaOcurrencia', dateFormat:'d/m/Y'},		{type:'string',		name:'modCdperson'},
 					{type:'string',		name:'modnumPoliza'},		{type:'string',		name:'modFactura'},				{type:'string',		name:'modTelefono'},
-					{type:'string',		name:'modEmail'}
+					{type:'string',		name:'modEmail'},			{type:'string',		name:'modtxtAutEspecial'}
 				]
 	});
 	
@@ -535,8 +535,9 @@ Ext.onReady(function() {
 							valorIndexSeleccionado.set('modEmail',record.get('email'));
 							valorIndexSeleccionado.set('modFactura',noFactura);
 							valorIndexSeleccionado.set('modPolizaAfectada',record.get('nmpoliza'));
+							valorIndexSeleccionado.set('modtxtAutEspecial',"0");
 							banderaAsegurado = "1";
-							limpiarRegistros();							
+							limpiarRegistros();
 							modPolizasAltaTramite.hide();
 						}else{
 							// No se cumple la condición la fecha de ocurrencia es mayor a la fecha de alta de tramite
@@ -560,9 +561,62 @@ Ext.onReady(function() {
 						}
 					}else{
 					// La fecha de ocurrencia no se encuentra en el rango de la poliza vigente
-						Ext.Msg.show({
+						centrarVentanaInterna(Ext.Msg.show({
+							title: 'Aviso',
+							msg: 'La fecha de ocurrencia se encuentra fuera del rango de la p&oacute;liza vigente.<br/> &iquest;Desea continuar ?',
+							buttons: Ext.Msg.YESNO,
+							icon: Ext.Msg.QUESTION,
+							fn: function(buttonId, text, opt){
+								if(buttonId == 'yes'){
+									panelInicialPral.down('[name="cdunieco"]').setValue(record.get('cdunieco'));
+									panelInicialPral.down('[name="estado"]').setValue(record.get('estado'));
+									panelInicialPral.down('[name="cdramo"]').setValue(record.get('cdramo'));
+									panelInicialPral.down('[name="nmsituac"]').setValue(record.get('nmsituac'));
+									panelInicialPral.down('[name="polizaAfectada"]').setValue(record.get('nmpoliza'));
+									panelInicialPral.down('[name="idNmsolici"]').setValue(record.get('nmsolici'));
+									panelInicialPral.down('[name="idNmsuplem"]').setValue(record.get('nmsuplem'));
+									panelInicialPral.down('[name="idCdtipsit"]').setValue(record.get('cdtipsit'));
+									panelInicialPral.down('[name="idNumPolizaInt"]').setValue(record.get('numPoliza'));
+									panelInicialPral.down('[name="txtTelefono"]').setValue(record.get('telefono'));
+									panelInicialPral.down('[name="txtEmail"]').setValue(record.get('email'));
+									// realizamos la asignacion de las variables JOSE
+									valorIndexSeleccionado.set('modUnieco',record.get('cdunieco'));
+									valorIndexSeleccionado.set('modEstado',record.get('estado'));
+									valorIndexSeleccionado.set('modRamo',record.get('cdramo'));
+									valorIndexSeleccionado.set('modNmsituac',record.get('nmsituac'));
+									valorIndexSeleccionado.set('polizaAfectada',record.get('nmpoliza'));
+									valorIndexSeleccionado.set('modNmsolici',record.get('nmsolici'));
+									valorIndexSeleccionado.set('modNmsuplem',record.get('nmsuplem'));
+									valorIndexSeleccionado.set('modCdtipsit',record.get('cdtipsit'));
+									valorIndexSeleccionado.set('modNmautserv',null);
+									valorIndexSeleccionado.set('modCdpersondesc',record.get('nombAsegurado'));
+									valorIndexSeleccionado.set('modnumPoliza',record.get('numPoliza'));
+									valorIndexSeleccionado.set('modTelefono',record.get('telefono'));
+									valorIndexSeleccionado.set('modEmail',record.get('email'));
+									valorIndexSeleccionado.set('modFactura',noFactura);
+									valorIndexSeleccionado.set('modPolizaAfectada',record.get('nmpoliza'));
+									valorIndexSeleccionado.set('modtxtAutEspecial',"1");
+									banderaAsegurado = "1";
+									limpiarRegistros();
+									modPolizasAltaTramite.hide();
+								}else{
+									valorIndexSeleccionado.set('modCdperson','');
+									valorIndexSeleccionado.set('modCdpersondesc','');
+									modPolizasAltaTramite.hide();
+									limpiarRegistros();
+									if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
+										panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
+									}else{
+										panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
+									}
+								}
+								
+							}
+						}));
+						
+						/*Ext.Msg.show({
 							title:'Error',
-							msg: 'La fecha de ocurrencia no se encuentra en el rango de la p&oacute;liza vigente',
+							msg: '1..La fecha de ocurrencia no se encuentra en el rango de la p&oacute;liza vigente',
 							buttons: Ext.Msg.OK,
 							icon: Ext.Msg.ERROR,
 							fn: function() {
@@ -576,7 +630,7 @@ Ext.onReady(function() {
 							panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
 						}else{
 							panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
-						}
+						}*/
 					}
 				}else{
 					// El asegurado no se encuentra vigente
@@ -778,7 +832,7 @@ Ext.onReady(function() {
 			height: 250,
 			plugins  :
 			[
-				Ext.create('Ext.grid.plugin.CellEditing',{	
+				Ext.create('Ext.grid.plugin.CellEditing',{
 					clicksToEdit: 1
 					,listeners : {
 						beforeedit : function() {
@@ -1565,7 +1619,14 @@ Ext.onReady(function() {
 							vtype: 'email',
 							allowBlank: false
 						}
-					}
+					}/*,
+					{
+						header: 'Autorizacion',	dataIndex: 'modtxtAutEspecial',			width:150
+						,editor: {
+							xtype: 'textfield',
+							allowBlank: false
+						}
+					}*/
 				],
 				tbar: [
 					{
@@ -1802,12 +1863,15 @@ Ext.onReady(function() {
 					}
 				}
 			},
-			{	xtype: 'numberfield',				fieldLabel: 'Tel&eacute;fono'				,name		: 'txtTelefono' 
+			{	xtype: 'numberfield',				fieldLabel: 'Tel&eacute;fono'			,name		: 'txtTelefono' 
 				,width		 : 350
 			},
 			{	xtype: 'textfield',					fieldLabel: 'Correo Electr&oacute;nico'	,name		: 'txtEmail'
 				,width		 : 350,					vtype: 'email'
 			},
+			{	xtype: 'textfield',					fieldLabel: 'Autorizacion'	,name		: 'txtAutEspecial'
+                ,width		 : 300,					value: "0",			hidden:true
+            },
 			{
 				colspan:2
 				,border: false
@@ -2239,6 +2303,7 @@ Ext.onReady(function() {
 						panelInicialPral.down('[name=dtFechaOcurrencia]').setValue(json.otvalor10mc);
 						panelInicialPral.down('[name=idnombreBeneficiarioProv]').setValue(json.otvalor15mc);
 						panelInicialPral.down('[name=idnombreAsegurado]').setValue(json.nombremc);
+						panelInicialPral.down('[name=txtAutEspecial]').setValue(json.otvalor22mc);
 						storeAsegurados.load({
 							params:{
 								'params.cdperson':json.otvalor09mc
@@ -2845,6 +2910,7 @@ Ext.onReady(function() {
 					return false;
 				}
 			}
+		    
 	        var submitValues={};
 	        var formulario=panelInicialPral.form.getValues();
 	        submitValues['params']=formulario;
@@ -2868,7 +2934,8 @@ Ext.onReady(function() {
 	                modnumPoliza: record.get('modnumPoliza'),
 	                modNmautserv: record.get('modNmautserv'),
 	                modTelefono: record.get('modTelefono'),
-	                modEmail: record.get('modEmail')
+	                modEmail: record.get('modEmail'),
+	                modtxtAutEspecial: record.get('modtxtAutEspecial')
 	            });
 	        });
 	        submitValues['datosTablas']=datosTablas;
