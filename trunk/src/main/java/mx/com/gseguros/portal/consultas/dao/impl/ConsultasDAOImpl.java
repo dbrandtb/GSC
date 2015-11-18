@@ -3032,6 +3032,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 					,"TIPO_RAMO"
 					,"SUC_PERMITIDA"
 					,"SWAPLICA"
+					,"DESCRIP"
             };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -3073,6 +3074,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 					,"TIPO_RAMO"
 					,"AGENTE"
 					,"SWAPLICA"
+					,"DESCRIP"
             };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

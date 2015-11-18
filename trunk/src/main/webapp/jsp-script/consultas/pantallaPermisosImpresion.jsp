@@ -62,6 +62,7 @@ Ext.onReady(function()
             ,'cduniecoPer'
             ,'cdagentePer'
             ,'funcion' //[S/N]
+            ,'descrip'
         ]
     });
     ////// modelos //////
@@ -310,7 +311,7 @@ Ext.onReady(function()
                 [
                     {
                         text       : 'SUCURSAL'
-                        ,dataIndex : 'cduniecoPer'
+                        ,dataIndex : 'descrip'
                         ,flex      : 1
                     }
                     ,{
@@ -358,7 +359,7 @@ Ext.onReady(function()
                 [
                     {
                         text       : 'AGENTE'
-                        ,dataIndex : 'cdagentePer'
+                        ,dataIndex : 'descrip'
                         ,flex      : 1
                     }
                     ,{
@@ -406,7 +407,7 @@ Ext.onReady(function()
                 [
                     {
                         text       : 'SUCURSAL'
-                        ,dataIndex : 'cduniecoPer'
+                        ,dataIndex : 'descrip'
                         ,flex      : 1
                     }
                     ,{
@@ -454,7 +455,7 @@ Ext.onReady(function()
                 [
                     {
                         text       : 'AGENTE'
-                        ,dataIndex : 'cdagentePer'
+                        ,dataIndex : 'descrip'
                         ,flex      : 1
                     }
                     ,{
