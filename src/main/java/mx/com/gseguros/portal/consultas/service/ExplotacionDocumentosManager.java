@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.consultas.service;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -79,5 +80,16 @@ public interface ExplotacionDocumentosManager
 			String cdsisrol
 			,String cdtipram
 			,String pantalla
+			)throws Exception;
+	
+	public InputStream descargarLote(
+			String lote
+			,String hoja
+			,String peso
+			,String cdtipram
+			,String cdtipimp
+			,String tipolote
+			,String cdusuari
+			,String cdsisrol
 			)throws Exception;
 }

@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.consultas.controller;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -8,8 +9,10 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.service.ExplotacionDocumentosManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.general.util.TipoArchivo;
 import mx.com.gseguros.utils.Utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -23,7 +26,7 @@ import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
 
-@Controller
+@Controller("explotacionDocumentosAction")
 @Scope("prototype")
 @ParentPackage(value="default")
 @Namespace("/consultas")
@@ -36,6 +39,9 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 	private boolean                  success;
 	private String                   message;
 	private Map<String,Item>         items;
+	private InputStream              fileInputStream;
+	private String                   filename;
+	private String                   contentType;
 	
 	@Autowired
 	private ExplotacionDocumentosManager explotacionDocumentosManager;
@@ -576,47 +582,178 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	////////////////// Getters y setters ///////////////////
-	                                                      //
-	public Map<String, String> getParams() {              //
-		return params;                                    //
-	}                                                     //
-	                                                      //
-	public void setParams(Map<String, String> params) {   //
-		this.params = params;                             //
-	}                                                     //
-	                                                      //
-	public List<Map<String, String>> getList() {          //
-		return list;                                      //
-	}                                                     //
-	                                                      //
-	public void setList(List<Map<String, String>> list) { //
-		this.list = list;                                 //
-	}                                                     //
-	                                                      //
-	public boolean isSuccess() {                          //
-		return success;                                   //
-	}                                                     //
-	                                                      //
-	public void setSuccess(boolean success) {             //
-		this.success = success;                           //
-	}                                                     //
-	                                                      //
-	public String getMessage() {                          //
-		return message;                                   //
-	}                                                     //
-	                                                      //
-	public void setMessage(String message) {              //
-		this.message = message;                           //
-	}                                                     //
-	                                                      //
-	public Map<String, Item> getItems() {                 //
-		return items;                                     //
-	}                                                     //
-                                                          //
-	public void setItems(Map<String, Item> items) {       //
-		this.items = items;                               //
-	}                                                     //
-                                                          //
-	////////////////////////////////////////////////////////
+	public String descargarLote()
+	{
+		logger.debug(Utils.log(
+				 "\n###########################"
+				,"\n###### descargarLote ######"
+				));
+		
+		try
+		{
+			UserVO usuario = Utils.validateSession(session);
+			String cdusuari = usuario.getUser();
+			String cdsisrol = usuario.getRolActivo().getClave();
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String lote     = params.get("lote");
+			String hoja     = params.get("hoja");
+			String peso     = params.get("peso");
+			String cdtipram = params.get("cdtipram");
+			String cdtipimp = params.get("cdtipimp");
+			String tipolote = params.get("tipolote");
+			
+			Utils.validate(
+					lote      , "No se recibi\u00F3 el lote"
+					,hoja     , "No se recibi\u00F3 el tipo de hoja"
+					,peso     , "No se recibi\u00F3 el peso"
+					,cdtipram , "No se recibi\u00F3 el tipo de ramo"
+					,cdtipimp , "No se recibi\u00F3 el tipo de impresi\u00F3n"
+					,tipolote , "No se recibi\u00F3 el tipo de lote"
+					);
+			
+			fileInputStream = explotacionDocumentosManager.descargarLote(
+					lote
+					,hoja
+					,peso
+					,cdtipram
+					,cdtipimp
+					,tipolote
+					,cdusuari
+					,cdsisrol
+					);
+			
+			contentType = TipoArchivo.PDF.getContentType();
+			filename    = Utils.join("descarga_lote_",lote,"_papel_",hoja,".pdf");
+			
+			success = true;
+			session.put("descargarLote" , "S");
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+			session.put("descargarLote" , message);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### descargarLote ######"
+				,"\n###########################"
+				));
+		return SUCCESS;
+	}
+	
+	@Action(value   = "esperarDescargaLote",
+			results = { @Result(name="success", type="json") }
+	)
+	public String esperarDescargaLote()
+	{
+		logger.debug(Utils.log(
+				 "\n#################################"
+				,"\n###### esperarDescargaLote ######"
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			String descargarLote = null;
+			
+			while(StringUtils.isBlank(descargarLote))
+			{
+				descargarLote = (String)session.get("descargarLote");
+				Thread.sleep(250l);
+			}
+			
+			if("S".equals(descargarLote))
+			{
+				success = true;
+			}
+			else
+			{
+				message = descargarLote;
+				session.put("descargarLote" , "");
+			}
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### success=" , success
+				,"\n###### message=" , message
+				,"\n###### esperarDescargaLote ######"
+				,"\n#################################"
+				));
+		return SUCCESS;
+	}
+	
+	////////////////// Getters y setters ///////////////////////////
+	                                                              //
+	public Map<String, String> getParams() {                      //
+		return params;                                            //
+	}                                                             //
+	                                                              //
+	public void setParams(Map<String, String> params) {           //
+		this.params = params;                                     //
+	}                                                             //
+	                                                              //
+	public List<Map<String, String>> getList() {                  //
+		return list;                                              //
+	}                                                             //
+	                                                              //
+	public void setList(List<Map<String, String>> list) {         //
+		this.list = list;                                         //
+	}                                                             //
+	                                                              //
+	public boolean isSuccess() {                                  //
+		return success;                                           //
+	}                                                             //
+	                                                              //
+	public void setSuccess(boolean success) {                     //
+		this.success = success;                                   //
+	}                                                             //
+	                                                              //
+	public String getMessage() {                                  //
+		return message;                                           //
+	}                                                             //
+	                                                              //
+	public void setMessage(String message) {                      //
+		this.message = message;                                   //
+	}                                                             //
+	                                                              //
+	public Map<String, Item> getItems() {                         //
+		return items;                                             //
+	}                                                             //
+                                                                  //
+	public void setItems(Map<String, Item> items) {               //
+		this.items = items;                                       //
+	}                                                             //
+                                                                  //
+	public InputStream getFileInputStream() {                     //
+		return fileInputStream;                                   //
+	}                                                             //
+                                                                  //
+	public void setFileInputStream(InputStream fileInputStream) { //
+		this.fileInputStream = fileInputStream;                   //
+	}                                                             //
+                                                                  //
+	public String getFilename() {                                 //
+		return filename;                                          //
+	}                                                             //
+                                                                  //
+	public void setFilename(String filename) {                    //
+		this.filename = filename;                                 //
+	}                                                             //
+                                                                  //
+	public String getContentType() {                              //
+		return contentType;                                       //
+	}                                                             //
+                                                                  //
+	public void setContentType(String contentType) {              //
+		this.contentType = contentType;                           //
+	}                                                             //
+                                                                  //
+    ////////////////////////////////////////////////////////////////
 }

@@ -426,12 +426,22 @@ Ext.define('VentanaImpresionLote',
                                                 ,disabled : true
                                                 ,handler  : function(boton)
                                                 {
-                                                    me.imprimir(
-                                                        bot
-                                                        ,boton
-                                                        ,_fieldById('_c0_gridImpresoras').getSelectionModel().getSelection()
-                                                        ,'S'
-                                                    );
+                                                    if(_fieldById('_c0_gridImpresoras').getSelectionModel().getSelection()[0].get('nombre')=='download')
+                                                    {
+                                                        me.download(
+                                                            bot
+                                                            ,boton
+                                                        );
+                                                    }
+                                                    else
+                                                    {
+                                                        me.imprimir(
+                                                            bot
+                                                            ,boton
+                                                            ,_fieldById('_c0_gridImpresoras').getSelectionModel().getSelection()
+                                                            ,'S'
+                                                        );
+                                                    }
                                                 }
                                             }
                                             ,{
@@ -441,11 +451,21 @@ Ext.define('VentanaImpresionLote',
                                                 ,disabled : true
                                                 ,handler  : function(boton)
                                                 {
-                                                    me.imprimir(
-                                                        bot
-                                                        ,boton
-                                                        ,_fieldById('_c0_gridImpresoras').getSelectionModel().getSelection()
-                                                    );
+                                                    if(_fieldById('_c0_gridImpresoras').getSelectionModel().getSelection()[0].get('nombre')=='download')
+                                                    {
+                                                        me.download(
+                                                            bot
+                                                            ,boton
+                                                        );
+                                                    }
+                                                    else
+                                                    {
+                                                        me.imprimir(
+                                                            bot
+                                                            ,boton
+                                                            ,_fieldById('_c0_gridImpresoras').getSelectionModel().getSelection()
+                                                        );
+                                                    }
                                                 }
                                             }
                                         ]
@@ -547,6 +567,83 @@ Ext.define('VentanaImpresionLote',
                 {
                     _setLoading(false,win);
                     errorComunicacion(null,'Error al imprimir');
+                }
+            });
+        }
+        catch(e)
+        {
+            manejaException(e,ck);
+        }
+    }
+    ,download : function(botPap,botImp)
+    {
+        debug('download botPap,botImp:',botPap,botImp,'.');
+        
+        var me  = this;
+        var win = botImp.up('window');
+        
+        var ck = 'Descargando';
+        try
+        {
+            if(Ext.isEmpty(botPap))
+            {
+                throw 'Se perdi\u00F3 el componente de impresi\u00F3n';
+            }
+            
+            Ext.create('Ext.form.Panel').submit(
+            {
+                url             : _GLOBAL_URL_DESCARGAR_LOTE
+                ,params         :
+                {
+                    'params.lote'      : me.lote
+                    ,'params.hoja'     : botPap.hoja
+                    ,'params.peso'     : botPap.peso
+                    ,'params.cdtipram' : me.cdtipram
+                    ,'params.cdtipimp' : me.cdtipimp
+                    ,'params.tipolote' : me.tipolote
+                }
+                ,standardSubmit : true
+                ,target         : '_blank'
+            });
+            
+            _setLoading(true,win);
+            Ext.Ajax.request(
+            {
+                url      : _GLOBAL_URL_ESPERAR_DESCARGA_LOTE
+                ,timeout : 1000*60*5
+                ,success : function(response)
+                {
+                    _setLoading(false,win);
+                    var ck = 'Decodificando respuesta al imprimir';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        if(json.success==true)
+                        {
+                            mensajeCorrecto(
+                                'Descarga correcta'
+                                ,'Descarga correcta'
+                                ,function()
+                                {
+                                    win.destroy();
+                                    me.actualizarBotones();
+                                }
+                            );
+                        }
+                        else
+                        {
+                            mensajeError(json.message);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure  : function()
+                {
+                    _setLoading(false,win);
+                    errorComunicacion(null,'Error al descargar');
                 }
             });
         }
