@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
+import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
@@ -516,7 +517,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	public void guardarDocumento(String cdunieco, String cdramo, String estado,
 			String nmpoliza, String nmsuplem, Date feinici, String cddocume,
 			String dsdocume, String nmsolici, String ntramite, String tipmov,
-			String swvisible, String codidocu, String cdtiptra, String cdorddoc, String cdmoddoc) throws Exception {
+			String swvisible, String codidocu, String cdtiptra, String cdorddoc, Documento documento) throws Exception {
 		
 		HashMap<String, Object> params =  new HashMap<String, Object>();
 		params.put("pv_cdunieco_i"  , cdunieco);
@@ -534,7 +535,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("pv_codidocu_i"  , codidocu);
 		params.put("pv_cdtiptra_i"  , cdtiptra);
 		params.put("cdorddoc"       , cdorddoc);
-		params.put("cdmoddoc"       , cdmoddoc);
+		params.put("cdmoddoc"       , documento!=null ? documento.getCdmoddoc() : null);
 		Utils.debugProcedure(logger, "PKG_SATELITES2.P_MOV_DOCUMENTOS", params);
 		ejecutaSP(new GuardarDocumentoPolizaSP(getDataSource()), params);
 	}

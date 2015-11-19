@@ -3,6 +3,8 @@ package mx.com.gseguros.portal.documentos.service;
 import java.util.Date;
 import java.util.Map;
 
+import mx.com.gseguros.portal.documentos.model.Documento;
+
 public interface DocumentosManager
 {
 	public final static int PROCESO_EMISION = 1
@@ -37,6 +39,6 @@ public interface DocumentosManager
 			,String codidocu
 			,String cdtiptra
 			,String cdorddoc
-			,String cdmoddoc
+			,Documento documento
 			)throws Exception;
 }

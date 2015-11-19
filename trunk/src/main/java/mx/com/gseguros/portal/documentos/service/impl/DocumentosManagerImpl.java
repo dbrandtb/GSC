@@ -10,6 +10,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
+import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Utils;
@@ -205,7 +206,7 @@ public class DocumentosManagerImpl implements DocumentosManager
 			,String codidocu
 			,String cdtiptra
 			,String cdorddoc
-			,String cdmoddoc
+			,Documento documento
 			)throws Exception
 	{
 		mesaControlDAO.guardarDocumento(
@@ -224,7 +225,7 @@ public class DocumentosManagerImpl implements DocumentosManager
 				,codidocu
 				,cdtiptra
 				,cdorddoc
-				,cdmoddoc
+				,documento
 				);
 	}
 }

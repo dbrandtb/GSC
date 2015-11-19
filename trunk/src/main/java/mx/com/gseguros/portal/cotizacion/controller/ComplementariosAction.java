@@ -2435,8 +2435,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,Constantes.SI
 							,null
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-							,null
-							,null
+							,"0"
+							,Documento.EXTERNO_CARATULA
 							);
 					
 					/**
@@ -2467,7 +2467,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,null
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 							,"0"
-							,Documento.RECIBO.getCdmoddoc()
+							,Documento.RECIBO
 							);
 					
 					/**
@@ -2497,8 +2497,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,Constantes.SI
 							,null
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-							,null
-							,null
+							,"0"
+							,Documento.EXTERNO_AP
 							);
 					
 					/**
@@ -2528,8 +2528,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,Constantes.SI
 							,null
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-							,null
-							,null
+							,"0"
+							,Documento.EXTERNO_CAIC
 							);
 					
 					if("C".equalsIgnoreCase(tipoGrupoInciso)){
@@ -2560,8 +2560,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,Constantes.SI
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,null
-								,null
+								,"0"
+								,Documento.EXTERNO_INCISOS_FLOTILLAS
 								);
 						
 						/**
@@ -2591,8 +2591,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,Constantes.SI
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,null
-								,null
+								,"0"
+								,Documento.EXTERNO_TARJETA_IDENTIFICACION
 								);
 						
 					}
@@ -2642,8 +2642,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,Constantes.SI
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,null
-								,null
+								,"0"
+								,Documento.EXTERNO_REDUCE_GS
 								);
 					}
 					if(gestoria){
@@ -2673,8 +2673,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,Constantes.SI
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,null
-								,null
+								,"0"
+								,Documento.EXTERNO_GESTORIA_GS
 								);
 					}
 					
@@ -2705,8 +2705,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,Constantes.SI
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,null
-								,null
+								,"0"
+								,Documento.EXTERNO_ESPECIF_SEGURO_VIDA
 								);
 
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf\">Condiciones Generales Seguro de Vida</a>";
@@ -2731,8 +2731,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,Constantes.SI
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,null
-								,null
+								,"0"
+								,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA
 								);
 					}
 					
@@ -3466,8 +3466,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,Constantes.SI
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,null
-								,null
+								,"0"
+								,Documento.EXTERNO_CARATULA
 								);
 						
 						/**
@@ -3498,7 +3498,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
-								,Documento.RECIBO.getCdmoddoc()
+								,Documento.RECIBO
 								);
 						
 						/**
@@ -3528,8 +3528,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,Constantes.SI
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,null
-								,null
+								,"0"
+								,Documento.EXTERNO_AP
 								);
 						
 						/**
@@ -3559,8 +3559,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,Constantes.SI
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,null
-								,null
+								,"0"
+								,Documento.EXTERNO_CAIC
 								);
 						
 						if("C".equalsIgnoreCase(tipoGrupoInciso)){
@@ -3591,8 +3591,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,Constantes.SI
 									,null
 									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-									,null
-									,null
+									,"0"
+									,Documento.EXTERNO_INCISOS_FLOTILLAS
 									);
 							
 							/**
@@ -3622,8 +3622,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,Constantes.SI
 									,null
 									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-									,null
-									,null
+									,"0"
+									,Documento.EXTERNO_TARJETA_IDENTIFICACION
 									);
 							
 						}
@@ -3673,8 +3673,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,Constantes.SI
 									,null
 									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-									,null
-									,null
+									,"0"
+									,Documento.EXTERNO_REDUCE_GS
 									);
 						}
 						if(gestoria){
@@ -3704,8 +3704,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,Constantes.SI
 									,null
 									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-									,null
-									,null
+									,"0"
+									,Documento.EXTERNO_GESTORIA_GS
 									);
 						}
 						
@@ -3736,8 +3736,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,Constantes.SI
 									,null
 									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-									,null
-									,null
+									,"0"
+									,Documento.EXTERNO_ESPECIF_SEGURO_VIDA
 									);
 
 							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf\">Condiciones Generales Seguro de Vida</a>";
@@ -3762,8 +3762,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,Constantes.SI
 									,null
 									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-									,null
-									,null
+									,"0"
+									,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA
 									);
 						}
 

@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.portal.documentos.model.Documento;
+
 public interface MesaControlDAO
 {
 	/**
@@ -151,7 +153,7 @@ public interface MesaControlDAO
 	public void guardarDocumento(String cdunieco, String cdramo, String estado,
 			String nmpoliza, String nmsuplem, Date feinici, String cddocume,
 			String dsdocume, String nmsolici, String ntramite, String tipmov,
-			String swvisible, String codidocu, String cdtiptra, String cdorddoc, String cdmoddoc) throws Exception;
+			String swvisible, String codidocu, String cdtiptra, String cdorddoc, Documento documento) throws Exception;
 	
 	public String turnaPorCargaTrabajo(
 			String ntramite
