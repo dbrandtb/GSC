@@ -1430,13 +1430,18 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				files.add(new File(filePath));
 			}
 			
-			File fusionado = DocumentosUtils.fusionarDocumentosPDF(files,new File(Utils.join(
-					rutaDocumentosTemporal
-					,"/lote_"         , lote
-					,"_fusion_papel_" , hoja
-					,"_t_"            , System.currentTimeMillis()
-					,".pdf"
-					)));
+			File fusionado = DocumentosUtils.fusionarDocumentosPDF(
+					files
+					,new File(Utils.join(
+							rutaDocumentosTemporal
+							,"/lote_"         , lote
+							,"_fusion_papel_" , hoja
+							,"_t_"            , System.currentTimeMillis()
+							,".pdf"
+					        )
+					)
+					,"C".equals(hoja)
+			);
 			
 			if(fusionado==null || !fusionado.exists())
 			{
