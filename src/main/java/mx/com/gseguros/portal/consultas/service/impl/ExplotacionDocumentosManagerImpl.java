@@ -446,12 +446,6 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		
 		try
 		{
-			//TODO si el papel es multiple hay que mandar por charola especifica (B por la 1, M por la 2)
-			if(hoja.length()>1)
-			{
-				throw new ApplicationException("No soporta intercalada, consulte a desarrollo");
-			}
-			
 			paso = "Recuperando archivos";
 			sb.append("\n").append(paso);
 			
@@ -475,8 +469,9 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					String ntramite = archivo.get("ntramite");
 					String cddocume = archivo.get("cddocume");
 					String filePath = Utils.join(rutaDocumentosPoliza,"/",ntramite,"/",cddocume);
+					String papelDoc = archivo.get("tipodoc");
 					
-					sb.append(Utils.log("\ntramite,archivo=",ntramite,cddocume));
+					sb.append(Utils.log("\ntramite,archivo=",ntramite,",",cddocume));
 					
 					if(cddocume.toLowerCase().indexOf("://")!=-1)
 					{
@@ -503,7 +498,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 							filePath
 							,dsimpres
 							,Integer.parseInt(archivo.get("nmcopias")) //numCopias
-							,null                                      //mediaId
+							,hoja.length()>1 ? ( "M".equals(papelDoc) ? charola2 : charola1 ) : charola1
 							);
 					
 					if(test)
@@ -512,42 +507,6 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					}
 				}
 			}
-			
-			/*
-			else
-			{
-				for(Map<String,String>archivo:listaArchivos)
-				{
-					//qwe TODO si el papel es multiple hay que mandar por charola especifica (B por la 1, M por la 2)
-					if(hoja.length()>1)
-					{
-						throw new ApplicationException("No soporta intercalada, consulte a desarrollo");
-					}
-					
-					if(!apagado)
-					{
-						if("B".equals(archivo.get("tipodoc")))
-						{
-							impresionService.imprimeDocumento(
-									Utils.join(rutaDocumentosPoliza,"/",archivo.get("ntramite"),"/",archivo.get("cddocume"))
-									,dsimpres
-									,Integer.parseInt(archivo.get("nmcopias")) //numCopias
-									,null                                      //mediaId
-									);
-							if(test)
-							{
-								apagado = true;
-							}
-						}
-						else if("M".equals(archivo.get("tipodoc")))
-						{
-							//qwe TODO Ricardo hay que bajar los recibos a un archivo local temporal y luego imprimir
-							throw new ApplicationException("No soporta recibos remotos, consulte a desarrollo");
-						}
-					}
-				}
-			}
-			*/
 			
 			paso = "Actualizando remesas, emisiones y endosos";
 			sb.append("\n").append(paso);
@@ -1405,7 +1364,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				String cddocume = archivo.get("cddocume");
 				String filePath = Utils.join(rutaDocumentosPoliza,"/",ntramite,"/",cddocume);
 				
-				sb.append(Utils.log("\ntramite,archivo=",ntramite,cddocume));
+				sb.append(Utils.log("\ntramite,archivo=",ntramite,",",cddocume));
 				
 				if(cddocume.toLowerCase().indexOf("://")!=-1)
 				{
