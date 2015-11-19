@@ -13,7 +13,9 @@
 	var _GLOBAL_OCULTA_EXTENSION_TIMEOUT   = '<s:text name="sesion.oculta.extension.timeout"/>';
 	var _GLOBAL_URL_GRABAR_EVENTO          = '<s:url namespace="/servicios" action="grabarEvento" />';
 	
-	var _GLOBAL_DIRECTORIO_ICONOS = '${icons}';
-	var _GLOBAL_URL_RECUPERACION  = '<s:url namespace="/recuperacion" action="recuperar"    />';
-	var _GLOBAL_URL_IMPRIMIR_LOTE = '<s:url namespace="/consultas"    action="imprimirLote" />';
+	var _GLOBAL_DIRECTORIO_ICONOS         = '${icons}';
+	var _GLOBAL_URL_RECUPERACION          = '<s:url namespace="/recuperacion" action="recuperar"           />';
+	var _GLOBAL_URL_IMPRIMIR_LOTE         = '<s:url namespace="/consultas"    action="imprimirLote"        />';
+	var _GLOBAL_URL_DESCARGAR_LOTE        = '<s:url namespace="/consultas"    action="descargarLote"       />';
+	var _GLOBAL_URL_ESPERAR_DESCARGA_LOTE = '<s:url namespace="/consultas"    action="esperarDescargaLote" />';
 </script>
