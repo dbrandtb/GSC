@@ -13,6 +13,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.lowagie.text.Document;
+import com.lowagie.text.PageSize;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfImportedPage;
@@ -22,7 +23,13 @@ import com.lowagie.text.pdf.PdfWriter;
 public class DocumentosUtils
 {
 	private final static Logger logger = Logger.getLogger(DocumentosUtils.class);
+	
 	public static File fusionarDocumentosPDF(List<File>origen,File destino)
+	{
+		return DocumentosUtils.fusionarDocumentosPDF(origen,destino,false);
+	}
+	
+	public static File fusionarDocumentosPDF(List<File>origen,File destino,boolean credencial)
 	{
 		File resp=null;
 		try
@@ -32,7 +39,7 @@ public class DocumentosUtils
 			{
 				listaInput.add(new FileInputStream(iOrigen));
 			}
-			DocumentosUtils.concatPDFs(listaInput,new FileOutputStream(destino),false);
+			DocumentosUtils.concatPDFs(listaInput,new FileOutputStream(destino),false,credencial);
 			resp=new File(destino.getCanonicalPath());
 		}catch(Exception ex)
 		{
@@ -41,9 +48,28 @@ public class DocumentosUtils
 		return resp;
 	}
 	
-	public static void concatPDFs(List<InputStream> streamOfPDFFiles, OutputStream outputStream, boolean paginate) {
+	public static void concatPDFs(List<InputStream> streamOfPDFFiles, OutputStream outputStream, boolean paginate)
+	{
+		DocumentosUtils.concatPDFs(streamOfPDFFiles, outputStream, paginate, false);
+	}
+	
+	public static void concatPDFs(List<InputStream> streamOfPDFFiles, OutputStream outputStream, boolean paginate, boolean credencial) {
 
-	    Document document = new Document();
+	    Document document = null;
+	    
+	    /*
+	     * Si es credencial, se configura el tamanio ID_1 que
+	     * mide 85.60 x 53.98 mm
+	     */
+	    if(credencial)
+	    {
+	    	document = new Document(PageSize.ID_1);
+	    }
+	    else
+	    {
+	    	document = new Document();
+	    }
+	    
 	    try {
 	      List<InputStream> pdfs = streamOfPDFFiles;
 	      List<PdfReader> readers = new ArrayList<PdfReader>();

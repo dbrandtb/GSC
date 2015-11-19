@@ -665,6 +665,8 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 				Thread.sleep(250l);
 			}
 			
+			session.put("descargarLote" , "");
+			
 			if("S".equals(descargarLote))
 			{
 				success = true;
@@ -672,7 +674,6 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 			else
 			{
 				message = descargarLote;
-				session.put("descargarLote" , "");
 			}
 		}
 		catch(Exception ex)
