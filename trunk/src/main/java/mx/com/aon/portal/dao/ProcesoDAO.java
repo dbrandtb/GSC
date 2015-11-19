@@ -3839,12 +3839,12 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		SimpleDateFormat spdf = new SimpleDateFormat("dd/MM/yyyy");
     		Calendar cal;
     		
-    		String llaveCli = rs.getString("llaveCli"); 
-    		int claveCli = 0;
-    		
-    		if(StringUtils.isNotBlank(llaveCli)){
-    			claveCli = Integer.parseInt(llaveCli.substring(llaveCli.length()-10));
-    		}
+//    		String llaveCli = rs.getString("llaveCli"); 
+//    		int claveCli = 0;
+//    		
+//    		if(StringUtils.isNotBlank(llaveCli)){
+//    			claveCli = Integer.parseInt(llaveCli.substring(llaveCli.length()-10));
+//    		}
     		
     		cliente.setAgrupaCli(rs.getInt("agrupaCli"));
     		cliente.setApellidomCli(rs.getString("apellidomCli"));
@@ -3855,7 +3855,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setCanconCli(rs.getInt("canconCli"));
     		cliente.setCelularCli(rs.getString("celularCli"));
     		cliente.setCheqdevCli(rs.getInt("cheqdevCli"));
-    		cliente.setClaveCli(claveCli);//cliente.setClaveCli(rs.getInt("claveCli"));
+    		cliente.setClaveCli(rs.getInt("claveCli"));//cliente.setClaveCli(claveCli);//se usa claveCli para uso exclusivo de cdperson en productos de salud, una vez platicado con Argenis
     		cliente.setCodcarCli(rs.getInt("codcarCli"));
     		cliente.setCodposCli(rs.getString("codposCli"));
     		cliente.setColcarCli(rs.getString("colcarCli"));
