@@ -5,22 +5,13 @@ public interface ImpresionService {
 	
 	/**
 	 * Imprime un documento
-	 * @param documento Ruta completa del documento a imprimir
-	 * @param iPrinter  Indice de la impresora a utilizar
-	 * @param numCopias Numero de copias requeridas
-	 * @param mediaId   Numero de la bandeja de impresion, si es null se utilizara la bandeja por defecto
-	 * @throws Exception
-	 */
-	public void imprimeDocumento(String documento, int iPrinter, int numCopias, Integer mediaId) throws Exception;
-	
-	/**
-	 * Imprime un documento
+	 * 
 	 * @param documento Ruta completa del documento a imprimir
 	 * @param nombreImpresora Nombre de la impresora a utilizar
 	 * @param numCopias Numero de copias requeridas
-	 * @param mediaId   Numero de la bandeja de impresion, si es null se utilizara la bandeja por defecto
+	 * @param bandeja   Nombre de la bandeja de impresion, si es null se utilizara la bandeja por defecto
 	 * @throws Exception
 	 */
-	public void imprimeDocumento(String documento, String nombreImpresora, int numCopias, Integer mediaId) throws Exception;
+	public void imprimeDocumento(String documento, String nombreImpresora, int numCopias, String bandeja) throws Exception;
 	
 }
