@@ -2474,10 +2474,24 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String parametros = null;
 			parametros = "?"+polRes.getCduniext()+","+polRes.getCdramoext()+","+polRes.getNmpoliex()+",,0,"+ numEndoso+",0";
 			logger.debug("URL Generada para Caratula: "+ urlImpresionCaratulaEndosoB + parametros);
-			mesaControlDAO.guardarDocumento(cdunieco, cdramo, estado, nmpoliza,
-					nmsuplem, new Date(), urlImpresionCaratulaEndosoB + parametros, 
-					"Car&aacute;tula Endoso B", nmpoliza,
-					nmtramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, null);
+			mesaControlDAO.guardarDocumento(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,new Date()
+					,urlImpresionCaratulaEndosoB + parametros
+					,"Car&aacute;tula Endoso B"
+					,nmpoliza
+					,nmtramite
+					,cdtipsup
+					,Constantes.SI
+					,null
+					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+					,"0"
+					,Documento.EXTERNO_CARATULA
+					);
 		
 		}catch(Exception e){
 			logger.error("Error al guardar la caratula de endoso B",e);
@@ -3342,10 +3356,24 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					
 					parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"));
 					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
-					mesaControlDAO.guardarDocumento(cdunieco, cdramo, estado,nmpoliza, nmsuplem, 
-							new Date(), urlCaratula + parametros,
-							"Car&aacute;tula de P&oacute;liza ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")", nmpoliza, ntramite,
-							cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, null);
+					mesaControlDAO.guardarDocumento(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsuplem
+							,new Date()
+							,urlCaratula + parametros
+							,"Car&aacute;tula de P&oacute;liza ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")"
+							,nmpoliza
+							,ntramite
+							,cdtipsup
+							,Constantes.SI
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,"0"
+							,Documento.EXTERNO_CARATULA
+							);
 					
 					/**
 					 * Para Recibos
@@ -3377,11 +3405,23 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 							
 							logger.debug("URL Generada para Recibo "+reciboIt.get("NUMREC")+": "+ urlRecibo + parametros);
 							mesaControlDAO.guardarDocumento(
-									cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-									new Date(), urlRecibo + parametros, "Recibo  "+reciboIt.get("NUMREC")+"  ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")", nmpoliza, 
-									ntramite, cdtipsup, visible, null,
-									((TipoEndoso.EMISION_POLIZA.getCdTipSup().intValue() == Integer.parseInt(cdtipsup)) || (TipoEndoso.RENOVACION.getCdTipSup().intValue() == Integer.parseInt(cdtipsup)))?TipoTramite.POLIZA_NUEVA.getCdtiptra() : TipoTramite.ENDOSO.getCdtiptra()
-									, "0", Documento.RECIBO.getCdmoddoc());
+									cdunieco
+									,cdramo
+									,estado
+									,nmpoliza
+									,nmsuplem
+									,new Date()
+									,urlRecibo + parametros
+									,"Recibo  "+reciboIt.get("NUMREC")+"  ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")"
+									,nmpoliza
+									,ntramite
+									,cdtipsup
+									,visible
+									,null
+									,((TipoEndoso.EMISION_POLIZA.getCdTipSup().intValue() == Integer.parseInt(cdtipsup)) || (TipoEndoso.RENOVACION.getCdTipSup().intValue() == Integer.parseInt(cdtipsup)))?TipoTramite.POLIZA_NUEVA.getCdtiptra() : TipoTramite.ENDOSO.getCdtiptra()
+									,"0"
+									,Documento.RECIBO
+									);
 						}
 					}
 					
@@ -3392,9 +3432,23 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
 						logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
 						mesaControlDAO.guardarDocumento(
-								cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-								new Date(), urlAp + parametros, "AP", nmpoliza, 
-								ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, null);
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,urlAp + parametros
+								,"AP"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_AP
+								);
 					}
 					
 					
@@ -3405,9 +3459,23 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
 						logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
 						mesaControlDAO.guardarDocumento(
-								cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-								new Date(), urlCaic + parametros, "CAIC", nmpoliza, 
-								ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, null);
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,urlCaic + parametros
+								,"CAIC"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_CAIC
+								);
 					}
 					
 					
@@ -3418,9 +3486,23 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"));
 						logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
 						mesaControlDAO.guardarDocumento(
-								cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-								new Date(), urlIncisosFlot + parametros, "Incisos Flotillas", nmpoliza, 
-								ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, null);
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,urlIncisosFlot + parametros
+								,"Incisos Flotillas"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_INCISOS_FLOTILLAS
+								);
 						
 						/**
 						 * Para Tarjeta Identificacion
@@ -3428,9 +3510,23 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
 						logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
 						mesaControlDAO.guardarDocumento(
-								cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-								new Date(), urlTarjIdent + parametros, "Tarjeta de Identificacion", nmpoliza, 
-								ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, null);
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,urlTarjIdent + parametros
+								,"Tarjeta de Identificacion"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_TARJETA_IDENTIFICACION
+								);
 					}
 					
 					/**
@@ -3438,9 +3534,23 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					 */
 					if(StringUtils.isNotBlank(endosoIt.get("REDUCEGS")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("REDUCEGS"))){
 						mesaControlDAO.guardarDocumento(
-								cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-								new Date(), "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf", "Reduce GS", nmpoliza, 
-								ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, null);
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
+								,"Reduce GS"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_REDUCE_GS
+								);
 					}
 					
 					/**
@@ -3449,9 +3559,23 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					if(StringUtils.isNotBlank(endosoIt.get("GESTORIA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("GESTORIA"))){
 						
 						mesaControlDAO.guardarDocumento(
-								cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-								new Date(), "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf", "Gestoria GS", nmpoliza, 
-								ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, null);
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
+								,"Gestoria GS"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_GESTORIA_GS
+								);
 					}
 
 					/**
@@ -3460,14 +3584,42 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					if(StringUtils.isNotBlank(endosoIt.get("COBVIDA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("COBVIDA"))){
 						
 						mesaControlDAO.guardarDocumento(
-								cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-								new Date(), "https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf", "Especificaciones Seguro de Vida", nmpoliza, 
-								ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, null);
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,"https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf"
+								,"Especificaciones Seguro de Vida"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_ESPECIF_SEGURO_VIDA
+								);
 
 						mesaControlDAO.guardarDocumento(
-								cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-								new Date(), "https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf", "Condiciones Generales Seguro de Vida", nmpoliza, 
-								ntramite, cdtipsup, Constantes.SI, null, TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, null);
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,"https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf"
+								,"Condiciones Generales Seguro de Vida"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA
+								);
 					}
 				}
 			}

@@ -10789,8 +10789,8 @@ public class EndososAction extends PrincipalCoreAction
 					,Constantes.SI
 					,null
 					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-					,null
-					,null
+					,"0"
+					,Documento.EXTERNO_CARATULA
 					);
 			
 		} catch (Exception e) {
@@ -10879,8 +10879,8 @@ public class EndososAction extends PrincipalCoreAction
 							,Constantes.SI
 							,null
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-							,null
-							,null
+							,"0"
+							,Documento.EXTERNO_CARATULA
 							);
 					
 					
@@ -10930,7 +10930,7 @@ public class EndososAction extends PrincipalCoreAction
 									,null
 									,((TipoEndoso.EMISION_POLIZA.getCdTipSup().intValue() == Integer.parseInt(cdtipsup)) || (TipoEndoso.RENOVACION.getCdTipSup().intValue() == Integer.parseInt(cdtipsup)))?TipoTramite.POLIZA_NUEVA.getCdtiptra() : TipoTramite.ENDOSO.getCdtiptra()
 									,"0"
-									,Documento.RECIBO.getCdmoddoc()
+									,Documento.RECIBO
 									);
 						}
 					}
@@ -10965,8 +10965,8 @@ public class EndososAction extends PrincipalCoreAction
 								,Constantes.SI
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,null
-								,null
+								,"0"
+								,Documento.EXTERNO_AP
 								);
 					}
 					
@@ -10998,8 +10998,8 @@ public class EndososAction extends PrincipalCoreAction
 								,Constantes.SI
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,null
-								,null
+								,"0"
+								,Documento.EXTERNO_CAIC
 								);
 					}
 					
@@ -11031,8 +11031,8 @@ public class EndososAction extends PrincipalCoreAction
 								,Constantes.SI
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,null
-								,null
+								,"0"
+								,Documento.EXTERNO_INCISOS_FLOTILLAS
 								);
 						
 						/**
@@ -11061,8 +11061,8 @@ public class EndososAction extends PrincipalCoreAction
 								,Constantes.SI
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,null
-								,null
+								,"0"
+								,Documento.EXTERNO_TARJETA_IDENTIFICACION
 								);
 						
 					}
@@ -11091,8 +11091,8 @@ public class EndososAction extends PrincipalCoreAction
 								,Constantes.SI
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,null
-								,null
+								,"0"
+								,Documento.EXTERNO_REDUCE_GS
 								);
 					}
 					
@@ -11120,8 +11120,8 @@ public class EndososAction extends PrincipalCoreAction
 								,Constantes.SI
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,null
-								,null
+								,"0"
+								,Documento.EXTERNO_GESTORIA_GS
 								);
 					}
 
@@ -11149,8 +11149,8 @@ public class EndososAction extends PrincipalCoreAction
 								,Constantes.SI
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,null
-								,null
+								,"0"
+								,Documento.EXTERNO_ESPECIF_SEGURO_VIDA
 								);
 
 						//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf");
@@ -11173,8 +11173,8 @@ public class EndososAction extends PrincipalCoreAction
 								,Constantes.SI
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,null
-								,null
+								,"0"
+								,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA
 								);
 					}
 				}

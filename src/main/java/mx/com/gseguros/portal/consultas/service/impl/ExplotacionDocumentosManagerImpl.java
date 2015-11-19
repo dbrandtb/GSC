@@ -19,6 +19,7 @@ import mx.com.gseguros.portal.consultas.model.DocumentoReciboParaMostrarDTO;
 import mx.com.gseguros.portal.consultas.service.ExplotacionDocumentosManager;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
@@ -347,7 +348,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null         //codidocu
 						,TipoTramite.IMPRESION.getCdtiptra()
 						,"0"
-						,"59" // <<< 59 es el CDMODDOCU de REMESA
+						,Documento.REMESA_IMPRESION_LOTE
 						);
 				
 				paso = "Generando remesa excel";
@@ -1136,7 +1137,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null         //codidocu
 						,TipoTramite.IMPRESION.getCdtiptra()
 						,"0"
-						,"59" // <<< 59 es el CDMODDOCU de REMESA
+						,Documento.REMESA_IMPRESION_LOTE
 						);
 				
 				paso = "Generando remesa excel";

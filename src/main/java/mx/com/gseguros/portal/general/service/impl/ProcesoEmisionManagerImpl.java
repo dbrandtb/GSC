@@ -14,6 +14,7 @@ import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.emision.model.EmisionVO;
@@ -520,11 +521,24 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
 				mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car&aacute;tula de p&oacute;liza</a>";
 				
-				mesaControlDAO.guardarDocumento(cdunieco, cdramo, "M",
-						nmpolizaEmitida, nmsuplemEmitida, new Date(), urlCaratula + parametros,
-						"Car&aacute;tula de P&oacute;liza", nmpoliza, ntramite, 
-						String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup()),
-						Constantes.SI, null, "1", null, null);
+				mesaControlDAO.guardarDocumento(
+						cdunieco
+						,cdramo
+						,"M"
+						,nmpolizaEmitida
+						,nmsuplemEmitida
+						,new Date()
+						,urlCaratula + parametros
+						,"Car&aacute;tula de P&oacute;liza"
+						,nmpoliza
+						,ntramite
+						,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+						,Constantes.SI
+						,null
+						,"1"
+						,"0"
+						,Documento.EXTERNO_CARATULA
+						);
 				
 				/**
 				 * Para Recibo 1
@@ -533,10 +547,24 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
 				mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlRecibo + parametros+"\">Recibo provisional de primas</a>";
 				
-				mesaControlDAO.guardarDocumento(cdunieco, cdramo, "M",
-						nmpolizaEmitida, nmsuplemEmitida, new Date(), urlRecibo + parametros,
-						"Recibo 1", nmpoliza, ntramite, String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup()),
-						Constantes.SI, null, "1", null, null);
+				mesaControlDAO.guardarDocumento(
+						cdunieco
+						,cdramo
+						,"M"
+						,nmpolizaEmitida
+						,nmsuplemEmitida
+						,new Date()
+						,urlRecibo + parametros
+						,"Recibo 1"
+						,nmpoliza
+						,ntramite
+						,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+						,Constantes.SI
+						,null
+						,"1"
+						,"0"
+						,Documento.RECIBO
+						);
 				
 				/**
 				 * Para AP inciso 1
@@ -545,10 +573,24 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
 				mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAp + parametros+"\">Anexo cobertura de AP</a>";
 				
-				mesaControlDAO.guardarDocumento(cdunieco, cdramo, "M",
-						nmpolizaEmitida, nmsuplemEmitida, new Date(), urlAp + parametros,
-						"AP", nmpoliza, ntramite, String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup()),
-						Constantes.SI, null, "1", null, null);
+				mesaControlDAO.guardarDocumento(
+						cdunieco
+						,cdramo
+						,"M"
+						,nmpolizaEmitida
+						,nmsuplemEmitida
+						,new Date()
+						,urlAp + parametros
+						,"AP"
+						,nmpoliza
+						,ntramite
+						,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+						,Constantes.SI
+						,null
+						,"1"
+						,"0"
+						,Documento.EXTERNO_AP
+						);
 				
 				/**
 				 * Para CAIC inciso 1
@@ -557,10 +599,24 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
 				mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaic + parametros+"\">Anexo de cobertura RC USA</a>";
 				
-				mesaControlDAO.guardarDocumento(cdunieco, cdramo, "M",
-						nmpolizaEmitida, nmsuplemEmitida, new Date(), urlCaic + parametros,
-						"CAIC", nmpoliza, ntramite, String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup()),
-						Constantes.SI, null, "1", null, null);
+				mesaControlDAO.guardarDocumento(
+						cdunieco
+						,cdramo
+						,"M"
+						,nmpolizaEmitida
+						,nmsuplemEmitida
+						,new Date()
+						,urlCaic + parametros
+						,"CAIC"
+						,nmpoliza
+						,ntramite
+						,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+						,Constantes.SI
+						,null
+						,"1"
+						,"0"
+						,Documento.EXTERNO_CAIC
+						);
 				
 				if("C".equalsIgnoreCase(tipoGrupoInciso)){
 					/**
@@ -570,10 +626,24 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
 					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosFlot + parametros+"\">Relaci&oacute;n de Incisos Flotillas</a>";
 					
-					mesaControlDAO.guardarDocumento(cdunieco, cdramo, "M",
-							nmpolizaEmitida, nmsuplemEmitida, new Date(), urlIncisosFlot + parametros,
-							"Incisos Flotillas", nmpoliza, ntramite, String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup()),
-							Constantes.SI, null, "1", null, null);
+					mesaControlDAO.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,urlIncisosFlot + parametros
+							,"Incisos Flotillas"
+							,nmpoliza
+							,ntramite
+							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+							,Constantes.SI
+							,null
+							,"1"
+							,"0"
+							,Documento.EXTERNO_INCISOS_FLOTILLAS
+							);
 					
 					/**
 					 * Para Tarjeta Identificacion
@@ -582,10 +652,24 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
 					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci&oacute;n</a>";
 					
-					mesaControlDAO.guardarDocumento(cdunieco, cdramo, "M",
-							nmpolizaEmitida, nmsuplemEmitida, new Date(), urlTarjIdent + parametros,
-							"Tarjeta de Identificacion", nmpoliza, ntramite, String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup()),
-							Constantes.SI, null, "1", null, null);
+					mesaControlDAO.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,urlTarjIdent + parametros
+							,"Tarjeta de Identificacion"
+							,nmpoliza
+							,ntramite
+							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+							,Constantes.SI
+							,null
+							,"1"
+							,"0"
+							,Documento.EXTERNO_TARJETA_IDENTIFICACION
+							);
 				}
 				
 				/**
@@ -610,11 +694,24 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					
 					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf\">Reduce GS</a>";
 					
-					mesaControlDAO.guardarDocumento(cdunieco, cdramo, "M",
-							nmpolizaEmitida, nmsuplemEmitida, new Date(), 
-							"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf",
-							"Reduce GS", nmpoliza, ntramite, String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup()),
-							Constantes.SI, null, "1", null, null);
+					mesaControlDAO.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
+							,"Reduce GS"
+							,nmpoliza
+							,ntramite
+							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+							,Constantes.SI
+							,null
+							,"1"
+							,"0"
+							,Documento.EXTERNO_REDUCE_GS
+							);
 					
 				}
 				if(gestoria) {
@@ -624,11 +721,24 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					
 					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf\">Gestoria GS</a>";
 					
-					mesaControlDAO.guardarDocumento(cdunieco, cdramo, "M",
-							nmpolizaEmitida, nmsuplemEmitida, new Date(), 
-							"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf",
-							"Gestoria GS", nmpoliza, ntramite, String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup()),
-							Constantes.SI, null, "1", null, null);
+					mesaControlDAO.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
+							,"Gestoria GS"
+							,nmpoliza
+							,ntramite
+							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+							,Constantes.SI
+							,null
+							,"1"
+							,"0"
+							,Documento.EXTERNO_GESTORIA_GS
+							);
 					
 				}
 				
