@@ -620,6 +620,7 @@ function _p51_agregarClic(bot)
         if(bot.tipo=='S')
         {
             var cdunieco = _p51_venAgregarPermiso.down('[fieldLabel=SUCURSAL PERMISO]');
+            cdunieco.heredar(true);
             cdunieco.enable();
             cdunieco.show();
             
