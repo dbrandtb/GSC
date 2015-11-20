@@ -444,6 +444,9 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 			logger.debug(">>>>>>> Ejecutando WS Cliente General Clave Compania: " + cliente.getClaveCia());
 			logger.debug(">>>>>>> Ejecutando WS Cliente General Clave Externa: " + cliente.getNumeroExterno());
 			logger.debug(">>>>>>> Ejecutando WS Cliente General RFC: " + cliente.getRfcCli());
+			
+			logger.debug("Fuera de la clase de mapeo numero de cliente cdperson: "+ cliente.getClaveCli());
+			
 			try{
 				
 				if(async){

@@ -3846,6 +3846,9 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 //    			claveCli = Integer.parseInt(llaveCli.substring(llaveCli.length()-10));
 //    		}
     		
+    		logger.debug("VARLOR DE LA CLAVE CLI PARA ws DE ART 140: " + rs.getInt("claveCli"));
+    		logger.debug("VARLOR DE LA CLAVE CLI PARA WS DE ART 140 MAYUS: " + rs.getInt("CLAVECLI"));
+    		
     		cliente.setAgrupaCli(rs.getInt("agrupaCli"));
     		cliente.setApellidomCli(rs.getString("apellidomCli"));
     		cliente.setApellidopCli(rs.getString("apellidopCli"));
