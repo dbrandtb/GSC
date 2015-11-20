@@ -3368,7 +3368,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			{
 				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe"))
 				{
-					map.put(col,Utils.formateaFecha(rs.getString(col)));
+					map.put(col,Utils.formateaFechaConHora(rs.getString(col)));
 				}
 				else
 				{

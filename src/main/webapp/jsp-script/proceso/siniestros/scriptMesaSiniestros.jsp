@@ -1585,16 +1585,16 @@ var msgWindow;
 	                        ,width     : 60
 	                    }
 	                    ,{
-	                        header     : 'Consecutivo'
+	                        header     : 'No.'
 	                        ,dataIndex : 'NMORDINA'
-	                        ,width     : 80
+	                        ,width     : 40
 	                    }
 	                    ,{
 	                        header     : 'Fecha de inicio'
 	                        ,xtype     : 'datecolumn'
 	                        ,dataIndex : 'FECHAINI'
-	                        ,format    : 'd M Y'
-	                        ,width     : 90
+	                        ,format    : 'd M Y H:i'
+	                        ,width     : 130
 	                    }
 	                    ,{
 	                        header     : 'Usuario inicio'
@@ -1605,7 +1605,7 @@ var msgWindow;
 	                        header     : 'Fecha de fin'
 	                        ,xtype     : 'datecolumn'
 	                        ,dataIndex : 'FECHAFIN'
-	                        ,format    : 'd M Y'
+	                        ,format    : 'd M Y H:i'
 	                        ,width     : 90
 	                    }
 	                    ,{
@@ -1964,8 +1964,8 @@ Ext.onReady(function()
 		            ,"NMORDINA"
 		            ,"CDTIPTRA"
 		            ,"CDCLAUSU"
-		            ,{name:"FECHAINI",type:'date',dateFormat:'d/m/Y'}
-		            ,{name:"FECHAFIN",type:'date',dateFormat:'d/m/Y'}
+		            ,{name:"FECHAINI",type:'date',dateFormat:'d/m/Y H:i'}
+		            ,{name:"FECHAFIN",type:'date',dateFormat:'d/m/Y H:i'}
 		            ,"COMMENTS"
 		            ,"CDUSUARI_INI"
 		            ,"CDUSUARI_FIN"
