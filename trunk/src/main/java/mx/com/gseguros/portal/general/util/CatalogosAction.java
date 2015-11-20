@@ -744,6 +744,17 @@ public class CatalogosAction extends PrincipalCoreAction {
 						lista = catalogosManager.recuperarComboUsuarios(params.get("cadena"));
 					}
 					break;
+				case SUCURSALES_PERMISO_IMPRESION:
+					if(params!=null)
+					{
+						UserVO usuario2 = (UserVO)session.get("USUARIO");
+						lista = catalogosManager.recuperarSucursalesPermisoImpresion(
+								params.get("idPadre")
+								,usuario2.getUser()
+								,usuario2.getCdUnieco()
+								);
+					}
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

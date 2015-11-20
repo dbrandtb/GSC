@@ -268,6 +268,32 @@ public class Utils
 	}
 	
 	/**
+	 * Formatea un string con el contenido de una fecha
+	 * @param fecha Fecha formateada
+	 * @return
+	 */
+	public static String formateaFechaConHora(String fecha) {
+		StringBuilder strBuilder = new StringBuilder();
+		try {
+			if(fecha!=null && fecha.length() > 10) {
+				//  1 9 9 0 - 1 2 - 0 1 _ 0 0 : 0 0 : 00.0 <<CADENA
+				// 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6       <<INDICE
+				strBuilder.append(fecha.substring(8, 10)).append("/")
+						.append(fecha.substring(5, 7)).append("/")
+						.append(fecha.substring(0, 4))
+						.append(" ")
+						.append(fecha.substring(11,16));
+			} else {
+				strBuilder.append(fecha);
+			}
+		} catch (Exception e) {
+			logger.error("Error al formatear la fecha", e);
+		}
+		//logger.debug("#debug fecha="+strBuilder);
+		return strBuilder.toString();
+	}
+	
+	/**
 	 * Convierte una fecha String a Calendar
 	 * @param fecha String
 	 * @return devuelve objeto Calendar

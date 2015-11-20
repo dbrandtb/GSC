@@ -125,10 +125,10 @@ function _4_onClockClick(grid,rowIndex){
 				})
 				,columns : [
 					{	header     : 'Tr&aacute;mite',		dataIndex : 'NTRAMITE',				width     : 60			},
-					{	header     : 'Consecutivo'	,		dataIndex : 'NMORDINA'	,			width     : 80			},
-					{	header     : 'Fecha de inicio',		dataIndex : 'FECHAINI',				width     : 90,			xtype     : 'datecolumn',		format    : 'd M Y'		},
+					{	header     : 'No.',		            dataIndex : 'NMORDINA'	,			width     : 40			},
+					{	header     : 'Fecha de inicio',		dataIndex : 'FECHAINI',				width     : 130,			xtype     : 'datecolumn',		format    : 'd M Y H:i'		},
 					{	header     : 'Usuario inicio',		dataIndex : 'usuario_ini',			width     : 150			},
-					{	header     : 'Fecha de fin',		dataIndex : 'FECHAFIN',				width     : 90,			xtype     : 'datecolumn',		format    : 'd M Y'		},
+					{	header     : 'Fecha de fin',		dataIndex : 'FECHAFIN',				width     : 90,			xtype     : 'datecolumn',		format    : 'd M Y H:i'		},
 					{	header     : 'Usuario fin',			dataIndex : 'usuario_fin',			width     : 150			},
 					{	width      : 30	,					dataIndex    : 'FECHAFIN',			menuDisabled : true,
 						renderer     : function(value){
@@ -888,8 +888,8 @@ Ext.onReady(function(){
 			,"NMORDINA"
 			,"CDTIPTRA"
 			,"CDCLAUSU"
-			,{name:"FECHAINI",type:'date',dateFormat:'d/m/Y'}
-			,{name:"FECHAFIN",type:'date',dateFormat:'d/m/Y'}
+			,{name:"FECHAINI",type:'date',dateFormat:'d/m/Y H:i'}
+			,{name:"FECHAFIN",type:'date',dateFormat:'d/m/Y H:i'}
 			,"COMMENTS"
 			,"CDUSUARI_INI"
 			,"CDUSUARI_FIN"

@@ -1272,4 +1272,46 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
     }
+	
+	@Deprecated
+	@Override
+    public List<GenericVO> recuperarSucursalesPermisoImpresion(
+    		String cdtipram
+    		,String cdusuari
+    		,String cdunieco
+    		) throws Exception
+    {
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarSucursalesPermisoImpresion @@@@@@"
+				,"\n@@@@@@ cdtipram=" , cdtipram
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				));
+		
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		String          paso  = "Recuperando usuarios";
+		try
+		{
+			List<Map<String,String>> listaSucursales = consultasDAO.recuperarSucursalesPermisoImpresion(
+					cdtipram
+		    		,cdusuari
+		    		,cdunieco
+		    		);
+			for(Map<String,String> sucursal : listaSucursales)
+			{
+				lista.add(new GenericVO(sucursal.get("cdunieco"),sucursal.get("dsunieco")));
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ recuperarSucursalesPermisoImpresion @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+    }
 }

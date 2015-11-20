@@ -447,4 +447,10 @@ public interface ConsultasDAO
 			)throws Exception;
 	
 	public String recuperarDstipsupPorCdtipsup(String cdtipsup) throws Exception;
+	
+	public List<Map<String,String>> recuperarSucursalesPermisoImpresion(
+			String cdtipram
+			,String cdusuari
+			,String cdunieco
+			)throws Exception;
 }
