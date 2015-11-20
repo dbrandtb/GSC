@@ -73,6 +73,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 	private MesaControlDAO mesaControlDAO;
 	private ConsultasDAO   consultasDAO;
 	
+	private boolean lanzatarAsincrono = true;
+	
 	@Value("${ruta.documentos.poliza}")
 	private String rutaDocumentosPoliza;
 	
@@ -3839,28 +3841,32 @@ public class CotizacionManagerImpl implements CotizacionManager
 		{
 			try
 			{
-				/*
-				cotizacionDAO.tarificaEmi(
-						cdusuari
-						,cdelemen
-						,cdunieco
-						,cdramo
-						,"W"       //estado
-						,nmpoliza
-						,"0"       //nmstiuac
-						,"0"       //nmsuplem
-						,cdtipsit);
-				*/
-				cotizacionDAO.ejecutaTarificacionConcurrente(
-						cdunieco
-						,cdramo
-						,"W" //estado
-						,nmpoliza
-						,"0" //nmsuplem
-						,"0" //nmsituac
-						,"1" //tipotari
-						,cdperpag
-						);
+				if(lanzatarAsincrono)
+				{
+					new EjecutaTarificacionConcurrente(
+							cdunieco
+							,cdramo
+							,"W" //estado
+							,nmpoliza
+							,"0" //nmsuplem
+							,"0" //nmsituac
+							,"1" //tipotari
+							,cdperpag
+							).start();
+				}
+				else
+				{
+					cotizacionDAO.ejecutaTarificacionConcurrente(
+							cdunieco
+							,cdramo
+							,"W" //estado
+							,nmpoliza
+							,"0" //nmsuplem
+							,"0" //nmsituac
+							,"1" //tipotari
+							,cdperpag
+							);
+				}
 			}
 			catch(Exception ex)
 			{
@@ -6775,6 +6781,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     	cotizacionDAO.ejecutaValoresDefectoConcurrente(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, tipotari, cdperpag);
 	}
     
+    @Deprecated
     @Override
     public void ejecutaTarificacionConcurrente(
 			String cdunieco
@@ -6800,8 +6807,88 @@ public class CotizacionManagerImpl implements CotizacionManager
     			,"\n@@@@@@ cdperpag=" , cdperpag
     			,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     			));
-    	cotizacionDAO.ejecutaTarificacionConcurrente(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, tipotari, cdperpag);
+    	if(lanzatarAsincrono)
+    	{
+	    	new EjecutaTarificacionConcurrente(
+	    			cdunieco
+	    			,cdramo
+	    			,estado
+	    			,nmpoliza
+	    			,nmsuplem
+	    			,nmsituac
+	    			,tipotari
+	    			,cdperpag
+	    			).start();
+    	}
+    	else
+    	{
+    		cotizacionDAO.ejecutaTarificacionConcurrente(
+	    			cdunieco
+	    			,cdramo
+	    			,estado
+	    			,nmpoliza
+	    			,nmsuplem
+	    			,nmsituac
+	    			,tipotari
+	    			,cdperpag
+	    			);
+    	}
 	}
+    
+    private class EjecutaTarificacionConcurrente extends Thread
+    {
+    	private String cdunieco
+    	               ,cdramo
+    	               ,estado
+    	               ,nmpoliza
+    	               ,nmsuplem
+    	               ,nmsituac
+    	               ,tipotari
+    	               ,cdperpag;
+    	
+    	public EjecutaTarificacionConcurrente(
+    			String cdunieco
+    			,String cdramo
+    			,String estado
+    			,String nmpoliza
+    			,String nmsuplem
+    			,String nmsituac
+    			,String tipotari
+    			,String cdperpag
+    			)
+    	{
+			this.cdunieco = cdunieco;
+			this.cdramo   = cdramo;
+			this.estado   = estado;
+			this.nmpoliza = nmpoliza;
+			this.nmsuplem = nmsuplem;
+			this.nmsituac = nmsituac;
+			this.tipotari = tipotari;
+			this.cdperpag = cdperpag;
+    	}
+    	
+    	@Override
+    	public void run()
+    	{
+    		try
+    		{
+    		    cotizacionDAO.ejecutaTarificacionConcurrente(
+        			cdunieco
+        			,cdramo
+        			,estado
+        			,nmpoliza
+        			,nmsuplem
+        			,nmsituac
+        			,tipotari
+        			,cdperpag
+        			);
+    		}
+    		catch(Exception ex)
+    		{
+    			logger.error("Error en tarificacion concurrente", ex);
+    		}
+    	}
+    }
     
     @Override
     public void ejecutaValoresDefectoTarificacionConcurrente(
