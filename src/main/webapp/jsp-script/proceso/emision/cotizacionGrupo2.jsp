@@ -4834,7 +4834,7 @@ function _p25_aseguradosClic(grid,rowIndex)
                     ,proxy      :
                     {
                         type         : 'ajax'
-                        ,timeout     : 1000*60*3
+                        ,timeout     : 1000*60*10
                         ,url         : _p25_urlCargarAseguradosGrupo
                         ,extraParams :
                         {
