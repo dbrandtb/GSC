@@ -338,6 +338,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					,"pcpgocte"
 					,"cdpool"
 					,"swexiper"
+					,"feini"
+					,"fefin"
 				};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -387,6 +389,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,"dctocmer"
 			,"cdpool"
 			,"swexiper"
+			,"feini"
+			,"fefin"
 		};
 		
 		protected CargarDatosCotizacionGrupo(DataSource dataSource)
