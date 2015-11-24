@@ -686,6 +686,11 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				
 				List<Map<String,String>> agentes = consultasDAO.recuperarConfigImpresionAgentes(cdusuariPer,cdunieco,cdtipram);
 				
+				paso = "Recuperando permisos por usuario";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				List<Map<String,String>> usuarios = consultasDAO.recuperarConfigImpresionUsuarios(cdusuariPer,cdunieco,cdtipram);
+				
 				paso = "Integrando permisos";
 				logger.debug("@@@@@@ paso: {}",paso);
 				
@@ -713,6 +718,19 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 					nuevo.put("cdagentePer" , agente.get("AGENTE"));
 					nuevo.put("funcion"     , agente.get("SWAPLICA"));
 					nuevo.put("descrip"     , agente.get("DESCRIP"));
+					resumen.add(nuevo);
+				}
+				
+				for(Map<String,String> usuarioPer:usuarios)
+				{
+					Map<String,String>nuevo = new HashMap<String,String>();
+					nuevo.put("tipo"        , "U");
+					nuevo.put("cdusuari"    , usuarioPer.get("COD_USUARIO"));
+					nuevo.put("cdunieco"    , usuarioPer.get("SUC_USUARIO"));
+					nuevo.put("cdtipram"    , usuarioPer.get("TIPO_RAMO"));
+					nuevo.put("cdusuariPer" , usuarioPer.get("CDUSUARI_PERMISO"));
+					nuevo.put("funcion"     , usuarioPer.get("SWAPLICA"));
+					nuevo.put("descrip"     , usuarioPer.get("DESCRIP"));
 					resumen.add(nuevo);
 				}
 				

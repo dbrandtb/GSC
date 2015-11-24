@@ -3560,4 +3560,83 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+
+	@Override
+	public List<Map<String,String>> recuperarConfigImpresionUsuarios(String cdusuari, String cdunieco, String cdtipram) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdusuari" , cdusuari);
+		params.put("cdunieco" , cdunieco);
+		params.put("cdtipram" , cdtipram);
+		params.put("swaplica" , null);
+		Map<String,Object>      procRes = ejecutaSP(new RecuperarConfigImpresionUsuarios(getDataSource()),params);
+		List<Map<String,String>> lista  = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_TCNFIMPINCEXCAGT lista=",lista));
+		return lista;
+	}
+	
+	protected class RecuperarConfigImpresionUsuarios extends StoredProcedure
+	{
+		protected RecuperarConfigImpresionUsuarios(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_TCNFIMPINCEXCUSR");
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipram" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swaplica" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"COD_USUARIO"
+					,"SUC_USUARIO"
+					,"TIPO_RAMO"
+					,"CDUSUARI_PERMISO"
+					,"SWAPLICA"
+					,"DESCRIP"
+            };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void movPermisoImpresionUsuario(
+			String cdusuari
+			,String cdunieco
+			,String cdtipram
+			,String cdusuariPer
+			,String swaplica
+			,String accion
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdusuari"    , cdusuari);
+		params.put("cdunieco"    , cdunieco);
+		params.put("cdtipram"    , cdtipram);
+		params.put("cdusuariPer" , cdusuariPer);
+		params.put("swaplica"    , swaplica);
+		params.put("accion"      , accion);
+		ejecutaSP(new MovPermisoImpresionUsuario(getDataSource()),params);
+	}
+	
+	protected class MovPermisoImpresionUsuario extends StoredProcedure
+	{
+		protected MovPermisoImpresionUsuario(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_MOV_TCNFIMPINCEXCUSR");
+			declareParameter(new SqlParameter("cdusuari"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipram"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuariPer" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swaplica"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

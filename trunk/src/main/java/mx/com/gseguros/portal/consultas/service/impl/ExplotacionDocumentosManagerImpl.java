@@ -786,6 +786,17 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,accion
 						);
 			}
+			else if("U".equals(tipo))
+			{
+				consultasDAO.movPermisoImpresionUsuario(
+						cdusuari
+						,cdunieco
+						,cdtipram
+						,clave
+						,funcion
+						,accion
+						);
+			}
 			else
 			{
 				throw new ApplicationException("Tipo de permiso no soportado");
