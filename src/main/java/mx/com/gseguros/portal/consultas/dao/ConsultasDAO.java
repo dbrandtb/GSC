@@ -453,4 +453,15 @@ public interface ConsultasDAO
 			,String cdusuari
 			,String cdunieco
 			)throws Exception;
+	
+	public List<Map<String,String>> recuperarConfigImpresionUsuarios(String cdusuari, String cdunieco, String cdtipram) throws Exception;
+	
+	public void movPermisoImpresionUsuario(
+			String cdusuari
+			,String cdunieco
+			,String cdtipram
+			,String cdusuariPer
+			,String swaplica
+			,String accion
+			)throws Exception;
 }

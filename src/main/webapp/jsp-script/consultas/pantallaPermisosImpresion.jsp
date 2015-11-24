@@ -15,8 +15,10 @@ debug('_p51_params:',_p51_params);
 
 var _p51_storeIncSuc
     ,_p51_storeIncAge
+    ,_p51_storeIncUsu
     ,_p51_storeExcSuc
-    ,_p51_storeExcAge;
+    ,_p51_storeExcAge
+    ,_p51_storeExcUsu;
 
 var _p51_venAgregarPermiso;
 
@@ -55,12 +57,13 @@ Ext.onReady(function()
         extend  : 'Ext.data.Model'
         ,fields :
         [
-            'tipo' //[S (sucursal) / A (agente)]
+            'tipo' //[S (sucursal) / A (agente) / U (usuario)]
             ,'cdusuari'
             ,'cdunieco'
             ,'cdtipram'
             ,'cduniecoPer'
             ,'cdagentePer'
+            ,'cdusuariPer'
             ,'funcion' //[S/N]
             ,'descrip'
         ]
@@ -78,12 +81,22 @@ Ext.onReady(function()
         model : '_p51_modelo'
         ,data : []
     });
+    _p51_storeIncUsu = Ext.create('Ext.data.Store',
+    {
+        model : '_p51_modelo'
+        ,data : []
+    });
     _p51_storeExcSuc = Ext.create('Ext.data.Store',
     {
         model : '_p51_modelo'
         ,data : []
     });
     _p51_storeExcAge = Ext.create('Ext.data.Store',
+    {
+        model : '_p51_modelo'
+        ,data : []
+    });
+    _p51_storeExcUsu = Ext.create('Ext.data.Store',
     {
         model : '_p51_modelo'
         ,data : []
@@ -158,7 +171,7 @@ Ext.onReady(function()
         ,layout   :
         {
             type     : 'table'
-            ,columns : 2
+            ,columns : 3
         }
         ,items    :
         [
@@ -168,7 +181,7 @@ Ext.onReady(function()
                 ,title       : 'B\u00DASQUEDA '
                 ,defaults    : { style : 'margin:5px;' }
                 ,items       : _p51_formBusqItems
-                ,colspan     : 2
+                ,colspan     : 3
                 ,width       : 800
                 ,layout      :
                 {
@@ -233,8 +246,10 @@ Ext.onReady(function()
                                                 
                                                 _p51_storeIncSuc.removeAll();
                                                 _p51_storeIncAge.removeAll();
+                                                _p51_storeIncUsu.removeAll();
                                                 _p51_storeExcSuc.removeAll();
                                                 _p51_storeExcAge.removeAll();
+                                                _p51_storeExcUsu.removeAll();
                                                 for(var i in json.list)
                                                 {
                                                     var raw = json.list[i];
@@ -249,7 +264,7 @@ Ext.onReady(function()
                                                             _p51_storeExcSuc.add(raw);
                                                         }
                                                     }
-                                                    else
+                                                    else if(raw.tipo=='A')
                                                     {
                                                         if(raw.funcion=='S')
                                                         {
@@ -258,6 +273,17 @@ Ext.onReady(function()
                                                         else
                                                         {
                                                             _p51_storeExcAge.add(raw);
+                                                        }
+                                                    }
+                                                    else if(raw.tipo=='U')
+                                                    {
+                                                        if(raw.funcion=='S')
+                                                        {
+                                                            _p51_storeIncUsu.add(raw);
+                                                        }
+                                                        else
+                                                        {
+                                                            _p51_storeExcUsu.add(raw);
                                                         }
                                                     }
                                                 }
@@ -294,8 +320,10 @@ Ext.onReady(function()
                             me.up('form').getForm().reset();
                             _p51_storeIncSuc.removeAll();
                             _p51_storeIncAge.removeAll();
+                            _p51_storeIncUsu.removeAll();
                             _p51_storeExcSuc.removeAll();
                             _p51_storeExcAge.removeAll();
+                            _p51_storeExcUsu.removeAll();
                         }
                     }
                 ]
@@ -305,7 +333,7 @@ Ext.onReady(function()
                 itemId   : '_p51_gridIncSuc'
                 ,title   : 'LIMITAR POR SUCURSALES:'
                 ,store   : _p51_storeIncSuc
-                ,width   : 350
+                ,width   : 300
                 ,height  : 230
                 ,columns :
                 [
@@ -328,7 +356,7 @@ Ext.onReady(function()
                                 ,record.get('cdusuari')
                                 ,record.get('cdunieco')
                                 ,record.get('cdtipram')
-                                ,record.get('tipo')=='S' ? record.get('cduniecoPer') : record.get('cdagentePer')
+                                ,record.get('tipo')=='S' ? record.get('cduniecoPer') : ( record.get('tipo')=='A' ? record.get('cdagentePer') : record.get('cdusuariPer'))
                                 ,record.get('funcion')
                                 ,'D'
                                 );
@@ -353,7 +381,7 @@ Ext.onReady(function()
                 itemId   : '_p51_gridIncAge'
                 ,title   : 'LIMITAR POR AGENTES:'
                 ,store   : _p51_storeIncAge
-                ,width   : 350
+                ,width   : 300
                 ,height  : 230
                 ,columns :
                 [
@@ -376,7 +404,7 @@ Ext.onReady(function()
                                 ,record.get('cdusuari')
                                 ,record.get('cdunieco')
                                 ,record.get('cdtipram')
-                                ,record.get('tipo')=='S' ? record.get('cduniecoPer') : record.get('cdagentePer')
+                                ,record.get('tipo')=='S' ? record.get('cduniecoPer') : ( record.get('tipo')=='A' ? record.get('cdagentePer') : record.get('cdusuariPer'))
                                 ,record.get('funcion')
                                 ,'D'
                                 );
@@ -398,10 +426,58 @@ Ext.onReady(function()
             })
             ,Ext.create('Ext.grid.Panel',
             {
+                itemId   : '_p51_gridIncUsu'
+                ,title   : 'LIMITAR POR USUARIOS:'
+                ,store   : _p51_storeIncUsu
+                ,width   : 300
+                ,height  : 230
+                ,columns :
+                [
+                    {
+                        text       : 'USUARIO'
+                        ,dataIndex : 'descrip'
+                        ,flex      : 1
+                    }
+                    ,{
+                        xtype    : 'actioncolumn'
+                        ,icon    : '${icons}delete.png'
+                        ,width   : 30
+                        ,handler : function(grid,row,col,item,e,record)
+                        {
+                            var store = grid.getStore();
+                            debug('store:',store,'record:',record);
+                            _p51_mov(
+                                grid
+                                ,record.get('tipo')
+                                ,record.get('cdusuari')
+                                ,record.get('cdunieco')
+                                ,record.get('cdtipram')
+                                ,record.get('tipo')=='S' ? record.get('cduniecoPer') : ( record.get('tipo')=='A' ? record.get('cdagentePer') : record.get('cdusuariPer'))
+                                ,record.get('funcion')
+                                ,'D'
+                                );
+                        }
+                    }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text      : 'Agregar'
+                        ,icon     : '${icons}add.png'
+                        ,disabled : true
+                        ,tipo     : 'U'
+                        ,funcion  : 'S'
+                        ,handler  : _p51_agregarClic
+                    }
+                ]
+            })
+            ,Ext.create('Ext.grid.Panel',
+            {
                 itemId   : '_p51_gridExtSuc'
                 ,title   : 'DESCARTAR SUCURSALES:'
                 ,store   : _p51_storeExcSuc
-                ,width   : 350
+                ,width   : 300
                 ,height  : 230
                 ,columns :
                 [
@@ -424,7 +500,7 @@ Ext.onReady(function()
                                 ,record.get('cdusuari')
                                 ,record.get('cdunieco')
                                 ,record.get('cdtipram')
-                                ,record.get('tipo')=='S' ? record.get('cduniecoPer') : record.get('cdagentePer')
+                                ,record.get('tipo')=='S' ? record.get('cduniecoPer') : ( record.get('tipo')=='A' ? record.get('cdagentePer') : record.get('cdusuariPer'))
                                 ,record.get('funcion')
                                 ,'D'
                                 );
@@ -449,7 +525,7 @@ Ext.onReady(function()
                 itemId   : '_p51_gridExtAge'
                 ,title   : 'DESCARTAR AGENTES:'
                 ,store   : _p51_storeExcAge
-                ,width   : 350
+                ,width   : 300
                 ,height  : 230
                 ,columns :
                 [
@@ -472,7 +548,7 @@ Ext.onReady(function()
                                 ,record.get('cdusuari')
                                 ,record.get('cdunieco')
                                 ,record.get('cdtipram')
-                                ,record.get('tipo')=='S' ? record.get('cduniecoPer') : record.get('cdagentePer')
+                                ,record.get('tipo')=='S' ? record.get('cduniecoPer') : ( record.get('tipo')=='A' ? record.get('cdagentePer') : record.get('cdusuariPer'))
                                 ,record.get('funcion')
                                 ,'D'
                                 );
@@ -487,6 +563,54 @@ Ext.onReady(function()
                         ,icon     : '${icons}add.png'
                         ,disabled : true
                         ,tipo     : 'A'
+                        ,funcion  : 'N'
+                        ,handler  : _p51_agregarClic
+                    }
+                ]
+            })
+            ,Ext.create('Ext.grid.Panel',
+            {
+                itemId   : '_p51_gridExtUsu'
+                ,title   : 'DESCARTAR USUARIOS:'
+                ,store   : _p51_storeExcUsu
+                ,width   : 300
+                ,height  : 230
+                ,columns :
+                [
+                    {
+                        text       : 'USUARIO'
+                        ,dataIndex : 'descrip'
+                        ,flex      : 1
+                    }
+                    ,{
+                        xtype    : 'actioncolumn'
+                        ,icon    : '${icons}delete.png'
+                        ,width   : 30
+                        ,handler : function(grid,row,col,item,e,record)
+                        {
+                            var store = grid.getStore();
+                            debug('store:',store,'record:',record);
+                            _p51_mov(
+                                grid
+                                ,record.get('tipo')
+                                ,record.get('cdusuari')
+                                ,record.get('cdunieco')
+                                ,record.get('cdtipram')
+                                ,record.get('tipo')=='S' ? record.get('cduniecoPer') : ( record.get('tipo')=='A' ? record.get('cdagentePer') : record.get('cdusuariPer'))
+                                ,record.get('funcion')
+                                ,'D'
+                                );
+                        }
+                    }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text      : 'Agregar'
+                        ,icon     : '${icons}add.png'
+                        ,disabled : true
+                        ,tipo     : 'U'
                         ,funcion  : 'N'
                         ,handler  : _p51_agregarClic
                     }
@@ -591,7 +715,7 @@ function _p51_agregarClic(bot)
                 tipo = 'DESCARTAR SUCURSAL';
             }
         }
-        else
+        else if(bot.tipo=='A')
         {
             if(bot.funcion=='S')
             {
@@ -600,6 +724,17 @@ function _p51_agregarClic(bot)
             else
             {
                 tipo = 'DESCARTAR AGENTE';
+            }
+        }
+        else if(bot.tipo=='U')
+        {
+            if(bot.funcion=='S')
+            {
+                tipo = 'LIMITAR POR USUARIO';
+            }
+            else
+            {
+                tipo = 'DESCARTAR USUARIO';
             }
         }
 
@@ -627,8 +762,12 @@ function _p51_agregarClic(bot)
             var cdagente = _p51_venAgregarPermiso.down('[fieldLabel=AGENTE PERMISO]');
             cdagente.disable();
             cdagente.hide();
+            
+            var cdusuari = _p51_venAgregarPermiso.down('[fieldLabel=USUARIO PERMISO]');
+            cdusuari.disable();
+            cdusuari.hide();
         }
-        else
+        else if(bot.tipo=='A')
         {
             var cdunieco = _p51_venAgregarPermiso.down('[fieldLabel=SUCURSAL PERMISO]');
             cdunieco.disable();
@@ -637,6 +776,24 @@ function _p51_agregarClic(bot)
             var cdagente = _p51_venAgregarPermiso.down('[fieldLabel=AGENTE PERMISO]');
             cdagente.enable();
             cdagente.show();
+            
+            var cdusuari = _p51_venAgregarPermiso.down('[fieldLabel=USUARIO PERMISO]');
+            cdusuari.disable();
+            cdusuari.hide();
+        }
+        else if(bot.tipo=='U')
+        {
+            var cdunieco = _p51_venAgregarPermiso.down('[fieldLabel=SUCURSAL PERMISO]');
+            cdunieco.disable();
+            cdunieco.hide();
+            
+            var cdagente = _p51_venAgregarPermiso.down('[fieldLabel=AGENTE PERMISO]');
+            cdagente.disable();
+            cdagente.hide();
+            
+            var cdusuari = _p51_venAgregarPermiso.down('[fieldLabel=USUARIO PERMISO]');
+            cdusuari.enable();
+            cdusuari.show();
         }
         
         centrarVentanaInterna(_p51_venAgregarPermiso.show());
