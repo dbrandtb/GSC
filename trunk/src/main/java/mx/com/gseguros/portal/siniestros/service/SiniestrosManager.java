@@ -234,8 +234,6 @@ public interface SiniestrosManager {
 	 * 54647 NMRECLAM,
 	 * aaapertu
 	 */
-	public List<Map<String,String>> listaSiniestrosTramite(String ntramite,String procesoInterno) throws Exception;
-	
 	public List<Map<String,String>> listaSiniestrosMsiniesTramite(String ntramite,String factura,String procesoInterno) throws Exception;
 	
 	public List<Map<String,String>> listaAseguradosTramite(String ntramite, String nfactura, String tipoProceso) throws Exception;

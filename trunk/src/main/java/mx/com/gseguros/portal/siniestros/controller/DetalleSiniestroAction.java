@@ -283,6 +283,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			modMesaControl.put("pv_otvalor11_i",lista.get(0).getOtvalor11mc());
 			modMesaControl.put("pv_otvalor15_i",lista.get(0).getOtvalor15mc());
 			modMesaControl.put("pv_otvalor20_i",lista.get(0).getOtvalor20mc());
+			modMesaControl.put("pv_otvalor22_i",lista.get(0).getOtvalor22mc());
 			siniestrosManager.actualizaValorMC(modMesaControl);
 		}catch( Exception e){
 			logger.error("Error al actualizar la Mesa de Control: {}", e.getMessage(), e);
