@@ -72,6 +72,10 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 	@Autowired
 	private MesaControlDAO mesaControlDAO;
 
+	/**
+	 * METODO DEPRECADO
+	 */
+	@Deprecated
 	private WrapperResultadosWS ejecutaClienteSaludGS(Operacion operacion,
 			ClienteSalud cliente, HashMap<String, Object> params, boolean async) throws Exception {
 		
@@ -329,6 +333,10 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 	}
 	
 	
+	/**
+	 * METODO DEPRECADO
+	 */
+	@Deprecated
 	public boolean ejecutaWSclienteSalud(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String ntramite,
 			Ice2sigsService.Operacion op, UserVO userVO) {
@@ -405,6 +413,8 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		params.put("pv_nmsuplem_i", nmsuplem);
 		params.put("pv_ntramite_i", ntramite);
 		params.put("pv_cdperson_i", cdperson);
+
+		params.put("pv_compania_i", (cliente != null)? cliente.getClaveCia():null);
 		
 		
 		if(Ice2sigsService.Operacion.CONSULTA_GENERAL.getCodigo() != op.getCodigo()){

@@ -3790,6 +3790,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		super(dataSource, "PKG_CONSULTA.P_WS_CLIENTES_ART140");
     		
     		declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_compania_i", OracleTypes.VARCHAR));			
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ClienteGeneralMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
