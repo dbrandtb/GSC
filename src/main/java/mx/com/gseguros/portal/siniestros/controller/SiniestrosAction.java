@@ -1480,6 +1480,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			paramsTworkSin.put("pv_feocurre_i",	renderFechas.parse(params.get("feocurre")));
 			paramsTworkSin.put("pv_nmautser_i",	null);
 			paramsTworkSin.put("pv_nfactura_i",	params.get("nfactura"));
+			paramsTworkSin.put("pv_reqautes_i",	"0");
 			siniestrosManager.guardaListaTworkSin(paramsTworkSin);
 			mensaje = "Asegurado guardado";
 			success = true;
