@@ -504,6 +504,6 @@ function _p32_guardarClic()
 </script>
 </head>
 <body>
-<div id="_p32_divpri" style="height:100px;"></div>
+<div id="_p32_divpri" style="height:400px;"></div>
 </body>
 </html>
