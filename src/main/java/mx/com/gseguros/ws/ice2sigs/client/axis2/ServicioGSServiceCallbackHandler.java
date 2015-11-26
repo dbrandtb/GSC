@@ -61,54 +61,6 @@
             }
                 
            /**
-            * auto generated Axis2 call back method for movimientoGS method
-            * override this method for handling normal response from movimientoGS operation
-            */
-           public void receiveResultmovimientoGS(
-                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSResponseE result
-                        ) {
-           }
-
-          /**
-           * auto generated Axis2 Error handler
-           * override this method for handling error response from movimientoGS operation
-           */
-            public void receiveErrormovimientoGS(java.lang.Exception e) {
-            }
-                
-           /**
-            * auto generated Axis2 call back method for movimientoAseguradoCoberturaGS method
-            * override this method for handling normal response from movimientoAseguradoCoberturaGS operation
-            */
-           public void receiveResultmovimientoAseguradoCoberturaGS(
-                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE result
-                        ) {
-           }
-
-          /**
-           * auto generated Axis2 Error handler
-           * override this method for handling error response from movimientoAseguradoCoberturaGS operation
-           */
-            public void receiveErrormovimientoAseguradoCoberturaGS(java.lang.Exception e) {
-            }
-                
-           /**
-            * auto generated Axis2 call back method for polizaGS method
-            * override this method for handling normal response from polizaGS operation
-            */
-           public void receiveResultpolizaGS(
-                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSResponseE result
-                        ) {
-           }
-
-          /**
-           * auto generated Axis2 Error handler
-           * override this method for handling error response from polizaGS operation
-           */
-            public void receiveErrorpolizaGS(java.lang.Exception e) {
-            }
-                
-           /**
             * auto generated Axis2 call back method for reclamoGS method
             * override this method for handling normal response from reclamoGS operation
             */
@@ -125,19 +77,19 @@
             }
                 
            /**
-            * auto generated Axis2 call back method for movimientoAseguradoGS method
-            * override this method for handling normal response from movimientoAseguradoGS operation
+            * auto generated Axis2 call back method for direccionClienteGeneralGS method
+            * override this method for handling normal response from direccionClienteGeneralGS operation
             */
-           public void receiveResultmovimientoAseguradoGS(
-                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSResponseE result
+           public void receiveResultdireccionClienteGeneralGS(
+                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.DireccionClienteGeneralGSResponseE result
                         ) {
            }
 
           /**
            * auto generated Axis2 Error handler
-           * override this method for handling error response from movimientoAseguradoGS operation
+           * override this method for handling error response from direccionClienteGeneralGS operation
            */
-            public void receiveErrormovimientoAseguradoGS(java.lang.Exception e) {
+            public void receiveErrordireccionClienteGeneralGS(java.lang.Exception e) {
             }
                 
            /**
@@ -170,22 +122,6 @@
            * override this method for handling error response from clienteGS operation
            */
             public void receiveErrorclienteGS(java.lang.Exception e) {
-            }
-                
-           /**
-            * auto generated Axis2 call back method for movimientoAgenteGS method
-            * override this method for handling normal response from movimientoAgenteGS operation
-            */
-           public void receiveResultmovimientoAgenteGS(
-                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSResponseE result
-                        ) {
-           }
-
-          /**
-           * auto generated Axis2 Error handler
-           * override this method for handling error response from movimientoAgenteGS operation
-           */
-            public void receiveErrormovimientoAgenteGS(java.lang.Exception e) {
             }
                 
            /**
@@ -250,22 +186,6 @@
            * override this method for handling error response from comisionReciboAgenteGS operation
            */
             public void receiveErrorcomisionReciboAgenteGS(java.lang.Exception e) {
-            }
-                
-           /**
-            * auto generated Axis2 call back method for movimientoAseguradoEndosoGS method
-            * override this method for handling normal response from movimientoAseguradoEndosoGS operation
-            */
-           public void receiveResultmovimientoAseguradoEndosoGS(
-                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE result
-                        ) {
-           }
-
-          /**
-           * auto generated Axis2 Error handler
-           * override this method for handling error response from movimientoAseguradoEndosoGS operation
-           */
-            public void receiveErrormovimientoAseguradoEndosoGS(java.lang.Exception e) {
             }
                 
 
