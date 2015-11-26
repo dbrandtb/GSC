@@ -3657,55 +3657,56 @@ function _p30_cotizar(sinTarificar)
     
     if(valido)
     {
-        var ncamiones = 0;
-        var ntractocamiones = 0;
-        var nsemiremolques = 0;
-    	
-    	var nTipo2  = 0;
-    	var nTipo4  = 0;
-        var nTipo13 = 0;
-        _p30_store.each(function(record)
-        {
-            
-        	if(record.get('cdtipsit')+'x'=='CRx')
+    	if(_p30_smap1.tipoflot=='P'){
+    		var ncamiones = 0;
+            var ntractocamiones = 0;
+            var nsemiremolques = 0;
+        	
+        	var nTipo2  = 0;
+        	var nTipo4  = 0;
+            var nTipo13 = 0;
+            _p30_store.each(function(record)
             {
-        		var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
-        		if(record.get(tipoVehiName)-0==2){
-        			ncamiones = ncamiones+1;
-        		}
-        		else if(record.get(tipoVehiName)-0==4)
+                if(record.get('cdtipsit')+'x'=='CRx')
                 {
-                    ncamiones = ncamiones+1;
-                    ntractocamiones = ntractocamiones+1;
-                }else if(record.get(tipoVehiName)-0==13)
-                {
+            		var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
+            		if(record.get(tipoVehiName)-0==2){
+            			ncamiones = ncamiones+1;
+            		}
+            		else if(record.get(tipoVehiName)-0==4)
+                    {
+                        ncamiones = ncamiones+1;
+                        ntractocamiones = ntractocamiones+1;
+                    }else if(record.get(tipoVehiName)-0==13)
+                    {
+                    	nsemiremolques = nsemiremolques+1;
+                    }
+                    
+                }else if(record.get('cdtipsit')+'x'=='TCx'){
+                	ncamiones = ncamiones+1;
+                	ntractocamiones = ntractocamiones+1;
+                	
+                }else if(record.get('cdtipsit')+'x'=='RQx'){
                 	nsemiremolques = nsemiremolques+1;
                 }
-                
-            }else if(record.get('cdtipsit')+'x'=='TCx'){
-            	ncamiones = ncamiones+1;
-            	ntractocamiones = ntractocamiones+1;
-            	
-            }else if(record.get('cdtipsit')+'x'=='RQx'){
-            	nsemiremolques = nsemiremolques+1;
-            }
-        });
-        
-        if(ncamiones > _p30_smap1.totalCamiones){
-        	valido = false;
-        	mensajeWarning("&Uacute;nicamente se puede amparar "+_p30_smap1.totalCamiones+" Camiones en la autorización. <br/>Intente nuevamente.");
-        }else{
-        	if(ntractocamiones > _p30_smap1.totalTractocamion){
+            });
+            
+            if(ncamiones > _p30_smap1.totalCamiones){
             	valido = false;
-            	mensajeWarning("&Uacute;nicamente se puede amparar "+_p30_smap1.totalTractocamion+" Tractocamiones en la autorización. <br/>Intente nuevamente.");
+            	mensajeWarning("&Uacute;nicamente se puede amparar "+_p30_smap1.totalCamiones+" Camiones en la autorización. <br/>Intente nuevamente.");
             }else{
-            	if(nsemiremolques > (+ntractocamiones * +_p30_smap1.remolquesPorTracto)){
-            		valido = false;
-            		mensajeWarning('Se permiten '+_p30_smap1.remolquesPorTracto+' remolques por cada tractocami&oacute;n<br/>'
-                            +'Y en la cotizaci&oacute;n hay '+nsemiremolques+' remolques y '+ntractocamiones+' tractocamiones');
-            	}
+            	if(ntractocamiones > _p30_smap1.totalTractocamion){
+                	valido = false;
+                	mensajeWarning("&Uacute;nicamente se puede amparar "+_p30_smap1.totalTractocamion+" Tractocamiones en la autorización. <br/>Intente nuevamente.");
+                }else{
+                	if(nsemiremolques > (+ntractocamiones * +_p30_smap1.remolquesPorTracto)){
+                		valido = false;
+                		mensajeWarning('Se permiten '+_p30_smap1.remolquesPorTracto+' remolques por cada tractocami&oacute;n<br/>'
+                                +'Y en la cotizaci&oacute;n hay '+nsemiremolques+' remolques y '+ntractocamiones+' tractocamiones');
+                	}
+                }
             }
-        }
+    	}
     }
     
     if(valido)
