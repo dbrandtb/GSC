@@ -3493,7 +3493,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,nmsuplem
 								,new Date()
 								,urlIncisosFlot + parametros
-								,"Incisos Flotillas"
+								,"Incisos Flotillas"+" ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")"
 								,nmpoliza
 								,ntramite
 								,cdtipsup
@@ -3517,7 +3517,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,nmsuplem
 								,new Date()
 								,urlTarjIdent + parametros
-								,"Tarjeta de Identificacion"
+								,"Tarjeta de Identificacion"+" ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")"
 								,nmpoliza
 								,ntramite
 								,cdtipsup
