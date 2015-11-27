@@ -2576,7 +2576,7 @@ public class EndososAction extends PrincipalCoreAction
 							error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
 							logger.error("Error al ejecutar los WS de endoso");
 							
-							boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? 99999 : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+tipoEndoso.toString(), false);
+							boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+tipoEndoso.toString(), false);
 							
 							if(endosoRevertido){
 								logger.error("Endoso revertido exitosamente.");
@@ -8618,7 +8618,7 @@ public class EndososAction extends PrincipalCoreAction
 						error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
 						logger.error("Error al ejecutar los WS de endoso");
 						
-						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? 99999 : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+TipoEndoso.CAMBIO_FORMA_PAGO.toString(), false);
+						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+TipoEndoso.CAMBIO_FORMA_PAGO.toString(), false);
 						
 						if(endosoRevertido){
 							logger.error("Endoso revertido exitosamente.");
@@ -8971,7 +8971,7 @@ public class EndososAction extends PrincipalCoreAction
 						error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
 						logger.error("Error al ejecutar los WS de endoso");
 						
-						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? 99999 : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+TipoEndoso.CAMBIO_AGENTE.toString(), false);
+						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+TipoEndoso.CAMBIO_AGENTE.toString(), false);
 						
 						if(endosoRevertido){
 							logger.error("Endoso revertido exitosamente.");
@@ -9466,7 +9466,7 @@ public class EndososAction extends PrincipalCoreAction
 //					logger.error("Error al ejecutar los WS de endoso");
 //					
 //					
-//					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? 99999 : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+TipoEndoso.CAMBIO_CONTRATANTE.toString(), false);
+//					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+TipoEndoso.CAMBIO_CONTRATANTE.toString(), false);
 //					if(endosoRevertido){
 //						logger.error("Endoso revertido exitosamente.");
 //						error+=" Favor de volver a itentar.";
