@@ -14,6 +14,7 @@
     var storeIncisos_p3;
     var panelCoberturasp3;
     var paramsincisos    = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
+    var _p3_smap1        = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
     var pantallaOrigen   = '<s:property value="smap1.pantallaOrigen" />';
     var inputCduniecop3  = '<s:property value="smap1.CDUNIECO" />';
     var inputCdramop3    = '<s:property value="smap1.CDRAMO" />';
@@ -93,10 +94,13 @@
                     ,cdtipsit  : record.get('cdtipsit')
                 });
             });
-            json['smap1']={};
-            json['smap1']['cdperson']  = inputCdpersonap3;
-            json['smap1']['altabaja']  = inputAltabajap3;
-            json['smap1']['confirmar'] = confirmar;
+            
+            _p3_smap1['cdperson']  = inputCdpersonap3;
+            _p3_smap1['altabaja']  = inputAltabajap3;
+            _p3_smap1['confirmar'] = confirmar;
+            
+            json['smap1']=_p3_smap1;
+
             debug(json);
             Ext.Ajax.request(
             {
