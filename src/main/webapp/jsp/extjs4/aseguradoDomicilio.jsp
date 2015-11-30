@@ -379,8 +379,8 @@ Ext.onReady(function(){
     	
     	formPanelp4.items.items[2].items.items.forEach(function(element, index, array){
     		debug('elem ITerada: ', element);
-    		if('smap1.CDPOSTAL' == element.name ){
-				element.setReadOnly(true);    		
+    		if('smap1.CODPOSTAL' == element.name ){
+				element.setReadOnly(true);		
     		}
     		
     	});
