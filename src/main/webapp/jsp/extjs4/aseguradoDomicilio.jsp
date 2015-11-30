@@ -375,23 +375,17 @@ Ext.onReady(function(){
 	    	formPanelp4.items.items[2].items.items[2].setReadOnly(true);//estado
 	    	formPanelp4.items.items[2].items.items[3].setReadOnly(true);//municipio
 	    }
-    }/**
-      * Ya no aplica para fronterizos y servicio publico
-      * 
-    	else if( ((inputCdramop4+'x')=='16x' || (inputCdramop4+'x')=='6x') && inputCdrolp4 == "1" && !Ext.isEmpty(inputCdideperp4)){
-    	//alert("cdrol: " + inputCdrolp4);
+    }else if( ((inputCdramop4+'x')=='16x' || (inputCdramop4+'x')=='6x') && inputCdrolp4 == "1" && !Ext.isEmpty(inputCdideperp4)){
     	
     	formPanelp4.items.items[2].items.items.forEach(function(element, index, array){
     		debug('elem ITerada: ', element);
-    		if('smap1.CDMUNICI' != element.name && 'smap1.CDCOLONI' != element.name){
-    			element.setReadOnly(true);
-    		}else {
-    			element.setReadOnly(false);
+    		if('smap1.CDPOSTAL' == element.name ){
+				element.setReadOnly(true);    		
     		}
     		
     	});
     		
-    }*/
+    }
     
     //establecer cargar colonia al cambiar cod pos
     formPanelp4.items.items[2].items.items[1].on('blur',function()
