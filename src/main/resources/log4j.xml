@@ -6,7 +6,7 @@
     <!-- Application appender -->
     <!-- <appender name="app" class="org.apache.log4j.RollingFileAppender">
         <param name="Threshold" value="INFO" />
-        <param name="File" value="/u01/wlserver/wlapplogs/gseguros/application.log" />
+        <param name="File" value="/RES/logs/gseguros/application.log" />
         <param name="Append" value="true" />
         <param name="MaxFileSize" value="50MB"/>
         <param name="MaxBackupIndex" value="10"/>
@@ -18,7 +18,7 @@
     <!-- Developer Appender (Ver todo) -->
     <appender name="dev" class="org.apache.log4j.RollingFileAppender">
         <param name="Threshold" value="DEBUG" />
-        <param name="File" value="/u01/wlserver/wlapplogs/gseguros/dev.log" />
+        <param name="File" value="/RES/logs/gseguros/dev.log" />
         <param name="Append" value="true" />
         <param name="MaxFileSize" value="50MB"/>
         <param name="MaxBackupIndex" value="10"/>
@@ -30,7 +30,7 @@
     <!-- Error Appender (Errores) -->
     <appender name="err" class="org.apache.log4j.RollingFileAppender">
         <param name="Threshold" value="WARN" />
-        <param name="File" value="/u01/wlserver/wlapplogs/gseguros/err.log" />
+        <param name="File" value="/RES/logs/gseguros/err.log" />
         <param name="Append" value="true" />
         <param name="MaxFileSize" value="50MB"/>
         <param name="MaxBackupIndex" value="10"/>
@@ -42,7 +42,7 @@
     <!-- SQL Appender (Sentencias SQL) -->
     <appender name="sql" class="org.apache.log4j.RollingFileAppender">
         <param name="Threshold" value="INFO" />
-        <param name="File" value="/u01/wlserver/wlapplogs/gseguros/sql.log" />
+        <param name="File" value="/RES/logs/gseguros/sql.log" />
         <param name="Append" value="true" />
         <param name="MaxFileSize" value="50MB"/>
         <param name="MaxBackupIndex" value="10"/>
