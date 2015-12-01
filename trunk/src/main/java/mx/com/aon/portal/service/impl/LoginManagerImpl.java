@@ -12,11 +12,11 @@ package mx.com.aon.portal.service.impl;
 
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
@@ -29,11 +29,14 @@ import javax.naming.ldap.InitialLdapContext;
 
 import mx.com.aon.portal.model.PerfilVO;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal.model.UsuarioRolEmpresaVO;
 import mx.com.aon.portal.service.LoginManager;
 import mx.com.aon.tmp.Endpoint;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.general.dao.UsuarioDAO;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * LoginManagerImpl
@@ -63,6 +66,8 @@ public class LoginManagerImpl implements LoginManager {
 	private String Ldap_security_credentials;
 	private String Ldap_base_search;
 	
+	@Autowired
+	private UsuarioDAO usuarioDAO;
 
 	public UserVO obtenerDatosUsuario(String user) throws Exception {
 
@@ -74,12 +79,17 @@ public class LoginManagerImpl implements LoginManager {
 			throw new ApplicationException("Usuario y/o password no validos");
 		}
 
+        List<UsuarioRolEmpresaVO> rolesCliente = usuarioDAO.obtieneRolesCliente(user);
+		
 		userVO = new UserVO();
-		// todo revisar despues esto como queda
-		userVO.setUser(user);
-		userVO.setCodigoPersona(user);
-		userVO.setName(user);
-		userVO.setLastName(user);
+		if(rolesCliente != null && rolesCliente.size() > 0) {
+			UsuarioRolEmpresaVO usuarioRolEmpresaVO = (UsuarioRolEmpresaVO)rolesCliente.get(0);
+			userVO.setUser(usuarioRolEmpresaVO.getCdUsuario());
+			userVO.setCdUnieco(usuarioRolEmpresaVO.getCdUnieco());
+			userVO.setCodigoPersona(usuarioRolEmpresaVO.getCdPerson());
+			userVO.setName(usuarioRolEmpresaVO.getDsUsuario());
+			//userVO.setLastName(user);
+		}
 		userVO.setPerfil("DEFAULT");
 
 		// TODO: Probar quitando el siguiente codigo para intentar mejorar
