@@ -3657,7 +3657,8 @@ function _p30_cotizar(sinTarificar)
     
     if(valido)
     {
-    	if(_p30_smap1.tipoflot=='P'){
+    	if(_p30_smap1.tipoflot=='P' && _p30_smap1.cdsisrol!='SUSCRIAUTO'){
+    		
     		var ncamiones = 0;
             var ntractocamiones = 0;
             var nsemiremolques = 0;
