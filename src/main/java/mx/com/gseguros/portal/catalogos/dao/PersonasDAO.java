@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 
 public interface PersonasDAO
@@ -140,5 +141,13 @@ public interface PersonasDAO
 	
 	public void actualizaCdideper(String cdunieco, String cdramo, String estado, String nmpoliza, 
 			String nmsuplem, String cdideper) throws Exception;
+	
+	public String guardarClienteNonGratos(Map<String, Object> paramsCliente) throws Exception;
+	
+	public String actualizaClienteClienteNonGrato(String rfc, String nongrata) throws Exception;
+
+	public List<Map<String, String>> obtieneListaClientesNonGratos(String rfc) throws Exception;
+
+	public List<GenericVO> consultaClientesNonGratos(String cdperson) throws Exception;
 	
 }

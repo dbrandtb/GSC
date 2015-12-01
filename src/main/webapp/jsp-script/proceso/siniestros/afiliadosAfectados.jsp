@@ -11,6 +11,8 @@
 			var _CATALOGO_TIPOMONEDA					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA"/>';
 			var _CATALOGO_COBERTURASTOTALES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURASTOTALES"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASTOTALES"/>';
+			var _CATALOGO_SUBCOBERTURASTOTALESMS 		= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURAS4MS"/>';
+			var _CATALOGO_SUBCOBERTURASTOTALESMSC		= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURAS4MSC"/>';
 			var _CATALOGO_SUBCOBERTURASRECUPERA			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASRECUPERA"/>';
 			var _ROL_MEDICO								= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MEDICO_AJUSTADOR.cdsisrol" />';
 			var _ROL_COORD_MEDICO						= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@GERENTE_MEDICO_MULTIREGIONAL.cdsisrol" />';
@@ -146,6 +148,7 @@
 			var _11_aseguradoSeleccionado = null;
 			var _tipoPago = _11_params.OTVALOR02;
 			var _tipoProducto = _11_params.CDRAMO;
+			var _cdtipsitProducto = _11_params.CDTIPSIT
 			var banderaConcepto = "0";
 			var banderaAsegurado = "0";
 			var storeCobertura;
@@ -156,6 +159,8 @@
 			var sstoreCoberturaRecuperaRender;
 			var storeSubcoberturaAsegurado;
 			var storeSubcoberturaAseguradoRender;
+			var storeSubcoberturaAsegurado4MSRender;
+			var storeSubcoberturaAsegurado4MSCRender;
 			var storeSubcoberturaRecupera;
 			var storeSubcoberturaRecuperaRender;
 			var storeRechazos;
@@ -558,6 +563,52 @@
 					}
 				});
 				storeSubcoberturaAseguradoRender.load();
+				
+				storeSubcoberturaAsegurado4MSRender = Ext.create('Ext.data.JsonStore', {
+					model:'Generic',
+					//autoLoad:true,
+					cargado:false,
+					proxy: {
+						type: 'ajax',
+						url: _URL_CATALOGOS,
+						extraParams : {catalogo:_CATALOGO_SUBCOBERTURASTOTALESMS},
+						reader: {
+							type: 'json',
+							root: 'lista'
+						}
+					},listeners: {
+						load : function() {
+							this.cargado=true;
+							if(!Ext.isEmpty(gridFacturaDirecto)){
+								gridFacturaDirecto.getView().refresh();
+							}
+						}
+					}
+				});
+				storeSubcoberturaAsegurado4MSRender.load();
+				
+				storeSubcoberturaAsegurado4MSCRender = Ext.create('Ext.data.JsonStore', {
+					model:'Generic',
+					//autoLoad:true,
+					cargado:false,
+					proxy: {
+						type: 'ajax',
+						url: _URL_CATALOGOS,
+						extraParams : {catalogo:_CATALOGO_SUBCOBERTURASTOTALESMSC},
+						reader: {
+							type: 'json',
+							root: 'lista'
+						}
+					},listeners: {
+						load : function() {
+							this.cargado=true;
+							if(!Ext.isEmpty(gridFacturaDirecto)){
+								gridFacturaDirecto.getView().refresh();
+							}
+						}
+					}
+				});
+				storeSubcoberturaAsegurado4MSCRender.load();
 				
 				storeSubcoberturaRecuperaRender = Ext.create('Ext.data.JsonStore', {
 					model:'Generic',
@@ -1371,17 +1422,46 @@
 									if (typeof v == 'string') {
 										debug("Valor de V : "+v);
 										debug("Valor de storeSubcoberturaAseguradoRender.cargado : "+storeSubcoberturaAseguradoRender.cargado);
-										if(storeSubcoberturaAseguradoRender.cargado) {
-											debug("storeSubcoberturaAseguradoRender");
-											debug(storeSubcoberturaAseguradoRender);
-											storeSubcoberturaAseguradoRender.each(function(rec) {
-												if (rec.data.key == v){
-													leyenda = rec.data.value;
-												}
-											});
-										}
-										else{
-										    leyenda='Cargando...';
+										debug("======> Valor de _cdtipsitProducto", _cdtipsitProducto);
+										if(_cdtipsitProducto == "MS"){
+											if(storeSubcoberturaAsegurado4MSRender.cargado) {
+												debug("storeSubcoberturaAsegurado4MSRender");
+												debug(storeSubcoberturaAsegurado4MSRender);
+												storeSubcoberturaAsegurado4MSRender.each(function(rec) {
+													if (rec.data.key == v){
+														leyenda = rec.data.value;
+													}
+												});
+											}
+											else{
+											    leyenda='Cargando...';
+											}
+										}else if(_cdtipsitProducto =="MSC"){
+											if(storeSubcoberturaAsegurado4MSCRender.cargado) {
+												debug("storeSubcoberturaAsegurado4MSCRender");
+												debug(storeSubcoberturaAsegurado4MSCRender);
+												storeSubcoberturaAsegurado4MSCRender.each(function(rec) {
+													if (rec.data.key == v){
+														leyenda = rec.data.value;
+													}
+												});
+											}
+											else{
+											    leyenda='Cargando...';
+											}
+										}else{
+											if(storeSubcoberturaAseguradoRender.cargado) {
+												debug("storeSubcoberturaAseguradoRender");
+												debug(storeSubcoberturaAseguradoRender);
+												storeSubcoberturaAseguradoRender.each(function(rec) {
+													if (rec.data.key == v){
+														leyenda = rec.data.value;
+													}
+												});
+											}
+											else{
+											    leyenda='Cargando...';
+											}
 										}
 									}else{
 										if (v.key && v.value){

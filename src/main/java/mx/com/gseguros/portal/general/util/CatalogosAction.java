@@ -325,6 +325,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 					String cdgarant = null;
 					String cdsubcob = null;
 					String cdtipsit = null;
+					UserVO usuarioR		= (UserVO)session.get("USUARIO");
+					String cdrol		= usuarioR.getRolActivo().getClave();
+					
 					if(params!=null)
 					{
 						logger.debug("Valores de entrada --> "+params);
@@ -351,6 +354,16 @@ public class CatalogosAction extends PrincipalCoreAction {
 					
 				case SUBCOBERTURASTOTALES:
 					lista = siniestrosManager.getConsultaListaSubcoberturaTotales();
+					break;
+				case SUBCOBERTURAS4MS:
+					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("MS");
+					logger.debug("Valor de lista==>"+lista.size());
+					logger.debug(lista);
+					break;
+				case SUBCOBERTURAS4MSC:
+					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("MSC");
+					logger.debug("Valor de lista==>"+lista.size());
+					logger.debug(lista);
 					break;
 				case SUBCOBERTURASRECUPERA:
 					lista = siniestrosManager.getConsultaListaSubcoberturaRecupera();

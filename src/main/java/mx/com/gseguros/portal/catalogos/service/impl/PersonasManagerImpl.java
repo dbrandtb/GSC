@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
@@ -1007,6 +1008,128 @@ public class PersonasManagerImpl implements PersonasManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return persona;
+	}
+	
+	@Override
+	public String guardarClienteNonGratos(String rfc, String status, String tipoPersona, String cveAgente,
+			String nombreCompleto, String domicilio, String observaciones, String cduser, Date fechaProcesamiento,
+			String accion) throws Exception{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarClienteNonGratos @@@@@@"
+				,"\n@@@@@@ rfc =",rfc
+				,"\n@@@@@@ status =",status
+				,"\n@@@@@@ tipoPersona =",tipoPersona
+				,"\n@@@@@@ cveAgente =",cveAgente
+				,"\n@@@@@@ nombreCompleto =",nombreCompleto
+				,"\n@@@@@@ domicilio=",domicilio
+				,"\n@@@@@@ observaciones=",observaciones
+				,"\n@@@@@@ cduser =",cduser
+				,"\n@@@@@@ fechaProcesamiento=", fechaProcesamiento
+				,"\n@@@@@@ accion=",accion
+				));
+		
+		String paso = null;
+		try
+		{
+			paso = "Guardando clientes non gratos";
+			logger2.debug("\nVoy a guardar datos de persona");
+			Map<String, Object> paramsCliente= new HashMap<String, Object>();
+			paramsCliente.put("pv_cdrfc_i",rfc);
+			paramsCliente.put("pv_status_i",status);
+			paramsCliente.put("pv_cdtipper_i",tipoPersona);
+			paramsCliente.put("pv_cdagente_i",cveAgente);
+			paramsCliente.put("pv_dsnombre_i",nombreCompleto);
+			paramsCliente.put("pv_dsdomicil_i",domicilio);
+			paramsCliente.put("pv_obsermot_i",observaciones);
+			paramsCliente.put("pv_cduser_i",cduser);
+			paramsCliente.put("pv_fefecha_i",fechaProcesamiento);
+			paramsCliente.put("pv_accion_i",accion);
+			String res= personasDAO.guardarClienteNonGratos(paramsCliente);
+			paso = "Actualizamos la informaci&oacute;n del cliente por RFC";
+			logger2.debug("\nVoy a guardar datos de persona");
+			String nongrata = null;
+			if(accion.equalsIgnoreCase("I")){
+				nongrata = "S";
+			}else{
+				nongrata = "N";
+			}
+			logger.debug(Utils.log("Valor de nongrata ====> ",nongrata));
+			personasDAO.actualizaClienteClienteNonGrato(rfc, nongrata);
+			
+			paso = "Datos guardados correctamente";
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ mensaje=",paso
+				,"\n@@@@@@ guardarClienteNonGratos @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return paso;
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneListaClientesNonGratos(String rfc) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ obtieneListaClientesNonGratos @@@@@@"
+				,"\n@@@@@@ params=",rfc
+				));
+		
+		String paso = null;
+		List<Map<String,String>> list = null;
+		try
+		{
+			paso = "Obtenemos la lista de los clientes non gratos";
+			logger2.debug("\nObtenemos la lista de los clientes non gratos");
+			list = personasDAO.obtieneListaClientesNonGratos(rfc);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ mensaje=",paso
+				,"\n@@@@@@ obtieneListaClientesNonGratos @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return list;
+	}
+	
+	@Override
+	public List<GenericVO> consultaClientesNonGratos(String cdperson) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ obtieneListaClientesNonGratos @@@@@@"
+				,"\n@@@@@@ params=",cdperson
+				));
+		
+		String paso = null;
+		List<GenericVO> genericVO= null;
+		try
+		{
+			paso = "Obtenemos la lista de los clientes non gratos";
+			logger2.debug("\nObtenemos la lista de los clientes non gratos");
+			genericVO = personasDAO.consultaClientesNonGratos(cdperson);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ mensaje=",paso
+				,"\n@@@@@@ obtieneListaClientesNonGratos @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return genericVO;
 	}
 	
 	/************************ BASE MANAGER **************************/
