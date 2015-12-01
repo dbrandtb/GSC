@@ -1,5 +1,7 @@
 package mx.com.gseguros.portal.catalogos.dao.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,6 +12,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import mx.com.aon.portal.dao.ObtieneTatriperMapper;
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
@@ -20,9 +23,11 @@ import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
+import org.springframework.jdbc.core.RowMapper;
 
 public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 {
@@ -1253,5 +1258,107 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public String guardarClienteNonGratos(Map<String, Object> paramsCliente) throws Exception {
+		Map<String, Object> mapResult = ejecutaSP(new GuardarClienteNonGratos(getDataSource()), paramsCliente);
+		return (String) mapResult.get("pv_msg_id_o");
+	}
+	
+	protected class GuardarClienteNonGratos extends StoredProcedure {
+		protected GuardarClienteNonGratos(DataSource dataSource) {
+			super(dataSource, "PKG_DESARROLLO.P_VALIDA_CDRFC_TPERNGRA");
+			declareParameter(new SqlParameter("pv_cdrfc_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipper_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdagente_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsnombre_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsdomicil_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_obsermot_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cduser_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fefecha_i", OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String actualizaClienteClienteNonGrato(String rfc, String nongrata) throws Exception {
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cdrfc_i", rfc);
+		params.put("pv_nongrata_i", nongrata);
+		Map<String, Object> resultado = ejecutaSP(new ActualizaClienteRFC(getDataSource()), params);
+		return (String) resultado.get("pv_msg_id_o");
+	}
+	
+	protected class ActualizaClienteRFC extends StoredProcedure {
+		protected ActualizaClienteRFC(DataSource dataSource) {
+			super(dataSource, "PKG_DESARROLLO.P_ACT_PERSONA_NONGRATA");
+			declareParameter(new SqlParameter("pv_cdrfc_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nongrata_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public List<Map<String, String>> obtieneListaClientesNonGratos(String rfc) throws Exception {
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cdrfc_i", rfc);
+		Map<String,Object>resultado=ejecutaSP(new ObtieneListaClientesNonGratos(getDataSource()), params);
+		logger.debug("resultado de municipio y colonia: " + resultado.get("pv_registro_o"));
+		return ((List<Map<String,String>>)resultado.get("pv_registro_o"));
+		
+	}
+	
+	protected class ObtieneListaClientesNonGratos extends StoredProcedure
+	{
+		protected ObtieneListaClientesNonGratos(DataSource dataSource)
+		{
+			super(dataSource,"PKG_DESARROLLO.P_GET_TPERNGRA");
+			declareParameter(new SqlParameter("pv_cdrfc_i"    , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDRFC", 	"STATUS", 	"CDTIPPER", 	"CDAGENTE",		"DSNOMBRE",	"DSDOMICIL", 
+					"OBSERMOT", "CDUSER", 	"FEFECHA", 		"DESCAGENTE", 	"DESTIPOPER"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public List<GenericVO> consultaClientesNonGratos(String cdperson) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdperson_i", cdperson);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ConsultaClientesNonGratos(this.getDataSource()), params);
+		return (List<GenericVO>) resultadoMap.get("pv_registro_o");
+	}
+	protected class ConsultaClientesNonGratos extends StoredProcedure
+	{
+		protected ConsultaClientesNonGratos(DataSource dataSource)
+		{
+			super(dataSource, "PKG_DESARROLLO.P_GET_USUARIOS_RFC");
+			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR,new ClientesNonGratos()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	protected class ClientesNonGratos  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	GenericVO consulta = new GenericVO();
+        	consulta.setKey(rs.getString("CDRFC"));
+        	consulta.setValue(rs.getString("DSNOMBRE"));
+            return consulta;
+        }
+    }
+	
 	
 }

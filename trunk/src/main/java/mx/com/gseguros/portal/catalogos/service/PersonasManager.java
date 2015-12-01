@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 
@@ -129,4 +130,12 @@ public interface PersonasManager
 	public String guardarPantallaEspPersona(Map<String,String>params) throws Exception;
 	
 	public Map<String,String>recuperarEspPersona(String cdperson) throws Exception;
+	
+	public String guardarClienteNonGratos(String rfc, String status, String tipoPersona, String cveAgente,
+			String nombreCompleto, String domicilio, String observaciones, String cduser, Date fechaProcesamiento,
+			String accion) throws Exception;
+
+	public List<Map<String, String>> obtieneListaClientesNonGratos(String rfc) throws Exception;
+
+	public List<GenericVO> consultaClientesNonGratos(String cdperson) throws Exception;
 }

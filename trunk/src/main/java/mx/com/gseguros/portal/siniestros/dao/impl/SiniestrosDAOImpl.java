@@ -408,6 +408,27 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 		}
 	}
 	
+	@Override
+	public List<GenericVO> obtieneListadoSubcoberturaTotalesMultisalud(String cdtipsit) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdtipsit_i", cdtipsit);
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoSubcoberturaTotalesMultisalud(getDataSource()), params);
+		return (List<GenericVO>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ObtieneListadoSubcoberturaTotalesMultisalud extends StoredProcedure
+	{
+		protected ObtieneListadoSubcoberturaTotalesMultisalud(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.P_GET_CDCONVAL_MULTISALUD");
+			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaSubcobertura()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
     protected class DatosListaSubcobertura  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	GenericVO consulta = new GenericVO();

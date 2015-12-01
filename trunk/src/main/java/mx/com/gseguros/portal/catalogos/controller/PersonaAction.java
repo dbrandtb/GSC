@@ -1,10 +1,12 @@
 package mx.com.gseguros.portal.catalogos.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -29,6 +31,8 @@ import org.springframework.stereotype.Controller;
 public class PersonaAction extends PrincipalCoreAction
 {
 
+	private static final long serialVersionUID = 2211193078664526450L;
+
 	private static final Logger logger = LoggerFactory.getLogger(PersonaAction.class);
 	
 	private boolean                  success;
@@ -36,7 +40,7 @@ public class PersonaAction extends PrincipalCoreAction
 	private Map<String,String>       params;
 	private List<Map<String,String>> list;
 	private Map<String,Item>         items;
-	
+	private List<GenericVO> 		genericVO;
 	@Autowired
 	private PersonasManager personasManager;
 	
@@ -207,7 +211,134 @@ public class PersonaAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
+	
+	@Action(value   = "guardaClienteNonGratos",
+		results = { @Result(name="success", type="json") }
+	)
+	public String guardaClienteNonGratos()
+	{
+		logger.debug(Utils.log(
+				 "\n#######################################"
+				,"\n###### guardaClienteNonGratos ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			Utils.validate(params                 , "No se recibieron datos");
+			String cduser = ((UserVO)session.get("USUARIO")).getUser();
+			Date   fechaProcesamiento = new Date();
+			//message = personasManager.guardarClienteNonGratos(paramsCliente, params.get("cdrfc"));
+			message = personasManager.guardarClienteNonGratos(params.get("cdrfc"),params.get("status"),params.get("cdtipper"),params.get("agente"),
+					params.get("dsnombre"),params.get("dsdomicil"), params.get("obsermot"), cduser, fechaProcesamiento, params.get("accion"));
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### guardaClienteNonGratos ######"
+				,"\n#######################################"
+				));
+		return SUCCESS;
+	}
+	
+	@Action(value = "obtieneListaClientesNonGratos", results = { @Result(name = "success", type = "json", params = {
+			"ignoreHierarchy", "false", "includeProperties",
+			"list.*,success" }) })
+		public String obtieneListaClientesNonGratos()
+		{
+			logger.debug(Utils.log(
+					 "\n###########################################"
+					,"\n###### obtieneListaClientesNonGratos ######"
+					,"\n###### params=",params
+					));
+			
+			try
+			{
+				//Utils.validateSession(session);
+				//Utils.validate(params                 , "No se recibieron datos");
+				list = personasManager.obtieneListaClientesNonGratos(params.get("cdrfc"));
+				success = true;
+			}
+			catch(Exception ex)
+			{
+				message = Utils.manejaExcepcion(ex);
+			}
+			
+			logger.debug(Utils.log(
+					 "\n###### obtieneListaClientesNonGratos ######"
+					,"\n###########################################"
+					));
+			return SUCCESS;
+		}
+	
+	@Action(value = "consultaClientesNonGratos", results = { @Result(name = "success", type = "json", params = {
+			"ignoreHierarchy", "false", "includeProperties",
+			"genericVO.*,success" }) })
+		public String consultaClientesNonGratos()
+		{
+			logger.debug(Utils.log(
+					 "\n###########################################"
+					,"\n###### obtieneListaClientesNonGratos ######"
+					,"\n###### params=",params
+					));
+			
+			try
+			{
+				genericVO = personasManager.consultaClientesNonGratos(params.get("cdperson"));
+				success = true;
+			}
+			catch(Exception ex)
+			{
+				message = Utils.manejaExcepcion(ex);
+			}
+			
+			logger.debug(Utils.log(
+					 "\n###### obtieneListaClientesNonGratos ######"
+					,"\n###########################################"
+					));
+			return SUCCESS;
+		}
+	
+	@Actions({
+		@Action(value   = "administracionClientes",
+	            results = {
+	            @Result(name="success" , location="/jsp-script/proceso/siniestros/administracionClientes.jsp")
+	        })
+	})
+	public String administracionClientes()
+	{
+		logger.debug(Utils.log(
+				 "\n#############################"
+				,"\n###### pantallaPersona ######"
+				,"\n###### params=",params
+				));
+		
+		String result = ERROR;
+		
+		try
+		{
+			UserVO usuario = Utils.validateSession(session);
+			result = SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### result=",result
+				,"\n###### pantallaPersona ######"
+				,"\n#############################"
+				));
+		return result;
+	}
 
+	
 	public boolean isSuccess() {
 		return success;
 	}
@@ -246,6 +377,14 @@ public class PersonaAction extends PrincipalCoreAction
 
 	public void setItems(Map<String, Item> items) {
 		this.items = items;
+	}
+
+	public List<GenericVO> getGenericVO() {
+		return genericVO;
+	}
+
+	public void setGenericVO(List<GenericVO> genericVO) {
+		this.genericVO = genericVO;
 	}
 	
 }
