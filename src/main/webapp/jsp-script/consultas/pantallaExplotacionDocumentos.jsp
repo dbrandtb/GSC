@@ -22,7 +22,7 @@ var _p49_dirIconos = '${icons}';
 ////// overrides //////
 ////// overrides //////
 
-////// componentes dinamicos /////
+////// componentes dinamicos //////
 var _p49_formBusqItems = [<s:property value="items.itemsFormBusq"     escapeHtml="false" />];
 var _p49_gridPolFields = [<s:property value="items.gridPolizasFields" escapeHtml="false" />];
 var _p49_gridPolCols   = [];
