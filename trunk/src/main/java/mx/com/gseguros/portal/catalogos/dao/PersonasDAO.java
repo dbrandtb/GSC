@@ -146,7 +146,7 @@ public interface PersonasDAO
 	
 	public String actualizaClienteClienteNonGrato(String rfc, String nongrata) throws Exception;
 
-	public List<Map<String, String>> obtieneListaClientesNonGratos(String rfc) throws Exception;
+	public List<Map<String, String>> obtieneListaClientesNonGratos(String rfc, String proceso) throws Exception;
 
 	public List<GenericVO> consultaClientesNonGratos(String cdperson) throws Exception;
 	

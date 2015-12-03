@@ -132,10 +132,10 @@ public interface PersonasManager
 	public Map<String,String>recuperarEspPersona(String cdperson) throws Exception;
 	
 	public String guardarClienteNonGratos(String rfc, String status, String tipoPersona, String cveAgente,
-			String nombreCompleto, String domicilio, String observaciones, String cduser, Date fechaProcesamiento,
+			String nombreCompleto, String domicilio, String observaciones,String proceso, String cduser, Date fechaProcesamiento,
 			String accion) throws Exception;
 
-	public List<Map<String, String>> obtieneListaClientesNonGratos(String rfc) throws Exception;
+	public List<Map<String, String>> obtieneListaClientesNonGratos(String rfc, String proceso) throws Exception;
 
 	public List<GenericVO> consultaClientesNonGratos(String cdperson) throws Exception;
 }

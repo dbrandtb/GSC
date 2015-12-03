@@ -1012,7 +1012,7 @@ public class PersonasManagerImpl implements PersonasManager
 	
 	@Override
 	public String guardarClienteNonGratos(String rfc, String status, String tipoPersona, String cveAgente,
-			String nombreCompleto, String domicilio, String observaciones, String cduser, Date fechaProcesamiento,
+			String nombreCompleto, String domicilio, String observaciones,String proceso,  String cduser, Date fechaProcesamiento,
 			String accion) throws Exception{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -1024,6 +1024,7 @@ public class PersonasManagerImpl implements PersonasManager
 				,"\n@@@@@@ nombreCompleto =",nombreCompleto
 				,"\n@@@@@@ domicilio=",domicilio
 				,"\n@@@@@@ observaciones=",observaciones
+				,"\n@@@@@@ proceso=",proceso
 				,"\n@@@@@@ cduser =",cduser
 				,"\n@@@@@@ fechaProcesamiento=", fechaProcesamiento
 				,"\n@@@@@@ accion=",accion
@@ -1042,6 +1043,7 @@ public class PersonasManagerImpl implements PersonasManager
 			paramsCliente.put("pv_dsnombre_i",nombreCompleto);
 			paramsCliente.put("pv_dsdomicil_i",domicilio);
 			paramsCliente.put("pv_obsermot_i",observaciones);
+			paramsCliente.put("pv_cdtipcli_i",proceso);
 			paramsCliente.put("pv_cduser_i",cduser);
 			paramsCliente.put("pv_fefecha_i",fechaProcesamiento);
 			paramsCliente.put("pv_accion_i",accion);
@@ -1073,12 +1075,13 @@ public class PersonasManagerImpl implements PersonasManager
 	}
 	
 	@Override
-	public List<Map<String, String>> obtieneListaClientesNonGratos(String rfc) throws Exception
+	public List<Map<String, String>> obtieneListaClientesNonGratos(String rfc, String proceso) throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ obtieneListaClientesNonGratos @@@@@@"
-				,"\n@@@@@@ params=",rfc
+				,"\n@@@@@@ rfc=",rfc
+				,"\n@@@@@@ proceso=",proceso
 				));
 		
 		String paso = null;
@@ -1087,7 +1090,7 @@ public class PersonasManagerImpl implements PersonasManager
 		{
 			paso = "Obtenemos la lista de los clientes non gratos";
 			logger2.debug("\nObtenemos la lista de los clientes non gratos");
-			list = personasDAO.obtieneListaClientesNonGratos(rfc);
+			list = personasDAO.obtieneListaClientesNonGratos(rfc, proceso);
 		}
 		catch(Exception ex)
 		{

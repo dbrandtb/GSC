@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.catalogos.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import org.apache.struts2.convention.annotation.Actions;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -231,7 +233,7 @@ public class PersonaAction extends PrincipalCoreAction
 			Date   fechaProcesamiento = new Date();
 			//message = personasManager.guardarClienteNonGratos(paramsCliente, params.get("cdrfc"));
 			message = personasManager.guardarClienteNonGratos(params.get("cdrfc"),params.get("status"),params.get("cdtipper"),params.get("agente"),
-					params.get("dsnombre"),params.get("dsdomicil"), params.get("obsermot"), cduser, fechaProcesamiento, params.get("accion"));
+					params.get("dsnombre"),params.get("dsdomicil"), params.get("obsermot"),params.get("proceso"), cduser, fechaProcesamiento, params.get("accion"));
 			success = true;
 		}
 		catch(Exception ex)
@@ -261,7 +263,7 @@ public class PersonaAction extends PrincipalCoreAction
 			{
 				//Utils.validateSession(session);
 				//Utils.validate(params                 , "No se recibieron datos");
-				list = personasManager.obtieneListaClientesNonGratos(params.get("cdrfc"));
+				list = personasManager.obtieneListaClientesNonGratos(params.get("cdrfc"), params.get("proceso"));
 				success = true;
 			}
 			catch(Exception ex)
@@ -313,8 +315,8 @@ public class PersonaAction extends PrincipalCoreAction
 	public String administracionClientes()
 	{
 		logger.debug(Utils.log(
-				 "\n#############################"
-				,"\n###### pantallaPersona ######"
+				 "\n####################################"
+				,"\n###### administracionClientes ######"
 				,"\n###### params=",params
 				));
 		
@@ -322,8 +324,18 @@ public class PersonaAction extends PrincipalCoreAction
 		
 		try
 		{
+			/* Proceso Cliente
+			 * 1.- Clientes Non Gratos
+			 * 2.- Politicamente Expuesto
+			 * 3.- VIP
+			 */
 			UserVO usuario = Utils.validateSession(session);
 			result = SUCCESS;
+			String proceso  = params.get("tipoProceso");
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("procesoCliente",proceso);
+			setParamsJson(params);
+			logger.debug("Params : {}", params);
 		}
 		catch(Exception ex)
 		{
@@ -332,13 +344,25 @@ public class PersonaAction extends PrincipalCoreAction
 		
 		logger.debug(Utils.log(
 				 "\n###### result=",result
-				,"\n###### pantallaPersona ######"
-				,"\n#############################"
+				,"\n###### administracionClientes ######"
+				,"\n####################################"
 				));
 		return result;
 	}
 
-	
+	public void setParamsJson(HashMap<String, String> params) {
+		this.params = params;
+	}
+
+	public String getParamsJson() {
+		try {
+			return JSONUtil.serialize(params);
+		} catch (Exception e) {
+			logger.error("Error al generar JSON de params {}", e.getMessage(), e);
+			return null;
+		}
+	}
+
 	public boolean isSuccess() {
 		return success;
 	}

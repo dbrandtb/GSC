@@ -1275,6 +1275,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			declareParameter(new SqlParameter("pv_dsnombre_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_dsdomicil_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_obsermot_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipcli_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cduser_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_fefecha_i", OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
@@ -1305,9 +1306,10 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	}
 
 	@Override
-	public List<Map<String, String>> obtieneListaClientesNonGratos(String rfc) throws Exception {
+	public List<Map<String, String>> obtieneListaClientesNonGratos(String rfc, String proceso) throws Exception {
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("pv_cdrfc_i", rfc);
+		params.put("pv_proceso_i", proceso);
 		Map<String,Object>resultado=ejecutaSP(new ObtieneListaClientesNonGratos(getDataSource()), params);
 		logger.debug("resultado de municipio y colonia: " + resultado.get("pv_registro_o"));
 		return ((List<Map<String,String>>)resultado.get("pv_registro_o"));
@@ -1318,8 +1320,10 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
 		protected ObtieneListaClientesNonGratos(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_GET_TPERNGRA");
+			super(dataSource,"PKG_DESARROLLO.P_GET_TPERNGRA2");
+			//super(dataSource,"PKG_DESARROLLO.P_GET_TPERNGRA");
 			declareParameter(new SqlParameter("pv_cdrfc_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_proceso_i"    , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"CDRFC", 	"STATUS", 	"CDTIPPER", 	"CDAGENTE",		"DSNOMBRE",	"DSDOMICIL", 
 					"OBSERMOT", "CDUSER", 	"FEFECHA", 		"DESCAGENTE", 	"DESTIPOPER"

@@ -12,15 +12,20 @@
 				var _URL_CATALOGOS					= '<s:url namespace="/catalogos" 		action="obtieneCatalogo" />';
 				var _p22_urlObtenerPersonas     	= '<s:url namespace="/catalogos"  		action="obtenerPersonasPorRFC"              />';
 				//var _URL_GUARDA_CLIENTE	            = '<s:url namespace="/siniestros"  		action="guardaClienteNonGratos" />';
-				var _URL_GUARDA_CLIENTE      		= '<s:url namespace="/persona" 			action="guardaClienteNonGratos" />';
-				var _URL_LISTA_CLIENTE      		= '<s:url namespace="/persona" 			action="obtieneListaClientesNonGratos" />';
-				var _URL_LISTA_NONGRATOS            = '<s:url namespace="/persona"  		action="consultaClientesNonGratos" />';
 				
+				
+				
+				var _URL_LISTA_CLIENTE      		= '<s:url namespace="/persona" 			action="obtieneListaClientesNonGratos" />';
+				
+				var _URL_GUARDA_CLIENTE      		= '<s:url namespace="/persona" 			action="guardaClienteNonGratos" />';
+				var _URL_LISTA_NONGRATOS            = '<s:url namespace="/persona"  		action="consultaClientesNonGratos" />';
+				var proceso = <s:property value='paramsJson' escapeHtml='false'/>;
+				debug("VALOR A ENVIAR ====> ",proceso);
 			</script>
 			<script type="text/javascript" src="${ctx}/js/proceso/siniestros/administracionClientes.js"></script>
 	</head>
 	<body>
-		<div style="height:800px;">
+		<div style="height:500px;">
 			<div id="div_clau"></div>
 		</div>
  	</body>
