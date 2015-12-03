@@ -62,6 +62,54 @@
     width       : 200px;
     text-align  : center;
 }
+.proceso .image
+{
+    width            : 65px;
+    height           : 35px;
+    background-image : url('${flujoimg}proceso.png');
+}
+.proceso .cdproceso, .labelO
+{
+    position    : absolute;
+    left        : 50%;
+    margin-left : -100px;
+    border      : 0px solid red;
+    top         : 10px;
+    width       : 200px;
+    text-align  : center;
+}
+.validacion .image
+{
+    width            : 50px;
+    height           : 50px;
+    background-image : url('${flujoimg}validacion.png');
+}
+.labelV
+{
+    position    : absolute;
+    left        : 50%;
+    margin-left : -100px;
+    border      : 0px solid red;
+    top         : 20px;
+    width       : 200px;
+    text-align  : center;
+}
+.revision .image
+{
+    width            : 45px;
+    height           : 50px;
+    background-image : url('${flujoimg}revision.png');
+}
+.labelR
+{
+    position    : absolute;
+    left        : 50%;
+    margin-left : -100px;
+    border      : 0px solid red;
+    top         : 20px;
+    width       : 200px;
+    text-align  : center;
+}
 .entidad:hover
 {
     border : 0px solid blue;
@@ -89,6 +137,30 @@
     height           : 40px;
     border           : 0px solid red;
     background-image : url('${flujoimg}componente.png');
+}
+.entidadO
+{
+    position         : absolute;
+    width            : 65px;
+    height           : 35px;
+    border           : 0px solid red;
+    background-image : url('${flujoimg}proceso.png');
+}
+.entidadV
+{
+    position         : absolute;
+    width            : 50px;
+    height           : 50px;
+    border           : 0px solid red;
+    background-image : url('${flujoimg}validacion.png');
+}
+.entidadR
+{
+    position         : absolute;
+    width            : 45px;
+    height           : 50px;
+    border           : 0px solid red;
+    background-image : url('${flujoimg}revision.png');
 }
 .plus
 {
@@ -150,6 +222,10 @@ if(inIframe())
 ////// variables //////
 var estadoTpl;
 var pantallaTpl;
+var componenteTpl;
+var procesoTpl;
+var validacionTpl;
+var revisionTpl;
 
 var _p52_panelGrids;
 var _p52_gridTramites;
@@ -160,6 +236,11 @@ var _p52_catalogoEstados;
 var _p52_panelEstado;
 var _p52_catalogoPantallas;
 var _p52_catalogoComponentes;
+var _p52_catalogoProcesos;
+var _p52_catalogoValidaciones;
+var _p52_catalogoRevisiones;
+var _p52_formValidacion;
+var _p52_panelRevision;
 
 var toolkit;
 
@@ -226,6 +307,48 @@ Ext.onReady(function()
         ,'</div>'
     ]);
     
+    procesoTpl = new Ext.Template(
+    [
+         '<div id="O{cdproceso}" class="catEntidad proceso" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{dsproceso}">'
+        ,'    <table width="90" border="0">'
+        ,'        <tr>'
+        ,'            <td align="center"><div class="image"></div><div class="cdproceso">{cdproceso}</div></td>'
+        ,'        </tr>'
+        ,'        <tr>'
+        ,'            <td align="center">{dsproceso}</td>'
+        ,'        </tr>'
+        ,'    </table>'
+        ,'</div>'
+    ]);
+    
+    validacionTpl = new Ext.Template(
+    [
+         '<div id="V0" class="catEntidad validacion" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{dsvalidacion}">'
+        ,'    <table width="90" border="0">'
+        ,'        <tr>'
+        ,'            <td align="center"><div class="image"></div></td>'
+        ,'        </tr>'
+        ,'        <tr>'
+        ,'            <td align="center">{dsvalidacion}</td>'
+        ,'        </tr>'
+        ,'    </table>'
+        ,'</div>'
+    ]);
+    
+    revisionTpl = new Ext.Template(
+    [
+         '<div id="R0" class="catEntidad revision" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{dsrevision}">'
+        ,'    <table width="90" border="0">'
+        ,'        <tr>'
+        ,'            <td align="center"><div class="image"></div></td>'
+        ,'        </tr>'
+        ,'        <tr>'
+        ,'            <td align="center">{dsrevision}</td>'
+        ,'        </tr>'
+        ,'    </table>'
+        ,'</div>'
+    ]);
+    
     epProps['E'] =
     {
         anchor     : [ 'Perimeter' , { shape : 'Circle' } ]
@@ -241,6 +364,27 @@ Ext.onReady(function()
     };
     
     epProps['C'] =
+    {
+        anchor     : [ 'Perimeter' , { shape : 'Rectangle' } ]
+        ,isSource  : true
+        ,isTarget  : true
+    };
+    
+    epProps['O'] =
+    {
+        anchor     : [ 'Perimeter' , { shape : 'Rectangle' } ]
+        ,isSource  : true
+        ,isTarget  : true
+    };
+    
+    epProps['V'] =
+    {
+        anchor     : [ 'Perimeter' , { shape : 'Diamond' } ]
+        ,isSource  : true
+        ,isTarget  : true
+    };
+    
+    epProps['R'] =
     {
         anchor     : [ 'Perimeter' , { shape : 'Rectangle' } ]
         ,isSource  : true
@@ -470,13 +614,40 @@ Ext.onReady(function()
                                 }
                             }
                             ,{
-                                title : 'PROCESOS'
+                                title       : 'PROCESOS'
+                                ,itemId     : '_p52_catalogoProcesos'
+                                ,defaults   : { style : 'margin : 5px;' }
+                                ,autoScroll : true
+                                ,layout     :
+                                {
+                                    type     : 'table'
+                                    ,columns : 2
+                                    ,tdAttrs : { valign : 'top' }
+                                }
                             }
                             ,{
-                                title : 'VALIDACIONES'
+                                title       : 'VALIDACIONES'
+                                ,itemId     : '_p52_catalogoValidaciones'
+                                ,defaults   : { style : 'margin : 5px;' }
+                                ,autoScroll : true
+                                ,layout     :
+                                {
+                                    type     : 'table'
+                                    ,columns : 2
+                                    ,tdAttrs : { valign : 'top' }
+                                }
                             }
                             ,{
-                                title : 'REVISIONES'
+                                title       : 'REVISIONES'
+                                ,itemId     : '_p52_catalogoRevisiones'
+                                ,defaults   : { style : 'margin : 5px;' }
+                                ,autoScroll : true
+                                ,layout     :
+                                {
+                                    type     : 'table'
+                                    ,columns : 2
+                                    ,tdAttrs : { valign : 'top' }
+                                }
                             }
                         ]
                     })
@@ -752,6 +923,165 @@ Ext.onReady(function()
                                     })
                                 ]
                             })
+                            ,Ext.create('Ext.form.Panel',
+                            {
+                                itemId       : '_p52_formValidacion'
+                                ,title       : 'VALIDACI\u00D3N'
+                                ,defaults    : { style : 'margin:5px;' }
+                                ,buttonAlign : 'center'
+                                ,hidden      : true
+                                ,buttons     :
+                                [
+                                    {
+                                        text     : 'Guardar'
+                                        ,icon    : '${icons}disk.png'
+                                        ,handler : function(me)
+                                        {
+                                            _p52_panelCanvas.enable();
+                                            me.up('panel').hide();
+                                        }
+                                    }
+                                    ,{
+                                        text     : 'Cancelar'
+                                        ,icon    : '${icons}cancel.png'
+                                        ,handler : function(me)
+                                        {
+                                            _p52_panelCanvas.enable();
+                                            me.up('panel').hide();
+                                        }
+                                    }
+                                ]
+                                ,items :
+                                [
+                                    {
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : 'Nombre'
+                                        ,labelAlign : 'top'
+                                        ,name       : 'DSVALIDA'
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : 'Expresi\u00f3n'
+                                        ,labelAlign : 'top'
+                                        ,name       : 'CDEXPRES'
+                                    }
+                                ]
+                            })
+                            ,Ext.create('Ext.panel.Panel',
+                            {
+                                itemId       : '_p52_panelRevision'
+                                ,title       : 'REVISI\u00D3N'
+                                ,hidden      : true
+                                ,buttonAlign : 'center'
+                                ,buttons     :
+                                [
+                                    {
+                                        text     : 'Guardar'
+                                        ,icon    : '${icons}disk.png'
+                                        ,handler : function(me)
+                                        {
+                                            _p52_panelCanvas.enable();
+                                            me.up('panel').hide();
+                                        }
+                                    }
+                                    ,{
+                                        text     : 'Cancelar'
+                                        ,icon    : '${icons}cancel.png'
+                                        ,handler : function(me)
+                                        {
+                                            _p52_panelCanvas.enable();
+                                            me.up('panel').hide();
+                                        }
+                                    }
+                                ]
+                                ,items :
+                                [
+                                    {
+                                        xtype     : 'fieldset'
+                                        ,defaults : { style : 'margin:5px;' }
+                                        ,items    :
+                                        [
+                                            {
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : 'Nombre'
+                                                ,labelAlign : 'top'
+                                                ,name       : 'DSREVISI'
+                                            }
+                                        ]
+                                    }
+                                    ,Ext.create('Ext.grid.Panel',
+                                    {
+                                        itemId   : '_p52_gridRevDoc'
+                                        ,title   : 'DOCUMENTOS'
+                                        ,height  : 220
+                                        ,columns :
+                                        [
+                                            {
+                                                text       : 'DOCUMENTO'
+                                                ,dataIndex : 'DSDOCUME'
+                                                ,flex      : 1
+                                            }
+                                            ,{
+                                                text       : 'INCLUIR'
+                                                ,xtype     : 'checkcolumn'
+                                                ,dataIndex : 'SWINCLUIR'
+                                                ,width     : 70
+                                            }
+                                            ,{
+                                                text       : 'OBLIGA.'
+                                                ,xtype     : 'checkcolumn'
+                                                ,dataIndex : 'SWOBLIGA'
+                                                ,width     : 70
+                                            }
+                                        ]
+                                        ,store : Ext.create('Ext.data.Store',
+                                        {
+                                            autoLoad : true
+                                            ,fields  :
+                                            [
+                                                'DSDOCUME'
+                                                ,{ name : 'SWINCLUIR' , type : 'boolean' }
+                                                ,{ name : 'SWOBLIGA'  , type : 'boolean' }
+                                            ]
+                                            ,proxy   :
+                                            {
+                                                type    : 'memory'
+                                                ,reader : 'json'
+                                                ,data   :
+                                                [
+                                                    {
+                                                        DSDOCUME : 'CRENDENCIAL ELECTOR'
+                                                    }
+                                                    ,{
+                                                        DSDOCUME : 'SOLICITUD DE COTIZACION'
+                                                    }
+                                                    ,{
+                                                        DSDOCUME : 'CURP'
+                                                    }
+                                                    ,{
+                                                        DSDOCUME : 'RFC'
+                                                    }
+                                                    ,{
+                                                        DSDOCUME : 'INFORME MEDICO'
+                                                    }
+                                                    ,{
+                                                        DSDOCUME : 'CERTIFICADO ESTUDIOS'
+                                                    }
+                                                    ,{
+                                                        DSDOCUME : 'AUTORIZACION SERVICIOS'
+                                                    }
+                                                    ,{
+                                                        DSDOCUME : 'FACTURA'
+                                                    }
+                                                    ,{
+                                                        DSDOCUME : 'ORDEN DE SERVICIO'
+                                                    }
+                                                ]
+                                            }
+                                        })
+                                    })
+                                ]
+                            })
                         ]
                     })
                     ,Ext.create('Ext.panel.Panel',
@@ -792,23 +1122,31 @@ Ext.onReady(function()
     ////// contenido //////
     
     ////// custom //////
-    _p52_panelGrids          = _fieldById('_p52_panelGrids');
-    _p52_gridTramites        = _fieldById('_p52_gridTramites');
-    _p52_gridProcesos        = _fieldById('_p52_gridProcesos');
-    _p52_panelDibujo         = _fieldById('_p52_panelDibujo');
-    _p52_catalogoEstados     = _fieldById('_p52_catalogoEstados');
-    _p52_panelCanvas         = _fieldById('_p52_panelCanvas');
-    _p52_panelEstado         = _fieldById('_p52_panelEstado');
-    _p52_catalogoPantallas   = _fieldById('_p52_catalogoPantallas');
-    _p52_catalogoComponentes = _fieldById('_p52_catalogoComponentes');
+    _p52_panelGrids           = _fieldById('_p52_panelGrids');
+    _p52_gridTramites         = _fieldById('_p52_gridTramites');
+    _p52_gridProcesos         = _fieldById('_p52_gridProcesos');
+    _p52_panelDibujo          = _fieldById('_p52_panelDibujo');
+    _p52_catalogoEstados      = _fieldById('_p52_catalogoEstados');
+    _p52_panelCanvas          = _fieldById('_p52_panelCanvas');
+    _p52_panelEstado          = _fieldById('_p52_panelEstado');
+    _p52_catalogoPantallas    = _fieldById('_p52_catalogoPantallas');
+    _p52_catalogoComponentes  = _fieldById('_p52_catalogoComponentes');
+    _p52_catalogoProcesos     = _fieldById('_p52_catalogoProcesos');
+    _p52_catalogoValidaciones = _fieldById('_p52_catalogoValidaciones');
+    _p52_catalogoRevisiones   = _fieldById('_p52_catalogoRevisiones');
+    _p52_formValidacion       = _fieldById('_p52_formValidacion');
+    _p52_panelRevision        = _fieldById('_p52_panelRevision');
     ////// custom //////
     
     ////// loaders //////
     _p52_cargarEstados();
     _p52_cargarPantallas();
     _p52_cargarComponentes();
+    _p52_cargarProcesos();
+    _p52_cargarValidaciones();
+    _p52_cargarRevisiones();
     
-    _p52_navega(2);
+    //_p52_navega(2);
     
     jsPlumb.ready(function()
     {
@@ -965,6 +1303,78 @@ function _p52_cargarComponentes()
     );
 }
 
+function _p52_cargarProcesos()
+{
+    debug('_p52_cargarProcesos');
+    _p52_catalogoProcesos.removeAll();
+    _p52_catalogoProcesos.add(
+    {
+        xtype   : 'panel'
+        ,tpl    : procesoTpl
+        ,border : 0
+        ,data   :
+        {
+            cdproceso  : 1
+            ,dsproceso : 'Emision'
+        }
+    }
+    ,{
+        xtype   : 'panel'
+        ,tpl    : procesoTpl
+        ,border : 0
+        ,data   :
+        {
+            cdproceso  : 2
+            ,dsproceso : 'WS Salud'
+        }
+    }
+    ,{
+        xtype   : 'panel'
+        ,tpl    : procesoTpl
+        ,border : 0
+        ,data   :
+        {
+            cdproceso  : 3
+            ,dsproceso : 'WS Autos'
+        }
+    }
+    );
+}
+
+function _p52_cargarValidaciones()
+{
+    debug('_p52_cargarValidaciones');
+    _p52_catalogoValidaciones.removeAll();
+    _p52_catalogoValidaciones.add(
+    {
+        xtype   : 'panel'
+        ,tpl    : validacionTpl
+        ,border : 0
+        ,data   :
+        {
+            cdvalidacion  : 0
+            ,dsvalidacion : 'Nueva validaci\u00f3n'
+        }
+    });
+}
+
+function _p52_cargarRevisiones()
+{
+    debug('_p52_cargarRevisiones');
+    _p52_catalogoRevisiones.removeAll();
+    _p52_catalogoRevisiones.add(
+    {
+        xtype   : 'panel'
+        ,tpl    : revisionTpl
+        ,border : 0
+        ,data   :
+        {
+            cdrevision  : 0
+            ,dsrevision : 'Nueva revisi\u00f3n'
+        }
+    });
+}
+
 function _p52_dragstart(event)
 {
     debug('_p52_dragstart event:',event);
@@ -997,6 +1407,18 @@ function _p52_drop(event)
     {
         $('#canvasdiv').append('<div id="'+id+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\');return false;"></a><div class="labelC">'+clave+' - '+descrip+'</div></div>');
     }
+    else if(tipo=='O')
+    {
+        $('#canvasdiv').append('<div id="'+id+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\');return false;"></a><div class="labelO">'+clave+' - '+descrip+'</div></div>');
+    }
+    else if(tipo=='V')
+    {
+        $('#canvasdiv').append('<div id="'+id+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\');return false;"></a><div class="labelV">'+descrip+'</div></div>');
+    }
+    else if(tipo=='R')
+    {
+        $('#canvasdiv').append('<div id="'+id+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\');return false;"></a><div class="labelR">'+descrip+'</div></div>');
+    }
     
     _p52_addEndpoint(id,tipo);
 }
@@ -1020,6 +1442,22 @@ function _p52_editEndpoint(id,tipo)
     {
         _p52_panelCanvas.disable();
         _p52_panelEstado.show();
+        _p52_formValidacion.hide();
+        _p52_panelRevision.hide();
+    }
+    else if(tipo=='V')
+    {
+        _p52_panelCanvas.disable();
+        _p52_panelEstado.hide();
+        _p52_formValidacion.show();
+        _p52_panelRevision.hide();
+    }
+    else if(tipo=='R')
+    {
+        _p52_panelCanvas.disable();
+        _p52_panelEstado.hide();
+        _p52_formValidacion.hide();
+        _p52_panelRevision.show();
     }
 }
 
