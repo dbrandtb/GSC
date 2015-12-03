@@ -1,6 +1,7 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
 	Ext.onReady(function() {
 		var panelProveedor;
+		var complemento;
 		Ext.selection.CheckboxModel.override( {
 			mode: 'SINGLE',
 			allowDeselect: true
@@ -93,6 +94,7 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 			hideTrigger:true,
 			listeners : {
 				'select' : function(combo, record) {
+					debug("Valor ---> ",this.getValue());
 					CargaListaCliente(this.getValue());
 				}
 			}
@@ -159,7 +161,8 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 										'params.dsnombre'   : record.get('DSNOMBRE'),
 										'params.dsdomicil'  : record.get('DSDOMICIL'),
 										'params.obsermot'   : record.get('OBSERMOT'),
-										'params.accion'     : "U"												
+										'params.proceso'    : proceso.procesoCliente,
+										'params.accion'     : "U"
 									}
 									,success : function (response){
 										mensajeCorrecto('&Eacute;XITO','El cliente se ha deshabilitado Correctamente.');
@@ -355,6 +358,7 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 											'params.dsnombre'   : _PanelPrincipalPersonas.down('[name=smap1.nombreCliente]').getValue(),
 											'params.dsdomicil'  : _PanelPrincipalPersonas.down('[name=smap1.domicilio]').getValue(),
 											'params.obsermot'   : _PanelPrincipalPersonas.down('[name=smap1.comments]').getValue(),
+											'params.proceso'    : proceso.procesoCliente,
 											'params.accion'     : "I"												
 										}
 										,success : function (response){
@@ -414,13 +418,14 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 			items       :[
 			              	asegurado,
 			              	{	xtype   : 'button',
-			            	  	colspan:2,
-		            	  		text    : 'Alta Cliente Non Gratos',
+			            	  	colspan :2,
+			            	  	id      : 'btnAltaCliente',
+		            	  		text    : ' ',
 		            	  		icon    : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
 		            	  		handler : function() {
 									windowCvePago = Ext.create('Ext.window.Window',{
 										modal       : true,
-										title		: 'Alta Cliente Non Gratos',
+										title		: 'Alta'+ complemento,
 										buttonAlign : 'center',
 										width       : 870,
 										height		: 430,										
@@ -446,12 +451,28 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 			              }
               ]
 			});
+		
+		
 
 		CargaListaCliente(null);
 		
 		function CargaListaCliente(rfc){
+			
+			if(proceso.procesoCliente =="1"){
+				Ext.getCmp('btnAltaCliente').setText('Alta Clientes Non Gratos');
+				complemento = " Clientes Non Gratos";
+			}else if(proceso.procesoCliente =="2"){
+				Ext.getCmp('btnAltaCliente').setText('Alta Clientes Políticamente Expuestos');
+				complemento = " Clientes Políticamente Expuestos";
+			}else{
+				Ext.getCmp('btnAltaCliente').setText('Alta Clientes VIP');
+				complemento = " Clientes VIP";
+			}
+			
+			
 			var params = {
-					'params.cdrfc'	:	rfc
+					'params.cdrfc'				:	rfc
+					,'params.proceso'	:	proceso.procesoCliente
 				};
 				
 				cargaStorePaginadoLocal(storeListadoCliente, _URL_LISTA_CLIENTE, 'list', params, function(options, success, response){
