@@ -77,6 +77,6 @@
     
     <bean id="validacionesCotizacionDAOSIGSImpl" class="mx.com.gseguros.portal.cotizacion.dao.impl.ValidacionesCotizacionDAOSIGSImpl" parent="abstractManagerDAOSIGS"/>
     
-    <bean id="flujoMesaControlDAOImpl" class="/gseguros/src/main/java/mx/com/gseguros/mesacontrol/dao/impl/FlujoMesaControlDAOImpl" parent="abstractManagerDAO"/>
+    <bean id="flujoMesaControlDAOImpl" class="mx.com.gseguros.mesacontrol.dao.impl.FlujoMesaControlDAOImpl" parent="abstractManagerDAO"/>
     
 </beans>
