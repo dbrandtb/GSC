@@ -1028,6 +1028,21 @@
 				</param>
 			</result>
 		</action>
+		
+		<action name="solicitudesCxp" class="siniestrosAction"  method="pantallaInicial">
+			<result>/jsp-script/proceso/siniestros/solicitudesCxp.jsp</result>
+		</action>
+		
+		<action name="cargaSolicitudesCxp" class="siniestrosAction" method="loadListaSolicitudesCxp">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					solicitudPago.*,
+					success
+				</param>
+			</result>
+		</action>
+		
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>

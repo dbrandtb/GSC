@@ -22,6 +22,7 @@ import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.PlanVO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
+import mx.com.gseguros.portal.general.model.SolicitudCxPVO;
 
 public interface IConsultasAseguradoDAO {
 	/**
@@ -199,5 +200,7 @@ public interface IConsultasAseguradoDAO {
      * @throws Exception
      */
 	public void actualizaEstatusEnvio(String iCodAviso) throws Exception;
+
+	public List<SolicitudCxPVO> obtieneListadoSolicitudesCxp() throws Exception;
 	
 }

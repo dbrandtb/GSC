@@ -24,6 +24,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
+import mx.com.gseguros.portal.general.model.SolicitudCxPVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.CausaSiniestro;
@@ -90,6 +91,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	private List<HashMap<String,String>> datosTablas;
 	private List<PolizaVigenteVO> listaPoliza;
 	private List<PolizaVigenteVO> polizaUnica;
+	private List<SolicitudCxPVO> solicitudPago;
 	private String msgResult;
 	
 	private String existePenalizacion;
@@ -5219,6 +5221,27 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		success = true;
 		return SUCCESS;
 	}
+	
+	public String pantallaInicial(){
+		success = true;
+		return SUCCESS;
+	}
+	
+	
+	public String loadListaSolicitudesCxp(){
+		logger.debug("===> Entra a loadListaSolicitudesCxp  ===>");
+		try {
+			solicitudPago = consultasAseguradoManager.obtieneListadoSolicitudesCxp();
+			logger.debug("Respuesta loadList : {}", solicitudPago);
+		}catch( Exception e){
+			logger.error("Error en loadListaDocumentos : {}", e.getMessage(), e);
+			success =  false;
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
 /****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {
 		return listaTipoAtencion;
@@ -5794,5 +5817,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 
 	public void setValidacionGeneral(String validacionGeneral) {
 		this.validacionGeneral = validacionGeneral;
+	}
+
+	public List<SolicitudCxPVO> getSolicitudPago() {
+		return solicitudPago;
+	}
+
+	public void setSolicitudPago(List<SolicitudCxPVO> solicitudPago) {
+		this.solicitudPago = solicitudPago;
 	}	
 }

@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.consultas.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import mx.com.gseguros.exception.ApplicationException;
@@ -23,6 +24,7 @@ import mx.com.gseguros.portal.consultas.model.PlanVO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
+import mx.com.gseguros.portal.general.model.SolicitudCxPVO;
 
 public interface ConsultasAseguradoManager {
 	
@@ -69,5 +71,7 @@ public interface ConsultasAseguradoManager {
 	public String consultaTelefonoAgente (String cdagente) throws ApplicationException;
 
 	public void actualizaEstatusEnvio(String iCodAviso, PolizaVO poliza) throws ApplicationException;
+
+	public List<SolicitudCxPVO> obtieneListadoSolicitudesCxp() throws Exception;
 	
 }

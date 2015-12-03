@@ -714,7 +714,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vError", Types.SMALLINT));
 			declareParameter(new SqlParameter("vDesError", Types.VARCHAR));
 			
-			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<String>(){  
+			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<String>(){
 				@Override  
 				public String extractData(ResultSet rs) throws SQLException, DataAccessException {  
 					String result = null;

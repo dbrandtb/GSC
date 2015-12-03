@@ -26,6 +26,7 @@ import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasAseguradoManager;
 import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
+import mx.com.gseguros.portal.general.model.SolicitudCxPVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -390,5 +391,27 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 			throw new ApplicationException("5",e);
 		}
 	}
+
+	@Override
+	public List<SolicitudCxPVO> obtieneListadoSolicitudesCxp() throws Exception {
+		try {
+			List<SolicitudCxPVO> loadList = new ArrayList<SolicitudCxPVO>();
+			loadList = consultasAseguradoDAOSIGS.obtieneListadoSolicitudesCxp();
+			return loadList;
+		} catch (Exception e) {
+			throw new ApplicationException("2", e);
+		}
+	}
+
+	/*@Override
+	public public String obtieneListadoSolicitudesCxp() throws Exception {
+			try {
+				String loadList ="";
+				loadList = consultasAseguradoDAOSIGS.obtieneListadoSolicitudesCxp();
+				return loadList;
+			} catch (Exception e) {
+				throw new ApplicationException("2", e);
+			}
+	}*/
 	
 }
