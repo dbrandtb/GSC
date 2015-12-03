@@ -9,7 +9,8 @@ Ext.onReady(function()
 {
 	/*
 	ERROR:
-	<s:property value="respuestaOculta" /><s:property value="message" />
+	<s:property value="respuestaOculta" />
+	<s:property value="message" />
 	*/
 	mensajeError('<s:property value="respuesta" /><s:property value="message" />');
 });
