@@ -3,15 +3,22 @@ package mx.com.gseguros.mesacontrol.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.utils.Utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
-{
+public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
+	
+	@Autowired
+	private FlujoMesaControlDAO flujoMesaControlDAO;
+	
+	
+	
 	
 	@Override
 	public Map<String,Item> workflow(

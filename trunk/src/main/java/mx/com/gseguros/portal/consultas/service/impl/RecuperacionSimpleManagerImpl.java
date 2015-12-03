@@ -7,6 +7,7 @@ import java.util.Map;
 
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
 import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
@@ -19,6 +20,7 @@ import mx.com.gseguros.utils.Utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 {
@@ -29,6 +31,9 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 	private ConsultasDAO  consultasDAO;
 	private CotizacionDAO cotizacionDAO;
 	private EndososDAO    endososDAO;
+	
+	@Autowired
+	private FlujoMesaControlDAO flujoMesaControlDAO;
 	
 	/*
 	 * Utilerias
