@@ -31,17 +31,25 @@ import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
+import mx.com.gseguros.portal.general.model.SolicitudCxPVO;
+import mx.com.gseguros.portal.reclamoExpress.dao.impl.ReclamoExpressDAOSIGSImpl.ConsultaReclamoExpressSP;
+import mx.com.gseguros.portal.reclamoExpress.dao.impl.ReclamoExpressDAOSIGSImpl.ReclamoExpressMapper;
+import mx.com.gseguros.portal.reclamoExpress.model.ReclamoExpressVO;
+import mx.com.gseguros.ws.autosgs.dao.impl.AutosSIGSDAOImpl;
 
+import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.SqlReturnResultSet;
 import org.springframework.jdbc.object.StoredProcedure;
-
+import org.springframework.jdbc.core.RowMapper;
 
 public class ConsultasAseguradoDAOSIGSImpl extends AbstractManagerDAO implements
 		IConsultasAseguradoDAO {
 
+	private static Logger logger = Logger.getLogger(ConsultasAseguradoDAOSIGSImpl.class);
+	
 	@Override
 	public List<ConsultaResultadosAseguradoVO> obtieneResultadosAsegurado(
 			String rfc, String cdperson, String nombre) throws Exception {
@@ -165,7 +173,11 @@ public class ConsultasAseguradoDAOSIGSImpl extends AbstractManagerDAO implements
 	public String consultaTelefonoAgente(String cdagente) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("cdagente", cdagente);
+		long time_start, time_end;
+		time_start = System.currentTimeMillis();
 		Map<String, Object> mapResult = ejecutaSP(new consultaTelefonoAgenteSP(getDataSource()), params);
+		time_end = System.currentTimeMillis();
+		logger.debug("Tiempo de Espera  En segundos ==> "+( time_end - time_start )/1000);
 		return (String) mapResult.get("rs");
 	}
 	
@@ -191,5 +203,74 @@ public class ConsultasAseguradoDAOSIGSImpl extends AbstractManagerDAO implements
 	@Override
 	public void actualizaEstatusEnvio(String iCodAviso) throws Exception {
 	}
+
+	/*@Override
+	public List<SolicitudCxPVO> obtieneListadoSolicitudesCxp() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> mapResult = ejecutaSP(new obtieneListadoSolicitudesCxp(getDataSource()), params);
+		return ( List<SolicitudCxPVO>) mapResult.get("rs");
+		
+		
+		logger.debug("Entra ====>");
+		long time_start, time_end;
+		time_start = System.currentTimeMillis();
+		Map<String, Object> mapResult = ejecutaSP(new obtieneListadoSolicitudesCxp(getDataSource()), params);
+		logger.debug("respuesta ====>");
+		logger.debug(mapResult);
+		time_end = System.currentTimeMillis();
+		logger.debug("Valor de Respuesta ===>"+(String) mapResult.get("rs"));
+		logger.debug("Tiempo de Espera  En segundos ==> "+( time_end - time_start )/1000);
+		return (String) mapResult.get("rs");
+	}
+	
+	public class obtieneListadoSolicitudesCxp extends StoredProcedure{
+		protected obtieneListadoSolicitudesCxp(DataSource dataSource){
+			super(dataSource, "sp_consulta_solcxp_salud");
+			declareParameter(new SqlReturnResultSet("rs",new ListadoSolicitudesCxp()));
+			compile();
+		}
+	}*/
+	
+	@Override
+	public List<SolicitudCxPVO> obtieneListadoSolicitudesCxp() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoSolicitudesCxp(getDataSource()), params);
+		return (List<SolicitudCxPVO>) mapResult.get("rs");
+	}
+	
+	public class ObtieneListadoSolicitudesCxp extends StoredProcedure{
+		protected ObtieneListadoSolicitudesCxp(DataSource dataSource){
+			super(dataSource, "sp_consulta_solcxp_salud");
+			/*Aqui se colocan los parametros conforme se requieran en el SP*/
+			declareParameter(new SqlReturnResultSet("rs", new ListadoSolicitudesCxp()));
+			compile();
+		}
+	}
+	
+	public class ListadoSolicitudesCxp implements RowMapper<SolicitudCxPVO>{
+		public SolicitudCxPVO mapRow(ResultSet rs, int rowNum) throws SQLException{
+			SolicitudCxPVO solicitudesCXP = new SolicitudCxPVO();
+			solicitudesCXP.setProducto(rs.getString("producto"));
+			solicitudesCXP.setNumsol(rs.getString("numsol"));
+			solicitudesCXP.setCvedpto(rs.getString("cvedpto"));
+			solicitudesCXP.setFecha(rs.getString("fecha"));
+			if(rs.getString("tip_pro").equalsIgnoreCase("SA")){
+				solicitudesCXP.setTip_pro("Pago Directo");
+			}else{
+				solicitudesCXP.setTip_pro("Pago Reembolso");
+			}
+			solicitudesCXP.setId_pro(rs.getString("id_pro"));
+			solicitudesCXP.setDestino(rs.getString("destino"));
+			solicitudesCXP.setNomdes(rs.getString("nomdes"));
+			solicitudesCXP.setDestinoComp(rs.getString("destino")+" "+rs.getString("nomdes"));
+			solicitudesCXP.setRfc(rs.getString("rfc"));
+			solicitudesCXP.setFactura(rs.getString("factura"));
+			solicitudesCXP.setBenef(rs.getString("benef"));
+			solicitudesCXP.setInomovtos(rs.getString("inomovtos"));
+			solicitudesCXP.setMtotalap(rs.getString("mtotalap"));
+			return solicitudesCXP;
+		}
+	}
+	
 	
 }

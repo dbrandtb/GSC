@@ -32,6 +32,7 @@ import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
+import mx.com.gseguros.portal.general.model.SolicitudCxPVO;
 import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -933,6 +934,12 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			compile();
 		}
+	}
+
+	@Override
+	public List<SolicitudCxPVO> obtieneListadoSolicitudesCxp() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
