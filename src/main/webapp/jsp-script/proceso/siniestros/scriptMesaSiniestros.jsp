@@ -581,112 +581,102 @@ var msgWindow;
 						debug("json.NMAUTESP == 0 ===>",json.NMAUTESP == 0, json.NMAUTESP);
 						if(json.OTVALOR22 > 0 && json.NMAUTESP == 0){
 							//mensajeWarning('Se requere una autorizaci&oacute;n especial para continuar.');
-							var ventanaTmp = Ext.Msg.show({
-								title:'Aviso del sistema',
-								msg: 'Se requere una autorizaci&oacute;n especial para continuar.',
-								buttons: Ext.Msg.OK,
-								icon: Ext.Msg.WARNING,
-								fn: function(){
-									windowAutEsp = Ext.create('Ext.window.Window',{
-										modal       : true,
-										buttonAlign : 'center',
-										title: 'Autorizaci&oacute;n Especial',
-										autoScroll  : true,
-										items       : [
-											panelModificacion = Ext.create('Ext.form.Panel', {
-												bodyPadding: 5,
-												items: [
-													{	xtype: 'numberfield'
-														,fieldLabel: 'N&uacute;mero de autorizaci&oacute;n'
-														,name		: 'txtAutEspecial'
-														,allowBlank : false
-													}
-												],
-												buttonAlign:'center',
-												buttons: [
-													{
-														text: 'Aceptar'
-														,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
-														,buttonAlign : 'center',
-														handler: function() { 
-															if (panelModificacion.form.isValid()) {
-																var datos=panelModificacion.form.getValues();
-																Ext.Ajax.request({
-																	url     : _URL_VALIDA_AUTESPECIFICA
-																	,params:{
-																		'params.ntramite'  : json.NTRAMITE,
-																		'params.tipoPago'  : json.OTVALOR02,
-																		'params.nfactura'  : json.NFACTURA,
-																		'params.cdunieco'  : json.CDUNIECO,
-																		'params.cdramo'    : json.CDRAMO,
-																		'params.estado'    : json.ESTADO,
-																		'params.nmpoliza'  : json.NMPOLIZA,
-																		'params.nmsuplem'  : json.NMSUPLEM,
-																		'params.nmsituac'  : json.NMSITUAC,
-																		'params.nmautesp'  : datos.txtAutEspecial,
-																		'params.nmsinies'  : json.NMSINIES,
-																		'params.cdperson'  : json.CDPERSON,
-																		'params.cdtipsit'  : json.CDTIPSIT
-																	}
-																	,success : function (response){
-																		debug("Valor Ext.decode(response.responseText).validacionGeneral ====>",Ext.decode(response.responseText).validacionGeneral);
-																		if(Ext.decode(response.responseText).validacionGeneral =="1"){
-																			//Exito y debe de dejar  pasar 
-																			
-																			mensajeCorrecto('&Eacute;XITO','Se ha asociado correctamente.',function(){
-																				windowAutEsp.close();
-																				Ext.create('Ext.form.Panel').submit(
-																				{
-																					url		: _URL_MESACONTROL
-																					,standardSubmit : true
-																					,params         :
-																					{
-																						'smap1.gridTitle'      : 'Siniestros en espera'
-																						,'smap2.pv_cdtiptra_i' : 16
-																					}
-																				});
-																			});
-																			
-																		}else{
-																			//Mensaje de Error
-																			mensajeError("No se puede asociar el tr&aacute;mite con la autorizaci&oacute;n especial");
-																		}
-																	},
-																	failure : function (){
-																		me.up().up().setLoading(false);
-																		centrarVentanaInterna(Ext.Msg.show({
-																			title:'Error',
-																			msg: 'Error de comunicaci&oacute;n',
-																			buttons: Ext.Msg.OK,
-																			icon: Ext.Msg.ERROR
-																		}));
-																	}
-																});
-																
-															}else {
-																Ext.Msg.show({
-																	title: 'Aviso',
-																	msg: 'Complete la informaci&oacute;n requerida',
-																	buttons: Ext.Msg.OK,
-																	icon: Ext.Msg.WARNING
-																});
+							windowAutEsp = Ext.create('Ext.window.Window',{
+								modal       : true,
+								buttonAlign : 'center',
+								title: 'Autorizaci&oacute;n Especial',
+								autoScroll  : true,
+								items       : [
+									panelModificacion = Ext.create('Ext.form.Panel', {
+										bodyPadding: 5,
+										items: [
+											{	xtype: 'numberfield'
+												,fieldLabel: 'N&uacute;mero de autorizaci&oacute;n'
+												,name		: 'txtAutEspecial'
+												,allowBlank : false
+											}
+										],
+										buttonAlign:'center',
+										buttons: [
+											{
+												text: 'Aceptar'
+												,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
+												,buttonAlign : 'center',
+												handler: function() { 
+													if (panelModificacion.form.isValid()) {
+														var datos=panelModificacion.form.getValues();
+														Ext.Ajax.request({
+															url     : _URL_VALIDA_AUTESPECIFICA
+															,params:{
+																'params.ntramite'  : json.NTRAMITE,
+																'params.tipoPago'  : json.OTVALOR02,
+																'params.nfactura'  : json.NFACTURA,
+																'params.cdunieco'  : json.CDUNIECO,
+																'params.cdramo'    : json.CDRAMO,
+																'params.estado'    : json.ESTADO,
+																'params.nmpoliza'  : json.NMPOLIZA,
+																'params.nmsuplem'  : json.NMSUPLEM,
+																'params.nmsituac'  : json.NMSITUAC,
+																'params.nmautesp'  : datos.txtAutEspecial,
+																'params.nmsinies'  : json.NMSINIES,
+																'params.cdperson'  : json.CDPERSON,
+																'params.cdtipsit'  : json.CDTIPSIT
 															}
-														}
-													},{
-														text: 'Cancelar',
-														icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
-														buttonAlign : 'center',
-														handler: function() {
-															windowAutEsp.close();
-														}
+															,success : function (response){
+																debug("Valor Ext.decode(response.responseText).validacionGeneral ====>",Ext.decode(response.responseText).validacionGeneral);
+																if(Ext.decode(response.responseText).validacionGeneral =="1"){
+																	mensajeCorrecto('&Eacute;XITO','Se ha asociado correctamente.',function(){
+																		windowAutEsp.close();
+																		Ext.create('Ext.form.Panel').submit(
+																		{
+																			url		: _URL_MESACONTROL
+																			,standardSubmit : true
+																			,params         :
+																			{
+																				'smap1.gridTitle'      : 'Siniestros en espera'
+																				,'smap2.pv_cdtiptra_i' : 16
+																			}
+																		});
+																	});
+																	
+																}else{
+																	//Mensaje de Error
+																	mensajeError("Autorizaci&oacute;n especial no valida para este tr&aacute;mite.");
+																}
+															},
+															failure : function (){
+																me.up().up().setLoading(false);
+																centrarVentanaInterna(Ext.Msg.show({
+																	title:'Error',
+																	msg: 'Error de comunicaci&oacute;n',
+																	buttons: Ext.Msg.OK,
+																	icon: Ext.Msg.ERROR
+																}));
+															}
+														});
+														
+													}else {
+														Ext.Msg.show({
+															title: 'Aviso',
+															msg: 'Complete la informaci&oacute;n requerida',
+															buttons: Ext.Msg.OK,
+															icon: Ext.Msg.WARNING
+														});
 													}
-												]
-											})  
+												}
+											},{
+												text: 'Cancelar',
+												icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+												buttonAlign : 'center',
+												handler: function() {
+													windowAutEsp.close();
+												}
+											}
 										]
-									}).show();
-									centrarVentana(windowAutEsp);
-								}
-							})
+									})  
+								]
+							}).show();
+							centrarVentana(windowAutEsp);
 							
 						}else{
 							// Pago diferente a Directo
@@ -1126,7 +1116,7 @@ var msgWindow;
 						debug("Valor de Respuesta ===>",valCobertura.length);
 						for(var i = 0; i < valCobertura.length; i++){
 							banderaExisteCobertura = "1";
-							resultCobertura = resultCobertura + 'La Factura ' + valCobertura[i].NFACTURA + ' del siniestro '+ valCobertura[i].NMSINIES+ ' tiene cobertura no amparada. <br/>';
+							resultCobertura = resultCobertura + 'La Factura ' + valCobertura[i].NFACTURA + ' del siniestro '+ valCobertura[i].NMSINIES+ ' requiere actualizar la cobertura no amparada. <br/>';
 						}
 						if(banderaExisteCobertura == "1"){
 							centrarVentanaInterna(mensajeWarning(resultCobertura));
