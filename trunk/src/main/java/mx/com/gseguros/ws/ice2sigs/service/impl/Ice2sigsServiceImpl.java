@@ -60,7 +60,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 			.getLogger(Ice2sigsServiceImpl.class);
 
 	private static final long WS_TIMEOUT =  20000;
-	private static final long WS_TIMEOUT_EXTENDED =  1*60*60*1000; // 1 hora// Cambio Temporal Antes 60000;
+	private static final long WS_TIMEOUT_EXTENDED =  3*60*1000; // 3 minutos// Cambio Temporal Antes 60000;
 	
 	private String endpoint;
 	
