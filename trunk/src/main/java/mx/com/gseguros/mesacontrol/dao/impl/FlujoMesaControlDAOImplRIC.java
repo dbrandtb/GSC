@@ -247,7 +247,7 @@ public class FlujoMesaControlDAOImplRIC extends AbstractManagerDAO implements Fl
 	
 	protected class MovimientoTfluaccSP extends StoredProcedure {
 		protected MovimientoTfluaccSP(DataSource dataSource) {
-			super(dataSource,"PKG_MESACONTROL.P_MOV_FLUPROC");
+			super(dataSource,"PKG_MESACONTROL.P_MOV_FLUACC");
 			declareParameter(new SqlParameter("cdtipflu", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdflujomc", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdaccion", OracleTypes.VARCHAR));
