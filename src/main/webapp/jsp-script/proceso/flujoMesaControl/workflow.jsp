@@ -198,14 +198,22 @@
     border           : 0px solid green;
     background-image : url('${icons}delete.png')
 }
+.catedit
+{
+    position : absolute;
+    top      : 0;
+    left     : 0;
+}
 </style>
 <script type="text/javascript" src="${ctx}/resources/jsPlumb/jsPlumb-2.0.4.js?${now}"></script>
 <script>
 ////// iframe //////
+var stop = false;
 if(inIframe())
 {
     try
     {
+        stop = true;
         window.top.location = window.location;
     }
     catch(e)
@@ -241,6 +249,8 @@ var _p52_catalogoValidaciones;
 var _p52_catalogoRevisiones;
 var _p52_formValidacion;
 var _p52_panelRevision;
+var _p52_panelAccion;
+var _p52_catalogoIconos;
 
 var toolkit;
 
@@ -255,6 +265,10 @@ var epProps = [];
 
 Ext.onReady(function()
 {
+    if(stop)
+    {
+        return;
+    }
     ////// requires //////
     ////// requires //////
     
@@ -273,7 +287,7 @@ Ext.onReady(function()
         ,'            <td align="center"><div class="image"></div><div class="cdestado">{cdestado}</div></td>'
         ,'        </tr>'
         ,'        <tr>'
-        ,'            <td align="center">{dsestado}</td>'
+        ,'            <td align="center"><a class="catedit" href="#" onclick="_p52_editCatClic(\'E\',\'E{cdestado}\'); return false;" ><img src="${icons}pencil.png" /></a>{dsestado}</td>'
         ,'        </tr>'
         ,'    </table>'
         ,'</div>'
@@ -287,7 +301,7 @@ Ext.onReady(function()
         ,'            <td align="center"><div class="image"></div><div class="cdpantalla">{cdpantalla}</div></td>'
         ,'        </tr>'
         ,'        <tr>'
-        ,'            <td align="center">{dspantalla}</td>'
+        ,'            <td align="center"><a class="catedit" href="#" onclick="_p52_editCatClic(\'P\',\'P{cdpantalla}\'); return false;" ><img src="${icons}pencil.png" /></a>{dspantalla}</td>'
         ,'        </tr>'
         ,'    </table>'
         ,'</div>'
@@ -301,7 +315,7 @@ Ext.onReady(function()
         ,'            <td align="center"><div class="image"></div><div class="cdcomponente">{cdcomponente}</div></td>'
         ,'        </tr>'
         ,'        <tr>'
-        ,'            <td align="center">{dscomponente}</td>'
+        ,'            <td align="center"><a class="catedit" href="#" onclick="_p52_editCatClic(\'C\',\'C{cdcomponente}\'); return false;" ><img src="${icons}pencil.png" /></a>{dscomponente}</td>'
         ,'        </tr>'
         ,'    </table>'
         ,'</div>'
@@ -315,7 +329,7 @@ Ext.onReady(function()
         ,'            <td align="center"><div class="image"></div><div class="cdproceso">{cdproceso}</div></td>'
         ,'        </tr>'
         ,'        <tr>'
-        ,'            <td align="center">{dsproceso}</td>'
+        ,'            <td align="center"><a class="catedit" href="#" onclick="_p52_editCatClic(\'O\',\'O{cdproceso}\'); return false;" ><img src="${icons}pencil.png" /></a>{dsproceso}</td>'
         ,'        </tr>'
         ,'    </table>'
         ,'</div>'
@@ -344,6 +358,20 @@ Ext.onReady(function()
         ,'        </tr>'
         ,'        <tr>'
         ,'            <td align="center">{dsrevision}</td>'
+        ,'        </tr>'
+        ,'    </table>'
+        ,'</div>'
+    ]);
+    
+    iconoTpl = new Ext.Template(
+    [
+         '<div class="radioicono">'
+        ,'    <table width="80" border="0">'
+        ,'        <tr>'
+        ,'            <td align="center"><img src="${icons}{cdicono}.png" /></td>'
+        ,'        </tr>'
+        ,'        <tr>'
+        ,'            <td align="center"><input type="radio" name="icono" />{dsicono}</td>'
         ,'        </tr>'
         ,'    </table>'
         ,'</div>'
@@ -588,6 +616,15 @@ Ext.onReady(function()
                                     ,columns : 2
                                     ,tdAttrs : { valign : 'top' }
                                 }
+                                ,tools :
+                                [{
+                                    type      : 'collapse'
+                                    ,tooltip  : 'Agregar'
+                                    ,callback : function(panel)
+                                    {
+                                        _p52_editCatClic('E');
+                                    }
+                                }]
                             }
                             ,{
                                 title       : 'PANTALLAS'
@@ -600,6 +637,15 @@ Ext.onReady(function()
                                     ,columns : 2
                                     ,tdAttrs : { valign : 'top' }
                                 }
+                                ,tools :
+                                [{
+                                    type      : 'collapse'
+                                    ,tooltip  : 'Agregar'
+                                    ,callback : function(panel)
+                                    {
+                                        _p52_editCatClic('P');
+                                    }
+                                }]
                             }
                             ,{
                                 title       : 'COMPONENTES'
@@ -612,6 +658,15 @@ Ext.onReady(function()
                                     ,columns : 2
                                     ,tdAttrs : { valign : 'top' }
                                 }
+                                ,tools :
+                                [{
+                                    type      : 'collapse'
+                                    ,tooltip  : 'Agregar'
+                                    ,callback : function(panel)
+                                    {
+                                        _p52_editCatClic('C');
+                                    }
+                                }]
                             }
                             ,{
                                 title       : 'PROCESOS'
@@ -624,6 +679,15 @@ Ext.onReady(function()
                                     ,columns : 2
                                     ,tdAttrs : { valign : 'top' }
                                 }
+                                ,tools :
+                                [{
+                                    type      : 'collapse'
+                                    ,tooltip  : 'Agregar'
+                                    ,callback : function(panel)
+                                    {
+                                        _p52_editCatClic('O');
+                                    }
+                                }]
                             }
                             ,{
                                 title       : 'VALIDACIONES'
@@ -1082,6 +1146,125 @@ Ext.onReady(function()
                                     })
                                 ]
                             })
+                            ,Ext.create('Ext.panel.Panel',
+                            {
+                                itemId       : '_p52_panelAccion'
+                                ,title       : 'ACCI\u00D3N'
+                                ,hidden      : true
+                                ,buttonAlign : 'center'
+                                ,buttons     :
+                                [
+                                    {
+                                        text     : 'Guardar'
+                                        ,icon    : '${icons}disk.png'
+                                        ,handler : function(me)
+                                        {
+                                            _p52_panelCanvas.enable();
+                                            me.up('panel').hide();
+                                        }
+                                    }
+                                    ,{
+                                        text     : 'Cancelar'
+                                        ,icon    : '${icons}cancel.png'
+                                        ,handler : function(me)
+                                        {
+                                            _p52_panelCanvas.enable();
+                                            me.up('panel').hide();
+                                        }
+                                    }
+                                ]
+                                ,items :
+                                [
+                                    {
+                                        xtype     : 'fieldset'
+                                        ,defaults : { style : 'margin:5px;' }
+                                        ,items    :
+                                        [
+                                            {
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : 'Nombre'
+                                                ,labelAlign : 'top'
+                                                ,name       : 'DSACCION'
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : 'Valor'
+                                                ,labelAlign : 'top'
+                                                ,name       : 'CDVALOR'
+                                            }
+                                        ]
+                                    }
+                                    ,Ext.create('Ext.grid.Panel',
+                                    {
+                                        itemId   : '_p52_gridAccRol'
+                                        ,title   : 'PERMISOS'
+                                        ,height  : 220
+                                        ,columns :
+                                        [
+                                            {
+                                                text       : 'ROL'
+                                                ,dataIndex : 'DSSISROL'
+                                                ,width     : 200
+                                            }
+                                            ,{
+                                                xtype      : 'checkcolumn'
+                                                ,dataIndex : 'SWPERMISO'
+                                                ,flex      : 1
+                                            }
+                                        ]
+                                        ,store : Ext.create('Ext.data.Store',
+                                        {
+                                            autoLoad : true
+                                            ,fields  :
+                                            [
+                                                'DSSISROL'
+                                                ,{ name : 'SWPERMISO' , type : 'boolean' }
+                                            ]
+                                            ,proxy   :
+                                            {
+                                                type    : 'memory'
+                                                ,reader : 'json'
+                                                ,data   :
+                                                [
+                                                    {
+                                                        DSSISROL : 'AGENTE'
+                                                    }
+                                                    ,{
+                                                        DSSISROL : 'SUSCRIPTOR'
+                                                    }
+                                                    ,{
+                                                        DSSISROL : 'MESA DE CONTROL'
+                                                    }
+                                                    ,{
+                                                        DSSISROL : 'SUPERVISOR'
+                                                    }
+                                                    ,{
+                                                        DSSISROL : 'SUSCRIPTOR AUTO'
+                                                    }
+                                                    ,{
+                                                        DSSISROL : 'PROMOTOR'
+                                                    }
+                                                ]
+                                            }
+                                        })
+                                    })
+                                    ,Ext.create('Ext.panel.Panel',
+                                    {
+                                        itemId      : '_p52_catalogoIconos'
+                                        ,title      : 'ICONO'
+                                        ,height     : 200
+                                        ,defaults   : { style : 'margin : 5px;' }
+                                        ,autoScroll : true
+                                        ,border     : 0
+                                        ,layout     :
+                                        {
+                                            type     : 'table'
+                                            ,columns : 3
+                                            ,tdAttrs : { valign : 'top' }
+                                        }
+                                    })
+                                ]
+                            })
                         ]
                     })
                     ,Ext.create('Ext.panel.Panel',
@@ -1136,6 +1319,8 @@ Ext.onReady(function()
     _p52_catalogoRevisiones   = _fieldById('_p52_catalogoRevisiones');
     _p52_formValidacion       = _fieldById('_p52_formValidacion');
     _p52_panelRevision        = _fieldById('_p52_panelRevision');
+    _p52_panelAccion          = _fieldById('_p52_panelAccion');
+    _p52_catalogoIconos       = _fieldById('_p52_catalogoIconos');
     ////// custom //////
     
     ////// loaders //////
@@ -1145,12 +1330,12 @@ Ext.onReady(function()
     _p52_cargarProcesos();
     _p52_cargarValidaciones();
     _p52_cargarRevisiones();
+    _p52_cargarIconos();
     
-    //_p52_navega(2);
+    _p52_navega(2);
     
     jsPlumb.ready(function()
     {
-        
         toolkit = jsPlumb.getInstance(
         {
             Container            : 'canvasdiv'
@@ -1158,6 +1343,12 @@ Ext.onReady(function()
             ,ConnectionOverlays  : [ [ 'PlainArrow' , { location : 1 } ] ]
             ,Connector           : 'StateMachine'
             ,ReattachConnections : false
+        });
+        
+        toolkit.bind('dblclick',function(con)
+        {
+            debug('dblclick con:',con);
+            _p52_editEndpoint(con,'A');
         });
     });
     ////// loaders //////
@@ -1375,6 +1566,114 @@ function _p52_cargarRevisiones()
     });
 }
 
+function _p52_cargarIconos()
+{
+    debug('_p52_cargarIconos');
+    _p52_catalogoIconos.removeAll();
+    _p52_catalogoIconos.add(
+    {
+        xtype   : 'panel'
+        ,tpl    : iconoTpl
+        ,border : 0
+        ,data   :
+        {
+            cdicono  : 'disk'
+            ,dsicono : 'DISK'
+        }
+    }
+    ,{
+        xtype   : 'panel'
+        ,tpl    : iconoTpl
+        ,border : 0
+        ,data   :
+        {
+            cdicono  : 'add'
+            ,dsicono : 'ADD'
+        }
+    }
+    ,{
+        xtype   : 'panel'
+        ,tpl    : iconoTpl
+        ,border : 0
+        ,data   :
+        {
+            cdicono  : 'cancel'
+            ,dsicono : 'CANCEL'
+        }
+    }
+    ,{
+        xtype   : 'panel'
+        ,tpl    : iconoTpl
+        ,border : 0
+        ,data   :
+        {
+            cdicono  : 'disk'
+            ,dsicono : 'DISK'
+        }
+    }
+    ,{
+        xtype   : 'panel'
+        ,tpl    : iconoTpl
+        ,border : 0
+        ,data   :
+        {
+            cdicono  : 'delete'
+            ,dsicono : 'DELETE'
+        }
+    }
+    ,{
+        xtype   : 'panel'
+        ,tpl    : iconoTpl
+        ,border : 0
+        ,data   :
+        {
+            cdicono  : 'arrow_left'
+            ,dsicono : 'ARROW_LEFT'
+        }
+    }
+    ,{
+        xtype   : 'panel'
+        ,tpl    : iconoTpl
+        ,border : 0
+        ,data   :
+        {
+            cdicono  : 'arrow_up'
+            ,dsicono : 'ARROW_UP'
+        }
+    }
+    ,{
+        xtype   : 'panel'
+        ,tpl    : iconoTpl
+        ,border : 0
+        ,data   :
+        {
+            cdicono  : 'delete'
+            ,dsicono : 'DELETE'
+        }
+    }
+    ,{
+        xtype   : 'panel'
+        ,tpl    : iconoTpl
+        ,border : 0
+        ,data   :
+        {
+            cdicono  : 'arrow_left'
+            ,dsicono : 'ARROW_LEFT'
+        }
+    }
+    ,{
+        xtype   : 'panel'
+        ,tpl    : iconoTpl
+        ,border : 0
+        ,data   :
+        {
+            cdicono  : 'arrow_up'
+            ,dsicono : 'ARROW_UP'
+        }
+    }
+    );
+}
+
 function _p52_dragstart(event)
 {
     debug('_p52_dragstart event:',event);
@@ -1431,8 +1730,9 @@ function _p52_generaId()
 function _p52_addEndpoint(id,tipo)
 {
     debug('_p52_addEndpoint id,tipo:',id,tipo);
-    toolkit.addEndpoint(id,epProps[tipo]);
+    var ep = toolkit.addEndpoint(id,epProps[tipo]);
     toolkit.draggable(id);
+    return ep;
 }
 
 function _p52_editEndpoint(id,tipo)
@@ -1444,6 +1744,7 @@ function _p52_editEndpoint(id,tipo)
         _p52_panelEstado.show();
         _p52_formValidacion.hide();
         _p52_panelRevision.hide();
+        _p52_panelAccion.hide();
     }
     else if(tipo=='V')
     {
@@ -1451,6 +1752,7 @@ function _p52_editEndpoint(id,tipo)
         _p52_panelEstado.hide();
         _p52_formValidacion.show();
         _p52_panelRevision.hide();
+        _p52_panelAccion.hide();
     }
     else if(tipo=='R')
     {
@@ -1458,6 +1760,15 @@ function _p52_editEndpoint(id,tipo)
         _p52_panelEstado.hide();
         _p52_formValidacion.hide();
         _p52_panelRevision.show();
+        _p52_panelAccion.hide();
+    }
+    else if(tipo=='A')
+    {
+        _p52_panelCanvas.disable();
+        _p52_panelEstado.hide();
+        _p52_formValidacion.hide();
+        _p52_panelRevision.hide();
+        _p52_panelAccion.show();
     }
 }
 
@@ -1465,6 +1776,11 @@ function _p52_removeEndpoint(id)
 {
     debug('_p52_removeEndpoint id:',id);
     toolkit.remove(id);
+}
+
+function _p52_editCatClic(tipo,id)
+{
+    debug('_p52_editCatClic tipo,id:',tipo,id,'.');
 }
 ////// funciones //////
 
