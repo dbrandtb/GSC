@@ -4860,7 +4860,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	public String  guardarConfiguracionProveedor(){
 		logger.debug("Entra a guardarConfiguracionProveedor params de entrada :{}",params);
 		try {
-			String respuesta = siniestrosManager.guardaConfiguracionProveedor(params.get("cmbProveedorMod"),params.get("idaplicaIVA"),params.get("secuenciaIVA"),params.get("idaplicaIVARET"),params.get("proceso"));
+			Date   fechaProcesamiento = new Date();
+			this.session=ActionContext.getContext().getSession();
+			UserVO usuario=(UserVO) session.get("USUARIO");
+			
+			
+			String respuesta = siniestrosManager.guardaConfiguracionProveedor(params.get("cmbProveedorMod"),params.get("idaplicaIVA"),
+					params.get("secuenciaIVA"),params.get("idaplicaIVARET"),usuario.getUser(), fechaProcesamiento, params.get("proceso"));
 		}catch( Exception e){
 			logger.error("Error al obtener el monto del arancel : {}", e.getMessage(), e);
 			return SUCCESS;
@@ -5236,6 +5242,19 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		}catch( Exception e){
 			logger.error("Error en loadListaDocumentos : {}", e.getMessage(), e);
 			success =  false;
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	public String validaExisteConfiguracionProv(){
+		logger.debug("Entra a validaAutorizacionEspecial  Params: {}", params);
+		try {
+			validacionGeneral = siniestrosManager.validaExisteConfiguracionProv(params.get("cdpresta"));
+			logger.debug("validacionGeneral : {}", validacionGeneral);
+		}catch( Exception e){
+			logger.error("Error validaAutorizacionEspecial : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
 		success = true;

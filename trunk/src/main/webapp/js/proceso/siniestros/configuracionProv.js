@@ -301,7 +301,7 @@ Ext.onReady(function() {
 				,style         : 'margin:5px'
 				,height        : 400
 				,columns       : [
-					{	xtype: 'actioncolumn',			width: 90,		sortable: false,		menuDisabled: true,
+					{	xtype: 'actioncolumn',			width: 100,		sortable: false,		menuDisabled: true,
 						items: [{
 							icon: _CONTEXT+'/resources/fam3icons/icons/application_edit.png',
 							tooltip: 'Editar Proveedor',
@@ -317,6 +317,12 @@ Ext.onReady(function() {
 							tooltip: 'Configurar layout',
 							scope: this,
 							handler : configuracionLayoutProveedor
+						}
+						,{
+							icon:_CONTEXT+'/resources/fam3icons/icons/database_lightning.png',
+							tooltip: 'Subir Archivo',
+							scope: this,
+							handler : configuracionSubirCargaMasiva
 						}]
 					},
 					{
@@ -368,6 +374,9 @@ Ext.onReady(function() {
 			})
 		]
 	});
+	
+	
+	cargarPaginacion();
 	
 	function cargarPaginacion(){
 		storeGridProveedores.removeAll();
@@ -431,26 +440,172 @@ Ext.onReady(function() {
 					'params.secuenciaIVA'	:	record.get('SECUENCIAIVA'),
 					'params.idaplicaIVARET'	:	record.get('APLICAIVARET')
 				}
-			}/*,
-			listeners:{
-				 close:function(){
-					 if(true){
-						Ext.create('Ext.form.Panel').submit(
-						{
-							standardSubmit :true
-							,params		:
-							{
-								'params.ntramite' : _11_params.NTRAMITE
-							}
-						});
-						 panelInicialPral.getForm().reset();
-						storeAseguradoFactura.removeAll();
-						storeConceptos.removeAll();
-					 }
-				 }
-			}*/
+			}
 		}).show();
 		centrarVentanaInterna(windowLoader);
+	}
+	
+	
+	function configuracionSubirCargaMasiva(grid,rowIndex){
+		var record = grid.getStore().getAt(rowIndex);
+		debug("Valor enviado ===>"+record.get('CLAVEPROVEEDOR'));
+		
+		Ext.Ajax.request({
+			url     : _URL_EXISTE_CONF_PROV
+			,params:{
+				'params.cdpresta': record.get('CLAVEPROVEEDOR')
+			}
+			,success : function (response){
+				debug(Ext.decode(response.responseText).validacionGeneral);
+				if( Ext.decode(response.responseText).validacionGeneral =="S"){
+					var _p22_windowAgregarDocu=Ext.create('Ext.window.Window',
+					{
+						title       : 'Subir Archivo de Carga Masiva'
+						,closable    : false
+						,modal       : true
+						,width       : 500
+						//,height   : 700
+						,bodyPadding : 5
+						,items       :
+						[
+							panelSeleccionDocumento= Ext.create('Ext.form.Panel',
+							{
+								border       : 0
+								//,url         : _URL_Carga_Masiva
+								,timeout     : 600
+								,buttonAlign : 'center'
+								,items       :
+								[
+									{
+										xtype       : 'filefield'
+										,fieldLabel : 'Documento'
+										,buttonText : 'Examinar...'
+										,buttonOnly : false
+										,width      : 450
+										,name       : 'file'
+										,cAccept    : ['xls','xlsx']
+										,listeners  :
+										{
+											change : function(me)
+											{
+												var indexofPeriod = me.getValue().lastIndexOf("."),
+												uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
+												if (!Ext.Array.contains(this.cAccept, uploadedExtension))
+												{
+													Ext.MessageBox.show(
+													{
+														title   : 'Error de tipo de archivo',
+														msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
+														buttons : Ext.Msg.OK,
+														icon    : Ext.Msg.WARNING
+													});
+													me.reset();
+													Ext.getCmp('_p22_botGuaDoc').setDisabled(true);
+												}
+												else
+												{
+													Ext.getCmp('_p22_botGuaDoc').setDisabled(false);
+												}
+											}
+										}
+									}
+								]
+								,buttons     :
+								[
+									{
+										id        : '_p22_botGuaDoc'
+										,text     : 'Agregar'
+										,icon     : '${ctx}/resources/fam3icons/icons/disk.png'
+										,disabled : true
+										,handler  : function (button,e)
+										{
+											/*button.setDisabled(true);
+											Ext.getCmp('_p22_BotCanDoc').setDisabled(true);
+											
+											button.up().up().getForm().submit(
+											{
+												params        :
+												{
+													'params.pi_nmtabla': _NMTABLA
+													,'params.tipotabla': _TIPOTABLA
+												},
+												waitMsg: 'Ejecutando Carga Masiva...',
+												success: function(form, action) {
+													_p22_windowAgregarDocu.destroy();
+													mensajeCorrecto('Exito', 'La carga masiva se ha ejecutado correctamente.');
+													recargagridTabla5Claves();
+												},
+												failure: function(form, action) {
+													
+													manejaErrorSubmit(form, action, function() {
+														
+														Ext.getCmp('_p22_botGuaDoc').setDisabled(false);
+														Ext.getCmp('_p22_BotCanDoc').setDisabled(false);
+														
+														if(action.result.resultado.key == 1) {
+															// Error en validacion de formato:
+															msgServer = 'Error en la validación ¿Desea descargar el archivo de errores?';
+															Ext.Msg.show({
+																title: 'Error', 
+																msg: msgServer, 
+																buttons: Ext.Msg.YESNO, 
+																icon: Ext.Msg.ERROR,
+																fn: function(btn){
+																	if (btn == 'yes'){
+																		Ext.create('Ext.form.Panel').submit({
+																			url            : _URL_DESCARGA_DOCUMENTOS,
+																			standardSubmit : true,
+																			target         : '_blank',
+																			params         : {
+																				path     : _RUTA_DOCUMENTOS_TEMPORAL,
+																				filename : action.result.fileFileName 
+																			}
+																		});
+																	}
+																}
+															 });
+														} else if (action.result.resultado.key == 2) {
+															// Error en carga masiva:
+															Ext.Msg.show({title: 'Error', msg: action.result.resultado.value, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+														}
+													});
+												}
+											});*/
+										}
+									}
+									,{
+										id       : '_p22_BotCanDoc'
+										,text    : 'Cancelar'
+										,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+										,handler : function (button,e)
+										{
+											_p22_windowAgregarDocu.destroy();
+										}
+									}
+								]
+							})
+						]
+					}).show();
+					centrarVentanaInterna(_p22_windowAgregarDocu);
+				}else{
+					mensajeWarning('No se ha configurado el Layout del proveedor');
+				}
+			},
+			failure : function (){
+				me.up().up().setLoading(false);
+				centrarVentanaInterna(Ext.Msg.show({
+					title:'Error',
+					msg: 'Error de comunicaci&oacute;n',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				}));
+			}
+		});
+		
+		
+		
+		//windowLoader = Ext.create('Ext.window.Window',{}).show();
+		//centrarVentanaInterna(windowLoader);
 	}
 	
 	

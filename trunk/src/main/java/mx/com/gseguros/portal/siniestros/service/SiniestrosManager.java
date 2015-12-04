@@ -601,7 +601,8 @@ public interface SiniestrosManager {
 	
 	public String obtieneAplicaConceptoIVA(String idConcepto)throws Exception;
 	
-	public String guardaConfiguracionProveedor(String cdpresta, String aplicaIVA,String secuenciaIVA, String aplicaIVARET, String proceso) throws Exception;
+	public String guardaConfiguracionProveedor(String cdpresta, String aplicaIVA,String secuenciaIVA, 
+			String aplicaIVARET,String cduser, Date fechaProcesamiento, String proceso) throws Exception;
 	
 	public List<GenericVO>obtenerAtributosLayout(String descripcion) throws Exception;
 	
@@ -644,4 +645,6 @@ public interface SiniestrosManager {
 	public List<Map<String,String>> obtenerDatosAutorizacionEspecial(String nmautespecial) throws Exception;
 	
 	public List<Map<String, String>> getConsultaExisteCoberturaTramite(String ntramite, String tipoPago)throws Exception;
+	
+	public String validaExisteConfiguracionProv(String cdpresta) throws Exception;
 }

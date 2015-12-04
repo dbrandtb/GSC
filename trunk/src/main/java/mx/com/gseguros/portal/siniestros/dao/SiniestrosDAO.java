@@ -471,7 +471,8 @@ public interface SiniestrosDAO {
 	
 	public String obtieneAplicaConceptoIVA(String idConcepto) throws Exception;
 	
-	public String guardaConfiguracionProveedor(String cdpresta, String aplicaIVA,String secuenciaIVA, String aplicaIVARET, String proceso) throws Exception;
+	public String guardaConfiguracionProveedor(String cdpresta, String aplicaIVA,String secuenciaIVA,
+			String aplicaIVARET,String cduser, Date fechaProcesamiento, String proceso) throws Exception;
 	
 	public List<GenericVO>obtenerAtributosLayout(String descripcion) throws Exception;
 	
@@ -513,4 +514,6 @@ public interface SiniestrosDAO {
 	public List<Map<String,String>> obtenerDatosAutorizacionEspecial(Map<String, String> params) throws Exception;
 	
 	public List<Map<String, String>> obtieneListaExisteCoberturaTramite(HashMap<String, Object> params) throws Exception;
+	
+	public String validaExisteConfiguracionProv(String cdpresta) throws Exception;
 }

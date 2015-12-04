@@ -4531,12 +4531,15 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     }
     
 	@Override
-	public String guardaConfiguracionProveedor(String cdpresta, String aplicaIVA,String secuenciaIVA, String aplicaIVARET, String proceso) throws Exception {
+	public String guardaConfiguracionProveedor(String cdpresta, String aplicaIVA,String secuenciaIVA,
+			 String aplicaIVARET,String cduser, Date fechaProcesamiento, String proceso) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdpresta_i", cdpresta);
 		params.put("pv_aplicaIVA_i", aplicaIVA);
 		params.put("pv_secuenciaIVA_i", secuenciaIVA);
 		params.put("pv_aplicaIVARet_i", aplicaIVARET);
+		params.put("pv_cduser_i", cduser);
+		params.put("pv_fefecha_i", fechaProcesamiento);
 		params.put("pv_accion_i", proceso);
 		Map<String, Object> resultado = ejecutaSP(new GuardaConfiguracionProveedor(getDataSource()), params);
 		//logger.debug( resultado.get("pv_registro_o"));
@@ -4547,11 +4550,13 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     	
     	protected GuardaConfiguracionProveedor(DataSource dataSource) {
     		
-    		super(dataSource, "PKG_SINIESTRO.P_MOV_CONFPROV");
+    		super(dataSource,"PKG_SINIESTRO.P_MOV_CONFPROV");
     		declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_aplicaIVA_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_secuenciaIVA_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_aplicaIVARet_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cduser_i",  OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_fefecha_i",   OracleTypes.DATE));
     		declareParameter(new SqlParameter("pv_accion_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -5100,4 +5105,26 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	@Override
+	public String validaExisteConfiguracionProv(String cdpresta) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdpresta_i", cdpresta);
+		Map<String, Object> resultado = ejecutaSP(new ValidaExisteConfiguracionProv(getDataSource()), params);
+		logger.debug( resultado.get("pv_existe_o"));
+		return (String) resultado.get("pv_existe_o");
+	}
+	
+    protected class ValidaExisteConfiguracionProv extends StoredProcedure {
+    	
+    	protected ValidaExisteConfiguracionProv(DataSource dataSource) {
+    		super(dataSource, "PKG_SINIESTRO.P_VALIDA_CONF_PROV");
+    		declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_existe_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+	
 }

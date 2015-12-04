@@ -15,11 +15,12 @@
 				var _URL_MOV_PROVEEDOR			=	'<s:url namespace="/siniestros" action="guardarConfiguracionProveedor" />';
 				
 				var _VER_CONFIG_LAYOUT 			= '<s:url namespace="/siniestros"		action="includes/configuracionLayout" />';
+				var _URL_EXISTE_CONF_PROV 		= '<s:url namespace="/siniestros"		action="validaExisteConfiguracionProv" />';
 			</script>
 			<script type="text/javascript" src="${ctx}/js/proceso/siniestros/configuracionProv.js"></script>
 	</head>
 	<body>
-		<div style="height:500px;">
+		<div style="height:1000px;">
 			<div id="div_clau"></div>
 		</div>
  	</body>

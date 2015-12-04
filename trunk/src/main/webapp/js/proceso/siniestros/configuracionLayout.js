@@ -65,7 +65,8 @@ Ext.onReady(function() {
 			reader: {
 				type: 'json',
 				root: 'lista'
-			}
+			},
+			sortInfo: { field: 'codigo', direction: 'ASC'} 
 		}
 	});
 	storeCveColumna.load();
@@ -474,7 +475,8 @@ Ext.onReady(function() {
 					});
 				}
 			}
-		}]
+		}
+		]
 	});
 	
 	if(valorAction.ntramite != null){
