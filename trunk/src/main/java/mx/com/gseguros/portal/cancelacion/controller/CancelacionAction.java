@@ -415,6 +415,7 @@ public class CancelacionAction extends PrincipalCoreAction
 			params.put("pv_fecha_carga_i" , null);
 			params.put("pv_usuario_i"     , usuario.getUser());
 			params.put("pv_cdtipsup_i"    , cdtipsup);
+			params.put("pv_cdsisrol_i"    , usuario.getRolActivo().getClave());
 			cancelacionManager.cancelacionMasiva(params);
 			success=true;
 			

@@ -378,6 +378,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 			declareParameter(new SqlParameter("pv_fecha_carga_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_usuario_i"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsup_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsisrol_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_texto_o"  , OracleTypes.VARCHAR));
