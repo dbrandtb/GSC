@@ -42,7 +42,11 @@ public enum RecuperacionSimple
 	,RECUPERAR_VALOR_ATRIBUTO_UNICO                          ("M" , "RECUPERAR_VALOR_ATRIBUTO_UNICO")
 	,RECUPERAR_VALOR_MAXIMO_SITUACION_POR_ROL                ("M" , "RECUPERAR_VALOR_MAXIMO_SITUACION_POR_ROL")
 	,RECUPERAR_VALORES_ATRIBUTOS_FACTORES                    ("L" , "RECUPERAR_VALORES_ATRIBUTOS_FACTORES")
-	,RECUPERAR_VALORES_PANTALLA                              ("L" , "RECUPERAR_VALORES_PANTALLA");
+	,RECUPERAR_VALORES_PANTALLA                              ("L" , "RECUPERAR_VALORES_PANTALLA")
+	,RECUPERAR_TTIPTRAMC                                     ("L" , "RECUPERAR_TTIPTRAMC")
+	,RECUPERAR_TICONOS                                       ("L" , "RECUPERAR_TICONOS")
+	,RECUPERAR_TFLUJOMC                                      ("L" , "RECUPERAR_TFLUJOMC")
+	;
 	 
 	private String tipo;
 	private String procedimiento;
