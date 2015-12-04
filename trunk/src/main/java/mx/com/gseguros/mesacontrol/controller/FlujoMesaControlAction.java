@@ -27,7 +27,7 @@ import org.springframework.stereotype.Controller;
 public class FlujoMesaControlAction extends PrincipalCoreAction
 {
 	private static final long serialVersionUID = 4896753376957054283L;
-	private Logger            logger           = LoggerFactory.getLogger(FlujoMesaControlAction.class);
+	private static Logger     logger           = LoggerFactory.getLogger(FlujoMesaControlAction.class);
 	
 	private boolean                  success;
 	private String                   message;
@@ -94,6 +94,202 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 				,"\n###### jsplumb ######"
 				,"\n#####################"
 				));
+		return SUCCESS;
+	}
+	
+	@Action(value   = "registrarEntidad",
+			results = { @Result(name="success", type="json") }
+			)
+	public String registrarEntidad()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n##############################"
+				,"\n###### registrarEntidad ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdtipflu   = params.get("cdtipflu")
+			       ,cdflujomc = params.get("cdflujomc")
+			       ,tipo      = params.get("tipo")
+			       ,clave     = params.get("clave")
+			       ,webid     = params.get("webid")
+			       ,xpos      = params.get("xpos")
+			       ,ypos      = params.get("ypos");
+			
+			Utils.validate(
+					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
+					,cdflujomc , "No se recibi\u00f3 el flujo"
+					,tipo      , "No se recibi\u00f3 el tipo de entidad"
+					,clave     , "No se recibi\u00f3 la clave de entidad"
+					,webid     , "No se recibi\u00f3 el id de entidad"
+					,xpos      , "No se recibi\u00f3 x de entidad"
+					,ypos      , "No se recibi\u00f3 y de entidad"
+					);
+			
+			params.put("consecutivo" , "9");
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### registrarEntidad ######"
+					,"\n##############################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value   = "borrarEntidad",
+			results = { @Result(name="success", type="json") }
+			)
+	public String borrarEntidad()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n###########################"
+				,"\n###### borrarEntidad ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdtipflu   = params.get("cdtipflu")
+			       ,cdflujomc = params.get("cdflujomc")
+			       ,tipo      = params.get("tipo")
+			       ,webid     = params.get("webid");
+			
+			Utils.validate(
+					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
+					,cdflujomc , "No se recibi\u00f3 el flujo"
+					,tipo      , "No se recibi\u00f3 el tipo de entidad"
+					,webid     , "No se recibi\u00f3 el id de entidad"
+					);
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### borrarEntidad ######"
+					,"\n###########################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value   = "registrarConnection",
+			results = { @Result(name="success", type="json") }
+			)
+	public String registrarConnection()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n#################################"
+				,"\n###### registrarConnection ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdtipflu   = params.get("cdtipflu")
+			       ,cdflujomc = params.get("cdflujomc")
+			       ,idorigen  = params.get("idorigen")
+			       ,iddestin  = params.get("iddestin");
+			
+			Utils.validate(
+					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
+					,cdflujomc , "No se recibi\u00f3 el flujo"
+					,idorigen  , "No se recibi\u00f3 el origen"
+					,iddestin  , "No se recibi\u00f3 el destino"
+					);
+			
+			params.put("consecutivo" , "9");
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### registrarConnection ######"
+					,"\n#################################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value   = "borrarConnection",
+			results = { @Result(name="success", type="json") }
+			)
+	public String borrarConnection()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n##############################"
+				,"\n###### borrarConnection ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdtipflu   = params.get("cdtipflu")
+			       ,cdflujomc = params.get("cdflujomc")
+			       ,idorigen  = params.get("idorigen")
+			       ,iddestin  = params.get("iddestin");
+			
+			Utils.validate(
+					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
+					,cdflujomc , "No se recibi\u00f3 el flujo"
+					,idorigen  , "No se recibi\u00f3 el origen"
+					,iddestin  , "No se recibi\u00f3 el destino"
+					);
+			
+			params.put("consecutivo" , "9");
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### borrarConnection ######"
+					,"\n##############################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
 		return SUCCESS;
 	}
 
