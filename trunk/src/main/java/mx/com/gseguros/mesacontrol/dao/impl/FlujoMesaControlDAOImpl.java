@@ -80,7 +80,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	@Override
 	public List<Map<String,String>> recuperaTestadomc() throws Exception
 	{
-		Map<String,Object>       procRes = ejecutaSP(new RecuperaTtiptramcSP(getDataSource()),new HashMap<String,String>());
+		Map<String,Object>       procRes = ejecutaSP(new RecuperaTestadomcSP(getDataSource()),new HashMap<String,String>());
 		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		if(lista==null)
 		{
@@ -147,7 +147,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	{
 		protected RecuperaTcompmcSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_MESACONTROL.P_GET_TPANTAMC");
+			super(dataSource,"PKG_MESACONTROL.P_GET_TCOMPMC");
 			String[] cols=new String[]{"CDCOMPMC","DSCOMPMC","NOMCOMP"};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -187,7 +187,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	// SP 7
 	@Override
 	public List<Map<String,String>> recuperaTdocume() throws Exception {
-		Map<String,Object>       procRes = ejecutaSP(new RecuperaTtiptramcSP(getDataSource()),new HashMap<String,String>());
+		Map<String,Object>       procRes = ejecutaSP(new RecuperaTdocumeSP(getDataSource()),new HashMap<String,String>());
 		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		if(lista==null) {
 			lista = new ArrayList<Map<String,String>>();
@@ -457,7 +457,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	
 	protected class RecuperaTfluprocSP extends StoredProcedure {
 		protected RecuperaTfluprocSP(DataSource dataSource) {
-			super(dataSource,"PKG_MESACONTROL.P_FLU_PROC");
+			super(dataSource,"PKG_MESACONTROL.P_GET_TFLUPROC");
 			declareParameter(new SqlParameter("cdtipflu" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdflujomc", OracleTypes.VARCHAR));
 			String[] cols=new String[]{ "CDTIPFLU","CDFLUJOMC","CDPROCMC","WEBID","XPOS","YPOS","WIDTH","HEIGHT" };
@@ -593,7 +593,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	{
 		protected RecuperaTfluaccSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_MESACONTROL.P_GET_TFLUPANT");
+			super(dataSource,"PKG_MESACONTROL.P_GET_TFLUACC");
 			declareParameter(new SqlParameter("cdtipflu" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipflumc" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdaccion" , OracleTypes.VARCHAR));
@@ -988,7 +988,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	{
 		protected MovimientoTcompmcSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_MESACONTROL.P_MOV_TESTADOMC");
+			super(dataSource,"PKG_MESACONTROL.P_MOV_TCOMPMC");
 			declareParameter(new SqlParameter("cdcompmc", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("dscompmc", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nomcomp", OracleTypes.VARCHAR));
@@ -1020,7 +1020,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("xpos"   , xpos);
 		params.put("ypos"     , ypos);
 		params.put("subrayado"     , subrayado);
-		ejecutaSP(new MovimientoTtipflumcSP(getDataSource()),params);
+		ejecutaSP(new MovimientoTflucompSP(getDataSource()),params);
 	}
 	
 	protected class MovimientoTflucompSP extends StoredProcedure
@@ -1244,14 +1244,14 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("cddocume" , cddocume);
 		params.put("swobliga"   , swobliga);
 		params.put("subrayado"     , subrayado);
-		ejecutaSP(new MovimientoTtipflumcSP(getDataSource()),params);
+		ejecutaSP(new MovimientoTflurevdocSP(getDataSource()),params);
 	}
 	
 	protected class MovimientoTflurevdocSP extends StoredProcedure
 	{
 		protected MovimientoTflurevdocSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_MESACONTROL.P_MOV_TFLUCOMP");
+			super(dataSource,"PKG_MESACONTROL.P_MOV_TFLUREVDOC");
 			declareParameter(new SqlParameter("cdtipflu"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdflujomc"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdrevisi"   , OracleTypes.VARCHAR));
@@ -1355,7 +1355,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	{
 		protected MovimientoTfluaccrolSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_MESACONTROL.P_MOV_TPANTMC");
+			super(dataSource,"PKG_MESACONTROL.P_MOV_TFLUACCROL");
 			declareParameter(new SqlParameter("cdtipflu"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdflujomc"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdaccion"   , OracleTypes.VARCHAR));
