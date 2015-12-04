@@ -43,10 +43,28 @@ public enum RecuperacionSimple
 	,RECUPERAR_VALOR_MAXIMO_SITUACION_POR_ROL                ("M" , "RECUPERAR_VALOR_MAXIMO_SITUACION_POR_ROL")
 	,RECUPERAR_VALORES_ATRIBUTOS_FACTORES                    ("L" , "RECUPERAR_VALORES_ATRIBUTOS_FACTORES")
 	,RECUPERAR_VALORES_PANTALLA                              ("L" , "RECUPERAR_VALORES_PANTALLA")
-	,RECUPERAR_TTIPTRAMC                                     ("L" , "RECUPERAR_TTIPTRAMC")
-	,RECUPERAR_TICONOS                                       ("L" , "RECUPERAR_TICONOS")
-	,RECUPERAR_TFLUJOMC                                      ("L" , "RECUPERAR_TFLUJOMC")
+	,RECUPERAR_TTIPTRAMC                                     ("L" , "RECUPERAR_TTIPTRAMC")  // MC
+	,RECUPERAR_TTIPFLUMC 									 ("L" , "RECUPERAR_TTIPFLUMC")  // MC
+	,RECUPERAR_TESTADOMC									 ("L" , "RECUPERAR_TESTADOMC")  // MC
+	,RECUPERAR_TPANTAMC										 ("L" , "RECUPERAR_TPANTAMC")   // MC
+	,RECUPERAR_TCOMPMC										 ("L" , "RECUPERAR_TCOMPMC")    // MC
+	,RECUPERAR_TPROCMC 									 	 ("L" , "RECUPERAR_TPROCMC")    // MC
+	,RECUPERAR_TDOCUME                                       ("L" , "RECUPERAR_TDOCUME")    // MC
+	,RECUPERAR_TICONOS                                       ("L" , "RECUPERAR_TICONOS")    // MC
+	,RECUPERAR_TFLUJOMC                                      ("L" , "RECUPERAR_TFLUJOMC")   // MC
+	,RECUPERAR_TFLUEST 									 	 ("L" , "RECUPERAR_TFLUEST")    // MC
+	,RECUPERAR_TFLUESTROL									 ("L" , "RECUPERAR_TFLUESTROL") // MC
+	,RECUPERAR_TFLUESTAVI									 ("L" , "RECUPERAR_TFLUESTAVI") // MC
+    ,RECUPERAR_TFLUPANT                                      ("L" , "RECUPERAR_TFLUPANT")   // MC
+	,RECUPERAR_TFLUCOMP                                      ("L" , "RECUPERAR_TFLUCOMP")   // MC
+	,RECUPERAR_TFLUPROC                                      ("L" , "RECUPERAR_TFLUPROC")   // MC
+	,RECUPERAR_TFLUVAL 									 	 ("L" , "RECUPERAR_TFLUVAL")    // MC
+	,RECUPERAR_TFLUREV										 ("L" , "RECUPERAR_TFLUREV")    // MC
+	,RECUPERAR_TFLUREVDOC									 ("L" , "RECUPERAR_TFLUREVDOC") // MC
+	,RECUPERAR_TFLUACC                                       ("L" , "RECUPERAR_TFLUACC")    // MC
+	,RECUPERAR_TFLUACCROL                                    ("L" , "RECUPERAR_TFLUACCROL") // MC
 	;
+
 	 
 	private String tipo;
 	private String procedimiento;
