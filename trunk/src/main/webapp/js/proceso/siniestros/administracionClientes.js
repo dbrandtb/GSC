@@ -37,7 +37,7 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
             model     : '_p22_modeloGrid', 
             proxy     : {
                     type        : 'ajax'
-                    ,url        : _p22_urlObtenerPersonas
+                    ,url        : _P22_URLOBTENERPERSONAS
                     ,reader     :
                     {
                         type  : 'json'
@@ -78,7 +78,7 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 			autoLoad:false,
 			proxy: {
 				type: 'ajax',
-				url : _URL_LISTA_NONGRATOS,
+				url : _URL_LISTA_CLIENTES,
 				reader: {
 					type: 'json',
 					root: 'genericVO'
@@ -94,7 +94,6 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 			hideTrigger:true,
 			listeners : {
 				'select' : function(combo, record) {
-					debug("Valor ---> ",this.getValue());
 					CargaListaCliente(this.getValue());
 				}
 			}
@@ -165,8 +164,10 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 										'params.accion'     : "U"
 									}
 									,success : function (response){
-										mensajeCorrecto('&Eacute;XITO','El cliente se ha deshabilitado Correctamente.');
-										CargaListaCliente(null);
+										mensajeCorrecto('&Eacute;XITO','El cliente se ha deshabilitado Correctamente.',function(){
+											CargaListaCliente(null);
+										});
+										
 									},
 									failure : function () {
 										Ext.Msg.show({
@@ -235,8 +236,7 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 		            		   enableKeyEvents: true,				store        : storeObtenerPersona,
 		            		   listeners: {
 		            			   select: function(comb, records){
-		            				   debug("Valor del Record Seleccionado  ======>", records);
-		            				   	var form=_p22_formBusqueda();
+		            				    var form=_p22_formBusqueda();
 	            				   		form.down('[name=smap1.nombre]').reset();
 	            				   		form.down('[name=smap1.rfcCliente]').setValue(records[0].get('CDRFC'));
 		            				    form.down('[name=smap1.tipoPersona]').setValue(records[0].get('OTFISJUR'));
@@ -255,10 +255,6 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 		            					   //_RFCsel = '';
 		            					   form.down('[name=smap1.nombre]').reset();
 		            					   form.down('[name=smap1.rfc]').getStore().removeAll();
-		            					   /*form.down('[name=smap1.rfcCliente]').setValue('');
-			            				   form.down('[name=smap1.tipoPersona]').setValue('');
-			            				   form.down('[name=smap1.nombreCliente]').setValue('');
-			            				   form.down('[name=smap1.domicilio]').setValue('');*/
 		            				   }
 		            			   },
 		            			   change: function(me, val, oldVal, eopts){
@@ -294,7 +290,6 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 		            		   enableKeyEvents: true,				store        : storeObtenerPersona,
 		            		   listeners: {
 		            			   select: function(comb, records){
-		            				   debug("Valor del Record Seleccionado  ======>", records);
 		            				   var form=_p22_formBusqueda();
 		            				   form.down('[name=smap1.rfc]').reset();
 		            				   form.down('[name=smap1.rfcCliente]').setValue(records[0].get('CDRFC'));
@@ -313,10 +308,6 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 		            				   }else{
 		            					   form.down('[name=smap1.rfc]').reset();
 		            					   form.down('[name=smap1.nombre]').getStore().removeAll();
-		            					   /*form.down('[name=smap1.rfcCliente]').setValue('');
-			            				   form.down('[name=smap1.tipoPersona]').setValue('');
-			            				   form.down('[name=smap1.nombreCliente]').setValue('');
-			            				   form.down('[name=smap1.domicilio]').setValue('');*/
 		            				   }
 		            			   },
 		            			   change: function(me, val){
@@ -362,8 +353,19 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 											'params.accion'     : "I"												
 										}
 										,success : function (response){
-											mensajeCorrecto('&Eacute;XITO','El cliente se ha agregado Correctamente.');
-											formulario.reset();
+											json = Ext.decode(response.responseText);
+											if(json.success==false){
+												Ext.Msg.show({
+													title:'Error',
+													msg: json.message,
+													buttons: Ext.Msg.OK,
+													icon: Ext.Msg.WARNING
+												});
+											}else{
+												mensajeCorrecto('&Eacute;XITO','El cliente se ha agregado Correctamente.');
+												formulario.reset();
+											}
+											
 										},
 										failure : function () {
 											Ext.Msg.show({
@@ -475,11 +477,11 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 					,'params.proceso'	:	proceso.procesoCliente
 				};
 				
-				cargaStorePaginadoLocal(storeListadoCliente, _URL_LISTA_CLIENTE, 'list', params, function(options, success, response){
+				cargaStorePaginadoLocal(storeListadoCliente, _URL_LISTA_CLIENTE_GRID, 'list', params, function(options, success, response){
 					if(success){
 						var jsonResponse = Ext.decode(response.responseText);
 						if(jsonResponse.list && jsonResponse.list.length == 0) {
-							centrarVentanaInterna(showMessage("Aviso", "No se encontraron clientes non gratos.", Ext.Msg.OK, Ext.Msg.INFO));
+							centrarVentanaInterna(showMessage("Aviso", "No se encontraron "+complemento +".", Ext.Msg.OK, Ext.Msg.INFO));
 							return;
 						}
 						

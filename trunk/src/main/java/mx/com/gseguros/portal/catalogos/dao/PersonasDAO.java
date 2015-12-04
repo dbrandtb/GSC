@@ -142,12 +142,12 @@ public interface PersonasDAO
 	public void actualizaCdideper(String cdunieco, String cdramo, String estado, String nmpoliza, 
 			String nmsuplem, String cdideper) throws Exception;
 	
-	public String guardarClienteNonGratos(Map<String, Object> paramsCliente) throws Exception;
+	public String guardarConfiguracionClientes(Map<String, Object> paramsCliente) throws Exception;
 	
-	public String actualizaClienteClienteNonGrato(String rfc, String nongrata) throws Exception;
+	public String actualizaClienteClientexTipo(String rfc, String activaCliente, String tipCliente) throws Exception;
 
-	public List<Map<String, String>> obtieneListaClientesNonGratos(String rfc, String proceso) throws Exception;
+	public List<Map<String, String>> obtieneListaClientesxTipo(String rfc, String proceso) throws Exception;
 
-	public List<GenericVO> consultaClientesNonGratos(String cdperson) throws Exception;
+	public List<GenericVO> consultaClientes(String cdperson) throws Exception;
 	
 }

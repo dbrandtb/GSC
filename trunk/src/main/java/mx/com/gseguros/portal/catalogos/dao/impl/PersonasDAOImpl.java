@@ -1260,7 +1260,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	}
 	
 	@Override
-	public String guardarClienteNonGratos(Map<String, Object> paramsCliente) throws Exception {
+	public String guardarConfiguracionClientes(Map<String, Object> paramsCliente) throws Exception {
 		Map<String, Object> mapResult = ejecutaSP(new GuardarClienteNonGratos(getDataSource()), paramsCliente);
 		return (String) mapResult.get("pv_msg_id_o");
 	}
@@ -1286,19 +1286,21 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	}
 	
 	@Override
-	public String actualizaClienteClienteNonGrato(String rfc, String nongrata) throws Exception {
+	public String actualizaClienteClientexTipo(String rfc, String activaCliente, String tipCliente) throws Exception {
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("pv_cdrfc_i", rfc);
-		params.put("pv_nongrata_i", nongrata);
-		Map<String, Object> resultado = ejecutaSP(new ActualizaClienteRFC(getDataSource()), params);
+		params.put("pv_activaCliente_i", activaCliente);
+		params.put("pv_cdtipcli_i", tipCliente);
+		Map<String, Object> resultado = ejecutaSP(new ActualizaClienteClientexTipo(getDataSource()), params);
 		return (String) resultado.get("pv_msg_id_o");
 	}
 	
-	protected class ActualizaClienteRFC extends StoredProcedure {
-		protected ActualizaClienteRFC(DataSource dataSource) {
-			super(dataSource, "PKG_DESARROLLO.P_ACT_PERSONA_NONGRATA");
+	protected class ActualizaClienteClientexTipo extends StoredProcedure {
+		protected ActualizaClienteClientexTipo(DataSource dataSource) {
+			super(dataSource, "PKG_DESARROLLO.P_ACT_INF_CLIENTE");
 			declareParameter(new SqlParameter("pv_cdrfc_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nongrata_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_activaCliente_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipcli_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			compile();
@@ -1306,19 +1308,19 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	}
 
 	@Override
-	public List<Map<String, String>> obtieneListaClientesNonGratos(String rfc, String proceso) throws Exception {
+	public List<Map<String, String>> obtieneListaClientesxTipo(String rfc, String proceso) throws Exception {
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("pv_cdrfc_i", rfc);
 		params.put("pv_proceso_i", proceso);
-		Map<String,Object>resultado=ejecutaSP(new ObtieneListaClientesNonGratos(getDataSource()), params);
+		Map<String,Object>resultado=ejecutaSP(new ObtieneListaClientesxTipo(getDataSource()), params);
 		logger.debug("resultado de municipio y colonia: " + resultado.get("pv_registro_o"));
 		return ((List<Map<String,String>>)resultado.get("pv_registro_o"));
 		
 	}
 	
-	protected class ObtieneListaClientesNonGratos extends StoredProcedure
+	protected class ObtieneListaClientesxTipo extends StoredProcedure
 	{
-		protected ObtieneListaClientesNonGratos(DataSource dataSource)
+		protected ObtieneListaClientesxTipo(DataSource dataSource)
 		{
 			super(dataSource,"PKG_DESARROLLO.P_GET_TPERNGRA2");
 			//super(dataSource,"PKG_DESARROLLO.P_GET_TPERNGRA");
@@ -1336,15 +1338,15 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	}
 
 	@Override
-	public List<GenericVO> consultaClientesNonGratos(String cdperson) throws Exception {
+	public List<GenericVO> consultaClientes(String cdperson) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdperson_i", cdperson);
-		Map<String,Object> resultadoMap=this.ejecutaSP(new ConsultaClientesNonGratos(this.getDataSource()), params);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ConsultaClientes(this.getDataSource()), params);
 		return (List<GenericVO>) resultadoMap.get("pv_registro_o");
 	}
-	protected class ConsultaClientesNonGratos extends StoredProcedure
+	protected class ConsultaClientes extends StoredProcedure
 	{
-		protected ConsultaClientesNonGratos(DataSource dataSource)
+		protected ConsultaClientes(DataSource dataSource)
 		{
 			super(dataSource, "PKG_DESARROLLO.P_GET_USUARIOS_RFC");
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));

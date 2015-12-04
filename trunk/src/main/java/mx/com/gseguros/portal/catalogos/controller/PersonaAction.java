@@ -214,10 +214,10 @@ public class PersonaAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	@Action(value   = "guardaClienteNonGratos",
+	@Action(value   = "guardarConfiguracionClientes",
 		results = { @Result(name="success", type="json") }
 	)
-	public String guardaClienteNonGratos()
+	public String guardarConfiguracionClientes()
 	{
 		logger.debug(Utils.log(
 				 "\n#######################################"
@@ -232,7 +232,7 @@ public class PersonaAction extends PrincipalCoreAction
 			String cduser = ((UserVO)session.get("USUARIO")).getUser();
 			Date   fechaProcesamiento = new Date();
 			//message = personasManager.guardarClienteNonGratos(paramsCliente, params.get("cdrfc"));
-			message = personasManager.guardarClienteNonGratos(params.get("cdrfc"),params.get("status"),params.get("cdtipper"),params.get("agente"),
+			message = personasManager.guardarConfiguracionClientes(params.get("cdrfc"),params.get("status"),params.get("cdtipper"),params.get("agente"),
 					params.get("dsnombre"),params.get("dsdomicil"), params.get("obsermot"),params.get("proceso"), cduser, fechaProcesamiento, params.get("accion"));
 			success = true;
 		}
@@ -248,10 +248,10 @@ public class PersonaAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	@Action(value = "obtieneListaClientesNonGratos", results = { @Result(name = "success", type = "json", params = {
+	@Action(value = "obtieneListaClientesxTipo", results = { @Result(name = "success", type = "json", params = {
 			"ignoreHierarchy", "false", "includeProperties",
 			"list.*,success" }) })
-		public String obtieneListaClientesNonGratos()
+		public String obtieneListaClientesxTipo()
 		{
 			logger.debug(Utils.log(
 					 "\n###########################################"
@@ -263,7 +263,7 @@ public class PersonaAction extends PrincipalCoreAction
 			{
 				//Utils.validateSession(session);
 				//Utils.validate(params                 , "No se recibieron datos");
-				list = personasManager.obtieneListaClientesNonGratos(params.get("cdrfc"), params.get("proceso"));
+				list = personasManager.obtieneListaClientesxTipo(params.get("cdrfc"), params.get("proceso"));
 				success = true;
 			}
 			catch(Exception ex)
@@ -278,20 +278,20 @@ public class PersonaAction extends PrincipalCoreAction
 			return SUCCESS;
 		}
 	
-	@Action(value = "consultaClientesNonGratos", results = { @Result(name = "success", type = "json", params = {
+	@Action(value = "consultaClientes", results = { @Result(name = "success", type = "json", params = {
 			"ignoreHierarchy", "false", "includeProperties",
 			"genericVO.*,success" }) })
-		public String consultaClientesNonGratos()
+		public String consultaClientes()
 		{
 			logger.debug(Utils.log(
-					 "\n###########################################"
-					,"\n###### obtieneListaClientesNonGratos ######"
+					 "\n##############################"
+					,"\n###### consultaClientes ######"
 					,"\n###### params=",params
 					));
 			
 			try
 			{
-				genericVO = personasManager.consultaClientesNonGratos(params.get("cdperson"));
+				genericVO = personasManager.consultaClientes(params.get("cdperson"));
 				success = true;
 			}
 			catch(Exception ex)
@@ -300,8 +300,8 @@ public class PersonaAction extends PrincipalCoreAction
 			}
 			
 			logger.debug(Utils.log(
-					 "\n###### obtieneListaClientesNonGratos ######"
-					,"\n###########################################"
+					 "\n###### consultaClientes ######"
+					,"\n##############################"
 					));
 			return SUCCESS;
 		}
