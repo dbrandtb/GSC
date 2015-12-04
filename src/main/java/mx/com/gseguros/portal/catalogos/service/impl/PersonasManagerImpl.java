@@ -1011,12 +1011,12 @@ public class PersonasManagerImpl implements PersonasManager
 	}
 	
 	@Override
-	public String guardarClienteNonGratos(String rfc, String status, String tipoPersona, String cveAgente,
+	public String guardarConfiguracionClientes(String rfc, String status, String tipoPersona, String cveAgente,
 			String nombreCompleto, String domicilio, String observaciones,String proceso,  String cduser, Date fechaProcesamiento,
 			String accion) throws Exception{
 		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ guardarClienteNonGratos @@@@@@"
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarConfiguracionClientes @@@@@@"
 				,"\n@@@@@@ rfc =",rfc
 				,"\n@@@@@@ status =",status
 				,"\n@@@@@@ tipoPersona =",tipoPersona
@@ -1047,19 +1047,26 @@ public class PersonasManagerImpl implements PersonasManager
 			paramsCliente.put("pv_cduser_i",cduser);
 			paramsCliente.put("pv_fefecha_i",fechaProcesamiento);
 			paramsCliente.put("pv_accion_i",accion);
-			String res= personasDAO.guardarClienteNonGratos(paramsCliente);
+			String res= personasDAO.guardarConfiguracionClientes(paramsCliente);
 			paso = "Actualizamos la informaci&oacute;n del cliente por RFC";
 			logger2.debug("\nVoy a guardar datos de persona");
-			String nongrata = null;
+			String activaCliente = null;
 			if(accion.equalsIgnoreCase("I")){
-				nongrata = "S";
+				activaCliente = "S";
 			}else{
-				nongrata = "N";
+				activaCliente = "N";
 			}
-			logger.debug(Utils.log("Valor de nongrata ====> ",nongrata));
-			personasDAO.actualizaClienteClienteNonGrato(rfc, nongrata);
-			
-			paso = "Datos guardados correctamente";
+			logger.debug(Utils.log("Valor de activaCliente ====> ",activaCliente));
+			//1.- Clientes Non gratos
+			if(proceso.equalsIgnoreCase("1")){ 
+				personasDAO.actualizaClienteClientexTipo(rfc, activaCliente,proceso);
+			}else if(proceso.equalsIgnoreCase("2")){ 
+				//2.- Politicamente Expuesto
+				personasDAO.actualizaClienteClientexTipo(rfc, activaCliente,proceso);
+			}else{
+				//3.- VIP
+				personasDAO.actualizaClienteClientexTipo(rfc, activaCliente,proceso);
+			}
 		}
 		catch(Exception ex)
 		{
@@ -1068,18 +1075,18 @@ public class PersonasManagerImpl implements PersonasManager
 		
 		logger.debug(Utils.log(
 				 "\n@@@@@@ mensaje=",paso
-				,"\n@@@@@@ guardarClienteNonGratos @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarConfiguracionClientes @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return paso;
 	}
 	
 	@Override
-	public List<Map<String, String>> obtieneListaClientesNonGratos(String rfc, String proceso) throws Exception
+	public List<Map<String, String>> obtieneListaClientesxTipo(String rfc, String proceso) throws Exception
 	{
 		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ obtieneListaClientesNonGratos @@@@@@"
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ obtieneListaClientesxTipo @@@@@@"
 				,"\n@@@@@@ rfc=",rfc
 				,"\n@@@@@@ proceso=",proceso
 				));
@@ -1090,7 +1097,7 @@ public class PersonasManagerImpl implements PersonasManager
 		{
 			paso = "Obtenemos la lista de los clientes non gratos";
 			logger2.debug("\nObtenemos la lista de los clientes non gratos");
-			list = personasDAO.obtieneListaClientesNonGratos(rfc, proceso);
+			list = personasDAO.obtieneListaClientesxTipo(rfc, proceso);
 		}
 		catch(Exception ex)
 		{
@@ -1099,18 +1106,18 @@ public class PersonasManagerImpl implements PersonasManager
 		
 		logger.debug(Utils.log(
 				 "\n@@@@@@ mensaje=",paso
-				,"\n@@@@@@ obtieneListaClientesNonGratos @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ obtieneListaClientesxTipo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return list;
 	}
 	
 	@Override
-	public List<GenericVO> consultaClientesNonGratos(String cdperson) throws Exception
+	public List<GenericVO> consultaClientes(String cdperson) throws Exception
 	{
 		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ obtieneListaClientesNonGratos @@@@@@"
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ consultaClientes @@@@@@"
 				,"\n@@@@@@ params=",cdperson
 				));
 		
@@ -1120,7 +1127,7 @@ public class PersonasManagerImpl implements PersonasManager
 		{
 			paso = "Obtenemos la lista de los clientes non gratos";
 			logger2.debug("\nObtenemos la lista de los clientes non gratos");
-			genericVO = personasDAO.consultaClientesNonGratos(cdperson);
+			genericVO = personasDAO.consultaClientes(cdperson);
 		}
 		catch(Exception ex)
 		{
@@ -1129,8 +1136,8 @@ public class PersonasManagerImpl implements PersonasManager
 		
 		logger.debug(Utils.log(
 				 "\n@@@@@@ mensaje=",paso
-				,"\n@@@@@@ obtieneListaClientesNonGratos @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ consultaClientes @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return genericVO;
 	}
