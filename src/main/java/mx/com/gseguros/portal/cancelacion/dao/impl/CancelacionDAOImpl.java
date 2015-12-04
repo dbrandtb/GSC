@@ -226,6 +226,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 			,Date fecancel
 			,String cdusuari
 			,String cdtipsup
+			,String cdsisrol
 			)throws Exception
 	{
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
@@ -242,6 +243,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 		params.put("pv_fecancel_i" , fecancel);
 		params.put("pv_usuario_i"  , cdusuari);
 		params.put("pv_cdtipsup_i" , cdtipsup);
+		params.put("pv_cdsisrol_i" , cdsisrol);
 		Utils.debugProcedure(logger, "pkg_cancela.p_cancela_poliza", params);
 		Map<String,Object> resParams = ejecutaSP(new CancelaPoliza(getDataSource()),params);
 		
@@ -266,6 +268,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 			declareParameter(new SqlParameter("pv_fecancel_i" , OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_usuario_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsup_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsisrol_i" , OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));

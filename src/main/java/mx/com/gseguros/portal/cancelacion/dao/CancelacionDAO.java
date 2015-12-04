@@ -62,6 +62,7 @@ public interface CancelacionDAO
 			,Date fecancel
 			,String cdusuari
 			,String cdtipsup
+			,String cdsisrol
 			)throws Exception;
 	
 	public void validaCancelacionAProrrata(

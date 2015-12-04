@@ -241,6 +241,7 @@ public class CancelacionAction extends PrincipalCoreAction
 			UserVO usuario=(UserVO)session.get("USUARIO");
 			smap1.put("pv_usuario_i"  , usuario.getUser());
 			smap1.put("pv_cdtipsup_i" , cdtipsup);
+			smap1.put("pv_cdsisrol_i" , usuario.getRolActivo().getClave());
 			nmsuplem = cancelacionManager.cancelaPoliza(smap1);	
 			
 			String cdunieco = smap1.get("pv_cdunieco_i");

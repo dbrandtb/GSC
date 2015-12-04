@@ -4616,6 +4616,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,fecancel
 					,cdusuari
 					,cdtipsup
+					,usuarioSesion.getRolActivo().getClave()
 					);
 			
 			
