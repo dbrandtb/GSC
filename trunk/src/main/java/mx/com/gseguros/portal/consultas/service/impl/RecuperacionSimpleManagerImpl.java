@@ -10,6 +10,9 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
+import mx.com.gseguros.portal.consultas.model.RecuperacionSimpleJAIME;
+import mx.com.gseguros.portal.consultas.model.RecuperacionSimpleSalvador;
+import mx.com.gseguros.portal.consultas.model.RecuperacionSimple_GDH;
 import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
@@ -772,44 +775,36 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				lista = consultasDAO.recuperarDetalleRemesa(ntramite,tipolote);
 			}
 			
-			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUPANT))
-			{	
-				String cdtipflu=params.get("cdtipflu");
-				String cdtipflumc=params.get("cdtipflumc");
-				String cdpantmc=params.get("cdpantmc");
-				String webid=params.get("webid");
-				String xpos=params.get("xpos");
-				String ypos=params.get("ypos");
-				String subrayado=params.get("subrayado");
-				lista = flujoMesaControlDAO.recuperaTflupant(cdtipflu, cdtipflumc, cdpantmc, webid, xpos, ypos, subrayado);
-			}
-			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUCOMP))
-			{	
-				String cdtipflumc=params.get("cdtipflumc");
-				String cdflujomc=params.get("cdflujomc");
-				lista = flujoMesaControlDAO.recuperaTflucomp(cdtipflumc, cdflujomc);
-			}
-			
-			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUACC))
-			{	
-				String cdtipflu=params.get("cdtipflu");
-				String cdtipflumc=params.get("cdtipflumc");
-				String cdaccion=params.get("cdaccion");
-				String dsaccion=params.get("dsaccion");
-				String cdicono=params.get("cdicono");
-				String cdvalor=params.get("cdvalor");
-				lista = flujoMesaControlDAO.recuperaTfluacc(cdtipflu, cdtipflumc, cdaccion, dsaccion, cdicono, cdvalor);
-			}
-			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUACCROL))
-			{	
-				String cdtipflu=params.get("cdtipflu");
-				String cdflujomc=params.get("cdflujomc");
-				String cdaccion=params.get("cdaccion");
-				lista = flujoMesaControlDAO.recuperaTfluaccrol(cdtipflu, cdflujomc, cdaccion);
-			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TTIPTRAMC))
 			{
 				lista = flujoMesaControlDAO.recuperaTtiptramc();
+			}
+			else if(consulta.equals(RecuperacionSimple_GDH.RECUPERAR_TTIPFLUMC))
+			{	
+				lista = flujoMesaControlDAO.recuperaTtipflumc();
+			}
+			else if(consulta.equals(RecuperacionSimpleSalvador.RECUPERAR_TESTADOMC))
+			{	
+				lista = flujoMesaControlDAO.recuperaTestadomc();
+			}
+			else if(consulta.equals(RecuperacionSimpleJAIME.RECUPERAR_TPANTAMC))
+			{
+				lista = flujoMesaControlDAO.recuperaTpantamc();
+			}
+			else if(consulta.equals(RecuperacionSimpleJAIME.RECUPERAR_TCOMPMC))
+			{
+				lista = flujoMesaControlDAO.recuperaTcompmc();
+			}
+			else if(consulta.equals(RecuperacionSimple_GDH.RECUPERAR_TPROCMC))
+			{
+				lista = flujoMesaControlDAO.recuperaTprocmc();
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TDOCUME))
+			{
+				paso = "Recuperando detalle de remesa";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				lista = flujoMesaControlDAO.recuperaTdocume();
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TICONOS))
 			{
@@ -820,6 +815,92 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String cdtipflu = params.get("cdtipflu");
 				lista = flujoMesaControlDAO.recuperaTflujomc(cdtipflu);
 			}
+			else if(consulta.equals(RecuperacionSimple_GDH.RECUPERAR_TFLUEST))
+			{
+				String cdtipflu = params.get("cdtipflu");
+				String cdflujomc = params.get("cdflujomc"); 
+				lista = flujoMesaControlDAO.recuperaTfluest(cdtipflu, cdflujomc);
+			}
+			else if(consulta.equals(RecuperacionSimpleSalvador.RECUPERAR_TFLUESTROL))
+			{
+				String cdtipflu = params.get("cdtipflu");
+				String cdflujomc = params.get("cdflujomc");
+				String cdestadomc = params.get("cdestadomc");
+				
+				lista = flujoMesaControlDAO.recuperaTfluestrol(cdtipflu,cdflujomc,cdestadomc);
+			}
+			else if(consulta.equals(RecuperacionSimpleJAIME.RECUPERAR_TFLUESTAVI))
+			{
+				String cdtipflu = params.get("cdtipflu");
+				String cdflujomc = params.get("cdflujomc");
+				String cdestadomc = params.get("cdestadomc");
+				lista = flujoMesaControlDAO.recuperaTfluestavi(cdtipflu, cdflujomc, cdestadomc);
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUPANT))
+			{
+				String cdtipflu=params.get("cdtipflu");
+				String cdtipflumc=params.get("cdtipflumc");
+				String cdpantmc=params.get("cdpantmc");
+				String webid=params.get("webid");
+				String xpos=params.get("xpos");
+				String ypos=params.get("ypos");
+				String subrayado=params.get("subrayado");
+				lista = flujoMesaControlDAO.recuperaTflupant(cdtipflu, cdtipflumc, cdpantmc, webid, xpos, ypos, subrayado);
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUCOMP))
+			{
+				String cdtipflumc=params.get("cdtipflumc");
+				String cdflujomc=params.get("cdflujomc");
+				lista = flujoMesaControlDAO.recuperaTflucomp(cdtipflumc, cdflujomc);
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUPROC))
+			{
+				paso = "Recuperando detalle de remesa";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				String cdtipflu = params.get("cdtipflu");
+				String cdflujomc = params.get("cdflujomc");
+				
+				lista = flujoMesaControlDAO.recuperaTfluproc(cdtipflu, cdflujomc);
+			}
+			else if(consulta.equals(RecuperacionSimple_GDH.RECUPERAR_TFLUVAL))
+			{
+				String cdtipflu = params.get("cdtipflu");
+				String cdflujomc = params.get("cdflujomc"); 
+				lista = flujoMesaControlDAO.recuperaTfluval(cdtipflu, cdflujomc);
+			}
+			else if(consulta.equals(RecuperacionSimpleSalvador.RECUPERAR_TFLUREV))
+			{
+				String cdtipflu = params.get("cdtipflu");
+				String cdflujomc = params.get("cdflujomc");
+				
+				lista = flujoMesaControlDAO.recuperaTflurev(cdtipflu,cdflujomc);
+			}
+			else if(consulta.equals(RecuperacionSimpleJAIME.RECUPERAR_TFLUREVDOC))
+			{
+				String cdtipflu = params.get("cdtipflu");
+				String cdflujomc = params.get("cdflujomc");
+				String cdrevisi = params.get("cdrevisi");
+				lista = flujoMesaControlDAO.recuperaTflurevdoc(cdtipflu, cdflujomc, cdrevisi);
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUACC))
+			{
+				String cdtipflu=params.get("cdtipflu");
+				String cdtipflumc=params.get("cdtipflumc");
+				String cdaccion=params.get("cdaccion");
+				String dsaccion=params.get("dsaccion");
+				String cdicono=params.get("cdicono");
+				String cdvalor=params.get("cdvalor");
+				lista = flujoMesaControlDAO.recuperaTfluacc(cdtipflu, cdtipflumc, cdaccion, dsaccion, cdicono, cdvalor);
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUACCROL))
+			{
+				String cdtipflu=params.get("cdtipflu");
+				String cdflujomc=params.get("cdflujomc");
+				String cdaccion=params.get("cdaccion");
+				lista = flujoMesaControlDAO.recuperaTfluaccrol(cdtipflu, cdflujomc, cdaccion);
+			}
+
 		}
 		catch(Exception ex)
 		{
