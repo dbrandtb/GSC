@@ -807,8 +807,19 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String cdaccion=params.get("cdaccion");
 				lista = flujoMesaControlDAO.recuperaTfluaccrol(cdtipflu, cdflujomc, cdaccion);
 			}
-			
-			
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TTIPTRAMC))
+			{
+				lista = flujoMesaControlDAO.recuperaTtiptramc();
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TICONOS))
+			{
+				lista = flujoMesaControlDAO.recuperaTiconos();
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUJOMC))
+			{
+				String cdtipflu = params.get("cdtipflu");
+				lista = flujoMesaControlDAO.recuperaTflujomc(cdtipflu);
+			}
 		}
 		catch(Exception ex)
 		{
