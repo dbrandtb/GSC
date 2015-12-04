@@ -25,10 +25,10 @@ public class RehabilitacionManagerImpl implements RehabilitacionManager
 	}
 
 	@Override
-	public Map<String,Object> rehabilitarPoliza(Map<String, String> params,String cdusuari) throws Exception
+	public Map<String,Object> rehabilitarPoliza(Map<String, String> params,String cdusuari, String cdsisrol) throws Exception
 	{
 		log.debug("RehabilitacionManager rehabilitarPoliza params: "+params);
-		Map<String,Object> mapa=rehabilitacionDAO.rehabilitarPoliza(params,cdusuari);
+		Map<String,Object> mapa=rehabilitacionDAO.rehabilitarPoliza(params,cdusuari,cdsisrol);
 		log.debug("RehabilitacionManager rehabilitarPoliza respuesta: "+mapa);
 		return mapa;
 	}

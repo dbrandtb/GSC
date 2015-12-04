@@ -272,13 +272,14 @@ public class RehabilitacionAction extends PrincipalCoreAction
 			String  fereinst       = smap1.get("pv_fereinst_i");
 			UserVO  usuario        = (UserVO)session.get("USUARIO");
 			String  cdusuari       = usuario.getUser();
+			String  cdsisrol       = usuario.getRolActivo().getClave();
 			
 			exito = true;
 			
 			Map<String,Object> resRehab = null;
 			try
 			{
-				resRehab = rehabilitacionManager.rehabilitarPoliza(smap1,cdusuari);
+				resRehab = rehabilitacionManager.rehabilitarPoliza(smap1,cdusuari,cdsisrol);
 			}
 			catch(Exception ex)
 			{
