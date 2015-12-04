@@ -7954,7 +7954,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			//pkg_cancela.p_cancela_poliza
 			String nmsuplemCancela = cancelacionManager.cancelaPoliza(cdunieco, cdramo, null, estado, nmpoliza, null
-					,cdrazonReexp, comentaReexp, feIniVig, feFinvig, sFecha, cdusuari, cdtipsup);
+					,cdrazonReexp, comentaReexp, feIniVig, feFinvig, sFecha, cdusuari, cdtipsup,usuario.getRolActivo().getClave());
 			
 			// Se confirma el endoso si cumple la validacion de fechas: 
 			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza
