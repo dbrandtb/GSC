@@ -17,9 +17,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 	@Autowired
 	private FlujoMesaControlDAO flujoMesaControlDAO;
 	
-	
-	
-	
 	@Override
 	public Map<String,Item> workflow(
 			StringBuilder sb
