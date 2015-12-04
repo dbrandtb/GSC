@@ -225,6 +225,11 @@ if(inIframe())
 ////// iframe //////
 
 ////// urls //////
+var _p52_urlRegistrarEntidad    = '<s:url namespace="/flujomesacontrol" action="registrarEntidad"    />';
+var _p52_urlBorrarEntidad       = '<s:url namespace="/flujomesacontrol" action="borrarEntidad"       />';
+var _p52_urlRegistrarConnection = '<s:url namespace="/flujomesacontrol" action="registrarConnection" />';
+var _p52_urlBorrarConnection    = '<s:url namespace="/flujomesacontrol" action="borrarConnection"    />';
+var _p52_urlGuardarCoords       = '<s:url namespace="/flujomesacontrol" action="guardarCoordenadas"  />';
 ////// urls //////
 
 ////// variables //////
@@ -1996,15 +2001,22 @@ Ext.onReady(function()
                 ,buttons     :
                 [
                     {
-                        text  : 'Guardar coordenadas'
-                        ,icon : '${icons}disk.png'
+                        text     : 'Guardar coordenadas'
+                        ,icon    : '${icons}disk.png'
+                        ,handler : function(me)
+                        {
+                            _p52_guardarCoords();
+                        }
                     }
                     ,{
                         text     : 'Guardar coordenadas y regresar'
                         ,icon    : '${icons}disk.png'
                         ,handler : function(me)
                         {
-                            _p52_navega(1);
+                            _p52_guardarCoords(function()
+                            {
+                                _p52_navega(1);
+                            });
                         }
                     }
                     ,{
@@ -2066,6 +2078,28 @@ Ext.onReady(function()
         {
             debug('dblclick con:',con);
             _p52_editEndpoint(con,'A');
+        });
+        
+        toolkit.bind('connection',function(con)
+        {
+            debug('connection con:',con,'.');
+            _p52_registrarConnection(con);
+        });
+        
+        toolkit.bind('connectionDetached',function(con)
+        {
+            debug('connectionDetached con:',con,'.');
+            _p52_borrarConnection(con);
+        });
+        
+        toolkit.bind('connectionMoved',function(con)
+        {
+            debug('connectionMoved con:',con,'.');
+            _p52_borrarConnection(
+            {
+                sourceId  : con.originalSourceId
+                ,targetId : con.originalTargetId
+            });
         });
     });
     ////// loaders //////
@@ -2450,30 +2484,52 @@ function _p52_drop(event)
     
     if(tipo=='E')
     {
-        $('#canvasdiv').append('<div id="'+id+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\');return false;"></a><div class="labelE">'+clave+' - '+descrip+'</div></div>');
+        _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
+        {
+            $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\');return false;"></a><div class="labelE">'+clave+' - '+descrip+'</div></div>');
+            _p52_addEndpoint(id,tipo);
+        });
     }
     else if(tipo=='P')
     {
-        $('#canvasdiv').append('<div id="'+id+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\');return false;"></a><div class="labelP">'+clave+' - '+descrip+'</div></div>');
+        _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
+        {
+            $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\');return false;"></a><div class="labelP">'+clave+' - '+descrip+'</div></div>');
+            _p52_addEndpoint(id,tipo);
+        });
     }
     else if(tipo=='C')
     {
-        $('#canvasdiv').append('<div id="'+id+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\');return false;"></a><div class="labelC">'+clave+' - '+descrip+'</div></div>');
+        _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
+        {
+            $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\');return false;"></a><div class="labelC">'+clave+' - '+descrip+'</div></div>');
+            _p52_addEndpoint(id,tipo);
+        });
     }
     else if(tipo=='O')
     {
-        $('#canvasdiv').append('<div id="'+id+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\');return false;"></a><div class="labelO">'+clave+' - '+descrip+'</div></div>');
+        _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
+        {
+            $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\');return false;"></a><div class="labelO">'+clave+' - '+descrip+'</div></div>');
+            _p52_addEndpoint(id,tipo);
+        });
     }
     else if(tipo=='V')
     {
-        $('#canvasdiv').append('<div id="'+id+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\');return false;"></a><div class="labelV">'+descrip+'</div></div>');
+        _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
+        {
+            $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\');return false;"></a><div class="labelV">'+descrip+'</div></div>');
+            _p52_addEndpoint(id,tipo);
+        });
     }
     else if(tipo=='R')
     {
-        $('#canvasdiv').append('<div id="'+id+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\');return false;"></a><div class="labelR">'+descrip+'</div></div>');
+        _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
+        {
+            $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\');return false;"></a><div class="labelR">'+descrip+'</div></div>');
+            _p52_addEndpoint(id,tipo);
+        });
     }
-    
-    _p52_addEndpoint(id,tipo);
 }
 
 function _p52_generaId()
@@ -2526,10 +2582,57 @@ function _p52_editEndpoint(id,tipo)
     }
 }
 
-function _p52_removeEndpoint(id)
+function _p52_removeEndpoint(id,tipo)
 {
-    debug('_p52_removeEndpoint id:',id);
-    toolkit.remove(id);
+    debug('_p52_removeEndpoint id,tipo:',id,tipo,'.');
+    var ck = 'Borrando entidad';
+    try
+    {
+        _setLoading(true,_p52_panelDibujo);
+        Ext.Ajax.request(
+        {
+            url      : _p52_urlBorrarEntidad
+            ,params  :
+            {
+                'params.cdtipflu'   : _p52_selectedFlujo.get('CDTIPFLU')
+                ,'params.cdflujomc' : _p52_selectedFlujo.get('CDFLUJOMC')
+                ,'params.tipo'      : tipo
+                ,'params.webid'     : id
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_panelDibujo);
+                var ck = 'Decodificando respuesta al borrar entidad';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### -entidad:',json);
+                    if(json.success==true)
+                    {
+                        toolkit.remove(id);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_panelDibujo);
+                errorComunicacion(null,'Error al borrar entidad');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_panelDibujo);
+        manejaException(e,ck);
+    }
 }
 
 function _p52_editCatClic(tipo,id)
@@ -2617,6 +2720,241 @@ function _p52_editCatClic(tipo,id)
         }
     }
     
+}
+
+function _p52_registrarEntidad(tipo,clave,id,x,y,callback)
+{
+    var ck = 'Regitrando entidad';
+    try
+    {
+        _setLoading(true,_p52_panelDibujo);
+        Ext.Ajax.request(
+        {
+            url     : _p52_urlRegistrarEntidad
+            ,params :
+            {
+                'params.cdtipflu'   : _p52_selectedFlujo.get('CDTIPFLU')
+                ,'params.cdflujomc' : _p52_selectedFlujo.get('CDFLUJOMC')
+                ,'params.tipo'      : tipo
+                ,'params.clave'     : clave
+                ,'params.webid'     : id
+                ,'params.xpos'      : x
+                ,'params.ypos'      : y
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_panelDibujo);
+                var ck = 'Decodificando respuesta al registrar entidad';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### +entidad:',json);
+                    if(json.success==true)
+                    {
+                        callback(json);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            { 
+                _setLoading(false,_p52_panelDibujo);
+                errorComunicacion(null,'Error al registrar entidad');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_panelDibujo);
+        manejaException(e,ck);
+    }
+}
+
+function _p52_registrarConnection(con)
+{
+    debug('_p52_registrarConnection con:',con,'.');
+    var ck = 'Registrando conexi\u00f3n';
+    try
+    {
+        _setLoading(true,_p52_panelDibujo);
+        Ext.Ajax.request(
+        {
+            url      : _p52_urlRegistrarConnection
+            ,params  :
+            {
+                'params.cdtipflu'   : _p52_selectedFlujo.get('CDTIPFLU')
+                ,'params.cdflujomc' : _p52_selectedFlujo.get('CDFLUJOMC')
+                ,'params.idorigen'  : con.sourceId
+                ,'params.iddestin'  : con.targetId
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_panelDibujo);
+                var ck = 'Decodificando respuesta al registrar conexi\u00f3n';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### +conex:',json);
+                    if(json.success==true)
+                    {
+                    }
+                    else
+                    {
+                        toolkit.detach(con);
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    toolkit.detach(con);
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                toolkit.detach(con);
+                _setLoading(false,_p52_panelDibujo);
+                errorComunicacion(null,'Error al registrar conexi\u00f3n');
+            }
+        });
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+}
+
+function _p52_borrarConnection(con)
+{
+    debug('_p52_borrarConnection con:',con,'.');
+    var ck = 'Borrando conexi\u00f3n';
+    try
+    {
+        _setLoading(true,_p52_panelDibujo);
+        Ext.Ajax.request(
+        {
+            url      : _p52_urlBorrarConnection
+            ,params  :
+            {
+                'params.cdtipflu'   : _p52_selectedFlujo.get('CDTIPFLU')
+                ,'params.cdflujomc' : _p52_selectedFlujo.get('CDFLUJOMC')
+                ,'params.idorigen'  : con.sourceId
+                ,'params.iddestin'  : con.targetId
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_panelDibujo);
+                var ck = 'Decodificando respuesta al borrar conexi\u00f3n';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### +conex:',json);
+                    if(json.success==true)
+                    {
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_panelDibujo);
+                errorComunicacion(null,'Error al borrar conexi\u00f3n');
+            }
+        });
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+}
+
+function _p52_guardarCoords(callback)
+{
+    debug('_p52_guardarCoords callback?',!Ext.isEmpty(callback));
+    var ck = 'Guardando coordenadas';
+    try
+    {
+        var jsonData =
+        {
+            params :
+            {
+                cdtipflu   : _p52_selectedFlujo.get('CDTIPFLU')
+                ,cdflujomc : _p52_selectedFlujo.get('CDFLUJOMC')
+            }
+            ,list : []
+        };
+        
+        ck       = 'Recopilando coordenadas';
+        var divs = $('.entidad');
+        debug('divs:',divs);
+        
+        for(var i=0;i<divs.length;i++)
+        {
+            var divi = divs[i];
+            jsonData.list.push(
+            {
+                webid : divi.id
+                ,xpos : divi.offsetLeft
+                ,ypos : divi.offsetTop
+                ,tipo : $(divi).attr('tipo')
+            });
+        }
+        
+        debug('jsonData:',jsonData);
+        
+        _setLoading(true,_p52_panelDibujo);
+        Ext.Ajax.request(
+        {
+            url       : _p52_urlGuardarCoords
+            ,jsonData : jsonData
+            ,success  : function(response)
+            {
+                _setLoading(false,_p52_panelDibujo);
+                var ck = 'Decodificando respuesta al guardar coordenadas';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### guardar coords:',json);
+                    if(json.success==true)
+                    {
+                        mensajeCorrecto('Coordenadas guardadas','Coordenadas guardadas',callback);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure  : function()
+            {
+                _setLoading(false,_p52_panelDibujo);
+                errorComunicacion(null,'Error al guardar coordenadas');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_panelDibujo);
+        manejaException(e,ck);
+    }
 }
 ////// funciones //////
 
