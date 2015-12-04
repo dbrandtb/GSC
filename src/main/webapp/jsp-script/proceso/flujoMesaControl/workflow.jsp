@@ -20,7 +20,7 @@
     height           : 50px;
     background-image : url('${flujoimg}estado.png');
 }
-.estado .cdestado, .labelE
+.estado .CDESTADOMC, .labelE
 {
     position    : absolute;
     left        : 50%;
@@ -36,7 +36,7 @@
     height           : 60px;
     background-image : url('${flujoimg}pantalla.png');
 }
-.pantalla .cdpantalla, .labelP
+.pantalla .CDPANTMC, .labelP
 {
     position    : absolute;
     left        : 50%;
@@ -52,7 +52,7 @@
     height           : 40px;
     background-image : url('${flujoimg}componente.png');
 }
-.componente .cdcomponente, .labelC
+.componente .CDCOMPMC, .labelC
 {
     position    : absolute;
     left        : 50%;
@@ -68,7 +68,7 @@
     height           : 35px;
     background-image : url('${flujoimg}proceso.png');
 }
-.proceso .cdproceso, .labelO
+.proceso .CDPROCMC, .labelO
 {
     position    : absolute;
     left        : 50%;
@@ -255,9 +255,47 @@ var _p52_catalogoIconos;
 var toolkit;
 
 var epProps = [];
+
+var _p52_formTtipflumc;
+var _p52_formTflujomc;
+var _p52_selectedFlujo;
+var _p52_formEstado;
+var _p52_formComponente;
+var _p52_formPantalla;
+var _p52_formProceso;
 ////// variables //////
 
 ////// overrides //////
+Ext.define('App.overrides.view.Table',
+{
+    override: 'Ext.view.Table',
+    getRecord: function (node) {
+        node = this.getNode(node);
+        if (node) {
+            //var recordIndex = node.getAttribute('data-recordIndex');
+            //if (recordIndex) {
+            //    recordIndex = parseInt(recordIndex, 10);
+            //    if (recordIndex > -1) {
+            //        // The index is the index in the original Store, not in a GroupStore
+            //        // The Grouping Feature increments the index to skip over unrendered records in collapsed groups
+            //        return this.store.data.getAt(recordIndex);
+            //    }
+            //}
+            return this.dataSource.data.get(node.getAttribute('data-recordId'));
+        }
+    },
+    indexInStore: function (node) {
+        node = this.getNode(node, true);
+        if (!node && node !== 0) {
+            return -1;
+        }
+        //var recordIndex = node.getAttribute('data-recordIndex');
+        //if (recordIndex) {
+        //    return parseInt(recordIndex, 10);
+        //}
+        return this.dataSource.indexOf(this.getRecord(node));
+    }
+});
 ////// overrides //////
 
 ////// componentes dinamicos //////
@@ -281,13 +319,13 @@ Ext.onReady(function()
     ////// componentes //////
     estadoTpl = new Ext.Template(
     [
-         '<div id="E{cdestado}" class="catEntidad estado" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{dsestado}">'
+         '<div id="E{CDESTADOMC}" class="catEntidad estado" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{DSESTADOMC}">'
         ,'    <table width="90" border="0">'
         ,'        <tr>'
-        ,'            <td align="center"><div class="image"></div><div class="cdestado">{cdestado}</div></td>'
+        ,'            <td align="center"><div class="image"></div><div class="CDESTADOMC">{CDESTADOMC}</div></td>'
         ,'        </tr>'
         ,'        <tr>'
-        ,'            <td align="center"><a class="catedit" href="#" onclick="_p52_editCatClic(\'E\',\'E{cdestado}\'); return false;" ><img src="${icons}pencil.png" /></a>{dsestado}</td>'
+        ,'            <td align="center"><a class="catedit" href="#" onclick="_p52_editCatClic(\'E\',\'E{CDESTADOMC}\'); return false;" ><img src="${icons}pencil.png" /></a>{DSESTADOMC}</td>'
         ,'        </tr>'
         ,'    </table>'
         ,'</div>'
@@ -295,13 +333,13 @@ Ext.onReady(function()
     
     pantallaTpl = new Ext.Template(
     [
-         '<div id="P{cdpantalla}" class="catEntidad pantalla" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{dspantalla}">'
+         '<div id="P{CDPANTMC}" class="catEntidad pantalla" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{DSPANTMC}">'
         ,'    <table width="90" border="0">'
         ,'        <tr>'
-        ,'            <td align="center"><div class="image"></div><div class="cdpantalla">{cdpantalla}</div></td>'
+        ,'            <td align="center"><div class="image"></div><div class="CDPANTMC">{CDPANTMC}</div></td>'
         ,'        </tr>'
         ,'        <tr>'
-        ,'            <td align="center"><a class="catedit" href="#" onclick="_p52_editCatClic(\'P\',\'P{cdpantalla}\'); return false;" ><img src="${icons}pencil.png" /></a>{dspantalla}</td>'
+        ,'            <td align="center"><a class="catedit" href="#" onclick="_p52_editCatClic(\'P\',\'P{CDPANTMC}\'); return false;" ><img src="${icons}pencil.png" /></a>{DSPANTMC}</td>'
         ,'        </tr>'
         ,'    </table>'
         ,'</div>'
@@ -309,13 +347,13 @@ Ext.onReady(function()
     
     componenteTpl = new Ext.Template(
     [
-         '<div id="C{cdcomponente}" class="catEntidad componente" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{dscomponente}">'
+         '<div id="C{CDCOMPMC}" class="catEntidad componente" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{DSCOMPMC}">'
         ,'    <table width="90" border="0">'
         ,'        <tr>'
-        ,'            <td align="center"><div class="image"></div><div class="cdcomponente">{cdcomponente}</div></td>'
+        ,'            <td align="center"><div class="image"></div><div class="CDCOMPMC">{CDCOMPMC}</div></td>'
         ,'        </tr>'
         ,'        <tr>'
-        ,'            <td align="center"><a class="catedit" href="#" onclick="_p52_editCatClic(\'C\',\'C{cdcomponente}\'); return false;" ><img src="${icons}pencil.png" /></a>{dscomponente}</td>'
+        ,'            <td align="center"><a class="catedit" href="#" onclick="_p52_editCatClic(\'C\',\'C{CDCOMPMC}\'); return false;" ><img src="${icons}pencil.png" /></a>{DSCOMPMC}</td>'
         ,'        </tr>'
         ,'    </table>'
         ,'</div>'
@@ -323,13 +361,13 @@ Ext.onReady(function()
     
     procesoTpl = new Ext.Template(
     [
-         '<div id="O{cdproceso}" class="catEntidad proceso" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{dsproceso}">'
+         '<div id="O{CDPROCMC}" class="catEntidad proceso" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{DSPROCMC}">'
         ,'    <table width="90" border="0">'
         ,'        <tr>'
-        ,'            <td align="center"><div class="image"></div><div class="cdproceso">{cdproceso}</div></td>'
+        ,'            <td align="center"><div class="image"></div><div class="CDPROCMC">{CDPROCMC}</div></td>'
         ,'        </tr>'
         ,'        <tr>'
-        ,'            <td align="center"><a class="catedit" href="#" onclick="_p52_editCatClic(\'O\',\'O{cdproceso}\'); return false;" ><img src="${icons}pencil.png" /></a>{dsproceso}</td>'
+        ,'            <td align="center"><a class="catedit" href="#" onclick="_p52_editCatClic(\'O\',\'O{CDPROCMC}\'); return false;" ><img src="${icons}pencil.png" /></a>{DSPROCMC}</td>'
         ,'        </tr>'
         ,'    </table>'
         ,'</div>'
@@ -371,7 +409,7 @@ Ext.onReady(function()
         ,'            <td align="center"><img src="${icons}{cdicono}.png" /></td>'
         ,'        </tr>'
         ,'        <tr>'
-        ,'            <td align="center"><input type="radio" name="icono" />{dsicono}</td>'
+        ,'            <td align="center"><input type="radio" name="iconoaccion" />{dsicono}</td>'
         ,'        </tr>'
         ,'    </table>'
         ,'</div>'
@@ -418,6 +456,447 @@ Ext.onReady(function()
         ,isSource  : true
         ,isTarget  : true
     };
+    
+    _p52_formTtipflumc = Ext.create('Ext.window.Window',
+    {
+        title        : 'TR\u00C1MITE'
+        ,modal       : true
+        ,closeAction : 'hide'
+        ,items       :
+        [
+            Ext.create('Ext.form.Panel',
+            {
+                defaults : { style : 'margin:5px;' }
+                ,border  : 0
+                ,items   :
+                [
+                    <s:property value="items.ttipfluFormItems" escapeHtml="false" />
+                    ,{
+                        xtype       : 'fieldcontainer'
+                        ,fieldLabel : 'PROPIEDADES'
+                        ,items      :
+                        [
+                            {
+                                xtype       : 'checkbox'
+                                ,boxLabel   : 'REQUIERE P\u00d3LIZA'
+                                ,name       : 'SWREQPOL'
+                                ,inputValue : 'S'
+                            }
+                            ,{
+                                xtype       : 'checkbox'
+                                ,boxLabel   : 'M\u00DALTIPLES P\u00d3LIZAS'
+                                ,name       : 'SWMULTPOL'
+                                ,inputValue : 'S'
+                                ,align      : 'right'
+                            }
+                        ]
+                    }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text  : 'Guardar'
+                        ,icon : '${icons}disk.png'
+                    }
+                ]
+            })
+        ]
+        ,showNew : function()
+        {
+            var me = this;
+            me.down('form').getForm().reset();
+            me.down('[name=ACCION]').setValue('I');
+            centrarVentanaInterna(me.show());
+        }
+        ,showEdit : function(record)
+        {
+            var me = this;
+            me.down('form').getForm().loadRecord(record);
+            me.down('[name=ACCION]').setValue('U');
+            centrarVentanaInterna(me.show());
+        }
+    });
+    
+    _p52_formTflujomc = Ext.create('Ext.window.Window',
+    {
+        title        : 'PROCESO'
+        ,modal       : true
+        ,closeAction : 'hide'
+        ,items       :
+        [
+            Ext.create('Ext.form.Panel',
+            {
+                defaults : { style : 'margin:5px;' }
+                ,border  : 0
+                ,items   :
+                [
+                    {
+                        xtype       : 'textfield'
+                        ,fieldLabel : '_ACCION'
+                        ,name       : 'ACCION'
+                        ,allowBlank : false
+                    }
+                    ,{
+                        xtype       : 'textfield'
+                        ,fieldLabel : '_CDTIPFLU'
+                        ,name       : 'CDTIPFLU'
+                        ,allowBlank : false
+                    }
+                    ,{
+                        xtype       : 'textfield'
+                        ,fieldLabel : '_CDFLUJOMC'
+                        ,name       : 'CDFLUJOMC'
+                    }
+                    ,{
+                        xtype       : 'textfield'
+                        ,fieldLabel : 'NOMBRE'
+                        ,name       : 'DSFLUJOMC'
+                        ,allowBlank : false
+                    }
+                    ,{
+                        xtype       : 'checkbox'
+                        ,boxLabel   : 'VISIBLE'
+                        ,fieldLabel : 'PROPIEDADES'
+                        ,name       : 'SWFINAL'
+                        ,inputValue : 'S'
+                    }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text  : 'Guardar'
+                        ,icon : '${icons}disk.png'
+                    }
+                ]
+            })
+        ]
+        ,showNew : function()
+        {
+            var ck = 'Mostrando formulario';
+            try
+            {
+                var sel = _p52_gridTramites.getSelectionModel().getSelection();
+                if(sel.length==0)
+                {
+                    throw 'Debe seleccionar un tr\u00e1mite';
+                }
+                
+                var me = this;
+                me.down('form').getForm().reset();
+                me.down('[name=ACCION]').setValue('I');
+                me.down('[name=CDTIPFLU]').setValue(sel[0].get('CDTIPFLU'));
+                centrarVentanaInterna(me.show());
+            }
+            catch(e)
+            {
+                manejaException(e,ck);
+            }
+        }
+        ,showEdit : function(record)
+        {
+            var me = this;
+            me.down('form').getForm().loadRecord(record);
+            me.down('[name=ACCION]').setValue('U');
+            centrarVentanaInterna(me.show());
+        }
+    });
+    
+    _p52_formEstado = Ext.create('Ext.window.Window',
+    {
+        title        : 'STATUS'
+        ,modal       : true
+        ,closeAction : 'hide'
+        ,items       :
+        [
+            Ext.create('Ext.form.Panel',
+            {
+                defaults : { style : 'margin:5px;' }
+                ,border  : 0
+                ,items   :
+                [
+                    {
+                        xtype       : 'textfield'
+                        ,fieldLabel : '_ACCION'
+                        ,name       : 'ACCION'
+                        ,allowBlank : false
+                    }
+                    ,{
+                        xtype       : 'textfield'
+                        ,fieldLabel : '_CDESTADOMC'
+                        ,name       : 'CDESTADOMC'
+                    }
+                    ,{
+                        xtype       : 'textfield'
+                        ,fieldLabel : 'NOMBRE'
+                        ,name       : 'DSESTADOMC'
+                        ,allowBlank : false
+                    }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text  : 'Guardar'
+                        ,icon : '${icons}disk.png'
+                    }
+                ]
+            })
+        ]
+        ,showNew : function()
+        {
+            var ck = 'Mostrando formulario';
+            try
+            {
+                var me = this;
+                me.down('form').getForm().reset();
+                me.down('[name=ACCION]').setValue('I');
+                centrarVentanaInterna(me.show());
+            }
+            catch(e)
+            {
+                manejaException(e,ck);
+            }
+        }
+        ,showEdit : function(data)
+        {
+            var me = this;
+            me.down('form').getForm().loadRecord(data);
+            me.down('[name=ACCION]').setValue('U');
+            centrarVentanaInterna(me.show());
+        }
+    });
+    
+    _p52_formComponente = Ext.create('Ext.window.Window',
+    {
+        title        : 'COMPONENTE'
+        ,modal       : true
+        ,closeAction : 'hide'
+        ,items       :
+        [
+            Ext.create('Ext.form.Panel',
+            {
+                defaults : { style : 'margin:5px;' }
+                ,border  : 0
+                ,items   :
+                [
+                    {
+                        xtype       : 'textfield'
+                        ,fieldLabel : '_ACCION'
+                        ,name       : 'ACCION'
+                        ,allowBlank : false
+                    }
+                    ,{
+                        xtype       : 'textfield'
+                        ,fieldLabel : '_CDCOMPMC'
+                        ,name       : 'CDCOMPMC'
+                    }
+                    ,{
+                        xtype       : 'textfield'
+                        ,fieldLabel : 'NOMBRE'
+                        ,name       : 'DSCOMPMC'
+                        ,allowBlank : false
+                    }
+                    ,{
+                        xtype       : 'textfield'
+                        ,fieldLabel : 'CLASE'
+                        ,name       : 'NOMCOMP'
+                        ,allowBlank : false
+                    }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text  : 'Guardar'
+                        ,icon : '${icons}disk.png'
+                    }
+                ]
+            })
+        ]
+        ,showNew : function()
+        {
+            var ck = 'Mostrando formulario';
+            try
+            {
+                var me = this;
+                me.down('form').getForm().reset();
+                me.down('[name=ACCION]').setValue('I');
+                centrarVentanaInterna(me.show());
+            }
+            catch(e)
+            {
+                manejaException(e,ck);
+            }
+        }
+        ,showEdit : function(data)
+        {
+            var me = this;
+            me.down('form').getForm().loadRecord(data);
+            me.down('[name=ACCION]').setValue('U');
+            centrarVentanaInterna(me.show());
+        }
+    });
+    
+    _p52_formPantalla = Ext.create('Ext.window.Window',
+    {
+        title        : 'PANTALLA'
+        ,modal       : true
+        ,closeAction : 'hide'
+        ,items       :
+        [
+            Ext.create('Ext.form.Panel',
+            {
+                defaults : { style : 'margin:5px;' }
+                ,border  : 0
+                ,items   :
+                [
+                    {
+                        xtype       : 'textfield'
+                        ,fieldLabel : '_ACCION'
+                        ,name       : 'ACCION'
+                        ,allowBlank : false
+                    }
+                    ,{
+                        xtype       : 'textfield'
+                        ,fieldLabel : '_CDPANTMC'
+                        ,name       : 'CDPANTMC'
+                    }
+                    ,{
+                        xtype       : 'textfield'
+                        ,fieldLabel : 'NOMBRE'
+                        ,name       : 'DSPANTMC'
+                        ,width      : 500
+                        ,allowBlank : false
+                    }
+                    ,{
+                        xtype       : 'textfield'
+                        ,fieldLabel : 'URL'
+                        ,name       : 'URLPANTMC'
+                        ,width      : 500
+                        ,allowBlank : false
+                    }
+                    ,{
+                        xtype       : 'fieldcontainer'
+                        ,fieldLabel : 'PROPIEDADES'
+                        ,items      :
+                        [
+                            {
+                                xtype       : 'checkbox'
+                                ,boxLabel   : 'EXTERNA'
+                                ,name       : 'SWEXTERNA'
+                                ,inputValue : 'S'
+                            }
+                        ]
+                    }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text  : 'Guardar'
+                        ,icon : '${icons}disk.png'
+                    }
+                ]
+            })
+        ]
+        ,showNew : function()
+        {
+            var ck = 'Mostrando formulario';
+            try
+            {
+                var me = this;
+                me.down('form').getForm().reset();
+                me.down('[name=ACCION]').setValue('I');
+                centrarVentanaInterna(me.show());
+            }
+            catch(e)
+            {
+                manejaException(e,ck);
+            }
+        }
+        ,showEdit : function(data)
+        {
+            var me = this;
+            me.down('form').getForm().loadRecord(data);
+            me.down('[name=ACCION]').setValue('U');
+            centrarVentanaInterna(me.show());
+        }
+    });
+    
+    _p52_formProceso = Ext.create('Ext.window.Window',
+    {
+        title        : 'PROCESO'
+        ,modal       : true
+        ,closeAction : 'hide'
+        ,items       :
+        [
+            Ext.create('Ext.form.Panel',
+            {
+                defaults : { style : 'margin:5px;' }
+                ,border  : 0
+                ,items   :
+                [
+                    {
+                        xtype       : 'textfield'
+                        ,fieldLabel : '_ACCION'
+                        ,name       : 'ACCION'
+                        ,allowBlank : false
+                    }
+                    ,{
+                        xtype       : 'textfield'
+                        ,fieldLabel : '_CDPROCMC'
+                        ,name       : 'CDPROCMC'
+                    }
+                    ,{
+                        xtype       : 'textfield'
+                        ,fieldLabel : 'NOMBRE'
+                        ,name       : 'DSPROCMC'
+                        ,width      : 500
+                        ,allowBlank : false
+                    }
+                    ,{
+                        xtype       : 'textfield'
+                        ,fieldLabel : 'URL'
+                        ,name       : 'URLPROCMC'
+                        ,width      : 500
+                        ,allowBlank : false
+                    }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text  : 'Guardar'
+                        ,icon : '${icons}disk.png'
+                    }
+                ]
+            })
+        ]
+        ,showNew : function()
+        {
+            var ck = 'Mostrando formulario';
+            try
+            {
+                var me = this;
+                me.down('form').getForm().reset();
+                me.down('[name=ACCION]').setValue('I');
+                centrarVentanaInterna(me.show());
+            }
+            catch(e)
+            {
+                manejaException(e,ck);
+            }
+        }
+        ,showEdit : function(data)
+        {
+            var me = this;
+            me.down('form').getForm().loadRecord(data);
+            me.down('[name=ACCION]').setValue('U');
+            centrarVentanaInterna(me.show());
+        }
+    });
     ////// componentes //////
     
     ////// contenido //////
@@ -473,9 +952,10 @@ Ext.onReady(function()
                             titlePosition : 0
                             ,items        :
                             [{
-                                xtype : 'button'
-                                ,text : 'Agregar'
-                                ,icon : '${icons}add.png'
+                                xtype    : 'button'
+                                ,text    : 'Agregar'
+                                ,icon    : '${icons}add.png'
+                                ,handler : function(){ _p52_formTtipflumc.showNew(); }
                             }]
                         }
                         ,hideHeaders : true
@@ -490,31 +970,43 @@ Ext.onReady(function()
                                 ,width   : 30
                                 ,icon    : '${icons}pencil.png'
                                 ,tooltip : 'Editar'
+                                ,handler : function(me,row,col,item,e,record)
+                                {
+                                    _p52_formTtipflumc.showEdit(record);
+                                }
                             }
                         ]
                         ,store : Ext.create('Ext.data.Store',
                         {
                             autoLoad : true
-                            ,fields  : [ 'DSTIPFLU' ]
+                            ,fields  :
+                            [
+                                'CDTIPFLU'
+                                ,'DSTIPFLU'
+                                ,'CDTIPTRA'
+                                ,'SWMULTPOL'
+                                ,'SWREQPOL'
+                            ]
                             ,proxy   :
                             {
                                 type    : 'memory'
                                 ,reader : 'json'
                                 ,data   :
                                 [
-                                    { DSTIPFLU : '-poliza nueva' }
-                                    ,{ DSTIPFLU : '-cambio de contratante' }
-                                    ,{ DSTIPFLU : '-otro' }
-                                    ,{ DSTIPFLU : '-otro' }
-                                    ,{ DSTIPFLU : '-otro' }
-                                    ,{ DSTIPFLU : '-otro' }
-                                    ,{ DSTIPFLU : '-otro' }
-                                    ,{ DSTIPFLU : '-otro' }
-                                    ,{ DSTIPFLU : '-otro' }
-                                    ,{ DSTIPFLU : '-otro' }
-                                    ,{ DSTIPFLU : '-otro' }
-                                    ,{ DSTIPFLU : '-otro' }
-                                    ,{ DSTIPFLU : '-otro' }
+                                    {
+                                        CDTIPFLU   : 1
+                                        ,DSTIPFLU  : 'POLIZA NUEVA'
+                                        ,CDTIPTRA  : 2
+                                        ,SWMULTPOL : 'S'
+                                        ,SWREQPOL  : 'N'
+                                    }
+                                    ,{
+                                        CDTIPFLU   : 2
+                                        ,DSTIPFLU  : 'CAMBIO DE CONTRATANTE'
+                                        ,CDTIPTRA  : 2
+                                        ,SWMULTPOL : 'N'
+                                        ,SWREQPOL  : 'S'
+                                    }
                                 ]
                             }
                         })
@@ -523,7 +1015,20 @@ Ext.onReady(function()
                             select : function(me,record)
                             {
                                 _p52_gridProcesos.store.removeAll();
-                                _p52_gridProcesos.store.add({ DSFLUJOMC : '-emision salud individual' },{ DSFLUJOMC : '-otro '+(new Date().getTime()) });
+                                _p52_gridProcesos.store.add(
+                                    {
+                                        CDTIPFLU   : 1
+                                        ,CDFLUJOMC : 1
+                                        ,DSFLUJOMC : 'EMISION SALUD VITAL'
+                                        ,SWFINAL   : 'S'
+                                    }
+                                    ,{
+                                        CDTIPFLU   : 1
+                                        ,CDFLUJOMC : 2
+                                        ,DSFLUJOMC : 'EMISION SALUD COLECTIVO'
+                                        ,SWFINAL   : 'N'
+                                    }
+                                );
                             }
                         }
                     })
@@ -537,9 +1042,10 @@ Ext.onReady(function()
                             titlePosition : 0
                             ,items        :
                             [{
-                                xtype : 'button'
-                                ,text : 'Agregar'
-                                ,icon : '${icons}add.png'
+                                xtype    : 'button'
+                                ,text    : 'Agregar'
+                                ,icon    : '${icons}add.png'
+                                ,handler : function(me){ _p52_formTflujomc.showNew(); }
                             }]
                         }
                         ,hideHeaders : true
@@ -551,19 +1057,40 @@ Ext.onReady(function()
                             }
                             ,{
                                 xtype    : 'actioncolumn'
-                                ,width   : 30
-                                ,icon    : '${icons}pencil.png'
-                                ,tooltip : 'Editar'
-                                ,handler : function(view,row,col,item,e,record)
-                                {
-                                    _p52_navega(2);
-                                }
+                                ,width   : 50
+                                ,items   :
+                                [
+                                    {
+                                        icon    : '${icons}pencil.png'
+                                        ,tooltip : 'Editar'
+                                        ,handler : function(view,row,col,item,e,record)
+                                        {
+                                            _p52_formTflujomc.showEdit(record);
+                                        }
+                                    }
+                                    ,{
+                                        icon    : '${icons}chart_line.png'
+                                        ,tooltip : 'Modelar'
+                                        ,handler : function(view,row,col,item,e,record)
+                                        {
+                                            _p52_selectedFlujo = record;
+                                            _p52_panelDibujo.setTitle(record.get('DSFLUJOMC'));
+                                            _p52_navega(2);
+                                        }
+                                    }
+                                ]
                             }
                         ]
                         ,store : Ext.create('Ext.data.Store',
                         {
                             autoLoad : true
-                            ,fields  : [ 'DSFLUJOMC' ]
+                            ,fields  :
+                            [
+                                'CDTIPFLU'
+                                ,'CDFLUJOMC'
+                                ,'DSFLUJOMC'
+                                ,'SWFINAL'
+                            ]
                             ,proxy   :
                             {
                                 type    : 'memory'
@@ -577,7 +1104,7 @@ Ext.onReady(function()
             ,Ext.create('Ext.panel.Panel',
             {
                 itemId      : '_p52_panelDibujo'
-                ,title      : 'PROCESO DE PRUEBA'
+                ,title      : ''
                 ,titleAlign : 'center'
                 ,region     : 'center'
                 ,hidden     : true
@@ -587,7 +1114,18 @@ Ext.onReady(function()
                 [{
                     type     : 'gear'
                     ,tooltip : 'Editar'
-                    ,handler : function(){ alert('editar proceso'); }
+                    ,handler : function()
+                    {
+                        var ck = 'Editando proceso';
+                        try
+                        {
+                            _p52_formTflujomc.showEdit(_p52_selectedFlujo);
+                        }
+                        catch(e)
+                        {
+                            manejaException(e,ck);
+                        }
+                    }
                 }]
                 ,items :
                 [
@@ -755,15 +1293,58 @@ Ext.onReady(function()
                                 ,items       :
                                 [
                                     {
-                                        xtype  : 'fieldset'
-                                        ,items :
+                                        xtype     : 'form'
+                                        ,defaults : { style : 'margin:5px;' }
+                                        ,border   : 0
+                                        ,items    :
                                         [
                                             {
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_ACCION'
+                                                ,name       : 'ACCION'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_CDTIPFLU'
+                                                ,name       : 'CDTIPFLU'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_CDFLUJOMC'
+                                                ,name       : 'CDFLUJOMC'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_CDESTADO'
+                                                ,name       : 'CDESTADO'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_WEBID'
+                                                ,name       : 'WEBID'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_XPOS'
+                                                ,name       : 'XPOS'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_YPOS'
+                                                ,name       : 'YPOS'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
                                                 xtype       : 'slider'
                                                 ,fieldLabel : 'Tiempo m\u00e1ximo en horas'
                                                 ,minValue   : 0
                                                 ,maxValue   : 40
-                                                ,value      : 0
                                                 ,increment  : 1
                                                 ,name       : 'TIMEMAXH'
                                                 ,labelAlign : 'top'
@@ -771,9 +1352,8 @@ Ext.onReady(function()
                                             ,{
                                                 xtype       : 'slider'
                                                 ,fieldLabel : 'Tiempo m\u00e1ximo en minutos'
-                                                ,minValue   : 30
+                                                ,minValue   : 0
                                                 ,maxValue   : 60
-                                                ,value      : 30
                                                 ,increment  : 5
                                                 ,name       : 'TIMEMAXM'
                                                 ,labelAlign : 'top'
@@ -783,7 +1363,6 @@ Ext.onReady(function()
                                                 ,fieldLabel : 'Tiempo primer alerta en horas'
                                                 ,minValue   : 0
                                                 ,maxValue   : 40
-                                                ,value      : 0
                                                 ,increment  : 1
                                                 ,name       : 'TIMEWRN1H'
                                                 ,labelAlign : 'top'
@@ -791,9 +1370,8 @@ Ext.onReady(function()
                                             ,{
                                                 xtype       : 'slider'
                                                 ,fieldLabel : 'Tiempo primer alerta en minutos'
-                                                ,minValue   : 30
+                                                ,minValue   : 0
                                                 ,maxValue   : 60
-                                                ,value      : 0
                                                 ,increment  : 5
                                                 ,name       : 'TIMEWRN1M'
                                                 ,labelAlign : 'top'
@@ -803,7 +1381,6 @@ Ext.onReady(function()
                                                 ,fieldLabel : 'Tiempo segunda alerta en horas'
                                                 ,minValue   : 0
                                                 ,maxValue   : 40
-                                                ,value      : 0
                                                 ,increment  : 1
                                                 ,name       : 'TIMEWRN2H'
                                                 ,labelAlign : 'top'
@@ -811,9 +1388,8 @@ Ext.onReady(function()
                                             ,{
                                                 xtype       : 'slider'
                                                 ,fieldLabel : 'Tiempo segunda alerta en minutos'
-                                                ,minValue   : 30
+                                                ,minValue   : 00
                                                 ,maxValue   : 60
-                                                ,value      : 0
                                                 ,increment  : 5
                                                 ,name       : 'TIMEWRN2M'
                                                 ,labelAlign : 'top'
@@ -826,7 +1402,7 @@ Ext.onReady(function()
                                             }
                                             ,{
                                                 xtype        : 'fieldcontainer'
-                                                ,fieldLabel  : 'Tipo asignaci\u00f3n'
+                                                ,fieldLabel  : 'Tipo de asignaci\u00f3n'
                                                 ,labelAlign  : 'top'
                                                 ,defaultType : 'radiofield'
                                                 ,defaults    : { flex : 1 }
@@ -837,7 +1413,6 @@ Ext.onReady(function()
                                                         boxLabel    : 'Simple'
                                                         ,name       : 'CDTIPASIG'
                                                         ,inputValue : 1
-                                                        ,checked    : true
                                                     }
                                                     ,{
                                                         boxLabel    : 'Carrusel'
@@ -847,7 +1422,7 @@ Ext.onReady(function()
                                                     ,{
                                                         boxLabel    : 'Carga'
                                                         ,name       : 'CDTIPASIG'
-                                                        ,inputValue : 'xl'
+                                                        ,inputValue : '4'
                                                     }
                                                 ]
                                             }
@@ -872,9 +1447,9 @@ Ext.onReady(function()
                                                 ,width     : 55
                                             }
                                             ,{
-                                                text       : 'DEF.'
+                                                text       : 'TRAB.'
                                                 ,xtype     : 'checkcolumn'
-                                                ,dataIndex : 'SWDEFAULT'
+                                                ,dataIndex : 'SWTRABAJO'
                                                 ,width     : 55
                                             }
                                             ,{
@@ -898,7 +1473,7 @@ Ext.onReady(function()
                                                 'CDSISROL'
                                                 ,'DSSISROL'
                                                 ,{ name : 'SWVER'     , type : 'boolean' }
-                                                ,{ name : 'SWDEFAULT' , type : 'boolean' }
+                                                ,{ name : 'SWTRABAJO' , type : 'boolean' }
                                                 ,{ name : 'SWCOMPRA'  , type : 'boolean' }
                                                 ,{ name : 'SWREASIG'  , type : 'boolean' }
                                                 ,'CDROLASIG'
@@ -1019,15 +1594,59 @@ Ext.onReady(function()
                                 [
                                     {
                                         xtype       : 'textfield'
-                                        ,fieldLabel : 'Nombre'
-                                        ,labelAlign : 'top'
-                                        ,name       : 'DSVALIDA'
+                                        ,fieldLabel : '_ACCION'
+                                        ,name       : 'ACCION'
+                                        ,allowBlank : false
                                     }
                                     ,{
                                         xtype       : 'textfield'
-                                        ,fieldLabel : 'Expresi\u00f3n'
+                                        ,fieldLabel : '_CDTIPFLU'
+                                        ,name       : 'CDTIPFLU'
+                                        ,allowBlank : false
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : '_CDFLUJOMC'
+                                        ,name       : 'CDFLUJOMC'
+                                        ,allowBlank : false
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : '_CDVALIDA'
+                                        ,name       : 'CDVALIDA'
+                                        ,allowBlank : false
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : '_WEBID'
+                                        ,name       : 'WEBID'
+                                        ,allowBlank : false
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : '_XPOS'
+                                        ,name       : 'XPOS'
+                                        ,allowBlank : false
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : '_YPOS'
+                                        ,name       : 'YPOS'
+                                        ,allowBlank : false
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : 'NOMBRE'
+                                        ,labelAlign : 'top'
+                                        ,name       : 'DSVALIDA'
+                                        ,allowBlank : false
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : 'EXPRESI\u00D3N'
                                         ,labelAlign : 'top'
                                         ,name       : 'CDEXPRES'
+                                        ,allowBlank : false
                                     }
                                 ]
                             })
@@ -1061,35 +1680,82 @@ Ext.onReady(function()
                                 ,items :
                                 [
                                     {
-                                        xtype     : 'fieldset'
+                                        xtype     : 'form'
+                                        ,border   : 0
                                         ,defaults : { style : 'margin:5px;' }
                                         ,items    :
                                         [
                                             {
                                                 xtype       : 'textfield'
+                                                ,fieldLabel : '_ACCION'
+                                                ,name       : 'ACCION'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_CDTIPFLU'
+                                                ,name       : 'CDTIPFLU'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_CDFLUJOMC'
+                                                ,name       : 'CDFLUJOMC'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_CDREVISI'
+                                                ,name       : 'CDESTADO'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_WEBID'
+                                                ,name       : 'WEBID'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_XPOS'
+                                                ,name       : 'XPOS'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_YPOS'
+                                                ,name       : 'YPOS'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
                                                 ,fieldLabel : 'Nombre'
                                                 ,labelAlign : 'top'
                                                 ,name       : 'DSREVISI'
+                                                ,allowBlank : false
                                             }
                                         ]
                                     }
                                     ,Ext.create('Ext.grid.Panel',
                                     {
-                                        itemId   : '_p52_gridRevDoc'
-                                        ,title   : 'DOCUMENTOS'
-                                        ,height  : 220
+                                        itemId    : '_p52_gridRevDoc'
+                                        ,title    : 'DOCUMENTOS'
+                                        ,height   : 220
+                                        ,features :
+                                        [{
+                                            ftype           : 'groupingsummary'
+                                            ,startCollapsed : true
+                                            ,groupHeaderTpl :
+                                            [
+                                                '{name}'
+                                            ]
+                                        }]
                                         ,columns :
                                         [
                                             {
                                                 text       : 'DOCUMENTO'
                                                 ,dataIndex : 'DSDOCUME'
                                                 ,flex      : 1
-                                            }
-                                            ,{
-                                                text       : 'INCLUIR'
-                                                ,xtype     : 'checkcolumn'
-                                                ,dataIndex : 'SWINCLUIR'
-                                                ,width     : 70
                                             }
                                             ,{
                                                 text       : 'OBLIGA.'
@@ -1100,11 +1766,14 @@ Ext.onReady(function()
                                         ]
                                         ,store : Ext.create('Ext.data.Store',
                                         {
-                                            autoLoad : true
-                                            ,fields  :
+                                            autoLoad    : true
+                                            ,groupField : 'DSTIPTRA'
+                                            ,fields     :
                                             [
-                                                'DSDOCUME'
-                                                ,{ name : 'SWINCLUIR' , type : 'boolean' }
+                                                'CDDOCUME'
+                                                ,'DSDOCUME'
+                                                ,'CDTIPTRA'
+                                                ,'DSTIPTRA'
                                                 ,{ name : 'SWOBLIGA'  , type : 'boolean' }
                                             ]
                                             ,proxy   :
@@ -1114,31 +1783,40 @@ Ext.onReady(function()
                                                 ,data   :
                                                 [
                                                     {
-                                                        DSDOCUME : 'CRENDENCIAL ELECTOR'
+                                                        DSTIPTRA  : 'EMISION'
+                                                        ,DSDOCUME : 'CRENDENCIAL ELECTOR'
                                                     }
                                                     ,{
-                                                        DSDOCUME : 'SOLICITUD DE COTIZACION'
+                                                        DSTIPTRA  : 'EMISION'
+                                                        ,DSDOCUME : 'SOLICITUD DE COTIZACION'
                                                     }
                                                     ,{
-                                                        DSDOCUME : 'CURP'
+                                                        DSTIPTRA  : 'EMISION'
+                                                        ,DSDOCUME : 'CURP'
                                                     }
                                                     ,{
-                                                        DSDOCUME : 'RFC'
+                                                        DSTIPTRA  : 'EMISION'
+                                                        ,DSDOCUME : 'RFC'
                                                     }
                                                     ,{
-                                                        DSDOCUME : 'INFORME MEDICO'
+                                                        DSTIPTRA  : 'SINIESTROS'
+                                                        ,DSDOCUME : 'INFORME MEDICO'
                                                     }
                                                     ,{
-                                                        DSDOCUME : 'CERTIFICADO ESTUDIOS'
+                                                        DSTIPTRA  : 'SINIESTROS'
+                                                        ,DSDOCUME : 'CERTIFICADO ESTUDIOS'
                                                     }
                                                     ,{
-                                                        DSDOCUME : 'AUTORIZACION SERVICIOS'
+                                                        DSTIPTRA  : 'SINIESTROS'
+                                                        ,DSDOCUME : 'AUTORIZACION SERVICIOS'
                                                     }
                                                     ,{
-                                                        DSDOCUME : 'FACTURA'
+                                                        DSTIPTRA  : 'SINIESTROS'
+                                                        ,DSDOCUME : 'FACTURA'
                                                     }
                                                     ,{
-                                                        DSDOCUME : 'ORDEN DE SERVICIO'
+                                                        DSTIPTRA  : 'SINIESTROS'
+                                                        ,DSDOCUME : 'ORDEN DE SERVICIO'
                                                     }
                                                 ]
                                             }
@@ -1176,19 +1854,57 @@ Ext.onReady(function()
                                 ,items :
                                 [
                                     {
-                                        xtype     : 'fieldset'
+                                        xtype     : 'form'
+                                        ,border   : 0
                                         ,defaults : { style : 'margin:5px;' }
                                         ,items    :
                                         [
                                             {
+		                                        xtype       : 'textfield'
+		                                        ,fieldLabel : '_ACCION'
+		                                        ,name       : 'ACCION'
+		                                        ,allowBlank : false
+		                                    }
+		                                    ,{
+		                                        xtype       : 'textfield'
+		                                        ,fieldLabel : '_CDTIPFLU'
+		                                        ,name       : 'CDTIPFLU'
+		                                        ,allowBlank : false
+		                                    }
+		                                    ,{
+		                                        xtype       : 'textfield'
+		                                        ,fieldLabel : '_CDFLUJOMC'
+		                                        ,name       : 'CDFLUJOMC'
+		                                        ,allowBlank : false
+		                                    }
+		                                    ,{
+		                                        xtype       : 'textfield'
+		                                        ,fieldLabel : '_CDACCION'
+		                                        ,name       : 'CDACCION'
+		                                        ,allowBlank : false
+		                                    }
+                                            ,{
                                                 xtype       : 'textfield'
-                                                ,fieldLabel : 'Nombre'
-                                                ,labelAlign : 'top'
-                                                ,name       : 'DSACCION'
+                                                ,fieldLabel : '_IDORIGEN'
+                                                ,name       : 'IDORIGEN'
+                                                ,allowBlank : false
                                             }
                                             ,{
                                                 xtype       : 'textfield'
-                                                ,fieldLabel : 'Valor'
+                                                ,fieldLabel : '_IDDESTIN'
+                                                ,name       : 'IDDESTIN'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : 'NOMBRE'
+                                                ,labelAlign : 'top'
+                                                ,name       : 'DSACCION'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : 'VALOR'
                                                 ,labelAlign : 'top'
                                                 ,name       : 'CDVALOR'
                                             }
@@ -1217,7 +1933,8 @@ Ext.onReady(function()
                                             autoLoad : true
                                             ,fields  :
                                             [
-                                                'DSSISROL'
+                                                'CDSISROL'
+                                                ,'DSSISROL'
                                                 ,{ name : 'SWPERMISO' , type : 'boolean' }
                                             ]
                                             ,proxy   :
@@ -1279,11 +1996,11 @@ Ext.onReady(function()
                 ,buttons     :
                 [
                     {
-                        text  : 'Guardar'
+                        text  : 'Guardar coordenadas'
                         ,icon : '${icons}disk.png'
                     }
                     ,{
-                        text     : 'Guardar y regresar'
+                        text     : 'Guardar coordenadas y regresar'
                         ,icon    : '${icons}disk.png'
                         ,handler : function(me)
                         {
@@ -1291,7 +2008,7 @@ Ext.onReady(function()
                         }
                     }
                     ,{
-                        text  : 'Salir sin guardar'
+                        text  : 'Salir sin guardar coordenadas'
                         ,icon : '${icons}cancel.png'
                         ,handler : function(me)
                         {
@@ -1332,7 +2049,7 @@ Ext.onReady(function()
     _p52_cargarRevisiones();
     _p52_cargarIconos();
     
-    _p52_navega(2);
+    //_p52_navega(2);
     
     jsPlumb.ready(function()
     {
@@ -1389,30 +2106,33 @@ function _p52_cargarEstados()
         xtype   : 'panel'
         ,tpl    : estadoTpl
         ,border : 0
+        ,itemId : 'E100'
         ,data   :
         {
-            cdestado  : 100
-            ,dsestado : 'Nuevo'
+            CDESTADOMC  : 100
+            ,DSESTADOMC : 'NUEVO'
         }
     }
     ,{
         xtype   : 'panel'
         ,tpl    : estadoTpl
         ,border : 0
+        ,itemId : 'E101'
         ,data   :
         {
-            cdestado  : 101
-            ,dsestado : 'En revisión por el supervisor'
+            CDESTADOMC  : 101
+            ,DSESTADOMC : 'EN REVISION'
         }
     }
     ,{
         xtype   : 'panel'
         ,tpl    : estadoTpl
         ,border : 0
+        ,itemId : 'E99'
         ,data   :
         {
-            cdestado  : 999
-            ,dsestado : 'Confirmado'
+            CDESTADOMC  : 999
+            ,DSESTADOMC : 'CONFIRMADO'
         }
     }
     );
@@ -1423,36 +2143,58 @@ function _p52_cargarPantallas()
     debug('_p52_cargarPantallas');
     _p52_catalogoPantallas.removeAll();
     _p52_catalogoPantallas.add(
-    {
-        xtype   : 'panel'
-        ,tpl    : pantallaTpl
-        ,border : 0
-        ,data   :
-        {
-            cdpantalla  : 45
-            ,dspantalla : 'Datos complementarios'
-        }
-    }
-    ,{
-        xtype   : 'panel'
-        ,tpl    : pantallaTpl
-        ,border : 0
-        ,data   :
-        {
-            cdpantalla  : 86
-            ,dspantalla : 'Cotizacion auto individual'
-        }
-    }
-    ,{
-        xtype   : 'panel'
-        ,tpl    : pantallaTpl
-        ,border : 0
-        ,data   :
-        {
-            cdpantalla  : 102
-            ,dspantalla : 'Cotizacion salud individual'
-        }
-    }
+	    {
+	        xtype   : 'panel'
+	        ,tpl    : pantallaTpl
+	        ,border : 0
+	        ,itemId : 'P45'
+	        ,data   :
+	        {
+	            CDPANTMC   : 45
+	            ,DSPANTMC  : 'DATOS COMPLEMENTARIOS'
+	            ,URLPANTMC : '/emision/complementarios.action'
+	            ,SWEXTERNA : 'N'
+	        }
+	    }
+	    ,{
+	        xtype   : 'panel'
+	        ,tpl    : pantallaTpl
+	        ,border : 0
+            ,itemId : 'P86'
+	        ,data   :
+	        {
+	            CDPANTMC  : 86
+	            ,DSPANTMC : 'COTIZACION AUTO INDIVIDUAL'
+	            ,URLPANTMC : '/emision/cotizacionAutoIndividual.action'
+	            ,SWEXTERNA : 'N'
+	        }
+	    }
+	    ,{
+	        xtype   : 'panel'
+	        ,tpl    : pantallaTpl
+	        ,border : 0
+            ,itemId : 'P102'
+	        ,data   :
+	        {
+	            CDPANTMC   : 102
+	            ,DSPANTMC  : 'COTIZACION SALUD INDIVIDUAL'
+	            ,URLPANTMC : '/emision/cotizacion.action'
+	            ,SWEXTERNA : 'N'
+	        }
+	    }
+	    ,{
+	        xtype   : 'panel'
+	        ,tpl    : pantallaTpl
+	        ,border : 0
+            ,itemId : 'P103'
+	        ,data   :
+	        {
+	            CDPANTMC   : 103
+	            ,DSPANTMC  : 'SISA'
+	            ,URLPANTMC : 'http://sisa.com/pantalla1.jsp'
+	            ,SWEXTERNA : 'S'
+	        }
+	    }
     );
 }
 
@@ -1461,36 +2203,42 @@ function _p52_cargarComponentes()
     debug('_p52_cargarComponentes');
     _p52_catalogoComponentes.removeAll();
     _p52_catalogoComponentes.add(
-    {
-        xtype   : 'panel'
-        ,tpl    : componenteTpl
-        ,border : 0
-        ,data   :
-        {
-            cdcomponente  : 1
-            ,dscomponente : 'Ventana de documentos'
-        }
-    }
-    ,{
-        xtype   : 'panel'
-        ,tpl    : componenteTpl
-        ,border : 0
-        ,data   :
-        {
-            cdcomponente  : 2
-            ,dscomponente : 'Ventana de historial'
-        }
-    }
-    ,{
-        xtype   : 'panel'
-        ,tpl    : componenteTpl
-        ,border : 0
-        ,data   :
-        {
-            cdcomponente  : 3
-            ,dscomponente : 'Vista previa tarifa'
-        }
-    }
+	    {
+	        xtype   : 'panel'
+	        ,tpl    : componenteTpl
+	        ,border : 0
+	        ,itemId : 'C1'
+	        ,data   :
+	        {
+	            CDCOMPMC  : 1
+	            ,DSCOMPMC : 'VENTANA DE DOCUMENTOS'
+	            ,NOMCOMP  : 'VENTANA_DOCUMENTOS'
+	        }
+	    }
+	    ,{
+	        xtype   : 'panel'
+	        ,tpl    : componenteTpl
+	        ,border : 0
+            ,itemId : 'C2'
+	        ,data   :
+	        {
+	            CDCOMPMC  : 2
+	            ,DSCOMPMC : 'VENTANA DE HISTORIAL'
+                ,NOMCOMP  : 'VENTANA_HISTORIAL'
+	        }
+	    }
+	    ,{
+	        xtype   : 'panel'
+	        ,tpl    : componenteTpl
+	        ,border : 0
+            ,itemId : 'C3'
+	        ,data   :
+	        {
+	            CDCOMPMC  : 3
+	            ,DSCOMPMC : 'VISTA PREVIA TARIFA'
+	            ,NOMCOMP  : 'VP_TARIFA'
+	        }
+	    }
     );
 }
 
@@ -1499,36 +2247,42 @@ function _p52_cargarProcesos()
     debug('_p52_cargarProcesos');
     _p52_catalogoProcesos.removeAll();
     _p52_catalogoProcesos.add(
-    {
-        xtype   : 'panel'
-        ,tpl    : procesoTpl
-        ,border : 0
-        ,data   :
-        {
-            cdproceso  : 1
-            ,dsproceso : 'Emision'
-        }
-    }
-    ,{
-        xtype   : 'panel'
-        ,tpl    : procesoTpl
-        ,border : 0
-        ,data   :
-        {
-            cdproceso  : 2
-            ,dsproceso : 'WS Salud'
-        }
-    }
-    ,{
-        xtype   : 'panel'
-        ,tpl    : procesoTpl
-        ,border : 0
-        ,data   :
-        {
-            cdproceso  : 3
-            ,dsproceso : 'WS Autos'
-        }
-    }
+	    {
+	        xtype   : 'panel'
+	        ,tpl    : procesoTpl
+	        ,border : 0
+	        ,itemId : 'O1'
+	        ,data   :
+	        {
+	            CDPROCMC   : 1
+	            ,DSPROCMC  : 'EMISION'
+	            ,URLPROCMC : '/EMISION/PROCESOEMISION.ACTION'
+	        }
+	    }
+	    ,{
+	        xtype   : 'panel'
+	        ,tpl    : procesoTpl
+	        ,border : 0
+            ,itemId : 'O2'
+	        ,data   :
+	        {
+	            CDPROCMC   : 2
+	            ,DSPROCMC  : 'WS SALUD'
+                ,URLPROCMC : '/EMISION/EJECUTAWSSALUD.ACTION'
+	        }
+	    }
+	    ,{
+	        xtype   : 'panel'
+	        ,tpl    : procesoTpl
+	        ,border : 0
+            ,itemId : 'O3'
+	        ,data   :
+	        {
+	            CDPROCMC   : 3
+	            ,DSPROCMC  : 'WS AUTOS'
+                ,URLPROCMC : '/EMISION/EJECUTAWSSALUD.ACTION'
+	        }
+	    }
     );
 }
 
@@ -1781,6 +2535,88 @@ function _p52_removeEndpoint(id)
 function _p52_editCatClic(tipo,id)
 {
     debug('_p52_editCatClic tipo,id:',tipo,id,'.');
+    
+    if(tipo=='E')
+    {
+        if(Ext.isEmpty(id))
+        {
+            _p52_formEstado.showNew();
+        }
+        else
+        {
+            debug('recuperando:',_fieldById(id).initialConfig.data,'.');
+            var rec =
+            {
+                datos    : _fieldById(id).initialConfig.data
+                ,getData : function()
+                {
+                    return this.datos;
+                }
+            };
+            _p52_formEstado.showEdit(rec);
+        }
+    }
+    else if(tipo=='P')
+    {
+        if(Ext.isEmpty(id))
+        {
+            _p52_formPantalla.showNew();
+        }
+        else
+        {
+            debug('recuperando:',_fieldById(id).initialConfig.data,'.');
+            var rec =
+            {
+                datos    : _fieldById(id).initialConfig.data
+                ,getData : function()
+                {
+                    return this.datos;
+                }
+            };
+            _p52_formPantalla.showEdit(rec);
+        }
+    }
+    else if(tipo=='C')
+    {
+        if(Ext.isEmpty(id))
+        {
+            _p52_formComponente.showNew();
+        }
+        else
+        {
+            debug('recuperando:',_fieldById(id).initialConfig.data,'.');
+            var rec =
+            {
+                datos    : _fieldById(id).initialConfig.data
+                ,getData : function()
+                {
+                    return this.datos;
+                }
+            };
+            _p52_formComponente.showEdit(rec);
+        }
+    }
+    else if(tipo=='O')
+    {
+        if(Ext.isEmpty(id))
+        {
+            _p52_formProceso.showNew();
+        }
+        else
+        {
+            debug('recuperando:',_fieldById(id).initialConfig.data,'.');
+            var rec =
+            {
+                datos    : _fieldById(id).initialConfig.data
+                ,getData : function()
+                {
+                    return this.datos;
+                }
+            };
+            _p52_formProceso.showEdit(rec);
+        }
+    }
+    
 }
 ////// funciones //////
 
