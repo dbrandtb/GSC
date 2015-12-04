@@ -70,5 +70,30 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> recuperaTiconos() throws Exception
+	{
+		Map<String,Object>       procRes = ejecutaSP(new RecuperaTiconosSP(getDataSource()),new HashMap<String,String>());
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		return lista;
+	}
+	
+	protected class RecuperaTiconosSP extends StoredProcedure
+	{
+		protected RecuperaTiconosSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_GET_TICONOS");
+			String[] cols=new String[]{ "CDICONO" , "DSICONO" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 
 }
