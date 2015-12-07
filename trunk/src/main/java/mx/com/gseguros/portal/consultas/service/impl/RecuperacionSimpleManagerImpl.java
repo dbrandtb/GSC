@@ -10,9 +10,6 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
-import mx.com.gseguros.portal.consultas.model.RecuperacionSimpleJAIME;
-import mx.com.gseguros.portal.consultas.model.RecuperacionSimpleSalvador;
-import mx.com.gseguros.portal.consultas.model.RecuperacionSimple_GDH;
 import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
@@ -779,23 +776,23 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			{
 				lista = flujoMesaControlDAO.recuperaTtiptramc();
 			}
-			else if(consulta.equals(RecuperacionSimple_GDH.RECUPERAR_TTIPFLUMC))
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TTIPFLUMC))
 			{	
 				lista = flujoMesaControlDAO.recuperaTtipflumc();
 			}
-			else if(consulta.equals(RecuperacionSimpleSalvador.RECUPERAR_TESTADOMC))
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TESTADOMC))
 			{	
 				lista = flujoMesaControlDAO.recuperaTestadomc();
 			}
-			else if(consulta.equals(RecuperacionSimpleJAIME.RECUPERAR_TPANTAMC))
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TPANTAMC))
 			{
 				lista = flujoMesaControlDAO.recuperaTpantamc();
 			}
-			else if(consulta.equals(RecuperacionSimpleJAIME.RECUPERAR_TCOMPMC))
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TCOMPMC))
 			{
 				lista = flujoMesaControlDAO.recuperaTcompmc();
 			}
-			else if(consulta.equals(RecuperacionSimple_GDH.RECUPERAR_TPROCMC))
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TPROCMC))
 			{
 				lista = flujoMesaControlDAO.recuperaTprocmc();
 			}
@@ -815,13 +812,13 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String cdtipflu = params.get("cdtipflu");
 				lista = flujoMesaControlDAO.recuperaTflujomc(cdtipflu);
 			}
-			else if(consulta.equals(RecuperacionSimple_GDH.RECUPERAR_TFLUEST))
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUEST))
 			{
 				String cdtipflu = params.get("cdtipflu");
 				String cdflujomc = params.get("cdflujomc"); 
 				lista = flujoMesaControlDAO.recuperaTfluest(cdtipflu, cdflujomc);
 			}
-			else if(consulta.equals(RecuperacionSimpleSalvador.RECUPERAR_TFLUESTROL))
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUESTROL))
 			{
 				String cdtipflu = params.get("cdtipflu");
 				String cdflujomc = params.get("cdflujomc");
@@ -829,7 +826,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				
 				lista = flujoMesaControlDAO.recuperaTfluestrol(cdtipflu,cdflujomc,cdestadomc);
 			}
-			else if(consulta.equals(RecuperacionSimpleJAIME.RECUPERAR_TFLUESTAVI))
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUESTAVI))
 			{
 				String cdtipflu = params.get("cdtipflu");
 				String cdflujomc = params.get("cdflujomc");
@@ -863,20 +860,20 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				
 				lista = flujoMesaControlDAO.recuperaTfluproc(cdtipflu, cdflujomc);
 			}
-			else if(consulta.equals(RecuperacionSimple_GDH.RECUPERAR_TFLUVAL))
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUVAL))
 			{
 				String cdtipflu = params.get("cdtipflu");
 				String cdflujomc = params.get("cdflujomc"); 
 				lista = flujoMesaControlDAO.recuperaTfluval(cdtipflu, cdflujomc);
 			}
-			else if(consulta.equals(RecuperacionSimpleSalvador.RECUPERAR_TFLUREV))
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUREV))
 			{
 				String cdtipflu = params.get("cdtipflu");
 				String cdflujomc = params.get("cdflujomc");
 				
 				lista = flujoMesaControlDAO.recuperaTflurev(cdtipflu,cdflujomc);
 			}
-			else if(consulta.equals(RecuperacionSimpleJAIME.RECUPERAR_TFLUREVDOC))
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUREVDOC))
 			{
 				String cdtipflu = params.get("cdtipflu");
 				String cdflujomc = params.get("cdflujomc");
