@@ -41787,6 +41787,50 @@
                             
 
                         /**
+                        * field for CveCia
+                        */
+
+                        
+                                    protected java.lang.String localCveCia ;
+                                
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localCveCiaTracker = false ;
+                           
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getCveCia(){
+                               return localCveCia;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param CveCia
+                               */
+                               public void setCveCia(java.lang.String param){
+                            
+                                       if (param != null){
+                                          //update the setting tracker
+                                          localCveCiaTracker = true;
+                                       } else {
+                                          localCveCiaTracker = false;
+                                              
+                                       }
+                                   
+                                            this.localCveCia=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for CveCli
                         */
 
@@ -42557,6 +42601,40 @@
                                           }
                                     
                                    xmlWriter.writeEndElement();
+                             } if (localCveCiaTracker){
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"cveCia", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"cveCia");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("cveCia");
+                                    }
+                                
+
+                                          if (localCveCia==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("cveCia cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localCveCia);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
                              } if (localCveCliTracker){
                                     namespace = "";
                                     if (! namespace.equals("")) {
@@ -43155,6 +43233,15 @@
                                         } else {
                                            throw new org.apache.axis2.databinding.ADBException("colonia cannot be null!!");
                                         }
+                                    } if (localCveCiaTracker){
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "cveCia"));
+                                 
+                                        if (localCveCia != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localCveCia));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("cveCia cannot be null!!");
+                                        }
                                     } if (localCveCliTracker){
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "cveCli"));
@@ -43376,6 +43463,24 @@
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setColonia(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                    else {
+                                        
+                                    }
+                                
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","cveCia").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setCveCia(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();
