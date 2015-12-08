@@ -120,8 +120,8 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	{
 		protected RecuperaTpantamcSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_MESACONTROL.P_GET_TPANTAMC");
-			String[] cols=new String[]{ "CDTIPFLU","CDFLUJOMC","CDPANTMC","WEBID","XPOS","YPOS"};
+			super(dataSource,"PKG_MESACONTROL.P_GET_TPANTMC");
+			String[] cols=new String[]{ "CDPANTMC" , "DSPANTMC" , "URLPANTMC" , "SWEXTERNA"};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -287,7 +287,12 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			super(dataSource,"PKG_MESACONTROL.P_GET_TFLUEST");
 			declareParameter(new SqlParameter("cdtipflu" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
-			String[] cols=new String[]{ "CDTIPFLU" , "CDFLUJOMC", "CDESTADOMC", "WEBID", "XPOS", "YPOS", "TIMEMAX", "TIMEWRN1", "TIMEWRN2", "SWESCALA", "CDTIPASIG" };
+			String[] cols=new String[]{
+					"CDTIPFLU"  , "CDFLUJOMC" , "CDESTADOMC"
+					,"WEBID"    , "XPOS"      , "YPOS"
+					,"TIMEMAX"  , "TIMEWRN1"  , "TIMEWRN2"
+					,"SWESCALA" , "CDTIPASIG" , "DSESTADOMC"
+					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -338,8 +343,8 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		Map<String,String>       params  = new LinkedHashMap<String,String>();
 		
 		params.put("cdtipflu", cdtipflu);
-		params.put("cdflujomc", cdtipflu);
-		params.put("cdestadomc", cdtipflu);
+		params.put("cdflujomc", cdflujomc);
+		params.put("cdestadomc", cdestadomc);
 		Map<String,Object>       procRes = ejecutaSP(new RecuperaTfluestaviSP(getDataSource()),params);
 		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		if(lista==null)
@@ -368,16 +373,11 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	
 	// SP 13
 	@Override
-	public List<Map<String,String>> recuperaTflupant(String cdtipflu,String cdtipflumc,String cdpantmc, String webid,String xpos,String ypos,String subrayado) throws Exception
+	public List<Map<String,String>> recuperaTflupant(String cdtipflu,String cdflujomc) throws Exception
 	{
 		Map<String,String>       params  = new LinkedHashMap<String,String>();
 		params.put("cdtipflu" , cdtipflu);
-	    params.put("cdtipflumc",cdtipflumc);
-	    params.put("cdpantmc",cdpantmc);
-	    params.put("webid",webid);
-	    params.put("xpos",xpos);
-	    params.put("ypos",ypos);
-	    params.put("subrayado",subrayado);
+	    params.put("cdflujomc",cdflujomc);
 
 		Map<String,Object>       procRes = ejecutaSP(new RecuperaTflupantSP(getDataSource()),params);
 		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
@@ -394,13 +394,8 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		{
 			super(dataSource,"PKG_MESACONTROL.P_GET_TFLUPANT");
 			declareParameter(new SqlParameter("cdtipflu" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdtipflumc" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdpantmc" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("webid" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("xpos" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("ypos" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("subrayado" , OracleTypes.VARCHAR));
-			String[] cols=new String[]{ "CDTIPFLU","CDFLUJOMC","CDPANTMC","WEBID","XPOS","YPOS","SUBRAYADO" };
+			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{ "CDTIPFLU","CDFLUJOMC","CDPANTMC","WEBID","XPOS","YPOS", "DSPANTMC" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -432,7 +427,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			super(dataSource,"PKG_MESACONTROL.P_GET_TFLUCOMP");
 			declareParameter(new SqlParameter("cdtipflu" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
-			String[] cols=new String[]{ "CDTIPFLU","CDFLUJOMC","CDCOMPMC","WEBID","XPOS","YPOS","SUBRAYADO" };
+			String[] cols=new String[]{ "CDTIPFLU","CDFLUJOMC","CDCOMPMC","WEBID","XPOS","YPOS","DSCOMPMC" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -726,6 +721,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdestadomc",cdestadomc);
 		params.put("dsestadomc",dsestadomc);
+		params.put("accion",accion);
 		ejecutaSP(new MovimientoTestadomcSP(getDataSource()),params);
 	}
 	
@@ -736,6 +732,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			super(dataSource,"PKG_MESACONTROL.P_MOV_TESTADOMC");
 			declareParameter(new SqlParameter("cdestadomc", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("dsestadomc", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -752,8 +749,6 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			,String webid
 			,String xpos
 			,String ypos
-			,String width
-			,String height
 			,String timemax
 			,String timewrn1
 			,String timewrn2
@@ -764,18 +759,17 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdtipflu"   , cdtipflu);
-		params.put("cdflujomc"   , cdflujomc);
-		params.put("cdestadomc"   , cdestadomc);
-		params.put("webid" , webid);
-		params.put("xpos"   , xpos);
-		params.put("ypos"     , ypos);
-		params.put("width"     , width);
-		params.put("height"     , height);
-		params.put("timemax"     , timemax);
-		params.put("timewrn1"     , timewrn1);
-		params.put("timewrn2"     , timewrn2);
-		params.put("swescala"     , swescala);
-		params.put("cdtipasig"     , cdtipasig);
+		params.put("cdflujomc"  , cdflujomc);
+		params.put("cdestadomc" , cdestadomc);
+		params.put("webid"      , webid);
+		params.put("xpos"       , xpos);
+		params.put("ypos"       , ypos);
+		params.put("timemax"    , timemax);
+		params.put("timewrn1"   , timewrn1);
+		params.put("timewrn2"   , timewrn2);
+		params.put("swescala"   , swescala);
+		params.put("cdtipasig"  , cdtipasig);
+		params.put("accion"     , accion);
 		ejecutaSP(new MovimientoTfluestSP(getDataSource()),params);
 	}
 	
@@ -785,21 +779,19 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		{
 			super(dataSource,"PKG_MESACONTROL.P_MOV_TFLUEST");
 			declareParameter(new SqlParameter("cdtipflu"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdflujomc"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdestadomc"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("webid" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("xpos"   , OracleTypes.VARCHAR));		
-			declareParameter(new SqlParameter("ypos"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("width"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("height"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("timemax"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdflujomc"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdestadomc" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("webid"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("xpos"       , OracleTypes.VARCHAR));		
+			declareParameter(new SqlParameter("ypos"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("timemax"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("timewrn1"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("timewrn2"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("swescala"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdtipasig"   , OracleTypes.VARCHAR));	
+			declareParameter(new SqlParameter("cdtipasig"  , OracleTypes.VARCHAR));	
 			declareParameter(new SqlParameter("accion"     , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
@@ -830,17 +822,17 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		{
 			super(dataSource,"PKG_MESACONTROL.P_MOV_TFLUESTROL");
 			declareParameter(new SqlParameter("cdtipflu"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdflujomc"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdestadomc"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdflujomc"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdestadomc" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("swver"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("swtrabajo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("swcompra"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("swreasig"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdrolasig"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdrolasig"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swver"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swtrabajo"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("accion"     , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
@@ -852,48 +844,46 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			String cdtipflu,
 			String cdflujomc,
 			String cdestadomc,
-			String webid,
-			String xpos,
-			String ypos,
-			String timemax,
-			String timewrn1,
-			String timewrn2,
-			String swescala,
-			String cdtipasig,
-			String accion) throws Exception {
+			String cdaviso,
+			String cdtipavi,
+			String dscoment,
+			String swautoavi,
+			String dsmailavi,
+			String cdusuariavi,
+			String cdsisrolavi,
+			String accion
+			)throws Exception {
 		Map<String,String> params = new LinkedHashMap<String,String>();
-		params.put("cdtipflu", cdtipflu);
-		params.put("cdflujomc", cdflujomc);
-		params.put("cdestadomc", cdestadomc);
-		params.put("webid", webid);
-		params.put("xpos", xpos);
-		params.put("ypos", ypos);
-		params.put("timemax", timemax);
-		params.put("timewrn1", timewrn1);
-		params.put("timewrn2", timewrn2);
-		params.put("swescala", swescala);
-		params.put("cdtipasig", cdtipasig);
-		params.put("accion", accion);
+		params.put("cdtipflu"    , cdtipflu);
+		params.put("cdflujomc"   , cdflujomc);
+		params.put("cdestadomc"  , cdestadomc);
+		params.put("cdaviso"     , cdaviso);
+		params.put("cdtipavi"    , cdtipavi);
+		params.put("dscoment"    , dscoment);
+		params.put("swautoavi"   , swautoavi);
+		params.put("dsmailavi"   , dsmailavi);
+		params.put("cdusuariavi" , cdusuariavi);
+		params.put("cdsisrolavi" , cdsisrolavi);
+		params.put("accion"      , accion);
 		ejecutaSP(new MovimientoTfluestaviSP(getDataSource()),params);
 	}
 	
 	protected class MovimientoTfluestaviSP extends StoredProcedure {
 		protected MovimientoTfluestaviSP(DataSource dataSource) {
 			super(dataSource,"PKG_MESACONTROL.P_MOV_TFLUESTAVI");
-			declareParameter(new SqlParameter("cdtipflu", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdflujomc", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdestadomc", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("webid", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("xpos", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("ypos", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("timemax", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("timewrn1", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("timewrn2", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("swescala", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdtipasig", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("accion", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipflu"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdflujomc"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdestadomc"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdaviso"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipavi"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("dscoment"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swautoavi"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("dsmailavi"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuariavi" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrolavi" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
@@ -981,6 +971,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("cdcompmc",cdcompmc);
 		params.put("dscompmc",dscompmc);
 		params.put("nomcomp",nomcomp);
+		params.put("accion",accion);
 		ejecutaSP(new MovimientoTcompmcSP(getDataSource()),params);
 	}
 	
@@ -992,6 +983,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("cdcompmc", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("dscompmc", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nomcomp", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -1008,18 +1000,17 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			,String webid
 			,String xpos
 			,String ypos
-			,String subrayado
 			,String accion
 			) throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
-		params.put("cdtipflu"   , cdtipflu);
-		params.put("cdflujomc"   , cdflujomc);
-		params.put("cdcompmc"   , cdcompmc);
-		params.put("webid" , webid);
-		params.put("xpos"   , xpos);
-		params.put("ypos"     , ypos);
-		params.put("subrayado"     , subrayado);
+		params.put("cdtipflu"  , cdtipflu);
+		params.put("cdflujomc" , cdflujomc);
+		params.put("cdcompmc"  , cdcompmc);
+		params.put("webid"     , webid);
+		params.put("xpos"      , xpos);
+		params.put("ypos"      , ypos);
+		params.put("accion"    , accion);
 		ejecutaSP(new MovimientoTflucompSP(getDataSource()),params);
 	}
 	
@@ -1028,16 +1019,15 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		protected MovimientoTflucompSP(DataSource dataSource)
 		{
 			super(dataSource,"PKG_MESACONTROL.P_MOV_TFLUCOMP");
-			declareParameter(new SqlParameter("cdtipflu"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdflujomc"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdestadomc"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("webid" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("xpos"   , OracleTypes.VARCHAR));		
-			declareParameter(new SqlParameter("ypos"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("subrayado"   , OracleTypes.VARCHAR));	
-			declareParameter(new SqlParameter("accion"     , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipflu"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdcompmc"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("webid"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("xpos"      , OracleTypes.VARCHAR));		
+			declareParameter(new SqlParameter("ypos"      , OracleTypes.VARCHAR));	
+			declareParameter(new SqlParameter("accion"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

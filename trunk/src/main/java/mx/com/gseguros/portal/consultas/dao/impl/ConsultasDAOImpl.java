@@ -3639,4 +3639,32 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> recuperarRolesTodos() throws Exception
+	{
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarRolesTodosSP(getDataSource()),new HashMap<String,String>());
+		List<Map<String,String>> roles   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(roles==null)
+		{
+			roles = new ArrayList<Map<String,String>>();
+		}
+		return roles;
+	}
+	
+	protected class RecuperarRolesTodosSP extends StoredProcedure
+	{
+		protected RecuperarRolesTodosSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_TODOS_ROLES");
+			String[] cols = new String[]{
+					"CDSISROL"
+					,"DSSISROL"
+            };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

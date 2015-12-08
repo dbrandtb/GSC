@@ -837,6 +837,16 @@ function _getValueByName(compName,showError,parent)
     return val;
 }
 
+//TRANSFORMA UN OBJETO, PONIENDO params. ANTES DE TODOS SUS ATRIBUTOS
+function _formValuesToParams(formValues)
+{
+    var params = {};
+    for(var att in formValues)
+    {
+        params['params.'+att] = formValues[att];
+    }
+    return params;
+}
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////

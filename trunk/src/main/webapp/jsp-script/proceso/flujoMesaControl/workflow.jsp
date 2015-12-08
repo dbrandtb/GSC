@@ -230,6 +230,13 @@ var _p52_urlBorrarEntidad       = '<s:url namespace="/flujomesacontrol" action="
 var _p52_urlRegistrarConnection = '<s:url namespace="/flujomesacontrol" action="registrarConnection" />';
 var _p52_urlBorrarConnection    = '<s:url namespace="/flujomesacontrol" action="borrarConnection"    />';
 var _p52_urlGuardarCoords       = '<s:url namespace="/flujomesacontrol" action="guardarCoordenadas"  />';
+var _p52_urlRecuperacion        = '<s:url namespace="/recuperacion"     action="recuperar"           />';
+var _p52_urlMovimientoTtipflumc = '<s:url namespace="/flujomesacontrol" action="movimientoTtipflumc" />';
+var _p52_urlMovimientoTflujomc  = '<s:url namespace="/flujomesacontrol" action="movimientoTflujomc"  />';
+var _p52_urlMovimientoCatalogo  = '<s:url namespace="/flujomesacontrol" action="movimientoCatalogo"  />';
+var _p52_urlCargarModelado      = '<s:url namespace="/flujomesacontrol" action="cargarModelado"      />';
+var _p52_cargarDatosEstado      = '<s:url namespace="/flujomesacontrol" action="cargarDatosEstado"   />';
+var _p52_urlGuardarDatosStatus  = '<s:url namespace="/flujomesacontrol" action="guardarDatosEstado"  />';
 ////// urls //////
 
 ////// variables //////
@@ -490,7 +497,7 @@ Ext.onReady(function()
                             ,{
                                 xtype       : 'checkbox'
                                 ,boxLabel   : 'M\u00DALTIPLES P\u00d3LIZAS'
-                                ,name       : 'SWMULTPOL'
+                                ,name       : 'SWMULTIPOL'
                                 ,inputValue : 'S'
                                 ,align      : 'right'
                             }
@@ -501,8 +508,61 @@ Ext.onReady(function()
                 ,buttons     :
                 [
                     {
-                        text  : 'Guardar'
-                        ,icon : '${icons}disk.png'
+                        text     : 'Guardar'
+                        ,icon    : '${icons}disk.png'
+                        ,handler : function(me)
+                        {
+                            var ck = 'Guardando';
+                            try
+                            {
+                                var win  = me.up('window');
+                                var form = me.up('form').getForm();
+                                if(!form.isValid())
+                                {
+                                    throw 'Favor de revisar los datos';
+                                }
+                                
+                                _setLoading(true,win);
+                                Ext.Ajax.request(
+                                {
+                                    url      : _p52_urlMovimientoTtipflumc
+                                    ,params  : _formValuesToParams(form.getValues())
+                                    ,success : function(response)
+                                    {
+                                        _setLoading(false,win);
+                                        var ck = 'Decodificando respuesta al guardar tr\u00E1mite';
+                                        try
+                                        {
+                                            var json = Ext.decode(response.responseText);
+                                            debug('### mov ttipflumc:',json);
+                                            if(json.success==true)
+                                            {
+                                                win.hide();
+                                                _p52_gridTramites.store.reload();
+                                            }
+                                            else
+                                            {
+                                                mensajeError(json.message);
+                                            }
+                                        }
+                                        catch(e)
+                                        {
+                                            manejaException(e,ck);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        _setLoading(false,win);
+                                        errorComunicacion(null,'Error guardando tr\u00E1mite');
+                                    }
+                                });
+                            }
+                            catch(e)
+                            {
+                                _setLoading(false,win);
+                                manejaException(e,ck);
+                            }
+                        }
                     }
                 ]
             })
@@ -571,8 +631,61 @@ Ext.onReady(function()
                 ,buttons     :
                 [
                     {
-                        text  : 'Guardar'
-                        ,icon : '${icons}disk.png'
+                        text     : 'Guardar'
+                        ,icon    : '${icons}disk.png'
+                        ,handler : function(me)
+                        {
+                            var ck = 'Guardando';
+                            try
+                            {
+                                var win  = me.up('window');
+                                var form = me.up('form').getForm();
+                                if(!form.isValid())
+                                {
+                                    throw 'Favor de revisar los datos';
+                                }
+                                
+                                _setLoading(true,win);
+                                Ext.Ajax.request(
+                                {
+                                    url      : _p52_urlMovimientoTflujomc
+                                    ,params  : _formValuesToParams(form.getValues())
+                                    ,success : function(response)
+                                    {
+                                        _setLoading(false,win);
+                                        var ck = 'Decodificando respuesta al guardar proceso';
+                                        try
+                                        {
+                                            var json = Ext.decode(response.responseText);
+                                            debug('### mov tflujomc:',json);
+                                            if(json.success==true)
+                                            {
+                                                win.hide();
+                                                _p52_gridProcesos.store.reload();
+                                            }
+                                            else
+                                            {
+                                                mensajeError(json.message);
+                                            }
+                                        }
+                                        catch(e)
+                                        {
+                                            manejaException(e,ck);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        _setLoading(false,win);
+                                        errorComunicacion(null,'Error guardando proceso');
+                                    }
+                                });
+                            }
+                            catch(e)
+                            {
+                                _setLoading(false,win);
+                                manejaException(e,ck);
+                            }
+                        }
                     }
                 ]
             })
@@ -643,8 +756,12 @@ Ext.onReady(function()
                 ,buttons     :
                 [
                     {
-                        text  : 'Guardar'
-                        ,icon : '${icons}disk.png'
+                        text     : 'Guardar'
+                        ,icon    : '${icons}disk.png'
+                        ,handler : function(me)
+                        {
+                            _p52_guardarCatalogo(me,'E');
+                        }
                     }
                 ]
             })
@@ -714,8 +831,12 @@ Ext.onReady(function()
                 ,buttons     :
                 [
                     {
-                        text  : 'Guardar'
-                        ,icon : '${icons}disk.png'
+                        text     : 'Guardar'
+                        ,icon    : '${icons}disk.png'
+                        ,handler : function(me)
+                        {
+                            _p52_guardarCatalogo(me,'C');
+                        }
                     }
                 ]
             })
@@ -800,8 +921,12 @@ Ext.onReady(function()
                 ,buttons     :
                 [
                     {
-                        text  : 'Guardar'
-                        ,icon : '${icons}disk.png'
+                        text     : 'Guardar'
+                        ,icon    : '${icons}disk.png'
+                        ,handler : function(me)
+                        {
+                           _p52_guardarCatalogo(me,'P');
+                        }
                     }
                 ]
             })
@@ -873,8 +998,12 @@ Ext.onReady(function()
                 ,buttons     :
                 [
                     {
-                        text  : 'Guardar'
-                        ,icon : '${icons}disk.png'
+                        text     : 'Guardar'
+                        ,icon    : '${icons}disk.png'
+                        ,handler : function(me)
+                        {
+                            _p52_guardarCatalogo(me,'O');
+                        }
                     }
                 ]
             })
@@ -989,51 +1118,36 @@ Ext.onReady(function()
                                 'CDTIPFLU'
                                 ,'DSTIPFLU'
                                 ,'CDTIPTRA'
-                                ,'SWMULTPOL'
+                                ,'SWMULTIPOL'
                                 ,'SWREQPOL'
                             ]
                             ,proxy   :
                             {
-                                type    : 'memory'
-                                ,reader : 'json'
-                                ,data   :
-                                [
-                                    {
-                                        CDTIPFLU   : 1
-                                        ,DSTIPFLU  : 'POLIZA NUEVA'
-                                        ,CDTIPTRA  : 2
-                                        ,SWMULTPOL : 'S'
-                                        ,SWREQPOL  : 'N'
-                                    }
-                                    ,{
-                                        CDTIPFLU   : 2
-                                        ,DSTIPFLU  : 'CAMBIO DE CONTRATANTE'
-                                        ,CDTIPTRA  : 2
-                                        ,SWMULTPOL : 'N'
-                                        ,SWREQPOL  : 'S'
-                                    }
-                                ]
+                                url          : _p52_urlRecuperacion
+                                ,type        : 'ajax'
+                                ,extraParams :
+                                {
+                                    'params.consulta' : 'RECUPERAR_TTIPFLUMC'
+                                }
+                                ,reader      :
+                                {
+                                    type             : 'json'
+                                    ,root            : 'list'
+                                    ,messageProperty : 'message'
+                                }
                             }
                         })
                         ,listeners :
                         {
                             select : function(me,record)
                             {
-                                _p52_gridProcesos.store.removeAll();
-                                _p52_gridProcesos.store.add(
+                                _p52_gridProcesos.store.load(
+                                {
+                                    params :
                                     {
-                                        CDTIPFLU   : 1
-                                        ,CDFLUJOMC : 1
-                                        ,DSFLUJOMC : 'EMISION SALUD VITAL'
-                                        ,SWFINAL   : 'S'
+                                        'params.cdtipflu' : record.get('CDTIPFLU')
                                     }
-                                    ,{
-                                        CDTIPFLU   : 1
-                                        ,CDFLUJOMC : 2
-                                        ,DSFLUJOMC : 'EMISION SALUD COLECTIVO'
-                                        ,SWFINAL   : 'N'
-                                    }
-                                );
+                                });
                             }
                         }
                     })
@@ -1074,13 +1188,14 @@ Ext.onReady(function()
                                         }
                                     }
                                     ,{
-                                        icon    : '${icons}chart_line.png'
+                                        icon     : '${icons}chart_line.png'
                                         ,tooltip : 'Modelar'
                                         ,handler : function(view,row,col,item,e,record)
                                         {
                                             _p52_selectedFlujo = record;
                                             _p52_panelDibujo.setTitle(record.get('DSFLUJOMC'));
                                             _p52_navega(2);
+                                            _p52_cargarModelado();
                                         }
                                     }
                                 ]
@@ -1088,7 +1203,7 @@ Ext.onReady(function()
                         ]
                         ,store : Ext.create('Ext.data.Store',
                         {
-                            autoLoad : true
+                            autoLoad : false
                             ,fields  :
                             [
                                 'CDTIPFLU'
@@ -1098,9 +1213,18 @@ Ext.onReady(function()
                             ]
                             ,proxy   :
                             {
-                                type    : 'memory'
-                                ,reader : 'json'
-                                ,data   : []
+                                type         : 'ajax'
+                                ,url         : _p52_urlRecuperacion
+                                ,extraParams :
+                                {
+                                    'params.consulta' : 'RECUPERAR_TFLUJOMC'
+                                }
+                                ,reader      :
+                                {
+                                    type             : 'json'
+                                    ,root            : 'list'
+                                    ,messageProperty : 'message'
+                                }
                             }
                         })
                     })
@@ -1281,8 +1405,11 @@ Ext.onReady(function()
                                         ,icon    : '${icons}disk.png'
                                         ,handler : function(me)
                                         {
-                                            _p52_panelCanvas.enable();
-                                            me.up('panel').hide();
+                                            _p52_guardarDatosEstado(me,function(bot)
+                                            {
+                                                _p52_panelCanvas.enable();
+                                                me.up('panel').hide();
+                                            });
                                         }
                                     }
                                     ,{
@@ -1323,8 +1450,8 @@ Ext.onReady(function()
                                             }
                                             ,{
                                                 xtype       : 'textfield'
-                                                ,fieldLabel : '_CDESTADO'
-                                                ,name       : 'CDESTADO'
+                                                ,fieldLabel : '_CDESTADOMC'
+                                                ,name       : 'CDESTADOMC'
                                                 ,allowBlank : false
                                             }
                                             ,{
@@ -1358,7 +1485,7 @@ Ext.onReady(function()
                                                 xtype       : 'slider'
                                                 ,fieldLabel : 'Tiempo m\u00e1ximo en minutos'
                                                 ,minValue   : 0
-                                                ,maxValue   : 60
+                                                ,maxValue   : 55
                                                 ,increment  : 5
                                                 ,name       : 'TIMEMAXM'
                                                 ,labelAlign : 'top'
@@ -1376,7 +1503,7 @@ Ext.onReady(function()
                                                 xtype       : 'slider'
                                                 ,fieldLabel : 'Tiempo primer alerta en minutos'
                                                 ,minValue   : 0
-                                                ,maxValue   : 60
+                                                ,maxValue   : 55
                                                 ,increment  : 5
                                                 ,name       : 'TIMEWRN1M'
                                                 ,labelAlign : 'top'
@@ -1394,7 +1521,7 @@ Ext.onReady(function()
                                                 xtype       : 'slider'
                                                 ,fieldLabel : 'Tiempo segunda alerta en minutos'
                                                 ,minValue   : 00
-                                                ,maxValue   : 60
+                                                ,maxValue   : 55
                                                 ,increment  : 5
                                                 ,name       : 'TIMEWRN2M'
                                                 ,labelAlign : 'top'
@@ -1443,7 +1570,7 @@ Ext.onReady(function()
                                             {
                                                 text       : 'ROL'
                                                 ,dataIndex : 'DSSISROL'
-                                                ,width     : 120
+                                                ,width     : 170
                                             }
                                             ,{
                                                 text       : 'VER'
@@ -1485,29 +1612,17 @@ Ext.onReady(function()
                                             ]
                                             ,proxy   :
                                             {
-                                                type    : 'memory'
-                                                ,reader : 'json'
-                                                ,data   :
-                                                [
-                                                    {
-                                                        DSSISROL : 'AGENTE'
-                                                    }
-                                                    ,{
-                                                        DSSISROL : 'SUSCRIPTOR'
-                                                    }
-                                                    ,{
-                                                        DSSISROL : 'MESA DE CONTROL'
-                                                    }
-                                                    ,{
-                                                        DSSISROL : 'SUPERVISOR'
-                                                    }
-                                                    ,{
-                                                        DSSISROL : 'SUSCRIPTOR AUTO'
-                                                    }
-                                                    ,{
-                                                        DSSISROL : 'PROMOTOR'
-                                                    }
-                                                ]
+                                                type         : 'ajax'
+                                                ,url         : _p52_urlRecuperacion
+                                                ,extraParams :
+                                                {
+                                                    'params.consulta' : 'RECUPERAR_ROLES'
+                                                }
+                                                ,reader      :
+                                                {
+                                                    type  : 'json'
+                                                    ,root : 'list'
+                                                }
                                             }
                                         })
                                     })
@@ -2134,190 +2249,253 @@ function _p52_navega(nivel)
 function _p52_cargarEstados()
 {
     debug('_p52_cargarEstados');
-    _p52_catalogoEstados.removeAll();
-    _p52_catalogoEstados.add(
+    
+    var ck = 'Cargando status';
+    try
     {
-        xtype   : 'panel'
-        ,tpl    : estadoTpl
-        ,border : 0
-        ,itemId : 'E100'
-        ,data   :
+        _setLoading(true,_p52_catalogoEstados);
+        Ext.Ajax.request(
         {
-            CDESTADOMC  : 100
-            ,DSESTADOMC : 'NUEVO'
-        }
+            url      : _p52_urlRecuperacion
+            ,params  :
+            {
+                'params.consulta' : 'RECUPERAR_TESTADOMC'
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_catalogoEstados);
+                var ck = 'Decodificando respuesta al cargar los status';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### load status:',json);
+                    if(json.success==true)
+                    {
+                        _p52_catalogoEstados.removeAll();
+                        for(var i=0;i<json.list.length;i++)
+                        {
+                            debug('agregando estado:',json.list[i]);
+                            _p52_catalogoEstados.add(
+                            {
+                                xtype   : 'panel'
+                                ,tpl    : estadoTpl
+                                ,border : 0
+                                ,itemId : 'E'+json.list[i].CDESTADOMC
+                                ,data   : json.list[i]
+                            });
+                        }
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_catalogoEstados);
+                errorComunicacion(null,'Error al cargar los status');
+            }
+        });
     }
-    ,{
-        xtype   : 'panel'
-        ,tpl    : estadoTpl
-        ,border : 0
-        ,itemId : 'E101'
-        ,data   :
-        {
-            CDESTADOMC  : 101
-            ,DSESTADOMC : 'EN REVISION'
-        }
+    catch(e)
+    {
+        _setLoading(false,_p52_catalogoEstados);
+        manejaException(e,ck);
     }
-    ,{
-        xtype   : 'panel'
-        ,tpl    : estadoTpl
-        ,border : 0
-        ,itemId : 'E99'
-        ,data   :
-        {
-            CDESTADOMC  : 999
-            ,DSESTADOMC : 'CONFIRMADO'
-        }
-    }
-    );
 }
 
 function _p52_cargarPantallas()
 {
     debug('_p52_cargarPantallas');
-    _p52_catalogoPantallas.removeAll();
-    _p52_catalogoPantallas.add(
-	    {
-	        xtype   : 'panel'
-	        ,tpl    : pantallaTpl
-	        ,border : 0
-	        ,itemId : 'P45'
-	        ,data   :
-	        {
-	            CDPANTMC   : 45
-	            ,DSPANTMC  : 'DATOS COMPLEMENTARIOS'
-	            ,URLPANTMC : '/emision/complementarios.action'
-	            ,SWEXTERNA : 'N'
-	        }
-	    }
-	    ,{
-	        xtype   : 'panel'
-	        ,tpl    : pantallaTpl
-	        ,border : 0
-            ,itemId : 'P86'
-	        ,data   :
-	        {
-	            CDPANTMC  : 86
-	            ,DSPANTMC : 'COTIZACION AUTO INDIVIDUAL'
-	            ,URLPANTMC : '/emision/cotizacionAutoIndividual.action'
-	            ,SWEXTERNA : 'N'
-	        }
-	    }
-	    ,{
-	        xtype   : 'panel'
-	        ,tpl    : pantallaTpl
-	        ,border : 0
-            ,itemId : 'P102'
-	        ,data   :
-	        {
-	            CDPANTMC   : 102
-	            ,DSPANTMC  : 'COTIZACION SALUD INDIVIDUAL'
-	            ,URLPANTMC : '/emision/cotizacion.action'
-	            ,SWEXTERNA : 'N'
-	        }
-	    }
-	    ,{
-	        xtype   : 'panel'
-	        ,tpl    : pantallaTpl
-	        ,border : 0
-            ,itemId : 'P103'
-	        ,data   :
-	        {
-	            CDPANTMC   : 103
-	            ,DSPANTMC  : 'SISA'
-	            ,URLPANTMC : 'http://sisa.com/pantalla1.jsp'
-	            ,SWEXTERNA : 'S'
-	        }
-	    }
-    );
+    
+    var ck = 'Cargando pantallas';
+    try
+    {
+        _setLoading(true,_p52_catalogoPantallas);
+        Ext.Ajax.request(
+        {
+            url      : _p52_urlRecuperacion
+            ,params  :
+            {
+                'params.consulta' : 'RECUPERAR_TPANTMC'
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_catalogoPantallas);
+                var ck = 'Decodificando respuesta al cargar las pantallas';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### load pantallas:',json);
+                    if(json.success==true)
+                    {
+                        _p52_catalogoPantallas.removeAll();
+                        for(var i=0;i<json.list.length;i++)
+                        {
+                            debug('agregando pantalla:',json.list[i]);
+                            _p52_catalogoPantallas.add(
+                            {
+                                xtype   : 'panel'
+                                ,tpl    : pantallaTpl
+                                ,border : 0
+                                ,itemId : 'P'+json.list[i].CDPANTMC
+                                ,data   : json.list[i]
+                            });
+                        }
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_catalogoPantallas);
+                errorComunicacion(null,'Error al cargar las pantallas');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_catalogoPantallas);
+        manejaException(e,ck);
+    }
 }
 
 function _p52_cargarComponentes()
 {
     debug('_p52_cargarComponentes');
-    _p52_catalogoComponentes.removeAll();
-    _p52_catalogoComponentes.add(
-	    {
-	        xtype   : 'panel'
-	        ,tpl    : componenteTpl
-	        ,border : 0
-	        ,itemId : 'C1'
-	        ,data   :
-	        {
-	            CDCOMPMC  : 1
-	            ,DSCOMPMC : 'VENTANA DE DOCUMENTOS'
-	            ,NOMCOMP  : 'VENTANA_DOCUMENTOS'
-	        }
-	    }
-	    ,{
-	        xtype   : 'panel'
-	        ,tpl    : componenteTpl
-	        ,border : 0
-            ,itemId : 'C2'
-	        ,data   :
-	        {
-	            CDCOMPMC  : 2
-	            ,DSCOMPMC : 'VENTANA DE HISTORIAL'
-                ,NOMCOMP  : 'VENTANA_HISTORIAL'
-	        }
-	    }
-	    ,{
-	        xtype   : 'panel'
-	        ,tpl    : componenteTpl
-	        ,border : 0
-            ,itemId : 'C3'
-	        ,data   :
-	        {
-	            CDCOMPMC  : 3
-	            ,DSCOMPMC : 'VISTA PREVIA TARIFA'
-	            ,NOMCOMP  : 'VP_TARIFA'
-	        }
-	    }
-    );
+    
+    var ck = 'Cargando componentes';
+    try
+    {
+        _setLoading(true,_p52_catalogoComponentes);
+        Ext.Ajax.request(
+        {
+            url      : _p52_urlRecuperacion
+            ,params  :
+            {
+                'params.consulta' : 'RECUPERAR_TCOMPMC'
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_catalogoComponentes);
+                var ck = 'Decodificando respuesta al cargar los componentes';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### load componentes:',json);
+                    if(json.success==true)
+                    {
+                        _p52_catalogoComponentes.removeAll();
+                        for(var i=0;i<json.list.length;i++)
+                        {
+                            debug('agregando componentes:',json.list[i]);
+                            _p52_catalogoComponentes.add(
+                            {
+                                xtype   : 'panel'
+                                ,tpl    : componenteTpl
+                                ,border : 0
+                                ,itemId : 'C'+json.list[i].CDCOMPMC
+                                ,data   : json.list[i]
+                            });
+                        }
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_catalogoComponentes);
+                errorComunicacion(null,'Error al cargar los componentes');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_catalogoComponentes);
+        manejaException(e,ck);
+    }
 }
 
 function _p52_cargarProcesos()
 {
     debug('_p52_cargarProcesos');
-    _p52_catalogoProcesos.removeAll();
-    _p52_catalogoProcesos.add(
-	    {
-	        xtype   : 'panel'
-	        ,tpl    : procesoTpl
-	        ,border : 0
-	        ,itemId : 'O1'
-	        ,data   :
-	        {
-	            CDPROCMC   : 1
-	            ,DSPROCMC  : 'EMISION'
-	            ,URLPROCMC : '/EMISION/PROCESOEMISION.ACTION'
-	        }
-	    }
-	    ,{
-	        xtype   : 'panel'
-	        ,tpl    : procesoTpl
-	        ,border : 0
-            ,itemId : 'O2'
-	        ,data   :
-	        {
-	            CDPROCMC   : 2
-	            ,DSPROCMC  : 'WS SALUD'
-                ,URLPROCMC : '/EMISION/EJECUTAWSSALUD.ACTION'
-	        }
-	    }
-	    ,{
-	        xtype   : 'panel'
-	        ,tpl    : procesoTpl
-	        ,border : 0
-            ,itemId : 'O3'
-	        ,data   :
-	        {
-	            CDPROCMC   : 3
-	            ,DSPROCMC  : 'WS AUTOS'
-                ,URLPROCMC : '/EMISION/EJECUTAWSSALUD.ACTION'
-	        }
-	    }
-    );
+    
+    var ck = 'Cargando Procesos';
+    try
+    {
+        _setLoading(true,_p52_catalogoProcesos);
+        Ext.Ajax.request(
+        {
+            url      : _p52_urlRecuperacion
+            ,params  :
+            {
+                'params.consulta' : 'RECUPERAR_TPROCMC'
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_catalogoProcesos);
+                var ck = 'Decodificando respuesta al cargar los procesos';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### load procesos:',json);
+                    if(json.success==true)
+                    {
+                        _p52_catalogoProcesos.removeAll();
+                        for(var i=0;i<json.list.length;i++)
+                        {
+                            debug('agregando procesos:',json.list[i]);
+                            _p52_catalogoProcesos.add(
+                            {
+                                xtype   : 'panel'
+                                ,tpl    : procesoTpl
+                                ,border : 0
+                                ,itemId : 'O'+json.list[i].CDPROCMC
+                                ,data   : json.list[i]
+                            });
+                        }
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_catalogoProcesos);
+                errorComunicacion(null,'Error al cargar los procesos');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_catalogoProcesos);
+        manejaException(e,ck);
+    }
 }
 
 function _p52_cargarValidaciones()
@@ -2486,7 +2664,7 @@ function _p52_drop(event)
     {
         _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
         {
-            $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\');return false;"></a><div class="labelE">'+clave+' - '+descrip+'</div></div>');
+            _p52_addDiv(id,tipo,clave,descrip,x,y);
             _p52_addEndpoint(id,tipo);
         });
     }
@@ -2494,7 +2672,7 @@ function _p52_drop(event)
     {
         _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
         {
-            $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\');return false;"></a><div class="labelP">'+clave+' - '+descrip+'</div></div>');
+            _p52_addDiv(id,tipo,clave,descrip,x,y);
             _p52_addEndpoint(id,tipo);
         });
     }
@@ -2502,7 +2680,7 @@ function _p52_drop(event)
     {
         _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
         {
-            $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\');return false;"></a><div class="labelC">'+clave+' - '+descrip+'</div></div>');
+            _p52_addDiv(id,tipo,clave,descrip,x,y);
             _p52_addEndpoint(id,tipo);
         });
     }
@@ -2510,7 +2688,7 @@ function _p52_drop(event)
     {
         _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
         {
-            $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\');return false;"></a><div class="labelO">'+clave+' - '+descrip+'</div></div>');
+            _p52_addDiv(id,tipo,clave,descrip,x,y);
             _p52_addEndpoint(id,tipo);
         });
     }
@@ -2518,7 +2696,7 @@ function _p52_drop(event)
     {
         _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
         {
-            $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\');return false;"></a><div class="labelV">'+descrip+'</div></div>');
+            _p52_addDiv(id,tipo,clave,descrip,x,y);
             _p52_addEndpoint(id,tipo);
         });
     }
@@ -2526,7 +2704,7 @@ function _p52_drop(event)
     {
         _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
         {
-            $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\');return false;"></a><div class="labelR">'+descrip+'</div></div>');
+            _p52_addDiv(id,tipo,clave,descrip,x,y);
             _p52_addEndpoint(id,tipo);
         });
     }
@@ -2541,13 +2719,12 @@ function _p52_addEndpoint(id,tipo)
 {
     debug('_p52_addEndpoint id,tipo:',id,tipo);
     var ep = toolkit.addEndpoint(id,epProps[tipo]);
-    toolkit.draggable(id);
     return ep;
 }
 
-function _p52_editEndpoint(id,tipo)
+function _p52_editEndpoint(id,tipo,clave)
 {
-    debug('_p52_editEndpoint id,tipo:',id,tipo);
+    debug('_p52_editEndpoint id,tipo,clave:',id,tipo,clave,'.');
     if(tipo=='E')
     {
         _p52_panelCanvas.disable();
@@ -2555,6 +2732,8 @@ function _p52_editEndpoint(id,tipo)
         _p52_formValidacion.hide();
         _p52_panelRevision.hide();
         _p52_panelAccion.hide();
+        
+        _p52_cargarPropsEstado(clave);
     }
     else if(tipo=='V')
     {
@@ -2582,9 +2761,9 @@ function _p52_editEndpoint(id,tipo)
     }
 }
 
-function _p52_removeEndpoint(id,tipo)
+function _p52_removeEndpoint(id,tipo,clave)
 {
-    debug('_p52_removeEndpoint id,tipo:',id,tipo,'.');
+    debug('_p52_removeEndpoint id,tipo,clave:',id,tipo,clave,'.');
     var ck = 'Borrando entidad';
     try
     {
@@ -2597,6 +2776,7 @@ function _p52_removeEndpoint(id,tipo)
                 'params.cdtipflu'   : _p52_selectedFlujo.get('CDTIPFLU')
                 ,'params.cdflujomc' : _p52_selectedFlujo.get('CDFLUJOMC')
                 ,'params.tipo'      : tipo
+                ,'params.clave'     : clave
                 ,'params.webid'     : id
             }
             ,success : function(response)
@@ -2724,7 +2904,9 @@ function _p52_editCatClic(tipo,id)
 
 function _p52_registrarEntidad(tipo,clave,id,x,y,callback)
 {
-    var ck = 'Regitrando entidad';
+    debug('_p52_registrarEntidad :',tipo,clave,id,'.');
+    debug(x,y,'.');
+    var ck = 'Registrando entidad';
     try
     {
         _setLoading(true,_p52_panelDibujo);
@@ -2953,6 +3135,403 @@ function _p52_guardarCoords(callback)
     catch(e)
     {
         _setLoading(false,_p52_panelDibujo);
+        manejaException(e,ck);
+    }
+}
+
+function _p52_guardarCatalogo(boton,tipo)
+{
+    debug('_p52_guardarCatalogo boton,tipo:',boton,tipo,'.');
+    var ck   = 'Guardando cat\u00e1logo '+tipo;
+    var win  = boton.up('window');
+    var form = boton.up('form').getForm();
+    try
+    {
+        if(!form.isValid())
+        {
+            throw 'Favor de revisar los datos';
+        }
+        
+        var datos = _formValuesToParams(form.getValues());
+        datos['params.tipo'] = tipo;
+        
+        _setLoading(true,win);
+        Ext.Ajax.request(
+        {
+            url      : _p52_urlMovimientoCatalogo
+            ,params  : datos
+            ,success : function(response)
+            {
+                _setLoading(false,win);
+                var ck = 'Decodificando respuesta al guardar cat\u00e1logo tipo'+tipo;
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### guardar cat,json:',tipo,json,'.');
+                    if(json.success==true)
+                    {
+                        win.hide();
+                        if(tipo=='E')
+                        {
+                            _p52_cargarEstados();
+                        }
+                        else if(tipo=='P')
+                        {
+                            _p52_cargarPantallas();
+                        }
+                        else if(tipo=='C')
+                        {
+                            _p52_cargarComponentes();
+                        }
+                        else if(tipo=='O')
+                        {
+                            _p52_cargarProcesos();
+                        }
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,win);
+                errorComunicacion(null,'Error guardando cat\u00e1logo '+tipo);
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,win);
+        manejaException(e,ck);
+    }
+}
+
+function _p52_cargarModelado()
+{
+    debug('_p52_cargarModelado');
+    var ck = 'Borrando modelado';
+    try
+    {
+        var divs = $('.entidad');
+        debug('divs:',divs);
+        
+        for(var i=0;i<divs.length;i++)
+        {
+            toolkit.remove(divs[i].id);
+        }
+    
+        ck = 'Recuperando modelado';
+    
+        _setLoading(true,_p52_panelDibujo);
+        Ext.Ajax.request(
+        {
+            url      : _p52_urlCargarModelado
+            ,params  :
+            {
+                'params.cdtipflu'   : _p52_selectedFlujo.get('CDTIPFLU')
+                ,'params.cdflujomc' : _p52_selectedFlujo.get('CDFLUJOMC')
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_panelDibujo);
+                var ck = 'Decodificando respuesta al cargar modelado';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### modelado:',json);
+                    if(json.success==true)
+                    {
+                        if(json.list.length>0)
+                        {
+                            for(var i=0;i<json.list.length;i++)
+                            {
+                                var ite = json.list[i];
+                                
+                                var id      = ite.WEBID;
+                                var tipo    = ite.TIPO;
+                                var y       = ite.YPOS;
+                                var x       = ite.XPOS;
+                                
+                                if(tipo=='E')
+                                {
+                                    clave   = ite.CDESTADOMC;
+                                    descrip = ite.DSESTADOMC;
+                                    _p52_addDiv(id,tipo,clave,descrip,x,y);
+                                }
+                                else if(tipo=='P')
+                                {
+                                    clave   = ite.CDPANTMC;
+                                    descrip = ite.DSPANTMC;
+                                    _p52_addDiv(id,tipo,clave,descrip,x,y);
+                                }
+                                else if(tipo=='C')
+                                {
+                                    clave   = ite.CDCOMPMC;
+                                    descrip = ite.DSCOMPMC;
+                                    _p52_addDiv(id,tipo,clave,descrip,x,y);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        mensajeError(json.message,function()
+                        {
+                            _p52_navega(1);
+                        });
+                    }
+                }
+                catch(e)
+                {
+                    _p52_navega(1);
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_panelDibujo);
+                _p52_navega(1);
+                errorComunicacion(null,'Error al cargar modelado');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_panelDibujo);
+        _p52_navega(1);
+        manejaException(e,ck);
+    }
+}
+
+function _p52_addDiv(id,tipo,clave,descrip,x,y)
+{
+    debug('_p52_addDiv:',id,tipo,clave,'.');
+    debug(descrip,x,y,'.');
+    
+    if(tipo=='E')
+    {
+        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelE">'+clave+' - '+descrip+'</div></div>');
+    }
+    else if(tipo=='P')
+    {
+        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelP">'+clave+' - '+descrip+'</div></div>');
+    }
+    else if(tipo=='C')
+    {
+        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelC">'+clave+' - '+descrip+'</div></div>');
+    }
+    else if(tipo=='O')
+    {
+        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelO">'+clave+' - '+descrip+'</div></div>');
+    }
+    else if(tipo=='V')
+    {
+        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelV">'+descrip+'</div></div>');
+    }
+    else if(tipo=='R')
+    {
+        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelR">'+descrip+'</div></div>');
+    }
+    
+    toolkit.draggable(id);
+}
+
+function _p52_cargarPropsEstado(cdestadomc)
+{
+    debug('_p52_cargarPropsEstado cdestadomc:',cdestadomc,'.');
+    var ck = 'Borrando datos de status';
+    try
+    {
+    
+        var grid = _fieldById('_p52_gridEstRol');
+        grid.store.each(function(record)
+        {
+            record.set('SWVER'     , false);
+            record.set('SWTRABAJO' , false);
+            record.set('SWCOMPRA'  , false);
+            record.set('SWREASIG'  , false);
+        });
+        
+        grid = _fieldById('_p52_gridEstAvi');
+        grid.store.removeAll();
+        
+        _p52_panelEstado.down('form').getForm().reset();
+    
+        ck = 'Recuperando datos de status';
+    
+        _setLoading(true,_p52_panelEstado);
+        Ext.Ajax.request(
+        {
+            url      : _p52_cargarDatosEstado
+            ,params  :
+            {
+                'params.cdtipflu'    : _p52_selectedFlujo.get('CDTIPFLU')
+                ,'params.cdflujomc'  : _p52_selectedFlujo.get('CDFLUJOMC')
+                ,'params.cdestadomc' : cdestadomc
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_panelEstado);
+                var ck = 'Decodificando respuesta al recuperar datos de status';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### datos estado:',json);
+                    if(json.success==true)
+                    {
+                        _p52_panelEstado.down('form').loadRecord(
+                        {
+                            getData : function()
+                            {
+                                return json.params;
+                            }
+                        });
+                        _p52_panelEstado.down('[name=ACCION]').setValue('U');
+                        
+                        var grid = _fieldById('_p52_gridEstRol');
+                        grid.store.each(function(record)
+                        {
+                            for(var i=0;i<json.list.length;i++)
+                            {
+                                var ite = json.list[i];
+                                if(ite.TIPO=='P'&&ite.CDSISROL==record.get('CDSISROL'))
+                                {
+                                    if('S'==ite.SWVER)
+                                    {
+                                        record.set('SWVER',true);
+                                    }
+                                    if('S'==ite.SWTRABAJO)
+                                    {
+                                        record.set('SWTRABAJO',true);
+                                    }
+                                    if('S'==ite.SWCOMPRA)
+                                    {
+                                        record.set('SWCOMPRA',true);
+                                    }
+                                    if('S'==ite.SWREASIG)
+                                    {
+                                        record.set('SWREASIG',true);
+                                    }
+                                }
+                            }
+                        });
+                        
+                        grid = _fieldById('_p52_gridEstAvi');
+                        for(var i=0;i<json.list.length;i++)
+                        {
+                            var ite = json.list[i];
+                            if(ite.TIPO=='A')
+                            {
+                                grid.store.add(ite);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_panelEstado);
+                errorComunicacion(null,'Error al recuperar datos de status');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_panelEstado);
+        manejaException(e,ck);
+    }
+}
+
+function _p52_guardarDatosEstado(bot,callback)
+{
+    debug('_p52_guardarDatosEstado');
+    var ck = 'Guardando datos de status';
+    try
+    {
+        var form  = _p52_panelEstado.down('form').getForm();
+        if(!form.isValid())
+        {
+            throw 'Favor de revisar los datos';
+        }
+        
+        var jsonData =
+        {
+            params : form.getValues()
+            ,list  : []
+        };
+        
+        var grid = _fieldById('_p52_gridEstRol');
+        grid.store.each(function(record)
+        {
+            var datos       = record.getData();
+            datos.TIPO      = 'P';
+            datos.SWVER     = record.get("SWVER")     ? "S" : "N";
+            datos.SWTRABAJO = record.get("SWTRABAJO") ? "S" : "N";
+            datos.SWCOMPRA  = record.get("SWCOMPRA")  ? "S" : "N";
+            datos.SWREASIG  = record.get("SWREASIG")  ? "S" : "N";
+            jsonData.list.push(datos);
+        });
+        
+        grid = _fieldById('_p52_gridEstAvi');
+        grid.store.each(function(record)
+        {
+            var datos  = record.getData();
+            datos.TIPO = 'A';
+            jsonData.list.push(datos);
+        });
+        
+        debug('jsonData:',jsonData);
+        
+        _setLoading(true,_p52_panelEstado);
+        Ext.Ajax.request(
+        {
+            url       : _p52_urlGuardarDatosStatus
+            ,jsonData : jsonData
+            ,success  : function(response)
+            {
+                _setLoading(false,_p52_panelEstado);
+                var ck = 'Decodificando respuesta al guardar datos de status';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    if(json.success==true)
+                    {
+                        callback(bot);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_panelEstado);
+                errorComunicacion(null,'Error al guardar datos de status');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_panelEstado);
         manejaException(e,ck);
     }
 }

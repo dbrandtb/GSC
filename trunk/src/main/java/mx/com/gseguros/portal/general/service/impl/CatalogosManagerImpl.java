@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
@@ -33,6 +34,9 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	
 	@Autowired
 	private ConsultasDAO consultasDAO;
+	
+	@Autowired
+	private FlujoMesaControlDAO flujoMesaControlDAO;
 	
 	private static final Logger logger = Logger.getLogger(CatalogosManagerImpl.class);
 	
@@ -1314,4 +1318,36 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
     }
+	
+	@Override
+	@Deprecated
+    public List<GenericVO> recuperarTtiptramc() throws Exception
+    {
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarTtiptramc @@@@@@"
+				));
+		
+		String          paso  = null;
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		try
+		{
+			List<Map<String,String>> mapas = flujoMesaControlDAO.recuperaTtiptramc();
+			for(Map<String,String> mapa:mapas)
+			{
+				lista.add(new GenericVO(mapa.get("CDTIPTRA"),mapa.get("DSTIPTRA")));
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ recuperarTtiptramc @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+    }
+    
 }
