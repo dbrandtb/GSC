@@ -768,6 +768,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 								);
 					}
 					break;
+				case TTIPTRAMC:
+					lista = catalogosManager.recuperarTtiptramc();
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

@@ -171,4 +171,7 @@ public interface CatalogosManager {
     		,String cdusuari
     		,String cdunieco
     		) throws Exception;
+    
+    @Deprecated
+    public List<GenericVO> recuperarTtiptramc() throws Exception;
 }

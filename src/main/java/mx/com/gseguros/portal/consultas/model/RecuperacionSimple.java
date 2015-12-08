@@ -46,7 +46,7 @@ public enum RecuperacionSimple
 	,RECUPERAR_TTIPTRAMC                                     ("L" , "RECUPERAR_TTIPTRAMC")  // MC
 	,RECUPERAR_TTIPFLUMC 									 ("L" , "RECUPERAR_TTIPFLUMC")  // MC
 	,RECUPERAR_TESTADOMC									 ("L" , "RECUPERAR_TESTADOMC")  // MC
-	,RECUPERAR_TPANTAMC										 ("L" , "RECUPERAR_TPANTAMC")   // MC
+	,RECUPERAR_TPANTMC										 ("L" , "RECUPERAR_TPANTMC")   // MC
 	,RECUPERAR_TCOMPMC										 ("L" , "RECUPERAR_TCOMPMC")    // MC
 	,RECUPERAR_TPROCMC 									 	 ("L" , "RECUPERAR_TPROCMC")    // MC
 	,RECUPERAR_TDOCUME                                       ("L" , "RECUPERAR_TDOCUME")    // MC
@@ -63,6 +63,7 @@ public enum RecuperacionSimple
 	,RECUPERAR_TFLUREVDOC									 ("L" , "RECUPERAR_TFLUREVDOC") // MC
 	,RECUPERAR_TFLUACC                                       ("L" , "RECUPERAR_TFLUACC")    // MC
 	,RECUPERAR_TFLUACCROL                                    ("L" , "RECUPERAR_TFLUACCROL") // MC
+	,RECUPERAR_ROLES                                         ("L" , "RECUPERAR_ROLES")
 	;
 
 	 

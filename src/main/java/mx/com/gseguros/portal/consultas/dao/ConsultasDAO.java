@@ -464,4 +464,6 @@ public interface ConsultasDAO
 			,String swaplica
 			,String accion
 			)throws Exception;
+	
+	public List<Map<String,String>> recuperarRolesTodos() throws Exception;
 }

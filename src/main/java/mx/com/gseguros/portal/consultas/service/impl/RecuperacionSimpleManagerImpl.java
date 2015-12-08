@@ -784,7 +784,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			{	
 				lista = flujoMesaControlDAO.recuperaTestadomc();
 			}
-			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TPANTAMC))
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TPANTMC))
 			{
 				lista = flujoMesaControlDAO.recuperaTpantamc();
 			}
@@ -817,6 +817,22 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String cdtipflu = params.get("cdtipflu");
 				String cdflujomc = params.get("cdflujomc"); 
 				lista = flujoMesaControlDAO.recuperaTfluest(cdtipflu, cdflujomc);
+				
+				for(Map<String,String>mapa:lista)
+				{
+					Double tmax = Double.parseDouble(mapa.get("TIMEMAX"));
+					Double wrn1 = Double.parseDouble(mapa.get("TIMEWRN1"));
+					Double wrn2 = Double.parseDouble(mapa.get("TIMEWRN2"));
+					
+					mapa.put("TIMEMAXH" , String.format("%.0f",Math.floor(tmax/60d)));
+					mapa.put("TIMEMAXM" , String.format("%.0f",Math.floor(tmax%60d)));
+					
+					mapa.put("TIMEWRN1H" , String.format("%.0f",Math.floor(wrn1/60d)));
+					mapa.put("TIMEWRN1M" , String.format("%.0f",Math.floor(wrn1%60d)));
+					
+					mapa.put("TIMEWRN2H" , String.format("%.0f",Math.floor(wrn2/60d)));
+					mapa.put("TIMEWRN2M" , String.format("%.0f",Math.floor(wrn2%60d)));
+				}
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUESTROL))
 			{
@@ -836,13 +852,8 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUPANT))
 			{
 				String cdtipflu=params.get("cdtipflu");
-				String cdtipflumc=params.get("cdtipflumc");
-				String cdpantmc=params.get("cdpantmc");
-				String webid=params.get("webid");
-				String xpos=params.get("xpos");
-				String ypos=params.get("ypos");
-				String subrayado=params.get("subrayado");
-				lista = flujoMesaControlDAO.recuperaTflupant(cdtipflu, cdtipflumc, cdpantmc, webid, xpos, ypos, subrayado);
+				String cdflujomc=params.get("cdflujomc");
+				lista = flujoMesaControlDAO.recuperaTflupant(cdtipflu, cdflujomc);
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUCOMP))
 			{
@@ -897,7 +908,10 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String cdaccion=params.get("cdaccion");
 				lista = flujoMesaControlDAO.recuperaTfluaccrol(cdtipflu, cdflujomc, cdaccion);
 			}
-
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_ROLES))
+			{
+				lista = consultasDAO.recuperarRolesTodos();
+			}
 		}
 		catch(Exception ex)
 		{
