@@ -14,6 +14,7 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.utils.Utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,11 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			gc.generaComponentes(ttipfluCmp, true, false, true, false, false, false);
 			
 			items.put("ttipfluFormItems" , gc.getItems());
+			
+			List<ComponenteVO> tdocumeCmp = pantallasDAO.obtenerComponentes(null, null, null, null, null, cdsisrol, "FLUJOMC", "TDOCUME", null);
+			gc.generaComponentes(tdocumeCmp, true, false, true, false, false, false);
+			
+			items.put("tdocumeFormItems" , gc.getItems());
 			
 		}
 		catch(Exception ex)
@@ -230,7 +236,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 	}
 	
 	@Override
-	public void registrarEntidad(
+	public String registrarEntidad(
 			StringBuilder sb
 			,String cdtipflu
 			,String cdflujomc
@@ -253,7 +259,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 				,"\n@@@@@@ ypos="      , ypos
 				));
 		
-		String paso = "Registrando entidad";
+		String cdentidad = null
+		       ,paso     = "Registrando entidad";
 		sb.append("\n").append(paso);
 		
 		try
@@ -299,6 +306,45 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 						,"I"
 						);
 			}
+			else if("O".equals(tipo))
+			{
+				flujoMesaControlDAO.movimientoTfluproc(
+						cdtipflu
+						,cdflujomc
+						,clave //cdprocmc
+						,webid
+						,xpos
+						,ypos
+						,"I"
+						);
+			}
+			else if("V".equals(tipo))
+			{
+				cdentidad = flujoMesaControlDAO.movimientoTfluval(
+						cdtipflu
+						,cdflujomc
+						,null //cdvalida
+						,"" //dsvalida
+						,"-1" //cdexpres
+						,webid
+						,xpos
+						,ypos
+						,"I"
+						);
+			}
+			else if("R".equals(tipo))
+			{
+				cdentidad = flujoMesaControlDAO.movimientoTflurev(
+						cdtipflu
+						,cdflujomc
+						,null //cdrevisi
+						,""   //dsrevisi
+						,webid
+						,xpos
+						,ypos
+						,"I"
+						);
+			}
 		}
 		catch(Exception ex)
 		{
@@ -306,9 +352,11 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 		}
 		
 		sb.append(Utils.log(
-				 "\n@@@@@@ registrarEntidad @@@@@@"
+				 "\n@@@@@@ cdentidad=",cdentidad
+				,"\n@@@@@@ registrarEntidad @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
+		return cdentidad;
 	}
 	
 	@Override
@@ -328,7 +376,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 				,"\n@@@@@@ cdflujomc=" , cdflujomc
 				,"\n@@@@@@ tipo="      , tipo
 				,"\n@@@@@@ clave="     , clave
-				,"\n@@@@@@ webid="     , cdtipflu
+				,"\n@@@@@@ webid="     , webid
 				));
 		
 		String paso = "Borrando entidad";
@@ -342,7 +390,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 						cdtipflu
 						,cdflujomc
 						,clave //cdestadomc
-						,null //webid
+						,webid
 						,null //xpos
 						,null //ypos
 						,null //timemax
@@ -351,6 +399,69 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 						,null //swescala
 						,null //cdtipasig
 						,"D"
+						);
+			}
+			else if("P".equals(tipo))
+			{
+				flujoMesaControlDAO.movimientoTflupant(
+						cdtipflu
+						,cdflujomc
+						,clave//cdpantmc
+						,webid
+						,null//xpos
+						,null//ypos
+						,"D"
+						);
+			}
+			else if("C".equals(tipo))
+			{
+				flujoMesaControlDAO.movimientoTflucomp(
+						cdtipflu
+						,cdflujomc
+						,clave //cdcompmc
+						,webid
+						,null //xpos
+						,null //ypos
+						,"D" //accion
+						);
+			}
+			else if("O".equals(tipo))
+			{
+				flujoMesaControlDAO.movimientoTfluproc(
+						cdtipflu
+						,cdflujomc
+						,clave //cdprocmc
+						,webid
+						,null//xpos
+						,null//ypos
+						,"D"//accion
+						);
+			}
+			else if("V".equals(tipo))
+			{
+				flujoMesaControlDAO.movimientoTfluval(
+						cdtipflu
+						,cdflujomc
+						,clave //cdvalida
+						,null //dsvalida
+						,null //cdexpres
+						,webid
+						,null //xpos
+						,null //ypoS
+						,"D" //accion
+						);
+			}
+			else if("R".equals(tipo))
+			{
+				flujoMesaControlDAO.movimientoTflurev(
+						cdtipflu
+						,cdflujomc
+						,clave //cdrevisi
+						,null //dsrevisi
+						,webid
+						,null //xpos
+						,null //ypos
+						,"D" //accion
 						);
 			}
 		}
@@ -422,6 +533,38 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 					componente.put("TIPO" , "C");
 					list.add(componente);
 				}
+				
+				List<Map<String,String>> procesos = flujoMesaControlDAO.recuperaTfluproc(cdtipflu, cdflujomc);
+				
+				for(Map<String,String>proceso:procesos)
+				{
+					proceso.put("TIPO" , "O");
+					list.add(proceso);
+				}
+				
+				List<Map<String,String>> validaciones = flujoMesaControlDAO.recuperaTfluval(cdtipflu, cdflujomc);
+				
+				for(Map<String,String>proceso:validaciones)
+				{
+					proceso.put("TIPO" , "V");
+					list.add(proceso);
+				}
+				
+				List<Map<String,String>> revisiones = flujoMesaControlDAO.recuperaTflurev(cdtipflu, cdflujomc);
+				
+				for(Map<String,String>revision:revisiones)
+				{
+					revision.put("TIPO" , "R");
+					list.add(revision);
+				}
+				
+				List<Map<String,String>> acciones = flujoMesaControlDAO.recuperaTfluacc(cdtipflu,cdflujomc);
+				
+				for(Map<String,String>accion:acciones)
+				{
+					accion.put("TIPO" , "A");
+					list.add(accion);
+				}
 			}
 			
 		}
@@ -477,6 +620,19 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			if(estado==null)
 			{
 				throw new ApplicationException("No se encuentra el status");
+			}
+			
+			if(StringUtils.isBlank(estado.get("TIMEMAX")))
+			{
+				estado.put("TIMEMAX","0");
+			}
+			if(StringUtils.isBlank(estado.get("TIMEWRN1")))
+			{
+				estado.put("TIMEWRN1","0");
+			}
+			if(StringUtils.isBlank(estado.get("TIMEWRN2")))
+			{
+				estado.put("TIMEWRN2","0");
 			}
 			
 			Double tmax = Double.parseDouble(estado.get("TIMEMAX"));
@@ -645,6 +801,587 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 		
 		sb.append(Utils.log(
 				 "\n@@@@@@ guardarDatosEstado @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public String registrarConnection(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String idorigen
+			,String iddestin
+			)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ registrarConnection @@@@@@"
+				,"\n@@@@@@ cdtipflu="  , cdtipflu
+				,"\n@@@@@@ cdflujomc=" , cdflujomc
+				,"\n@@@@@@ idorigen="  , idorigen
+				,"\n@@@@@@ iddestin="  , iddestin
+				));
+		
+		String cdaccion = null
+		       ,paso    = null;
+		
+		try
+		{
+			paso = "Registrando conexi\u00f3n";
+			sb.append("\n").append(paso);
+			
+			cdaccion = flujoMesaControlDAO.movimientoTfluacc(
+					cdtipflu
+					,cdflujomc
+					,null //cdaccion
+					,""   //dsaccion
+					,""   //cdicono
+					,""   //cdvalor
+					,idorigen
+					,iddestin
+					,"I"
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		sb.append(Utils.log(
+				 "\n@@@@@@ cdaccion=",cdaccion
+				,"\n@@@@@@ registrarConnection @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return cdaccion;
+	}
+	
+	@Override
+	public Map<String,String> cargarDatosValidacion(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String cdvalida
+			)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarDatosValidacion @@@@@@"
+				,"\n@@@@@@ cdtipflu="  , cdtipflu
+				,"\n@@@@@@ cdflujomc=" , cdflujomc
+				,"\n@@@@@@ cdvalida="  , cdvalida
+				));
+		
+		Map<String,String> validacion = null;
+		String             paso       = null;
+		
+		try
+		{
+			paso = "Recuperando validaciones";
+			sb.append("\n").append(paso);
+			
+			List<Map<String,String>> validaciones = flujoMesaControlDAO.recuperaTfluval(cdtipflu, cdflujomc);
+			
+			for(Map<String,String>validaIte : validaciones)
+			{
+				if(validaIte.get("CDVALIDA").equals(cdvalida))
+				{
+					validacion = validaIte;
+					break;
+				}
+			}
+			
+			if(validacion==null)
+			{
+				throw new ApplicationException("No se encuentra la validaci\u00f3n");
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		sb.append(Utils.log(
+				 "\n@@@@@@ cargarDatosValidacion @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return validacion;
+	}
+	
+	@Override
+	public void guardarDatosValidacion(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String cdvalida
+			,String webid
+			,String xpos
+			,String ypos
+			,String dsvalida
+			,String cdexpres
+			,String accion
+			)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarDatosValidacion @@@@@@"
+				,"\n@@@@@@ cdtipflu="  , cdtipflu
+				,"\n@@@@@@ cdflujomc=" , cdflujomc
+				,"\n@@@@@@ cdvalida="  , cdvalida
+				,"\n@@@@@@ webid="     , webid
+				,"\n@@@@@@ xpos="      , xpos
+				,"\n@@@@@@ ypos="      , ypos
+				,"\n@@@@@@ dsvalida="  , dsvalida
+				,"\n@@@@@@ cdexpres="  , cdexpres
+				,"\n@@@@@@ accion="    , accion
+				));
+		
+		String paso = "Guardando datos de validaci\u00f3n";
+		sb.append("\n").append(paso);
+		
+		try
+		{
+			flujoMesaControlDAO.movimientoTfluval(
+					cdtipflu
+					,cdflujomc
+					,cdvalida
+					,dsvalida
+					,cdexpres
+					,webid
+					,xpos
+					,ypos
+					,accion
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		sb.append(Utils.log(
+				 "\n@@@@@@ guardarDatosValidacion @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public void guardarCoordenadas(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,List<Map<String,String>>list
+			)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarCoordenadas @@@@@@"
+				,"\n@@@@@@ cdtipflu="  , cdtipflu
+				,"\n@@@@@@ cdflujomc=" , cdflujomc
+				,"\n@@@@@@ list="      , list
+				));
+
+		String paso = "Guardando coordenadas";
+		try
+		{
+			for(Map<String,String>entidad:list)
+			{
+				flujoMesaControlDAO.actualizaCoordenadas(
+						cdtipflu
+						,cdflujomc
+						,entidad.get("tipo")
+						,entidad.get("clave")
+						,entidad.get("webid")
+						,entidad.get("xpos")
+						,entidad.get("ypos")
+						);
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		sb.append(Utils.log(
+				 "\n@@@@@@ guardarCoordenadas @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public String expresion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdexpres
+			)throws Exception
+	{
+		return flujoMesaControlDAO.expresion(
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,nmsituac
+				,nmsuplem
+				,cdexpres
+				);
+	}
+	
+	@Override
+	public Map<String,Object> cargarDatosRevision(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String cdrevisi
+			)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarDatosRevision @@@@@@"
+				,"\n@@@@@@ cdtipflu="  , cdtipflu
+				,"\n@@@@@@ cdflujomc=" , cdflujomc
+				,"\n@@@@@@ cdrevisi="  , cdrevisi
+				));
+		
+		Map<String,Object> result = new HashMap<String,Object>();
+		String             paso   = null;
+		
+		try
+		{
+			paso = "Recuperando revisi\u00f3n";
+			sb.append("\n").append(paso);
+			
+			List<Map<String,String>> lista    = flujoMesaControlDAO.recuperaTflurev(cdtipflu, cdflujomc);
+			Map<String,String>       revision = null;
+			
+			for(Map<String,String>listaItem:lista)
+			{
+				if(listaItem.get("CDREVISI").equals(cdrevisi))
+				{
+					revision = listaItem;
+					break;
+				}
+			}
+			
+			if(revision==null)
+			{
+				throw new ApplicationException("No se encuentra la revisi\u00f3n");
+			}
+			
+			paso = "Recuperando documentos";
+			sb.append("\n").append(paso);
+			
+			List<Map<String,String>> permisos = flujoMesaControlDAO.recuperaTflurevdoc(cdtipflu, cdflujomc, cdrevisi);
+			
+			sb.append(Utils.log(
+					 "\nmapa="  , revision
+					,"\nlista=" , permisos
+					));
+			
+			result.put("mapa"  , revision);
+			result.put("lista" , permisos);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		sb.append(Utils.log(
+				 "\n@@@@@@ cargarDatosRevision @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return result;
+	}
+	
+	@Override
+	public void guardarDatosRevision(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String cdrevisi
+			,String dsrevisi
+			,String accion
+			,String webid
+			,String xpos
+			,String ypos
+			,List<Map<String,String>>list
+			)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarDatosRevision @@@@@@"
+				,"\n@@@@@@ cdtipflu="  , cdtipflu
+				,"\n@@@@@@ cdflujomc=" , cdflujomc
+				,"\n@@@@@@ cdrevisi="  , cdrevisi
+				,"\n@@@@@@ dsrevisi="  , dsrevisi
+				,"\n@@@@@@ accion="    , accion
+				,"\n@@@@@@ webid="     , webid
+				,"\n@@@@@@ xpos="      , xpos
+				,"\n@@@@@@ ypos="      , ypos
+				,"\n@@@@@@ list="      , list
+				));
+		
+		String paso = null;
+		try
+		{
+			paso = "Guardando datos de revisi\u00f3n";
+			sb.append("\n").append(paso);
+			
+			flujoMesaControlDAO.movimientoTflurev(
+					cdtipflu
+					,cdflujomc
+					,cdrevisi
+					,dsrevisi
+					,webid
+					,xpos
+					,ypos
+					,accion
+					);
+			
+			paso = "Guardando documentos";
+			sb.append("\n").append(paso);
+			
+			for(Map<String,String>ite : list)
+			{
+				flujoMesaControlDAO.movimientoTflurevdoc(
+						cdtipflu
+						,cdflujomc
+						,cdrevisi
+						,ite.get("CDDOCUME")
+						,ite.get("SWOBLIGA")
+						,"I"
+						);
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		sb.append(Utils.log(
+				 "\n@@@@@@ guardarDatosRevision @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public void movimientoTdocume(
+			StringBuilder sb
+			,String accion
+			,String cddocume
+			,String dsdocume
+			,String cdtiptra
+			)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ movimientoTdocume @@@@@@"
+				,"\n@@@@@@ accion="   , accion
+				,"\n@@@@@@ dsdocume=" , dsdocume
+				,"\n@@@@@@ dsdocume=" , dsdocume
+				,"\n@@@@@@ cdtiptra=" , cdtiptra
+				));
+		
+		String paso = "Guardando documento";
+		sb.append("\n").append(paso);
+		
+		try
+		{
+			flujoMesaControlDAO.movimientoTdocume(cddocume, dsdocume, cdtiptra, accion);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		sb.append(Utils.log(
+				 "\n@@@@@@ movimientoTdocume @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public void borrarConnection(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String cdaccion
+			)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ borrarConnection @@@@@@"
+				,"\n@@@@@@ cdtipflu="  , cdtipflu
+				,"\n@@@@@@ cdflujomc=" , cdflujomc
+				,"\n@@@@@@ cdaccion="  , cdaccion
+				));
+		
+		String paso = "Borrando acci\u00f3n";
+		sb.append("\n").append(paso);
+		
+		try
+		{
+			flujoMesaControlDAO.movimientoTfluacc(
+					cdtipflu
+					,cdflujomc
+					,cdaccion
+					,null //dsaccion
+					,null //cdicono
+					,null //cdvalor
+					,null //idorigen
+					,null //iddestin
+					,"D" //accion
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		sb.append(Utils.log(
+				 "\n@@@@@@ borrarConnection @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public Map<String,Object> cargarDatosAccion(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String cdaccion
+			)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarDatosAccion @@@@@@"
+				,"\n@@@@@@ cdtipflu="  , cdtipflu
+				,"\n@@@@@@ cdflujomc=" , cdflujomc
+				,"\n@@@@@@ cdaccion="  , cdaccion
+				));
+		
+		Map<String,Object> result = new HashMap<String,Object>();
+		String             paso   = null;
+		
+		try
+		{
+			paso = "Recuperando acci\u00f3n";
+			sb.append("\n").append(paso);
+			
+			List<Map<String,String>> lista    = flujoMesaControlDAO.recuperaTfluacc(cdtipflu, cdflujomc);
+			Map<String,String>       accion = null;
+			
+			for(Map<String,String>listaItem:lista)
+			{
+				if(listaItem.get("CDACCION").equals(cdaccion))
+				{
+					accion = listaItem;
+					break;
+				}
+			}
+			
+			if(accion==null)
+			{
+				throw new ApplicationException("No se encuentra la acci\u00f3n");
+			}
+			
+			paso = "Recuperando permisos";
+			sb.append("\n").append(paso);
+			
+			List<Map<String,String>> permisos = flujoMesaControlDAO.recuperaTfluaccrol(cdtipflu, cdflujomc, cdaccion);
+			
+			sb.append(Utils.log(
+					 "\nmapa="  , accion
+					,"\nlista=" , permisos
+					));
+			
+			result.put("mapa"  , accion);
+			result.put("lista" , permisos);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		sb.append(Utils.log(
+				 "\n@@@@@@ cargarDatosAccion @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return result;
+	}
+	
+	@Override
+	public void guardarDatosAccion(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String cdaccion
+			,String dsaccion
+			,String accion
+			,String idorigen
+			,String iddestin
+			,String cdvalor
+			,String cdicono
+			,List<Map<String,String>>list
+			)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarDatosAccion @@@@@@"
+				,"\n@@@@@@ cdtipflu="  , cdtipflu
+				,"\n@@@@@@ cdflujomc=" , cdflujomc
+				,"\n@@@@@@ cdaccion="  , cdaccion
+				,"\n@@@@@@ dsaccion="  , dsaccion
+				,"\n@@@@@@ accion="    , accion
+				,"\n@@@@@@ idorigen="  , idorigen
+				,"\n@@@@@@ iddestin="  , iddestin
+				,"\n@@@@@@ cdvalor="   , cdvalor
+				,"\n@@@@@@ cdicono="   , cdicono
+				,"\n@@@@@@ list="      , list
+				));
+		
+		String paso = null;
+		
+		try
+		{
+			paso = "Guardando datos de acci\u00f3n";
+			sb.append("\n").append(paso);
+			
+			flujoMesaControlDAO.movimientoTfluacc(
+					cdtipflu
+					,cdflujomc
+					,cdaccion
+					,dsaccion
+					,cdicono
+					,cdvalor
+					,idorigen
+					,iddestin
+					,accion
+					);
+			
+			paso = "Guardando permisos";
+			sb.append("\n").append(paso);
+			
+			for(Map<String,String>ite : list)
+			{
+				flujoMesaControlDAO.movimientoTfluaccrol(
+						cdtipflu
+						,cdflujomc
+						,cdaccion
+						,ite.get("CDSISROL")
+						,"S".equals(ite.get("SWPERMISO")) ? "S" : "N"
+						,"I"
+						);
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		sb.append(Utils.log(
+				 "\n@@@@@@ guardarDatosAccion @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}

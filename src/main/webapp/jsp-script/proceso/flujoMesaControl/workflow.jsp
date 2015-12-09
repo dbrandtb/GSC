@@ -225,18 +225,25 @@ if(inIframe())
 ////// iframe //////
 
 ////// urls //////
-var _p52_urlRegistrarEntidad    = '<s:url namespace="/flujomesacontrol" action="registrarEntidad"    />';
-var _p52_urlBorrarEntidad       = '<s:url namespace="/flujomesacontrol" action="borrarEntidad"       />';
-var _p52_urlRegistrarConnection = '<s:url namespace="/flujomesacontrol" action="registrarConnection" />';
-var _p52_urlBorrarConnection    = '<s:url namespace="/flujomesacontrol" action="borrarConnection"    />';
-var _p52_urlGuardarCoords       = '<s:url namespace="/flujomesacontrol" action="guardarCoordenadas"  />';
-var _p52_urlRecuperacion        = '<s:url namespace="/recuperacion"     action="recuperar"           />';
-var _p52_urlMovimientoTtipflumc = '<s:url namespace="/flujomesacontrol" action="movimientoTtipflumc" />';
-var _p52_urlMovimientoTflujomc  = '<s:url namespace="/flujomesacontrol" action="movimientoTflujomc"  />';
-var _p52_urlMovimientoCatalogo  = '<s:url namespace="/flujomesacontrol" action="movimientoCatalogo"  />';
-var _p52_urlCargarModelado      = '<s:url namespace="/flujomesacontrol" action="cargarModelado"      />';
-var _p52_cargarDatosEstado      = '<s:url namespace="/flujomesacontrol" action="cargarDatosEstado"   />';
-var _p52_urlGuardarDatosStatus  = '<s:url namespace="/flujomesacontrol" action="guardarDatosEstado"  />';
+var _p52_urlRegistrarEntidad       = '<s:url namespace="/flujomesacontrol" action="registrarEntidad"       />';
+var _p52_urlBorrarEntidad          = '<s:url namespace="/flujomesacontrol" action="borrarEntidad"          />';
+var _p52_urlRegistrarConnection    = '<s:url namespace="/flujomesacontrol" action="registrarConnection"    />';
+var _p52_urlBorrarConnection       = '<s:url namespace="/flujomesacontrol" action="borrarConnection"       />';
+var _p52_urlGuardarCoords          = '<s:url namespace="/flujomesacontrol" action="guardarCoordenadas"     />';
+var _p52_urlRecuperacion           = '<s:url namespace="/recuperacion"     action="recuperar"              />';
+var _p52_urlMovimientoTtipflumc    = '<s:url namespace="/flujomesacontrol" action="movimientoTtipflumc"    />';
+var _p52_urlMovimientoTflujomc     = '<s:url namespace="/flujomesacontrol" action="movimientoTflujomc"     />';
+var _p52_urlMovimientoCatalogo     = '<s:url namespace="/flujomesacontrol" action="movimientoCatalogo"     />';
+var _p52_urlCargarModelado         = '<s:url namespace="/flujomesacontrol" action="cargarModelado"         />';
+var _p52_urlCargarDatosEstado      = '<s:url namespace="/flujomesacontrol" action="cargarDatosEstado"      />';
+var _p52_urlGuardarDatosStatus     = '<s:url namespace="/flujomesacontrol" action="guardarDatosEstado"     />';
+var _p52_urlCargarDatosValidacion  = '<s:url namespace="/flujomesacontrol" action="cargarDatosValidacion"  />';
+var _p52_urlGuardarDatosValidacion = '<s:url namespace="/flujomesacontrol" action="guardarDatosValidacion" />';
+var _p52_urlCargarDatosRevision    = '<s:url namespace="/flujomesacontrol" action="cargarDatosRevision"    />';
+var _p52_urlGuardarDatosRevision   = '<s:url namespace="/flujomesacontrol" action="guardarDatosRevision"   />';
+var _p52_urlMovimientoTdocume      = '<s:url namespace="/flujomesacontrol" action="movimientoTdocume"      />';
+var _p52_urlCargarDatosAccion      = '<s:url namespace="/flujomesacontrol" action="cargarDatosAccion"      />';
+var _p52_urlGuardarDatosAccion     = '<s:url namespace="/flujomesacontrol" action="guardarDatosAccion"     />';
 ////// urls //////
 
 ////// variables //////
@@ -275,6 +282,11 @@ var _p52_formEstado;
 var _p52_formComponente;
 var _p52_formPantalla;
 var _p52_formProceso;
+var _p52_formTdocume;
+
+var _p52_cargando = false;
+
+var _p52_debug = false;
 ////// variables //////
 
 ////// overrides //////
@@ -418,10 +430,10 @@ Ext.onReady(function()
          '<div class="radioicono">'
         ,'    <table width="80" border="0">'
         ,'        <tr>'
-        ,'            <td align="center"><img src="${icons}{cdicono}.png" /></td>'
+        ,'            <td align="center"><img src="${icons}{CDICONO}.png" /></td>'
         ,'        </tr>'
         ,'        <tr>'
-        ,'            <td align="center"><input type="radio" name="iconoaccion" />{dsicono}</td>'
+        ,'            <td align="center"><input type="radio" name="iconoaccion" value="{CDICONO}"/>{DSICONO}</td>'
         ,'        </tr>'
         ,'    </table>'
         ,'</div>'
@@ -601,17 +613,20 @@ Ext.onReady(function()
                         ,fieldLabel : '_ACCION'
                         ,name       : 'ACCION'
                         ,allowBlank : false
+                        ,hidden     : !_p52_debug
                     }
                     ,{
                         xtype       : 'textfield'
                         ,fieldLabel : '_CDTIPFLU'
                         ,name       : 'CDTIPFLU'
                         ,allowBlank : false
+                        ,hidden     : !_p52_debug
                     }
                     ,{
                         xtype       : 'textfield'
                         ,fieldLabel : '_CDFLUJOMC'
                         ,name       : 'CDFLUJOMC'
+                        ,hidden     : !_p52_debug
                     }
                     ,{
                         xtype       : 'textfield'
@@ -638,18 +653,21 @@ Ext.onReady(function()
                             var ck = 'Guardando';
                             try
                             {
-                                var win  = me.up('window');
-                                var form = me.up('form').getForm();
+                                var win     = me.up('window');
+                                var formCmp = me.up('form');
+                                var form    = me.up('form').getForm();
                                 if(!form.isValid())
                                 {
                                     throw 'Favor de revisar los datos';
                                 }
                                 
+                                var formValues = form.getValues();
+                                
                                 _setLoading(true,win);
                                 Ext.Ajax.request(
                                 {
                                     url      : _p52_urlMovimientoTflujomc
-                                    ,params  : _formValuesToParams(form.getValues())
+                                    ,params  : _formValuesToParams(formValues)
                                     ,success : function(response)
                                     {
                                         _setLoading(false,win);
@@ -662,6 +680,13 @@ Ext.onReady(function()
                                             {
                                                 win.hide();
                                                 _p52_gridProcesos.store.reload();
+                                                
+                                                if(!_p52_panelDibujo.isHidden())
+                                                {
+                                                    _p52_panelDibujo.setTitle(json.params.DSFLUJOMC);
+                                                    _p52_selectedFlujo.set('DSFLUJOMC' , json.params.DSFLUJOMC);
+                                                    _p52_selectedFlujo.set('SWFINAL'   , json.params.SWFINAL);
+                                                }
                                             }
                                             else
                                             {
@@ -739,11 +764,13 @@ Ext.onReady(function()
                         ,fieldLabel : '_ACCION'
                         ,name       : 'ACCION'
                         ,allowBlank : false
+                        ,hidden     : !_p52_debug
                     }
                     ,{
                         xtype       : 'textfield'
                         ,fieldLabel : '_CDESTADOMC'
                         ,name       : 'CDESTADOMC'
+                        ,hidden     : !_p52_debug
                     }
                     ,{
                         xtype       : 'textfield'
@@ -808,11 +835,13 @@ Ext.onReady(function()
                         ,fieldLabel : '_ACCION'
                         ,name       : 'ACCION'
                         ,allowBlank : false
+                        ,hidden     : !_p52_debug
                     }
                     ,{
                         xtype       : 'textfield'
                         ,fieldLabel : '_CDCOMPMC'
                         ,name       : 'CDCOMPMC'
+                        ,hidden     : !_p52_debug
                     }
                     ,{
                         xtype       : 'textfield'
@@ -883,11 +912,13 @@ Ext.onReady(function()
                         ,fieldLabel : '_ACCION'
                         ,name       : 'ACCION'
                         ,allowBlank : false
+                        ,hidden     : !_p52_debug
                     }
                     ,{
                         xtype       : 'textfield'
                         ,fieldLabel : '_CDPANTMC'
                         ,name       : 'CDPANTMC'
+                        ,hidden     : !_p52_debug
                     }
                     ,{
                         xtype       : 'textfield'
@@ -973,11 +1004,13 @@ Ext.onReady(function()
                         ,fieldLabel : '_ACCION'
                         ,name       : 'ACCION'
                         ,allowBlank : false
+                        ,hidden     : !_p52_debug
                     }
                     ,{
                         xtype       : 'textfield'
                         ,fieldLabel : '_CDPROCMC'
                         ,name       : 'CDPROCMC'
+                        ,hidden     : !_p52_debug
                     }
                     ,{
                         xtype       : 'textfield'
@@ -1027,6 +1060,102 @@ Ext.onReady(function()
         {
             var me = this;
             me.down('form').getForm().loadRecord(data);
+            me.down('[name=ACCION]').setValue('U');
+            centrarVentanaInterna(me.show());
+        }
+    });
+    
+    _p52_formTdocume = Ext.create('Ext.window.Window',
+    {
+        title        : 'DOCUMENTO'
+        ,modal       : true
+        ,closeAction : 'hide'
+        ,items       :
+        [
+            Ext.create('Ext.form.Panel',
+            {
+                defaults : { style : 'margin:5px;' }
+                ,border  : 0
+                ,items   :
+                [
+                    <s:property value="items.tdocumeFormItems" escapeHtml="false" />
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text     : 'Guardar'
+                        ,icon    : '${icons}disk.png'
+                        ,handler : function(me)
+                        {
+                            var ck = 'Guardando';
+                            try
+                            {
+                                var win  = me.up('window');
+                                var form = me.up('form').getForm();
+                                if(!form.isValid())
+                                {
+                                    throw 'Favor de revisar los datos';
+                                }
+                                
+                                _setLoading(true,win);
+                                Ext.Ajax.request(
+                                {
+                                    url      : _p52_urlMovimientoTdocume
+                                    ,params  : _formValuesToParams(form.getValues())
+                                    ,success : function(response)
+                                    {
+                                        _setLoading(false,win);
+                                        var ck = 'Decodificando respuesta al guardar documento';
+                                        try
+                                        {
+                                            var json = Ext.decode(response.responseText);
+                                            debug('### mov tdocume:',json);
+                                            if(json.success==true)
+                                            {
+                                                win.hide();
+                                                _p52_panelRevision.hide();
+                                                _p52_panelCanvas.enable();
+                                                _fieldById('_p52_gridRevDoc').store.reload();
+                                            }
+                                            else
+                                            {
+                                                mensajeError(json.message);
+                                            }
+                                        }
+                                        catch(e)
+                                        {
+                                            manejaException(e,ck);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        _setLoading(false,win);
+                                        errorComunicacion(null,'Error guardando documento');
+                                    }
+                                });
+                            }
+                            catch(e)
+                            {
+                                _setLoading(false,win);
+                                manejaException(e,ck);
+                            }
+                        }
+                    }
+                ]
+            })
+        ]
+        ,showNew : function()
+        {
+            var me = this;
+            me.down('form').getForm().reset();
+            me.down('[name=ACCION]').setValue('I');
+            centrarVentanaInterna(me.show());
+        }
+        ,showEdit : function(record)
+        {
+            var me = this;
+            me.down('form').getForm().loadRecord(record);
             me.down('[name=ACCION]').setValue('U');
             centrarVentanaInterna(me.show());
         }
@@ -1284,14 +1413,26 @@ Ext.onReady(function()
                                     ,tdAttrs : { valign : 'top' }
                                 }
                                 ,tools :
-                                [{
-                                    type      : 'collapse'
-                                    ,tooltip  : 'Agregar'
-                                    ,callback : function(panel)
+                                [
                                     {
-                                        _p52_editCatClic('E');
+                                        type      : 'collapse'
+                                        ,tooltip  : 'Agregar'
+                                        ,callback : function(panel)
+                                        {
+                                            _p52_editCatClic('E');
+                                        }
                                     }
-                                }]
+                                    ,{
+                                        type     : 'help'
+                                        ,tooltip : 'Tips'
+                                        ,handler : function()
+                                        {
+                                            _p52_ventanaTips([
+                                                'Restricci\u00f3n al agregar: solo se puede agregar una vez.'
+                                            ]);
+                                        }
+                                    }
+                                ]
                             }
                             ,{
                                 title       : 'PANTALLAS'
@@ -1347,14 +1488,29 @@ Ext.onReady(function()
                                     ,tdAttrs : { valign : 'top' }
                                 }
                                 ,tools :
-                                [{
-                                    type      : 'collapse'
-                                    ,tooltip  : 'Agregar'
-                                    ,callback : function(panel)
+                                [
                                     {
-                                        _p52_editCatClic('O');
+                                        type      : 'collapse'
+                                        ,tooltip  : 'Agregar'
+                                        ,callback : function(panel)
+                                        {
+                                            _p52_editCatClic('O');
+                                        }
                                     }
-                                }]
+                                    ,{
+                                        type     : 'help'
+                                        ,tooltip : 'Tips'
+                                        ,handler : function()
+                                        {
+                                            _p52_ventanaTips([
+                                                'Conexiones de salida:'
+                                                ,'- Puede no tener conexiones,'
+                                                ,'- Puede tener una sola conexi\u00f3n sin valor,'
+                                                ,'- Puede tener dos conexiones, una con valor EXITO y otra con valor ERROR.'
+                                            ]);
+                                        }
+                                    }
+                                ]
                             }
                             ,{
                                 title       : 'VALIDACIONES'
@@ -1367,6 +1523,19 @@ Ext.onReady(function()
                                     ,columns : 2
                                     ,tdAttrs : { valign : 'top' }
                                 }
+                                ,tools :
+                                [{
+                                    type     : 'help'
+                                    ,tooltip : 'Tips'
+                                    ,handler : function()
+                                    {
+                                        _p52_ventanaTips([
+                                            'Conexiones de salida:'
+                                            ,'- Debe tener al menos una conexi\u00f3n,'
+                                            ,'- Todas sus conexiones deben tener valor.'
+                                        ]);
+                                    }
+                                }]
                             }
                             ,{
                                 title       : 'REVISIONES'
@@ -1379,6 +1548,20 @@ Ext.onReady(function()
                                     ,columns : 2
                                     ,tdAttrs : { valign : 'top' }
                                 }
+                                ,tools :
+                                [{
+                                    type     : 'help'
+                                    ,tooltip : 'Tips'
+                                    ,handler : function()
+                                    {
+                                        _p52_ventanaTips([
+                                            'Conexiones de salida:'
+                                            ,'- Debe tener al menos una conexi\u00f3n,'
+                                            ,'- Puede tener una sola conexi\u00f3n sin valor,'
+                                            ,'- Puede tener dos conexiones, una con valor EXITO y otra con valor ERROR.'
+                                        ]);
+                                    }
+                                }]
                             }
                         ]
                     })
@@ -1405,7 +1588,7 @@ Ext.onReady(function()
                                         ,icon    : '${icons}disk.png'
                                         ,handler : function(me)
                                         {
-                                            _p52_guardarDatosEstado(me,function(bot)
+                                            _p52_guardarDatosEstado(me,function(me)
                                             {
                                                 _p52_panelCanvas.enable();
                                                 me.up('panel').hide();
@@ -1435,42 +1618,49 @@ Ext.onReady(function()
                                                 ,fieldLabel : '_ACCION'
                                                 ,name       : 'ACCION'
                                                 ,allowBlank : false
+                                                ,hidden     : !_p52_debug
                                             }
                                             ,{
                                                 xtype       : 'textfield'
                                                 ,fieldLabel : '_CDTIPFLU'
                                                 ,name       : 'CDTIPFLU'
                                                 ,allowBlank : false
+                                                ,hidden     : !_p52_debug
                                             }
                                             ,{
                                                 xtype       : 'textfield'
                                                 ,fieldLabel : '_CDFLUJOMC'
                                                 ,name       : 'CDFLUJOMC'
                                                 ,allowBlank : false
+                                                ,hidden     : !_p52_debug
                                             }
                                             ,{
                                                 xtype       : 'textfield'
                                                 ,fieldLabel : '_CDESTADOMC'
                                                 ,name       : 'CDESTADOMC'
                                                 ,allowBlank : false
+                                                ,hidden     : !_p52_debug
                                             }
                                             ,{
                                                 xtype       : 'textfield'
                                                 ,fieldLabel : '_WEBID'
                                                 ,name       : 'WEBID'
                                                 ,allowBlank : false
+                                                ,hidden     : !_p52_debug
                                             }
                                             ,{
                                                 xtype       : 'textfield'
                                                 ,fieldLabel : '_XPOS'
                                                 ,name       : 'XPOS'
                                                 ,allowBlank : false
+                                                ,hidden     : !_p52_debug
                                             }
                                             ,{
                                                 xtype       : 'textfield'
                                                 ,fieldLabel : '_YPOS'
                                                 ,name       : 'YPOS'
                                                 ,allowBlank : false
+                                                ,hidden     : !_p52_debug
                                             }
                                             ,{
                                                 xtype       : 'slider'
@@ -1696,8 +1886,16 @@ Ext.onReady(function()
                                         ,icon    : '${icons}disk.png'
                                         ,handler : function(me)
                                         {
-                                            _p52_panelCanvas.enable();
-                                            me.up('panel').hide();
+                                            _p52_guardarDatosValidacion(me,function(me)
+                                            {
+                                                _p52_panelCanvas.enable();
+                                                me.up('panel').hide();
+                                                _p52_actualizaLabel(
+                                                    'V'
+                                                    ,_p52_formValidacion.down('[name=WEBID]').getValue()
+                                                    ,_p52_formValidacion.down('[name=DSVALIDA]').getValue()
+                                                );
+                                            });
                                         }
                                     }
                                     ,{
@@ -1717,42 +1915,49 @@ Ext.onReady(function()
                                         ,fieldLabel : '_ACCION'
                                         ,name       : 'ACCION'
                                         ,allowBlank : false
+                                        ,hidden     : !_p52_debug
                                     }
                                     ,{
                                         xtype       : 'textfield'
                                         ,fieldLabel : '_CDTIPFLU'
                                         ,name       : 'CDTIPFLU'
                                         ,allowBlank : false
+                                        ,hidden     : !_p52_debug
                                     }
                                     ,{
                                         xtype       : 'textfield'
                                         ,fieldLabel : '_CDFLUJOMC'
                                         ,name       : 'CDFLUJOMC'
                                         ,allowBlank : false
+                                        ,hidden     : !_p52_debug
                                     }
                                     ,{
                                         xtype       : 'textfield'
                                         ,fieldLabel : '_CDVALIDA'
                                         ,name       : 'CDVALIDA'
                                         ,allowBlank : false
+                                        ,hidden     : !_p52_debug
                                     }
                                     ,{
                                         xtype       : 'textfield'
                                         ,fieldLabel : '_WEBID'
                                         ,name       : 'WEBID'
                                         ,allowBlank : false
+                                        ,hidden     : !_p52_debug
                                     }
                                     ,{
                                         xtype       : 'textfield'
                                         ,fieldLabel : '_XPOS'
                                         ,name       : 'XPOS'
                                         ,allowBlank : false
+                                        ,hidden     : !_p52_debug
                                     }
                                     ,{
                                         xtype       : 'textfield'
                                         ,fieldLabel : '_YPOS'
                                         ,name       : 'YPOS'
                                         ,allowBlank : false
+                                        ,hidden     : !_p52_debug
                                     }
                                     ,{
                                         xtype       : 'textfield'
@@ -1762,11 +1967,13 @@ Ext.onReady(function()
                                         ,allowBlank : false
                                     }
                                     ,{
-                                        xtype       : 'textfield'
-                                        ,fieldLabel : 'EXPRESI\u00D3N'
-                                        ,labelAlign : 'top'
-                                        ,name       : 'CDEXPRES'
-                                        ,allowBlank : false
+                                        xtype          : 'numberfield'
+                                        ,fieldLabel    : 'EXPRESI\u00D3N'
+                                        ,labelAlign    : 'top'
+                                        ,name          : 'CDEXPRES'
+                                        ,allowBlank    : false
+                                        ,minValue      : -1
+                                        ,allowDecimals : false
                                     }
                                 ]
                             })
@@ -1783,8 +1990,16 @@ Ext.onReady(function()
                                         ,icon    : '${icons}disk.png'
                                         ,handler : function(me)
                                         {
-                                            _p52_panelCanvas.enable();
-                                            me.up('panel').hide();
+                                            _p52_guardarDatosRevision(me,function(me)
+                                            {
+                                                _p52_panelCanvas.enable();
+                                                me.up('panel').hide();
+                                                _p52_actualizaLabel(
+                                                    'R'
+                                                    ,_p52_panelRevision.down('[name=WEBID]').getValue()
+                                                    ,_p52_panelRevision.down('[name=DSREVISI]').getValue()
+                                                );
+                                            });
                                         }
                                     }
                                     ,{
@@ -1810,42 +2025,49 @@ Ext.onReady(function()
                                                 ,fieldLabel : '_ACCION'
                                                 ,name       : 'ACCION'
                                                 ,allowBlank : false
+                                                ,hidden     : !_p52_debug
                                             }
                                             ,{
                                                 xtype       : 'textfield'
                                                 ,fieldLabel : '_CDTIPFLU'
                                                 ,name       : 'CDTIPFLU'
                                                 ,allowBlank : false
+                                                ,hidden     : !_p52_debug
                                             }
                                             ,{
                                                 xtype       : 'textfield'
                                                 ,fieldLabel : '_CDFLUJOMC'
                                                 ,name       : 'CDFLUJOMC'
                                                 ,allowBlank : false
+                                                ,hidden     : !_p52_debug
                                             }
                                             ,{
                                                 xtype       : 'textfield'
                                                 ,fieldLabel : '_CDREVISI'
-                                                ,name       : 'CDESTADO'
+                                                ,name       : 'CDREVISI'
                                                 ,allowBlank : false
+                                                ,hidden     : !_p52_debug
                                             }
                                             ,{
                                                 xtype       : 'textfield'
                                                 ,fieldLabel : '_WEBID'
                                                 ,name       : 'WEBID'
                                                 ,allowBlank : false
+                                                ,hidden     : !_p52_debug
                                             }
                                             ,{
                                                 xtype       : 'textfield'
                                                 ,fieldLabel : '_XPOS'
                                                 ,name       : 'XPOS'
                                                 ,allowBlank : false
+                                                ,hidden     : !_p52_debug
                                             }
                                             ,{
                                                 xtype       : 'textfield'
                                                 ,fieldLabel : '_YPOS'
                                                 ,name       : 'YPOS'
                                                 ,allowBlank : false
+                                                ,hidden     : !_p52_debug
                                             }
                                             ,{
                                                 xtype       : 'textfield'
@@ -1860,7 +2082,28 @@ Ext.onReady(function()
                                     {
                                         itemId    : '_p52_gridRevDoc'
                                         ,title    : 'DOCUMENTOS'
-                                        ,height   : 220
+                                        ,height   : 320
+                                        ,tools    :
+                                        [{
+                                            type     : 'plus'
+                                            ,tooltip : 'Agregar'
+                                            ,handler : function()
+                                            {
+                                                centrarVentanaInterna(
+                                                    Ext.MessageBox.confirm(
+                                                        'Confirmar'
+                                                        ,'Se perder\u00e1n los cambios no guardados en la revisi\u00f3n<br>¿Desea continuar?'
+                                                        ,function(btn)
+                                                        {
+                                                            if(btn === 'yes')
+                                                            {
+                                                                _p52_formTdocume.showNew();
+                                                            }
+                                                        }
+                                                    )
+                                                );
+                                            }
+                                        }]
                                         ,features :
                                         [{
                                             ftype           : 'groupingsummary'
@@ -1876,6 +2119,28 @@ Ext.onReady(function()
                                                 text       : 'DOCUMENTO'
                                                 ,dataIndex : 'DSDOCUME'
                                                 ,flex      : 1
+                                            }
+                                            ,{
+                                                xtype    : 'actioncolumn'
+                                                ,tooltip : 'Editar'
+                                                ,icon    : '${icons}pencil.png'
+                                                ,width   : 30
+                                                ,handler : function(me,row,col,item,e,record)
+                                                {
+                                                    centrarVentanaInterna(
+                                                        Ext.MessageBox.confirm(
+                                                            'Confirmar'
+                                                            ,'Se perder\u00e1n los cambios no guardados en la revisi\u00f3n<br>¿Desea continuar?'
+                                                            ,function(btn)
+                                                            {
+                                                                if(btn === 'yes')
+                                                                {
+                                                                    _p52_formTdocume.showEdit(record);
+                                                                }
+                                                            }
+                                                        )
+                                                    );
+                                                }
                                             }
                                             ,{
                                                 text       : 'OBLIGA.'
@@ -1898,47 +2163,17 @@ Ext.onReady(function()
                                             ]
                                             ,proxy   :
                                             {
-                                                type    : 'memory'
-                                                ,reader : 'json'
-                                                ,data   :
-                                                [
-                                                    {
-                                                        DSTIPTRA  : 'EMISION'
-                                                        ,DSDOCUME : 'CRENDENCIAL ELECTOR'
-                                                    }
-                                                    ,{
-                                                        DSTIPTRA  : 'EMISION'
-                                                        ,DSDOCUME : 'SOLICITUD DE COTIZACION'
-                                                    }
-                                                    ,{
-                                                        DSTIPTRA  : 'EMISION'
-                                                        ,DSDOCUME : 'CURP'
-                                                    }
-                                                    ,{
-                                                        DSTIPTRA  : 'EMISION'
-                                                        ,DSDOCUME : 'RFC'
-                                                    }
-                                                    ,{
-                                                        DSTIPTRA  : 'SINIESTROS'
-                                                        ,DSDOCUME : 'INFORME MEDICO'
-                                                    }
-                                                    ,{
-                                                        DSTIPTRA  : 'SINIESTROS'
-                                                        ,DSDOCUME : 'CERTIFICADO ESTUDIOS'
-                                                    }
-                                                    ,{
-                                                        DSTIPTRA  : 'SINIESTROS'
-                                                        ,DSDOCUME : 'AUTORIZACION SERVICIOS'
-                                                    }
-                                                    ,{
-                                                        DSTIPTRA  : 'SINIESTROS'
-                                                        ,DSDOCUME : 'FACTURA'
-                                                    }
-                                                    ,{
-                                                        DSTIPTRA  : 'SINIESTROS'
-                                                        ,DSDOCUME : 'ORDEN DE SERVICIO'
-                                                    }
-                                                ]
+                                                type         : 'ajax'
+                                                ,url         : _p52_urlRecuperacion
+                                                ,extraParams :
+                                                {
+                                                    'params.consulta' : 'RECUPERAR_TDOCUME'
+                                                }
+                                                ,reader      :
+                                                {
+                                                    type  : 'json'
+                                                    ,root : 'list'
+                                                }
                                             }
                                         })
                                     })
@@ -1957,8 +2192,11 @@ Ext.onReady(function()
                                         ,icon    : '${icons}disk.png'
                                         ,handler : function(me)
                                         {
-                                            _p52_panelCanvas.enable();
-                                            me.up('panel').hide();
+                                            _p52_guardarDatosAccion(me,function(me)
+                                            {
+                                                _p52_panelCanvas.enable();
+                                                me.up('panel').hide();
+                                            });
                                         }
                                     }
                                     ,{
@@ -1984,36 +2222,42 @@ Ext.onReady(function()
 		                                        ,fieldLabel : '_ACCION'
 		                                        ,name       : 'ACCION'
 		                                        ,allowBlank : false
+		                                        ,hidden     : !_p52_debug
 		                                    }
 		                                    ,{
 		                                        xtype       : 'textfield'
 		                                        ,fieldLabel : '_CDTIPFLU'
 		                                        ,name       : 'CDTIPFLU'
 		                                        ,allowBlank : false
+		                                        ,hidden     : !_p52_debug
 		                                    }
 		                                    ,{
 		                                        xtype       : 'textfield'
 		                                        ,fieldLabel : '_CDFLUJOMC'
 		                                        ,name       : 'CDFLUJOMC'
 		                                        ,allowBlank : false
+		                                        ,hidden     : !_p52_debug
 		                                    }
 		                                    ,{
 		                                        xtype       : 'textfield'
 		                                        ,fieldLabel : '_CDACCION'
 		                                        ,name       : 'CDACCION'
 		                                        ,allowBlank : false
+		                                        ,hidden     : !_p52_debug
 		                                    }
                                             ,{
                                                 xtype       : 'textfield'
                                                 ,fieldLabel : '_IDORIGEN'
                                                 ,name       : 'IDORIGEN'
                                                 ,allowBlank : false
+                                                ,hidden     : !_p52_debug
                                             }
                                             ,{
                                                 xtype       : 'textfield'
                                                 ,fieldLabel : '_IDDESTIN'
                                                 ,name       : 'IDDESTIN'
                                                 ,allowBlank : false
+                                                ,hidden     : !_p52_debug
                                             }
                                             ,{
                                                 xtype       : 'textfield'
@@ -2059,29 +2303,17 @@ Ext.onReady(function()
                                             ]
                                             ,proxy   :
                                             {
-                                                type    : 'memory'
-                                                ,reader : 'json'
-                                                ,data   :
-                                                [
-                                                    {
-                                                        DSSISROL : 'AGENTE'
-                                                    }
-                                                    ,{
-                                                        DSSISROL : 'SUSCRIPTOR'
-                                                    }
-                                                    ,{
-                                                        DSSISROL : 'MESA DE CONTROL'
-                                                    }
-                                                    ,{
-                                                        DSSISROL : 'SUPERVISOR'
-                                                    }
-                                                    ,{
-                                                        DSSISROL : 'SUSCRIPTOR AUTO'
-                                                    }
-                                                    ,{
-                                                        DSSISROL : 'PROMOTOR'
-                                                    }
-                                                ]
+                                                type         : 'ajax'
+                                                ,url         : _p52_urlRecuperacion
+                                                ,extraParams :
+                                                {
+                                                    'params.consulta' : 'RECUPERAR_ROLES'
+                                                }
+                                                ,reader      :
+                                                {
+                                                    type  : 'json'
+                                                    ,root : 'list'
+                                                }
                                             }
                                         })
                                     })
@@ -2089,7 +2321,7 @@ Ext.onReady(function()
                                     {
                                         itemId      : '_p52_catalogoIconos'
                                         ,title      : 'ICONO'
-                                        ,height     : 200
+                                        ,height     : 250
                                         ,defaults   : { style : 'margin : 5px;' }
                                         ,autoScroll : true
                                         ,border     : 0
@@ -2192,29 +2424,31 @@ Ext.onReady(function()
         toolkit.bind('dblclick',function(con)
         {
             debug('dblclick con:',con);
-            _p52_editEndpoint(con,'A');
+            _p52_editEndpoint(con,'A',con.cdaccion);
         });
         
         toolkit.bind('connection',function(con)
         {
             debug('connection con:',con,'.');
-            _p52_registrarConnection(con);
+            if(_p52_cargando==false)
+            {
+                _p52_registrarConnection(con);
+            }
         });
         
         toolkit.bind('connectionDetached',function(con)
         {
             debug('connectionDetached con:',con,'.');
-            _p52_borrarConnection(con);
+            if(_p52_cargando==false)
+            {
+                _p52_borrarConnection(con.connection.cdaccion);
+            }
         });
         
         toolkit.bind('connectionMoved',function(con)
         {
             debug('connectionMoved con:',con,'.');
-            _p52_borrarConnection(
-            {
-                sourceId  : con.originalSourceId
-                ,targetId : con.originalTargetId
-            });
+            _p52_borrarConnection(con.connection.cdaccion);
         });
     });
     ////// loaders //////
@@ -2243,6 +2477,12 @@ function _p52_navega(nivel)
     {
         _p52_panelGrids.hide();
         _p52_panelDibujo.show();
+        
+        _p52_panelCanvas.enable();
+        _p52_panelEstado.hide();
+        _p52_formValidacion.hide();
+        _p52_panelRevision.hide();
+        _p52_panelAccion.hide();
     }
 }
 
@@ -2272,10 +2512,10 @@ function _p52_cargarEstados()
                     if(json.success==true)
                     {
                         _p52_catalogoEstados.removeAll();
+                        var estados = [];
                         for(var i=0;i<json.list.length;i++)
                         {
-                            debug('agregando estado:',json.list[i]);
-                            _p52_catalogoEstados.add(
+                            estados.push(
                             {
                                 xtype   : 'panel'
                                 ,tpl    : estadoTpl
@@ -2284,6 +2524,7 @@ function _p52_cargarEstados()
                                 ,data   : json.list[i]
                             });
                         }
+                        _p52_catalogoEstados.add(estados);
                     }
                     else
                     {
@@ -2335,10 +2576,10 @@ function _p52_cargarPantallas()
                     if(json.success==true)
                     {
                         _p52_catalogoPantallas.removeAll();
+                        var pantallas = [];
                         for(var i=0;i<json.list.length;i++)
                         {
-                            debug('agregando pantalla:',json.list[i]);
-                            _p52_catalogoPantallas.add(
+                            pantallas.push(
                             {
                                 xtype   : 'panel'
                                 ,tpl    : pantallaTpl
@@ -2347,6 +2588,7 @@ function _p52_cargarPantallas()
                                 ,data   : json.list[i]
                             });
                         }
+                        _p52_catalogoPantallas.add(pantallas);
                     }
                     else
                     {
@@ -2398,10 +2640,10 @@ function _p52_cargarComponentes()
                     if(json.success==true)
                     {
                         _p52_catalogoComponentes.removeAll();
+                        var comps = [];
                         for(var i=0;i<json.list.length;i++)
                         {
-                            debug('agregando componentes:',json.list[i]);
-                            _p52_catalogoComponentes.add(
+                            comps.push(
                             {
                                 xtype   : 'panel'
                                 ,tpl    : componenteTpl
@@ -2410,6 +2652,7 @@ function _p52_cargarComponentes()
                                 ,data   : json.list[i]
                             });
                         }
+                        _p52_catalogoComponentes.add(comps);
                     }
                     else
                     {
@@ -2461,10 +2704,10 @@ function _p52_cargarProcesos()
                     if(json.success==true)
                     {
                         _p52_catalogoProcesos.removeAll();
+                        var procs = [];
                         for(var i=0;i<json.list.length;i++)
                         {
-                            debug('agregando procesos:',json.list[i]);
-                            _p52_catalogoProcesos.add(
+                            procs.push(
                             {
                                 xtype   : 'panel'
                                 ,tpl    : procesoTpl
@@ -2473,6 +2716,7 @@ function _p52_cargarProcesos()
                                 ,data   : json.list[i]
                             });
                         }
+                        _p52_catalogoProcesos.add(procs);
                     }
                     else
                     {
@@ -2535,109 +2779,64 @@ function _p52_cargarRevisiones()
 function _p52_cargarIconos()
 {
     debug('_p52_cargarIconos');
-    _p52_catalogoIconos.removeAll();
-    _p52_catalogoIconos.add(
+    
+    var ck = 'Cargando iconos';
+    try
     {
-        xtype   : 'panel'
-        ,tpl    : iconoTpl
-        ,border : 0
-        ,data   :
+        _setLoading(true,_p52_catalogoIconos);
+        Ext.Ajax.request(
         {
-            cdicono  : 'disk'
-            ,dsicono : 'DISK'
-        }
+            url      : _p52_urlRecuperacion
+            ,params  :
+            {
+                'params.consulta' : 'RECUPERAR_TICONOS'
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_catalogoIconos);
+                var ck = 'Decodificando respuesta al cargar los iconos';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### load iconos:',json);
+                    if(json.success==true)
+                    {
+                        _p52_catalogoIconos.removeAll();
+                        var iconos = [];
+                        for(var i=0;i<json.list.length;i++)
+                        {
+                            iconos.push(
+                            {
+                                xtype   : 'panel'
+                                ,tpl    : iconoTpl
+                                ,border : 0
+                                ,data   : json.list[i]
+                            });
+                        }
+                        _p52_catalogoIconos.add(iconos);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_catalogoIconos);
+                errorComunicacion(null,'Error al cargar los iconos');
+            }
+        });
     }
-    ,{
-        xtype   : 'panel'
-        ,tpl    : iconoTpl
-        ,border : 0
-        ,data   :
-        {
-            cdicono  : 'add'
-            ,dsicono : 'ADD'
-        }
+    catch(e)
+    {
+        _setLoading(false,_p52_catalogoIconos);
+        manejaException(e,ck);
     }
-    ,{
-        xtype   : 'panel'
-        ,tpl    : iconoTpl
-        ,border : 0
-        ,data   :
-        {
-            cdicono  : 'cancel'
-            ,dsicono : 'CANCEL'
-        }
-    }
-    ,{
-        xtype   : 'panel'
-        ,tpl    : iconoTpl
-        ,border : 0
-        ,data   :
-        {
-            cdicono  : 'disk'
-            ,dsicono : 'DISK'
-        }
-    }
-    ,{
-        xtype   : 'panel'
-        ,tpl    : iconoTpl
-        ,border : 0
-        ,data   :
-        {
-            cdicono  : 'delete'
-            ,dsicono : 'DELETE'
-        }
-    }
-    ,{
-        xtype   : 'panel'
-        ,tpl    : iconoTpl
-        ,border : 0
-        ,data   :
-        {
-            cdicono  : 'arrow_left'
-            ,dsicono : 'ARROW_LEFT'
-        }
-    }
-    ,{
-        xtype   : 'panel'
-        ,tpl    : iconoTpl
-        ,border : 0
-        ,data   :
-        {
-            cdicono  : 'arrow_up'
-            ,dsicono : 'ARROW_UP'
-        }
-    }
-    ,{
-        xtype   : 'panel'
-        ,tpl    : iconoTpl
-        ,border : 0
-        ,data   :
-        {
-            cdicono  : 'delete'
-            ,dsicono : 'DELETE'
-        }
-    }
-    ,{
-        xtype   : 'panel'
-        ,tpl    : iconoTpl
-        ,border : 0
-        ,data   :
-        {
-            cdicono  : 'arrow_left'
-            ,dsicono : 'ARROW_LEFT'
-        }
-    }
-    ,{
-        xtype   : 'panel'
-        ,tpl    : iconoTpl
-        ,border : 0
-        ,data   :
-        {
-            cdicono  : 'arrow_up'
-            ,dsicono : 'ARROW_UP'
-        }
-    }
-    );
 }
 
 function _p52_dragstart(event)
@@ -2696,7 +2895,7 @@ function _p52_drop(event)
     {
         _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
         {
-            _p52_addDiv(id,tipo,clave,descrip,x,y);
+            _p52_addDiv(id,tipo,json.params.cdentidad,'',x,y);
             _p52_addEndpoint(id,tipo);
         });
     }
@@ -2704,7 +2903,7 @@ function _p52_drop(event)
     {
         _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
         {
-            _p52_addDiv(id,tipo,clave,descrip,x,y);
+            _p52_addDiv(id,tipo,json.params.cdentidad,'',x,y);
             _p52_addEndpoint(id,tipo);
         });
     }
@@ -2733,7 +2932,7 @@ function _p52_editEndpoint(id,tipo,clave)
         _p52_panelRevision.hide();
         _p52_panelAccion.hide();
         
-        _p52_cargarPropsEstado(clave);
+        _p52_cargarDatosEstado(clave);
     }
     else if(tipo=='V')
     {
@@ -2742,6 +2941,8 @@ function _p52_editEndpoint(id,tipo,clave)
         _p52_formValidacion.show();
         _p52_panelRevision.hide();
         _p52_panelAccion.hide();
+        
+        _p52_cargarDatosValidacion(clave);
     }
     else if(tipo=='R')
     {
@@ -2750,6 +2951,8 @@ function _p52_editEndpoint(id,tipo,clave)
         _p52_formValidacion.hide();
         _p52_panelRevision.show();
         _p52_panelAccion.hide();
+        
+        _p52_cargarDatosRevision(clave);
     }
     else if(tipo=='A')
     {
@@ -2758,6 +2961,8 @@ function _p52_editEndpoint(id,tipo,clave)
         _p52_formValidacion.hide();
         _p52_panelRevision.hide();
         _p52_panelAccion.show();
+        
+        _p52_cargarDatosAccion(clave);
     }
 }
 
@@ -2986,6 +3191,8 @@ function _p52_registrarConnection(con)
                     debug('### +conex:',json);
                     if(json.success==true)
                     {
+                        con.connection.cdaccion=json.params.cdaccion;
+                        debug('con:',con);
                     }
                     else
                     {
@@ -3013,9 +3220,9 @@ function _p52_registrarConnection(con)
     }
 }
 
-function _p52_borrarConnection(con)
+function _p52_borrarConnection(cdaccion)
 {
-    debug('_p52_borrarConnection con:',con,'.');
+    debug('_p52_borrarConnection cdaccion:',cdaccion,'.');
     var ck = 'Borrando conexi\u00f3n';
     try
     {
@@ -3027,8 +3234,7 @@ function _p52_borrarConnection(con)
             {
                 'params.cdtipflu'   : _p52_selectedFlujo.get('CDTIPFLU')
                 ,'params.cdflujomc' : _p52_selectedFlujo.get('CDFLUJOMC')
-                ,'params.idorigen'  : con.sourceId
-                ,'params.iddestin'  : con.targetId
+                ,'params.cdaccion'  : cdaccion
             }
             ,success : function(response)
             {
@@ -3089,10 +3295,11 @@ function _p52_guardarCoords(callback)
             var divi = divs[i];
             jsonData.list.push(
             {
-                webid : divi.id
-                ,xpos : divi.offsetLeft
-                ,ypos : divi.offsetTop
-                ,tipo : $(divi).attr('tipo')
+                clave  : $(divi).attr('clave')
+                ,webid : $(divi).attr('id')
+                ,xpos  : divi.offsetLeft
+                ,ypos  : divi.offsetTop
+                ,tipo  : $(divi).attr('tipo')
             });
         }
         
@@ -3223,7 +3430,9 @@ function _p52_cargarModelado()
         
         for(var i=0;i<divs.length;i++)
         {
+            _p52_cargando = true;
             toolkit.remove(divs[i].id);
+            _p52_cargando = false;
         }
     
         ck = 'Recuperando modelado';
@@ -3276,6 +3485,35 @@ function _p52_cargarModelado()
                                     descrip = ite.DSCOMPMC;
                                     _p52_addDiv(id,tipo,clave,descrip,x,y);
                                 }
+                                else if(tipo=='O')
+                                {
+                                    clave   = ite.CDPROCMC;
+                                    descrip = ite.DSPROCMC;
+                                    _p52_addDiv(id,tipo,clave,descrip,x,y);
+                                }
+                                else if(tipo=='V')
+                                {
+                                    clave   = ite.CDVALIDA;
+                                    descrip = ite.DSVALIDA;
+                                    _p52_addDiv(id,tipo,clave,descrip,x,y);
+                                }
+                                else if(tipo=='R')
+                                {
+                                    clave   = ite.CDREVISI;
+                                    descrip = ite.DSREVISI;
+                                    _p52_addDiv(id,tipo,clave,descrip,x,y);
+                                }
+                                else if(tipo=='A')
+                                {
+                                    _p52_cargando = true;
+                                    var con = toolkit.connect(
+                                    {
+                                        source   : _p52_addEndpoint(ite.IDORIGEN  , $('#'+ite.IDORIGEN).attr('tipo'))
+                                        , target :_p52_addEndpoint(ite.IDDESTIN , $('#'+ite.IDDESTIN).attr('tipo'))
+                                    });
+                                    con.cdaccion = ite.CDACCION;
+                                    _p52_cargando = false;
+                                }
                             }
                         }
                     }
@@ -3314,37 +3552,42 @@ function _p52_addDiv(id,tipo,clave,descrip,x,y)
     debug('_p52_addDiv:',id,tipo,clave,'.');
     debug(descrip,x,y,'.');
     
+    if(Ext.isEmpty(descrip))
+    {
+        descrip = '';
+    }
+    
     if(tipo=='E')
     {
-        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelE">'+clave+' - '+descrip+'</div></div>');
+        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelE">'+clave+' - '+descrip+'</div></div>');
     }
     else if(tipo=='P')
     {
-        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelP">'+clave+' - '+descrip+'</div></div>');
+        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelP">'+clave+' - '+descrip+'</div></div>');
     }
     else if(tipo=='C')
     {
-        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelC">'+clave+' - '+descrip+'</div></div>');
+        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelC">'+clave+' - '+descrip+'</div></div>');
     }
     else if(tipo=='O')
     {
-        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelO">'+clave+' - '+descrip+'</div></div>');
+        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelO">'+clave+' - '+descrip+'</div></div>');
     }
     else if(tipo=='V')
     {
-        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelV">'+descrip+'</div></div>');
+        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelV">'+descrip+'</div></div>');
     }
     else if(tipo=='R')
     {
-        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelR">'+descrip+'</div></div>');
+        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelR">'+descrip+'</div></div>');
     }
     
     toolkit.draggable(id);
 }
 
-function _p52_cargarPropsEstado(cdestadomc)
+function _p52_cargarDatosEstado(cdestadomc)
 {
-    debug('_p52_cargarPropsEstado cdestadomc:',cdestadomc,'.');
+    debug('_p52_cargarDatosEstado cdestadomc:',cdestadomc,'.');
     var ck = 'Borrando datos de status';
     try
     {
@@ -3368,7 +3611,7 @@ function _p52_cargarPropsEstado(cdestadomc)
         _setLoading(true,_p52_panelEstado);
         Ext.Ajax.request(
         {
-            url      : _p52_cargarDatosEstado
+            url      : _p52_urlCargarDatosEstado
             ,params  :
             {
                 'params.cdtipflu'    : _p52_selectedFlujo.get('CDTIPFLU')
@@ -3456,6 +3699,237 @@ function _p52_cargarPropsEstado(cdestadomc)
     }
 }
 
+function _p52_cargarDatosRevision(cdrevisi)
+{
+    debug('_p52_cargarDatosRevision cdrevisi:',cdrevisi,'.');
+    var ck = 'Borrando datos de revisi\u00f3n';
+    try
+    {
+        var grid = _fieldById('_p52_gridRevDoc');
+        grid.store.each(function(record)
+        {
+            record.set('SWOBLIGA' , false);
+        });
+        
+        _p52_panelRevision.down('form').getForm().reset();
+    
+        ck = 'Recuperando datos de revisi\u00f3n';
+    
+        _setLoading(true,_p52_panelRevision);
+        Ext.Ajax.request(
+        {
+            url      : _p52_urlCargarDatosRevision
+            ,params  :
+            {
+                'params.cdtipflu'   : _p52_selectedFlujo.get('CDTIPFLU')
+                ,'params.cdflujomc' : _p52_selectedFlujo.get('CDFLUJOMC')
+                ,'params.cdrevisi'  : cdrevisi
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_panelRevision);
+                var ck = 'Decodificando respuesta al recuperar datos de revisi\u00f3n';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### datos revision:',json);
+                    if(json.success==true)
+                    {
+                        _p52_panelRevision.down('form').loadRecord(
+                        {
+                            getData : function()
+                            {
+                                return json.params;
+                            }
+                        });
+                        _p52_panelRevision.down('[name=ACCION]').setValue('U');
+                        
+                        var grid = _fieldById('_p52_gridRevDoc');
+                        grid.store.each(function(record)
+                        {
+                            for(var i=0;i<json.list.length;i++)
+                            {
+                                var ite = json.list[i];
+                                if(ite.CDDOCUME==record.get('CDDOCUME')&&'S'==ite.SWOBLIGA)
+                                {
+                                    record.set('SWOBLIGA',true);
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_panelRevision);
+                errorComunicacion(null,'Error al recuperar datos de revisi\u00f3n');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_panelRevision);
+        manejaException(e,ck);
+    }
+}
+
+function _p52_cargarDatosValidacion(cdvalida)
+{
+    debug('_p52_cargarDatosValidacion cdvalida:',cdvalida,'.');
+    var ck = 'Borrando datos de validaci\u00f3n';
+    try
+    {
+        _p52_formValidacion.getForm().reset();
+    
+        ck = 'Recuperando datos de validaci\u00f3n';
+    
+        _setLoading(true,_p52_formValidacion);
+        Ext.Ajax.request(
+        {
+            url      : _p52_urlCargarDatosValidacion
+            ,params  :
+            {
+                'params.cdtipflu'   : _p52_selectedFlujo.get('CDTIPFLU')
+                ,'params.cdflujomc' : _p52_selectedFlujo.get('CDFLUJOMC')
+                ,'params.cdvalida'  : cdvalida
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_formValidacion);
+                var ck = 'Decodificando respuesta al recuperar datos de validaci\u00f3n';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### datos validacion:',json);
+                    if(json.success==true)
+                    {
+                        _p52_formValidacion.loadRecord(
+                        {
+                            getData : function()
+                            {
+                                return json.params;
+                            }
+                        });
+                        _p52_formValidacion.down('[name=ACCION]').setValue('U');
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_formValidacion);
+                errorComunicacion(null,'Error al recuperar datos de validaci\u00f3n');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_formValidacion);
+        manejaException(e,ck);
+    }
+}
+
+function _p52_cargarDatosAccion(cdaccion)
+{
+    debug('_p52_cargarDatosAccion cdaccion:',cdaccion,'.');
+    var ck = 'Borrando datos de acci\u00f3n';
+    try
+    {
+        var grid = _fieldById('_p52_gridAccRol');
+        grid.store.each(function(record)
+        {
+            record.set('SWPERMISO' , false);
+        });
+        
+        _p52_panelAccion.down('form').getForm().reset();
+        
+        $('[name=iconoaccion]:checked').prop('checked',false);
+        
+        ck = 'Recuperando datos de acci\u00f3n';
+    
+        _setLoading(true,_p52_panelAccion);
+        Ext.Ajax.request(
+        {
+            url      : _p52_urlCargarDatosAccion
+            ,params  :
+            {
+                'params.cdtipflu'   : _p52_selectedFlujo.get('CDTIPFLU')
+                ,'params.cdflujomc' : _p52_selectedFlujo.get('CDFLUJOMC')
+                ,'params.cdaccion'  : cdaccion
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_panelAccion);
+                var ck = 'Decodificando respuesta al recuperar datos de acci\u00f3n';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### datos accion:',json);
+                    if(json.success==true)
+                    {
+                        _p52_panelAccion.down('form').loadRecord(
+                        {
+                            getData : function()
+                            {
+                                return json.params;
+                            }
+                        });
+                        _p52_panelAccion.down('[name=ACCION]').setValue('U');
+                        
+                        var grid = _fieldById('_p52_gridAccRol');
+                        grid.store.each(function(record)
+                        {
+                            for(var i=0;i<json.list.length;i++)
+                            {
+                                var ite = json.list[i];
+                                if(ite.CDSISROL==record.get('CDSISROL')&&'S'==ite.SWPERMISO)
+                                {
+                                    record.set('SWPERMISO',true);
+                                }
+                            }
+                        });
+                        
+                        $('[name=iconoaccion][value='+json.params.CDICONO+']').prop('checked',true);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_panelAccion);
+                errorComunicacion(null,'Error al recuperar datos de acci\u00f3n');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_panelAccion);
+        manejaException(e,ck);
+    }
+}
+
 function _p52_guardarDatosEstado(bot,callback)
 {
     debug('_p52_guardarDatosEstado');
@@ -3534,6 +4008,254 @@ function _p52_guardarDatosEstado(bot,callback)
         _setLoading(false,_p52_panelEstado);
         manejaException(e,ck);
     }
+}
+
+function _p52_guardarDatosRevision(bot,callback)
+{
+    debug('_p52_guardarDatosRevision');
+    var ck = 'Guardando datos de revisi\u00f3n';
+    try
+    {
+        var form  = _p52_panelRevision.down('form').getForm();
+        if(!form.isValid())
+        {
+            throw 'Favor de revisar los datos';
+        }
+        
+        var jsonData =
+        {
+            params : form.getValues()
+            ,list  : []
+        };
+        
+        var grid = _fieldById('_p52_gridRevDoc');
+        grid.store.each(function(record)
+        {
+            var datos       = record.getData();
+            datos.SWOBLIGA  = record.get("SWOBLIGA") ? "S" : "N";
+            jsonData.list.push(datos);
+        });
+        
+        debug('jsonData:',jsonData);
+        
+        _setLoading(true,_p52_panelRevision);
+        Ext.Ajax.request(
+        {
+            url       : _p52_urlGuardarDatosRevision
+            ,jsonData : jsonData
+            ,success  : function(response)
+            {
+                _setLoading(false,_p52_panelRevision);
+                var ck = 'Decodificando respuesta al guardar datos de revisi\u00f3n';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    if(json.success==true)
+                    {
+                        callback(bot);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_panelRevision);
+                errorComunicacion(null,'Error al guardar datos de revisi\u00f3n');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_panelRevision);
+        manejaException(e,ck);
+    }
+}
+
+function _p52_guardarDatosAccion(bot,callback)
+{
+    debug('_p52_guardarDatosAccion');
+    var ck = 'Guardando datos de acci\u00f3n';
+    try
+    {
+        var form  = _p52_panelAccion.down('form').getForm();
+        if(!form.isValid())
+        {
+            throw 'Favor de revisar los datos';
+        }
+        
+        var jsonData =
+        {
+            params : form.getValues()
+            ,list  : []
+        };
+        
+        var grid = _fieldById('_p52_gridAccRol');
+        grid.store.each(function(record)
+        {
+            var datos       = record.getData();
+            datos.SWPERMISO = record.get("SWPERMISO") ? "S" : "N";
+            jsonData.list.push(datos);
+        });
+        
+        jsonData.params.CDICONO = $('[name=iconoaccion]:checked').val();
+        
+        debug('jsonData:',jsonData);
+        
+        _setLoading(true,_p52_panelAccion);
+        Ext.Ajax.request(
+        {
+            url       : _p52_urlGuardarDatosAccion
+            ,jsonData : jsonData
+            ,success  : function(response)
+            {
+                _setLoading(false,_p52_panelAccion);
+                var ck = 'Decodificando respuesta al guardar datos de acci\u00f3n';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    if(json.success==true)
+                    {
+                        callback(bot);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_panelAccion);
+                errorComunicacion(null,'Error al guardar datos de revisi\u00f3n');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_panelAccion);
+        manejaException(e,ck);
+    }
+}
+
+function _p52_guardarDatosValidacion(bot,callback)
+{
+    debug('_p52_guardarDatosValidacion');
+    var ck = 'Guardando datos de validaci\u00f3n';
+    try
+    {
+        var form  = _p52_formValidacion.getForm();
+        if(!form.isValid())
+        {
+            throw 'Favor de revisar los datos';
+        }
+        
+        _setLoading(true,_p52_formValidacion);
+        Ext.Ajax.request(
+        {
+            url      : _p52_urlGuardarDatosValidacion
+            ,params  : _formValuesToParams(form.getValues())
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_formValidacion);
+                var ck = 'Decodificando respuesta al guardar datos de validaci\u00f3n';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    if(json.success==true)
+                    {
+                        callback(bot);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_formValidacion);
+                errorComunicacion(null,'Error al guardar datos de validaci\u00f3n');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_formValidacion);
+        manejaException(e,ck);
+    }
+}
+
+function _p52_actualizaLabel(tipo,webid,label)
+{
+    debug('_p52_actualizaLabel tipo,webid,label:',tipo,webid,label,'.');
+    $('#'+webid+'>.label'+tipo).html(label);
+}
+
+function _p52_expresion(cdunieco,cdramo,estado,nmpoliza,nmsituac,nmsuplem,cdexpres)
+{
+    Ext.Ajax.request(
+    {
+        url : '<s:url namespace="/flujomesacontrol" action="expresion" />'
+        ,params :
+        {
+            'params.cdunieco'  : cdunieco
+            ,'params.cdramo'   : cdramo
+            ,'params.estado'   : estado
+            ,'params.nmpoliza' : nmpoliza
+            ,'params.nmsituac' : nmsituac
+            ,'params.nmsuplem' : nmsuplem
+            ,'params.cdexpres' : cdexpres
+        }
+        ,success : function(response)
+        {
+            alert();
+            debug(Ext.decode(response.responseText));
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
+}
+
+function _p52_ventanaTips(tips)
+{
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        modal        : true
+        ,title       : 'Tips'
+        ,width       : 450
+        ,height      : 230
+        ,style       : 'padding:5px;'
+        ,border      : 0
+        ,html        : '<p>'+(tips.join('<p>'))
+        ,closeAction : 'destroy'
+        ,buttonAlign : 'center'
+        ,buttons     :
+        [{
+            text     : 'Continuar'
+            ,icon    : '${icons}accept.png'
+            ,handler : function(me)
+            {
+                me.up('window').destroy();
+            }
+        }]
+    }).show());
 }
 ////// funciones //////
 

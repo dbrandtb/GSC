@@ -179,9 +179,7 @@ public interface FlujoMesaControlDAO {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, String>> recuperaTfluacc(String cdtipflu,
-			String cdtipflumc, String cdaccion, String dsaccion,
-			String cdicono, String cdvalor) throws Exception;
+	public List<Map<String, String>> recuperaTfluacc(String cdtipflu,String cdflujomc) throws Exception;
 
 	/**
 	 * 
@@ -380,8 +378,7 @@ public interface FlujoMesaControlDAO {
 	 * @throws Exception
 	 */
 	public void movimientoTfluproc(String cdtipflu, String cdflujomc, String cdprocmc,
-			String webid, String xpos, String ypos, String width,
-			String height, String accion) throws Exception;
+			String webid, String xpos, String ypos, String accion) throws Exception;
 
 	/**
 	 * 
@@ -396,9 +393,9 @@ public interface FlujoMesaControlDAO {
 	 * @param accion
 	 * @throws Exception
 	 */
-	public void movimientoTfluval(String cdtipflu, String cdflujomc, String cdvalida,
+	public String movimientoTfluval(String cdtipflu, String cdflujomc, String cdvalida,
 			String dsvalida, String cdexpres, String webid, String xpos,
-			String ypoS, String accion) throws Exception;
+			String ypos, String accion) throws Exception;
 
 	/**
 	 * 
@@ -423,9 +420,9 @@ public interface FlujoMesaControlDAO {
 	 * @param ypos
 	 * @throws Exception
 	 */
-	public void movimientoTflurev(String accion, String cdtipflu, String cdflujomc,
+	public String movimientoTflurev(String cdtipflu, String cdflujomc,
 			String cdrevisi, String dsrevisi, String webid, String xpos,
-			String ypos) throws Exception;
+			String ypos,String accion) throws Exception;
 
 	/**
 	 * 
@@ -440,7 +437,7 @@ public interface FlujoMesaControlDAO {
 	 */
 	public void movimientoTflurevdoc(String cdtipflu, String cdflujomc,
 			String cdrevisi, String cddocume, String swobliga,
-			String subrayado, String accion) throws Exception;
+			String accion) throws Exception;
 
 	/**
 	 * 
@@ -463,7 +460,7 @@ public interface FlujoMesaControlDAO {
 	 * @param accion
 	 * @throws Exception
 	 */
-	public void movimientoTfluacc(String cdtipflu, String cdflujomc, String cdaccion,
+	public String movimientoTfluacc(String cdtipflu, String cdflujomc, String cdaccion,
 			String dsaccion, String cdicono, String cdvalor, String idorigen,
 			String iddestin, String accion) throws Exception;
 
@@ -480,5 +477,25 @@ public interface FlujoMesaControlDAO {
 	public void movimientoTfluaccrol(String cdtipflu, String cdflujomc,
 			String cdaccion, String cdsisrol, String swpermiso, String accion)
 			throws Exception;
+	
+	public String expresion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdexpres
+			)throws Exception;
+	
+	public void actualizaCoordenadas(
+			String cdtipflu
+			,String cdflujomc
+			,String tipo
+			,String clave
+			,String webid
+			,String xpos
+			,String ypos
+			)throws Exception;
 	
 }

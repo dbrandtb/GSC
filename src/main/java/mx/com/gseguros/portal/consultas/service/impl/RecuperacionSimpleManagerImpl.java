@@ -18,6 +18,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.utils.Utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -820,6 +821,19 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				
 				for(Map<String,String>mapa:lista)
 				{
+					if(StringUtils.isBlank(mapa.get("TIMEMAX")))
+					{
+						mapa.put("TIMEMAX","0");
+					}
+					if(StringUtils.isBlank(mapa.get("TIMEWRN1")))
+					{
+						mapa.put("TIMEWRN1","0");
+					}
+					if(StringUtils.isBlank(mapa.get("TIMEWRN2")))
+					{
+						mapa.put("TIMEWRN2","0");
+					}
+					
 					Double tmax = Double.parseDouble(mapa.get("TIMEMAX"));
 					Double wrn1 = Double.parseDouble(mapa.get("TIMEWRN1"));
 					Double wrn2 = Double.parseDouble(mapa.get("TIMEWRN2"));
@@ -894,12 +908,8 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUACC))
 			{
 				String cdtipflu=params.get("cdtipflu");
-				String cdtipflumc=params.get("cdtipflumc");
-				String cdaccion=params.get("cdaccion");
-				String dsaccion=params.get("dsaccion");
-				String cdicono=params.get("cdicono");
-				String cdvalor=params.get("cdvalor");
-				lista = flujoMesaControlDAO.recuperaTfluacc(cdtipflu, cdtipflumc, cdaccion, dsaccion, cdicono, cdvalor);
+				String cdflujomc=params.get("cdflujomc");
+				lista = flujoMesaControlDAO.recuperaTfluacc(cdtipflu, cdflujomc);
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUACCROL))
 			{

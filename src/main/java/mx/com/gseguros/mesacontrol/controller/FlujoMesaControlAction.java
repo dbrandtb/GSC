@@ -140,7 +140,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,ypos      , "No se recibi\u00f3 y de entidad"
 					);
 			
-			flujoMesaControlManager.registrarEntidad(
+			String cdentidad = flujoMesaControlManager.registrarEntidad(
 					sb
 					,cdtipflu
 					,cdflujomc
@@ -150,6 +150,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,xpos
 					,ypos
 					);
+			
+			params.put("cdentidad" , cdentidad);
 			
 			success = true;
 			
@@ -254,7 +256,15 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,iddestin  , "No se recibi\u00f3 el destino"
 					);
 			
-			params.put("consecutivo" , "9");
+			String cdaccion = flujoMesaControlManager.registrarConnection(
+					sb
+					,cdtipflu
+					,cdflujomc
+					,idorigen
+					,iddestin
+					);
+			
+			params.put("cdaccion" , cdaccion);
 			
 			success = true;
 			
@@ -292,17 +302,20 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			String cdtipflu   = params.get("cdtipflu")
 			       ,cdflujomc = params.get("cdflujomc")
-			       ,idorigen  = params.get("idorigen")
-			       ,iddestin  = params.get("iddestin");
+			       ,cdaccion  = params.get("cdaccion");
 			
 			Utils.validate(
 					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
 					,cdflujomc , "No se recibi\u00f3 el flujo"
-					,idorigen  , "No se recibi\u00f3 el origen"
-					,iddestin  , "No se recibi\u00f3 el destino"
+					,cdaccion  , "No se recibi\u00f3 la clave"
 					);
 			
-			params.put("consecutivo" , "9");
+			flujoMesaControlManager.borrarConnection(
+					sb
+					,cdtipflu
+					,cdflujomc
+					,cdaccion
+					);
 			
 			success = true;
 			
@@ -592,7 +605,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 	public String guardarDatosEstado()
 	{
 		StringBuilder sb = new StringBuilder(Utils.log(
-				 "\n#########################$######"
+				 "\n################################"
 				,"\n###### guardarDatosEstado ######"
 				,"\n###### params=" , params
 				,"\n###### list="   , list
@@ -664,6 +677,516 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			sb.append(Utils.log(
 					 "\n###### guardarDatosEstado ######"
+					,"\n################################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value   = "cargarDatosValidacion",
+			results = { @Result(name="success", type="json") }
+			)
+	public String cargarDatosValidacion()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n###################################"
+				,"\n###### cargarDatosValidacion ######"
+				,"\n###### params=",params
+				));
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdtipflu   = params.get("cdtipflu")
+				   ,cdflujomc = params.get("cdflujomc")
+				   ,cdvalida  = params.get("cdvalida");
+			
+			Utils.validate(
+					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
+					,cdflujomc , "No se recibi\u00f3 la clave de flujo"
+					,cdvalida  , "No se recibi\u00f3 la clave de validaci\u00f3n"
+					);
+			
+			Map<String,String> res = flujoMesaControlManager.cargarDatosValidacion(
+					sb
+					,cdtipflu
+					,cdflujomc
+					,cdvalida
+					);
+			
+			params.putAll(res);
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### cargarDatosValidacion ######"
+					,"\n###################################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value   = "guardarDatosValidacion",
+			results = { @Result(name="success", type="json") }
+			)
+	public String guardarDatosValidacion()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n####################################"
+				,"\n###### guardarDatosValidacion ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdtipflu   = params.get("CDTIPFLU")
+			       ,cdflujomc = params.get("CDFLUJOMC")
+			       ,cdvalida  = params.get("CDVALIDA")
+			       ,webid     = params.get("WEBID")
+			       ,xpos      = params.get("XPOS")
+			       ,ypos      = params.get("YPOS")
+			       ,dsvalida  = params.get("DSVALIDA")
+			       ,cdexpres  = params.get("CDEXPRES")
+			       ,accion    = params.get("ACCION");
+			
+			Utils.validate(
+					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
+					,cdflujomc , "No se recibi\u00f3 la clave de flujo"
+					,cdvalida  , "No se recibi\u00f3 la clave de validaci\u00f3n"
+					,webid     , "No se recibi\u00f3 el id"
+					,xpos      , "No se recibi\u00f3 x"
+					,ypos      , "No se recibi\u00f3 y"
+					,dsvalida  , "No se recibi\u00f3 el nombre"
+					,cdexpres  , "No se recibi\u00f3 la clave de expresi\u00f3n"
+					,accion    , "No se recibi\u00f3 el tipo de operaci\u00f3n"
+					);
+			
+			flujoMesaControlManager.guardarDatosValidacion(
+					sb
+					,cdtipflu
+					,cdflujomc
+					,cdvalida
+					,webid
+					,xpos
+					,ypos
+					,dsvalida
+					,cdexpres
+					,accion
+					);
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### guardarDatosValidacion ######"
+					,"\n####################################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value           = "guardarCoordenadas",
+			results         = { @Result(name="success", type="json") },
+            interceptorRefs = {
+			    @InterceptorRef(value = "json", params = {"enableSMD", "true", "ignoreSMDMethodInterfaces", "false" })
+			})
+	public String guardarCoordenadas()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n################################"
+				,"\n###### guardarCoordenadas ######"
+				,"\n###### params=" , params
+				,"\n###### list="   , list
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params, "No se recibieron datos");
+			
+			String cdtipflu   = params.get("cdtipflu")
+			       ,cdflujomc = params.get("cdflujomc");
+			
+			Utils.validate(list, "No se recibieron entidades");
+			
+			flujoMesaControlManager.guardarCoordenadas(
+					sb
+					,cdtipflu
+					,cdflujomc
+					,list
+					);
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### guardarCoordenadas ######"
+					,"\n################################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value   = "expresion",
+			results = { @Result(name="success", type="json") }
+			)
+	public String expresion()
+	{
+		try
+		{
+			String cdunieco = params.get("cdunieco");
+			String cdramo   = params.get("cdramo");
+			String estado   = params.get("estado");
+			String nmpoliza = params.get("nmpoliza");
+			String nmsituac = params.get("nmsituac");
+			String nmsuplem = params.get("nmsuplem");
+			String cdexpres = params.get("cdexpres");
+			params.put("salida" , flujoMesaControlManager.expresion(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsituac
+					,nmsuplem
+					,cdexpres
+					));
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
+	
+	@Action(value   = "cargarDatosRevision",
+			results = { @Result(name="success", type="json") }
+			)
+	public String cargarDatosRevision()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n#################################"
+				,"\n###### cargarDatosRevision ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdtipflu   = params.get("cdtipflu")
+				   ,cdflujomc = params.get("cdflujomc")
+				   ,cdrevisi  = params.get("cdrevisi");
+			
+			Utils.validate(
+					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
+					,cdflujomc , "No se recibi\u00f3 la clave de flujo"
+					,cdrevisi  , "No se recibi\u00f3 la clave de revisi\u00f3n"
+					);
+			
+			Map<String,Object> res = flujoMesaControlManager.cargarDatosRevision(
+					sb
+					,cdtipflu
+					,cdflujomc
+					,cdrevisi
+					);
+			
+			params = (Map<String,String>)res.get("mapa");
+			list   = (List<Map<String,String>>)res.get("lista");
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### cargarDatosRevision ######"
+					,"\n#################################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value           = "guardarDatosRevision",
+			results         = { @Result(name="success", type="json") },
+            interceptorRefs = {
+			    @InterceptorRef(value = "json", params = {"enableSMD", "true", "ignoreSMDMethodInterfaces", "false" })
+			})
+	public String guardarDatosRevision()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n##################################"
+				,"\n###### guardarDatosRevision ######"
+				,"\n###### params=" , params
+				,"\n###### list="   , list
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			Utils.validate(list , "No se recibieron documentos");
+			
+			String cdtipflu   = params.get("CDTIPFLU")
+			       ,cdflujomc = params.get("CDFLUJOMC")
+			       ,cdrevisi  = params.get("CDREVISI")
+			       ,dsrevisi  = params.get("DSREVISI")
+			       ,accion    = params.get("ACCION")
+			       ,webid     = params.get("WEBID")
+			       ,xpos      = params.get("XPOS")
+			       ,ypos      = params.get("YPOS")
+			       ;
+			
+			Utils.validate(
+					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
+					,cdflujomc , "No se recibi\u00f3 la clave de flujo"
+					,cdrevisi  , "No se recibi\u00f3 la clave de revisi\u00f3n"
+					,dsrevisi  , "No se recibi\u00f3 el nombre de revisi\u00f3n"
+					,accion    , "No se recibi\u00f3 la operaci\u00f3n"
+					,webid     , "No se recibi\u00f3 el id"
+					,xpos      , "No se recibi\u00f3 x"
+					,ypos      , "No se recibi\u00f3 y"
+					);
+			
+			flujoMesaControlManager.guardarDatosRevision(
+					sb
+					,cdtipflu
+					,cdflujomc
+					,cdrevisi
+					,dsrevisi
+					,accion
+					,webid
+					,xpos
+					,ypos
+					,list
+					);
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### guardarDatosRevision ######"
+					,"\n##################################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value   = "movimientoTdocume",
+			results = { @Result(name="success", type="json") }
+			)
+	public String movimientoTdocume()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n###############################"
+				,"\n###### movimientoTdocume ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String accion    = params.get("ACCION")
+			       ,cddocume = params.get("CDDOCUME")
+			       ,dsdocume = params.get("DSDOCUME")
+			       ,cdtiptra = params.get("CDTIPTRA");
+			
+			Utils.validate(
+					accion    , "No se recibi\u00f3 la acci\u00f3n"
+					,dsdocume , "No se recibi\u00f3 el nombre"
+					,cdtiptra , "No se recibi\u00f3 el tipo de tr\u00e1mite"
+					);
+			
+			flujoMesaControlManager.movimientoTdocume(
+					sb
+					,accion
+					,cddocume
+					,dsdocume
+					,cdtiptra
+					);
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### movimientoTdocume ######"
+					,"\n###############################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value   = "cargarDatosAccion",
+			results = { @Result(name="success", type="json") }
+			)
+	public String cargarDatosAccion()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n###############################"
+				,"\n###### cargarDatosAccion ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdtipflu   = params.get("cdtipflu")
+				   ,cdflujomc = params.get("cdflujomc")
+				   ,cdaccion  = params.get("cdaccion");
+			
+			Utils.validate(
+					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
+					,cdflujomc , "No se recibi\u00f3 la clave de flujo"
+					,cdaccion  , "No se recibi\u00f3 la clave de acci\u00f3n"
+					);
+			
+			Map<String,Object> res = flujoMesaControlManager.cargarDatosAccion(
+					sb
+					,cdtipflu
+					,cdflujomc
+					,cdaccion
+					);
+			
+			params = (Map<String,String>)res.get("mapa");
+			list   = (List<Map<String,String>>)res.get("lista");
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### cargarDatosAccion ######"
+					,"\n###############################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value           = "guardarDatosAccion",
+			results         = { @Result(name="success", type="json") },
+            interceptorRefs = {
+			    @InterceptorRef(value = "json", params = {"enableSMD", "true", "ignoreSMDMethodInterfaces", "false" })
+			})
+	public String guardarDatosAccion()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n################################"
+				,"\n###### guardarDatosAccion ######"
+				,"\n###### params=" , params
+				,"\n###### list="   , list
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			Utils.validate(list , "No se recibieron permisos");
+			
+			String cdtipflu   = params.get("CDTIPFLU")
+			       ,cdflujomc = params.get("CDFLUJOMC")
+			       ,cdaccion  = params.get("CDACCION")
+			       ,dsaccion  = params.get("DSACCION")
+			       ,accion    = params.get("ACCION")
+			       ,idorigen  = params.get("IDORIGEN")
+			       ,iddestin  = params.get("IDDESTIN")
+			       ,cdvalor   = params.get("CDVALOR")
+			       ,cdicono   = params.get("CDICONO")
+			       ;
+			
+			Utils.validate(
+					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
+					,cdflujomc , "No se recibi\u00f3 la clave de flujo"
+					,cdaccion  , "No se recibi\u00f3 la clave de acci\u00f3n"
+					,dsaccion  , "No se recibi\u00f3 el nombre de acci\u00f3n"
+					,accion    , "No se recibi\u00f3 la operaci\u00f3n"
+					,idorigen  , "No se recibi\u00f3 el origen"
+					,iddestin  , "No se recibi\u00f3 el destino"
+					);
+			
+			flujoMesaControlManager.guardarDatosAccion(
+					sb
+					,cdtipflu
+					,cdflujomc
+					,cdaccion
+					,dsaccion
+					,accion
+					,idorigen
+					,iddestin
+					,cdvalor
+					,cdicono
+					,list
+					);
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### guardarDatosAccion ######"
 					,"\n################################"
 					));
 			
