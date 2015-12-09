@@ -11,7 +11,7 @@ public interface FlujoMesaControlManager
 	public Map<String,Item> workflow(
 			StringBuilder sb
 			,String cdsisrol
-			) throws Exception;
+			)throws Exception;
 	
 	public void movimientoTtipflumc(
 			StringBuilder sb
@@ -39,7 +39,7 @@ public interface FlujoMesaControlManager
 			,Map<String,String> params
 			)throws Exception;
 	
-	public void registrarEntidad(
+	public String registrarEntidad(
 			StringBuilder sb
 			,String cdtipflu
 			,String cdflujomc
@@ -92,4 +92,104 @@ public interface FlujoMesaControlManager
 			,List<Map<String,String>>list
 			)throws Exception;
 	
+	public String registrarConnection(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String idorigen
+			,String iddestin
+			)throws Exception;
+	
+	public Map<String,String> cargarDatosValidacion(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String cdvalida
+			)throws Exception;
+	
+	public void guardarDatosValidacion(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String cdvalida
+			,String webid
+			,String xpos
+			,String ypos
+			,String dsvalida
+			,String cdexpres
+			,String accion
+			)throws Exception;
+	
+	public void guardarCoordenadas(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,List<Map<String,String>>list
+			)throws Exception;
+	
+	public String expresion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdexpres
+			)throws Exception;
+	
+	public Map<String,Object> cargarDatosRevision(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String cdrevisi
+			)throws Exception;
+	
+	public void guardarDatosRevision(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String cdrevisi
+			,String dsrevisi
+			,String accion
+			,String webid
+			,String xpos
+			,String ypos
+			,List<Map<String,String>>list
+			)throws Exception;
+	
+	public void movimientoTdocume(
+			StringBuilder sb
+			,String accion
+			,String cddocume
+			,String dsdocume
+			,String cdtiptra
+			)throws Exception;
+	
+	public void borrarConnection(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String cdaccion
+			)throws Exception;
+	
+	public Map<String,Object> cargarDatosAccion(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String cdaccion
+			)throws Exception;
+	
+	public void guardarDatosAccion(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String cdaccion
+			,String dsaccion
+			,String accion
+			,String idorigen
+			,String iddestin
+			,String cdvalor
+			,String cdicono
+			,List<Map<String,String>>list
+			)throws Exception;
 }
