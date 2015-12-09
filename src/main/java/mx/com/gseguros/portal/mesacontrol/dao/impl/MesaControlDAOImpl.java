@@ -55,15 +55,15 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	}
 	
 	@Override
-	public String movimientoMesaControl(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String cdsucadm,
-			String cdsucdoc, String cdtiptra, Date ferecepc, String cdagente,
-			String referencia, String nombre, Date festatus, String status,
-			String comments, String nmsolici, String cdtipsit,
-			Map<String, String> valores
-			,String cdusuari
-			,String cdsisrol, String swimpres
-			) throws Exception
+	public String movimientoMesaControl(
+			String cdunieco  , String cdramo   , String estado     , String nmpoliza
+			,String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra
+			,Date ferecepc   , String cdagente , String referencia , String nombre
+			,Date festatus   , String status   , String comments   , String nmsolici
+			,String cdtipsit , String cdusuari , String cdsisrol   , String swimpres
+			,String cdtipflu , String cdflujomc
+			,Map<String, String> valores
+			)throws Exception
 	{
 		Map<String,Object>params=new LinkedHashMap<String,Object>();
 		params.put("cdunieco"  , cdunieco);
@@ -86,13 +86,25 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("cdusuari"  , cdusuari);
 		params.put("cdsisrol"  , cdsisrol);
 		params.put("swimpres"  , swimpres);
+		params.put("cdtipflu"  , cdtipflu);
+		params.put("cdflujomc" , cdflujomc);
 		
-		for(int i=1; i <= 50; i++) {
-			params.put(new StringBuilder("otvalor").append(StringUtils.leftPad(String.valueOf(i),2,"0")).toString(),null);
+		if(valores==null)
+		{
+			valores = new LinkedHashMap<String,String>();
 		}
-		if(valores != null) {
-			params.putAll(valores);
+		
+		for(int i=1; i <= 50; i++)
+		{
+			String key    = Utils.join("otvalor",StringUtils.leftPad(String.valueOf(i),2,"0"));
+			String pv_key = Utils.join("pv_",key);
+			if(!valores.containsKey(key))
+			{
+				valores.put(key,valores.get(pv_key));
+			}
 		}
+		
+		params.putAll(valores);
 
 		logger.debug(
 				new StringBuilder()
@@ -181,6 +193,8 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("swimpres"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipflu"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdflujomc"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_tramite_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));

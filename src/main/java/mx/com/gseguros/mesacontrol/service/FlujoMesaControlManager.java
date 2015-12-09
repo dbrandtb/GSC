@@ -192,4 +192,6 @@ public interface FlujoMesaControlManager
 			,String cdicono
 			,List<Map<String,String>>list
 			)throws Exception;
+	
+	public Map<String,Item> debugScreen(StringBuilder sb) throws Exception;
 }

@@ -249,10 +249,12 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null //comments
 						,null //nmsolici
 						,null //cdtipsit
-						,valores
 						,cdusuari
 						,cdsisrol
 						,null //swimpres
+						,null //cdtipflu
+						,null //cdflujomc
+						,valores
 						);
 				
 				mesaControlDAO.movimientoDetalleTramite(
@@ -1012,10 +1014,12 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null //comments
 						,null //nmsolici
 						,null //cdtipsit
-						,valores
 						,cdusuari
 						,cdsisrol
 						,null //swimpres
+						,null //cdtipflu
+						,null //cdflujomc
+						,valores
 						);
 				
 				result.put("remesa" , remesa);

@@ -290,6 +290,8 @@ var _p52_debug = false;
 ////// variables //////
 
 ////// overrides //////
+extjs_custom_override_mayusculas = false;
+
 Ext.define('App.overrides.view.Table',
 {
     override: 'Ext.view.Table',

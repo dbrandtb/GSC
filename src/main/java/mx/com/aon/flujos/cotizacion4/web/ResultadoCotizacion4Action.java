@@ -35,6 +35,7 @@ import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoArchivo;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
+import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
@@ -76,6 +77,9 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     
     @Autowired
     private DocumentosManager documentosManager;
+    
+    @Autowired
+    private MesaControlManager mesaControlManager;
     
     //Constantes de catalogos
     public static final String cdatribuSexo                         ="1";
@@ -1155,7 +1159,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             {
             	try
             	{
-	            	Map<String,Object>parMesCon=new LinkedHashMap<String,Object>(0);
+	            	/*Map<String,Object>parMesCon=new LinkedHashMap<String,Object>(0);
 	            	parMesCon.put("pv_cdunieco_i"   , comprarCdunieco);
 	            	parMesCon.put("pv_cdramo_i"     , comprarCdramo);
 	            	parMesCon.put("pv_estado_i"     , "W");
@@ -1175,8 +1179,34 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            	parMesCon.put("pv_cdtipsit_i"   , cdtipsit);
 	            	parMesCon.put("cdusuari"        , cdusuari);
 	            	parMesCon.put("cdsisrol"        , cdsisrol);
-	            	WrapperResultados mesaContWr = kernelManagerSustituto.PMovMesacontrol(parMesCon);
-	            	ntramite                     = (String) mesaContWr.getItemMap().get("ntramite");
+	            	WrapperResultados mesaContWr = kernelManagerSustituto.PMovMesacontrol(parMesCon);*/
+	            	
+	            	ntramite = mesaControlManager.movimientoTramite(
+	            			comprarCdunieco
+	            			,comprarCdramo
+	            			,"W"
+	            			,"0"
+	            			,"0"
+	            			,null
+	            			,null
+	            			,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+	            			,new Date()
+	            			,cdagente
+	            			,null
+	            			,""
+	            			,new Date()
+	            			,"2"
+	            			,""
+	            			,comprarNmpoliza
+	            			,cdtipsit
+	            			,cdusuari
+	            			,cdsisrol
+	            			,null
+	            			,null
+	            			,null
+	            			,null
+	            			);
+	            	
 	            	smap1.put("ntramite",ntramite);
 	            	
 	            	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);

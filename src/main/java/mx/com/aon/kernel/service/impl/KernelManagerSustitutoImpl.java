@@ -942,7 +942,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return map;
 	}
 	
-	
+	/*
 	public WrapperResultados PMovMesacontrol(Map<String, Object> param) throws ApplicationException
 	{
 		if(param!=null)
@@ -971,6 +971,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto PMovMesacontrol mesage:"+res.getMsgText());
         return res;
 	}
+	*/
 	
 	public WrapperResultados PMovTvalosin(Map<String, Object> param) throws ApplicationException
 	{

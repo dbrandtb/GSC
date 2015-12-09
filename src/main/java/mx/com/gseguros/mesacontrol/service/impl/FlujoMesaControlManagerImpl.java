@@ -1385,4 +1385,48 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
+	
+	@Override
+	public Map<String,Item> debugScreen(StringBuilder sb) throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ debugScreen @@@@@@"
+				));
+		String           paso  = null;
+		Map<String,Item> items = new HashMap<String,Item>();
+		try
+		{
+			paso = "Recuperando componentes";
+			sb.append("\n").append(paso);
+			
+			List<ComponenteVO> comps = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,null //cdramo
+					,null //cdtipsit
+					,null //estado
+					,null //cdsisrol
+					,"DEBUG_SCREEN"
+					,"ITEMS"
+					,null //orden
+					);
+			
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.generaComponentes(comps, true, false, true, false, false, false);
+			
+			items.put("items" , gc.getItems());
+			
+			sb.append(Utils.log(
+					 "\n@@@@@@ items=",items
+					,"\n@@@@@@ debugScreen @@@@@@"
+					,"\n@@@@@@@@@@@@@@@@@@@@@@@@@"
+					));
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		return items;
+	}
 }
