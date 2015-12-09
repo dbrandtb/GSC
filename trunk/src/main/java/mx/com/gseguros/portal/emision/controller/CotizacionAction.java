@@ -48,6 +48,7 @@ import mx.com.gseguros.portal.general.util.TipoArchivo;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
@@ -125,6 +126,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	@Autowired
 	private DocumentosManager documentosManager;
+	
+	@Autowired
+	private MesaControlManager mesaControlManager;
 	
 	public CotizacionAction()
 	{
@@ -6338,7 +6342,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			{
 				if(!hayTramite&&!hayTramiteVacio)//es agente
 				{
-					Map<String,Object>params=new HashMap<String,Object>();
+					/*Map<String,Object>params=new HashMap<String,Object>();
 					params.put("pv_cdunieco_i"   , cdunieco);
 					params.put("pv_cdramo_i"     , cdramo);
 					params.put("pv_estado_i"     , "W");
@@ -6361,7 +6365,37 @@ public class CotizacionAction extends PrincipalCoreAction
 					params.put("cdusuari"        , cdusuari);
 					params.put("cdsisrol"        , cdsisrol);
 					WrapperResultados wr=kernelManager.PMovMesacontrol(params);
-					String ntramiteNew = (String)wr.getItemMap().get("ntramite");
+					String ntramiteNew = (String)wr.getItemMap().get("ntramite");*/
+					
+					Map<String,String> valores = new LinkedHashMap<String,String>();
+					valores.put("otvalor01" , clasif);
+					valores.put("otvalor02" , sincenso ? "S" : "N");
+					
+					String ntramiteNew = mesaControlManager.movimientoTramite(
+							cdunieco
+							,cdramo
+							,"W"
+							,"0"
+							,"0"
+							,cdunieco
+							,cdunieco
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,new Date()
+							,cdagente
+							,null
+							,null
+							,new Date()
+							,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo()
+							,null
+							,nmpoliza
+							,cdtipsit
+							,cdusuari
+							,cdsisrol
+							,null //swimpres
+							,null //cdtipflu
+							,null //cdflujomc
+							,valores
+							);
 					smap1.put("ntramite",ntramiteNew);
 					
 					Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);

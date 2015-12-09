@@ -5,13 +5,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
@@ -26,6 +26,7 @@ import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoPrestadorServicio;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
+import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
@@ -81,6 +82,9 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	
 	@Autowired
 	private DocumentosManager documentosManager;
+	
+	@Autowired
+	private MesaControlManager mesaControlManager;
 	
 	public String autorizacionServicios() {
 		logger.debug("Entra a autorizacionServicios Params: {}", params);
@@ -332,7 +336,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 				
 				if(params.get("claveTipoAutoriza").trim().equalsIgnoreCase("1") || params.get("claveTipoAutoriza").trim().equalsIgnoreCase("3")){
 					//Cambios de TMESACONTROL
-					HashMap<String, Object> paramsMCAut = new HashMap<String, Object>();
+					/*HashMap<String, Object> paramsMCAut = new HashMap<String, Object>();
 					paramsMCAut.put("pv_cdunieco_i",params.get("cdunieco"));
 					paramsMCAut.put("pv_cdramo_i",params.get("cdramo"));
 					paramsMCAut.put("pv_estado_i",params.get("estado"));
@@ -372,11 +376,60 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 					paramsMCAut.put("cdusuari"    ,usuario.getUser());
 					paramsMCAut.put("cdsisrol"    ,usuario.getRolActivo());
 					//4.- Se realiza la modificacion  de TMESACOMTROL PKG_SATELITES.P_MOV_MESACONTROL
-					WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(paramsMCAut);
+					WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(paramsMCAut);*/
+					
+					String statusParaTramite = null;
+					if(params.get("status").trim().equalsIgnoreCase(EstatusTramite.PENDIENTE.getCodigo())){
+						statusParaTramite = EstatusTramite.CONFIRMADO.getCodigo();
+					}else{
+						if(usuario.getRolActivo().getClave().trim().equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol())) {
+							statusParaTramite = EstatusTramite.EN_CAPTURA_CMM.getCodigo();// valor 12
+						}else{
+							statusParaTramite = EstatusTramite.EN_CAPTURA.getCodigo();// valor 7
+						}
+					}
+					
+					Map<String,String> valores = new LinkedHashMap<String,String>();
+					valores.put("otvalor01" , lista.get(0).getNmautser());
+					valores.put("otvalor02" , params.get("fesolici"));
+					valores.put("otvalor03" , params.get("feautori"));
+					valores.put("otvalor04" , params.get("fevencim"));
+					valores.put("otvalor05" , params.get("dsNombreAsegurado"));
+					valores.put("otvalor06" , params.get("copagoTotal"));
+					valores.put("otvalor07" , params.get("idHospitalPlus"));
+					valores.put("otvalor16" , usuario.getUser());
+					valores.put("otvalor17" , usuario.getUser());
+					valores.put("otvalor18" , usuario.getUser());
+					
+					String ntramiteGenerado = mesaControlManager.movimientoTramite(
+							params.get("cdunieco")
+							,params.get("cdramo")
+							,params.get("estado")
+							,params.get("nmpoliza")
+							,params.get("nmsuplem")
+							,null
+							,null
+							,TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra()
+							,null
+							,null
+							,null
+							,null
+							,null
+							,statusParaTramite
+							,params.get("dsnotas")
+							,null
+							,params.get("cdtipsit")
+							,usuario.getUser()
+							,usuario.getRolActivo().getClave()
+							,null //swimpres
+							,null //cdtipflu
+							,null //cdflujomc
+							,valores
+							);
 					
 					if(params.get("status").trim().equalsIgnoreCase("2")){
 						Map<String,Object>paramsO =new HashMap<String,Object>();
-						paramsO.put("pv_ntramite_i" , (String)res.getItemMap().get("ntramite"));
+						paramsO.put("pv_ntramite_i" , ntramiteGenerado);
 						paramsO.put("pv_cdunieco_i" , params.get("cdunieco"));
 						paramsO.put("pv_cdramo_i" , params.get("cdramo"));
 						paramsO.put("pv_estado_i" , params.get("estado"));

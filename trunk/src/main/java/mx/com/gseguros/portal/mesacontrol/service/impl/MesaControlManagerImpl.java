@@ -88,6 +88,96 @@ public class MesaControlManagerImpl implements MesaControlManager
 				));
     }
 	
+	@Deprecated
+	@Override
+	public String movimientoTramite(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdsucadm
+			,String cdsucdoc
+			,String cdtiptra
+			,Date ferecepc
+			,String cdagente
+			,String referencia
+			,String nombre
+			,Date festatus
+			,String status
+			,String comments
+			,String nmsolici
+			,String cdtipsit
+			,String cdusuari
+			,String cdsisrol
+			,String swimpres
+			,String cdtipflu
+			,String cdflujomc
+			,Map<String,String>valores
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ movimientoTramite @@@@@@"
+				,"\n@@@@@@ cdunieco="   , cdunieco
+				,"\n@@@@@@ cdramo="     , cdramo
+				,"\n@@@@@@ estado="     , estado
+				,"\n@@@@@@ nmpoliza="   , nmpoliza
+				,"\n@@@@@@ nmsuplem="   , nmsuplem
+				,"\n@@@@@@ cdsucadm="   , cdsucadm
+				,"\n@@@@@@ cdsucdoc="   , cdsucdoc
+				,"\n@@@@@@ cdtiptra="   , cdtiptra
+				,"\n@@@@@@ ferecepc="   , ferecepc
+				,"\n@@@@@@ cdagente="   , cdagente
+				,"\n@@@@@@ referencia=" , referencia
+				,"\n@@@@@@ nombre="     , nombre
+				,"\n@@@@@@ festatus="   , festatus
+				,"\n@@@@@@ status="     , status
+				,"\n@@@@@@ comments="   , comments
+				,"\n@@@@@@ nmsolici="   , nmsolici
+				,"\n@@@@@@ cdtipsit="   , cdtipsit
+				,"\n@@@@@@ cdusuari="   , cdusuari
+				,"\n@@@@@@ cdsisrol="   , cdsisrol
+				,"\n@@@@@@ swimpres="   , swimpres
+				,"\n@@@@@@ cdtipflu="   , cdtipflu
+				,"\n@@@@@@ cdflujomc="  , cdflujomc
+				,"\n@@@@@@ valores="    , valores
+				));
+		
+		String ntramite = mesaControlDAO.movimientoMesaControl(
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,nmsuplem
+				,cdsucadm
+				,cdsucdoc
+				,cdtiptra
+				,ferecepc
+				,cdagente
+				,referencia
+				,nombre
+				,festatus
+				,status
+				,comments
+				,nmsolici
+				,cdtipsit
+				,cdusuari
+				,cdsisrol
+				,swimpres
+				,cdtipflu
+				,cdflujomc
+				,valores
+				);
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ ntramite=",ntramite
+				,"\n@@@@@@ movimientoTramite @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return ntramite;
+	}
+	
 	/*
 	 * Getters y setters
 	 */

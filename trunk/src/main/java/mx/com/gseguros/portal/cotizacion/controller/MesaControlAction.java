@@ -317,14 +317,41 @@ public class MesaControlAction extends PrincipalCoreAction
 			//Validamos el usuario contra la sucursal:
 			kernelManager.validaUsuarioSucursal(omap.get("pv_cdsucdoc_i").toString(), null, null, user.getUser());
 			
-			WrapperResultados res = kernelManager.PMovMesacontrol(omap);
-			if(res.getItemMap() == null)log.error("Sin mensaje respuesta de nmtramite!!");
-			else msgResult = (String) res.getItemMap().get("ntramite");
+			//WrapperResultados res = kernelManager.PMovMesacontrol(omap);
+			String ntramiteGenerado = mesaControlManager.movimientoTramite(
+					(String)omap.get("pv_cdsucdoc_i")
+					,(String)omap.get("pv_cdramo_i")
+					,(String)omap.get("pv_estado_i")
+					,(String)omap.get("pv_nmpoliza_i")
+					,(String)omap.get("pv_nmsuplem_i")
+					,(String)omap.get("pv_cdsucadm_i")
+					,(String)omap.get("pv_cdsucdoc_i")
+					,(String)omap.get("pv_cdtiptra_i")
+					,new Date()
+					,(String)omap.get("pv_cdagente_i")
+					,(String)omap.get("pv_referencia_i")
+					,(String)omap.get("pv_nombre_i")
+					,new Date()
+					,(String)omap.get("pv_status_i")
+					,(String)omap.get("pv_comments_i")
+					,(String)omap.get("pv_nmsolici_i")
+					,(String)omap.get("pv_cdtipsit_i")
+					,user.getUser()
+					,user.getRolActivo().getClave()
+					,null //swimpres
+					,null //cdtipflu
+					,null //cdflujomc
+					,smap1
+					);
+			//if(res.getItemMap() == null)log.error("Sin mensaje respuesta de nmtramite!!");
+			if(ntramiteGenerado==null)log.error("Sin mensaje respuesta de nmtramite!!");
+			//else msgResult = (String) res.getItemMap().get("ntramite");
+			else msgResult = ntramiteGenerado;
 					log.debug("TRAMITE RESULTADO: "+msgResult);
 					
 			log.debug("se inserta detalle nuevo");
         	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-        	parDmesCon.put("pv_ntramite_i"   , res.getItemMap().get("ntramite"));
+        	parDmesCon.put("pv_ntramite_i"   , ntramiteGenerado);
         	parDmesCon.put("pv_feinicio_i"   , new Date());
         	parDmesCon.put("pv_cdclausu_i"   , null);
         	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite manual desde mesa de control");
@@ -902,19 +929,46 @@ public class MesaControlAction extends PrincipalCoreAction
 			omap.put("cdusuari" , user.getUser());
 			omap.put("cdsisrol" , user.getRolActivo().getClave());
 			
-			WrapperResultados res = kernelManager.PMovMesacontrol(omap);
+			//WrapperResultados res = kernelManager.PMovMesacontrol(omap);
+			String ntramiteGenerado = mesaControlManager.movimientoTramite(
+					(String)omap.get("pv_cdsucdoc_i")
+					,(String)omap.get("pv_cdramo_i")
+					,(String)omap.get("pv_estado_i")
+					,(String)omap.get("pv_nmpoliza_i")
+					,(String)omap.get("pv_nmsuplem_i")
+					,(String)omap.get("pv_cdsucadm_i")
+					,(String)omap.get("pv_cdsucdoc_i")
+					,(String)omap.get("pv_cdtiptra_i")
+					,renderFechas.parse((String)omap.get("pv_ferecepc_i"))
+					,(String)omap.get("pv_cdagente_i")
+					,(String)omap.get("pv_referencia_i")
+					,(String)omap.get("pv_nombre_i")
+					,renderFechas.parse((String)omap.get("pv_festatus_i"))
+					,(String)omap.get("pv_status_i")
+					,(String)omap.get("pv_comments_i")
+					,(String)omap.get("pv_nmsolici_i")
+					,(String)omap.get("pv_cdtipsit_i")
+					,user.getUser()
+					,user.getRolActivo().getClave()
+					,null //swimpres
+					,null //cdtipflu
+					,null //cdflujomc
+					,smap1
+					);
 			////// Se guarda el tramite //////
 			//////////////////////////////////
 			
 			////////////////////////////////////////////
 			////// se verifica que se guarde bien //////
-			if(res.getItemMap() == null)
+			//if(res.getItemMap() == null)
+			if(ntramiteGenerado==null)
 			{
 				log.error("Sin mensaje respuesta de nmtramite!!");
 			}
 			else
 			{
-				msgResult = (String) res.getItemMap().get("ntramite");
+				//msgResult = (String) res.getItemMap().get("ntramite");
+				msgResult = ntramiteGenerado;
 			}
 			log.debug("TRAMITE RESULTADO: "+msgResult);
 			////// se verifica que se guarde bien //////
@@ -925,7 +979,8 @@ public class MesaControlAction extends PrincipalCoreAction
 			UserVO usu=(UserVO)session.get("USUARIO");
 			log.debug("se inserta detalle nuevo");
         	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-        	parDmesCon.put("pv_ntramite_i"   , res.getItemMap().get("ntramite"));
+        	//parDmesCon.put("pv_ntramite_i"   , res.getItemMap().get("ntramite"));
+        	parDmesCon.put("pv_ntramite_i"   , ntramiteGenerado);
         	parDmesCon.put("pv_feinicio_i"   , new Date());
         	parDmesCon.put("pv_cdclausu_i"   , null);
         	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite manual desde mesa de control");
@@ -944,7 +999,8 @@ public class MesaControlAction extends PrincipalCoreAction
             	    ,new Date()
             	    ,((UserVO)session.get("USUARIO")).getUser()
             	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
-            	    ,(String)res.getItemMap().get("ntramite")
+            	    //,(String)res.getItemMap().get("ntramite")
+            	    ,ntramiteGenerado
             	    ,smap1.get("pv_cdsucdoc_i")
             	    ,(String)omap.get("pv_cdramo_i")
             	    ,null

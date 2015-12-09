@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.mesacontrol.service;
 
 import java.util.Date;
+import java.util.Map;
 
 public interface MesaControlManager
 {
@@ -28,4 +29,31 @@ public interface MesaControlManager
     		,String cdusuari
     		,String cdsisrol
     		)throws Exception;
+    
+    @Deprecated
+	public String movimientoTramite(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdsucadm
+			,String cdsucdoc
+			,String cdtiptra
+			,Date ferecepc
+			,String cdagente
+			,String referencia
+			,String nombre
+			,Date festatus
+			,String status
+			,String comments
+			,String nmsolici
+			,String cdtipsit
+			,String cdusuari
+			,String cdsisrol
+			,String swimpres
+			,String cdtipflu
+			,String cdflujomc
+			,Map<String,String>valores
+			)throws Exception;
 }

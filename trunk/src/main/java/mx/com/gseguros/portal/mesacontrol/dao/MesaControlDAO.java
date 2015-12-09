@@ -40,15 +40,15 @@ public interface MesaControlDAO
 	 * @return
 	 * @throws Exception
 	 */
-	public String movimientoMesaControl(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String cdsucadm,
-			String cdsucdoc, String cdtiptra, Date ferecepc, String cdagente,
-			String referencia, String nombre, Date festatus, String status,
-			String comments, String nmsolici, String cdtipsit,
-			Map<String, String> valores
-			,String cdusuari
-			,String cdsisrol, String swimpres
-			) throws Exception;
+	public String movimientoMesaControl(
+			String cdunieco  , String cdramo   , String estado     , String nmpoliza
+			,String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra
+			,Date ferecepc   , String cdagente , String referencia , String nombre
+			,Date festatus   , String status   , String comments   , String nmsolici
+			,String cdtipsit , String cdusuari , String cdsisrol   , String swimpres
+			,String cdtipflu , String cdflujomc
+			,Map<String, String> valores
+			)throws Exception;
 	
 	/**
 	 * 

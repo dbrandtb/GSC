@@ -14,7 +14,6 @@ import java.util.Map.Entry;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
@@ -45,6 +44,7 @@ import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
@@ -110,6 +110,9 @@ public class EndososAction extends PrincipalCoreAction
 	
 	@Autowired
 	private DocumentosManager documentosManager;
+	
+	@Autowired
+	private MesaControlManager mesaControlManager;
 	
 	private boolean exito           = false;
 	private String  respuesta;
@@ -4718,7 +4721,7 @@ public class EndososAction extends PrincipalCoreAction
 						}
 					}
 					
-					Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
+					/*Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
 					paramsMesaControl.put("pv_cdunieco_i"   , cdunieco);
 					paramsMesaControl.put("pv_cdramo_i"     , cdramo);
 					paramsMesaControl.put("pv_estado_i"     , estado);
@@ -4747,7 +4750,43 @@ public class EndososAction extends PrincipalCoreAction
 					paramsMesaControl.put("cdusuari"        , cdusuari);
 					paramsMesaControl.put("cdsisrol"        , cdsisrol);
 					WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
-					tramiteGenerado=(String) wr.getItemMap().get("ntramite");
+					tramiteGenerado=(String) wr.getItemMap().get("ntramite");*/
+					
+					Map<String,String> valores = new LinkedHashMap<String,String>();
+					valores.put("otvalor01" , cdusuari);
+					valores.put("otvalor02" , cdelemen);
+					valores.put("otvalor03" , (Integer.valueOf(respConfirmacionEndoso.getNumeroTramite())).toString());
+					valores.put("otvalor04" , cdpersonSesion);
+					valores.put("otvalor05" , dssuplem);
+					valores.put("otvalor06" , cdtipsup);
+					valores.put("otvalor07" , nsuplogi);
+					valores.put("otvalor08" , ntramite);
+					
+					tramiteGenerado = mesaControlManager.movimientoTramite(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsuplem
+							,cdunieco
+							,cdunieco
+							,TipoTramite.EMISION_EN_ESPERA.getCdtiptra()
+							,fechaEndosoD
+							,null
+							,null
+							,null
+							,fechaEndosoD
+							,EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo()
+							,mensajeRespuesta
+							,null
+							,cdtipsit
+							,cdusuari
+							,cdsisrol
+							,null //swimpres
+							,null //cdtipflu
+							,null //cdflujomc
+							,valores
+							);
 				}
 			}
 			
@@ -5753,7 +5792,7 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		
 		// Se inserta en la Mesa de Control:
-		Map<String,Object>paramsMesaControl = new HashMap<String,Object>();
+		/*Map<String,Object>paramsMesaControl = new HashMap<String,Object>();
 		paramsMesaControl.put("pv_cdunieco_i"   , cdunieco);
 		paramsMesaControl.put("pv_cdramo_i"     , cdramo);
 		paramsMesaControl.put("pv_estado_i"     , estado);
@@ -5780,13 +5819,47 @@ public class EndososAction extends PrincipalCoreAction
 		paramsMesaControl.put("cdusuari" , ((UserVO)session.get("USUARIO")).getUser());
 		paramsMesaControl.put("cdsisrol" , ((UserVO)session.get("USUARIO")).getRolActivo().getClave());
 		
-		WrapperResultados wr = kernelManager.PMovMesacontrol(paramsMesaControl);
+		WrapperResultados wr = kernelManager.PMovMesacontrol(paramsMesaControl);*/
+		
+		Map<String,String> valores = new LinkedHashMap<String,String>();
+		valores.put("otvalor01" , ntramiteEmision);
+		valores.put("otvalor02" , cdtipsup);
+		valores.put("otvalor03" , descEndoso);
+		valores.put("otvalor04" , nsuplogi);
+		valores.put("otvalor05" , ((UserVO)session.get("USUARIO")).getUser());
+		
+		String ntramiteGenerado = mesaControlManager.movimientoTramite(
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,nmsuplem
+				,cdunieco
+				,cdunieco
+				,TipoTramite.ENDOSO.getCdtiptra()
+				,fechaEndoso
+				,null
+				,null
+				,null
+				,fechaEndoso
+				,estatusTramite
+				,dscoment
+				,null
+				,cdtipsit
+				,((UserVO)session.get("USUARIO")).getUser()
+				,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+				,null //swimpres
+				,null //cdtipflu
+				,null //cdflujomc
+				,valores
+				);
 		
 		// Si fue confirmado no asignamos numero de tramite:
 		if(respuesta.isConfirmado()) {
 			respuesta.setNumeroTramite(null);
 		} else {
-			respuesta.setNumeroTramite( (String)wr.getItemMap().get("ntramite") );
+			//respuesta.setNumeroTramite( (String)wr.getItemMap().get("ntramite") );
+			respuesta.setNumeroTramite(ntramiteGenerado);
 		}
 	    
 	    return respuesta;

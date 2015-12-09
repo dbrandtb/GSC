@@ -9,13 +9,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
@@ -35,6 +35,7 @@ import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoPago;
 import mx.com.gseguros.portal.general.util.TipoPrestadorServicio;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
@@ -48,7 +49,6 @@ import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Operacion;
-import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -58,7 +58,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.SqlParameter;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -137,6 +136,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	
 	@Autowired
 	private DocumentosManager documentosManager;
+	
+	@Autowired
+	private MesaControlManager mesaControlManager;
 
 	/**
 	* metodo para consultar la poliza en especifico
@@ -175,7 +177,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			// 1.- Guardar en TMESACONTROL 
 			this.session=ActionContext.getContext().getSession();
 			UserVO usuario=(UserVO) session.get("USUARIO");
-			HashMap<String, Object> parMesCon = new HashMap<String, Object>();
+			/*HashMap<String, Object> parMesCon = new HashMap<String, Object>();
 			parMesCon.put("pv_cdunieco_i",		params.get("cdunieco"));
 			parMesCon.put("pv_cdunieco_i", 		listaMesaControl.get(0).getCduniecomc());
 			parMesCon.put("pv_cdramo_i", 		listaMesaControl.get(0).getCdramomc());
@@ -246,11 +248,92 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			parMesCon.put("pv_otvalor50"    , 	listaMesaControl.get(0).getOtvalor50mc());
 			parMesCon.put("cdusuari"        , usuario.getUser());
 			parMesCon.put("cdsisrol"        , usuario.getRolActivo().getClave());
-			WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
-			if(res.getItemMap() == null){
+			WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);*/
+			
+			Map<String,String> valores = new LinkedHashMap<String,String>();
+			valores.put("otvalor01" , listaMesaControl.get(0).getOtvalor01mc());
+			valores.put("otvalor02" , listaMesaControl.get(0).getOtvalor02mc());
+			valores.put("otvalor03" , listaMesaControl.get(0).getOtvalor03mc());
+			valores.put("otvalor04" , listaMesaControl.get(0).getOtvalor04mc());
+			valores.put("otvalor05" , listaMesaControl.get(0).getOtvalor05mc());
+			valores.put("otvalor06" , listaMesaControl.get(0).getOtvalor06mc());
+			valores.put("otvalor07" , listaMesaControl.get(0).getOtvalor07mc());
+			valores.put("otvalor08" , listaMesaControl.get(0).getOtvalor08mc());
+			valores.put("otvalor09" , listaMesaControl.get(0).getOtvalor09mc());
+			valores.put("otvalor10" , listaMesaControl.get(0).getOtvalor10mc());
+			valores.put("otvalor11" , listaMesaControl.get(0).getOtvalor11mc());
+			valores.put("otvalor12" , listaMesaControl.get(0).getOtvalor12mc());
+			valores.put("otvalor13" , listaMesaControl.get(0).getOtvalor13mc());
+			valores.put("otvalor14" , listaMesaControl.get(0).getOtvalor14mc());
+			valores.put("otvalor15" , listaMesaControl.get(0).getOtvalor15mc());
+			valores.put("otvalor16" , listaMesaControl.get(0).getOtvalor16mc());
+			valores.put("otvalor17" , listaMesaControl.get(0).getOtvalor17mc());
+			valores.put("otvalor18" , listaMesaControl.get(0).getOtvalor18mc());
+			valores.put("otvalor19" , listaMesaControl.get(0).getOtvalor19mc());
+			valores.put("otvalor20" , listaMesaControl.get(0).getOtvalor20mc());
+			valores.put("otvalor21" , listaMesaControl.get(0).getOtvalor21mc());
+			valores.put("otvalor22" , listaMesaControl.get(0).getOtvalor22mc());
+			valores.put("otvalor23" , listaMesaControl.get(0).getOtvalor23mc());
+			valores.put("otvalor24" , listaMesaControl.get(0).getOtvalor24mc());
+			valores.put("otvalor25" , listaMesaControl.get(0).getOtvalor25mc());
+			valores.put("otvalor26" , listaMesaControl.get(0).getOtvalor26mc());
+			valores.put("otvalor27" , listaMesaControl.get(0).getOtvalor27mc());
+			valores.put("otvalor28" , listaMesaControl.get(0).getOtvalor28mc());
+			valores.put("otvalor29" , listaMesaControl.get(0).getOtvalor29mc());
+			valores.put("otvalor30" , listaMesaControl.get(0).getOtvalor30mc());
+			valores.put("otvalor31" , listaMesaControl.get(0).getOtvalor31mc());
+			valores.put("otvalor32" , listaMesaControl.get(0).getOtvalor32mc());
+			valores.put("otvalor33" , listaMesaControl.get(0).getOtvalor33mc());
+			valores.put("otvalor34" , listaMesaControl.get(0).getOtvalor34mc());
+			valores.put("otvalor35" , listaMesaControl.get(0).getOtvalor35mc());
+			valores.put("otvalor36" , listaMesaControl.get(0).getOtvalor36mc());
+			valores.put("otvalor37" , listaMesaControl.get(0).getOtvalor37mc());
+			valores.put("otvalor38" , listaMesaControl.get(0).getOtvalor38mc());
+			valores.put("otvalor39" , listaMesaControl.get(0).getOtvalor39mc());
+			valores.put("otvalor40" , listaMesaControl.get(0).getOtvalor40mc());
+			valores.put("otvalor41" , listaMesaControl.get(0).getOtvalor41mc());
+			valores.put("otvalor42" , listaMesaControl.get(0).getOtvalor42mc());
+			valores.put("otvalor43" , listaMesaControl.get(0).getOtvalor43mc());
+			valores.put("otvalor44" , listaMesaControl.get(0).getOtvalor44mc());
+			valores.put("otvalor45" , listaMesaControl.get(0).getOtvalor45mc());
+			valores.put("otvalor46" , listaMesaControl.get(0).getOtvalor46mc());
+			valores.put("otvalor47" , listaMesaControl.get(0).getOtvalor47mc());
+			valores.put("otvalor48" , listaMesaControl.get(0).getOtvalor48mc());
+			valores.put("otvalor49" , listaMesaControl.get(0).getOtvalor49mc());
+			valores.put("otvalor50" , listaMesaControl.get(0).getOtvalor50mc());
+			
+			String ntramiteGenerado = mesaControlManager.movimientoTramite(
+					listaMesaControl.get(0).getCduniecomc()
+					,listaMesaControl.get(0).getCdramomc()
+					,listaMesaControl.get(0).getEstadomc()
+					,listaMesaControl.get(0).getNmpolizamc()
+					,listaMesaControl.get(0).getNmsuplemmc()
+					,listaMesaControl.get(0).getCdsucadmmc()
+					,listaMesaControl.get(0).getCdsucdocmc()
+					,listaMesaControl.get(0).getCdtiptramc()
+					,getDate(listaMesaControl.get(0).getFerecepcmc())
+					,listaMesaControl.get(0).getCdagentemc()
+					,listaMesaControl.get(0).getReferenciamc()
+					,listaMesaControl.get(0).getNombremc()
+					,getDate(listaMesaControl.get(0).getFecstatumc())
+					,EstatusTramite.EN_CAPTURA.getCodigo()
+					,listaMesaControl.get(0).getCommentsmc()
+					,listaMesaControl.get(0).getNmsolicimc()
+					,listaMesaControl.get(0).getCdtipsitmc()
+					,usuario.getUser()
+					,usuario.getRolActivo().getClave()
+					,null //swimpres
+					,null //cdtipflu
+					,null //cdflujomc
+					,valores
+					);
+			
+			//if(res.getItemMap() == null){
+			if(ntramiteGenerado==null){
 				logger.error("Sin mensaje respuesta de nmtramite!!");
 			}else{
-				msgResult = (String) res.getItemMap().get("ntramite");
+				//msgResult = (String) res.getItemMap().get("ntramite");
+				msgResult = ntramiteGenerado;
 				logger.debug("valor de nuevo tramite : {}",msgResult);
 				//2.- Obtenemos los valores de las facturas anteriores y lo guardamos a TFACMESCTRL
 				List<Map<String,String>> facturas = siniestrosManager.obtenerFacturasTramite(params.get("pv_ntramite_i"));
@@ -4898,7 +4981,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	public String guardaConfiguracionLayout(){
 		logger.debug("Entra a guardaAltaTramite Params: {} datosTablas {}", params,datosTablas);
 		try{
-			//Realizamos la inserción de los guardados
+			//Realizamos la inserciï¿½n de los guardados
 			siniestrosManager.guardaLayoutProveedor(params.get("cmbProveedor"), null,null,null,null,null,null,null,"D");
 			for(int i=0;i<datosTablas.size();i++) {
 				siniestrosManager.guardaLayoutProveedor(

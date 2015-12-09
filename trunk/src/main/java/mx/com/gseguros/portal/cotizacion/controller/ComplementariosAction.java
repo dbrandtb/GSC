@@ -26,7 +26,6 @@ import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
@@ -52,6 +51,7 @@ import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
+import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
@@ -149,6 +149,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private DocumentosManager documentosManager;
+	
+	@Autowired
+	private MesaControlManager mesaControlManager;
 
 	public String mostrarPantalla()
 	{
@@ -1867,7 +1870,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						}
 					}
 					
-					Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
+					/*Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
 					paramsMesaControl.put("pv_cdunieco_i"   , cdunieco);
 					paramsMesaControl.put("pv_cdramo_i"     , cdramo);
 					paramsMesaControl.put("pv_estado_i"     , estado);
@@ -1892,8 +1895,39 @@ public class ComplementariosAction extends PrincipalCoreAction
 					paramsMesaControl.put("pv_otvalor05"    , "EMISION");
 					paramsMesaControl.put("cdusuari"        , cdusuari);
 					paramsMesaControl.put("cdsisrol"        , cdsisrol);
-					WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
-					String ntramiteAutorizacion=(String) wr.getItemMap().get("ntramite");
+					WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);*/
+					Map<String,String> valores = new LinkedHashMap<String,String>();
+					valores.put("otvalor01" , cdusuari);
+					valores.put("otvalor02" , cdelemen);
+					valores.put("otvalor03" , ntramite);
+					valores.put("otvalor04" , cdpersonSesion);
+					valores.put("otvalor05" , "EMISION");
+					
+					String ntramiteAutorizacion = mesaControlManager.movimientoTramite(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,"0"
+							,cdunieco
+							,cdunieco
+							,TipoTramite.EMISION_EN_ESPERA.getCdtiptra()
+							,new Date()
+							,null
+							,null
+							,null
+							,new Date()
+							,EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo()
+							,mensajeRespuesta
+							,null
+							,cdtipsit
+							,cdusuari
+							,cdsisrol
+							,null //swimpres
+							,null //cdtipflu
+							,null //cdflujomc
+							,valores
+							);
 					mensajeRespuesta = mensajeRespuesta + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
 					
 					Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
@@ -1930,7 +1964,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					panel1.put("necesitaAutorizacion" , "S");
 					mensajeRespuesta = "La p&oacute;liza se envi&oacute; a autorizaci&oacute;n debido a que se cambio el cuadro de comisiones";
 					
-					Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
+					/*Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
 					paramsMesaControl.put("pv_cdunieco_i"   , cdunieco);
 					paramsMesaControl.put("pv_cdramo_i"     , cdramo);
 					paramsMesaControl.put("pv_estado_i"     , estado);
@@ -1955,8 +1989,39 @@ public class ComplementariosAction extends PrincipalCoreAction
 					paramsMesaControl.put("pv_otvalor05"    , "EMISION");
 					paramsMesaControl.put("cdusuari"        , cdusuari);
 					paramsMesaControl.put("cdsisrol"        , cdsisrol);
-					WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
-					String ntramiteAutorizacion=(String) wr.getItemMap().get("ntramite");
+					WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);*/
+					Map<String,String> valores = new LinkedHashMap<String,String>();
+					valores.put("otvalor01" , cdusuari);
+					valores.put("otvalor02" , cdelemen);
+					valores.put("otvalor03" , ntramite);
+					valores.put("otvalor04" , cdpersonSesion);
+					valores.put("otvalor05" , "EMISION");
+					
+					String ntramiteAutorizacion = mesaControlManager.movimientoTramite(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,"0"
+							,cdunieco
+							,cdunieco
+							,TipoTramite.EMISION_EN_ESPERA.getCdtiptra()
+							,new Date()
+							,null
+							,null
+							,null
+							,new Date()
+							,EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo()
+							,mensajeRespuesta
+							,null
+							,cdtipsit
+							,cdusuari
+							,cdsisrol
+							,null //swimpres
+							,null //cdtipflu
+							,null //cdflujomc
+							,valores
+							);
 					mensajeRespuesta = mensajeRespuesta + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
 					
 					Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);

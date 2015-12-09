@@ -7,13 +7,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
@@ -22,6 +22,7 @@ import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.TipoPago;
 import mx.com.gseguros.portal.general.util.TipoPrestadorServicio;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.MesaControlVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
@@ -60,6 +61,9 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 	
 	@Autowired
 	private DocumentosManager documentosManager;
+	
+	@Autowired
+	private MesaControlManager mesaControlManager;
 	
 	/**
 	* Funcion para cargar la pantalla principal del alta de tramite
@@ -118,7 +122,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			// 1.- Guardar en TMESACONTROL 
 			this.session=ActionContext.getContext().getSession();
 			UserVO usuario=(UserVO) session.get("USUARIO");
-			HashMap<String, Object> parMesCon = new HashMap<String, Object>();
+			/*HashMap<String, Object> parMesCon = new HashMap<String, Object>();
 			parMesCon.put("pv_cdunieco_i",params.get("cdunieco"));
 			parMesCon.put("pv_cdramo_i",params.get("cmbRamos"));
 			parMesCon.put("pv_estado_i",params.get("estado"));
@@ -158,15 +162,67 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 				parMesCon.put("pv_otvalor12","7RDH");
 				parMesCon.put("pv_otvalor14","7RDH001");
-			}
+			}*/
 			
 			//Si el tr&aacute;mite es nuevo
 			if(params.get("idNumTramite").toString().length() <= 0){
-				WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
-				if(res.getItemMap() == null){
+				
+				Map<String,String> valores = new LinkedHashMap<String,String>();
+				valores.put("otvalor02" , params.get("cmbTipoPago"));
+				valores.put("otvalor03" , params.get("ImporteIndFactura"));
+				valores.put("otvalor04" , params.get("cmbBeneficiario"));
+				valores.put("otvalor05" , usuario.getUser());
+				valores.put("otvalor06" , params.get("fechaIndFactura"));
+				valores.put("otvalor07" , params.get("cmbTipoAtencion"));
+				valores.put("otvalor08" , params.get("numIndFactura"));
+				valores.put("otvalor09" , params.get("cmbAseguradoAfectado"));
+				valores.put("otvalor10" , params.get("dtFechaOcurrencia"));
+				valores.put("otvalor11" , params.get("cmbProveedor"));
+				valores.put("otvalor15" , params.get("idnombreBeneficiarioProv"));
+				valores.put("otvalor20" , params.get("cmbRamos"));
+				valores.put("otvalor22" , params.get("txtAutEspecial"));
+				
+				if(params.get("cmbProveedor").toString().length() > 0){
+					valores.put("otvalor13",TipoPrestadorServicio.CLINICA.getCdtipo());
+				}
+				
+				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
+					valores.put("otvalor12","7RDH");
+					valores.put("otvalor14","7RDH001");
+				}
+				
+				//WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
+				String ntramiteGenerado = mesaControlManager.movimientoTramite(
+						params.get("cdunieco")
+						,params.get("cmbRamos")
+						,params.get("estado")
+						,params.get("polizaAfectada")
+						,params.get("idNmsuplem")
+						,params.get("cmbOficEmisora")
+						,params.get("cmbOficReceptora")
+						,TipoTramite.SINIESTRO.getCdtiptra()
+						,getDate(params.get("dtFechaRecepcion"))
+						,null
+						,null
+						,params.get("idnombreAsegurado")
+						,getDate(params.get("dtFechaRecepcion"))
+						,EstatusTramite.PENDIENTE.getCodigo()
+						,null
+						,params.get("idNmsolici")
+						,params.get("idCdtipsit")
+						,usuario.getUser()
+						,usuario.getRolActivo().getClave()
+						,null //swimpres
+						,null //cdtipflu
+						,null //cdflujomc
+						,valores
+						);
+				//if(res.getItemMap() == null){
+				if(ntramiteGenerado==null){
 					logger.error("Sin mensaje respuesta de nmtramite!!");
 				}else{
-					msgResult = (String) res.getItemMap().get("ntramite");
+					//msgResult = (String) res.getItemMap().get("ntramite");
+					msgResult = ntramiteGenerado;
 					logger.debug("Entra a proceso 1");
 					ProcesoAltaTramite(msgResult, params.get("cmbRamos"));
 				}
@@ -333,7 +389,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			paramsTworkSinPagRem.put("pv_reqautes_i",params.get("txtAutEspecial"));
 			siniestrosManager.guardaListaTworkSin(paramsTworkSinPagRem);
 			
-			//Guardamos la información del asegurado
+			//Guardamos la informaciï¿½n del asegurado
 			HashMap<String, Object> paramsAsegurado = new HashMap<String, Object>();
 			paramsAsegurado.put("pv_cdunieco_i",params.get("cdunieco"));
 			paramsAsegurado.put("pv_cdramo_i",params.get("cmbRamos"));
@@ -702,7 +758,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				paramsTworkSin.put("pv_reqautes_i", datosTablas.get(i).get("modtxtAutEspecial"));
 				siniestrosManager.guardaListaTworkSin(paramsTworkSin);
 				
-				//Guardamos la información del asegurado
+				//Guardamos la informaciï¿½n del asegurado
 				HashMap<String, Object> paramsAsegurado = new HashMap<String, Object>();
 				paramsAsegurado.put("pv_cdunieco_i",datosTablas.get(i).get("modUnieco"));
 				paramsAsegurado.put("pv_cdramo_i",datosTablas.get(i).get("modRamo"));

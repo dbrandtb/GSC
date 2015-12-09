@@ -876,10 +876,12 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //comments
 					,null //nmsolici
 					,null //cdtipsit
-					,valores
 					,cdusuari
 					,cdsisrol
 					,null
+					,null
+					,null
+					,valores
 					);
 			//para tramite
 			
@@ -1306,10 +1308,12 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //comments
 					,null //nmsolici
 					,null //cdtipsit
-					,valores
 					,cdusuari
 					,usuarioSesion.getRolActivo().getClave()
 					,null
+					,null
+					,null
+					,valores
 					);
 			
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
@@ -1591,10 +1595,12 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //comments
 					,null //nmsolici
 					,null //cdtipsit
-					,valores
 					,cdusuari
 					,usuarioSesion.getRolActivo().getClave()
 					,null
+					,null
+					,null
+					,valores
 					);
 
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
@@ -2588,10 +2594,12 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //comments
 					,null //nmsolici
 					,null //cdtipsit
-					,valores
 					,cdusuari
 					,cdsisrol
 					,null
+					,null
+					,null
+					,valores
 					);
 			
 			if(this.endosoAseguradoAlterno(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup)){
@@ -2740,10 +2748,12 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //comments
 					,null //nmsolici
 					,null //cdtipsit
-					,valores
 					,cdusuari
 					,cdsisrol
 					,null
+					,null
+					,null
+					,valores
 					);
 			//para generar tramite
 			
@@ -2884,10 +2894,12 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //comments
 					,null //nmsolici
 					,null //cdtipsit
-					,valores
 					,cdusuari
 					,cdsisrol
 					,null
+					,null
+					,null
+					,valores
 					);
 			
 			if(this.endosoTextoLibre(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, nivelPoliza)){
@@ -3170,10 +3182,12 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //comments
 					,null //nmsolici
 					,null //cdtipsit
-					,valoresTra
 					,cdusuari
 					,usuarioSesion.getRolActivo().getClave()
 					,null
+					,null
+					,null
+					,valoresTra
 					);
 			
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
@@ -4949,10 +4963,12 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //comments
 					,null //nmsolici
 					,null //cdtipsit
-					,valores
 					,cdusuari
 					,cdsisrol
 					,null
+					,null
+					,null
+					,valores
 					);
 			
 			/**
@@ -5412,10 +5428,12 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null //comments
 					,null //nmsolici
 					,null //cdtipsit
-					,valores
 					,cdusuari
 					,usuarioSesion.getRolActivo().getClave()
 					,null
+					,null
+					,null
+					,valores
 					);
 
 			String nmsuplemGen = nmsuplem;

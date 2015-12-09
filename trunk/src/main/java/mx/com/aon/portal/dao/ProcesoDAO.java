@@ -124,7 +124,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String LOAD_DETALLE_MESA_CONTROL = "LOAD_DETALLE_MESA_CONTROL";
     public static final String OBTENER_EXCLUSIONES_X_TIPO = "OBTENER_EXCLUSIONES_X_TIPO";
     public static final String OBTENER_HTML_CLAUSULA="OBTENER_HTML_CLAUSULA";
-    public static final String P_MOV_MESACONTROL="P_MOV_MESACONTROL";
+    //public static final String P_MOV_MESACONTROL="P_MOV_MESACONTROL";
     public static final String P_MOV_TVALOSIN="P_MOV_TVALOSIN";
     public static final String P_MOV_DMESACONTROL="P_MOV_DMESACONTROL";
     public static final String OBTIENE_DATOS_RECIBOS="OBTIENE_DATOS_RECIBOS";
@@ -230,7 +230,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(LOAD_DETALLE_MESA_CONTROL, new ObtenerDetalleMesaControl(getDataSource()));
         addStoredProcedure(OBTENER_EXCLUSIONES_X_TIPO, new ObtenerExclusionesXTipo(getDataSource()));
         addStoredProcedure(OBTENER_HTML_CLAUSULA, new ObtenerHtmlClausula(getDataSource()));
-        addStoredProcedure(P_MOV_MESACONTROL, new PMovMesacontrol(getDataSource()));
+        //addStoredProcedure(P_MOV_MESACONTROL, new PMovMesacontrol(getDataSource()));
         addStoredProcedure(P_MOV_TVALOSIN, new PMovTvalosin(getDataSource()));
         addStoredProcedure(P_MOV_DMESACONTROL, new PMovDmesacontrol(getDataSource()));
         addStoredProcedure(P_BORRA_MPOLIPER, new PBorraMpoliper(getDataSource()));
@@ -2488,7 +2488,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	
 	///////////////////////////////
 	////// p mov mesacontrol //////
-	/*///////////////////////////*/
+	/*///////////////////////////*
 	protected class PMovMesacontrol extends CustomStoredProcedure {
 		protected PMovMesacontrol(DataSource dataSource) {
 			super(dataSource,"PKG_SATELITES2.P_MOV_MESACONTROL");
@@ -2562,6 +2562,8 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("swimpres"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_tramite_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
@@ -2578,7 +2580,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			return wrapperResultados;
 		}
 	}
-	
+	*/
 	
 	protected class PMovTvalosin extends CustomStoredProcedure {
 		protected PMovTvalosin(DataSource dataSource) {

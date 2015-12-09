@@ -5,7 +5,7 @@ import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.mesacontrol.model.TramiteVO;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.utils.Utils;
@@ -35,7 +35,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 	private boolean                  success;
 	private String                   message;
 	private Map<String,Item>         items;
-	private TramiteVO                tramite;
+	private FlujoVO                  flujo;
 	private Map<String,String>       params;
 	private List<Map<String,String>> list;
 	
@@ -1199,6 +1199,39 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		
 		return SUCCESS;
 	}
+	
+	@Action(value   = "debugScreen",
+	        results = {
+			    @Result(name="error"   , location="/jsp-script/general/errorPantalla.jsp"),
+                @Result(name="success" , location="/jsp-script/proceso/flujoMesaControl/debugScreen.jsp")
+            }
+	)
+	public String debugScreen()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n#########################"
+				,"\n###### debugScreen ######"
+				));
+		String result = ERROR;
+		try
+		{
+			items = flujoMesaControlManager.debugScreen(sb);
+			
+			result = SUCCESS;
+			
+			sb.append(Utils.log(
+					 "\n###### debugScreen ######"
+					,"\n#########################"
+					));
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		return result;
+	}
+		
 
 	////////////////////////////////////////////////////////
 	// GETTERS Y SETTERS                                  //
@@ -1227,12 +1260,12 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		this.items = items;                               //
 	}                                                     //
                                                           //
-	public TramiteVO getTramite() {                       //
-		return tramite;                                   //
+	public FlujoVO getTramite() {                         //
+		return flujo;                                     //
 	}                                                     //
 	                                                      //
-	public void setTramite(TramiteVO tramite) {           //
-		this.tramite = tramite;                           //
+	public void setFlujo(FlujoVO flujo) {                 //
+		this.flujo = flujo;                               //
 	}                                                     //
 	                                                      //
 	public Map<String, String> getParams() {              //

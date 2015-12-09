@@ -145,7 +145,7 @@ public interface KernelManagerSustituto {
 	public List<Map<String, String>> cargarTiposClausulasExclusion() throws ApplicationException;
 	public List<Map<String, String>> obtenerExclusionesPorTipo(Map<String, String> smap1) throws ApplicationException;
 	public Map<String, String> obtenerHtmlClausula(Map<String, String> paramObtenerHtml) throws ApplicationException;
-	public WrapperResultados PMovMesacontrol(Map<String, Object> parMesCon) throws ApplicationException;
+	//public WrapperResultados PMovMesacontrol(Map<String, Object> parMesCon) throws ApplicationException;
 	public WrapperResultados PMovTvalosin(Map<String, Object> parTvalosin) throws ApplicationException;
 	public List<Map<String, String>> loadMesaControl(Map<String,String> params) throws ApplicationException;
 	public List<Map<String, String>> loadMesaControlUsuario(Map<String,String> params) throws ApplicationException;
