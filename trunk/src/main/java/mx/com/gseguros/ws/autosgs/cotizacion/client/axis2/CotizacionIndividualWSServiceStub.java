@@ -38679,50 +38679,6 @@
                             
 
                         /**
-                        * field for FechaFactura
-                        */
-
-                        
-                                    protected java.util.Calendar localFechaFactura ;
-                                
-                           /*  This tracker boolean wil be used to detect whether the user called the set method
-                          *   for this attribute. It will be used to determine whether to include this field
-                           *   in the serialized XML
-                           */
-                           protected boolean localFechaFacturaTracker = false ;
-                           
-
-                           /**
-                           * Auto generated getter method
-                           * @return java.util.Calendar
-                           */
-                           public  java.util.Calendar getFechaFactura(){
-                               return localFechaFactura;
-                           }
-
-                           
-                        
-                            /**
-                               * Auto generated setter method
-                               * @param param FechaFactura
-                               */
-                               public void setFechaFactura(java.util.Calendar param){
-                            
-                                       if (param != null){
-                                          //update the setting tracker
-                                          localFechaFacturaTracker = true;
-                                       } else {
-                                          localFechaFacturaTracker = false;
-                                              
-                                       }
-                                   
-                                            this.localFechaFactura=param;
-                                    
-
-                               }
-                            
-
-                        /**
                         * field for FondoEspecial
                         */
 
@@ -39397,41 +39353,7 @@
                                                }
                                     
                                    xmlWriter.writeEndElement();
-                              if (localFechaFacturaTracker){
-                                    namespace = "";
-                                    if (! namespace.equals("")) {
-                                        prefix = xmlWriter.getPrefix(namespace);
-
-                                        if (prefix == null) {
-                                            prefix = generatePrefix(namespace);
-
-                                            xmlWriter.writeStartElement(prefix,"fechaFactura", namespace);
-                                            xmlWriter.writeNamespace(prefix, namespace);
-                                            xmlWriter.setPrefix(prefix, namespace);
-
-                                        } else {
-                                            xmlWriter.writeStartElement(namespace,"fechaFactura");
-                                        }
-
-                                    } else {
-                                        xmlWriter.writeStartElement("fechaFactura");
-                                    }
-                                
-
-                                          if (localFechaFactura==null){
-                                              // write the nil attribute
-                                              
-                                                     throw new org.apache.axis2.databinding.ADBException("fechaFactura cannot be null!!");
-                                                  
-                                          }else{
-
-                                        
-                                                   xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localFechaFactura));
-                                            
-                                          }
-                                    
-                                   xmlWriter.writeEndElement();
-                             }
+                             
                                     namespace = "";
                                     if (! namespace.equals("")) {
                                         prefix = xmlWriter.getPrefix(namespace);
@@ -40061,16 +39983,7 @@
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localF3));
-                             if (localFechaFacturaTracker){
-                                      elementList.add(new javax.xml.namespace.QName("",
-                                                                      "fechaFactura"));
-                                 
-                                        if (localFechaFactura != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localFechaFactura));
-                                        } else {
-                                           throw new org.apache.axis2.databinding.ADBException("fechaFactura cannot be null!!");
-                                        }
-                                    }
+                            
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "fondoEspecial"));
                                  
@@ -40302,24 +40215,6 @@
                                     throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
                                 }
                             
-                                    
-                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
-                                
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","fechaFactura").equals(reader.getName())){
-                                
-                                    java.lang.String content = reader.getElementText();
-                                    
-                                              object.setFechaFactura(
-                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToDateTime(content));
-                                              
-                                        reader.next();
-                                    
-                              }  // End of if for expected property start element
-                                
-                                    else {
-                                        
-                                    }
-                                
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
@@ -53635,6 +53530,50 @@
                             
 
                         /**
+                        * field for FechaFactura
+                        */
+
+                        
+                                    protected java.util.Calendar localFechaFactura ;
+                                
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localFechaFacturaTracker = false ;
+                           
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.util.Calendar
+                           */
+                           public  java.util.Calendar getFechaFactura(){
+                               return localFechaFactura;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param FechaFactura
+                               */
+                               public void setFechaFactura(java.util.Calendar param){
+                            
+                                       if (param != null){
+                                          //update the setting tracker
+                                          localFechaFacturaTracker = true;
+                                       } else {
+                                          localFechaFacturaTracker = false;
+                                              
+                                       }
+                                   
+                                            this.localFechaFactura=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for FormaPago
                         */
 
@@ -55031,6 +54970,40 @@
                                           }
                                     
                                    xmlWriter.writeEndElement();
+                             } if (localFechaFacturaTracker){
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"fechaFactura", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"fechaFactura");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("fechaFactura");
+                                    }
+                                
+
+                                          if (localFechaFactura==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("fechaFactura cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localFechaFactura));
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
                              } if (localFormaPagoTracker){
                                             if (localFormaPago==null){
                                                  throw new org.apache.axis2.databinding.ADBException("formaPago cannot be null!!");
@@ -55979,6 +55952,15 @@
                                         } else {
                                            throw new org.apache.axis2.databinding.ADBException("equipoEspecial cannot be null!!");
                                         }
+                                    } if (localFechaFacturaTracker){
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "fechaFactura"));
+                                 
+                                        if (localFechaFactura != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localFechaFactura));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("fechaFactura cannot be null!!");
+                                        }
                                     } if (localFormaPagoTracker){
                             elementList.add(new javax.xml.namespace.QName("",
                                                                       "formaPago"));
@@ -56435,6 +56417,24 @@
                                     
                                               object.setEquipoEspecial(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                    else {
+                                        
+                                    }
+                                
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","fechaFactura").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setFechaFactura(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToDateTime(content));
                                               
                                         reader.next();
                                     
