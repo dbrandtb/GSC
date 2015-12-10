@@ -17,7 +17,7 @@ Ext.onReady(function() {
 	
 	Ext.define('modeLayoutProveedor', {
 		extend:'Ext.data.Model',
-		fields:['claveAtributo','claveFormatoAtributo','valorMinimo','valorMaximo','columnaExcel', 'claveFormatoFecha']
+		fields:['claveAtributo','claveFormatoAtributo','valorMinimo','valorMaximo','columnaExcel', 'claveFormatoFecha', "atributoRequerido"]
 	});
 	
 	Ext.define('modelListadoProvMedico',{
@@ -65,8 +65,7 @@ Ext.onReady(function() {
 			reader: {
 				type: 'json',
 				root: 'lista'
-			},
-			sortInfo: { field: 'codigo', direction: 'ASC'} 
+			}
 		}
 	});
 	storeCveColumna.load();
@@ -156,6 +155,21 @@ Ext.onReady(function() {
 		}
 	});
 	storeAplicaIVARet.load();
+	
+	var storeCampoRequerido= Ext.create('Ext.data.JsonStore', {
+		model:'Generic',
+		proxy: {
+			type: 'ajax',
+			url: _URL_CATALOGOS,
+			extraParams : {catalogo:_SINO},
+			reader: {
+				type: 'json',
+				root: 'lista'
+			}
+		}
+	});
+	storeCampoRequerido.load();
+	
 	//Informacion proveedor
 	cmbProveedor = Ext.create('Ext.form.field.ComboBox', {
 		fieldLabel : 'Proveedor',			displayField : 'nombre',			name:'cmbProveedor',			valueField : 'cdpresta',
@@ -203,6 +217,11 @@ Ext.onReady(function() {
 		displayField: 'value',		valueField: 'key',				editable:false
 	});
 	
+	cmbAplicaRequerido = Ext.create('Ext.form.ComboBox', {
+		name:'idAplicaRequerido',		store: storeCampoRequerido,		queryMode:'local',
+		displayField: 'value',		valueField: 'key',				editable:false,				allowBlank:false
+	});
+	
     /*////////////////////////////////////////////////////////////////
     ////////////////   DECLARACION DE EDITOR DE INCISOS  ////////////
     ///////////////////////////////////////////////////////////////*/
@@ -238,7 +257,7 @@ Ext.onReady(function() {
 							handler: this.onRemoveClick
 						}]
 					},
-					{	header: 'Atributo', 			dataIndex: 'claveAtributo',			flex:3,			editor : cmbAtributos,			allowBlank: false
+					{	header: 'Atributo', 			dataIndex: 'claveAtributo',			width : 150 ,			editor : cmbAtributos,			allowBlank: false
 						,renderer : function(v) {
 							var leyenda = '';
 							if (typeof v == 'string'){
@@ -257,7 +276,7 @@ Ext.onReady(function() {
 							return leyenda;
 						}
 					},
-					{	header: 'Formato', 				dataIndex: 'claveFormatoAtributo',	flex:2,			editor : cmbTipoFormato,		allowBlank: false
+					{	header: 'Formato', 				dataIndex: 'claveFormatoAtributo',	width : 150,			editor : cmbTipoFormato,		allowBlank: false
 						,renderer : function(v) {
 							var leyenda = '';
 							if (typeof v == 'string'){
@@ -276,17 +295,17 @@ Ext.onReady(function() {
 							return leyenda;
 						}
 					},
-					{	header: 'Valor Minimo',			dataIndex: 'valorMinimo',			flex:2//, 		allowBlank: false
+					{	header: 'Valor Minimo',			dataIndex: 'valorMinimo',			width : 100
 						,editor: {		
 							xtype: 'numberfield',		decimalSeparator :'.'//,			allowBlank: false
 						}
 					},
-					{	header: 'Valor M&aacute;ximo',	dataIndex: 'valorMaximo',			flex:2//,			allowBlank: false
+					{	header: 'Valor M&aacute;ximo',	dataIndex: 'valorMaximo',			width : 100//,			allowBlank: false
 						,editor: {		
 							xtype: 'numberfield',		decimalSeparator :'.'//,			allowBlank: false
 						}
 					},
-					{	header: 'Columna', 				dataIndex: 'columnaExcel',			flex:2,			editor : cmbCveColumna
+					{	header: 'Columna', 				dataIndex: 'columnaExcel',			width : 100,			editor : cmbCveColumna
 						,renderer : function(v) {
 							var leyenda = '';
 								if (typeof v == 'string'){
@@ -305,7 +324,28 @@ Ext.onReady(function() {
 								return leyenda;
 						}
 					},
-					{	header: 'Formato Fecha', 		dataIndex: 'claveFormatoFecha',			flex:2,			editor : cmbFormFecha
+					{
+						header: 'Requerido', 				dataIndex: 'atributoRequerido',	width : 100		,  allowBlank: false
+						,editor : cmbAplicaRequerido
+						,renderer : function(v) {
+						var leyenda = '';
+							if (typeof v == 'string') {
+								storeCampoRequerido.each(function(rec) {
+									if (rec.data.key == v) {
+										leyenda = rec.data.value;
+									}
+								});
+							}else {
+								if (v.key && v.value) {
+									leyenda = v.value;
+								} else {
+									leyenda = v.data.value;
+								}
+							}
+							return leyenda;
+						}
+					},
+					{	header: 'Formato Fecha', 		dataIndex: 'claveFormatoFecha',			width : 120,			editor : cmbFormFecha
 						,renderer : function(v) {
 							var leyenda = '';
 							if (typeof v == 'string'){
@@ -391,6 +431,7 @@ Ext.onReady(function() {
 							valorMinimo:record.get('valorMinimo'),
 							valorMaximo:record.get('valorMaximo'),
 							columnaExcel:record.get('columnaExcel'),
+							atributoRequerido : record.get('atributoRequerido'),
 							claveFormatoFecha:record.get('claveFormatoFecha')
 						});
 					});
@@ -512,7 +553,9 @@ Ext.onReady(function() {
 							valorMinimo: json[i].VALORMIN,
 							valorMaximo: json[i].VALORMAX,
 							columnaExcel: json[i].CVEEXCEL,
+							atributoRequerido : json[i].SWOBLIGA,
 							claveFormatoFecha: json[i].FORMATFECH
+							
 						});
 						storeLayoutProveedor.add(rec);
 					}

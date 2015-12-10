@@ -46,6 +46,7 @@ var _URL_INF_ASEGURADO					= '<s:url namespace="/siniestros" 	action="consultaDa
 var _URL_POLIZA_UNICA					= '<s:url namespace="/siniestros"	action="consultaPolizaUnica"/>';
 var _URL_MONTO_PAGO_SINIESTRO			= '<s:url namespace="/siniestros"	action="obtieneMontoPagoSiniestro"/>';
 var _URL_P_MOV_MAUTSINI					= '<s:url namespace="/siniestros"	action="obtieneMensajeMautSini"/>';
+var _Url_AltaTramite_Previo      		= '<s:url namespace="/siniestros" 	action="includes/altaTramitePrevio"      />';
 var windowLoader;
 var msgWindow;
 
@@ -527,8 +528,8 @@ var msgWindow;
 	
 	function mostrarSolicitudPago(grid,rowIndex,colIndex){
 		storeDestinoPago = Ext.create('Ext.data.JsonStore', {
-		    model:'Generic',
-	        proxy:
+			model:'Generic',
+			proxy:
 	        {
 	            type: 'ajax',
 	            url: _URL_CATALOGOS,
@@ -796,6 +797,28 @@ var msgWindow;
 	        }
 	    });
 		centrarVentana(msgWindow);
+	}
+	
+	
+	function altaTramiteWindow(){
+	    windowLoader = Ext.create('Ext.window.Window',{
+	        modal       : true,
+	        buttonAlign : 'center',
+	        width       : 830,
+	        height      : 570,
+	        title: 'Alta de Tr&aacute;mite Previo',
+	        autoScroll  : true,
+	        loader      : {
+	            url     : _Url_AltaTramite_Previo,
+	            scripts  : true,
+	            loadMask : true,
+	            autoLoad : true,
+	            ajaxOptions: {
+	            	method: 'POST'
+	            }
+	        }
+	    }).show();
+	    centrarVentana(windowLoader);
 	}
 	
 Ext.onReady(function()

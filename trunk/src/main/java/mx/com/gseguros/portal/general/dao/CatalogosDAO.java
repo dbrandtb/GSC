@@ -125,4 +125,6 @@ public interface CatalogosDAO {
 	public List<GenericVO> obtieneAgenteEspecifico(String cdagente) throws Exception;
 	
 	public List<GenericVO> recuperarListaPools() throws Exception;
+	
+	public List<GenericVO> obtieneAtributosExcel(String cdTabla) throws Exception;
 }

@@ -1793,7 +1793,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	public String guardaLayoutProveedor(String cdpresta, String claveAtributo,
 			String claveFormatoAtributo, String valorMinimo,
 			String valorMaximo, String columnaExcel, String claveFormatoFecha,
-			String nmordina, String tipoAccion) throws Exception {
+			String atributoRequerido, String nmordina, String tipoAccion) throws Exception {
 		// TODO Auto-generated method stub
 		try {
 			String accion = null;
@@ -1813,6 +1813,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			paramsConfLayout.put("pv_valormin_i", valorMinimo);
 			paramsConfLayout.put("pv_cveexcel_i", columnaExcel);
 			paramsConfLayout.put("pv_formatfech_i",claveFormatoFecha);
+			paramsConfLayout.put("pv_swobliga_i",atributoRequerido);
 			paramsConfLayout.put("pv_accion_i",accion);
 			
 			log.debug("paramsConfLayout params: "+paramsConfLayout);
@@ -2042,5 +2043,22 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
+	}
+	
+	@Override
+	public String validaExisteConfiguracionProv2() throws Exception {
+		try {
+			return siniestrosDAO.validaExisteConfiguracionProv2();
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> requiereConfiguracionLayoutProveedor(String cdpresta) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdpresta_i", cdpresta);
+		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
+		return siniestrosDAO.obtieneConfiguracionLayoutProveedor(params);
 	}
 }

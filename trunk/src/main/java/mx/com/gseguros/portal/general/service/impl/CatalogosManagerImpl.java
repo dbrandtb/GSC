@@ -1320,6 +1320,11 @@ public class CatalogosManagerImpl implements CatalogosManager {
     }
 	
 	@Override
+	public List<GenericVO> obtieneAtributosExcel(Catalogos catalogo) throws Exception {
+		return catalogosDAO.obtieneAtributosExcel(catalogo.getCdTabla());
+	}
+	
+	@Override
 	@Deprecated
     public List<GenericVO> recuperarTtiptramc() throws Exception
     {

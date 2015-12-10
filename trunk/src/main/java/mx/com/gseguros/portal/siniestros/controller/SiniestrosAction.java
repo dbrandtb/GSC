@@ -4982,7 +4982,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		logger.debug("Entra a guardaAltaTramite Params: {} datosTablas {}", params,datosTablas);
 		try{
 			//Realizamos la inserci�n de los guardados
-			siniestrosManager.guardaLayoutProveedor(params.get("cmbProveedor"), null,null,null,null,null,null,null,"D");
+			siniestrosManager.guardaLayoutProveedor(params.get("cmbProveedor"), null,null,null,null,null,null,null,null,"D");
 			for(int i=0;i<datosTablas.size();i++) {
 				siniestrosManager.guardaLayoutProveedor(
 					params.get("cmbProveedor"), 
@@ -4992,6 +4992,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					datosTablas.get(i).get("valorMaximo"),
 					datosTablas.get(i).get("columnaExcel"),
 					datosTablas.get(i).get("claveFormatoFecha"),
+					datosTablas.get(i).get("atributoRequerido"),
 					i+"",
 					null
 				);
@@ -5335,6 +5336,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		logger.debug("Entra a validaAutorizacionEspecial  Params: {}", params);
 		try {
 			validacionGeneral = siniestrosManager.validaExisteConfiguracionProv(params.get("cdpresta"));
+			validacionGeneral = siniestrosManager.validaExisteConfiguracionProv2();
 			logger.debug("validacionGeneral : {}", validacionGeneral);
 		}catch( Exception e){
 			logger.error("Error validaAutorizacionEspecial : {}", e.getMessage(), e);

@@ -301,7 +301,7 @@ Ext.onReady(function() {
 				,style         : 'margin:5px'
 				,height        : 400
 				,columns       : [
-					{	xtype: 'actioncolumn',			width: 100,		sortable: false,		menuDisabled: true,
+					{	xtype: 'actioncolumn',			width: 120,		sortable: false,		menuDisabled: true,
 						items: [{
 							icon: _CONTEXT+'/resources/fam3icons/icons/application_edit.png',
 							tooltip: 'Editar Proveedor',
@@ -320,9 +320,15 @@ Ext.onReady(function() {
 						}
 						,{
 							icon:_CONTEXT+'/resources/fam3icons/icons/database_lightning.png',
-							tooltip: 'Subir Archivo',
+							tooltip: 'Subir Archivo Conf A',
 							scope: this,
 							handler : configuracionSubirCargaMasiva
+						}
+						,{
+							icon:_CONTEXT+'/resources/fam3icons/icons/database_lightning.png',
+							tooltip: 'Subir Archivo 2',
+							scope: this,
+							handler : configuracionSubirCargaMasiva2
 						}]
 					},
 					{
@@ -458,7 +464,7 @@ Ext.onReady(function() {
 			,success : function (response){
 				debug(Ext.decode(response.responseText).validacionGeneral);
 				if( Ext.decode(response.responseText).validacionGeneral =="S"){
-					var _p22_windowAgregarDocu=Ext.create('Ext.window.Window',
+					/*var _p22_windowAgregarDocu=Ext.create('Ext.window.Window',
 					{
 						title       : 'Subir Archivo de Carga Masiva'
 						,closable    : false
@@ -471,7 +477,7 @@ Ext.onReady(function() {
 							panelSeleccionDocumento= Ext.create('Ext.form.Panel',
 							{
 								border       : 0
-								//,url         : _URL_Carga_Masiva
+								,url         : _URL_Carga_Masiva
 								,timeout     : 600
 								,buttonAlign : 'center'
 								,items       :
@@ -480,6 +486,7 @@ Ext.onReady(function() {
 										xtype       : 'filefield'
 										,fieldLabel : 'Documento'
 										,buttonText : 'Examinar...'
+										,name       : 'fileName'
 										,buttonOnly : false
 										,width      : 450
 										,name       : 'file'
@@ -519,15 +526,15 @@ Ext.onReady(function() {
 										,disabled : true
 										,handler  : function (button,e)
 										{
-											/*button.setDisabled(true);
+											button.setDisabled(true);
 											Ext.getCmp('_p22_BotCanDoc').setDisabled(true);
 											
 											button.up().up().getForm().submit(
 											{
 												params        :
 												{
-													'params.pi_nmtabla': _NMTABLA
-													,'params.tipotabla': _TIPOTABLA
+													'params.pi_nmtabla': '4010'//_NMTABLA
+													,'params.tipotabla': '1'//_TIPOTABLA
 												},
 												waitMsg: 'Ejecutando Carga Masiva...',
 												success: function(form, action) {
@@ -552,15 +559,15 @@ Ext.onReady(function() {
 																icon: Ext.Msg.ERROR,
 																fn: function(btn){
 																	if (btn == 'yes'){
-																		Ext.create('Ext.form.Panel').submit({
-																			url            : _URL_DESCARGA_DOCUMENTOS,
-																			standardSubmit : true,
-																			target         : '_blank',
-																			params         : {
-																				path     : _RUTA_DOCUMENTOS_TEMPORAL,
-																				filename : action.result.fileFileName 
-																			}
-																		});
+																		//Ext.create('Ext.form.Panel').submit({
+																			//url            : _URL_DESCARGA_DOCUMENTOS,
+																			//standardSubmit : true,
+																			//target         : '_blank',
+																			//params         : {
+																				//path     : _RUTA_DOCUMENTOS_TEMPORAL,
+																				//filename : action.result.fileFileName 
+																			//}
+																		//});
 																	}
 																}
 															 });
@@ -570,7 +577,7 @@ Ext.onReady(function() {
 														}
 													});
 												}
-											});*/
+											});
 										}
 									}
 									,{
@@ -586,7 +593,7 @@ Ext.onReady(function() {
 							})
 						]
 					}).show();
-					centrarVentanaInterna(_p22_windowAgregarDocu);
+					centrarVentanaInterna(_p22_windowAgregarDocu);*/
 				}else{
 					mensajeWarning('No se ha configurado el Layout del proveedor');
 				}
@@ -606,6 +613,22 @@ Ext.onReady(function() {
 		
 		//windowLoader = Ext.create('Ext.window.Window',{}).show();
 		//centrarVentanaInterna(windowLoader);
+	}
+	
+	function configuracionSubirCargaMasiva2(grid,rowIndex){
+		Ext.Ajax.request({
+			url: _URL_Carga_Masiva,
+			params: {
+				'params.fileName'  : 'C:\\Users\\Alberto\\Desktop\\libro1.xls'
+			},
+			success: function(response) {
+				var res = Ext.decode(response.responseText);
+				debug("VALOR DE RES ======> ", res);
+			},
+			failure: function(){
+				centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
+			}
+		});
 	}
 	
 	

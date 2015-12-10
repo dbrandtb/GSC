@@ -4616,6 +4616,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_valormin_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cveexcel_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_formatfech_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swobliga_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -4642,7 +4643,9 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     				"VALORMAX",
     				"VALORMIN",
     				"CVEEXCEL",
-    				"FORMATFECH"
+    				"FORMATFECH",
+    				"SWOBLIGA"
+    				
     		};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -5121,6 +5124,46 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		super(dataSource, "PKG_SINIESTRO.P_VALIDA_CONF_PROV");
     		declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_existe_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+    @Override
+	public List<Map<String, String>> obtieneConfiguracionLayoutProveedor(HashMap<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneConfiguracionLayoutProveedor(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneConfiguracionLayoutProveedor extends StoredProcedure {
+		protected ObtieneConfiguracionLayoutProveedor(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_SINIESTRO.P_OBTIENE_LAYOUT_INFOPROV");
+			declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"MAXREGISTRO","CVEFORMATO","VALORMIN","VALORMAX","FORMATDATE","SWOBLIGA"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String validaExisteConfiguracionProv2() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> resultado = ejecutaSP(new ValidaExisteConfiguracionProv2(getDataSource()), params);
+		logger.debug("Valor de Respuesta ====>"+ resultado.get("pv_msg_id_o"));
+		String respuesta = resultado.get("pv_msg_id_o")+"";
+		return respuesta;
+	}
+	
+    protected class ValidaExisteConfiguracionProv2 extends StoredProcedure {
+    	
+    	protected ValidaExisteConfiguracionProv2(DataSource dataSource) {
+    		super(dataSource, "PKG_DESARROLLO.P_GET_TMOVSISCO");
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
     		compile();

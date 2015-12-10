@@ -157,11 +157,13 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case STATUSINIESTROS:
 				case STATUS_VIGENCIA_POL:
 				case TRAZCANAU:
-				case CVECOLUMNA:
 				case FORMATOFECHA:
 				case TIPOS_IMP_LOTE:
 				case TIPOS_LOTE_IMPR:
 					lista = catalogosManager.getTmanteni(cat);
+	                break;
+				case CVECOLUMNA:
+					lista = catalogosManager.obtieneAtributosExcel(cat);
 	                break;
 				case MC_SUCURSALES_ADMIN:
 				case MC_SUCURSALES_DOCUMENTO:
@@ -186,8 +188,8 @@ public class CatalogosAction extends PrincipalCoreAction {
 					lista = catalogosManager.obtieneStatusTramite(params);
 					break;
 				case TATRISIT:
-		            lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
-					break;
+					lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
+		            break;
 				case TATRISIN:
 		            lista = catalogosManager.obtieneAtributosSiniestro(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
 					break;
