@@ -205,7 +205,7 @@ Ext.onReady(function()
                 itemId    : '_p49_gridPolizas'
                 ,title    : 'RESULTADOS'
                 ,columns  : _p49_gridPolCols
-                ,height   : 250
+                ,height   : 350
                 ,store    : _p49_storePolizas
                 ,selModel :
                 {
