@@ -106,7 +106,7 @@ Ext.onReady(function()
     ////// componentes //////
     _p51_venAgregarPermiso = Ext.create('Ext.window.Window',
     {
-        title        : 'AGREGAR PERMISO'
+        title        : 'AGREGAR/QUITAR PERMISO'
         ,modal       : true
         ,closeAction : 'hide'
         ,items       :
