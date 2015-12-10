@@ -320,19 +320,29 @@ Ext.onReady(function() {
 					    ,labelWidth: 170,					value:'0'							,hidden:true
 					},
 		            cmbRamos,
-					{
-						xtype: 'textfield'
-						,name: 'txtFactura'
-						,fieldLabel: 'N&uacute;mero factura'
-						,width		 : 300
-					}
-					,{
+		            {
 						xtype: 'numberfield',
 						name: 'txtContraRecibo',
 						fieldLabel: 'Contrarecibo',
 						width		 : 300,
 						allowBlank: false,
 						listeners : {
+							'change' : function( field ){
+								storeAsegurados2.load({
+									params:{
+										'params.ntramite': panelInicialPral.down('[name="txtContraRecibo"]').getValue(),
+										'params.nfactura':   panelInicialPral.down('[name="txtFactura"]').getValue()
+									}
+								});
+							}
+						}
+					},
+					{
+						xtype: 'textfield'
+						,name: 'txtFactura'
+						,fieldLabel: 'N&uacute;mero factura'
+						,width		 : 300
+						,listeners : {
 							'change' : function( field ){
 								storeAsegurados2.load({
 									params:{
