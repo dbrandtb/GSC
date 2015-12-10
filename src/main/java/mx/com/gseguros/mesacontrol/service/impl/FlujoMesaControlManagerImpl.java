@@ -12,6 +12,8 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.RolSistema;
+import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +29,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 	
 	@Autowired
 	private PantallasDAO pantallasDAO;
+	
+	@Autowired
+	private MesaControlDAO mesaControlDAO;
 	
 	@Override
 	public Map<String,Item> workflow(
@@ -1428,5 +1433,168 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			Utils.generaExcepcion(ex, paso, sb.toString());
 		}
 		return items;
+	}
+	
+	@Override
+	public Map<String,Object> mesaControl(
+			StringBuilder sb
+			,String cdsisrol
+			,String cdtiptra
+			,String cdusuari
+			)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ mesaControl @@@@@@"
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdtiptra=" , cdtiptra
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				));
+		Map<String,Object> result = new HashMap<String,Object>();
+		String             paso   = null;
+		try
+		{
+			paso = "Recuperando componentes de filtro";
+			sb.append("\n").append(paso);
+			
+			List<ComponenteVO> filtro = pantallasDAO.obtenerComponentes(
+					cdtiptra //cdtiptra
+					,null //cdunieco
+					,null //cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"MESA_CONTROL"//pantalla
+					,"FILTRO"//seccion
+					,null //orden
+					);
+			
+			paso = "Recuperando componentes de grid";
+			sb.append("\n").append(paso);
+			
+			List<ComponenteVO> grid = pantallasDAO.obtenerComponentes(
+					cdtiptra //cdtiptra
+					,null //cdunieco
+					,null //cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"MESA_CONTROL"//pantalla
+					,"GRID"//seccion
+					,null //orden
+					);
+			
+			paso = "Generando componentes";
+			sb.append("\n").append(paso);
+			
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			gc.generaComponentes(filtro, true, false, true, false, false, false);
+			
+			Map<String,Item> items = new HashMap<String,Item>();
+			items.put("filtroItems" , gc.getItems());
+			
+			gc.generaComponentes(grid, true, true, false, true, false, false);
+			
+			items.put("gridFields"  , gc.getFields());
+			items.put("gridColumns" , gc.getColumns());
+			
+			Map<String,String> mapa = new HashMap<String,String>();
+			if(cdsisrol.equals(RolSistema.AGENTE.getCdsisrol()))
+			{
+				mapa.put("CDAGENTE" , mesaControlDAO.cargarCdagentePorCdusuari(cdusuari));
+			}
+			
+			result.put("items" , items);
+			result.put("mapa"  , mapa);
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		sb.append(Utils.log(
+				 "\n@@@@@@ result=",result
+				,"\n@@@@@@ mesaControl @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return result;
+	}
+	
+	@Override
+	public Map<String,Object> recuperarTramites(
+			StringBuilder sb
+			,String cdtiptra
+			,String status
+			,String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String nmpoliza
+			,String cdagente
+			,String ntramite
+			,String fedesde
+			,String fehasta
+			,int start
+			,int limit
+			)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarTramites @@@@@@"
+				,"\n@@@@@@ cdtiptra=" , cdtiptra
+				,"\n@@@@@@ status="   , status
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ cdtipsit=" , cdtipsit
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ cdagente=" , cdagente
+				,"\n@@@@@@ ntramite=" , ntramite
+				,"\n@@@@@@ fedesde="  , fedesde
+				,"\n@@@@@@ fehasta="  , fehasta
+				,"\n@@@@@@ start="    , start
+				,"\n@@@@@@ limit="    , limit
+				));
+		String             paso   = null;
+		Map<String,Object> result = null;
+		try
+		{
+			paso = "Recuperando tr\u00e1mites";
+			sb.append("\n").append(paso);
+			
+			result = flujoMesaControlDAO.recuperarTramites(
+					cdtiptra
+					,status
+					,cdusuari
+					,cdsisrol
+					,cdunieco
+					,cdramo
+					,cdtipsit
+					,estado
+					,nmpoliza
+					,cdagente
+					,ntramite
+					,fedesde
+					,fehasta
+					,start
+					,limit
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+
+		sb.append(Utils.log(
+				 "\n@@@@@@ result=" , result
+				,"\n@@@@@@ recuperarTramites @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return result;
 	}
 }

@@ -249,9 +249,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			{
 				paso = "Recuperando clave de agente";
 				logger.info(paso);
-				Map<String,String>params=new LinkedHashMap<String,String>();
-				params.put("cdusuari" , cdusuari);
-				cdagente = mesaControlDAO.cargarCdagentePorCdusuari(params);
+				cdagente = mesaControlDAO.cargarCdagentePorCdusuari(cdusuari);
 			}
 			valores.put("cdagente" , cdagente);
 		}

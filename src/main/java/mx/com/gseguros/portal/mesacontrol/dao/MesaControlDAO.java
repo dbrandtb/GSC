@@ -14,7 +14,7 @@ public interface MesaControlDAO
 	 * @return
 	 * @throws Exception
 	 */
-	public String cargarCdagentePorCdusuari(Map<String,String>params) throws Exception;
+	public String cargarCdagentePorCdusuari(String cdusuari) throws Exception;
 	
 	/**
 	 * 

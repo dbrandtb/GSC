@@ -194,4 +194,30 @@ public interface FlujoMesaControlManager
 			)throws Exception;
 	
 	public Map<String,Item> debugScreen(StringBuilder sb) throws Exception;
+	
+	public Map<String,Object> mesaControl(
+			StringBuilder sb
+			,String cdsisrol
+			,String cdtiptra
+			,String cdusuari
+			)throws Exception;
+	
+	public Map<String,Object> recuperarTramites(
+			StringBuilder sb
+			,String cdtiptra
+			,String status
+			,String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String nmpoliza
+			,String cdagente
+			,String ntramite
+			,String fedesde
+			,String fehasta
+			,int start
+			,int limit
+			)throws Exception;
 }
