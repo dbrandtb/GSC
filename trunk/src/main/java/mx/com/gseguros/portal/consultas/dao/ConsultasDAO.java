@@ -466,4 +466,12 @@ public interface ConsultasDAO
 			)throws Exception;
 	
 	public List<Map<String,String>> recuperarRolesTodos() throws Exception;
+
+	public List<Map<String,String>> obtieneBeneficiariosPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+	) throws Exception;
 }
