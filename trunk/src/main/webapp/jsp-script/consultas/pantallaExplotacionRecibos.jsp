@@ -201,7 +201,7 @@ Ext.onReady(function()
                 itemId    : '_p50_gridRecibos'
                 ,title    : 'RESULTADOS'
                 ,columns  : _p50_gridRecCols
-                ,height   : 250
+                ,height   : 350
                 ,store    : _p50_storeRecibos
                 ,selModel :
                 {
