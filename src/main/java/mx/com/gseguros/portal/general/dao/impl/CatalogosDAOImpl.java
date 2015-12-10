@@ -1667,4 +1667,38 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<GenericVO> obtieneAtributosExcel(String cdTabla) throws Exception{
+		
+		try {
+			Map<String,Object> params=new LinkedHashMap<String,Object>(0);
+			params.put("pv_cdtabla", cdTabla);
+			logger.debug(
+	        		new StringBuilder()
+	        		.append("\n************************************************")
+	        		.append("\n****** PKG_SINIESTRO.P_GET_ATRIBUTO_EXCEL ******")
+	        		.append("\n****** params=").append(params)
+	        		.append("\n************************************************")
+	        		.toString()
+	        		);
+			Map<String, Object> resultado = ejecutaSP(new ObtieneAtributosExcel(getDataSource()), params);
+			return (List<GenericVO>) resultado.get("pv_registro_o");
+			
+		} catch (Exception e) {
+			throw new Exception(e.getMessage(), e);
+		}
+	}
+	
+	protected class ObtieneAtributosExcel extends StoredProcedure {
+    	protected ObtieneAtributosExcel(DataSource dataSource) {
+            super(dataSource,"PKG_SINIESTRO.P_GET_ATRIBUTO_EXCEL");
+            declareParameter(new SqlParameter("pv_cdtabla",       OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtenerTmanteniMapper()));
+            declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

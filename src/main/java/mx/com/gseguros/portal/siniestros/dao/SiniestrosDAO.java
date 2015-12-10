@@ -516,4 +516,8 @@ public interface SiniestrosDAO {
 	public List<Map<String, String>> obtieneListaExisteCoberturaTramite(HashMap<String, Object> params) throws Exception;
 	
 	public String validaExisteConfiguracionProv(String cdpresta) throws Exception;
+	
+	public String validaExisteConfiguracionProv2() throws Exception;
+	
+	public List<Map<String, String>> obtieneConfiguracionLayoutProveedor(HashMap<String, Object> params) throws Exception;
 }

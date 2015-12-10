@@ -607,7 +607,7 @@ public interface SiniestrosManager {
 	public List<GenericVO>obtenerAtributosLayout(String descripcion) throws Exception;
 	
 	public String guardaLayoutProveedor(String cdpresta, String claveAtributo, String claveFormatoAtributo,
-			String valorMinimo, String valorMaximo, String columnaExcel, String claveFormatoFecha, String nmordina, String tipoAccion) throws Exception;
+			String valorMinimo, String valorMaximo, String columnaExcel, String claveFormatoFecha,String atributoRequerido, String nmordina, String tipoAccion) throws Exception;
 
 	public List<Map<String, String>> consultaConfiguracionLayout(String cdpresta) throws Exception;
 	
@@ -647,4 +647,8 @@ public interface SiniestrosManager {
 	public List<Map<String, String>> getConsultaExisteCoberturaTramite(String ntramite, String tipoPago)throws Exception;
 	
 	public String validaExisteConfiguracionProv(String cdpresta) throws Exception;
+	
+	public String validaExisteConfiguracionProv2() throws Exception;
+	
+	public List<Map<String, String>> requiereConfiguracionLayoutProveedor(String cdpresta) throws Exception;
 }

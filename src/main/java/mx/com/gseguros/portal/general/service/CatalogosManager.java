@@ -172,6 +172,8 @@ public interface CatalogosManager {
     		,String cdunieco
     		) throws Exception;
     
+    public List<GenericVO> obtieneAtributosExcel(Catalogos catalogo) throws Exception;
+    
     @Deprecated
     public List<GenericVO> recuperarTtiptramc() throws Exception;
     
