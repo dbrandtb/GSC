@@ -174,4 +174,7 @@ public interface CatalogosManager {
     
     @Deprecated
     public List<GenericVO> recuperarTtiptramc() throws Exception;
+    
+    @Deprecated
+    public List<GenericVO> recuperarFlujoStatus(String cdtiptra) throws Exception;
 }

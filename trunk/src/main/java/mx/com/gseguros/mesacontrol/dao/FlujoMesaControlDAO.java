@@ -498,4 +498,23 @@ public interface FlujoMesaControlDAO {
 			,String ypos
 			)throws Exception;
 	
+	public List<Map<String,String>> recuperarEstadosPorCdtiptra(String cdtiptra) throws Exception;
+	
+	public Map<String,Object> recuperarTramites(
+			String cdtiptra
+			,String status
+			,String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String nmpoliza
+			,String cdagente
+			,String ntramite
+			,String fedesde
+			,String fehasta
+			,int start
+			,int limit
+			)throws Exception;
 }

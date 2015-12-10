@@ -1349,5 +1349,31 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
     }
-    
+	
+	@Override
+	@Deprecated
+	public List<GenericVO> recuperarFlujoStatus(String cdtiptra) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarFlujoStatus @@@@@@"
+				,"\n@@@@@@ cdtiptra=",cdtiptra
+				));
+		
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		lista.add(new GenericVO("-1" , "-TAREAS PENDIENTES-"));
+		lista.add(new GenericVO("0"  , "-TODOS-"));
+		List<Map<String,String>> statusFlujo = flujoMesaControlDAO.recuperarEstadosPorCdtiptra(cdtiptra);
+		for(Map<String,String>statusIte:statusFlujo)
+		{
+			lista.add(new GenericVO(statusIte.get("CDESTADOMC"),statusIte.get("DSESTADOMC")));
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista=",lista
+				,"\n@@@@@@ recuperarFlujoStatus @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
 }

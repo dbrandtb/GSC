@@ -771,6 +771,12 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TTIPTRAMC:
 					lista = catalogosManager.recuperarTtiptramc();
 					break;
+				case FLUJO_STATUS:
+					if(params!=null&&StringUtils.isNotBlank(params.get("cdtiptra")))
+					{
+						lista = catalogosManager.recuperarFlujoStatus(params.get("cdtiptra"));
+					}
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

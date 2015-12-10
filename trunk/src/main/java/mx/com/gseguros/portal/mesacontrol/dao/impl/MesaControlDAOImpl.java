@@ -27,8 +27,10 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 {
 	private static final Logger logger = Logger.getLogger(MesaControlDAOImpl.class);
 	
-	public String cargarCdagentePorCdusuari(Map<String,String>params)throws Exception
+	public String cargarCdagentePorCdusuari(String cdusuari)throws Exception
 	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdusuari" , cdusuari);
 		logger.debug(
 				new StringBuilder()
 				.append("\n****************************************************")

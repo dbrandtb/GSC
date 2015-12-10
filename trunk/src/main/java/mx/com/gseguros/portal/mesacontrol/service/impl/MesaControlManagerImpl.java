@@ -1,7 +1,6 @@
 package mx.com.gseguros.portal.mesacontrol.service.impl;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
@@ -22,9 +21,7 @@ public class MesaControlManagerImpl implements MesaControlManager
 				+ "\n#######################################"
 				+ "\n###### cargarCdagentePorCdusuari ######"
 				+ "\ncdusuari: "+cdusuari);
-		Map<String,String>params=new HashMap<String,String>();
-		params.put("cdusuari",cdusuari);
-		String cdagente=mesaControlDAO.cargarCdagentePorCdusuari(params);
+		String cdagente=mesaControlDAO.cargarCdagentePorCdusuari(cdusuari);
 		logger.info(""
 				+ "\ncdagente: "+cdagente
 				+ "\n###### cargarCdagentePorCdusuari ######"

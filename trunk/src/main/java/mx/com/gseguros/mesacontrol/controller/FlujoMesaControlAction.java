@@ -38,6 +38,9 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 	private FlujoVO                  flujo;
 	private Map<String,String>       params;
 	private List<Map<String,String>> list;
+	private int                      start
+	                                 ,limit
+	                                 ,total;
 	
 	public FlujoMesaControlAction()
 	{
@@ -1231,7 +1234,130 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		}
 		return result;
 	}
-		
+	
+	@Action(value   = "mesaControl",
+	        results = {
+			    @Result(name="error"   , location="/jsp-script/general/errorPantalla.jsp"),
+                @Result(name="success" , location="/jsp-script/proceso/flujoMesaControl/mesaControl.jsp")
+            }
+	)
+	public String mesaControl()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n#########################"
+				,"\n###### mesaControl ######"
+				));
+		String result = ERROR;
+		try
+		{
+			UserVO usuario = Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdtiptra = params.get("CDTIPTRA");
+			Utils.validate(cdtiptra, "No se recibi\u00f3 el tipo de tr\u00e1mite");
+			
+			Map<String,Object> manRes = flujoMesaControlManager.mesaControl(
+					sb
+					,usuario.getRolActivo().getClave()
+					,cdtiptra
+					,usuario.getUser()
+					);
+			
+			items = (Map<String,Item>)manRes.get("items");
+			params.putAll((Map<String,String>)manRes.get("mapa"));
+			
+			result = SUCCESS;
+			
+			sb.append(Utils.log(
+					 "\n###### mesaControl ######"
+					,"\n#########################"
+					));
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		return result;
+	}
+	
+	@Action(value   = "recuperarTramites",
+			results = { @Result(name="success", type="json") }
+			)
+	public String recuperarTramites()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n###############################"
+				,"\n###### recuperarTramites ######"
+				,"\n###### params=" , params
+				,"\n###### start="  , start
+				,"\n###### limit="  , limit
+				));
+		try
+		{
+			UserVO usuario = Utils.validateSession(session);
+			
+			Utils.validate(params, "No se recibieron datos");
+			
+			//obligatorios
+			String cdtiptra = params.get("CDTIPTRA")
+			       ,status  = params.get("STATUS");
+			
+			//opcionales
+			String cdunieco  = params.get("CDUNIECO")
+			       ,cdramo   = params.get("CDRAMO")
+			       ,cdtipsit = params.get("CDTIPSIT")
+			       ,estado   = params.get("ESTADO")
+			       ,nmpoliza = params.get("NMPOLIZA")
+			       ,cdagente = params.get("CDAGENTE")
+			       ,ntramite = params.get("NTRAMITE")
+			       ,fedesde  = params.get("FEDESDE")
+			       ,fehasta  = params.get("FEHASTA");			
+			
+			Utils.validate(
+					cdtiptra , "No se recibi\u00f3n el tipo de tr\u00e1mite"
+					,status  , "No se recibi\u00f3n el status"
+					);
+			
+			Map<String,Object> manRes = flujoMesaControlManager.recuperarTramites(
+					sb
+					,cdtiptra
+					,status
+					,usuario.getUser()
+					,usuario.getRolActivo().getClave()
+					,cdunieco
+					,cdramo
+					,cdtipsit
+					,estado
+					,nmpoliza
+					,cdagente
+					,ntramite
+					,fedesde
+					,fehasta
+					,start
+					,limit
+					);
+			
+			list  = (List<Map<String,String>>)manRes.get("lista");
+			total = (Integer)manRes.get("total");
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### list=",list
+					,"\n###### recuperarTramites ######"
+					,"\n###############################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
 
 	////////////////////////////////////////////////////////
 	// GETTERS Y SETTERS                                  //
@@ -1283,7 +1409,31 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 	public void setList(List<Map<String, String>> list) { //
 		this.list = list;                                 //
 	}                                                     //
-	                                                      //
-	////////////////////////////////////////////////////////
+                                                          //
+	public int getStart() {                               //
+		return start;                                     //
+	}                                                     //
+                                                          //
+	public void setStart(int start) {                     //
+		this.start = start;                               //
+	}                                                     //
+                                                          //
+	public int getLimit() {                               //
+		return limit;                                     //
+	}                                                     //
+                                                          //
+	public void setLimit(int limit) {                     //
+		this.limit = limit;                               //
+	}                                                     //
+                                                          //
+	public int getTotal() {                               //
+		return total;                                     //
+	}                                                     //
+                                                          //
+	public void setTotal(int total) {                     //
+		this.total = total;                               //
+	}                                                     //
+                                                          //
+    ////////////////////////////////////////////////////////
 	
 }

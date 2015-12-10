@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
+import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.slf4j.Logger;
@@ -1435,6 +1436,132 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("ypos"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> recuperarEstadosPorCdtiptra(String cdtiptra) throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("cdtiptra" , cdtiptra);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarEstadosPorCdtiptraSP(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		return lista;
+	}
+	
+	protected class RecuperarEstadosPorCdtiptraSP extends StoredProcedure
+	{
+		protected RecuperarEstadosPorCdtiptraSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_GET_ESTADOS_X_CDTIPTRA");
+			declareParameter(new SqlParameter("cdtiptra" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{ "CDESTADOMC" , "DSESTADOMC" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String,Object> recuperarTramites(
+			String cdtiptra
+			,String status
+			,String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String nmpoliza
+			,String cdagente
+			,String ntramite
+			,String fedesde
+			,String fehasta
+			,int start
+			,int limit
+			)throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("cdtiptra" , cdtiptra);
+		params.put("status"   , status);
+		params.put("cdusuari" , cdusuari);
+		params.put("cdsisrol" , cdsisrol);
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("cdtipsit" , cdtipsit);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("cdagente" , cdagente);
+		params.put("ntramite" , ntramite);
+		params.put("fedesde"  , fedesde);
+		params.put("fehasta"  , fehasta);
+		params.put("start"    , start);
+		params.put("limit"    , limit);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarTramitesSP(getDataSource()),params);
+		Map<String,Object> result  = new HashMap<String,Object>();
+		List<Map<String,String>> lista = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		Integer total = 0;
+		try
+		{
+			total = Integer.parseInt((String)procRes.get("pv_total_o"));
+		}
+		catch(Exception ex)
+		{
+			total = 0;
+		}
+		logger.debug(Utils.log("\n******lista=",lista,"\n******total=",total));
+		result.put("lista" , lista);
+		result.put("total" , total);
+		return result;
+	}
+	
+	protected class RecuperarTramitesSP extends StoredProcedure
+	{
+		protected RecuperarTramitesSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_GET_TRAMITES");
+			declareParameter(new SqlParameter("cdtiptra" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fedesde"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fehasta"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("start"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("limit"    , OracleTypes.VARCHAR));
+			String cols[]=new String[]{
+					"NTRAMITE"     , "CDUNIECO" , "CDRAMO"   , "DSRAMO"   , "ESTADO"     , "NMPOLIZA"
+					,"NMSOLICI"    , "CDSUCADM" , "DSSUCADM" , "CDSUCDOC" , "DSSUCDOC"   , "CDSUBRAM"
+					,"CDTIPTRA"    , "FERECEPC" , "CDAGENTE" , "DSAGENTE" , "REFERENCIA" , "NOMBRE"
+					,"FECSTATU"    , "STATUS"   , "COMMENTS" , "CDTIPSIT" , "COMI"       , "PRIMA_NETA"
+					,"PRIMA_TOTAL" , "NMSUPLEM"
+					,"OTVALOR01","OTVALOR02","OTVALOR03","OTVALOR04","OTVALOR05","OTVALOR06","OTVALOR07","OTVALOR08","OTVALOR09","OTVALOR10"
+					,"OTVALOR11","OTVALOR12","OTVALOR13","OTVALOR14","OTVALOR15","OTVALOR16","OTVALOR17","OTVALOR18","OTVALOR19","OTVALOR20"
+					,"OTVALOR21","OTVALOR22","OTVALOR23","OTVALOR24","OTVALOR25","OTVALOR26","OTVALOR27","OTVALOR28","OTVALOR29","OTVALOR30"
+					,"OTVALOR31","OTVALOR32","OTVALOR33","OTVALOR34","OTVALOR35","OTVALOR36","OTVALOR37","OTVALOR38","OTVALOR39","OTVALOR40"
+					,"OTVALOR41","OTVALOR42","OTVALOR43","OTVALOR44","OTVALOR45","OTVALOR46","OTVALOR47","OTVALOR48","OTVALOR49","OTVALOR50"
+					,"CONTRATANTE" , "CDUSUARI"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_total_o"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
