@@ -3667,4 +3667,56 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+
+	@Override
+	public List<Map<String,String>> obtieneBeneficiariosPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+	) throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		
+		Map<String,Object>       procRes = ejecutaSP(new ObtieneBeneficiariosPoliza(getDataSource()),params);
+		List<Map<String,String>> roles   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(roles==null)
+		{
+			roles = new ArrayList<Map<String,String>>();
+		}
+		return roles;
+	}
+	
+	protected class ObtieneBeneficiariosPoliza extends StoredProcedure
+	{
+		protected ObtieneBeneficiariosPoliza(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_WS_BENEF_AUTOS_COB_VIDA");
+			
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NOMBRE"
+					,"APEPAT"
+					,"APEMAT"
+					,"IDPARENTESCO"
+					,"NUMCER"
+					,"PORCENTAJE"
+					,"TEXTO"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

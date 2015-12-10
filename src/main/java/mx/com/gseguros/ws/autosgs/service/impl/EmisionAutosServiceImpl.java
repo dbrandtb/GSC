@@ -12,12 +12,14 @@ import javax.xml.namespace.QName;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.WSException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
+import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.Agente;
+import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.BeneficiarioCotizacionDTO;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.Cobertura;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.CodigoPostal;
 import mx.com.gseguros.ws.autosgs.cotizacion.client.axis2.CotizacionIndividualWSServiceStub.ConfiguracionPaquete;
@@ -79,6 +81,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	@Autowired
 	private AutosSIGSDAO autosSIGSDAO;
 	
+	@Autowired
+	private ConsultasDAO consultasDAO;
 	
 	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO){
@@ -101,6 +105,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		params.put("param5" , nmsuplem);
 		
 		List<Map<String,String>> listaEndosos = null;
+		List<Map<String,String>> listaBeneficiarios = null;
 		
 		try {
 			listaEndosos = storedProceduresManager.procedureListCall(
@@ -133,6 +138,13 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						params.put("param7" , endosoIt.get("NUMEND"));//numend
 						lista = storedProceduresManager.procedureListCall(
 								ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_RESIDENTES.getNombre(), params, null);
+						
+						try {
+							listaBeneficiarios = consultasDAO.obtieneBeneficiariosPoliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+						} catch (Exception e2) {
+							logger.error("Error al obtener lista de beneficiarios para WS de autos.",e2);
+							return null;
+						}
 					}
 					
 					if(lista!=null && lista.size()>0)
@@ -170,6 +182,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						
 						cotNeg.setNmsolici(Integer.valueOf(m.get("NMSOLICI")));
 						cotNeg.setTipoCotizacion(m.get("TIPOCOTIZACION"));
+
+						cotNeg.setTipoProveedorUdi(m.get("TIPOPROVEEDORUDI"));
 						
 						datosCotizacionAuto.setCotizacionNegocio(cotNeg);
 						
@@ -227,6 +241,29 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						cliente.setDom_ori("");//null
 						cliente.setNum_pas("");//null
 						cliente.setSta_cli("");//null
+						
+						
+						/**
+						 * PARA LISTA DE BENEFICIARIOS
+						 */
+						
+						if(listaBeneficiarios!=null && !listaBeneficiarios.isEmpty()){
+							
+							for(Map<String,String> beneficiarioIt : listaBeneficiarios){
+								
+								BeneficiarioCotizacionDTO benefAdd=  new BeneficiarioCotizacionDTO();
+								
+								benefAdd.setNombre(beneficiarioIt.get("NOMBRE"));
+								benefAdd.setApePat(beneficiarioIt.get("APEPAT"));
+								benefAdd.setApeMat(beneficiarioIt.get("APEMAT"));
+								benefAdd.setIdParentesco(Integer.parseInt(beneficiarioIt.get("IDPARENTESCO")));
+								benefAdd.setNumCer(Integer.parseInt(beneficiarioIt.get("NUMCER")));
+								benefAdd.setPorcentaje(Double.parseDouble(beneficiarioIt.get("PORCENTAJE")));
+								benefAdd.setTexto(beneficiarioIt.get("TEXTO"));
+								
+								datosCotizacionAuto.addBeneficiarios(benefAdd);
+							}
+						}
 						
 						datosCotizacionAuto.setFormasDePago(new FormasDePago_type0());//null
 						
@@ -295,6 +332,10 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						
 						TotalFormaPago totalFormaPago=new TotalFormaPago();
 						datosCotizacionAuto.setTotalFormaPago(totalFormaPago);
+						
+						
+						datosCotizacionAuto.setIdDireccion(Integer.valueOf(m.get("IDDIRECCION")));
+						datosCotizacionAuto.setRenueva(m.get("RENUEVA"));
 						
 						//derechopoliza
 						totalFormaPago.setDerechoPoliza(Double.valueOf(m.get("DERECHOPOLIZA")));
@@ -472,6 +513,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 							
 							incisoIterado.setCilindraje(row.get("CILINDRAJE"));
 							incisoIterado.setDescuentoInciso(Double.valueOf(row.get("DESCUENTOINCISO")));
+							
+							incisoIterado.setFechaFactura(Utils.getCalendarServerTimeZone(m.get("FECHAFACTURA"), Constantes.FORMATO_FECHA));
 							
 							//versionTarifa
 							confPaq.setVersionTarifa(Integer.valueOf(row.get("VERSIONTARIFAINC")));
