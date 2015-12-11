@@ -766,26 +766,26 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			Utils.validate(params , "No se recibieron datos");
 			
-			String cdtipflu   = params.get("CDTIPFLU")
-			       ,cdflujomc = params.get("CDFLUJOMC")
-			       ,cdvalida  = params.get("CDVALIDA")
-			       ,webid     = params.get("WEBID")
-			       ,xpos      = params.get("XPOS")
-			       ,ypos      = params.get("YPOS")
-			       ,dsvalida  = params.get("DSVALIDA")
-			       ,cdexpres  = params.get("CDEXPRES")
-			       ,accion    = params.get("ACCION");
+			String cdtipflu    = params.get("CDTIPFLU")
+			       ,cdflujomc  = params.get("CDFLUJOMC")
+			       ,cdvalida   = params.get("CDVALIDA")
+			       ,webid      = params.get("WEBID")
+			       ,xpos       = params.get("XPOS")
+			       ,ypos       = params.get("YPOS")
+			       ,dsvalida   = params.get("DSVALIDA")
+			       ,cdvalidafk = params.get("CDVALIDAFK")
+			       ,accion     = params.get("ACCION");
 			
 			Utils.validate(
-					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
-					,cdflujomc , "No se recibi\u00f3 la clave de flujo"
-					,cdvalida  , "No se recibi\u00f3 la clave de validaci\u00f3n"
-					,webid     , "No se recibi\u00f3 el id"
-					,xpos      , "No se recibi\u00f3 x"
-					,ypos      , "No se recibi\u00f3 y"
-					,dsvalida  , "No se recibi\u00f3 el nombre"
-					,cdexpres  , "No se recibi\u00f3 la clave de expresi\u00f3n"
-					,accion    , "No se recibi\u00f3 el tipo de operaci\u00f3n"
+					cdtipflu    , "No se recibi\u00f3 el tipo de flujo"
+					,cdflujomc  , "No se recibi\u00f3 la clave de flujo"
+					,cdvalida   , "No se recibi\u00f3 la clave de validaci\u00f3n"
+					,webid      , "No se recibi\u00f3 el id"
+					,xpos       , "No se recibi\u00f3 x"
+					,ypos       , "No se recibi\u00f3 y"
+					,dsvalida   , "No se recibi\u00f3 el nombre"
+					,cdvalidafk , "No se recibi\u00f3 la validaci\u00f3n"
+					,accion     , "No se recibi\u00f3 el tipo de operaci\u00f3n"
 					);
 			
 			flujoMesaControlManager.guardarDatosValidacion(
@@ -797,7 +797,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,xpos
 					,ypos
 					,dsvalida
-					,cdexpres
+					,cdvalidafk
 					,accion
 					);
 			
@@ -867,28 +867,28 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	@Action(value   = "expresion",
+	@Action(value   = "ejecutaValidacion",
 			results = { @Result(name="success", type="json") }
 			)
-	public String expresion()
+	public String ejecutaValidacion()
 	{
 		try
 		{
-			String cdunieco = params.get("cdunieco");
-			String cdramo   = params.get("cdramo");
-			String estado   = params.get("estado");
-			String nmpoliza = params.get("nmpoliza");
-			String nmsituac = params.get("nmsituac");
-			String nmsuplem = params.get("nmsuplem");
-			String cdexpres = params.get("cdexpres");
-			params.put("salida" , flujoMesaControlManager.expresion(
+			String cdunieco   = params.get("cdunieco");
+			String cdramo     = params.get("cdramo");
+			String estado     = params.get("estado");
+			String nmpoliza   = params.get("nmpoliza");
+			String nmsituac   = params.get("nmsituac");
+			String nmsuplem   = params.get("nmsuplem");
+			String cdvalidafk = params.get("cdvalidafk");
+			params.put("salida" , flujoMesaControlManager.ejecutaValidacion(
 					cdunieco
 					,cdramo
 					,estado
 					,nmpoliza
 					,nmsituac
 					,nmsuplem
-					,cdexpres
+					,cdvalidafk
 					));
 			success=true;
 		}

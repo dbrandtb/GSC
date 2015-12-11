@@ -387,7 +387,7 @@ public interface FlujoMesaControlDAO {
 	 * @param cdflujomc
 	 * @param cdvalida
 	 * @param dsvalida
-	 * @param cdexpres
+	 * @param cdvalidafk
 	 * @param webid
 	 * @param xpos
 	 * @param ypoS
@@ -395,7 +395,7 @@ public interface FlujoMesaControlDAO {
 	 * @throws Exception
 	 */
 	public String movimientoTfluval(String cdtipflu, String cdflujomc, String cdvalida,
-			String dsvalida, String cdexpres, String webid, String xpos,
+			String dsvalida, String cdvalidafk, String webid, String xpos,
 			String ypos, String accion) throws Exception;
 
 	/**
@@ -479,7 +479,7 @@ public interface FlujoMesaControlDAO {
 			String cdaccion, String cdsisrol, String swpermiso, String accion)
 			throws Exception;
 	
-	public String expresion(
+	public String ejecutaExpresion(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -526,5 +526,15 @@ public interface FlujoMesaControlDAO {
 			,String cdramo
 			,String estado
 			,String nmpoliza
+			)throws Exception;
+	
+	public String ejecutaValidacion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdvalidafk
 			)throws Exception;
 }

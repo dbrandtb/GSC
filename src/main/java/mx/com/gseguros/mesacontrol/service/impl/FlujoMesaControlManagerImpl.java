@@ -334,7 +334,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 						,cdflujomc
 						,null //cdvalida
 						,"" //dsvalida
-						,"-1" //cdexpres
+						,"-1" //cdvalidafk
 						,webid
 						,xpos
 						,ypos
@@ -453,7 +453,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 						,cdflujomc
 						,clave //cdvalida
 						,null //dsvalida
-						,null //cdexpres
+						,null //cdvalidafk
 						,webid
 						,null //xpos
 						,null //ypoS
@@ -927,22 +927,22 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			,String xpos
 			,String ypos
 			,String dsvalida
-			,String cdexpres
+			,String cdvalidafk
 			,String accion
 			)throws Exception
 	{
 		sb.append(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarDatosValidacion @@@@@@"
-				,"\n@@@@@@ cdtipflu="  , cdtipflu
-				,"\n@@@@@@ cdflujomc=" , cdflujomc
-				,"\n@@@@@@ cdvalida="  , cdvalida
-				,"\n@@@@@@ webid="     , webid
-				,"\n@@@@@@ xpos="      , xpos
-				,"\n@@@@@@ ypos="      , ypos
-				,"\n@@@@@@ dsvalida="  , dsvalida
-				,"\n@@@@@@ cdexpres="  , cdexpres
-				,"\n@@@@@@ accion="    , accion
+				,"\n@@@@@@ cdtipflu="   , cdtipflu
+				,"\n@@@@@@ cdflujomc="  , cdflujomc
+				,"\n@@@@@@ cdvalida="   , cdvalida
+				,"\n@@@@@@ webid="      , webid
+				,"\n@@@@@@ xpos="       , xpos
+				,"\n@@@@@@ ypos="       , ypos
+				,"\n@@@@@@ dsvalida="   , dsvalida
+				,"\n@@@@@@ cdvalidafk=" , cdvalidafk
+				,"\n@@@@@@ accion="     , accion
 				));
 		
 		String paso = "Guardando datos de validaci\u00f3n";
@@ -955,7 +955,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 					,cdflujomc
 					,cdvalida
 					,dsvalida
-					,cdexpres
+					,cdvalidafk
 					,webid
 					,xpos
 					,ypos
@@ -1017,24 +1017,24 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 	}
 	
 	@Override
-	public String expresion(
+	public String ejecutaValidacion(
 			String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza
 			,String nmsituac
 			,String nmsuplem
-			,String cdexpres
+			,String cdvalidafk
 			)throws Exception
 	{
-		return flujoMesaControlDAO.expresion(
+		return flujoMesaControlDAO.ejecutaValidacion(
 				cdunieco
 				,cdramo
 				,estado
 				,nmpoliza
 				,nmsituac
 				,nmsuplem
-				,cdexpres
+				,cdvalidafk
 				);
 	}
 	
