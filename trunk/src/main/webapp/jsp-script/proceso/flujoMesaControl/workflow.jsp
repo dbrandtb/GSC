@@ -1970,13 +1970,13 @@ Ext.onReady(function()
                                         ,allowBlank : false
                                     }
                                     ,{
-                                        xtype          : 'numberfield'
-                                        ,fieldLabel    : 'EXPRESI\u00D3N'
+                                        xtype          : 'textfield'
+                                        ,fieldLabel    : 'VALIDACI\u00D3N'
                                         ,labelAlign    : 'top'
-                                        ,name          : 'CDEXPRES'
+                                        ,name          : 'CDVALIDAFK'
                                         ,allowBlank    : false
-                                        ,minValue      : -1
-                                        ,allowDecimals : false
+                                        ,minLength     : 1
+                                        ,maxLength     : 8
                                     }
                                 ]
                             })
@@ -4209,20 +4209,21 @@ function _p52_actualizaLabel(tipo,webid,label)
     $('#'+webid+'>.label'+tipo).html(label);
 }
 
-function _p52_expresion(cdunieco,cdramo,estado,nmpoliza,nmsituac,nmsuplem,cdexpres)
+//_p52_ejecutaValidacion(7,5,'M',32,1,245736709260000000,'ALVARO');
+function _p52_ejecutaValidacion(cdunieco,cdramo,estado,nmpoliza,nmsituac,nmsuplem,cdvalidafk)
 {
     Ext.Ajax.request(
     {
-        url : '<s:url namespace="/flujomesacontrol" action="expresion" />'
+        url : '<s:url namespace="/flujomesacontrol" action="ejecutaValidacion" />'
         ,params :
         {
-            'params.cdunieco'  : cdunieco
-            ,'params.cdramo'   : cdramo
-            ,'params.estado'   : estado
-            ,'params.nmpoliza' : nmpoliza
-            ,'params.nmsituac' : nmsituac
-            ,'params.nmsuplem' : nmsuplem
-            ,'params.cdexpres' : cdexpres
+            'params.cdunieco'    : cdunieco
+            ,'params.cdramo'     : cdramo
+            ,'params.estado'     : estado
+            ,'params.nmpoliza'   : nmpoliza
+            ,'params.nmsituac'   : nmsituac
+            ,'params.nmsuplem'   : nmsuplem
+            ,'params.cdvalidafk' : cdvalidafk
         }
         ,success : function(response)
         {

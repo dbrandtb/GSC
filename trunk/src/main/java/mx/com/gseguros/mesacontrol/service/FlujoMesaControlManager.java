@@ -118,7 +118,7 @@ public interface FlujoMesaControlManager
 			,String xpos
 			,String ypos
 			,String dsvalida
-			,String cdexpres
+			,String cdvalidafk
 			,String accion
 			)throws Exception;
 	
@@ -129,14 +129,14 @@ public interface FlujoMesaControlManager
 			,List<Map<String,String>>list
 			)throws Exception;
 	
-	public String expresion(
+	public String ejecutaValidacion(
 			String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza
 			,String nmsituac
 			,String nmsuplem
-			,String cdexpres
+			,String cdvalidafk
 			)throws Exception;
 	
 	public Map<String,Object> cargarDatosRevision(
