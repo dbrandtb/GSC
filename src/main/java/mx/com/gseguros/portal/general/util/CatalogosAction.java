@@ -774,10 +774,31 @@ public class CatalogosAction extends PrincipalCoreAction {
 					lista = catalogosManager.recuperarTtiptramc();
 					break;
 				case FLUJO_STATUS:
-					if(params!=null&&StringUtils.isNotBlank(params.get("cdtiptra")))
+					if(params!=null&&StringUtils.isNotBlank(params.get("agrupamc")))
 					{
-						lista = catalogosManager.recuperarFlujoStatus(params.get("cdtiptra"));
+						lista = catalogosManager.recuperarTestadomcPorAgrupamc(params.get("agrupamc"),params.get("extras"));
 					}
+					break;
+				case TTIPFLUMC:
+					if(params==null)
+					{
+						params=new HashMap<String,String>();
+					}
+					lista = catalogosManager.recuperarTtipflumc(params.get("agrupamc"));
+					break;
+				case TFLUJOMC:
+					if(params==null)
+					{
+						params=new HashMap<String,String>();
+					}
+					lista = catalogosManager.recuperarTflujomc(params.get("idPadre"),params.get("swfinal"));
+					break;
+				case TTIPSUPL:
+					if(params==null)
+					{
+						params=new HashMap<String,String>();
+					}
+					lista = catalogosManager.recuperarTtipsupl(params.get("idPadre"),params.get("ninguno"));
 					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);

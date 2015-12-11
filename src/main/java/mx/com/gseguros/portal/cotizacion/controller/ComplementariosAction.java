@@ -1926,7 +1926,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,null //swimpres
 							,null //cdtipflu
 							,null //cdflujomc
-							,valores
+							,valores, null
 							);
 					mensajeRespuesta = mensajeRespuesta + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
 					
@@ -2020,7 +2020,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,null //swimpres
 							,null //cdtipflu
 							,null //cdflujomc
-							,valores
+							,valores, null
 							);
 					mensajeRespuesta = mensajeRespuesta + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
 					

@@ -1,6 +1,7 @@
 package mx.com.gseguros.mesacontrol.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,6 +88,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			,String cdtiptra
 			,String swreqpol
 			,String swmultipol
+			,String cdtipsup
 			)throws Exception
 	{
 		sb.append(Utils.log(
@@ -98,6 +100,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 				,"\n@@@@@@ cdtiptra="   , cdtiptra
 				,"\n@@@@@@ swreqpol="   , swreqpol
 				,"\n@@@@@@ swmultipol=" , swmultipol
+				,"\n@@@@@@ cdtipsup="   , cdtipsup
 				));
 		
 		String paso = "Guardando tr\u00E1mite";
@@ -111,6 +114,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 					,cdtiptra
 					,"S".equals(swmultipol) ? "S" : "N"
 					,"S".equals(swreqpol) ? "S" : "N"
+					,cdtipsup
 					,accion
 					);
 		}
@@ -1439,7 +1443,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 	public Map<String,Object> mesaControl(
 			StringBuilder sb
 			,String cdsisrol
-			,String cdtiptra
+			,String agrupamc
 			,String cdusuari
 			)throws Exception
 	{
@@ -1447,7 +1451,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ mesaControl @@@@@@"
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
-				,"\n@@@@@@ cdtiptra=" , cdtiptra
+				,"\n@@@@@@ agrupamc=" , agrupamc
 				,"\n@@@@@@ cdusuari=" , cdusuari
 				));
 		Map<String,Object> result = new HashMap<String,Object>();
@@ -1458,7 +1462,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			sb.append("\n").append(paso);
 			
 			List<ComponenteVO> filtro = pantallasDAO.obtenerComponentes(
-					cdtiptra //cdtiptra
+					agrupamc //cdtiptra
 					,null //cdunieco
 					,null //cdramo
 					,null //cdtipsit
@@ -1473,7 +1477,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			sb.append("\n").append(paso);
 			
 			List<ComponenteVO> grid = pantallasDAO.obtenerComponentes(
-					cdtiptra //cdtiptra
+					agrupamc //cdtiptra
 					,null //cdunieco
 					,null //cdramo
 					,null //cdtipsit
@@ -1481,6 +1485,18 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 					,cdsisrol
 					,"MESA_CONTROL"//pantalla
 					,"GRID"//seccion
+					,null //orden
+					);
+			
+			List<ComponenteVO> form = pantallasDAO.obtenerComponentes(
+					agrupamc //cdtiptra
+					,null //cdunieco
+					,null //cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"MESA_CONTROL"//pantalla
+					,"FORMULARIO"//seccion
 					,null //orden
 					);
 			
@@ -1498,6 +1514,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			
 			items.put("gridFields"  , gc.getFields());
 			items.put("gridColumns" , gc.getColumns());
+			
+			gc.generaComponentes(form, true, false, true, false, false, false);
+			
+			items.put("formItems" , gc.getItems());
 			
 			Map<String,String> mapa = new HashMap<String,String>();
 			if(cdsisrol.equals(RolSistema.AGENTE.getCdsisrol()))
@@ -1524,7 +1544,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 	@Override
 	public Map<String,Object> recuperarTramites(
 			StringBuilder sb
-			,String cdtiptra
+			,String agrupamc
 			,String status
 			,String cdusuari
 			,String cdsisrol
@@ -1544,7 +1564,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 		sb.append(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarTramites @@@@@@"
-				,"\n@@@@@@ cdtiptra=" , cdtiptra
+				,"\n@@@@@@ agrupamc=" , agrupamc
 				,"\n@@@@@@ status="   , status
 				,"\n@@@@@@ cdusuari=" , cdusuari
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
@@ -1568,7 +1588,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			sb.append("\n").append(paso);
 			
 			result = flujoMesaControlDAO.recuperarTramites(
-					cdtiptra
+					agrupamc
 					,status
 					,cdusuari
 					,cdsisrol
@@ -1596,5 +1616,129 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return result;
+	}
+	
+	@Override
+	public Map<String,String> recuperarPolizaUnica(
+			StringBuilder sb
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarPolizaUnica @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				));
+		String             paso   = "Recuperando p\u00f3liza";
+		Map<String,String> poliza = null;
+		try
+		{
+			poliza = flujoMesaControlDAO.recuperarPolizaUnica(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+
+		sb.append(Utils.log(
+				 "\n@@@@@@ recuperarPolizaUnica @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return poliza;
+	}
+	
+	@Override
+	public String registrarTramite(
+			StringBuilder sb , String cdunieco , String cdramo     , String estado   , String nmpoliza
+			,String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra
+			,Date ferecepc   , String cdagente , String referencia , String nombre
+			,Date festatus   , String status   , String comments   , String nmsolici
+			,String cdtipsit , String cdusuari , String cdsisrol   , String swimpres
+			,String cdtipflu , String cdflujomc
+			,Map<String, String> valores, String cdtipsup
+			)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ registrarTramite @@@@@@"
+				,"\n@@@@@@ cdunieco="   , cdunieco
+				,"\n@@@@@@ cdramo="     , cdramo
+				,"\n@@@@@@ estado="     , estado
+				,"\n@@@@@@ nmpoliza="   , nmpoliza
+				,"\n@@@@@@ nmsuplem="   , nmsuplem
+				,"\n@@@@@@ cdsucadm="   , cdsucadm
+				,"\n@@@@@@ cdsucdoc="   , cdsucdoc
+				,"\n@@@@@@ cdtiptra="   , cdtiptra
+				,"\n@@@@@@ ferecepc="   , ferecepc
+				,"\n@@@@@@ cdagente="   , cdagente
+				,"\n@@@@@@ referencia=" , referencia
+				,"\n@@@@@@ nombre="     , nombre
+				,"\n@@@@@@ festatus="   , festatus
+				,"\n@@@@@@ status="     , status
+				,"\n@@@@@@ comments="   , comments
+				,"\n@@@@@@ nmsolici="   , nmsolici
+				,"\n@@@@@@ cdtipsit="   , cdtipsit
+				,"\n@@@@@@ cdusuari="   , cdusuari
+				,"\n@@@@@@ cdsisrol="   , cdsisrol
+				,"\n@@@@@@ swimpres="   , swimpres
+				,"\n@@@@@@ cdtipflu="   , cdtipflu
+				,"\n@@@@@@ cdflujomc="  , cdflujomc
+				,"\n@@@@@@ valores="    , valores
+				,"\n@@@@@@ cdtipsup="   , cdtipsup
+				));
+		
+		String paso = "Registrando tr\u00e1mite";
+		sb.append("\n").append(paso);
+		String ntramite = null;
+		try
+		{		
+			ntramite = mesaControlDAO.movimientoMesaControl(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,cdsucadm
+					,cdsucdoc
+					,cdtiptra
+					,ferecepc
+					,cdagente
+					,referencia
+					,nombre
+					,festatus
+					,status
+					,comments
+					,nmsolici
+					,cdtipsit
+					,cdusuari
+					,cdsisrol
+					,swimpres
+					,cdtipflu
+					,cdflujomc
+					,valores
+					,cdtipsup
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		sb.append(Utils.log(
+				 "\n@@@@@@ ntramite=",ntramite
+				,"\n@@@@@@ registrarTramite @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return ntramite;
 	}
 }

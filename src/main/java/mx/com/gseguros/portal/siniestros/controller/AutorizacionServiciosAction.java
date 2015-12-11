@@ -424,7 +424,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 							,null //swimpres
 							,null //cdtipflu
 							,null //cdflujomc
-							,valores
+							,valores, null
 							);
 					
 					if(params.get("status").trim().equalsIgnoreCase("2")){

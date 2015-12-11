@@ -1,5 +1,6 @@
 package mx.com.gseguros.mesacontrol.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ public interface FlujoMesaControlManager
 			,String cdtiptra
 			,String swreqpol
 			,String swmultipol
+			,String cdtipsup
 			)throws Exception;
 	
 	public void movimientoTflujomc(
@@ -198,13 +200,13 @@ public interface FlujoMesaControlManager
 	public Map<String,Object> mesaControl(
 			StringBuilder sb
 			,String cdsisrol
-			,String cdtiptra
+			,String agrupamc
 			,String cdusuari
 			)throws Exception;
 	
 	public Map<String,Object> recuperarTramites(
 			StringBuilder sb
-			,String cdtiptra
+			,String agrupamc
 			,String status
 			,String cdusuari
 			,String cdsisrol
@@ -219,5 +221,23 @@ public interface FlujoMesaControlManager
 			,String fehasta
 			,int start
 			,int limit
+			)throws Exception;
+	
+	public Map<String,String> recuperarPolizaUnica(
+			StringBuilder sb
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
+	
+	public String registrarTramite(
+			StringBuilder sb , String cdunieco , String cdramo     , String estado   , String nmpoliza
+			,String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra
+			,Date ferecepc   , String cdagente , String referencia , String nombre
+			,Date festatus   , String status   , String comments   , String nmsolici
+			,String cdtipsit , String cdusuari , String cdsisrol   , String swimpres
+			,String cdtipflu , String cdflujomc
+			,Map<String, String> valores, String cdtipsup
 			)throws Exception;
 }

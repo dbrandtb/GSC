@@ -54,6 +54,6 @@ public interface MesaControlManager
 			,String swimpres
 			,String cdtipflu
 			,String cdflujomc
-			,Map<String,String>valores
+			,Map<String,String>valores, String cdtipsup
 			)throws Exception;
 }

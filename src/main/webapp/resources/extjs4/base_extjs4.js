@@ -857,7 +857,9 @@ Ext.define('Generic',
     [
         { name:'key'   , type: 'string'},
         { name:'value' , type: 'string'},
-        { name:'aux'   , type: 'string'}
+        { name:'aux'   , type: 'string'},
+        { name:'aux2'  , type: 'string'},
+        { name:'aux3'  , type: 'string'}
     ]
 });
 

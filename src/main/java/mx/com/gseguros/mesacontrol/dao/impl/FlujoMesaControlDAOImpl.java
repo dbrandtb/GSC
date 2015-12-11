@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
@@ -53,9 +54,11 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	
 	// SP 2
 	@Override
-	public List<Map<String,String>> recuperaTtipflumc() throws Exception
+	public List<Map<String,String>> recuperaTtipflumc(String agrupamc) throws Exception
 	{
-		Map<String,Object>       procRes = ejecutaSP(new RecuperaTtipflumcSP(getDataSource()),new HashMap<String,String>());
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("agrupamc" , agrupamc);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperaTtipflumcSP(getDataSource()),params);
 		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		if(lista==null)
 		{
@@ -69,7 +72,8 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		protected RecuperaTtipflumcSP(DataSource dataSource)
 		{
 			super(dataSource,"PKG_MESACONTROL.P_GET_TTIPFLUMC");
-			String[] cols=new String[]{ "CDTIPFLU" , "DSTIPFLU", "CDTIPTRA","SWMULTIPOL","SWREQPOL" };
+			declareParameter(new SqlParameter("agrupamc" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{ "CDTIPFLU" , "DSTIPFLU", "CDTIPTRA","SWMULTIPOL","SWREQPOL","CDTIPSUP" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -238,10 +242,11 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	
 	// SP 9
 	@Override
-	public List<Map<String,String>> recuperaTflujomc(String cdtipflu) throws Exception
+	public List<Map<String,String>> recuperaTflujomc(String cdtipflu, String swfinal) throws Exception
 	{
 		Map<String,String>       params  = new LinkedHashMap<String,String>();
 		params.put("cdtipflu" , cdtipflu);
+		params.put("swfinal"  , swfinal);
 		Map<String,Object>       procRes = ejecutaSP(new RecuperaTflujomcSP(getDataSource()),params);
 		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		if(lista==null)
@@ -257,6 +262,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		{
 			super(dataSource,"PKG_MESACONTROL.P_GET_TFLUJOMC");
 			declareParameter(new SqlParameter("cdtipflu" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swfinal"  , OracleTypes.VARCHAR));
 			String[] cols=new String[]{ "CDTIPFLU","CDFLUJOMC","DSFLUJOMC","SWFINAL" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -641,6 +647,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			,String cdtiptra
 			,String swmultipol
 			,String swreqpol
+			,String cdtipsup
 			,String accion
 			) throws Exception
 	{
@@ -650,6 +657,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("cdtiptra"   , cdtiptra);
 		params.put("swmultipol" , swmultipol);
 		params.put("swreqpol"   , swreqpol);
+		params.put("cdtipsup"   , cdtipsup);
 		params.put("accion"     , accion);
 		ejecutaSP(new MovimientoTtipflumcSP(getDataSource()),params);
 	}
@@ -664,6 +672,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("cdtiptra"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("swmultipol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("swreqpol"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("accion"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -1441,11 +1450,11 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	}
 	
 	@Override
-	public List<Map<String,String>> recuperarEstadosPorCdtiptra(String cdtiptra) throws Exception
+	public List<Map<String,String>> recuperarTestadomcPorAgrupamc(String agrupamc) throws Exception
 	{
 		Map<String,String> params = new HashMap<String,String>();
-		params.put("cdtiptra" , cdtiptra);
-		Map<String,Object>       procRes = ejecutaSP(new RecuperarEstadosPorCdtiptraSP(getDataSource()),params);
+		params.put("agrupamc" , agrupamc);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarTestadomcPorAgrupamcSP(getDataSource()),params);
 		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		if(lista==null)
 		{
@@ -1454,12 +1463,12 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		return lista;
 	}
 	
-	protected class RecuperarEstadosPorCdtiptraSP extends StoredProcedure
+	protected class RecuperarTestadomcPorAgrupamcSP extends StoredProcedure
 	{
-		protected RecuperarEstadosPorCdtiptraSP(DataSource dataSource)
+		protected RecuperarTestadomcPorAgrupamcSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_MESACONTROL.P_GET_ESTADOS_X_CDTIPTRA");
-			declareParameter(new SqlParameter("cdtiptra" , OracleTypes.VARCHAR));
+			super(dataSource,"PKG_MESACONTROL.P_GET_TESTADOMC_X_AGRUPAMC");
+			declareParameter(new SqlParameter("agrupamc" , OracleTypes.VARCHAR));
 			String[] cols=new String[]{ "CDESTADOMC" , "DSESTADOMC" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -1470,7 +1479,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	
 	@Override
 	public Map<String,Object> recuperarTramites(
-			String cdtiptra
+			String agrupamc
 			,String status
 			,String cdusuari
 			,String cdsisrol
@@ -1488,7 +1497,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			)throws Exception
 	{
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
-		params.put("cdtiptra" , cdtiptra);
+		params.put("agrupamc" , agrupamc);
 		params.put("status"   , status);
 		params.put("cdusuari" , cdusuari);
 		params.put("cdsisrol" , cdsisrol);
@@ -1530,7 +1539,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		protected RecuperarTramitesSP(DataSource dataSource)
 		{
 			super(dataSource,"PKG_MESACONTROL.P_GET_TRAMITES");
-			declareParameter(new SqlParameter("cdtiptra" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("agrupamc" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
@@ -1560,6 +1569,77 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_total_o"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> recuperarTtipsupl(String cdtiptra) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdtiptra" , cdtiptra);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarTtipsupl(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		return lista;
+	}
+	
+	protected class RecuperarTtipsupl extends StoredProcedure
+	{
+		protected RecuperarTtipsupl(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_GET_TTIPSUPL");
+			declareParameter(new SqlParameter("cdtiptra" , OracleTypes.VARCHAR));
+			String cols[]=new String[]{ "CDTIPSUP", "DSTIPSUP" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String,String> recuperarPolizaUnica(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarPolizaUnicaSP(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new ApplicationException(Utils.join("No existe la p\u00f3liza para la sucursal ",cdunieco," y el producto ",cdramo));
+		}
+		else if(lista.size()>1)
+		{
+			throw new ApplicationException(Utils.join("P\u00f3liza duplicada para la sucursal ",cdunieco," y el producto ",cdramo));
+		}
+		return lista.get(0);
+	}
+	
+	protected class RecuperarPolizaUnicaSP extends StoredProcedure
+	{
+		protected RecuperarPolizaUnicaSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_REVISA_POLIZA_PARA_TRAMITE");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			String cols[]=new String[]{ "FEEFECTO", "FEEMISIO", "CONTRATANTE" , "AGENTE" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

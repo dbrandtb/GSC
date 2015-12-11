@@ -879,7 +879,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null
 					,null
 					,null
-					,valores
+					,valores, null
 					);
 			//para tramite
 			
@@ -1311,7 +1311,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null
 					,null
 					,null
-					,valores
+					,valores, null
 					);
 			
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
@@ -1598,7 +1598,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null
 					,null
 					,null
-					,valores
+					,valores, null
 					);
 
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
@@ -2597,7 +2597,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null
 					,null
 					,null
-					,valores
+					,valores, null
 					);
 			
 			if(this.endosoAseguradoAlterno(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup)){
@@ -2751,7 +2751,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null
 					,null
 					,null
-					,valores
+					,valores, null
 					);
 			//para generar tramite
 			
@@ -2897,7 +2897,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null
 					,null
 					,null
-					,valores
+					,valores, null
 					);
 			
 			if(this.endosoTextoLibre(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, nivelPoliza)){
@@ -3185,7 +3185,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null
 					,null
 					,null
-					,valoresTra
+					,valoresTra, null
 					);
 			
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
@@ -4966,7 +4966,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null
 					,null
 					,null
-					,valores
+					,valores, null
 					);
 			
 			/**
@@ -5431,7 +5431,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null
 					,null
 					,null
-					,valores
+					,valores, null
 					);
 
 			String nmsuplemGen = nmsuplem;

@@ -6394,7 +6394,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,null //swimpres
 							,null //cdtipflu
 							,null //cdflujomc
-							,valores
+							,valores, null
 							);
 					smap1.put("ntramite",ntramiteNew);
 					

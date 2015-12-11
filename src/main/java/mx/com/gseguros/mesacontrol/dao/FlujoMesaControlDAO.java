@@ -17,7 +17,7 @@ public interface FlujoMesaControlDAO {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, String>> recuperaTtipflumc() throws Exception;
+	public List<Map<String, String>> recuperaTtipflumc(String agrupamc) throws Exception;
 
 	/**
 	 * 
@@ -64,10 +64,11 @@ public interface FlujoMesaControlDAO {
 	/**
 	 * 
 	 * @param cdtipflu
+	 * @param swfinal TODO
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, String>> recuperaTflujomc(String cdtipflu)
+	public List<Map<String, String>> recuperaTflujomc(String cdtipflu, String swfinal)
 			throws Exception;
 
 	/**
@@ -203,7 +204,7 @@ public interface FlujoMesaControlDAO {
 	 * @throws Exception
 	 */
 	public void movimientoTtipflumc(String cdtipflu, String dstipflu, String cdtiptra,
-			String swmultipol, String swreqpol, String accion) throws Exception;
+			String swmultipol, String swreqpol, String cdtipsup, String accion) throws Exception;
 
 	/**
 	 * 
@@ -498,10 +499,10 @@ public interface FlujoMesaControlDAO {
 			,String ypos
 			)throws Exception;
 	
-	public List<Map<String,String>> recuperarEstadosPorCdtiptra(String cdtiptra) throws Exception;
+	public List<Map<String,String>> recuperarTestadomcPorAgrupamc(String cdtiptra) throws Exception;
 	
 	public Map<String,Object> recuperarTramites(
-			String cdtiptra
+			String agrupamc
 			,String status
 			,String cdusuari
 			,String cdsisrol
@@ -516,5 +517,14 @@ public interface FlujoMesaControlDAO {
 			,String fehasta
 			,int start
 			,int limit
+			)throws Exception;
+	
+	public List<Map<String,String>> recuperarTtipsupl(String cdtiptra) throws Exception;
+	
+	public Map<String,String> recuperarPolizaUnica(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
 			)throws Exception;
 }

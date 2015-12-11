@@ -174,7 +174,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				String ntramiteAutorizacion = mesaControlDAO.movimientoMesaControl(cdunieco, cdramo, estado, nmpoliza, 
 						"0", cdunieco, cdunieco, TipoTramite.EMISION_EN_ESPERA.getCdtiptra(), new Date(), null,
 						null, null, new Date(), EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo(),
-						msjeEnvio, null, cdtipsit, cdusuari, cdsisrol, null, null, null, otvalores);
+						msjeEnvio, null, cdtipsit, cdusuari, cdsisrol, null, null, null, otvalores, null);
 				
 				msjeEnvio = msjeEnvio + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
 	        	
@@ -209,7 +209,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo(),
 							msjeAutorizacion, null, cdtipsit,
 							cdusuari, cdsisrol, null,null,null,
-							otvalores);
+							otvalores, null);
 					
 					msjeAutorizacion = msjeAutorizacion + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
 					

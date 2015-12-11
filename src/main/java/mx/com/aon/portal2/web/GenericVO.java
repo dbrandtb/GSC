@@ -12,9 +12,11 @@ public class GenericVO implements Serializable {
     
 	private static final long serialVersionUID = -5060990997960225913L;
 	
-	private String key;
-    private String value;
-    private String aux;
+	private String key
+	               ,value
+	               ,aux
+                   ,aux2
+                   ,aux3;
     
     public GenericVO(){}
     
@@ -29,6 +31,23 @@ public class GenericVO implements Serializable {
         this.key   = key;
         this.value = value;
         this.aux   = aux;
+    }
+    
+    public GenericVO(String key,String value,String aux,String aux2)
+    {
+        this.key   = key;
+        this.value = value;
+        this.aux   = aux;
+        this.aux2  = aux2;
+    }
+    
+    public GenericVO(String key,String value,String aux,String aux2,String aux3)
+    {
+        this.key   = key;
+        this.value = value;
+        this.aux   = aux;
+        this.aux2  = aux2;
+        this.aux3  = aux3;
     }
 
     public String getKey() {
@@ -59,6 +78,22 @@ public class GenericVO implements Serializable {
 
 	public void setAux(String aux) {
 		this.aux = aux;
+	}
+
+	public String getAux2() {
+		return aux2;
+	}
+
+	public void setAux2(String aux2) {
+		this.aux2 = aux2;
+	}
+
+	public String getAux3() {
+		return aux3;
+	}
+
+	public void setAux3(String aux3) {
+		this.aux3 = aux3;
 	}
     
 }

@@ -1357,18 +1357,22 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	
 	@Override
 	@Deprecated
-	public List<GenericVO> recuperarFlujoStatus(String cdtiptra) throws Exception
+	public List<GenericVO> recuperarTestadomcPorAgrupamc(String agrupamc, String extras) throws Exception
 	{
 		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ recuperarFlujoStatus @@@@@@"
-				,"\n@@@@@@ cdtiptra=",cdtiptra
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarTestadomcPorAgrupamc @@@@@@"
+				,"\n@@@@@@ agrupamc=" , agrupamc
+				,"\n@@@@@@ extras="   , extras
 				));
 		
 		List<GenericVO> lista = new ArrayList<GenericVO>();
-		lista.add(new GenericVO("-1" , "-TAREAS PENDIENTES-"));
-		lista.add(new GenericVO("0"  , "-TODOS-"));
-		List<Map<String,String>> statusFlujo = flujoMesaControlDAO.recuperarEstadosPorCdtiptra(cdtiptra);
+		if("S".equals(extras))
+		{
+			lista.add(new GenericVO("-1" , "-TAREAS PENDIENTES-"));
+			lista.add(new GenericVO("0"  , "-TODOS-"));
+		}
+		List<Map<String,String>> statusFlujo = flujoMesaControlDAO.recuperarTestadomcPorAgrupamc(agrupamc);
 		for(Map<String,String>statusIte:statusFlujo)
 		{
 			lista.add(new GenericVO(statusIte.get("CDESTADOMC"),statusIte.get("DSESTADOMC")));
@@ -1376,8 +1380,92 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		
 		logger.debug(Utils.log(
 				 "\n@@@@@@ lista=",lista
-				,"\n@@@@@@ recuperarFlujoStatus @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarTestadomcPorAgrupamc @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
+	
+	@Override
+	public List<GenericVO> recuperarTtipflumc(String agrupamc) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarTtipflumc @@@@@@"
+				,"\n@@@@@@ agrupamc=",agrupamc
+				));
+		
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		List<Map<String,String>> tiposFlujo = flujoMesaControlDAO.recuperaTtipflumc(agrupamc);
+		for(Map<String,String>tipoFlujo:tiposFlujo)
+		{
+			lista.add(new GenericVO(
+					tipoFlujo.get("CDTIPFLU")
+					,tipoFlujo.get("DSTIPFLU")
+					,tipoFlujo.get("CDTIPTRA")
+					,tipoFlujo.get("CDTIPSUP")
+					,tipoFlujo.get("SWREQPOL")
+					));
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista=",lista
+				,"\n@@@@@@ recuperarTtipflumc @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
+	
+	@Override
+	public List<GenericVO> recuperarTflujomc(String cdtipflu, String swfinal) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarTflujomc @@@@@@"
+				,"\n@@@@@@ cdtipflu=" , cdtipflu
+				,"\n@@@@@@ swfinal="  , swfinal
+				));
+		
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		List<Map<String,String>> flujos = flujoMesaControlDAO.recuperaTflujomc(cdtipflu, swfinal);
+		for(Map<String,String>flujo:flujos)
+		{
+			lista.add(new GenericVO(flujo.get("CDFLUJOMC"),flujo.get("DSFLUJOMC")));
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista=",lista
+				,"\n@@@@@@ recuperarTflujomc @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
+	
+	@Override
+	public List<GenericVO> recuperarTtipsupl(String cdtiptra,String ninguno) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarTtipsupl @@@@@@"
+				,"\n@@@@@@ cdtiptra=" , cdtiptra
+				,"\n@@@@@@ ninguno="  , ninguno
+				));
+		
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		if("S".equals(ninguno))
+		{
+			lista.add(new GenericVO("0","NINGUNO"));
+		}
+		List<Map<String,String>> flujos = flujoMesaControlDAO.recuperarTtipsupl(cdtiptra);
+		for(Map<String,String>flujo:flujos)
+		{
+			lista.add(new GenericVO(flujo.get("CDTIPSUP"),flujo.get("DSTIPSUP")));
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista=",lista
+				,"\n@@@@@@ recuperarTtipsupl @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return lista;
 	}
