@@ -215,7 +215,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 						,null //swimpres
 						,null //cdtipflu
 						,null //cdflujomc
-						,valores
+						,valores, null
 						);
 				//if(res.getItemMap() == null){
 				if(ntramiteGenerado==null){

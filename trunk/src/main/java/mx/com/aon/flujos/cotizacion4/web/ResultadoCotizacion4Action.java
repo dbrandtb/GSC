@@ -1204,7 +1204,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            			,null
 	            			,null
 	            			,null
-	            			,null
+	            			,null, null
 	            			);
 	            	
 	            	smap1.put("ntramite",ntramite);

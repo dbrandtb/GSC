@@ -254,7 +254,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null //swimpres
 						,null //cdtipflu
 						,null //cdflujomc
-						,valores
+						,valores, null
 						);
 				
 				mesaControlDAO.movimientoDetalleTramite(
@@ -1019,7 +1019,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null //swimpres
 						,null //cdtipflu
 						,null //cdflujomc
-						,valores
+						,valores, null
 						);
 				
 				result.put("remesa" , remesa);

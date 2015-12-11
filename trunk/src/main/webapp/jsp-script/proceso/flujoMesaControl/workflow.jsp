@@ -1249,6 +1249,7 @@ Ext.onReady(function()
                                 'CDTIPFLU'
                                 ,'DSTIPFLU'
                                 ,'CDTIPTRA'
+                                ,'CDTIPSUP'
                                 ,'SWMULTIPOL'
                                 ,'SWREQPOL'
                             ]

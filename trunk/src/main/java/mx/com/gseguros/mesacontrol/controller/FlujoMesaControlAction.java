@@ -5,6 +5,8 @@ import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.mesacontrol.model.AgrupadorMC;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -359,7 +361,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,dstipflu   = params.get("DSTIPFLU")
 			       ,cdtiptra   = params.get("CDTIPTRA")
 			       ,swreqpol   = params.get("SWREQPOL")
-			       ,swmultipol = params.get("SWMULTIPOL");
+			       ,swmultipol = params.get("SWMULTIPOL")
+			       ,cdtipsup   = params.get("CDTIPSUP");
 			
 			Utils.validate(
 					accion     , "No se recibi\u00f3 la acci\u00f3n"
@@ -375,6 +378,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdtiptra
 					,swreqpol
 					,swmultipol
+					,cdtipsup
 					);
 			
 			success = true;
@@ -1254,18 +1258,30 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			Utils.validate(params , "No se recibieron datos");
 			
-			String cdtiptra = params.get("CDTIPTRA");
-			Utils.validate(cdtiptra, "No se recibi\u00f3 el tipo de tr\u00e1mite");
+			String agrupamc = params.get("AGRUPAMC");
+			Utils.validate(agrupamc, "No se recibi\u00f3 el agrupador");
+			
+			try
+			{
+				AgrupadorMC agrupador = AgrupadorMC.valueOf(agrupamc);
+			}
+			catch(Exception ex)
+			{
+				throw new ApplicationException("No se reconoce el agrupador");
+			}
 			
 			Map<String,Object> manRes = flujoMesaControlManager.mesaControl(
 					sb
 					,usuario.getRolActivo().getClave()
-					,cdtiptra
+					,agrupamc
 					,usuario.getUser()
 					);
 			
 			items = (Map<String,Item>)manRes.get("items");
 			params.putAll((Map<String,String>)manRes.get("mapa"));
+			
+			params.put("CDUSUARI" , usuario.getUser());
+			params.put("CDSISROL" , usuario.getRolActivo().getClave());
 			
 			result = SUCCESS;
 			
@@ -1301,7 +1317,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			Utils.validate(params, "No se recibieron datos");
 			
 			//obligatorios
-			String cdtiptra = params.get("CDTIPTRA")
+			String agrupamc = params.get("AGRUPAMC")
 			       ,status  = params.get("STATUS");
 			
 			//opcionales
@@ -1316,13 +1332,22 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,fehasta  = params.get("FEHASTA");			
 			
 			Utils.validate(
-					cdtiptra , "No se recibi\u00f3n el tipo de tr\u00e1mite"
+					agrupamc , "No se recibi\u00f3n el agrupador"
 					,status  , "No se recibi\u00f3n el status"
 					);
 			
+			try
+			{
+				AgrupadorMC agrupador = AgrupadorMC.valueOf(agrupamc);
+			}
+			catch(Exception ex)
+			{
+				throw new ApplicationException("No se reconoce el agrupador");
+			}
+			
 			Map<String,Object> manRes = flujoMesaControlManager.recuperarTramites(
 					sb
-					,cdtiptra
+					,agrupamc
 					,status
 					,usuario.getUser()
 					,usuario.getRolActivo().getClave()
@@ -1351,6 +1376,137 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					));
 			
 			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
+	
+	@Action(value   = "recuperarPolizaUnica",
+			results = { @Result(name="success", type="json") }
+			)
+	public String recuperarPolizaUnica()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n##################################"
+				,"\n###### recuperarPolizaUnica ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params, "No se recibieron datos");
+			
+			String cdunieco  = params.get("CDUNIECO")
+			       ,cdramo   = params.get("CDRAMO")
+			       ,estado   = params.get("ESTADO")
+			       ,nmpoliza = params.get("NMPOLIZA");
+			
+			Utils.validate(
+					cdunieco  , "No se recibi\u00f3n la sucursal"
+					,cdramo   , "No se recibi\u00f3n el producto"
+					,estado   , "No se recibi\u00f3n el estado"
+					,nmpoliza , "No se recibi\u00f3n la p\u00f3nliza"
+					);
+			
+			params.putAll(flujoMesaControlManager.recuperarPolizaUnica(sb,cdunieco,cdramo,estado,nmpoliza));
+			
+			sb.append(Utils.log(
+					 "\n###### params=",params
+					,"\n###### recuperarPolizaUnica ######"
+					,"\n##################################"
+					));
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value   = "registrarTramite",
+			results = { @Result(name="success", type="json") }
+			)
+	public String registrarTramite()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n##############################"
+				,"\n###### registrarTramite ######"
+				,"\n###### params=",params
+				));
+		try
+		{
+			UserVO usuario = Utils.validateSession(session);
+			
+			Utils.validate(params, "No se recibieron datos");
+			
+			String cdtiptra    = params.get("CDTIPTRA")
+			       ,cdtipsup   = params.get("CDTIPSUP")
+			       ,cdtipflu   = params.get("CDTIPFLU")
+			       ,cdflujomc  = params.get("CDFLUJOMC")
+			       ,cdsucadm   = params.get("CDSUCADM")
+			       ,cdsucdoc   = params.get("CDSUCDOC")
+			       ,cdramo     = params.get("CDRAMO")
+			       ,cdtipsit   = params.get("CDTIPSIT")
+			       ,nmpoliza   = params.get("NMPOLIZA")
+			       ,cdagente   = params.get("CDAGENTE")
+			       ,referencia = params.get("REFERENCIA")
+			       ,nombre     = params.get("NOMBRE")
+			       ,status     = params.get("STATUS")
+			       ,comments   = params.get("COMMENTS")
+			       ,ferecepc   = params.get("FERECEPC")
+			       ,festatus   = params.get("FESTATUS")
+			       ,estado     = params.get("ESTADO");
+			       
+			Utils.validate(
+					cdtiptra   , "No se recibi\u00f3 el tipo de tr\u00e1imte"
+					,cdtipflu  , "No se recibi\u00f3 el flujo"
+					,cdflujomc , "No se recibi\u00f3 el proceso"
+					,status    , "No se recibi\u00f3 el status"
+					);
+			
+			String ntramite = flujoMesaControlManager.registrarTramite(
+					sb
+					,cdsucdoc
+					,cdramo
+					,estado
+					,nmpoliza
+					,null //nmsuplem
+					,cdsucadm
+					,cdsucdoc
+					,cdtiptra
+					,ferecepc != null ? Utils.parse(ferecepc) : null
+					,cdagente
+					,referencia
+					,nombre
+					,festatus != null ? Utils.parse(festatus) : null
+					,status
+					,comments
+					,null //nmsolici
+					,cdtipsit
+					,usuario.getUser()
+					,usuario.getRolActivo().getClave()
+					,null //swimpres
+					,cdtipflu
+					,cdflujomc
+					,null
+					,cdtipsup
+					);
+			
+			params.put("ntramite" , ntramite);
+			
+			sb.append(Utils.log(
+					 "\n###### params=",params
+					,"\n###### registrarTramite ######"
+					,"\n##############################"
+					));
+			success = true;
 		}
 		catch(Exception ex)
 		{

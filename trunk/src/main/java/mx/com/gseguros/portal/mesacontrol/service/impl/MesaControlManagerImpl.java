@@ -110,7 +110,7 @@ public class MesaControlManagerImpl implements MesaControlManager
 			,String swimpres
 			,String cdtipflu
 			,String cdflujomc
-			,Map<String,String>valores
+			,Map<String,String>valores, String cdtipsup
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -139,6 +139,7 @@ public class MesaControlManagerImpl implements MesaControlManager
 				,"\n@@@@@@ cdtipflu="   , cdtipflu
 				,"\n@@@@@@ cdflujomc="  , cdflujomc
 				,"\n@@@@@@ valores="    , valores
+				,"\n@@@@@@ cdtipsup="   , cdtipsup
 				));
 		
 		String ntramite = mesaControlDAO.movimientoMesaControl(
@@ -165,6 +166,7 @@ public class MesaControlManagerImpl implements MesaControlManager
 				,cdtipflu
 				,cdflujomc
 				,valores
+				,cdtipsup
 				);
 		
 		logger.debug(Utils.log(

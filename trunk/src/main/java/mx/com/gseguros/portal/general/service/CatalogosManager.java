@@ -178,5 +178,11 @@ public interface CatalogosManager {
     public List<GenericVO> recuperarTtiptramc() throws Exception;
     
     @Deprecated
-    public List<GenericVO> recuperarFlujoStatus(String cdtiptra) throws Exception;
+    public List<GenericVO> recuperarTestadomcPorAgrupamc(String agrupamc, String extras) throws Exception;
+    
+    public List<GenericVO> recuperarTtipflumc(String agrupamc) throws Exception;
+    
+    public List<GenericVO> recuperarTflujomc(String cdtipflu, String swfinal) throws Exception;
+    
+    public List<GenericVO> recuperarTtipsupl(String cdtiptra,String ninguno) throws Exception;
 }

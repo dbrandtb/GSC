@@ -4785,7 +4785,7 @@ public class EndososAction extends PrincipalCoreAction
 							,null //swimpres
 							,null //cdtipflu
 							,null //cdflujomc
-							,valores
+							,valores, null
 							);
 				}
 			}
@@ -5851,7 +5851,7 @@ public class EndososAction extends PrincipalCoreAction
 				,null //swimpres
 				,null //cdtipflu
 				,null //cdflujomc
-				,valores
+				,valores, null
 				);
 		
 		// Si fue confirmado no asignamos numero de tramite:

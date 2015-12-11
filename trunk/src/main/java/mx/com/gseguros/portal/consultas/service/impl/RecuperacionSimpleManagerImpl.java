@@ -779,7 +779,12 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TTIPFLUMC))
 			{	
-				lista = flujoMesaControlDAO.recuperaTtipflumc();
+				String agrupamc = null;
+				if(params!=null)
+				{
+					agrupamc = params.get("agrupamc");
+				}
+				lista = flujoMesaControlDAO.recuperaTtipflumc(agrupamc);
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TESTADOMC))
 			{	
@@ -811,7 +816,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUJOMC))
 			{
 				String cdtipflu = params.get("cdtipflu");
-				lista = flujoMesaControlDAO.recuperaTflujomc(cdtipflu);
+				lista = flujoMesaControlDAO.recuperaTflujomc(cdtipflu, null);
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUEST))
 			{

@@ -130,7 +130,10 @@ public enum Catalogos {
 	TIPOS_LOTE_IMPR("TIPOLOTE"),
 	SUCURSALES_PERMISO_IMPRESION(""),
 	TTIPTRAMC(""),
-	FLUJO_STATUS("")
+	FLUJO_STATUS(""),
+	TTIPFLUMC(""),
+	TFLUJOMC(""),
+	TTIPSUPL("")
 	;
 
 	private String cdTabla;
