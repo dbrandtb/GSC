@@ -102,6 +102,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	private List<HashMap<String, String>> saveList;
 	private List<GenericVO> listaTipoAtencion;
 	private List<GenericVO> listadoRamosSalud;
+	private List<GenericVO> datosValidacionGral;
 	private List<ListaFacturasVO> listaFacturas;
 	
 	private Item                     item;
@@ -5171,6 +5172,32 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	public String consultaListaContrareciboAutEsp(){
+		logger.debug("Entra a consultaListaContrareciboAutEsp params de entrada :{}",params);
+		try {
+			datosValidacionGral = siniestrosManager.getConsultaListaContrareciboAutEsp(params.get("cdramo"),params.get("ntramite"));
+		}catch( Exception e){
+			logger.error("Error al consultar la Lista de los asegurados : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	
+	public String consultaListaFacturaTramite(){
+		logger.debug("Entra a consultaListaFacturaTramite params de entrada :{}",params);
+		try {
+			datosValidacionGral = siniestrosManager.getConsultaListaFacturaTramite(params.get("ntramite"), params.get("nfactura"));
+		}catch( Exception e){
+			logger.error("Error al consultar la Lista de los asegurados : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	
 	/**
 	* metodo que obtiene el listado de las coberturas de poliza
 	* @param maps [cdunieco,estado,cdramo,nmpoliza,nmsituac,cdgarant]
@@ -5929,5 +5956,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 
 	public void setSolicitudPago(List<SolicitudCxPVO> solicitudPago) {
 		this.solicitudPago = solicitudPago;
+	}
+
+	public List<GenericVO> getDatosValidacionGral() {
+		return datosValidacionGral;
+	}
+
+	public void setDatosValidacionGral(List<GenericVO> datosValidacionGral) {
+		this.datosValidacionGral = datosValidacionGral;
 	}	
 }

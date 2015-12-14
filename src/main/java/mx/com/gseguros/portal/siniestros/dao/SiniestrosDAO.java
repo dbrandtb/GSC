@@ -520,4 +520,8 @@ public interface SiniestrosDAO {
 	public String validaExisteConfiguracionProv2() throws Exception;
 	
 	public List<Map<String, String>> obtieneConfiguracionLayoutProveedor(HashMap<String, Object> params) throws Exception;
+	
+	public List<GenericVO> obtieneListaContrareciboAutEsp(String cdramo, String ntramite) throws Exception;
+	
+	public List<GenericVO> obtieneListaFacturaTramite(String ntramite, String nfactura) throws Exception;
 }
