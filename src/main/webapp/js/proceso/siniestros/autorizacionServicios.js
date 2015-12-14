@@ -2494,7 +2494,7 @@ Ext.onReady(function() {
 						'params.estado' : Ext.getCmp('idEstado').getValue(),
 						'params.nmpoliza' : Ext.getCmp('polizaAfectada').getValue(),
 						'params.nmsituac' : Ext.getCmp('idNmSituac').getValue(),
-						'params.cdtipsit' : Ext.getCmp('idcdtipsit').getValue(),
+						'params.cdtipsit' : json.cdtipsit, //Ext.getCmp('idcdtipsit').getValue(),
 						'params.cdgarant' : Ext.getCmp('idCobAfectada').getValue(),
 						'params.cdsubcob' : null
 					}
