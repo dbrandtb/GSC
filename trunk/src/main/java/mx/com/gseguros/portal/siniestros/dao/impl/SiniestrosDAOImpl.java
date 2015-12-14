@@ -5170,4 +5170,59 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     	}
     }
 	
+    
+    @SuppressWarnings("unchecked")
+	public List<GenericVO> obtieneListaContrareciboAutEsp(String cdramo, String ntramite) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_ntramite_i", ntramite);
+		params.put("pv_cdramo_i", cdramo);
+		
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtieneListaContrareciboAutEsp(this.getDataSource()), params);
+		return (List<GenericVO>) resultadoMap.get("pv_registro_o");
+	}
+	protected class ObtieneListaContrareciboAutEsp extends StoredProcedure
+	{
+		protected ObtieneListaContrareciboAutEsp(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_OBTIENE_CR_AUTESPECIAL");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosConfAutEspecial()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	protected class DatosConfAutEspecial  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	GenericVO consulta = new GenericVO();
+        	consulta.setKey(rs.getString("CLAVE"));
+        	consulta.setValue(rs.getString("DESCRIPCION"));
+            return consulta;
+        }
+    }
+	
+    @SuppressWarnings("unchecked")
+	public List<GenericVO> obtieneListaFacturaTramite(String ntramite, String nfactura) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_ntramite_i", ntramite);
+		params.put("pv_nfactura_i", nfactura);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtieneListaFacturaTramite(this.getDataSource()), params);
+		logger.debug("Valor de Respuesta ====>"+resultadoMap);
+		return (List<GenericVO>) resultadoMap.get("pv_registro_o");
+	}
+	protected class ObtieneListaFacturaTramite extends StoredProcedure
+	{
+		protected ObtieneListaFacturaTramite(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_OBTIENE_FACT_AUTESPECIAL");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosConfAutEspecial()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

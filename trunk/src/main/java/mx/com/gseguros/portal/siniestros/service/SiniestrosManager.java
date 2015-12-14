@@ -651,4 +651,8 @@ public interface SiniestrosManager {
 	public String validaExisteConfiguracionProv2() throws Exception;
 	
 	public List<Map<String, String>> requiereConfiguracionLayoutProveedor(String cdpresta) throws Exception;
+	
+	public List<GenericVO> getConsultaListaContrareciboAutEsp(String cdramo, String ntramite) throws Exception;
+	
+	public List<GenericVO> getConsultaListaFacturaTramite(String ntramite, String nfactura) throws Exception;
 }

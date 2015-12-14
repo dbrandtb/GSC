@@ -2061,4 +2061,24 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
 		return siniestrosDAO.obtieneConfiguracionLayoutProveedor(params);
 	}
+	
+	@Override
+	public List<GenericVO> getConsultaListaContrareciboAutEsp(String cdramo, String ntramite) throws Exception {
+		try {
+			return siniestrosDAO.obtieneListaContrareciboAutEsp(cdramo,ntramite);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public List<GenericVO> getConsultaListaFacturaTramite(String ntramite, String nfactura) throws Exception {
+		try {
+			return siniestrosDAO.obtieneListaFacturaTramite(ntramite,nfactura);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	
 }
