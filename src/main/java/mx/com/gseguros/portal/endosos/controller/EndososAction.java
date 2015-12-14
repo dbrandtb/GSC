@@ -9175,8 +9175,13 @@ public class EndososAction extends PrincipalCoreAction
 					Date fechaInicioEndoso=endososManager.obtenerFechaEndosoFormaPago(cdunieco, cdramo, estado, nmpoliza);
 					smap1.put("fechaInicioEndoso",renderFechas.format(fechaInicioEndoso));
 					
-					
 					boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
+					
+					if(!esProductoSalud){
+						smap1.put("fechaInicioEndoso",renderFechas.format(new Date()));
+					}
+					
+					
 					
 					smap1.put("esProductoSalud", esProductoSalud? Constantes.SI : Constantes.NO);
 					
@@ -9600,6 +9605,54 @@ public class EndososAction extends PrincipalCoreAction
 //					return SUCCESS;
 //				}
 			}else{
+				
+				/**
+				 * TODO: No aplica aun ya que se como el cliente fue importado de Salud, si se crea uno de danios puede duplicarse en danios 
+				 */
+//				if(Ramo.RECUPERA.getCdramo().equals(cdunieco)){
+//					Map<String,Object>resultData = personasManager.obtenerPersonaPorCdperson(smap2.get("cdpersonNvoContr"), timestamp);
+//					Map<String,String>resultPer =  (Map<String, String>) resultData.get("persona");
+//					
+//					if( resultPer!=null && resultPer.containsKey("CDIDEPER") && StringUtils.isBlank(resultPer.get("CDIDEPER"))){
+//						String saludDanios = "D";
+//						logger.debug("...Crear nueva Persona de danios en WS para RECUPERA..");
+//						
+//						ClienteGeneral clienteGeneral = new ClienteGeneral();
+//						clienteGeneral.setClaveCia(saludDanios);
+//						
+//						ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap2.get("cdpersonNvoContr"), Ice2sigsService.Operacion.INSERTA, clienteGeneral, null, false);
+//						
+//						if(clientesRes == null || (Estatus.EXITO.getCodigo() != clientesRes.getCodigo())){
+//							
+//							logger.error("Error en WS, exito false,Error al crear codigo externo de cliente, en endoso de contratante");
+//							mensaje = "Error al generar el endoso, en WS. Consulte a Soporte.";
+//							error   = "Error al generar el endoso, en WS. Consulte a Soporte.";
+//							
+//							boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.CAMBIO_CONTRATANTE.toString(), true);
+//							if(endosoRevertido){
+//								logger.error("Endoso revertido exitosamente.");
+//								error+=" Favor de volver a itentar.";
+//							}else{
+//								logger.error("Error al revertir el endoso");
+//								error+=" No se ha revertido el endoso.";
+//							}
+//							
+//							success = false;
+//							return SUCCESS;
+//						}else{
+//							logger.debug("Codigo externo obtenido: " + clientesRes.getClientesGeneral()[0].getNumeroExterno());
+//							
+//							HashMap params = new HashMap<String, String>();
+//							params.put("pv_cdperson_i", smap2.get("cdpersonNvoContr"));
+//							params.put("pv_swsalud_i"  , saludDanios);
+//							params.put("pv_cdideper_i"  , clientesRes.getClientesGeneral()[0].getNumeroExterno());
+//							
+//							personasManager.actualizaCodigoExterno(params);
+//						
+//						}
+//					}
+//				}
+				
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 					estado, nmpoliza, 
