@@ -419,7 +419,6 @@ Ext.define('VentanaImpresionLote',
                                         ,buttonAlign : 'center'
                                         ,buttons     :
                                         [
-                                            /*
                                             {
                                                 text      : 'Imprimir (test 1 hoja)'
                                                 ,itemId   : '_c0_botonImprimir2'
@@ -444,8 +443,8 @@ Ext.define('VentanaImpresionLote',
                                                         );
                                                     }
                                                 }
+                                                ,hidden   : true
                                             },
-                                            */
                                             {
                                                 text      : 'Imprimir'
                                                 ,itemId   : '_c0_botonImprimir'
