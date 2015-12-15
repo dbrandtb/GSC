@@ -38,6 +38,8 @@ var _35_urlLoadContratantes = '<s:url namespace="/endosos" action="cargarContrat
 var _p35_urlRecuperarCliente = '<s:url namespace="/" action="buscarPersonasRepetidas" />';
 var _p35_urlPantallaCliente  = '<s:url namespace="/catalogos" action="includes/personasLoader"/>';
 
+var _p35_urlRecuperacionSimple = '<s:url namespace="/emision"         action="recuperacionSimple"     />';
+
 debug('_35_smap1:',_35_smap1);
 
 
@@ -289,7 +291,6 @@ Ext.onReady(function()
         ,fieldLabel : 'Fecha de efecto'
         ,allowBlank : false
         ,value      : '<s:property value="smap1.fechaInicioEndoso" />'
-        ,readOnly   : true
         ,name       : 'fecha_endoso'
     });
     _35_panelEndoso = new _35_PanelEndoso();
@@ -408,6 +409,41 @@ _p22_recuperaCallback  =  function (){
     ventanaContratante.destroy();
     
 };
+
+
+Ext.Ajax.request(
+{
+    url      : _p35_urlRecuperacionSimple
+    ,params  :
+    {
+        'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
+        ,'smap1.cdunieco'     : _35_smap1.CDUNIECO
+        ,'smap1.cdramo'       : _35_smap1.CDRAMO
+        ,'smap1.estado'       : _35_smap1.ESTADO
+        ,'smap1.nmpoliza'     : _35_smap1.NMPOLIZA
+        ,'smap1.cdtipsup'     : _35_smap1.cdtipsup
+    }
+    ,success : function(response)
+    {
+        var json = Ext.decode(response.responseText);
+        debug('### fechas:',json);
+        if(json.exito)
+        {
+            _fieldByName('fecha_endoso').setMinValue(json.smap1.FECHA_MINIMA);
+            _fieldByName('fecha_endoso').setMaxValue(json.smap1.FECHA_MAXIMA);
+            _fieldByName('fecha_endoso').setReadOnly(json.smap1.EDITABLE=='N');
+            _fieldByName('fecha_endoso').isValid();
+        }
+        else
+        {
+            mensajeError(json.respuesta);
+        }
+    }
+    ,failure : function()
+    {
+        errorComunicacion();
+    }
+});
 
 function _35_confirmar()
 {

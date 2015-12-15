@@ -9179,6 +9179,7 @@ public class EndososAction extends PrincipalCoreAction
 					
 					if(!esProductoSalud){
 						smap1.put("fechaInicioEndoso",renderFechas.format(new Date()));
+						smap1.put("cdtipsup",cdtipsup);
 					}
 					
 					
