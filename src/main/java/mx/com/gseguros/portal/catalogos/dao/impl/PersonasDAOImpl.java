@@ -1365,6 +1365,12 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
             return consulta;
         }
     }
+
+	@Override
+	public String obtieneInformacionCliente(String sucursal, String ramo, String poliza) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 }

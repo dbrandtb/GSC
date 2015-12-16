@@ -138,4 +138,6 @@ public interface PersonasManager
 	public List<Map<String, String>> obtieneListaClientesxTipo(String rfc, String proceso) throws Exception;
 
 	public List<GenericVO> consultaClientes(String cdperson) throws Exception;
+	
+	public String obtieneInformacionCliente(String sucursal, String ramo, String poliza) throws Exception;
 }

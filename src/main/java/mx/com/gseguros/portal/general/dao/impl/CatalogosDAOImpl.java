@@ -1701,4 +1701,33 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
             compile();
     	}
     }
+	
+	@Override
+	public List<GenericVO> obtieneCatalogoParentescoAutos() throws Exception {
+		try {
+			HashMap<String,Object> params = new LinkedHashMap<String,Object>();    		
+    		Map<String, Object> resultado = ejecutaSP(new ObtieneCatalogoParentescoAutos(getDataSource()), params);
+    		return (List<GenericVO>) resultado.get("pv_registro_o");
+		} catch (Exception e) {
+			throw new Exception(e.getMessage(), e);
+		}
+	}
+    
+
+	protected class ObtieneCatalogoParentescoAutos extends StoredProcedure {
+	
+		protected ObtieneCatalogoParentescoAutos(DataSource dataSource) {
+			super(dataSource, "PKG_CONSULTA.P_OBTIENE_PARENTESCO_AUTO");
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneParentescoMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	protected class ObtieneParentescoMapper implements RowMapper {
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+			return new GenericVO(rs.getString("CODIGO"),rs.getString("DESCRIPCION"));
+		}
+	}
 }
