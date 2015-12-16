@@ -1720,12 +1720,6 @@ Ext.onReady(function()
                                                 ,labelAlign : 'top'
                                             }
                                             ,{
-                                                xtype       : 'checkbox'
-                                                ,boxLabel   : 'Origen por escalamiento'
-                                                ,name       : 'SWESCALA'
-                                                ,inputValue : 'S'
-                                            }
-                                            ,{
                                                 xtype        : 'fieldcontainer'
                                                 ,fieldLabel  : 'Tipo de asignaci\u00f3n'
                                                 ,labelAlign  : 'top'
@@ -2275,6 +2269,12 @@ Ext.onReady(function()
                                                 ,labelAlign : 'top'
                                                 ,name       : 'CDVALOR'
                                             }
+                                            ,{
+                                                xtype       : 'checkbox'
+                                                ,boxLabel   : 'Disparado por escalamiento'
+                                                ,name       : 'SWESCALA'
+                                                ,inputValue : 'S'
+                                            }
                                         ]
                                     }
                                     ,Ext.create('Ext.grid.Panel',
@@ -2422,9 +2422,11 @@ Ext.onReady(function()
             ,ConnectionOverlays  : [ [ 'PlainArrow' , { location : 1 } ] ]
             ,Connector           : 'StateMachine'
             ,ReattachConnections : false
+            ,HoverPaintStyle     : { strokeStyle   : 'red' , lineWidth    : 5 }
+            ,EndpointHoverStyle  : { outlineColor  : 'red' , outlineWidth : 1 }
         });
         
-        toolkit.bind('dblclick',function(con)
+        toolkit.bind('click',function(con)
         {
             debug('dblclick con:',con);
             _p52_editEndpoint(con,'A',con.cdaccion);

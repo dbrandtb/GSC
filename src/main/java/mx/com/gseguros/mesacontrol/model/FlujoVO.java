@@ -1,5 +1,7 @@
 package mx.com.gseguros.mesacontrol.model;
 
+import mx.com.gseguros.utils.Utils;
+
 public class FlujoVO
 {
 	private String ntramite
@@ -8,6 +10,7 @@ public class FlujoVO
 	               ,cdflujomc
 	               ,webid
 	               ,tipoent
+	               ,claveent
 	               ,cdunieco
 	               ,cdramo
 	               ,estado
@@ -109,5 +112,33 @@ public class FlujoVO
 
 	public void setNmsuplem(String nmsuplem) {
 		this.nmsuplem = nmsuplem;
+	}
+
+	public String getClaveent() {
+		return claveent;
+	}
+
+	public void setClaveent(String claveent) {
+		this.claveent = claveent;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return Utils.log(
+				"\nntramite="   , this.ntramite
+				,"\nstatus="    , this.status
+				,"\ncdtipflu="  , this.cdtipflu
+				,"\ncdflujomc=" , this.cdflujomc
+				,"\nwebid="     , this.webid
+				,"\ntipoent="   , this.tipoent
+				,"\nclaveent="  , this.claveent
+				,"\ncdunieco="  , this.cdunieco
+				,"\ncdramo="    , this.cdramo
+				,"\nestado="    , this.estado
+				,"\nnmpoliza="  , this.nmpoliza
+				,"\nnmsituac="  , this.nmsituac
+				,"\nnmsuplem="  , this.nmsuplem
+				);
 	}
 }

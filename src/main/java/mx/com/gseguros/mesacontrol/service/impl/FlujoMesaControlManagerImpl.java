@@ -8,6 +8,7 @@ import java.util.Map;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
@@ -286,7 +287,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 						,null //timemax
 						,null //timewrn1
 						,null //timewrn2
-						,null //swescala
 						,"1"  //cdtipasig
 						,"I"
 						);
@@ -405,7 +405,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 						,null //timemax
 						,null //timewrn1
 						,null //timewrn2
-						,null //swescala
 						,null //cdtipasig
 						,"D"
 						);
@@ -507,7 +506,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			paso = "Recuperando status";
 			sb.append("\n").append(paso);
 			
-			List<Map<String,String>> estados = flujoMesaControlDAO.recuperaTfluest(cdtipflu, cdflujomc);
+			List<Map<String,String>> estados = flujoMesaControlDAO.recuperaTfluest(cdtipflu, cdflujomc, null);
 			
 			if(estados.size()>0)
 			{
@@ -522,7 +521,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 				
 				List<Map<String,String>> pantallas = flujoMesaControlDAO.recuperaTflupant(
 						cdtipflu
-						,cdflujomc);
+						,cdflujomc
+						,null
+						);
 				
 				for(Map<String,String>pantalla:pantallas)
 				{
@@ -551,7 +552,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 					list.add(proceso);
 				}
 				
-				List<Map<String,String>> validaciones = flujoMesaControlDAO.recuperaTfluval(cdtipflu, cdflujomc);
+				List<Map<String,String>> validaciones = flujoMesaControlDAO.recuperaTfluval(cdtipflu, cdflujomc, null);
 				
 				for(Map<String,String>proceso:validaciones)
 				{
@@ -614,7 +615,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			paso = "Recuperando status";
 			sb.append("\n").append(paso);
 			
-			List<Map<String,String>> lista  = flujoMesaControlDAO.recuperaTfluest(cdtipflu, cdflujomc);
+			List<Map<String,String>> lista  = flujoMesaControlDAO.recuperaTfluest(cdtipflu, cdflujomc, cdestadomc);
 			Map<String,String>       estado = null;
 			
 			for(Map<String,String>listaItem:lista)
@@ -759,7 +760,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 					,new Long((Long.valueOf(timemaxm))+(Long.valueOf(timemaxh)*60)).toString()   //timemax
 					,new Long((Long.valueOf(timewrn1m))+(Long.valueOf(timewrn1h)*60)).toString() //timewrn1
 					,new Long((Long.valueOf(timewrn2m))+(Long.valueOf(timewrn2h)*60)).toString() //timewrn2
-					,"S".equals(swescala) ? "S" : "N"
 					,cdtipasig
 					,accion
 					);
@@ -849,6 +849,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 					,""   //cdvalor
 					,idorigen
 					,iddestin
+					,null
 					,"I"
 					);
 		}
@@ -889,7 +890,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			paso = "Recuperando validaciones";
 			sb.append("\n").append(paso);
 			
-			List<Map<String,String>> validaciones = flujoMesaControlDAO.recuperaTfluval(cdtipflu, cdflujomc);
+			List<Map<String,String>> validaciones = flujoMesaControlDAO.recuperaTfluval(cdtipflu, cdflujomc, cdvalida);
 			
 			for(Map<String,String>validaIte : validaciones)
 			{
@@ -1018,24 +1019,50 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 	
 	@Override
 	public String ejecutaValidacion(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String nmsituac
-			,String nmsuplem
+			StringBuilder sb
+			,FlujoVO flujo
 			,String cdvalidafk
 			)throws Exception
 	{
-		return flujoMesaControlDAO.ejecutaValidacion(
-				cdunieco
-				,cdramo
-				,estado
-				,nmpoliza
-				,nmsituac
-				,nmsuplem
-				,cdvalidafk
-				);
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ ejecutaValidacion @@@@@@"
+				,"\n@@@@@@ flujo="      , flujo
+				,"\n@@@@@@ cdvalidafk=" , cdvalidafk
+				));
+		
+		String salida = null
+		       ,paso  = null;
+		
+		try
+		{
+			paso = "Ejecutando validaci\u00f3n";
+			sb.append("\n").append(paso);
+			
+			salida = flujoMesaControlDAO.ejecutaValidacion(
+					flujo.getNtramite()
+					,flujo.getStatus()
+					,flujo.getCdunieco()
+					,flujo.getCdramo()
+					,flujo.getEstado()
+					,flujo.getNmpoliza()
+					,flujo.getNmsituac()
+					,flujo.getNmsuplem()
+					,cdvalidafk
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		sb.append(Utils.log(
+				 "\n@@@@@@ salida=",salida
+				,"\n@@@@@@ ejecutaValidacion @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		return salida;
 	}
 	
 	@Override
@@ -1240,6 +1267,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 					,null //cdvalor
 					,null //idorigen
 					,null //iddestin
+					,null
 					,"D" //accion
 					);
 		}
@@ -1332,6 +1360,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			,String iddestin
 			,String cdvalor
 			,String cdicono
+			,String swescala
 			,List<Map<String,String>>list
 			)throws Exception
 	{
@@ -1347,6 +1376,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 				,"\n@@@@@@ iddestin="  , iddestin
 				,"\n@@@@@@ cdvalor="   , cdvalor
 				,"\n@@@@@@ cdicono="   , cdicono
+				,"\n@@@@@@ swescala="  , swescala
 				,"\n@@@@@@ list="      , list
 				));
 		
@@ -1366,6 +1396,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 					,cdvalor
 					,idorigen
 					,iddestin
+					,"S".equals(swescala) ? "S" : "N"
 					,accion
 					);
 			
@@ -1729,6 +1760,16 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 					,valores
 					,cdtipsup
 					);
+			
+			mesaControlDAO.movimientoDetalleTramite(
+					ntramite
+					,new Date()
+					,null//cdclausu
+					,"Se registra un nuevo tr\u00e1mite desde mesa de control"
+					,cdusuari
+					,null//cdmotivo
+					,cdsisrol
+					);
 		}
 		catch(Exception ex)
 		{
@@ -1740,5 +1781,281 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return ntramite;
+	}
+	
+	@Override
+	public List<Map<String,String>>cargarAccionesEntidad(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String tipoent
+			,String cdentidad
+			,String webid
+			,String cdsisrol
+			)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarAccionesEntidad @@@@@@"
+				,"\n@@@@@@ cdtipflu="  , cdtipflu
+				,"\n@@@@@@ cdflujomc=" , cdflujomc
+				,"\n@@@@@@ tipoent="   , tipoent
+				,"\n@@@@@@ cdentidad=" , cdentidad
+				,"\n@@@@@@ webid="     , webid
+				,"\n@@@@@@ cdsisrol="  , cdsisrol
+				));
+		
+		List<Map<String,String>> acciones = new ArrayList<Map<String,String>>();
+		String                   paso     = null;
+		
+		try
+		{
+			paso = "Recuperando acciones de entidad";
+			sb.append("\n").append(paso);
+			List<Map<String,String>> tmp = flujoMesaControlDAO.cargarAccionesEntidad(
+					cdtipflu
+					,cdflujomc
+					,tipoent
+					,cdentidad
+					,webid
+					,cdsisrol
+					);
+			
+			for(Map<String,String> accion : tmp)
+			{
+				if(StringUtils.isNotBlank(accion.get("CDESTADOMC")))
+				{
+					accion.put("TIPODEST"  , "E");
+					accion.put("CLAVEDEST" , accion.get("CDESTADOMC"));
+					accion.put("WEBIDDEST" , accion.get("WEBIDESTADO"));
+				}
+				else if(StringUtils.isNotBlank(accion.get("CDPANTMC")))
+				{
+					accion.put("TIPODEST"  , "P");
+					accion.put("CLAVEDEST" , accion.get("CDPANTMC"));
+					accion.put("WEBIDDEST" , accion.get("WEBIDPANT"));
+				}
+				else if(StringUtils.isNotBlank(accion.get("CDCOMPMC")))
+				{
+					accion.put("TIPODEST"  , "C");
+					accion.put("CLAVEDEST" , accion.get("CDCOMPMC"));
+					accion.put("WEBIDDEST" , accion.get("WEBIDCOMP"));
+				}
+				else if(StringUtils.isNotBlank(accion.get("CDPROCMC")))
+				{
+					accion.put("TIPODEST"  , "O");
+					accion.put("CLAVEDEST" , accion.get("CDPROCMC"));
+					accion.put("WEBIDDEST" , accion.get("WEBIDPROC"));
+				}
+				else if(StringUtils.isNotBlank(accion.get("CDVALIDA")))
+				{
+					accion.put("TIPODEST"  , "V");
+					accion.put("CLAVEDEST" , accion.get("CDVALIDA"));
+					accion.put("WEBIDDEST" , accion.get("WEBIDVALIDA"));
+				}
+				else if(StringUtils.isNotBlank(accion.get("CDREVISI")))
+				{
+					accion.put("TIPODEST"  , "R");
+					accion.put("CLAVEDEST" , accion.get("CDREVISI"));
+					accion.put("WEBIDDEST" , accion.get("WEBIDREVISI"));
+				}
+				else
+				{
+					throw new ApplicationException("Acci\u00f3n no conectada");
+				}
+				if(StringUtils.isBlank(accion.get("TIPODEST"))
+						||StringUtils.isBlank(accion.get("CLAVEDEST"))
+						||StringUtils.isBlank(accion.get("WEBIDDEST"))
+						)
+				{
+					throw new ApplicationException("Acci\u00f2n mapeada con error");
+				}
+				acciones.add(accion);
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		sb.append(Utils.log(
+				 "\n@@@@@@ cargarAccionesEntidad @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return acciones;
+	}
+	
+	@Override
+	public void procesoDemo(
+			StringBuilder sb
+			,FlujoVO flujo
+			,String cdusuari
+			,String cdsisrol
+			)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ procesoDemo @@@@@@"
+				,"\n@@@@@@ flujo="    , flujo
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				));
+
+		String paso = "Cambiando fecha";
+		sb.append("\n").append(paso);
+		
+		try
+		{
+			mesaControlDAO.movimientoDetalleTramite(
+					flujo.getNtramite()
+					,new Date()//feinicio
+					,null//cdclausu
+					,Utils.join("Se agrega nuevo detalle ",Utils.format(new Date()))
+					,cdusuari
+					,null//cdmotivo
+					,cdsisrol
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		sb.append(Utils.log(
+				 "\n@@@@@@ procesoDemo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public List<Map<String,String>> ejecutaRevision(StringBuilder sb, FlujoVO flujo)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ ejecutaRevision @@@@@@"
+				,"\n@@@@@@ flujo=",flujo
+				));
+		
+		List<Map<String,String>> docsFaltan = null;
+		String                   paso       = null;
+		
+		try
+		{
+			paso = "Recuperando lista de documentos faltantes";
+			sb.append("\n").append(paso);
+			
+			docsFaltan = flujoMesaControlDAO.recuperarDocumentosRevisionFaltantes(
+					flujo.getCdtipflu()
+					,flujo.getCdflujomc()
+					,flujo.getClaveent()
+					,flujo.getNtramite()
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		sb.append(Utils.log(
+				 "\n@@@@@@ docsFaltan=",docsFaltan
+				,"\n@@@@@@ ejecutaRevision @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		return docsFaltan;
+	}
+	
+	@Override
+	public String turnarTramite(
+			StringBuilder sb
+			,String ntramite
+			,String statusOld
+			,String cdtipasigOld
+			,String statusNew
+			,String cdtipasigNew
+			,String cdusuariSes
+			,String cdsisrolSes
+			,String cdsisrolTurnado
+			)throws Exception
+	{
+		sb.append(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ turnarTramite @@@@@@"
+				,"\n@@@@@@ ntramite="        , ntramite
+				,"\n@@@@@@ statusOld="       , statusOld
+				,"\n@@@@@@ cdtipasigOld="    , cdtipasigOld
+				,"\n@@@@@@ statusNew="       , statusNew
+				,"\n@@@@@@ cdtipasigNew="    , cdtipasigNew
+				,"\n@@@@@@ cdusuariSes="     , cdusuariSes
+				,"\n@@@@@@ cdsisrolSes="     , cdsisrolSes
+				,"\n@@@@@@ cdsisrolTurnado=" , cdsisrolTurnado
+				));
+		String paso     = "Iniciando turnado"
+		       ,message = null;
+		try
+		{
+			Map<String,String> usuarioDestino = new HashMap<String,String>()
+			                   ,usuarioOrigen = null;
+			Date               fecstatu       = new Date();
+			
+			boolean origenSimple   = true
+			        ,destinoSimple = true;
+			
+			/*TODO:
+			if(!"1".equals(cdtipasigNew)) //es por usuario
+			{
+				paso = "Recuperando usuario que recibe el tr\u00e1mite";
+				sb.append("\n").append(paso);
+				usuarioRecibe = flujoMesaControlDAO.recuperarUsuarioParaTurnado(cdtipasigNew,cdsisrolTurnado);
+				sb.append(Utils.log("\nusuario que recibe=",usuarioRecibe));
+			}
+			
+			if(!"1".equals(cdtipasigOld)) //antes lo tenia un usuario especifico
+			{
+				paso = "Recuperando usuario que cede el tr\u00e1mite";
+				sb.append("\n").append(paso);
+				usuarioCede = flujoMesaControlDAO.recuperarUsuarioActualTramite(ntramite);
+				sb.append(Utils.log("\nusuario que cede=",usuarioCede));
+				//TODO --> invocar metodo que resta tareas
+			}
+			*/
+			
+			flujoMesaControlDAO.actualizarStatusTramite(
+					ntramite
+					,statusNew
+					,fecstatu
+					,usuarioDestino.get("CDUSUARI")
+					);
+			
+			mesaControlDAO.movimientoDetalleTramite(
+					ntramite
+					,new Date()//feinicio
+					,null//cdclausu
+					,null//comments
+					,cdusuariSes
+					,null//cdmotivo
+					,cdsisrolSes
+					);
+			
+			if(destinoSimple)
+			{
+				message = "El tr\u00e1mite ha sido turnado con \u00e9xito";
+			}
+			else
+			{
+				message = Utils.join("El tr\u00e1mite ha sido turnado a ",usuarioDestino.get("DSUSUARI"));
+			}
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		sb.append(Utils.log(
+				 "\n@@@@@@ message=",message
+				,"\n@@@@@@ turnarTramite @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return message;
 	}
 }

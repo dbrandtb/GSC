@@ -847,6 +847,1448 @@ function _formValuesToParams(formValues)
     }
     return params;
 }
+
+function _cargarBotonesEntidad(
+    cdtipflu
+    ,cdflujomc
+    ,tipoent
+    ,cdentidad
+    ,webid
+    ,callback
+    ,ntramite
+    ,status
+    ,cdunieco
+    ,cdramo
+    ,estado
+    ,nmpoliza
+    ,nmsituac
+    ,nmsuplem
+    ,callbackDespuesProceso
+    )
+{
+    debug('_cargarBotonesEntidad cdtipflu:'  , cdtipflu  , '.');
+    debug('_cargarBotonesEntidad cdflujomc:' , cdflujomc , '.');
+    debug('_cargarBotonesEntidad tipoent:'   , tipoent   , '.');
+    debug('_cargarBotonesEntidad cdentidad:' , cdentidad , '.');
+    debug('_cargarBotonesEntidad webid:'     , webid     , '.');
+    debug('_cargarBotonesEntidad callback:'  , callback  , '.');
+    debug('_cargarBotonesEntidad ntramite:'  , ntramite  , '.');
+    debug('_cargarBotonesEntidad status:'    , status    , '.');
+    debug('_cargarBotonesEntidad cdunieco:'  , cdunieco  , '.');
+    debug('_cargarBotonesEntidad cdramo:'    , cdramo    , '.');
+    debug('_cargarBotonesEntidad estado:'    , estado    , '.');
+    debug('_cargarBotonesEntidad nmpoliza:'  , nmpoliza  , '.');
+    debug('_cargarBotonesEntidad nmsituac:'  , nmsituac  , '.');
+    debug('_cargarBotonesEntidad nmsuplem:'  , nmsuplem  , '.');
+    
+    debug('_cargarBotonesEntidad callbackDespuesProceso?:'  , !Ext.isEmpty(callbackDespuesProceso)  , '.');
+    
+    var ck = 'Cargando acciones del proceso';
+    try
+    {
+        _mask(ck);
+        Ext.Ajax.request(
+        {
+            url      : _GLOBAL_URL_CARGAR_ACCIONES_ENTIDAD
+            ,params  :
+            {
+                'params.cdtipflu'   : cdtipflu
+                ,'params.cdflujomc' : cdflujomc
+                ,'params.tipoent'   : tipoent
+                ,'params.cdentidad' : cdentidad
+                ,'params.webid'     : webid
+            }
+            ,success : function(response)
+            {
+                _unmask();
+                var ck = 'Decodificando respuesta al cargar acciones de proceso';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### acciones:',json);
+                    if(json.success==true)
+                    {
+                        var botones = [];
+                        for(var i in json.list)
+                        {
+                            var datos = json.list[i];
+                            botones.push(Ext.create('Ext.Button',
+                            {
+                                text       : _NVL(datos.DSACCION,'(-SIN NOMBRE-)')
+                                ,icon      : _GLOBAL_DIRECTORIO_ICONOS+_NVL(datos.CDICONO,'application_xp_terminal')+'.png'
+                                ,cdtipflu  : ''+datos.CDTIPFLU
+                                ,cdflujomc : ''+datos.CDFLUJOMC
+                                ,tipodest  : ''+datos.TIPODEST
+                                ,clavedest : ''+datos.CLAVEDEST
+                                ,webiddest : ''+datos.WEBIDDEST
+                                ,ntramite  : ntramite
+                                ,status    : status
+                                ,cdunieco  : cdunieco
+                                ,cdramo    : cdramo
+                                ,estado    : estado
+                                ,nmpoliza  : nmpoliza
+                                ,nmsituac  : nmsituac
+                                ,nmsuplem  : nmsuplem
+                                ,handler   : function(me){ _botonEntidadClic(me,callbackDespuesProceso); }
+                            }));
+                        }
+                        if(typeof callback == 'string')
+                        {
+                            var comp = _fieldById(callback);
+                            comp.down('toolbar').add(botones);
+                        }
+                        else
+                        {
+                            callback(botones);
+                        }
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _unmask();
+                errorComunicacion(null,'Error al cargar acciones de proceso');
+            }
+        });
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+    return [];
+}
+
+/**
+ * Equivalente a NVL base de datos
+ */
+function _NVL(origen,valor)
+{
+    if(Ext.isEmpty(origen))
+        return valor;
+    return origen;
+}
+
+function _botonEntidadClic(bot,callbackDespuesProceso)
+{
+    debug('_botonEntidadClic bot,callbackDespuesProceso?:',bot,!Ext.isEmpty(callbackDespuesProceso),'.');
+    var ck = 'Recuperando datos de acci\u00f3n';
+    try
+    {
+        var cdtipflu   = bot.cdtipflu
+            ,cdflujomc = bot.cdflujomc
+            ,tipodest  = bot.tipodest
+            ,clavedest = bot.clavedest
+            ,webiddest = bot.webiddest
+            ,ntramite  = bot.ntramite
+            ,status    = bot.status
+            ,cdunieco  = bot.cdunieco
+            ,cdramo    = bot.cdramo
+            ,estado    = bot.estado
+            ,nmpoliza  = bot.nmpoliza
+            ,nmsituac  = bot.nmsituac
+            ,nmsuplem  = bot.nmsuplem
+        
+        debug('_botonEntidadClic cdtipflu:'  , cdtipflu  , '.');
+        debug('_botonEntidadClic cdflujomc:' , cdflujomc , '.');
+        debug('_botonEntidadClic tipodest:'  , tipodest  , '.');
+        debug('_botonEntidadClic clavedest:' , clavedest , '.');
+        debug('_botonEntidadClic webiddest:' , webiddest , '.');
+        debug('_botonEntidadClic ntramite:'  , ntramite  , '.');
+        debug('_botonEntidadClic status:'    , status    , '.');
+        debug('_botonEntidadClic cdunieco:'  , cdunieco  , '.');
+        debug('_botonEntidadClic cdramo:'    , cdramo    , '.');
+        debug('_botonEntidadClic estado:'    , estado    , '.');
+        debug('_botonEntidadClic nmpoliza:'  , nmpoliza  , '.');
+        debug('_botonEntidadClic nmsituac:'  , nmsituac  , '.');
+        debug('_botonEntidadClic nmsuplem:'  , nmsuplem  , '.');
+        
+        var callback;
+        
+        if(Ext.isEmpty(callbackDespuesProceso))
+        {
+            callback = function()
+            {
+                bot.up('window').destroy();
+            };
+        }
+        else
+        {
+            callback = function()
+            {
+                bot.up('window').destroy();
+                callbackDespuesProceso();
+            };
+        }
+        
+        _procesaAccion(
+            cdtipflu
+            ,cdflujomc
+            ,tipodest
+            ,clavedest
+            ,webiddest
+            ,ntramite
+            ,status
+            ,cdunieco
+            ,cdramo
+            ,estado
+            ,nmpoliza
+            ,nmsituac
+            ,nmsuplem
+            ,callback
+        );
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+}
+
+function _procesaAccion(
+    cdtipflu
+    ,cdflujomc
+    ,tipodest
+    ,clavedest
+    ,webiddest
+    ,ntramite
+    ,status
+    ,cdunieco
+    ,cdramo
+    ,estado
+    ,nmpoliza
+    ,nmsituac
+    ,nmsuplem
+    ,callback
+    )
+{
+    debug('_procesaAccion cdtipflu:'  , cdtipflu  , '.');
+    debug('_procesaAccion cdflujomc:' , cdflujomc , '.');
+    debug('_procesaAccion tipodest:'  , tipodest  , '.');
+    debug('_procesaAccion clavedest:' , clavedest , '.');
+    debug('_procesaAccion webiddest:' , webiddest , '.');
+    debug('_procesaAccion ntramite:'  , ntramite  , '.');
+    debug('_procesaAccion status:'    , status    , '.');
+    debug('_procesaAccion cdunieco:'  , cdunieco  , '.');
+    debug('_procesaAccion cdramo:'    , cdramo    , '.');
+    debug('_procesaAccion estado:'    , estado    , '.');
+    debug('_procesaAccion nmpoliza:'  , nmpoliza  , '.');
+    debug('_procesaAccion nmsituac:'  , nmsituac  , '.');
+    debug('_procesaAccion nmsuplem:'  , nmsuplem  , '.');
+    debug('_procesaAccion callback?:' , !Ext.isEmpty(callback) , '.');
+    var ck = 'Procesando acci\u00f3n';
+    try
+    {
+        if(tipodest=='E')
+        {
+            ck = 'Recuperando valores de status';
+            _mask(ck);
+            Ext.Ajax.request(
+            {
+                url      : _GLOBAL_URL_RECUPERACION
+                ,params  :
+                {
+                    'params.consulta'    : 'RECUPERAR_TFLUEST'
+                    ,'params.cdtipflu'   : cdtipflu
+                    ,'params.cdflujomc'  : cdflujomc
+                    //,'params.cdestadomc' : clavedest
+                }
+                ,success : function(response)
+                {
+                    _unmask();
+                    var ck = 'Decodificando respuesta al recuperar valores de status';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### tfluest:',json);
+                        if(json.success==true)
+                        {
+                            var estadoOld, estadoNew;
+                            for(var i=0 ; i<json.list.length ; i++)
+                            {
+                                var estadoIte = json.list[i];
+                                if(Number(estadoIte.CDESTADOMC)==Number(status))
+                                {
+                                    estadoOld =
+                                    {
+                                        CDTIPASIG : ''+estadoIte.CDTIPASIG
+                                    };
+                                }
+                                if(Number(estadoIte.CDESTADOMC)==Number(clavedest))
+                                {
+                                    estadoNew =
+                                    {
+                                        CDTIPASIG : ''+estadoIte.CDTIPASIG
+                                    };
+                                }
+                            }
+                            
+                            if(Ext.isEmpty(estadoOld)||Ext.isEmpty(estadoNew))
+                            {
+                                throw 'No se encuentran los status de turnado';
+                            }
+                            
+                            ck = 'Turnando tr\u00e1mite';
+                            Ext.Ajax.request(
+                            {
+                                url      : _GLOBAL_URL_TURNAR
+                                ,params  :
+                                {
+                                    'params.ntramite'      : ntramite
+                                    ,'params.statusOld'    : status
+                                    ,'params.cdtipasigOld' : estadoOld.CDTIPASIG
+                                    ,'params.statusNew'    : clavedest
+                                    ,'params.cdtipasigNew' : estadoNew.CDTIPASIG
+                                }
+                                ,success : function(response)
+                                {
+                                    var ck = 'Decodificando respuesta al turnar tr\u00e1mite';
+                                    try
+                                    {
+                                        var json = Ext.decode(response.responseText);
+                                        debug('### turnar:',json);
+                                        if(json.success==true)
+                                        {
+                                            mensajeCorrecto('Tr\u00e1mite turnado',json.message,callback);
+                                        }
+                                        else
+                                        {
+                                            mensajeError(json.message);
+                                        }
+                                    }
+                                    catch(e)
+                                    {
+                                        manejaException(e,ck);
+                                    }
+                                }
+                                ,failure : function()
+                                {
+                                    _unmask();
+                                    errorComunicacion(null,'Error al turnar tr\u00e1mite');
+                                }
+                            });
+                        }
+                        else
+                        {
+                            mensajeError(json.message);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function()
+                {
+                    _unmask();
+                    errorComunicacion(null,'Error al recuperar valores de status');
+                }
+            });
+        }
+        else if(tipodest=='P')
+        {
+            ck = 'Recuperando valores de pantalla';
+            _mask(ck);
+            Ext.Ajax.request(
+            {
+                url      : _GLOBAL_URL_RECUPERACION
+                ,params  :
+                {
+                    'params.consulta'  : 'RECUPERAR_TPANTMC'
+                    ,'params.CDPANTMC' : clavedest
+                }
+                ,success : function(response)
+                {
+                    _unmask();
+                    var ck = 'Decodificando respuesta al recuperar valores de pantalla';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### tpantmc:',json);
+                        if(json.success==true)
+                        {
+                            if(json.list.length==0)
+                            {
+                                throw 'La pantalla no existe';
+                            }
+                            else if(json.list.length>1)
+                            {
+                                throw 'Pantalla duplicada';
+                            }
+                            var pantalla = json.list[0];
+                            debug('pantalla:',pantalla);
+                            ck = 'Enviando petici\u00f3n';
+                            _mask('Redireccionando');
+                            Ext.create('Ext.form.Panel').submit(
+                            {
+                                url             : _NVL(pantalla.SWEXTERNA,'N')=='N' ?
+                                                      _GLOBAL_CONTEXTO+pantalla.URLPANTMC :
+                                                      _GLOBAL_URL_PANTALLA_EXTERNA
+                                ,standardSubmit : true
+                                ,target         : '_top'
+                                ,params         :
+                                {
+                                    'flujo.cdtipflu'   : cdtipflu
+                                    ,'flujo.cdflujomc' : cdflujomc
+                                    ,'flujo.tipoent'   : tipodest
+                                    ,'flujo.claveent'  : clavedest
+                                    ,'flujo.webid'     : webiddest
+                                    ,'flujo.ntramite'  : ntramite
+                                    ,'flujo.status'    : status
+                                    ,'flujo.cdunieco'  : cdunieco
+                                    ,'flujo.cdramo'    : cdramo
+                                    ,'flujo.estado'    : estado
+                                    ,'flujo.nmpoliza'  : nmpoliza
+                                    ,'flujo.nmsituac'  : nmsituac
+                                    ,'flujo.nmsuplem'  : nmsuplem
+                                    ,'params.url'      : _NVL(pantalla.SWEXTERNA,'N')=='N' ?
+                                                             '' :
+                                                             pantalla.URLPANTMC
+                                }
+                            });
+                        }
+                        else
+                        {
+                            mensajeError(json.message);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function()
+                {
+                    _unmask();
+                    errorComunicacion(null,'Error al recuperar valores de pantalla');
+                }
+            });
+        }
+        else if(tipodest=='C')
+        {
+            ck = 'Recuperando valores de componente';
+            _mask(ck);
+            Ext.Ajax.request(
+            {
+                url      : _GLOBAL_URL_RECUPERACION
+                ,params  :
+                {
+                    'params.consulta'  : 'RECUPERAR_TCOMPMC'
+                    ,'params.CDCOMPMC' : clavedest
+                }
+                ,success : function(response)
+                {
+                    _unmask();
+                    var ck = 'Decodificando respuesta al recuperar valores de componente';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### tcompmc:',json);
+                        if(json.success==true)
+                        {
+                            if(json.list.length==0)
+                            {
+                                throw 'El componente no existe';
+                            }
+                            else if(json.list.length>1)
+                            {
+                                throw 'Componente duplicado';
+                            }
+                            var compData = json.list[0];
+                            debug('compData:',compData);
+                            
+                            ck = 'Creando componente';
+                            Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES+compData.NOMCOMP);
+                            new window[compData.NOMCOMP](
+                            {
+                                cdtipflu   : cdtipflu
+                                ,cdflujomc : cdflujomc
+                                ,tipoent   : tipodest
+                                ,claveent  : clavedest
+                                ,webid     : webiddest
+                                ,ntramite  : ntramite
+                                ,status    : status
+                                ,cdunieco  : cdunieco
+                                ,cdramo    : cdramo
+                                ,estado    : estado
+                                ,nmpoliza  : nmpoliza
+                                ,nmsituac  : nmsituac
+                                ,nmsuplem  : nmsuplem
+                            }).mostrar();
+                        }
+                        else
+                        {
+                            mensajeError(json.message);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function()
+                {
+                    _unmask();
+                    errorComunicacion(null,'Error al recuperar valores de componente');
+                }
+            });
+        }
+        else if(tipodest=='O')
+        {
+            ck = 'Recuperando valores de proceso';
+            _mask(ck);
+            Ext.Ajax.request(
+            {
+                url      : _GLOBAL_URL_RECUPERACION
+                ,params  :
+                {
+                    'params.consulta'  : 'RECUPERAR_TPROCMC'
+                    ,'params.CDPROCMC' : clavedest
+                }
+                ,success : function(response)
+                {
+                    _unmask();
+                    var ck = 'Decodificando respuesta al recuperar valores de proceso';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### tprocmc:',json);
+                        if(json.success==true)
+                        {
+                            if(json.list.length==0)
+                            {
+                                throw 'El proceso no existe';
+                            }
+                            else if(json.list.length>1)
+                            {
+                                throw 'Proceso duplicado';
+                            }
+                            var data = json.list[0];
+                            debug('data:',data);
+                            
+                            ck = 'Recuperando acciones posteriores al proceso';
+                            _mask(ck);
+                            Ext.Ajax.request(
+                            {
+                                url      : _GLOBAL_URL_CARGAR_ACCIONES_ENTIDAD
+                                ,params  :
+                                {
+                                    'params.cdtipflu'   : cdtipflu
+                                    ,'params.cdflujomc' : cdflujomc
+                                    ,'params.tipoent'   : tipodest
+                                    ,'params.cdentidad' : clavedest
+                                    ,'params.webid'     : webiddest
+                                }
+                                ,success : function(response)
+                                {
+                                    _unmask();
+                                    var ck = 'Decodificando respuesta al recuperar acciones posteriores al proceso';
+                                    try
+                                    {
+                                        var json = Ext.decode(response.responseText);
+                                        debug('### acciones:',json);
+                                        var numSalidas = 0
+                                            ,accion1   = ''
+                                            ,accion2   = ''
+                                            ,accExito  = ''
+                                            ,accError  = '';
+                                        if(json.success==true)
+                                        {
+                                            /*
+                                            CDACCION: "138"
+                                            CDCOMPMC: null
+                                            CDESTADOMC: null
+                                            CDFLUJOMC: "12"
+                                            CDICONO: null
+                                            CDPANTMC: null
+                                            CDPROCMC: null
+                                            CDREVISI: null
+                                            CDTIPFLU: "1"
+                                            CDVALIDA: "20"
+                                            CDVALOR: null
+                                            CLAVEDEST: "20"
+                                            DSACCION: "next"
+                                            IDDESTIN: "1450139785755_1072"
+                                            IDORIGEN: "1450121226109_9387"
+                                            TIPODEST: "V"
+                                            WEBIDCOMP: null
+                                            WEBIDDEST: "1450139785755_1072"
+                                            WEBIDESTADO: null
+                                            WEBIDPANT: null
+                                            WEBIDPROC: null
+                                            WEBIDREVISI: null
+                                            WEBIDVALIDA: "1450139785755_1072"
+                                            */
+                                            if(json.list.length==1)
+                                            {
+                                                numSalidas = 1;
+                                                accion1    = json.list[0];
+                                            }
+                                            else if(json.list.length==2)
+                                            {
+                                                numSalidas = 2;
+                                                accion1    = json.list[0];
+                                                accion2    = json.list[1];
+                                                
+                                                if(_NVL(accion1.CDVALOR,'')=='EXITO')
+                                                {
+                                                    accExito = accion1;
+                                                }
+                                                else if(_NVL(accion2.CDVALOR,'')=='EXITO')
+                                                {
+                                                    accExito = accion2;
+                                                }
+                                                if(_NVL(accion1.CDVALOR,'')=='ERROR')
+                                                {
+                                                    accError = accion1;
+                                                }
+                                                else if(_NVL(accion2.CDVALOR,'')=='ERROR')
+                                                {
+                                                    accError = accion2;
+                                                }
+                                                
+                                                if(Ext.isEmpty(accExito)||Ext.isEmpty(accError))
+                                                {
+                                                    throw 'Las acciones relacionadas al proceso no tienen el valor EXITO/ERROR adecuado';
+                                                }
+                                            }
+                                            else if(json.list.length>2)
+                                            {
+                                                throw 'El proceso tiene demasiadas acciones relacionadas';
+                                            }
+                                            
+                                            ck = 'Ejecutando proceso';
+                                            _mask(ck);
+                                            Ext.Ajax.request(
+                                            {
+                                                url      : _GLOBAL_CONTEXTO+data.URLPROCMC
+                                                ,params  :
+                                                {
+                                                    'flujo.cdtipflu'   : cdtipflu
+                                                    ,'flujo.cdflujomc' : cdflujomc
+                                                    ,'flujo.tipoent'   : tipodest
+                                                    ,'flujo.claveent'  : clavedest
+                                                    ,'flujo.webid'     : webiddest
+                                                    ,'flujo.ntramite'  : ntramite
+                                                    ,'flujo.status'    : status
+                                                    ,'flujo.cdunieco'  : cdunieco
+                                                    ,'flujo.cdramo'    : cdramo
+                                                    ,'flujo.estado'    : estado
+                                                    ,'flujo.nmpoliza'  : nmpoliza
+                                                    ,'flujo.nmsituac'  : nmsituac
+                                                    ,'flujo.nmsuplem'  : nmsuplem
+                                                }
+                                                ,success : function(response)
+                                                {
+                                                    _unmask();
+                                                    var ck = 'Decodificando respuesta al ejecutar proceso';
+                                                    try
+                                                    {
+                                                        var json = Ext.decode(response.responseText);
+                                                        debug('### proceso:',json);
+                                                        if(json.success==true)
+                                                        {
+                                                            if(numSalidas==0)
+                                                            {
+                                                                mensajeCorrecto('AVISO',json.message,callback);
+                                                            }
+                                                            else if(numSalidas==1)
+                                                            {
+                                                                mensajeCorrecto
+                                                                (
+                                                                    'AVISO'
+                                                                    ,json.message
+                                                                    ,function()
+                                                                    {
+                                                                        _procesaAccion
+                                                                        (
+                                                                            cdtipflu
+                                                                            ,cdflujomc
+                                                                            ,accion1.TIPODEST
+                                                                            ,accion1.CLAVEDEST
+                                                                            ,accion1.WEBIDDEST
+                                                                            ,ntramite
+                                                                            ,status
+                                                                            ,cdunieco
+                                                                            ,cdramo
+                                                                            ,estado
+                                                                            ,nmpoliza
+                                                                            ,nmsituac
+                                                                            ,nmsuplem
+                                                                            ,callback
+                                                                        );
+                                                                    }
+                                                                );
+                                                            }
+                                                            else if(numSalidas==2)
+                                                            {
+                                                                mensajeCorrecto
+                                                                (
+                                                                    'AVISO'
+                                                                    ,json.message
+                                                                    ,function()
+                                                                    {
+                                                                        _procesaAccion
+                                                                        (
+                                                                            cdtipflu
+                                                                            ,cdflujomc
+                                                                            ,accExito.TIPODEST
+                                                                            ,accExito.CLAVEDEST
+                                                                            ,accExito.WEBIDDEST
+                                                                            ,ntramite
+                                                                            ,status
+                                                                            ,cdunieco
+                                                                            ,cdramo
+                                                                            ,estado
+                                                                            ,nmpoliza
+                                                                            ,nmsituac
+                                                                            ,nmsuplem
+                                                                            ,callback
+                                                                        );
+                                                                    }
+                                                                );
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            if(numSalidas<2)
+                                                            {
+                                                                mensajeError(json.message);
+                                                            }
+                                                            else
+                                                            {
+                                                                mensajeError
+                                                                (
+                                                                    json.message
+                                                                    ,function()
+                                                                    {
+                                                                        _procesaAccion
+                                                                        (
+                                                                            cdtipflu
+                                                                            ,cdflujomc
+                                                                            ,accError.TIPODEST
+                                                                            ,accError.CLAVEDEST
+                                                                            ,accError.WEBIDDEST
+                                                                            ,ntramite
+                                                                            ,status
+                                                                            ,cdunieco
+                                                                            ,cdramo
+                                                                            ,estado
+                                                                            ,nmpoliza
+                                                                            ,nmsituac
+                                                                            ,nmsuplem
+                                                                            ,callback
+                                                                        );
+                                                                    }
+                                                                );
+                                                            }
+                                                        }
+                                                    }
+                                                    catch(e)
+                                                    {
+                                                        if(numSalidas<2)
+                                                        {
+                                                            manejaException(e,ck);
+                                                        }
+                                                        else
+                                                        {
+                                                            debugError(e);
+                                                            mensajeError
+                                                            (
+                                                                'Error al manejar respuesta de proceso'
+                                                                ,function()
+                                                                {
+                                                                    _procesaAccion
+                                                                    (
+                                                                        cdtipflu
+                                                                        ,cdflujomc
+                                                                        ,accError.TIPODEST
+                                                                        ,accError.CLAVEDEST
+                                                                        ,accError.WEBIDDEST
+                                                                        ,ntramite
+                                                                        ,status
+                                                                        ,cdunieco
+                                                                        ,cdramo
+                                                                        ,estado
+                                                                        ,nmpoliza
+                                                                        ,nmsituac
+                                                                        ,nmsuplem
+                                                                        ,callback
+                                                                    );
+                                                                }
+                                                            );
+                                                        }
+                                                    }
+                                                }
+                                                ,failure : function(response)
+                                                {
+                                                    _unmask();
+                                                    if(numSalidas<2)
+                                                    {
+                                                        errorComunicacion(null,'Error al ejecutar proceso');
+                                                    }
+                                                    else
+                                                    {
+                                                        mensajeError(
+                                                            'Error de comunicaci\u00f3n al ejecutar proceso'
+                                                            ,function()
+                                                            {
+                                                                _procesaAccion
+                                                                (
+                                                                    cdtipflu
+                                                                    ,cdflujomc
+                                                                    ,accError.TIPODEST
+                                                                    ,accError.CLAVEDEST
+                                                                    ,accError.WEBIDDEST
+                                                                    ,ntramite
+                                                                    ,status
+                                                                    ,cdunieco
+                                                                    ,cdramo
+                                                                    ,estado
+                                                                    ,nmpoliza
+                                                                    ,nmsituac
+                                                                    ,nmsuplem
+                                                                    ,callback
+                                                                );
+                                                            }
+                                                        );
+                                                    }
+                                                }
+                                            });
+                                        }
+                                        else
+                                        {
+                                            mensajeError(json.message);
+                                        }
+                                    }
+                                    catch(e)
+                                    {
+                                        manejaException(e,ck);
+                                    }
+                                }
+                                ,failure : function()
+                                {
+                                    _unmask();
+                                    errorComunicacion(null,'Error al recuperar acciones posteriores al proceso');
+                                }
+                            });
+                        }
+                        else
+                        {
+                            mensajeError(json.message);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function()
+                {
+                    _unmask();
+                    errorComunicacion(null,'Error al recuperar valores de proceso');
+                }
+            });
+        }
+        else if(tipodest=='V')
+        {
+            ck = 'Recuperando valores de validaci\u00f3n';
+            _mask(ck);
+            Ext.Ajax.request(
+            {
+                url      : _GLOBAL_URL_RECUPERACION
+                ,params  :
+                {
+                    'params.consulta'   : 'RECUPERAR_TFLUVAL'
+                    ,'params.cdtipflu'  : cdtipflu
+                    ,'params.cdflujomc' : cdflujomc
+                    ,'params.cdvalida'  : clavedest
+                }
+                ,success : function(response)
+                {
+                    _unmask();
+                    var ck = 'Decodificando respuesta al recuperar valores de validaci\u00f3n';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### tfluval:',json);
+                        if(json.success==true)
+                        {
+                            if(json.list.length==0)
+                            {
+                                throw 'La validaci\u00f3n no existe';
+                            }
+                            else if(json.list.length>1)
+                            {
+                                throw 'Validaci\u00f3n duplicada';
+                            }
+                            var data = json.list[0];
+                            debug('data:',data);
+                            
+                            if('x'+data.CDVALIDAFK=='x-1')
+                            {
+                                throw 'La validaci\u00f3n no cuenta con una clave';
+                            }
+                            
+                            ck = 'Recuperando acciones posteriores a la validaci\u00f3n';
+                            _mask(ck);
+                            Ext.Ajax.request(
+                            {
+                                url      : _GLOBAL_URL_CARGAR_ACCIONES_ENTIDAD
+                                ,params  :
+                                {
+                                    'params.cdtipflu'   : cdtipflu
+                                    ,'params.cdflujomc' : cdflujomc
+                                    ,'params.tipoent'   : tipodest
+                                    ,'params.cdentidad' : clavedest
+                                    ,'params.webid'     : webiddest
+                                }
+                                ,success : function(response)
+                                {
+                                    _unmask();
+                                    var ck = 'Decodificando respuesta al recuperar acciones posteriores a la validaci\u00f3n';
+                                    try
+                                    {
+                                        var json = Ext.decode(response.responseText);
+                                        debug('### acciones:',json);
+                                        var numSalidas = json.list.length
+                                            ,acciones  = json.list;
+                                        if(json.success==true)
+                                        {
+                                            /*
+                                            CDACCION: "138"
+                                            CDCOMPMC: null
+                                            CDESTADOMC: null
+                                            CDFLUJOMC: "12"
+                                            CDICONO: null
+                                            CDPANTMC: null
+                                            CDPROCMC: null
+                                            CDREVISI: null
+                                            CDTIPFLU: "1"
+                                            CDVALIDA: "20"
+                                            CDVALOR: null
+                                            CLAVEDEST: "20"
+                                            DSACCION: "next"
+                                            IDDESTIN: "1450139785755_1072"
+                                            IDORIGEN: "1450121226109_9387"
+                                            TIPODEST: "V"
+                                            WEBIDCOMP: null
+                                            WEBIDDEST: "1450139785755_1072"
+                                            WEBIDESTADO: null
+                                            WEBIDPANT: null
+                                            WEBIDPROC: null
+                                            WEBIDREVISI: null
+                                            WEBIDVALIDA: "1450139785755_1072"
+                                            */
+                                            if(json.list.length==0)
+                                            {
+                                                throw 'No hay acciones relacionadas a la validaci\u00f3n';
+                                            }
+                                            for(var i=0 ; i<numSalidas ; i++)
+                                            {
+                                                if(Ext.isEmpty(acciones[i].CDVALOR))
+                                                {
+                                                    throw 'Las acciones relacionadas a la validaci\u00f3n no tienen valor';
+                                                }
+                                            }
+                                            
+                                            ck = 'Ejecutando validaci\u00f3n';
+                                            _mask(ck);
+                                            Ext.Ajax.request(
+                                            {
+                                                url      : _GLOBAL_URL_VALIDACION
+                                                ,params  :
+                                                {
+                                                    'flujo.cdtipflu'     : cdtipflu
+                                                    ,'flujo.cdflujomc'   : cdflujomc
+                                                    ,'flujo.tipoent'     : tipodest
+                                                    ,'flujo.claveent'    : clavedest
+                                                    ,'flujo.webid'       : webiddest
+                                                    ,'flujo.ntramite'    : ntramite
+                                                    ,'flujo.status'      : status
+                                                    ,'flujo.cdunieco'    : cdunieco
+                                                    ,'flujo.cdramo'      : cdramo
+                                                    ,'flujo.estado'      : estado
+                                                    ,'flujo.nmpoliza'    : nmpoliza
+                                                    ,'flujo.nmsituac'    : nmsituac
+                                                    ,'flujo.nmsuplem'    : nmsuplem
+                                                    ,'params.cdvalidafk' : data.CDVALIDAFK
+                                                }
+                                                ,success : function(response)
+                                                {
+                                                    _unmask();
+                                                    var ck = 'Decodificando respuesta al ejecutar validaci\u00f3n';
+                                                    try
+                                                    {
+                                                        var json = Ext.decode(response.responseText);
+                                                        debug('### validacion:',json);
+                                                        if(json.success==true)
+                                                        {
+                                                            var valorRespValid = json.params.salida
+                                                                ,salida        = '';
+                                                            for(var i=0 ; i<numSalidas ; i++)
+                                                            {
+                                                                if('x'+acciones[i].CDVALOR=='x'+valorRespValid)
+                                                                {
+                                                                    salida = acciones[i];
+                                                                    break;
+                                                                }
+                                                            }
+                                                            if(Ext.isEmpty(salida))
+                                                            {
+                                                                throw 'La validaci\u00f3n regres\u00f3 un valor que no tiene acci\u00f3n relacionada';
+                                                            }
+                                                            _procesaAccion
+                                                            (
+                                                                cdtipflu
+                                                                ,cdflujomc
+                                                                ,salida.TIPODEST
+                                                                ,salida.CLAVEDEST
+                                                                ,salida.WEBIDDEST
+                                                                ,ntramite
+                                                                ,status
+                                                                ,cdunieco
+                                                                ,cdramo
+                                                                ,estado
+                                                                ,nmpoliza
+                                                                ,nmsituac
+                                                                ,nmsuplem
+                                                                ,callback
+                                                            );
+                                                        }
+                                                        else
+                                                        {
+                                                            mensajeError(json.message);
+                                                        }
+                                                    }
+                                                    catch(e)
+                                                    {
+                                                        manejaException(e,ck);
+                                                    }
+                                                }
+                                                ,failure : function(response)
+                                                {
+                                                    _unmask();
+                                                    errorComunicacion(null,'Error al ejecutar validaci\u00f3n');
+                                                }
+                                            });
+                                        }
+                                        else
+                                        {
+                                            mensajeError(json.message);
+                                        }
+                                    }
+                                    catch(e)
+                                    {
+                                        manejaException(e,ck);
+                                    }
+                                }
+                                ,failure : function()
+                                {
+                                    _unmask();
+                                    errorComunicacion(null,'Error al recuperar acciones posteriores a la validaci\u00f3n');
+                                }
+                            });
+                        }
+                        else
+                        {
+                            mensajeError(json.message);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function()
+                {
+                    _unmask();
+                    errorComunicacion(null,'Error al recuperar valores de validaci\u00f3n');
+                }
+            });
+        }
+        else if(tipodest=='R')
+        {
+            ck = 'Recuperando acciones posteriores a la revisi\u00f3n';
+            _mask(ck);
+            Ext.Ajax.request(
+            {
+                url      : _GLOBAL_URL_CARGAR_ACCIONES_ENTIDAD
+                ,params  :
+                {
+                    'params.cdtipflu'   : cdtipflu
+                    ,'params.cdflujomc' : cdflujomc
+                    ,'params.tipoent'   : tipodest
+                    ,'params.cdentidad' : clavedest
+                    ,'params.webid'     : webiddest
+                }
+                ,success : function(response)
+                {
+                    _unmask();
+                    var ck = 'Decodificando respuesta al recuperar acciones posteriores a la revisi\u00f3n';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### acciones:',json);
+                        var numSalidas = 0
+                            ,accion1   = ''
+                            ,accion2   = ''
+                            ,accExito  = ''
+                            ,accError  = '';
+                        if(json.success==true)
+                        {
+                            /*
+                            CDACCION: "138"
+                            CDCOMPMC: null
+                            CDESTADOMC: null
+                            CDFLUJOMC: "12"
+                            CDICONO: null
+                            CDPANTMC: null
+                            CDPROCMC: null
+                            CDREVISI: null
+                            CDTIPFLU: "1"
+                            CDVALIDA: "20"
+                            CDVALOR: null
+                            CLAVEDEST: "20"
+                            DSACCION: "next"
+                            IDDESTIN: "1450139785755_1072"
+                            IDORIGEN: "1450121226109_9387"
+                            TIPODEST: "V"
+                            WEBIDCOMP: null
+                            WEBIDDEST: "1450139785755_1072"
+                            WEBIDESTADO: null
+                            WEBIDPANT: null
+                            WEBIDPROC: null
+                            WEBIDREVISI: null
+                            WEBIDVALIDA: "1450139785755_1072"
+                            */
+                            if(json.list.length==0)
+                            {
+                                throw 'No hay acciones relacionadas a la revisi\u00f3n';
+                            }
+                            else if(json.list.length==1)
+                            {
+                                numSalidas = 1;
+                                accion1    = json.list[0];
+                            }
+                            else if(json.list.length==2)
+                            {
+                                numSalidas = 2;
+                                accion1    = json.list[0];
+                                accion2    = json.list[1];
+                                
+                                if(_NVL(accion1.CDVALOR,'')=='EXITO')
+                                {
+                                    accExito = accion1;
+                                }
+                                else if(_NVL(accion2.CDVALOR,'')=='EXITO')
+                                {
+                                    accExito = accion2;
+                                }
+                                if(_NVL(accion1.CDVALOR,'')=='ERROR')
+                                {
+                                    accError = accion1;
+                                }
+                                else if(_NVL(accion2.CDVALOR,'')=='ERROR')
+                                {
+                                    accError = accion2;
+                                }
+                                
+                                if(Ext.isEmpty(accExito)||Ext.isEmpty(accError))
+                                {
+                                    throw 'Las acciones relacionadas a la revisi\u00f3n no tienen el valor EXITO/ERROR adecuado';
+                                }
+                            }
+                            else
+                            {
+                                throw 'La revisi\u00f3n tiene demasiadas acciones relacionadas';
+                            }
+                            
+                            ck = 'Ejecutando revisi\u00f3n';
+                            _mask(ck);
+                            Ext.Ajax.request(
+                            {
+                                url      : _GLOBAL_URL_REVISION
+                                ,params  :
+                                {
+                                    'flujo.cdtipflu'   : cdtipflu
+                                    ,'flujo.cdflujomc' : cdflujomc
+                                    ,'flujo.tipoent'   : tipodest
+                                    ,'flujo.claveent'  : clavedest
+                                    ,'flujo.webid'     : webiddest
+                                    ,'flujo.ntramite'  : ntramite
+                                    ,'flujo.status'    : status
+                                    ,'flujo.cdunieco'  : cdunieco
+                                    ,'flujo.cdramo'    : cdramo
+                                    ,'flujo.estado'    : estado
+                                    ,'flujo.nmpoliza'  : nmpoliza
+                                    ,'flujo.nmsituac'  : nmsituac
+                                    ,'flujo.nmsuplem'  : nmsuplem
+                                }
+                                ,success : function(response)
+                                {
+                                    _unmask();
+                                    var ck = 'Decodificando respuesta al ejecutar revisi\u00f3n';
+                                    try
+                                    {
+                                        var json = Ext.decode(response.responseText);
+                                        debug('### revision:',json);
+                                        if(json.success==true)
+                                        {
+                                            if(json.list.length==0)
+                                            {
+	                                            if(numSalidas==1)
+	                                            {
+	                                                _procesaAccion
+                                                    (
+                                                        cdtipflu
+                                                        ,cdflujomc
+                                                        ,accion1.TIPODEST
+                                                        ,accion1.CLAVEDEST
+                                                        ,accion1.WEBIDDEST
+                                                        ,ntramite
+                                                        ,status
+                                                        ,cdunieco
+                                                        ,cdramo
+                                                        ,estado
+                                                        ,nmpoliza
+                                                        ,nmsituac
+                                                        ,nmsuplem
+                                                        ,callback
+                                                    );
+	                                            }
+	                                            else if(numSalidas==2)
+	                                            {
+	                                                _procesaAccion
+                                                    (
+                                                        cdtipflu
+                                                        ,cdflujomc
+                                                        ,accExito.TIPODEST
+                                                        ,accExito.CLAVEDEST
+                                                        ,accExito.WEBIDDEST
+                                                        ,ntramite
+                                                        ,status
+                                                        ,cdunieco
+                                                        ,cdramo
+                                                        ,estado
+                                                        ,nmpoliza
+                                                        ,nmsituac
+                                                        ,nmsuplem
+                                                        ,callback
+                                                    );
+	                                            }
+	                                        }
+	                                        else
+	                                        {
+	                                            var lista = [];
+	                                            for(var i=0 ; i<json.list.length ; i++)
+	                                            {
+	                                                lista.push(json.list[i].DSDOCUME);
+	                                            }
+	                                            if(numSalidas==1)
+                                                {
+                                                    mensajeError
+                                                    (
+                                                        'FAVOR DE SUBIR LOS SIGUIENTES DOCUMENTOS:<p>'+(lista.join('<br/>'))
+                                                    );
+                                                }
+                                                else if(numSalidas==2)
+                                                {
+                                                    mensajeError
+                                                    (
+                                                        'FAVOR DE SUBIR LOS SIGUIENTES DOCUMENTOS:<p>'+(lista.join('<br/>'))
+                                                        ,function()
+                                                        {
+                                                            _procesaAccion
+                                                            (
+                                                                cdtipflu
+                                                                ,cdflujomc
+                                                                ,accError.TIPODEST
+                                                                ,accError.CLAVEDEST
+                                                                ,accError.WEBIDDEST
+                                                                ,ntramite
+                                                                ,status
+                                                                ,cdunieco
+                                                                ,cdramo
+                                                                ,estado
+                                                                ,nmpoliza
+                                                                ,nmsituac
+                                                                ,nmsuplem
+                                                                ,callback
+                                                            );
+                                                        }
+                                                    );
+                                                }
+	                                        }
+                                        }
+                                        else
+                                        {
+                                            if(numSalidas<2)
+                                            {
+                                                mensajeError(json.message);
+                                            }
+                                            else
+                                            {
+                                                mensajeError
+                                                (
+                                                    json.message
+                                                    ,function()
+                                                    {
+                                                        _procesaAccion
+                                                        (
+                                                            cdtipflu
+                                                            ,cdflujomc
+                                                            ,accError.TIPODEST
+                                                            ,accError.CLAVEDEST
+                                                            ,accError.WEBIDDEST
+                                                            ,ntramite
+                                                            ,status
+                                                            ,cdunieco
+                                                            ,cdramo
+                                                            ,estado
+                                                            ,nmpoliza
+                                                            ,nmsituac
+                                                            ,nmsuplem
+                                                            ,callback
+                                                        );
+                                                    }
+                                                );
+                                            }
+                                        }
+                                    }
+                                    catch(e)
+                                    {
+                                        if(numSalidas<2)
+                                        {
+                                            manejaException(e,ck);
+                                        }
+                                        else
+                                        {
+                                            debugError(e);
+                                            mensajeError
+                                            (
+                                                'Error al manejar respuesta de proceso'
+                                                ,function()
+                                                {
+                                                    _procesaAccion
+                                                    (
+                                                        cdtipflu
+                                                        ,cdflujomc
+                                                        ,accError.TIPODEST
+                                                        ,accError.CLAVEDEST
+                                                        ,accError.WEBIDDEST
+                                                        ,ntramite
+                                                        ,status
+                                                        ,cdunieco
+                                                        ,cdramo
+                                                        ,estado
+                                                        ,nmpoliza
+                                                        ,nmsituac
+                                                        ,nmsuplem
+                                                        ,callback
+                                                    );
+                                                }
+                                            );
+                                        }
+                                    }
+                                }
+                                ,failure : function(response)
+                                {
+                                    _unmask();
+                                    if(numSalidas<2)
+                                    {
+                                        errorComunicacion(null,'Error al ejecutar revisi\u00f3n');
+                                    }
+                                    else
+                                    {
+                                        mensajeError(
+                                            'Error de comunicaci\u00f3n al ejecutar revisi\u00f3n'
+                                            ,function()
+                                            {
+                                                _procesaAccion
+                                                (
+                                                    cdtipflu
+                                                    ,cdflujomc
+                                                    ,accError.TIPODEST
+                                                    ,accError.CLAVEDEST
+                                                    ,accError.WEBIDDEST
+                                                    ,ntramite
+                                                    ,status
+                                                    ,cdunieco
+                                                    ,cdramo
+                                                    ,estado
+                                                    ,nmpoliza
+                                                    ,nmsituac
+                                                    ,nmsuplem
+                                                    ,callback
+                                                );
+                                            }
+                                        );
+                                    }
+                                }
+                            });
+                        }
+                        else
+                        {
+                            mensajeError(json.message);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function()
+                {
+                    _unmask();
+                    errorComunicacion(null,'Error al recuperar acciones posteriores a la revisi\u00f3n');
+                }
+            });
+        }
+        else
+        {
+            throw 'Entidad inv\u00e1lida';
+        }
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+}
+
+function _mask(text)
+{
+    _unmask();
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title        : 'Cargando...'
+        ,itemId      : '_global_loadingWindow'
+        ,modal       : true
+        ,border      : 0
+        ,style       : 'padding:5px;'
+        ,closeAction : 'destroy'
+        ,items       :
+        [{
+            xtype  : 'displayfield'
+            ,value : _NVL(text,'Cargando...')
+        }]
+    }).show());
+}
+
+function _unmask()
+{
+    var masks = Ext.ComponentQuery.query('[itemId=_global_loadingWindow]');
+    for(var i=0;i<masks.length;i++)
+    {
+        masks[i].destroy();
+    }
+}
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////
