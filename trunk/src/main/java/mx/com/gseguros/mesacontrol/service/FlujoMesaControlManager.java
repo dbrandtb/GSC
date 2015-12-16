@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 
 public interface FlujoMesaControlManager
@@ -130,12 +131,8 @@ public interface FlujoMesaControlManager
 			)throws Exception;
 	
 	public String ejecutaValidacion(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String nmsituac
-			,String nmsuplem
+			StringBuilder sb
+			,FlujoVO flujo
 			,String cdvalidafk
 			)throws Exception;
 	
@@ -192,6 +189,7 @@ public interface FlujoMesaControlManager
 			,String iddestin
 			,String cdvalor
 			,String cdicono
+			,String swescala
 			,List<Map<String,String>>list
 			)throws Exception;
 	
@@ -239,5 +237,36 @@ public interface FlujoMesaControlManager
 			,String cdtipsit , String cdusuari , String cdsisrol   , String swimpres
 			,String cdtipflu , String cdflujomc
 			,Map<String, String> valores, String cdtipsup
+			)throws Exception;
+	
+	public List<Map<String,String>>cargarAccionesEntidad(
+			StringBuilder sb
+			,String cdtipflu
+			,String cdflujomc
+			,String tipoent
+			,String cdentidad
+			,String webid
+			,String cdsisrol
+			)throws Exception;
+	
+	public void procesoDemo(
+			StringBuilder sb
+			,FlujoVO flujo
+			,String cdusuari
+			,String cdsisrol
+			)throws Exception;
+	
+	public List<Map<String,String>> ejecutaRevision(StringBuilder sb, FlujoVO flujo)throws Exception;
+	
+	public String turnarTramite(
+			StringBuilder sb
+			,String ntramite
+			,String statusOld
+			,String cdtipasigOld
+			,String statusNew
+			,String cdtipasigNew
+			,String cdusuariSes
+			,String cdsisrolSes
+			,String cdsisrolTurnado
 			)throws Exception;
 }

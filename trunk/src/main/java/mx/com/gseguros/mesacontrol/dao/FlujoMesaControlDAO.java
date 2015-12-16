@@ -1,5 +1,6 @@
 package mx.com.gseguros.mesacontrol.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -24,28 +25,28 @@ public interface FlujoMesaControlDAO {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, String>> recuperaTestadomc() throws Exception;
+	public List<Map<String, String>> recuperaTestadomc(String cdestadomc) throws Exception;
 
 	/**
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, String>> recuperaTpantamc() throws Exception;
+	public List<Map<String, String>> recuperaTpantamc(String cdpantmc) throws Exception;
 
 	/**
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, String>> recuperaTcompmc() throws Exception;
+	public List<Map<String, String>> recuperaTcompmc(String cdcompmc) throws Exception;
 
 	/**
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, String>> recuperaTprocmc() throws Exception;
+	public List<Map<String, String>> recuperaTprocmc(String cdprocmc) throws Exception;
 
 	/**
 	 * 
@@ -78,7 +79,7 @@ public interface FlujoMesaControlDAO {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, String>> recuperaTfluest(String cdtipflu, String cdflujomc)
+	public List<Map<String, String>> recuperaTfluest(String cdtipflu, String cdflujomc, String cdestadomc)
 			throws Exception;
 
 	/**
@@ -116,7 +117,7 @@ public interface FlujoMesaControlDAO {
 	 * @throws Exception
 	 */
 	public List<Map<String, String>> recuperaTflupant(String cdtipflu,
-			String cdflujomc) throws Exception;
+			String cdflujomc, String cdpantmc) throws Exception;
 
 	/**
 	 * 
@@ -145,7 +146,7 @@ public interface FlujoMesaControlDAO {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, String>> recuperaTfluval(String cdtipflu, String cdflujomc)
+	public List<Map<String, String>> recuperaTfluval(String cdtipflu, String cdflujomc, String cdvalida)
 			throws Exception;
 
 	/**
@@ -249,7 +250,7 @@ public interface FlujoMesaControlDAO {
 	public void movimientoTfluest(String cdtipflu, String cdflujomc,
 			String cdestadomc, String webid, String xpos, String ypos,
 			String timemax, String timewrn1, String timewrn2,
-			String swescala, String cdtipasig, String accion)
+			String cdtipasig, String accion)
 			throws Exception;
 
 	/**
@@ -463,7 +464,7 @@ public interface FlujoMesaControlDAO {
 	 */
 	public String movimientoTfluacc(String cdtipflu, String cdflujomc, String cdaccion,
 			String dsaccion, String cdicono, String cdvalor, String idorigen,
-			String iddestin, String accion) throws Exception;
+			String iddestin, String swescala, String accion) throws Exception;
 
 	/**
 	 * 
@@ -529,12 +530,37 @@ public interface FlujoMesaControlDAO {
 			)throws Exception;
 	
 	public String ejecutaValidacion(
-			String cdunieco
+			String ntramite
+			,String status
+			,String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza
 			,String nmsituac
 			,String nmsuplem
 			,String cdvalidafk
+			)throws Exception;
+	
+	public List<Map<String,String>>cargarAccionesEntidad(
+			String cdtipflu
+			,String cdflujomc
+			,String tipoent
+			,String cdentidad
+			,String webid
+			,String cdsisrol
+			)throws Exception;
+	
+	public List<Map<String,String>> recuperarDocumentosRevisionFaltantes(
+			String cdtipflu
+			,String cdflujomc
+			,String cdrevisi
+			,String ntramite
+			)throws Exception;
+	
+	public void actualizarStatusTramite(
+			String ntramite
+			,String status
+			,Date fecstatu
+			,String cdusuari
 			)throws Exception;
 }

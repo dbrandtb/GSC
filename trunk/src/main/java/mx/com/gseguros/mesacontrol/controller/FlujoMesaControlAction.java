@@ -872,25 +872,39 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String ejecutaValidacion()
 	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n###############################"
+				,"\n###### ejecutaValidacion ######"
+				,"\n###### flujo="  , flujo
+				,"\n###### params=" , params
+				));
 		try
 		{
-			String cdunieco   = params.get("cdunieco");
-			String cdramo     = params.get("cdramo");
-			String estado     = params.get("estado");
-			String nmpoliza   = params.get("nmpoliza");
-			String nmsituac   = params.get("nmsituac");
-			String nmsuplem   = params.get("nmsuplem");
+			Utils.validateSession(session);
+			
+			Utils.validate(flujo  , "No se recibieron datos del flujo");
+			Utils.validate(params , "No se recibieron par\u00e1metros");
+			
 			String cdvalidafk = params.get("cdvalidafk");
+			
+			Utils.validate(cdvalidafk , "No se recibi\u00f3 clave de validaci\u00f3n");
+			
 			params.put("salida" , flujoMesaControlManager.ejecutaValidacion(
-					cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,nmsituac
-					,nmsuplem
+					sb
+					,flujo
 					,cdvalidafk
 					));
-			success=true;
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### params=" , params
+					,"\n###### ejecutaValidacion ######"
+					,"\n###############################"
+					));
+			
+			logger.debug(sb.toString());
+			
 		}
 		catch(Exception ex)
 		{
@@ -1164,7 +1178,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,iddestin  = params.get("IDDESTIN")
 			       ,cdvalor   = params.get("CDVALOR")
 			       ,cdicono   = params.get("CDICONO")
-			       ;
+			       ,swescala  = params.get("SWESCALA");
 			
 			Utils.validate(
 					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
@@ -1187,6 +1201,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,iddestin
 					,cdvalor
 					,cdicono
+					,swescala
 					,list
 					);
 			
@@ -1230,6 +1245,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					 "\n###### debugScreen ######"
 					,"\n#########################"
 					));
+			
 			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
@@ -1289,6 +1305,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					 "\n###### mesaControl ######"
 					,"\n#########################"
 					));
+			
 			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
@@ -1415,12 +1432,15 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			params.putAll(flujoMesaControlManager.recuperarPolizaUnica(sb,cdunieco,cdramo,estado,nmpoliza));
 			
+			success = true;
+			
 			sb.append(Utils.log(
 					 "\n###### params=",params
 					,"\n###### recuperarPolizaUnica ######"
 					,"\n##################################"
 					));
-			success = true;
+			
+			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -1501,12 +1521,362 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			params.put("ntramite" , ntramite);
 			
+			success = true;
+			
 			sb.append(Utils.log(
 					 "\n###### params=",params
 					,"\n###### registrarTramite ######"
 					,"\n##############################"
 					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
+	
+	@Action(value   = "cargarAccionesEntidad",
+			results = { @Result(name="success", type="json") }
+			)
+	public String cargarAccionesEntidad()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n###################################"
+				,"\n###### cargarAccionesEntidad ######"
+				,"\n###### params=",params
+				));
+		try
+		{
+			UserVO usuario  = Utils.validateSession(session);
+			String cdsisrol = usuario.getRolActivo().getClave();
+			
+			Utils.validate(params, "No se recibieron datos");
+			
+			String cdtipflu   = params.get("cdtipflu")
+			       ,cdflujomc = params.get("cdflujomc")
+			       ,tipoent   = params.get("tipoent")
+			       ,cdentidad = params.get("cdentidad")
+			       ,webid     = params.get("webid");
+			       
+			Utils.validate(
+					cdtipflu   , "No se recibi\u00f3 el flujo"
+					,cdflujomc , "No se recibi\u00f3 el proceso"
+					,tipoent   , "No se recibi\u00f3 la entidad"
+					,cdentidad , "No se recibi\u00f3 la clave"
+					);
+			
+			list = flujoMesaControlManager.cargarAccionesEntidad(
+					sb
+					,cdtipflu
+					,cdflujomc
+					,tipoent
+					,cdentidad
+					,webid
+					,cdsisrol
+					);
+			
 			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### cargarAccionesEntidad ######"
+					,"\n###################################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
+	
+	@Action(value   = "pantallaExterna",
+	        results = {
+			    @Result(name="error"   , location="/jsp-script/general/errorPantalla.jsp"),
+                @Result(name="success" , location="/jsp-script/proceso/flujoMesaControl/pantallaExterna.jsp")
+            }
+	)
+	public String pantallaExterna()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n#############################"
+				,"\n###### pantallaExterna ######"
+				,"\n###### params=" , params
+				,"\n###### flujo="  , flujo
+				));
+		
+		String result = ERROR;
+		
+		try
+		{
+			UserVO usuario = Utils.validateSession(session);
+			
+			Utils.validate(params, "No se recibieron datos");
+			
+			String urlExterna = params.get("url");
+			
+			Utils.validate(urlExterna , "No hay url");
+			
+			String parametros = Utils.join(
+					"?flujo.cdtipflu="   , flujo.getCdtipflu()
+					,"&flujo.cdflujomc=" , flujo.getCdflujomc()
+					,"&flujo.tipoent="   , flujo.getTipoent()
+					,"&flujo.claveent="  , flujo.getClaveent()
+					,"&flujo.webid="     , flujo.getWebid()
+					,"&flujo.ntramite="  , flujo.getNtramite()
+					,"&flujo.status="    , flujo.getStatus()
+					,"&flujo.cdunieco="  , flujo.getCdunieco()
+					,"&flujo.cdramo="    , flujo.getCdramo()
+					,"&flujo.estado="    , flujo.getEstado()
+					,"&flujo.nmpoliza="  , flujo.getNmpoliza()
+					,"&flujo.nmsituac="  , flujo.getNmsituac()
+					,"&flujo.nmsuplem="  , flujo.getNmsuplem()
+					);
+			
+			urlExterna = Utils.join(urlExterna,parametros.replace("flujo.",""),"&cdusuari=",usuario.getUser(),"&cdsisrol=",usuario.getRolActivo().getClave());
+			
+			params.put("urlInterna" , parametros);
+			params.put("urlExterna" , urlExterna);
+			
+			result = SUCCESS;
+			
+			sb.append(Utils.log(
+					 "\n###### result=",result
+					,"\n###### pantallaExterna ######"
+					,"\n#############################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return result;
+	}
+	
+	@Action(value   = "controladorExterno",
+	        results = {
+			    @Result(name="error"   , location="/jsp-script/general/errorPantalla.jsp"),
+                @Result(name="success" , location="/jsp-script/proceso/flujoMesaControl/controladorExterno.jsp")
+            }
+	)
+	public String controladorExterno()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n#################################"
+				,"\n###### controladorExterno ######"
+				,"\n###### flujo="  , flujo
+				));
+		
+		String result = ERROR;
+		
+		try
+		{
+			UserVO usuario = Utils.validateSession(session);
+			
+			Utils.validate(flujo , "No se recibieron datos");
+			
+			result = SUCCESS;
+			
+			sb.append(Utils.log(
+					 "\n###### result=",result
+					,"\n###### controladorExterno ######"
+					,"\n################################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return result;
+	}
+	
+	@Action(value   = "pantallaDiagnosticoFlujo",
+	        results = {
+			    @Result(name="error"   , location="/jsp-script/general/errorPantalla.jsp"),
+                @Result(name="success" , location="/jsp-script/proceso/flujoMesaControl/diagnosticoFlujo.jsp")
+            }
+	)
+	public String pantallaDiagnosticoFlujo()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n######################################"
+				,"\n###### pantallaDiagnosticoFlujo ######"
+				,"\n###### flujo=", flujo
+				));
+		
+		String result = ERROR;
+		
+		try
+		{
+			UserVO usuario = Utils.validateSession(session);
+			
+			Utils.validate(flujo , "No se recibieron datos");
+			
+			result = SUCCESS;
+			
+			sb.append(Utils.log(
+					 "\n###### result=",result
+					,"\n###### pantallaDiagnosticoFlujo ######"
+					,"\n######################################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return result;
+	}
+	
+	@Action(value   = "procesoDemo",
+			results = { @Result(name="success", type="json") }
+			)
+	public String cambiarFechaRecepcion()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n#########################"
+				,"\n###### procesoDemo ######"
+				,"\n###### flujo=",flujo
+				));
+		try
+		{
+			UserVO usuario = Utils.validateSession(session);
+			
+			Utils.validate(flujo, "No se recibieron datos");
+			
+			flujoMesaControlManager.procesoDemo(
+					sb
+					,flujo
+					,usuario.getUser()
+					,usuario.getRolActivo().getClave()
+					);
+			
+			message = "Se agreg\u00f3 un nuevo registro de detalle para el tr\u00e1mite";
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### procesoDemo ######"
+					,"\n#########################"
+					));
+			
+			logger.debug(sb.toString());
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
+	
+	@Action(value   = "ejecutaRevision",
+			results = { @Result(name="success", type="json") }
+			)
+	public String ejecutaRevision()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n#############################"
+				,"\n###### ejecutaRevision ######"
+				,"\n###### flujo="  , flujo
+				,"\n###### params=" , params
+				));
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(flujo  , "No se recibieron datos del flujo");
+			
+			list = flujoMesaControlManager.ejecutaRevision(
+					sb
+					,flujo
+					);
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### params=" , params
+					,"\n###### ejecutaRevision ######"
+					,"\n#############################"
+					));
+			
+			logger.debug(sb.toString());
+			
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
+	
+
+	
+	@Action(value   = "turnarTramite",
+			results = { @Result(name="success", type="json") }
+			)
+	public String turnarTramite()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n###########################"
+				,"\n###### turnarTramite ######"
+				,"\n###### params=" , params
+				));
+		try
+		{
+			UserVO user        = Utils.validateSession(session);
+			String cdusuariSes = user.getUser();
+			String cdsisrolSes = user.getRolActivo().getClave();
+			
+			Utils.validate(params, "No se recibieron datos");
+			
+			String ntramite         = params.get("ntramite")
+			       ,statusOld       = params.get("statusOld")
+			       ,cdtipasigOld    = params.get("cdtipasigOld")
+			       ,statusNew       = params.get("statusNew")
+			       ,cdtipasigNew    = params.get("cdtipasigNew")
+			       ,cdsisrolTurnado = params.get("cdsisrolTurnado");
+			
+			Utils.validate(
+					ntramite      , "No se recibi\u00f3 el tr\u00e1mite"
+					,statusOld    , "No se recibi\u00f3 el status anterior"
+					,cdtipasigOld , "No se recibi\u00f3 el tipo de status anterior"
+					,statusNew    , "No se recibi\u00f3 el status nuevo"
+					,cdtipasigNew , "No se recibi\u00f3 el tipo de status nuevo"
+					);
+			
+			message = flujoMesaControlManager.turnarTramite(
+					sb
+					,ntramite
+					,statusOld
+					,cdtipasigOld
+					,statusNew
+					,cdtipasigNew
+					,cdusuariSes
+					,cdsisrolSes
+					,cdsisrolTurnado
+					);
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### message=" , message
+					,"\n###### turnarTramite ######"
+					,"\n###########################"
+					));
+			
+			logger.debug(sb.toString());
+			
 		}
 		catch(Exception ex)
 		{
@@ -1542,7 +1912,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		this.items = items;                               //
 	}                                                     //
                                                           //
-	public FlujoVO getTramite() {                         //
+	public FlujoVO getFlujo() {                           //
 		return flujo;                                     //
 	}                                                     //
 	                                                      //

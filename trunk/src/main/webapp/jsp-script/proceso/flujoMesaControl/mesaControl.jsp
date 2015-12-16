@@ -219,6 +219,100 @@ Ext.onReady(function()
                     ,dock        : 'bottom'
                     ,displayInfo : true
                 }]
+                ,listeners :
+                {
+                    select : function(grid,record)
+                    {
+                        var ck = 'Invocando acciones de proceso';
+                        try
+                        {
+                            centrarVentanaInterna(Ext.create('Ext.window.Window',
+                            {
+                                title        : 'ACCIONES'
+                                ,itemId      : '_p54_windowAcciones'
+                                ,modal       : true
+                                ,width       : 800
+                                ,height      : 300
+                                ,border      : 0
+                                ,closeAction : 'destroy'
+                                ,defaults    :
+                                {
+                                    style  : 'margin:5px;border-bottom:1px solid #CCCCCC;'
+                                    ,width : 350
+                                }
+                                ,layout      :
+                                {
+                                    type     : 'table'
+                                    ,columns : 2
+                                }
+                                ,items       :
+                                [
+                                    {
+                                        xtype       : 'displayfield'
+                                        ,fieldLabel : 'NO. TR\u00c1MITE'
+                                        ,value      : record.get('NTRAMITE')
+                                    }
+                                    ,{
+                                        xtype       : 'displayfield'
+                                        ,fieldLabel : 'TR\u00c1MITE'
+                                        ,value      : record.get('DSTIPFLU')
+                                    }
+                                    ,{
+                                        xtype       : 'displayfield'
+                                        ,fieldLabel : 'PROCESO'
+                                        ,value      : record.get('DSFLUJOMC')
+                                    }
+                                    ,{
+                                        xtype       : 'displayfield'
+                                        ,fieldLabel : 'STATUS'
+                                        ,value      : record.get('DSSTATUS')
+                                    }
+                                    ,{
+                                        xtype       : 'displayfield'
+                                        ,fieldLabel : 'SUCURSAL'
+                                        ,value      : record.get('CDUNIECO')
+                                    }
+                                    ,{
+                                        xtype       : 'displayfield'
+                                        ,fieldLabel : 'SUBRAMO'
+                                        ,value      : record.get('DSTIPSIT')
+                                    }
+                                    ,{
+                                        xtype       : 'displayfield'
+                                        ,fieldLabel : 'P\u00d3LIZA'
+                                        ,value      : record.get('NMPOLIZA')
+                                    }
+                                ]
+                                ,buttonAlign : 'center'
+                                ,buttons     : _cargarBotonesEntidad
+                                (
+                                    record.get('CDTIPFLU')
+                                    ,record.get('CDFLUJOMC')
+                                    ,'E'
+                                    ,record.get('STATUS')
+                                    ,''
+                                    ,'_p54_windowAcciones'
+                                    ,record.get('NTRAMITE')
+                                    ,record.get('STATUS')
+                                    ,record.get('CDUNIECO')
+                                    ,record.get('CDRAMO')
+                                    ,record.get('ESTADO')
+                                    ,record.get('NMPOLIZA')
+                                    ,record.get('NMSITUAC')
+                                    ,record.get('NMSUPLEM')
+                                    ,function()
+                                    {
+                                        _p54_store.reload();
+                                    }
+                                )
+                            }).show());
+                        }
+                        catch(e)
+                        {
+                            manejaException(e,ck);
+                        }
+                    }
+                }
             })
         ]
     });
