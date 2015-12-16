@@ -7,9 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
+import mx.com.gseguros.portal.catalogos.dao.impl.ClienteDAO;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
@@ -24,19 +30,28 @@ import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-
+@Service
 public class PersonasManagerImpl implements PersonasManager
 {
 	private final static org.apache.log4j.Logger logger       = org.apache.log4j.Logger.getLogger(PersonasManagerImpl.class);
 	private final static org.slf4j.Logger        logger2      = org.slf4j.LoggerFactory.getLogger(PersonasManagerImpl.class);
 	private final static SimpleDateFormat        renderFechas = new SimpleDateFormat("dd/MM/yyyy");
-	private PantallasDAO pantallasDAO;
-	private PersonasDAO  personasDAO;
-	private EndososDAO   endososDAO;
+	
 	private Map<String,Object>session;
 	
+	@Autowired
+	private PantallasDAO pantallasDAO;
+	
+	@Autowired
+	private PersonasDAO  personasDAO;
+	
+	@Autowired
+	private EndososDAO   endososDAO;
+	
+	@Autowired
+	private ClienteDAO  clienteDAOSIGS;
+
+
 	/**
 	 * Carga los componentes de la pantalla de personas
 	 * @return exito,respuesta,respuestaOculta,itemMap
@@ -1142,6 +1157,32 @@ public class PersonasManagerImpl implements PersonasManager
 		return genericVO;
 	}
 	
+	@Override
+	public String obtieneInformacionCliente(String sucursal, String ramo, String poliza) throws Exception{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ obtieneInformacionCliente @@@@@@"
+				,"\n@@@@@@ sucursal =",sucursal
+				,"\n@@@@@@ ramo =",ramo
+				,"\n@@@@@@ poliza =",poliza
+				));
+		
+		String paso = null;
+		try{
+			paso = "Obtenemos la lista de los clientes non gratos";
+			paso = clienteDAOSIGS.obtieneInformacionCliente(sucursal, ramo, poliza);
+		}catch (Exception e){
+			throw new ApplicationException("1", e);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ mensaje=",paso
+				,"\n@@@@@@ obtieneInformacionCliente @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return paso;
+	}
+	
 	/************************ BASE MANAGER **************************/
 	private void manejaException(Exception ex,ManagerRespuestaBaseVO resp)
 	{
@@ -1210,5 +1251,5 @@ public class PersonasManagerImpl implements PersonasManager
 	public void setEndososDAO(EndososDAO endososDAO) {
 		this.endososDAO = endososDAO;
 	}
-	
+		
 }

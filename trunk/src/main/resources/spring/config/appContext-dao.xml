@@ -79,4 +79,6 @@
     
     <bean id="flujoMesaControlDAOImpl" class="mx.com.gseguros.mesacontrol.dao.impl.FlujoMesaControlDAOImpl" parent="abstractManagerDAO"/>
     
+    <bean id="clienteDAOSIGSImpl" class="mx.com.gseguros.portal.catalogos.dao.impl.ClienteDAOSIGSImpl" parent="abstractManagerDAOSIGS"/>
+    
 </beans>

@@ -800,6 +800,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = catalogosManager.recuperarTtipsupl(params.get("idPadre"),params.get("ninguno"));
 					break;
+				case PARENTESCOAUTO:
+					lista = catalogosManager.obtieneCatalogoParentescoAutos();
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

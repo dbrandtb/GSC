@@ -1,7 +1,9 @@
 package mx.com.gseguros.portal.catalogos.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -235,6 +237,98 @@ public class PersonaAction extends PrincipalCoreAction
 			message = personasManager.guardarConfiguracionClientes(params.get("cdrfc"),params.get("status"),params.get("cdtipper"),params.get("agente"),
 					params.get("dsnombre"),params.get("dsdomicil"), params.get("obsermot"),params.get("proceso"), cduser, fechaProcesamiento, params.get("accion"));
 			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### guardaClienteNonGratos ######"
+				,"\n#######################################"
+				));
+		return SUCCESS;
+	}
+	
+	
+	@Action(value   = "obtieneInformacionCliente",
+		results = { @Result(name="success", type="json") }
+	)
+	public String obtieneInformacionCliente()
+	{
+		logger.debug(Utils.log(
+				 "\n#######################################"
+				,"\n###### obtieneInformacionCliente ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			Utils.validate(params, "No se recibieron datos");
+			
+			message = personasManager.obtieneInformacionCliente(params.get("sucursal"),params.get("ramo"),params.get("poliza"));
+			String respuesta[] = message.split("\\|");
+			
+			if(respuesta[0].toString().equalsIgnoreCase("1")){
+				List<Map<String, String>> loadList = new ArrayList<Map<String,String>>();
+				HashMap<String,String>map=new HashMap<String,String>();
+				map.put("CVECLIENSIGS",respuesta[1].toString());
+				map.put("SUCEMISORA",respuesta[2].toString());
+				map.put("TIPERSONA",respuesta[3].toString());
+				map.put("NOMCLIENTE",respuesta[4].toString());
+				map.put("APPATERNO",respuesta[5].toString());
+				map.put("APMATERNO",respuesta[6].toString());
+				map.put("RAZONSOCIAL",respuesta[7].toString());
+				map.put("ANECLI",respuesta[8].toString());
+				map.put("RFCCLIENTE",respuesta[9].toString());
+				map.put("CVEIFE",respuesta[10].toString());
+				map.put("CURP",respuesta[11].toString());
+				map.put("SEXO",respuesta[12].toString());
+				map.put("CVEEDOCIVIL",respuesta[13].toString());
+				map.put("CALLECLIENTE",respuesta[14].toString());
+				map.put("NUMCLIENTE",respuesta[15].toString());
+				map.put("CPCLIENTE",respuesta[16].toString());
+				map.put("COLCLIENTE",respuesta[17].toString());
+				map.put("CVEMUNSIGS",respuesta[18].toString());
+				map.put("POBLACION",respuesta[19].toString());
+				map.put("CVEEDOSIGS",respuesta[20].toString());
+				map.put("FECNACIMIENTO",respuesta[21].toString());
+				map.put("NACEXT",respuesta[22].toString());
+				map.put("CVEOCUPACION",respuesta[23].toString());
+				map.put("CVEGIRO",respuesta[24].toString());
+				map.put("TELEFONO1",respuesta[25].toString());
+				map.put("TELEFONO2",respuesta[26].toString());
+				map.put("TELEFONO3",respuesta[27].toString());
+				map.put("EMAIL",respuesta[28].toString());
+				map.put("PAGINAWEB",respuesta[29].toString());
+				map.put("CANCON",respuesta[30].toString());
+				map.put("FUENTEINGRESO",respuesta[31].toString());
+				map.put("TIPADMINISTRACION",respuesta[32].toString());
+				map.put("CARGOPUBL",respuesta[33].toString());
+				map.put("NOMCAR",respuesta[34].toString());
+				map.put("PERCAR",respuesta[35].toString());
+				map.put("APOCLI",respuesta[36].toString());
+				map.put("DOMORI",respuesta[37].toString());
+				map.put("NUMPAS",respuesta[38].toString());
+				map.put("CVEUSERCAPTURA",respuesta[39].toString());
+				map.put("CVEUSERAUTORIZA",respuesta[40].toString());
+				map.put("FECALTA",respuesta[41].toString());
+				map.put("FECHACTUALIZACION",respuesta[42].toString());
+				map.put("ESTATUCLIENTE",respuesta[43].toString());
+				loadList.add(map);
+			list =loadList; 	
+			success = true;
+			}else{
+				message = respuesta[1].toString();
+				success = false;
+			}
+			
+			//obtieneInformacionCliente
+			
+
+			
+			
 		}
 		catch(Exception ex)
 		{

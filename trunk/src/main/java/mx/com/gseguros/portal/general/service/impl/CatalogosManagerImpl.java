@@ -1469,4 +1469,9 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO> obtieneCatalogoParentescoAutos()	throws Exception {
+		return catalogosDAO.obtieneCatalogoParentescoAutos();
+	}
 }

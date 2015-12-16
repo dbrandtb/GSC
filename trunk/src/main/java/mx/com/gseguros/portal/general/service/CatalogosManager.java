@@ -185,4 +185,6 @@ public interface CatalogosManager {
     public List<GenericVO> recuperarTflujomc(String cdtipflu, String swfinal) throws Exception;
     
     public List<GenericVO> recuperarTtipsupl(String cdtiptra,String ninguno) throws Exception;
+    
+    public List<GenericVO> obtieneCatalogoParentescoAutos() throws Exception;
 }

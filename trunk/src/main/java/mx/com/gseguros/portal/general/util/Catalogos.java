@@ -133,7 +133,8 @@ public enum Catalogos {
 	FLUJO_STATUS(""),
 	TTIPFLUMC(""),
 	TFLUJOMC(""),
-	TTIPSUPL("")
+	TTIPSUPL(""),
+	PARENTESCOAUTO("")
 	;
 
 	private String cdTabla;
