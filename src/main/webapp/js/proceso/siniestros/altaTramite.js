@@ -3344,7 +3344,7 @@ Ext.onReady(function() {
 																		params: {
 																			'smap1.ntramite' : panelInicialPral.down('[name=idNumTramite]').getValue(),
 																			'smap1.status'   : _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION
-																			,'smap1.swagente' : _fieldById('SWAGENTE').getGroupValue()
+																			,'smap1.swagente' : _fieldById('SWAGENTE3').getGroupValue()
 																		},
 																		failure: function(form, action)
 																		{

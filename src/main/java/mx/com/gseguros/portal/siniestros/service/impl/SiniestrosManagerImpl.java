@@ -117,11 +117,11 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	@Override
 	
 	public List<GenericVO> getConsultaListaSubcobertura(String cdunieco, String cdramo, String estado, String nmpoliza, 
-						String nmsituac, String cdtipsit, String cdgarant, String cdsubcob) throws Exception {
+						String nmsituac, String cdtipsit, String cdgarant, String cdsubcob, String cdrol) throws Exception {
 		try {
 			log.debug("getConsultaListaSubcobertura cdunieco : "+cdunieco+" cdramo : "+cdramo+" estado : "+
 						estado+" nmpoliza : "+nmpoliza+" nmsituac : "+nmsituac+" cdtipsit : "+cdtipsit+" cdgarant : "+cdgarant+"cdsubcob : "+cdsubcob);
-			List<GenericVO> lista = siniestrosDAO.obtieneListadoSubcobertura(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdtipsit, cdgarant, cdsubcob);
+			List<GenericVO> lista = siniestrosDAO.obtieneListadoSubcobertura(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdtipsit, cdgarant, cdsubcob, cdrol);
 			if(lista==null)
 			{
 				lista= new ArrayList<GenericVO>();

@@ -335,49 +335,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 				}
 				
 				if(params.get("claveTipoAutoriza").trim().equalsIgnoreCase("1") || params.get("claveTipoAutoriza").trim().equalsIgnoreCase("3")){
-					//Cambios de TMESACONTROL
-					/*HashMap<String, Object> paramsMCAut = new HashMap<String, Object>();
-					paramsMCAut.put("pv_cdunieco_i",params.get("cdunieco"));
-					paramsMCAut.put("pv_cdramo_i",params.get("cdramo"));
-					paramsMCAut.put("pv_estado_i",params.get("estado"));
-					paramsMCAut.put("pv_nmpoliza_i",params.get("nmpoliza"));
-					paramsMCAut.put("pv_nmsuplem_i",params.get("nmsuplem"));
-					paramsMCAut.put("pv_cdsucadm_i",null);
-					paramsMCAut.put("pv_cdsucdoc_i",null);
-					paramsMCAut.put("pv_cdtiptra_i",TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra());
-					paramsMCAut.put("pv_ferecepc_i",null);
-					paramsMCAut.put("pv_cdagente_i",null);
-					paramsMCAut.put("pv_referencia_i",null);
-					paramsMCAut.put("pv_nombre_i",null);
-					paramsMCAut.put("pv_festatus_i",null);
-					
-					if(params.get("status").trim().equalsIgnoreCase(EstatusTramite.PENDIENTE.getCodigo())){
-						paramsMCAut.put("pv_status_i",EstatusTramite.CONFIRMADO.getCodigo());
-					}else{
-						if(usuario.getRolActivo().getClave().trim().equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol())) {
-							paramsMCAut.put("pv_status_i",EstatusTramite.EN_CAPTURA_CMM.getCodigo());// valor 12
-						}else{
-							paramsMCAut.put("pv_status_i",EstatusTramite.EN_CAPTURA.getCodigo());// valor 7
-						}
-					}
-					paramsMCAut.put("pv_comments_i",params.get("dsnotas"));
-					paramsMCAut.put("pv_nmsolici_i",null);
-					paramsMCAut.put("pv_cdtipsit_i",params.get("cdtipsit"));
-					paramsMCAut.put("pv_otvalor01",lista.get(0).getNmautser());         		// No. de autorizaci�n
-					paramsMCAut.put("pv_otvalor02",params.get("fesolici"));             		// Fecha de Solicitud
-					paramsMCAut.put("pv_otvalor03",params.get("feautori"));             		// Fecha de autorizacion
-					paramsMCAut.put("pv_otvalor04",params.get("fevencim"));             		// Fecha de Vencimiento
-					paramsMCAut.put("pv_otvalor05",params.get("dsNombreAsegurado"));            // Nombre del asegurado
-					paramsMCAut.put("pv_otvalor06",params.get("copagoTotal"));					// Total Penalizacinn
-					paramsMCAut.put("pv_otvalor07",params.get("idHospitalPlus"));				// Tipo Hospital Plus
-					paramsMCAut.put("pv_otvalor16",usuario.getUser());
-					paramsMCAut.put("pv_otvalor17",usuario.getUser());
-					paramsMCAut.put("pv_otvalor18",usuario.getUser());
-					paramsMCAut.put("cdusuari"    ,usuario.getUser());
-					paramsMCAut.put("cdsisrol"    ,usuario.getRolActivo());
-					//4.- Se realiza la modificacion  de TMESACOMTROL PKG_SATELITES.P_MOV_MESACONTROL
-					WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(paramsMCAut);*/
-					
 					String statusParaTramite = null;
 					if(params.get("status").trim().equalsIgnoreCase(EstatusTramite.PENDIENTE.getCodigo())){
 						statusParaTramite = EstatusTramite.CONFIRMADO.getCodigo();

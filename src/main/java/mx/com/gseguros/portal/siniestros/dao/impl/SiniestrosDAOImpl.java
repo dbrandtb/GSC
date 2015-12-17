@@ -353,7 +353,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
     
     @Override
 	public List<GenericVO> obtieneListadoSubcobertura(String cdunieco, String cdramo, String estado, String nmpoliza,
-					String nmsituac, String cdtipsit, String cdgarant, String cdsubcob) throws Exception {
+					String nmsituac, String cdtipsit, String cdgarant, String cdsubcob,String cdrol) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdunieco_i", cdunieco);
 		params.put("pv_cdramo_i", 	cdramo); 
@@ -363,7 +363,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 		params.put("pv_cdtipsit_i", cdtipsit);
 		params.put("pv_cdgarant_i", cdgarant);
 		params.put("pv_cdsubcob_i", cdsubcob);
-		//params.put("pv_cdrol_i", 	rol);
+		params.put("pv_cdrol_i", 	cdrol);
 		
 		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoSubcoberturaSP(getDataSource()), params);
 		return (List<GenericVO>) mapResult.get("pv_registro_o");
@@ -382,7 +382,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdsubcob_i", OracleTypes.VARCHAR));
-			//declareParameter(new SqlParameter("pv_cdrol_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdrol_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaSubcobertura()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
