@@ -393,6 +393,7 @@ public interface SiniestrosDAO {
 			,String cdsisrolDestino
 			,String cdmotivo
 			,String cdclausu
+			,String swagente
 			) throws Exception;
 	
 	public void turnarAutServicio(

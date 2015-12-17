@@ -470,7 +470,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 						String usuarioDestino = null;
 						String cdclausu       = null;
 						
-						siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu);
+						siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu,null);
 						
 						Map<String,Object>paramsO =new HashMap<String,Object>();
 						paramsO.put("pv_ntramite_i" , params.get("idNumtramiteInicial"));

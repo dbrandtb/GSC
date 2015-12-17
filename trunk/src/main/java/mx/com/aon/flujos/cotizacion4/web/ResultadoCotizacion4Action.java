@@ -23,6 +23,8 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.web.model.IncisoSaludVO;
+import mx.com.gseguros.mesacontrol.model.TFLUJOMC;
+import mx.com.gseguros.mesacontrol.model.TTIPFLUMC;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
@@ -33,6 +35,7 @@ import mx.com.gseguros.portal.general.service.ServiciosManager;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoArchivo;
+import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
@@ -1202,9 +1205,10 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            			,cdusuari
 	            			,cdsisrol
 	            			,null
-	            			,null
-	            			,null
-	            			,null, null
+	            			,TTIPFLUMC.POLIZA_NUEVA
+	            			,TFLUJOMC.EMISION_SALUD_INDIVIDUAL
+	            			,null//valores
+	            			,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
 	            			);
 	            	
 	            	smap1.put("ntramite",ntramite);

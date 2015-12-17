@@ -117,7 +117,28 @@ Ext.onReady(function() {
         bodyPadding: 5,
         renderTo: 'maindiv',
         items: [
-            	motivoRechazo,incisosRechazo,textoRechazo
+            	motivoRechazo,incisosRechazo,textoRechazo,{
+                    xtype       : 'radiogroup'
+                    ,fieldLabel : 'Mostrar al agente'
+                    ,columns    : 2
+                    ,width      : 250
+                    ,style      : 'margin:5px;'
+                    ,items      :
+                    [
+                        {
+                            boxLabel    : 'Si'
+                            ,itemId     : 'SWAGENTE2'
+                            ,name       : 'SWAGENTE2'
+                            ,inputValue : 'S'
+                            ,checked    : true
+                        }
+                        ,{
+                            boxLabel    : 'No'
+                            ,name       : 'SWAGENTE2'
+                            ,inputValue : 'N'
+                        }
+                    ]
+                }
     	        ],
 	        buttonAlign:'center',
 	        buttons: [{
@@ -131,6 +152,7 @@ Ext.onReady(function() {
     		        	params: {
     		        		'smap1.ntramite' : _nmTramite, 
     		        		'smap1.status'   : 4
+    		        		,'smap1.swagente' : _fieldById('SWAGENTE2').getGroupValue()
     		        	},
     		        	failure: function(form, action) {
     		        		Ext.Msg.show({

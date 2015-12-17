@@ -173,19 +173,41 @@ function _datComTurnarSuscripcion()
     {
         title        : 'Observaciones para el suscriptor'
         ,width       : 600
-        ,height      : 400
+        ,height      : 430
         ,buttonAlign : 'center'
         ,modal       : true
         ,closable    : false
         ,autoScroll  : true
         ,items       :
         [
-            Ext.create('Ext.form.HtmlEditor',
             {
                 id        : 'inputTextareaCommentsToSusFromMC'
                 ,width  : 570
                 ,height : 300
-            })
+                ,xtype  : 'textarea'
+            }
+            ,{
+                xtype       : 'radiogroup'
+                ,fieldLabel : 'Mostrar al agente'
+                ,columns    : 2
+                ,width      : 250
+                ,style      : 'margin:5px;'
+                ,items      :
+                [
+                    {
+                        boxLabel    : 'Si'
+                        ,itemId     : 'SWAGENTE'
+                        ,name       : 'SWAGENTE'
+                        ,inputValue : 'S'
+                        ,checked    : true
+                    }
+                    ,{
+                        boxLabel    : 'No'
+                        ,name       : 'SWAGENTE'
+                        ,inputValue : 'N'
+                    }
+                ]
+            }
         ]
         ,buttons    :
         [
@@ -218,6 +240,7 @@ function _datComTurnarSuscripcion()
                                         'smap1.ntramite'   : inputNtramite
                                         ,'smap1.status'    : '13'//en suscripcion
                                         ,'smap1.comments' : Ext.getCmp('inputTextareaCommentsToSusFromMC').getValue()
+                                        ,'smap1.swagente' : _fieldById('SWAGENTE').getGroupValue()
                                     }
                                     ,success : function(response)
                                     {
@@ -792,18 +815,41 @@ function _datComTurnarSuscripcion()
 						                                        {
 						                                        	title        : 'Observaciones para el m&eacute;dico'
 						                                        	,width       : 600
-						                                        	,height      : 400
+						                                        	,height      : 430
 						                                        	,buttonAlign : 'center'
 						                                        	,modal       : true
 						                                        	,closable    : false
 						                                        	,autoScroll  : true
 						                                        	,items       :
 						                                        	[
-																		Ext.create('Ext.form.HtmlEditor', {
+																		{
 																		    id        : 'inputTextareaCommentsToMedico'
 																		    ,width  : 570
 																		    ,height : 300
-																		})
+																		    ,xtype  : 'textarea'
+																		}
+																		,{
+															                xtype       : 'radiogroup'
+															                ,fieldLabel : 'Mostrar al agente'
+															                ,columns    : 2
+															                ,width      : 250
+															                ,style      : 'margin:5px;'
+															                ,items      :
+															                [
+															                    {
+															                        boxLabel    : 'Si'
+															                        ,itemId     : 'SWAGENTE'
+															                        ,name       : 'SWAGENTE'
+															                        ,inputValue : 'S'
+															                        ,checked    : true
+															                    }
+															                    ,{
+															                        boxLabel    : 'No'
+															                        ,name       : 'SWAGENTE'
+															                        ,inputValue : 'N'
+															                    }
+															                ]
+															            }
 						                                        	]
 						                                        	,buttons    :
 						                                        	[
@@ -830,6 +876,7 @@ function _datComTurnarSuscripcion()
 						                                                                            'smap1.ntramite' : inputNtramite
 						                                                                            ,'smap1.status'  : '1'//en revision medica
 						                                                                            ,'smap1.comments' : Ext.getCmp('inputTextareaCommentsToMedico').getValue()
+						                                                                            ,'smap1.swagente' : _fieldById('SWAGENTE').getGroupValue()
 						                                                                        }
 						                                                                        ,success : function(response)
 						                                                                        {
@@ -1567,18 +1614,41 @@ function _datComTurnarSuscripcion()
 	                                        {
 	                                            title        : 'Dictamen para mesa de control'
 	                                            ,width       : 600
-	                                            ,height      : 400
+	                                            ,height      : 430
 	                                            ,buttonAlign : 'center'
 	                                            ,modal       : true
 	                                            ,closable    : false
 	                                            ,autoScroll  : true
 	                                            ,items       :
 	                                            [
-													Ext.create('Ext.form.HtmlEditor', {
+													{
 													    id        : 'inputTextareaCommentsToMCFromMedico'
 												    	,width  : 570
 	                                                    ,height : 300
-													})
+	                                                    ,xtype  : 'textarea'
+													}
+													,{
+										                xtype       : 'radiogroup'
+										                ,fieldLabel : 'Mostrar al agente'
+										                ,columns    : 2
+										                ,width      : 250
+										                ,style      : 'margin:5px;'
+										                ,items      :
+										                [
+										                    {
+										                        boxLabel    : 'Si'
+										                        ,itemId     : 'SWAGENTE'
+										                        ,name       : 'SWAGENTE'
+										                        ,inputValue : 'S'
+										                        ,checked    : true
+										                    }
+										                    ,{
+										                        boxLabel    : 'No'
+										                        ,name       : 'SWAGENTE'
+										                        ,inputValue : 'N'
+										                    }
+										                ]
+										            }
 	                                            ]
 	                                            ,buttons    :
 	                                            [
@@ -1606,7 +1676,8 @@ function _datComTurnarSuscripcion()
 					                                                        {
 					                                                            'smap1.ntramite'   : inputNtramite
 					                                                            ,'smap1.status'    : '5'//Vo.Bo.Medico
-					                                                            ,'smap1.comments' : Ext.getCmp('inputTextareaCommentsToMCFromMedico').getValue() 
+					                                                            ,'smap1.comments' : Ext.getCmp('inputTextareaCommentsToMCFromMedico').getValue()
+					                                                            ,'smap1.swagente' : _fieldById('SWAGENTE').getGroupValue()
 					                                                        }
 					                                                        ,success : function(response)
 					                                                        {
@@ -1693,18 +1764,41 @@ function _datComTurnarSuscripcion()
                                             {
                                                 title        : 'Dictamen para mesa de control'
                                                 ,width       : 600
-                                                ,height      : 400
+                                                ,height      : 430
                                                 ,buttonAlign : 'center'
                                                 ,modal       : true
                                                 ,closable    : false
                                                 ,autoScroll  : true
                                                 ,items       :
                                                 [
-                                                    Ext.create('Ext.form.HtmlEditor', {
+                                                    {
                                                         id        : 'inputTextareaCommentsToMCFromMedico'
                                                         ,width  : 570
                                                         ,height : 300
-                                                    })
+                                                        ,xtype : 'textarea'
+                                                    }
+                                                    ,{
+										                xtype       : 'radiogroup'
+										                ,fieldLabel : 'Mostrar al agente'
+										                ,columns    : 2
+										                ,width      : 250
+										                ,style      : 'margin:5px;'
+										                ,items      :
+										                [
+										                    {
+										                        boxLabel    : 'Si'
+										                        ,itemId     : 'SWAGENTE'
+										                        ,name       : 'SWAGENTE'
+										                        ,inputValue : 'S'
+										                        ,checked    : true
+										                    }
+										                    ,{
+										                        boxLabel    : 'No'
+										                        ,name       : 'SWAGENTE'
+										                        ,inputValue : 'N'
+										                    }
+										                ]
+										            }
                                                 ]
                                                 ,buttons    :
                                                 [
@@ -1733,7 +1827,8 @@ function _datComTurnarSuscripcion()
                                                                             {
                                                                                 'smap1.ntramite'   : inputNtramite
                                                                                 ,'smap1.status'    : '6'//Esperando info
-                                                                                ,'smap1.comments' : Ext.getCmp('inputTextareaCommentsToMCFromMedico').getValue() 
+                                                                                ,'smap1.comments' : Ext.getCmp('inputTextareaCommentsToMCFromMedico').getValue()
+                                                                                ,'smap1.swagente' : _fieldById('SWAGENTE').getGroupValue() 
                                                                             }
                                                                             ,success : function(response)
                                                                             {
@@ -1855,7 +1950,7 @@ function _datComTurnarSuscripcion()
    		                                                {
    		                                                    title        : 'Guardar detalle'
    		                                                    ,width       : 600
-   		                                                    ,height      : 400
+   		                                                    ,height      : 430
    		                                                    ,buttonAlign : 'center'
    		                                                    ,modal       : true
    		                                                    ,closable    : false
@@ -1873,7 +1968,28 @@ function _datComTurnarSuscripcion()
 		                                                            ,width  : 570
 		                                                            ,height : 100
 		                                                        })
-   		                                                        
+		                                                        ,{
+													                xtype       : 'radiogroup'
+													                ,fieldLabel : 'Mostrar al agente'
+													                ,columns    : 2
+													                ,width      : 250
+													                ,style      : 'margin:5px;'
+													                ,items      :
+													                [
+													                    {
+													                        boxLabel    : 'Si'
+													                        ,itemId     : 'SWAGENTE'
+													                        ,name       : 'SWAGENTE'
+													                        ,inputValue : 'S'
+													                        ,checked    : true
+													                    }
+													                    ,{
+													                        boxLabel    : 'No'
+													                        ,name       : 'SWAGENTE'
+													                        ,inputValue : 'N'
+													                    }
+													                ]
+													            }
    		                                                    ]
    		                                                    ,buttons    :
    		                                                    [
@@ -1902,6 +2018,7 @@ function _datComTurnarSuscripcion()
    		                                                                                    'smap1.ntramite' : inputNtramite
    		                                                                                    ,'smap1.status'  : '4'//rechazado
    		                                                                                    ,'smap1.comments' : Ext.getCmp('inputTextareaComments').getValue()
+   		                                                                                    ,'smap1.swagente' : _fieldById('SWAGENTE').getGroupValue()
    		                                                                                }
    		                                                                                ,success : function(response)
    		                                                                                {

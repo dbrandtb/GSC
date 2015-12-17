@@ -96,25 +96,25 @@ _4_botonesGrid.push('->',
 ///////////////////////
 
 <s:if test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("1")}'>
-    <%@ include file="/jsp-script/proceso/endosos/scriptMesaEmision.jsp"%>
+    <jsp:include page="/jsp-script/proceso/endosos/scriptMesaEmision.jsp" />
 </s:if>
 <s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("14")}'>
-<%@ include file="/jsp-script/proceso/endosos/scriptMesaAutorizacionServicios.jsp"%>
+    <jsp:include page="/jsp-script/proceso/endosos/scriptMesaAutorizacionServicios.jsp" />
 </s:elseif>
 <s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("15")}'>
-    <%@ include file="/jsp-script/proceso/endosos/scriptMesaAutorizacionEndosos.jsp"%>
+    <jsp:include page="/jsp-script/proceso/endosos/scriptMesaAutorizacionEndosos.jsp" />
 </s:elseif>
 <s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("16")}'>
-	<%@ include file="/jsp-script/proceso/siniestros/scriptMesaSiniestros.jsp"%>
+	<jsp:include page="/jsp-script/proceso/siniestros/scriptMesaSiniestros.jsp" />
 </s:elseif>
 <s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("17")}'>
-<%@ include file="/jsp-script/proceso/emision/scriptMesaAutorizacionEmisiones.jsp"%>
+    <jsp:include page="/jsp-script/proceso/emision/scriptMesaAutorizacionEmisiones.jsp" />
 </s:elseif>
 <s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("19")}'>
-<%@ include file="/jsp-script/proceso/siniestros/scriptMesaSISCO.jsp"%>
+    <jsp:include page="/jsp-script/proceso/siniestros/scriptMesaSISCO.jsp" />
 </s:elseif>
 <s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("20")}'>
-<%@ include file="/jsp-script/proceso/emision/scriptMesaImpresion.jsp"%>
+    <jsp:include page="/jsp-script/proceso/emision/scriptMesaImpresion.jsp" />
 </s:elseif>
 _4_botones.width = (_4_botones.items.length*20)+20;
 
@@ -395,6 +395,7 @@ function _4_onReasignarClick(row)
                                                                         ,'smap1.rol_destino'     : cdsisrol
                                                                         ,'smap1.usuario_destino' : cdusuari
                                                                         ,'smap1.comments'        : text.getValue()
+                                                                        ,'smap1.swagente'        : _fieldById('SWAGENTE').getGroupValue()
                                                                     }
                                                                     ,success : function(response)
                                                                     {
@@ -442,6 +443,7 @@ function _4_onReasignarClick(row)
                                                         ,height     : 200
                                                         ,allowBlank : false
                                                     }
+                                                    ,_4_swagenteRadioGroup()
                                                 ]
                                             }).show());
                                         }
@@ -488,6 +490,32 @@ function _4_onReasignarClick(row)
             errorComunicacion(null,'Error recuperando usuarios para reasignaci&oacute;n');
         }
     });
+}
+
+function _4_swagenteRadioGroup()
+{
+    return {
+                xtype       : 'radiogroup'
+                ,fieldLabel : 'Mostrar al agente'
+                ,columns    : 2
+                ,width      : 250
+                ,style      : 'margin:5px;'
+                ,items      :
+                [
+                    {
+                        boxLabel    : 'Si'
+                        ,itemId     : 'SWAGENTE'
+                        ,name       : 'SWAGENTE'
+                        ,inputValue : 'S'
+                        ,checked    : true
+                    }
+                    ,{
+                        boxLabel    : 'No'
+                        ,name       : 'SWAGENTE'
+                        ,inputValue : 'N'
+                    }
+                ]
+            };
 }
 /*///////////////////*/
 ////// funciones //////

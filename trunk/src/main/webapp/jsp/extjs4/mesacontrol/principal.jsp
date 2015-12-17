@@ -459,7 +459,7 @@ Ext.onReady(function(){
         		        		debug(record);
         		        		if(cellIndex<6)
         		        		{
-        		        		    Ext.getCmp('inputReadDetalleHtmlVisor').setValue(record.get('COMMENTS'));
+        		        		    Ext.getCmp('inputReadDetalleHtmlVisor').setValue((_4_smap1.cdsisrol!='EJECUTIVOCUENTA'||record.raw.SWAGENTE=='S')?record.get('COMMENTS'):'');
         		        		}
         		        		else if(cellIndex==6&&$(td).find('img').length>0)
         		        		{
