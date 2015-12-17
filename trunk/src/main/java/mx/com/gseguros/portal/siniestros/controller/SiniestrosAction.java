@@ -954,9 +954,11 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	public String consultaListaSubcobertura(){
 		logger.debug("Entra a consultaListaSubcobertura params de entrada :{}",params);
 		try {
+			UserVO usuarioR		= (UserVO)session.get("USUARIO");
+			String cdrol		= usuarioR.getRolActivo().getClave();
 			//cdunieco, cdramo, estado, nmpoliza, nmsituac, cdtipsit, cdgarant, cdsubcob
 			listaSubcobertura= siniestrosManager.getConsultaListaSubcobertura(params.get("cdunieco"),params.get("cdramo"), params.get("estado"),
-								params.get("nmpoliza"),params.get("nmsituac"),params.get("cdtipsit"),params.get("cdgarant"),params.get("cdsubcob"));
+								params.get("nmpoliza"),params.get("nmsituac"),params.get("cdtipsit"),params.get("cdgarant"),params.get("cdsubcob"), cdrol);
 		}catch( Exception e){
 			logger.error("Error al consultar la Lista de subcoberturas : {}", e.getMessage(), e);
 			return SUCCESS;

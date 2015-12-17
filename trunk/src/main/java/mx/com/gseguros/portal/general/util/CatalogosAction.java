@@ -351,7 +351,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 							cdgarant = params.get("idPadre");
 						}
 					}
-					lista = siniestrosManager.getConsultaListaSubcobertura(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdtipsit, cdgarant, cdsubcob);
+					lista = siniestrosManager.getConsultaListaSubcobertura(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdtipsit, cdgarant, cdsubcob,cdrol);
 					break;
 					
 				case SUBCOBERTURASTOTALES:

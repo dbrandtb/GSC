@@ -63,7 +63,7 @@ public interface SiniestrosManager {
 	public List<DatosSiniestroVO> getConsultaListaDatSubGeneral(HashMap<String, Object> paramDatSubGral) throws Exception;
 	
 	public List<GenericVO> getConsultaListaSubcobertura(String cdunieco, String cdramo, String estado, String nmpoliza,
-			String nmsituac, String cdtipsit, String cdgarant, String cdsubcob) throws Exception;
+			String nmsituac, String cdtipsit, String cdgarant, String cdsubcob, String rol) throws Exception;
 	
 	public List<GenericVO> getConsultaListaSubcoberturaTotales() throws Exception;
 	

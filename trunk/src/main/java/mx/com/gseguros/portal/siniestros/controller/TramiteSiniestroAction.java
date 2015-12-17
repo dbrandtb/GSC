@@ -122,48 +122,6 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			// 1.- Guardar en TMESACONTROL 
 			this.session=ActionContext.getContext().getSession();
 			UserVO usuario=(UserVO) session.get("USUARIO");
-			/*HashMap<String, Object> parMesCon = new HashMap<String, Object>();
-			parMesCon.put("pv_cdunieco_i",params.get("cdunieco"));
-			parMesCon.put("pv_cdramo_i",params.get("cmbRamos"));
-			parMesCon.put("pv_estado_i",params.get("estado"));
-			parMesCon.put("pv_nmpoliza_i",params.get("polizaAfectada"));
-			parMesCon.put("pv_nmsuplem_i",params.get("idNmsuplem"));
-			parMesCon.put("pv_nmsolici_i",params.get("idNmsolici"));
-			parMesCon.put("pv_cdtipsit_i",params.get("idCdtipsit"));
-			parMesCon.put("pv_cdsucadm_i",params.get("cmbOficEmisora"));
-			parMesCon.put("pv_cdsucdoc_i",params.get("cmbOficReceptora"));
-			parMesCon.put("pv_cdtiptra_i",TipoTramite.SINIESTRO.getCdtiptra());
-			parMesCon.put("pv_ferecepc_i",getDate(params.get("dtFechaRecepcion")));
-			parMesCon.put("pv_cdagente_i",null);
-			parMesCon.put("pv_referencia_i",null);
-			parMesCon.put("pv_nombre_i",params.get("idnombreAsegurado"));
-			parMesCon.put("pv_festatus_i",getDate(params.get("dtFechaRecepcion")));
-			parMesCon.put("pv_status_i",EstatusTramite.PENDIENTE.getCodigo());
-			parMesCon.put("pv_comments_i",null);
-			parMesCon.put("pv_otvalor02",params.get("cmbTipoPago"));
-			parMesCon.put("pv_otvalor03",params.get("ImporteIndFactura"));
-			parMesCon.put("pv_otvalor04",params.get("cmbBeneficiario"));
-			parMesCon.put("pv_otvalor15",params.get("idnombreBeneficiarioProv"));
-			parMesCon.put("pv_otvalor05",usuario.getUser());
-			parMesCon.put("pv_otvalor06",params.get("fechaIndFactura"));
-			parMesCon.put("pv_otvalor07",params.get("cmbTipoAtencion"));
-			parMesCon.put("pv_otvalor08",params.get("numIndFactura"));
-			parMesCon.put("pv_otvalor09",params.get("cmbAseguradoAfectado"));
-			parMesCon.put("pv_otvalor10",params.get("dtFechaOcurrencia"));
-			parMesCon.put("pv_otvalor20",params.get("cmbRamos"));
-			parMesCon.put("pv_otvalor22",params.get("txtAutEspecial"));
-			parMesCon.put("pv_otvalor11",params.get("cmbProveedor"));
-			parMesCon.put("cdusuari"    ,usuario.getUser());
-			parMesCon.put("cdsisrol"    ,usuario.getRolActivo());
-			if(params.get("cmbProveedor").toString().length() > 0){
-				parMesCon.put("pv_otvalor13",TipoPrestadorServicio.CLINICA.getCdtipo());
-			}
-			
-			if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
-				parMesCon.put("pv_otvalor12","7RDH");
-				parMesCon.put("pv_otvalor14","7RDH001");
-			}*/
-			
 			//Si el tr&aacute;mite es nuevo
 			if(params.get("idNumTramite").toString().length() <= 0){
 				
