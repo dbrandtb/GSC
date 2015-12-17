@@ -148,7 +148,7 @@ function _4_onClockClick(grid,rowIndex){
 					rowIndex, e, eOpts){
 						debug(record);
 						if(cellIndex<6){
-							Ext.getCmp('inputReadDetalleHtmlVisor').setValue(record.get('COMMENTS'));
+							Ext.getCmp('inputReadDetalleHtmlVisor').setValue((_4_smap1.cdsisrol!='EJECUTIVOCUENTA'||record.raw.SWAGENTE=='S')?record.get('COMMENTS'):'');
 						}
 						else if(cellIndex==6&&$(td).find('img').length>0){
 							debug('finalizar');
@@ -271,7 +271,7 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
 							modal       : true,
 							buttonAlign : 'center',
 							width       : 663,
-							height      : 400,
+							height      : 430,
 							autoScroll  : true,
 							items       : [
 								Ext.create('Ext.form.Panel', {
@@ -290,7 +290,30 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
 											id        : 'inputTextareaComments'
 											,width  : 570
 											,height : 100
-										})],
+										})
+										,{
+							                xtype       : 'radiogroup'
+						                    ,fieldLabel : 'Mostrar al agente'
+						                    ,columns    : 2
+						                    ,width      : 250
+						                    ,style      : 'margin:5px;'
+						                    ,items      :
+						                    [
+						                        {
+						                            boxLabel    : 'Si'
+						                            ,itemId     : 'SWAGENTE2'
+						                            ,name       : 'SWAGENTE2'
+						                            ,inputValue : 'S'
+						                            ,checked    : true
+						                        }
+						                        ,{
+						                            boxLabel    : 'No'
+						                            ,name       : 'SWAGENTE2'
+						                            ,inputValue : 'N'
+						                        }
+						                    ]
+						                }
+										],
 									buttonAlign:'center',
 									buttons: [{
 										text: 'Rechazar',
@@ -303,7 +326,8 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
 													params: {
 														'smap1.ntramite' : record.get('ntramite'), 
 														'smap1.status'   : _STATUS_TRAMITE_RECHAZADO,
-														'smap1.comments' : Ext.getCmp('inputTextareaComments').getValue()
+														'smap1.comments' : Ext.getCmp('inputTextareaComments').getValue(),
+														'smap1.swagente' : _fieldById('SWAGENTE2').getGroupValue()
 													},
 													failure: function(form, action) {
 														mensajeError('No se pudo rechazar.');
@@ -665,7 +689,7 @@ function activarTramiteAutorizacionServ (grid,rowIndex,colIndex){
 					modal       : true,
 					buttonAlign : 'center',
 					width       : 663,
-					height      : 400,
+					height      : 430,
 					autoScroll  : true,
 					items       : [
 						Ext.create('Ext.form.Panel', {
@@ -673,7 +697,29 @@ function activarTramiteAutorizacionServ (grid,rowIndex,colIndex){
 							width: 650,
 							url: _URL_ActualizaStatusTramite,
 							bodyPadding: 5,
-							items: [comentarioReactivacion],
+							items: [comentarioReactivacion,
+							        {
+						                xtype       : 'radiogroup'
+						                ,fieldLabel : 'Mostrar al agente'
+						                ,columns    : 2
+						                ,width      : 250
+						                ,style      : 'margin:5px;'
+						                ,items      :
+						                [
+						                    {
+						                        boxLabel    : 'Si'
+						                        ,itemId     : 'SWAGENTE2'
+						                        ,name       : 'SWAGENTE2'
+						                        ,inputValue : 'S'
+						                        ,checked    : true
+						                    }
+						                    ,{
+						                        boxLabel    : 'No'
+						                        ,name       : 'SWAGENTE2'
+						                        ,inputValue : 'N'
+						                    }
+						                ]
+						            }],
 							buttonAlign:'center',
 							buttons: [{
 								text: 'Reactivar',
@@ -685,7 +731,8 @@ function activarTramiteAutorizacionServ (grid,rowIndex,colIndex){
 											waitMsg:'Procesando...',
 											params: {
 												'smap1.ntramite' : record.get('ntramite'), 
-												'smap1.status'   : _STATUS_EN_CAPTURA_CMM
+												'smap1.status'   : _STATUS_EN_CAPTURA_CMM,
+												'smap1.swagente' : _fieldById('SWAGENTE2').getGroupValue()
 											},
 											failure: function(form, action) {
 												mensajeError('No se pudo reactivar dicho tr&aacute;mite.');

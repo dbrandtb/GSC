@@ -398,6 +398,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			String ntramite=smap1.get("ntramite");
 			String comments=smap1.get("comments");
 			String cdmotivo=smap1.get("cdmotivo");
+			String mostrarAgente=smap1.get("swagente");
 			
 			String rolDestino     = smap1.get("rol_destino");
 			String usuarioDestino = smap1.get("usuario_destino");
@@ -417,6 +418,7 @@ public class MesaControlAction extends PrincipalCoreAction
 					,rolDestino
 					,cdmotivo
 					,cdclausu
+					,mostrarAgente
 					);
 			
 			Boolean escalado  = (Boolean)res.get("ESCALADO");
@@ -563,7 +565,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			String cdusuariSesion = usu.getUser();
 			String cdsisrolSesion = "COORDINASINI";
 			String cdclausu       = null;
-			siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu);
+			siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu,null);
 			success=true;
 			
 		} catch(Exception ex) {

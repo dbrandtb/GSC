@@ -154,7 +154,7 @@ function _4_turnar(row,status,titulo)
     {
         title        : titulo
         ,width       : 500
-        ,height      : 300
+        ,height      : 330
         ,modal       : true
         ,items       :
         [
@@ -166,6 +166,7 @@ function _4_turnar(row,status,titulo)
                 ,width      : 480
                 ,height     : 200
             }
+            ,_4_swagenteRadioGroup()
         ]
         ,buttonAlign : 'center'
         ,buttons     :
@@ -184,6 +185,7 @@ function _4_turnar(row,status,titulo)
                             'smap1.status'    : status
                             ,'smap1.ntramite' : record.get('ntramite')
                             ,'smap1.comments' : Ext.ComponentQuery.query('#mesConObsSus')[0].getValue()
+                            ,'smap1.swagente' : _fieldById('SWAGENTE').getGroupValue()
                         }
                         ,success : function(response)
                         {
@@ -254,7 +256,7 @@ function _4_onSuscripcionClick(row)
     {
         title        : 'Turnar a suscripci&oacute;n'
         ,width       : 500
-        ,height      : 300
+        ,height      : 330
         ,modal       : true
         ,items       :
         [
@@ -266,6 +268,7 @@ function _4_onSuscripcionClick(row)
                 ,width      : 480
                 ,height     : 200
             }
+            ,_4_swagenteRadioGroup()
         ]
         ,buttonAlign : 'center'
         ,buttons     :
@@ -284,6 +287,7 @@ function _4_onSuscripcionClick(row)
                             'smap1.status'    : 13
                             ,'smap1.ntramite' : record.get('ntramite')
                             ,'smap1.comments' : Ext.ComponentQuery.query('#mesConObsSus')[0].getValue()
+                            ,'smap1.swagente' : _fieldById('SWAGENTE').getGroupValue()
                         }
                         ,success : function(response)
                         {
@@ -600,7 +604,7 @@ function _4_onClockClick(rowIndex)
                         debug(record);
                         if(cellIndex<6)
                         {
-                            Ext.getCmp('inputReadDetalleHtmlVisor').setValue(record.get('COMMENTS'));
+                            Ext.getCmp('inputReadDetalleHtmlVisor').setValue((_4_smap1.cdsisrol!='EJECUTIVOCUENTA'||record.raw.SWAGENTE=='S')?record.get('COMMENTS'):'');
                         }
                         else if(cellIndex==6&&$(td).find('img').length>0)
                         {

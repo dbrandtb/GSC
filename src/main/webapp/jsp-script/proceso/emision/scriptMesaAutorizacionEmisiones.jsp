@@ -319,7 +319,28 @@ function rechazarTramiteWindow(grid,rowIndex,colIndex){
         width: 650,
         url: _4_urlUpdateStatus,
         bodyPadding: 5,
-        items: [comentariosText],
+        items: [comentariosText,{
+        	xtype       : 'radiogroup'
+            ,fieldLabel : 'Mostrar al agente'
+            ,columns    : 2
+            ,width      : 250
+            ,style      : 'margin:5px;'
+            ,items      :
+            [
+                {
+                    boxLabel    : 'Si'
+                    ,itemId     : 'SWAGENTE2'
+                    ,name       : 'SWAGENTE2'
+                    ,inputValue : 'S'
+                    ,checked    : true
+                }
+                ,{
+                    boxLabel    : 'No'
+                    ,name       : 'SWAGENTE2'
+                    ,inputValue : 'N'
+                }
+            ]
+        }],
         buttonAlign:'center',
         buttons: [{
             text: 'Rechazar',
@@ -330,8 +351,9 @@ function rechazarTramiteWindow(grid,rowIndex,colIndex){
     	    		panelRechazoEmi.form.submit({
     		        	waitMsg:'Procesando...',
     		        	params: {
-    		        		'smap1.ntramite' : record.get('ntramite'),
-    		        		'smap1.status'   : _STATUS_TRAMITE_RECHAZADO,
+    		        		'smap1.ntramite' : record.get('ntramite')
+    		        		,'smap1.status'   : _STATUS_TRAMITE_RECHAZADO
+    		        		,'smap1.swagente' : _fieldById('SWAGENTE2').getGroupValue()
     		        	},
     		        	failure: function(form, action) {
     		        		mensajeError('No se pudo rechazar.');
@@ -386,7 +408,7 @@ function rechazarTramiteWindow(grid,rowIndex,colIndex){
         modal       : true,
         buttonAlign : 'center',
         width       : 663,
-        height      : 400,
+        height      : 430,
         autoScroll  : true,
         items       : [panelRechazoEmi]
     }).show();

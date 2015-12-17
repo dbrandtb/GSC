@@ -1434,19 +1434,41 @@ Ext.onReady(function()
 		                    {
 		                        title        : 'Guardar detalle'
 		                        ,width       : 600
-		                        ,height      : 400
+		                        ,height      : 430
 		                        ,buttonAlign : 'center'
 		                        ,modal       : true
 		                        ,closable    : false
 		                        ,autoScroll  : true
 		                        ,items       :
 		                        [
-		                            Ext.create('Ext.form.HtmlEditor',
 		                            {
 		                                id        : 'inputTextareaCommentsToRechazo'
 		                                ,width  : 570
 		                                ,height : 300
-		                            })
+		                                ,xtype  : 'textfield'
+		                            }
+		                            ,{
+		                                xtype       : 'radiogroup'
+	                                    ,fieldLabel : 'Mostrar al agente'
+	                                    ,columns    : 2
+	                                    ,width      : 250
+	                                    ,style      : 'margin:5px;'
+	                                    ,items      :
+	                                    [
+	                                        {
+	                                            boxLabel    : 'Si'
+	                                            ,itemId     : 'SWAGENTE'
+	                                            ,name       : 'SWAGENTE'
+	                                            ,inputValue : 'S'
+	                                            ,checked    : true
+	                                        }
+	                                        ,{
+	                                            boxLabel    : 'No'
+	                                            ,name       : 'SWAGENTE'
+	                                            ,inputValue : 'N'
+	                                        }
+	                                    ]
+	                                }
 		                        ]
 		                        ,buttons    :
 		                        [
@@ -1466,6 +1488,7 @@ Ext.onReady(function()
 		                                            'smap1.ntramite' : _0_smap1.ntramite
 		                                            ,'smap1.status'  : '4'//rechazado
 		                                            ,'smap1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
+		                                            ,'smap1.swagente' : _fieldById('SWAGENTE').getGroupValue()
 		                                        }
 		                                        ,success : function(response)
 		                                        {

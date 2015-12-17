@@ -2048,7 +2048,8 @@ Ext.onReady(function()
                         var label  = json.smap1[indice];
                         if(!Ext.isEmpty(label))
                         {
-                            _fieldLikeLabel(json.smap1[indice],_fieldById('_p25_fieldsetRiesgo')).readOnly = true;
+                            //_fieldLikeLabel(json.smap1[indice],_fieldById('_p25_fieldsetRiesgo')).readOnly = true;
+                            _fieldLikeLabel(json.smap1[indice],_fieldById('_p25_fieldsetRiesgo')).hide();
                         }
                     }
                 }
@@ -4102,7 +4103,7 @@ function _p25_turnar(status,titulo,closable)
     {
         title        : !Ext.isEmpty(titulo) ? titulo : 'Turnar tr&aacute;mite'
         ,width       : 500
-        ,height      : 300
+        ,height      : 330
         ,modal       : true
         ,closable    : closable==undefined ? true : closable
         ,items       :
@@ -4114,6 +4115,28 @@ function _p25_turnar(status,titulo,closable)
                 ,itemId     : '_p25_turnarCommentsItem'
                 ,width      : 480
                 ,height     : 200
+            }
+            ,{
+                xtype       : 'radiogroup'
+                ,fieldLabel : 'Mostrar al agente'
+                ,columns    : 2
+                ,width      : 250
+                ,style      : 'margin:5px;'
+                ,items      :
+                [
+                    {
+                        boxLabel    : 'Si'
+                        ,itemId     : 'SWAGENTE'
+                        ,name       : 'SWAGENTE'
+                        ,inputValue : 'S'
+                        ,checked    : true
+                    }
+                    ,{
+                        boxLabel    : 'No'
+                        ,name       : 'SWAGENTE'
+                        ,inputValue : 'N'
+                    }
+                ]
             }
         ]
         ,buttonAlign : 'center'
@@ -4133,6 +4156,7 @@ function _p25_turnar(status,titulo,closable)
                             'smap1.status'    : status
                             ,'smap1.ntramite' : _p25_ntramite ? _p25_ntramite : _p25_ntramiteVacio
                             ,'smap1.comments' : Ext.ComponentQuery.query('#_p25_turnarCommentsItem')[0].getValue()
+                            ,'smap1.swagente' : _fieldById('SWAGENTE').getGroupValue()
                         }
                         ,success : function(response)
                         {

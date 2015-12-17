@@ -34,6 +34,7 @@ import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -3538,6 +3539,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			,String cdsisrolDestino
 			,String cdmotivo
 			,String cdclausu
+			,String swagente
 			) throws Exception
 	{
 		Map<String,String>params=new HashMap<String,String>();
@@ -3550,6 +3552,11 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		params.put("cdsisrolDestino" , cdsisrolDestino);
 		params.put("cdmotivo"        , cdmotivo);
 		params.put("cdclausu"        , cdclausu);
+		if(StringUtils.isBlank(swagente))
+		{
+			swagente = "N";
+		}
+		params.put("swagente"        , swagente);
 		logger.info("params: "+params);
 		Map<String,Object> procRes  = ejecutaSP(new MoverTramite(getDataSource()), params);
 		boolean            escalado = "S".equals((String)procRes.get("pv_escalado_o"));
@@ -3577,6 +3584,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("cdsisrolDestino" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdmotivo"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdclausu"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swagente"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_escalado_o"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_status_esc_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_nombre_o"     , OracleTypes.VARCHAR));

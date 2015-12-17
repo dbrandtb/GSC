@@ -1364,6 +1364,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			,String cdsisrolDestino
 			,String cdmotivo
 			,String cdclausu
+			,String swagente
 			) throws Exception
 	{
 		log.info(""
@@ -1371,7 +1372,18 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 				+ "\n###### moverTramite ######"
 				);
 		
-		Map<String,Object> res = siniestrosDAO.moverTramite(ntramite,nuevoStatus,comments,cdusuariSesion,cdsisrolSesion,cdusuariDestino,cdsisrolDestino,cdmotivo,cdclausu);
+		Map<String,Object> res = siniestrosDAO.moverTramite(
+				ntramite
+				,nuevoStatus
+				,comments
+				,cdusuariSesion
+				,cdsisrolSesion
+				,cdusuariDestino
+				,cdsisrolDestino
+				,cdmotivo
+				,cdclausu
+				,swagente
+				);
 		
 		try
         {

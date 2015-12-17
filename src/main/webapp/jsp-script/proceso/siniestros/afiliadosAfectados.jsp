@@ -3355,7 +3355,28 @@
 			url: _URL_ACTSTATUS_TRAMITE,
 			bodyPadding: 5,
 			items: [
-				motivoRechazo,incisosRechazo,textoRechazo
+				motivoRechazo,incisosRechazo,textoRechazo,{
+	                xtype       : 'radiogroup'
+                    ,fieldLabel : 'Mostrar al agente'
+                    ,columns    : 2
+                    ,width      : 250
+                    ,style      : 'margin:5px;'
+                    ,items      :
+                    [
+                        {
+                            boxLabel    : 'Si'
+                            ,itemId     : 'SWAGENTE2'
+                            ,name       : 'SWAGENTE2'
+                            ,inputValue : 'S'
+                            ,checked    : true
+                        }
+                        ,{
+                            boxLabel    : 'No'
+                            ,name       : 'SWAGENTE2'
+                            ,inputValue : 'N'
+                        }
+                    ]
+                }
 			],
 			buttonAlign:'center',
 			buttons: [{
@@ -3369,6 +3390,7 @@
 							params: {
 								'smap1.ntramite' : _11_params.NTRAMITE,
 								'smap1.status'   : _RECHAZADO
+								,'smap1.swagente' : _fieldById('SWAGENTE2').getGroupValue()
 							},
 							failure: function(form, action) {
 								Ext.Msg.show({
@@ -4868,7 +4890,7 @@
 	        modal       : true,
 	        buttonAlign : 'center',
 	        width       : 663,
-	        height      : 400,
+	        height      : 430,
 	        autoScroll  : true,
 	        items       : [
         	        		Ext.create('Ext.form.Panel', {
@@ -4876,7 +4898,28 @@
         	                width: 650,
         	                url: _URL_ACTSTATUS_TRAMITE,
         	                bodyPadding: 5,
-        	                items: [comentariosText],
+        	                items: [comentariosText,{
+        	                    xtype       : 'radiogroup'
+        	                        ,fieldLabel : 'Mostrar al agente'
+        	                        ,columns    : 2
+        	                        ,width      : 250
+        	                        ,style      : 'margin:5px;'
+        	                        ,items      :
+        	                        [
+        	                            {
+        	                                boxLabel    : 'Si'
+        	                                ,itemId     : 'SWAGENTE3'
+        	                                ,name       : 'SWAGENTE3'
+        	                                ,inputValue : 'S'
+        	                                ,checked    : true
+        	                            }
+        	                            ,{
+        	                                boxLabel    : 'No'
+        	                                ,name       : 'SWAGENTE3'
+        	                                ,inputValue : 'N'
+        	                            }
+        	                        ]
+        	                    }],
         	        	    buttonAlign:'center',
         	        	    buttons: [{
         	            		text: 'Turnar'
@@ -4891,6 +4934,7 @@
         	            		        		'smap1.status'   : _STATUS_TRAMITE_EN_REVISION_MEDICA
         	            		        		,'smap1.rol_destino'     : 'medajustador'
         	            		        		,'smap1.usuario_destino' : ''
+        	            		        		,'smap1.swagente' : _fieldById('SWAGENTE3').getGroupValue()
         	            		        	},
         	            		        	failure: function(form, action) {
         	            		        		Ext.Msg.show({
@@ -5099,7 +5143,7 @@
 			modal       : true,
 			buttonAlign : 'center',
 			width       : 663,
-			height      : 400,
+			height      : 430,
 			autoScroll  : true,
 			items       : [
 				Ext.create('Ext.form.Panel', {
@@ -5107,7 +5151,28 @@
 					width: 650,
 					url: _URL_ACTSTATUS_TRAMITE,
 					bodyPadding: 5,
-					items: [comentariosText],
+					items: [comentariosText,{
+		                xtype       : 'radiogroup'
+		                    ,fieldLabel : 'Mostrar al agente'
+		                    ,columns    : 2
+		                    ,width      : 250
+		                    ,style      : 'margin:5px;'
+		                    ,items      :
+		                    [
+		                        {
+		                            boxLabel    : 'Si'
+		                            ,itemId     : 'SWAGENTE4'
+		                            ,name       : 'SWAGENTE4'
+		                            ,inputValue : 'S'
+		                            ,checked    : true
+		                        }
+		                        ,{
+		                            boxLabel    : 'No'
+		                            ,name       : 'SWAGENTE4'
+		                            ,inputValue : 'N'
+		                        }
+		                    ]
+		                }],
 					buttonAlign:'center',
 					buttons: [{
 						text: 'Devolver'
@@ -5121,6 +5186,7 @@
 									params: {
 										'smap1.ntramite' : _11_params.NTRAMITE,
 										'smap1.status'   : _STATUS_DEVOLVER_TRAMITE
+										,'smap1.swagente' : _fieldById('SWAGENTE4').getGroupValue()
 									},
 									failure: function(){
 										mensajeError('Error al devolver el tr&aacute;mite');
@@ -5199,7 +5265,7 @@
 			        	        modal       : true,
 			        	        buttonAlign : 'center',
 			        	        width       : 663,
-			        	        height      : 400,
+			        	        height      : 430,
 			        	        autoScroll  : true,
 			        	        items       : [
 					        	        		Ext.create('Ext.form.Panel', {
@@ -5207,7 +5273,28 @@
 					        	                width: 650,
 					        	                url: _URL_ACTSTATUS_TRAMITE,
 					        	                bodyPadding: 5,
-					        	                items: [comentariosText],
+					        	                items: [comentariosText,{
+					        	                    xtype       : 'radiogroup'
+				        	                        ,fieldLabel : 'Mostrar al agente'
+				        	                        ,columns    : 2
+				        	                        ,width      : 250
+				        	                        ,style      : 'margin:5px;'
+				        	                        ,items      :
+				        	                        [
+				        	                            {
+				        	                                boxLabel    : 'Si'
+				        	                                ,itemId     : 'SWAGENTE5'
+				        	                                ,name       : 'SWAGENTE5'
+				        	                                ,inputValue : 'S'
+				        	                                ,checked    : true
+				        	                            }
+				        	                            ,{
+				        	                                boxLabel    : 'No'
+				        	                                ,name       : 'SWAGENTE5'
+				        	                                ,inputValue : 'N'
+				        	                            }
+				        	                        ]
+				        	                    }],
 					        	        	    buttonAlign:'center',
 					        	        	    buttons: [{
 					        	            		text: 'Turnar'
@@ -5221,6 +5308,7 @@
 									        	            		        	params: {
 									        	            		        		'smap1.ntramite' : _11_params.NTRAMITE, 
 									        	            		        		'smap1.status'   : _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION
+									        	            		        		,'smap1.swagente' : _fieldById('SWAGENTE5').getGroupValue()
 									        	            		        	},
 									        	            		        	failure: function(form, action)
 									        	            		        	{

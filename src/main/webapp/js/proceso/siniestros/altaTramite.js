@@ -463,7 +463,7 @@ Ext.onReady(function() {
 		}
 	});
 	
-	/* PANEL PARA LA BUSQUEDA DE LA INFORMACIÓN DEL ASEGURADO PARA LA BUSQUEDA DE LAS POLIZAS */
+	/* PANEL PARA LA BUSQUEDA DE LA INFORMACIï¿½N DEL ASEGURADO PARA LA BUSQUEDA DE LAS POLIZAS */
 	gridPolizasAltaTramite= Ext.create('Ext.grid.Panel', {
 		id			:	'polizaGridAltaTramite',
 		store		:	storeListadoPoliza,
@@ -506,7 +506,7 @@ Ext.onReady(function() {
 					
 					if( (valorFechaOcurrencia <= valorFechaFinal) && (valorFechaOcurrencia >= valorFechaInicial)){
 						if( valorFechaOcurrencia >= valorFechaAltaAsegurado ){
-							//cumple la condición la fecha de ocurrencia es menor igual a la fecha de alta de tramite
+							//cumple la condiciï¿½n la fecha de ocurrencia es menor igual a la fecha de alta de tramite
 							panelInicialPral.down('[name="cdunieco"]').setValue(record.get('cdunieco'));
 							panelInicialPral.down('[name="estado"]').setValue(record.get('estado'));
 							panelInicialPral.down('[name="cdramo"]').setValue(record.get('cdramo'));
@@ -540,7 +540,7 @@ Ext.onReady(function() {
 							limpiarRegistros();
 							modPolizasAltaTramite.hide();
 						}else{
-							// No se cumple la condición la fecha de ocurrencia es mayor a la fecha de alta de tramite
+							// No se cumple la condiciï¿½n la fecha de ocurrencia es mayor a la fecha de alta de tramite
 							Ext.Msg.show({
 								title:'Error',
 								msg: 'La fecha de ocurrencia es mayor a la fecha de alta del asegurado',
@@ -903,14 +903,14 @@ Ext.onReady(function() {
 					,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 					,handler : _p21_agregarFactura
 				},
-				{	/*1.- MANDAMOS A GUARDAR LA INFORMACIÓN DE LAS FACTURAS UNICAMENTE EN EL TRAMITE*/
+				{	/*1.- MANDAMOS A GUARDAR LA INFORMACIï¿½N DE LAS FACTURAS UNICAMENTE EN EL TRAMITE*/
 					text	: 'Guardar Cambios Factura'
 					,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png'
 					,handler : function() {
 						guardarFacturaSiniestro(); //Guardar Cambios Factura
 					}
 				},
-				{	/*MOSTRAMOS LA INFORMACIÓN INICIAL DEL STORE DE LAS FACTURAS*/
+				{	/*MOSTRAMOS LA INFORMACIï¿½N INICIAL DEL STORE DE LAS FACTURAS*/
 					text		:'Restaurar Facturas'
 					,icon		:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png'
 					,handler	:function() {
@@ -956,7 +956,7 @@ Ext.onReady(function() {
 			}],
 			listeners: {
 				itemclick: function(dv, record, item, index, e) {
-					/*OBTENEMOS LA INFORMACIÓN DE LOS ASEGURADOS*/
+					/*OBTENEMOS LA INFORMACIï¿½N DE LOS ASEGURADOS*/
 					if(panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().hasSelection()){
 						if(banderaAsegurado =="1"){
 							guardarAseguradosFactura(); //Cambio de Factura
@@ -965,7 +965,7 @@ Ext.onReady(function() {
 						var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];
 						var noFactura= rowSelected.get('noFactura');
 						storeListAsegPagDirecto.removeAll();
-						//REALIZAMOS EL LLAMADO POR EL NUMERO DE FACTURA Y TRÁMITE
+						//REALIZAMOS EL LLAMADO POR EL NUMERO DE FACTURA Y TRï¿½MITE
 						Ext.Ajax.request( {
 							url		: _URL_ASEGURADO_FACTURA
 							,params	: {
@@ -2087,7 +2087,28 @@ Ext.onReady(function() {
 					url: _URL_ActualizaStatusTramite,
 					bodyPadding: 5,
 					items: [
-						motivoRechazo,incisosRechazo,textoRechazo
+						motivoRechazo,incisosRechazo,textoRechazo,{
+                            xtype       : 'radiogroup'
+                            ,fieldLabel : 'Mostrar al agente'
+                            ,columns    : 2
+                            ,width      : 250
+                            ,style      : 'margin:5px;'
+                            ,items      :
+                            [
+                                {
+                                    boxLabel    : 'Si'
+                                    ,itemId     : 'SWAGENTE2'
+                                    ,name       : 'SWAGENTE2'
+                                    ,inputValue : 'S'
+                                    ,checked    : true
+                                }
+                                ,{
+                                    boxLabel    : 'No'
+                                    ,name       : 'SWAGENTE2'
+                                    ,inputValue : 'N'
+                                }
+                            ]
+                        }
 					],
 					buttonAlign:'center',
 					buttons: [{
@@ -2101,6 +2122,7 @@ Ext.onReady(function() {
 									params: {
 										'smap1.ntramite' : panelInicialPral.down('[name=idNumTramite]').getValue(), 
 										'smap1.status'   : _RECHAZADO
+										,'smap1.swagente' : _fieldById('SWAGENTE2').getGroupValue()
 									},
 									failure: function(form, action) {
 										Ext.Msg.show({
@@ -3270,7 +3292,7 @@ Ext.onReady(function() {
 								modal	: true,
 								buttonAlign	: 'center',
 								width		: 663,
-								height		: 400,
+								height		: 430,
 								autoScroll	: true,
 								items		: [
 									Ext.create('Ext.form.Panel', {
@@ -3278,7 +3300,28 @@ Ext.onReady(function() {
 										width: 650,
 										url: _URL_ActualizaStatusTramite,
 										bodyPadding: 5,
-										items: [comentariosText],
+										items: [comentariosText,{
+                                            xtype       : 'radiogroup'
+                                            ,fieldLabel : 'Mostrar al agente'
+                                            ,columns    : 2
+                                            ,width      : 250
+                                            ,style      : 'margin:5px;'
+                                            ,items      :
+                                            [
+                                                {
+                                                    boxLabel    : 'Si'
+                                                    ,itemId     : 'SWAGENTE3'
+                                                    ,name       : 'SWAGENTE3'
+                                                    ,inputValue : 'S'
+                                                    ,checked    : true
+                                                }
+                                                ,{
+                                                    boxLabel    : 'No'
+                                                    ,name       : 'SWAGENTE3'
+                                                    ,inputValue : 'N'
+                                                }
+                                            ]
+                                        }],
 										buttonAlign:'center',
 										buttons: [{
 											text: 'Turnar'
@@ -3301,6 +3344,7 @@ Ext.onReady(function() {
 																		params: {
 																			'smap1.ntramite' : panelInicialPral.down('[name=idNumTramite]').getValue(),
 																			'smap1.status'   : _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION
+																			,'smap1.swagente' : _fieldById('SWAGENTE').getGroupValue()
 																		},
 																		failure: function(form, action)
 																		{

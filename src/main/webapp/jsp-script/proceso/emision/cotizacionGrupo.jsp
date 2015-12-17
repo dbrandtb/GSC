@@ -1941,7 +1941,8 @@ Ext.onReady(function()
                         var label  = json.smap1[indice];
                         if(!Ext.isEmpty(label))
                         {
-                            _fieldLikeLabel(json.smap1[indice],_fieldById('_p21_fieldsetRiesgo')).readOnly = true;
+                            //_fieldLikeLabel(json.smap1[indice],_fieldById('_p21_fieldsetRiesgo')).readOnly = true;
+                            _fieldLikeLabel(json.smap1[indice],_fieldById('_p21_fieldsetRiesgo')).hide();
                         }
                     }
                 }
@@ -2116,6 +2117,9 @@ function _p21_editarGrupoClic(grid,rowIndex)
     var record = grid.getStore().getAt(rowIndex);
     debug('>_p21_editarGrupoClic:',record);
     
+    var cdPlanParaQuitarPrim = record.get('cdplan');
+    var quitarPrim = _p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&(cdPlanParaQuitarPrim=='PR'||cdPlanParaQuitarPrim=='PA');
+    
     var valido = true;
     
     if(valido)
@@ -2269,8 +2273,8 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                         ,boxLabel   : 'Amparada'
                                                         ,name       : 'amparada'
                                                         ,inputValue : 'S'
-                                                        ,checked    : json.slist1[j].SWOBLIGA=='S'
-                                                        ,disabled   : false//_p21_smap1.cdsisrol!='COTIZADOR'&&json.slist1[j].SWOBLIGA=='S'
+                                                        ,checked    : json.slist1[j].SWOBLIGA=='S'&&!(quitarPrim&&(json.slist1[j].CDGARANT=='4AYM'||json.slist1[j].CDGARANT=='4EE'))
+                                                        ,disabled   : quitarPrim&&(json.slist1[j].CDGARANT=='4AYM'||json.slist1[j].CDGARANT=='4EE')//_p21_smap1.cdsisrol!='COTIZADOR'&&json.slist1[j].SWOBLIGA=='S'
                                                         ,style      : 'color:white;'
                                                         ,listeners  :
                                                         {
@@ -3958,7 +3962,7 @@ function _p21_turnar(status,titulo,closable)
     {
         title        : !Ext.isEmpty(titulo) ? titulo : 'Turnar tr&aacute;mite'
         ,width       : 500
-        ,height      : 300
+        ,height      : 330
         ,modal       : true
         ,closable    : closable==undefined ? true : closable
         ,items       :
@@ -3970,6 +3974,28 @@ function _p21_turnar(status,titulo,closable)
                 ,itemId     : '_p21_turnarCommentsItem'
                 ,width      : 480
                 ,height     : 200
+            }
+            ,{
+                xtype       : 'radiogroup'
+                ,fieldLabel : 'Mostrar al agente'
+                ,columns    : 2
+                ,width      : 250
+                ,style      : 'margin:5px;'
+                ,items      :
+                [
+                    {
+                        boxLabel    : 'Si'
+                        ,itemId     : 'SWAGENTE'
+                        ,name       : 'SWAGENTE'
+                        ,inputValue : 'S'
+                        ,checked    : true
+                    }
+                    ,{
+                        boxLabel    : 'No'
+                        ,name       : 'SWAGENTE'
+                        ,inputValue : 'N'
+                    }
+                ]
             }
         ]
         ,buttonAlign : 'center'
@@ -3989,6 +4015,7 @@ function _p21_turnar(status,titulo,closable)
                             'smap1.status'    : status
                             ,'smap1.ntramite' : _p21_ntramite ? _p21_ntramite : _p21_ntramiteVacio
                             ,'smap1.comments' : Ext.ComponentQuery.query('#_p21_turnarCommentsItem')[0].getValue()
+                            ,'smap1.swagente' : _fieldById('SWAGENTE').getGroupValue()
                         }
                         ,success : function(response)
                         {
@@ -4617,6 +4644,10 @@ function _p21_estiloEditores(cdplan)
                     {
                         debug('_4AYM found');
                         _4AYM=true;
+                        if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&_p21_clasif==_p21_TARIFA_LINEA)
+                        {
+                            _4AYM=false;
+                        }
                     }
                     if(cob.CDGARANT=='4MED')
                     {
@@ -4651,31 +4682,47 @@ function _p21_estiloEditores(cdplan)
                 _p21_editorDeducible.setReadOnly(!_4HOS);
                 if(_p21_smap1.cdsisrol!='COTIZADOR')
                 {
-                    //if(!_4AYM||!_4HOS||_4MAT)
-                    if(_4MAT)
+                    if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&(_p21_clasif==_p21_TARIFA_LINEA||(cdplan=='PR'||cdplan=='PA')))
                     {
                         _p21_editorAyudaMater.setValue('0');
                         _p21_editorAyudaMater.addCls('_p21_editorLectura');
                     }
-                    //else if(_4AYM&&_4HOS&&!_4MAT)
-                    else if(!_4MAT)
+                    else
                     {
-                        _p21_editorAyudaMater.removeCls('_p21_editorLectura');
+                        //if(!_4AYM||!_4HOS||_4MAT)
+                        if(_4MAT)
+                        {
+                            _p21_editorAyudaMater.setValue('0');
+                            _p21_editorAyudaMater.addCls('_p21_editorLectura');
+                        }
+                        //else if(_4AYM&&_4HOS&&!_4MAT)
+                        else if(!_4MAT)
+                        {
+                            _p21_editorAyudaMater.removeCls('_p21_editorLectura');
+                        }
                     }
                     //_p21_editorAyudaMater.setReadOnly(!_4AYM);
                 }
                 if(_p21_smap1.cdsisrol!='COTIZADOR')
                 {
-                    //if(!_4AIV||!_4MS)
-                    if(!_4MS)
+                    if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&(_p21_clasif==_p21_TARIFA_LINEA||(cdplan=='PR'||cdplan=='PA')))
                     {
                         _p21_editorAsisInter.setValue('0');
                         _p21_editorAsisInter.addCls('_p21_editorLectura');
                     }
-                    //else if(_4AIV&&_4MS)
-                    else if(_4MS)
+                    else
                     {
-                        _p21_editorAsisInter.removeCls('_p21_editorLectura');
+                        //if(!_4AIV||!_4MS)
+                        if(!_4MS)
+                        {
+                            _p21_editorAsisInter.setValue('0');
+                            _p21_editorAsisInter.addCls('_p21_editorLectura');
+                        }
+                        //else if(_4AIV&&_4MS)
+                        else if(_4MS)
+                        {
+                            _p21_editorAsisInter.removeCls('_p21_editorLectura');
+                        }
                     }
                 }
                 //_p21_editorAsisInter.setReadOnly(!_4AIV);
