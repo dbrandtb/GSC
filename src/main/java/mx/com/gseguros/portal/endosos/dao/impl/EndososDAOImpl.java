@@ -3711,8 +3711,8 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		protected RecuperarDiasDiferenciaEndosoValidos(DataSource dataSource)
 		{
 			super(dataSource,"PKG_CONSULTA.P_GET_DIAS_ENDOSO_AUTORIZA");
-			//declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			//declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_dias_endoso_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"      , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"       , OracleTypes.VARCHAR));
