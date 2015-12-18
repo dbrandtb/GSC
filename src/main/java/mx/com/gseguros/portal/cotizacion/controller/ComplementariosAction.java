@@ -27,6 +27,8 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
+import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
@@ -129,6 +131,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private String auxiliarProductoCdramo   = null;
 	private String auxiliarProductoCdtipsit = null;
 	private String tipoGrupoInciso;
+	private FlujoVO flujo;
 	
 	private ConsultasManager consultasManager;
 	private boolean exito = false;
@@ -152,6 +155,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private MesaControlManager mesaControlManager;
+	
+	@Autowired
+	private FlujoMesaControlManager flujoMesaControlManager;
 
 	public String mostrarPantalla()
 	{
@@ -165,6 +171,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				.append("\nestado: ").append(estado)
 				.append("\nnmpoliza: ").append(nmpoliza)
 				.append("\ncdtipsit: ").append(cdtipsit)
+				.append("\nflujo: ").append(flujo)
 				.toString()
 				);
 		
@@ -173,6 +180,33 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String result   = SUCCESS;
 		UserVO usuario  = null;
 		String cdsisrol = null;
+		
+		if(exito)
+		{
+			if(flujo!=null)
+			{
+				try
+				{
+					Map<String,Object> datosTramite = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(new StringBuilder(), flujo);
+					Map<String,String> tramite      = (Map<String,String>)datosTramite.get("TRAMITE");
+					cdunieco = flujo.getCdunieco();
+					cdramo   = flujo.getCdramo();
+					estado   = flujo.getEstado();
+					nmpoliza = tramite.get("NMSOLICI");
+					cdtipsit = tramite.get("CDTIPSIT");
+					map1 = new HashMap<String, String>();
+					map1.put("ntramite" , flujo.getNtramite());
+				}
+				catch(Exception ex)
+				{
+					long timestamp  = System.currentTimeMillis();
+					exito           = false;
+					respuesta       = "Error al procesar flujo #"+timestamp;
+					respuestaOculta = ex.getMessage();
+					logger.error(respuesta,ex);
+				}
+			}
+		}
 		
 		//revisar datos
 		if(exito)
@@ -1930,7 +1964,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							);
 					mensajeRespuesta = mensajeRespuesta + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
 					
-					Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+					/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
 		        	parDmesCon.put("pv_ntramite_i"   , ntramite);
 		        	parDmesCon.put("pv_feinicio_i"   , new Date());
 		        	parDmesCon.put("pv_cdclausu_i"   , null);
@@ -1938,7 +1972,17 @@ public class ComplementariosAction extends PrincipalCoreAction
 		        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 		        	parDmesCon.put("pv_cdmotivo_i"   , null);
 		        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
-		        	kernelManager.movDmesacontrol(parDmesCon);
+		        	kernelManager.movDmesacontrol(parDmesCon);*/
+					mesaControlManager.movimientoDetalleTramite(
+							ntramite
+							,new Date()//feinicio
+							,null//cdclausu
+							,"El tr&aacute;mite se envi&oacute; a autorizaci&oacute;n ("+ntramiteAutorizacion+")"
+							,cdusuari
+							,null//cdmotivo
+							,cdsisrol
+							,"S"//swagente
+							);
 					
 		        	kernelManager.mesaControlUpdateStatus(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
 		        	
@@ -2024,7 +2068,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							);
 					mensajeRespuesta = mensajeRespuesta + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
 					
-					Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+					/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
 		        	parDmesCon.put("pv_ntramite_i"   , ntramite);
 		        	parDmesCon.put("pv_feinicio_i"   , new Date());
 		        	parDmesCon.put("pv_cdclausu_i"   , null);
@@ -2032,7 +2076,17 @@ public class ComplementariosAction extends PrincipalCoreAction
 		        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 		        	parDmesCon.put("pv_cdmotivo_i"   , null);
 		        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
-		        	kernelManager.movDmesacontrol(parDmesCon);
+		        	kernelManager.movDmesacontrol(parDmesCon);*/
+					mesaControlManager.movimientoDetalleTramite(
+							ntramite
+							,new Date()
+							,null
+							,"El tr&aacute;mite se envi&oacute; a autorizaci&oacute;n ("+ntramiteAutorizacion+")"
+							,cdusuari
+							,null
+							,cdsisrol
+							,"S"
+							);
 					
 		        	kernelManager.mesaControlUpdateStatus(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
 		        	
@@ -2840,7 +2894,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			try
 			{
 				logger.debug("se inserta detalle nuevo para emision");
-	        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+	        	/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
 	        	parDmesCon.put("pv_ntramite_i"   , ntramite);
 	        	parDmesCon.put("pv_feinicio_i"   , new Date());
 	        	parDmesCon.put("pv_cdclausu_i"   , null);
@@ -2848,7 +2902,17 @@ public class ComplementariosAction extends PrincipalCoreAction
 	        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 	        	parDmesCon.put("pv_cdmotivo_i"   , null);
 	        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
-	        	kernelManager.movDmesacontrol(parDmesCon);
+	        	kernelManager.movDmesacontrol(parDmesCon);*/
+				mesaControlManager.movimientoDetalleTramite(
+						ntramite
+						,new Date()
+						,null//cdclausu
+						,"El tr\u00e1mite se emiti\u00f3"
+						,cdusuari
+						,null//cdmotivo
+						,cdsisrol
+						,"S"//swagente
+						);
 			}
 			catch(Exception ex)
 			{
@@ -3210,7 +3274,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			try
 			{
 				logger.debug("se inserta detalle nuevo para emision");
-	        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+	        	/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
 	        	parDmesCon.put("pv_ntramite_i"   , ntramite);
 	        	parDmesCon.put("pv_feinicio_i"   , fechaDia);
 	        	parDmesCon.put("pv_cdclausu_i"   , null);
@@ -3218,7 +3282,17 @@ public class ComplementariosAction extends PrincipalCoreAction
 	        	parDmesCon.put("pv_cdusuari_i"   , us.getUser());
 	        	parDmesCon.put("pv_cdmotivo_i"   , null);
 	        	parDmesCon.put("pv_cdsisrol_i"   , us.getRolActivo().getClave());
-	        	kernelManager.movDmesacontrol(parDmesCon);
+	        	kernelManager.movDmesacontrol(parDmesCon);*/
+				mesaControlManager.movimientoDetalleTramite(
+						ntramite
+						,fechaDia
+						,null//cdclausu
+						,"La emisi&oacute;n del tr&aacute;mite se autoriz&oacute; con las siguientes observaciones:<br/>"+comentarios
+						,us.getUser()
+						,null
+						,us.getRolActivo().getClave()
+						,"N"
+						);
 				
 	        	kernelManager.mesaControlUpdateStatus(ntramiteAut, EstatusTramite.CONFIRMADO.getCodigo());
 	        	
@@ -3889,7 +3963,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				try
 				{
 					logger.debug("se inserta detalle nuevo para emision");
-		        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+		        	/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
 		        	parDmesCon.put("pv_ntramite_i"   , ntramite);
 		        	parDmesCon.put("pv_feinicio_i"   , new Date());
 		        	parDmesCon.put("pv_cdclausu_i"   , null);
@@ -3897,7 +3971,17 @@ public class ComplementariosAction extends PrincipalCoreAction
 		        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 		        	parDmesCon.put("pv_cdmotivo_i"   , null);
 		        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
-		        	kernelManager.movDmesacontrol(parDmesCon);
+		        	kernelManager.movDmesacontrol(parDmesCon);*/
+					mesaControlManager.movimientoDetalleTramite(
+							ntramite
+							,new Date()
+							,null//cdclausu
+							,"El tr\u00e1mite se emiti\u00f3"
+							,cdusuari
+							,null//cdmotivo
+							,cdsisrol
+							,"S"//swagente
+							);
 				}
 				catch(Exception ex)
 				{
@@ -4591,6 +4675,26 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String cdramo      = map1.get("cdramo");
 		String estado      = map1.get("estado");
 		String nmpoliza    = map1.get("nmpoliza");
+		
+		if("R".equals(nmpoliza))
+		{
+			FlujoVO flujo = new FlujoVO();
+			flujo.setNtramite(ntramite);
+			try
+			{
+				Map<String,Object> datosValidacionJS = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(
+						new StringBuilder()
+						,flujo
+						);
+				nmpoliza = ((Map<String,String>)datosValidacionJS.get("TRAMITE")).get("NMSOLICI");
+			}
+			catch(Exception ex)
+			{
+				logger.error("Error al obtener datos de poliza desde flujo",ex);
+				return SUCCESS;
+			}
+		}
+		
 		String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
 		String url         = this.getText("ruta.servidor.reports")
 				+ "?destype=cache"
@@ -4892,6 +4996,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setServiciosManager(ServiciosManager serviciosManager) {
 		this.serviciosManager = serviciosManager;
+	}
+
+	public FlujoVO getFlujo() {
+		return flujo;
+	}
+
+	public void setFlujo(FlujoVO flujo) {
+		this.flujo = flujo;
 	}
 
 }

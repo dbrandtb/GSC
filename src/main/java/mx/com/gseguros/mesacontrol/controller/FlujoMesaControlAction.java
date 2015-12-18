@@ -39,6 +39,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 	private Map<String,Item>         items;
 	private FlujoVO                  flujo;
 	private Map<String,String>       params;
+	private Map<String,Object>       datosTramite;
 	private List<Map<String,String>> list;
 	private int                      start
 	                                 ,limit
@@ -774,6 +775,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,ypos       = params.get("YPOS")
 			       ,dsvalida   = params.get("DSVALIDA")
 			       ,cdvalidafk = params.get("CDVALIDAFK")
+			       ,jsvalida   = params.get("JSVALIDA")
 			       ,accion     = params.get("ACCION");
 			
 			Utils.validate(
@@ -798,6 +800,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,ypos
 					,dsvalida
 					,cdvalidafk
+					,jsvalida
 					,accion
 					);
 			
@@ -1178,7 +1181,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,iddestin  = params.get("IDDESTIN")
 			       ,cdvalor   = params.get("CDVALOR")
 			       ,cdicono   = params.get("CDICONO")
-			       ,swescala  = params.get("SWESCALA");
+			       ,swescala  = params.get("SWESCALA")
+			       ,aux       = params.get("AUX");
 			
 			Utils.validate(
 					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
@@ -1202,6 +1206,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdvalor
 					,cdicono
 					,swescala
+					,aux
 					,list
 					);
 			
@@ -1550,8 +1555,9 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 				));
 		try
 		{
-			UserVO usuario  = Utils.validateSession(session);
-			String cdsisrol = usuario.getRolActivo().getClave();
+			UserVO usuario   = Utils.validateSession(session);
+			String cdusuari  = usuario.getUser()
+			       ,cdsisrol = usuario.getRolActivo().getClave();
 			
 			Utils.validate(params, "No se recibieron datos");
 			
@@ -1577,6 +1583,9 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,webid
 					,cdsisrol
 					);
+			
+			params.put("cdusuari" , cdusuari);
+			params.put("cdsisrol" , cdsisrol);
 			
 			success = true;
 			
@@ -1820,8 +1829,6 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-
-	
 	@Action(value   = "turnarTramite",
 			results = { @Result(name="success", type="json") }
 			)
@@ -1845,7 +1852,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,cdtipasigOld    = params.get("cdtipasigOld")
 			       ,statusNew       = params.get("statusNew")
 			       ,cdtipasigNew    = params.get("cdtipasigNew")
-			       ,cdsisrolTurnado = params.get("cdsisrolTurnado");
+			       ,cdsisrolTurnado = params.get("cdsisrolTurnado")
+			       ,comments        = params.get("comments");
 			
 			Utils.validate(
 					ntramite      , "No se recibi\u00f3 el tr\u00e1mite"
@@ -1865,6 +1873,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdusuariSes
 					,cdsisrolSes
 					,cdsisrolTurnado
+					,comments
 					);
 			
 			success = true;
@@ -1873,6 +1882,110 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					 "\n###### message=" , message
 					,"\n###### turnarTramite ######"
 					,"\n###########################"
+					));
+			
+			logger.debug(sb.toString());
+			
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
+	
+	@Action(value   = "recuperarDatosTramiteValidacionCliente",
+			results = { @Result(name="success", type="json") }
+			)
+	public String recuperarDatosTramiteValidacionCliente()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n####################################################"
+				,"\n###### recuperarDatosTramiteValidacionCliente ######"
+				,"\n###### flujo=" , flujo
+				));
+		try
+		{
+			UserVO user     = Utils.validateSession(session);
+			String cdusuari = user.getUser();
+			String cdsisrol = user.getRolActivo().getClave();
+			
+			Utils.validate(flujo, "No se recibieron datos de flujo");
+			
+			datosTramite = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(sb,flujo);
+			
+			datosTramite.put("CDUSUARI" , cdusuari);
+			datosTramite.put("CDSISROL" , cdsisrol);
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### recuperarDatosTramiteValidacionCliente ######"
+					,"\n####################################################"
+					));
+			
+			logger.debug(sb.toString());
+			
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
+	
+	@Action(value   = "turnarDesdeComp",
+			results = { @Result(name="success", type="json") }
+			)
+	public String turnar()
+	{
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n#############################"
+				,"\n###### turnarDesdeComp ######"
+				,"\n###### params=" , params
+				));
+		try
+		{
+			UserVO user     = Utils.validateSession(session);
+			String cdusuari = user.getUser();
+			String cdsisrol = user.getRolActivo().getClave();
+			
+			Utils.validate(params, "No se recibieron datos");
+			
+			String cdtipflu   = params.get("CDTIPFLU")
+			       ,cdflujomc = params.get("CDFLUJOMC")
+			       ,ntramite  = params.get("NTRAMITE")
+			       ,statusOld = params.get("STATUSOLD")
+			       ,statusNew = params.get("STATUSNEW")
+			       ,swagente  = params.get("SWAGENTE")
+			       ,comments  = params.get("COMMENTS");
+			
+			Utils.validate(
+					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
+					,cdflujomc , "No se recibi\u00f3 el proceso"
+					,ntramite  , "No se recibi\u00f3 el tr\u00e1mite"
+					,statusOld , "No se recibi\u00f3 el status anterior"
+					,statusNew , "No se recibi\u00f3 el status nuevo"
+					);
+			
+			message = flujoMesaControlManager.turnarDesdeComp(
+					sb
+					,cdusuari
+					,cdsisrol
+					,cdtipflu
+					,cdflujomc
+					,ntramite
+					,statusOld
+					,statusNew
+					,swagente
+					,comments
+					);
+			
+			success = true;
+			
+			sb.append(Utils.log(
+					 "\n###### turnarDesdeComp ######"
+					,"\n#############################"
 					));
 			
 			logger.debug(sb.toString());
@@ -1958,6 +2071,15 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
                                                           //
 	public void setTotal(int total) {                     //
 		this.total = total;                               //
+	}                                                     //
+                                                          //
+	public Map<String, Object> getDatosTramite() {        //
+		return datosTramite;                              //
+	}                                                     //
+                                                          //
+	public void setDatosTramite(Map<String, Object>       //
+	                            datosTramite) {           //
+		this.datosTramite = datosTramite;                 //
 	}                                                     //
                                                           //
     ////////////////////////////////////////////////////////

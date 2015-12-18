@@ -26,7 +26,10 @@
             
             
             var panDatComMap1 = <s:property value="%{convertToJSON('map1')}" escapeHtml="false" />;
-            debug('panDatComMap1:',panDatComMap1);
+            debug('panDatComMap1:',panDatComMap1,'.');
+            
+            var panDatComFlujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+            debug('panDatComFlujo:',panDatComFlujo,'.');
             
             var inputCdunieco = '<s:property value="cdunieco"         />';
             var inputCdramo   = '<s:property value="cdramo"           />';
@@ -61,6 +64,12 @@
             var urlEditarAsegurados = '${ctx}<s:property value="map1.urlAsegurados" />';
             var urlServidorReports  = '<s:text name="ruta.servidor.reports"         />';
             var complerepSrvUsr     = '<s:text name="pass.servidor.reports"         />';
+            
+            if(!Ext.isEmpty(panDatComFlujo))
+            {
+                datComUrlMC = _GLOBAL_COMP_URL_MCFLUJO;
+                debug('datComUrlMC:',datComUrlMC);
+            }
             
             var _panDatCom_numPestaniasIniciales=4;
             var accordion;
@@ -415,6 +424,7 @@ function _datComTurnarSuscripcion()
                         	title : 'Editar datos complementarios / emitir',
                         	cls:'claseTitulo',
 		                    id:'formPanel',//id1
+		                    itemId : 'formPanel',
 		                    //renderTo:'maindiv',
 		                    url:urlGuardar,
 		                    buttonAlign:'center',
@@ -705,7 +715,8 @@ function _datComTurnarSuscripcion()
 		                            <s:property value="items" />
 		                        })
 		                    ],
-		                    buttons:[
+		                    buttons:
+		                    [
 		                        {
 		                            text:'Guardar',
 		                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
@@ -725,11 +736,23 @@ function _datComTurnarSuscripcion()
 		                                        },
 		                                        success:function(){
 		                                            form.setLoading(false);
-		                                            Ext.Msg.show({
-		                                                title:'Cambios guardados',
-		                                                msg: 'Sus cambios han sido guardados',
-		                                                buttons: Ext.Msg.OK
-		                                            });
+		                                            centrarVentanaInterna(Ext.Msg.show({
+		                                                title    : 'Cambios guardados'
+		                                                ,msg     : 'Sus cambios han sido guardados'
+		                                                ,buttons : Ext.Msg.OK
+		                                                ,fn      : function()
+		                                                {
+		                                                    if(!Ext.isEmpty(panDatComFlujo))
+		                                                    {
+		                                                        var botones = Ext.ComponentQuery.query('[xtype=button][clase=botonFlujo]');
+		                                                        debug('botones:',botones);
+		                                                        for(var i in botones)
+		                                                        {
+		                                                            botones[i].show();
+		                                                        }
+		                                                    }
+		                                                }
+		                                            }));
 		                                        },
 		                                        failure:function(){
 		                                            form.setLoading(false);
@@ -756,8 +779,8 @@ function _datComTurnarSuscripcion()
 		                        {
 		                            text     : 'Turnar a suscripci&oacute;n',
 		                            icon    : '${ctx}/resources/fam3icons/icons/user_go.png',
-		                            hidden  : sesionDsrol!='MESADECONTROL',
-		                            handler : function() {
+		                            hidden  : (sesionDsrol!='MESADECONTROL')||!Ext.isEmpty(panDatComFlujo)
+		                            ,handler : function() {
 		                            	var form = Ext.getCmp('formPanel');
                         	            if (form.isValid()) {
                         	                _datComTurnarSuscripcion();	
@@ -805,7 +828,7 @@ function _datComTurnarSuscripcion()
 		                        ,{
                                     text     : 'Guardar y enviar a revisión médica'
                                     ,icon    : '${ctx}/resources/fam3icons/icons/heart_add.png'
-                                    ,hidden  : (!sesionDsrol)||sesionDsrol!='SUSCRIPTOR'
+                                    ,hidden  : ((!sesionDsrol)||sesionDsrol!='SUSCRIPTOR')||!Ext.isEmpty(panDatComFlujo)
                                     ,handler:function()
                                     {
                                         var form=Ext.getCmp('formPanel');
@@ -1604,7 +1627,7 @@ function _datComTurnarSuscripcion()
 		                        ,{
                                     text     : 'Guardar y dar Vo. Bo.'
                                     ,icon    : '${ctx}/resources/fam3icons/icons/heart_add.png'
-                                    ,hidden  : (!sesionDsrol)||sesionDsrol!='MEDICO'
+                                    ,hidden  : ((!sesionDsrol)||sesionDsrol!='MEDICO')||!Ext.isEmpty(panDatComFlujo)
                                     ,handler:function()
                                     {
                                     	var form=Ext.getCmp('formPanel');                                         
@@ -1755,7 +1778,7 @@ function _datComTurnarSuscripcion()
 		                        ,{
                                     text     : 'Guardar como pendiente de informaci&oacute;n'
                                     ,icon    : '${ctx}/resources/fam3icons/icons/clock.png'
-                                    ,hidden  : (!sesionDsrol)||sesionDsrol!='MEDICO'
+                                    ,hidden  : ((!sesionDsrol)||sesionDsrol!='MEDICO')||!Ext.isEmpty(panDatComFlujo)
                                     ,handler:function()
                                     {
                                     	var form=Ext.getCmp('formPanel');                                         
@@ -1908,7 +1931,7 @@ function _datComTurnarSuscripcion()
 		                        ,{
                                     text     : 'Rechazar'
                                     ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-                                    ,hidden  : (!sesionDsrol)||(sesionDsrol!='SUSCRIPTOR'&&sesionDsrol!='MEDICO')
+                                    ,hidden  : ((!sesionDsrol)||(sesionDsrol!='SUSCRIPTOR'&&sesionDsrol!='MEDICO'))||!Ext.isEmpty(panDatComFlujo)
                                     ,handler:function()
                                     {
                                         var form=Ext.getCmp('formPanel');
@@ -2220,6 +2243,38 @@ function _datComTurnarSuscripcion()
                     }
                 });
                 
+                if(!Ext.isEmpty(panDatComFlujo))
+                {
+                    var formPanel = _fieldById('formPanel');
+                    _cargarBotonesEntidad
+                    (
+                        panDatComFlujo.cdtipflu
+                        ,panDatComFlujo.cdflujomc
+                        ,panDatComFlujo.tipoent
+                        ,panDatComFlujo.claveent
+                        ,panDatComFlujo.webid
+                        ,function(botones)
+                        {
+                            debug('botones:',botones);
+                            for(var i in botones)
+                            {
+                                var boton = botones[i];
+                                formPanel.down('toolbar').add(boton);
+                                boton.clase = 'botonFlujo';
+                                boton.hide();
+                            }
+                        }
+                        ,panDatComFlujo.ntramite
+                        ,panDatComFlujo.status
+                        ,panDatComFlujo.cdunieco
+                        ,panDatComFlujo.cdramo
+                        ,panDatComFlujo.estado
+                        ,panDatComFlujo.nmpoliza
+                        ,panDatComFlujo.nmsituac
+                        ,panDatComFlujo.nmsuplem
+                        ,function(){alert();}
+                    );
+                }
                 
                 function creaWindowPay(url, params, tarjet )
 			    {

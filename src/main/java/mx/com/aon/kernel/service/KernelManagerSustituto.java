@@ -159,7 +159,7 @@ public interface KernelManagerSustituto {
 	public WrapperResultados obtenDatosClienteGeneralWSporCdperson(HashMap<String,Object> params) throws ApplicationException;
 	public WrapperResultados mesaControlUpdateSolici(String ntramite,String nmsolici) throws ApplicationException;
 	public WrapperResultados mesaControlUpdateStatus(String ntramite,String status) throws ApplicationException;
-	public WrapperResultados movDmesacontrol(Map<String, Object> params) throws ApplicationException;
+	//public WrapperResultados movDmesacontrol(Map<String, Object> params) throws ApplicationException;
 	public List<Map<String, String>> obtenerDetalleMC(Map<String, String> smap1) throws ApplicationException;
 	public WrapperResultados mesaControlFinalizarDetalle(Map<String, String> smap1) throws ApplicationException;
 	public WrapperResultados preparaContrarecibo(Map<String, String> docu) throws ApplicationException;

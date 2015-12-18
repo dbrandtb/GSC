@@ -397,7 +397,7 @@ public interface FlujoMesaControlDAO {
 	 */
 	public String movimientoTfluval(String cdtipflu, String cdflujomc, String cdvalida,
 			String dsvalida, String cdvalidafk, String webid, String xpos,
-			String ypos, String accion) throws Exception;
+			String ypos, String jsvalida, String accion) throws Exception;
 
 	/**
 	 * 
@@ -464,7 +464,7 @@ public interface FlujoMesaControlDAO {
 	 */
 	public String movimientoTfluacc(String cdtipflu, String cdflujomc, String cdaccion,
 			String dsaccion, String cdicono, String cdvalor, String idorigen,
-			String iddestin, String swescala, String accion) throws Exception;
+			String iddestin, String swescala, String aux, String accion) throws Exception;
 
 	/**
 	 * 
@@ -562,5 +562,21 @@ public interface FlujoMesaControlDAO {
 			,String status
 			,Date fecstatu
 			,String cdusuari
+			)throws Exception;
+	
+	public Map<String,Object> recuperarDatosTramiteValidacionCliente(
+			String cdtipflu
+			,String cdflujomc
+			,String tipoent
+			,String claveent
+			,String webid
+			,String ntramite
+			,String status
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
 			)throws Exception;
 }

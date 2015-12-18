@@ -1876,6 +1876,107 @@ Ext.onReady(function()
                                 ,defaults    : { style : 'margin:5px;' }
                                 ,buttonAlign : 'center'
                                 ,hidden      : true
+                                ,tools       :
+                                [{
+                                    type     : 'help'
+                                    ,tooltip : 'Estructura de DATOS para validaci\u00f3n cliente'
+                                    ,handler : function()
+                                    {
+                                        _p52_ventanaTips(
+                                        [
+                                            'La estructura de los DATOS para validaci\u00f3n cliente es:'
+                                            ,'CDFLUJOMC: "12"'
+                                            ,'CDRAMO: "2"'
+                                            ,'CDSISROL: "MESADECONTROL"'
+                                            ,'CDTIPFLU: "1"'
+                                            ,'CDUNIECO: "1000"'
+                                            ,'CDUSUARI: "A100"'
+                                            ,'CLAVEENT: "27"'
+                                            ,'ESTADO: "W"'
+                                            ,'NMPOLIZA: ""'
+                                            ,'NMSITUAC: ""'
+                                            ,'NMSUPLEM: ""'
+                                            ,'NTRAMITE: "13892"'
+                                            ,'STATUS: "2"'
+                                            ,'TIPOENT: "V"'
+                                            ,'TRAMITE.CDAGENTE: "11000"'
+                                            ,'TRAMITE.CDFLUJOMC: "12"'
+                                            ,'TRAMITE.CDRAMO: "2"'
+                                            ,'TRAMITE.CDSUBRAM: "213"'
+                                            ,'TRAMITE.CDSUCADM: "1000"'
+                                            ,'TRAMITE.CDSUCDOC: "1000"'
+                                            ,'TRAMITE.CDTIPFLU: "1"'
+                                            ,'TRAMITE.CDTIPSIT: "SL"'
+                                            ,'TRAMITE.CDTIPSUP: "1"'
+                                            ,'TRAMITE.CDTIPTRA: "1"'
+                                            ,'TRAMITE.CDUNIECO: "1000"'
+                                            ,'TRAMITE.CDUSUARI: "A100"'
+                                            ,'TRAMITE.COMMENTS: "observaciones"'
+                                            ,'TRAMITE.ESTADO: "W"'
+                                            ,'TRAMITE.FECSTATU: "17/12/2015"'
+                                            ,'TRAMITE.FERECEPC: "17/12/2015"'
+                                            ,'TRAMITE.NMPOLIZA: null'
+                                            ,'TRAMITE.NMSOLICI: null'
+                                            ,'TRAMITE.NMSUPLEM: null'
+                                            ,'TRAMITE.NOMBRE: "PROSPECTO"'
+                                            ,'TRAMITE.NTRAMITE: "13892"'
+                                            ,'TRAMITE.OTVALOR01: null'
+                                            ,'TRAMITE.OTVALOR02: null'
+                                            ,'TRAMITE.OTVALOR03: null'
+                                            ,'TRAMITE.OTVALOR04: null'
+                                            ,'TRAMITE.OTVALOR05: null'
+                                            ,'TRAMITE.OTVALOR06: null'
+                                            ,'TRAMITE.OTVALOR07: null'
+                                            ,'TRAMITE.OTVALOR08: null'
+                                            ,'TRAMITE.OTVALOR09: null'
+                                            ,'TRAMITE.OTVALOR10: null'
+                                            ,'TRAMITE.OTVALOR11: null'
+                                            ,'TRAMITE.OTVALOR12: null'
+                                            ,'TRAMITE.OTVALOR13: null'
+                                            ,'TRAMITE.OTVALOR14: null'
+                                            ,'TRAMITE.OTVALOR15: null'
+                                            ,'TRAMITE.OTVALOR16: null'
+                                            ,'TRAMITE.OTVALOR17: null'
+                                            ,'TRAMITE.OTVALOR18: null'
+                                            ,'TRAMITE.OTVALOR19: null'
+                                            ,'TRAMITE.OTVALOR20: null'
+                                            ,'TRAMITE.OTVALOR21: null'
+                                            ,'TRAMITE.OTVALOR22: null'
+                                            ,'TRAMITE.OTVALOR23: null'
+                                            ,'TRAMITE.OTVALOR24: null'
+                                            ,'TRAMITE.OTVALOR25: null'
+                                            ,'TRAMITE.OTVALOR26: null'
+                                            ,'TRAMITE.OTVALOR27: null'
+                                            ,'TRAMITE.OTVALOR28: null'
+                                            ,'TRAMITE.OTVALOR29: null'
+                                            ,'TRAMITE.OTVALOR30: null'
+                                            ,'TRAMITE.OTVALOR31: null'
+                                            ,'TRAMITE.OTVALOR32: null'
+                                            ,'TRAMITE.OTVALOR33: null'
+                                            ,'TRAMITE.OTVALOR34: null'
+                                            ,'TRAMITE.OTVALOR35: null'
+                                            ,'TRAMITE.OTVALOR36: null'
+                                            ,'TRAMITE.OTVALOR37: null'
+                                            ,'TRAMITE.OTVALOR38: null'
+                                            ,'TRAMITE.OTVALOR39: null'
+                                            ,'TRAMITE.OTVALOR40: null'
+                                            ,'TRAMITE.OTVALOR41: null'
+                                            ,'TRAMITE.OTVALOR42: null'
+                                            ,'TRAMITE.OTVALOR43: null'
+                                            ,'TRAMITE.OTVALOR44: null'
+                                            ,'TRAMITE.OTVALOR45: null'
+                                            ,'TRAMITE.OTVALOR46: null'
+                                            ,'TRAMITE.OTVALOR47: null'
+                                            ,'TRAMITE.OTVALOR48: null'
+                                            ,'TRAMITE.OTVALOR49: null'
+                                            ,'TRAMITE.OTVALOR50: null'
+                                            ,'TRAMITE.REFERENCIA: "1"'
+                                            ,'TRAMITE.STATUS: "2"'
+                                            ,'TRAMITE.SWIMPRES: null'
+                                            ,'WEBID: "1450300336059_9079"'
+                                        ]);
+                                    }
+                                }]
                                 ,buttons     :
                                 [
                                     {
@@ -1971,6 +2072,12 @@ Ext.onReady(function()
                                         ,allowBlank    : false
                                         ,minLength     : 1
                                         ,maxLength     : 8
+                                    }
+                                    ,{
+                                        xtype          : 'textarea'
+                                        ,fieldLabel    : 'VALIDACI\u00D3N CLIENTE'
+                                        ,labelAlign    : 'top'
+                                        ,name          : 'JSVALIDA'
                                     }
                                 ]
                             })
@@ -2270,6 +2377,12 @@ Ext.onReady(function()
                                                 ,name       : 'CDVALOR'
                                             }
                                             ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : 'PAR\u00c1METRO'
+                                                ,labelAlign : 'top'
+                                                ,name       : 'AUX'
+                                            }
+                                            ,{
                                                 xtype       : 'checkbox'
                                                 ,boxLabel   : 'Disparado por escalamiento'
                                                 ,name       : 'SWESCALA'
@@ -2282,6 +2395,31 @@ Ext.onReady(function()
                                         itemId   : '_p52_gridAccRol'
                                         ,title   : 'PERMISOS'
                                         ,height  : 220
+                                        ,tools   :
+                                        [
+                                            {
+                                                type     : 'collapse'
+                                                ,tooltip : 'Ninguno'
+                                                ,handler : function()
+                                                {
+                                                    _fieldById('_p52_gridAccRol').store.each(function(record)
+                                                    {
+                                                        record.set('SWPERMISO',false);
+                                                    });
+                                                }
+                                            }
+                                            ,{
+                                                type     : 'plus'
+                                                ,tooltip : 'Todos'
+                                                ,handler : function()
+                                                {
+                                                    _fieldById('_p52_gridAccRol').store.each(function(record)
+                                                    {
+                                                        record.set('SWPERMISO',true);
+                                                    });
+                                                }
+                                            }
+                                        ]
                                         ,columns :
                                         [
                                             {
@@ -2421,6 +2559,7 @@ Ext.onReady(function()
             ,Endpoint            : ['Dot',{radius:7}]
             ,ConnectionOverlays  : [ [ 'PlainArrow' , { location : 1 } ] ]
             ,Connector           : 'StateMachine'
+            //,Connector           : 'Flowchart'
             ,ReattachConnections : false
             ,HoverPaintStyle     : { strokeStyle   : 'red' , lineWidth    : 5 }
             ,EndpointHoverStyle  : { outlineColor  : 'red' , outlineWidth : 1 }
@@ -4251,6 +4390,7 @@ function _p52_ventanaTips(tips)
         ,border      : 0
         ,html        : '<p>'+(tips.join('<p>'))
         ,closeAction : 'destroy'
+        ,autoScroll  : true
         ,buttonAlign : 'center'
         ,buttons     :
         [{

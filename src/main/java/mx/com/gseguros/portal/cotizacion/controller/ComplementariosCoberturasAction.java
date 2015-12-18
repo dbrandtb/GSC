@@ -20,12 +20,14 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 
@@ -62,6 +64,9 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 	private String str2;
 	private String respuesta;
 	private String respuestaOculta;
+	
+	@Autowired
+	private MesaControlManager mesaControlManager;
 	
 	public String pantallaCoberturas()
 	{
@@ -948,7 +953,17 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
             omap1.put("pv_cdusuari_i"   , usuarioSesion.getUser());
             omap1.put("pv_cdmotivo_i"   , null);
             omap1.put("pv_cdsisrol_i"   , usuarioSesion.getRolActivo().getClave());
-            kernelManager.movDmesacontrol(omap1);
+            //kernelManager.movDmesacontrol(omap1);
+            mesaControlManager.movimientoDetalleTramite(
+            		smap1.get("pv_ntramite_i")
+            		,new Date()
+            		,smap1.get("pv_cdclausu_i")
+            		,smap1.get("pv_comments_i")
+            		,usuarioSesion.getUser()
+            		,null//cdmotivo
+            		,usuarioSesion.getRolActivo().getClave()
+            		,"N"
+            		);
             
 			success=true;
 		}

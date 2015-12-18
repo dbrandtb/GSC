@@ -214,7 +214,9 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			,String comments
 			,String cdusuari
 			,String cdmotivo
-			,String cdsisrol)throws Exception
+			,String cdsisrol
+			,String swagente
+			)throws Exception
 	{
 		Map<String,Object>params=new LinkedHashMap<String,Object>();
 		params.put("ntramite" , ntramite);
@@ -224,10 +226,11 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("cdusuari" , cdusuari);
 		params.put("cdmotivo" , cdmotivo);
 		params.put("cdsisrol" , cdsisrol);
+		params.put("swagente" , swagente);
 		logger.debug(
 				new StringBuilder()
 				.append("\n**********************************************")
-				.append("\n****** PKG_SATELITES.P_MOV_DMESACONTROL ******")
+				.append("\n****** PKG_SATELITES2.P_MOV_DMESACONTROL ******")
 				.append("\n****** params=").append(params)
 				.append("\n**********************************************")
 				.toString()
@@ -239,7 +242,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected MovimientoDetalleTramite(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES.P_MOV_DMESACONTROL");
+			super(dataSource,"PKG_SATELITES2.P_MOV_DMESACONTROL");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("feinicio" , OracleTypes.TIMESTAMP));
 			declareParameter(new SqlParameter("cdclausu" , OracleTypes.VARCHAR));
@@ -247,6 +250,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdmotivo" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swagente" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

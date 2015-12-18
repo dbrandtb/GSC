@@ -28,6 +28,8 @@ Ext.override(Ext.form.TextField,
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _0_smap1      = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
+var _0_flujo      = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+
 var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
@@ -70,6 +72,15 @@ var _0_necesitoIncisos = true;
 </s:if>
 _0_smap1.conincisos=_0_necesitoIncisos?'si':'no';
 debug('_0_necesitoIncisos:',_0_necesitoIncisos);
+
+if(!Ext.isEmpty(_0_flujo))
+{
+    <s:url namespace="/flujomesacontrol" action="mesaControl" var="urlMesaFlujo" includeParams="get">
+        <s:param name="params.AGRUPAMC" value="%{'PRINCIPAL'}" />
+    </s:url>
+    _0_urlMesaControl = '<s:property value="urlMesaFlujo" />';
+    debug('_0_urlMesaControl:',_0_urlMesaControl);
+}
 
 var _0_panelPri;
 var _0_formAgrupados;

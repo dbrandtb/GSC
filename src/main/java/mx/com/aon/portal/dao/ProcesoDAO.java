@@ -126,7 +126,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTENER_HTML_CLAUSULA="OBTENER_HTML_CLAUSULA";
     //public static final String P_MOV_MESACONTROL="P_MOV_MESACONTROL";
     public static final String P_MOV_TVALOSIN="P_MOV_TVALOSIN";
-    public static final String P_MOV_DMESACONTROL="P_MOV_DMESACONTROL";
+    //public static final String P_MOV_DMESACONTROL="P_MOV_DMESACONTROL";
     public static final String OBTIENE_DATOS_RECIBOS="OBTIENE_DATOS_RECIBOS";
     public static final String OBTIENE_DATOS_COMISIONES="OBTIENE_DATOS_COMISIONES";
     public static final String OBTIENE_CATALOGO_COLONIAS="OBTIENE_CATALOGO_COLONIAS";
@@ -232,7 +232,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTENER_HTML_CLAUSULA, new ObtenerHtmlClausula(getDataSource()));
         //addStoredProcedure(P_MOV_MESACONTROL, new PMovMesacontrol(getDataSource()));
         addStoredProcedure(P_MOV_TVALOSIN, new PMovTvalosin(getDataSource()));
-        addStoredProcedure(P_MOV_DMESACONTROL, new PMovDmesacontrol(getDataSource()));
+        //addStoredProcedure(P_MOV_DMESACONTROL, new PMovDmesacontrol(getDataSource()));
         addStoredProcedure(P_BORRA_MPOLIPER, new PBorraMpoliper(getDataSource()));
         addStoredProcedure(P_EXISTE_DOMICILIO, new PExisteDomicilio(getDataSource()));
 
@@ -2699,10 +2699,10 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	
 	/////////////////////////////////
 	////// p mov d mesacontrol //////
-	/*/////////////////////////////*/
+	/*/////////////////////////////*
 	protected class PMovDmesacontrol extends CustomStoredProcedure {
 		protected PMovDmesacontrol(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES.P_MOV_DMESACONTROL");
+			super(dataSource,"PKG_SATELITES2.P_MOV_DMESACONTROL");
 			declareParameter(new SqlParameter("pv_ntramite_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_feinicio_i", 		OracleTypes.TIMESTAMP));
 			declareParameter(new SqlParameter("pv_cdclausu_i", 		OracleTypes.VARCHAR));
@@ -2710,6 +2710,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_cdusuari_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdmotivo_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdsisrol_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swagente_i", 		OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));
