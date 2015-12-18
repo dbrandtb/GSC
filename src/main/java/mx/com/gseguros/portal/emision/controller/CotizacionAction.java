@@ -21,6 +21,8 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
+import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -114,6 +116,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	private List<Map<String,Object>>         olist1;
 	private CotizacionManager                cotizacionManager;
 	private SiniestrosManager                siniestrosManager;
+	private FlujoVO                          flujo;
 	
 	@Autowired
 	private EmisionManager emisionManager;
@@ -129,6 +132,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	@Autowired
 	private MesaControlManager mesaControlManager;
+	
+	@Autowired
+	private FlujoMesaControlManager flujoMesaControlManager;
 	
 	public CotizacionAction()
 	{
@@ -233,8 +239,9 @@ public class CotizacionAction extends PrincipalCoreAction
 		logger.info("\n"
 				+ "\n################################"
 				+ "\n###### pantallaCotizacion ######"
-				+ "\nsmap1: "+smap1
-				+ "\nsession!=null: "+(session!=null)
+				+ "\n###### smap1: "+smap1
+				+ "\n###### flujo: "+flujo
+				+ "\n###### session!=null: "+(session!=null)
 				);
 		
 		success = true;
@@ -250,6 +257,30 @@ public class CotizacionAction extends PrincipalCoreAction
 		GeneradorCampos gc = null;
 		String cdusuari    = null;
 		String cdsisrol    = null;
+		
+		if(flujo!=null)
+		{
+			try
+			{
+				smap1 = new HashMap<String,String>();
+				smap1.put("ntramite" , flujo.getNtramite());
+				smap1.put("cdunieco" , flujo.getCdunieco());
+				smap1.put("cdramo"   , flujo.getCdramo());
+				smap1.put("cdtipsit" ,
+						((Map<String,String>)(flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(new StringBuilder(), flujo))
+						    .get("TRAMITE"))
+						    .get("CDTIPSIT")
+						);
+				logger.debug(Utils.log("\nsmap1 recuperado de flujo=",smap1));
+			}
+			catch(Exception ex)
+			{
+				success = false;
+				exito   = false;
+				logger.error("Error al recuperar datos de flujo",ex);
+				return ERROR;
+			}
+		}
 		
 		//instanciar el generador de campos
     	gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
@@ -3196,7 +3227,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				List<ComponenteVO>comboPool = pantallasManager.obtenerComponentes(
 						null, null, null,
-						null, null, null,
+						null, null, cdsisrol,
 						"COTIZACION_GRUPO", "COMBO_POOL", null);
 				gc.generaComponentes(comboPool, true,false,true,false,false,false);
 				imap.put("comboPool"  , gc.getItems());
@@ -6402,7 +6433,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            	parDmesCon.put("pv_ntramite_i"   , ntramiteNew);
 	            	parDmesCon.put("pv_feinicio_i"   , new Date());
 	            	parDmesCon.put("pv_cdclausu_i"   , null);
-	            	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite en mesa de control desde cotizaci&oacute;n de agente");
+	            	parDmesCon.put("pv_comments_i"   , "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente");
 	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 	            	parDmesCon.put("pv_cdmotivo_i"   , null);
 	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
@@ -9484,6 +9515,14 @@ public class CotizacionAction extends PrincipalCoreAction
 	public static void main(String[] args)
 	{
 		FTPSUtils.downloadChildrenFiles("10.1.1.134", "weblogic", "weblogic123", "/home/jtezva/Escritorio/destino", "/export/home/weblogic/origen");
+	}
+
+	public FlujoVO getFlujo() {
+		return flujo;
+	}
+
+	public void setFlujo(FlujoVO flujo) {
+		this.flujo = flujo;
 	}
 
 }

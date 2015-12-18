@@ -1863,7 +1863,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				
 				List<ComponenteVO>comboPool = pantallasDAO.obtenerComponentes(
 						null, null, null,
-						null, null, null,
+						null, null, cdsisrol,
 						"COTIZACION_GRUPO", "COMBO_POOL", null);
 				gcGral.generaComponentes(comboPool, true,false,true,false,false,false);
 				resp.getImap().put("comboPool"  , gcGral.getItems());
@@ -3729,7 +3729,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 							ntramite
 							,new Date()
 							,null       //cdclausu
-							,"Se guard&oacute; un nuevo tr&aacute;mite en mesa de control desde cotizaci&oacute;n de agente"
+							,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
 							,cdusuari
 							,null       //cdmotivo
 							,cdsisrol
@@ -6506,7 +6506,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             			"", nmpoliza, cdtipsit, cdusuari, cdsisrol, null, null, null, null, null);
             	
             	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null
-            			,"Se guard&oacute; un nuevo tr&aacute;mite en mesa de control desde cotizaci&oacute;n de agente"
+            			,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
             			,cdusuari, null, cdsisrol);
             	
             	try {
