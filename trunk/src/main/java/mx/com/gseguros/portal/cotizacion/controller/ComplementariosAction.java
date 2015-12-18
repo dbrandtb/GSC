@@ -2747,8 +2747,27 @@ public class ComplementariosAction extends PrincipalCoreAction
 						/**
 						 * Para cobertura de Vida
 						 */
+						String reporteEspVida = this.getText("rdf.emision.nombre.esp.cobvida");
+						String pdfEspVidaNom = "SOL_VIDA_AUTO.pdf";
 						
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf\">Especificaciones Seguro de Vida</a>";
+						String url=this.getText("ruta.servidor.reports")
+								+ "?destype=cache"
+								+ "&desformat=PDF"
+								+ "&userid="+this.getText("pass.servidor.reports")
+								+ "&report="+reporteEspVida
+								+ "&paramform=no"
+								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+								+ "&p_unieco="+cdunieco
+								+ "&p_ramo="+cdramo
+								+ "&p_estado='M'"
+								+ "&p_poliza="+nmpolizaEmitida
+								+ "&p_suplem="+nmsuplemEmitida
+								+ "&desname="+rutaCarpeta+"/"+pdfEspVidaNom;
+						
+						HttpUtil.generaArchivo(url,rutaCarpeta+"/"+pdfEspVidaNom);
+						
+						
+//						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf\">Especificaciones Seguro de Vida</a>";
 						
 						//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
 						//paramsR.put("pv_dsdocume_i", "Especificaciones Seguro de Vida");
@@ -2762,7 +2781,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,"https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf"
+								,pdfEspVidaNom
 								,"Especificaciones Seguro de Vida"
 								,nmpoliza
 								,ntramite
@@ -3778,8 +3797,26 @@ public class ComplementariosAction extends PrincipalCoreAction
 							/**
 							 * Para cobertura de Vida
 							 */
+							String reporteEspVida = this.getText("rdf.emision.nombre.esp.cobvida");
+							String pdfEspVidaNom = "SOL_VIDA_AUTO.pdf";
 							
-							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf\">Especificaciones Seguro de Vida</a>";
+							String url=this.getText("ruta.servidor.reports")
+									+ "?destype=cache"
+									+ "&desformat=PDF"
+									+ "&userid="+this.getText("pass.servidor.reports")
+									+ "&report="+reporteEspVida
+									+ "&paramform=no"
+									+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+									+ "&p_unieco="+cdunieco
+									+ "&p_ramo="+cdramo
+									+ "&p_estado='M'"
+									+ "&p_poliza="+_nmpoliza
+									+ "&p_suplem="+_nmsuplem
+									+ "&desname="+rutaCarpeta+"/"+pdfEspVidaNom;
+							
+							HttpUtil.generaArchivo(url,rutaCarpeta+"/"+pdfEspVidaNom);
+							
+//							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf\">Especificaciones Seguro de Vida</a>";
 							
 							//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
 							//paramsR.put("pv_dsdocume_i", "Especificaciones Seguro de Vida");
@@ -3793,7 +3830,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,_nmpoliza
 									,_nmsuplem
 									,new Date()
-									,"https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf"
+									,pdfEspVidaNom
 									,"Especificaciones Seguro de Vida"
 									,nmsolici
 									,ntramite
