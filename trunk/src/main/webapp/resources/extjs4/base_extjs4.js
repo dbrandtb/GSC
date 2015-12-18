@@ -916,11 +916,12 @@ function _cargarBotonesEntidad(
                             {
                                 text       : _NVL(datos.DSACCION,'(-SIN NOMBRE-)')
                                 ,icon      : _GLOBAL_DIRECTORIO_ICONOS+_NVL(datos.CDICONO,'application_xp_terminal')+'.png'
-                                ,cdtipflu  : ''+datos.CDTIPFLU
-                                ,cdflujomc : ''+datos.CDFLUJOMC
-                                ,tipodest  : ''+datos.TIPODEST
-                                ,clavedest : ''+datos.CLAVEDEST
-                                ,webiddest : ''+datos.WEBIDDEST
+                                ,cdtipflu  : cdtipflu
+                                ,cdflujomc : cdflujomc
+                                ,tipodest  : ''+_NVL(datos.TIPODEST,'')
+                                ,clavedest : ''+_NVL(datos.CLAVEDEST,'')
+                                ,webiddest : ''+_NVL(datos.WEBIDDEST,'')
+                                ,aux       : ''+_NVL(datos.AUX,'')
                                 ,ntramite  : ntramite
                                 ,status    : status
                                 ,cdunieco  : cdunieco
@@ -929,6 +930,8 @@ function _cargarBotonesEntidad(
                                 ,nmpoliza  : nmpoliza
                                 ,nmsituac  : nmsituac
                                 ,nmsuplem  : nmsuplem
+                                ,cdusuari  : ''+_NVL(json.params.cdusuari,'')
+                                ,cdsisrol  : ''+_NVL(json.params.cdsisrol,'')
                                 ,handler   : function(me){ _botonEntidadClic(me,callbackDespuesProceso); }
                             }));
                         }
@@ -987,6 +990,7 @@ function _botonEntidadClic(bot,callbackDespuesProceso)
             ,tipodest  = bot.tipodest
             ,clavedest = bot.clavedest
             ,webiddest = bot.webiddest
+            ,aux       = bot.aux
             ,ntramite  = bot.ntramite
             ,status    = bot.status
             ,cdunieco  = bot.cdunieco
@@ -995,12 +999,15 @@ function _botonEntidadClic(bot,callbackDespuesProceso)
             ,nmpoliza  = bot.nmpoliza
             ,nmsituac  = bot.nmsituac
             ,nmsuplem  = bot.nmsuplem
+            ,cdusuari  = bot.cdusuari
+            ,cdsisrol  = bot.cdsisrol;
         
         debug('_botonEntidadClic cdtipflu:'  , cdtipflu  , '.');
         debug('_botonEntidadClic cdflujomc:' , cdflujomc , '.');
         debug('_botonEntidadClic tipodest:'  , tipodest  , '.');
         debug('_botonEntidadClic clavedest:' , clavedest , '.');
         debug('_botonEntidadClic webiddest:' , webiddest , '.');
+        debug('_botonEntidadClic aux:'       , aux       , '.');
         debug('_botonEntidadClic ntramite:'  , ntramite  , '.');
         debug('_botonEntidadClic status:'    , status    , '.');
         debug('_botonEntidadClic cdunieco:'  , cdunieco  , '.');
@@ -1009,6 +1016,8 @@ function _botonEntidadClic(bot,callbackDespuesProceso)
         debug('_botonEntidadClic nmpoliza:'  , nmpoliza  , '.');
         debug('_botonEntidadClic nmsituac:'  , nmsituac  , '.');
         debug('_botonEntidadClic nmsuplem:'  , nmsuplem  , '.');
+        debug('_botonEntidadClic cdusuari:'  , cdusuari  , '.');
+        debug('_botonEntidadClic cdsisrol:'  , cdsisrol  , '.');
         
         var callback;
         
@@ -1034,6 +1043,7 @@ function _botonEntidadClic(bot,callbackDespuesProceso)
             ,tipodest
             ,clavedest
             ,webiddest
+            ,aux
             ,ntramite
             ,status
             ,cdunieco
@@ -1042,6 +1052,8 @@ function _botonEntidadClic(bot,callbackDespuesProceso)
             ,nmpoliza
             ,nmsituac
             ,nmsuplem
+            ,cdusuari
+            ,cdsisrol
             ,callback
         );
     }
@@ -1057,6 +1069,7 @@ function _procesaAccion(
     ,tipodest
     ,clavedest
     ,webiddest
+    ,aux
     ,ntramite
     ,status
     ,cdunieco
@@ -1065,6 +1078,8 @@ function _procesaAccion(
     ,nmpoliza
     ,nmsituac
     ,nmsuplem
+    ,cdusuari
+    ,cdsisrol
     ,callback
     )
 {
@@ -1073,6 +1088,7 @@ function _procesaAccion(
     debug('_procesaAccion tipodest:'  , tipodest  , '.');
     debug('_procesaAccion clavedest:' , clavedest , '.');
     debug('_procesaAccion webiddest:' , webiddest , '.');
+    debug('_procesaAccion aux:'       , aux       , '.');
     debug('_procesaAccion ntramite:'  , ntramite  , '.');
     debug('_procesaAccion status:'    , status    , '.');
     debug('_procesaAccion cdunieco:'  , cdunieco  , '.');
@@ -1081,6 +1097,8 @@ function _procesaAccion(
     debug('_procesaAccion nmpoliza:'  , nmpoliza  , '.');
     debug('_procesaAccion nmsituac:'  , nmsituac  , '.');
     debug('_procesaAccion nmsuplem:'  , nmsuplem  , '.');
+    debug('_procesaAccion cdusuari:'  , cdusuari  , '.');
+    debug('_procesaAccion cdsisrol:'  , cdsisrol  , '.');
     debug('_procesaAccion callback?:' , !Ext.isEmpty(callback) , '.');
     var ck = 'Procesando acci\u00f3n';
     try
@@ -1231,7 +1249,7 @@ function _procesaAccion(
                                                       _GLOBAL_CONTEXTO+pantalla.URLPANTMC :
                                                       _GLOBAL_URL_PANTALLA_EXTERNA
                                 ,standardSubmit : true
-                                ,target         : '_top'
+                                //,target         : '_top'
                                 ,params         :
                                 {
                                     'flujo.cdtipflu'   : cdtipflu
@@ -1312,6 +1330,7 @@ function _procesaAccion(
                                 ,tipoent   : tipodest
                                 ,claveent  : clavedest
                                 ,webid     : webiddest
+                                ,aux       : aux
                                 ,ntramite  : ntramite
                                 ,status    : status
                                 ,cdunieco  : cdunieco
@@ -1320,6 +1339,8 @@ function _procesaAccion(
                                 ,nmpoliza  : nmpoliza
                                 ,nmsituac  : nmsituac
                                 ,nmsuplem  : nmsuplem
+                                ,cdusuari  : cdusuari
+                                ,cdsisrol  : cdsisrol
                             }).mostrar();
                         }
                         else
@@ -1513,6 +1534,7 @@ function _procesaAccion(
                                                                             ,accion1.TIPODEST
                                                                             ,accion1.CLAVEDEST
                                                                             ,accion1.WEBIDDEST
+                                                                            ,aux
                                                                             ,ntramite
                                                                             ,status
                                                                             ,cdunieco
@@ -1521,6 +1543,8 @@ function _procesaAccion(
                                                                             ,nmpoliza
                                                                             ,nmsituac
                                                                             ,nmsuplem
+                                                                            ,cdusuari
+                                                                            ,cdsisrol
                                                                             ,callback
                                                                         );
                                                                     }
@@ -1541,6 +1565,7 @@ function _procesaAccion(
                                                                             ,accExito.TIPODEST
                                                                             ,accExito.CLAVEDEST
                                                                             ,accExito.WEBIDDEST
+                                                                            ,aux
                                                                             ,ntramite
                                                                             ,status
                                                                             ,cdunieco
@@ -1549,6 +1574,8 @@ function _procesaAccion(
                                                                             ,nmpoliza
                                                                             ,nmsituac
                                                                             ,nmsuplem
+                                                                            ,cdusuari
+                                                                            ,cdsisrol
                                                                             ,callback
                                                                         );
                                                                     }
@@ -1575,6 +1602,7 @@ function _procesaAccion(
                                                                             ,accError.TIPODEST
                                                                             ,accError.CLAVEDEST
                                                                             ,accError.WEBIDDEST
+                                                                            ,aux
                                                                             ,ntramite
                                                                             ,status
                                                                             ,cdunieco
@@ -1583,6 +1611,8 @@ function _procesaAccion(
                                                                             ,nmpoliza
                                                                             ,nmsituac
                                                                             ,nmsuplem
+                                                                            ,cdusuari
+                                                                            ,cdsisrol
                                                                             ,callback
                                                                         );
                                                                     }
@@ -1611,6 +1641,7 @@ function _procesaAccion(
                                                                         ,accError.TIPODEST
                                                                         ,accError.CLAVEDEST
                                                                         ,accError.WEBIDDEST
+                                                                        ,aux
                                                                         ,ntramite
                                                                         ,status
                                                                         ,cdunieco
@@ -1619,6 +1650,8 @@ function _procesaAccion(
                                                                         ,nmpoliza
                                                                         ,nmsituac
                                                                         ,nmsuplem
+                                                                        ,cdusuari
+                                                                        ,cdsisrol
                                                                         ,callback
                                                                     );
                                                                 }
@@ -1646,6 +1679,7 @@ function _procesaAccion(
                                                                     ,accError.TIPODEST
                                                                     ,accError.CLAVEDEST
                                                                     ,accError.WEBIDDEST
+                                                                    ,aux
                                                                     ,ntramite
                                                                     ,status
                                                                     ,cdunieco
@@ -1654,6 +1688,8 @@ function _procesaAccion(
                                                                     ,nmpoliza
                                                                     ,nmsituac
                                                                     ,nmsuplem
+                                                                    ,cdusuari
+                                                                    ,cdsisrol
                                                                     ,callback
                                                                 );
                                                             }
@@ -1731,9 +1767,17 @@ function _procesaAccion(
                             var data = json.list[0];
                             debug('data:',data);
                             
+                            var cliente = false;
                             if('x'+data.CDVALIDAFK=='x-1')
                             {
-                                throw 'La validaci\u00f3n no cuenta con una clave';
+                                if(Ext.isEmpty(data.JSVALIDA))
+                                {
+                                    throw 'La validaci\u00f3n no cuenta con una clave ni validaci\u00f3n cliente';
+                                }
+                                else
+                                {
+                                    cliente = true;
+                                }
                             }
                             
                             ck = 'Recuperando acciones posteriores a la validaci\u00f3n';
@@ -1798,86 +1842,182 @@ function _procesaAccion(
                                                 }
                                             }
                                             
-                                            ck = 'Ejecutando validaci\u00f3n';
-                                            _mask(ck);
-                                            Ext.Ajax.request(
+                                            if(!cliente)
                                             {
-                                                url      : _GLOBAL_URL_VALIDACION
-                                                ,params  :
+                                                ck = 'Ejecutando validaci\u00f3n';
+                                                _mask(ck);
+                                                Ext.Ajax.request(
                                                 {
-                                                    'flujo.cdtipflu'     : cdtipflu
-                                                    ,'flujo.cdflujomc'   : cdflujomc
-                                                    ,'flujo.tipoent'     : tipodest
-                                                    ,'flujo.claveent'    : clavedest
-                                                    ,'flujo.webid'       : webiddest
-                                                    ,'flujo.ntramite'    : ntramite
-                                                    ,'flujo.status'      : status
-                                                    ,'flujo.cdunieco'    : cdunieco
-                                                    ,'flujo.cdramo'      : cdramo
-                                                    ,'flujo.estado'      : estado
-                                                    ,'flujo.nmpoliza'    : nmpoliza
-                                                    ,'flujo.nmsituac'    : nmsituac
-                                                    ,'flujo.nmsuplem'    : nmsuplem
-                                                    ,'params.cdvalidafk' : data.CDVALIDAFK
-                                                }
-                                                ,success : function(response)
-                                                {
-                                                    _unmask();
-                                                    var ck = 'Decodificando respuesta al ejecutar validaci\u00f3n';
-                                                    try
+                                                    url      : _GLOBAL_URL_VALIDACION
+                                                    ,params  :
                                                     {
-                                                        var json = Ext.decode(response.responseText);
-                                                        debug('### validacion:',json);
-                                                        if(json.success==true)
+                                                        'flujo.cdtipflu'     : cdtipflu
+                                                        ,'flujo.cdflujomc'   : cdflujomc
+                                                        ,'flujo.tipoent'     : tipodest
+                                                        ,'flujo.claveent'    : clavedest
+                                                        ,'flujo.webid'       : webiddest
+                                                        ,'flujo.ntramite'    : ntramite
+                                                        ,'flujo.status'      : status
+                                                        ,'flujo.cdunieco'    : cdunieco
+                                                        ,'flujo.cdramo'      : cdramo
+                                                        ,'flujo.estado'      : estado
+                                                        ,'flujo.nmpoliza'    : nmpoliza
+                                                        ,'flujo.nmsituac'    : nmsituac
+                                                        ,'flujo.nmsuplem'    : nmsuplem
+                                                        ,'params.cdvalidafk' : data.CDVALIDAFK
+                                                    }
+                                                    ,success : function(response)
+                                                    {
+                                                        _unmask();
+                                                        var ck = 'Decodificando respuesta al ejecutar validaci\u00f3n';
+                                                        try
                                                         {
-                                                            var valorRespValid = json.params.salida
-                                                                ,salida        = '';
-                                                            for(var i=0 ; i<numSalidas ; i++)
+                                                            var json = Ext.decode(response.responseText);
+                                                            debug('### validacion:',json);
+                                                            if(json.success==true)
                                                             {
-                                                                if('x'+acciones[i].CDVALOR=='x'+valorRespValid)
+                                                                var valorRespValid = json.params.salida
+                                                                    ,salida        = '';
+                                                                for(var i=0 ; i<numSalidas ; i++)
                                                                 {
-                                                                    salida = acciones[i];
-                                                                    break;
+                                                                    if('x'+acciones[i].CDVALOR=='x'+valorRespValid)
+                                                                    {
+                                                                        salida = acciones[i];
+                                                                        break;
+                                                                    }
                                                                 }
+                                                                if(Ext.isEmpty(salida))
+                                                                {
+                                                                    throw 'La validaci\u00f3n regres\u00f3 un valor que no tiene acci\u00f3n relacionada';
+                                                                }
+                                                                _procesaAccion
+                                                                (
+                                                                    cdtipflu
+                                                                    ,cdflujomc
+                                                                    ,salida.TIPODEST
+                                                                    ,salida.CLAVEDEST
+                                                                    ,salida.WEBIDDEST
+                                                                    ,aux
+                                                                    ,ntramite
+                                                                    ,status
+                                                                    ,cdunieco
+                                                                    ,cdramo
+                                                                    ,estado
+                                                                    ,nmpoliza
+                                                                    ,nmsituac
+                                                                    ,nmsuplem
+                                                                    ,cdusuari
+                                                                    ,cdsisrol
+                                                                    ,callback
+                                                                );
                                                             }
-                                                            if(Ext.isEmpty(salida))
+                                                            else
                                                             {
-                                                                throw 'La validaci\u00f3n regres\u00f3 un valor que no tiene acci\u00f3n relacionada';
+                                                                mensajeError(json.message);
                                                             }
-                                                            _procesaAccion
-                                                            (
-                                                                cdtipflu
-                                                                ,cdflujomc
-                                                                ,salida.TIPODEST
-                                                                ,salida.CLAVEDEST
-                                                                ,salida.WEBIDDEST
-                                                                ,ntramite
-                                                                ,status
-                                                                ,cdunieco
-                                                                ,cdramo
-                                                                ,estado
-                                                                ,nmpoliza
-                                                                ,nmsituac
-                                                                ,nmsuplem
-                                                                ,callback
-                                                            );
                                                         }
-                                                        else
+                                                        catch(e)
                                                         {
-                                                            mensajeError(json.message);
+                                                            manejaException(e,ck);
                                                         }
                                                     }
-                                                    catch(e)
+                                                    ,failure : function(response)
                                                     {
-                                                        manejaException(e,ck);
+                                                        _unmask();
+                                                        errorComunicacion(null,'Error al ejecutar validaci\u00f3n');
                                                     }
-                                                }
-                                                ,failure : function(response)
+                                                });
+                                            }
+                                            else//evaluacion cliente
+                                            {
+                                                ck = 'Recuperando datos para validaci\u00f3n cliente';
+                                                _mask(ck);
+                                                Ext.Ajax.request(
                                                 {
-                                                    _unmask();
-                                                    errorComunicacion(null,'Error al ejecutar validaci\u00f3n');
-                                                }
-                                            });
+                                                    url      : _GLOBAL_URL_VALIDACION_MONTAR_DATOS
+                                                    ,params  :
+                                                    {
+                                                        'flujo.cdtipflu'   : cdtipflu
+                                                        ,'flujo.cdflujomc' : cdflujomc
+                                                        ,'flujo.tipoent'   : tipodest
+                                                        ,'flujo.claveent'  : clavedest
+                                                        ,'flujo.webid'     : webiddest
+                                                        ,'flujo.ntramite'  : ntramite
+                                                        ,'flujo.status'    : status
+                                                        ,'flujo.cdunieco'  : cdunieco
+                                                        ,'flujo.cdramo'    : cdramo
+                                                        ,'flujo.estado'    : estado
+                                                        ,'flujo.nmpoliza'  : nmpoliza
+                                                        ,'flujo.nmsituac'  : nmsituac
+                                                        ,'flujo.nmsuplem'  : nmsuplem
+                                                    }
+                                                    ,success : function(response)
+                                                    {
+                                                        _unmask();
+                                                        var ck = 'Decodificando respuesta al recuperar datos para validaci\u00f3n cliente';
+                                                        try
+                                                        {
+                                                            var json = Ext.decode(response.responseText);
+                                                            debug('### datos memoria validacion javascript:',json);
+                                                            if(json.success==true)
+                                                            {
+                                                                ck = 'Construyendo validaci\u00f3n cliente';
+                                                                eval('var validacionCliente=function(DATOS){debug("DATOS:",DATOS);'+data.JSVALIDA+'};');
+                                                                debug('validacionCliente:',validacionCliente);
+                                                                
+                                                                ck = 'Invocando validaci\u00f3n cliente';
+                                                                var valorRespValid = validacionCliente(json.datosTramite)
+                                                                    ,salida        = '';
+                                                                for(var i=0 ; i<numSalidas ; i++)
+                                                                {
+                                                                    if('x'+acciones[i].CDVALOR=='x'+valorRespValid)
+                                                                    {
+                                                                        salida = acciones[i];
+                                                                        break;
+                                                                    }
+                                                                }
+                                                                if(Ext.isEmpty(salida))
+                                                                {
+                                                                    throw 'La validaci\u00f3n cliente regres\u00f3 un valor que no tiene acci\u00f3n relacionada';
+                                                                }
+                                                                _procesaAccion
+                                                                (
+                                                                    cdtipflu
+                                                                    ,cdflujomc
+                                                                    ,salida.TIPODEST
+                                                                    ,salida.CLAVEDEST
+                                                                    ,salida.WEBIDDEST
+                                                                    ,aux
+                                                                    ,ntramite
+                                                                    ,status
+                                                                    ,cdunieco
+                                                                    ,cdramo
+                                                                    ,estado
+                                                                    ,nmpoliza
+                                                                    ,nmsituac
+                                                                    ,nmsuplem
+                                                                    ,cdusuari
+                                                                    ,cdsisrol
+                                                                    ,callback
+                                                                );
+                                                            }
+                                                            else
+                                                            {
+                                                                mensajeError(json.message);
+                                                            }
+                                                        }
+                                                        catch(e)
+                                                        {
+                                                            manejaException(e,ck);
+                                                        }
+                                                    }
+                                                    ,failure : function()
+                                                    {
+                                                        _unmask();
+                                                        errorComunicacion(null,'Error al ejecutar validaci\u00f3n cliente');
+                                                    }
+                                                });
+                                            }
                                         }
                                         else
                                         {
@@ -2052,6 +2192,7 @@ function _procesaAccion(
                                                         ,accion1.TIPODEST
                                                         ,accion1.CLAVEDEST
                                                         ,accion1.WEBIDDEST
+                                                        ,aux
                                                         ,ntramite
                                                         ,status
                                                         ,cdunieco
@@ -2060,6 +2201,8 @@ function _procesaAccion(
                                                         ,nmpoliza
                                                         ,nmsituac
                                                         ,nmsuplem
+                                                        ,cdusuari
+                                                        ,cdsisrol
                                                         ,callback
                                                     );
 	                                            }
@@ -2072,6 +2215,7 @@ function _procesaAccion(
                                                         ,accExito.TIPODEST
                                                         ,accExito.CLAVEDEST
                                                         ,accExito.WEBIDDEST
+                                                        ,aux
                                                         ,ntramite
                                                         ,status
                                                         ,cdunieco
@@ -2080,6 +2224,8 @@ function _procesaAccion(
                                                         ,nmpoliza
                                                         ,nmsituac
                                                         ,nmsuplem
+                                                        ,cdusuari
+                                                        ,cdsisrol
                                                         ,callback
                                                     );
 	                                            }
@@ -2112,6 +2258,7 @@ function _procesaAccion(
                                                                 ,accError.TIPODEST
                                                                 ,accError.CLAVEDEST
                                                                 ,accError.WEBIDDEST
+                                                                ,aux
                                                                 ,ntramite
                                                                 ,status
                                                                 ,cdunieco
@@ -2120,6 +2267,8 @@ function _procesaAccion(
                                                                 ,nmpoliza
                                                                 ,nmsituac
                                                                 ,nmsuplem
+                                                                ,cdusuari
+                                                                ,cdsisrol
                                                                 ,callback
                                                             );
                                                         }
@@ -2147,6 +2296,7 @@ function _procesaAccion(
                                                             ,accError.TIPODEST
                                                             ,accError.CLAVEDEST
                                                             ,accError.WEBIDDEST
+                                                            ,aux
                                                             ,ntramite
                                                             ,status
                                                             ,cdunieco
@@ -2155,6 +2305,8 @@ function _procesaAccion(
                                                             ,nmpoliza
                                                             ,nmsituac
                                                             ,nmsuplem
+                                                            ,cdusuari
+                                                            ,cdsisrol
                                                             ,callback
                                                         );
                                                     }
@@ -2183,6 +2335,7 @@ function _procesaAccion(
                                                         ,accError.TIPODEST
                                                         ,accError.CLAVEDEST
                                                         ,accError.WEBIDDEST
+                                                        ,aux
                                                         ,ntramite
                                                         ,status
                                                         ,cdunieco
@@ -2191,6 +2344,8 @@ function _procesaAccion(
                                                         ,nmpoliza
                                                         ,nmsituac
                                                         ,nmsuplem
+                                                        ,cdusuari
+                                                        ,cdsisrol
                                                         ,callback
                                                     );
                                                 }
@@ -2218,6 +2373,7 @@ function _procesaAccion(
                                                     ,accError.TIPODEST
                                                     ,accError.CLAVEDEST
                                                     ,accError.WEBIDDEST
+                                                    ,aux
                                                     ,ntramite
                                                     ,status
                                                     ,cdunieco
@@ -2226,6 +2382,8 @@ function _procesaAccion(
                                                     ,nmpoliza
                                                     ,nmsituac
                                                     ,nmsuplem
+                                                    ,cdusuari
+                                                    ,cdsisrol
                                                     ,callback
                                                 );
                                             }
