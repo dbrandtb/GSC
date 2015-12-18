@@ -225,7 +225,7 @@ Ext.onReady(function()
                         ,'smap1.estado'       : _p29_smap1.estado
                         ,'smap1.nmpoliza'     : _p29_smap1.nmpoliza
                         ,'smap1.nmsuplem'     : '1'
-                        ,'smap1.nmsituac'     : '0'
+                        ,'smap1.nmsituac'     : '1'
                         ,'smap1.cdrolPipes'   : '3'
                         ,'smap1.cdtipsup'     : '1'
                         ,'smap1.ultimaImagen' : 'N'
