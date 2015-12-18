@@ -513,7 +513,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("cdtipflu"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdvalida"  , OracleTypes.VARCHAR));
-			String[] cols=new String[]{ "CDTIPFLU", "CDFLUJOMC", "CDVALIDA", "DSVALIDA", "CDVALIDAFK", "WEBID", "XPOS", "YPOS" };
+			String[] cols=new String[]{ "CDTIPFLU", "CDFLUJOMC", "CDVALIDA", "DSVALIDA", "CDVALIDAFK", "WEBID", "XPOS", "YPOS", "JSVALIDA"};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -613,7 +613,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			super(dataSource,"PKG_MESACONTROL.P_GET_TFLUACC");
 			declareParameter(new SqlParameter("cdtipflu"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
-			String[] cols=new String[]{ "CDTIPFLU","CDFLUJOMC","CDACCION","DSACCION","CDICONO","CDVALOR","IDORIGEN","IDDESTIN","SWESCALA"};
+			String[] cols=new String[]{ "CDTIPFLU","CDFLUJOMC","CDACCION","DSACCION","CDICONO","CDVALOR","IDORIGEN","IDDESTIN","SWESCALA","AUX"};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -1125,7 +1125,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	@Override
 	public String movimientoTfluval(String cdtipflu, String cdflujomc,
 			String cdvalida, String dsvalida, String cdvalidafk, String webid,
-			String xpos, String ypos, String accion) throws Exception 
+			String xpos, String ypos, String jsvalida, String accion) throws Exception 
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdtipflu"   , cdtipflu);
@@ -1136,6 +1136,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("webid"      , webid);
 		params.put("xpos"       , xpos);
 		params.put("ypos"       , ypos);
+		params.put("jsvalida"   , jsvalida);
 		params.put("accion"     , accion);
 		Map<String,Object> procRes = ejecutaSP(new MovimientoTfluvalSP(getDataSource()),params);
 		return (String)procRes.get("cdvalida");
@@ -1154,6 +1155,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter     ("webid"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter     ("xpos"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter     ("ypos"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter     ("jsvalida"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter     ("accion"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
@@ -1317,6 +1319,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			String idorigen,
 			String iddestin,
 			String swescala,
+			String aux,
 			String accion) throws Exception {
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdtipflu"  , cdtipflu);
@@ -1328,6 +1331,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("idorigen"  , idorigen);
 		params.put("iddestin"  , iddestin);
 		params.put("swescala"  , "S".equals(swescala) ? "S" : "N");
+		params.put("aux"       , aux);
 		params.put("accion"    , accion);
 		Map<String,Object> procRes = ejecutaSP(new MovimientoTfluaccSP(getDataSource()),params);
 		return (String)procRes.get("cdaccion");
@@ -1345,6 +1349,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter     ("idorigen"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter     ("iddestin"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter     ("swescala"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter     ("aux"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter     ("accion"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
@@ -1576,6 +1581,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 					"NTRAMITE"  , "CDTIPFLU" , "DSTIPFLU" , "CDFLUJOMC" , "DSFLUJOMC"
 					,"STATUS"   , "DSSTATUS" , "CDUNIECO" , "CDRAMO"    , "CDTIPSIT"
 					,"DSTIPSIT" , "ESTADO"   , "NMPOLIZA" , "FECSTATU"  , "FERECEPC"
+					,"NMSOLICI"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_total_o"    , OracleTypes.VARCHAR));
@@ -1742,7 +1748,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("cdsisrol"  , OracleTypes.VARCHAR));
 			String cols[]=new String[]{
 					"CDTIPFLU"  , "CDFLUJOMC"  , "CDACCION" , "DSACCION"
-					,"CDICONO"  , "CDVALOR"    , "IDORIGEN" , "IDDESTIN"
+					,"CDICONO"  , "CDVALOR"    , "IDORIGEN" , "IDDESTIN", "AUX"
 					,"CDESTADOMC" , "WEBIDESTADO"
 					,"CDPANTMC"   , "WEBIDPANT"
 					,"CDCOMPMC"   , "WEBIDCOMP"
@@ -1825,6 +1831,88 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String,Object> recuperarDatosTramiteValidacionCliente(
+			String cdtipflu
+			,String cdflujomc
+			,String tipoent
+			,String claveent
+			,String webid
+			,String ntramite
+			,String status
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("CDTIPFLU"  , cdtipflu);
+		params.put("CDFLUJOMC" , cdflujomc);
+		params.put("TIPOENT"   , tipoent);
+		params.put("CLAVEENT"  , claveent);
+		params.put("WEBID"     , webid);
+		params.put("NTRAMITE"  , ntramite);
+		params.put("STATUS"    , status);
+		params.put("CDUNIECO"  , cdunieco);
+		params.put("CDRAMO"    , cdramo);
+		params.put("ESTADO"    , estado);
+		params.put("NMPOLIZA"  , nmpoliza);
+		params.put("NMSITUAC"  , nmsituac);
+		params.put("NMSUPLEM"  , nmsuplem);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarDatosTramiteValidacionClienteSP(getDataSource()),params);
+		List<Map<String,String>> tramite = (List<Map<String,String>>)procRes.get("TRAMITE");
+		if(tramite==null||tramite.size()==0)
+		{
+			throw new ApplicationException("No hay tr\u00e1mite");
+		}
+		if(tramite.size()>1)
+		{
+			throw new ApplicationException("Tr\u00e1mite duplicado");
+		}
+		procRes.put("TRAMITE" , tramite.get(0));
+		procRes.putAll(params);
+		return procRes;
+	}
+	
+	protected class RecuperarDatosTramiteValidacionClienteSP extends StoredProcedure
+	{
+		protected RecuperarDatosTramiteValidacionClienteSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_GET_DATOS_VALIDACION_JS");
+			declareParameter(new SqlParameter("CDTIPFLU"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("CDFLUJOMC"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("TIPOENT"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("CLAVEENT"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("WEBID"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("NTRAMITE"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("STATUS"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("CDUNIECO"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("CDRAMO"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ESTADO"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("NMPOLIZA"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("NMSITUAC"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("NMSUPLEM"   , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"NTRAMITE"  ,"CDUNIECO" ,"CDRAMO"   ,"ESTADO"   ,"NMPOLIZA" ,"NMSUPLEM"  ,"NMSOLICI" ,"CDSUCADM"
+					,"CDSUCDOC" ,"CDSUBRAM" ,"CDTIPTRA" ,"FERECEPC" ,"CDAGENTE" ,"REFERENCIA","NOMBRE"   ,"FECSTATU"
+					,"STATUS"   ,"COMMENTS" ,"CDTIPSIT"
+					,"OTVALOR01","OTVALOR02","OTVALOR03","OTVALOR04","OTVALOR05","OTVALOR06" ,"OTVALOR07","OTVALOR08","OTVALOR09","OTVALOR10"
+					,"OTVALOR11","OTVALOR12","OTVALOR13","OTVALOR14","OTVALOR15","OTVALOR16" ,"OTVALOR17","OTVALOR18","OTVALOR19","OTVALOR20"
+					,"OTVALOR21","OTVALOR22","OTVALOR23","OTVALOR24","OTVALOR25","OTVALOR26" ,"OTVALOR27","OTVALOR28","OTVALOR29","OTVALOR30"
+					,"OTVALOR31","OTVALOR32","OTVALOR33","OTVALOR34","OTVALOR35","OTVALOR36" ,"OTVALOR37","OTVALOR38","OTVALOR39","OTVALOR40"
+					,"OTVALOR41","OTVALOR42","OTVALOR43","OTVALOR44","OTVALOR45","OTVALOR46" ,"OTVALOR47","OTVALOR48","OTVALOR49","OTVALOR50"
+					,"SWIMPRES" ,"CDTIPFLU" ,"CDFLUJOMC","CDUSUARI" ,"CDTIPSUP"
+			};
+			declareParameter(new SqlOutParameter("TRAMITE" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

@@ -350,15 +350,25 @@ public class MesaControlAction extends PrincipalCoreAction
 					log.debug("TRAMITE RESULTADO: "+msgResult);
 					
 			log.debug("se inserta detalle nuevo");
-        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+        	/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
         	parDmesCon.put("pv_ntramite_i"   , ntramiteGenerado);
         	parDmesCon.put("pv_feinicio_i"   , new Date());
         	parDmesCon.put("pv_cdclausu_i"   , null);
-        	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite manual desde mesa de control");
+        	parDmesCon.put("pv_comments_i"   , "Se guard\u00f3 un nuevo tr\u00e1mite manual desde mesa de control");
         	parDmesCon.put("pv_cdusuari_i"   , user.getUser());
         	parDmesCon.put("pv_cdmotivo_i"   , null);
         	parDmesCon.put("pv_cdsisrol_i"   , user.getRolActivo().getClave());
-        	kernelManager.movDmesacontrol(parDmesCon);
+        	kernelManager.movDmesacontrol(parDmesCon);*/
+			mesaControlManager.movimientoDetalleTramite(
+					ntramiteGenerado
+					,new Date()
+					,null//lcdclausu
+					,"Se guard\u00f3 un nuevo tr\u00e1mite manual desde mesa de control"
+					,user.getUser()
+					,null//cdmotivo
+					,user.getRolActivo().getClave()
+					,"S"
+					);
 					
 			success=true;
 			
@@ -980,16 +990,26 @@ public class MesaControlAction extends PrincipalCoreAction
 			////// se guarda el detalle //////
 			UserVO usu=(UserVO)session.get("USUARIO");
 			log.debug("se inserta detalle nuevo");
-        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+        	/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
         	//parDmesCon.put("pv_ntramite_i"   , res.getItemMap().get("ntramite"));
         	parDmesCon.put("pv_ntramite_i"   , ntramiteGenerado);
         	parDmesCon.put("pv_feinicio_i"   , new Date());
         	parDmesCon.put("pv_cdclausu_i"   , null);
-        	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite manual desde mesa de control");
+        	parDmesCon.put("pv_comments_i"   , "Se guard\u00f3 un nuevo tr\u00e1mite manual desde mesa de control");
         	parDmesCon.put("pv_cdusuari_i"   , usu.getUser());
         	parDmesCon.put("pv_cdmotivo_i"   , null);
         	parDmesCon.put("pv_cdsisrol_i"   , usu.getRolActivo().getClave());
-        	kernelManager.movDmesacontrol(parDmesCon);
+        	kernelManager.movDmesacontrol(parDmesCon);*/
+			mesaControlManager.movimientoDetalleTramite(
+					ntramiteGenerado
+					,new Date()
+					,null
+					,"Se guard\u00f3 un nuevo tr\u00e1mite manual desde mesa de control"
+					,usu.getUser()
+					,null
+					,usu.getRolActivo().getClave()
+					,"S"
+					);
 			////// se guarda el detalle //////
         	//////////////////////////////////
         	
@@ -1067,7 +1087,7 @@ public class MesaControlAction extends PrincipalCoreAction
 		{
 			kernelManager.mesaControlUpdateStatus(ntramiteEmi  , EstatusTramite.PENDIENTE.getCodigo());
 			kernelManager.mesaControlUpdateStatus(ntramiteAuto , EstatusTramite.CONFIRMADO.getCodigo());
-			Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+			/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
         	parDmesCon.put("pv_ntramite_i"   , ntramiteEmi);
         	parDmesCon.put("pv_feinicio_i"   , new Date());
         	parDmesCon.put("pv_cdclausu_i"   , null);
@@ -1075,7 +1095,19 @@ public class MesaControlAction extends PrincipalCoreAction
         	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
         	parDmesCon.put("pv_cdmotivo_i"   , null);
         	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
-        	kernelManager.movDmesacontrol(parDmesCon);
+        	kernelManager.movDmesacontrol(parDmesCon);*/
+			
+			mesaControlManager.movimientoDetalleTramite(
+					ntramiteEmi
+					,new Date()
+					,null
+					,"El gerente regres\u00f3 el tr\u00e1mite con las siguientes observaciones:<br/>"+comentario
+					,cdusuari
+					,null
+					,cdsisrol
+					,"N"
+					);
+			
         	mensaje = "Tr&aacute;mite regresado";
         	success = true;
 		}
@@ -1111,7 +1143,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			
 			Utils.validate(ntramite , "No se recibio el numero de tramite");
 			
-			mesaControlManager.movimientoDetalleTramite(ntramite, new Date(), null, dscoment, user.getUser(), null, user.getRolActivo().getClave());
+			mesaControlManager.movimientoDetalleTramite(ntramite, new Date(), null, dscoment, user.getUser(), null, user.getRolActivo().getClave(),null);
 		}
 		catch(Exception ex)
 		{

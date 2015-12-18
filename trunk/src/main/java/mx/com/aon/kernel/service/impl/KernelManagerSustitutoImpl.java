@@ -998,14 +998,14 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
 	}
 	
-	public WrapperResultados movDmesacontrol(Map<String, Object> params) throws ApplicationException
+	/*public WrapperResultados movDmesacontrol(Map<String, Object> params) throws ApplicationException
 	{
 		log.debug("### kernel movDmesacontrol map: "+params);
         WrapperResultados res=this.returnBackBoneInvoke(params, ProcesoDAO.P_MOV_DMESACONTROL);
         log.debug("### kernel sustituto movDmesacontrol id:"+res.getMsgId());
         log.debug("### kernel sustituto movDmesacontrol mesage:"+res.getMsgText());
         return res;
-	}
+	}*/
 	
 	public List<Map<String, String>> loadMesaControl(Map<String,String> params) throws ApplicationException
 	{

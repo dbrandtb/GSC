@@ -21,6 +21,7 @@ public interface MesaControlManager
 			,String cdusuari
 			,String cdmotivo
 			,String cdsisrol
+			,String swagente
 			)throws Exception;
     
     public void validarAntesDeTurnar(

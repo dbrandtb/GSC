@@ -1137,16 +1137,26 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            	//WrapperResultados mesaContWr=
 	            	kernelManagerSustituto.mesaControlUpdateSolici(ntramite, comprarNmpoliza);
 	            	
-	            	logger.debug("se inserta detalle nuevo");
+	            	/*logger.debug("se inserta detalle nuevo");
 	            	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
 	            	parDmesCon.put("pv_ntramite_i"   , ntramite);
 	            	parDmesCon.put("pv_feinicio_i"   , new Date());
 	            	parDmesCon.put("pv_cdclausu_i"   , null);
-	            	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; una cotizaci&oacute;n nueva para el tr&aacute;mite");
+	            	parDmesCon.put("pv_comments_i"   , );
 	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 	            	parDmesCon.put("pv_cdmotivo_i"   , null);
 	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
-	            	kernelManagerSustituto.movDmesacontrol(parDmesCon);
+	            	*/
+	            	mesaControlManager.movimientoDetalleTramite(
+	            			ntramite
+	            			,new Date()
+	            			,null//cdclausu
+	            			,"Se guard&oacute; una cotizaci&oacute;n nueva para el tr&aacute;mite"
+	            			,cdusuari
+	            			,null//cdmotivo
+	            			,cdsisrol
+	            			,"S"
+	            			);
 	            }
 	    		catch(Exception ex)
 	    		{
@@ -1205,23 +1215,33 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            			,cdusuari
 	            			,cdsisrol
 	            			,null
-	            			,TTIPFLUMC.POLIZA_NUEVA
-	            			,TFLUJOMC.EMISION_SALUD_INDIVIDUAL
+	            			,"2".equals(comprarCdramo) ? TTIPFLUMC.POLIZA_NUEVA : ""
+	            			,"2".equals(comprarCdramo) ? TFLUJOMC.EMISION_SALUD_INDIVIDUAL : ""
 	            			,null//valores
 	            			,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
 	            			);
 	            	
 	            	smap1.put("ntramite",ntramite);
 	            	
-	            	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+	            	/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
 	            	parDmesCon.put("pv_ntramite_i"   , ntramite);
 	            	parDmesCon.put("pv_feinicio_i"   , new Date());
 	            	parDmesCon.put("pv_cdclausu_i"   , null);
-	            	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite en mesa de control desde cotizaci&oacute;n de agente");
+	            	parDmesCon.put("pv_comments_i"   , "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente");
 	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 	            	parDmesCon.put("pv_cdmotivo_i"   , null);
 	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
-	            	kernelManagerSustituto.movDmesacontrol(parDmesCon);
+	            	kernelManagerSustituto.movDmesacontrol(parDmesCon);*/
+	            	mesaControlManager.movimientoDetalleTramite(
+	            			ntramite
+	            			,new Date()
+	            			,null//cdclausu
+	            			,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
+	            			,cdusuari
+	            			,null//cdmotivo
+	            			,cdsisrol
+	            			,"S"//swagente
+	            			);
 	            	
 	            	try
 		            {

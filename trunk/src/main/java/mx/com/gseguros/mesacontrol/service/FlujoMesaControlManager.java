@@ -120,6 +120,7 @@ public interface FlujoMesaControlManager
 			,String ypos
 			,String dsvalida
 			,String cdvalidafk
+			,String jsvalida
 			,String accion
 			)throws Exception;
 	
@@ -190,6 +191,7 @@ public interface FlujoMesaControlManager
 			,String cdvalor
 			,String cdicono
 			,String swescala
+			,String aux
 			,List<Map<String,String>>list
 			)throws Exception;
 	
@@ -268,5 +270,21 @@ public interface FlujoMesaControlManager
 			,String cdusuariSes
 			,String cdsisrolSes
 			,String cdsisrolTurnado
+			,String comments
+			)throws Exception;
+	
+	public Map<String,Object> recuperarDatosTramiteValidacionCliente(StringBuilder sb, FlujoVO flujo)throws Exception;
+	
+	public String turnarDesdeComp(
+			StringBuilder sb
+			,String cdusuari
+			,String cdsisrol
+			,String cdtipflu
+			,String cdflujomc
+			,String ntramite
+			,String statusOld
+			,String statusNew
+			,String swagente
+			,String comments
 			)throws Exception;
 }

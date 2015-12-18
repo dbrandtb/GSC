@@ -62,7 +62,7 @@ public interface MesaControlDAO
 	 * @throws Exception
 	 */
 	public void movimientoDetalleTramite(String ntramite, Date feinicio,
-			String cdclausu, String comments, String cdusuari, String cdmotivo, String cdsisrol)
+			String cdclausu, String comments, String cdusuari, String cdmotivo, String cdsisrol,String swagente)
 			throws Exception;
 	
 	/**

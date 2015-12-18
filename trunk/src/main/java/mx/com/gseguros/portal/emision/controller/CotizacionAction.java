@@ -1222,7 +1222,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			try
 			{
 				logger.debug("se inserta detalle nuevo para emision");
-	        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+	        	/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
 	        	parDmesCon.put("pv_ntramite_i"   , ntramite);
 	        	parDmesCon.put("pv_feinicio_i"   , new Date());
 	        	parDmesCon.put("pv_cdclausu_i"   , null);
@@ -1230,7 +1230,17 @@ public class CotizacionAction extends PrincipalCoreAction
 	        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 	        	parDmesCon.put("pv_cdmotivo_i"   , null);
 	        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
-	        	kernelManager.movDmesacontrol(parDmesCon);
+	        	kernelManager.movDmesacontrol(parDmesCon);*/
+				mesaControlManager.movimientoDetalleTramite(
+						ntramite
+						,new Date()
+						,null
+						,"El tr\u00e1mite se emiti\u00f3"
+						,cdusuari
+						,null
+						,cdsisrol
+						,"S"
+						);
 			}
 			catch(Exception ex)
 			{
@@ -6429,7 +6439,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							);
 					smap1.put("ntramite",ntramiteNew);
 					
-					Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+					/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
 	            	parDmesCon.put("pv_ntramite_i"   , ntramiteNew);
 	            	parDmesCon.put("pv_feinicio_i"   , new Date());
 	            	parDmesCon.put("pv_cdclausu_i"   , null);
@@ -6437,7 +6447,17 @@ public class CotizacionAction extends PrincipalCoreAction
 	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 	            	parDmesCon.put("pv_cdmotivo_i"   , null);
 	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
-	            	kernelManager.movDmesacontrol(parDmesCon);
+	            	kernelManager.movDmesacontrol(parDmesCon);*/
+					mesaControlManager.movimientoDetalleTramite(
+							ntramite
+							,new Date()
+							,null
+							,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
+							,cdusuari
+							,null
+							,cdsisrol
+							,"S"
+							);
 	            	
 	            	smap1.put("nombreUsuarioDestino"
 	            			,cotizacionManager.turnaPorCargaTrabajo(ntramiteNew,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())

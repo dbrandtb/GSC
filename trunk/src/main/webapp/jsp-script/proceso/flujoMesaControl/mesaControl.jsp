@@ -219,6 +219,11 @@ Ext.onReady(function()
                     ,dock        : 'bottom'
                     ,displayInfo : true
                 }]
+                ,selModel  :
+                {
+                    type           : 'rowmodel'
+                    ,allowDeselect : true
+                }
                 ,listeners :
                 {
                     select : function(grid,record)
@@ -566,6 +571,6 @@ function _p54_registrarTramite(bot)
 </script>
 </head>
 <body>
-<div id="_p54_divpri" style="height:900px;border:1px solid #CCCCCC;"></div>
+<div id="_p54_divpri" style="height:900px;border:0px solid #CCCCCC;"></div>
 </body>
 </html>
