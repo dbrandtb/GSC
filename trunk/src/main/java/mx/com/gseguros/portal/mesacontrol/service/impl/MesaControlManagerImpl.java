@@ -54,7 +54,7 @@ public class MesaControlManagerImpl implements MesaControlManager
 				,"\n@@@@@@ swagente=" , swagente
 				));
 		
-		mesaControlDAO.movimientoDetalleTramite(ntramite, feinicio, cdclausu, comments, cdusuari, cdmotivo, cdsisrol, swagente);
+		mesaControlDAO.movimientoDetalleTramite(ntramite, feinicio, cdclausu, comments, cdusuari, cdmotivo, cdsisrol, swagente, null, null);
 		
 		logger.debug(Utils.log(
 				 "\n@@@@@@ movimientoDetalleTramite @@@@@@"

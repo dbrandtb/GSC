@@ -3733,7 +3733,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,cdusuari
 							,null       //cdmotivo
 							,cdsisrol
-							,"S"
+							,"S", null, null
 							);
 					
 					resp.getSmap().put("nombreUsuarioDestino"
@@ -6496,7 +6496,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             	logger.debug("se inserta detalle nuevo");
             	
             	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null,
-            			"Se guard\u00f3 una cotizaci\u00f3n nueva para el tr\u00e1mite", cdusuari, null, cdsisrol,"S");
+            			"Se guard\u00f3 una cotizaci\u00f3n nueva para el tr\u00e1mite", cdusuari, null, cdsisrol,"S", null, null);
         		
     		} else { //se genera un tramite
     			
@@ -6508,7 +6508,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             	
             	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null
             			,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
-            			,cdusuari, null, cdsisrol,"S");
+            			,cdusuari, null, cdsisrol,"S", null, null);
             	
             	try {
 	            	cotizacionDAO.grabarEvento(new StringBuilder("\nCotizar tramite grupo"), 

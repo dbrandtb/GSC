@@ -216,17 +216,21 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			,String cdmotivo
 			,String cdsisrol
 			,String swagente
+			,String cdusuariDest
+			,String cdsisrolDest
 			)throws Exception
 	{
 		Map<String,Object>params=new LinkedHashMap<String,Object>();
-		params.put("ntramite" , ntramite);
-		params.put("feinicio" , feinicio);
-		params.put("cdclausu" , cdclausu);
-		params.put("comments" , comments);
-		params.put("cdusuari" , cdusuari);
-		params.put("cdmotivo" , cdmotivo);
-		params.put("cdsisrol" , cdsisrol);
-		params.put("swagente" , swagente);
+		params.put("ntramite"     , ntramite);
+		params.put("feinicio"     , feinicio);
+		params.put("cdclausu"     , cdclausu);
+		params.put("comments"     , comments);
+		params.put("cdusuari"     , cdusuari);
+		params.put("cdmotivo"     , cdmotivo);
+		params.put("cdsisrol"     , cdsisrol);
+		params.put("swagente"     , swagente);
+		params.put("cdusuariDest" , cdusuariDest);
+		params.put("cdsisrolDest" , cdsisrolDest);
 		logger.debug(
 				new StringBuilder()
 				.append("\n**********************************************")
@@ -243,14 +247,16 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		protected MovimientoDetalleTramite(DataSource dataSource)
 		{
 			super(dataSource,"PKG_SATELITES2.P_MOV_DMESACONTROL");
-			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("feinicio" , OracleTypes.TIMESTAMP));
-			declareParameter(new SqlParameter("cdclausu" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("comments" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdmotivo" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("swagente" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ntramite"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feinicio"     , OracleTypes.TIMESTAMP));
+			declareParameter(new SqlParameter("cdclausu"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("comments"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdmotivo"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swagente"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuariDest" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrolDest" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

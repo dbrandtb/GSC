@@ -222,7 +222,7 @@ Ext.define('VentanaRechazo',
                         var values = form.getValues();
                         values.SWAGENTE = _fieldById('SWAGENTE',win).getGroupValue();
                         debug('values:',values);
-                        values.COMMENTS = 'Se rechaza el tr\u00e1mite con las siguientes observaciones:'+values.COMMENTSINT;
+                        values.COMMENTS = values.COMMENTSINT;
                         
                         _mask(ck);
                         Ext.Ajax.request(

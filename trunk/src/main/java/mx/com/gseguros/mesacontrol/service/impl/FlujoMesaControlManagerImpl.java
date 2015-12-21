@@ -1779,7 +1779,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 					,cdusuari
 					,null//cdmotivo
 					,cdsisrol
-					,"S"
+					,"S", null, null
 					);
 		}
 		catch(Exception ex)
@@ -1925,7 +1925,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 					,cdusuari
 					,null//cdmotivo
 					,cdsisrol
-					,"S"
+					,"S", null, null
 					);
 		}
 		catch(Exception ex)
@@ -1987,69 +1987,167 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			,String cdtipasigNew
 			,String cdusuariSes
 			,String cdsisrolSes
-			,String cdsisrolTurnado
 			,String comments
 			)throws Exception
 	{
 		sb.append(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ turnarTramite @@@@@@"
-				,"\n@@@@@@ ntramite="        , ntramite
-				,"\n@@@@@@ statusOld="       , statusOld
-				,"\n@@@@@@ cdtipasigOld="    , cdtipasigOld
-				,"\n@@@@@@ statusNew="       , statusNew
-				,"\n@@@@@@ cdtipasigNew="    , cdtipasigNew
-				,"\n@@@@@@ cdusuariSes="     , cdusuariSes
-				,"\n@@@@@@ cdsisrolSes="     , cdsisrolSes
-				,"\n@@@@@@ cdsisrolTurnado=" , cdsisrolTurnado
-				,"\n@@@@@@ comments="        , comments
+				,"\n@@@@@@ ntramite="     , ntramite
+				,"\n@@@@@@ statusOld="    , statusOld
+				,"\n@@@@@@ cdtipasigOld=" , cdtipasigOld
+				,"\n@@@@@@ statusNew="    , statusNew
+				,"\n@@@@@@ cdtipasigNew=" , cdtipasigNew
+				,"\n@@@@@@ cdusuariSes="  , cdusuariSes
+				,"\n@@@@@@ cdsisrolSes="  , cdsisrolSes
+				,"\n@@@@@@ comments="     , comments
 				));
 		String paso     = "Iniciando turnado"
 		       ,message = null;
 		try
 		{
-			Map<String,String> usuarioDestino = new HashMap<String,String>()
-			                   ,usuarioOrigen = null;
+			Map<String,String> usuarioDestino = new HashMap<String,String>();
 			Date               fecstatu       = new Date();
 			
-			boolean origenSimple   = true
-			        ,destinoSimple = true;
+			boolean destinoSimple = true;
 			
-			/*TODO:
-			if(!"1".equals(cdtipasigNew)) //es por usuario
+			if(!"1".equals(cdtipasigNew)) //es por carrusel o por carga
 			{
-				paso = "Recuperando usuario que recibe el tr\u00e1mite";
+				destinoSimple = false;
+				
+				paso = "Recuperando datos del tr\u00e1mite";
 				sb.append("\n").append(paso);
-				usuarioRecibe = flujoMesaControlDAO.recuperarUsuarioParaTurnado(cdtipasigNew,cdsisrolTurnado);
-				sb.append(Utils.log("\nusuario que recibe=",usuarioRecibe));
+				Map<String,Object> datosTramite = flujoMesaControlDAO.recuperarDatosTramiteValidacionCliente(
+						null//cdtipflu
+						,null//cdflujomc
+						,null//tipoent
+						,null//claveent
+						,null//webid
+						,ntramite
+						,null//status
+						,null//cdunieco
+						,null//cdramo
+						,null//estado
+						,null//nmpoliza
+						,null//nmsituac
+						,null//nmsuplem
+						);
+				Map<String,String> tramite = (Map<String,String>)datosTramite.get("TRAMITE");
+				String cdtipflu  = tramite.get("CDTIPFLU");
+				String cdflujomc = tramite.get("CDFLUJOMC");
+				
+				paso = "Recuperando rol destino";
+				sb.append("\n").append(paso);
+				List<Map<String,String>> roles         = flujoMesaControlDAO.recuperaTfluestrol(cdtipflu, cdflujomc, statusNew);
+				sb.append(Utils.log("\nroles=",roles));
+				String                   cdsisrolTurnado = null;
+				for(Map<String,String>rol:roles)
+				{
+					if("S".equals(rol.get("SWTRABAJO")))
+					{
+						cdsisrolTurnado = rol.get("CDSISROL");
+						break;
+					}
+				}
+				if(StringUtils.isBlank(cdsisrolTurnado))
+				{
+					throw new ApplicationException("No hay rol definido para ver el status nuevo");
+				}
+				sb.append(Utils.log("\ncdsisrolNuevo=",cdsisrolTurnado));
+				
+				String cadenaTipoTurnado = null;
+				if("3".equals(cdtipasigNew))
+				{
+					cadenaTipoTurnado = "CARRUSEL";
+				}
+				else if("4".equals(cdtipasigNew))
+				{
+					cadenaTipoTurnado = "TAREAS";
+				}
+				else
+				{
+					throw new ApplicationException("El tipo de asignaci\u00f3n no es correcto");
+				}
+				
+				paso = "Recuperando usuario destino del tr\u00e1mite";
+				sb.append(Utils.log("\n",paso,", tipo=",cadenaTipoTurnado));
+				usuarioDestino = flujoMesaControlDAO.recuperarUsuarioParaTurnado(cdsisrolTurnado,cadenaTipoTurnado);
+				usuarioDestino.put("cdsisrol" , cdsisrolTurnado);
+				sb.append(Utils.log("\nusuario destino=",usuarioDestino));
 			}
 			
 			if(!"1".equals(cdtipasigOld)) //antes lo tenia un usuario especifico
 			{
-				paso = "Recuperando usuario que cede el tr\u00e1mite";
-				sb.append("\n").append(paso);
-				usuarioCede = flujoMesaControlDAO.recuperarUsuarioActualTramite(ntramite);
-				sb.append(Utils.log("\nusuario que cede=",usuarioCede));
-				//TODO --> invocar metodo que resta tareas
+				Map<String,Object> datos = flujoMesaControlDAO.recuperarDatosTramiteValidacionCliente(
+						null//cdtipflu
+						,null//cdflujomc
+						,null//tipoent
+						,null//claveent
+						,null//webid
+						,ntramite
+						,null//status
+						,null//cdunieco
+						,null//cdramo
+						,null//estado
+						,null//nmpoliza
+						,null//nmsituac
+						,null//nmsuplem
+						);
+				Map<String,String> tramite = (Map<String,String>)datos.get("TRAMITE");
+				
+				String cdusuariActual  = tramite.get("CDUSUARI")
+				       ,cdsisrolActual = cdsisrolSes;
+				
+				if(!cdusuariSes.equals(cdusuariActual))
+				{
+					/*
+					 * el usuario de sesion no es el dueño del tramite,
+					 * hay que recuperar al dueño para descontarselo.
+					 * Ya sabemos de quien es por TMESACONTROL.CDUSUARI
+					 * pero no sabemos el rol, lo necesitamos para descontarlo en la lista,
+					 * porque la lista viene en clave doble CDUSUARI-CDSISROL
+					 */
+					cdsisrolActual = flujoMesaControlDAO.recuperarRolRecienteTramite(ntramite,cdusuariActual);
+				}
+				
+				flujoMesaControlDAO.restarTramiteUsuario(cdusuariActual,cdsisrolActual);
 			}
-			*/
+			
+			paso = "Actualizando status";
+			sb.append("\n").append(paso);
 			
 			flujoMesaControlDAO.actualizarStatusTramite(
 					ntramite
 					,statusNew
 					,fecstatu
-					,usuarioDestino.get("CDUSUARI")
+					,usuarioDestino.get("cdusuari")
 					);
 			
+			paso = "Actualizando recuperando descripci\u00f3n de status";
+			sb.append("\n").append(paso);
+			List<Map<String,String>>estados = flujoMesaControlDAO.recuperaTestadomc(statusNew);
+			if(estados==null||estados.size()==0)
+			{
+				throw new ApplicationException("No se encuentra la descripci\u00f3n del status");
+			}
+			if(estados.size()>1)
+			{
+				throw new ApplicationException("Descripci\u00f3n del status duplicada");
+			}
+			
+			paso = "Guardando detalle de tr\u00e1mite";
+			sb.append("\n").append(paso);
 			mesaControlDAO.movimientoDetalleTramite(
 					ntramite
 					,new Date()//feinicio
 					,null//cdclausu
-					,comments
+					,Utils.join("Tr\u00e1mite turnado a status \"",estados.get(0).get("DSESTADOMC"),"\": ",Utils.NVL(comments,"(sin comentarios)"))
 					,cdusuariSes
 					,null//cdmotivo
 					,cdsisrolSes
 					,"S"
+					,usuarioDestino.get("cdusuari")
+					,usuarioDestino.get("cdsisrol")
 					);
 			
 			if(destinoSimple)
@@ -2058,7 +2156,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			}
 			else
 			{
-				message = Utils.join("El tr\u00e1mite ha sido turnado a ",usuarioDestino.get("DSUSUARI"));
+				message = Utils.join("El tr\u00e1mite ha sido turnado a ",usuarioDestino.get("dsusuari"));
 			}
 			
 		}
@@ -2175,25 +2273,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			Map<String,String> statusNuevo = statusesNew.get(0);
 			sb.append(Utils.log("=",statusNuevo));
 			
-			paso = "Recuperando rol que recibe";
-			sb.append("\n").append(paso);
-			List<Map<String,String>> roles         = flujoMesaControlDAO.recuperaTfluestrol(cdtipflu, cdflujomc, statusNew);
-			sb.append(Utils.log("\nroles=",roles));
-			String                   cdsisrolNuevo = null;
-			for(Map<String,String>rol:roles)
-			{
-				if("S".equals(rol.get("SWTRABAJO")))
-				{
-					cdsisrolNuevo = rol.get("CDSISROL");
-					break;
-				}
-			}
-			if(StringUtils.isBlank(cdsisrolNuevo))
-			{
-				throw new ApplicationException("No hay rol definido para ver el status nuevo");
-			}
-			sb.append(Utils.log("\ncdsisrolNuevo=",cdsisrolNuevo));
-			
 			paso = "Invocando turnado general";
 			sb.append("\n").append(paso);
 			message = this.turnarTramite(
@@ -2205,7 +2284,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 					,statusNuevo.get("CDTIPASIG")
 					,cdusuari
 					,cdsisrol
-					,cdsisrolNuevo
 					,comments
 					);
 		}

@@ -579,4 +579,13 @@ public interface FlujoMesaControlDAO {
 			,String nmsituac
 			,String nmsuplem
 			)throws Exception;
+	
+	public Map<String,String> recuperarUsuarioParaTurnado(
+			String cdsisrol
+			,String tipoasig
+			)throws Exception;
+	
+	public String recuperarRolRecienteTramite(String ntramite, String cdusuari) throws Exception;
+	
+	public void restarTramiteUsuario(String cdusuari,String cdsisrol) throws Exception;
 }

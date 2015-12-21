@@ -1852,7 +1852,6 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,cdtipasigOld    = params.get("cdtipasigOld")
 			       ,statusNew       = params.get("statusNew")
 			       ,cdtipasigNew    = params.get("cdtipasigNew")
-			       ,cdsisrolTurnado = params.get("cdsisrolTurnado")
 			       ,comments        = params.get("comments");
 			
 			Utils.validate(
@@ -1872,7 +1871,6 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdtipasigNew
 					,cdusuariSes
 					,cdsisrolSes
-					,cdsisrolTurnado
 					,comments
 					);
 			

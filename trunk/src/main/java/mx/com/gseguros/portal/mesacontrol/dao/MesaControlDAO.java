@@ -59,10 +59,12 @@ public interface MesaControlDAO
 	 * @param comments
 	 * @param cdusuari
 	 * @param cdmotivo
+	 * @param cdusuariDest TODO
+	 * @param cdsisrolDest TODO
 	 * @throws Exception
 	 */
 	public void movimientoDetalleTramite(String ntramite, Date feinicio,
-			String cdclausu, String comments, String cdusuari, String cdmotivo, String cdsisrol,String swagente)
+			String cdclausu, String comments, String cdusuari, String cdmotivo, String cdsisrol,String swagente, String cdusuariDest, String cdsisrolDest)
 			throws Exception;
 	
 	/**
