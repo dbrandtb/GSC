@@ -678,4 +678,11 @@ public class Utils
         }
         return true;
     }
+    
+    public static String NVL(String origen, String reemplazo)
+    {
+    	if(StringUtils.isBlank(origen))
+    		return reemplazo;
+    	return origen;
+    }
 }

@@ -1153,6 +1153,7 @@ function _procesaAccion(
                             }
                             
                             ck = 'Turnando tr\u00e1mite';
+                            _mask(ck);
                             Ext.Ajax.request(
                             {
                                 url      : _GLOBAL_URL_TURNAR
@@ -1166,6 +1167,7 @@ function _procesaAccion(
                                 }
                                 ,success : function(response)
                                 {
+                                    _unmask();
                                     var ck = 'Decodificando respuesta al turnar tr\u00e1mite';
                                     try
                                     {
@@ -2642,7 +2644,7 @@ Ext.onReady(function()
 
 /**
  * Valida un RFC a partir de sus datos de entrada
- * @param {} tipoPersona Indica si es Física o Moral
+ * @param {} tipoPersona Indica si es Fï¿½sica o Moral
  * @param {} nombre Primer nombre
  * @param {} nombre2 Segundo nombre
  * @param {} apaterno 

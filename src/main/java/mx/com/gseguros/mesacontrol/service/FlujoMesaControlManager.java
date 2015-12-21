@@ -269,7 +269,6 @@ public interface FlujoMesaControlManager
 			,String cdtipasigNew
 			,String cdusuariSes
 			,String cdsisrolSes
-			,String cdsisrolTurnado
 			,String comments
 			)throws Exception;
 	

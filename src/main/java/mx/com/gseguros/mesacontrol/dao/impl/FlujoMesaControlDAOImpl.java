@@ -16,6 +16,7 @@ import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.SqlInOutParameter;
@@ -1911,6 +1912,90 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 					,"SWIMPRES" ,"CDTIPFLU" ,"CDFLUJOMC","CDUSUARI" ,"CDTIPSUP"
 			};
 			declareParameter(new SqlOutParameter("TRAMITE" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String,String> recuperarUsuarioParaTurnado(
+			String cdsisrol
+			,String tipoasig
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdsisrol" , cdsisrol);
+		params.put("tipoasig" , tipoasig);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarUsuarioParaTurnadoSP(getDataSource()),params);
+		String cdusuari = (String) procRes.get("pv_cdusuari_o");
+		String dsusuari = (String) procRes.get("pv_dsusuari_o");
+		Map<String,String> usuario = new HashMap<String,String>();
+		usuario.put("cdusuari" , cdusuari);
+		usuario.put("dsusuari" , dsusuari);
+		return usuario;
+	}
+	
+	protected class RecuperarUsuarioParaTurnadoSP extends StoredProcedure
+	{
+		protected RecuperarUsuarioParaTurnadoSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_GET_USER_PARA_ASIG_TRAMITE");
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipoasig" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdusuari_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_dsusuari_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String recuperarRolRecienteTramite(String ntramite, String cdusuari) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("cdusuari" , cdusuari);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarRolRecienteTramiteSP(getDataSource()),params);
+		String cdsisrol = (String)procRes.get("pv_cdsisrol_o");
+		if(StringUtils.isBlank(cdsisrol))
+		{
+			throw new ApplicationException("No hay rol de usuario origen");
+		}
+		return cdsisrol;
+	}
+	
+	protected class RecuperarRolRecienteTramiteSP extends StoredProcedure
+	{
+		protected RecuperarRolRecienteTramiteSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_GET_CDSISROL_MAX_DETALLE");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdsisrol_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void restarTramiteUsuario(String cdusuari, String cdsisrol) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdusuari" , cdusuari);
+		params.put("cdsisrol" , cdsisrol);
+		ejecutaSP(new RestarTramiteUsuarioSP(getDataSource()),params);
+	}
+	
+	protected class RestarTramiteUsuarioSP extends StoredProcedure
+	{
+		protected RestarTramiteUsuarioSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_RESTA_TAREA_USUARIO");
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

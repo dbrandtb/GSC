@@ -265,7 +265,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,cdusuari
 						,null                      //cdmotivo
 						,cdsisrol
-						,"S"
+						,"S", null, null
 						);
 				
 				for(Map<String,String>movAgente:movsAgente)
@@ -591,7 +591,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,cdusuari
 						,null       //cdmotivo
 						,cdsisrol
-						,"S"
+						,"S", null, null
 						);
 			}
 			
@@ -871,7 +871,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					,cdusuari
 					,null       //cdmotivo
 					,cdsisrol
-					,"S"
+					,"S", null, null
 					);
 		}
 		catch(Exception ex)
@@ -1036,7 +1036,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,cdusuari
 						,null                      //cdmotivo
 						,cdsisrol
-						,"S"
+						,"S", null, null
 						);
 				
 				paso = "Registrando relaci\u00F3n de movimiento";
@@ -1246,7 +1246,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,cdusuari
 						,null                      //cdmotivo
 						,cdsisrol
-						,"S"
+						,"S", null, null
 						);
 			}
 		}
@@ -1511,7 +1511,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,cdusuari
 						,null       //cdmotivo
 						,cdsisrol
-						,"S"
+						,"S", null, null
 						);
 			}
 			
