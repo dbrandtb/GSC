@@ -3318,7 +3318,29 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                         {
                                             var form = formsValidos[k];
                                             debug('intento cargar:',form,'con:',form.datosAnteriores);
-                                            form.loadRecord(form.datosAnteriores);
+                                            //form.loadRecord(form.datosAnteriores);
+                                            
+                                            for(var attCampo in form.datosAnteriores.data)
+                                            {
+                                                var attCampoCampo = form.down('[name='+attCampo+']');
+                                                if(!Ext.isEmpty(attCampoCampo))
+                                                {
+                                                    attCampoCampo.setValue(form.datosAnteriores.get(attCampo));
+                                                    if(attCampoCampo.xtype=='combobox')
+                                                    {
+                                                        attCampoCampo.store.valorParaCargar = ''+form.datosAnteriores.get(attCampo);
+                                                        attCampoCampo.store.padre = attCampoCampo;
+                                                        attCampoCampo.store.on(
+                                                        {
+                                                            load : function(me)
+                                                            {
+                                                                me.padre.setValue(me.valorParaCargar);
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            }
+                                            
                                             if(form.datosAnteriores.raw&&form.datosAnteriores.raw.amparada=='S')
                                             {
                                                 form.down('[name=amparada]').setValue(true);
