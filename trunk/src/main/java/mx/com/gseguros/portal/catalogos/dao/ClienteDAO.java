@@ -1,4 +1,4 @@
-package mx.com.gseguros.portal.catalogos.dao.impl;
+package mx.com.gseguros.portal.catalogos.dao;
 
 public interface ClienteDAO {
 	/**
