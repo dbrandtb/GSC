@@ -4984,7 +4984,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	public String guardaConfiguracionLayout(){
 		logger.debug("Entra a guardaAltaTramite Params: {} datosTablas {}", params,datosTablas);
 		try{
-			//Realizamos la inserci�n de los guardados
+			//Realizamos la insercion de los guardados
 			siniestrosManager.guardaLayoutProveedor(params.get("cmbProveedor"), null,null,null,null,null,null,null,null,"D");
 			for(int i=0;i<datosTablas.size();i++) {
 				siniestrosManager.guardaLayoutProveedor(
