@@ -15,6 +15,7 @@ import javax.sql.DataSource;
 import mx.com.aon.portal.dao.ObtieneTatriperMapper;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.catalogos.dao.ClienteDAO;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.impl.ValidacionesCotizacionDAOSIGSImpl.ObtieneValidacionRetroactividad;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
