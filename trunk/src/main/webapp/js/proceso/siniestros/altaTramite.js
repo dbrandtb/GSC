@@ -463,7 +463,7 @@ Ext.onReady(function() {
 		}
 	});
 	
-	/* PANEL PARA LA BUSQUEDA DE LA INFORMACI�N DEL ASEGURADO PARA LA BUSQUEDA DE LAS POLIZAS */
+	/* PANEL PARA LA BUSQUEDA DE LA INFORMACION DEL ASEGURADO PARA LA BUSQUEDA DE LAS POLIZAS */
 	gridPolizasAltaTramite= Ext.create('Ext.grid.Panel', {
 		id			:	'polizaGridAltaTramite',
 		store		:	storeListadoPoliza,
@@ -506,7 +506,7 @@ Ext.onReady(function() {
 					
 					if( (valorFechaOcurrencia <= valorFechaFinal) && (valorFechaOcurrencia >= valorFechaInicial)){
 						if( valorFechaOcurrencia >= valorFechaAltaAsegurado ){
-							//cumple la condici�n la fecha de ocurrencia es menor igual a la fecha de alta de tramite
+							//cumple la condicion la fecha de ocurrencia es menor igual a la fecha de alta de tramite
 							panelInicialPral.down('[name="cdunieco"]').setValue(record.get('cdunieco'));
 							panelInicialPral.down('[name="estado"]').setValue(record.get('estado'));
 							panelInicialPral.down('[name="cdramo"]').setValue(record.get('cdramo'));
@@ -540,7 +540,7 @@ Ext.onReady(function() {
 							limpiarRegistros();
 							modPolizasAltaTramite.hide();
 						}else{
-							// No se cumple la condici�n la fecha de ocurrencia es mayor a la fecha de alta de tramite
+							// No se cumple la condicion la fecha de ocurrencia es mayor a la fecha de alta de tramite
 							Ext.Msg.show({
 								title:'Error',
 								msg: 'La fecha de ocurrencia es mayor a la fecha de alta del asegurado',
@@ -903,14 +903,14 @@ Ext.onReady(function() {
 					,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 					,handler : _p21_agregarFactura
 				},
-				{	/*1.- MANDAMOS A GUARDAR LA INFORMACI�N DE LAS FACTURAS UNICAMENTE EN EL TRAMITE*/
+				{	/*1.- MANDAMOS A GUARDAR LA INFORMACION DE LAS FACTURAS UNICAMENTE EN EL TRAMITE*/
 					text	: 'Guardar Cambios Factura'
 					,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png'
 					,handler : function() {
 						guardarFacturaSiniestro(); //Guardar Cambios Factura
 					}
 				},
-				{	/*MOSTRAMOS LA INFORMACI�N INICIAL DEL STORE DE LAS FACTURAS*/
+				{	/*MOSTRAMOS LA INFORMACION INICIAL DEL STORE DE LAS FACTURAS*/
 					text		:'Restaurar Facturas'
 					,icon		:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png'
 					,handler	:function() {
@@ -956,7 +956,7 @@ Ext.onReady(function() {
 			}],
 			listeners: {
 				itemclick: function(dv, record, item, index, e) {
-					/*OBTENEMOS LA INFORMACI�N DE LOS ASEGURADOS*/
+					/*OBTENEMOS LA INFORMACiON DE LOS ASEGURADOS*/
 					if(panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().hasSelection()){
 						if(banderaAsegurado =="1"){
 							guardarAseguradosFactura(); //Cambio de Factura
@@ -965,7 +965,7 @@ Ext.onReady(function() {
 						var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];
 						var noFactura= rowSelected.get('noFactura');
 						storeListAsegPagDirecto.removeAll();
-						//REALIZAMOS EL LLAMADO POR EL NUMERO DE FACTURA Y TR�MITE
+						//REALIZAMOS EL LLAMADO POR EL NUMERO DE FACTURA Y TRAMITE
 						Ext.Ajax.request( {
 							url		: _URL_ASEGURADO_FACTURA
 							,params	: {
