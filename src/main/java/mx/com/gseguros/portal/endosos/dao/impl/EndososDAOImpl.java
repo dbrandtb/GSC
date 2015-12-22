@@ -4720,4 +4720,100 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public void guardarEndosoNombreRFCFecha(Map<String, Object> params) throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************")
+				.append("\n****** PKG_SATELITES.P_MOV_MPERSONA ******")
+				.append("\n****** params=").append(params)
+				.append("\n******************************************")
+				.toString()
+				);
+		this.ejecutaSP(new GuardarEndosoNombreRFCFecha(this.getDataSource()), params);
+	}
+	
+	protected class GuardarEndosoNombreRFCFecha extends StoredProcedure
+	{
+		protected GuardarEndosoNombreRFCFecha(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES.P_MOV_MPERSONA");
+			declareParameter(new SqlParameter("pv_cdperson_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipide_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdideper_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsnombre_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipper_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otfisjur_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otsexo_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fenacimi_i"  , OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_cdrfc_i"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsemail_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsnombre1_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsapellido_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsapellido1_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feingreso_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdnacion_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_canaling_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_conducto_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptcumupr_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_residencia_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nongrata_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdideext_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdestciv_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsucemi_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_accion_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneInformacionCliente(String cdunieco,String cdramo,String estado,
+			String nmpoliza,String nmsuplem,String motivo) throws Exception {
+		Map<String,String>params = new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		params.put("pv_idmotivo_i" , motivo);
+		
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtieneInformacionCliente(this.getDataSource()), params);
+		return (List<Map<String, String>>) resultadoMap.get("pv_registro_o");
+			}
+	protected class  ObtieneInformacionCliente extends StoredProcedure
+	{
+		String[] columnas=new String[]{
+			"IDMOTIVO",		"NUMSUC",		"RAMO",			"POLIZA",			"FENDOSO",			"CLIENTE",
+			"NOMCLI",		"APEPAT",		"APEMAT",		"RASONSOCIAL",		"FECNAC",			"TIPPER",
+			"RFCCLI",		"CVEELE",		"CURPCLI",		"CALLECLI",			"NUMCLI",			"NUMINT",
+			"CODPOS",		"COLONIA",		"MUNICIPIO",	"CVEEDO",			"POBLACION",		"TELEFONO1",
+			"TELEFONO2",	"TELEFONO3"
+		};
+		
+		protected ObtieneInformacionCliente(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_GET_DAT_CAM_NOM_RFC_FECNAC");
+			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_idmotivo_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(columnas)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public List<Map<String, String>> CambioClientenombreRFCfechaNacimiento(Map<String, String> params)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

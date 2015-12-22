@@ -42,5 +42,7 @@ public interface AutosSIGSDAO {
 	public void revierteEndosoFallidoSigs(Map<String, Object> params) throws Exception;
 	
 	public void revierteEndosoBFallidoSigs(Map<String, Object> params) throws Exception;
+
+	public Integer CambioClientenombreRFCfechaNacimiento(Map<String, Object> params) throws Exception;
 	
 }
