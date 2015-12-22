@@ -2739,7 +2739,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                 ,decimalSeparator : '.'
                                                             }
                                                         }
-                                                        ,{
+                                                        /*,{
                                                             header     : 'Cesi&oacute;n comisi&oacute;n<br/>intermediario'
                                                             ,dataIndex : 'cesicomi'
                                                             ,flex      : 1
@@ -2750,7 +2750,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                 ,allowDecimals    : true
                                                                 ,decimalSeparator : '.'
                                                             }
-                                                        }
+                                                        }*/
                                                         ,{
                                                             header     : 'Ponderaci&oacute;n ubicaci&oacute;n<br/>geogr&aacute;fica'
                                                             ,dataIndex : 'pondubic'
