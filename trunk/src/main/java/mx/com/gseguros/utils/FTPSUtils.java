@@ -77,7 +77,7 @@ public class FTPSUtils {
         try {
             File file = new File(localFilePath);
             if (!file.exists()) {
-                throw new RuntimeException("No se encontr� el archivo local: " + localFilePath);
+                throw new RuntimeException("No se encontro el archivo local: " + localFilePath);
             }
             
             manager.init();
@@ -335,7 +335,7 @@ public class FTPSUtils {
             String remoteFilePath) {
         
         String connectionString = "sftp://" + username + ":" + password + "@" + hostName + "/" + remoteFilePath;
-        logger.info(new StringBuilder("Cadena de conexi�n: ").append(connectionString));
+        logger.info(new StringBuilder("Cadena de conexion: ").append(connectionString));
         return connectionString;
     }
     
