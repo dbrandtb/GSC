@@ -347,7 +347,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			paramsTworkSinPagRem.put("pv_reqautes_i",params.get("txtAutEspecial"));
 			siniestrosManager.guardaListaTworkSin(paramsTworkSinPagRem);
 			
-			//Guardamos la informaci�n del asegurado
+			//Guardamos la informacion del asegurado
 			HashMap<String, Object> paramsAsegurado = new HashMap<String, Object>();
 			paramsAsegurado.put("pv_cdunieco_i",params.get("cdunieco"));
 			paramsAsegurado.put("pv_cdramo_i",params.get("cmbRamos"));
@@ -716,7 +716,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				paramsTworkSin.put("pv_reqautes_i", datosTablas.get(i).get("modtxtAutEspecial"));
 				siniestrosManager.guardaListaTworkSin(paramsTworkSin);
 				
-				//Guardamos la informaci�n del asegurado
+				//Guardamos la informacion del asegurado
 				HashMap<String, Object> paramsAsegurado = new HashMap<String, Object>();
 				paramsAsegurado.put("pv_cdunieco_i",datosTablas.get(i).get("modUnieco"));
 				paramsAsegurado.put("pv_cdramo_i",datosTablas.get(i).get("modRamo"));
