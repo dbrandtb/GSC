@@ -453,4 +453,11 @@ public interface EndososAutoManager
 			,String cdtipsup
 			,UserVO usuarioSesion
 			)throws Exception;
+
+	public void guardarEndosoNombreRFCFecha(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String cdperson, String cdtipide, String cdideper, String dsnombre, String cdtipper, String otfisjur,
+			String otsexo, Date fechaNacimiento, String cdrfc, String dsemail, String dsnombre1, String dsapellido,
+			String dsapellido1, String feingreso, String cdnacion, String canaling, String conducto, String ptcumupr,
+			String residencia, String nongrata, String cdideext, String cdestciv, String cdsucemi, String cdusuari,
+			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso)throws Exception;
 }

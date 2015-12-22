@@ -746,5 +746,59 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			compile();
 		}
 	}
+
+
+	@Override
+	public Integer CambioClientenombreRFCfechaNacimiento(Map<String, Object> params) throws Exception {
+		Integer resp = null;
+		Map<String, Object> mapResult = ejecutaSP(new CambioClientenombreRFCfechaNacimiento(getDataSource()), params);
+		resp = (Integer) mapResult.get("rs");
+		
+		return resp;
+	}
 	
+	public class CambioClientenombreRFCfechaNacimiento extends StoredProcedure{
+		protected CambioClientenombreRFCfechaNacimiento(DataSource dataSource){
+			super(dataSource, "sp_GuardaDatosCliente");
+			declareParameter(new SqlParameter("vNumSuc", Types.SMALLINT));
+			declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
+			declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
+			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
+			declareParameter(new SqlParameter("vCliente", Types.INTEGER));
+			declareParameter(new SqlParameter("vMotivo", Types.SMALLINT));
+			declareParameter(new SqlParameter("vNomCli", Types.VARCHAR));
+			declareParameter(new SqlParameter("vApePat", Types.VARCHAR));
+			declareParameter(new SqlParameter("vApeMat", Types.VARCHAR));
+			declareParameter(new SqlParameter("vRazSoc", Types.VARCHAR));
+			declareParameter(new SqlParameter("vFecNac", Types.DATE));
+			declareParameter(new SqlParameter("vTipPer", Types.VARCHAR));
+			declareParameter(new SqlParameter("vRfcCli", Types.VARCHAR));
+			declareParameter(new SqlParameter("vCveEle", Types.VARCHAR));
+			declareParameter(new SqlParameter("vCurpCli", Types.VARCHAR));
+			declareParameter(new SqlParameter("vCalleCli", Types.VARCHAR));
+			declareParameter(new SqlParameter("vNumCli", Types.VARCHAR));
+			declareParameter(new SqlParameter("vNumInt", Types.VARCHAR));
+			declareParameter(new SqlParameter("vCodPos", Types.INTEGER));
+			declareParameter(new SqlParameter("vColonia", Types.VARCHAR));
+			declareParameter(new SqlParameter("vMunicipio", Types.SMALLINT));
+			declareParameter(new SqlParameter("vCveEdo", Types.SMALLINT));
+			declareParameter(new SqlParameter("vPoblacion", Types.VARCHAR));
+			declareParameter(new SqlParameter("vTelefono1", Types.VARCHAR));
+			declareParameter(new SqlParameter("vTelefono2", Types.VARCHAR));
+			declareParameter(new SqlParameter("vTelefono3", Types.VARCHAR));
+			
+			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
+				@Override  
+				public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+					Integer result = null;
+					while(rs.next()){  
+						result = rs.getInt(1);
+					}  
+					return result;  
+				}
+			}));
+			
+			compile();
+		}
+	}
 }
