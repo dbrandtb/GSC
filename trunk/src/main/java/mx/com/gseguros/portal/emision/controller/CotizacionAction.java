@@ -6469,7 +6469,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
 	            	kernelManager.movDmesacontrol(parDmesCon);*/
 					mesaControlManager.movimientoDetalleTramite(
-							ntramite
+							ntramiteNew
 							,new Date()
 							,null
 							,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
