@@ -152,4 +152,6 @@ public interface PersonasDAO
 
 	public String obtieneInformacionCliente(String sucursal, String ramo, String poliza) throws Exception;
 	
+	public String validaExisteAseguradoSicaps(String cdideper)throws Exception;
+	
 }

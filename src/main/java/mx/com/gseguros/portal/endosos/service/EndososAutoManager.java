@@ -459,5 +459,6 @@ public interface EndososAutoManager
 			String otsexo, Date fechaNacimiento, String cdrfc, String dsemail, String dsnombre1, String dsapellido,
 			String dsapellido1, String feingreso, String cdnacion, String canaling, String conducto, String ptcumupr,
 			String residencia, String nongrata, String cdideext, String cdestciv, String cdsucemi, String cdusuari,
-			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso)throws Exception;
+			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso, String tipoPantalla,
+			String codigoCliExt,String sucursalEnt,String ramoEntrada,String polizaEnt, String cdpersonNew, String dsnombreComp)throws Exception;
 }

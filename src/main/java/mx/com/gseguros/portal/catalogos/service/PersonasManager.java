@@ -140,4 +140,6 @@ public interface PersonasManager
 	public List<GenericVO> consultaClientes(String cdperson) throws Exception;
 	
 	public String obtieneInformacionCliente(String sucursal, String ramo, String poliza) throws Exception;
+	
+	public String validaExisteAseguradoSicaps(String cdideper)throws Exception;
 }

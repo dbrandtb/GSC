@@ -1372,5 +1372,27 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		return null;
 	}
 	
+	@Override
+	public String validaExisteAseguradoSicaps(String cdideper)throws Exception
+	{
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdideper_i", cdideper);
+		Map<String,Object>resultado=ejecutaSP(new ValidaExisteAseguradoSicaps(getDataSource()), params);
+		logger.debug("Estatus de la persona: " + resultado.get("pv_cdperson_o") );
+		return (String)resultado.get("pv_cdperson_o");
+	}
+	
+	protected class ValidaExisteAseguradoSicaps extends StoredProcedure
+	{
+		protected ValidaExisteAseguradoSicaps(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_VALIDA_PERSONA_SICAPS");
+			declareParameter(new SqlParameter("pv_cdideper_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdperson_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 }

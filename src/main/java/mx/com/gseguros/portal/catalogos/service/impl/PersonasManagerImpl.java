@@ -1183,6 +1183,12 @@ public class PersonasManagerImpl implements PersonasManager
 		return paso;
 	}
 	
+	@Override
+	public String validaExisteAseguradoSicaps(String cdideper)throws Exception
+	{
+		return personasDAO.validaExisteAseguradoSicaps(cdideper);
+	}
+	
 	/************************ BASE MANAGER **************************/
 	private void manejaException(Exception ex,ManagerRespuestaBaseVO resp)
 	{

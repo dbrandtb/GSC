@@ -508,5 +508,9 @@
             <result name="success">/jsp-script/catalogos/pantallaBeneficiarios.jsp</result>
             <result name="error">/jsp-script/general/includes/errorPantalla.jsp</result>
         </action>
+        
+		<action name="importaPersonaExtWSNoSicaps" class="personasAction" method="importaPersonaExtWSNoSicaps">
+            <result type="json" />
+        </action>
     </package>
 </struts>
