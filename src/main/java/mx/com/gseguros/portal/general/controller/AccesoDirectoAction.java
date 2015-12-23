@@ -49,6 +49,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 	public static final String ACCESO_CONSULTA_POLIZAS = "consultaPolizas";
 	public static final String ACCESO_CONSULTA_ASEGURADOS = "consultaAsegurados";
 	public static final String ACCESO_CLIENTE_UNICO = "clienteUnico";
+	public static final String ACCESO_ENDOSO_POLIZAS_NO_SICAPS = "endosoPolizasNoSICAPS";
 	public static final String ENDOSOS_AUTOS = "endososAutos";
 	public static final String MENU_PRINCIPAL = "menuPrincipal";
 	public static final String MESA_CONTROL_AGENTES = "mesaControlAgentes";
@@ -142,7 +143,9 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 				|| ACCESO_CLIENTE_UNICO.equals(acceso)
 				|| ENDOSOS_AUTOS.equals(acceso)
 				|| MENU_PRINCIPAL.equals(acceso)
-				|| MESA_CONTROL_AGENTES.equals(acceso)) {
+				|| MESA_CONTROL_AGENTES.equals(acceso)
+				|| ACCESO_ENDOSO_POLIZAS_NO_SICAPS.equals(acceso)
+				) {
 			
 			// Patch para traducir el rol, ya que el portal manda un codigo: 
 			if (ACCESO_CONSULTA_POLIZAS.equals(acceso)) {
