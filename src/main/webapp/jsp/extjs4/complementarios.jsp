@@ -1007,7 +1007,7 @@ function _datComTurnarSuscripcion()
 									                                        ,cdunieco            : inputCdunieco
 									                                        ,cdramo              : inputCdramo
 									                                        ,cdtipsit            : inputCdtipsit
-									                                        ,'panel1.notarifica' : Number(inputCdramo)==16 ? 'si' : ''
+									                                        ,'panel1.notarifica' : ( Number(inputCdramo)==16 || Number(inputCdramo)==6 || Number(inputCdramo)==5 ) ? 'si' : ''
 									                                    }
 									                                    ,success : function(response)
 									                                    {
