@@ -74,6 +74,7 @@ Ext.onReady(function() {
                                     	
                                     	_fieldByName('filtrarFam',gridDatosAsegurado).setValue('');
                                     	_fieldByName('filtrarAseg',gridDatosAsegurado).setValue('');
+                                    	_fieldByName('filtrarCveAseg',gridDatosAsegurado).setValue('');
                                     	
                                     	storeAsegurados.clearFilter();
                                     	
@@ -792,23 +793,23 @@ Ext.onReady(function() {
                     siniestralidad(null, null,record.get('cdperson'),null,"0");//cdunieco,cdramo, cdperson, nmpoliza
                 }
             },
-            {text:'Plan',dataIndex:'dsplan',width:100 , align:'left'},
-            {text:'Tipo de <br/>asegurado',dataIndex:'parentesco',width:100 , align:'left'},
-            {text:'Clave <br/>Asegurado',dataIndex:'cdperson',width:100,align:'left'},
+            {text:'Plan',dataIndex:'dsplan',width:90 , align:'left'},
+            {text:'Tipo de <br/>asegurado',dataIndex:'parentesco',width:80 , align:'left'},
+            {text:'Clave <br/>Asegurado',dataIndex:'cdperson',width:80,align:'left'},
             {text:'Nombre',dataIndex:'nombre',width:180,align:'left'},
-            {text:'Estatus',dataIndex:'status',width:100,align:'left'},
+            {text:'Estatus',dataIndex:'status',width:80,align:'left'},
             {text:'RFC',dataIndex:'cdrfc',width:100,align:'left'},
             {text:'Sexo',dataIndex:'sexo',width:60 , align:'left'},
             {text:'Grupo',dataIndex:'grupo', itemId: 'grupo',width:100, align:'left', hidden: true},
             {text:'Familia',dataIndex:'familia', itemId: 'familia',width:100, align:'left', hidden: true},
-            {text:'Fecha Nac.',dataIndex:'fenacimi',width:100, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
+            {text:'Fecha Nac.',dataIndex:'fenacimi',width:90, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
         ],
         tbar: [{
                 xtype : 'textfield',
                 name : 'filtrarAseg',
                 fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Asegurado:</span>',
                 labelWidth : 100,
-                width: 280,
+                width: 260,
                 maxLength : 50,
                 listeners:{
                 	change: function(elem,newValue,oldValue){
@@ -832,10 +833,37 @@ Ext.onReady(function() {
                 }
             },'-',{
                 xtype : 'textfield',
+                name : 'filtrarCveAseg',
+                fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Cve. Asegurado:</span>',
+                labelWidth : 120,
+                width: 220,
+                maxLength : 50,
+                listeners:{
+                	change: function(elem,newValue,oldValue){
+                		newValue = Ext.util.Format.uppercase(newValue);
+                		
+                		//Validacion de valor anterior ya que la pantalla hace lowercase en automatico y manda doble change
+						if( newValue == Ext.util.Format.uppercase(oldValue)){
+							return false;
+						}
+						
+						try{
+//			        		storeAsegurados.clearFilter();
+//	                		storeAsegurados.filter('familia',newValue);
+//							storeAsegurados.filter(storeAsegurados.createFilterFn('familia',newValue, true));
+							storeAsegurados.removeFilter('filtroCveAseg');
+	                		storeAsegurados.filter(Ext.create('Ext.util.Filter', {property: 'cdperson', anyMatch: true, value: newValue, root: 'data', id:'filtroCveAseg'}));
+						}catch(e){
+							error('Error al filtrar por clave de asegurado',e);
+						}
+                	}
+                }
+            },'-',{
+                xtype : 'textfield',
                 name : 'filtrarFam',
                 fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Familia:</span>',
                 labelWidth : 80,
-                width: 250,
+                width: 240,
                 maxLength : 50,
                 listeners:{
                 	change: function(elem,newValue,oldValue){
