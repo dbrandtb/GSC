@@ -1521,12 +1521,16 @@ Ext.onReady(function() {
                                     break;
                                     
                                     case 5:
-                                        // Busqueda de polizas por nombre:
+                                        // Busqueda de polizas por numero corto:
                                         if(!formBusqueda.findField('params.sucursal').isValid() || !formBusqueda.findField('params.producto').isValid() || !formBusqueda.findField('params.numpolizacorto').isValid()){
                                             mensajeWarning('Llene los datos requeridos.');
                                             return;
                                         }
-                                        cargaStoreSuplementos(formBusqueda.getValues());
+                                        var paramsForm = formBusqueda.getValues();
+                                        var tipob = paramsForm.tipoBusqueda;
+                                        paramsForm['params.tipoBusqueda'] = tipob;
+                                        
+                                        cargaStoreSuplementos(paramsForm);
                                         
                                     break;
                                 }
