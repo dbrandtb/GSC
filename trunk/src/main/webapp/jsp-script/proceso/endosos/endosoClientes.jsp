@@ -67,9 +67,9 @@
 		
 		var cmbSucursal = Ext.create('Ext.form.field.ComboBox',{
 			fieldLabel	: 'Sucursal',			name			:'cmbSucursal',				allowBlank		: false,
-			editable	: true,					displayField	:'value',//					width			: 350,
+			editable	: true,					displayField	:'value',
 			emptyText	:'Seleccione...',		valueField		:'key',						forceSelection	: true,
-			queryMode	:'local',				store 			:sucursalCliente//,			readOnly   : (pantallaPrincipal =="0")
+			queryMode	:'local',				store 			:sucursalCliente,			readOnly   : (pantallaPrincipal =="0")
 		});
 		
 		var panelInicialPral = Ext.create('Ext.form.Panel', {
@@ -408,10 +408,7 @@
 					FECNACIMIENTO   : clienteSeleccionado.FENACIMI
 			});
 			storeListadoAsegurado.add(rec);
-		}else{
-			debug("Entra al else ");
 		}
-
     });
 	
 	function importaPersonaWS(esSaludD, codigoCliExt){
