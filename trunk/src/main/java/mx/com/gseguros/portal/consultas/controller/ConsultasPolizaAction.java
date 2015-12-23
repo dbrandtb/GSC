@@ -269,7 +269,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			
 //			groupTipoBusqueda
 			
-			if(params.containsKey("numpolizacorto") && StringUtils.isNotBlank(params.get("numpolizacorto"))){
+			if(params.containsKey("tipoBusqueda") && StringUtils.isNotBlank(params.get("tipoBusqueda")) && "5".equals(params.get("tipoBusqueda"))){
 				datosSuplemento = consultasPolizaManager.obtieneHistoricoPolizaCorto(params.get("sucursal"), params.get("producto"), params.get("numpolizacorto"));
 			}else{
 				PolizaAseguradoVO poliza = new PolizaAseguradoVO();
