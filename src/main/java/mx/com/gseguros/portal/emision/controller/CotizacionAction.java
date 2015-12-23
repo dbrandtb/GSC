@@ -4682,12 +4682,22 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 	            if(exito)
 	            {
-					exito = FTPSUtils.upload(
-							this.getText("dominio.server.layouts"),
-							this.getText("user.server.layouts"),
-							this.getText("pass.server.layouts"),
-							archivoTxt.getAbsolutePath(),
-							this.getText("directorio.server.layouts")+"/"+nombreCenso);
+					exito = FTPSUtils.upload
+							(
+								this.getText("dominio.server.layouts"),
+								this.getText("user.server.layouts"),
+								this.getText("pass.server.layouts"),
+								archivoTxt.getAbsolutePath(),
+								this.getText("directorio.server.layouts")+"/"+nombreCenso
+						    )
+							&&FTPSUtils.upload
+							(
+								this.getText("dominio.server.layouts2"),
+								this.getText("user.server.layouts"),
+								this.getText("pass.server.layouts"),
+								archivoTxt.getAbsolutePath(),
+								this.getText("directorio.server.layouts")+"/"+nombreCenso
+							);
 					
 					if(!exito)
 					{
@@ -5750,12 +5760,22 @@ public class CotizacionAction extends PrincipalCoreAction
 					
 					if(exito)
 					{
-						exito = FTPSUtils.upload(
-								this.getText("dominio.server.layouts"),
-								this.getText("user.server.layouts"),
-								this.getText("pass.server.layouts"),
-								archivoTxt.getAbsolutePath(),
-								this.getText("directorio.server.layouts")+"/"+nombreCenso);
+						exito = FTPSUtils.upload
+								(
+									this.getText("dominio.server.layouts"),
+									this.getText("user.server.layouts"),
+									this.getText("pass.server.layouts"),
+									archivoTxt.getAbsolutePath(),
+									this.getText("directorio.server.layouts")+"/"+nombreCenso
+								)
+								&&FTPSUtils.upload
+								(
+									this.getText("dominio.server.layouts2"),
+									this.getText("user.server.layouts"),
+									this.getText("pass.server.layouts"),
+									archivoTxt.getAbsolutePath(),
+									this.getText("directorio.server.layouts")+"/"+nombreCenso
+								);
 						
 						if(!exito)
 						{

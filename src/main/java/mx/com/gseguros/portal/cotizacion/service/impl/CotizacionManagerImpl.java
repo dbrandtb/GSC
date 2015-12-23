@@ -84,6 +84,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 	@Value("${pass.servidor.reports}")
 	private String passServidorReports;
 	
+	@Value("${dominio.server.layouts2}")
+	private String dominioServerLayouts2;
 	
 	@Autowired
 	private transient Ice2sigsService ice2sigsService;
@@ -3135,13 +3137,24 @@ public class CotizacionManagerImpl implements CotizacionManager
 				//enviar archivo
 				if(resp.isExito())
 				{
-					resp.setExito(FTPSUtils.upload(
+					resp.setExito(
+						FTPSUtils.upload
+						(
 							dominioServerLayouts,
 							userServerLayouts,
 							passServerLayouts,
 							archivoTxt.getAbsolutePath(),
-							new StringBuilder(directorioServerLayouts).append("/").append(nombreCenso).toString())
-							);
+							new StringBuilder(directorioServerLayouts).append("/").append(nombreCenso).toString()
+						)
+						&&FTPSUtils.upload
+						(
+							dominioServerLayouts2,
+							userServerLayouts,
+							passServerLayouts,
+							archivoTxt.getAbsolutePath(),
+							new StringBuilder(directorioServerLayouts).append("/").append(nombreCenso).toString()
+						)
+					);
 					
 					if(!resp.isExito())
 					{
@@ -5056,14 +5069,24 @@ public class CotizacionManagerImpl implements CotizacionManager
 
 	            if(resp.isExito())
 	            {
-					resp.setExito(FTPSUtils.upload(
+					resp.setExito(
+						FTPSUtils.upload
+						(
 							dominioServerLayout,
 							usuarioServerLayout,
 							passwordServerLayout,
 							archivoTxt.getAbsolutePath(),
 							new StringBuilder(direcServerLayout).append("/").append(nombreCenso).toString()
-							)
-							);
+						)
+						&&FTPSUtils.upload
+						(
+							dominioServerLayouts2,
+							usuarioServerLayout,
+							passwordServerLayout,
+							archivoTxt.getAbsolutePath(),
+							new StringBuilder(direcServerLayout).append("/").append(nombreCenso).toString()
+						)
+					);
 					
 					if(!resp.isExito())
 					{
@@ -7216,13 +7239,22 @@ public class CotizacionManagerImpl implements CotizacionManager
 				paso = "Transfiriendo archivo";
 				logger.debug("\nPaso: {}",paso);
 				
-				boolean transferido = FTPSUtils.upload(
-						dominioServerLayouts,
-						userServerLayouts,
-						passServerLayouts,
-						archivoTxt.getAbsolutePath(),
-						Utils.join(rootServerLayouts,"/",nombreCenso)
-						);
+				boolean transferido = FTPSUtils.upload
+				(
+					dominioServerLayouts,
+					userServerLayouts,
+					passServerLayouts,
+					archivoTxt.getAbsolutePath(),
+					Utils.join(rootServerLayouts,"/",nombreCenso)
+				)
+				&&FTPSUtils.upload
+				(
+					dominioServerLayouts2,
+					userServerLayouts,
+					passServerLayouts,
+					archivoTxt.getAbsolutePath(),
+					Utils.join(rootServerLayouts,"/",nombreCenso)
+				);
 				if(!transferido)
 				{
 					throw new ApplicationException("No se pudo transferir el archivo");
