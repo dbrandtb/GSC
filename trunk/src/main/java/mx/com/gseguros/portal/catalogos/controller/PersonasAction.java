@@ -464,6 +464,206 @@ public class PersonasAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	/**
+	 * Importa Persona/Cliente Externo de Salud o Danios 
+	 * @return SUCCESS
+	 */
+	public String importaPersonaExtWSNoSicaps()
+	{
+		logger.info(
+				"\n###########################################"
+				+ "\n###### importaPersonaExtWSNoSicaps ######"
+				+ "\n params: "+params
+				);
+		try
+		{
+			logger.debug("...Busqueda de Persona en WS...");
+			String saludDanios = params.get("esSalud");
+			
+			ClienteGeneral clienteGeneral = new ClienteGeneral();
+			clienteGeneral.setClaveCia(saludDanios);
+			clienteGeneral.setNumeroExterno(params.get("codigoCliExt"));
+			
+			ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
+			
+			if(clientesRes == null || (Estatus.EXITO.getCodigo() != clientesRes.getCodigo())){
+				
+				logger.debug("Error en WS, exito false");
+				exito           = false;
+				respuesta       = "No se encontr� ninguna persona al Importar. Consulte a soporte, ext. 8050";
+				respuestaOculta = "No se encontr� ninguna persona al Importar. Consulte a soporte, ext. 8050";
+				slist1          = null;
+				
+				return SUCCESS;
+			}else{
+				exito = true;
+			}
+			
+			ClienteGeneral[] listaClientesGS = clientesRes.getClientesGeneral();
+			
+			if(listaClientesGS != null && listaClientesGS.length == 1 ){
+				logger.debug("Importando Persona de GS ");
+				
+				ClienteGeneral cliImport = listaClientesGS[0];
+				
+				//Validamos si ya existe el registro 
+				logger.debug("VALOR cliImport getNumeroExterno ===>"+cliImport.getNumeroExterno());
+				String validarAsegurado = personasManager.validaExisteAseguradoSicaps(cliImport.getNumeroExterno());
+				logger.debug("Validamos si existe ====> "+validarAsegurado);
+				if(Integer.parseInt(validarAsegurado) > 0){
+					params.put("cdpersonNuevo", validarAsegurado);
+					exito                = true;
+					respuesta            = "Ya existe un asegurado por lo que no se actualiza";
+					respuestaOculta      = "Ya existe un asegurado por lo que no se actualiza";
+				}else{
+					String apellidoPat = "";
+			    	if(StringUtils.isNotBlank(cliImport.getApellidopCli()) && !cliImport.getApellidopCli().trim().equalsIgnoreCase("null")){
+			    		apellidoPat = cliImport.getApellidopCli();
+			    	}
+			    	
+			    	String apellidoMat = "";
+			    	if(StringUtils.isNotBlank(cliImport.getApellidomCli()) && !cliImport.getApellidomCli().trim().equalsIgnoreCase("null")){
+			    		apellidoMat = cliImport.getApellidomCli();
+			    	}
+			    	
+		    		Calendar calendar =  Calendar.getInstance();
+		    		
+		    		String sexo = "H"; //Hombre
+			    	if(cliImport.getSexoCli() > 0){
+			    		if(cliImport.getSexoCli() == 2) sexo = "M";
+			    	}
+			    	
+			    	String tipoPersona = "F"; //Fisica
+			    	if(cliImport.getFismorCli() > 0){
+			    		if(cliImport.getFismorCli() == 2){
+			    			tipoPersona = "M";
+			    		}else if(cliImport.getFismorCli() == 3){
+			    			tipoPersona = "S";
+			    		}
+			    	}
+			    	
+			    	String nacionalidad = "001";// Nacional
+			    	if(StringUtils.isNotBlank(cliImport.getNacCli()) && !cliImport.getNacCli().equalsIgnoreCase("1")){
+			    		nacionalidad = "002";
+			    	}
+			    	
+			    	
+			    	if(cliImport.getFecnacCli()!= null){
+			    		calendar.set(cliImport.getFecnacCli().get(Calendar.YEAR), cliImport.getFecnacCli().get(Calendar.MONTH), cliImport.getFecnacCli().get(Calendar.DAY_OF_MONTH));
+			    	}
+			    	
+			    	Calendar calendarIngreso =  Calendar.getInstance();
+			    	if(cliImport.getFecaltaCli() != null){
+			    		calendarIngreso.set(cliImport.getFecaltaCli().get(Calendar.YEAR), cliImport.getFecaltaCli().get(Calendar.MONTH), cliImport.getFecaltaCli().get(Calendar.DAY_OF_MONTH));
+			    	}
+					
+			    	String edoAdosPos2 = Integer.toString(cliImport.getEstadoCli());
+	    			if(edoAdosPos2.length() ==  1){
+	    				edoAdosPos2 = "0"+edoAdosPos2;
+	    			}
+	    			
+	    			long timestamp=System.currentTimeMillis();
+	    			
+	    			logger.debug("Canal de Ingreso:" + cliImport.getCanconCli());
+	    			
+	    			params.put("pv_cdpostal_i", cliImport.getCodposCli());
+	    			params.put("pv_cdedo_i",    edoAdosPos2);
+	    			params.put("pv_dsmunici_i", cliImport.getMunicipioCli());
+	    			params.put("pv_dscoloni_i", cliImport.getColoniaCli());
+	    			
+	    			Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(params);
+	    			
+	    			Map<String,Object>managerResult = personasManager.guardarPantallaPersonas(null,//cdperson
+							"1",//cdidepe
+							"S".equalsIgnoreCase(saludDanios)? null : cliImport.getNumeroExterno(),
+							(cliImport.getFismorCli() == 1) ? cliImport.getNombreCli() : cliImport.getRazSoc(),
+							"1",//cdtipper
+							tipoPersona, sexo, calendar.getTime(), cliImport.getRfcCli(), cliImport.getMailCli()
+							,null //segundo nombre
+							,apellidoPat
+							,apellidoMat
+							,calendarIngreso.getTime()
+							,nacionalidad
+							,cliImport.getCanconCli() <= 0 ? "0" : (Integer.toString(cliImport.getCanconCli()))// canaling
+							,null// conducto
+							,null// ptcumupr
+							,null// residencia
+							,null// nongrata
+							/**
+	                		 * 
+	                		 * SE PONE EL CDIDEEXT EN BLANCO POR PETICION DE ARGENIS POR PROBLEMAS DE SUCURSAL CON EL CLIENTE
+	                		 * SE MANDAN A CREAR NUEVOS CLIENTES.
+	                		 * 
+	                		 * Codigo Original:
+	                		 * "S".equalsIgnoreCase(saludDanios)? cliImport.getNumeroExterno() : null 
+	                		 * 
+	                		 **/
+							,null//"S".equalsIgnoreCase(saludDanios)? cliImport.getNumeroExterno() : null
+							,cliImport.getEdocivilCli()<=0 ?"0" : Integer.toString(cliImport.getEdocivilCli())
+							,Integer.toString(cliImport.getSucursalCli())
+							,"1"//nmorddom
+							,cliImport.getCalleCli()
+							,cliImport.getTelefonoCli()
+							,cliImport.getCodposCli()
+							,cliImport.getCodposCli()+edoAdosPos2
+							,munycol.get("CDMUNICI")//minicipio
+							,munycol.get("CDCOLONI")//colonia
+							,cliImport.getNumeroCli()
+							,null//numero int
+							,false
+							,timestamp);
+					
+					
+					exito                = (Boolean)managerResult.get("exito");
+					String cdpersonNuevo = (String)managerResult.get("cdpersonNuevo");
+					params.put("cdperson", cdpersonNuevo);
+					params.put("codigoExterno", cliImport.getNumeroExterno());
+
+					params.put("coloniaImp",    StringUtils.isBlank(munycol.get("CDCOLONI")) && StringUtils.isNotBlank(cliImport.getColoniaCli())   ? cliImport.getColoniaCli()  : "");
+					params.put("municipioImp" , StringUtils.isBlank(munycol.get("CDMUNICI")) && StringUtils.isNotBlank(cliImport.getMunicipioCli()) ? cliImport.getMunicipioCli(): "");
+					
+					if(exito){
+						managerResult=personasManager.guardarDatosTvaloper(
+								cdpersonNuevo, "1", cliImport.getCveEle(),cliImport.getPasaporteCli(),null,null,null,null,null
+								,cliImport.getOrirecCli(),null,null,cliImport.getNacCli(),null,null,null,null,null,null
+								,null,null,(cliImport.getOcuPro() > 0) ? Integer.toString(cliImport.getOcuPro()) : "0"
+								,null,null,null,null,cliImport.getCurpCli(),null,null,null,null,null,null,null,null,null
+								,null,null,null,null,cliImport.getMailCli(),null,null,null,null,null,null,null,null,null
+								,null,null,timestamp);
+						
+						exito                = (Boolean)managerResult.get("exito");
+						respuesta            = (String)managerResult.get("respuesta");
+						respuestaOculta      = (String)managerResult.get("respuestaOculta");
+						
+					}
+				}
+				
+			}else {
+				logger.debug("No se encontro coincidencia con el WS o hay mas de una.");
+				if(listaClientesGS == null){
+					logger.debug("Lista de Clientes es nula");	
+				}else{
+					logger.debug("Tamanio de la Lista de Clientes: " + listaClientesGS.length);
+				}
+				exito           = false;
+				respuesta       = "Error al importar persona externa en la edicion.";
+				respuestaOculta = "Error al importar persona externa en la edicion.";
+			}
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error inesperado al importar persona por WS",ex);
+			exito           = false;
+			respuesta       = "Error inesperado";
+			respuestaOculta = ex.getMessage();
+		}
+		logger.info(
+				"\n###### importaPersonaExtWSNoSicaps ######"
+				+ "\n#######################################"
+				);
+		return SUCCESS;
+	}
+	
 	
 	public String obtenerPersonaPorCdperson()
 	{

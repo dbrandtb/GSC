@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.catalogos.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -271,6 +272,8 @@ public class PersonaAction extends PrincipalCoreAction
 			String respuesta[] = message.split("\\|");
 			
 			if(respuesta[0].toString().equalsIgnoreCase("1")){
+				Formatter fmt = new Formatter();
+				String claveExterna = "D"+String.format("%04d",Integer.parseInt(params.get("sucursal")))+""+String.format("%010d",Integer.parseInt(respuesta[1].toString()));
 				List<Map<String, String>> loadList = new ArrayList<Map<String,String>>();
 				HashMap<String,String>map=new HashMap<String,String>();
 				map.put("CVECLIENSIGS",respuesta[1].toString());
@@ -316,6 +319,7 @@ public class PersonaAction extends PrincipalCoreAction
 				map.put("FECALTA",respuesta[41].toString());
 				map.put("FECHACTUALIZACION",respuesta[42].toString());
 				map.put("ESTATUCLIENTE",respuesta[43].toString());
+				map.put("CVEEXTERNA", claveExterna);
 				loadList.add(map);
 			list =loadList; 	
 			success = true;

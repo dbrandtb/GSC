@@ -609,6 +609,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		smap1.put("pv_estado", smap1.get("ESTADO"));
 		smap1.put("pv_nmpoliza", smap1.get("NMPOLIZA"));
 		smap1.put("pv_cdperson", smap1.get("CDPERSON"));
+		smap1.put("tipoPantalla", "0");
 		smap1.put("FEINIVAL", null);
 		smap1.put("cdtipsup",TipoEndoso.REHABILITACION_NOMBRE_RFC_FENAC.getCdTipSup().toString());
 		
@@ -624,6 +625,29 @@ public class EndososAutoAction extends PrincipalCoreAction
 		.append("\n###### endosoClientes  ######")
 		.append("\n#############################")
 		.append("\n#############################").toString());
+		
+		return SUCCESS;
+	}
+	
+	public String endososPolizasNoSicaps()
+	{
+		//List<Map<String, String>> loadList = new ArrayList<Map<String,String>>();
+		HashMap<String,String>smap=new HashMap<String,String>();
+		smap.put("cdtipsup",TipoEndoso.REHABILITACION_NOMBRE_RFC_FENAC.getCdTipSup().toString());
+		smap.put("tipoPantalla","1");
+		smap1 = smap;
+		logger.debug(new StringBuilder()
+		.append("\n#####################################")
+		.append("\n#####################################")
+		.append("\n###### endososPolizasNoSicaps  ######")
+		.append("\n######                         ######").toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("session: ").append(session).toString());		
+		logger.debug(new StringBuilder()
+		.append("\n######                         ######")
+		.append("\n###### endososPolizasNoSicaps  ######")
+		.append("\n#####################################")
+		.append("\n#####################################").toString());
 		
 		return SUCCESS;
 	}
@@ -2368,7 +2392,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	public String guardarEndosoNombreRFCFecha() {
         
 	logger.debug(Utils.log(
-			"\n#########################################"
+			"\n##########################################"
 			,"\n#########################################"
 			,"\n###### guardarEndosoNombreRFCFecha ######"
 			,"\n###### smap1="  , smap1
@@ -2378,85 +2402,77 @@ public class EndososAutoAction extends PrincipalCoreAction
 		logger.debug("Validando datos de entrada");
 		Utils.validate(smap1, "No se recibieron datos");
 		
-		String cdunieco = smap1.get("cdunieco");
-		String cdramo   = smap1.get("cdramo");
-		String estado   = smap1.get("estado");
-		String nmpoliza = smap1.get("nmpoliza");
-		String cdperson = smap1.get("cdperson");
-		String cdtipide = smap1.get("cdtipide");
-		String cdideper = smap1.get("cdideper");
-		String dsnombre = smap1.get("dsnombre");
-		String cdtipper = smap1.get("cdtipper");
-		String otfisjur = smap1.get("otfisjur");
-		String otsexo = smap1.get("otsexo");
-		String fenacimi = smap1.get("fenacimi");
-		String cdrfc = smap1.get("cdrfc");
-		String dsemail = smap1.get("dsemail");
-		String dsnombre1 = smap1.get("dsnombre1");
-		String dsapellido = smap1.get("dsapellido");
-		String dsapellido1 = smap1.get("dsapellido1");
-		String feingreso = smap1.get("feingreso");
-		String cdnacion = smap1.get("cdnacion");
-		String canaling = smap1.get("canaling");
-		String conducto = smap1.get("conducto");
-		String ptcumupr = smap1.get("ptcumupr");
-		String residencia = smap1.get("residencia");
-		String nongrata = smap1.get("nongrata");
-		String cdideext = smap1.get("cdideext");
-		String cdestciv = smap1.get("cdestciv");
-		String cdsucemi = smap1.get("cdsucemi");
 		
-		Utils.validate(cdunieco , "No se recibio la sucursal");
-		Utils.validate(cdramo   , "No se recibio el producto");
-		Utils.validate(estado   , "No se recibio el estado de la poliza");
-		Utils.validate(nmpoliza , "No se recibio el numero de poliza");
-		Utils.validate(session                , "No hay sesion");
-		Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+		String tipoPantalla = smap1.get("tipoPantalla");
+		String codigoCliExt = smap1.get("codigoCliExterno");
+		String sucursalEnt  = smap1.get("sucursalEntrada");
+		String ramoEntrada  = smap1.get("ramoEntrada");
+		String polizaEnt    = smap1.get("polizaEntrada");
+		String cdpersonNew  = smap1.get("cdpersonNuevo");
+		String dsnombreComp = smap1.get("dsnombreComp");
 		
-		String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
-		String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
-		String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
-		String cdtipsup = TipoEndoso.REHABILITACION_NOMBRE_RFC_FENAC.getCdTipSup().toString();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		String fechaEndoso = sdf.format(new Date());
+		String cdunieco     = smap1.get("cdunieco");
+		String cdramo       = smap1.get("cdramo");
+		String estado       = smap1.get("estado");
+		String nmpoliza     = smap1.get("nmpoliza");
+		String cdperson     = smap1.get("cdperson");
+		String cdtipide     = smap1.get("cdtipide");
+		String cdideper     = smap1.get("cdideper");
+		String dsnombre     = smap1.get("dsnombre");
+		String cdtipper     = smap1.get("cdtipper");
+		String otfisjur     = smap1.get("otfisjur");
+		String otsexo       = smap1.get("otsexo");
+		String fenacimi     = smap1.get("fenacimi");
+		String cdrfc        = smap1.get("cdrfc");
+		String dsemail      = smap1.get("dsemail");
+		String dsnombre1    = smap1.get("dsnombre1");
+		String dsapellido   = smap1.get("dsapellido");
+		String dsapellido1  = smap1.get("dsapellido1");
+		String feingreso    = smap1.get("feingreso");
+		String cdnacion     = smap1.get("cdnacion");
+		String canaling     = smap1.get("canaling");
+		String conducto     = smap1.get("conducto");
+		String ptcumupr     = smap1.get("ptcumupr");
+		String residencia   = smap1.get("residencia");
+		String nongrata     = smap1.get("nongrata");
+		String cdideext     = smap1.get("cdideext");
+		String cdestciv     = smap1.get("cdestciv");
+		String cdsucemi     = smap1.get("cdsucemi");
+		String cdusuari     = ((UserVO)session.get("USUARIO")).getUser();
+		String cdsisrol     = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+		String cdelemen     = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
+		String cdtipsup     = TipoEndoso.REHABILITACION_NOMBRE_RFC_FENAC.getCdTipSup().toString();
+		SimpleDateFormat sdf= new SimpleDateFormat("dd/MM/yyyy");
+		String fechaEndoso  = sdf.format(new Date());
 		Date   dFechaEndoso = renderFechas.parse(fechaEndoso);
+		
+		Utils.validate(tipoPantalla   , "No se recibio el origen del llamado");
+		
+		if(tipoPantalla.equalsIgnoreCase("0")){
+			Utils.validate(cdunieco , "No se recibio la sucursal");
+			Utils.validate(cdramo   , "No se recibio el producto");
+			Utils.validate(estado   , "No se recibio el estado de la poliza");
+			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
+			Utils.validate(session                , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+		}else{
+			Utils.validate(codigoCliExt , "No se recibio el codigo de cliente externo");
+			Utils.validate(sucursalEnt  , "No se recibio la sucursal");
+			Utils.validate(ramoEntrada  , "No se recibio el producto");
+			Utils.validate(polizaEnt    , "No se recibio el numero de poliza");
+			Utils.validate(cdpersonNew  , "No se recibio el asegurado");
+		}
+
 
 		String fenacimientoM= fenacimi.substring(8,10)+"/"+fenacimi.substring(5,7)+"/"+fenacimi.substring(0,4);
 		endososAutoManager.guardarEndosoNombreRFCFecha(
-				cdunieco,
-				cdramo,
-				estado,
-				nmpoliza,
-				cdperson,
-				cdtipide,
-				cdideper,
-				dsnombre,
-				cdtipper,
-				otfisjur,
-				otsexo,
-				renderFechas.parse(fenacimientoM),
-				cdrfc,
-				dsemail,
-				dsnombre1,
-				dsapellido,
-				dsapellido1,
-				feingreso,
-				cdnacion,
-				canaling,
-				conducto,
-				ptcumupr,
-				residencia,
-				nongrata,
-				cdideext,
-				cdestciv,
-				cdsucemi,
-				cdusuari,
-				cdsisrol,
-				cdelemen,
-				cdtipsup,
-				fechaEndoso,
-				dFechaEndoso
-				);
+				cdunieco,		cdramo,			estado,			nmpoliza,		cdperson,							cdtipide,			cdideper,
+				dsnombre,		cdtipper,		otfisjur,		otsexo,			renderFechas.parse(fenacimientoM),	cdrfc,				dsemail,
+				dsnombre1,		dsapellido,		dsapellido1,	feingreso,		cdnacion,							canaling,			conducto,
+				ptcumupr,		residencia,		nongrata,		cdideext,		cdestciv,							cdsucemi,			cdusuari,
+				cdsisrol,		cdelemen,		cdtipsup,		fechaEndoso,	dFechaEndoso,						tipoPantalla,		codigoCliExt,
+				sucursalEnt,	ramoEntrada,	polizaEnt,		cdpersonNew,	dsnombreComp
+		);
 		
 		respuesta = "Endoso generado correctamente";
 		success   = true;
