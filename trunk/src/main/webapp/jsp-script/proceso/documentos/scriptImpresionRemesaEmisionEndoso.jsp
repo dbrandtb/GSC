@@ -228,6 +228,11 @@ function _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback,ma
         manejaException(e,ck);
     }
 }
+
+function _generarRemesaClic2(required,cdunieco,cdramo,estado,nmpoliza,callback,marcar)
+{
+	
+}
 ////// funciones //////
 <s:if test="false">
 </script>
