@@ -144,6 +144,10 @@
                 <param name="smap1.cargaTipoPersona">${params.cargaTipoPersona}</param>
                 <param name="smap1.modoRecuperaDanios">${params.modoRecuperaDanios}</param>
 		    </result>
+		    <result name="endosoPolizasNoSICAPS" type="redirectAction">
+                <param name="namespace">/endosos</param>
+                <param name="actionName">polizasNoSICAPS</param>
+            </result>
 		    <result name="endososAutos" type="redirectAction">
                 <param name="namespace">/endosos</param>
                 <param name="actionName">marcoEndosos</param>
