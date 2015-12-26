@@ -2695,7 +2695,7 @@ function validaRFC(tipoPersona, nombre, nombre2, apaterno, amaterno, fecha, rfc)
                 return false;
             }
         } else {
-            throw 'Error en la validacion, tipo de persona invalido';
+            throw 'Error en la validacion, tipo de persona invalido: ' + tipoPersona;
         }
         return true;
     } catch(e) {
