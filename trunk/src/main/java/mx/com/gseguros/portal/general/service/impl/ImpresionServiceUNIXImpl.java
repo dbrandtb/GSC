@@ -60,13 +60,13 @@ public class ImpresionServiceUNIXImpl implements ImpresionService {
 	    // execute the command
 	    SystemCommandExecutor commandExecutor = new SystemCommandExecutor(commands);
 	    int result = commandExecutor.executeCommand();
+	    logger.debug("Resultado numerico del comando {} : {}", sbComando, result);
 
 	    // get the stdout and stderr from the command that was run
 	    StringBuilder stdout = commandExecutor.getStandardOutputFromCommand();
 	    StringBuilder stderr = commandExecutor.getStandardErrorFromCommand();
 	    
 	    // print the stdout and stderr:
-	    logger.debug("Resultado numerico del comando {} : {}", sbComando, result);
 	    logger.debug("STDOUT:");
 	    logger.debug(stdout.toString());
 	    logger.debug("STDERR:");
