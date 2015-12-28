@@ -1554,6 +1554,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			String nmpoliza = slist1.get(0).get("nmpoliza");
 			String feini    = slist1.get(0).get("feini");
 			String fefin    = slist1.get(0).get("fefin");
+			String fesolici = slist1.get(0).get("FESOLICI");
 			
 			String cdpersonCli = smap1.get("cdpersonCli");
 			String cdideperCli = smap1.get("cdideperCli");
@@ -1583,6 +1584,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,nmpoliza
 					,feini
 					,fefin
+					,fesolici
 					,cdpersonCli
 					,cdideperCli
 					,noTarificar
