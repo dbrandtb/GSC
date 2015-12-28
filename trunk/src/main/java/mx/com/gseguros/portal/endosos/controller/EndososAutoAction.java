@@ -2460,7 +2460,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(sucursalEnt  , "No se recibio la sucursal");
 			Utils.validate(ramoEntrada  , "No se recibio el producto");
 			Utils.validate(polizaEnt    , "No se recibio el numero de poliza");
-			Utils.validate(cdpersonNew  , "No se recibio el asegurado");
+			//Utils.validate(cdpersonNew  , "No se recibio el asegurado");
 		}
 
 
