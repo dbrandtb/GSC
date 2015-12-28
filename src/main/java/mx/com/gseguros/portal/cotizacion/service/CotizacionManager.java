@@ -435,6 +435,7 @@ public interface CotizacionManager
 			,String nmpoliza
 			,String feini
 			,String fefin
+			,String fesolici
 			,String cdpersonCli
 			,String cdideperCli
 			,boolean noTarificar
