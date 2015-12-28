@@ -103,11 +103,11 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 			ManagerRespuestaSlistSmapVO resp = cotizacionManager.cotizar(
 					params.get("cdunieco"), params.get("cdramo"), params.get("cdtipsit"), 
 					params.get("username"), params.get("cdelemento"),
-					nmpoliza, feini, fefin, params.get("cdpersonCli"), params.get("cdideperCli"),
+					nmpoliza, feini, fefin, null, params.get("cdpersonCli"), params.get("cdideperCli"),
 					noTarificar, conIncisos, list, params.containsKey("movil"),
 					tvalopol, params.get("cdagenteAux"));
 			
-			// Se vacían los datos de entrada para no devolverlos de nuevo:
+			// Se vacï¿½an los datos de entrada para no devolverlos de nuevo:
 			params = new HashMap<String, String>();
 			list   = new ArrayList<Map<String,String>>();
 			
@@ -273,7 +273,7 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 					,tvalopol
 					);
 			
-			// Se vacían los datos de entrada para no devolverlos de nuevo:
+			// Se vacï¿½an los datos de entrada para no devolverlos de nuevo:
 			params             = new HashMap<String, String>();
 			list               = new ArrayList<Map<String,String>>();
 			listaValoresSituac = new ArrayList<Map<String,String>>();
