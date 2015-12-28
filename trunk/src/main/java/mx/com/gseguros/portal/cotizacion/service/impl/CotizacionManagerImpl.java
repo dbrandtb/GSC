@@ -5569,6 +5569,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String nmpoliza
 			,String feini
 			,String fefin
+			,String fesolici
 			,String cdpersonCli
 			,String cdideperCli
 			,boolean noTarificar
@@ -5590,6 +5591,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     			,"\n@@@@@@ nmpoliza="    , nmpoliza
     			,"\n@@@@@@ feini="       , feini
     			,"\n@@@@@@ fefin="       , fefin
+    			,"\n@@@@@@ fesolici="    , fesolici
     			,"\n@@@@@@ cdpersonCli=" , cdpersonCli
     			,"\n@@@@@@ cdideperCli=" , cdideperCli
     			,"\n@@@@@@ noTarificar=" , noTarificar
@@ -5635,6 +5637,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 				////// si no hay nmpoliza //////
 				////////////////////////////////
 				
+				////// para incluir fesolici //////
+				if(StringUtils.isBlank(fesolici))
+				{
+					fesolici = renderFechas.format(fechaHoy);
+				}
+				////// para incluir fesolici //////
+				
 				//////////////////////
 	            ////// mpolizas //////
 				paso = "Insertando maestro de p\u00F3liza";
@@ -5674,7 +5683,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 						,"S"      //swconsol
 						,null     //nmpolant
 						,null     //nmpolnva
-						,renderFechas.format(fechaHoy) //fesolici
+						,fesolici
 						,StringUtils.isNotBlank(cdagente)?cdagente:cdusuari//cdramant
 						,null     //cdmejred
 						,null     //nmpoldoc
