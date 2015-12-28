@@ -8,6 +8,7 @@
 	var _CATALOGO_SUCURSALES			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
 	var _35_urlGuardar     				= '<s:url namespace="/endosos" action="guardarEndosoNombreRFCFecha"       />';
 	var _UrlImportaPersonaWS 			= '<s:url namespace="/catalogos" action="importaPersonaExtWSNoSicaps" />';
+	var _actualiza_pantalla				= '<s:url namespace="/endosos" action="polizasNoSICAPS"       />'; 
 	debug('clienteSeleccionado  ===>:',clienteSeleccionado);
 	var _35_panelPri;
 	var cdpersonNuevo;
@@ -123,10 +124,18 @@
                   					var desTipoPersona = null;
                       				if(json.list[0].TIPERSONA =="1"){
                       					desTipoPersona = "FISICA"
+                      					datosContratante.down('[name=dsapellido]').allowBlank =false;
+                      					datosContratante.down('[name=dsapellido1]').allowBlank =false;
+                      					
+                      					
                       				}else if(json.list[0].TIPERSONA =="2"){
                       					desTipoPersona = "MORAL"
+                      					datosContratante.down('[name=dsapellido]').allowBlank =true;
+                      					datosContratante.down('[name=dsapellido1]').allowBlank =true;
                       				}else{
                       					desTipoPersona = "SIMPLIFICADO"
+                      					datosContratante.down('[name=dsapellido]').allowBlank =true;
+                      					datosContratante.down('[name=dsapellido1]').allowBlank =true;
                       				}
                       				
                       				storeListadoAsegurado.removeAll();
@@ -219,10 +228,10 @@
 				    ,width		 : 400,					allowBlank	: (pantallaPrincipal =="0"),							hidden : (pantallaPrincipal =="0")
 				},
 				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Apellido Paterno',			name       : 'dsapellido'
-				    ,width		 : 400,					allowBlank	: false
+				    ,width		 : 400,					allowBlank	: true
 				},
 				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Apellido Materno',			name       : 'dsapellido1'
-				    ,width		 : 400,					allowBlank	: false
+				    ,width		 : 400,					allowBlank	: true
 				},
 				{	xtype		: 'datefield',			labelWidth: 150,		fieldLabel	: 'Fecha nacimiento',			name	   : 'fenacini'
 					,format		: 'd/m/Y',				allowBlank	: false
@@ -333,6 +342,11 @@
 			   						      	         ,panelInicialPral.down('[name=nmPoliza]').getValue()
 			   						      	         ,callbackRemesa
 		   						      	     );
+	   						      			Ext.create('Ext.form.Panel').submit(
+   											{
+   												url		: _actualiza_pantalla
+   												,standardSubmit : true
+   											});
 	   						      		}else{
 	   						      		debug("Entra a la opcion 2");
 	   						      			_generarRemesaClic(
@@ -382,10 +396,16 @@
 			var desTipoPersona = null;
 				if(clienteSeleccionado.OTFISJUR =="F"){
 					desTipoPersona = "FISICA"
+					
 				}else if(clienteSeleccionado.OTFISJUR =="M"){
 					desTipoPersona = "MORAL"
+					datosContratante.down('[name=dsapellido]').allowBlank =true;
+					datosContratante.down('[name=dsapellido1]').allowBlank =true;
+					
 				}else{
 					desTipoPersona = "SIMPLIFICADO"
+					datosContratante.down('[name=dsapellido]').allowBlank =true;
+					datosContratante.down('[name=dsapellido1]').allowBlank =true;
 				}
 			
 			var rec = new modelListadoAsegurado({
