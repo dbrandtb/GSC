@@ -2625,11 +2625,12 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								}
 								
 								if(aplicaIVA.equalsIgnoreCase("S")){
-									if(seleccionAplica.equalsIgnoreCase("D")){
+									importesWSSiniestroIte.put(IMPORTE_WS_IMPORTE , (new Double(subttcopagototalSiniestroIte)).toString());
+									/*if(seleccionAplica.equalsIgnoreCase("D")){
 										importesWSSiniestroIte.put(IMPORTE_WS_IMPORTE , (new Double(subttcopagototalSiniestroIte)).toString());
 									}else{
 										importesWSSiniestroIte.put(IMPORTE_WS_IMPORTE , (new Double(subttDescuentoSiniestroIte)).toString());
-									}
+									}*/
 									if(ivaRetenido.equalsIgnoreCase("S")){
 										importesWSSiniestroIte.put(IMPORTE_WS_IVR     , (new Double(ivrSiniestroIte)    ).toString());
 									}else{
@@ -2650,6 +2651,22 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						facturaObj.put("siniestroPD", aseguradosxSiniestro);
 				}
 			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			/***************************** 		P A G O		R E E M B O L S O 		*************************/
 			else if(TipoPago.REEMBOLSO.getCodigo().equals(tramite.get("OTVALOR02"))){//TIPO DE PAGO POR REEMBOLSO
 				logger.debug("Paso 5.- EL PROCESO DE PAGO REEMBOLSO ");
