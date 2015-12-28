@@ -366,13 +366,13 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 	    logger.debug("Antes de ejecutar comando {}", params.get("comando"));
 	    int result = commandExecutor.executeCommand();
 		logger.debug("Despues de ejecutar comando {}", params.get("comando"));
+		logger.debug("The numeric result of the command was: " + result);
 
 	    // get the stdout and stderr from the command that was run
 	    StringBuilder stdout = commandExecutor.getStandardOutputFromCommand();
 	    StringBuilder stderr = commandExecutor.getStandardErrorFromCommand();
 	    
 	    // print the stdout and stderr
-	    logger.debug("The numeric result of the command was: " + result);
 	    logger.debug("STDOUT:");
 	    logger.debug(stdout.toString());
 	    logger.debug("STDERR:");
