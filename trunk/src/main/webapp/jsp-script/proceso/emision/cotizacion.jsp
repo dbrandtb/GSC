@@ -961,6 +961,7 @@ function _0_cargar()
                             }
                             debug('store:',_0_storeIncisos);
                             var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
+                            primerInciso.set('FESOLICI',json.smap1.FESOLICI);
                             if(_0_smap1.cdramo=='6')
                             {
                                 primerInciso.set('parametros.pv_otvalor24','S');
@@ -1814,7 +1815,7 @@ Ext.onReady(function()
         extend  : 'Ext.data.Model'
         ,fields :
         [
-            <s:property value="imap.fieldsAgrupados"/>
+            <s:property value="imap.fieldsAgrupados"/>,'FESOLICI'
         ]
     });
     /*/////////////////*/
@@ -1963,6 +1964,15 @@ Ext.onReady(function()
     			    _0_fieldNtramite
     			    ,_0_fieldNmpoliza
     			    ,<s:property value="imap.camposAgrupados"/>
+    			    ,{
+                        name        : 'FESOLICI'
+                        ,fieldLabel : 'FECHA DE SOLICITUD'
+                        ,xtype      : 'datefield'
+                        ,format     : 'd/m/Y'
+                        ,editable   : true
+                        ,allowBlank : false
+                        ,value      : new Date()
+                    }
     			    ,{
                         id          : 'fechaInicioVigencia'
                         ,name       : 'feini'
