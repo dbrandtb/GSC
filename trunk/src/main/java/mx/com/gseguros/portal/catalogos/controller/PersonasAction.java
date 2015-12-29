@@ -617,6 +617,7 @@ public class PersonasAction extends PrincipalCoreAction
 					exito                = (Boolean)managerResult.get("exito");
 					String cdpersonNuevo = (String)managerResult.get("cdpersonNuevo");
 					params.put("cdperson", cdpersonNuevo);
+					params.put("cdpersonNuevo", cdpersonNuevo);
 					params.put("codigoExterno", cliImport.getNumeroExterno());
 
 					params.put("coloniaImp",    StringUtils.isBlank(munycol.get("CDCOLONI")) && StringUtils.isNotBlank(cliImport.getColoniaCli())   ? cliImport.getColoniaCli()  : "");
