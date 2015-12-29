@@ -8,7 +8,6 @@
 	var _CATALOGO_SUCURSALES			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
 	var _35_urlGuardar     				= '<s:url namespace="/endosos" action="guardarEndosoNombreRFCFecha"       />';
 	var _UrlImportaPersonaWS 			= '<s:url namespace="/catalogos" action="importaPersonaExtWSNoSicaps" />';
-	var _actualiza_pantalla				= '<s:url namespace="/endosos" action="polizasNoSICAPS"       />'; 
 	debug('clienteSeleccionado  ===>:',clienteSeleccionado);
 	var _35_panelPri;
 	var cdpersonNuevo;
@@ -314,39 +313,52 @@
 	   						    success:function(response,opts){
 	   						    	 panelInicialPral.setLoading(false);
 	   						         var jsonResp = Ext.decode(response.responseText);
-	   						         
 	   						         var callbackRemesa = function(){
 	   						             marendNavegacion(2);
 	   						         };
 	   						         
 	   						         mensajeCorrecto("Endoso",jsonResp.respuesta,function(){
 	   						      		if(pantallaPrincipal =="1"){
-		   						      		cdpersonNuevo = 0;
-		   						     		codigoCliExterno = 0;
-		   						     		panelInicialPral.down('combo[name=cmbSucursal]').setValue('');
-		                  					panelInicialPral.down('[name=cveRamo]').setValue('');
-		                  					panelInicialPral.down('[name=nmPoliza]').setValue('');
-			   						     	datosContratante.down('[name=dsnombre]').setValue('');
-			   								datosContratante.down('[name=dsnombre1]').setValue('');
-			   								datosContratante.down('[name=dsnomCompleto]').setValue('');
-			   								datosContratante.down('[name=dsapellido]').setValue('');
-			   								datosContratante.down('[name=dsapellido1]').setValue('');
-			   								datosContratante.down('[name=fenacini]').setValue('');
-			   								datosContratante.down('[name=rfcContratante]').setValue('');
-			   								storeListadoAsegurado.removeAll();
-	   						      			_generarRemesaClic2(
-			   						      	         true
-			   						      	         ,panelInicialPral.down('combo[name=cmbSucursal]').getValue()
-			   						      	         ,panelInicialPral.down('[name=cveRamo]').getValue()
-			   						      	         ,'M'
-			   						      	         ,panelInicialPral.down('[name=nmPoliza]').getValue()
-			   						      	         ,callbackRemesa
-		   						      	     );
-	   						      			Ext.create('Ext.form.Panel').submit(
-   											{
-   												url		: _actualiza_pantalla
-   												,standardSubmit : true
-   											});
+	   						      			var numRand=Math.floor((Math.random()*100000)+1);	
+		   						      		var windowVerDocu=Ext.create('Ext.window.Window',
+											{
+												title          : 'ENDOSOS P&Oacute;LIZA NO SICAPS'
+												,width         : 700
+												,height        : 500
+												,collapsible   : true
+												,titleCollapse : true
+												,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+																	+'src= http://gswas.com.mx/ImpresionDesa/servlet/aendosob?'+panelInicialPral.down('combo[name=cmbSucursal]').getValue()
+																	+','+panelInicialPral.down('[name=cveRamo]').getValue()+','+panelInicialPral.down('[name=nmPoliza]').getValue()
+																	+',,0,'+jsonResp.smap2.numEndosoSIGS+',0>'
+																	+'</iframe>'
+												,listeners     :
+												{
+													resize : function(win,width,height,opt){
+														$('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+													},
+					   						      	close:function(){
+														if(true){
+															cdpersonNuevo = 0;
+						   						     		codigoCliExterno = 0;
+					   						      			_generarRemesaClic2(
+							   						      	         true
+							   						      	         ,panelInicialPral.down('combo[name=cmbSucursal]').getValue()
+							   						      	         ,panelInicialPral.down('[name=cveRamo]').getValue()
+							   						      	         ,'M'
+							   						      	         ,panelInicialPral.down('[name=nmPoliza]').getValue()
+							   						      	         ,callbackRemesa
+						   						      	     );
+															Ext.create('Ext.form.Panel').submit(
+				   											{
+				   												url		: _CONTEXT+'/seguridad/accesoDirecto.action?codigoCliente=6442&codigoRol=EJECUTIVOCUENTA&params.acceso=endosoPolizasNoSICAPS&user=biosnet1'
+				   												,standardSubmit : true
+				   											});
+														}
+													}
+												}
+											}).show();
+											windowVerDocu.center();
 	   						      		}else{
 	   						      		debug("Entra a la opcion 2");
 	   						      			_generarRemesaClic(
@@ -439,19 +451,21 @@
 				'params.codigoCliExt':  codigoCliExt
 			}
 			,success  : function(response){
-				//_p22_formDatosAdicionales().setLoading(false);
 				var json = Ext.decode(response.responseText);
 				debug('response text:',json);
 				if(json.exito){
-					debug("Valores de recuperacion ==> ",json.params.cdpersonNuevo, json.params.codigoCliExt)
+					debug("Valores de recuperacion ==> ",json.params.cdpersonNuevo, json.params.codigoCliExt);
+					
 					cdpersonNuevo = json.params.cdpersonNuevo;
 					codigoCliExterno  = json.params.codigoCliExt;
 				}else{
 					mensajeError("Error al Editar Cliente, vuelva a intentarlo.");
+					storeListadoAsegurado.removeAll();
 				}
 			}
 			,failure  : function(){
 				errorComunicacion(null,'En importar persona. Consulte a soporte.');
+				storeListadoAsegurado.removeAll();
 			}
 		});
 	}
