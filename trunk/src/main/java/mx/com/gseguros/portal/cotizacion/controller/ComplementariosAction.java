@@ -2739,9 +2739,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 * Para cobertura de reduce GS
 						 */
 						
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf\">Reduce GS</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf\">Reduce GS</a>";
 						
-						//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
+						//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
 						//paramsR.put("pv_dsdocume_i", "Reduce GS");
 						
 						//kernelManager.guardarArchivo(paramsR);
@@ -2753,7 +2753,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
+								,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
 								,"Reduce GS"
 								,nmpoliza
 								,ntramite
@@ -2770,9 +2770,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 * Para cobertura de gestoria GS
 						 */
 						
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf\">Gestoria GS</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf\">Gestoria GS</a>";
 						
-						//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
+						//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
 						//paramsR.put("pv_dsdocume_i", "Gestoria GS");
 						
 						//kernelManager.guardarArchivo(paramsR);
@@ -2784,7 +2784,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
+								,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
 								,"Gestoria GS"
 								,nmpoliza
 								,ntramite
@@ -2821,9 +2821,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 						HttpUtil.generaArchivo(url,rutaCarpeta+"/"+pdfEspVidaNom);
 						
 						
-//						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf\">Especificaciones Seguro de Vida</a>";
+//						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf\">Especificaciones Seguro de Vida</a>";
 						
-						//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
+						//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
 						//paramsR.put("pv_dsdocume_i", "Especificaciones Seguro de Vida");
 						
 						//kernelManager.guardarArchivo(paramsR);
@@ -2847,9 +2847,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,Documento.EXTERNO_ESPECIF_SEGURO_VIDA
 								);
 
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf\">Condiciones Generales Seguro de Vida</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf\">Condiciones Generales Seguro de Vida</a>";
 						
-						//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf");
+						//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf");
 						//paramsR.put("pv_dsdocume_i", "Condiciones Generales Seguro de Vida");
 						
 						//kernelManager.guardarArchivo(paramsR);
@@ -2861,7 +2861,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,"https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf"
+								,"http://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf"
 								,"Condiciones Generales Seguro de Vida"
 								,nmpoliza
 								,ntramite
@@ -3809,9 +3809,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 							 * Para cobertura de reduce GS
 							 */
 							
-							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf\">Reduce GS</a>";
+							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf\">Reduce GS</a>";
 							
-							//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
+							//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
 							//paramsR.put("pv_dsdocume_i", "Reduce GS");
 							
 							//kernelManager.guardarArchivo(paramsR);
@@ -3823,7 +3823,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,_nmpoliza
 									,_nmsuplem
 									,new Date()
-									,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
+									,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
 									,"Reduce GS"
 									,nmsolici
 									,ntramite
@@ -3840,9 +3840,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 							 * Para cobertura de gestoria GS
 							 */
 							
-							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf\">Gestoria GS</a>";
+							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf\">Gestoria GS</a>";
 							
-							//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
+							//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
 							//paramsR.put("pv_dsdocume_i", "Gestoria GS");
 							
 							//kernelManager.guardarArchivo(paramsR);
@@ -3854,7 +3854,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,_nmpoliza
 									,_nmsuplem
 									,new Date()
-									,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
+									,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
 									,"Gestoria GS"
 									,nmsolici
 									,ntramite
@@ -3890,9 +3890,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 							
 							HttpUtil.generaArchivo(url,rutaCarpeta+"/"+pdfEspVidaNom);
 							
-//							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf\">Especificaciones Seguro de Vida</a>";
+//							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf\">Especificaciones Seguro de Vida</a>";
 							
-							//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
+							//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
 							//paramsR.put("pv_dsdocume_i", "Especificaciones Seguro de Vida");
 							
 							//kernelManager.guardarArchivo(paramsR);
@@ -3916,9 +3916,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,Documento.EXTERNO_ESPECIF_SEGURO_VIDA
 									);
 
-							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf\">Condiciones Generales Seguro de Vida</a>";
+							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf\">Condiciones Generales Seguro de Vida</a>";
 							
-							//paramsR.put("pv_cddocume_i", "https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf");
+							//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf");
 							//paramsR.put("pv_dsdocume_i", "Condiciones Generales Seguro de Vida");
 							
 							//kernelManager.guardarArchivo(paramsR);
@@ -3930,7 +3930,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,_nmpoliza
 									,_nmsuplem
 									,new Date()
-									,"https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf"
+									,"http://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf"
 									,"Condiciones Generales Seguro de Vida"
 									,nmsolici
 									,ntramite
