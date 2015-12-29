@@ -2456,7 +2456,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(session                , "No hay sesion");
 			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
 		}else{
-			Utils.validate(codigoCliExt , "No se recibio el codigo de cliente externo");
+			//Utils.validate(codigoCliExt , "No se recibio el codigo de cliente externo");
 			Utils.validate(sucursalEnt  , "No se recibio la sucursal");
 			Utils.validate(ramoEntrada  , "No se recibio el producto");
 			Utils.validate(polizaEnt    , "No se recibio el numero de poliza");
@@ -2465,7 +2465,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 
 
 		String fenacimientoM= fenacimi.substring(8,10)+"/"+fenacimi.substring(5,7)+"/"+fenacimi.substring(0,4);
-		endososAutoManager.guardarEndosoNombreRFCFecha(
+		int claveEndoso = endososAutoManager.guardarEndosoNombreRFCFecha(
 				cdunieco,		cdramo,			estado,			nmpoliza,		cdperson,							cdtipide,			cdideper,
 				dsnombre,		cdtipper,		otfisjur,		otsexo,			renderFechas.parse(fenacimientoM),	cdrfc,				dsemail,
 				dsnombre1,		dsapellido,		dsapellido1,	feingreso,		cdnacion,							canaling,			conducto,
@@ -2474,7 +2474,15 @@ public class EndososAutoAction extends PrincipalCoreAction
 				sucursalEnt,	ramoEntrada,	polizaEnt,		cdpersonNew,	dsnombreComp
 		);
 		
-		respuesta = "Endoso generado correctamente";
+		logger.debug("Valor del endoso recuperado ======>>>>>>>"+claveEndoso);
+		if(smap2==null)
+		{
+			smap2=new HashMap<String,String>();
+		}
+		smap2.put("numEndosoSIGS" ,claveEndoso+"");
+		
+		
+		respuesta = "Endoso generado correctamente. N&uacute;mero de endoso : "+claveEndoso;
 		success   = true;
 	}
 	catch(Exception ex)

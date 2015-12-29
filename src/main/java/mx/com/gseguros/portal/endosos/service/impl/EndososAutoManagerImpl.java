@@ -5593,7 +5593,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			}
 
 	@Override
-	public void guardarEndosoNombreRFCFecha(String cdunieco, String cdramo, String estado, String nmpoliza,
+	public int guardarEndosoNombreRFCFecha(String cdunieco, String cdramo, String estado, String nmpoliza,
 			String cdperson, String cdtipide, String cdideper, String dsnombre, String cdtipper, String otfisjur,
 			String otsexo, Date fechaNacimiento, String cdrfc, String dsemail, String dsnombre1, String dsapellido,
 			String dsapellido1, String feingreso, String cdnacion, String canaling, String conducto, String ptcumupr,
@@ -5609,11 +5609,13 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		
 		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
 		String paso = "";
-		
+		int endosoRecuperado = 0;
 		try
 		{
+			//ENDOSO POLIZAS SICAPS
 			if(tipoPantalla.equalsIgnoreCase("0")){
 				paso = "Iniciando endoso";
+				
 				logger.info(paso);
 				Map<String,String>iniciarEndosoResp=endososDAO.iniciarEndoso(
 						cdunieco
@@ -5699,7 +5701,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						paramsEnd.put("vTelefono3"  , datosEnIt.get("TELEFONO3"));
 						
 					try{
-						int endosoRecuperado = -1;
+						
 						Integer res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
 						
 						logger.debug("Respuesta de Cambio AseguradoAlterno numero de endoso =========> : " + res);
@@ -5760,6 +5762,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					logger.error("Aviso, No se tienen datos de Cambio AseguradoAlterno");
 				}
 			}else{
+				//ENDOSO POLIZAS NO SICAPS
 				paso = "Actualizamos los valores del contratante";
 				logger.debug(paso);
 				//Obtenemos la informacion del Cliente de SISG
@@ -5828,7 +5831,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				paramsEnd.put("vTelefono3"  , respuesta[27].toString());
 					
 				try{
-					int endosoRecuperado = -1;
+					endosoRecuperado = -1;
 					Integer res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
 					logger.debug("Respuesta de Cambio AseguradoAlterno numero de endoso =========> : " + res);
 					
@@ -5907,5 +5910,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ guardarEndosoNombreRFCFecha @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 		));
+		
+		logger.debug("Valor a enviar ===>"+endosoRecuperado);
+		
+		return endosoRecuperado;
 	}
 }
