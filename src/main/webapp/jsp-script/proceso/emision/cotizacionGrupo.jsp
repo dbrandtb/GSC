@@ -4761,6 +4761,15 @@ function _p21_estiloEditores(cdplan)
                     }
                     //_p21_editorEmerextr.setReadOnly(!_4EE);
                 }
+                
+                /* pidieron que no se pueda ver EE si el plan es primario para los agentes */
+                if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&_p21_clasif==_p21_TARIFA_LINEA&&(cdplan=='PR'||cdplan=='PA'))
+                {
+                    _p21_editorEmerextr.setValue('N');
+                    _p21_editorEmerextr.addCls('_p21_editorLectura');
+                }
+                /* pidieron que no se pueda ver EE si el plan es primario para los agentes */
+                
             }
             else
             {
