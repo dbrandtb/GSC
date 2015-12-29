@@ -3560,7 +3560,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,nmpoliza
 								,nmsuplem
 								,new Date()
-								,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
+								,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
 								,"Reduce GS"
 								,nmpoliza
 								,ntramite
@@ -3585,7 +3585,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,nmpoliza
 								,nmsuplem
 								,new Date()
-								,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
+								,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
 								,"Gestoria GS"
 								,nmpoliza
 								,ntramite
@@ -3610,7 +3610,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,nmpoliza
 								,nmsuplem
 								,new Date()
-								,"https://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf"
+								,"http://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf"
 								,"Especificaciones Seguro de Vida"
 								,nmpoliza
 								,ntramite
@@ -3629,7 +3629,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,nmpoliza
 								,nmsuplem
 								,new Date()
-								,"https://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf"
+								,"http://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf"
 								,"Condiciones Generales Seguro de Vida"
 								,nmpoliza
 								,ntramite

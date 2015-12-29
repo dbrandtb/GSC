@@ -692,7 +692,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					 * Para cobertura de reduce GS
 					 */
 					
-					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf\">Reduce GS</a>";
+					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf\">Reduce GS</a>";
 					
 					mesaControlDAO.guardarDocumento(
 							cdunieco
@@ -701,7 +701,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,nmpolizaEmitida
 							,nmsuplemEmitida
 							,new Date()
-							,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
+							,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
 							,"Reduce GS"
 							,nmpoliza
 							,ntramite
@@ -719,7 +719,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					 * Para cobertura de gestoria GS
 					 */
 					
-					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf\">Gestoria GS</a>";
+					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf\">Gestoria GS</a>";
 					
 					mesaControlDAO.guardarDocumento(
 							cdunieco
@@ -728,7 +728,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,nmpolizaEmitida
 							,nmsuplemEmitida
 							,new Date()
-							,"https://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
+							,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
 							,"Gestoria GS"
 							,nmpoliza
 							,ntramite
