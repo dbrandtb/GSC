@@ -72,6 +72,40 @@
 			queryMode	:'local',				store 			:sucursalCliente,			readOnly   : (pantallaPrincipal =="0")
 		});
 		
+		function validaCamposRequerido(tipoPersona){
+			if(tipoPersona =="F"){
+				datosContratante.down('[name=dsapellido]').allowBlank =false;
+				datosContratante.down('[name=dsapellido1]').allowBlank =false;
+				datosContratante.down('[name=dsnomCompleto]').allowBlank =false;
+				datosContratante.down('[name=dsRazonSocial]').allowBlank =true;
+				datosContratante.down('[name=dsapellido]').show();
+				datosContratante.down('[name=dsapellido1]').show();
+				
+				if(pantallaPrincipal =="1"){
+					datosContratante.down('[name=dsnomCompleto]').show();
+				}else{
+					datosContratante.down('[name=dsnomCompleto]').hide();
+				}
+				datosContratante.down('[name=dsRazonSocial]').hide();
+			}else{
+				datosContratante.down('[name=dsapellido]').allowBlank =true;
+				datosContratante.down('[name=dsapellido1]').allowBlank =true;
+				datosContratante.down('[name=dsnomCompleto]').allowBlank =true;
+				datosContratante.down('[name=dsRazonSocial]').allowBlank =false;
+				datosContratante.down('[name=dsapellido]').hide();
+				datosContratante.down('[name=dsapellido1]').hide();
+				datosContratante.down('[name=dsnomCompleto]').hide();
+				datosContratante.down('[name=dsRazonSocial]').show();
+				
+				if(pantallaPrincipal =="0"){
+					datosContratante.down('[name=dsnombre]').hide();
+					datosContratante.down('[name=dsnombre1]').hide();
+					datosContratante.down('[name=dsnombre]').allowBlank =true;
+					datosContratante.down('[name=dsnombre1]').allowBlank =true;
+				}
+			}
+		}
+		
 		var panelInicialPral = Ext.create('Ext.form.Panel', {
 		    title: 'Datos de la P&oacute;liza',
 		    id: 'panelInicialPral',
@@ -105,6 +139,7 @@
 					datosContratante.down('[name=fenacini]').setValue('');
 					datosContratante.down('[name=rfcContratante]').setValue('');
 					datosContratante.down('[name=dsnomCompleto]').setValue('');
+					datosContratante.down('[name=dsRazonSocial]').setValue('');
 					
 					var form = this.up('form').getForm();
 					if (form.isValid()){
@@ -122,19 +157,16 @@
                   				}else{
                   					var desTipoPersona = null;
                       				if(json.list[0].TIPERSONA =="1"){
-                      					desTipoPersona = "FISICA"
-                      					datosContratante.down('[name=dsapellido]').allowBlank =false;
-                      					datosContratante.down('[name=dsapellido1]').allowBlank =false;
+                      					desTipoPersona = "FISICA";
+                    					validaCamposRequerido("F");
                       					
                       					
                       				}else if(json.list[0].TIPERSONA =="2"){
-                      					desTipoPersona = "MORAL"
-                      					datosContratante.down('[name=dsapellido]').allowBlank =true;
-                      					datosContratante.down('[name=dsapellido1]').allowBlank =true;
+                      					desTipoPersona = "MORAL";
+                    					validaCamposRequerido("M");
                       				}else{
-                      					desTipoPersona = "SIMPLIFICADO"
-                      					datosContratante.down('[name=dsapellido]').allowBlank =true;
-                      					datosContratante.down('[name=dsapellido1]').allowBlank =true;
+                      					desTipoPersona = "SIMPLIFICADO";
+                    					validaCamposRequerido("S");
                       				}
                       				
                       				storeListadoAsegurado.removeAll();
@@ -201,6 +233,7 @@
 					datosContratante.down('[name=dsnombre]').setValue(record.get('NOMCLIENTE1'));
 					datosContratante.down('[name=dsnombre1]').setValue(record.get('NOMCLIENTE2'));
 					datosContratante.down('[name=dsnomCompleto]').setValue(record.get('NOMCLIENTE'));
+					datosContratante.down('[name=dsRazonSocial]').setValue(record.get('RAZONSOCIAL'));
 					datosContratante.down('[name=dsapellido]').setValue(record.get('APPATERNO'));
 					datosContratante.down('[name=dsapellido1]').setValue(record.get('APMATERNO'));
 					datosContratante.down('[name=fenacini]').setValue(record.get('FECNACIMIENTO'));
@@ -223,7 +256,10 @@
 				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Segundo nombre',				name       : 'dsnombre1'
 				    ,width		 : 400,					hidden      : (pantallaPrincipal !="0")
 				},
-				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Nombre Completo',				name       : 'dsnomCompleto'
+				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Nombre completo',				name       : 'dsnomCompleto'
+				    ,width		 : 400,					allowBlank	: (pantallaPrincipal =="0"),							hidden : (pantallaPrincipal =="0")
+				},
+				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Raz&oacute;n social',			name       : 'dsRazonSocial'
 				    ,width		 : 400,					allowBlank	: (pantallaPrincipal =="0"),							hidden : (pantallaPrincipal =="0")
 				},
 				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Apellido Paterno',			name       : 'dsapellido'
@@ -406,31 +442,53 @@
 			panelInicialPral.down('[name=cveRamo]').setValue(clienteSeleccionado.RAMO);
 			panelInicialPral.down('[name=nmPoliza]').setValue(clienteSeleccionado.NMPOLIEX);
 			var desTipoPersona = null;
-				if(clienteSeleccionado.OTFISJUR =="F"){
-					desTipoPersona = "FISICA"
-					
-				}else if(clienteSeleccionado.OTFISJUR =="M"){
-					desTipoPersona = "MORAL"
-					datosContratante.down('[name=dsapellido]').allowBlank =true;
-					datosContratante.down('[name=dsapellido1]').allowBlank =true;
-					
+			var nombreCompl ="";
+			var razonSocialC = "";
+			
+			debug("Valor de clienteSeleccionado.DSNOMBRE1 ===="+clienteSeleccionado.DSNOMBRE1);
+			debug(clienteSeleccionado.DSNOMBRE1);
+			
+			if(clienteSeleccionado.DSNOMBRE1 == null ||clienteSeleccionado.DSNOMBRE1 == 'null' || clienteSeleccionado.DSNOMBRE1 == '' ){
+				nombreCompl = clienteSeleccionado.DSNOMBRE;
+			}else{
+				nombreCompl = clienteSeleccionado.DSNOMBRE+" "+clienteSeleccionado.DSNOMBRE1;
+			}
+			
+			if(clienteSeleccionado.OTFISJUR =="F"){
+				desTipoPersona = "FISICA";
+				validaCamposRequerido(clienteSeleccionado.OTFISJUR);
+				
+			}else if(clienteSeleccionado.OTFISJUR =="M"){
+				desTipoPersona = "MORAL";
+				validaCamposRequerido(clienteSeleccionado.OTFISJUR);
+				if(clienteSeleccionado.DSRAZSOC != null ||clienteSeleccionado.DSRAZSOC != 'null'){
+					razonSocialC = nombreCompl;
 				}else{
-					desTipoPersona = "SIMPLIFICADO"
-					datosContratante.down('[name=dsapellido]').allowBlank =true;
-					datosContratante.down('[name=dsapellido1]').allowBlank =true;
+					razonSocialC = clienteSeleccionado.DSRAZSOC;
 				}
+				
+			}else{
+				desTipoPersona = "SIMPLIFICADO"
+				validaCamposRequerido("S");
+				if(clienteSeleccionado.DSRAZSOC != null ||clienteSeleccionado.DSRAZSOC != 'null'){
+					razonSocialC = nombreCompl;
+				}else{
+					razonSocialC = clienteSeleccionado.DSRAZSOC;
+				}
+			}
+			
 			
 			var rec = new modelListadoAsegurado({
 					CVECLIENSIGS    : clienteSeleccionado.CDIDEPER,
 					SUCEMISORA    	: clienteSeleccionado.pv_cdunieco,
 					TIPERSONA    	: clienteSeleccionado.OTFISJUR,
 					DESTIPERSONA    : desTipoPersona,
-					NOMCLIENTE    	: clienteSeleccionado.DSNOMBRE+" "+clienteSeleccionado.DSNOMBRE1,
+					NOMCLIENTE    	: nombreCompl,
 					NOMCLIENTE1    	: clienteSeleccionado.DSNOMBRE,
 					NOMCLIENTE2    	: clienteSeleccionado.DSNOMBRE1,
 					APPATERNO    	: clienteSeleccionado.DSAPELLIDO,
 					APMATERNO    	: clienteSeleccionado.DSAPELLIDO1,
-					RAZONSOCIAL    	: null,
+					RAZONSOCIAL    	: razonSocialC,
 					RFCCLIENTE    	: clienteSeleccionado.CDRFC,
 					CVEIFE    		: null,
 					CURP    		: null,
