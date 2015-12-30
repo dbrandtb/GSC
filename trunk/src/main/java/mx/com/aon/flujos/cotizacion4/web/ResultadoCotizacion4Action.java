@@ -1215,8 +1215,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            			,cdusuari
 	            			,cdsisrol
 	            			,null
-	            			,"2".equals(comprarCdramo) ? TTIPFLUMC.POLIZA_NUEVA : ""
-	            			,"2".equals(comprarCdramo) ? TFLUJOMC.EMISION_SALUD_INDIVIDUAL : ""
+	            			,"2".equals(comprarCdramo)||"1".equals(comprarCdramo) ? TTIPFLUMC.POLIZA_NUEVA : ""
+	            			,"2".equals(comprarCdramo)||"1".equals(comprarCdramo) ? TFLUJOMC.EMISION_SALUD_INDIVIDUAL : ""
 	            			,null//valores
 	            			,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
 	            			);

@@ -35,6 +35,7 @@
     var _GLOBAL_COMP_URL_CONS_CLAU            = '<s:url namespace="/catalogos"        action="consultaClausulas"         />';
     var _GLOBAL_COMP_URL_CONS_CLAU_DET        = '<s:url namespace="/catalogos"        action="consultaClausulaDetalle"   />';
     var _GLOBAL_COMP_URL_GUARDA_CARTA_RECHAZO = '<s:url namespace="/"                 action="guardarCartaRechazo"       />';
+    var _GLOBAL_COMP_URL_AUTORIZAR_EMISION    = '<s:url namespace="/"                 action="autorizaEmisionSinSMD"     />';
     
     <s:url namespace="/flujomesacontrol" action="mesaControl" var="urlMesaFlujo" includeParams="get">
         <s:param name="params.AGRUPAMC" value="%{'PRINCIPAL'}" />

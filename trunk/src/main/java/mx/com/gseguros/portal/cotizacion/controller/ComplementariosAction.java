@@ -39,6 +39,7 @@ import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
+import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
@@ -144,6 +145,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private CotizacionManager cotizacionManager;
 	private EmisionManager    emisionManager;
 	
+	private String message;
+	private Map<String, String> params;
+	
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
 	
@@ -158,6 +162,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private FlujoMesaControlManager flujoMesaControlManager;
+	
+	@Autowired
+	private EndososManager endososManager;
 
 	public String mostrarPantalla()
 	{
@@ -1930,6 +1937,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 					paramsMesaControl.put("cdusuari"        , cdusuari);
 					paramsMesaControl.put("cdsisrol"        , cdsisrol);
 					WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);*/
+					
+					/*
+					 * jtezva: 2015-12-29 B
+					 * Ahora ya no se crea el tramite nuevo
+					 * 
 					Map<String,String> valores = new LinkedHashMap<String,String>();
 					valores.put("otvalor01" , cdusuari);
 					valores.put("otvalor02" , cdelemen);
@@ -1963,6 +1975,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,valores, null
 							);
 					mensajeRespuesta = mensajeRespuesta + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
+					* jtezva: 2015-12-29 B
+					*/
 					
 					/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
 		        	parDmesCon.put("pv_ntramite_i"   , ntramite);
@@ -1977,7 +1991,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 							ntramite
 							,new Date()//feinicio
 							,null//cdclausu
-							,"El tr&aacute;mite se envi&oacute; a autorizaci&oacute;n ("+ntramiteAutorizacion+")"
+							
+							// jtezva: 2015-12-29 B
+							//,"El tr&aacute;mite se envi&oacute; a autorizaci&oacute;n ("+ntramiteAutorizacion+")"
+							,"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n"
+							// jtezva: 2015-12-29 B
+							
 							,cdusuari
 							,null//cdmotivo
 							,cdsisrol
@@ -2034,6 +2053,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 					paramsMesaControl.put("cdusuari"        , cdusuari);
 					paramsMesaControl.put("cdsisrol"        , cdsisrol);
 					WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);*/
+					
+					/*
+					 * jtezva: 2015-12-29 B
+					 * Ahora ya no se crea el tramite nuevo
+					 * 
 					Map<String,String> valores = new LinkedHashMap<String,String>();
 					valores.put("otvalor01" , cdusuari);
 					valores.put("otvalor02" , cdelemen);
@@ -2067,6 +2091,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,valores, null
 							);
 					mensajeRespuesta = mensajeRespuesta + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
+					* jtezva: 2015-12-29 B
+					*/
 					
 					/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
 		        	parDmesCon.put("pv_ntramite_i"   , ntramite);
@@ -2081,7 +2107,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 							ntramite
 							,new Date()
 							,null
-							,"El tr&aacute;mite se envi&oacute; a autorizaci&oacute;n ("+ntramiteAutorizacion+")"
+							
+							// jtezva: 2015-12-29 B
+							//,"El tr&aacute;mite se envi&oacute; a autorizaci&oacute;n ("+ntramiteAutorizacion+")"
+							,"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n"
+							// jtezva: 2015-12-29 B
+							
 							,cdusuari
 							,null
 							,cdsisrol
@@ -2934,11 +2965,13 @@ public class ComplementariosAction extends PrincipalCoreAction
 	public String autorizaEmision()
 	{
 		this.session=ActionContext.getContext().getSession();
-		logger.debug(""
-				+ "\n#############################"
-				+ "\n###### autorizaEmision ######"
-				);
-		logger.debug("panel1"+panel1);
+		logger.debug(Utils.log(
+				 "\n#############################"
+				,"\n###### autorizaEmision ######"
+				,"\n###### panel1=" , panel1
+				,"\n###### params=" , params
+				,"\n###### flujo="  , flujo
+				));
 		
 		////// variables
 		success                 = true;
@@ -2965,35 +2998,75 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String cdIdeperRes      = null;
 		String tipoMov          = TipoTramite.POLIZA_NUEVA.getCdtiptra();
 		String rutaCarpeta      = null;
+		String swagente         = "N";
 		
-		////// obtener parametros
-		if(success)
+		boolean procesoFlujo = false;
+		
+		if(flujo!=null)
 		{
+			procesoFlujo = true;
+			
 			try
 			{
-				success = success && ( ntramiteAut      = panel1.get("ntramite")           )!=null;
-				success = success && ( cdunieco         = panel1.get("cdunieco")           )!=null;
-				success = success && ( cdramo           = panel1.get("cdramo")             )!=null;
-				success = success && ( nmpoliza         = panel1.get("nmpoliza")           )!=null;
-				success = success && ( ntramite         = panel1.get("otvalor03")          )!=null;
-				success = success && ( cdusuari         = panel1.get("otvalor01")          )!=null;
-				success = success && ( cdelemen         = panel1.get("otvalor02")          )!=null;
-				success = success && ( cdperson         = panel1.get("otvalor04")          )!=null;
-				success = success && ( comentarios      = panel2.get("observaciones")      )!=null;
-				success = success && ( fechaEmision     = panel1.get("ferecepc")           )!=null;
-				success = success && ( cdtipsit         = panel1.get("cdtipsit")           )!=null;
-				success = success && ( fechaEmisionDate = renderFechas.parse(fechaEmision) )!=null;
-				success = success && ( us               = (UserVO)session.get("USUARIO")   )!=null;
-				if(!success)
-				{
-					mensajeRespuesta = "No se recibieron todos los datos";
-				}
+				us = Utils.validateSession(session);
+				
+				ntramiteAut = null;
+				ntramite    = flujo.getNtramite();
+				
+				Map<String,Object> datos   = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(new StringBuilder(),flujo);
+				Map<String,String> tramite = (Map<String,String>)datos.get("TRAMITE");
+				cdunieco = tramite.get("CDUNIECO");
+				cdramo   = tramite.get("CDRAMO");
+				nmpoliza = tramite.get("NMSOLICI");
+				
+				cdusuari     = us.getUser();
+				cdelemen     = us.getEmpresa().getElementoId();
+				
+				cdtipsit = endososManager.recuperarCdtipsitInciso1(cdunieco, cdramo, estado, nmpoliza);
+				
+				DatosUsuario datUs = kernelManager.obtenerDatosUsuario(us.getUser(),cdtipsit);
+				cdperson = datUs.getCdperson();
+				
+				comentarios = params.get("dscoment");
+				swagente    = params.get("swagente");
 			}
 			catch(Exception ex)
 			{
-				logger.error("error al procesar los datos",ex);
-				mensajeRespuesta = "Error al procesar los datos";
-				success          = false;
+				mensajeRespuesta = Utils.manejaExcepcion(ex);
+				success = false;
+			}
+		}
+		else
+		{
+			////// obtener parametros
+			if(success)
+			{
+				try
+				{
+					success = success && ( ntramiteAut      = panel1.get("ntramite")           )!=null;
+					success = success && ( cdunieco         = panel1.get("cdunieco")           )!=null;
+					success = success && ( cdramo           = panel1.get("cdramo")             )!=null;
+					success = success && ( nmpoliza         = panel1.get("nmpoliza")           )!=null;
+					success = success && ( ntramite         = panel1.get("otvalor03")          )!=null;
+					success = success && ( cdusuari         = panel1.get("otvalor01")          )!=null;
+					success = success && ( cdelemen         = panel1.get("otvalor02")          )!=null;
+					success = success && ( cdperson         = panel1.get("otvalor04")          )!=null;
+					success = success && ( comentarios      = panel2.get("observaciones")      )!=null;
+					success = success && ( fechaEmision     = panel1.get("ferecepc")           )!=null;
+					success = success && ( cdtipsit         = panel1.get("cdtipsit")           )!=null;
+					success = success && ( fechaEmisionDate = renderFechas.parse(fechaEmision) )!=null;
+					success = success && ( us               = (UserVO)session.get("USUARIO")   )!=null;
+					if(!success)
+					{
+						mensajeRespuesta = "No se recibieron todos los datos";
+					}
+				}
+				catch(Exception ex)
+				{
+					logger.error("error al procesar los datos",ex);
+					mensajeRespuesta = "Error al procesar los datos";
+					success          = false;
+				}
 			}
 		}
 		
@@ -3011,6 +3084,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 				Map<String,Object>polizaCompleta=kernelManager.getInfoMpolizasCompleta(paramObtenerPoliza);
 				logger.debug("poliza a emitir: "+polizaCompleta);
 				cdperpag = (String)polizaCompleta.get("cdperpag");
+				
+				if(procesoFlujo)
+				{
+					fechaEmisionDate = (Date)polizaCompleta.get("feemisio");
+				}
 			}
 			catch(Exception ex)
 			{
@@ -3291,10 +3369,13 @@ public class ComplementariosAction extends PrincipalCoreAction
 						,us.getUser()
 						,null
 						,us.getRolActivo().getClave()
-						,"N"
+						,swagente
 						);
 				
-	        	kernelManager.mesaControlUpdateStatus(ntramiteAut, EstatusTramite.CONFIRMADO.getCodigo());
+				if(!procesoFlujo)
+				{
+					kernelManager.mesaControlUpdateStatus(ntramiteAut, EstatusTramite.CONFIRMADO.getCodigo());
+				}
 	        	
 	        	mensajeRespuesta = "P&oacute;liza emitida: "+nmpoliexEmitida;
 			}
@@ -3305,6 +3386,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 				success          = false;
 			}
 		}
+		
+		message = mensajeRespuesta;
 		
 		logger.debug(""
 				+ "\n###### autorizaEmision ######"
@@ -5004,6 +5087,22 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setFlujo(FlujoVO flujo) {
 		this.flujo = flujo;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public Map<String, String> getParams() {
+		return params;
+	}
+
+	public void setParams(Map<String, String> params) {
+		this.params = params;
 	}
 
 }
