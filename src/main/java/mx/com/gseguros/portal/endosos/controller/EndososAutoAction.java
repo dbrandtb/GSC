@@ -612,6 +612,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		smap1.put("tipoPantalla", "0");
 		smap1.put("FEINIVAL", null);
 		smap1.put("cdtipsup",TipoEndoso.REHABILITACION_NOMBRE_RFC_FENAC.getCdTipSup().toString());
+		smap1.put("rutaPDF",this.getText("caratula.impresion.autos.endosob.url"));
 		
 		logger.debug(new StringBuilder()
 		.append("\n############################")
@@ -635,6 +636,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		HashMap<String,String>smap=new HashMap<String,String>();
 		smap.put("cdtipsup",TipoEndoso.REHABILITACION_NOMBRE_RFC_FENAC.getCdTipSup().toString());
 		smap.put("tipoPantalla","1");
+		smap.put("rutaPDF",this.getText("caratula.impresion.autos.endosob.url"));
 		smap1 = smap;
 		logger.debug(new StringBuilder()
 		.append("\n#####################################")
@@ -2474,7 +2476,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 				sucursalEnt,	ramoEntrada,	polizaEnt,		cdpersonNew,	dsnombreComp
 		);
 		
-		logger.debug("Valor del endoso recuperado ======>>>>>>>"+claveEndoso);
 		if(smap2==null)
 		{
 			smap2=new HashMap<String,String>();
