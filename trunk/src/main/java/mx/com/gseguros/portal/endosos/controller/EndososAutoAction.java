@@ -2412,7 +2412,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 		String polizaEnt    = smap1.get("polizaEntrada");
 		String cdpersonNew  = smap1.get("cdpersonNuevo");
 		String dsnombreComp = smap1.get("dsnombreComp");
-		
+		String tramite		= smap1.get("ntramite");
+		String numsuplemen  = smap1.get("nmsuplem");
 		String cdunieco     = smap1.get("cdunieco");
 		String cdramo       = smap1.get("cdramo");
 		String estado       = smap1.get("estado");
@@ -2447,6 +2448,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		SimpleDateFormat sdf= new SimpleDateFormat("dd/MM/yyyy");
 		String fechaEndoso  = sdf.format(new Date());
 		Date   dFechaEndoso = renderFechas.parse(fechaEndoso);
+		String urlCaratula =  this.getText("caratula.impresion.autos.endosob.url");
 		
 		Utils.validate(tipoPantalla   , "No se recibio el origen del llamado");
 		
@@ -2473,7 +2475,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 				dsnombre1,		dsapellido,		dsapellido1,	feingreso,		cdnacion,							canaling,			conducto,
 				ptcumupr,		residencia,		nongrata,		cdideext,		cdestciv,							cdsucemi,			cdusuari,
 				cdsisrol,		cdelemen,		cdtipsup,		fechaEndoso,	dFechaEndoso,						tipoPantalla,		codigoCliExt,
-				sucursalEnt,	ramoEntrada,	polizaEnt,		cdpersonNew,	dsnombreComp
+				sucursalEnt,	ramoEntrada,	polizaEnt,		cdpersonNew,	dsnombreComp,
+				tramite,		numsuplemen,	urlCaratula
 		);
 		
 		if(smap2==null)

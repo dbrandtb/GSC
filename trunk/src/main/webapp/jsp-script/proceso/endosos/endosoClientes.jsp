@@ -327,7 +327,9 @@
 								'polizaEntrada' : panelInicialPral.down('[name=nmPoliza]').getValue(),
 								'tipoPantalla'  : clienteSeleccionado.tipoPantalla,
 								'cdpersonNuevo' : cdpersonNuevo,
-								'codigoCliExterno'  : codigoCliExterno
+								'codigoCliExterno'  : codigoCliExterno,
+								'ntramite'  : clienteSeleccionado.NTRAMITE,
+								'nmsuplem'  : clienteSeleccionado.NMSUPLEM
 							}
 							submitValues['smap1']= params;
 							Ext.Ajax.request( {
