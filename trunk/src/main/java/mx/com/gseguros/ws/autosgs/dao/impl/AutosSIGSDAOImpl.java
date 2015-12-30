@@ -749,10 +749,10 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 
 
 	@Override
-	public Integer CambioClientenombreRFCfechaNacimiento(Map<String, Object> params) throws Exception {
-		Integer resp = null;
+	public String CambioClientenombreRFCfechaNacimiento(Map<String, Object> params) throws Exception {
+		String resp = null;
 		Map<String, Object> mapResult = ejecutaSP(new CambioClientenombreRFCfechaNacimiento(getDataSource()), params);
-		resp = (Integer) mapResult.get("rs");
+		resp = (String) mapResult.get("rs");
 		
 		return resp;
 	}
@@ -787,12 +787,12 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vTelefono2", Types.VARCHAR));
 			declareParameter(new SqlParameter("vTelefono3", Types.VARCHAR));
 			
-			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
+			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<String>(){  
 				@Override  
-				public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
-					Integer result = null;
+				public String extractData(ResultSet rs) throws SQLException, DataAccessException {  
+					String result = null;
 					while(rs.next()){  
-						result = rs.getInt(1);
+						result = rs.getString(1)+"|"+rs.getString(2);
 					}  
 					return result;  
 				}
