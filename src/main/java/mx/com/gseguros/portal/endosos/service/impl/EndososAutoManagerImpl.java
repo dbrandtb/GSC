@@ -25,6 +25,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 import mx.com.gseguros.portal.documentos.model.Documento;
+import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.endosos.model.PropiedadesDeEndosoParaWS;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
@@ -101,6 +102,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	
 	@Autowired
 	private MesaControlManager mesaControlManager;
+	
+	@Autowired
+	private DocumentosManager documentosManager;
 	
 	@Autowired
 	@Qualifier("emisionAutosServiceImpl")
@@ -5600,7 +5604,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String residencia, String nongrata, String cdideext, String cdestciv, String cdsucemi, String cdusuari,
 			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso, String tipoPantalla,
 			String codigoCliExt,String sucursalEnt,String ramoEntrada,String polizaEnt, String cdpersonNew,
-			String dsnombreComp) throws Exception {
+			String dsnombreComp, String ntramite, String numsuplemen, String urlCaratula) throws Exception {
 		// TODO Auto-generated method stub
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -5722,6 +5726,31 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 							valores.put("otvalor03" , null);
 							valores.put("otvalor04" , nsuplogi);
 							valores.put("otvalor05" , cdusuari);
+							
+							String parametros = null;
+							
+							parametros = "?"+sucursalEnt+","+ramoEntrada+","+polizaEnt+",,0,"+Integer.toString(endosoRecuperado)+",0";
+							logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
+							
+							documentosManager.guardarDocumento(
+									cdunieco
+									,cdramo
+									,estado
+									,nmpoliza
+									,nmsuplem
+									,new Date()
+									,urlCaratula + parametros
+									,"ENDOSO CORRECCI&Oacute;N DE NOMBRE,RFC Y FECHA NACIMIENTO"
+									,nmpoliza
+									,ntramite
+									,cdtipsup
+									,Constantes.SI
+									,null
+									,TipoTramite.ENDOSO.getCdtiptra()
+									,"0"
+									,Documento.EXTERNO_CARATULA
+									);
+							
 							
 							String ntramiteGenerado = mesaControlManager.movimientoTramite(
 									cdunieco

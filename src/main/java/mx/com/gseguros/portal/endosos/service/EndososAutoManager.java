@@ -460,5 +460,6 @@ public interface EndososAutoManager
 			String dsapellido1, String feingreso, String cdnacion, String canaling, String conducto, String ptcumupr,
 			String residencia, String nongrata, String cdideext, String cdestciv, String cdsucemi, String cdusuari,
 			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso, String tipoPantalla,
-			String codigoCliExt,String sucursalEnt,String ramoEntrada,String polizaEnt, String cdpersonNew, String dsnombreComp)throws Exception;
+			String codigoCliExt,String sucursalEnt,String ramoEntrada,String polizaEnt, String cdpersonNew, String dsnombreComp,
+			String tramite, String numsuplemen, String urlCaratula)throws Exception;
 }
