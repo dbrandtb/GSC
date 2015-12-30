@@ -5702,20 +5702,19 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						
 					try{
 						
-						Integer res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
+						String res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
+						String respuesta[] = res.split("\\|");
 						
-						logger.debug("Respuesta de Cambio AseguradoAlterno numero de endoso =========> : " + res);
-						
-						if(res == null || res == 0 || res == -1){
+						if(Integer.parseInt(respuesta[0].toString()) == 0 ){
 							logger.debug("Endoso Cambio AseguradoAlterno no exitoso");
-							boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, res, "Error en endoso de actualizacion de nombre, rfc y fecha nacimiento", true);
+							boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, Integer.parseInt(respuesta[1].toString()), "Error en endoso de actualizacion de nombre, rfc y fecha nacimiento", true);
 							if(endosoRevertido){
 								logger.error("Endoso revertido exitosamente.");
 							}else{
 								logger.error("Error al revertir el endoso");
 							}
 						}else{
-							endosoRecuperado = res.intValue();
+							endosoRecuperado = Integer.parseInt(respuesta[0].toString());
 							
 							Map<String,String> valores = new LinkedHashMap<String,String>();
 							valores.put("otvalor01" , null);
@@ -5763,7 +5762,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				}
 			}else{
 				//ENDOSO POLIZAS NO SICAPS
-				paso = "Actualizamos los valores del contratante";
+				paso = "Obtenemos la informaci&oacute;n del cliente";
 				logger.debug(paso);
 				//Obtenemos la informacion del Cliente de SISG
 				String message =  clienteDAOSIGS.obtieneInformacionCliente(sucursalEnt,ramoEntrada,polizaEnt);
@@ -5771,36 +5770,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				logger.debug("Valor de la respuesta ====> "+message);
 				
 				//Obtenemos la informacion del Cliente de ICE
+				paso = "Recuperamos la informaci&oacute;n del cliente";
+				logger.debug(paso);
 				Map<String,String>contratante = personasDAO.recuperarEspPersona(cdpersonNew);
-				
-				Map<String,Object>params=new HashMap<String,Object>();
-				//params.get("tipopago")=="1"?params.get("tipopago"):null
-				params.put("pv_cdperson_i"    , cdpersonNew);
-				params.put("pv_cdtipide_i"    , contratante.get("cdtipide"));
-				params.put("pv_cdideper_i"    , codigoCliExt);
-				params.put("pv_dsnombre_i"    , dsnombreComp);
-				params.put("pv_cdtipper_i"    , respuesta[3].toString() == null?contratante.get("cdideper"):respuesta[3].toString());
-				params.put("pv_otfisjur_i"    , contratante.get("otfisjur"));
-				params.put("pv_otsexo_i"      , contratante.get("otsexo"));
-				params.put("pv_fenacimi_i"    , fechaNacimiento);
-				params.put("pv_cdrfc_i"       , cdrfc);
-				params.put("pv_dsemail_i"     , respuesta[28].toString() ==null?contratante.get("dsemail"):respuesta[28].toString());
-				params.put("pv_dsnombre1_i"   , dsnombre1);
-				params.put("pv_dsapellido_i"  , dsapellido);
-				params.put("pv_dsapellido1_i" , dsapellido1);
-				params.put("pv_feingreso_i"   , contratante.get("feingreso"));
-				params.put("pv_cdnacion_i"    , contratante.get("cdnacion"));
-				params.put("pv_canaling_i"    , contratante.get("canaling"));
-				params.put("pv_conducto_i"    , contratante.get("conducto"));
-				params.put("pv_ptcumupr_i"    , contratante.get("ptcumupr"));
-				params.put("pv_residencia_i"  , contratante.get("residencia"));
-				params.put("pv_nongrata_i"    , contratante.get("nongrata"));
-				params.put("pv_cdideext_i"    , contratante.get("cdideext"));
-				params.put("pv_cdestciv_i"    , contratante.get("cdestciv"));
-				params.put("pv_cdsucemi_i"    , contratante.get("cdsucemi"));
-				params.put("pv_accion_i"      , "U" );
-				logger.debug("EndososManager datos params: "+params);
-				endososDAO.guardarEndosoNombreRFCFecha(params);
 				
 				HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
 				paramsEnd.put("vNumSuc"  , sucursalEnt);
@@ -5829,75 +5801,46 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				paramsEnd.put("vTelefono1"  , respuesta[25].toString());
 				paramsEnd.put("vTelefono2"  , respuesta[26].toString());
 				paramsEnd.put("vTelefono3"  , respuesta[27].toString());
-					
-				try{
-					endosoRecuperado = -1;
-					Integer res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
-					logger.debug("Respuesta de Cambio AseguradoAlterno numero de endoso =========> : " + res);
-					
-					if(res == null || res == 0 || res == -1){
-						logger.debug("Endoso Cambio AseguradoAlterno no exitoso");
-						Map<String,Object>param=new HashMap<String,Object>();
-						//params.get("tipopago")=="1"?params.get("tipopago"):null
-						param.put("pv_cdperson_i"    , contratante.get("cdperson"));
-						param.put("pv_cdtipide_i"    , contratante.get("cdtipide"));
-						param.put("pv_cdideper_i"    , contratante.get("cdideper"));
-						param.put("pv_dsnombre_i"    , contratante.get("dsnombre"));
-						param.put("pv_cdtipper_i"    , contratante.get("cdideper"));
-						param.put("pv_otfisjur_i"    , contratante.get("otfisjur"));
-						param.put("pv_otsexo_i"      , contratante.get("otsexo"));
-						param.put("pv_fenacimi_i"    , contratante.get("fenacimi"));
-						param.put("pv_cdrfc_i"       , contratante.get("cdrfc"));
-						param.put("pv_dsemail_i"     , contratante.get("dsemail"));
-						param.put("pv_dsnombre1_i"   , contratante.get("dsnombre1"));
-						param.put("pv_dsapellido_i"  , contratante.get("dsapellido"));
-						param.put("pv_dsapellido1_i" , contratante.get("dsapellido1"));
-						param.put("pv_feingreso_i"   , contratante.get("feingreso"));
-						param.put("pv_cdnacion_i"    , contratante.get("cdnacion"));
-						param.put("pv_canaling_i"    , contratante.get("canaling"));
-						param.put("pv_conducto_i"    , contratante.get("conducto"));
-						param.put("pv_ptcumupr_i"    , contratante.get("ptcumupr"));
-						param.put("pv_residencia_i"  , contratante.get("residencia"));
-						param.put("pv_nongrata_i"    , contratante.get("nongrata"));
-						param.put("pv_cdideext_i"    , contratante.get("cdideext"));
-						param.put("pv_cdestciv_i"    , contratante.get("cdestciv"));
-						param.put("pv_cdsucemi_i"    , contratante.get("cdsucemi"));
-						param.put("pv_accion_i"      , "U" );
-						logger.debug("EndososManager datos params: "+param);
-						endososDAO.guardarEndosoNombreRFCFecha(param);
-					}else{
-						endosoRecuperado = res.intValue();
-					}
-					
-				} catch (Exception e){
-					Map<String,Object>param=new HashMap<String,Object>();
-					param.put("pv_cdperson_i"    , contratante.get("cdperson"));
-					param.put("pv_cdtipide_i"    , contratante.get("cdtipide"));
-					param.put("pv_cdideper_i"    , contratante.get("cdideper"));
-					param.put("pv_dsnombre_i"    , contratante.get("dsnombre"));
-					param.put("pv_cdtipper_i"    , contratante.get("cdideper"));
-					param.put("pv_otfisjur_i"    , contratante.get("otfisjur"));
-					param.put("pv_otsexo_i"      , contratante.get("otsexo"));
-					param.put("pv_fenacimi_i"    , contratante.get("fenacimi"));
-					param.put("pv_cdrfc_i"       , contratante.get("cdrfc"));
-					param.put("pv_dsemail_i"     , contratante.get("dsemail"));
-					param.put("pv_dsnombre1_i"   , contratante.get("dsnombre1"));
-					param.put("pv_dsapellido_i"  , contratante.get("dsapellido"));
-					param.put("pv_dsapellido1_i" , contratante.get("dsapellido1"));
-					param.put("pv_feingreso_i"   , contratante.get("feingreso"));
-					param.put("pv_cdnacion_i"    , contratante.get("cdnacion"));
-					param.put("pv_canaling_i"    , contratante.get("canaling"));
-					param.put("pv_conducto_i"    , contratante.get("conducto"));
-					param.put("pv_ptcumupr_i"    , contratante.get("ptcumupr"));
-					param.put("pv_residencia_i"  , contratante.get("residencia"));
-					param.put("pv_nongrata_i"    , contratante.get("nongrata"));
-					param.put("pv_cdideext_i"    , contratante.get("cdideext"));
-					param.put("pv_cdestciv_i"    , contratante.get("cdestciv"));
-					param.put("pv_cdsucemi_i"    , contratante.get("cdsucemi"));
-					param.put("pv_accion_i"      , "U" );
-					logger.debug("EndososManager datos params: "+param);
-					endososDAO.guardarEndosoNombreRFCFecha(param);
-					logger.error("Error en Envio Cambio AseguradoAlterno Auto: " + e.getMessage(),e);
+
+				endosoRecuperado = -1;
+				String res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
+				String respu[] = res.split("\\|");
+				logger.debug("Respuesta de Cambio AseguradoAlterno numero de endoso =========> : " + res);
+				
+				if(Integer.parseInt(respu[0].toString()) == 0 ){
+					logger.debug("Endoso Cambio AseguradoAlterno no exitoso");
+					throw new ApplicationException(respu[1].toString());
+				}else{
+					endosoRecuperado = Integer.parseInt(respu[0].toString());
+					paso = "Guardamos informaci&oacute;n del cliente";
+					logger.debug(paso);
+					Map<String,Object>params=new HashMap<String,Object>();
+					params.put("pv_cdperson_i"    , cdpersonNew);
+					params.put("pv_cdtipide_i"    , contratante.get("cdtipide"));
+					params.put("pv_cdideper_i"    , codigoCliExt);
+					params.put("pv_dsnombre_i"    , dsnombreComp);
+					params.put("pv_cdtipper_i"    , respuesta[3].toString() == null?contratante.get("cdideper"):respuesta[3].toString());
+					params.put("pv_otfisjur_i"    , contratante.get("otfisjur"));
+					params.put("pv_otsexo_i"      , contratante.get("otsexo"));
+					params.put("pv_fenacimi_i"    , fechaNacimiento);
+					params.put("pv_cdrfc_i"       , cdrfc);
+					params.put("pv_dsemail_i"     , respuesta[28].toString() ==null?contratante.get("dsemail"):respuesta[28].toString());
+					params.put("pv_dsnombre1_i"   , dsnombre1);
+					params.put("pv_dsapellido_i"  , dsapellido);
+					params.put("pv_dsapellido1_i" , dsapellido1);
+					params.put("pv_feingreso_i"   , contratante.get("feingreso"));
+					params.put("pv_cdnacion_i"    , contratante.get("cdnacion"));
+					params.put("pv_canaling_i"    , contratante.get("canaling"));
+					params.put("pv_conducto_i"    , contratante.get("conducto"));
+					params.put("pv_ptcumupr_i"    , contratante.get("ptcumupr"));
+					params.put("pv_residencia_i"  , contratante.get("residencia"));
+					params.put("pv_nongrata_i"    , contratante.get("nongrata"));
+					params.put("pv_cdideext_i"    , contratante.get("cdideext"));
+					params.put("pv_cdestciv_i"    , contratante.get("cdestciv"));
+					params.put("pv_cdsucemi_i"    , contratante.get("cdsucemi"));
+					params.put("pv_accion_i"      , "U" );
+					logger.debug("EndososManager datos params: "+params);
+					endososDAO.guardarEndosoNombreRFCFecha(params);
 				}
 			}
 		}
@@ -5910,8 +5853,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ guardarEndosoNombreRFCFecha @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 		));
-		
-		logger.debug("Valor a enviar ===>"+endosoRecuperado);
 		
 		return endosoRecuperado;
 	}
