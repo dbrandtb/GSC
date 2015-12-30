@@ -2296,7 +2296,9 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                 for(var l=0;l<form.items.items.length;l++)
                                                                 {
                                                                     form.items.items[l].setDisabled(!value);
-                                                                    if(value)
+                                                                    if(value
+                                                                        &&(Ext.isEmpty(me.flagPuedesBorrar)||me.flagPuedesBorrar==true)
+                                                                    )
                                                                     {
                                                                         try
                                                                         {
@@ -3066,8 +3068,10 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             
                                             if(form.datosAnteriores.raw&&form.datosAnteriores.raw.amparada=='S')
                                             {
+                                                form.down('[name=amparada]').flagPuedesBorrar = false;
                                                 form.down('[name=amparada]').setValue(true);
                                                 debug('se "checkeo" el box');
+                                                form.down('[name=amparada]').flagPuedesBorrar = true;
                                             }
                                             else
                                             {
