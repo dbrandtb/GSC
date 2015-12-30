@@ -20,7 +20,7 @@
 		
 		Ext.define('modelListadoAsegurado',{
 			extend: 'Ext.data.Model',
-			fields: [  	
+			fields: [
 				{type:'string',    name:'CVECLIENSIGS'		},			{type:'string',    name:'SUCEMISORA'		},			{type:'string',    name:'TIPERSONA'			},
 				{type:'string',    name:'NOMCLIENTE'		},			{type:'string',    name:'NOMCLIENTE1'		},			{type:'string',    name:'NOMCLIENTE2'		},
 				{type:'string',    name:'APPATERNO'			},			{type:'string',    name:'APMATERNO'			},			{type:'string',    name:'RAZONSOCIAL'		},
@@ -107,22 +107,22 @@
 		}
 		
 		var panelInicialPral = Ext.create('Ext.form.Panel', {
-		    title: 'Datos de la P&oacute;liza',
-		    id: 'panelInicialPral',
-		    bodyPadding: 5,
-		    defaultType: 'textfield',
-		    layout      : {
+			title: 'Datos de la P&oacute;liza',
+			id: 'panelInicialPral',
+			bodyPadding: 5,
+			defaultType: 'textfield',
+			layout      : {
 				type    : 'table'
 				,columns: 3
 			},
 			defaults 	: {
 				style   : 'margin:5px;'
 			},
-		    items: [
+			items: [
 				cmbSucursal,
-		    	{       fieldLabel	: 'Ramo',		        name		: 'cveRamo',		        allowBlank	: false, 		type: 'numberfield',	readOnly   : (pantallaPrincipal =="0")	},
-		    	{       fieldLabel	: 'P&oacute;liza',      name		: 'nmPoliza',		        allowBlank	: false,		readOnly   : (pantallaPrincipal =="0")	}
-	    	]
+				{       fieldLabel	: 'Ramo',		        name		: 'cveRamo',		        allowBlank	: false, 		type: 'numberfield',	readOnly   : (pantallaPrincipal =="0")	},
+				{       fieldLabel	: 'P&oacute;liza',      name		: 'nmPoliza',		        allowBlank	: false,		readOnly   : (pantallaPrincipal =="0")	}
+			]
 			,buttonAlign:'center'
 			//El boton unicante aparecera para polizas NO SICAPS
 			,buttons: [{
@@ -140,62 +140,56 @@
 					datosContratante.down('[name=rfcContratante]').setValue('');
 					datosContratante.down('[name=dsnomCompleto]').setValue('');
 					datosContratante.down('[name=dsRazonSocial]').setValue('');
-					
 					var form = this.up('form').getForm();
 					if (form.isValid()){
 						Ext.Ajax.request({
-                  			url     : _URL_OBTIENE_CLIENTE
-                  			,params : {
-                  				'params.sucursal'  : panelInicialPral.down('combo[name=cmbSucursal]').getValue()
-                  				,'params.ramo'      : panelInicialPral.down('[name=cveRamo]').getValue()
-                  				,'params.poliza'    : panelInicialPral.down('[name=nmPoliza]').getValue()
-                  			}
-                  			,success : function(response) {
-                  				var json=Ext.decode(response.responseText);
-                  				if(json.success!=true){
-                  					centrarVentanaInterna(mensajeError(json.message));
-                  				}else{
-                  					var desTipoPersona = null;
-                      				if(json.list[0].TIPERSONA =="1"){
-                      					desTipoPersona = "FISICA";
-                    					validaCamposRequerido("F");
-                      					
-                      					
-                      				}else if(json.list[0].TIPERSONA =="2"){
-                      					desTipoPersona = "MORAL";
-                    					validaCamposRequerido("M");
-                      				}else{
-                      					desTipoPersona = "SIMPLIFICADO";
-                    					validaCamposRequerido("S");
-                      				}
-                      				
-                      				storeListadoAsegurado.removeAll();
-                      				var rec = new modelListadoAsegurado({
-                      					CVECLIENSIGS    : json.list[0].CVECLIENSIGS,
-                      					SUCEMISORA    	: json.list[0].SUCEMISORA,
-                      					TIPERSONA    	: json.list[0].TIPERSONA,
-                      					DESTIPERSONA    : desTipoPersona,
-                      					NOMCLIENTE    	: json.list[0].NOMCLIENTE,
-                      					APPATERNO    	: json.list[0].APPATERNO,
-                      					APMATERNO    	: json.list[0].APMATERNO,
-                      					RAZONSOCIAL    	: json.list[0].RAZONSOCIAL,
-                      					RFCCLIENTE    	: json.list[0].RFCCLIENTE,
-                      					CVEIFE    		: json.list[0].CVEIFE,
-                      					CURP    		: json.list[0].CURP,
-                      					CALLECLIENTE    : json.list[0].CALLECLIENTE,
-                      					NUMCLIENTE    	: json.list[0].NUMCLIENTE,
-                      					CPCLIENTE    	: json.list[0].CPCLIENTE,
-                      					FECNACIMIENTO   : json.list[0].FECNACIMIENTO
-        							});
-                      				storeListadoAsegurado.add(rec);
-                      				
-                      				importaPersonaWS("D", json.list[0].CVEEXTERNA);
-                  				}
-                  			}
-                  			,failure : errorComunicacion
-                  		});
-					}
-					else{
+							url     : _URL_OBTIENE_CLIENTE
+							,params : {
+								'params.sucursal'  : panelInicialPral.down('combo[name=cmbSucursal]').getValue()
+								,'params.ramo'      : panelInicialPral.down('[name=cveRamo]').getValue()
+								,'params.poliza'    : panelInicialPral.down('[name=nmPoliza]').getValue()
+							}
+							,success : function(response) {
+								var json=Ext.decode(response.responseText);
+								if(json.success!=true){
+									centrarVentanaInterna(mensajeError(json.message));
+								}else{
+									var desTipoPersona = null;
+									if(json.list[0].TIPERSONA =="1"){
+										desTipoPersona = "FISICA";
+										validaCamposRequerido("F");
+									}else if(json.list[0].TIPERSONA =="2"){
+										desTipoPersona = "MORAL";
+										validaCamposRequerido("M");
+									}else{
+										desTipoPersona = "SIMPLIFICADO";
+										validaCamposRequerido("S");
+									}
+									storeListadoAsegurado.removeAll();
+									var rec = new modelListadoAsegurado({
+										CVECLIENSIGS    : json.list[0].CVECLIENSIGS,
+										SUCEMISORA    	: json.list[0].SUCEMISORA,
+										TIPERSONA    	: json.list[0].TIPERSONA,
+										DESTIPERSONA    : desTipoPersona,
+										NOMCLIENTE    	: json.list[0].NOMCLIENTE,
+										APPATERNO    	: json.list[0].APPATERNO,
+										APMATERNO    	: json.list[0].APMATERNO,
+										RAZONSOCIAL    	: json.list[0].RAZONSOCIAL,
+										RFCCLIENTE    	: json.list[0].RFCCLIENTE,
+										CVEIFE    		: json.list[0].CVEIFE,
+										CURP    		: json.list[0].CURP,
+										CALLECLIENTE    : json.list[0].CALLECLIENTE,
+										NUMCLIENTE    	: json.list[0].NUMCLIENTE,
+										CPCLIENTE    	: json.list[0].CPCLIENTE,
+										FECNACIMIENTO   : json.list[0].FECNACIMIENTO
+									});
+									storeListadoAsegurado.add(rec);
+									importaPersonaWS("D", json.list[0].CVEEXTERNA);
+								}
+							}
+							,failure : errorComunicacion
+						});
+					}else{
 						Ext.Msg.show({
 							title:'Datos incompletos',
 							msg: 'Favor de introducir todos los campos requeridos',
@@ -243,67 +237,61 @@
 		});
 		
 		var datosContratante = Ext.create('Ext.form.Panel',{
-   	        id          : 'datosContratante',
-   	        bodyPadding : 5,
-   	        title: 'Cambio del contratante',
-   	        defaults 	: {
+			id          : 'datosContratante',
+			bodyPadding : 5,
+			title: 'Cambio del contratante',
+			defaults 	: {
 				style   : 'margin:5px;'
 			},
 			items       :[
 				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Primer nombre',				name       : 'dsnombre'
-				    ,width		 : 400,					allowBlank	: (pantallaPrincipal !="0"),    						hidden : (pantallaPrincipal !="0")
+					,width		 : 400,					allowBlank	: (pantallaPrincipal !="0"),    						hidden : (pantallaPrincipal !="0")
 				},
 				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Segundo nombre',				name       : 'dsnombre1'
-				    ,width		 : 400,					hidden      : (pantallaPrincipal !="0")
+					,width		 : 400,					hidden      : (pantallaPrincipal !="0")
 				},
 				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Nombre completo',				name       : 'dsnomCompleto'
-				    ,width		 : 400,					allowBlank	: (pantallaPrincipal =="0"),							hidden : (pantallaPrincipal =="0")
+					,width		 : 400,					allowBlank	: (pantallaPrincipal =="0"),							hidden : (pantallaPrincipal =="0")
 				},
 				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Raz&oacute;n social',			name       : 'dsRazonSocial'
-				    ,width		 : 400,					allowBlank	: (pantallaPrincipal =="0"),							hidden : (pantallaPrincipal =="0")
+					,width		 : 400,					allowBlank	: (pantallaPrincipal =="0"),							hidden : (pantallaPrincipal =="0")
 				},
 				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Apellido Paterno',			name       : 'dsapellido'
-				    ,width		 : 400,					allowBlank	: true
+					,width		 : 400,					allowBlank	: true
 				},
 				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Apellido Materno',			name       : 'dsapellido1'
-				    ,width		 : 400,					allowBlank	: true
+					,width		 : 400,					allowBlank	: true
 				},
 				{	xtype		: 'datefield',			labelWidth: 150,		fieldLabel	: 'Fecha nacimiento',			name	   : 'fenacini'
 					,format		: 'd/m/Y',				allowBlank	: false
 				},
 				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'RFC',							name       : 'rfcContratante'
-				    ,width		 : 400,					allowBlank	: false
+					,width		 : 400,					allowBlank	: false
 				}
-   	        ]
-   	    });
-		
-		
-	    _35_panelPri=Ext.create('Ext.panel.Panel',{
-   	        renderTo     : 'maindivHist'
-   	        , id : '_35_panelPri'
-   	        ,defaults    :
-   	        {
-   	            style : 'margin : 5px;'
-   	        }
-   	        ,items       :
-   	        [
-   	            //_35_formLectura
-   	            panelInicialPral
-   	            ,gridDatos
-   	            ,datosContratante
-   	        ]
-   	        ,buttonAlign : 'center'
-   	        ,buttons     :
-   	        [
-   	            {
-   	                text      : 'Confirmar endoso'
-   	                ,icon     : '${ctx}/resources/fam3icons/icons/key.png'
-   	                ,handler: function() {
-   	                	var formPanel = this.up().up();
-   	                	debug(datosContratante.isValid());
-   	                	
-   	                	if(datosContratante.isValid()){
- 							var submitValues={};
+			]
+		});
+
+		_35_panelPri=Ext.create('Ext.panel.Panel',{
+			renderTo     : 'maindivHist'
+			, id : '_35_panelPri'
+			,defaults    : {
+				style : 'margin : 5px;'
+			}
+			,items       : [
+				panelInicialPral
+				,gridDatos
+				,datosContratante
+			]
+			,buttonAlign : 'center'
+			,buttons     : [
+				{
+					text      : 'Confirmar endoso'
+					,icon     : '${ctx}/resources/fam3icons/icons/key.png'
+					,handler: function() {
+						var formPanel = this.up().up();
+						debug(datosContratante.isValid());
+						if(datosContratante.isValid()){
+							var submitValues={};
 							params = {
 								'cdperson'    : clienteSeleccionado.pv_cdperson,
 								'cdtipide'    : clienteSeleccionado.CDTIPIDE,
@@ -335,104 +323,108 @@
 								'nmpoliza'    : clienteSeleccionado.pv_nmpoliza,
 								'nmpoliex'    : clienteSeleccionado.NMPOLIEX,
 								'sucursalEntrada': panelInicialPral.down('combo[name=cmbSucursal]').getValue(),
-                  				'ramoEntrada'   : panelInicialPral.down('[name=cveRamo]').getValue(),
-                  				'polizaEntrada' : panelInicialPral.down('[name=nmPoliza]').getValue(),
-                  				'tipoPantalla'  : clienteSeleccionado.tipoPantalla,
-                  				'cdpersonNuevo' : cdpersonNuevo,
-                  				'codigoCliExterno'  : codigoCliExterno
+								'ramoEntrada'   : panelInicialPral.down('[name=cveRamo]').getValue(),
+								'polizaEntrada' : panelInicialPral.down('[name=nmPoliza]').getValue(),
+								'tipoPantalla'  : clienteSeleccionado.tipoPantalla,
+								'cdpersonNuevo' : cdpersonNuevo,
+								'codigoCliExterno'  : codigoCliExterno
 							}
-							
 							submitValues['smap1']= params;
 							Ext.Ajax.request( {
-	   						    url: _35_urlGuardar,
-	   						    jsonData: Ext.encode(submitValues),
-	   						    success:function(response,opts){
-	   						    	 panelInicialPral.setLoading(false);
-	   						         var jsonResp = Ext.decode(response.responseText);
-	   						         var callbackRemesa = function(){
-	   						             marendNavegacion(2);
-	   						         };
-	   						         
-	   						         mensajeCorrecto("Endoso",jsonResp.respuesta,function(){
-	   						      		if(pantallaPrincipal =="1"){
-	   						      			var numRand=Math.floor((Math.random()*100000)+1);	
-		   						      		var windowVerDocu=Ext.create('Ext.window.Window',
-											{
-												title          : 'ENDOSOS P&Oacute;LIZA NO SICAPS'
-												,width         : 700
-												,height        : 500
-												,collapsible   : true
-												,titleCollapse : true
-												,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-																	+'src= http://gswas.com.mx/ImpresionDesa/servlet/aendosob?'+panelInicialPral.down('combo[name=cmbSucursal]').getValue()
-																	+','+panelInicialPral.down('[name=cveRamo]').getValue()+','+panelInicialPral.down('[name=nmPoliza]').getValue()
-																	+',,0,'+jsonResp.smap2.numEndosoSIGS+',0>'
+								url: _35_urlGuardar,
+								jsonData: Ext.encode(submitValues),
+								success:function(response,opts){
+									panelInicialPral.setLoading(false);
+									var jsonResp = Ext.decode(response.responseText);
+									var callbackRemesa = function(){
+										marendNavegacion(2);
+									};
+									if(jsonResp.success==false){
+										Ext.Msg.show({
+											title:'Endoso',
+											msg: jsonResp.respuesta,
+											buttons: Ext.Msg.OK,
+											icon: Ext.Msg.WARNING
+										});
+									}else{
+										mensajeCorrecto("Endoso",jsonResp.respuesta,function(){
+											if(pantallaPrincipal =="1"){
+												var numRand=Math.floor((Math.random()*100000)+1);
+												var windowVerDocu=Ext.create('Ext.window.Window', {
+													title          : 'ENDOSOS P&Oacute;LIZA NO SICAPS'
+													,width         : 700
+													,height        : 500
+													,collapsible   : true
+													,titleCollapse : true
+													,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+																		+'src='+clienteSeleccionado.rutaPDF+'?'+panelInicialPral.down('combo[name=cmbSucursal]').getValue()
+																		+','+panelInicialPral.down('[name=cveRamo]').getValue()+','+panelInicialPral.down('[name=nmPoliza]').getValue()
+																		+',,0,'+jsonResp.smap2.numEndosoSIGS+',0>'
 																	+'</iframe>'
-												,listeners     :
-												{
-													resize : function(win,width,height,opt){
-														$('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
-													},
-					   						      	close:function(){
-														if(true){
-															cdpersonNuevo = 0;
-						   						     		codigoCliExterno = 0;
-					   						      			_generarRemesaClic2(
-							   						      	         true
-							   						      	         ,panelInicialPral.down('combo[name=cmbSucursal]').getValue()
-							   						      	         ,panelInicialPral.down('[name=cveRamo]').getValue()
-							   						      	         ,'M'
-							   						      	         ,panelInicialPral.down('[name=nmPoliza]').getValue()
-							   						      	         ,callbackRemesa
-						   						      	     );
-															Ext.create('Ext.form.Panel').submit(
-				   											{
-				   												url		: _CONTEXT+'/seguridad/accesoDirecto.action?codigoCliente=6442&codigoRol=EJECUTIVOCUENTA&params.acceso=endosoPolizasNoSICAPS&user=biosnet1'
-				   												,standardSubmit : true
-				   											});
+													,listeners     : {
+														resize : function(win,width,height,opt){
+															$('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+														},
+														close:function(){
+															if(true){
+																cdpersonNuevo = 0;
+																codigoCliExterno = 0;
+																_generarRemesaClic2(
+																	true
+																	,panelInicialPral.down('combo[name=cmbSucursal]').getValue()
+																	 ,panelInicialPral.down('[name=cveRamo]').getValue()
+																	 ,'M'
+																	 ,panelInicialPral.down('[name=nmPoliza]').getValue()
+																	 ,callbackRemesa
+																);
+																Ext.create('Ext.form.Panel').submit(
+																{
+																	url		: _CONTEXT+'/seguridad/accesoDirecto.action?codigoCliente=6442&codigoRol=EJECUTIVOCUENTA&params.acceso=endosoPolizasNoSICAPS&user=biosnet1'
+																	,standardSubmit : true
+																});
+															}
 														}
 													}
-												}
-											}).show();
-											windowVerDocu.center();
-	   						      		}else{
-	   						      		debug("Entra a la opcion 2");
-	   						      			_generarRemesaClic(
-			   						      	         true
-			   						      	         ,clienteSeleccionado.pv_cdunieco
-			   						      	         ,clienteSeleccionado.pv_cdramo
-			   						      	         ,clienteSeleccionado.pv_estado
-			   						      	         ,clienteSeleccionado.pv_nmpoliza
-			   						      	         ,callbackRemesa
-		   						      	     );
-	   						      		}
-	   						      	 });
-	   						    },
-	   						    failure:function(response,opts){
-	   						        panelInicialPral.setLoading(false);
-	   						        Ext.Msg.show({
-	   						            title:'Error',
-	   						            msg: 'Error de comunicaci&oacute;n',
-	   						            buttons: Ext.Msg.OK,
-	   						            icon: Ext.Msg.ERROR
-	   						        });
-	   						    }
-	   						});
-   						}else {
-   							myMask.hide();
-   							Ext.Msg.show({
-   								title: 'Aviso',
-   								msg: 'Complete la informaci&oacute;n requerida',
-   								buttons: Ext.Msg.OK,
-   								icon: Ext.Msg.WARNING
-   							});
-   						}
-   	            	}
-   	            }
-   	        ]
-   	    });
-	    
-		
+												}).show();
+												windowVerDocu.center();
+											}else{
+												debug("Entra a la opcion 2");
+												_generarRemesaClic(
+													true
+													 ,clienteSeleccionado.pv_cdunieco
+													 ,clienteSeleccionado.pv_cdramo
+													 ,clienteSeleccionado.pv_estado
+													 ,clienteSeleccionado.pv_nmpoliza
+													 ,callbackRemesa
+												);
+											}
+										});
+									}
+								},
+								failure:function(response,opts){
+									panelInicialPral.setLoading(false);
+									Ext.Msg.show({
+										title:'Error',
+										msg: 'Error de comunicaci&oacute;n',
+										buttons: Ext.Msg.OK,
+										icon: Ext.Msg.ERROR
+									});
+								}
+							});
+						}else {
+							myMask.hide();
+							Ext.Msg.show({
+								title: 'Aviso',
+								msg: 'Complete la informaci&oacute;n requerida',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.WARNING
+							});
+						}
+					}
+				}
+			]
+		});
+
 		////// loaders //////
 		//VALORES DE ENTRADA PARA POLIZAS SICAPS
 		if(clienteSeleccionado.tipoPantalla == "0"){
@@ -444,20 +436,16 @@
 			var desTipoPersona = null;
 			var nombreCompl ="";
 			var razonSocialC = "";
-			
 			debug("Valor de clienteSeleccionado.DSNOMBRE1 ===="+clienteSeleccionado.DSNOMBRE1);
 			debug(clienteSeleccionado.DSNOMBRE1);
-			
 			if(clienteSeleccionado.DSNOMBRE1 == null ||clienteSeleccionado.DSNOMBRE1 == 'null' || clienteSeleccionado.DSNOMBRE1 == '' ){
 				nombreCompl = clienteSeleccionado.DSNOMBRE;
 			}else{
 				nombreCompl = clienteSeleccionado.DSNOMBRE+" "+clienteSeleccionado.DSNOMBRE1;
 			}
-			
 			if(clienteSeleccionado.OTFISJUR =="F"){
 				desTipoPersona = "FISICA";
 				validaCamposRequerido(clienteSeleccionado.OTFISJUR);
-				
 			}else if(clienteSeleccionado.OTFISJUR =="M"){
 				desTipoPersona = "MORAL";
 				validaCamposRequerido(clienteSeleccionado.OTFISJUR);
@@ -466,7 +454,6 @@
 				}else{
 					razonSocialC = clienteSeleccionado.DSRAZSOC;
 				}
-				
 			}else{
 				desTipoPersona = "SIMPLIFICADO"
 				validaCamposRequerido("S");
@@ -476,44 +463,41 @@
 					razonSocialC = clienteSeleccionado.DSRAZSOC;
 				}
 			}
-			
-			
 			var rec = new modelListadoAsegurado({
-					CVECLIENSIGS    : clienteSeleccionado.CDIDEPER,
-					SUCEMISORA    	: clienteSeleccionado.pv_cdunieco,
-					TIPERSONA    	: clienteSeleccionado.OTFISJUR,
-					DESTIPERSONA    : desTipoPersona,
-					NOMCLIENTE    	: nombreCompl,
-					NOMCLIENTE1    	: clienteSeleccionado.DSNOMBRE,
-					NOMCLIENTE2    	: clienteSeleccionado.DSNOMBRE1,
-					APPATERNO    	: clienteSeleccionado.DSAPELLIDO,
-					APMATERNO    	: clienteSeleccionado.DSAPELLIDO1,
-					RAZONSOCIAL    	: razonSocialC,
-					RFCCLIENTE    	: clienteSeleccionado.CDRFC,
-					CVEIFE    		: null,
-					CURP    		: null,
-					CALLECLIENTE    : null,//clienteSeleccionado.OTFISJUR,
-					NUMCLIENTE    	: null,//clienteSeleccionado.OTFISJUR,
-					CPCLIENTE    	: null,//clienteSeleccionado.OTFISJUR,
-					FECNACIMIENTO   : clienteSeleccionado.FENACIMI
+				CVECLIENSIGS    : clienteSeleccionado.CDIDEPER,
+				SUCEMISORA    	: clienteSeleccionado.pv_cdunieco,
+				TIPERSONA    	: clienteSeleccionado.OTFISJUR,
+				DESTIPERSONA    : desTipoPersona,
+				NOMCLIENTE    	: nombreCompl,
+				NOMCLIENTE1    	: clienteSeleccionado.DSNOMBRE,
+				NOMCLIENTE2    	: clienteSeleccionado.DSNOMBRE1,
+				APPATERNO    	: clienteSeleccionado.DSAPELLIDO,
+				APMATERNO    	: clienteSeleccionado.DSAPELLIDO1,
+				RAZONSOCIAL    	: razonSocialC,
+				RFCCLIENTE    	: clienteSeleccionado.CDRFC,
+				CVEIFE    		: null,
+				CURP    		: null,
+				CALLECLIENTE    : null,//clienteSeleccionado.OTFISJUR,
+				NUMCLIENTE    	: null,//clienteSeleccionado.OTFISJUR,
+				CPCLIENTE    	: null,//clienteSeleccionado.OTFISJUR,
+				FECNACIMIENTO   : clienteSeleccionado.FENACIMI
 			});
 			storeListadoAsegurado.add(rec);
 		}
-    });
-	
+	});
+
 	function importaPersonaWS(esSaludD, codigoCliExt){
 		Ext.Ajax.request({
 			url       : _UrlImportaPersonaWS
 			,params: {
-				'params.esSalud':  esSaludD,
-				'params.codigoCliExt':  codigoCliExt
+			'params.esSalud':  esSaludD,
+			'params.codigoCliExt':  codigoCliExt
 			}
 			,success  : function(response){
 				var json = Ext.decode(response.responseText);
 				debug('response text:',json);
 				if(json.exito){
 					debug("Valores de recuperacion ==> ",json.params.cdpersonNuevo, json.params.codigoCliExt);
-					
 					cdpersonNuevo = json.params.cdpersonNuevo;
 					codigoCliExterno  = json.params.codigoCliExt;
 				}else{
@@ -527,8 +511,6 @@
 			}
 		});
 	}
-//////funciones //////
-///////////////////////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="maindivHist" style="height:500px;"></div>
