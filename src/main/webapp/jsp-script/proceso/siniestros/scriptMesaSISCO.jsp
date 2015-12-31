@@ -253,12 +253,12 @@ var msgWindow;
        	                                ,itemId     : 'SWAGENTE2'
        	                                ,name       : 'SWAGENTE2'
        	                                ,inputValue : 'S'
-       	                                ,checked    : true
        	                            }
        	                            ,{
        	                                boxLabel    : 'No'
        	                                ,name       : 'SWAGENTE2'
        	                                ,inputValue : 'N'
+                                        ,checked    : true
        	                            }
        	                        ]
        	                    }],
@@ -400,12 +400,12 @@ var msgWindow;
 				        	                                ,itemId     : 'SWAGENTE3'
 				        	                                ,name       : 'SWAGENTE3'
 				        	                                ,inputValue : 'S'
-				        	                                ,checked    : true
 				        	                            }
 				        	                            ,{
 				        	                                boxLabel    : 'No'
 				        	                                ,name       : 'SWAGENTE3'
 				        	                                ,inputValue : 'N'
+                                                            ,checked    : true
 				        	                            }
 				        	                        ]
 				        	                    }],

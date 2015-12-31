@@ -304,12 +304,12 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
 						                            ,itemId     : 'SWAGENTE2'
 						                            ,name       : 'SWAGENTE2'
 						                            ,inputValue : 'S'
-						                            ,checked    : true
 						                        }
 						                        ,{
 						                            boxLabel    : 'No'
 						                            ,name       : 'SWAGENTE2'
 						                            ,inputValue : 'N'
+	                                                ,checked    : true
 						                        }
 						                    ]
 						                }
@@ -711,12 +711,12 @@ function activarTramiteAutorizacionServ (grid,rowIndex,colIndex){
 						                        ,itemId     : 'SWAGENTE2'
 						                        ,name       : 'SWAGENTE2'
 						                        ,inputValue : 'S'
-						                        ,checked    : true
 						                    }
 						                    ,{
 						                        boxLabel    : 'No'
 						                        ,name       : 'SWAGENTE2'
 						                        ,inputValue : 'N'
+                                                ,checked    : true
 						                    }
 						                ]
 						            }],
