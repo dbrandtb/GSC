@@ -1460,12 +1460,12 @@ Ext.onReady(function()
 	                                            ,itemId     : 'SWAGENTE'
 	                                            ,name       : 'SWAGENTE'
 	                                            ,inputValue : 'S'
-	                                            ,checked    : true
 	                                        }
 	                                        ,{
 	                                            boxLabel    : 'No'
 	                                            ,name       : 'SWAGENTE'
 	                                            ,inputValue : 'N'
+	                                            ,checked    : true
 	                                        }
 	                                    ]
 	                                }

@@ -3368,12 +3368,12 @@
                             ,itemId     : 'SWAGENTE2'
                             ,name       : 'SWAGENTE2'
                             ,inputValue : 'S'
-                            ,checked    : true
                         }
                         ,{
                             boxLabel    : 'No'
                             ,name       : 'SWAGENTE2'
                             ,inputValue : 'N'
+                            ,checked    : true
                         }
                     ]
                 }
@@ -4911,12 +4911,12 @@
         	                                ,itemId     : 'SWAGENTE3'
         	                                ,name       : 'SWAGENTE3'
         	                                ,inputValue : 'S'
-        	                                ,checked    : true
         	                            }
         	                            ,{
         	                                boxLabel    : 'No'
         	                                ,name       : 'SWAGENTE3'
         	                                ,inputValue : 'N'
+                                            ,checked    : true
         	                            }
         	                        ]
         	                    }],
@@ -5164,12 +5164,12 @@
 		                            ,itemId     : 'SWAGENTE4'
 		                            ,name       : 'SWAGENTE4'
 		                            ,inputValue : 'S'
-		                            ,checked    : true
 		                        }
 		                        ,{
 		                            boxLabel    : 'No'
 		                            ,name       : 'SWAGENTE4'
 		                            ,inputValue : 'N'
+                                    ,checked    : true
 		                        }
 		                    ]
 		                }],
@@ -5286,12 +5286,12 @@
 				        	                                ,itemId     : 'SWAGENTE5'
 				        	                                ,name       : 'SWAGENTE5'
 				        	                                ,inputValue : 'S'
-				        	                                ,checked    : true
 				        	                            }
 				        	                            ,{
 				        	                                boxLabel    : 'No'
 				        	                                ,name       : 'SWAGENTE5'
 				        	                                ,inputValue : 'N'
+                                                            ,checked    : true
 				        	                            }
 				        	                        ]
 				        	                    }],

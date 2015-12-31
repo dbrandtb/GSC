@@ -344,12 +344,12 @@ var msgWindow;
 									                            ,itemId     : 'SWAGENTE2'
 									                            ,name       : 'SWAGENTE2'
 									                            ,inputValue : 'S'
-									                            ,checked    : true
 									                        }
 									                        ,{
 									                            boxLabel    : 'No'
 									                            ,name       : 'SWAGENTE2'
 									                            ,inputValue : 'N'
+                                                                ,checked    : true
 									                        }
 									                    ]
 									                }],
@@ -616,12 +616,12 @@ var msgWindow;
        	                                ,itemId     : 'SWAGENTE3'
        	                                ,name       : 'SWAGENTE3'
        	                                ,inputValue : 'S'
-       	                                ,checked    : true
        	                            }
        	                            ,{
        	                                boxLabel    : 'No'
        	                                ,name       : 'SWAGENTE3'
        	                                ,inputValue : 'N'
+                                        ,checked    : true
        	                            }
        	                        ]
        	                    }],
@@ -757,12 +757,12 @@ var msgWindow;
 		        	                                ,itemId     : 'SWAGENTE4'
 		        	                                ,name       : 'SWAGENTE4'
 		        	                                ,inputValue : 'S'
-		        	                                ,checked    : true
 		        	                            }
 		        	                            ,{
 		        	                                boxLabel    : 'No'
 		        	                                ,name       : 'SWAGENTE4'
 		        	                                ,inputValue : 'N'
+                                                    ,checked    : true
 		        	                            }
 		        	                        ]
 		        	                    }],
@@ -872,12 +872,12 @@ var msgWindow;
        	                                ,itemId     : 'SWAGENTE5'
        	                                ,name       : 'SWAGENTE5'
        	                                ,inputValue : 'S'
-       	                                ,checked    : true
        	                            }
        	                            ,{
        	                                boxLabel    : 'No'
        	                                ,name       : 'SWAGENTE5'
        	                                ,inputValue : 'N'
+                                        ,checked    : true
        	                            }
        	                        ]
        	                    }],
@@ -1578,12 +1578,12 @@ function turnarDevolucionTramite(grid,rowIndex,colIndex){
                             ,itemId     : 'SWAGENTE6'
                             ,name       : 'SWAGENTE6'
                             ,inputValue : 'S'
-                            ,checked    : true
                         }
                         ,{
                             boxLabel    : 'No'
                             ,name       : 'SWAGENTE6'
                             ,inputValue : 'N'
+                            ,checked    : true
                         }
                     ]
                 }],
