@@ -514,7 +514,9 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 							incisoIterado.setCilindraje(row.get("CILINDRAJE"));
 							incisoIterado.setDescuentoInciso(Double.valueOf(row.get("DESCUENTOINCISO")));
 							
-							incisoIterado.setFechaFactura(Utils.getCalendarServerTimeZone(m.get("FECHAFACTURA"), Constantes.FORMATO_FECHA));
+							incisoIterado.setFechaFactura(Utils.getCalendarServerTimeZone(row.get("FECHAFACTURA"), Constantes.FORMATO_FECHA));
+							
+							incisoIterado.setSaRcvDias(Integer.valueOf(row.get("SARCVDIAS")));
 							
 							//versionTarifa
 							confPaq.setVersionTarifa(Integer.valueOf(row.get("VERSIONTARIFAINC")));
