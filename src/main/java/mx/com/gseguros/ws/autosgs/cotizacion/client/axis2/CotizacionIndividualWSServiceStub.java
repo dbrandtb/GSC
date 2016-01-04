@@ -54243,6 +54243,36 @@
                             
 
                         /**
+                        * field for SaRcvDias
+                        */
+
+                        
+                                    protected int localSaRcvDias ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getSaRcvDias(){
+                               return localSaRcvDias;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param SaRcvDias
+                               */
+                               public void setSaRcvDias(int param){
+                            
+                                            this.localSaRcvDias=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for Salvamento
                         */
 
@@ -55537,6 +55567,35 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
+                                            xmlWriter.writeStartElement(prefix,"saRcvDias", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"saRcvDias");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("saRcvDias");
+                                    }
+                                
+                                               if (localSaRcvDias==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("saRcvDias cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localSaRcvDias));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
                                             xmlWriter.writeStartElement(prefix,"salvamento", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
@@ -56093,6 +56152,12 @@
                                  
                                 elementList.add(
                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localPrimaNeta));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "saRcvDias"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localSaRcvDias));
                             
                                       elementList.add(new javax.xml.namespace.QName("",
                                                                       "salvamento"));
@@ -56784,6 +56849,25 @@
                                     
                                               object.setPrimaNeta(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToDouble(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","saRcvDias").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setSaRcvDias(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
                                               
                                         reader.next();
                                     
