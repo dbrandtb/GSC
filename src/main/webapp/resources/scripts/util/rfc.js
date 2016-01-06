@@ -72,8 +72,9 @@ function validaRFC(tipoPersona, nombre, nombre2, apaterno, amaterno, fecha, rfc)
 function generaRFC(tipoPersona, nombre, nombre2, apaterno, amaterno, fecha) {
     try {
         if(tipoPersona == 'F') {
-            return apaterno.substr(0,2) + amaterno.substr(0,1) + nombre.substr(0, 1) +
-                fecha.substr(8, 2) + fecha.substr(3, 2) + fecha.substr(0, 2);
+            //return apaterno.substr(0,2) + amaterno.substr(0,1) + nombre.substr(0, 1) +
+                //fecha.substr(8, 2) + fecha.substr(3, 2) + fecha.substr(0, 2);
+            return generaRFCPersonaFisica(nombre, nombre2, apaterno, amaterno, fecha);
         } else if(tipoPersona == 'M' || tipoPersona == 'S') { // Persona moral y regimen Simplificado
             //return nombre.substr(0,3) + fecha.substr(8, 2) + fecha.substr(3, 2) + fecha.substr(0, 2);
             return generaRFCPersonaMoral(nombre, fecha);
@@ -114,34 +115,96 @@ function run(){
  * @param {} amaterno Apellido materno
  * @param {} fecha  Fecha de nacimiento en formato DD/MM/YYYY
  */
-function generaRFCPersonaFisica(nombre, nombre2, apaterno, amaterno, fecha) {
+function generaRFCPersonaFisica(nombre1, nombre2, apaterno, amaterno, fecha) {
     
     // TODO: Analizar si le pasamos el nombre 1 y 2 en una sola variable
+	
+	
+	var nombreComp = nombre1 + ' ' + nombre2; 
+	
+	// Se convierte a mayuscula y sin acentos:
+	nombreComp = nombreComp.toUpperCase();
+	nombreComp = reemplazaCaracteresLatinos(nombreComp);
+    apaterno = apaterno.toUpperCase();
+    apaterno = reemplazaCaracteresLatinos(apaterno);
+    amaterno = amaterno.toUpperCase();
+    amaterno = reemplazaCaracteresLatinos(amaterno);
+    debug('A mayusculas y sin acentos:', nombreComp, apaterno, amaterno);
     
-    // REGLA 1
-    // Se integra la clave con los siguientes datos:
-    // 1.  La primera letra del apellido paterno y la siguiente primera vocal del mismo.
-	console.log('Parametros:', nombre, nombre2, apaterno, amaterno, fecha);
-    var tmp = apaterno.match(/\b(\w)/i)[0];
-    tmp += apaterno.match(/[aeiou]/i)[0];
-    console.log('Con apaterno:', tmp);
+    //
+    nombreComp = reemplazarCaracteresEspecialesPersonaFisica(nombreComp);
+    apaterno = reemplazarCaracteresEspecialesPersonaFisica(apaterno);
+    amaterno = reemplazarCaracteresEspecialesPersonaFisica(amaterno);
+    debug('Reemplazar caracteres especiales por su descripcion:', nombreComp, apaterno, amaterno);
     
-    // 2.  La primera letra del apellido materno.
-    tmp += amaterno.match(/\b(\w)/i)[0];
-    console.log('Con amaterno:', tmp);
+    // Se eliminan guiones, signos y puntos, etc:
+    nombreComp = quitaEspaciosSignosYPuntos(nombreComp);
+    apaterno = quitaEspaciosSignosYPuntos(apaterno);
+    amaterno = quitaEspaciosSignosYPuntos(amaterno);
+    debug('Sin espacios, signos ni puntos:', nombreComp, apaterno, amaterno);
     
-    // 3.  La primera letra del nombre.
-    tmp += nombre.match(/\b(\w)/i)[0];
-    console.log('Con nombre:', tmp);
+    // REGLA 8
+    // Cuando en el nombre de las personas físicas figuren artículos, preposiciones, conjunciones o contracciones 
+    // no se tomarán como elementos de integración de la clave:
+    nombreComp = quitaAbreviaturasPersonaFisica(nombreComp);
+    apaterno   = quitaAbreviaturasPersonaFisica(apaterno);
+    amaterno   = quitaAbreviaturasPersonaFisica(amaterno);
+    debug('Sin abreviaturas persona Fisica:', nombreComp, apaterno, amaterno);
     
+    // REGLA 6
+    // Cuando el nombre es compuesto, o sea, que esta formado por dos o más palabras, 
+    // se tomará para la conformación la letra inicial de la primera, 
+    // siempre que no sea MARIA o JOSE dado su frecuente uso, en cuyo caso se tomará la primera letra de la segunda palabra.
+    nombreComp  = nombreComp.replace(/\b(MARIA)\b/gi, '').replace(/\b(JOSE)\b/gi, '');
+    
+    var tmp = '';
+    
+    // REGLA 7
+    // En los casos en que la persona física tenga un solo apellido, 
+    // se conformará con la primera y segunda letras del apellido paterno o materno, 
+    // según figure en el acta de nacimiento, más la primera y segunda letras del nombre.
+    // Ejemplos:
+    // Juan Martínez       MAJU-420116
+    // Gerarda Zafra       ZAGE-251115
+    if(!apaterno || !amaterno) {
+    	debug('No cuenta con algun apellido');
+    	var apellido = apaterno + amaterno;
+    	debug('Apellido compuesto:', apellido);
+    	tmp = apellido.match(/\b(\w){2}/i)[0];
+    	tmp += nombreComp.match(/\b(\w){2}/i)[0];
+    	
+    } else {
+    	debug('Tiene los 2 apellidos');
+	    // REGLA 1
+        // Se integra la clave con los siguientes datos:
+        // 1.  La primera letra del apellido paterno y la siguiente primera vocal del mismo.
+        debug('Parametros:', nombreComp, apaterno, amaterno, fecha);
+        tmp = apaterno.match(/\b(\w)/i)[0];
+        tmp += apaterno.match(/[aeiou]/i)[0];
+        debug('Con apaterno:', tmp);
+        
+        // 2.  La primera letra del apellido materno.
+        tmp += amaterno.match(/\b(\w)/i)[0];
+        debug('Con amaterno:', tmp);
+        
+        // 3.  La primera letra del nombre.
+        tmp += nombreComp.match(/\b(\w)/i)[0];
+        debug('Con nombre:', tmp);
+    }
+
+    
+    // REGLA 9
+    // Cuando de las cuatro letras que formen la expresión alfabética, resulte una palabra inconveniente, 
+    // la última letra será sustituida por una  “ X “.
+    tmp = quitaPalabrasInconvenientesPersonaFisica(tmp);
     
     // REGLA 2
     // A continuación se anotará la fecha de nacimiento del contribuyente, en el siguiente orden:
     // Año: Se tomarán las dos últimas cifras, escribiéndolas con números arábigos.
-    // Mes: Se tomará el mes de nacimiento en su número de orden, en un año de calendario,                          escribiéndolo con números arábigos.
+    // Mes: Se tomará el mes de nacimiento en su número de orden, en un año de calendario, escribiéndolo con números arábigos.
     // Día: Se escribirá con números arábigos.
     tmp += fecha.substr(8, 2) + fecha.substr(3, 2) + fecha.substr(0, 2);
-    console.log('Con fecha:', tmp);
+    debug('Con fecha:', tmp);
     
     return tmp;
 }
@@ -155,31 +218,26 @@ function generaRFCPersonaFisica(nombre, nombre2, apaterno, amaterno, fecha) {
 function generaRFCPersonaMoral(nombre, fecha) {
     
     // Se convierte a mayuscula y sin acentos:
-    nombre = nombre.toUpperCase();
-    nombre = nombre.replace(/\u00C1/gi, 'A')
-                   .replace(/\u00C9/gi, 'E')
-                   .replace(/\u00CD/gi, 'I')
-                   .replace(/\u00D3/gi, 'O')
-                   .replace(/\u00DA/gi,"U").replace(/\u00DC/,"U")
-                   .replace(/\u00D1/,"N");  
-    console.log('A mayusculas y sin acentos:', nombre);
+    nombre = nombre.toUpperCase();  
+    nombre = reemplazaCaracteresLatinos(nombre);
+    debug('A mayusculas y sin acentos:', nombre);
     
     //
     nombre = reemplazarCaracteresEspecialesPersonaMoral(nombre);
-    console.log('Reemplazar caracteres especiales por su descripcion:', nombre);
+    debug('Reemplazar caracteres especiales por su descripcion:', nombre);
     
-    // Se eliminan guiones, articulos, etc:
+    // Se eliminan guiones, signos y puntos, etc:
     nombre = quitaEspaciosSignosYPuntos(nombre);
-    console.log('Sin articulos, puntos ni espacios:', nombre);
+    debug('Sin espacios, signos ni puntos:', nombre);
     
     // Regla 9.-
     // Cuando en la denominación o razón social figuren artículos, preposiciones y conjunciones o contracciones 
     // no se tomaran como elementos de integración de la clave:
     nombre = quitaAbreviaturasPersonaMoral(nombre);
-    console.log('Sin abreviaturas persona Moral:', nombre);
+    debug('Sin abreviaturas persona Moral:', nombre);
     
     var numPalabras = cuentaPalabras(nombre);
-    console.log('numPalabras=', numPalabras);
+    debug('numPalabras=', numPalabras);
     
     // Se obtiene la fecha de constitucion
     
@@ -239,13 +297,27 @@ function cuentaPalabras(txt) {
     txt = txt.replace(/[ ]{2,}/gi," ");
     txt = txt.replace(/\n /,"\n");
     
-    console.log('txt=="', txt, '"');
+    //debug('txt=="', txt, '"');
     
     if(txt.length > 0) {
     	return txt.split(" ").length;
     } else {
     	return 0;
     }
+}
+
+/**
+ * Reemplaza caracteres latinos, letras con acento y tildes
+ * @param {} txt
+ * @return {}
+ */
+function reemplazaCaracteresLatinos(txt) {
+	return txt.replace(/\u00E1/g, 'a').replace(/\u00C1/g, 'A')
+              .replace(/\u00E9/g, 'e').replace(/\u00C9/g, 'E')
+              .replace(/\u00ED/g, 'i').replace(/\u00CD/g, 'I')
+              .replace(/\u00F3/g, 'o').replace(/\u00D3/g, 'O')
+              .replace(/\u00FA/g, 'u').replace(/\u00DA/g, 'U').replace(/\u00FC/gi,"u").replace(/\u00DC/,"U")
+              .replace(/\u00F1/g, 'n').replace(/\u00D1/g, 'N');
 }
 
 /**
@@ -276,6 +348,95 @@ function quitaEspaciosSignosYPuntos(texto) {
     return txt;
 }
 
+
+function quitaPalabrasInconvenientesPersonaFisica(texto) {
+    
+    return texto.replace(/\b(BUEI)\b/gi, 'BUEX')
+                .replace(/\b(BUEY)\b/gi, 'BUEX')
+                .replace(/\b(CACA)\b/gi, 'CACX')
+                .replace(/\b(CACO)\b/gi, 'CACX')
+                .replace(/\b(CAGA)\b/gi, 'CAGX')
+                .replace(/\b(CAGO)\b/gi, 'CAGX')
+                .replace(/\b(CAKA)\b/gi, 'CAKX')
+                .replace(/\b(COGE)\b/gi, 'COGX')
+                .replace(/\b(COJA)\b/gi, 'COJX')
+                .replace(/\b(COJE)\b/gi, 'COJX')
+                .replace(/\b(COJI)\b/gi, 'COJX')
+                .replace(/\b(COJO)\b/gi, 'COJX')
+                .replace(/\b(CULO)\b/gi, 'CULX')
+                .replace(/\b(FETO)\b/gi, 'FETX')
+                .replace(/\b(GUEY)\b/gi, 'GUEX')
+                .replace(/\b(JOTO)\b/gi, 'JOTX')
+                .replace(/\b(KACA)\b/gi, 'KACX')
+                .replace(/\b(KACO)\b/gi, 'KACX')
+                .replace(/\b(KAGA)\b/gi, 'KAGX')
+                .replace(/\b(KAGO)\b/gi, 'KAGX')
+                .replace(/\b(KOGE)\b/gi, 'KOGX')
+                .replace(/\b(KOJO)\b/gi, 'KOJX')
+                .replace(/\b(KAKA)\b/gi, 'KAKX')
+                .replace(/\b(KULO)\b/gi, 'KULX')
+                .replace(/\b(MAME )\b/gi, 'MAMX')
+                .replace(/\b(MAMO)\b/gi, 'MAMX')
+                .replace(/\b(MEAR)\b/gi, 'MEAX')
+                .replace(/\b(MEON)\b/gi, 'MEOX')
+                .replace(/\b(MION)\b/gi, 'MIOX')
+                .replace(/\b(MOCO)\b/gi, 'MOCX')
+                .replace(/\b(MULA)\b/gi, 'MULX')
+                .replace(/\b(PEDA)\b/gi, 'PEDX')
+                .replace(/\b(PEDO)\b/gi, 'PEDX')
+                .replace(/\b(PENE)\b/gi, 'PENX')
+                .replace(/\b(PUTA)\b/gi, 'PUTX')
+                .replace(/\b(PUTO)\b/gi, 'PUTX')
+                .replace(/\b(QULO)\b/gi, 'QULX')
+                .replace(/\b(RATA)\b/gi, 'RATX')
+                .replace(/\b(RUIN)\b/gi, 'RUIX');
+}
+
+function quitaAbreviaturasPersonaFisica(texto) {
+    
+    return texto.replace('-', '')
+//                .replace(/\b(A C)\b/gi, '')
+                .replace(/\b(A EN P)\b/gi, '').replace(/\b(A  EN P)\b/gi, '')
+//                .replace(/\b(S DE RL)\b/gi, '').replace(/\b(S DE R L)\b/gi, '').replace(/\b(S  DE R L)\b/gi, '')
+                .replace(/\b(COMPAÑÍA)\b/gi, '').replace(/\b(COMPAÑIA)\b/gi, '').replace(/\b(COMPANIA)\b/gi, '').replace(/\b(COMPA&ÍA)\b/gi, '')
+                .replace(/\b(CIA)\b/gi, '').replace(/\b(CÍA)\b/gi, '')
+                .replace(/\b(SOC)\b/gi, '')
+                .replace(/\b(COOP)\b/gi, '')
+                .replace(/\b(S EN C POR A)\b/gi, '').replace(/\b(S  EN C POR A)\b/gi, '')
+//                .replace(/\b(S EN NC)\b/gi, '').replace(/\b(S EN N C)\b/gi, '')
+                .replace(/\b(SA DE CV)\b/gi, '').replace(/\b(S A DE C V)\b/gi, '').replace(/\b(S A  DE C V)\b/gi, '').replace(/\b(S A)\b/gi, '').replace(/\b(SA)\b/gi, '')
+//                .replace(/\b(PARA)\b/gi, '')
+//                .replace(/\b(POR)\b/gi, '')
+//                .replace(/\b(AL)\b/gi, '')
+                .replace(/\b(SC)\b/gi, '').replace(/\b(S C)\b/gi, '').replace(/\b(SCS)\b/gi, '').replace(/\b(S C S)\b/gi, '')
+//                .replace(/\b(SCL)\b/gi, '').replace(/\b(S C L)\b/gi, '')
+//                .replace(/\b(SNC)\b/gi, '').replace(/\b(S N C)\b/gi, '')
+//                .replace(/\b(OF)\b/gi, '')
+//                .replace(/\b(COMPANY)\b/gi, '')
+                .replace(/\b(MC)\b/gi, '').replace(/\b(MAC)\b/gi, '')
+                .replace(/\b(VAN)\b/gi, '')
+                .replace(/\b(VON)\b/gi, '')
+                .replace(/\b(MI)\b/gi, '')
+                .replace(/\b(SRL MI)\b/gi, '')
+//                .replace(/\b(SA MI)\b/gi, '')
+//                .replace(/\b(SRL CV MI)\b/gi, '')
+                // Articulos:
+//                .replace(/\b(CON)\b/gi, '')
+                .replace(/\b(DE)\b/gi, '')
+                .replace(/\b(DEL)\b/gi, '')
+//                .replace(/\b(EL)\b/gi, '')
+//                .replace(/\b(EN)\b/gi, '')
+                .replace(/\b(LA)\b/gi, '')
+                .replace(/\b(LOS)\b/gi, '')
+                .replace(/\b(LAS)\b/gi, '')
+                .replace(/\b(SUS)\b/gi, '')
+                .replace(/\b(THE)\b/gi, '')
+                .replace(/\b(AND)\b/gi, '')
+                .replace(/\b(CO)\b/gi, '')
+                .replace(/\b(Y)\b/gi, '')
+                .replace(/\b(A)\b/gi, '');
+                
+}
 
 function quitaAbreviaturasPersonaMoral(texto) {
 	
@@ -347,6 +508,23 @@ function quitaAbreviaturasPersonaMoral(texto) {
                 .replace(/\b(Y)\b/gi, '');
                 //.replace(/(^\s*)|(\s*$)/gi,"")
                 
+}
+
+function reemplazarCaracteresEspecialesPersonaFisica(txt) {
+    
+    // REGLA 10
+    // Cuando aparezcan formando parte del nombre, apellido paterno y apellido materno los caracteres especiales, 
+	// éstos deben de excluirse para el cálculo del homónimo y del dígito verificador. 
+	// Los caracteres se interpretarán, sí y sólo si, están en forma individual 
+	// dentro del nombre, apellido paterno y apellido materno. 
+    txt = txt.replace(/\u0027(?=\s|$)/gi, 'APOSTROFE').replace(/\u2018(?=\s|$)/gi, 'APOSTROFE').replace(/\u2019(?=\s|$)/gi, 'APOSTROFE')
+             //.replace(/\.(?=\s|$)/gi, 'PUNTO')// TODO: buscar expresion regular que lo arregle
+             ;
+    // Ahora se reemplazan los caracteres especiales que no vienen en forma individual:
+    txt = txt.replace(/\u0027/gi, '').replace(/\u2018/gi, '').replace(/\u2019/gi, '')
+             //.replace(/\.(?=\s|$)/gi, '')// TODO: buscar expresion regular que lo arregle
+             ;
+    return txt;
 }
 
 function reemplazarCaracteresEspecialesPersonaMoral(txt) {
