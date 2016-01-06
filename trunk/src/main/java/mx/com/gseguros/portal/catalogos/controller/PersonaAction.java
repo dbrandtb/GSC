@@ -293,7 +293,7 @@ public class PersonaAction extends PrincipalCoreAction
 				map.put("NUMCLIENTE",respuesta[15].toString());
 				map.put("CPCLIENTE",respuesta[16].toString());
 				map.put("COLCLIENTE",respuesta[17].toString());
-				map.put("CVEMUNSIGS",respuesta[18].toString());
+				map.put("CVEMUNSIGS",String.format("%03d",Integer.parseInt(respuesta[18].toString())));
 				map.put("POBLACION",respuesta[19].toString());
 				map.put("CVEEDOSIGS",respuesta[20].toString());
 				map.put("FECNACIMIENTO",respuesta[21].toString());
