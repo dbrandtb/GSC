@@ -13,6 +13,16 @@
 	var cdpersonNuevo;
 	var codigoCliExterno;
 	var pantallaPrincipal = clienteSeleccionado.tipoPantalla;
+	
+	var intNombre1  = 0;
+	var intNombre2  = 0;
+	var intnomCompl = 0;
+	var intappM     = 0;
+	var intappP     = 0;
+	var intfecha    = 0;
+	var intRazonS   = 0;
+	var tipoPerGral = null;
+	
 	debug("pantallaPrincipal ===>", pantallaPrincipal);
 	Ext.onReady(function() {
 		
@@ -106,6 +116,14 @@
 			}
 		}
 		
+		function validaRFCDatosRequeridos(tipoPersona,nombre1,nombre2,nombreCompleto,razonSocial,appPaterno,appMaterno, fechaNacimiento){
+			if(tipoPersona == "F"){
+				datosContratante.down('[name=rfcSugerido]').setText('RFC Sugerido : '+generaRFC(tipoPersona, nombreCompleto, null, appPaterno,appMaterno, fechaNacimiento));
+			}else{
+				datosContratante.down('[name=rfcSugerido]').setText('RFC Sugerido : '+generaRFC(tipoPersona, razonSocial, null, null,null, fechaNacimiento));
+			}
+		}
+		
 		var panelInicialPral = Ext.create('Ext.form.Panel', {
 			title: 'Datos de la P&oacute;liza',
 			id: 'panelInicialPral',
@@ -132,6 +150,13 @@
 				, hidden : (pantallaPrincipal =="0")
 				,handler: function() {
 					storeListadoAsegurado.removeAll();
+					intNombre1  = 0;
+					intNombre2  = 0;
+					intnomCompl = 0;
+					intappM     = 0;
+					intappP     = 0;
+					intfecha    = 0;
+					intRazonS   = 0;
 					datosContratante.down('[name=dsnombre]').setValue('');
 					datosContratante.down('[name=dsnombre1]').setValue('');
 					datosContratante.down('[name=dsapellido]').setValue('');
@@ -157,13 +182,16 @@
 									var desTipoPersona = null;
 									if(json.list[0].TIPERSONA =="1"){
 										desTipoPersona = "FISICA";
+										tipoPerGral = "F";
 										validaCamposRequerido("F");
 									}else if(json.list[0].TIPERSONA =="2"){
 										desTipoPersona = "MORAL";
 										validaCamposRequerido("M");
+										tipoPerGral ="M";
 									}else{
 										desTipoPersona = "SIMPLIFICADO";
 										validaCamposRequerido("S");
+										tipoPerGral = "S";
 									}
 									storeListadoAsegurado.removeAll();
 									var rec = new modelListadoAsegurado({
@@ -212,9 +240,9 @@
 				{	header  : 'Suc. Emisora',			dataIndex : 'SUCEMISORA',		flex:2 },
 				{	header  : 'Tipo Persona',			dataIndex : 'TIPERSONA',		flex:2,		hidden: true	 },
 				{	header  : 'Tipo Persona',			dataIndex : 'DESTIPERSONA',		flex:2 },
-				{	header  : 'Nombre Cliente',			dataIndex : 'NOMCLIENTE',		flex:2 },
-				{	header  : 'Nombre Cliente',			dataIndex : 'NOMCLIENTE1',		flex:2,		hidden: true	 },
-				{	header  : 'Nombre Cliente',			dataIndex : 'NOMCLIENTE1',		flex:2,		hidden: true	 },
+				{	header  : 'Nombre Completo',		dataIndex : 'NOMCLIENTE',		flex:2 },
+				{	header  : 'Nombre1',				dataIndex : 'NOMCLIENTE1',		flex:2,		hidden: true	 },
+				{	header  : 'Nombre2',				dataIndex : 'NOMCLIENTE2',		flex:2,		hidden: true	 },
 				{	header  : 'Apellido<br/>paterno',	dataIndex : 'APPATERNO' ,		flex:2 },
 				{	header  : 'Apellido<br/>materno' ,	dataIndex : 'APMATERNO'	 ,		flex:2 },
 				{	header  : 'Raz&oacute;n social',	dataIndex : 'RAZONSOCIAL',		flex:2 },
@@ -232,6 +260,15 @@
 					datosContratante.down('[name=dsapellido1]').setValue(record.get('APMATERNO'));
 					datosContratante.down('[name=fenacini]').setValue(record.get('FECNACIMIENTO'));
 					datosContratante.down('[name=rfcContratante]').setValue(record.get('RFCCLIENTE'));
+					
+					if(record.get('TIPERSONA') =="1" || record.get('TIPERSONA') =="F"){
+						datosContratante.down('[name=rfcSugerido]').setText('RFC Sugerido : '+generaRFC("F", record.get('NOMCLIENTE'), null, record.get('APPATERNO'),
+								record.get('APMATERNO'), record.get('FECNACIMIENTO'))); 
+								
+					}else{
+						datosContratante.down('[name=rfcSugerido]').setText('RFC Sugerido : '+generaRFC("M", record.get('RAZONSOCIAL'), null,null,
+    							null, record.get('FECNACIMIENTO'))); 
+					}
 				}
 			}
 		});
@@ -240,34 +277,160 @@
 			id          : 'datosContratante',
 			bodyPadding : 5,
 			title: 'Cambio del contratante',
+			layout      : {
+				type     : 'table'
+				,columns : 2
+			},
 			defaults 	: {
 				style   : 'margin:5px;'
 			},
 			items       :[
-				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Primer nombre',				name       : 'dsnombre'
-					,width		 : 400,					allowBlank	: (pantallaPrincipal !="0"),    						hidden : (pantallaPrincipal !="0")
+				{    xtype       : 'textfield',			colspan     :2,			labelWidth: 150,		fieldLabel : 'Primer nombre',				name       : 'dsnombre'
+					,width		 : 400,					allowBlank	: (pantallaPrincipal !="0"),    	hidden     : (pantallaPrincipal !="0"),
+					listeners: {
+	                    change: function(cmp,newVal){
+	                 		if(!Ext.isEmpty(newVal) && intNombre1 > 0){
+								validaRFCDatosRequeridos(
+										tipoPerGral, 
+										newVal,
+										datosContratante.down('[name=dsnombre1]').getValue(), 
+										datosContratante.down('[name=dsnomCompleto]').getValue(),
+										datosContratante.down('[name=dsRazonSocial]').getValue(), 
+										datosContratante.down('[name=dsapellido]').getValue(),
+										datosContratante.down('[name=dsapellido1]').getValue(),
+										Ext.Date.format(datosContratante.down('[name=fenacini]').getValue(),'d/m/Y'));
+	                 		}else{
+	                 			intNombre1++;
+	                 		}
+	                 	}
+	                }
 				},
-				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Segundo nombre',				name       : 'dsnombre1'
-					,width		 : 400,					hidden      : (pantallaPrincipal !="0")
+				{    xtype       : 'textfield',			colspan     :2,			labelWidth: 150,		fieldLabel : 'Segundo nombre',				name       : 'dsnombre1'
+					,width		 : 400,					hidden      : (pantallaPrincipal !="0"),
+					listeners: {
+	                    change: function(cmp,newVal){
+	                 		if(!Ext.isEmpty(newVal) && intNombre2 > 0){
+								validaRFCDatosRequeridos(
+										tipoPerGral,
+										datosContratante.down('[name=dsnombre]').getValue(),
+										newVal,
+										datosContratante.down('[name=dsnomCompleto]').getValue(),
+										datosContratante.down('[name=dsRazonSocial]').getValue(), 
+										datosContratante.down('[name=dsapellido]').getValue(),
+										datosContratante.down('[name=dsapellido1]').getValue(),
+										Ext.Date.format(datosContratante.down('[name=fenacini]').getValue(),'d/m/Y'));
+	                 		}else{
+	                 			intNombre2++;
+	                 		}
+	                 	}
+	                }
 				},
-				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Nombre completo',				name       : 'dsnomCompleto'
-					,width		 : 400,					allowBlank	: (pantallaPrincipal =="0"),							hidden : (pantallaPrincipal =="0")
+				{    xtype       : 'textfield',			colspan     :2,			labelWidth: 150,		fieldLabel : 'Nombre completo',				name       : 'dsnomCompleto'
+					,width		 : 400,					allowBlank	: (pantallaPrincipal =="0"),		hidden     : (pantallaPrincipal =="0"),
+					listeners: {
+	                    change: function(cmp,newVal){
+	                 		if(!Ext.isEmpty(newVal) && intnomCompl > 0){
+								validaRFCDatosRequeridos(
+										tipoPerGral,
+										datosContratante.down('[name=dsnombre]').getValue(),
+										datosContratante.down('[name=dsnombre1]').getValue(),
+										newVal,
+										datosContratante.down('[name=dsRazonSocial]').getValue(), 
+										datosContratante.down('[name=dsapellido]').getValue(),
+										datosContratante.down('[name=dsapellido1]').getValue(),
+										Ext.Date.format(datosContratante.down('[name=fenacini]').getValue(),'d/m/Y'));
+	                 		}else{
+	                 			intnomCompl++;
+	                 		}
+	                 	}
+	                }
 				},
-				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Raz&oacute;n social',			name       : 'dsRazonSocial'
-					,width		 : 400,					allowBlank	: (pantallaPrincipal =="0"),							hidden : (pantallaPrincipal =="0")
+				{    xtype       : 'textfield',			colspan     :2,			labelWidth: 150,		fieldLabel : 'Raz&oacute;n social',			name       : 'dsRazonSocial'
+					,width		 : 400,					allowBlank	: (pantallaPrincipal =="0"),		hidden     : (pantallaPrincipal =="0"),
+					listeners: {
+	                    change: function(cmp,newVal){
+	                 		if(!Ext.isEmpty(newVal) && intRazonS > 0){
+								validaRFCDatosRequeridos(
+										tipoPerGral,
+										datosContratante.down('[name=dsnombre]').getValue(),
+										datosContratante.down('[name=dsnombre1]').getValue(),
+										datosContratante.down('[name=dsnomCompleto]').getValue(),
+										newVal,
+										datosContratante.down('[name=dsapellido]').getValue(),
+										datosContratante.down('[name=dsapellido1]').getValue(),
+										Ext.Date.format(datosContratante.down('[name=fenacini]').getValue(),'d/m/Y'));
+	                 		}else{
+	                 			intRazonS++;
+	                 		}
+	                 	}
+	                }
 				},
-				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Apellido Paterno',			name       : 'dsapellido'
-					,width		 : 400,					allowBlank	: true
+				{    xtype       : 'textfield',			colspan     :2,			labelWidth: 150,		fieldLabel : 'Apellido Paterno',			name       : 'dsapellido'
+					,width		 : 400,					allowBlank	: true,
+					listeners: {
+	                    change: function(cmp,newVal){
+	                 		if(!Ext.isEmpty(newVal) && intappP > 0){
+								validaRFCDatosRequeridos(
+										tipoPerGral,
+										datosContratante.down('[name=dsnombre]').getValue(),
+										datosContratante.down('[name=dsnombre1]').getValue(),
+										datosContratante.down('[name=dsnomCompleto]').getValue(),
+										datosContratante.down('[name=dsRazonSocial]').getValue(),
+										newVal,
+										datosContratante.down('[name=dsapellido1]').getValue(),
+										Ext.Date.format(datosContratante.down('[name=fenacini]').getValue(),'d/m/Y'));
+	                 		}else{
+	                 			intappP++;
+	                 		}
+	                 	}
+	                }
 				},
-				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'Apellido Materno',			name       : 'dsapellido1'
-					,width		 : 400,					allowBlank	: true
+				{    xtype       : 'textfield',			colspan     :2,			labelWidth: 150,		fieldLabel : 'Apellido Materno',			name       : 'dsapellido1'
+					,width		 : 400,					allowBlank	: true,
+					listeners: {
+	                    change: function(cmp,newVal){
+	                 		if(!Ext.isEmpty(newVal) && intappM > 0){
+								validaRFCDatosRequeridos(
+										tipoPerGral,
+										datosContratante.down('[name=dsnombre]').getValue(),
+										datosContratante.down('[name=dsnombre1]').getValue(),
+										datosContratante.down('[name=dsnomCompleto]').getValue(),
+										datosContratante.down('[name=dsRazonSocial]').getValue(),
+										datosContratante.down('[name=dsapellido]').getValue(),
+										newVal,
+										Ext.Date.format(datosContratante.down('[name=fenacini]').getValue(),'d/m/Y'));
+	                 		}else{
+	                 			intappM++;
+	                 		}
+	                 	}
+	                }
 				},
-				{	xtype		: 'datefield',			labelWidth: 150,		fieldLabel	: 'Fecha nacimiento',			name	   : 'fenacini'
-					,format		: 'd/m/Y',				allowBlank	: false
+				{	xtype		: 'datefield',			colspan     :2,			labelWidth: 150,		fieldLabel	: 'Fecha nacimiento',			name	   : 'fenacini'
+					,format		: 'd/m/Y',				allowBlank	: false,
+					listeners: {
+	                    change: function(cmp,newVal){
+	                 		if(!Ext.isEmpty(newVal) && intfecha > 0){
+								validaRFCDatosRequeridos(
+										tipoPerGral,
+										datosContratante.down('[name=dsnombre]').getValue(),
+										datosContratante.down('[name=dsnombre1]').getValue(),
+										datosContratante.down('[name=dsnomCompleto]').getValue(),
+										datosContratante.down('[name=dsRazonSocial]').getValue(),
+										datosContratante.down('[name=dsapellido]').getValue(),
+										datosContratante.down('[name=dsapellido1]').getValue(),
+										Ext.Date.format(newVal,'d/m/Y'));
+	                 		}else{
+	                 			intfecha++;
+	                 		}
+	                 	}
+	                }
 				},
-				{    xtype       : 'textfield',			labelWidth: 150,		fieldLabel : 'RFC',							name       : 'rfcContratante'
-					,width		 : 400,					allowBlank	: false
+				{    xtype      : 'textfield',			labelWidth: 150,		fieldLabel : 'RFC',		name       : 'rfcContratante'
+					,width		: 400,					allowBlank	: false
 				}
+				,
+				{	xtype		: 'label',				name: 'rfcSugerido',		text: ''
+			    }
 			]
 		});
 
@@ -332,6 +495,8 @@
 								'nmsuplem'  : clienteSeleccionado.NMSUPLEM
 							}
 							submitValues['smap1']= params;
+							debug("Valor a enviar ==>",submitValues);
+							
 							Ext.Ajax.request( {
 								url: _35_urlGuardar,
 								jsonData: Ext.encode(submitValues),
@@ -447,9 +612,11 @@
 			}
 			if(clienteSeleccionado.OTFISJUR =="F"){
 				desTipoPersona = "FISICA";
+				tipoPerGral = "F";
 				validaCamposRequerido(clienteSeleccionado.OTFISJUR);
 			}else if(clienteSeleccionado.OTFISJUR =="M"){
 				desTipoPersona = "MORAL";
+				tipoPerGral = "M";
 				validaCamposRequerido(clienteSeleccionado.OTFISJUR);
 				if(clienteSeleccionado.DSRAZSOC != null ||clienteSeleccionado.DSRAZSOC != 'null'){
 					razonSocialC = nombreCompl;
@@ -458,7 +625,9 @@
 				}
 			}else{
 				desTipoPersona = "SIMPLIFICADO"
+				tipoPerGral = "S";
 				validaCamposRequerido("S");
+				
 				if(clienteSeleccionado.DSRAZSOC != null ||clienteSeleccionado.DSRAZSOC != 'null'){
 					razonSocialC = nombreCompl;
 				}else{
