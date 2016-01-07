@@ -339,7 +339,7 @@ Ext.onReady(function()
             cdtiptraCmp.setValue(records[0].get('aux'));
             cdtipsupCmp.setValue(records[0].get('aux2'));
             nmpolizaCmp.allowBlank = records[0].get('aux3') != 'S';
-            nmpolizaCmp.setValue('');
+            nmpolizaCmp.setValue('0');
         }
     });
     
@@ -349,12 +349,14 @@ Ext.onReady(function()
         {
             if(!Ext.isEmpty(val)&&Number(val)==1)
             {
-                nmpolizaCmp.setValue('');
-                nmpolizaCmp.disable();
+                nmpolizaCmp.setValue('0');
+                nmpolizaCmp.setReadOnly(true);
+                //nmpolizaCmp.disable();
             }
             else
             {
-                nmpolizaCmp.enable();
+                //nmpolizaCmp.enable();
+                nmpolizaCmp.setReadOnly(false);
             }
         }
     });

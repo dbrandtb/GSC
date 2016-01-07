@@ -92,6 +92,9 @@ Ext.define('VentanaAutEmi',
                         values['params.swagente'] = _fieldById('SWAGENTE',win).getGroupValue();
                         debug('values:',values);
                         
+                        var tout = Ext.Ajax.timeout-0;
+                        Ext.Ajax.timeout = 1000*60*5;//1000 (segundo) x 60 (minuto) x 5
+                        
                         _mask(ck);
                         Ext.Ajax.request(
                         {
@@ -99,6 +102,7 @@ Ext.define('VentanaAutEmi',
                             ,params  : values
                             ,success : function(response)
                             {
+                                Ext.Ajax.timeout = tout;
                                 var ck = 'Decodificando respuesta al autorizar emisi\u00f3n';
                                 try
                                 {
@@ -133,6 +137,7 @@ Ext.define('VentanaAutEmi',
                             }
                             ,failure : function()
                             {
+                                Ext.Ajax.timeout = tout;
                                 _unmask();
                                 errorComunicacion(null,'Error al turnar tr\u00e1mite');
                             }
