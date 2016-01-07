@@ -462,4 +462,11 @@ public interface EndososAutoManager
 			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso, String tipoPantalla,
 			String codigoCliExt,String sucursalEnt,String ramoEntrada,String polizaEnt, String cdpersonNew, String dsnombreComp,
 			String tramite, String numsuplemen, String urlCaratula)throws Exception;
+	
+	public int guardarEndosoDomicilioNoSICAPS(String tipoPantalla, String sucursalEnt, String ramoEntrada,
+			String polizaEnt, String codigoCliExt, String cdpersonNew, String codigoPostal, String cveEstado,
+			String estado, String cveEdoSISG, String cveMinicipio, String municipio, String cveMunSISG,
+			String cveColonia, String colonia, String calle, String numExterior, String numInterior, String cdusuari,
+			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso,
+			String urlCaratula)throws Exception;
 }
