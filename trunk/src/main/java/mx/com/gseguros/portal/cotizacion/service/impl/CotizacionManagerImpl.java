@@ -3870,6 +3870,14 @@ public class CotizacionManagerImpl implements CotizacionManager
 				}
 				else
 				{
+					cotizacionDAO.eliminarMpolirec(
+							cdunieco
+			        		,cdramo
+			        		,"W"
+			        		,nmpoliza
+			        		,"0"
+							);
+					
 					cotizacionDAO.ejecutaTarificacionConcurrente(
 							cdunieco
 							,cdramo
@@ -6855,6 +6863,14 @@ public class CotizacionManagerImpl implements CotizacionManager
     	}
     	else
     	{
+    		cotizacionDAO.eliminarMpolirec(
+					cdunieco
+	        		,cdramo
+	        		,estado
+	        		,nmpoliza
+	        		,nmsuplem
+					);
+    		
     		cotizacionDAO.ejecutaTarificacionConcurrente(
 	    			cdunieco
 	    			,cdramo
@@ -6905,6 +6921,14 @@ public class CotizacionManagerImpl implements CotizacionManager
     	{
     		try
     		{
+    			cotizacionDAO.eliminarMpolirec(
+						cdunieco
+		        		,cdramo
+		        		,estado
+		        		,nmpoliza
+		        		,nmsuplem
+						);
+    			
     		    cotizacionDAO.ejecutaTarificacionConcurrente(
         			cdunieco
         			,cdramo
@@ -8676,6 +8700,15 @@ public class CotizacionManagerImpl implements CotizacionManager
 						}
 					}
 				}
+				
+				logger.debug(Utils.log("\n&&&&&& eliminarMpolirec [id=",timestamp,"] &&&&&&"));
+				cotizacionDAO.eliminarMpolirec(
+						cdunieco
+		        		,cdramo
+		        		,"W"
+		        		,nmpoliza
+		        		,"0"
+						);
 				
 				logger.debug(Utils.log("\n&&&&&& ejecutaTarificacionConcurrente [id=",timestamp,"] &&&&&&"));
 				cotizacionDAO.ejecutaTarificacionConcurrente(

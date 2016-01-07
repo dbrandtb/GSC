@@ -554,4 +554,12 @@ public interface CotizacionDAO {
 			,String feini)throws Exception;
 
 	public void getActualizaCuadroComision(Map<String, Object> paramsPoliage) throws Exception;
+	
+	public void eliminarMpolirec(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception;
 }
