@@ -2572,8 +2572,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 		}
 		
 		logger.debug(Utils.log(
-				 "\n###### guardarEndosoNombreRFCFecha ######"
-				,"\n#########################################"
+				 "\n###### guardarEndosoDomicilioNoSICAPS ######"
+				,"\n############################################"
 				));
 		return SUCCESS;
 	}
