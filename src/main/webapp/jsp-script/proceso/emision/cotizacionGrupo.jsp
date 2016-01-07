@@ -2799,7 +2799,10 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                     {
                                                         afterrender : function()
                                                         {
-                                                            if(_p21_smap1.FACTORES=='S'&&Ext.isEmpty(record.get('extrreno')))
+                                                            //2016-01-06a se cargan factores siempre
+                                                            //if(_p21_smap1.FACTORES=='S'&&Ext.isEmpty(record.get('extrreno')))
+                                                            if(Ext.isEmpty(record.get('extrreno')))
+                                                            //2016-01-06a se cargan factores siempre
                                                             {
                                                                 var ponerValoresFactores=function()
                                                                 {
