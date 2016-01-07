@@ -165,6 +165,7 @@
 					datosContratante.down('[name=rfcContratante]').setValue('');
 					datosContratante.down('[name=dsnomCompleto]').setValue('');
 					datosContratante.down('[name=dsRazonSocial]').setValue('');
+					datosContratante.down('[name=rfcSugerido]').setText('');
 					var form = this.up('form').getForm();
 					if (form.isValid()){
 						Ext.Ajax.request({
