@@ -836,7 +836,7 @@ public class PersonasManagerImpl implements PersonasManager
 			List<ComponenteVO>componentesMpoliper=pantallasDAO.obtenerComponentes(
 					null                     //cdtiptra
 					,cdunieco
-					,cdramo
+					,"|"+cdramo+"|"
 					,null                    //cdtipsit
 					,estado
 					,cdsisrol
