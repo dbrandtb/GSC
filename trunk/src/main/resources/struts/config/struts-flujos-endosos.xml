@@ -872,7 +872,24 @@
             <result name="success">/jsp-script/proceso/endosos/endosoClientes.jsp</result>
         </action>
         
+        <action name="endosoDomicilioNOSICAPS" class="endososAutoAction" method="endososPolizasNoSicaps">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoCambioDomicilioNOSICAPS.jsp</result>
+        </action>
+        
         <action name="guardarEndosoNombreRFCFecha" class="endososAutoAction" method="guardarEndosoNombreRFCFecha">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="guardarEndosoDomicilioNoSICAPS" class="endososAutoAction" method="guardarEndosoDomicilioNoSICAPS">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>

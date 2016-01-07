@@ -148,6 +148,10 @@
                 <param name="namespace">/endosos</param>
                 <param name="actionName">polizasNoSICAPS</param>
             </result>
+            <result name="endosoDomicilioNOSICAPS" type="redirectAction">
+                <param name="namespace">/endosos</param>
+                <param name="actionName">endosoDomicilioNOSICAPS</param>
+            </result>
 		    <result name="endososAutos" type="redirectAction">
                 <param name="namespace">/endosos</param>
                 <param name="actionName">marcoEndosos</param>
