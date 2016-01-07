@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cancelacion.dao.CancelacionDAO;
@@ -105,6 +106,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	
 	@Autowired
 	private DocumentosManager documentosManager;
+	
+	@Autowired
+	private KernelManagerSustituto kernelManager;
 	
 	@Autowired
 	@Qualifier("emisionAutosServiceImpl")
@@ -5881,6 +5885,128 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				"\n@@@@@@ " , resp
 				,"\n@@@@@@ guardarEndosoNombreRFCFecha @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+		));
+		
+		return endosoRecuperado;
+	}
+	
+	
+	@Override
+	public int guardarEndosoDomicilioNoSICAPS(String tipoPantalla, String sucursalEnt, String ramoEntrada,
+			String polizaEnt, String codigoCliExt, String cdpersonNew, String codigoPostal, String cveEstado,
+			String estado, String cveEdoSISG, String cveMinicipio, String municipio, String cveMunSISG,
+			String cveColonia, String colonia, String calle, String numExterior, String numInterior, String cdusuari,
+			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso,
+			String urlCaratula) throws Exception {
+		// TODO Auto-generated method stub
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarEndosoDomicilioNoSICAPS @@@@@@"
+				,"\n@@@@@@ tipoPantalla=" , tipoPantalla
+				,"\n@@@@@@ sucursalEnt =" , sucursalEnt
+				,"\n@@@@@@ ramoEntrada =" , ramoEntrada
+				,"\n@@@@@@ polizaEnt =" , polizaEnt
+				,"\n@@@@@@ codigoCliExt=" , codigoCliExt
+				,"\n@@@@@@ cdpersonNew=" , cdpersonNew
+				,"\n@@@@@@ codigoPostal=" , codigoPostal
+				,"\n@@@@@@ cveEstado =" , cveEstado
+				,"\n@@@@@@ estado=" , estado 
+				,"\n@@@@@@ cveEdoSISG=" , cveEdoSISG
+				,"\n@@@@@@ cveMinicipio =" , cveMinicipio
+				,"\n@@@@@@ municipio=" , municipio
+				,"\n@@@@@@ cveMunSISG=" , cveMunSISG
+				,"\n@@@@@@ cveColonia=" , cveColonia
+				,"\n@@@@@@ colonia=" , colonia
+				,"\n@@@@@@ calle=" , calle
+				,"\n@@@@@@ numExterior=" , numExterior
+				,"\n@@@@@@ numInterior=" , numInterior
+				,"\n@@@@@@ cdusuari =" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdelemen=" , cdelemen
+				,"\n@@@@@@ cdtipsup =" , fechaEndoso
+				,"\n@@@@@@ dFechaEndoso=" , dFechaEndoso
+				,"\n@@@@@@ urlCaratula=" ,urlCaratula
+		));
+		
+		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
+		String paso = "";
+		int endosoRecuperado = 0;
+		try
+		{
+
+			//ENDOSO POLIZAS NO SICAPS
+			paso = "Obtenemos la informaci&oacute;n del cliente";
+			logger.debug(paso);
+			String message =  clienteDAOSIGS.obtieneInformacionCliente(sucursalEnt,ramoEntrada,polizaEnt);
+			String respuesta[] = message.split("\\|");
+			
+			paso = "Obtenemos la informaci&oacute;n del cliente de SICAPS";
+			logger.debug(paso);
+			Map<String,String> managerResult=personasDAO.obtenerDomicilioPorCdperson(cdpersonNew);
+			SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+			
+			paso = "Generaci&oacute;n del mapa de guardado SIGS";
+			logger.debug(paso);
+			HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
+			paramsEnd.put("vNumSuc"  , sucursalEnt);
+			paramsEnd.put("vRamo"    , ramoEntrada);
+			paramsEnd.put("vPoliza"  , polizaEnt);
+			paramsEnd.put("vFEndoso" , dFechaEndoso);
+			paramsEnd.put("vCliente" , Integer.parseInt(respuesta[1].toString()));
+			paramsEnd.put("vMotivo"  , Integer.parseInt("40"));
+			paramsEnd.put("vNomCli"  , respuesta[4].toString());
+			paramsEnd.put("vApePat"  , respuesta[5].toString());
+			paramsEnd.put("vApeMat"  , respuesta[6].toString());
+			paramsEnd.put("vRazSoc"  , respuesta[7].toString());
+			paramsEnd.put("vFecNac"  , renderFechas.parse(respuesta[21].toString()));
+			paramsEnd.put("vTipPer"  , respuesta[3].toString());
+			paramsEnd.put("vRfcCli"  , respuesta[9].toString());
+			paramsEnd.put("vCveEle"  , respuesta[10].toString());
+			paramsEnd.put("vCurpCli"  , respuesta[11].toString());
+			paramsEnd.put("vCalleCli"  , calle);
+			paramsEnd.put("vNumCli"  , numExterior);
+			paramsEnd.put("vNumInt"  , numInterior);
+			paramsEnd.put("vCodPos"  , codigoPostal);
+			paramsEnd.put("vColonia" , colonia);
+			paramsEnd.put("vMunicipio" , Integer.parseInt(cveMunSISG)+"");
+			paramsEnd.put("vCveEdo"  , cveEdoSISG);
+			paramsEnd.put("vPoblacion"  , municipio);
+			paramsEnd.put("vTelefono1"  , respuesta[25].toString());
+			paramsEnd.put("vTelefono2"  , respuesta[26].toString());
+			paramsEnd.put("vTelefono3"  , respuesta[27].toString());
+			
+			endosoRecuperado = -1;
+			String res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
+			String respu[] = res.split("\\|");
+			if(Integer.parseInt(respu[0].toString()) == 0 ){
+				logger.debug("Endoso Cambio AseguradoAlterno no exitoso");
+				throw new ApplicationException(respu[1].toString());
+			}else{
+				logger.debug("Endoso Cambio AseguradoAlterno exitoso");
+				endosoRecuperado = Integer.parseInt(respu[0].toString());
+				Map<String,String>paramDomicil=new LinkedHashMap<String,String>(0);
+				paramDomicil.put("pv_cdperson_i" , cdpersonNew);
+				paramDomicil.put("pv_nmorddom_i" , managerResult.get("NMORDDOM"));
+				paramDomicil.put("pv_msdomici_i" , calle);
+				paramDomicil.put("pv_nmtelefo_i" , managerResult.get("NMTELEFO"));
+				paramDomicil.put("pv_cdpostal_i" , codigoPostal);
+				paramDomicil.put("pv_cdedo_i"    , cveEstado);
+				paramDomicil.put("pv_cdmunici_i" , cveMinicipio);
+				paramDomicil.put("pv_cdcoloni_i" , cveColonia);
+				paramDomicil.put("pv_nmnumero_i" , numExterior);
+				paramDomicil.put("pv_nmnumint_i" , numInterior);
+				paramDomicil.put("pv_accion_i"   , "U");
+				kernelManager.pMovMdomicil(paramDomicil);
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ " , resp
+				,"\n@@@@@@ guardarEndosoDomicilioNoSICAPS @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 		));
 		
 		return endosoRecuperado;
