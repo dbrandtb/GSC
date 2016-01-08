@@ -2532,6 +2532,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String calle        = smap1.get("desCalle");
 			String numExterior  = smap1.get("numExterior");
 			String numInterior  = smap1.get("numInterior");
+			String telefono1  = smap1.get("telefono1");
+			String telefono2  = smap1.get("telefono2");
+			String telefono3  = smap1.get("telefono3");
 			//String   = smap1.get("");
 			
 			
@@ -2549,7 +2552,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			int claveEndoso = endososAutoManager.guardarEndosoDomicilioNoSICAPS(
 					tipoPantalla, sucursalEnt, ramoEntrada, polizaEnt, codigoCliExt, cdpersonNew, codigoPostal, cveEstado,
 					estado,	cveEdoSISG, cveMinicipio, municipio, cveMunSISG, cveColonia, colonia, calle, numExterior, numInterior,
-					cdusuari, cdsisrol, cdelemen, cdtipsup, fechaEndoso, dFechaEndoso, urlCaratula
+					cdusuari, cdsisrol, cdelemen, cdtipsup, fechaEndoso, dFechaEndoso, urlCaratula, telefono1, telefono2, telefono3
 			);
 			
 			Utils.validate(tipoPantalla   , "No se recibio el origen del llamado");
