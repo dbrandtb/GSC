@@ -1908,10 +1908,10 @@ Ext.onReady(function()
         });
     }
     
-    _fieldByName('nmnumero').regex = /^[A-Za-z0-9-]*$/;
-    _fieldByName('nmnumero').regexText = 'Solo d&iacute;gitos, letras y guiones';
-    _fieldByName('nmnumint').regex = /^[A-Za-z0-9-]*$/;
-    _fieldByName('nmnumint').regexText = 'Solo d&iacute;gitos, letras y guiones';
+    _fieldByName('nmnumero').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+    _fieldByName('nmnumero').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
+    _fieldByName('nmnumint').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+    _fieldByName('nmnumint').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
     
     if(!_p25_ntramite)
     {
