@@ -13,6 +13,7 @@ import javax.print.attribute.standard.PrinterName;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.general.service.ImpresionService;
+import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.utils.cmd.SystemCommandExecutor;
 
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +38,17 @@ public class ImpresionServiceUNIXImpl implements ImpresionService {
 	
 	
 	@Override
-	public void imprimeDocumento(String documento, String nombreImpresora, int numCopias, String bandeja) throws Exception {
+	public void imprimeDocumento(String documento, String nombreImpresora, int numCopias, String bandeja) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ imprimeDocumento @@@@@@"
+				,"\n@@@@@@ documento="       , documento
+				,"\n@@@@@@ nombreImpresora=" , nombreImpresora
+				,"\n@@@@@@ numCopias="       , numCopias
+				,"\n@@@@@@ bandeja="         , bandeja
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
         
 		// Se valida la existencia / instalacion de la impresora a utilizar:
 		validaExistenciaImpresora(nombreImpresora);
