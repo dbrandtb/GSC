@@ -468,5 +468,5 @@ public interface EndososAutoManager
 			String estado, String cveEdoSISG, String cveMinicipio, String municipio, String cveMunSISG,
 			String cveColonia, String colonia, String calle, String numExterior, String numInterior, String cdusuari,
 			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso,
-			String urlCaratula)throws Exception;
+			String urlCaratula, String telefono1, String telefono2, String telefono3)throws Exception;
 }

@@ -5608,7 +5608,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String residencia, String nongrata, String cdideext, String cdestciv, String cdsucemi, String cdusuari,
 			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso, String tipoPantalla,
 			String codigoCliExt,String sucursalEnt,String ramoEntrada,String polizaEnt, String cdpersonNew,
-			String dsnombreComp, String ntramite, String numsuplemen, String urlCaratula) throws Exception {
+			String dsnombreComp, String ntramite, String numsuplemen, String urlCaratula
+			) throws Exception {
 		// TODO Auto-generated method stub
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -5897,7 +5898,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String estado, String cveEdoSISG, String cveMinicipio, String municipio, String cveMunSISG,
 			String cveColonia, String colonia, String calle, String numExterior, String numInterior, String cdusuari,
 			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso,
-			String urlCaratula) throws Exception {
+			String urlCaratula,String telefono1, String telefono2, String telefono3) throws Exception {
 		// TODO Auto-generated method stub
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -5926,6 +5927,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ cdtipsup =" , fechaEndoso
 				,"\n@@@@@@ dFechaEndoso=" , dFechaEndoso
 				,"\n@@@@@@ urlCaratula=" ,urlCaratula
+				,"\n@@@@@@ telefono1=" ,telefono1
+				,"\n@@@@@@ telefono2=" ,telefono2
+				,"\n@@@@@@ telefono3=" ,telefono3
 		));
 		
 		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
@@ -5971,9 +5975,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			paramsEnd.put("vMunicipio" , Integer.parseInt(cveMunSISG)+"");
 			paramsEnd.put("vCveEdo"  , cveEdoSISG);
 			paramsEnd.put("vPoblacion"  , municipio);
-			paramsEnd.put("vTelefono1"  , respuesta[25].toString());
-			paramsEnd.put("vTelefono2"  , respuesta[26].toString());
-			paramsEnd.put("vTelefono3"  , respuesta[27].toString());
+			paramsEnd.put("vTelefono1"  , telefono1);
+			paramsEnd.put("vTelefono2"  , telefono2);
+			paramsEnd.put("vTelefono3"  , telefono3);
 			
 			endosoRecuperado = -1;
 			String res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
@@ -5988,7 +5992,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				paramDomicil.put("pv_cdperson_i" , cdpersonNew);
 				paramDomicil.put("pv_nmorddom_i" , managerResult.get("NMORDDOM"));
 				paramDomicil.put("pv_msdomici_i" , calle);
-				paramDomicil.put("pv_nmtelefo_i" , managerResult.get("NMTELEFO"));
+				paramDomicil.put("pv_nmtelefo_i" , telefono1);
 				paramDomicil.put("pv_cdpostal_i" , codigoPostal);
 				paramDomicil.put("pv_cdedo_i"    , cveEstado);
 				paramDomicil.put("pv_cdmunici_i" , cveMinicipio);
