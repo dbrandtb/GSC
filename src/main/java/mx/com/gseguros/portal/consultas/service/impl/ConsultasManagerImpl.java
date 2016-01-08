@@ -363,6 +363,13 @@ public class ConsultasManagerImpl implements ConsultasManager
 		return consultasDAO.recuperarTparagen(paragen);
 	}
 	
+	@Deprecated
+	@Override
+	public Map<String,String> recuperarDatosFlujoEmision(String cdramo, String tipoflot) throws Exception
+	{
+		return consultasDAO.recuperarDatosFlujoEmision(cdramo,tipoflot);
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	///////////////////////////////

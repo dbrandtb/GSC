@@ -124,4 +124,7 @@ public interface ConsultasManager
 	
 	@Deprecated
 	public String recuperarTparagen(ParametroGeneral paragen) throws Exception;
+	
+	@Deprecated
+	public Map<String,String> recuperarDatosFlujoEmision(String cdramo, String tipoflot) throws Exception;
 }

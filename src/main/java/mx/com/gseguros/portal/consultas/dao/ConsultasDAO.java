@@ -473,5 +473,7 @@ public interface ConsultasDAO
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
-	) throws Exception;
+	)throws Exception;
+	
+	public Map<String,String> recuperarDatosFlujoEmision(String cdramo, String tipoflot) throws Exception;
 }
