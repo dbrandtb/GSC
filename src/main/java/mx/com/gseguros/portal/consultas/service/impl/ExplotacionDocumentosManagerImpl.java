@@ -497,6 +497,9 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						FileUtils.copyInputStreamToFile(remoto, local);
 					}
 					
+					paso = "Imprimiendo archivo";
+					sb.append("\n").append(paso);
+					
 					impresionService.imprimeDocumento(
 							filePath
 							,dsimpres
