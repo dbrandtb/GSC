@@ -23,8 +23,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.web.model.IncisoSaludVO;
-import mx.com.gseguros.mesacontrol.model.TFLUJOMC;
-import mx.com.gseguros.mesacontrol.model.TTIPFLUMC;
+import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
@@ -173,6 +172,11 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     
     @Autowired
     private ServiciosManager serviciosManager;
+
+	private Map<String, String> qwe;
+	
+	@Autowired
+	private ConsultasManager consultasManager;
     
     public String entrar()
     {
@@ -1194,6 +1198,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            	parMesCon.put("cdsisrol"        , cdsisrol);
 	            	WrapperResultados mesaContWr = kernelManagerSustituto.PMovMesacontrol(parMesCon);*/
 	            	
+            		Map<String,String> datosFlujo = consultasManager.recuperarDatosFlujoEmision(comprarCdramo,"I");
+            		
 	            	ntramite = mesaControlManager.movimientoTramite(
 	            			comprarCdunieco
 	            			,comprarCdramo
@@ -1215,8 +1221,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            			,cdusuari
 	            			,cdsisrol
 	            			,null
-	            			,"2".equals(comprarCdramo)||"1".equals(comprarCdramo) ? TTIPFLUMC.POLIZA_NUEVA : ""
-	            			,"2".equals(comprarCdramo)||"1".equals(comprarCdramo) ? TFLUJOMC.EMISION_SALUD_INDIVIDUAL : ""
+	            			,datosFlujo.get("cdtipflu")
+	            			,datosFlujo.get("cdflujomc")
 	            			,null//valores
 	            			,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
 	            			);
