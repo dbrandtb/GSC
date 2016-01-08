@@ -342,6 +342,10 @@
         <action name="reintentaWSautos" class="beanDatosComplementarios" method="reintentaWSautos">
             <result name="success" type="json" />
         </action>
+        
+        <action name="autorizaEmisionSinSMD" class="beanDatosComplementarios" method="autorizaEmision">
+            <result name="success" type="json" />
+        </action>
                 
     </package>
 
