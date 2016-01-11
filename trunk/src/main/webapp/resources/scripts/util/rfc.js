@@ -104,6 +104,9 @@ function run(){
     document.getElementById('rfc').value = generaRFC(tipoPer, name, name2, paterno, materno, date);
     
     document.getElementById('numPalabras').value = cuentaPalabras(name);
+    
+    
+    //debug(generaClaveDiferenciadoraHomonima(paterno + ' ' + materno + ' ' + name2 + ' ' + name));
 }
 
 
@@ -157,6 +160,11 @@ function generaRFCPersonaFisica(nombre1, nombre2, apaterno, amaterno, fecha) {
     // siempre que no sea MARIA o JOSE dado su frecuente uso, en cuyo caso se tomará la primera letra de la segunda palabra.
     nombreComp  = nombreComp.replace(/\b(MARIA)\b/gi, '').replace(/\b(JOSE)\b/gi, '');
     
+    
+    ///////////
+    var cveHomonima = generaClaveDiferenciadoraHomonima(apaterno + ' ' + amaterno + ' ' + nombre2 + ' ' + nombre1);
+    debug('cveHomonima:' + cveHomonima);
+    
     var tmp = '';
     
     // REGLA 7
@@ -168,9 +176,9 @@ function generaRFCPersonaFisica(nombre1, nombre2, apaterno, amaterno, fecha) {
     // Gerarda Zafra       ZAGE-251115
     if(!apaterno || !amaterno) {
     	debug('No cuenta con algun apellido');
-    	var apellido = apaterno + amaterno;
-    	debug('Apellido compuesto:', apellido);
-    	tmp = apellido.match(/\b(\w){2}/i)[0];
+    	var apellidos = apaterno + amaterno;
+    	debug('Apellido compuesto:', apellidos);
+    	tmp = apellidos.match(/\b(\w){2}/i)[0];
     	tmp += nombreComp.match(/\b(\w){2}/i)[0];
     	
     } else {
@@ -180,7 +188,7 @@ function generaRFCPersonaFisica(nombre1, nombre2, apaterno, amaterno, fecha) {
         // 1.  La primera letra del apellido paterno y la siguiente primera vocal del mismo.
         debug('Parametros:', nombreComp, apaterno, amaterno, fecha);
         tmp = apaterno.match(/\b(\w)/i)[0];
-        tmp += apaterno.match(/[aeiou]/i)[0];
+        tmp += apaterno.substr(1).match(/[aeiou]/i)[0];
         debug('Con apaterno:', tmp);
         
         // 2.  La primera letra del apellido materno.
@@ -206,6 +214,13 @@ function generaRFCPersonaFisica(nombre1, nombre2, apaterno, amaterno, fecha) {
     tmp += fecha.substr(8, 2) + fecha.substr(3, 2) + fecha.substr(0, 2);
     debug('Con fecha:', tmp);
     
+    // Se agrega la homoclave:
+    tmp += cveHomonima;
+    debug('Con homoclave parte 1:', tmp);
+    
+    // Se agrega el digito verificador:
+    tmp += new String(generaDigitoVerificador(tmp));
+    
     return tmp;
 }
 
@@ -217,6 +232,8 @@ function generaRFCPersonaFisica(nombre1, nombre2, apaterno, amaterno, fecha) {
  */
 function generaRFCPersonaMoral(nombre, fecha) {
     
+	var nombreOriginal = nombre;
+	
     // Se convierte a mayuscula y sin acentos:
     nombre = nombre.toUpperCase();  
     nombre = reemplazaCaracteresLatinos(nombre);
@@ -240,6 +257,12 @@ function generaRFCPersonaMoral(nombre, fecha) {
     debug('numPalabras=', numPalabras);
     
     // Se obtiene la fecha de constitucion
+    
+    
+    ///////////
+    var cveHomonima = generaClaveDiferenciadoraHomonima(nombreOriginal);
+    debug('cveHomonima:' + cveHomonima);
+    
     
     // Regla 1.-
     
@@ -282,7 +305,206 @@ function generaRFCPersonaMoral(nombre, fecha) {
     // Se agrega la fecha de constitucion:
     nombre += fecha.substr(8, 2) + fecha.substr(3, 2) + fecha.substr(0, 2);
     
+    
+    // Se agrega la homoclave:
+    nombre += cveHomonima;
+    debug('Con homoclave parte 1:', nombre);
+    
+    // Se agrega el digito verificador:
+    nombre += new String(generaDigitoVerificador(nombre));
+    
     return nombre;
+}
+
+
+/**
+ * Genera la clave diferenciadora homonima en base al nombre o razon social
+ * @param {} nombre Nombre de la persona o Razon social
+ */
+function generaClaveDiferenciadoraHomonima(nombre) {
+
+	// Se convierte a mayuscula y sin acentos:
+    nombre = nombre.toUpperCase();
+    nombre = reemplazaCaracteresLatinos(nombre);
+    nombre = quitaEspaciosSignosYPuntos(nombre).trim();
+    debug('Nombre para generar homoclave:"' + nombre + '"');
+	
+    // 1. Se asignaran valores a las letras del nombre o razón social de acuerdo a la tabla del Anexo 1:
+    //    Espacio = 00  B = 12      O = 26
+    //    0 = 00        C = 13      P = 27
+    //    1 = 01        D = 14      Q = 28
+    //    2 = 02        E = 15      R = 29
+    //    3 = 03        F = 16      S = 32
+    //    4 = 04        G = 17      T = 33
+    //    5 = 05        H = 18      U = 34
+    //    6 = 06        I = 19      V = 35
+    //    7 = 07        J = 21      W = 36
+    //    8 = 08        K = 22      X = 37
+    //    9 = 09        L = 23      Y = 38
+    //    & = 10        M = 24      Z = 39
+    //    A = 11        N = 25      Ñ = 40
+    
+	var codigoTmp = '';
+    for (var i = 0, len = nombre.length; i < len; i++) {
+    	
+        debug('caracter a reemplazar', nombre[i]);
+    	
+        // Si el caracter es un digito, se le agrega un cero al inicio
+        if(nombre[i].match(/\d/g)) {
+        	codigoTmp += '0'+nombre[i]; 
+        } else if( nombre[i].match(/[A-Z]/g) || nombre[i].match(/\s/g) || nombre[i].match(/&/g) || nombre[i].match(/\u00D1/gi) ) {
+        	// Si es letra, espacio, ampersand o ntilde lo convertimos:
+        	codigoTmp += nombre[i].replace(/\s/g,'00').replace(/&/g, '10').replace(/\u00D1/gi, '40')
+                 .replace(/A/gi,'11').replace(/B/gi,'12').replace(/C/gi,'13').replace(/D/gi,'14').replace(/E/gi,'15')
+                 .replace(/F/gi,'16').replace(/G/gi,'17').replace(/H/gi,'18').replace(/I/gi,'19').replace(/J/gi,'21')
+                 .replace(/K/gi,'22').replace(/L/gi,'23').replace(/M/gi,'24').replace(/N/gi,'25').replace(/O/gi,'26')
+                 .replace(/P/gi,'27').replace(/Q/gi,'28').replace(/R/gi,'29').replace(/S/gi,'32').replace(/T/gi,'33')
+                 .replace(/U/gi,'34').replace(/V/gi,'35').replace(/W/gi,'36').replace(/X/gi,'37').replace(/Y/gi,'38')
+                 .replace(/Z/gi,'39');
+        }/* else{
+        	// Cualquier otro caracter se convierte a 00:
+        	codigoTmp += '00';
+        }*/
+    }
+	
+    
+    // 2. Se ordenan los valores de la siguiente manera:
+    // G    O   M   E   Z          D     I    A    Z          E   M   M  A
+    // 017  26  24  15  39  00  14  19  11  39  00  15  24  24  11
+    // Se agrega un cero al valor de la primera letra para uniformar el criterio de los números a tomar de dos en dos:
+    codigoTmp = '0'+codigoTmp;
+    
+    // 3. Se efectuaran las multiplicaciones de los números tomados de dos en dos para la posición de la pareja:
+    var suma = 0;
+    debug('codigoTmp=', codigoTmp);
+    for (var i = 1, len = codigoTmp.length; i < len; i++) {
+    	debug('codigoTmp[i]=', codigoTmp[i], 'codigoTmp[i-1]=', codigoTmp[i-1]);
+    	
+    	debug('Se multiplica:', codigoTmp[i-1] + '' + codigoTmp[i], '*', codigoTmp[i], 
+    	           '=', Number('' + codigoTmp[i-1] + codigoTmp[i]) * Number(codigoTmp[i]));
+    	suma += Number('' + codigoTmp[i-1] + codigoTmp[i]) * Number(codigoTmp[i]);
+    }
+    
+    var strSuma = new String(suma);
+    debug('suma:', suma);
+    debug('suma.length:', strSuma.length);
+    debug('suma.length-3:', Number(strSuma.length)-3);
+    
+    // 4. Se suma el resultado de las multiplicaciones y del resultado obtenido, 
+    // se tomaran las tres ultimas cifras y estas se dividen entre el factor 34
+    var cociente = Math.trunc( Number(strSuma.substr(Number(strSuma.length)-3)) / 34 );
+    var residuo  = Number(strSuma.substr(Number(strSuma.length)-3)) % 34;
+    
+    debug('cociente', cociente);
+    debug('residuo', residuo);
+    
+    // 5. Con el cociente y el residuo se consulta la tabla del Anexo II y se asigna la homonimia:
+    // TABLA DE VALORES QUE SE ASIGNAN A LA CLAVE DIFERENCIADORA DE HOMONIMIO EN BASE AL COEFICIENTE Y AL RESIDUO
+    //  0 = 1   10 = B  20 = L  30 = W
+    //  1 = 2   11 = C  21 = M  31 = X
+    //  2 = 3   12 = D  22 = N  32 = Y
+    //  3 = 4   13 = E  23 = P  33 = Z
+    //  4 = 5   14 = F  24 = Q  
+    //  5 = 6   15 = G  25 = R  
+    //  6 = 7   16 = H  26 = S  
+    //  7 = 8   17 = I  27 = T  
+    //  8 = 9   18 = J  28 = U  
+    //  9 = A   19 = K  29 = V  
+    var tablaAnexo2 = ['1','2','3','4','5','6','7','8','9','A',
+                       'B','C','D','E','F','G','H','I','J','K',
+                       'L','M','N','P','Q','R','S','T','U','V',
+                       'W','X','Y','Z'];
+                       
+    var claveFinal = tablaAnexo2[cociente]+tablaAnexo2[residuo];
+    debug('tablaAnexo2[cociente]=', tablaAnexo2[cociente]);
+    debug('tablaAnexo2[residuo]=', tablaAnexo2[residuo]);
+    debug('claveFinal=', claveFinal);
+    
+    //return codigoTmp;
+    return claveFinal;
+}
+
+
+/**
+ * Genera el digito verificador en base al RFC
+ * @param {} rfc
+ */
+function generaDigitoVerificador(rfc) {
+	
+	// 1.  Se asignaran los valores del Anexo III a las letras y números 
+	// del registro federal de contribuyentes formado a 12 posiciones
+	// TABLA DE VALORES PARA LO GENERACIÓN DEL CÓDIGO VERIFICADOR DEL REGISTRO FEDERAL DE CONTRIBUYENTES.
+    //    0   00  D   13  P   26
+    //    1   01  E   14  Q   27
+    //    2   02  F   15  R   28
+    //    3   03  G   16  S   29
+    //    4   04  H   17  T   30
+    //    5   05  I   18  U   31
+    //    6   06  J   19  V   32
+    //    7   07  K   20  W   33
+    //    8   08  L   21  X   34
+    //    9   09  M   22  Y   35
+    //    A   10  N   23  Z   36
+    //    B   11  &   24  BLANCO  37
+    //    C   12  O   25  Ñ   38
+    // TODOS LOS CARACTERES QUE NO SE ENCUENTREN EN ESTA TABLA SE LES ASIGNARA UN VALOR DE “ 00 “.
+	var digitoTmp = '';
+    for (var i = 0, len = rfc.length; i < len; i++) {
+        
+        debug('caracter a reemplazar', rfc[i]);
+        
+        // Si el caracter es un digito, se le agrega un cero al inicio
+        if(rfc[i].match(/\d/g)) {
+            digitoTmp += '0'+rfc[i]; 
+        } else if( rfc[i].match(/[A-Z]/g) || rfc[i].match(/\s/g) || rfc[i].match(/&/g) || rfc[i].match(/\u00D1/gi) ) {
+        	// TODO: abreviar este tipo de else if (en una sola rexeg)
+            // Si es letra, espacio, ampersand o ntilde lo convertimos:
+            digitoTmp += rfc[i].replace(/\s/g,'37').replace(/&/g, '24').replace(/\u00D1/gi, '38')
+                 .replace(/A/gi,'10').replace(/B/gi,'11').replace(/C/gi,'12').replace(/D/gi,'13').replace(/E/gi,'14')
+                 .replace(/F/gi,'15').replace(/G/gi,'16').replace(/H/gi,'17').replace(/I/gi,'18').replace(/J/gi,'19')
+                 .replace(/K/gi,'20').replace(/L/gi,'21').replace(/M/gi,'22').replace(/N/gi,'23').replace(/O/gi,'25')
+                 .replace(/P/gi,'26').replace(/Q/gi,'27').replace(/R/gi,'28').replace(/S/gi,'29').replace(/T/gi,'30')
+                 .replace(/U/gi,'31').replace(/V/gi,'32').replace(/W/gi,'33').replace(/X/gi,'34').replace(/Y/gi,'35')
+                 .replace(/Z/gi,'36');
+        } else{
+            // Cualquier otro caracter se convierte a 00:
+            digitoTmp += '00';
+        }
+    }
+    
+    // 2.  Una vez asignados los valores se aplicara la siguiente forma tomando como base  el factor 13 en orden descendente a cada letra y número del R.F.C. para su multiplicación, de acuerdo a la siguiente formula:
+    // (Vi * (Pi + 1)) + (Vi * (Pi + 1)) + ..............+ (Vi * (Pi + 1))      MOD 11
+    // Vi    Valor asociado al carácter de acuerdo a la tabla del Anexo III.
+    // Pi    Posición que ocupa el i-esimo carácter tomando de derecha a izquierda es decir P toma los valores de 1 a 12.
+    
+    
+    var suma = 0;
+    debug('digitoTmp=', digitoTmp);
+    for (var i = 1, len = digitoTmp.length, factor=13; i < len; i=i+2, factor--) {
+        debug('digitoTmp[i]=', digitoTmp[i], 'digitoTmp[i-1]=', digitoTmp[i-1]);
+        
+        debug( 'Se multiplica:', digitoTmp[i-1] + '' + digitoTmp[i], '*', factor, 
+                   '=', Number('' + digitoTmp[i-1] + digitoTmp[i]) * factor );
+        suma += Number('' + digitoTmp[i-1] + digitoTmp[i]) * factor;
+    }
+    debug('suma:', suma);
+    
+    // 3.  El resultado de la suma se divide entre el factor 11.
+    // Si el residuo es igual a cero, este será el valor que se le asignara al dígito verificador.
+    // Si el residuo es mayor a cero se restara este al factor 11:  11-3 =8
+    // Si el residuo es igual a 10 el dígito verificador será  “ A”.
+    // Si el residuo es igual a cero el dígito verificador será cero.
+    var residuo  = suma % 11;
+    var digitoVerif = '';
+    if(residuo == 0) {
+        digitoVerif = '0';
+    } else if(residuo == 10) {
+        digitoVerif = 'A';
+    } else {
+        digitoVerif = new String(11-residuo);
+    }
+    
+    return digitoVerif;
 }
 
 
@@ -375,7 +597,7 @@ function quitaPalabrasInconvenientesPersonaFisica(texto) {
                 .replace(/\b(KOJO)\b/gi, 'KOJX')
                 .replace(/\b(KAKA)\b/gi, 'KAKX')
                 .replace(/\b(KULO)\b/gi, 'KULX')
-                .replace(/\b(MAME )\b/gi, 'MAMX')
+                .replace(/\b(MAME)\b/gi, 'MAMX')
                 .replace(/\b(MAMO)\b/gi, 'MAMX')
                 .replace(/\b(MEAR)\b/gi, 'MEAX')
                 .replace(/\b(MEON)\b/gi, 'MEOX')
