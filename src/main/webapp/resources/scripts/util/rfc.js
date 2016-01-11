@@ -13,24 +13,15 @@ function validaRFC(tipoPersona, nombre, nombre2, apaterno, amaterno, fecha, rfc)
     try {
         // Persona fisica
         if(tipoPersona == 'F') {
-            if(rfc.substr(0, 1) != apaterno.substr(0, 1)) {
-                return false;
-            }
-            if(rfc.substr(2, 1) != amaterno.substr(0, 1)) {
-                return false;
-            }
-            if(rfc.substr(3, 1) != nombre.substr(0, 1)) {
-                return false;
-            }
-            if(rfc.substr(4, 2) != fecha.substr(8, 2)) {
-                return false;
-            }
-            if(rfc.substr(6, 2) != fecha.substr(3, 2)) {
-                return false;
-            }
-            if(rfc.substr(8, 2) != fecha.substr(0, 2)) {
-                return false;
-            }
+        	
+        	var rfcGenerado = generaRFCPersonaFisica(nombre, nombre2, apaterno, amaterno, fecha);
+        	debug('RFCs a comparar:', rfc.toUpperCase(), rfcGenerado);
+        	if( rfc.toUpperCase() == rfcGenerado ) {
+        		return true;
+        	} else {
+        		return false;
+        	}
+        	
         } else if(tipoPersona == 'M' || tipoPersona == 'S') { // Persona moral y regimen Simplificado
             if(rfc.substr(0, 1) != nombre.substr(0, 1)) {
                 return false;
