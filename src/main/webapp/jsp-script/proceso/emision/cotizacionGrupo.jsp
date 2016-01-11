@@ -1733,72 +1733,7 @@ Ext.onReady(function()
             }
         });
         
-        Ext.Ajax.request(
-        {
-            url     : _p21_urlRecuperacionSimple
-            ,params :
-            {
-                'smap1.procedimiento' : 'RECUPERAR_CONTEO_BLOQUEO'
-                ,'smap1.cdunieco'     : _p21_smap1.cdunieco
-                ,'smap1.cdramo'       : _p21_smap1.cdramo
-                ,'smap1.estado'       : _p21_smap1.estado
-                ,'smap1.nmpoliza'     : _p21_smap1.nmpoliza
-            }
-            ,success : function(response)
-            {
-                var ck = 'Decodificando conteo de bloqueos';
-                try
-                {
-                    var json=Ext.decode(response.responseText);
-                    debug('### conteo bloqueo:',json);
-                    if(json.exito)
-                    {
-                        if(Number(json.smap1.CONTEO)>0)
-                        {
-                            centrarVentanaInterna(Ext.create('Ext.window.Window',
-                            {
-                                title     : 'Cotizaci\u00F3n en proceso...'
-                                ,width    : 400
-                                ,height   : 150
-                                ,modal    : true
-                                ,closable : false
-                                ,html     : '<div style="padding:5px;border:0px solid black;">'
-                                            +'Su cotizaci\u00F3n a\u00FAn se encuentra generando tarifa ('
-                                            +json.smap1.CONTEO
-                                            +').<br/>Intente m\u00E1s tarde</div>'
-                                ,buttonAlign : 'center'
-                                ,buttons     :
-                                [
-                                    {
-                                        text     : 'Regresar'
-                                        ,icon    : '${icons}arrow_undo.png'
-                                        ,handler : function(){ history.back(); }
-                                    }
-                                    ,{
-                                        text     : 'Recargar'
-                                        ,icon    : '${icons}arrow_refresh.png'
-                                        ,handler : function(me){ me.up('window').setLoading(true); location.reload(); }
-                                    }
-                                ]
-                            }).show());
-                        }
-                    }
-                    else
-                    {
-                        mensajeError(json.respuesta);
-                    }
-                }
-                catch(e)
-                {
-                    manejaException(e,ck);
-                }
-            }
-            ,failure : function()
-            {
-                me.setLoading(false);
-                errorComunicacion(null,'Error al contar bloqueos');
-            }
-        });
+        _p21_tbloqueo(false);
     }
     
     _fieldByName('nmnumero').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
@@ -4900,7 +4835,118 @@ function _p21_emitir()
     _p21_generarTramiteClic(_p21_generarVentanaVistaPrevia);
 }
 
+function _p21_tbloqueo(closable,callback,retry)
+{
+    Ext.Ajax.request(
+    {
+        url     : _p21_urlRecuperacionSimple
+        ,params :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_CONTEO_BLOQUEO'
+            ,'smap1.cdunieco'     : _p21_smap1.cdunieco
+            ,'smap1.cdramo'       : _p21_smap1.cdramo
+            ,'smap1.estado'       : _p21_smap1.estado
+            ,'smap1.nmpoliza'     : _p21_smap1.nmpoliza
+        }
+        ,success : function(response)
+        {
+            var ck = 'Decodificando conteo de bloqueos';
+            try
+            {
+                var json=Ext.decode(response.responseText);
+                debug('### conteo bloqueo:',json);
+                if(json.exito)
+                {
+                    if(Number(json.smap1.CONTEO)>0)
+                    {
+                        centrarVentanaInterna(Ext.create('Ext.window.Window',
+                        {
+                            title     : 'Cotizaci\u00F3n en proceso...'
+                            ,width    : 400
+                            ,height   : 150
+                            ,modal    : true
+                            ,closable : false
+                            ,html     : '<div style="padding:5px;border:0px solid black;">'
+                                        +'Su cotizaci\u00F3n a\u00FAn se encuentra generando tarifa ('
+                                        +json.smap1.CONTEO
+                                        +').<br/>Intente m\u00E1s tarde</div>'
+                            ,buttonAlign : 'center'
+                            ,buttons     :
+                            [
+                                {
+                                    text     : 'Regresar'
+                                    ,icon    : '${icons}arrow_undo.png'
+                                    ,handler : function(){ history.back(); }
+                                    ,hidden  : closable
+                                }
+                                ,{
+                                    text     : 'Recargar'
+                                    ,icon    : '${icons}arrow_refresh.png'
+                                    ,handler : function(me){ me.up('window').setLoading(true); location.reload(); }
+                                    ,hidden  : closable
+                                }
+                                ,{
+                                    text     : 'Reintentar'
+                                    ,icon    : '${icons}control_repeat_blue.png'
+                                    ,handler : function(me){ me.up('window').destroy(); retry(); }
+                                    ,hidden  : !(closable&&!Ext.isEmpty(retry))
+                                }
+                                ,{
+                                    text     : 'Aceptar'
+                                    ,icon    : '${icons}accept.png'
+                                    ,handler : function(me){ me.up('window').destroy(); }
+                                    ,hidden  : !closable
+                                }
+                            ]
+                        }).show());
+                    }
+                    else if(!Ext.isEmpty(callback))
+                    {
+                        callback();
+                    }
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            catch(e)
+            {
+                manejaException(e,ck);
+            }
+        }
+        ,failure : function()
+        {
+            me.setLoading(false);
+            errorComunicacion(null,'Error al contar bloqueos');
+        }
+    });
+}
+
 function _p21_generarVentanaVistaPrevia(sinBotones)
+{
+    _mask('Cargando...');
+    setTimeout(
+	    function()
+	    {
+	        _unmask();
+		    _p21_tbloqueo(
+		        true
+		        ,function()
+		        {
+		            _p21_generarVentanaVistaPrevia2(sinBotones);
+		        }
+		        ,function()
+		        {
+		            _p21_generarVentanaVistaPrevia(sinBotones);
+		        }
+		    );
+        }
+        ,2000
+    );
+}
+
+function _p21_generarVentanaVistaPrevia2(sinBotones)
 {
     var itemsVistaPrevia=[];
     
