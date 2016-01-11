@@ -11,40 +11,27 @@
  */
 function validaRFC(tipoPersona, nombre, nombre2, apaterno, amaterno, fecha, rfc) {
     try {
-        // Persona fisica
-        if(tipoPersona == 'F') {
+    	var esValido = false;
+    	var rfcGenerado = '';
+    	
+        if(tipoPersona == 'F') {// Persona fisica
         	
-        	var rfcGenerado = generaRFCPersonaFisica(nombre, nombre2, apaterno, amaterno, fecha);
-        	debug('RFCs a comparar:', rfc.toUpperCase(), rfcGenerado);
-        	if( rfc.toUpperCase() == rfcGenerado ) {
-        		return true;
-        	} else {
-        		return false;
-        	}
+        	rfcGenerado = generaRFCPersonaFisica(nombre, nombre2, apaterno, amaterno, fecha);
         	
         } else if(tipoPersona == 'M' || tipoPersona == 'S') { // Persona moral y regimen Simplificado
-            if(rfc.substr(0, 1) != nombre.substr(0, 1)) {
-                return false;
-            }
-            if(rfc.substr(1, 1) != nombre.substr(1, 1)) {
-                return false;
-            }
-            if(rfc.substr(2, 1) != nombre.substr(2, 1)) {
-                return false;
-            }
-            if(rfc.substr(3, 2) != fecha.substr(8, 2)) {
-                return false;
-            }
-            if(rfc.substr(5, 2) != fecha.substr(3, 2)) {
-                return false;
-            }
-            if(rfc.substr(7, 2) != fecha.substr(0, 2)) {
-                return false;
-            }
+            
+        	rfcGenerado = generaRFCPersonaMoral(nombre, fecha);
+        	
         } else {
             throw 'Error en la validacion, tipo de persona invalido: "' + tipoPersona + '"';
         }
-        return true;
+        
+        debug('Tipo de persona:', tipoPersona);
+        debug('RFCs a comparar:', rfc.toUpperCase(), rfcGenerado);
+        if(rfc.toUpperCase() == rfcGenerado) {
+            esValido = true;
+        }
+        return esValido;
     } catch(e) {
         throw 'Error al validar RFC' + e.toString();
     }
