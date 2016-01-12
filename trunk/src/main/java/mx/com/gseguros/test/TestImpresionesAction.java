@@ -382,6 +382,21 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 	}
 
 	
+	/**
+	 * Prueba de sleep
+	 * @return
+	 * @throws Exception
+	 */
+	@Action(value="sleep",
+			results={@Result(name="success", type="json")}
+	)
+	public String sleep() throws Exception {
+		int min = Integer.parseInt(params.get("m"));
+		logger.debug("Iniciando sleep de {} minuto(s)", min);
+		Thread.sleep(min*60*1000);
+        logger.debug("Finalizando sleep de {} minuto(s)", min);
+		return SUCCESS;
+	}
     
     
 	/*
