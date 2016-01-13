@@ -14,7 +14,15 @@ import mx.com.gseguros.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.opensymphony.xwork2.ActionContext;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.UniformInterfaceException;
+import com.sun.jersey.api.client.WebResource;
 
 public class EmisionAction extends PrincipalCoreAction
 {
@@ -164,6 +172,55 @@ public class EmisionAction extends PrincipalCoreAction
 				 "\n###### guardarClausulasPoliza ######"
 				,"\n####################################"
 				));
+		return SUCCESS;
+	}
+	
+	public String obtieneIdUsu()
+	{		
+		logger.debug(Utils.log(
+				 "\n >>> guardarClausulasPoliza"
+				,"\n >>> smap1=",smap1
+				));
+		
+		String login = smap1.get("cdusuari");
+		String respInd = null;
+		try
+		{
+    		Client restclient = Client.create();
+	    	WebResource webResource = restclient.resource("http://10.1.21.117:9080/wsCAS/rest/usuarios/getIdUsuByLogin");
+
+	    	logger.debug(Utils.log(" >>>>>>>>>>> Request Obtener IdUsu: " + login));
+      		
+      		ClientResponse response = webResource.type("application/x-www-form-urlencoded").post(ClientResponse.class, "login="+login);
+
+			String output;
+			if (response.getStatus() > 299 || response.getStatus() < 200) {
+				logger.debug(Utils.log(response.getEntity(String.class)));
+			   output = "Failed : HTTP error code : "  + response.getStatus();
+			}        
+			else{
+			    output = response.getEntity(String.class);            
+			}
+
+			logger.debug(Utils.log("Response Usuario Obtenido: " + output));
+		respInd = "['idusu':" + output + "]";
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		logger.debug(Utils.log("respInd: " + respInd.toString()));
+		
+		exito = true;
+		respuesta = respInd;
+		smap1.put("idusu", output);
+						
+		} catch (UniformInterfaceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClientHandlerException e) {
+			// TODO Auto-gerated catch block
+			e.printStackTrace();
+				}
+		
 		return SUCCESS;
 	}
 	
