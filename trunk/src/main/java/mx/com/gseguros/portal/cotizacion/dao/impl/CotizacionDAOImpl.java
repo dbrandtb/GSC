@@ -366,6 +366,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		private String[] columnas=new String[]{
 			"cdrfc"
 			,"cdperson"
+			,"cdideper_"
+			,"cdideext_"
 			,"nombre"
 			,"codpostal"
 			,"cdedo"
