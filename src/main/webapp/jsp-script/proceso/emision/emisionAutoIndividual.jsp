@@ -19,9 +19,9 @@ var _p29_urlDocumentosPoliza               = '<s:url namespace="/documentos" act
 var _p29_urlRecuperacionSimple             = '<s:url namespace="/emision"    action="recuperacionSimple"                   />';
 var _p29_urlCotizacionAutoIndividual       = '<s:url namespace="/emision"    action="cotizacionAutoIndividual"             />';
 var _p29_urlDocumentosPolizaClon           = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon"          />';
-var _p29_urlObtieneValNumeroSerie          = '<s:url namespace="/emision" action="obtieneValNumeroSerie"                />';
-var urlPantallaBeneficiarios			   = '<s:url namespace="/catalogos"  action="includes/pantallaBeneficiarios" />';
-
+var _p29_urlObtieneValNumeroSerie          = '<s:url namespace="/emision"    action="obtieneValNumeroSerie"                />';
+var urlPantallaBeneficiarios			   = '<s:url namespace="/catalogos"  action="includes/pantallaBeneficiarios"       />';
+var _p28_urlCargarIdUsu                    = '<s:url namespace="/emision"    action="obtieneIdUsu"        />';
 var urlReintentarWS  = '<s:url namespace="/"        action="reintentaWSautos" />';
 var _urlEnviarCorreo = '<s:url namespace="/general" action="enviaCorreo"      />';
 ////// urls //////
@@ -46,6 +46,10 @@ var _aplicaCobVida = !Ext.isEmpty(_p29_smap1.AplicaCobVida) && _p29_smap1.Aplica
 var _FechaMinEdad  = _p29_smap1.FechaMinEdad;
 var _FechaMaxEdad  = _p29_smap1.FechaMaxEdad;
 
+var ramogs;
+var poliza;
+
+var _url_domiciliacion = '<s:text name="portal.agentes.domiciliacion.url" />';
 ////// variables //////
 
 Ext.onReady(function()
@@ -225,7 +229,7 @@ Ext.onReady(function()
                         ,'smap1.estado'       : _p29_smap1.estado
                         ,'smap1.nmpoliza'     : _p29_smap1.nmpoliza
                         ,'smap1.nmsuplem'     : '1'
-                        ,'smap1.nmsituac'     : '1'
+                        ,'smap1.nmsituac'     : '0'
                         ,'smap1.cdrolPipes'   : '3'
                         ,'smap1.cdtipsup'     : '1'
                         ,'smap1.ultimaImagen' : 'N'
@@ -1014,32 +1018,32 @@ function _p29_mostrarVistaPrevia()
                                     {
                                         var callbackRemesa = function()
                                         {
-	                                        centrarVentanaInterna(Ext.create('Ext.window.Window',
-	                                        {
-	                                            title        : 'Documentos del tr&aacute;mite'
-	                                            ,modal       : true
-	                                            ,buttonAlign : 'center'
-	                                            ,width       : 600
-	                                            ,height      : 400
-	                                            ,autoScroll  : true
-	                                            ,loader      :
-	                                            {
-	                                                url       : _p29_urlDocumentosPoliza
-	                                                ,params   :
-	                                                {
-	                                                    'smap1.nmpoliza'  : _p29_smap1.nmpolizaEmitida
-	                                                    ,'smap1.cdunieco' : _p29_smap1.cdunieco
-	                                                    ,'smap1.cdramo'   : _p29_smap1.cdramo
-	                                                    ,'smap1.estado'   : 'M'
-	                                                    ,'smap1.nmsuplem' : '0'
-	                                                    ,'smap1.ntramite' : ''
-	                                                    ,'smap1.nmsolici' : _p29_smap1.nmpoliza
-	                                                    ,'smap1.tipomov'  : '0'
-	                                                }
-	                                                ,scripts  : true
-	                                                ,autoLoad : true
-	                                            }
-	                                        }).show());
+                                            centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                            {
+                                                title        : 'Documentos del tr&aacute;mite'
+                                                ,modal       : true
+                                                ,buttonAlign : 'center'
+                                                ,width       : 600
+                                                ,height      : 400
+                                                ,autoScroll  : true
+                                                ,loader      :
+                                                {
+                                                    url       : _p29_urlDocumentosPoliza
+                                                    ,params   :
+                                                    {
+                                                        'smap1.nmpoliza'  : _p29_smap1.nmpolizaEmitida
+                                                        ,'smap1.cdunieco' : _p29_smap1.cdunieco
+                                                        ,'smap1.cdramo'   : _p29_smap1.cdramo
+                                                        ,'smap1.estado'   : 'M'
+                                                        ,'smap1.nmsuplem' : '0'
+                                                        ,'smap1.ntramite' : ''
+                                                        ,'smap1.nmsolici' : _p29_smap1.nmpoliza
+                                                        ,'smap1.tipomov'  : '0'
+                                                    }
+                                                    ,scripts  : true
+                                                    ,autoLoad : true
+                                                }
+                                            }).show());
                                         };
                                         _generarRemesaClic(
                                             false
@@ -1050,7 +1054,7 @@ function _p29_mostrarVistaPrevia()
                                             ,callbackRemesa
                                         );
                                     }
-                                }
+                                }//fin boton impresion
                                 ,{
                                     xtype    : 'button'
                                     ,itemId  : '_p29_botonCancelarEmision'
@@ -1082,6 +1086,54 @@ function _p29_mostrarVistaPrevia()
                                         });
                                     }
                                 }
+//====================================--------------------=======================================||
+	                         ,{
+                                      hidden  :  Number(_fieldByName('cdperpag').getValue()) != 1 
+	                        	     ,xtype   : 'button'
+                                     ,itemId  : '_p29_botonRedireccionar'
+                                     ,text    : 'Cobranza Automatica'
+                                     ,icon    : '${ctx}/resources/fam3icons/icons/application_link.png'
+                                     ,disabled : true
+                                     ,handler : function()
+                                     {  
+                                    	 Ext.Ajax.request(
+                                            {
+                                                url     : _p28_urlCargarIdUsu
+                                                ,params :
+                                                {
+                                                    'smap1.cdusuari' : _p29_smap1.cdusuari,
+                                                }
+                                                ,success : function(response)
+                                                { 
+//                                                 	alert(response);
+//                                                 	alert(response.responseText);
+                                    	    	   var json = Ext.decode(response.responseText);
+//                                     	    	   alert(json);
+//                                                    var idusu = json.idusu;                                                   
+                                                        var idusu = json.smap1.idusu;
+//                                                         alert(idusu);
+		                                    	     var url = _url_domiciliacion+"?u="+idusu+"&suc="+_p29_smap1.cdunieco+"&ram="+ramogs+"&pol="+poliza;
+		                                             centrarVentanaInterna(Ext.create('Ext.window.Window',
+		                                             {
+		                                                  title       : 'Datos de Poliza'
+		                                                 ,modal       : true
+		                                                 ,buttonAlign : 'center'
+		                                                 ,width       : 810
+		                                                 ,height      : 510
+		                                                 ,autoScroll  : true
+		                                                 ,modal       : true
+		                                                 ,html        :'<iframe width="800" height="500" src="'+url+'"></iframe>'
+		                                                 
+		                                             }).show());
+                                                }
+                                                ,failure  : function()
+                                                {   alert("Hello! I am an alert box!! 2");
+                                                    errorComunicacion();
+                                                }
+		                                      });
+                                     }
+                                 }  
+                            
                             ]
                         })
                     ]
@@ -1119,9 +1171,12 @@ function _p29_emitirFinal(me)
         {
             panelpri.setLoading(false);
             var json=Ext.decode(response.responseText);
+            ramogs = json.cdRamoGS;
+            poliza = json.nmpolAlt;
             debug('### emitir:',json);
             if(json.success==true)
-            {
+            {   _fieldById('_p29_botonRedireccionar').setDisabled(false);
+            
             	_p29_smap1.nmpolizaEmitida=json.panel2.nmpoliza;
                 debug("_p29_smap1.nmpolizaEmitida:",_p29_smap1.nmpolizaEmitida);
                 
@@ -1130,6 +1185,7 @@ function _p29_emitirFinal(me)
                     _fieldById('_p29_botonEmitirPolizaFinal').hide();
                     _fieldById('_p29_botonCancelarEmision').setDisabled(true);
                     _fieldById('_p29_botonNueva').setDisabled(false);
+                    
                     
                     Ext.Msg.show(
 	                {

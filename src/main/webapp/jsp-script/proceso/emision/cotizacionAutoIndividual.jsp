@@ -23,6 +23,8 @@
 </style>
 <script>
 ////// overrides //////
+
+
 Ext.override(Ext.form.TextField,
 {
     initComponent:function()
@@ -90,7 +92,6 @@ var _p28_urlCargarObligatorioCamionRamo5      = '<s:url namespace="/emision"    
 var _p28_urlCargarDetalleNegocioRamo5         = '<s:url namespace="/emision"         action="cargarDetalleNegocioRamo5"                      />';
 var _p28_urlCargarParamerizacionCoberturasRol = '<s:url namespace="/emision"         action="cargarParamerizacionConfiguracionCoberturasRol" />';
 var _p28_urlCargarTipoCambioWS                = '<s:url namespace="/emision"         action="cargarTipoCambioWS"                             />';
-
 var _p28_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p28_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 ////// urls //////
@@ -102,10 +103,10 @@ debug('_p28_smap1:',_p28_smap1);
 var _p28_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 debug('_p28_reporteCotizacion:',_p28_reporteCotizacion);
 
-var _p28_formFields   = [ <s:property value="imap.formFields"   /> ];
-var _p28_panel2Items  = [ <s:property value="imap.panel2Items"  /> ];
-var _p28_panel3Items  = [ <s:property value="imap.panel3Items"  /> ];
-var _p28_panel4Items  = [ <s:property value="imap.panel4Items"  /> ];
+var _p28_formFields   = [<s:property value="imap.formFields"   />];
+var _p28_panel2Items  = [<s:property value="imap.panel2Items"  />];
+var _p28_panel3Items  = [<s:property value="imap.panel3Items"  />];
+var _p28_panel4Items  = [<s:property value="imap.panel4Items"  />];
 
 var _p28_recordClienteRecuperado = null;
 var _p28_storeCoberturas         = null;
@@ -122,14 +123,14 @@ Ext.onReady(function()
     _grabarEvento('COTIZACION','ACCCOTIZA',null,null,_p28_smap1.cdramo);
 
     Ext.Ajax.timeout = 3*60*1000;
-
-	////// modelos //////
-	Ext.define('_p28_modeloRecuperado',
+ 
+    ////// modelos //////
+    Ext.define('_p28_modeloRecuperado',
     {
         extend  : 'Ext.data.Model'
         ,fields :
         [
-            'NOMBRECLI'
+             'NOMBRECLI'
             ,'DIRECCIONCLI'
         ]
     });
@@ -158,10 +159,10 @@ Ext.onReady(function()
             ,'orden_parentesco'
         ]
     });
-	////// modelos //////
-	
-	////// stores //////
-	_p28_storeCoberturas=Ext.create('Ext.data.Store',
+    ////// modelos //////
+    
+    ////// stores //////
+    _p28_storeCoberturas=Ext.create('Ext.data.Store',
     {
         autoLoad : false
         ,model   : 'RowCobertura'
@@ -190,10 +191,10 @@ Ext.onReady(function()
             }
         }
     });
-	////// stores //////
-	
-	////// componentes //////
-	_p28_windowCoberturas = new Ext.Window(
+    ////// stores //////
+    
+    ////// componentes //////
+    _p28_windowCoberturas = new Ext.Window(
     {
         plain        : true
         ,width       : 500
@@ -257,24 +258,25 @@ Ext.onReady(function()
         ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
         ,handler : _p28_guardarConfig
     });
-	////// componentes //////
-	
-	////// contenido //////
-	var _p28_formOcultoItems = [];
-	<s:if test='%{getImap().get("panel5Items")!=null}'>
-	    var items = [<s:property value="imap.panel5Items" />];
-	    for(var i=0;i<items.length;i++)
-	    {
-	        _p28_formOcultoItems.push(items[i]);
-	    }
-	</s:if>
-	<s:if test='%{getImap().get("panel6Items")!=null}'>
+    ////// componentes //////
+    
+    ////// contenido //////
+    var _p28_formOcultoItems = [];
+    <s:if test='%{getImap().get("panel5Items")!=null}'>
+        var items = [<s:property value="imap.panel5Items" />];
+        for(var i=0;i<items.length;i++)
+        {
+            _p28_formOcultoItems.push(items[i]);
+        }
+    </s:if>
+    <s:if test='%{getImap().get("panel6Items")!=null}'>
         var items = [<s:property value="imap.panel6Items" />];
         for(var i=0;i<items.length;i++)
         {
             _p28_formOcultoItems.push(items[i]);
         }
     </s:if>
+   
     var _p28_panel1Items =
     [
         {
@@ -299,17 +301,19 @@ Ext.onReady(function()
                     {
                         change : _p28_nmpolizaChange
                     }
-                }
+                 }
                 ,{
                     xtype    : 'button'
                     ,itemId  : '_p28_botonCargar'
                     ,text    : 'BUSCAR'
                     ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
                     ,handler : _p28_cargar
-                }
-            ]
-        }
+                 }      
+              ]
+         }
     ];
+    
+    
     <s:if test='%{getImap().get("panel1Items")!=null}'>
         var aux = [<s:property value='imap.panel1Items' />];
         for(var i=0;i<aux.length;i++)
@@ -318,7 +322,6 @@ Ext.onReady(function()
             _p28_panel1Items.push(aux[i]);
         }
     </s:if>
-    
     var tatripolItems=
     [
         <s:if test='%{!"0".equals(getSmap1().get("tatripolItemsLength"))}' >
@@ -328,7 +331,8 @@ Ext.onReady(function()
     
     _p28_panel1Items.push(
     {
-        xtype   : 'fieldset'
+           xtype   : 'fieldset'
+
         ,itemId : '_p28_fieldsetVehiculo'
         ,width  : 435
         ,title  : '<span style="font:bold 14px Calibri;">VEH&Iacute;CULO</span>'
@@ -370,88 +374,88 @@ Ext.onReady(function()
         ,minValue   : Ext.Date.add(new Date(),Ext.Date.DAY,1)
         ,style      : 'margin-left:15px;'
     });
-	
-	Ext.create('Ext.panel.Panel',
-	{
-	    itemId    : '_p28_panelpri'
-	    ,border   : 0
-	    ,renderTo : '_p28_divpri'
-	    ,defaults : { style : 'margin : 5px;' }
-	    ,items    :
-	    [
-	        Ext.create('Ext.form.Panel',
-	        {
-	            itemId      : '_p28_form'
-	            ,border     : 0
-	            ,defaults   : { style : 'margin : 5px;' }
-	            ,formOculto : Ext.create('Ext.form.Panel',{ items : _p28_formOcultoItems })
-	            ,layout     :
-	            {
-	                type     : 'table'
-	                ,columns : 2
-	                ,tdAttrs : { valign : 'top' }
-	            }
-	            ,items    :
-	            [
-	                {
-	                    xtype  : 'fieldset'
-	                    ,title : '<span style="font:bold 14px Calibri;">DATOS GENERALES</span>'
-	                    ,items : _p28_panel1Items
-	                }
-	                ,{
-	                    xtype   : 'fieldset'
-	                    ,itemId : '_p28_panel4Fieldset'
-	                    ,title  : '<span style="font:bold 14px Calibri;">COBERTURAS</span>'
-	                    ,items  : _p28_panel4Items
-	                }
-	            ]
-	        })
-	        ,Ext.create('Ext.panel.Panel',
-	        {
-	            itemId       : '_p28_botonera'
-	            ,buttonAlign : 'center'
-	            ,border      : 0
-	            ,buttons     :
-	            [
-	                {
-	                    itemId   : '_p28_cotizarButton'
-	                    ,text    : 'Cotizar'
-	                    ,icon    : '${ctx}/resources/fam3icons/icons/calculator.png'
-	                    ,handler : function(){_p28_cotizar();}
-	                }
-	                ,{
+    
+    Ext.create('Ext.panel.Panel',
+    {
+        itemId    : '_p28_panelpri'
+        ,border   : 0
+        ,renderTo : '_p28_divpri'
+        ,defaults : { style : 'margin : 5px;' }
+        ,items    :
+        [
+            Ext.create('Ext.form.Panel',
+            {
+                itemId      : '_p28_form'
+                ,border     : 0
+                ,defaults   : { style : 'margin : 5px;' }
+                ,formOculto : Ext.create('Ext.form.Panel',{ items : _p28_formOcultoItems })
+                ,layout     :
+                {
+                    type     : 'table'
+                    ,columns : 2
+                    ,tdAttrs : { valign : 'top' }
+                }
+                ,items    :
+                [
+                    {
+                        xtype  : 'fieldset'
+                        ,title : '<span style="font:bold 14px Calibri;">DATOS GENERALES</span>'
+                        ,items : _p28_panel1Items
+                    }
+                    ,{
+                        xtype   : 'fieldset'
+                        ,itemId : '_p28_panel4Fieldset'
+                        ,title  : '<span style="font:bold 14px Calibri;">COBERTURAS</span>'
+                        ,items  : _p28_panel4Items
+                    }
+                ]
+            })
+            ,Ext.create('Ext.panel.Panel',
+            {
+                itemId       : '_p28_botonera'
+                ,buttonAlign : 'center'
+                ,border      : 0
+                ,buttons     :
+                [
+                    {
+                        itemId   : '_p28_cotizarButton'
+                        ,text    : 'Cotizar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/calculator.png'
+                        ,handler : function(){_p28_cotizar();}
+                    }
+                    ,{
                         itemId   : '_p28_limpiarButton'
                         ,text    : 'Limpiar'
                         ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
                         ,handler : _p28_limpiar
                     }
-	            ]
-	        })
-	    ]
-	});
-	////// contenido //////
-	
-	////// custom //////
-	
-	//fechas
-	_fieldByName('feini').on(
-	{
-        change : function(me,val)
-	    {
-	        debug('val:',val);
-	        var fefin = _fieldByName('fefin');
-	        fefin.setValue(Ext.Date.add(val,Ext.Date.YEAR,1));
-	        fefin.setMinValue(Ext.Date.add(val,Ext.Date.DAY,1));
-	        fefin.isValid();
-	    }
-	});
+                ]
+            })
+        ]
+    });
+    ////// contenido //////
+    
+    ////// custom //////
+    
     //fechas
-	
-	//ramo 5
-	if(_p28_smap1.cdramo+'x'=='5x')
-	{
-	    //fechas
-	    _fieldByName('feini').on(
+    _fieldByName('feini').on(
+    {
+        change : function(me,val)
+        {
+            debug('val:',val);
+            var fefin = _fieldByName('fefin');
+            fefin.setValue(Ext.Date.add(val,Ext.Date.YEAR,1));
+            fefin.setMinValue(Ext.Date.add(val,Ext.Date.DAY,1));
+            fefin.isValid();
+        }
+    });
+    //fechas
+    
+    //ramo 5
+    if(_p28_smap1.cdramo+'x'=='5x')
+    {
+        //fechas
+        _fieldByName('feini').on(
         {
             change : _p28_calculaVigencia
         });
@@ -462,26 +466,26 @@ Ext.onReady(function()
         });
     
         _p28_calculaVigencia();
-	    //fechas
-	
-	    var agente    = _fieldByLabel('AGENTE');
-	    var clave     = _fieldByName('parametros.pv_otvalor06');
-	    var marca     = _fieldByName('parametros.pv_otvalor07');
+        //fechas
+    
+        var agente    = _fieldByLabel('AGENTE');
+        var clave     = _fieldByName('parametros.pv_otvalor06');
+        var marca     = _fieldByName('parametros.pv_otvalor07');
         var submarca  = _fieldByName('parametros.pv_otvalor08');
         var modelo    = _fieldByName('parametros.pv_otvalor09');
         var version   = _fieldByName('parametros.pv_otvalor10');
         var tipoValor = _fieldByLabel('TIPO VALOR');
         var sumaAsegu = _fieldLikeLabel('VALOR VEH');
-	    var combcl    = _fieldLikeLabel('CLIENTE NUEVO');
-	    
-	    //agente
-	    if(_p28_smap1.cdsisrol=='EJECUTIVOCUENTA')
-	    {
-	        agente.setValue(_p28_smap1.cdagente);
-	        agente.setReadOnly(true);
-	        _p28_ramo5AgenteSelect(agente,_p28_smap1.cdagente);
-	    }
-	    else if(_p28_smap1.cdsisrol=='PROMOTORAUTO'
+        var combcl    = _fieldLikeLabel('CLIENTE NUEVO');
+        
+        //agente
+        if(_p28_smap1.cdsisrol=='EJECUTIVOCUENTA')
+        {
+            agente.setValue(_p28_smap1.cdagente);
+            agente.setReadOnly(true);
+            _p28_ramo5AgenteSelect(agente,_p28_smap1.cdagente);
+        }
+        else if(_p28_smap1.cdsisrol=='PROMOTORAUTO'
             ||_p28_smap1.cdsisrol=='SUSCRIAUTO')
         {
             agente.on(
@@ -489,25 +493,25 @@ Ext.onReady(function()
                 'select' : _p28_ramo5AgenteSelect
             });
         }
-	    //agente
-	    
-	    //cliente nuevo
-	    combcl.on(
-	    {
-	        change : _p28_ramo5ClienteChange
+        //agente
+        
+        //cliente nuevo
+        combcl.on(
+        {
+            change : _p28_ramo5ClienteChange
         });
-	    
-	    combcl.getStore().on('load',function()
+        
+        combcl.getStore().on('load',function()
         {
             debug('combo cliente nuevo store load');
             combcl.setValue('S');
         });
         combcl.setValue('S');
-	    //cliente nuevo
-	    
-	    //version
-	    version.anidado = true;
-	    version.heredar = function()
+        //cliente nuevo
+        
+        //version
+        version.anidado = true;
+        version.heredar = function()
         {
             version.getStore().load(
             {
@@ -518,56 +522,57 @@ Ext.onReady(function()
                 }
             });
         };
-	    
-	    submarca.on(
-	    {
-	        select : function(){ version.reset(); }
-	    });
-	    
-	    modelo.on(
-	    {
-	        select : function()
-	        {
-	            version.getStore().load(
-	            {
-	                params :
-	                {
-	                    'params.submarca' : submarca.getValue()
-	                    ,'params.modelo'  : modelo.getValue()
-	                }
-	            });
-	        }
-	        ,change : function()
-	        {
-	            tipoValor.setValue('');
-	        }
-	    });
-	    //version
-	    
-	    //clave
-	    clave.on(
-	    {
-	        select : function(combo,records){ _p28_herenciaDescendiente(clave,marca,submarca,modelo,version,records[0]); }
-	    });
-	    
-	    modelo.on(
-	    {
-	        select : function() { _p28_herenciaAscendente(clave,marca,submarca,modelo,version); }
-	    });
-	    
-	    version.on(
+        
+        submarca.on(
+        {
+            select : function(){ version.reset(); }
+        });
+        
+        modelo.on(
+        {
+            select : function()
+            {
+                version.getStore().load(
+                {
+                    params :
+                    {
+                        'params.submarca' : submarca.getValue()
+                        ,'params.modelo'  : modelo.getValue()
+                    }
+                });
+            }
+            ,change : function()
+            {
+                tipoValor.setValue('');
+            }
+        });
+        //version
+        
+        //clave
+        clave.on(
+        {
+            select : function(combo,records){ _p28_herenciaDescendiente(clave,marca,submarca,modelo,version,records[0]); }
+        });
+        
+        modelo.on(
         {
             select : function() { _p28_herenciaAscendente(clave,marca,submarca,modelo,version); }
         });
-	    //clave
-	    
-	    //tipovalor
-	    tipoValor.on(
-	    {
-	        select : function()
-	        {
-	            var valor = tipoValor.getValue();
-	            if(_p28_smap1.cdramo+'x'=='5x'&&valor-0==3)
+        
+        version.on(
+        {
+            select : function() { _p28_herenciaAscendente(clave,marca,submarca,modelo,version); }
+        });
+        //clave
+        
+        //tipovalor
+        _fieldLikeLabel('FECHA DE FACTURA').hide();
+        tipoValor.on(
+        {
+            select : function()
+            {
+                var valor = tipoValor.getValue();
+                if(_p28_smap1.cdramo+'x'=='5x'&&valor-0==3)
                 {
                     var modelo = _fieldByLabel('MODELO').getValue()-0;
                     var anioAc = new Date().getFullYear()-0;
@@ -582,18 +587,39 @@ Ext.onReady(function()
                 {
                     _p28_cargarRangoValorRamo5();
                 }
-	        }
-	    });
-	    //tipovalor
-	    
-	    //sumaAsegurada
-	    sumaAsegu.on(
-	    {
-	        change : function(){ _p28_limitarCoberturasDependientesSumasegRamo5(); }
-	    });
-	    //sumaAsegurada
-	    
-	    //parametrizacion coberturas
+               
+                
+/* ------------------------------- VALOR FACTURA ------------------- */
+             
+               var valor = tipoValor.getValue();
+                if(valor-0==3)/* 3 = VALOR FACTURA*/
+                {
+                	var hoy = new  Date();
+                	var limite = Ext.Date.add(hoy, Ext.Date.DAY,-60);
+                	
+                	_fieldLikeLabel('FECHA DE FACTURA').setMinValue(limite);
+                	_fieldLikeLabel('FECHA DE FACTURA').setMaxValue(hoy);
+                	_fieldLikeLabel('FECHA DE FACTURA').show();
+                	_fieldLikeLabel('FECHA DE FACTURA').allowBlank=false;
+                }
+                else
+                {
+                    _fieldLikeLabel('FECHA DE FACTURA').hide();
+                    _fieldLikeLabel('FECHA DE FACTURA').allowBlank=true;
+                }
+                
+                }
+        });
+        //tipovalor
+        
+        //sumaAsegurada
+        sumaAsegu.on(
+        {
+            change : function(){ _p28_limitarCoberturasDependientesSumasegRamo5(); }
+        });
+        //sumaAsegurada
+        
+        //parametrizacion coberturas
         _fieldByLabel('NEGOCIO').on(
         {
             change : function(){ _p28_cargarParametrizacionCoberturas(); }
@@ -613,76 +639,76 @@ Ext.onReady(function()
                 }
             }
         });
-	    //parametrizacion coberturas
-	    
-	    //uso
-	    var usoCmp = _fieldByLabel('TIPO USO');
-	    debug('@CUSTOM uso:',usoCmp);
-	    usoCmp.anidado = true;
-	    usoCmp.heredar = function(remoto,micallback)
-	    {
-	        var negocioCmp  = _fieldByLabel('NEGOCIO');
-	        var servicioCmp = _fieldByLabel('TIPO SERVICIO');
-	        var negocioVal  = negocioCmp.getValue();
-	        var servicioVal = servicioCmp.getValue();
-	        debug('negocioVal:'  , negocioVal);
-	        debug('servicioVal:' , servicioVal);
-	        if(!Ext.isEmpty(negocioVal)
-	            &&!Ext.isEmpty(servicioVal)
-	            )
-	        {
-	            _fieldByLabel('TIPO USO').getStore().load(
-	            {
-	                params :
-	                {
-	                    'params.cdnegocio' : negocioVal
-	                    ,'params.servicio' : servicioVal
-	                }
-	                ,callback : function()
-	                {
-	                    var me  = _fieldByLabel('TIPO USO');
-	                    var val = me.getValue();
-	                    var den = false;
-	                    me.getStore().each(function(record)
-	                    {
-	                        if(record.get('key')==val)
-	                        {
-	                            den = true;
-	                        }
-	                    });
-	                    if(!den)
-	                    {
-	                        me.clearValue();
-	                    }
-	                    _fieldLikeLabel('CLAVE').store.proxy.extraParams['params.uso']=me.getValue();
-	                    if(!Ext.isEmpty(micallback))
-	                    {
-	                        micallback(_fieldByLabel('TIPO USO'));
-	                    }
-	                }
-	            });
-	        }
-	        else
-	        {
-	            if(!Ext.isEmpty(micallback))
-	            {
-	                micallback(_fieldByLabel('TIPO USO'));
-	            }
-	        }
-	    };
-	    
-	    _fieldByLabel('NEGOCIO').on(
-	    {
-	        change : function(me,val)
-	        {
-	            if(me.findRecord('key',val)!=false)
-	            {
-	                _fieldByLabel('TIPO USO').heredar(true);
-	            }
-	        }
-	    });
-	    
-	    _fieldByLabel('TIPO SERVICIO').on(
+        //parametrizacion coberturas
+        
+        //uso
+        var usoCmp = _fieldByLabel('TIPO USO');
+        debug('@CUSTOM uso:',usoCmp);
+        usoCmp.anidado = true;
+        usoCmp.heredar = function(remoto,micallback)
+        {
+            var negocioCmp  = _fieldByLabel('NEGOCIO');
+            var servicioCmp = _fieldByLabel('TIPO SERVICIO');
+            var negocioVal  = negocioCmp.getValue();
+            var servicioVal = servicioCmp.getValue();
+            debug('negocioVal:'  , negocioVal);
+            debug('servicioVal:' , servicioVal);
+            if(!Ext.isEmpty(negocioVal)
+                &&!Ext.isEmpty(servicioVal)
+                )
+            {
+                _fieldByLabel('TIPO USO').getStore().load(
+                {
+                    params :
+                    {
+                        'params.cdnegocio' : negocioVal
+                        ,'params.servicio' : servicioVal
+                    }
+                    ,callback : function()
+                    {
+                        var me  = _fieldByLabel('TIPO USO');
+                        var val = me.getValue();
+                        var den = false;
+                        me.getStore().each(function(record)
+                        {
+                            if(record.get('key')==val)
+                            {
+                                den = true;
+                            }
+                        });
+                        if(!den)
+                        {
+                            me.clearValue();
+                        }
+                        _fieldLikeLabel('CLAVE').store.proxy.extraParams['params.uso']=me.getValue();
+                        if(!Ext.isEmpty(micallback))
+                        {
+                            micallback(_fieldByLabel('TIPO USO'));
+                        }
+                    }
+                });
+            }
+            else
+            {
+                if(!Ext.isEmpty(micallback))
+                {
+                    micallback(_fieldByLabel('TIPO USO'));
+                }
+            }
+        };
+        
+        _fieldByLabel('NEGOCIO').on(
+        {
+            change : function(me,val)
+            {
+                if(me.findRecord('key',val)!=false)
+                {
+                    _fieldByLabel('TIPO USO').heredar(true);
+                }
+            }
+        });
+        
+        _fieldByLabel('TIPO SERVICIO').on(
         {
             change : function(me,val)
             {
@@ -718,68 +744,68 @@ Ext.onReady(function()
                 }
             }
         });
-	    //uso
-	    
-	    //camion
-	    if(_p28_smap1.cdtipsit+'x'=='CRx')
-	    {
-	        _fieldLikeLabel('CLAVE').on(
-	        {
-	            select : function(){ _p28_recuperaObligatorioCamionRamo5(); }
-	        });
-	        _fieldLikeLabel('VALOR VEH').on(
-	        {
-	            change : function(){ _p28_recuperaObligatorioCamionRamo5(); }
-	        });
-	        _fieldLikeLabel('LIZA TRACTOCAMI').allowBlank=false;
-	        _fieldLikeLabel('LIZA TRACTOCAMI').on(
-	        {
-	            blur : function(me)
-	            {
-	                var val=me.getValue();
-	                if(!Ext.isEmpty(val)&&val+'x'!='x')
-	                {
-	                    me.setLoading(true);
-	                    Ext.Ajax.request(
-	                    {
-	                        url     : _p28_urlValidarTractocamionRamo5
-	                        ,params :
-	                        {
-	                            'smap1.poliza' : val
-	                            ,'smap1.rfc'   : Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.RFCCLI
-	                        }
-	                        ,success : function(response)
-	                        {
-	                            me.setLoading(false);
-	                            var json = Ext.decode(response.responseText);
-	                            debug('### tractocamion:',json);
-	                            if(!json.exito)
-	                            {
-	                                mensajeWarning(json.respuesta);
-	                                me.setValue('');
-	                            }
-	                        }
-	                        ,failure : function()
-	                        {
-	                            me.setLoading(false);
-	                            me.setValue('');
-	                            errorComunicacion();
-	                        }
-	                    });
-	                }
-	            }
-	        });
-	    }
-	    //camion
-	    
-	    //negocio
-	    _fieldByLabel('NEGOCIO').on(
-	    {
-	        change : function(me,val)
-	        {
-	            if(me.findRecord('key',val)!=false)
-	            {
-	                marca.getStore().load(
+        //uso
+        
+        //camion
+        if(_p28_smap1.cdtipsit+'x'=='CRx')
+        {
+            _fieldLikeLabel('CLAVE').on(
+            {
+                select : function(){ _p28_recuperaObligatorioCamionRamo5(); }
+            });
+            _fieldLikeLabel('VALOR VEH').on(
+            {
+                change : function(){ _p28_recuperaObligatorioCamionRamo5(); }
+            });
+            _fieldLikeLabel('LIZA TRACTOCAMI').allowBlank=false;
+            _fieldLikeLabel('LIZA TRACTOCAMI').on(
+            {
+                blur : function(me)
+                {
+                    var val=me.getValue();
+                    if(!Ext.isEmpty(val)&&val+'x'!='x')
+                    {
+                        me.setLoading(true);
+                        Ext.Ajax.request(
+                        {
+                            url     : _p28_urlValidarTractocamionRamo5
+                            ,params :
+                            {
+                                'smap1.poliza' : val
+                                ,'smap1.rfc'   : Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.RFCCLI
+                            }
+                            ,success : function(response)
+                            {
+                                me.setLoading(false);
+                                var json = Ext.decode(response.responseText);
+                                debug('### tractocamion:',json);
+                                if(!json.exito)
+                                {
+                                    mensajeWarning(json.respuesta);
+                                    me.setValue('');
+                                }
+                            }
+                            ,failure : function()
+                            {
+                                me.setLoading(false);
+                                me.setValue('');
+                                errorComunicacion();
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        //camion
+        
+        //negocio
+        _fieldByLabel('NEGOCIO').on(
+        {
+            change : function(me,val)
+            {
+                if(me.findRecord('key',val)!=false)
+                {
+                    marca.getStore().load(
                     {
                         params :
                         {
@@ -815,7 +841,7 @@ Ext.onReady(function()
                             var json = Ext.decode(response.responseText);
                             debug('### detalle negocio:',json);
                             if(Number(json.smap1.MULTIANUAL) != 0) {
-                            	_fieldByName('fefin').validator=function(val)
+                                _fieldByName('fefin').validator=function(val)
                                 {
                                     var feiniVal = Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y');
                                     debug('feiniVal:',feiniVal);
@@ -850,138 +876,137 @@ Ext.onReady(function()
                             errorComunicacion();
                         }
                     });
-	            }
-	        }
-	    });
-	    //negocio
-	    
-	    //asistencia eua y canada
-	    if(_p28_smap1.cdtipsit+'x'=='ARx'||_p28_smap1.cdtipsit+'x'=='PPx')
+                }
+            }
+        });
+        //negocio
+        
+        //asistencia eua y canada
+        if(_p28_smap1.cdtipsit+'x'=='ARx'||_p28_smap1.cdtipsit+'x'=='PPx')
         {
-	        var canadaCmp = _fieldLikeLabel('CANAD');
-	        debug('@CUSTOM canada:',canadaCmp);
-	        canadaCmp.anidado = true;
-	        canadaCmp.heredar = function(remoto,micallback)
-	        {
-    	        var me        = _fieldLikeLabel('CANAD');
-	            var postalCmp = _fieldLikeLabel('CIRCULACI');
-	            var postalVal = postalCmp.getValue();
-	            if((postalVal+'x').length==6)
-	            {
-    	            me.setLoading(true);
-	                Ext.Ajax.request(
-	                {
-    	                url     : _p28_urlRecuperacionSimple
-	                    ,params :
-	                    {
-    	                    'smap1.procedimiento' : 'VERIFICAR_CODIGO_POSTAL_FRONTERIZO'
-	                        ,'smap1.cdpostal'     : postalVal
-	                    }
-	                    ,success : function(response)
-	                    {
-    	                    me.setLoading(false);
-	                        var json=Ext.decode(response.responseText);
-	                        debug('### canada:',json);
-	                        if(json.exito)
-	                        {
-	                            if(json.smap1.fronterizo+'x'=='Sx')
-	                            {
-	                                me.setValue('S');
-	                            }
-	                            else
-	                            {
-	                                me.setValue('N');
-	                            }
-	                        }
-	                        else
-	                        {
-    	                        mensajeError(json.respuesta);
-	                        }
-	                        if(!Ext.isEmpty(micallback))
-	                        {
-	                            micallback(_fieldLikeLabel('CANAD'));
-	                        }
-	                    }
-	                    ,failure : function()
-    	                {
-	                        me.setLoading(false);
-	                        errorComunicacion();
-	                    }
-	                });
-	            }
-	            else
-	            {
-	                if(!Ext.isEmpty(micallback))
-	                {
-	                    micallback(_fieldLikeLabel('CANAD'));
-	                }
-	            }
-	        }
-	    
-	        var postalCmp = _fieldLikeLabel('CIRCULACI');
-	        postalCmp.on(
-	        {
-    	        change : function()
-	            {
-    	            _fieldLikeLabel('CANAD').heredar();
-	            }
-	        });
-	    }
-	    //asistencia eua y canada
-	}
-	//ramo 5
-	
-	////// custom //////
-	
-	////// loaders //////
-	_p28_cargarConfig();
-	
-	if('|AR|CR|PC|PP|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')!=-1)
-	{
-	    debug('@CUSTOM valor max');
-	    var valorCmp = _fieldLikeLabel('VALOR VEH');
-	    Ext.Ajax.request(
-	    {
-	        url     : _p28_urlRecuperacionSimple
-	        ,params :
-	        {
-	            'smap1.procedimiento' : 'RECUPERAR_VALOR_MAXIMO_SITUACION_POR_ROL'
-	            ,'smap1.cdtipsit'     : _p28_smap1.cdtipsit
-	        }
-	        ,success : function(response)
-	        {
-	            var json = Ext.decode(response.responseText);
-	            debug('### valor maximo por rol:',json);
-	            if(json.exito)
-	            {
-	                valorCmp.maximoTotal = json.smap1.VALOR;
-	                valorCmp.validator = function(val)
-	                {
-	                    var me = _fieldLikeLabel('VALOR VEH');
-	                    debug('validar contra ',me.maximoTotal);
-	                    if(Number(val)>Number(me.maximoTotal))
-	                    {
-	                    	if(_p28_smap1.cdsisrol =='EJECUTIVOCUENTA'){
-                        		return 'Favor de acudir a Mesa de Control para realizar la cotización';
-                        	}else{
-                        		return 'El valor m&aacute;ximo es '+me.maximoTotal;
-                        	}
-	                    }
-	                    return true;
-	                };
-	            }
-	            else
-	            {
-	                mensajeError(json.respuesta);
-	            }
-	        }
-	        ,failure : function()
-	        {
-	            errorComunicacion();
-	        }
-	    });
-	}
-	////// loaders //////
+            var canadaCmp = _fieldLikeLabel('CANAD');
+            debug('@CUSTOM canada:',canadaCmp);
+            canadaCmp.anidado = true;
+            canadaCmp.heredar = function(remoto,micallback)
+            {
+                var me        = _fieldLikeLabel('CANAD');
+                var postalCmp = _fieldLikeLabel('CIRCULACI');
+                var postalVal = postalCmp.getValue();
+                if((postalVal+'x').length==6)
+                {
+                    me.setLoading(true);
+                    Ext.Ajax.request(
+                    {
+                        url     : _p28_urlRecuperacionSimple
+                        ,params :
+                        {
+                            'smap1.procedimiento' : 'VERIFICAR_CODIGO_POSTAL_FRONTERIZO'
+                            ,'smap1.cdpostal'     : postalVal
+                        }
+                        ,success : function(response)
+                        {
+                            me.setLoading(false);
+                            var json=Ext.decode(response.responseText);
+                            debug('### canada:',json);
+                            if(json.exito)
+                            {
+                                if(json.smap1.fronterizo+'x'=='Sx')
+                                {
+                                    me.setValue('S');
+                                }
+                                else
+                                {
+                                    me.setValue('N');
+                                }
+                            }
+                            else
+                            {
+                                mensajeError(json.respuesta);
+                            }
+                            if(!Ext.isEmpty(micallback))
+                            {
+                                micallback(_fieldLikeLabel('CANAD'));
+                            }
+                        }
+                        ,failure : function()
+                        {
+                            me.setLoading(false);
+                            errorComunicacion();
+                        }
+                    });
+                }
+                else
+                {
+                    if(!Ext.isEmpty(micallback))
+                    {
+                        micallback(_fieldLikeLabel('CANAD'));
+                    }
+                }
+            }
+        
+            var postalCmp = _fieldLikeLabel('CIRCULACI');
+            postalCmp.on(
+            {
+                change : function()
+                {
+                    _fieldLikeLabel('CANAD').heredar();
+                }
+            });
+        }
+        //asistencia eua y canada
+    }
+    //ramo 5
+    ////// custom //////
+    
+    ////// loaders //////
+    _p28_cargarConfig();
+    
+    if('|AR|CR|PC|PP|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')!=-1)
+    {
+        debug('@CUSTOM valor max');
+        var valorCmp = _fieldLikeLabel('VALOR VEH');
+        Ext.Ajax.request(
+        {
+            url     : _p28_urlRecuperacionSimple
+            ,params :
+            {
+                'smap1.procedimiento' : 'RECUPERAR_VALOR_MAXIMO_SITUACION_POR_ROL'
+                ,'smap1.cdtipsit'     : _p28_smap1.cdtipsit
+            }
+            ,success : function(response)
+            {
+                var json = Ext.decode(response.responseText);
+                debug('### valor maximo por rol:',json);
+                if(json.exito)
+                {
+                    valorCmp.maximoTotal = json.smap1.VALOR;
+                    valorCmp.validator = function(val)
+                    {
+                        var me = _fieldLikeLabel('VALOR VEH');
+                        debug('validar contra ',me.maximoTotal);
+                        if(Number(val)>Number(me.maximoTotal))
+                        {
+                            if(_p28_smap1.cdsisrol =='EJECUTIVOCUENTA'){
+                                return 'Favor de acudir a Mesa de Control para realizar la cotización';
+                            }else{
+                                return 'El valor m&aacute;ximo es '+me.maximoTotal;
+                            }
+                        }
+                        return true;
+                    };
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure : function()
+            {
+                errorComunicacion();
+            }
+        });
+    }
+    ////// loaders //////
 });
 
 ////// funciones //////
@@ -1886,8 +1911,8 @@ function _p28_cargarSumaAseguradaRamo5(clave,modelo,callback)
             {
                 if(!Ext.isEmpty(json.respuesta))
                 {
-                    //comentado porque rafa no quiere avisos
-                    //mensajeWarning(json.respuesta);
+                 //comentado porque rafa no quiere avisos
+                 //mensajeWarning(json.respuesta);
                 }
                 var sumaseg = _fieldByName('parametros.pv_otvalor13');
                 sumaseg.setValue(json.smap1.sumaseg);
@@ -1914,6 +1939,9 @@ function _p28_cargarSumaAseguradaRamo5(clave,modelo,callback)
         }
     });
     debug('<_p28_cargarSumaAseguradaRamo5');
+
+
+
 }
 
 function _p28_cargar(boton)
@@ -1947,7 +1975,6 @@ function _p28_cargar(boton)
                 if(json.success)
                 {
                     var maestra  = json.slist1[0].ESTADO=='M';
-                    
                     var fesolici    = Ext.Date.parse(json.smap1.FESOLICI,'d/m/Y');
                     var fechaHoy    = Ext.Date.clearTime(new Date());
                     var fechaLimite = Ext.Date.add(fechaHoy,Ext.Date.DAY,-1*(json.smap1.diasValidos-0));
@@ -1956,19 +1983,20 @@ function _p28_cargar(boton)
                     debug('fechaHoy='    , fechaHoy);
                     debug('fechaLimite=' , fechaLimite);
                     debug('vencida='     , vencida , '.');
-                    
+
                     _p28_limpiar();
-                    
+
                     var iniVig = Ext.Date.parse(json.smap1.FEEFECTO,'d/m/Y').getTime();
                     var finVig = Ext.Date.parse(json.smap1.FEPROREN,'d/m/Y').getTime();
                     var milDif = finVig-iniVig;
                     var diaDif = milDif/(1000*60*60*24);
                     debug('diaDif:',diaDif);
-                    
+                  
                     /*if(!maestra&&!vencida)
                     {
                         _fieldByName('feini').setValue(Ext.Date.parse(json.smap1.FEEFECTO,'d/m/Y'));
                     }*/
+                    
                     _fieldByName('feini').setValue(new Date());
                     _fieldByName('fefin').setValue
                     (
@@ -2246,31 +2274,31 @@ function _p28_cargarRangoValorRamo5(callback)
                 if(json.exito)
                 {
                     valor.validator=function(value){
-                    	var r = true;
-                    	valormin = valorCargado*(1+(json.smap1.P1VALOR-0));
+                        var r = true;
+                        valormin = valorCargado*(1+(json.smap1.P1VALOR-0));
                         valormax = valorCargado*(1+(json.smap1.P2VALOR-0));
                         debug('valormin:',valormin);
                         debug('valormax:',valormax);
                         var me = _fieldLikeLabel('VALOR VEH');
 
-                       	if(_p28_smap1.cdsisrol =='EJECUTIVOCUENTA'){
-                       		if(Number(value)>Number(me.maximoTotal)){
-                       			valor.setMinValue(me.maximoTotal);
-                       			valor.setMaxValue(me.maximoTotal);
-                       			valor.setMinValue(false);
-                       			valor.setMaxValue(false);
-                       			r='Favor de acudir a Mesa de Control para realizar la cotización.';
-       	                    }else if((Number(valormin)>= Number(me.maximoTotal)) && (Number(valormax)>= Number(me.maximoTotal))){
-       	                    	valor.setMinValue(me.maximoTotal);
-                       			valor.setMaxValue(me.maximoTotal);
-       	                    }else{
-       	                    	valor.setMaxValue(valormax);
-       	                    	valor.setMinValue(valormin);
-       	                    }
-                       	}else{
-                       		valor.setMinValue(valormin);
-                       		valor.setMaxValue(valormax);
-                       	}
+                        if(_p28_smap1.cdsisrol =='EJECUTIVOCUENTA'){
+                            if(Number(value)>Number(me.maximoTotal)){
+                                valor.setMinValue(me.maximoTotal);
+                                valor.setMaxValue(me.maximoTotal);
+                                valor.setMinValue(false);
+                                valor.setMaxValue(false);
+                                r='Favor de acudir a Mesa de Control para realizar la cotización.';
+                            }else if((Number(valormin)>= Number(me.maximoTotal)) && (Number(valormax)>= Number(me.maximoTotal))){
+                                valor.setMinValue(me.maximoTotal);
+                                valor.setMaxValue(me.maximoTotal);
+                            }else{
+                                valor.setMaxValue(valormax);
+                                valor.setMinValue(valormin);
+                            }
+                        }else{
+                            valor.setMinValue(valormin);
+                            valor.setMaxValue(valormax);
+                        }
                        return r;
                     }
                     valor.isValid();
@@ -2421,6 +2449,17 @@ function _p28_tarifaSelect(selModel, record, row, column, eOpts)
         _fieldById('_p28_botonImprimir').setDisabled(false);
         _fieldById('_p28_botonEnviar').setDisabled(false);
         _fieldById('_p28_botonDetalles').setDisabled(false);
+        
+        if( Number(_p28_selectedCdperpag) == 1 && (_p28_selectedCdplan=="3A" || _p28_selectedCdplan =="4L" || _p28_selectedCdplan =="5B"))
+        {
+            debug(".D.");
+            debug('DSPERPAG');  
+            _fieldById('_p28_botonCoberturas').setDisabled(true);
+            _fieldById('_p28_botonComprar').setDisabled(true);
+            _fieldById('_p28_botonImprimir').setDisabled(true);
+            _fieldById('_p28_botonEnviar').setDisabled(true);
+            _fieldById('_p28_botonDetalles').setDisabled(true);
+        }
     }
 }
 
@@ -2464,7 +2503,7 @@ function _p28_comprar()
                    ,buttons : Ext.Msg.OK
                    ,fn      : function()
                    {
-                   	   var swExiper = (!Ext.isEmpty(_p28_recordClienteRecuperado) && Ext.isEmpty(_p28_recordClienteRecuperado.raw.CLAVECLI) && !Ext.isEmpty(_p28_recordClienteRecuperado.raw.CDIDEPER))? 'N' : 'S' ;
+                       var swExiper = (!Ext.isEmpty(_p28_recordClienteRecuperado) && Ext.isEmpty(_p28_recordClienteRecuperado.raw.CLAVECLI) && !Ext.isEmpty(_p28_recordClienteRecuperado.raw.CDIDEPER))? 'N' : 'S' ;
                        Ext.create('Ext.form.Panel').submit(
                        {
                            url             : _p28_urlDatosComplementarios
