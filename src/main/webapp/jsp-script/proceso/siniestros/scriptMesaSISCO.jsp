@@ -1035,8 +1035,19 @@ var msgWindow;
 					if(banderaRespuesta == "1"){
 						centrarVentanaInterna(Ext.Msg.show({
 							title:'Respuesta Pagos',
-							msg: resultRespuesta,
-							buttons: Ext.Msg.OK
+							msg: resultRespuesta, //'Se requere una autorizaci&oacute;n especial para continuar.',
+							buttons: Ext.Msg.OK,
+							fn: function(){
+								Ext.create('Ext.form.Panel').submit({
+									url				: _URL_MESACONTROL
+									,standardSubmit	:true
+									,params			:
+									{
+										'smap1.gridTitle'		: 'Siniestros'
+										,'smap2.pv_cdtiptra_i'	: _PAGO_AUTOMATICO
+									}
+								});
+							}
 						}));
 					}
 				},
