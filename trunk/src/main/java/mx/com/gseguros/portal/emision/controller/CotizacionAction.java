@@ -74,8 +74,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -4048,8 +4046,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		if(exito&&StringUtils.isBlank(nombreCensoConfirmado))
 		{
 			FileInputStream input       = null;
-			XSSFWorkbook    workbook    = null;
-			XSSFSheet       sheet       = null;
+			Workbook        workbook    = null;
+			Sheet           sheet       = null;
 			Long            inTimestamp = null;
 			File            archivoTxt  = null;
 			PrintStream     output      = null;
@@ -4057,7 +4055,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			try
 			{	
 				input       = new FileInputStream(censo);
-				workbook    = new XSSFWorkbook(input);
+				workbook    = WorkbookFactory.create(input);
 				sheet       = workbook.getSheetAt(0);
 				inTimestamp = System.currentTimeMillis();
 				nombreCenso = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
@@ -4071,6 +4069,14 @@ public class CotizacionAction extends PrincipalCoreAction
 				respuesta       = "Error al procesar censo #"+etimestamp;
 				respuestaOculta = ex.getMessage();
 				logger.error(respuesta,ex);
+			}
+			
+			if(exito&&workbook.getNumberOfSheets()!=1)
+			{
+				long etimestamp = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Favor de revisar el n\u00famero de hojas del censo #"+etimestamp;
+				logger.error(respuesta);
 			}
 			
 			if(exito)
@@ -5183,9 +5189,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			{
 				
 				FileInputStream input      = null;
-				//XSSFWorkbook  workbook   = null;
 				Workbook        workbook   = null;
-				//XSSFSheet     sheet      = null;
 				Sheet           sheet      = null;
 				File            archivoTxt = null;
 				PrintStream     output     = null;
@@ -5201,7 +5205,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				try
 				{	
 					input    = new FileInputStream(censo);
-					//workbook = new XSSFWorkbook(input);
 					workbook = WorkbookFactory.create(input);
 					sheet    = workbook.getSheetAt(0);
 					
@@ -5215,6 +5218,14 @@ public class CotizacionAction extends PrincipalCoreAction
 					respuesta       = "Error inesperado al procesar censo #"+etimestamp;
 					respuestaOculta = ex.getMessage();
 					logger.error(respuesta,ex);
+				}
+				
+				if(exito&&workbook.getNumberOfSheets()!=1)
+				{
+					long etimestamp = System.currentTimeMillis();
+					exito           = false;
+					respuesta       = "Favor de revisar el n\u00famero de hojas del censo #"+etimestamp;
+					logger.error(respuesta);
 				}
 				
 				if(exito)
