@@ -805,6 +805,11 @@ public class MesaControlAction extends PrincipalCoreAction
 			String seccionGridButtons        = "GRIDBUTTONS";
 			String seccionBotonesTramite     = "BOTONES_TRAMITE";
 			
+			//REalizamos el llamado del proceso de pago automatico cdtiptra = 19
+			if(cdtiptra.equalsIgnoreCase("19")){
+				siniestrosManager.procesaPagoAutomaticoSisco();
+			}
+			
 			rol = usuario.getRolActivo().getClave();
 			
 			////// obtener valores del formulario //////

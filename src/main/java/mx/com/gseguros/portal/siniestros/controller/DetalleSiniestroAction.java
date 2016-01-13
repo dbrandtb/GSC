@@ -130,7 +130,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			Date dFeFactura = renderFechas.parse(formatoFechaFactura);
 			Date dFeEgreso = renderFechas.parse(formatoFeEgreso); 
 			
-			siniestrosManager.guardaListaFacturaSiniestro(params.get("ntramite"), params.get("nfactura"), dFeFactura , params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),dFeEgreso, params.get("diasdedu"),null,null);
+			siniestrosManager.guardaListaFacturaSiniestro(params.get("ntramite"), params.get("nfactura"), dFeFactura , params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),dFeEgreso, params.get("diasdedu"),null,null, null);
 			success = true;
 			
 			if(params.get("actMisiniper").equalsIgnoreCase("1")){
@@ -158,13 +158,39 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			}else{
 				feegreso = renderFechas.parse(params.get("fefactura"));
 			}
-			siniestrosManager.guardaListaFacturaSiniestro(params.get("ntramite"), params.get("nfactura"), renderFechas.parse(params.get("fefactura")), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),feegreso,params.get("diasdedu"),null,null);
+			//Actualizamos la informacion del la factura
+			siniestrosManager.guardaListaFacturaSiniestro(params.get("ntramite"), params.get("nfactura"), renderFechas.parse(params.get("fefactura")), 
+					params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), 
+					params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),
+					params.get("dctonuex"),feegreso,params.get("diasdedu"),null,null, params.get("nfacturaOrig"));
+			
+			logger.debug("Valores de entrada ===>> ");
+			logger.debug("Valores de entrada ntramite ===>> "+params.get("ntramite"));
+			logger.debug("Valores de entrada nfactura ===>> "+params.get("nfactura"));
+			logger.debug("Valores de entrada nfacturaOrig ===>>"+params.get("nfacturaOrig"));
+			siniestrosManager.guardaListaFacturaPagoAutomatico(params.get("ntramite"), params.get("nfactura"), params.get("nfacturaOrig"));
 			
 			List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(params.get("ntramite"), params.get("nfactura"),null);
 			
-			for(int i =0; i < asegurados.size();i++){
+			for(int i = 0; i < asegurados.size();i++){
 				String munSiniestro=asegurados.get(i).get("NMSINIES")+"";
 				if(!munSiniestro.equalsIgnoreCase("null")){
+					
+					if(!params.get("nfactura").toString().equalsIgnoreCase(params.get("nfacturaOrig").toString())){
+						siniestrosManager.P_MOV_MAUTSINI(asegurados.get(i).get("CDUNIECO"), asegurados.get(i).get("CDRAMO"), asegurados.get(i).get("ESTADO"), 
+							asegurados.get(i).get("NMPOLIZA"), asegurados.get(i).get("NMSUPLEM"), asegurados.get(i).get("NMSITUAC"), asegurados.get(i).get("AAAPERTU"), 
+							asegurados.get(i).get("STATUS"), asegurados.get(i).get("NMSINIES"),params.get("nfacturaOrig"),
+							null,null,null,null,null,
+							Constantes.MAUTSINI_AREA_RECLAMACIONES, params.get("autrecla"), Constantes.MAUTSINI_FACTURA, params.get("commenar"), Constantes.DELETE_MODE);
+						
+						siniestrosManager.P_MOV_MAUTSINI(asegurados.get(i).get("CDUNIECO"), asegurados.get(i).get("CDRAMO"), asegurados.get(i).get("ESTADO"), 
+							asegurados.get(i).get("NMPOLIZA"), asegurados.get(i).get("NMSUPLEM"), asegurados.get(i).get("NMSITUAC"), asegurados.get(i).get("AAAPERTU"), 
+							asegurados.get(i).get("STATUS"), asegurados.get(i).get("NMSINIES"), params.get("nfacturaOrig"),
+							null,null,null,null,null,
+							Constantes.MAUTSINI_AREA_MEDICA, params.get("autmedic"), Constantes.MAUTSINI_FACTURA, params.get("commenme"), Constantes.DELETE_MODE);
+					}
+					
+					
 					Map<String,Object>paramsTvalosin = new HashMap<String,Object>();
 					paramsTvalosin.put("pv_cdunieco"  , asegurados.get(i).get("CDUNIECO"));
 					paramsTvalosin.put("pv_cdramo"    , asegurados.get(i).get("CDRAMO"));

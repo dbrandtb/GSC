@@ -377,10 +377,11 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			String cdgarant, String cdconval, String descporc, String descnume,
 			String cdmoneda, String tasacamb, String ptimporta,
 			String dctonuex, Date feegreso, String diasdedu, String nombProv,
-			String tipoAccion) throws Exception {
+			String tipoAccion, String factInicial) throws Exception {
 		// TODO Auto-generated method stub
 		try {
 			String accion = null;
+			String facInicial = null;
 			log.debug("Entra a esta parte --> : "+feegreso);
 			if(tipoAccion == null || tipoAccion == ""){
 				accion = Constantes.INSERT_MODE;
@@ -388,6 +389,13 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 				accion = Constantes.UPDATE_MODE;
 			}
 			
+			if(factInicial == null || factInicial ==""){
+				facInicial = nfactura;
+			}else{
+				facInicial =  factInicial;
+			}
+			
+			log.debug("Valor de la accion ==>"+accion);
 			HashMap<String,Object> paramsFacMesaCtrl=new HashMap<String,Object>();
 			paramsFacMesaCtrl.put("pv_accion_i", accion);
 			paramsFacMesaCtrl.put("pv_ntramite_i",ntramite);
@@ -407,6 +415,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			paramsFacMesaCtrl.put("pv_feegreso_i", feegreso);
 			paramsFacMesaCtrl.put("pv_diasdedu_i",diasdedu);
 			paramsFacMesaCtrl.put("pv_nombprov_i",nombProv);
+			paramsFacMesaCtrl.put("pv_factInicial_i",facInicial);
 			log.debug("guardaListaFacMesaControl params: "+paramsFacMesaCtrl);
 			return siniestrosDAO.guardaListaFacturaSiniestro(paramsFacMesaCtrl);
 		} catch (ParseException parseExc) {
@@ -2091,6 +2100,47 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
+
+	@Override
+	public void procesaPagoAutomaticoSisco() throws Exception {
+		// TODO Auto-generated method stub
+		siniestrosDAO.procesaPagoAutomaticoSisco();
+	}
 	
+	@Override
+	public List<Map<String, String>> getValidaArancelesTramitexProveedor(String ntramite) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_ntramite_i", ntramite);
+		return siniestrosDAO.obtieneValidaconAranceleTramite(params);
+	}
 	
+	@Override
+	public String obtieneMontoTramitePagoDirecto(HashMap<String, Object> paramsPagoDirecto) throws Exception {
+		try {
+			return siniestrosDAO.obtieneMontoTramitePagoDirecto(paramsPagoDirecto);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> getValidaFacturaMontoPagoAutomatico(String ntramite) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_ntramite_i", ntramite);
+		return siniestrosDAO.obtieneValidaFacturaMontoPagoAutomatico(params);
+	}
+	
+	@Override
+	public String guardaListaFacturaPagoAutomatico(String ntramite, String nfactura,String factInicial) throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			HashMap<String,Object> datosFactura=new HashMap<String,Object>();
+			datosFactura.put("pv_ntramite_i",ntramite);
+			datosFactura.put("pv_nfactura_i",nfactura);
+			datosFactura.put("pv_nfacori_i",factInicial);
+			return siniestrosDAO.guardaListaFacturaPagoAutomatico(datosFactura);
+		} catch (ParseException parseExc) {
+			throw new Exception(parseExc.getMessage(), parseExc);
+		}
+	}
 }
