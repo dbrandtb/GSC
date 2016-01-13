@@ -53,8 +53,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -2387,7 +2388,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)&&!sincenso&&!complemento&&StringUtils.isBlank(nombreCensoConfirmado))
 		{
 			FileInputStream input       = null;
-			XSSFSheet       sheet       = null;
+			Workbook        workbook    = null;
+			Sheet           sheet       = null;
 			File            archivoTxt  = null;
 			PrintStream     output      = null;
 			
@@ -2402,13 +2404,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 			//instanciar
 			try
 			{
-				File censo            = new File(new StringBuilder(rutaDocumentosTemporal).append("/censo_").append(miTimestamp).toString());
-				input                 = new FileInputStream(censo);
-				XSSFWorkbook workbook = new XSSFWorkbook(input);
-				sheet                 = workbook.getSheetAt(0);
-				nombreCenso           = new StringBuilder("censo_").append(miTimestamp).append("_").append(nmpoliza).append(".txt").toString();
-				archivoTxt            = new File(new StringBuilder(rutaDocumentosTemporal).append("/").append(nombreCenso).toString());
-				output                = new PrintStream(archivoTxt);
+				File censo  = new File(new StringBuilder(rutaDocumentosTemporal).append("/censo_").append(miTimestamp).toString());
+				input       = new FileInputStream(censo);
+				workbook    = WorkbookFactory.create(input);
+				sheet       = workbook.getSheetAt(0);
+				nombreCenso = new StringBuilder("censo_").append(miTimestamp).append("_").append(nmpoliza).append(".txt").toString();
+				archivoTxt  = new File(new StringBuilder(rutaDocumentosTemporal).append("/").append(nombreCenso).toString());
+				output      = new PrintStream(archivoTxt);
 			}
 			catch(Exception ex)
 			{
@@ -2417,6 +2419,14 @@ public class CotizacionManagerImpl implements CotizacionManager
 				resp.setRespuesta(new StringBuilder("Error al procesar censo #").append(timestamp).toString());
 				resp.setRespuestaOculta(ex.getMessage());
 				logger.error(resp.getRespuesta(),ex);
+			}
+			
+			if(resp.isExito()&&workbook.getNumberOfSheets()!=1)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Favor de revisar el n\u00famero de hojas del censo #").append(timestamp).toString());
+				logger.error(resp.getRespuesta());
 			}
 			
 			//crear pipes y ejecutar procedure
@@ -4322,20 +4332,21 @@ public class CotizacionManagerImpl implements CotizacionManager
 		{
 			
 			FileInputStream input       = null;
-			XSSFSheet       sheet       = null;
+			Workbook        workbook    = null;
+			Sheet           sheet       = null;
 			File            archivoTxt  = null;
 			PrintStream     output      = null;
 			
 			try
 			{	
-				File censo            = new File(new StringBuilder(rutaDocsTemp).append("/censo_").append(censoTimestamp).toString());
-				input                 = new FileInputStream(censo);
-				XSSFWorkbook workbook = new XSSFWorkbook(input);
-				sheet                 = workbook.getSheetAt(0);
-				Long inTimestamp      = System.currentTimeMillis();
-				nombreCenso = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
-				archivoTxt  = new File(new StringBuilder(rutaDocsTemp).append("/").append(nombreCenso).toString());
-				output      = new PrintStream(archivoTxt);
+				File censo       = new File(new StringBuilder(rutaDocsTemp).append("/censo_").append(censoTimestamp).toString());
+				input            = new FileInputStream(censo);
+				workbook         = WorkbookFactory.create(input);
+				sheet            = workbook.getSheetAt(0);
+				Long inTimestamp = System.currentTimeMillis();
+				nombreCenso      = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
+				archivoTxt       = new File(new StringBuilder(rutaDocsTemp).append("/").append(nombreCenso).toString());
+				output           = new PrintStream(archivoTxt);
 			}
 			catch(Exception ex)
 			{
@@ -4344,6 +4355,14 @@ public class CotizacionManagerImpl implements CotizacionManager
 				resp.setRespuesta(new StringBuilder("Error al procesar censo #").append(timestamp).toString());
 				resp.setRespuestaOculta(ex.getMessage());
 				logger.error(resp.getRespuesta(),ex);
+			}
+			
+			if(resp.isExito()&&workbook.getNumberOfSheets()!=1)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Favor de revisar el n\u00famero de hojas del censo #").append(timestamp).toString());
+				logger.error(resp.getRespuesta());
 			}
 			
 			if(resp.isExito())
@@ -7101,7 +7120,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 			paso = "Filtrando filas con errores";
 			logger.debug("\nPaso: {}",paso);
 			
-			Iterator<Row>            rowIterator = (new XSSFWorkbook(new FileInputStream(censo))).getSheetAt(0).iterator();
+			Workbook workbook = WorkbookFactory.create(new FileInputStream(censo));
+			if(workbook.getNumberOfSheets()!=1)
+			{
+				throw new ApplicationException("Favor de revisar el n\u00famero de hojas del censo");
+			}
+			
+			Iterator<Row>            rowIterator = workbook.getSheetAt(0).iterator();
 			List<Map<String,String>> registros   = new ArrayList<Map<String,String>>();
 			List<Map<String,String>> recordsDTO  = new ArrayList<Map<String,String>>();
 			int                      nTotal      = 0;
