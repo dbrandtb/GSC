@@ -12,6 +12,7 @@
 	var _GLOBAL_MUESTRA_EXTENSION_TIMEOUT  = '<s:text name="sesion.muestra.extension.timeout"/>';
 	var _GLOBAL_OCULTA_EXTENSION_TIMEOUT   = '<s:text name="sesion.oculta.extension.timeout"/>';
 	var _GLOBAL_URL_GRABAR_EVENTO          = '<s:url namespace="/servicios" action="grabarEvento" />';
+	var _GLOBAL_URL_TEST_SLEEP             = '<s:url namespace="/test" action="sleep" />';
 	
 	var _GLOBAL_DIRECTORIO_ICONOS         = '${icons}';
 	var _GLOBAL_CONTEXTO                  = '${ctx}';
