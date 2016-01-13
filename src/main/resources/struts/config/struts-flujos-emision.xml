@@ -435,6 +435,14 @@
             <result name="success" type="json" />
         </action>
        
+       <action name="obtieneIdUsu" class="emisionAction" method="obtieneIdUsu"><!--Buscar idUsu -->
+            <result name="success" type="json" />
+       </action>
+       
+       <action name="CargarPoliza" class="CotizacionAction" method="CargarPoliza"><!--Buscar por poliza -->
+            <result name="success" type="json" />
+       </action>
+    
     </package>
     
 </struts>
