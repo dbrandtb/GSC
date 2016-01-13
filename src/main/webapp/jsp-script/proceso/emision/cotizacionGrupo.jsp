@@ -89,9 +89,11 @@ var _p21_urlPantallaAgentes              = '<s:url namespace="/flujocotizacion" 
 var _p21_urlComplementoCotizacion        = '<s:url namespace="/emision"         action="complementoSaludGrupo"            />';
 var _p21_urlPantallaEspPersona           = '<s:url namespace="/persona"         action="includes/pantallaEspPersona"      />';
 
-var _p21_nombreReporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
-var _p21_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports"     />';
-var _p21_reportsServerUser       = '<s:text name="pass.servidor.reports"     />';
+var _p21_nombreReporteCotizacion        = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
+var _p21_nombreReporteCotizacionDetalle = '<s:text name='%{"rdf.cotizacion2.nombre."+smap1.cdtipsit.toUpperCase()}' />';
+
+var _p21_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p21_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _p21_clasif             = null;
 var _p21_storeGrupos        = null;
@@ -4977,6 +4979,12 @@ function _p21_generarVentanaVistaPrevia2(sinBotones)
             ,buttons     :
             [
                 {
+                    text     : 'Vista previa'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+                    ,hidden  : !Ext.isEmpty(sinBotones)&&sinBotones==true
+                    ,handler : function(){_p21_imprimir2();}
+                }
+                ,{
                     text     : 'Emitir'
                     ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
                     ,hidden  : !Ext.isEmpty(sinBotones)&&sinBotones==true
@@ -5469,6 +5477,59 @@ function _p21_imprimir()
         }
     }).show());
     debug('<_p21_imprimir');
+}
+
+function _p21_imprimir2()
+{
+    debug('>_p21_imprimir2');
+    var urlRequestImpCotiza = _p21_urlImprimirCotiza
+            + '?p_unieco='      + _p21_smap1.cdunieco
+            + '&p_ramo='        + _p21_smap1.cdramo
+            + '&p_estado=W'
+            + '&p_poliza='      + _p21_smap1.nmpoliza
+            + '&p_suplem=0'
+            + '&p_cdperpag='    + _fieldByName('cdperpag').getValue()
+            + '&p_perpag='      + _fieldByName('cdperpag').getValue()
+            + '&p_cdplan='
+            + '&destype=cache'
+            + "&desformat=PDF"
+            + "&userid="        + _p21_reportsServerUser
+            + "&ACCESSIBLE=YES"
+            + "&report="        + _p21_nombreReporteCotizacionDetalle
+            + "&paramform=no";
+    debug(urlRequestImpCotiza);
+    var numRand = Math.floor((Math.random() * 100000) + 1);
+    debug(numRand);
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title          : 'Cotizaci&oacute;n'
+        ,width         : 700
+        ,height        : 500
+        ,collapsible   : true
+        ,titleCollapse : true
+        ,html : '<iframe innerframe="'
+                + numRand
+                + '" frameborder="0" width="100" height="100"'
+                + 'src="'
+                + _p21_urlViewDoc
+                + "?contentType=application/pdf&url="
+                + encodeURIComponent(urlRequestImpCotiza)
+                + "\">"
+                + '</iframe>'
+        ,listeners :
+        {
+            resize : function(win,width,height,opt)
+            {
+                debug(width,height);
+                $('[innerframe="'+ numRand+ '"]').attr(
+                {
+                    'width'   : width - 20
+                    ,'height' : height - 60
+                });
+            }
+        }
+    }).show());
+    debug('<_p21_imprimir2');
 }
 
 function _p21_agentes()
