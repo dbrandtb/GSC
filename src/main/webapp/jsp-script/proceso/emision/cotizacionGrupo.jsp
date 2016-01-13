@@ -4513,6 +4513,9 @@ function _p21_rfcBlur(field)
                                                 //SE GENERA UN NUEVO CDPERSON PARA PROSPECTOS
                                                 _fieldByName('cdperson') .setValue('');
                                                 
+                                                _fieldByName('cdideper_').setValue(record.get('CDIDEPER'));
+                                                _fieldByName('cdideext_').setValue(record.raw.CDIDEEXT);
+                                                
                                                 _fieldByName('nombre')   .setValue(record.get('NOMBRECLI'));
                                                 _fieldByName('codpostal').setValue(record.get('CODPOSTAL'));
                                                 

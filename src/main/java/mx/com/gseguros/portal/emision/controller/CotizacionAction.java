@@ -6301,8 +6301,10 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			try
 			{
-				String cdperson = smap1.get("cdperson");
-				String exiper   = "N";
+				String cdperson  = smap1.get("cdperson");
+				String exiper    = "N";
+				String cdideper_ = smap1.get("cdideper_");
+				String cdideext_ = smap1.get("cdideext_");
 				
 				boolean nuevoCdperson = StringUtils.isBlank(cdperson);
 				if(nuevoCdperson)
@@ -6327,7 +6329,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
 						parametros.put("param01_pv_cdperson_i"    , cdperson);
 						parametros.put("param02_pv_cdtipide_i"    , "1");
-						parametros.put("param03_pv_cdideper_i"    , null);
+						parametros.put("param03_pv_cdideper_i"    , cdideper_);
 						parametros.put("param04_pv_dsnombre_i"    , smap1.get("nombre"));
 						parametros.put("param05_pv_cdtipper_i"    , "1");
 						parametros.put("param06_pv_otfisjur_i"    , "M");
@@ -6344,10 +6346,8 @@ public class CotizacionAction extends PrincipalCoreAction
 						parametros.put("param17"                  , null);
 						parametros.put("param18"                  , null);
 						parametros.put("param19"                  , null);
-						parametros.put("param18"                  , null);
-						parametros.put("param19"                  , null);
 						parametros.put("param20"                  , null);
-						parametros.put("param21"                  , null);
+						parametros.put("param21"                  , cdideext_);
 						parametros.put("param22"                  , null);
 						parametros.put("param23"                  , null);
 						parametros.put("param24_pv_accion_i"      , "I");
