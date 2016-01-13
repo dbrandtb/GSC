@@ -2449,6 +2449,29 @@ function _unmask()
         masks[i].destroy();
     }
 }
+
+
+/**
+ * Prueba de timeout
+ * @param {int} min Duracion del timeout en minutos
+ */
+function testTimeout(min) {
+	
+	console.log('Inicio de timeout de ' + min + ' min(s) ...');
+    
+    Ext.Ajax.request({
+    	url    : _GLOBAL_URL_TEST_SLEEP,
+    	params : {
+            'params.m'  : min
+        },
+        success : function(response) {
+        	console.log('Fin de timeout de ' + min + ' min(s).', response);
+        },
+        failure: function(response) {
+        	console.error('Error en Timeout de ' + min + ' min(s)', response);
+        }
+    });
+}
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////
