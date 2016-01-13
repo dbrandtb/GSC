@@ -1897,8 +1897,13 @@ Ext.onReady(function()
         }
     });
     
-    _fieldByName('cdpool').forceSelection=false;
-    _fieldByName('cdpool').up('form').doLayout();
+    _fieldByName('cdpool').on(
+    {
+        focus : function(me)
+        {
+            me.forceSelection = false;
+        }
+    });
     ////// loaders //////
 });
 
