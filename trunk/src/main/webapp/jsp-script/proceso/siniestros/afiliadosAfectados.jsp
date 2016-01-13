@@ -102,6 +102,7 @@
 			var _URL_VALIDA_AUTESPECIFICA				= '<s:url namespace="/siniestros"		action="validaAutorizacionEspecial"/>';
 			var _URL_INF_AUT_ESPECIFICO					= '<s:url namespace="/siniestros" 		action="consultaDatosAutorizacionEspecial" />';
 			var _URL_EXISTE_COBERTURA					= '<s:url namespace="/siniestros" 		action="consultaExisteCoberturaTramite" />';
+			var _11_urlActualizarSiniestro        		= '<s:url namespace="/siniestros"  		action="actualizarMultiSiniestro"      />';
 			
 			debug("VALOR DE _11_params --->",_11_params);
 			debug("VALOR DEL ROL ACTIVO --->",_CDROL);
@@ -2575,10 +2576,13 @@
 							xtype		: 'textfield',			fieldLabel	: 'No. Tr&aacute;mite',		name	: 'params.ntramite', readOnly   : true, hidden: true
 						},
 						{
-							xtype		: 'textfield',			fieldLabel	: 'ContraRecibo',		name	: 'params.contrarecibo', readOnly   : true
+							xtype		: 'textfield',			fieldLabel	: 'ContraRecibo',			name	: 'params.contrarecibo', readOnly   : true
 						},
 						{
-							xtype		: 'textfield',			fieldLabel	: 'No. Factura',			name	: 'params.nfactura', readOnly   : true
+							xtype		: 'textfield',			fieldLabel	: 'No. Factura Original',	name	: 'params.nfacturaOrig', readOnly   : true, hidden: true 
+						},
+						{
+							xtype		: 'textfield',			fieldLabel	: 'No. Factura',			name	: 'params.nfactura', readOnly   : (_11_params.CDTIPTRA != _TIPO_PAGO_AUTOMATICO)
 						},
 						{
 							xtype		: 'datefield',			fieldLabel	: 'Fecha Factura',			name	: 'params.fefactura',	format	: 'd/m/Y'
@@ -2673,7 +2677,15 @@
 												centrarVentanaInterna(mensajeError("Verifica los datos requeridos"));
 											},
 											success: function(form, action) {
-												debug("exito y no realizar nada");
+												Ext.create('Ext.form.Panel').submit({
+													standardSubmit :true
+													,params		: {
+														'params.ntramite' : _11_params.NTRAMITE
+													}
+												});
+												 panelInicialPral.getForm().reset();
+												storeAseguradoFactura.removeAll();
+												storeConceptos.removeAll();
 											}
 										});
 									}
@@ -3658,6 +3670,8 @@
 				
 				//params.cdtipser
 				panelInicialPral.down('[name=params.nfactura]').setValue(_11_recordActivo.get('factura'));
+				
+				panelInicialPral.down('[name=params.nfacturaOrig]').setValue(_11_recordActivo.get('factura'));
 				
 				if(_11_recordActivo.get('desctoNum').length == 0){
 					panelInicialPral.down('[name=params.descnume]').setValue("0.00");

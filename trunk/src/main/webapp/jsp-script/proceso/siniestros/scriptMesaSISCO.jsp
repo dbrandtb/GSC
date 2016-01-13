@@ -8,10 +8,28 @@ var _CONTEXT = '${ctx}';
 /* ******************** CATALOGOS ******************** */
 
 // Catalogo Tipos de pago a utilizar:
-var _PAGO_DIRECTO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo" />';
-var _REEMBOLSO    = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo" />';
-var _INDEMNIZACION= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@INDEMNIZACION.codigo" />';
-var _URL_CATALOGOS                      = '<s:url namespace="/catalogos"   action="obtieneCatalogo" />';
+var _PAGO_DIRECTO 	= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo" />';
+var _REEMBOLSO    	= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo" />';
+var _INDEMNIZACION	= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@INDEMNIZACION.codigo" />';
+var _URL_CATALOGOS	= '<s:url namespace="/catalogos"   action="obtieneCatalogo" />';
+
+
+//SINIESTROS
+var _UrlRechazarTramiteWindwow  			= '<s:url namespace="/siniestros" 	action="includes/rechazoReclamaciones" />';
+var _URL_INF_ASEGURADO						= '<s:url namespace="/siniestros" 	action="consultaDatosAseguradoSiniestro"/>';
+var _UrlDetalleSiniestroDirecto 			= '<s:url namespace="/siniestros" 	action="afiliadosAfectados"        />';
+var _selCobUrlAvanza              			= '<s:url namespace="/siniestros" 	action="afiliadosAfectados"/>';
+var _URL_POLIZA_UNICA						= '<s:url namespace="/siniestros"	action="consultaPolizaUnica"/>';
+var _urlSeleccionCobertura      			= '<s:url namespace="/siniestros" 	action="seleccionCobertura"        />';
+var _URL_GENERAR_CALCULO					= '<s:url namespace="/siniestros" 	action="generarCalculoSiniestros" />';
+var _URL_VALIDA_ARANCELES					= '<s:url namespace="/siniestros" 	action="validaArancelesTramitexProveedor" />';
+var _URL_ACTUALIZA_MONTO					= '<s:url namespace="/siniestros" 	action="actualizaMontoTramite" />';
+var _URL_MESACONTROL						= '<s:url namespace="/mesacontrol" 	action="mcdinamica" />';
+var _PAGO_AUTOMATICO						= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@PAGO_AUTOMATICO.cdtiptra" />';
+var _URL_VALIDA_FACTMONTO					= '<s:url namespace="/siniestros" 	action="validaFacturaMontoPagoAutomatico" />';
+var _URL_VALIDA_SOLICITUD_PAGO				= '<s:url namespace="/siniestros" 	action="solicitarPagoAutomatico" />';
+
+
 // Catalogo Estatus de tramite a utilizar:
 var _STATUS_TRAMITE_EN_REVISION_MEDICA      = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_REVISION_MEDICA.codigo" />';
 var _STATUS_TRAMITE_RECHAZADO               = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@RECHAZADO.codigo" />';
@@ -24,29 +42,19 @@ var _URL_LISTADO_ASEGURADO_POLIZA			= '<s:url namespace="/siniestros"       acti
 var _URL_CONSULTA_BENEFICIARIO				= '<s:url namespace="/siniestros"		action="consultaDatosBeneficiario" />';
 
 /* *************************************************** */
-
-// URLs:
-var _URL_CATALOGOS              		= '<s:url namespace="/catalogos"   	action="obtieneCatalogo" />';
 var _URL_ActualizaStatusTramite 		= '<s:url namespace="/mesacontrol" 	action="actualizarStatusTramite" />';
-//AUTORIZACION DE SERVICIO
 var _UrlValidaDocumentosCargados		= '<s:url namespace="/siniestros" 	action="validaDocumentosCargados"        />';
 var _URL_CONSULTA_TRAMITE       		= '<s:url namespace="/siniestros"   action="consultaListadoMesaControl" />';
 var _URL_NOMBRE_TURNADO   				= '<s:url namespace="/siniestros" 	action="obtieneUsuarioTurnado" />';
 
-//SINIESTROS
-var _UrlRechazarTramiteWindwow  		= '<s:url namespace="/siniestros" 	action="includes/rechazoReclamaciones" />';
+
 var _UrlDetalleSiniestro        		= '<s:url namespace="/siniestros" 	action="detalleSiniestro" />';
-var _UrlDetalleSiniestroDirecto 		= '<s:url namespace="/siniestros" 	action="afiliadosAfectados"        />';
 var _UrlSolicitarPago           		= '<s:url namespace="/siniestros" 	action="solicitarPago"             />';
 var _URL_CONCEPTODESTINO        		= '<s:url namespace="/siniestros"   action="guardarConceptoDestino" />';
-var _selCobUrlAvanza              		= '<s:url namespace="/siniestros" 	action="afiliadosAfectados"/>';
-var _urlSeleccionCobertura      		= '<s:url namespace="/siniestros" 	action="seleccionCobertura"        />';
 var _URL_VAL_AJUSTADOR_MEDICO			= '<s:url namespace="/siniestros" 	action="consultaDatosValidacionAjustadorMed"/>';
-var _URL_INF_ASEGURADO					= '<s:url namespace="/siniestros" 	action="consultaDatosAseguradoSiniestro"/>';
-var _URL_POLIZA_UNICA					= '<s:url namespace="/siniestros"	action="consultaPolizaUnica"/>';
 var _URL_MONTO_PAGO_SINIESTRO			= '<s:url namespace="/siniestros"	action="obtieneMontoPagoSiniestro"/>';
 var _URL_P_MOV_MAUTSINI					= '<s:url namespace="/siniestros"	action="obtieneMensajeMautSini"/>';
-var _Url_AltaTramite_Previo      		= '<s:url namespace="/siniestros" 	action="includes/altaTramitePrevio"      />';
+
 var windowLoader;
 var msgWindow;
 
@@ -55,8 +63,8 @@ var msgWindow;
         <s:property value="imap1.gridbuttons" />
 	];
 	
+	/*Rechazar tramite*/
 	function rechazarTramiteWindow(grid,rowIndex,colIndex){
-		
 		var record = grid.getStore().getAt(rowIndex);
 		if(record.get('status') == _STATUS_TRAMITE_RECHAZADO){
 			mensajeWarning('Este tr&aacute;mite ya se encuentra rechazado!');
@@ -93,11 +101,9 @@ var msgWindow;
 		centrarVentana(windowLoader);
 	}
 	
-	function detalleReclamacionWindow(grid,rowIndex,colIndex)
-	{
+	/*Detalle de Reclamacion*/
+	function detalleReclamacionWindow(grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);
-		debug('record Valor de respuesta :',record.data);
-		debug("Valor de Respuesta -->",record.get('cdunieco'));
 		Ext.Ajax.request({
 			url	 : _URL_INF_ASEGURADO
 			,params:{
@@ -215,7 +221,16 @@ var msgWindow;
 				});
 			}
 		});
-	}
+	}	
+	
+	
+	
+	
+	
+	
+
+	
+
 	
 	function turnarAareaMedica(grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);
@@ -712,9 +727,13 @@ var msgWindow;
 	                    }
 	        			,success : function (response)
 	        			{
+	        				
 		        			 	if(Ext.decode(response.responseText).listaMesaControl != null)
 		        		    	{
+		        			 		debug("Entra al if");
 		        			    	var json=Ext.decode(response.responseText).listaMesaControl[0];
+		        			    	debug("Entra al if  json ===> ", json);
+		        			    	
 		        			    	cdramoTramite = json.cdramomc;
 		           		    		cdtipsitTramite = json.cdtipsitmc;
 		           		    		panelModificacion.query('combo[name=cmbBeneficiario]')[0].setValue(json.otvalor04mc);
@@ -843,53 +862,210 @@ var msgWindow;
 		centrarVentana(msgWindow);
 	}
 	
-	
-	function altaTramiteWindow(){
-	    windowLoader = Ext.create('Ext.window.Window',{
-	        modal       : true,
-	        buttonAlign : 'center',
-	        width       : 830,
-	        height      : 570,
-	        title: 'Alta de Tr&aacute;mite Previo',
-	        autoScroll  : true,
-	        loader      : {
-	            url     : _Url_AltaTramite_Previo,
-	            scripts  : true,
-	            loadMask : true,
-	            autoLoad : true,
-	            ajaxOptions: {
-	            	method: 'POST'
-	            }
-	        }
-	    }).show();
-	    centrarVentana(windowLoader);
+	/*Validacion de los aranceles para el pago automatico*/
+	function validarArancelesPagoAutomatico(button, grid,rowIndex,colIndex){
+		var form=button.up().up();
+		
+		if(mcdinGrid.getView().getSelectionModel().hasSelection()){
+			totalTramites = mcdinGrid.getView().getSelectionModel().getSelection();
+			var totalTramite ="";
+			for(var i=0;i<totalTramites.length;i++) {
+                tramite=totalTramites[i];
+                totalTramite = totalTramite+""+tramite.get('ntramite');
+                if(i< totalTramites.length -1){
+                	totalTramite = totalTramite+"|";
+                }
+            }
+			form.setLoading(true);
+			Ext.Ajax.request({
+				url	 : _URL_VALIDA_ARANCELES
+				,params:{
+					'params.ntramite'  : totalTramite
+				}
+				,success : function (response) {
+					form.setLoading(false);
+					banderaAranceles ="0";
+					var resultAranceles = "";
+					var arancelesTra = Ext.decode(response.responseText).loadList;
+					for(i = 0; i < arancelesTra.length; i++){
+						banderaAranceles = "1";
+						resultAranceles = resultAranceles + 'El C.R.' + arancelesTra[i].NTRAMITE+ ' en la Factura ' + arancelesTra[i].NFACTURA + ' del siniestro '+ arancelesTra[i].NMSINIES+' .El concepto '+ arancelesTra[i].CDCONCEP+ ' el importe del arancel es 0. <br/>';
+					}
+					if(banderaAranceles == "1"){
+						centrarVentanaInterna(mensajeWarning(resultAranceles));
+					}else{
+						centrarVentanaInterna(mensajeCorrecto('\u00C9xito', 'Los montos de los aranceles son mayores a 0.', Ext.Msg.OK, Ext.Msg.INFO));
+					}
+					
+				},failure : function () {
+					form.setLoading(false);
+					Ext.Msg.show({
+						title:'Error',
+						msg: 'Error de comunicaci&oacute;n',
+						buttons: Ext.Msg.OK,
+						icon: Ext.Msg.ERROR
+					});
+				}
+			});
+			
+		}else {
+			centrarVentanaInterna(mensajeWarning("Debe seleccionar al menos un Contrarecibo."));
+		}
 	}
 	
-Ext.onReady(function()
-		{
+	
+	function generarCalculoPagoAutomatico(button, grid,rowIndex,colIndex){
+		var form=button.up().up();
+		if(mcdinGrid.getView().getSelectionModel().hasSelection()){
+			totalTramites = mcdinGrid.getView().getSelectionModel().getSelection();
+			form.setLoading(true);
+			for(var i=0;i<totalTramites.length;i++) {
+                var tramite=totalTramites[i];
+                Ext.Ajax.request( {
+   					url	 : _URL_GENERAR_CALCULO
+   					,params:{
+   						'params.ntramite'  : tramite.get('ntramite')
+   					}
+   					,success : function (response){
+   					},
+   					failure : function (){
+   						form.setLoading(false);
+   						Ext.Msg.show({
+   							title:'Error',
+   							msg: 'Error de comunicaci&oacute;n',
+   							buttons: Ext.Msg.OK,
+   							icon: Ext.Msg.ERROR
+   						});
+   					}
+   				});
+                
+            }
+			form.setLoading(false);
+			Ext.create('Ext.form.Panel').submit({
+				url				: _URL_MESACONTROL
+				,standardSubmit	:true
+				,params			:
+				{
+					'smap1.gridTitle'		: 'Siniestros'
+					,'smap2.pv_cdtiptra_i'	: _PAGO_AUTOMATICO
+				}
+			});
+		}else {
+			centrarVentanaInterna(mensajeWarning("Debe seleccionar al menos un Contrarecibo."));
+		}
+	}
+	
+	/*Validacion de los aranceles para el pago automatico*/
+	function solicitarPagoAutomatico(button, grid,rowIndex,colIndex){
+		var form=button.up().up();
+		if(mcdinGrid.getView().getSelectionModel().hasSelection()){
+			totalTramites = mcdinGrid.getView().getSelectionModel().getSelection();
+			var totalTramite ="";
+			for(var i=0;i<totalTramites.length;i++) {
+                tramite=totalTramites[i];
+                totalTramite = totalTramite+""+tramite.get('ntramite');
+                if(i< totalTramites.length -1){
+                	totalTramite = totalTramite+"|";
+                }
+            }
+			form.setLoading(true);
+			Ext.Ajax.request({
+				url	 : _URL_VALIDA_FACTMONTO
+				,params:{
+					'params.ntramite'  : totalTramite
+				}
+				,success : function (response) {
+					form.setLoading(false);
+					banderaAranceles ="0";
+					var resultAranceles = 'Los siguientes C.R. no se procesaran : <br/>';
+					var arancelesTra = Ext.decode(response.responseText).loadList;
+					for(i = 0; i < arancelesTra.length; i++){
+						banderaAranceles = "1";
+						resultAranceles = resultAranceles + '   - El C.R.' + arancelesTra[i].NTRAMITE+ ' el n&uacute;mero de factura es:  ' + arancelesTra[i].NFACTURA + ' el importe de la factura es : '+ arancelesTra[i].PTIMPORT+'<br/>';
+					}
+					
+					if(banderaAranceles == "1"){
+						
+						centrarVentanaInterna(Ext.Msg.show({
+							title:'Aviso del sistema',
+							msg: resultAranceles, //'Se requere una autorizaci&oacute;n especial para continuar.',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.WARNING,
+							fn: function(){
+								debug("Mandamos el listado de los tramites");
+								validaInformacion(totalTramite);
+							}
+						}));
+					}else{
+						validaInformacion(totalTramite);
+					}
+					
+				},failure : function () {
+					form.setLoading(false);
+					Ext.Msg.show({
+						title:'Error',
+						msg: 'Error de comunicaci&oacute;n',
+						buttons: Ext.Msg.OK,
+						icon: Ext.Msg.ERROR
+					});
+				}
+			});
 			
-			/////////////////////
-			////// modelos //////
-			Ext.define('DetalleMC',{
-		        extend:'Ext.data.Model',
-		        fields:
-		        [
-		            "NTRAMITE"
-		            ,"NMORDINA"
-		            ,"CDTIPTRA"
-		            ,"CDCLAUSU"
-		            ,{name:"FECHAINI",type:'date',dateFormat:'d/m/Y'}
-		            ,{name:"FECHAFIN",type:'date',dateFormat:'d/m/Y'}
-		            ,"COMMENTS"
-		            ,"CDUSUARI_INI"
-		            ,"CDUSUARI_FIN"
-		            ,"usuario_ini"
-		            ,"usuario_fin"
-		        ]
-		    });
-		    ////// modelos //////
-			/////////////////////
-		});
+		}else {
+			centrarVentanaInterna(mensajeWarning("Debe seleccionar al menos un Contrarecibo."));
+		}
+	}
+	
+	function validaInformacion(totalTramite){
+		Ext.Ajax.request({
+				url: _URL_VALIDA_SOLICITUD_PAGO,
+				params: {
+		    		'params.ntramite' : totalTramite
+		    	},
+				success: function(response, opts) {
+					
+					var respuestaMensaje = Ext.decode(response.responseText).loadList;
+					var resultRespuesta  = 'C.R. Procesados : <br/>';
+					var banderaRespuesta = 0;
+					for(i = 0; i < respuestaMensaje.length; i++){
+						banderaRespuesta = "1";
+						resultRespuesta = resultRespuesta + respuestaMensaje[i].mensajeRespuesta+'<br/>';
+					}
+					
+					if(banderaRespuesta == "1"){
+						centrarVentanaInterna(Ext.Msg.show({
+							title:'Respuesta Pagos',
+							msg: resultRespuesta,
+							buttons: Ext.Msg.OK
+						}));
+					}
+				},
+				failure: function(){
+					mcdinGrid.setLoading(false);
+					mensajeError('No se pudo solicitar el pago.');
+				}
+			});
+	}
+
+	Ext.onReady(function(){
+		Ext.define('DetalleMC',{
+	        extend:'Ext.data.Model',
+	        fields:
+	        [
+	            "NTRAMITE"
+	            ,"NMORDINA"
+	            ,"CDTIPTRA"
+	            ,"CDCLAUSU"
+	            ,{name:"FECHAINI",type:'date',dateFormat:'d/m/Y'}
+	            ,{name:"FECHAFIN",type:'date',dateFormat:'d/m/Y'}
+	            ,"COMMENTS"
+	            ,"CDUSUARI_INI"
+	            ,"CDUSUARI_FIN"
+	            ,"usuario_ini"
+	            ,"usuario_fin"
+	        ]
+	    });
+	});
 <s:if test="false">
 </script>
 </s:if>

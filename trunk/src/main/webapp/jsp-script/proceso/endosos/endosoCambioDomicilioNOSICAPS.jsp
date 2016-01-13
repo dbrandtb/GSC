@@ -28,7 +28,8 @@
 				{type:'string',    name:'CPCLIENTE'			},			{type:'string',    name:'CALLECLIENTE'		},			{type:'string',    name:'NUMCLIENTE'		},
 				{type:'string',    name:'CVEEDOSIGS'		},			{type:'string',    name:'CVEMUNSIGS'		},			{type:'string',    name:'COLCLIENTE'		},
 				{type:'string',    name:'POBLACION'			},			{type:'string',    name:'NUMEXTERIOR'		},			{type:'string',    name:'NUMINTERIOR'		},
-				{type:'string',    name:'ESTADOASEG'		},			{type:'string',    name:'CDEDOICE'			},			{type:'string',    name:'CDCOLONICE'		}
+				{type:'string',    name:'ESTADOASEG'		},			{type:'string',    name:'CDEDOICE'			},			{type:'string',    name:'CDCOLONICE'		},
+				{type:'string',    name:'TELEFONO1'			},			{type:'string',    name:'TELEFONO2'			},			{type:'string',    name:'TELEFONO3'			}
 			]
 		});
 
@@ -166,6 +167,9 @@
         			datosContratante.down('[name=smap1.CALLE]').setValue('');
         			datosContratante.down('[name=smap1.NUMEXT]').setValue('');
         			datosContratante.down('[name=smap1.NUMINT]').setValue('');
+        			datosContratante.down('[name=smap1.TELEFONO1]').setValue('');
+        			datosContratante.down('[name=smap1.TELEFONO2]').setValue('');
+        			datosContratante.down('[name=smap1.TELEFONO3]').setValue('');
         			
 					var form = this.up('form').getForm();
 					if (form.isValid()){
@@ -178,7 +182,7 @@
 							}
 							,success : function(response) {
 								var jsonCliente =Ext.decode(response.responseText);
-								//debug ("jsonCliente ===> ",jsonCliente);
+								debug ("jsonCliente ===> ",jsonCliente);
 								if(jsonCliente.success!=true){
 									centrarVentanaInterna(mensajeError(jsonCliente.message));
 								}else{
@@ -221,7 +225,10 @@
 																NUMINTERIOR     : jsonICE.smap1.NMNUMINT,
 																ESTADOASEG      : jsonICE.smap1.ESTADO,
 																CDEDOICE        : jsonICE.smap1.CDEDO,
-																CDCOLONICE      : jsonICE.smap1.CDCOLONI 
+																CDCOLONICE      : jsonICE.smap1.CDCOLONI,
+																TELEFONO1       : jsonCliente.list[0].TELEFONO1,
+																TELEFONO2      	: jsonCliente.list[0].TELEFONO2,
+																TELEFONO3      	: jsonCliente.list[0].TELEFONO3
 															});
 															storeListadoAsegurado.add(rec);
 														}
@@ -271,7 +278,10 @@
 				{	header  : 'Col. ICE',				dataIndex : 'CDCOLONICE',	flex:2,  hidden: true	}, 
 				{	header  : 'Colonia',				dataIndex : 'COLCLIENTE',	flex:2 },
 				{	header  : 'Estado',					dataIndex : 'ESTADOASEG',	flex:2 },
-				{	header  : 'Municipio',				dataIndex : 'POBLACION',	flex:2 }
+				{	header  : 'Municipio',				dataIndex : 'POBLACION',	flex:2 },
+				{	header  : 'Tel&eacute;fono 1',		dataIndex : 'TELEFONO1',	flex:2 },
+				{	header  : 'Tel&eacute;fono 2',		dataIndex : 'TELEFONO2',	flex:2 },
+				{	header  : 'Tel&eacute;fono 3',		dataIndex : 'TELEFONO3',	flex:2 }
 			],
 			listeners: {
 				itemclick: function(dv, record, item, index, e) {
@@ -295,6 +305,9 @@
         			datosContratante.down('[name=smap1.CALLE]').setValue(record.get('CALLECLIENTE'));
         			datosContratante.down('[name=smap1.NUMEXT]').setValue(record.get('NUMEXTERIOR'));
         			datosContratante.down('[name=smap1.NUMINT]').setValue(record.get('NUMINTERIOR'));
+        			datosContratante.down('[name=smap1.TELEFONO1]').setValue(record.get('TELEFONO1'));
+        			datosContratante.down('[name=smap1.TELEFONO2]').setValue(record.get('TELEFONO2'));
+        			datosContratante.down('[name=smap1.TELEFONO3]').setValue(record.get('TELEFONO3'));
 				}
 			}
 		});
@@ -383,6 +396,15 @@
 				},{
                 	xtype       : 'textfield',			name        : 'smap1.NUMINT',					fieldLabel		: 'N&uacute;m. Int.',				
 					width		 : 400
+				},{
+                	xtype       : 'textfield',			name        : 'smap1.TELEFONO1',				fieldLabel		: 'Tel&eacute;fono 1',				
+					width		 : 400
+				},{
+                	xtype       : 'textfield',			name        : 'smap1.TELEFONO2',				fieldLabel		: 'Tel&eacute;fono 2',				
+					width		 : 400
+				},{
+                	xtype       : 'textfield',			name        : 'smap1.TELEFONO3',				fieldLabel		: 'Tel&eacute;fono 3',				
+					width		 : 400
 				}
 			]
 		});
@@ -427,7 +449,10 @@
 								'polizaEntrada'     : panelInicialPral.down('[name=nmPoliza]').getValue(),
 								'tipoPantalla'      : clienteSeleccionado.tipoPantalla,
 								'cdpersonNuevo'     : cdpersonNuevo,
-								'codigoCliExterno'  : codigoCliExterno
+								'codigoCliExterno'  : codigoCliExterno,
+								'telefono1'		    : datosContratante.down('[name=smap1.TELEFONO1]').getValue(),
+								'telefono2'	        : datosContratante.down('[name=smap1.TELEFONO2]').getValue(),
+								'telefono3'     	: datosContratante.down('[name=smap1.TELEFONO3]').getValue()
 							}
 							submitValues['smap1']= params;
 							debug("Valor a enviar ==>",submitValues);

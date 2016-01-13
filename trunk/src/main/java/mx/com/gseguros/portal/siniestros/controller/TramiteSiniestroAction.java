@@ -272,6 +272,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					null,
 					null,
 					null,
+					null,
 					null
 				);
 			}
@@ -317,6 +318,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					null,
 					null,
 					(cdramo.equalsIgnoreCase(Ramo.RECUPERA.getCdramo()))?datosTablas.get(i).get("nombprov"):null ,
+					null,
 					null
 				);
 			}
@@ -403,6 +405,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					null,
 					null,
 					(cdramo.equalsIgnoreCase(Ramo.RECUPERA.getCdramo()))?datosTablas.get(i).get("nombprov"):null ,
+					null,
 					null
 				);
 				actualizaMesaControlSiniestro(params.get("nmtramite"));
@@ -601,6 +604,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					datosTablas.get(i).get("cdmoneda"),
 					datosTablas.get(i).get("tasacamb"),
 					datosTablas.get(i).get("ptimporta"),
+					null,
 					null,
 					null,
 					null,

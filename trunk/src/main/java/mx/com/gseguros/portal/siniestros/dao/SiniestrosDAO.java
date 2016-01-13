@@ -525,4 +525,14 @@ public interface SiniestrosDAO {
 	public List<GenericVO> obtieneListaContrareciboAutEsp(String cdramo, String ntramite) throws Exception;
 	
 	public List<GenericVO> obtieneListaFacturaTramite(String ntramite, String nfactura) throws Exception;
+
+	public void procesaPagoAutomaticoSisco() throws Exception;
+	
+	public List<Map<String, String>> obtieneValidaconAranceleTramite(HashMap<String, Object> params) throws Exception;
+
+	public String obtieneMontoTramitePagoDirecto(HashMap<String, Object> paramsPagoDirecto) throws Exception;
+	
+	public List<Map<String, String>> obtieneValidaFacturaMontoPagoAutomatico(HashMap<String, Object> params) throws Exception;
+	
+	public String guardaListaFacturaPagoAutomatico(HashMap<String, Object> datosFactura) throws Exception;
 }

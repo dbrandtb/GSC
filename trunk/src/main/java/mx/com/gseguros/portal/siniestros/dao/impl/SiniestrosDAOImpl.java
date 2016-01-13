@@ -1091,6 +1091,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				declareParameter(new SqlParameter("pv_feegreso_i", OracleTypes.DATE));
 				declareParameter(new SqlParameter("pv_diasdedu_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_nombprov_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_factInicial_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 				compile();
@@ -5233,4 +5234,101 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	@Override
+	public void procesaPagoAutomaticoSisco() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		ejecutaSP(new ProcesaPagoAutomaticoSisco(this.getDataSource()), params);
+	}
+
+	protected class ProcesaPagoAutomaticoSisco extends StoredProcedure
+	{
+		protected ProcesaPagoAutomaticoSisco(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_GET_TMOVSISCO");
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public List<Map<String, String>> obtieneValidaconAranceleTramite(HashMap<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneValidaconAranceleTramite(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneValidaconAranceleTramite extends StoredProcedure {
+		protected ObtieneValidaconAranceleTramite(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_SINIESTRO.P_VALIDA_ARANCE_TRAMITE");
+			declareParameter(new SqlParameter("pv_ntramite_i",   OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NTRAMITE","NFACTURA","NMSINIES", "CDCONCEP"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public String obtieneMontoTramitePagoDirecto(HashMap<String, Object> paramsPagoDirecto) throws Exception {
+		Map<String, Object> resultado = ejecutaSP(new ObtieneMontoTramitePagoDirecto(getDataSource()), paramsPagoDirecto);
+		logger.debug( resultado.get("pv_monto_o"));
+		return (String) resultado.get("pv_monto_o");
+	}
+	
+    protected class ObtieneMontoTramitePagoDirecto extends StoredProcedure {
+    	
+    	protected ObtieneMontoTramitePagoDirecto(DataSource dataSource) {
+    		super(dataSource, "PKG_SINIESTRO.P_OBTIENE_MONTOTRAMITE");
+    		declareParameter(new SqlParameter("pv_ntramite_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_monto_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+	@Override
+	public List<Map<String, String>> obtieneValidaFacturaMontoPagoAutomatico(HashMap<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneValidaFacturaMontoPagoAutomatico(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneValidaFacturaMontoPagoAutomatico extends StoredProcedure {
+		protected ObtieneValidaFacturaMontoPagoAutomatico(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_SINIESTRO.P_VALIDA_FACTURA_MONTO");
+			declareParameter(new SqlParameter("pv_ntramite_i",   OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NTRAMITE","NFACTURA","PTIMPORT"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String guardaListaFacturaPagoAutomatico(HashMap<String, Object> paramsFacMesaCtrl) throws Exception {
+			Map<String, Object> mapResult = ejecutaSP(new GuardaListaFacturaPagoAutomatico(getDataSource()), paramsFacMesaCtrl);
+			return (String) mapResult.get("pv_msg_id_o");
+	}
+	
+	protected class GuardaListaFacturaPagoAutomatico extends StoredProcedure {
+		protected GuardaListaFacturaPagoAutomatico(DataSource dataSource) {
+			super(dataSource, "PKG_SINIESTRO.P_ACTUALIZA_FAC_MSINIEST_PA");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfacori_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
 }

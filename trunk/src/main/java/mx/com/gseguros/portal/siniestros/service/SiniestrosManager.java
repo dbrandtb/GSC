@@ -125,7 +125,8 @@ public interface SiniestrosManager {
 			Date feegreso,
 			String diasdedu,
 			String nombProv,
-			String tipoAccion
+			String tipoAccion,
+			String factInicial
 	) throws Exception;
 	
 	
@@ -188,6 +189,7 @@ public interface SiniestrosManager {
 			String dctonuex
 			) throws Exception;*/
 
+	
 	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws Exception;
 
 	public String getAltaSiniestroAutServicio(String nmautser,String nfactura) throws Exception;
@@ -656,4 +658,15 @@ public interface SiniestrosManager {
 	public List<GenericVO> getConsultaListaContrareciboAutEsp(String cdramo, String ntramite) throws Exception;
 	
 	public List<GenericVO> getConsultaListaFacturaTramite(String ntramite, String nfactura) throws Exception;
+	
+	public void procesaPagoAutomaticoSisco() throws Exception;
+	
+	public List<Map<String, String>> getValidaArancelesTramitexProveedor(String ntramite) throws Exception;
+	
+	public String obtieneMontoTramitePagoDirecto(HashMap<String, Object> paramsPagoDirecto) throws Exception;
+	
+	public List<Map<String, String>> getValidaFacturaMontoPagoAutomatico(String ntramite) throws Exception;
+	
+	public String guardaListaFacturaPagoAutomatico(String ntramite, String nfactura, String factInicial) throws Exception;
+	
 }
