@@ -1898,6 +1898,7 @@ Ext.onReady(function()
     });
     
     _fieldByName('cdpool').forceSelection=false;
+    _fieldByName('cdpool').up('form').doLayout();
     ////// loaders //////
 });
 
@@ -4895,7 +4896,7 @@ function _p21_tbloqueo(closable,callback,retry)
                                     text     : 'Aceptar'
                                     ,icon    : '${icons}accept.png'
                                     ,handler : function(me){ me.up('window').destroy(); }
-                                    ,hidden  : !closable
+                                    ,hidden  : true//!closable
                                 }
                             ]
                         }).show());
