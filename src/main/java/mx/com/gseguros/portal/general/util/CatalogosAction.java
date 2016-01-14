@@ -160,6 +160,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case FORMATOFECHA:
 				case TIPOS_IMP_LOTE:
 				case TIPOS_LOTE_IMPR:
+				case ORDEN_IMPRESION:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case CVECOLUMNA:

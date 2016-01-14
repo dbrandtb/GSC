@@ -26,6 +26,8 @@ var _p49_dirIconos = '${icons}';
 var _p49_formBusqItems = [<s:property value="items.itemsFormBusq"     escapeHtml="false" />];
 var _p49_gridPolFields = [<s:property value="items.gridPolizasFields" escapeHtml="false" />];
 var _p49_gridPolCols   = [];
+var _p49_comboOrden    = <s:property value="items.comboOrden" escapeHtml="false" />.editor;
+debug('_p49_comboOrden:',_p49_comboOrden);
 
 _fieldByName('cdtipram').rowspan = 5;
 
@@ -99,6 +101,19 @@ Ext.onReady(function()
                ,root            : 'list'
                ,successProperty : 'success'
                ,messageProperty : 'message'
+            }
+        }
+        ,listeners :
+        {
+            load : function(me,records,success)
+            {
+                if(success)
+                {
+                    for(var i in records)
+                    {
+                        records[i].set('orden','1');
+                    }
+                }
             }
         }
     });
@@ -220,6 +235,26 @@ Ext.onReady(function()
 	                    }
                     }
                 }
+		        ,plugins : Ext.create('Ext.grid.plugin.RowEditing',
+		        {
+		            clicksToEdit  : 2
+		            ,errorSummary : false
+		            ,listeners    :
+		            {
+		                beforeedit : function(editor,context)
+		                {
+		                    if(context.record.get('tipoflot')=='C' || context.record.get('tipoflot')=='F')
+		                    {
+		                        _p49_comboOrden.store.removeAt(2);
+		                        _p49_comboOrden.store.add({ key : '3' , value : 'No. Empleado' });
+		                    }
+		                    else
+		                    {
+		                        _p49_comboOrden.store.removeAt(2);
+		                    }
+		                }
+		            }
+		        })
                 ,buttonAlign : 'center'
                 ,buttons     :
                 [
@@ -410,8 +445,38 @@ function _p49_navega(nivel)
                         var cols = Ext.decode('['+json.params.columns+']');
                         debug('cols:',cols);
                         
+                        var cols2 =
+                        [{
+                            dataIndex : 'orden'
+                            ,width    : 100
+                            ,text     : 'ORDEN'
+                            ,editor   : _p49_comboOrden
+                            ,renderer : function(v)
+                            {
+                                var l = 'error';
+                                if(Number(v)==1)
+                                {
+                                    l = 'Certificado';
+                                }
+                                else if(Number(v)==2)
+                                {
+                                    l = 'RFC';
+                                }
+                                else if(Number(v)==3)
+                                {
+                                    l = 'No. Empleado';
+                                }
+                                return l;
+                            }
+                        }];
+                        
+                        for(var i in cols)
+                        {
+                            cols2.push(cols[i]);
+                        }
+                        
                         ck = 'Mostrando columnas';
-                        grid.reconfigure(_p49_storePolizas,cols);
+                        grid.reconfigure(_p49_storePolizas,cols2);
                     }
                     else
                     {
@@ -473,6 +538,7 @@ function _p49_impresionClic(tipoimp)
                             ,nmsuplem : rec.get('nmsuplem')
                             ,cdagente : rec.get('cdagente')
                             ,ntramite : rec.get('ntramite')
+                            ,orden    : rec.get('orden')
                         });
                     }
                     debug('jsonData:',jsonData);
