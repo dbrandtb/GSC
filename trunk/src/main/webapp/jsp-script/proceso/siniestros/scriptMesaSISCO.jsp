@@ -927,7 +927,7 @@ var msgWindow;
    						'params.ntramite'  : tramite.get('ntramite')
    					}
    					,success : function (response){
-   					},
+   					}/*,
    					failure : function (){
    						form.setLoading(false);
    						Ext.Msg.show({
@@ -936,7 +936,7 @@ var msgWindow;
    							buttons: Ext.Msg.OK,
    							icon: Ext.Msg.ERROR
    						});
-   					}
+   					}*/
    				});
                 
             }
