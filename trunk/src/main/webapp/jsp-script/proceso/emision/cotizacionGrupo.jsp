@@ -88,6 +88,9 @@ var _p21_urlRecuperacionSimpleLista      = '<s:url namespace="/emision"         
 var _p21_urlPantallaAgentes              = '<s:url namespace="/flujocotizacion" action="principal"                        />';
 var _p21_urlComplementoCotizacion        = '<s:url namespace="/emision"         action="complementoSaludGrupo"            />';
 var _p21_urlPantallaEspPersona           = '<s:url namespace="/persona"         action="includes/pantallaEspPersona"      />';
+var _p21_urlRecuperacion                 = '<s:url namespace="/recuperacion"    action="recuperar"                        />';
+
+var _p21_urlMarcarTramitePendienteVistaPrevia = '<s:url namespace="/mesacontrol" action="marcarTramiteVistaPrevia" />';
 
 var _p21_nombreReporteCotizacion        = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_nombreReporteCotizacionDetalle = '<s:text name='%{"rdf.cotizacion2.nombre."+smap1.cdtipsit.toUpperCase()}' />';
@@ -4903,17 +4906,109 @@ function _p21_tbloqueo(closable,callback,retry)
                                     ,hidden  : !(closable&&!Ext.isEmpty(retry))
                                 }
                                 ,{
-                                    text     : 'Aceptar'
+                                    text     : 'Consultar m\u00e1s tarde'
                                     ,icon    : '${icons}accept.png'
-                                    ,handler : function(me){ me.up('window').destroy(); }
-                                    ,hidden  : true//!closable
+                                    ,hidden  : !closable
+                                    ,handler : function(me)
+                                    {
+                                        var ck = 'Marcando como pendiente de vista previa';
+                                        try
+                                        {
+                                            _mask(ck);
+                                            Ext.Ajax.request(
+                                            {
+                                                url      : _p21_urlMarcarTramitePendienteVistaPrevia
+                                                ,params  :
+                                                {
+                                                    'params.ntramite' : _p21_ntramite
+                                                }
+                                                ,success : function(response)
+                                                {
+                                                    _unmask();
+                                                    var ck = 'Decodificando respuesta al marcar como pendiente de vista previa';
+                                                    try
+                                                    {
+                                                        var json = Ext.decode(response.responseText);
+                                                        debug('### marcar swvispre:',json);
+                                                        if(json.success==true)
+                                                        {
+                                                            _p21_mesacontrol();
+                                                        }
+                                                        else
+                                                        {
+                                                            mensajeError(json.message);
+                                                        }
+                                                    }
+                                                    catch(e)
+                                                    {
+                                                        manejaException(e,ck);
+                                                    }
+                                                }
+                                                ,failure : function()
+                                                {
+                                                    _unmask();
+                                                    errorComunicacion(null,'Error al marcar como pendiente de vista previa');
+                                                }
+                                            });
+                                        }
+                                        catch(e)
+                                        {
+                                            manejaException(e,ck);
+                                        }
+                                    }
                                 }
                             ]
                         }).show());
                     }
-                    else if(!Ext.isEmpty(callback))
+                    else
                     {
-                        callback();
+                        if(!Ext.isEmpty(callback))
+                        {
+                            callback();
+                        }
+                        else
+                        {
+                            _mask('Verificando vista previa');
+                            Ext.Ajax.request(
+                            {
+                                url     : _p21_urlRecuperacion
+                                ,params :
+                                {
+                                    'params.consulta'  : 'RECUPERAR_SWVISPRE_TRAMITE'
+                                    ,'params.ntramite' : false == _p21_ntramite ? '' : _p21_ntramite
+                                }
+                                ,success : function(response)
+                                {
+                                    _unmask();
+                                    var ck = 'Decodificando respuesta al verificar vista previa';
+                                    try
+                                    {
+                                        var json = Ext.decode(response.responseText);
+                                        debug('### swvispre:',json);
+                                        if(json.success==true)
+                                        {
+                                            if(json.params.SWVISPRE=='S')
+                                            {
+                                                _p21_generarVentanaVistaPrevia(false);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            mensajeError(json.message);
+                                        }
+                                    }
+                                    catch(e)
+                                    {
+                                        manejaException(e,ck);
+                                    }
+                                }
+                                ,failure : function()
+                                {
+                                    _unmask();
+                                    errorComunicacion(null,'Error al verificar vista previa');
+                                }
+                            });
+                        }
                     }
                 }
                 else

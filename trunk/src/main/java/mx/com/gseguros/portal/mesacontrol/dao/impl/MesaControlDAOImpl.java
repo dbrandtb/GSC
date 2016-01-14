@@ -881,4 +881,52 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
     		compile();
 		}
 	}
+	
+	@Override
+	public void marcarTramiteVistaPrevia(String ntramite) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite", ntramite);
+		ejecutaSP(new MarcarTramiteVistaPreviaSP(getDataSource()),params);
+	}
+	
+	protected class MarcarTramiteVistaPreviaSP extends StoredProcedure
+	{
+		protected MarcarTramiteVistaPreviaSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_DESARROLLO.P_MARCA_TRAMITE_VISTA_PREVIA");
+    		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));
+    		compile();
+		}
+	}
+	
+	@Override
+	public String recuperarSwvispreTramite(String ntramite) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite", ntramite);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarSwvispreTramiteSP(getDataSource()),params);
+		String swvispre = (String) procRes.get("pv_swvispre_o");
+		if(StringUtils.isBlank(swvispre))
+		{
+			swvispre = "N";
+		}
+		return swvispre;
+	}
+	
+	protected class RecuperarSwvispreTramiteSP extends StoredProcedure
+	{
+		protected RecuperarSwvispreTramiteSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_DESARROLLO.P_GET_SWVISPRE_TRAMITE");
+    		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_swvispre_o" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+    		compile();
+		}
+	}
+	
 }
