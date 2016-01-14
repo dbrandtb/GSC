@@ -894,7 +894,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected MarcarTramiteVistaPreviaSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_MARCA_TRAMITE_VISTA_PREVIA");
+			super(dataSource,"PKG_SATELITES2.P_MARCA_TRAMITE_VISTA_PREVIA");
     		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));
@@ -920,7 +920,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected RecuperarSwvispreTramiteSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_GET_SWVISPRE_TRAMITE");
+			super(dataSource,"PKG_CONSULTA.P_GET_SWVISPRE_TRAMITE");
     		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_swvispre_o" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
