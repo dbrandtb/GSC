@@ -221,4 +221,8 @@ public interface MesaControlDAO
 			,String ntramite
 			,String marcar
 			)throws Exception;
+	
+	public void marcarTramiteVistaPrevia(String ntramite) throws Exception;
+	
+	public String recuperarSwvispreTramite(String ntramite) throws Exception;
 }

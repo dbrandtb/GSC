@@ -64,6 +64,7 @@ public enum RecuperacionSimple
 	,RECUPERAR_TFLUACC                                       ("L" , "RECUPERAR_TFLUACC")    // MC
 	,RECUPERAR_TFLUACCROL                                    ("L" , "RECUPERAR_TFLUACCROL") // MC
 	,RECUPERAR_ROLES                                         ("L" , "RECUPERAR_ROLES")
+	,RECUPERAR_SWVISPRE_TRAMITE                              ("M" , "RECUPERAR_SWVISPRE_TRAMITE")
 	;
 
 	 

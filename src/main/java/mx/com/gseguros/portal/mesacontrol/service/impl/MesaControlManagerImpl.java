@@ -203,4 +203,10 @@ public class MesaControlManagerImpl implements MesaControlManager
 	public void setMesaControlDAO(MesaControlDAO mesaControlDAO) {
 		this.mesaControlDAO = mesaControlDAO;
 	}
+	
+	@Override
+	public void marcarTramiteVistaPrevia(String ntramite) throws Exception
+	{
+		mesaControlDAO.marcarTramiteVistaPrevia(ntramite);
+	}
 }

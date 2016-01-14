@@ -16,6 +16,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2VO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
+import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +36,9 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 	
 	@Autowired
 	private FlujoMesaControlDAO flujoMesaControlDAO;
+	
+	@Autowired
+	private MesaControlDAO mesaControlDAO;
 	
 	/*
 	 * Utilerias
@@ -547,6 +551,17 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				Map<String,String>requeridasYEjecutadas = consultasDAO.recuperarDetalleImpresionLote(lote);
 				
 				mapa.putAll(requeridasYEjecutadas);
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_SWVISPRE_TRAMITE))
+			{
+				paso = "Recuperando estado de vista previa de tr\u00e1mite";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				String ntramite = params.get("ntramite");
+				
+				Utils.validate(ntramite, "No se recibi\u00F3 el tr\u00e1mite");
+				
+				mapa.put("SWVISPRE" , mesaControlDAO.recuperarSwvispreTramite(ntramite));
 			}
 		}
 		catch(Exception ex)

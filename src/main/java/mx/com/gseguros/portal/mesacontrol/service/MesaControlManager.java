@@ -57,4 +57,6 @@ public interface MesaControlManager
 			,String cdflujomc
 			,Map<String,String>valores, String cdtipsup
 			)throws Exception;
+    
+    public void marcarTramiteVistaPrevia(String ntramite) throws Exception;
 }
