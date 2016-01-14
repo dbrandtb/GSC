@@ -58,6 +58,7 @@ public interface EmisionDAO {
 			,String tipo
 			,String nmtraope
 			,String nmrecibo
+			,String orden
 			)throws Exception;
 	
 	public void marcarTramiteImpreso(String ntramite, String swimpres) throws Exception;

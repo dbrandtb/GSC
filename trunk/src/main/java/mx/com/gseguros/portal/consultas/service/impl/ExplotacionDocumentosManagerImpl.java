@@ -135,6 +135,18 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					,null //orden
 					);
 			
+			List<ComponenteVO> comboOrden = pantallasDAO.obtenerComponentes(
+					null  //cdtiptra
+					,null //cdunieco
+					,null //cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"EXPLOTACION_DOCUMENTOS"
+					,"COMBO_ORDEN"
+					,null //orden
+					);
+			
 			paso = "Construyendo componentes";
 			logger.debug(paso);
 			
@@ -145,6 +157,9 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			
 			gc.generaComponentes(compsGridPolizas, true, true, false, true, false, false);
 			items.put("gridPolizasFields" , gc.getFields());
+			
+			gc.generaComponentes(comboOrden, true, false, false, true, true, false); 
+			items.put("comboOrden" , gc.getColumns());
 			
 		}
 		catch(Exception ex)
@@ -283,6 +298,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 							,tipolote
 							,"P".equals(tipolote) ? movAgente.get("ntramite") : null
 							,"R".equals(tipolote) ? movAgente.get("nmrecibo") : null
+							,StringUtils.isBlank(movAgente.get("orden")) ? "1" : movAgente.get("orden")
 							);
 					
 					if("P".equals(tipolote))
@@ -1055,6 +1071,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,"P"
 						,ntramiteOpe
 						,null
+						,"1"
 						);
 				
 				paso = "Marcando tr\u00E1mite original";

@@ -139,6 +139,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 			,String tipo
 			,String nmtraope
 			,String nmrecibo
+			,String orden
 			)throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
@@ -151,6 +152,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 		params.put("tipo"     , tipo);
 		params.put("nmtraope" , nmtraope);
 		params.put("nmrecibo" , nmrecibo);
+		params.put("orden"    , orden);
 		ejecutaSP(new InsertarMpoliimp(getDataSource()),params);
 	}
 	
@@ -168,6 +170,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 			declareParameter(new SqlParameter("tipo"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmtraope" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmrecibo" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("orden"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

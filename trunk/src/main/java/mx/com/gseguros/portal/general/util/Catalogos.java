@@ -134,7 +134,8 @@ public enum Catalogos {
 	TTIPFLUMC(""),
 	TFLUJOMC(""),
 	TTIPSUPL(""),
-	PARENTESCOAUTO("")
+	PARENTESCOAUTO(""),
+	ORDEN_IMPRESION("TORDIMP")
 	;
 
 	private String cdTabla;
