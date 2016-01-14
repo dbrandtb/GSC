@@ -177,7 +177,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						cotNeg.setF2(Double.valueOf(m.get("F2")));
 						cotNeg.setF3(Double.valueOf(m.get("F3")));
 						cotNeg.setPorcentajeBono(Double.valueOf(m.get("PORCENTAJEBONO")));
-						cotNeg.setIdCotizaciongs(Integer.valueOf(m.get("IDPROVEEDORUDI")));
+						cotNeg.setIdProveedorUdi(Integer.valueOf(m.get("IDPROVEEDORUDI")));
 						cotNeg.setMontoCedido(Double.valueOf(m.get("MONTOCEDIDO")));
 						
 						cotNeg.setNmsolici(Integer.valueOf(m.get("NMSOLICI")));
