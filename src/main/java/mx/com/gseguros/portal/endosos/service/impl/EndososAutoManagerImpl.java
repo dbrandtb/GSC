@@ -144,7 +144,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Value("${tarjeta.iden.impresion.autos.url}")
 	private String urlImpresionTarjetaIdentificacion;
 	
-	private Map<String,Object> session;
 	@Override
 	public Map<String,Object> construirMarcoEndosos(String cdusuari,String cdsisrol) throws Exception
 	{
@@ -1677,9 +1676,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		
 		try
 		{
-			
-			String tstamp = Utils.generaTimestamp();
-			
 			paso = "Guardando recibo despago";
 			logger.info(paso);
 			
@@ -2667,7 +2663,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
+				,"\n@@@@@@ guardarEndosoVigenciaPoliza @@@@@@"
 				,"\n@@@@@@ cdunieco="         , cdunieco
 				,"\n@@@@@@ cdramo="           , cdramo
 				,"\n@@@@@@ estado="           , estado
@@ -2686,6 +2682,10 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		String paso = "";
 		try
 		{
+			paso = "Se actualiza FEFECSIT con el inicio de la nueva vigencia de la poliza";
+			logger.debug(paso);
+			endososDAO.actualizaMpolisitNuevaVigencia(cdunieco, cdramo, estado, nmpoliza, nmsuplemOriginal, feefecto);
+			
 			paso = "Modificar nmsuplem";
 			logger.info(paso);
 			endososDAO.modificarNmsuplemSatelites(
@@ -2794,7 +2794,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		
 		logger.debug(Utils.log(
 				 "\n@@@@@@ " , resp
-				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
+				,"\n@@@@@@ guardarEndosoVigenciaPoliza @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
@@ -3236,7 +3236,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Override
 	public List<Map<String,String>> obtenerRetroactividad(String cdsisrol, String cdramo,
 			String cdtipsup, String fechaProceso) throws Exception {
-		// TODO Auto-generated method stub
+		
 		List<Map<String, String>> respRetroActividad = null;
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -5525,9 +5525,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		
 		try
 		{
-			
-			String tstamp = Utils.generaTimestamp();
-			
 			paso = "Guardando recibo despago";
 			logger.info(paso);
 			
@@ -5610,7 +5607,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String codigoCliExt,String sucursalEnt,String ramoEntrada,String polizaEnt, String cdpersonNew,
 			String dsnombreComp, String ntramite, String numsuplemen, String urlCaratula
 			) throws Exception {
-		// TODO Auto-generated method stub
+		
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarEndosoNombreRFCFecha @@@@@@"
@@ -5899,7 +5896,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String cveColonia, String colonia, String calle, String numExterior, String numInterior, String cdusuari,
 			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso,
 			String urlCaratula,String telefono1, String telefono2, String telefono3) throws Exception {
-		// TODO Auto-generated method stub
+		
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarEndosoDomicilioNoSICAPS @@@@@@"

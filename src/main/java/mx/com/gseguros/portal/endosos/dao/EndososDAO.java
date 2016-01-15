@@ -639,4 +639,7 @@ public interface EndososDAO
 	public List<Map<String,String>> obtieneInformacionCliente(String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem,String motivo)throws Exception;
 	
 	public List<Map<String,String>> CambioClientenombreRFCfechaNacimiento(Map<String, String> params)throws Exception;
+	
+	public void actualizaMpolisitNuevaVigencia(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String feefecto) throws Exception;
+	
 }
