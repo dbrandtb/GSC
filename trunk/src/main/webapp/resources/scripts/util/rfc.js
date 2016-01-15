@@ -1,12 +1,12 @@
 /**
  * Valida un RFC a partir de sus datos de entrada
- * @param {} tipoPersona Indica si es Fï¿½sica o Moral
- * @param {} nombre Primer nombre
- * @param {} nombre2 Segundo nombre
- * @param {} apaterno 
- * @param {} amaterno 
- * @param {} fecha Fecha de nacimiento para persona fisica, fecha inicio para persona moral
- * @param {} rfc RFC a validar
+ * @param {string} tipoPersona Indica si es Fisica o Moral
+ * @param {string} nombre Primer nombre
+ * @param {string} nombre2 Segundo nombre
+ * @param {string} apaterno 
+ * @param {string} amaterno 
+ * @param {string} fecha Fecha de nacimiento para persona fisica, fecha inicio para persona moral en formato dd/mm/yyyy
+ * @param {string} rfc RFC a validar
  * @return true si es valido, false si es invalido
  */
 function validaRFC(tipoPersona, nombre, nombre2, apaterno, amaterno, fecha, rfc) {
@@ -48,6 +48,9 @@ function validaRFC(tipoPersona, nombre, nombre2, apaterno, amaterno, fecha, rfc)
  * @param {} fecha
  */
 function generaRFC(tipoPersona, nombre, nombre2, apaterno, amaterno, fecha) {
+	
+	// TODO: Validar fecha y lanzar error en caso de ser invalida
+	
     try {
         if(tipoPersona == 'F') {
             //return apaterno.substr(0,2) + amaterno.substr(0,1) + nombre.substr(0, 1) +
@@ -161,21 +164,36 @@ function generaRFCPersonaFisica(nombre1, nombre2, apaterno, amaterno, fecha) {
     	
     } else {
     	debug('Tiene los 2 apellidos');
-	    // REGLA 1
-        // Se integra la clave con los siguientes datos:
-        // 1.  La primera letra del apellido paterno y la siguiente primera vocal del mismo.
-        debug('Parametros:', nombreComp, apaterno, amaterno, fecha);
-        tmp = apaterno.match(/\b(\w)/i)[0];
-        tmp += apaterno.substr(1).match(/[aeiou]/i)[0];
-        debug('Con apaterno:', tmp);
-        
-        // 2.  La primera letra del apellido materno.
-        tmp += amaterno.match(/\b(\w)/i)[0];
-        debug('Con amaterno:', tmp);
-        
-        // 3.  La primera letra del nombre.
-        tmp += nombreComp.match(/\b(\w)/i)[0];
-        debug('Con nombre:', tmp);
+    	debug('Parametros:', nombreComp, apaterno, amaterno, fecha);
+    	debug('apaterno="'+apaterno+'"');
+    	// Si el apellido paterno tiene 1 o 2 letras:
+    	if(apaterno.length == 1 || apaterno.length == 2) {
+    		debug('Apellido paterno con 1 o 2 letras');
+    		// En los casos en que el apellido paterno de la persona física se componga de una o dos letras, la clave se formará de la siguiente manera:
+            // 1.  La primera letra del apellido paterno.
+    		tmp = apaterno.match(/\b(\w)/i)[0];
+    		debug('Con apaterno:', tmp);
+            // 2.  La primera letra del apellido materno.
+    		tmp += amaterno.match(/\b(\w)/i)[0];
+    		debug('Con amaterno:', tmp);
+            // 3.  La primera y segunda letra del nombre.
+    		tmp += nombreComp.match(/\b(\w){2}/i)[0];
+    		debug('Con nombre:', tmp);
+    	} else {
+    		
+            // REGLA 1
+            // Se integra la clave con los siguientes datos:
+            // 1.  La primera letra del apellido paterno y la siguiente primera vocal del mismo.
+            tmp = apaterno.match(/\b(\w)/i)[0];
+            tmp += apaterno.substr(1).match(/[aeiou]/i)[0];
+            debug('Con apaterno:', tmp);
+            // 2.  La primera letra del apellido materno.
+            tmp += amaterno.match(/\b(\w)/i)[0];
+            debug('Con amaterno:', tmp);
+            // 3.  La primera letra del nombre.
+            tmp += nombreComp.match(/\b(\w)/i)[0];
+            debug('Con nombre:', tmp);
+        }
     }
 
     
@@ -205,8 +223,8 @@ function generaRFCPersonaFisica(nombre1, nombre2, apaterno, amaterno, fecha) {
 
 /**
  * Genera el RFC de una persona moral
- * @param {} nombre Nombre de la persona moral
- * @param {} fecha  Fecha de constitución
+ * @param {string} nombre Nombre de la persona moral
+ * @param {string} fecha  Fecha de constitución en formato dd/mm/yyyy
  */
 function generaRFCPersonaMoral(nombre, fecha) {
     
@@ -231,10 +249,35 @@ function generaRFCPersonaMoral(nombre, fecha) {
     nombre = quitaAbreviaturasPersonaMoral(nombre);
     debug('Sin abreviaturas persona Moral:', nombre);
     
+    // REGLA 10
+    // Cuando la denominación o razón social contenga en algún o en sus tres primeros elementos 
+    // números arábigos, o números romanos, para efectos de conformación de la clave 
+    // éstos se tomaran como escritos con letra y seguirán las reglas ya establecidas
+    debug('cadena antes de reemplazar romanos:', nombre);
+    nombre = nombre.replace(/\b(\w)+\b/gi, function myFunction(x) {
+    	debug('value to deromanize', x);
+    	var validator = /^M*(?:D?C{0,3}|C[MD])(?:L?X{0,3}|X[CL])(?:V?I{0,3}|I[XV])$/gi;
+    	// Si tiene el patron de numero romano se convierte a numero y luego a letra:
+    	if(validator.test(x)) {
+    		var romanToWord = intToWord( Number(deromanize(x)) ).toUpperCase();
+    		debug('validator true:', x, ', se devolvera:', romanToWord);
+    		return romanToWord;
+    	} else {
+    		debug('validator false:', x, ', se devolvera:', x);
+    		return x;
+    	}
+    });
+    debug('cadena despues de reemplazar romanos', nombre);
+    nombre = nombre.replace(/\b[0-9]+\b/g, function myFunction(x) {
+    	debug('number to convert', x);
+    	// Convierte el numero a letra:
+        return intToWord(Number(x)).toUpperCase();
+    });
+    debug('cadena despues de reemplazar enteros', nombre);
+    
+    // Se cuentan las palabras despues de eliminar/reemplazar palabras:
     var numPalabras = cuentaPalabras(nombre);
     debug('numPalabras=', numPalabras);
-    
-    // Se obtiene la fecha de constitucion
     
     
     ///////////
@@ -243,7 +286,6 @@ function generaRFCPersonaMoral(nombre, fecha) {
     
     
     // Regla 1.-
-    
     
     // Regla 3:
     // Cuando la letra inicial de cualquiera de las tres primeras palabras 
@@ -304,7 +346,7 @@ function generaClaveDiferenciadoraHomonima(nombre) {
 	// Se convierte a mayuscula y sin acentos:
     nombre = nombre.toUpperCase();
     nombre = reemplazaCaracteresLatinos(nombre);
-    nombre = quitaEspaciosSignosYPuntos(nombre).trim();
+    nombre = quitaEspaciosSignosYPuntos(nombre);
     debug('Nombre para generar homoclave:"' + nombre + '"');
 	
     // 1. Se asignaran valores a las letras del nombre o razón social de acuerdo a la tabla del Anexo 1:
@@ -356,10 +398,10 @@ function generaClaveDiferenciadoraHomonima(nombre) {
     var suma = 0;
     debug('codigoTmp=', codigoTmp);
     for (var i = 1, len = codigoTmp.length; i < len; i++) {
-    	debug('codigoTmp[i]=', codigoTmp[i], 'codigoTmp[i-1]=', codigoTmp[i-1]);
-    	
-    	debug('Se multiplica:', codigoTmp[i-1] + '' + codigoTmp[i], '*', codigoTmp[i], 
-    	           '=', Number('' + codigoTmp[i-1] + codigoTmp[i]) * Number(codigoTmp[i]));
+//    	debug('codigoTmp[i]=', codigoTmp[i], 'codigoTmp[i-1]=', codigoTmp[i-1]);
+//    	
+//    	debug('Se multiplica:', codigoTmp[i-1] + '' + codigoTmp[i], '*', codigoTmp[i], 
+//    	           '=', Number('' + codigoTmp[i-1] + codigoTmp[i]) * Number(codigoTmp[i]));
     	suma += Number('' + codigoTmp[i-1] + codigoTmp[i]) * Number(codigoTmp[i]);
     }
     
@@ -429,7 +471,7 @@ function generaDigitoVerificador(rfc) {
 	var digitoTmp = '';
     for (var i = 0, len = rfc.length; i < len; i++) {
         
-        debug('caracter a reemplazar', rfc[i]);
+//        debug('caracter a reemplazar', rfc[i]);
         
         // Si el caracter es un digito, se le agrega un cero al inicio
         if(rfc[i].match(/\d/g)) {
@@ -459,10 +501,10 @@ function generaDigitoVerificador(rfc) {
     var suma = 0;
     debug('digitoTmp=', digitoTmp);
     for (var i = 1, len = digitoTmp.length, factor=13; i < len; i=i+2, factor--) {
-        debug('digitoTmp[i]=', digitoTmp[i], 'digitoTmp[i-1]=', digitoTmp[i-1]);
-        
-        debug( 'Se multiplica:', digitoTmp[i-1] + '' + digitoTmp[i], '*', factor, 
-                   '=', Number('' + digitoTmp[i-1] + digitoTmp[i]) * factor );
+//        debug('digitoTmp[i]=', digitoTmp[i], 'digitoTmp[i-1]=', digitoTmp[i-1]);
+//        
+//        debug( 'Se multiplica:', digitoTmp[i-1] + '' + digitoTmp[i], '*', factor, 
+//                   '=', Number('' + digitoTmp[i-1] + digitoTmp[i]) * factor );
         suma += Number('' + digitoTmp[i-1] + digitoTmp[i]) * factor;
     }
     debug('suma:', suma);
@@ -544,7 +586,7 @@ function quitaEspaciosSignosYPuntos(texto) {
                 .replace(/[\.]{1,}/gi," ") // reemplazamos los puntos por espacios
                 .replace(/(^\s*)|(\s*$)/gi,"")
                 .replace(/[ ]{2,}/gi," ")
-                .replace(/\n /,"\n");
+                .replace(/\n /,"\n").trim();
     return txt;
 }
 
@@ -634,7 +676,7 @@ function quitaAbreviaturasPersonaFisica(texto) {
                 .replace(/\b(AND)\b/gi, '')
                 .replace(/\b(CO)\b/gi, '')
                 .replace(/\b(Y)\b/gi, '')
-                .replace(/\b(A)\b/gi, '');
+                .replace(/\b(A)\b/gi, '').trim();
                 
 }
 
@@ -705,7 +747,7 @@ function quitaAbreviaturasPersonaMoral(texto) {
                 //.replace(' E ', '') // TODO: Crear una funcion que busque coincidencias por palabra completa
                 .replace(/\b(E)\b/gi, '')
                 //.replace(' Y ', '')
-                .replace(/\b(Y)\b/gi, '');
+                .replace(/\b(Y)\b/gi, '').trim();
                 //.replace(/(^\s*)|(\s*$)/gi,"")
                 
 }
@@ -799,3 +841,259 @@ function padding_right(s, c, n) {
   return s;
 }
 
+
+/**
+ * Convierte un numero entero a letra
+ * 
+ * @param {int} n Numero entero a convertir
+ * @return {string} Representacion del numero en letras 
+ */
+function intToWord(n) {
+    
+    var bloque1 = [];
+    bloque1.push('');
+    bloque1.push('Uno');
+    bloque1.push('Dos');
+    bloque1.push('Tres');
+    bloque1.push('Cuatro');
+    bloque1.push('Cinco');
+    bloque1.push('Seis');
+    bloque1.push('Siete');
+    bloque1.push('Ocho');
+    bloque1.push('Nueve');
+    bloque1.push('Diez');
+    bloque1.push('Once');
+    bloque1.push('Doce');
+    bloque1.push('Trece');
+    bloque1.push('Catorce');
+    bloque1.push('Quince');
+    bloque1.push('Dieciseis');
+    bloque1.push('Diecisiete');
+    bloque1.push('Dieciocho');
+    bloque1.push('Diecinueve');
+    bloque1.push('Veinte');
+    bloque1.push('Veintiuno');
+    bloque1.push('Veintidos');
+    bloque1.push('Veintitres');
+    bloque1.push('Veinticuatro');
+    bloque1.push('Veinticinco');
+    bloque1.push('Veintiseis');
+    bloque1.push('Veintisiete');
+    bloque1.push('Veintiocho');
+    bloque1.push('Veintinueve');
+    bloque1.push('Treinta');
+    bloque1.push('Treinta Y Uno');
+    bloque1.push('Treinta Y Dos');
+    bloque1.push('Treinta Y Tres');
+    bloque1.push('Treinta Y Cuatro');
+    bloque1.push('Treinta Y Cinco');
+    bloque1.push('Treinta Y Seis');
+    bloque1.push('Treinta Y Siete');
+    bloque1.push('Treinta Y Ocho');
+    bloque1.push('Treinta Y Nueve');
+    bloque1.push('Cuarenta');
+    bloque1.push('Cuarenta Y Uno');
+    bloque1.push('Cuarenta Y Dos');
+    bloque1.push('Cuarenta Y Tres');
+    bloque1.push('Cuarenta Y Cuatro');
+    bloque1.push('Cuarenta Y Cinco');
+    bloque1.push('Cuarenta Y Seis');
+    bloque1.push('Cuarenta Y Siete');
+    bloque1.push('Cuarenta Y Ocho');
+    bloque1.push('Cuarenta Y Nueve');
+    bloque1.push('Cincuenta');
+    bloque1.push('Cincuenta Y Uno');
+    bloque1.push('Cincuenta Y Dos');
+    bloque1.push('Cincuenta Y Tres');
+    bloque1.push('Cincuenta Y Cuatro');
+    bloque1.push('Cincuenta Y Cinco');
+    bloque1.push('Cincuenta Y Seis');
+    bloque1.push('Cincuenta Y Siete');
+    bloque1.push('Cincuenta Y Ocho');
+    bloque1.push('Cincuenta Y Nueve');
+    bloque1.push('Sesenta');
+    bloque1.push('Sesenta Y Uno');
+    bloque1.push('Sesenta Y Dos');
+    bloque1.push('Sesenta Y Tres');
+    bloque1.push('Sesenta Y Cuatro');
+    bloque1.push('Sesenta Y Cinco');
+    bloque1.push('Sesenta Y Seis');
+    bloque1.push('Sesenta Y Siete');
+    bloque1.push('Sesenta Y Ocho');
+    bloque1.push('Sesenta Y Nueve');
+    bloque1.push('Setenta');
+    bloque1.push('Setenta Y Uno');
+    bloque1.push('Setenta Y Dos');
+    bloque1.push('Setenta Y Tres');
+    bloque1.push('Setenta Y Cuatro');
+    bloque1.push('Setenta Y Cinco');
+    bloque1.push('Setenta Y Seis');
+    bloque1.push('Setenta Y Siete');
+    bloque1.push('Setenta Y Ocho');
+    bloque1.push('Setenta Y Nueve');
+    bloque1.push('Ochenta');
+    bloque1.push('Ochenta Y Uno');
+    bloque1.push('Ochenta Y Dos');
+    bloque1.push('Ochenta Y Tres');
+    bloque1.push('Ochenta Y Cuatro');
+    bloque1.push('Ochenta Y Cinco');
+    bloque1.push('Ochenta Y Seis');
+    bloque1.push('Ochenta Y Siete');
+    bloque1.push('Ochenta Y Ocho');
+    bloque1.push('Ochenta Y Nueve');
+    bloque1.push('Noventa');
+    bloque1.push('Noventa Y Uno');
+    bloque1.push('Noventa Y Dos');
+    bloque1.push('Noventa Y Tres');
+    bloque1.push('Noventa Y Cuatro');
+    bloque1.push('Noventa Y Cinco');
+    bloque1.push('Noventa Y Seis');
+    bloque1.push('Noventa Y Siete');
+    bloque1.push('Noventa Y Ocho');
+    bloque1.push('Noventa Y Nueve');
+
+    var bloque2 = [];
+    bloque2.push('');
+    bloque2.push('Ciento');
+    bloque2.push('Doscientos');
+    bloque2.push('trescientos');
+    bloque2.push('Cuatrocientos');
+    bloque2.push('Quinientos');
+    bloque2.push('Seiscientos');
+    bloque2.push('Setecientos');
+    bloque2.push('Ochocientos');
+    bloque2.push('Novecientos');
+    
+    if (isNaN(n)) {
+        throw 'No es un n\u00FAmero';
+    }
+    
+    if (Number(n) > 999999999) {
+        throw 'Excede el n\u00FAmero m\u00E1ximo a convertir';
+    }
+    
+    var trios = [];
+    trios[2] = n % 1000;
+    n = Math.floor(n / 1000);
+
+    trios[1] = n % 1000;
+    n = Math.floor(n / 1000);
+
+    trios[0] = n;
+
+    var cadena = '';
+
+    for (var i = 0; i < 3; i++) {
+        var trio = trios[i];
+
+        if (trio > 0) {
+            var n99 = trio % 100;
+            var n9 = Math.floor(trio / 100);
+
+            var cadTmp = '';
+            if (trio == 1) {
+                if (i == 0) {
+                    cadTmp = ' Un';
+                } else if (i == 2) {
+                    cadTmp = ' Uno';
+                }
+            } else if (trio == 100) {
+                cadTmp = 'Cien';
+            } else if (n99 == 1) {
+                if (i == 0 || i == 1) {
+                    cadTmp = bloque2[n9] + ' Un';
+                } else if (i == 2) {
+                    cadTmp = bloque2[n9] + ' ' + bloque1[n99];
+                }
+            } else if (n99 > 20 && n99 % 10 == 1) {
+                if (i == 0 || i == 1) {
+                    if (n99 == 21) {
+                        cadTmp = bloque2[n9] + ' Veinitun';
+                    } else if (n99 == 31) {
+                        cadTmp = bloque2[n9] + ' Treinta y un';
+                    } else if (n99 == 41) {
+                        cadTmp = bloque2[n9] + ' Cuarenta y un';
+                    } else if (n99 == 51) {
+                        cadTmp = bloque2[n9] + ' Cincuenta y un';
+                    } else if (n99 == 61) {
+                        cadTmp = bloque2[n9] + ' Sesenta y un';
+                    } else if (n99 == 71) {
+                        cadTmp = bloque2[n9] + ' Setenta y un';
+                    } else if (n99 == 81) {
+                        cadTmp = bloque2[n9] + ' Ochenta y un';
+                    } else if (n99 == 91) {
+                        cadTmp = bloque2[n9] + ' Noventa y un';
+                    }
+                } else if (i == 2) {
+                    cadTmp = bloque2[n9] + ' ' + bloque1[n99];
+                }
+            } else {
+                cadTmp = bloque2[n9] + ' ' + bloque1[n99];
+            }
+
+            if (i == 0) {
+                if (trio == 1) {
+                    cadTmp = cadTmp + ' Millon ';
+                } else {
+                    cadTmp = cadTmp + ' Millones ';
+                }
+            } else if (i == 1) {
+                cadTmp = cadTmp + ' Mil ';
+            }
+
+            cadena = cadena + cadTmp;
+        }
+    }
+
+    return cadena;
+}
+
+
+/**
+ * Convierte un numero romano a numero entero
+ * 
+ * @param {string} roman Numero romano a convertir
+ * @return {int} Representacion entera del numero romano 
+ */
+function deromanize(roman) {
+    var roman = roman.toUpperCase(), validator = /^M*(?:D?C{0,3}|C[MD])(?:L?X{0,3}|X[CL])(?:V?I{0,3}|I[XV])$/, token = /[MDLV]|C[MD]?|X[CL]?|I[XV]?/g, key = {
+        M  : 1000,
+        CM : 900,
+        D  : 500,
+        CD : 400,
+        C  : 100,
+        XC : 90,
+        L  : 50,
+        XL : 40,
+        X  : 10,
+        IX : 9,
+        V  : 5,
+        IV : 4,
+        I  : 1
+    }, num = 0, m;
+    if (!(roman && validator.test(roman))) {
+        //return false;
+        throw 'No es un numero romano v\u00E1lido';
+    }
+    while (m = token.exec(roman)) {
+        num += key[m[0]];
+    }
+    return num;
+}
+
+
+/*
+function romanize (num) {
+    if (!+num)
+        return false;
+    var digits = String(+num).split(""),
+        key = ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
+               "","X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
+               "","I","II","III","IV","V","VI","VII","VIII","IX"],
+        roman = "",
+        i = 3;
+    while (i--)
+        roman = (key[+digits.pop() + (i * 10)] || "") + roman;
+    return Array(+digits.join("") + 1).join("M") + roman;
+}
+*/
