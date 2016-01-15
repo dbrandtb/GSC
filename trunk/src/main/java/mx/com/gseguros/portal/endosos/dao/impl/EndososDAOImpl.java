@@ -4816,4 +4816,34 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
+	@Override
+	public void actualizaMpolisitNuevaVigencia(String cdunieco, String cdramo, String estado, String nmpoliza, 
+			String nmsuplem, String feefecto) throws Exception {
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i"  , cdramo);
+		params.put("pv_estado_i"  , estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_feefecto_i", feefecto);
+		ejecutaSP(new ActualizaMpolisitNuevaVigenciaSP(getDataSource()), params);
+	}
+	
+	protected class ActualizaMpolisitNuevaVigenciaSP extends StoredProcedure {
+		protected ActualizaMpolisitNuevaVigenciaSP(DataSource dataSource) {
+			super(dataSource, "PKG_SATELITES2.P_ACTUALIZA_MPOLISIT_NVA_VIG");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_feefecto_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o" , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }
