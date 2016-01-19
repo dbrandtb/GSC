@@ -14,13 +14,6 @@
 	        <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
 	        <url>http://repository.springsource.com/maven/bundles/external</url>
 	    </repository>
-	    
-        <!-- Jersey -->
-        <repository>
-            <id>maven2-repository.java.net</id>
-            <name>Java.net Repository for Maven</name>
-            <url>http://download.java.net/maven/2/</url>
-        </repository>
    </repositories>
     
     <dependencies>
@@ -423,20 +416,6 @@
             </exclusions>
         </dependency>
         <!-- FIN PARA AXIS2 -->
-        
-        <!-- Jersey -->
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>1.8</version>
-        </dependency>
-
-        <!-- JSON -->
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
-        </dependency>
         
     </dependencies>
     
