@@ -603,7 +603,7 @@ Ext.onReady(function()
                              
                                  ,params :
                                  {
-                                     'params.consulta' :'RECUPERAR_DIASF_FECHA_FACTURACION'
+                                     'params.consulta' :'RECUPERAR_DIAS_FECHA_FACTURACION'
                                     ,'params.cdtipsit' : _p28_smap1.cdtipsit
                     	             
                     	            }

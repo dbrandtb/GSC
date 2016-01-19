@@ -65,7 +65,7 @@ public enum RecuperacionSimple
 	,RECUPERAR_TFLUACCROL                                    ("L" , "RECUPERAR_TFLUACCROL") // MC
 	,RECUPERAR_ROLES                                         ("L" , "RECUPERAR_ROLES")
 	,RECUPERAR_SWVISPRE_TRAMITE                              ("M" , "RECUPERAR_SWVISPRE_TRAMITE")
-	,RECUPERAR_DIASF_FECHA_FACTURACION						 ("M" , "RECUPERAR_DIASF_FECHA_FACTURACION")
+	,RECUPERAR_DIAS_FECHA_FACTURACION						 ("M" , "RECUPERAR_DIAS_FECHA_FACTURACION")
 	;
 	 
 	private String tipo;
