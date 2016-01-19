@@ -3748,4 +3748,36 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public String recuperarDias(String cdtipsit, String cdsisrol) throws Exception
+	{logger.debug(Utils.log("VILS >>> ",cdtipsit,"/",cdsisrol));
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("pv_cdtipsit_i" , cdtipsit);
+		params.put("pv_cdsisrol_i" , cdsisrol);
+		Map<String,Object> procRes  = ejecutaSP(new RecuperarDias(getDataSource()),params);
+		String dias = (String)procRes.get("pv_rangofec_o");
+		logger.debug(Utils.log("VILS dias >>> ",dias));
+		if(StringUtils.isBlank(dias))
+		{
+			throw new ApplicationException(Utils.join("Error al consultar los dias para la fecha de facturacion ",cdtipsit,"/",cdsisrol));
+		}
+		return dias;
+	}
+	
+	
+	protected class RecuperarDias extends StoredProcedure
+	{ 
+		protected RecuperarDias(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA. P_GET_RANGO_FECHA_FACTURA");
+			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_rangofec_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+			
+		}
+	}
 }

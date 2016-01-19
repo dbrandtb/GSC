@@ -255,7 +255,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				resp.setSmap(new HashMap<String,String>());
 				resp.getSmap().put("CONTEO" , consultasDAO.recuperarConteoTbloqueo(cdunieco,cdramo,estado,nmpoliza));
 			}
-			
 			setCheckpoint("0");
 		}
 		catch(Exception ex)
@@ -562,6 +561,12 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				Utils.validate(ntramite, "No se recibi\u00F3 el tr\u00e1mite");
 				
 				mapa.put("SWVISPRE" , mesaControlDAO.recuperarSwvispreTramite(ntramite));
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_DIAS))
+			{
+				logger.debug(Utils.log("VILS >>> ",params));
+				String cdtipsit = params.get("cdtipsit");
+				mapa.put("dias" , consultasDAO.recuperarDias(cdtipsit, cdsisrol));
 			}
 		}
 		catch(Exception ex)
