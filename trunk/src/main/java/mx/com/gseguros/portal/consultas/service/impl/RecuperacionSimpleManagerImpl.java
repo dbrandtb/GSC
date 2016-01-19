@@ -188,7 +188,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				resp.setSmap(new HashMap<String,String>());
 				resp.getSmap().put("listaNombres",sb.toString());
 			}
-			else if(proc.equals(RecuperacionSimple.RECUPERAR_FECHAS_LIMITE_ENDOSO))
+			else if(proc.equals(RecuperacionSimple.RECUPERAR_DIAS_FECHA_FACTURACION))
 			{
 				String cdunieco = params.get("cdunieco");
 				String cdramo   = params.get("cdramo");
@@ -562,7 +562,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				
 				mapa.put("SWVISPRE" , mesaControlDAO.recuperarSwvispreTramite(ntramite));
 			}
-			else if(consulta.equals(RecuperacionSimple.RECUPERAR_DIASF_FECHA_FACTURACION))
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_DIAS_FECHA_FACTURACION))
 			{
 				logger.debug(Utils.log("VILS >>> ",params));
 				String cdtipsit = params.get("cdtipsit");

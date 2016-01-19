@@ -3750,7 +3750,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	}
 	
 	@Override
-	public String recuperarDias(String cdtipsit, String cdsisrol) throws Exception
+	public String recuperarDiasFechaFacturacion(String cdtipsit, String cdsisrol) throws Exception
 	{logger.debug(Utils.log("VILS >>> ",cdtipsit,"/",cdsisrol));
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("pv_cdtipsit_i" , cdtipsit);
