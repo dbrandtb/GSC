@@ -562,11 +562,11 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				
 				mapa.put("SWVISPRE" , mesaControlDAO.recuperarSwvispreTramite(ntramite));
 			}
-			else if(consulta.equals(RecuperacionSimple.RECUPERAR_DIAS))
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_DIASF_FECHA_FACTURACION))
 			{
 				logger.debug(Utils.log("VILS >>> ",params));
 				String cdtipsit = params.get("cdtipsit");
-				mapa.put("dias" , consultasDAO.recuperarDias(cdtipsit, cdsisrol));
+				mapa.put("dias" , consultasDAO.recuperarDiasFechaFacturacion(cdtipsit, cdsisrol));
 			}
 		}
 		catch(Exception ex)

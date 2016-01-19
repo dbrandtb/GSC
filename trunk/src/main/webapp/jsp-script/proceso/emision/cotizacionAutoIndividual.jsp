@@ -595,7 +595,7 @@ Ext.onReady(function()
                var valor = tipoValor.getValue();
                 if(valor-0==3)/* 3 = VALOR FACTURA*/
                 {
-                	var numeroDias;
+                	var numeroDiasFechaFacturacion;
                 	
                 	 Ext.Ajax.request(
                              { 
@@ -603,7 +603,7 @@ Ext.onReady(function()
                              
                                  ,params :
                                  {
-                                     'params.consulta' :'RECUPERAR_DIAS'
+                                     'params.consulta' :'RECUPERAR_DIASF_FECHA_FACTURACION'
                                     ,'params.cdtipsit' : _p28_smap1.cdtipsit
                     	             
                     	            }
@@ -615,9 +615,9 @@ Ext.onReady(function()
                     	                    debug('### load status:',json);
                     	                    if(json.success==true)
                     	                    {
-                    	                        numeroDias = json.params.dias;
+                    	                    	numeroDiasFechaFacturacion = json.params.dias;
                     	                        var hoy = new  Date();
-                    	                        var limite = Ext.Date.add(hoy, Ext.Date.DAY,-1*(numeroDias));
+                    	                        var limite = Ext.Date.add(hoy, Ext.Date.DAY,-1*(numeroDiasFechaFacturacion));
                     	                        
                     	                        _fieldLikeLabel('FECHA DE FACTURA').setMinValue(limite);
                     	                    }
@@ -639,7 +639,7 @@ Ext.onReady(function()
                 		
                 		
                 	var hoy = new  Date();
-                	var limite = Ext.Date.add(hoy, Ext.Date.DAY,numeroDias);
+                	var limite = Ext.Date.add(hoy, Ext.Date.DAY,numeroDiasFechaFacturacion);
                 	
                 	_fieldLikeLabel('FECHA DE FACTURA').setMinValue(limite);
                 	_fieldLikeLabel('FECHA DE FACTURA').setMaxValue(hoy);
