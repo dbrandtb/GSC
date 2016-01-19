@@ -477,5 +477,5 @@ public interface ConsultasDAO
 	
 	public Map<String,String> recuperarDatosFlujoEmision(String cdramo, String tipoflot) throws Exception;
 
-	public String recuperarDias(String cdtipsit, String cdsisrol) throws Exception;
+	public String recuperarDiasFechaFacturacion(String cdtipsit, String cdsisrol) throws Exception;
 }
