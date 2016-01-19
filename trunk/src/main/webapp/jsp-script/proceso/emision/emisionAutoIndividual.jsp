@@ -22,8 +22,10 @@ var _p29_urlDocumentosPolizaClon           = '<s:url namespace="/documentos" act
 var _p29_urlObtieneValNumeroSerie          = '<s:url namespace="/emision"    action="obtieneValNumeroSerie"                />';
 var urlPantallaBeneficiarios			   = '<s:url namespace="/catalogos"  action="includes/pantallaBeneficiarios"       />';
 var _p28_urlCargarIdUsu                    = '<s:url namespace="/emision"    action="obtieneIdUsu"        />';
+
 var urlReintentarWS  = '<s:url namespace="/"        action="reintentaWSautos" />';
 var _urlEnviarCorreo = '<s:url namespace="/general" action="enviaCorreo"      />';
+
 ////// urls //////
 
 ////// variables //////
@@ -48,8 +50,10 @@ var _FechaMaxEdad  = _p29_smap1.FechaMaxEdad;
 
 var ramogs;
 var poliza;
+var idusu;
 
 var _url_domiciliacion = '<s:text name="portal.agentes.domiciliacion.url" />';
+var _URL_IDUSULOGIN = '<s:text name="sigs.obtenerIdususByLogin.url" />';
 ////// variables //////
 
 Ext.onReady(function()
@@ -420,7 +424,6 @@ Ext.onReady(function()
 	    }
 	    ,failure : errorComunicacion
 	});
-	
 	////// loaders //////
 	
 	var folio  = _fieldByName('parametros.pv_otvalor37');
@@ -911,7 +914,7 @@ function _p29_mostrarVistaPrevia()
                             }
                             ,defaults : { style : 'margin:5px;' }
                             ,items    :
-                            [
+                            [       //Inicio de Items . Ext.form.Panel
                                 {
                                     xtype       : 'textfield'
                                     ,itemId     : '_p29_numerofinalpoliza'
@@ -1088,7 +1091,7 @@ function _p29_mostrarVistaPrevia()
                                 }
 //====================================--------------------=======================================||
 	                         ,{
-                                      hidden  :  Number(_fieldByName('cdperpag').getValue()) != 1 
+	                        	      hidden  :  Number(_fieldByName('cdperpag').getValue()) != 1 
 	                        	     ,xtype   : 'button'
                                      ,itemId  : '_p29_botonRedireccionar'
                                      ,text    : 'Cobranza Automatica'
@@ -1096,48 +1099,14 @@ function _p29_mostrarVistaPrevia()
                                      ,disabled : true
                                      ,handler : function()
                                      {  
-                                    	 Ext.Ajax.request(
-                                            {
-                                                url     : _p28_urlCargarIdUsu
-                                                ,params :
-                                                {
-                                                    'smap1.cdusuari' : _p29_smap1.cdusuari,
-                                                }
-                                                ,success : function(response)
-                                                { 
-//                                                 	alert(response);
-//                                                 	alert(response.responseText);
-                                    	    	   var json = Ext.decode(response.responseText);
-//                                     	    	   alert(json);
-//                                                    var idusu = json.idusu;                                                   
-                                                        var idusu = json.smap1.idusu;
-//                                                         alert(idusu);
-		                                    	     var url = _url_domiciliacion+"?u="+idusu+"&suc="+_p29_smap1.cdunieco+"&ram="+ramogs+"&pol="+poliza;
-		                                             centrarVentanaInterna(Ext.create('Ext.window.Window',
-		                                             {
-		                                                  title       : 'Datos de Poliza'
-		                                                 ,modal       : true
-		                                                 ,buttonAlign : 'center'
-		                                                 ,width       : 810
-		                                                 ,height      : 510
-		                                                 ,autoScroll  : true
-		                                                 ,modal       : true
-		                                                 ,html        :'<iframe width="800" height="500" src="'+url+'"></iframe>'
-		                                                 
-		                                             }).show());
-                                                }
-                                                ,failure  : function()
-                                                {   alert("Hello! I am an alert box!! 2");
-                                                    errorComunicacion();
-                                                }
-		                                      });
+                                    	 domiciliar();
                                      }
                                  }  
                             
-                            ]
-                        })
-                    ]
-                }).show());
+                            ]//Fin Items. Ext.form.Panel
+                        })//Fin Ext.form.Panel (Fin ext.create
+                    ]//Fin Items. Ext.window.Window
+                }).show());//Fin Ext.window.Window, Fin ext.create Ext.window.Window and Show(it), Fin centrarVentanaInterna
             }
         }
         ,failure : function()
@@ -1226,7 +1195,7 @@ function _p29_emitirFinal(me)
                 _mensajeEmail = json.mensajeEmail;
                 _fieldById('botonEnvioEmail').enable();
                 
-                
+                domiciliar();
                 
                 _fieldById('_p29_botonCancelarEmision').setDisabled(true);
                 _fieldById('_p29_botonNueva').setDisabled(false);
@@ -1443,6 +1412,46 @@ function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
 	centrarVentanaInterna(validacionNumSerie.show());
 }
 
+function domiciliar()
+{ 
+	 _mask('Cargando domiciliaci\u00f3n');
+	  Ext.Ajax.request(
+		         { 
+		             url     : _p28_urlCargarIdUsu
+		             ,params :
+		             {
+		                 'smap1.cdusuari' : _p29_smap1.cdusuari
+		             }
+		             ,success : function(response)
+		             {
+		            	 _unmask();
+		                var json = Ext.decode(response.responseText);
+		                if(json.success == true){
+		                    var idusu = json.smap1.idUsu;
+		                    var url = _url_domiciliacion+"?u="+idusu+"&suc="+_p29_smap1.cdunieco+"&ram="+ramogs+"&pol="+poliza;
+		                    centrarVentanaInterna(Ext.create('Ext.window.Window',
+		                      {
+		                           title       : 'Datos de Poliza'
+		                          ,name        : 'DatPoliza'
+		                          ,modal       : true
+		                          ,buttonAlign : 'center'
+		                          ,width       : 810
+		                          ,height      : 510
+		                          ,autoScroll  : true
+		                          ,html        :'<iframe width="800" height="500" src="'+url+'"></iframe>'
+		                          
+		                      }).show());
+		                      document.getElementsByName("DatPoliza");      
+		                 }
+		                else{console.log(json.respuesta);}
+		             }
+		             ,failure  : function(response)
+		             {   _unmask();
+		                 console.log(response);
+		             }
+		        }
+		    );
+	   }
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>

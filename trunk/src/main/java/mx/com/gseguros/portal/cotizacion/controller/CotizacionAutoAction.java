@@ -1536,7 +1536,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
-	
+
 	/*
 	 * Getters y setters
 	 */

@@ -92,6 +92,7 @@ var _p28_urlCargarObligatorioCamionRamo5      = '<s:url namespace="/emision"    
 var _p28_urlCargarDetalleNegocioRamo5         = '<s:url namespace="/emision"         action="cargarDetalleNegocioRamo5"                      />';
 var _p28_urlCargarParamerizacionCoberturasRol = '<s:url namespace="/emision"         action="cargarParamerizacionConfiguracionCoberturasRol" />';
 var _p28_urlCargarTipoCambioWS                = '<s:url namespace="/emision"         action="cargarTipoCambioWS"                             />';
+var _p28_urlRecuperacion                      = '<s:url namespace="/recuperacion"    action="recuperar"                                      />';
 var _p28_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p28_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 ////// urls //////
@@ -594,15 +595,58 @@ Ext.onReady(function()
                var valor = tipoValor.getValue();
                 if(valor-0==3)/* 3 = VALOR FACTURA*/
                 {
+                	var numeroDias;
+                	
+                	 Ext.Ajax.request(
+                             { 
+                                 url     : _p28_urlRecuperacion
+                             
+                                 ,params :
+                                 {
+                                     'params.consulta' :'RECUPERAR_DIAS'
+                                    ,'params.cdtipsit' : _p28_smap1.cdtipsit
+                    	             
+                    	            }
+                    	            ,success : function(response)
+                    	            {                 	                
+                    	                try
+                    	                {
+                    	                    var json = Ext.decode(response.responseText);
+                    	                    debug('### load status:',json);
+                    	                    if(json.success==true)
+                    	                    {
+                    	                        numeroDias = json.params.dias;
+                    	                        var hoy = new  Date();
+                    	                        var limite = Ext.Date.add(hoy, Ext.Date.DAY,-1*(numeroDias));
+                    	                        
+                    	                        _fieldLikeLabel('FECHA DE FACTURA').setMinValue(limite);
+                    	                    }
+                    	                    else
+                    	                    {
+                    	                        mensajeError(json.message);
+                    	                    }
+                    	                }
+                    	                catch(e)
+                    	                {
+                    	                    manejaException(e,ck);
+                    	                }
+                    	            }
+                    	            ,failure : function()
+                    	            {
+                    	                errorComunicacion(null,'Error al dias de factura');
+                    	            }
+                    	        });
+                		
+                		
                 	var hoy = new  Date();
-                	var limite = Ext.Date.add(hoy, Ext.Date.DAY,-60);
+                	var limite = Ext.Date.add(hoy, Ext.Date.DAY,numeroDias);
                 	
                 	_fieldLikeLabel('FECHA DE FACTURA').setMinValue(limite);
                 	_fieldLikeLabel('FECHA DE FACTURA').setMaxValue(hoy);
                 	_fieldLikeLabel('FECHA DE FACTURA').show();
                 	_fieldLikeLabel('FECHA DE FACTURA').allowBlank=false;
                 }
-                else
+		else
                 {
                     _fieldLikeLabel('FECHA DE FACTURA').hide();
                     _fieldLikeLabel('FECHA DE FACTURA').allowBlank=true;
