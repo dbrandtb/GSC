@@ -22,14 +22,15 @@ var _p29_urlDocumentosPolizaClon           = '<s:url namespace="/documentos" act
 var _p29_urlObtieneValNumeroSerie          = '<s:url namespace="/emision"    action="obtieneValNumeroSerie"                />';
 var urlPantallaBeneficiarios			   = '<s:url namespace="/catalogos"  action="includes/pantallaBeneficiarios"       />';
 var _p28_urlCargarIdUsu                    = '<s:url namespace="/emision"    action="obtieneIdUsu"        />';
-
-var urlReintentarWS  = '<s:url namespace="/"        action="reintentaWSautos" />';
-var _urlEnviarCorreo = '<s:url namespace="/general" action="enviaCorreo"      />';
-
+var urlReintentarWS                        = '<s:url namespace="/"        action="reintentaWSautos" />';
+var _urlEnviarCorreo                       = '<s:url namespace="/general" action="enviaCorreo"      />';
 ////// urls //////
 
 ////// variables //////
-var _p29_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
+var claveUsuarioCaptura;
+if(Ext.isEmpty(<s:property value="%{#session['USUARIO']"/>))
+{claveUsuarioCaptura = <s:property value="%{#session['USUARIO'].claveUsuarioCaptura}" />;}
+var _p29_smap1          = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false"/>;
 debug('_p29_smap1:',_p29_smap1);
 
 var _p29_polizaAdicionalesItems = null;
@@ -50,15 +51,13 @@ var _FechaMaxEdad  = _p29_smap1.FechaMaxEdad;
 
 var ramogs;
 var poliza;
-var idusu;
 
 var _url_domiciliacion = '<s:text name="portal.agentes.domiciliacion.url" />';
 var _URL_IDUSULOGIN = '<s:text name="sigs.obtenerIdususByLogin.url" />';
 ////// variables //////
 
 Ext.onReady(function()
-{
-	
+{	
 	// Se aumenta el timeout para todas las peticiones:
 	Ext.Ajax.timeout = 485000; // 8 min
 	Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
@@ -1195,7 +1194,8 @@ function _p29_emitirFinal(me)
                 _mensajeEmail = json.mensajeEmail;
                 _fieldById('botonEnvioEmail').enable();
                 
-                domiciliar();
+                if(Number(_fieldByName('cdperpag').getValue()) == 1)
+                {domiciliar();}
                 
                 _fieldById('_p29_botonCancelarEmision').setDisabled(true);
                 _fieldById('_p29_botonNueva').setDisabled(false);
@@ -1413,45 +1413,55 @@ function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
 }
 
 function domiciliar()
-{ 
-	 _mask('Cargando domiciliaci\u00f3n');
-	  Ext.Ajax.request(
-		         { 
-		             url     : _p28_urlCargarIdUsu
-		             ,params :
-		             {
-		                 'smap1.cdusuari' : _p29_smap1.cdusuari
-		             }
-		             ,success : function(response)
-		             {
-		            	 _unmask();
-		                var json = Ext.decode(response.responseText);
-		                if(json.success == true){
-		                    var idusu = json.smap1.idUsu;
-		                    var url = _url_domiciliacion+"?u="+idusu+"&suc="+_p29_smap1.cdunieco+"&ram="+ramogs+"&pol="+poliza;
-		                    centrarVentanaInterna(Ext.create('Ext.window.Window',
-		                      {
-		                           title       : 'Datos de Poliza'
-		                          ,name        : 'DatPoliza'
-		                          ,modal       : true
-		                          ,buttonAlign : 'center'
-		                          ,width       : 810
-		                          ,height      : 510
-		                          ,autoScroll  : true
-		                          ,html        :'<iframe width="800" height="500" src="'+url+'"></iframe>'
-		                          
-		                      }).show());
-		                      document.getElementsByName("DatPoliza");      
-		                 }
-		                else{console.log(json.respuesta);}
-		             }
-		             ,failure  : function(response)
-		             {   _unmask();
-		                 console.log(response);
-		             }
-		        }
-		    );
-	   }
+{   
+    var callbackFunction = function(idUsuario)
+    {
+    var url = _url_domiciliacion+"?u="+idUsuario+"&suc="+_p29_smap1.cdunieco+"&ram="+ramogs+"&pol="+poliza;
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+      {
+           title       : 'Datos de Poliza'
+          ,modal       : true
+          ,buttonAlign : 'center'
+          ,width       : 1000
+          ,height      : 500
+          ,autoScroll  : false
+          ,html        :'<iframe width="950" height="500" src="'+url+'"></iframe>'
+          
+      }).show());
+    };
+    
+	var idusu;	
+    if (Ext.isEmpty(claveUsuarioCaptura)) {
+    	_mask('Cargando domiciliaci\u00f3n');
+       Ext.Ajax.request(
+                 { 
+                     url     : _p28_urlCargarIdUsu
+                     ,params :
+                     {
+                         'smap1.cdusuari' : _p29_smap1.cdusuari
+                     }
+                     ,success : function(response)
+                     {
+                    	 _unmask();
+                        var json = Ext.decode(response.responseText);
+                        if(json.success == true){
+                            idusu = json.smap1.idUsu;
+                            callbackFunction(idUsu);
+                                                 }
+                        else{console.log(json.respuesta);}
+                     }
+                     ,failure  : function(response)
+                     {   _unmask();
+                         console.log(response);
+                     }
+                }
+              );
+            }
+    else {
+          idusu=claveUsuarioCaptura;
+          callbackFunction(idusu);
+         }
+}
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
