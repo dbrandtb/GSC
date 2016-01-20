@@ -333,6 +333,10 @@ public interface CotizacionManager
 			,String cdpool
 			,String nombreCensoConfirmado
 			,boolean asincrono
+			,String cdideper_
+			,String cdideext_
+			,String nmpolant
+			,String nmrenova
 			);
 	
 	public ManagerRespuestaSlistVO obtenerTiposSituacion();
@@ -382,6 +386,10 @@ public interface CotizacionManager
 			,String ntramiteVacio
 			,String cdelemen
 			,String nombreCensoConfirmado
+			,String cdideper_
+			,String cdideext_
+			,String nmpolant
+			,String nmrenova
 			);
 	public ManagerRespuestaVoidVO validarCambioZonaGMI(
 			String cdunieco

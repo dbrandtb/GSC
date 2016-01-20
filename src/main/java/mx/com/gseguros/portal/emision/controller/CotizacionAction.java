@@ -3250,6 +3250,13 @@ public class CotizacionAction extends PrincipalCoreAction
 				gc.generaComponentes(comboPool, true,false,true,false,false,false);
 				imap.put("comboPool"  , gc.getItems());
 				
+				List<ComponenteVO>datosPoliza = pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, cdsisrol,
+						"COTIZACION_GRUPO", "DATOS_POLIZA", null);
+				gc.generaComponentes(datosPoliza, true,false,true,false,false,false);
+				imap.put("datosPoliza"  , gc.getItems());
+				
 				List<ComponenteVO>botones=pantallasManager.obtenerComponentes(
 						null, null, "|"+status+"|",
 						null, null, cdsisrol,
@@ -3787,6 +3794,10 @@ public class CotizacionAction extends PrincipalCoreAction
 		String dsdomiciCli     = null;
 		String nmnumeroCli     = null;
 		String nmnumintCli     = null;
+		String cdideper_       = null;
+		String cdideext_       = null;
+		String nmpolant        = null;
+		String nmrenova        = null;
 		
 		String nombreCensoConfirmado = null;
 		
@@ -3820,6 +3831,10 @@ public class CotizacionAction extends PrincipalCoreAction
 			dsdomiciCli     = smap1.get("dsdomici");
 			nmnumeroCli     = smap1.get("nmnumero");
 			nmnumintCli     = smap1.get("nmnumint");
+			cdideper_       = smap1.get("cdideper_");
+			cdideext_       = smap1.get("cdideext_");
+			nmpolant        = smap1.get("nmpolant");
+			nmrenova        = smap1.get("nmrenova");
 			
 			nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 			
@@ -3892,6 +3907,10 @@ public class CotizacionAction extends PrincipalCoreAction
 					,ntramiteVacio
 					,cdelemen
 					,nombreCensoConfirmado
+					,cdideper_
+					,cdideext_
+					,nmpolant
+					,nmrenova
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -3945,6 +3964,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		Date fechaHoy           = new Date();
 		String feini            = smap1.get("feini");
 		String fefin            = smap1.get("fefin");
+		String nmpolant         = smap1.get("nmpolant");
+		String nmrenova         = smap1.get("nmrenova");
 		
 		censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+censoTimestamp);
 		
@@ -3976,7 +3997,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            mapaMpolizas.put("pv_hhefecto"  , "12:00");
 	            mapaMpolizas.put("pv_feproren"  , fefin);
 	            mapaMpolizas.put("pv_fevencim"  , null);
-	            mapaMpolizas.put("pv_nmrenova"  , "0");
+	            mapaMpolizas.put("pv_nmrenova"  , StringUtils.isBlank(nmrenova) ? "0" : nmrenova);
 	            mapaMpolizas.put("pv_ferecibo"  , null);
 	            mapaMpolizas.put("pv_feultsin"  , null);
 	            mapaMpolizas.put("pv_nmnumsin"  , "0");
@@ -3989,7 +4010,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            mapaMpolizas.put("pv_nmcuadro"  , "P1");
 	            mapaMpolizas.put("pv_porredau"  , "100");
 	            mapaMpolizas.put("pv_swconsol"  , "S");
-	            mapaMpolizas.put("pv_nmpolant"  , null);
+	            mapaMpolizas.put("pv_nmpolant"  , nmpolant);
 	            mapaMpolizas.put("pv_nmpolnva"  , null);
 	            mapaMpolizas.put("pv_fesolici"  , renderFechas.format(fechaHoy));
 	            mapaMpolizas.put("pv_cdramant"  , null);
@@ -4864,6 +4885,10 @@ public class CotizacionAction extends PrincipalCoreAction
 		String cdelemen                = null;
 		String cdpool                  = null;
 		String nombreCensoConfirmado   = null;
+		String cdideper_               = null;
+		String cdideext_               = null;
+		String nmpolant                = null;
+		String nmrenova                = null;
 		
 		boolean sincenso      = false;
 		boolean censoAtrasado = false;
@@ -4916,6 +4941,10 @@ public class CotizacionAction extends PrincipalCoreAction
 			nmnumeroCli     = smap1.get("nmnumero");
 			nmnumintCli     = smap1.get("nmnumint");
 			cdpool          = smap1.get("cdpool");
+			cdideper_       = smap1.get("cdideper_");
+			cdideext_       = smap1.get("cdideext_");
+			nmpolant        = smap1.get("nmpolant");
+			nmrenova        = smap1.get("nmrenova");
 			
 			rutaDocumentosTemporal  = getText("ruta.documentos.temporal");
 			dominioServerLayouts    = getText("dominio.server.layouts");
@@ -4998,6 +5027,10 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdpool
 					,nombreCensoConfirmado
 					,asincrono
+					,cdideper_
+					,cdideext_
+					,nmpolant
+					,StringUtils.isBlank(nmrenova) ? "0" : nmrenova
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -5078,6 +5111,9 @@ public class CotizacionAction extends PrincipalCoreAction
 			String cdmunici      = smap1.get("cdmunici");
 			String codpostal      = smap1.get("codpostal");
 			
+			String nmpolant  = smap1.get("nmpolant")
+			       ,nmrenova = smap1.get("nmrenova");
+			
 			logger.info(Utils.log(
 					"\ninTimestamp: " , inTimestamp
 					,"\nclasif: "     , clasif
@@ -5129,7 +5165,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		            mapaMpolizas.put("pv_hhefecto"  , "12:00");
 		            mapaMpolizas.put("pv_feproren"  , fefin);
 		            mapaMpolizas.put("pv_fevencim"  , null);
-		            mapaMpolizas.put("pv_nmrenova"  , "0");
+		            mapaMpolizas.put("pv_nmrenova"  , StringUtils.isBlank(nmrenova) ? "0" : nmrenova);
 		            mapaMpolizas.put("pv_ferecibo"  , null);
 		            mapaMpolizas.put("pv_feultsin"  , null);
 		            mapaMpolizas.put("pv_nmnumsin"  , "0");
@@ -5142,7 +5178,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		            mapaMpolizas.put("pv_nmcuadro"  , "P1");
 		            mapaMpolizas.put("pv_porredau"  , "100");
 		            mapaMpolizas.put("pv_swconsol"  , "S");
-		            mapaMpolizas.put("pv_nmpolant"  , null);
+		            mapaMpolizas.put("pv_nmpolant"  , nmpolant);
 		            mapaMpolizas.put("pv_nmpolnva"  , null);
 		            mapaMpolizas.put("pv_fesolici"  , renderFechas.format(fechaHoy));
 		            mapaMpolizas.put("pv_cdramant"  , null);

@@ -955,6 +955,7 @@ Ext.onReady(function()
                                         ,readOnly   : true
                                     }
                                     ,<s:property value="imap.comboPool" />
+                                    ,<s:property value="imap.datosPoliza" />
                                     ,{
                                         xtype    : 'button'
                                         ,text    : 'Exclusiones/Extraprimas (Cl&aacute;usulas)'
