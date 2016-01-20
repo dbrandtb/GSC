@@ -33,6 +33,7 @@ public interface FlujoMesaControlManager
 			,String cdflujomc
 			,String dsflujomc
 			,String swfinal
+			,String cdtipram
 			)throws Exception;
 	
 	public void movimientoCatalogo(

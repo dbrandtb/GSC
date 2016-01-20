@@ -643,6 +643,7 @@ Ext.onReady(function()
                         ,name       : 'SWFINAL'
                         ,inputValue : 'S'
                     }
+                    ,<s:property value="items.comboCdtipram" escapeHtml="false" />
                 ]
                 ,buttonAlign : 'center'
                 ,buttons     :
@@ -742,6 +743,7 @@ Ext.onReady(function()
         ,showEdit : function(record)
         {
             var me = this;
+            debug('record:',record);
             me.down('form').getForm().loadRecord(record);
             me.down('[name=ACCION]').setValue('U');
             centrarVentanaInterna(me.show());
@@ -1342,6 +1344,7 @@ Ext.onReady(function()
                                 ,'CDFLUJOMC'
                                 ,'DSFLUJOMC'
                                 ,'SWFINAL'
+                                ,'CDTIPRAM'
                             ]
                             ,proxy   :
                             {
