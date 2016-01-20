@@ -321,7 +321,7 @@ function _p32_agregar()
     }
 }
 
-function _p32_guardarClic()
+function _p32_guardarClic(callback)
 {
     debug('>_p32_guardarClic');
     
@@ -446,6 +446,12 @@ function _p32_guardarClic()
                             }
                         });
                         _p32_cargarStore();
+                        
+                        if(!Ext.isEmpty(callback))
+                        {
+                        	callback();
+                        }
+                        
                     }
                     else
                     {
