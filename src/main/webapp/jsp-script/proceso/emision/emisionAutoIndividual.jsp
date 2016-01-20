@@ -28,8 +28,9 @@ var _urlEnviarCorreo                       = '<s:url namespace="/general" action
 
 ////// variables //////
 var claveUsuarioCaptura;
-if(Ext.isEmpty(<s:property value="%{#session['USUARIO']"/>))
-{claveUsuarioCaptura = <s:property value="%{#session['USUARIO'].claveUsuarioCaptura}" />;}
+if(Ext.isEmpty(<s:property value="%{#session['USUARIO']"/>)){
+	//claveUsuarioCaptura = <s:property value="%{#session['USUARIO'].claveUsuarioCaptura}" />;
+}
 var _p29_smap1          = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false"/>;
 debug('_p29_smap1:',_p29_smap1);
 
@@ -37,6 +38,8 @@ var _p29_polizaAdicionalesItems = null;
 var _p29_adicionalesItems       = null;
 var _p22_parentCallback         = false;
 var _p22_parentCallbackCallback = null;
+var _p32_parentCallback         = false;
+var _p32_parentCallbackCallback = null;
 var _p29_ventanaDocs            = null;
 var _p29_validaSeguro			= "N";
 
@@ -722,14 +725,7 @@ function _p29_guardar(callback)
                     debug('### guardar:',json);
                     if(json.exito)
                     {
-                        if(callback)
-                        {
-                            callback();
-                        }
-                        else
-                        {
-                            mensajeCorrecto('Datos guardados',json.respuesta);
-                        }
+                    	_p32_guardarClic(callback);
                     }
                     else
                     {
