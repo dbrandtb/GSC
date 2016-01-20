@@ -1871,6 +1871,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 				gcGral.generaComponentes(comboPool, true,false,true,false,false,false);
 				resp.getImap().put("comboPool"  , gcGral.getItems());
 				
+				List<ComponenteVO>datosPoliza = pantallasDAO.obtenerComponentes(
+						null, null, null,
+						null, null, cdsisrol,
+						"COTIZACION_GRUPO", "DATOS_POLIZA", null);
+				gcGral.generaComponentes(datosPoliza, true,false,true,false,false,false);
+				resp.getImap().put("datosPoliza"  , gcGral.getItems());
+				
 				List<ComponenteVO>botones=pantallasDAO.obtenerComponentes(
 						null, null, "|"+status+"|",
 						null, null, cdsisrol,
@@ -2185,6 +2192,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdpool
 			,String nombreCensoConfirmado
 			,boolean asincrono
+			,String cdideper_
+			,String cdideext_
+			,String nmpolant
+			,String nmrenova
 			)
 	{
 		logger.info(
@@ -2232,6 +2243,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ cdpool=")                 .append(cdpool)
 				.append("\n@@@@@@ nombreCensoConfirmado=")  .append(nombreCensoConfirmado)
 				.append("\n@@@@@@ asincrono=")              .append(asincrono)
+				.append("\n@@@@@@ cdideper_=")              .append(cdideper_)
+				.append("\n@@@@@@ cdideext_=")              .append(cdideext_)
+				.append("\n@@@@@@ nmpolant=")               .append(nmpolant)
+				.append("\n@@@@@@ nmrenova=")               .append(nmrenova)
 				.toString()
 				);
 		
@@ -2292,7 +2307,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			            ,"12:00"  //hhefecto
 			            ,fefin
 			            ,null     //fevencim
-			            ,"0"      //nmrenova
+			            ,StringUtils.isBlank(nmrenova) ? "0" : nmrenova
 			            ,null     //ferecibo
 			            ,null     //feultsin
 			            ,"0"      //nmnumsin
@@ -2305,7 +2320,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			            ,"P1"     //nmcuadro
 			            ,"100"    //porredau
 			            ,"S"      //swconsol
-			            ,null     //nmpolant
+			            ,nmpolant //nmpolant
 			            ,null     //nmpolnva
 			            ,renderFechas.format(fechaHoy) //fesolici
 			            ,null     //cdramant
@@ -3308,6 +3323,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,cdsisrol
 					,complemento
 					,asincrono
+					,cdideper_
+					,cdideext_
 					);
 			
 			resp.setExito(respInterna.isExito());
@@ -3361,6 +3378,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdsisrol
 			,boolean complemento
 			,boolean asincrono
+			,String cdideper_
+			,String cdideext_
 			)
 	{
 		logger.info(
@@ -3398,6 +3417,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ cdsisrol=")            .append(cdsisrol)
 				.append("\n@@@@@@ complemento=")         .append(complemento)
 				.append("\n@@@@@@ asincrono=")           .append(asincrono)
+				.append("\n@@@@@@ cdideper_=")           .append(cdideper_)
+				.append("\n@@@@@@ cdideext_=")           .append(cdideext_)
 				.toString()
 				);
 		
@@ -3644,7 +3665,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 						personasDAO.movimientosMpersona(
 								cdpersonCli
 								,"1"         //cdtipide
-								,null        //cdideper
+								,cdideper_   //cdideper
 								,nombreCli
 								,"1"         //cdtipper
 								,"M"         //otfisjur
@@ -3662,7 +3683,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 								,null        //ptcumupr
 								,null        //residencia
 								,null		 //nongrata
-								,null		 //cdideext
+								,cdideext_   //cdideext
 								,null		 //cdestcivil
 								,null		 //cdsucemi
 								,Constantes.INSERT_MODE
@@ -4183,6 +4204,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String ntramiteVacio
 			,String cdelemen
 			,String nombreCensoConfirmado
+			,String cdideper_
+			,String cdideext_
+			,String nmpolant
+			,String nmrenova
 			)
 	{
 		logger.info(
@@ -4221,6 +4246,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ ntramiteVacio=")       .append(ntramiteVacio)
 				.append("\n@@@@@@ cdelemen=")            .append(cdelemen)
 				.append("\n@@@@@@ nombreCensoConfirmado=").append(nombreCensoConfirmado)
+				.append("\n@@@@@@ cdideper_=")            .append(cdideper_)
+				.append("\n@@@@@@ cdideext_=")            .append(cdideext_)
+				.append("\n@@@@@@ nmpolant=")             .append(nmpolant)
+				.append("\n@@@@@@ nmrenova=")             .append(nmrenova)
 				.toString()
 				);
 		
@@ -4253,7 +4282,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		            ,"12:00"  //hhefecto
 		            ,fefin
 		            ,null     //fevencim
-		            ,"0"      //nmrenova
+		            ,StringUtils.isBlank(nmrenova) ? "0" : nmrenova
 		            ,null     //ferecibo
 		            ,null     //feultsin
 		            ,"0"      //nmnumsin
@@ -4266,7 +4295,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		            ,"P1"     //nmcuadro
 		            ,"100"    //porredau
 		            ,"S"      //swconsol
-		            ,null     //nmpolant
+		            ,nmpolant
 		            ,null     //nmpolnva
 		            ,renderFechas.format(fechaHoy) //fesolici
 		            ,null     //cdramant
@@ -5250,6 +5279,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,cdsisrol
 					,false
 					,false //asincrono
+					,cdideper_
+					,cdideext_
 					);
 		}
 		

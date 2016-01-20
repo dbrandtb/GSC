@@ -85,10 +85,15 @@ var _p25_urlPantallaAgentes             = '<s:url namespace="/flujocotizacion" a
 var _p25_urlComplementoCotizacion       = '<s:url namespace="/emision"         action="complementoSaludGrupo"            />';
 var _p25_urlGuardarConfig4TVALAT        = '<s:url namespace="/emision"         action="guardarConfiguracionGarantias"    />';
 var _p25_urlPantallaEspPersona          = '<s:url namespace="/persona"         action="includes/pantallaEspPersona"      />';
+var _p25_urlRecuperacion                = '<s:url namespace="/recuperacion"    action="recuperar"                        />';
 
-var _p25_urlImprimirCotiza       = '<s:text name="ruta.servidor.reports" />';
-var _p25_reportsServerUser       = '<s:text name="pass.servidor.reports" />';
-var _p25_nombreReporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
+var _p25_urlMarcarTramitePendienteVistaPrevia = '<s:url namespace="/mesacontrol" action="marcarTramiteVistaPrevia" />';
+
+var _p25_nombreReporteCotizacion        = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
+var _p25_nombreReporteCotizacionDetalle = '<s:text name='%{"rdf.cotizacion2.nombre."+smap1.cdtipsit.toUpperCase()}' />';
+
+var _p25_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p25_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _p25_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 debug('_p25_smap1:',_p25_smap1);
@@ -897,6 +902,7 @@ Ext.onReady(function()
                                         ,readOnly   : true
                                     }
                                     ,<s:property value="imap.comboPool" />
+                                    ,<s:property value="imap.datosPoliza" />
                                     ,{
                                         xtype    : 'button'
                                         ,text    : 'Exclusiones/Extraprimas (Cl&aacute;usulas)'
@@ -1840,72 +1846,7 @@ Ext.onReady(function()
             }
         });
         
-        Ext.Ajax.request(
-        {
-            url     : _p25_urlRecuperacionSimple
-            ,params :
-            {
-                'smap1.procedimiento' : 'RECUPERAR_CONTEO_BLOQUEO'
-                ,'smap1.cdunieco'     : _p25_smap1.cdunieco
-                ,'smap1.cdramo'       : _p25_smap1.cdramo
-                ,'smap1.estado'       : _p25_smap1.estado
-                ,'smap1.nmpoliza'     : _p25_smap1.nmpoliza
-            }
-            ,success : function(response)
-            {
-                var ck = 'Decodificando conteo de bloqueos';
-                try
-                {
-                    var json=Ext.decode(response.responseText);
-                    debug('### conteo bloqueo:',json);
-                    if(json.exito)
-                    {
-                        if(Number(json.smap1.CONTEO)>0)
-                        {
-                            centrarVentanaInterna(Ext.create('Ext.window.Window',
-                            {
-                                title     : 'Cotizaci\u00F3n en proceso...'
-                                ,width    : 400
-                                ,height   : 150
-                                ,modal    : true
-                                ,closable : false
-                                ,html     : '<div style="padding:5px;border:0px solid black;">'
-                                            +'Su cotizaci\u00F3n a\u00FAn se encuentra generando tarifa ('
-                                            +json.smap1.CONTEO
-                                            +').<br/>Intente m\u00E1s tarde</div>'
-                                ,buttonAlign : 'center'
-                                ,buttons     :
-                                [
-                                    {
-                                        text     : 'Regresar'
-                                        ,icon    : '${icons}arrow_undo.png'
-                                        ,handler : function(){ history.back(); }
-                                    }
-                                    ,{
-                                        text     : 'Recargar'
-                                        ,icon    : '${icons}arrow_refresh.png'
-                                        ,handler : function(me){ me.up('window').setLoading(true); location.reload(); }
-                                    }
-                                ]
-                            }).show());
-                        }
-                    }
-                    else
-                    {
-                        mensajeError(json.respuesta);
-                    }
-                }
-                catch(e)
-                {
-                    manejaException(e,ck);
-                }
-            }
-            ,failure : function()
-            {
-                me.setLoading(false);
-                errorComunicacion(null,'Error al contar bloqueos');
-            }
-        });
+        _p25_tbloqueo(false);
     }
     
     _fieldByName('nmnumero').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
@@ -2069,7 +2010,13 @@ Ext.onReady(function()
         }
     });
     
-    _fieldByName('cdpool').forceSelection=false;
+    _fieldByName('cdpool').on(
+    {
+        focus : function(me)
+        {
+            me.forceSelection = false;
+        }
+    });
     ////// loaders //////
 });
 
@@ -2389,6 +2336,9 @@ function _p25_rfcBlur(field)
 												//SE GENERA UN NUEVO CDPERSON PARA PROSPECTOS
                                                 _fieldByName('cdperson') .setValue('');
                                                 
+                                                _fieldByName('cdideper_').setValue(record.get('CDIDEPER'));
+                                                _fieldByName('cdideext_').setValue(record.raw.CDIDEEXT);
+                                                
                                                 _fieldByName('nombre')   .setValue(record.get('NOMBRECLI'));
                                                 _fieldByName('codpostal').setValue(record.get('CODPOSTAL'));
                                                 
@@ -2613,11 +2563,14 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                             ,change : function(checkbox,value)
                                                             {
                                                                 debug('checkbox change:',value);
-                                                                var form = checkbox.up().up();
+                                                                var form       = checkbox.up('form');
+                                                                var miCdgarant = form.cdgarant;
                                                                 for(var l=0;l<form.items.items.length;l++)
                                                                 {
                                                                     form.items.items[l].setDisabled(!value);
-                                                                    if(value)
+                                                                    if(value
+                                                                        &&(Ext.isEmpty(me.flagPuedesBorrar)||me.flagPuedesBorrar==true)
+                                                                    )
                                                                     {
                                                                         try
                                                                         {
@@ -3096,7 +3049,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                         afterrender : function()
                                                         {
                                                             if(_p25_factoresColumns.length>0
-                                                                &&_p25_smap1.FACTORES=='S'
+                                                                //&&_p25_smap1.FACTORES=='S'
                                                                 &&Ext.isEmpty(record.get(_p25_factoresColumns[0].editor.name))
                                                             )
                                                             {
@@ -3343,8 +3296,10 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                             
                                             if(form.datosAnteriores.raw&&form.datosAnteriores.raw.amparada=='S')
                                             {
+                                                form.down('[name=amparada]').flagPuedesBorrar = false;
                                                 form.down('[name=amparada]').setValue(true);
                                                 debug('se "checkeo" el box');
+                                                form.down('[name=amparada]').flagPuedesBorrar = true;
                                             }
                                             else
                                             {
@@ -4372,6 +4327,59 @@ function _p25_imprimir()
     debug('<_p25_imprimir');
 }
 
+function _p25_imprimir2()
+{
+    debug('>_p25_imprimir2');
+    var urlRequestImpCotiza = _p25_urlImprimirCotiza
+            + '?p_unieco='      + _p25_smap1.cdunieco
+            + '&p_ramo='        + _p25_smap1.cdramo
+            + '&p_estado=W'
+            + '&p_poliza='      + _p25_smap1.nmpoliza
+            + '&p_suplem=0'
+            + '&p_cdplan='
+            + '&p_cdperpag='    + _fieldByName('cdperpag').getValue()
+            + '&p_perpag='      + _fieldByName('cdperpag').getValue()
+            + '&destype=cache'
+            + "&desformat=PDF"
+            + "&userid="        + _p25_reportsServerUser
+            + "&ACCESSIBLE=YES"
+            + "&report="        + _p25_nombreReporteCotizacionDetalle
+            + "&paramform=no";
+    debug('urlRequestImpCotiza:',urlRequestImpCotiza);
+    var numRand = Math.floor((Math.random() * 100000) + 1);
+    debug(numRand);
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title          : 'Cotizaci&oacute;n'
+        ,width         : 700
+        ,height        : 500
+        ,collapsible   : true
+        ,titleCollapse : true
+        ,html : '<iframe innerframe="'
+                + numRand
+                + '" frameborder="0" width="100" height="100"'
+                + 'src="'
+                + _p25_urlViewDoc
+                + "?contentType=application/pdf&url="
+                + encodeURIComponent(urlRequestImpCotiza)
+                + "\">"
+                + '</iframe>'
+        ,listeners :
+        {
+            resize : function(win,width,height,opt)
+            {
+                debug(width,height);
+                $('[innerframe="'+ numRand+ '"]').attr(
+                {
+                    'width'   : width - 20
+                    ,'height' : height - 60
+                });
+            }
+        }
+    }).show());
+    debug('<_p25_imprimir2');
+}
+
 function _p25_revisarAseguradosClic(grid,rowIndex)
 {
     var record=grid.getStore().getAt(rowIndex);
@@ -4770,6 +4778,574 @@ function _p25_subirDetallePersonas()
 function _p25_emitir()
 {
     _p25_generarTramiteClic(_p25_generarVentanaVistaPrevia);
+}
+
+function _p25_tbloqueo(closable,callback,retry)
+{
+    Ext.Ajax.request(
+    {
+        url     : _p25_urlRecuperacionSimple
+        ,params :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_CONTEO_BLOQUEO'
+            ,'smap1.cdunieco'     : _p25_smap1.cdunieco
+            ,'smap1.cdramo'       : _p25_smap1.cdramo
+            ,'smap1.estado'       : _p25_smap1.estado
+            ,'smap1.nmpoliza'     : _p25_smap1.nmpoliza
+        }
+        ,success : function(response)
+        {
+            var ck = 'Decodificando conteo de bloqueos';
+            try
+            {
+                var json=Ext.decode(response.responseText);
+                debug('### conteo bloqueo:',json);
+                if(json.exito)
+                {
+                    if(Number(json.smap1.CONTEO)>0)
+                    {
+                        centrarVentanaInterna(Ext.create('Ext.window.Window',
+                        {
+                            title     : 'Cotizaci\u00F3n en proceso...'
+                            ,width    : 400
+                            ,height   : 150
+                            ,modal    : true
+                            ,closable : false
+                            ,html     : '<div style="padding:5px;border:0px solid black;">'
+                                        +'Su cotizaci\u00F3n a\u00FAn se encuentra generando tarifa ('
+                                        +json.smap1.CONTEO
+                                        +').<br/>Intente m\u00E1s tarde</div>'
+                            ,buttonAlign : 'center'
+                            ,buttons     :
+                            [
+                                {
+                                    text     : 'Regresar'
+                                    ,icon    : '${icons}arrow_undo.png'
+                                    ,handler : function(){ history.back(); }
+                                    ,hidden  : closable
+                                }
+                                ,{
+                                    text     : 'Recargar'
+                                    ,icon    : '${icons}arrow_refresh.png'
+                                    ,handler : function(me){ me.up('window').setLoading(true); location.reload(); }
+                                    ,hidden  : closable
+                                }
+                                ,{
+                                    text     : 'Reintentar'
+                                    ,icon    : '${icons}control_repeat_blue.png'
+                                    ,handler : function(me){ me.up('window').destroy(); retry(); }
+                                    ,hidden  : !(closable&&!Ext.isEmpty(retry))
+                                }
+                                ,{
+                                    text     : 'Consultar m\u00e1s tarde'
+                                    ,icon    : '${icons}accept.png'
+                                    ,hidden  : !closable
+                                    ,handler : function(me)
+                                    {
+                                        var ck = 'Marcando como pendiente de vista previa';
+                                        try
+                                        {
+                                            _mask(ck);
+                                            Ext.Ajax.request(
+                                            {
+                                                url      : _p25_urlMarcarTramitePendienteVistaPrevia
+                                                ,params  :
+                                                {
+                                                    'params.ntramite' : _p25_ntramite
+                                                }
+                                                ,success : function(response)
+                                                {
+                                                    _unmask();
+                                                    var ck = 'Decodificando respuesta al marcar como pendiente de vista previa';
+                                                    try
+                                                    {
+                                                        var json = Ext.decode(response.responseText);
+                                                        debug('### marcar swvispre:',json);
+                                                        if(json.success==true)
+                                                        {
+                                                            _p25_mesacontrol();
+                                                        }
+                                                        else
+                                                        {
+                                                            mensajeError(json.message);
+                                                        }
+                                                    }
+                                                    catch(e)
+                                                    {
+                                                        manejaException(e,ck);
+                                                    }
+                                                }
+                                                ,failure : function()
+                                                {
+                                                    _unmask();
+                                                    errorComunicacion(null,'Error al marcar como pendiente de vista previa');
+                                                }
+                                            });
+                                        }
+                                        catch(e)
+                                        {
+                                            manejaException(e,ck);
+                                        }
+                                    }
+                                }
+                            ]
+                        }).show());
+                    }
+                    else
+                    {
+                        if(!Ext.isEmpty(callback))
+                        {
+                            callback();
+                        }
+                        else
+                        {
+                            _mask('Verificando vista previa');
+                            Ext.Ajax.request(
+                            {
+                                url     : _p25_urlRecuperacion
+                                ,params :
+                                {
+                                    'params.consulta'  : 'RECUPERAR_SWVISPRE_TRAMITE'
+                                    ,'params.ntramite' : false == _p25_ntramite ? '' : _p25_ntramite
+                                }
+                                ,success : function(response)
+                                {
+                                    _unmask();
+                                    var ck = 'Decodificando respuesta al verificar vista previa';
+                                    try
+                                    {
+                                        var json = Ext.decode(response.responseText);
+                                        debug('### swvispre:',json);
+                                        if(json.success==true)
+                                        {
+                                            if(json.params.SWVISPRE=='S')
+                                            {
+                                                _p25_generarVentanaVistaPrevia(false);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            mensajeError(json.message);
+                                        }
+                                    }
+                                    catch(e)
+                                    {
+                                        manejaException(e,ck);
+                                    }
+                                }
+                                ,failure : function()
+                                {
+                                    _unmask();
+                                    errorComunicacion(null,'Error al verificar vista previa');
+                                }
+                            });
+                        }
+                    }
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            catch(e)
+            {
+                manejaException(e,ck);
+            }
+        }
+        ,failure : function()
+        {
+            me.setLoading(false);
+            errorComunicacion(null,'Error al contar bloqueos');
+        }
+    });
+}
+
+function _p25_generarVentanaVistaPrevia(sinBotones)
+{
+    _mask('Cargando...');
+    setTimeout(
+        function()
+        {
+            _unmask();
+            _p25_tbloqueo(
+                true
+                ,function()
+                {
+                    _p25_generarVentanaVistaPrevia2(sinBotones);
+                }
+                ,function()
+                {
+                    _p25_generarVentanaVistaPrevia(sinBotones);
+                }
+            );
+        }
+        ,2000
+    );
+}
+
+function _p25_generarVentanaVistaPrevia2(sinBotones)
+{
+    var itemsVistaPrevia=[];
+    
+    var mostrarVentana= function()
+    {
+        var ventana = Ext.create('Ext.window.Window',
+        {
+            title     : 'Vista previa'
+            ,width    : 800
+            ,height   : 400
+            ,closable : !Ext.isEmpty(sinBotones)&&sinBotones==true
+            ,modal    : true
+            ,items    :
+            [
+                Ext.create('Ext.tab.Panel',
+                {
+                    height : 300
+                    ,items : itemsVistaPrevia
+                })
+            ]
+            ,buttonAlign : 'center'
+            ,buttons     :
+            [
+                {
+                    text     : 'Vista previa'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+                    ,hidden  : !Ext.isEmpty(sinBotones)&&sinBotones==true
+                    ,handler : function(){_p25_imprimir2();}
+                }
+                ,{
+                    text     : 'Emitir'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
+                    ,hidden  : !Ext.isEmpty(sinBotones)&&sinBotones==true
+                    ,handler : function(){_p25_emitir2(ventana,this);}
+                }
+                ,{
+                    text     : 'Cancelar'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+                    ,hidden  : !Ext.isEmpty(sinBotones)&&sinBotones==true
+                    ,handler : function(){ventana.destroy();}
+                }
+            ]
+        });
+        centrarVentanaInterna(ventana.show());
+    }
+    
+    var rendererVP = function(val,md,rec)
+    {
+        if(rec.get('concepto')=='TOTAL DE HOMBRES'
+           ||rec.get('concepto')=='TOTAL DE MUJERES')
+        {
+            return val;
+        }
+        else
+        {
+            return Ext.util.Format.usMoney(val);
+        }
+    };
+    
+    itemsVistaPrevia.push(
+    Ext.create('Ext.grid.Panel',
+    {
+        title    : 'CONCEPTOS GLOBALES'
+        ,itemId  : '_p25_gridConceptosGlobales'
+        ,stores  : Ext.create('Ext.data.Store',
+        {
+            model : '_p25_vpModelo'
+        })
+        ,columns :
+        [
+            {
+                text       : 'CONCEPTO'
+                ,dataIndex : 'concepto'
+                ,sortable  : false
+                ,width     : 200
+            }
+            ,{
+                text       : 'IMPORTE<br/>SUBGRUPO 1'
+                ,dataIndex : 'subgrupo1'
+                ,sortable  : false
+                ,renderer  : rendererVP
+                ,width     : 140
+                ,hidden    : _p25_storeGrupos.getCount()<1
+            }
+            ,{
+                text       : 'IMPORTE<br/>SUBGRUPO 2'
+                ,dataIndex : 'subgrupo2'
+                ,sortable  : false
+                ,renderer  : rendererVP
+                ,width     : 140
+                ,hidden    : _p25_storeGrupos.getCount()<2
+            }
+            ,{
+                text       : 'IMPORTE<br/>SUBGRUPO 3'
+                ,dataIndex : 'subgrupo3'
+                ,sortable  : false
+                ,renderer  : rendererVP
+                ,width     : 140
+                ,hidden    : _p25_storeGrupos.getCount()<3
+            }
+            ,{
+                text       : 'IMPORTE<br/>SUBGRUPO 4'
+                ,dataIndex : 'subgrupo4'
+                ,sortable  : false
+                ,renderer  : rendererVP
+                ,width     : 140
+                ,hidden    : _p25_storeGrupos.getCount()<4
+            }
+            ,{
+                text       : 'IMPORTE<br/>SUBGRUPO 5'
+                ,dataIndex : 'subgrupo5'
+                ,sortable  : false
+                ,renderer  : rendererVP
+                ,width     : 140
+                ,hidden    : _p25_storeGrupos.getCount()<5
+            }
+            ,{
+                text       : 'IMPORTE<br/>SUBGRUPO 6'
+                ,dataIndex : 'subgrupo6'
+                ,sortable  : false
+                ,renderer  : rendererVP
+                ,width     : 140
+                ,hidden    : _p25_storeGrupos.getCount()<6
+            }
+            ,{
+                text       : 'IMPORTE<br/>SUBGRUPO 7'
+                ,dataIndex : 'subgrupo7'
+                ,sortable  : false
+                ,renderer  : rendererVP
+                ,width     : 140
+                ,hidden    : _p25_storeGrupos.getCount()<7
+            }
+            ,{
+                text       : 'IMPORTE<br/>SUBGRUPO 8'
+                ,dataIndex : 'subgrupo8'
+                ,sortable  : false
+                ,renderer  : rendererVP
+                ,width     : 140
+                ,hidden    : _p25_storeGrupos.getCount()<8
+            }
+            ,{
+                text       : 'IMPORTE<br/>SUBGRUPO 9'
+                ,dataIndex : 'subgrupo9'
+                ,sortable  : false
+                ,renderer  : rendererVP
+                ,width     : 140
+                ,hidden    : _p25_storeGrupos.getCount()<9
+            }
+            ,{
+                text       : 'IMPORTE<br/>P&Oacute;LIZA'
+                ,dataIndex : 'importe'
+                ,sortable  : false
+                ,renderer  : rendererVP
+                ,width     : 140
+            }
+        ]
+        ,listeners :
+        {
+            render : function(me)
+            {
+                Ext.Ajax.request(
+                {
+                    url     : _p25_urlCargarConceptosGlobales
+                    ,params :
+                    {
+                        'smap1.cdunieco'  : _p25_smap1.cdunieco
+                        ,'smap1.cdramo'   : _p25_smap1.cdramo
+                        ,'smap1.estado'   : _p25_smap1.estado
+                        ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                        ,'smap1.nmsuplem' : '0'
+                        ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
+                    }
+                    ,success : function(response)
+                    {
+                        var json=Ext.decode(response.responseText);
+                        debug('### obtener conceptos globales:',json);
+                        if(json.exito)
+                        {
+                            me.getStore().removeAll();
+                            me.getStore().add(new _p25_vpModelo(
+                            {
+                                concepto : 'PRIMA NETA'
+                                ,importe : json.smap1.PRIMA_NETA
+                            }));
+                            me.getStore().add(new _p25_vpModelo(
+                            {
+                                concepto : 'DERECHOS DE POLIZA'
+                                ,importe : json.smap1.DERPOL
+                            }));
+                            me.getStore().add(new _p25_vpModelo(
+                            {
+                                concepto : 'RECARGOS'
+                                ,importe : json.smap1.RECARGOS
+                            }));
+                            me.getStore().add(new _p25_vpModelo(
+                            {
+                                concepto : 'IVA'
+                                ,importe : json.smap1.IVA
+                            }));
+                            me.getStore().add(new _p25_vpModelo(
+                            {
+                                concepto : 'TOTAL DE 4 CONCEPTOS'
+                                ,importe : 0
+                            }));
+                            me.getStore().add(new _p25_vpModelo(
+                            {
+                                concepto : 'TOTAL DE HOMBRES'
+                                ,importe : 0
+                            }));
+                            me.getStore().add(new _p25_vpModelo(
+                            {
+                                concepto : 'TOTAL DE MUJERES'
+                                ,importe : 0
+                            }));
+                        }
+                        else
+                        {
+                            mensajeError(json.respuesta);
+                        }
+                    }
+                    ,failure : errorComunicacion
+                });
+            }
+        }
+    }));
+    
+    _p25_storeGrupos.each(function(record)
+    {
+        itemsVistaPrevia.push(
+        Ext.create('Ext.grid.Panel',
+        {
+            title      : 'TARIFA SUBGRUPO '+record.get('letra')
+            ,minHeight : 100
+            ,maxHeight : 250
+            ,store     : Ext.create('Ext.data.Store',
+            {
+                model     : '_p25_modeloTarifaEdad'
+                ,grupo    : record.get('letra')
+                ,autoLoad : true
+                ,proxy    :
+                {
+                    type         : 'ajax'
+                    ,timeout     : 1000*60*2
+                    ,extraParams :
+                    {
+                        'smap1.cdunieco'  : _p25_smap1.cdunieco
+                        ,'smap1.cdramo'   : _p25_smap1.cdramo
+                        ,'smap1.estado'   : _p25_smap1.estado
+                        ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                        ,'smap1.nmsuplem' : '0'
+                        ,'smap1.cdplan'   : record.get('cdplan')
+                        ,'smap1.cdgrupo'  : record.get('letra')
+                        ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
+                    }
+                    ,url         : _p25_urlObtenerTarifaEdad
+                    ,reader      :
+                    {
+                        type  : 'json'
+                        ,root : 'slist1'
+                    }
+                }
+                ,listeners :
+                {
+                    load : function(me,records,success)
+                    {
+                        if(success)
+                        {
+                            var prima  = 0;
+                            var derpol = 0;
+                            var recar  = 0;
+                            var iva    = 0;
+                            var hom    = 0;
+                            var muj    = 0;
+                            var pTot   = 0;
+                            
+                            for(var ij in records)
+                            {
+                                var primaPaso  = Number(records[ij].get('TARIFA_TOTAL_HOMBRES')) + Number(records[ij].get('TARIFA_TOTAL_MUJERES'));
+                                var derpolPaso = Number(records[ij].get('DERPOL_TOTAL_GENERAL'));
+                                var recarPaso  = Number(records[ij].get('RECARGOS_TOTAL_GENERAL'));
+                                var ivaPaso    = Number(records[ij].get('IVA_TOTAL_GENERAL'));
+                                
+                                prima  += primaPaso;
+                                derpol += derpolPaso;
+                                recar  += recarPaso;
+                                iva    += ivaPaso;
+                                
+                                pTot   += primaPaso+derpolPaso+recarPaso+ivaPaso;
+                                
+                                hom    += Number(records[ij].get('HOMBRES'));
+                                muj    += Number(records[ij].get('MUJERES'));
+                            }
+                            
+                            _fieldById('_p25_gridConceptosGlobales').store.getAt(0).set('subgrupo'+me.grupo , prima);
+                            _fieldById('_p25_gridConceptosGlobales').store.getAt(1).set('subgrupo'+me.grupo , derpol);
+                            _fieldById('_p25_gridConceptosGlobales').store.getAt(2).set('subgrupo'+me.grupo , recar);
+                            _fieldById('_p25_gridConceptosGlobales').store.getAt(3).set('subgrupo'+me.grupo , iva);
+                            
+                            _fieldById('_p25_gridConceptosGlobales').store.getAt(4).set('subgrupo'+me.grupo , pTot);
+                            _fieldById('_p25_gridConceptosGlobales').store.getAt(4).set('importe',
+                                Number(_fieldById('_p25_gridConceptosGlobales').store.getAt(4).get('importe'))+pTot);
+                                
+                            _fieldById('_p25_gridConceptosGlobales').store.getAt(5).set('subgrupo'+me.grupo , hom);
+                            _fieldById('_p25_gridConceptosGlobales').store.getAt(5).set('importe',
+                                Number(_fieldById('_p25_gridConceptosGlobales').store.getAt(5).get('importe'))+hom);
+                            
+                            _fieldById('_p25_gridConceptosGlobales').store.getAt(6).set('subgrupo'+me.grupo , muj);
+                            _fieldById('_p25_gridConceptosGlobales').store.getAt(6).set('importe',
+                                Number(_fieldById('_p25_gridConceptosGlobales').store.getAt(6).get('importe'))+muj);
+                            
+                            _fieldById('_p25_gridConceptosGlobales').store.commitChanges();
+                        }
+                    }
+                }
+            })
+            ,columns   :
+            [
+                {
+                    header     : 'Edad'
+                    ,width     : 60
+                    ,dataIndex : 'EDAD'
+                }
+                ,{
+                    header     : 'No. Hombres'
+                    ,width     : 100
+                    ,dataIndex : 'HOMBRES'
+                }
+                ,{
+                    header     : 'No. Mujeres'
+                    ,width     : 100
+                    ,dataIndex : 'MUJERES'
+                }
+                ,{
+                    header     : 'Tarifa por hombre'
+                    ,flex      : 1
+                    ,dataIndex : 'TARIFA_UNICA_HOMBRES'
+                    ,renderer  : Ext.util.Format.usMoney
+                }
+                ,{
+                    header     : 'Tarifa por mujer'
+                    ,flex      : 1
+                    ,dataIndex : 'TARIFA_UNICA_MUJERES'
+                    ,renderer  : Ext.util.Format.usMoney
+                }
+                ,{
+                    header     : 'Total hombres'
+                    ,flex      : 1
+                    ,dataIndex : 'TARIFA_TOTAL_HOMBRES'
+                    ,renderer  : Ext.util.Format.usMoney
+                }
+                ,{
+                    header     : 'Total mujeres'
+                    ,flex      : 1
+                    ,dataIndex : 'TARIFA_TOTAL_MUJERES'
+                    ,renderer  : Ext.util.Format.usMoney
+                }
+            ]
+        })
+        );
+    });
+    
+    mostrarVentana();
 }
 
 function _p25_aseguradosClic(grid,rowIndex)
@@ -5359,365 +5935,6 @@ function _p25_guardarAsegurados(grid,callback)
     }
     
     debug('<_p25_guardarAsegurados');
-}
-
-function _p25_generarVentanaVistaPrevia(sinBotones)
-{
-    var itemsVistaPrevia=[];
-    
-    var mostrarVentana= function()
-    {
-        var ventana = Ext.create('Ext.window.Window',
-        {
-            title     : 'Vista previa'
-            ,width    : 800
-            ,height   : 400
-            ,closable : !Ext.isEmpty(sinBotones)&&sinBotones==true
-            ,modal    : true
-            ,items    :
-            [
-                Ext.create('Ext.tab.Panel',
-                {
-                    height : 300
-                    ,items : itemsVistaPrevia
-                })
-            ]
-            ,buttonAlign : 'center'
-            ,buttons     :
-            [
-                {
-                    text     : 'Emitir'
-                    ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
-                    ,hidden  : !Ext.isEmpty(sinBotones)&&sinBotones==true
-                    ,handler : function(){_p25_emitir2(ventana,this);}
-                }
-                ,{
-                    text     : 'Cancelar'
-                    ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-                    ,hidden  : !Ext.isEmpty(sinBotones)&&sinBotones==true
-                    ,handler : function(){ventana.destroy();}
-                }
-            ]
-        });
-        centrarVentanaInterna(ventana.show());
-    }
-    
-    var rendererVP = function(val,md,rec)
-    {
-        if(rec.get('concepto')=='TOTAL DE HOMBRES'
-           ||rec.get('concepto')=='TOTAL DE MUJERES')
-        {
-            return val;
-        }
-        else
-        {
-            return Ext.util.Format.usMoney(val);
-        }
-    };
-    
-    itemsVistaPrevia.push(
-    Ext.create('Ext.grid.Panel',
-    {
-        title    : 'CONCEPTOS GLOBALES'
-        ,itemId  : '_p25_gridConceptosGlobales'
-        ,stores  : Ext.create('Ext.data.Store',
-        {
-            model : '_p25_vpModelo'
-        })
-        ,columns :
-        [
-            {
-                text       : 'CONCEPTO'
-                ,dataIndex : 'concepto'
-                ,sortable  : false
-                ,width     : 200
-            }
-            ,{
-                text       : 'IMPORTE<br/>SUBGRUPO 1'
-                ,dataIndex : 'subgrupo1'
-                ,sortable  : false
-                ,renderer  : rendererVP
-                ,width     : 140
-                ,hidden    : _p25_storeGrupos.getCount()<1
-            }
-            ,{
-                text       : 'IMPORTE<br/>SUBGRUPO 2'
-                ,dataIndex : 'subgrupo2'
-                ,sortable  : false
-                ,renderer  : rendererVP
-                ,width     : 140
-                ,hidden    : _p25_storeGrupos.getCount()<2
-            }
-            ,{
-                text       : 'IMPORTE<br/>SUBGRUPO 3'
-                ,dataIndex : 'subgrupo3'
-                ,sortable  : false
-                ,renderer  : rendererVP
-                ,width     : 140
-                ,hidden    : _p25_storeGrupos.getCount()<3
-            }
-            ,{
-                text       : 'IMPORTE<br/>SUBGRUPO 4'
-                ,dataIndex : 'subgrupo4'
-                ,sortable  : false
-                ,renderer  : rendererVP
-                ,width     : 140
-                ,hidden    : _p25_storeGrupos.getCount()<4
-            }
-            ,{
-                text       : 'IMPORTE<br/>SUBGRUPO 5'
-                ,dataIndex : 'subgrupo5'
-                ,sortable  : false
-                ,renderer  : rendererVP
-                ,width     : 140
-                ,hidden    : _p25_storeGrupos.getCount()<5
-            }
-            ,{
-                text       : 'IMPORTE<br/>SUBGRUPO 6'
-                ,dataIndex : 'subgrupo6'
-                ,sortable  : false
-                ,renderer  : rendererVP
-                ,width     : 140
-                ,hidden    : _p25_storeGrupos.getCount()<6
-            }
-            ,{
-                text       : 'IMPORTE<br/>SUBGRUPO 7'
-                ,dataIndex : 'subgrupo7'
-                ,sortable  : false
-                ,renderer  : rendererVP
-                ,width     : 140
-                ,hidden    : _p25_storeGrupos.getCount()<7
-            }
-            ,{
-                text       : 'IMPORTE<br/>SUBGRUPO 8'
-                ,dataIndex : 'subgrupo8'
-                ,sortable  : false
-                ,renderer  : rendererVP
-                ,width     : 140
-                ,hidden    : _p25_storeGrupos.getCount()<8
-            }
-            ,{
-                text       : 'IMPORTE<br/>SUBGRUPO 9'
-                ,dataIndex : 'subgrupo9'
-                ,sortable  : false
-                ,renderer  : rendererVP
-                ,width     : 140
-                ,hidden    : _p25_storeGrupos.getCount()<9
-            }
-            ,{
-                text       : 'IMPORTE<br/>P&Oacute;LIZA'
-                ,dataIndex : 'importe'
-                ,sortable  : false
-                ,renderer  : rendererVP
-                ,width     : 140
-            }
-        ]
-        ,listeners :
-        {
-            render : function(me)
-            {
-                Ext.Ajax.request(
-                {
-                    url     : _p25_urlCargarConceptosGlobales
-                    ,params :
-                    {
-                        'smap1.cdunieco'  : _p25_smap1.cdunieco
-                        ,'smap1.cdramo'   : _p25_smap1.cdramo
-                        ,'smap1.estado'   : _p25_smap1.estado
-                        ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
-                        ,'smap1.nmsuplem' : '0'
-                        ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
-                    }
-                    ,success : function(response)
-                    {
-                        var json=Ext.decode(response.responseText);
-                        debug('### obtener conceptos globales:',json);
-                        if(json.exito)
-                        {
-                            me.getStore().removeAll();
-                            me.getStore().add(new _p25_vpModelo(
-                            {
-                                concepto : 'PRIMA NETA'
-                                ,importe : json.smap1.PRIMA_NETA
-                            }));
-                            me.getStore().add(new _p25_vpModelo(
-                            {
-                                concepto : 'DERECHOS DE POLIZA'
-                                ,importe : json.smap1.DERPOL
-                            }));
-                            me.getStore().add(new _p25_vpModelo(
-                            {
-                                concepto : 'RECARGOS'
-                                ,importe : json.smap1.RECARGOS
-                            }));
-                            me.getStore().add(new _p25_vpModelo(
-                            {
-                                concepto : 'IVA'
-                                ,importe : json.smap1.IVA
-                            }));
-                            me.getStore().add(new _p25_vpModelo(
-                            {
-                                concepto : 'TOTAL DE 4 CONCEPTOS'
-                                ,importe : 0
-                            }));
-                            me.getStore().add(new _p25_vpModelo(
-                            {
-                                concepto : 'TOTAL DE HOMBRES'
-                                ,importe : 0
-                            }));
-                            me.getStore().add(new _p25_vpModelo(
-                            {
-                                concepto : 'TOTAL DE MUJERES'
-                                ,importe : 0
-                            }));
-                        }
-                        else
-                        {
-                            mensajeError(json.respuesta);
-                        }
-                    }
-                    ,failure : errorComunicacion
-                });
-            }
-        }
-    }));
-    
-    _p25_storeGrupos.each(function(record)
-    {
-        itemsVistaPrevia.push(
-        Ext.create('Ext.grid.Panel',
-        {
-            title      : 'TARIFA SUBGRUPO '+record.get('letra')
-            ,minHeight : 100
-            ,maxHeight : 250
-            ,store     : Ext.create('Ext.data.Store',
-            {
-                model     : '_p25_modeloTarifaEdad'
-                ,grupo    : record.get('letra')
-                ,autoLoad : true
-                ,proxy    :
-                {
-                    type         : 'ajax'
-                    ,timeout     : 1000*60*2
-                    ,extraParams :
-                    {
-                        'smap1.cdunieco'  : _p25_smap1.cdunieco
-                        ,'smap1.cdramo'   : _p25_smap1.cdramo
-                        ,'smap1.estado'   : _p25_smap1.estado
-                        ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
-                        ,'smap1.nmsuplem' : '0'
-                        ,'smap1.cdplan'   : record.get('cdplan')
-                        ,'smap1.cdgrupo'  : record.get('letra')
-                        ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
-                    }
-                    ,url         : _p25_urlObtenerTarifaEdad
-                    ,reader      :
-                    {
-                        type  : 'json'
-                        ,root : 'slist1'
-                    }
-                }
-                ,listeners :
-                {
-                    load : function(me,records,success)
-                    {
-                        if(success)
-                        {
-                            var prima  = 0;
-                            var derpol = 0;
-                            var recar  = 0;
-                            var iva    = 0;
-                            var hom    = 0;
-                            var muj    = 0;
-                            var pTot   = 0;
-                            
-                            for(var ij in records)
-                            {
-                                var primaPaso  = Number(records[ij].get('TARIFA_TOTAL_HOMBRES')) + Number(records[ij].get('TARIFA_TOTAL_MUJERES'));
-                                var derpolPaso = Number(records[ij].get('DERPOL_TOTAL_GENERAL'));
-                                var recarPaso  = Number(records[ij].get('RECARGOS_TOTAL_GENERAL'));
-                                var ivaPaso    = Number(records[ij].get('IVA_TOTAL_GENERAL'));
-                                
-                                prima  += primaPaso;
-                                derpol += derpolPaso;
-                                recar  += recarPaso;
-                                iva    += ivaPaso;
-                                
-                                pTot   += primaPaso+derpolPaso+recarPaso+ivaPaso;
-                                
-                                hom    += Number(records[ij].get('HOMBRES'));
-                                muj    += Number(records[ij].get('MUJERES'));
-                            }
-                            
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(0).set('subgrupo'+me.grupo , prima);
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(1).set('subgrupo'+me.grupo , derpol);
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(2).set('subgrupo'+me.grupo , recar);
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(3).set('subgrupo'+me.grupo , iva);
-                            
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(4).set('subgrupo'+me.grupo , pTot);
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(4).set('importe',
-                                Number(_fieldById('_p25_gridConceptosGlobales').store.getAt(4).get('importe'))+pTot);
-                                
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(5).set('subgrupo'+me.grupo , hom);
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(5).set('importe',
-                                Number(_fieldById('_p25_gridConceptosGlobales').store.getAt(5).get('importe'))+hom);
-                            
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(6).set('subgrupo'+me.grupo , muj);
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(6).set('importe',
-                                Number(_fieldById('_p25_gridConceptosGlobales').store.getAt(6).get('importe'))+muj);
-                            
-                            _fieldById('_p25_gridConceptosGlobales').store.commitChanges();
-                        }
-                    }
-                }
-            })
-            ,columns   :
-            [
-                {
-                    header     : 'Edad'
-                    ,width     : 60
-                    ,dataIndex : 'EDAD'
-                }
-                ,{
-                    header     : 'No. Hombres'
-                    ,width     : 100
-                    ,dataIndex : 'HOMBRES'
-                }
-                ,{
-                    header     : 'No. Mujeres'
-                    ,width     : 100
-                    ,dataIndex : 'MUJERES'
-                }
-                ,{
-                    header     : 'Tarifa por hombre'
-                    ,flex      : 1
-                    ,dataIndex : 'TARIFA_UNICA_HOMBRES'
-                    ,renderer  : Ext.util.Format.usMoney
-                }
-                ,{
-                    header     : 'Tarifa por mujer'
-                    ,flex      : 1
-                    ,dataIndex : 'TARIFA_UNICA_MUJERES'
-                    ,renderer  : Ext.util.Format.usMoney
-                }
-                ,{
-                    header     : 'Total hombres'
-                    ,flex      : 1
-                    ,dataIndex : 'TARIFA_TOTAL_HOMBRES'
-                    ,renderer  : Ext.util.Format.usMoney
-                }
-                ,{
-                    header     : 'Total mujeres'
-                    ,flex      : 1
-                    ,dataIndex : 'TARIFA_TOTAL_MUJERES'
-                    ,renderer  : Ext.util.Format.usMoney
-                }
-            ]
-        })
-        );
-    });
-    
-    mostrarVentana();
 }
 
 function _p25_emitir2(ventana,button)

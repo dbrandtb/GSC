@@ -317,6 +317,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			String[] cols=new String[]{
 					"cdrfc"
 					,"cdperson"
+					,"cdideper_"
+					,"cdideext_"
 					,"nombre"
 					,"codpostal"
 					,"cdedo"
@@ -340,6 +342,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					,"swexiper"
 					,"feini"
 					,"fefin"
+					,"nmpolant"
+					,"nmrenova"
 				};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -393,6 +397,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,"swexiper"
 			,"feini"
 			,"fefin"
+			,"nmpolant"
+			,"nmrenova"
 		};
 		
 		protected CargarDatosCotizacionGrupo(DataSource dataSource)
