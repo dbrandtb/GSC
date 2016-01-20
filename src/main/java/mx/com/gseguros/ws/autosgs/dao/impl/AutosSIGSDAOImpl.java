@@ -786,6 +786,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vTelefono1", Types.VARCHAR));
 			declareParameter(new SqlParameter("vTelefono2", Types.VARCHAR));
 			declareParameter(new SqlParameter("vTelefono3", Types.VARCHAR));
+			declareParameter(new SqlParameter("vUSER", Types.VARCHAR));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<String>(){  
 				@Override  
