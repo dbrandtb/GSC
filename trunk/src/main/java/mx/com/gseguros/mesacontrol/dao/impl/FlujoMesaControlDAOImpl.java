@@ -277,7 +277,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			super(dataSource,"PKG_MESACONTROL.P_GET_TFLUJOMC");
 			declareParameter(new SqlParameter("cdtipflu" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("swfinal"  , OracleTypes.VARCHAR));
-			String[] cols=new String[]{ "CDTIPFLU","CDFLUJOMC","DSFLUJOMC","SWFINAL" };
+			String[] cols=new String[]{ "CDTIPFLU","CDFLUJOMC","DSFLUJOMC","SWFINAL","CDTIPRAM" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -707,6 +707,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			,String cdflujomc
 			,String dsflujomc
 			,String swfinal
+			,String cdtipram
 			,String accion
 			) throws Exception
 	{
@@ -715,7 +716,8 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("cdflujomc" , cdflujomc);
 		params.put("dsflujomc" , dsflujomc);
 		params.put("swfinal"   , swfinal);
-		params.put("accion"     , accion);
+		params.put("cdtipram"  , cdtipram);
+		params.put("accion"    , accion);
 		ejecutaSP(new MovimientoTflujomcSP(getDataSource()),params);
 	}
 	
@@ -728,7 +730,8 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("dsflujomc" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("swfinal"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("accion"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipram"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

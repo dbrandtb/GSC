@@ -420,12 +420,14 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,cdtipflu  = params.get("CDTIPFLU")
 			       ,cdflujomc = params.get("CDFLUJOMC")
 			       ,dsflujomc = params.get("DSFLUJOMC")
-			       ,swfinal   = params.get("SWFINAL");
+			       ,swfinal   = params.get("SWFINAL")
+			       ,cdtipram  = params.get("CDTIPRAM");
 			
 			Utils.validate(
 					accion     , "No se recibi\u00f3 la acci\u00f3n"
 					,cdtipflu  , "No se recibi\u00f3 el padre"
 					,dsflujomc , "No se recibi\u00f3 el nombre"
+					,cdtipram  , "No se recibi\u00f3 el tipo de ramo"
 					);
 			
 			flujoMesaControlManager.movimientoTflujomc(
@@ -435,6 +437,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdflujomc
 					,dsflujomc
 					,swfinal
+					,cdtipram
 					);
 			
 			success = true;

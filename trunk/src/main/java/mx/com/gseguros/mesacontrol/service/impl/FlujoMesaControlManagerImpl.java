@@ -67,6 +67,11 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			
 			items.put("tdocumeFormItems" , gc.getItems());
 			
+			List<ComponenteVO> comboCdtipram = pantallasDAO.obtenerComponentes(null, null, null, null, null, cdsisrol, "FLUJOMC", "COMBO_CDTIPRAM", null);
+			gc.generaComponentes(comboCdtipram, true, false, true, false, false, false);
+			
+			items.put("comboCdtipram" , gc.getItems());
+			
 		}
 		catch(Exception ex)
 		{
@@ -137,6 +142,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			,String cdflujomc
 			,String dsflujomc
 			,String swfinal
+			,String cdtipram
 			)throws Exception
 	{
 		sb.append(Utils.log(
@@ -147,6 +153,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 				,"\n@@@@@@ cdflujomc="  , cdflujomc
 				,"\n@@@@@@ dsflujomc="  , dsflujomc
 				,"\n@@@@@@ swfinal="    , swfinal
+				,"\n@@@@@@ cdtipram="   , cdtipram
 				));
 		
 		String paso = "Guardando proceso";
@@ -159,6 +166,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 					,cdflujomc
 					,dsflujomc
 					,"S".equals(swfinal) ? "S" : "N"
+					,cdtipram
 					,accion
 					);
 		}
