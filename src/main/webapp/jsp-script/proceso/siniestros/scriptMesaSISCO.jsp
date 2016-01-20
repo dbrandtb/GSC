@@ -8,11 +8,11 @@ var _CONTEXT = '${ctx}';
 /* ******************** CATALOGOS ******************** */
 
 // Catalogo Tipos de pago a utilizar:
-var _PAGO_DIRECTO 	= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo" />';
-var _REEMBOLSO    	= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo" />';
-var _INDEMNIZACION	= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@INDEMNIZACION.codigo" />';
-var _URL_CATALOGOS	= '<s:url namespace="/catalogos"   action="obtieneCatalogo" />';
-
+var _PAGO_DIRECTO 			= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo" />';
+var _REEMBOLSO    			= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo" />';
+var _INDEMNIZACION			= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@INDEMNIZACION.codigo" />';
+var _URL_CATALOGOS			= '<s:url namespace="/catalogos"   action="obtieneCatalogo" />';
+var _UrlDocumentosPoliza    = '<s:url namespace="/documentos" 	action="ventanaDocumentosPoliza"   />';
 
 //SINIESTROS
 var _UrlRechazarTramiteWindwow  			= '<s:url namespace="/siniestros" 	action="includes/rechazoReclamaciones" />';
@@ -28,7 +28,7 @@ var _URL_MESACONTROL						= '<s:url namespace="/mesacontrol" 	action="mcdinamica
 var _PAGO_AUTOMATICO						= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@PAGO_AUTOMATICO.cdtiptra" />';
 var _URL_VALIDA_FACTMONTO					= '<s:url namespace="/siniestros" 	action="validaFacturaMontoPagoAutomatico" />';
 var _URL_VALIDA_SOLICITUD_PAGO				= '<s:url namespace="/siniestros" 	action="solicitarPagoAutomatico" />';
-
+var _UrlRevisionDocsSiniestro   			= '<s:url namespace="/siniestros" 	action="includes/revisionDocumentos"        />';
 
 // Catalogo Estatus de tramite a utilizar:
 var _STATUS_TRAMITE_EN_REVISION_MEDICA      = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_REVISION_MEDICA.codigo" />';
@@ -54,6 +54,13 @@ var _URL_CONCEPTODESTINO        		= '<s:url namespace="/siniestros"   action="gu
 var _URL_VAL_AJUSTADOR_MEDICO			= '<s:url namespace="/siniestros" 	action="consultaDatosValidacionAjustadorMed"/>';
 var _URL_MONTO_PAGO_SINIESTRO			= '<s:url namespace="/siniestros"	action="obtieneMontoPagoSiniestro"/>';
 var _URL_P_MOV_MAUTSINI					= '<s:url namespace="/siniestros"	action="obtieneMensajeMautSini"/>';
+
+
+var _URL_VALIDA_FACTURAASEGURADO  		= '<s:url namespace="/siniestros"	action="validarFacturaAsegurado" />';
+var _UrlGeneraSiniestroTramite 			= '<s:url namespace="/siniestros" 	action="generaSiniestroTramite" />';
+var _URL_TurnarAOperadorReclamacion 	= '<s:url namespace="/mesacontrol" 	action="turnarAOperadorReclamacion" />';
+_STATUS_TRAMITE_EN_CAPTURA              = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_CAPTURA.codigo" />';
+
 
 var windowLoader;
 var msgWindow;
@@ -1018,46 +1025,775 @@ var msgWindow;
 	
 	function validaInformacion(totalTramite){
 		Ext.Ajax.request({
-				url: _URL_VALIDA_SOLICITUD_PAGO,
-				params: {
-		    		'params.ntramite' : totalTramite
-		    	},
-				success: function(response, opts) {
-					
-					var respuestaMensaje = Ext.decode(response.responseText).loadList;
-					var resultRespuesta  = 'C.R. Procesados : <br/>';
-					var banderaRespuesta = 0;
-					for(i = 0; i < respuestaMensaje.length; i++){
-						banderaRespuesta = "1";
-						resultRespuesta = resultRespuesta + respuestaMensaje[i].mensajeRespuesta+'<br/>';
-					}
-					
-					if(banderaRespuesta == "1"){
-						centrarVentanaInterna(Ext.Msg.show({
-							title:'Respuesta Pagos',
-							msg: resultRespuesta, //'Se requere una autorizaci&oacute;n especial para continuar.',
-							buttons: Ext.Msg.OK,
-							fn: function(){
-								Ext.create('Ext.form.Panel').submit({
-									url				: _URL_MESACONTROL
-									,standardSubmit	:true
-									,params			:
-									{
-										'smap1.gridTitle'		: 'Siniestros'
-										,'smap2.pv_cdtiptra_i'	: _PAGO_AUTOMATICO
-									}
-								});
-							}
-						}));
-					}
-				},
-				failure: function(){
-					mcdinGrid.setLoading(false);
-					mensajeError('No se pudo solicitar el pago.');
+			url: _URL_VALIDA_SOLICITUD_PAGO,
+			params: {
+	    		'params.ntramite' : totalTramite
+	    	},
+			success: function(response, opts) {
+				
+				var respuestaMensaje = Ext.decode(response.responseText).loadList;
+				var resultRespuesta  = 'C.R. Procesados : <br/>';
+				var banderaRespuesta = 0;
+				for(i = 0; i < respuestaMensaje.length; i++){
+					banderaRespuesta = "1";
+					resultRespuesta = resultRespuesta + respuestaMensaje[i].mensajeRespuesta+'<br/>';
 				}
-			});
+				
+				if(banderaRespuesta == "1"){
+					centrarVentanaInterna(Ext.Msg.show({
+						title:'Respuesta Pagos',
+						msg: resultRespuesta, //'Se requere una autorizaci&oacute;n especial para continuar.',
+						buttons: Ext.Msg.OK,
+						fn: function(){
+							Ext.create('Ext.form.Panel').submit({
+								url				: _URL_MESACONTROL
+								,standardSubmit	:true
+								,params			:
+								{
+									'smap1.gridTitle'		: 'Siniestros'
+									,'smap2.pv_cdtiptra_i'	: _PAGO_AUTOMATICO
+								}
+							});
+						}
+					}));
+				}
+			},
+			failure: function(){
+				mcdinGrid.setLoading(false);
+				mensajeError('No se pudo solicitar el pago.');
+			}
+		});
 	}
 
+	function revDocumentosWindow(grid,rowIndex,colIndex){
+	    var record = grid.getStore().getAt(rowIndex);
+	    
+	    windowLoader = Ext.create('Ext.window.Window',{
+	        modal       : true,
+	        buttonAlign : 'center',
+	        width       : 600,
+	        height      : 400,
+	        autoScroll  : true,
+	        loader      : {
+	            url     : _UrlRevisionDocsSiniestro,
+	            params  : {
+	                'params.nmTramite'  : record.get('ntramite'),
+	                'params.cdTipoPago' : record.get('parametros.pv_otvalor02'),
+	                'params.cdTipoAtencion'  : record.get('parametros.pv_otvalor07'),
+	                'params.tieneCR'  : !Ext.isEmpty(record.get('parametros.pv_otvalor01'))
+	            },
+	            scripts  : true,
+	            loadMask : true,
+	            autoLoad : true,
+	            ajaxOptions: {
+	            	method: 'POST'
+	            }
+	        }
+	    }).show();
+	    centrarVentana(windowLoader);
+	}
+	
+	
+	function documentosWindow(grid,rowIndex,colIndex){
+		var record = grid.getStore().getAt(rowIndex);
+	    debug('record',record);
+	    
+	    windowLoader = Ext.create('Ext.window.Window',{
+	        modal       : true,
+	        buttonAlign : 'center',
+	        title       : 'Documentos del siniestro',
+	        width       : 600,
+	        height      : 400,
+	        autoScroll  : true,
+	        loader      : {
+	            url     : _UrlDocumentosPoliza,
+	            params  : {
+	                'smap1.ntramite'  : record.get('ntramite')
+	                ,'smap1.cdtippag' : record.get('parametros.pv_otvalor02')
+	                ,'smap1.cdtipate' : record.get('parametros.pv_otvalor07')
+	                ,'smap1.cdtiptra' : _PAGO_AUTOMATICO
+                    ,'smap1.cdunieco' : record.get('cdsucdoc')
+                    ,'smap1.cdramo'   : record.get('cdramo')
+                    ,'smap1.estado'   : record.get('estado')
+	                ,'smap1.nmpoliza' : record.get('nmpoliza')
+                    ,'smap1.nmsuplem' : '0'
+                    ,'smap1.nmsolici' : ''
+                    ,'smap1.tipomov'  : record.get('parametros.pv_otvalor02')
+	            },
+	            scripts  : true,
+	            loadMask : true,
+	            autoLoad : true,
+	            ajaxOptions: {
+	            	method: 'POST'
+	            }
+	        }
+	    }).show();
+	    centrarVentana(windowLoader);
+	}
+	
+	function turnarAreclamaciones(grid,rowIndex,colIndex){
+		var record = grid.getStore().getAt(rowIndex);
+		
+		Ext.Ajax.request({
+			url	 : _URL_VALIDA_FACTMONTO
+			,params:{
+				'params.ntramite'  : record.get('ntramite')
+			}
+			,success : function (response) {
+				//form.setLoading(false);
+				banderaAranceles ="0";
+				var resultAranceles = 'Los siguientes C.R. no se procesaran : <br/>';
+				var arancelesTra = Ext.decode(response.responseText).loadList;
+				for(i = 0; i < arancelesTra.length; i++){
+					banderaAranceles = "1";
+					resultAranceles = resultAranceles + '   - El C.R.' + arancelesTra[i].NTRAMITE+ ' el n&uacute;mero de factura es:  ' + arancelesTra[i].NFACTURA + ' el importe de la factura es : '+ arancelesTra[i].PTIMPORT+'<br/>';
+				}
+				
+				if(banderaAranceles == "1"){
+					centrarVentanaInterna(Ext.Msg.show({
+						title:'Aviso del sistema',
+						msg: resultAranceles,
+						buttons: Ext.Msg.OK,
+						icon: Ext.Msg.WARNING
+					}));
+				}else{
+					//Si es correcto entonces procedemos con el turnado al operador de reclamacioness
+					var comentariosText = Ext.create('Ext.form.field.TextArea', {
+						fieldLabel: 'Observaciones'
+						,labelWidth: 150
+						,width: 600
+						,name:'smap1.comments'
+						,height: 250
+						,allowBlank : false
+					});
+					
+					windowLoader = Ext.create('Ext.window.Window',{
+						modal       : true,
+						buttonAlign : 'center',
+						width       : 663,
+						height      : 430,
+						autoScroll  : true,
+						items       : [
+										Ext.create('Ext.form.Panel', {
+										title: 'Turnar a Coordinador de Reclamaciones',
+										width: 650,
+										url: _URL_ActualizaStatusTramite,
+										bodyPadding: 5,
+										items: [comentariosText,{
+											xtype       : 'radiogroup'
+											,fieldLabel : 'Mostrar al agente'
+											,columns    : 2
+											,width      : 250
+											,style      : 'margin:5px;'
+											,items      :
+											[
+												{
+													boxLabel    : 'Si'
+													,itemId     : 'SWAGENTE2'
+													,name       : 'SWAGENTE2'
+													,inputValue : 'S'
+												}
+												,{
+													boxLabel    : 'No'
+													,name       : 'SWAGENTE2'
+													,inputValue : 'N'
+													,checked    : true
+												}
+											]
+										}],
+										buttonAlign:'center',
+										buttons: [{
+											text: 'Turnar'
+											,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
+											,buttonAlign : 'center',
+											handler: function() {
+												var formPanel = this.up().up();
+												if (formPanel.form.isValid()) {
+													
+													if(record.get('parametros.pv_otvalor02') == _REEMBOLSO || record.get('parametros.pv_otvalor02') == _INDEMNIZACION){
+														Ext.Ajax.request({
+															url: _UrlGeneraSiniestroTramite,
+															params: {
+																'params.pv_ntramite_i' : record.get('ntramite')
+															},
+															success: function(response, opt) {
+																
+																var jsonRes=Ext.decode(response.responseText);
+	
+																if(jsonRes.success == true){
+																	formPanel.form.submit({
+																		waitMsg:'Procesando...',
+																		params: {
+																			'smap1.ntramite' : record.get('ntramite'), 
+																			'smap1.status'   : _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION
+																			,'smap1.swagente' : _fieldById('SWAGENTE2').getGroupValue()
+																		},
+																		failure: function(form, action)
+																		{
+																			debug(action);
+																			switch (action.failureType)
+																			{
+																				case Ext.form.action.Action.CONNECT_FAILURE:
+																					errorComunicacion();
+																					break;
+																				case Ext.form.action.Action.SERVER_INVALID:
+																					mensajeError(action.result.mensaje);
+																					break;
+																			}
+																		},
+																		success: function(form, action) {
+																			Ext.Ajax.request(
+																			{
+																				url: _URL_TurnarAOperadorReclamacion,
+																				params: {
+																						'smap1.ntramite' : record.get('ntramite'), 
+																						'smap1.status'   : _STATUS_TRAMITE_EN_CAPTURA
+																						,'smap1.rol_destino'     : 'operadorsini'
+																						,'smap1.usuario_destino' : ''
+																				},
+																				success:function(response,opts){
+																					Ext.Ajax.request(
+																					{
+																						url     : _URL_NOMBRE_TURNADO
+																						,params : 
+																						{           
+																							'params.ntramite': record.get('ntramite'),
+																							'params.rolDestino': 'operadorsini'
+																						}
+																						,success : function (response)
+																						{
+																							var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+																							mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+																							loadMcdinStore();
+																							windowLoader.close();
+																						},
+																						failure : function ()
+																						{
+																							me.up().up().setLoading(false);
+																							centrarVentanaInterna(Ext.Msg.show({
+																								title:'Error',
+																								msg: 'Error de comunicaci&oacute;n',
+																								buttons: Ext.Msg.OK,
+																								icon: Ext.Msg.ERROR
+																							}));
+																						}
+																					});
+																				},
+																				failure:function(response,opts)
+																				{
+																					Ext.Msg.show({
+																						title:'Error',
+																						msg: 'Error de comunicaci&oacute;n',
+																						buttons: Ext.Msg.OK,
+																						icon: Ext.Msg.ERROR
+																					});
+																				}
+																			});
+																		}
+																	});
+																}else{
+																	mensajeError('Error al generar Siniestro para Area de Reclamaciones');
+																}
+															},
+															failure: function(){
+																mensajeError('Error al generar Siniestro para Area de Reclamaciones');
+															}
+														});
+														
+													}else{
+														formPanel.form.submit({
+															waitMsg:'Procesando...',
+															params: {
+																'smap1.ntramite' : record.get('ntramite'), 
+																'smap1.status'   : _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION
+															},
+															failure: function(form, action) {
+																debug(action);
+																switch (action.failureType)
+																{
+																	case Ext.form.action.Action.CONNECT_FAILURE:
+																		errorComunicacion();
+																		break;
+																	case Ext.form.action.Action.SERVER_INVALID:
+																		mensajeError(action.result.mensaje);
+																		break;
+																}
+															},
+															success: function(form, action) {
+																Ext.Ajax.request(
+																{
+																	url: _URL_TurnarAOperadorReclamacion,
+																	params: {
+																			'smap1.ntramite' : record.get('ntramite'), 
+																			'smap1.status'   : _STATUS_TRAMITE_EN_CAPTURA
+																			,'smap1.rol_destino'     : 'operadorsini'
+																			,'smap1.usuario_destino' : ''
+																	},
+																	success:function(response,opts){
+																		Ext.Ajax.request(
+																		{
+																			url     : _URL_NOMBRE_TURNADO
+																			,params : 
+																			{           
+																				'params.ntramite': record.get('ntramite'),
+																				'params.rolDestino': 'operadorsini'
+																			}
+																			,success : function (response)
+																			{
+																				var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+																				mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+																				loadMcdinStore();
+																				windowLoader.close();
+																			},
+																			failure : function ()
+																			{
+																				me.up().up().setLoading(false);
+																				centrarVentanaInterna(Ext.Msg.show({
+																					title:'Error',
+																					msg: 'Error de comunicaci&oacute;n',
+																					buttons: Ext.Msg.OK,
+																					icon: Ext.Msg.ERROR
+																				}));
+																			}
+																		});
+																	},
+																	failure:function(response,opts)
+																	{
+																		Ext.Msg.show({
+																			title:'Error',
+																			msg: 'Error de comunicaci&oacute;n',
+																			buttons: Ext.Msg.OK,
+																			icon: Ext.Msg.ERROR
+																		});
+																	}
+																});
+															}
+														});
+													}
+													
+												} else {
+													Ext.Msg.show({
+														   title: 'Aviso',
+														   msg: 'Complete la informaci&oacute;n requerida',
+														   buttons: Ext.Msg.OK,
+														   icon: Ext.Msg.WARNING
+													   });
+												}
+											}
+										},{
+											text: 'Cancelar',
+											icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+											buttonAlign : 'center',
+											handler: function() {
+												windowLoader.close();
+											}
+										}
+										]
+									})  
+								]
+						}).show();
+						centrarVentana(windowLoader);
+				}
+				
+			},failure : function () {
+				form.setLoading(false);
+				Ext.Msg.show({
+					title:'Error',
+					msg: 'Error de comunicaci&oacute;n',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				});
+			}
+		});
+		
+		
+		/*Ext.Ajax.request({
+			url: _URL_VALIDA_FACTURAASEGURADO
+			,params	:	{
+				'smap.ntramite' : record.get('ntramite'),
+				'smap.tipoPago' : record.get('parametros.pv_otvalor02')
+			}
+			,success : function (response){
+				var jsonRes=Ext.decode(response.responseText);
+				if(jsonRes.loadList[0].faltaAsegurados =="0"){
+					
+					
+					var comentariosText = Ext.create('Ext.form.field.TextArea', {
+						fieldLabel: 'Observaciones'
+						,labelWidth: 150
+						,width: 600
+						,name:'smap1.comments'
+						,height: 250
+						,allowBlank : false
+					});
+					
+					windowLoader = Ext.create('Ext.window.Window',{
+						modal       : true,
+						buttonAlign : 'center',
+						width       : 663,
+						height      : 430,
+						autoScroll  : true,
+						items       : [
+										Ext.create('Ext.form.Panel', {
+										title: 'Turnar a Coordinador de Reclamaciones',
+										width: 650,
+										url: _URL_ActualizaStatusTramite,
+										bodyPadding: 5,
+										items: [comentariosText,{
+											xtype       : 'radiogroup'
+											,fieldLabel : 'Mostrar al agente'
+											,columns    : 2
+											,width      : 250
+											,style      : 'margin:5px;'
+											,items      :
+											[
+												{
+													boxLabel    : 'Si'
+													,itemId     : 'SWAGENTE2'
+													,name       : 'SWAGENTE2'
+													,inputValue : 'S'
+												}
+												,{
+													boxLabel    : 'No'
+													,name       : 'SWAGENTE2'
+													,inputValue : 'N'
+													,checked    : true
+												}
+											]
+										}],
+										buttonAlign:'center',
+										buttons: [{
+											text: 'Turnar'
+											,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
+											,buttonAlign : 'center',
+											handler: function() {
+												var formPanel = this.up().up();
+												if (formPanel.form.isValid()) {
+													
+													if(record.get('parametros.pv_otvalor02') == _REEMBOLSO || record.get('parametros.pv_otvalor02') == _INDEMNIZACION){
+														Ext.Ajax.request({
+															url: _UrlGeneraSiniestroTramite,
+															params: {
+																'params.pv_ntramite_i' : record.get('ntramite')
+															},
+															success: function(response, opt) {
+																
+																var jsonRes=Ext.decode(response.responseText);
+
+																if(jsonRes.success == true){
+																	formPanel.form.submit({
+																		waitMsg:'Procesando...',
+																		params: {
+																			'smap1.ntramite' : record.get('ntramite'), 
+																			'smap1.status'   : _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION
+																			,'smap1.swagente' : _fieldById('SWAGENTE2').getGroupValue()
+																		},
+																		failure: function(form, action)
+																		{
+																			debug(action);
+																			switch (action.failureType)
+																			{
+																				case Ext.form.action.Action.CONNECT_FAILURE:
+																					errorComunicacion();
+																					break;
+																				case Ext.form.action.Action.SERVER_INVALID:
+																					mensajeError(action.result.mensaje);
+																					break;
+																			}
+																		},
+																		success: function(form, action) {
+																			Ext.Ajax.request(
+																			{
+																				url: _URL_TurnarAOperadorReclamacion,
+																				params: {
+																						'smap1.ntramite' : record.get('ntramite'), 
+																						'smap1.status'   : _STATUS_TRAMITE_EN_CAPTURA
+																						,'smap1.rol_destino'     : 'operadorsini'
+																						,'smap1.usuario_destino' : ''
+																				},
+																				success:function(response,opts){
+																					Ext.Ajax.request(
+																					{
+																						url     : _URL_NOMBRE_TURNADO
+																						,params : 
+																						{           
+																							'params.ntramite': record.get('ntramite'),
+																							'params.rolDestino': 'operadorsini'
+																						}
+																						,success : function (response)
+																						{
+																							var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+																							mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+																							loadMcdinStore();
+																							windowLoader.close();
+																						},
+																						failure : function ()
+																						{
+																							me.up().up().setLoading(false);
+																							centrarVentanaInterna(Ext.Msg.show({
+																								title:'Error',
+																								msg: 'Error de comunicaci&oacute;n',
+																								buttons: Ext.Msg.OK,
+																								icon: Ext.Msg.ERROR
+																							}));
+																						}
+																					});
+																				},
+																				failure:function(response,opts)
+																				{
+																					Ext.Msg.show({
+																						title:'Error',
+																						msg: 'Error de comunicaci&oacute;n',
+																						buttons: Ext.Msg.OK,
+																						icon: Ext.Msg.ERROR
+																					});
+																				}
+																			});
+																		}
+																	});
+																}else{
+																	mensajeError('Error al generar Siniestro para Area de Reclamaciones');
+																}
+															},
+															failure: function(){
+																mensajeError('Error al generar Siniestro para Area de Reclamaciones');
+															}
+														});
+														
+													}else{
+														formPanel.form.submit({
+															waitMsg:'Procesando...',
+															params: {
+																'smap1.ntramite' : record.get('ntramite'), 
+																'smap1.status'   : _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION
+															},
+															failure: function(form, action) {
+																debug(action);
+																switch (action.failureType)
+																{
+																	case Ext.form.action.Action.CONNECT_FAILURE:
+																		errorComunicacion();
+																		break;
+																	case Ext.form.action.Action.SERVER_INVALID:
+																		mensajeError(action.result.mensaje);
+																		break;
+																}
+															},
+															success: function(form, action) {
+																Ext.Ajax.request(
+																{
+																	url: _URL_TurnarAOperadorReclamacion,
+																	params: {
+																			'smap1.ntramite' : record.get('ntramite'), 
+																			'smap1.status'   : _STATUS_TRAMITE_EN_CAPTURA
+																			,'smap1.rol_destino'     : 'operadorsini'
+																			,'smap1.usuario_destino' : ''
+																	},
+																	success:function(response,opts){
+																		Ext.Ajax.request(
+																		{
+																			url     : _URL_NOMBRE_TURNADO
+																			,params : 
+																			{           
+																				'params.ntramite': record.get('ntramite'),
+																				'params.rolDestino': 'operadorsini'
+																			}
+																			,success : function (response)
+																			{
+																				var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+																				mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+																				loadMcdinStore();
+																				windowLoader.close();
+																			},
+																			failure : function ()
+																			{
+																				me.up().up().setLoading(false);
+																				centrarVentanaInterna(Ext.Msg.show({
+																					title:'Error',
+																					msg: 'Error de comunicaci&oacute;n',
+																					buttons: Ext.Msg.OK,
+																					icon: Ext.Msg.ERROR
+																				}));
+																			}
+																		});
+																	},
+																	failure:function(response,opts)
+																	{
+																		Ext.Msg.show({
+																			title:'Error',
+																			msg: 'Error de comunicaci&oacute;n',
+																			buttons: Ext.Msg.OK,
+																			icon: Ext.Msg.ERROR
+																		});
+																	}
+																});
+															}
+														});
+													}
+													
+												} else {
+													Ext.Msg.show({
+														   title: 'Aviso',
+														   msg: 'Complete la informaci&oacute;n requerida',
+														   buttons: Ext.Msg.OK,
+														   icon: Ext.Msg.WARNING
+													   });
+												}
+											}
+										},{
+											text: 'Cancelar',
+											icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+											buttonAlign : 'center',
+											handler: function() {
+												windowLoader.close();
+											}
+										}
+										]
+									})  
+								]
+						}).show();
+					
+						centrarVentana(windowLoader);
+				
+				}else{
+					mensajeError("Falta asegurados para la factura:"+jsonRes.loadList[0].facturasFaltantes);
+				}
+			},
+			failure: function(){
+				mensajeError('Error al turnar.');
+			}
+		});*/
+	}
+	
+	function turnarAoperadorReclamaciones(grid,rowIndex,colIndex){
+		var record = grid.getStore().getAt(rowIndex);
+		var comentariosText = Ext.create('Ext.form.field.TextArea', {
+        	fieldLabel: 'Observaciones'
+    		,labelWidth: 150
+    		,width: 600
+    		,name:'smap1.comments'
+			,height: 250
+			,allowBlank : false
+        });
+		
+		windowLoader = Ext.create('Ext.window.Window',{
+	        modal       : true,
+	        buttonAlign : 'center',
+	        width       : 663,
+	        height      : 430,
+	        autoScroll  : true,
+	        items       : [
+        	        		Ext.create('Ext.form.Panel', {
+        	                title: 'Turnar a Operador de Reclamaciones',
+        	                width: 650,
+        	                url: _URL_ActualizaStatusTramite,
+        	                bodyPadding: 5,
+        	                items: [comentariosText,{
+        	                    xtype       : 'radiogroup'
+       	                        ,fieldLabel : 'Mostrar al agente'
+       	                        ,columns    : 2
+       	                        ,width      : 250
+       	                        ,style      : 'margin:5px;'
+       	                        ,items      :
+       	                        [
+       	                            {
+       	                                boxLabel    : 'Si'
+       	                                ,itemId     : 'SWAGENTE5'
+       	                                ,name       : 'SWAGENTE5'
+       	                                ,inputValue : 'S'
+       	                            }
+       	                            ,{
+       	                                boxLabel    : 'No'
+       	                                ,name       : 'SWAGENTE5'
+       	                                ,inputValue : 'N'
+                                        ,checked    : true
+       	                            }
+       	                        ]
+       	                    }],
+        	        	    buttonAlign:'center',
+        	        	    buttons: [{
+        	            		text: 'Turnar'
+        	            		,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
+        	            		,buttonAlign : 'center',
+        	            		handler: function() {
+        	            	    	if (this.up().up().form.isValid()) {
+        	            	    		this.up().up().form.submit({
+        	            		        	waitMsg:'Procesando...',
+        	            		        	params: {
+        	            		        		'smap1.ntramite' : record.get('ntramite'), 
+        	            		        		'smap1.status'   : _STATUS_TRAMITE_EN_CAPTURA
+        	            		        		,'smap1.rol_destino'     : 'operadorsini'
+                                                ,'smap1.usuario_destino' : colIndex.length>3 ? colIndex : ''
+                                                ,'smap1.swagente' : _fieldById('SWAGENTE5').getGroupValue()
+        	            		        	},
+        	            		        	failure: function(form, action) {
+        	            		        		debug(action);
+        	            		        		switch (action.failureType)
+                                                {
+                                                    case Ext.form.action.Action.CONNECT_FAILURE:
+                                                        errorComunicacion();
+                                                        break;
+                                                    case Ext.form.action.Action.SERVER_INVALID:
+                                                    	mensajeError(action.result.mensaje);
+                                                    	break;
+                                                }
+        	            		        		//mensajeError('No se pudo turnar.');
+        	            					},
+        	            					success: function(form, action) {
+        	            						Ext.Ajax.request(
+   								    	        {
+   								    	            url     : _URL_NOMBRE_TURNADO
+   								    	            ,params : 
+   								    	            {           
+   								    	                'params.ntramite': record.get('ntramite'),
+   								    	                'params.rolDestino': 'operadorsini'
+   								    	            }
+   								    	            ,success : function (response)
+   								    	            {
+   								    	                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+   								    	                mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+   		        	            						loadMcdinStore();
+   		        	            						windowLoader.close();
+   								    	            },
+   								    	            failure : function ()
+   								    	            {
+   								    	                me.up().up().setLoading(false);
+   								    	                centrarVentanaInterna(Ext.Msg.show({
+   								    	                    title:'Error',
+   								    	                    msg: 'Error de comunicaci&oacute;n',
+   								    	                    buttons: Ext.Msg.OK,
+   								    	                    icon: Ext.Msg.ERROR
+   								    	                }));
+   								    	            }
+   								    	        });
+        	            						
+        	            					}
+        	            				});
+        	            			} else {
+        	            				Ext.Msg.show({
+        	            	                   title: 'Aviso',
+        	            	                   msg: 'Complete la informaci&oacute;n requerida',
+        	            	                   buttons: Ext.Msg.OK,
+        	            	                   icon: Ext.Msg.WARNING
+        	            	               });
+        	            			}
+        	            		}
+        	            	},{
+        	            	    text: 'Cancelar',
+        	            	    icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+        	            	    buttonAlign : 'center',
+        	            	    handler: function() {
+        	            	        windowLoader.close();
+        	            	    }
+        	            	}
+        	            	]
+        	            })  
+	            	]
+	    }).show();
+		
+		centrarVentana(windowLoader);
+	}
+	
 	Ext.onReady(function(){
 		Ext.define('DetalleMC',{
 	        extend:'Ext.data.Model',
