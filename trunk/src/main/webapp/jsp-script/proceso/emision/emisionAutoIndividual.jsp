@@ -725,7 +725,16 @@ function _p29_guardar(callback)
                     debug('### guardar:',json);
                     if(json.exito)
                     {
-                    	_p32_guardarClic(callback);
+                    	if(_p29_validaSeguro =="S"){
+                    		_p32_guardarClic(callback);
+                        }else{
+                        	if(callback){
+                                callback();
+                            }
+                            else{
+                                mensajeCorrecto('Datos guardados',json.respuesta);
+                            }
+                        }
                     }
                     else
                     {
