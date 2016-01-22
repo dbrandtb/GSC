@@ -659,7 +659,7 @@ public interface SiniestrosManager {
 	
 	public List<GenericVO> getConsultaListaFacturaTramite(String ntramite, String nfactura) throws Exception;
 	
-	public void procesaPagoAutomaticoSisco() throws Exception;
+	public List<Map<String, String>> procesaPagoAutomaticoSisco() throws Exception;
 	
 	public List<Map<String, String>> getValidaArancelesTramitexProveedor(String ntramite) throws Exception;
 	

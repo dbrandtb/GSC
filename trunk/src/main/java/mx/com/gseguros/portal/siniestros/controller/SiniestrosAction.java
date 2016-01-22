@@ -2248,6 +2248,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 									conceptosxSiniestro.add(concepto);
 									logger.debug("Datos de los conceptos  contador k: {} ",k);
 									logger.debug("Datos de los conceptos  concepto : {}  COPAGO: {} ",concepto,concepto.get("COPAGO"));
+									logger.debug("Datos de los clave Concepto : {}",concepto.get("CDCONCEP") );
 									
 									if(tipoFormatoCalculo.equalsIgnoreCase("1")) {
 										logger.debug("--->>>>>>> HOSPITALIZACION");
@@ -2275,6 +2276,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 											}
 										}
 										
+										// valor del copago  scopago
 										double hPTIMPORT 	= Double.parseDouble(hosp.get("PTIMPORT"));
 										double hDESTO    	= Double.parseDouble(hosp.get("DESTO"));
 										double hIVA      	= Double.parseDouble(hosp.get("IVA"));
@@ -2340,7 +2342,16 @@ public class SiniestrosAction extends PrincipalCoreAction {
 										double cantidad				= Double.valueOf(row.get("CANTIDAD"));
 										
 										if(StringUtils.isNotBlank(row.get("IMP_ARANCEL"))) {
-											precioArancel 		= Double.valueOf(row.get("IMP_ARANCEL"));
+											
+											if(concepto.get("CDCONCEP").equalsIgnoreCase("-1")){
+												String scopago 			 = concepto.get("COPAGO");
+												scopago=scopago.replace("%", "").replace("$", "").replaceAll(",", "");
+												copago=Double.valueOf(scopago);
+												precioArancel  = copago;
+											}else{
+												precioArancel 		= Double.valueOf(row.get("IMP_ARANCEL"));
+											}
+											
 										}
 										row.put("IMP_ARANCEL",precioArancel+"");
 										
@@ -2653,24 +2664,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						}
 						facturaObj.put("siniestroPD", aseguradosxSiniestro);
 				}
-			}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			/***************************** 		P A G O		R E E M B O L S O 		*************************/
+			}/***************************** 		P A G O		R E E M B O L S O 		*************************/
 			else if(TipoPago.REEMBOLSO.getCodigo().equals(tramite.get("OTVALOR02"))){//TIPO DE PAGO POR REEMBOLSO
 				logger.debug("Paso 5.- EL PROCESO DE PAGO REEMBOLSO ");
 				double importeSiniestroUnico 	= 0d;
@@ -3281,6 +3275,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						HashMap<String, Object> paramsPagoDirecto = new HashMap<String, Object>();
 						paramsPagoDirecto.put("pv_ntramite_i",ntramiteA);
 						String montoTramite = siniestrosManager.obtieneMontoTramitePagoDirecto(paramsPagoDirecto);
+						
+						logger.debug("Valor del Monto del Arancel ===>>>> "+montoTramite);
 						Map<String,Object> otvalor = new HashMap<String,Object>();
 						otvalor.put("pv_ntramite_i" , ntramiteA);
 						otvalor.put("pv_otvalor03_i"  , montoTramite);

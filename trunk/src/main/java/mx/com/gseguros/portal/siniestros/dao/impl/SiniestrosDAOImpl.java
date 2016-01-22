@@ -5236,16 +5236,20 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 	
 	@Override
-	public void procesaPagoAutomaticoSisco() throws Exception {
+	public List<Map<String, String>> procesaPagoAutomaticoSisco() throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
-		ejecutaSP(new ProcesaPagoAutomaticoSisco(this.getDataSource()), params);
+		Map<String, Object> result = ejecutaSP(new ProcesaPagoAutomaticoSisco(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
 	}
 
-	protected class ProcesaPagoAutomaticoSisco extends StoredProcedure
-	{
-		protected ProcesaPagoAutomaticoSisco(DataSource dataSource)
-		{
+	protected class ProcesaPagoAutomaticoSisco extends StoredProcedure {
+		protected ProcesaPagoAutomaticoSisco(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
 			super(dataSource, "PKG_SINIESTRO.P_GET_TMOVSISCO");
+			String[] cols = new String[]{
+					"NTRAMITE"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
