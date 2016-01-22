@@ -1899,7 +1899,7 @@ function _procesaAccion(
                                                                     ,salida.TIPODEST
                                                                     ,salida.CLAVEDEST
                                                                     ,salida.WEBIDDEST
-                                                                    ,aux
+                                                                    ,salida.AUX
                                                                     ,ntramite
                                                                     ,status
                                                                     ,cdunieco
@@ -1989,7 +1989,7 @@ function _procesaAccion(
                                                                     ,salida.TIPODEST
                                                                     ,salida.CLAVEDEST
                                                                     ,salida.WEBIDDEST
-                                                                    ,aux
+                                                                    ,salida.AUX
                                                                     ,ntramite
                                                                     ,status
                                                                     ,cdunieco
@@ -2194,7 +2194,7 @@ function _procesaAccion(
                                                         ,accion1.TIPODEST
                                                         ,accion1.CLAVEDEST
                                                         ,accion1.WEBIDDEST
-                                                        ,aux
+                                                        ,accion1.AUX
                                                         ,ntramite
                                                         ,status
                                                         ,cdunieco
@@ -2217,7 +2217,7 @@ function _procesaAccion(
                                                         ,accExito.TIPODEST
                                                         ,accExito.CLAVEDEST
                                                         ,accExito.WEBIDDEST
-                                                        ,aux
+                                                        ,accExito.AUX
                                                         ,ntramite
                                                         ,status
                                                         ,cdunieco
@@ -2260,7 +2260,7 @@ function _procesaAccion(
                                                                 ,accError.TIPODEST
                                                                 ,accError.CLAVEDEST
                                                                 ,accError.WEBIDDEST
-                                                                ,aux
+                                                                ,accError.AUX
                                                                 ,ntramite
                                                                 ,status
                                                                 ,cdunieco
@@ -2298,7 +2298,7 @@ function _procesaAccion(
                                                             ,accError.TIPODEST
                                                             ,accError.CLAVEDEST
                                                             ,accError.WEBIDDEST
-                                                            ,aux
+                                                            ,accError.AUX
                                                             ,ntramite
                                                             ,status
                                                             ,cdunieco
@@ -2337,7 +2337,7 @@ function _procesaAccion(
                                                         ,accError.TIPODEST
                                                         ,accError.CLAVEDEST
                                                         ,accError.WEBIDDEST
-                                                        ,aux
+                                                        ,accError.AUX
                                                         ,ntramite
                                                         ,status
                                                         ,cdunieco
@@ -2375,7 +2375,7 @@ function _procesaAccion(
                                                     ,accError.TIPODEST
                                                     ,accError.CLAVEDEST
                                                     ,accError.WEBIDDEST
-                                                    ,aux
+                                                    ,accError.AUX
                                                     ,ntramite
                                                     ,status
                                                     ,cdunieco

@@ -1690,7 +1690,16 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("nmsituac"   , nmsituac);
 		params.put("nmsuplem"   , nmsuplem);
 		params.put("cdvalidafk" , cdvalidafk);
-		return (String)ejecutaSP(new EjecutaValidacionSP(getDataSource()),params).get("pv_result_o");
+		
+		Map<String,Object> procRes = ejecutaSP(new EjecutaValidacionSP(getDataSource()),params);
+		
+		String error = (String)procRes.get("pv_mensaje_o");
+		if(StringUtils.isNotBlank(error))
+		{
+			throw new ApplicationException(error);
+		}
+		
+		return (String)procRes.get("pv_result_o");
 	}
 	
 	protected class EjecutaValidacionSP extends StoredProcedure
@@ -1706,9 +1715,10 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("nmsuplem"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdvalidafk" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("ntramite"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_result_o" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_result_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_mensaje_o" , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

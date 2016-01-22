@@ -66,4 +66,6 @@ public interface PantallasManager
 	public Item                     obtenerArbol               ()                          throws Exception;
 	
 	public Map<String,String> obtienePantalla(Map<String,String> params) throws Exception;
+	
+	public List<ComponenteVO> recuperarComboDocs(String proceso);
 }

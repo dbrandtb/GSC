@@ -14,6 +14,7 @@ Ext.define('VentanaDocumentos',
     }
     ,constructor : function(config)
     {
+        debug('config:',config);
         var me = this;
         Ext.apply(me,
         {
@@ -32,6 +33,7 @@ Ext.define('VentanaDocumentos',
                     ,'smap1.nmsolici' : config.nmpoliza
                     ,'smap1.ntramite' : config.ntramite
                     ,'smap1.tipomov'  : '0'
+                    ,'smap1.aux'      : config.aux
                 }
             }
         });
