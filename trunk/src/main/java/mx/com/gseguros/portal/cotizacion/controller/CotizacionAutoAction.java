@@ -1,7 +1,6 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
 import java.io.File;
-import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -12,6 +11,8 @@ import java.util.Map.Entry;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
+import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
@@ -51,7 +52,12 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	private DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	@Autowired
-	private ConsultasManager         consultasManager;
+	private ConsultasManager consultasManager;
+	
+	private FlujoVO flujo;
+	
+	@Autowired
+	private FlujoMesaControlManager flujoMesaControlManager;
 
 	/**
 	 * Constructor que se asegura de que el action tenga sesion
@@ -152,41 +158,59 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cotizacionAutoIndividual()
 	{
-		logger.info(
-				new StringBuilder()
-				.append("\n######################################")
-				.append("\n###### cotizacionAutoIndividual ######")
-				.append("\n###### smap1=").append(smap1)
-				.toString()
-				);
+		long stamp = System.currentTimeMillis();
+		logger.info(Utils.log(
+				 "\n######################################"
+				,"\n###### cotizacionAutoIndividual ######"
+				,"\n###### stamp=" , stamp
+				,"\n###### smap1=" , smap1
+				,"\n###### flujo=" , flujo
+				));
 		
-		exito = true;
+		String result = ERROR;
 		
-		String ntramite = null;
-		String cdunieco = null;
-		String cdramo   = null;
-		String cdtipsit = null;
-		String cdusuari = null;
-		String cdsisrol = null;
-		
-		setCheckpoint("Validando datos de entrada");
 		try
 		{
-			checkNull(session,"No hay sesion");
-			checkNull(session.get("USUARIO"),"No hay usuario en la sesion");
-			UserVO usuario = (UserVO)session.get("USUARIO");
-			cdusuari = usuario.getUser();
-			cdsisrol = usuario.getRolActivo().getClave();
+			UserVO usuario = Utils.validateSession(session);
+			
+			if(flujo!=null)
+			{
+				smap1 = new HashMap<String,String>();
+				smap1.put("ntramite" , flujo.getNtramite());
+				smap1.put("cdunieco" , flujo.getCdunieco());
+				smap1.put("cdramo"   , flujo.getCdramo());
+				
+				logger.debug(Utils.log(stamp, "recuperando tramite"));
+				
+				StringBuilder sb = new StringBuilder();
+				Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(sb, flujo);
+				logger.debug(sb.toString());
+				
+				Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
+				logger.debug(Utils.log(stamp, "tramite=", tramite));
+				
+				smap1.put("cdtipsit" , tramite.get("CDTIPSIT"));
+				
+				logger.debug(Utils.log(stamp, "smap1 creado=", smap1));
+			}
+			
+			String cdusuari  = usuario.getUser()
+			       ,cdsisrol = usuario.getRolActivo().getClave();
+			
 			smap1.put("cdusuari" , cdusuari);
 			smap1.put("cdsisrol" , cdsisrol);
 			
-			checkNull(smap1,"No se recibieron datos");
-			ntramite = smap1.get("ntramite");
-			cdunieco = smap1.get("cdunieco");
-			cdramo   = smap1.get("cdramo");
-			cdtipsit = smap1.get("cdtipsit");
-			checkBlank(cdramo   ,"No se recibi贸 el producto");
-			checkBlank(cdtipsit ,"No se recibi贸 la modalidad");
+			Utils.validate(smap1,"No se recibieron datos");
+			
+			String ntramite  = smap1.get("ntramite")
+			       ,cdunieco = smap1.get("cdunieco")
+			       ,cdramo   = smap1.get("cdramo")
+			       ,cdtipsit = smap1.get("cdtipsit");
+			
+			Utils.validate(
+					cdramo    , "No se recibi贸 el producto"
+					,cdtipsit , "No se recibi贸 la modalidad"
+					);
 			
 			ManagerRespuestaImapSmapVO resp = cotizacionAutoManager.cotizacionAutoIndividual(
 					ntramite
@@ -198,31 +222,28 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
-			respuestaOculta = resp.getRespuestaOculta();
-			if(exito)
+			
+			if(!exito)
 			{
-				smap1.putAll(resp.getSmap());
-				imap = resp.getImap();
+				throw new ApplicationException(respuesta);
 			}
+			
+			smap1.putAll(resp.getSmap());
+			imap = resp.getImap();
+			
+			result = SUCCESS;
 		}
-		catch(ApplicationException ax)
+		catch(Exception ex)
 		{
-			manejaException(ax);
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		String result = SUCCESS;
-		if(!exito)
-		{
-			result = ERROR;
-		}
-		
-		logger.info(
-				new StringBuilder()
-				.append("\n###### result=").append(result)
-				.append("\n###### cotizacionAutoIndividual ######")
-				.append("\n######################################")
-				.toString()
-				);
+		logger.info(Utils.log(
+				 "\n###### stamp="  , stamp
+				,"\n###### result=" , result
+				,"\n###### cotizacionAutoIndividual ######"
+				,"\n######################################"
+				));
 		return result;
 	}
 	
@@ -328,82 +349,107 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String emisionAutoIndividual()
 	{
-		logger.info(
-				new StringBuilder()
-				.append("\n###################################")
-				.append("\n###### emisionAutoIndividual ######")
-				.append("\n###### smap1=").append(smap1)
-				.toString()
-				);
+		long stamp = System.currentTimeMillis();
+		logger.info(Utils.log(stamp
+				,"\n###################################"
+				,"\n###### emisionAutoIndividual ######"
+				,"\n###### flujo=" , flujo
+				,"\n###### smap1=" , smap1
+				));
 		
-		exito = true;
+		String result = ERROR;
 		
-		setCheckpoint("Validando datos de entrada");
 		try
 		{
-			checkNull(smap1, "No se recibieron datos");
-			String cdunieco = smap1.get("cdunieco");
-			String cdramo   = smap1.get("cdramo");
-			String cdtipsit = smap1.get("cdtipsit");
-			String estado   = smap1.get("estado");
-			String nmpoliza = smap1.get("nmpoliza");
-			String ntramite = smap1.get("ntramite");
-			checkBlank(cdunieco , "No se recibio la sucursal");
-			checkBlank(cdramo   , "No se recibio el ramo");
-			checkBlank(cdtipsit , "No se recibio la modalidad");
-			checkBlank(estado   , "No se recibio el estado de la poliza");
-			checkBlank(nmpoliza , "No se recibio el numero de poliza");
-			checkBlank(ntramite , "No se recibio el numero de tramite");
+			UserVO usuario = Utils.validateSession(session);
 			
-			checkNull(session,"No hay sesion");
-			checkNull(session.get("USUARIO"), "No hay usuario en la sesion");
-			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
-			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			if(flujo!=null)
+			{
+				smap1 = new HashMap<String,String>();
+				smap1.put("cdunieco" , flujo.getCdunieco());
+				smap1.put("cdramo"   , flujo.getCdramo());
+				smap1.put("estado"   , flujo.getEstado());
+				
+				logger.debug(Utils.log(stamp, "recuperando tramite"));
+				
+				StringBuilder sb = new StringBuilder();
+				Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(sb, flujo);
+				logger.debug(sb.toString());
+				
+				Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
+				logger.debug(Utils.log(stamp, "tramite=", tramite));
+				
+				smap1.put("cdtipsit" , tramite.get("CDTIPSIT"));
+				
+				smap1.put("nmpoliza" , tramite.get("NMSOLICI"));
+				
+				smap1.put("ntramite" , flujo.getNtramite());
+				
+				logger.debug(Utils.log(stamp, "smap1 creado=", smap1));
+			}
+			
+			Utils.validate(smap1, "No se recibieron datos");
+			
+			String cdunieco = smap1.get("cdunieco")
+			       ,cdramo   = smap1.get("cdramo")
+			       ,cdtipsit = smap1.get("cdtipsit")
+			       ,estado   = smap1.get("estado")
+			       ,nmpoliza = smap1.get("nmpoliza")
+			       ,ntramite = smap1.get("ntramite");
+			
+			Utils.validate(
+					cdunieco , "No se recibio la sucursal"
+					,cdramo   , "No se recibio el ramo"
+					,cdtipsit , "No se recibio la modalidad"
+					,estado   , "No se recibio el estado de la poliza"
+					,nmpoliza , "No se recibio el numero de poliza"
+					,ntramite , "No se recibio el numero de tramite"
+					);
+			
+			String cdusuari  = usuario.getUser()
+			       ,cdsisrol = usuario.getRolActivo().getClave();
 			
 			ManagerRespuestaImapSmapVO resp=cotizacionAutoManager.emisionAutoIndividual(cdunieco,cdramo,cdtipsit,estado,nmpoliza,ntramite,cdusuari);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
-			respuestaOculta = resp.getRespuestaOculta();
-			if(exito)
+			
+			if(!exito)
 			{
-				smap1.putAll(resp.getSmap());
-				smap1.put("cdsisrol" , cdsisrol);
-				imap = resp.getImap();
-				
-				HashMap<String,String> params = new HashMap<String, String>();
-				params.put("cdunieco", cdunieco);
-				params.put("cdramo", cdramo);
-				params.put("estado", estado);
-				params.put("nmpoliza", nmpoliza);
-				params.put("nmsuplem", "0");
-				
-				Map<String,String> fechas = consultasManager.consultaFeNacContratanteAuto(params);
-				
-				if(fechas != null && !fechas.isEmpty()){
-					smap1.put("AplicaCobVida" , fechas.get("APLICA"));
-					smap1.put("FechaMinEdad"  , fechas.get("FECHAMIN"));
-					smap1.put("FechaMaxEdad"  , fechas.get("FECHAMAX"));
-				}
+				throw new ApplicationException(respuesta);
 			}
+			
+			smap1.putAll(resp.getSmap());
+			smap1.put("cdsisrol" , cdsisrol);
+			imap = resp.getImap();
+			
+			HashMap<String,String> params = new HashMap<String, String>();
+			params.put("cdunieco" , cdunieco);
+			params.put("cdramo"   , cdramo);
+			params.put("estado"   , estado);
+			params.put("nmpoliza" , nmpoliza);
+			params.put("nmsuplem" , "0");
+			
+			Map<String,String> fechas = consultasManager.consultaFeNacContratanteAuto(params);
+			
+			if(fechas != null && !fechas.isEmpty())
+			{
+				smap1.put("AplicaCobVida" , fechas.get("APLICA"));
+				smap1.put("FechaMinEdad"  , fechas.get("FECHAMIN"));
+				smap1.put("FechaMaxEdad"  , fechas.get("FECHAMAX"));
+			}
+			
+			result = SUCCESS;
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex);
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		String result = SUCCESS;
-		if(!exito)
-		{
-			result = ERROR;
-		}
-		
-		logger.info(
-				new StringBuilder()
-				.append("\n###### result=").append(result)
-				.append("\n###### emisionAutoIndividual ######")
-				.append("\n###################################")
-				.toString()
-				);
+		logger.info(Utils.log(stamp
+				,"\n###### result=", result
+				,"\n###### emisionAutoIndividual ######"
+				,"\n###################################"
+				));
 		return result;
 	}
 	
@@ -1514,7 +1560,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			String feini    = smap1.get("feini");
 			String numSerie      = smap1.get("numSerie");
 			checkBlank(feini , "No se recibio la fecha inicial");
-			checkBlank(numSerie   , "No se recibio el n鷐ero de serie");
+			checkBlank(numSerie   , "No se recibio el n锟絤ero de serie");
 			String iCodAviso = "exito";
 			String feAutorizacion= feini.substring(8,10)+"/"+feini.substring(5,7)+"/"+feini.substring(0,4);
 			iCodAviso = cotizacionAutoManager.obtieneValidacionRetroactividad(numSerie, renderFechas.parse(feAutorizacion));
@@ -1644,5 +1690,13 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 
 	public void setExcelContentType(String excelContentType) {
 		this.excelContentType = excelContentType;
+	}
+
+	public FlujoVO getFlujo() {
+		return flujo;
+	}
+
+	public void setFlujo(FlujoVO flujo) {
+		this.flujo = flujo;
 	}
 }

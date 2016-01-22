@@ -572,6 +572,7 @@ Ext.onReady(function()
                             	}
                                 
                             }
+                            <s:if test='%{!(""+smap1.aux).equals("")}'>,<s:property value="items.comboDocs" escapeHtml="false" /></s:if>
                             ,Ext.create('Ext.panel.Panel',
                             {
                                 html    :'<iframe id="panDocIframeUploadDoc" name="panDocIframeUploadDoc"></iframe>'

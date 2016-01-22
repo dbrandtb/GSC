@@ -396,12 +396,11 @@ public class Utils
 		return true;
 	}
 
-	public static void main(String[] args) {
-		
-		
-		System.out.println(Utils.getCalendarServerTimeZone("11/25/2014", "dd/MM/yyyy"));
-		System.out.println(Utils.esFechaValida("11/25/2014", "dd/MM/yyyy"));
-		
+	public static void main(String[] args)
+	{
+		//System.out.println(Utils.getCalendarServerTimeZone("11/25/2014", "dd/MM/yyyy"));
+		//System.out.println(Utils.esFechaValida("11/25/2014", "dd/MM/yyyy"));
+		Utils.calcularFechaLaboral(Calendar.getInstance(),(60*4)+(60*8*8));
 	}
 	
 	/*
@@ -685,4 +684,139 @@ public class Utils
     		return reemplazo;
     	return origen;
     }
+    
+    /**
+     * 
+     * @param inicio fecha de inicio
+     * @param minutos que se deben sumar a esa fecha
+     * @return la fecha final
+     */
+    public static Calendar calcularFechaLaboral(Calendar inicio, int minutos)
+    {
+    	StringBuilder sb = new StringBuilder(Utils.log(
+    			 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    			,"\n@@@@@@ calcularFechaLaboral @@@@@@"
+    			,"\n@@@@@@ inicio=", inicio, "\n@@@@@@minutos=", minutos, "\n"
+    			));
+    	
+    	Calendar fin = (Calendar)inicio.clone();
+    	
+    	while(minutos>0)
+    	{
+    		sb.append(Utils.log("\nIteracion minutos a sumar=", minutos, ", fin=", fin, "\n"));
+    		
+    		int minutosFin = (fin.get(Calendar.HOUR_OF_DAY)*60)+fin.get(Calendar.MINUTE);
+    		sb.append(Utils.log("\nMinutos fin=", minutosFin));
+    		
+    		int restanteDia = 1020 - minutosFin;
+    		sb.append(Utils.log("\nRestante dia=", restanteDia));
+    		
+    		int minutosSumados = 0;
+    		
+    		boolean sumarDia = false;
+    		
+    		if(minutos > restanteDia)
+    		{
+    			sumarDia        = true;
+    			minutosSumados = restanteDia;
+    			sb.append(Utils.log("\nLos minutos que quiero restar superan lo disponible del dia, le resto solo lo del dia: ", minutosSumados));
+    		}
+    		else
+    		{
+    			minutosSumados = minutos;
+    			sb.append(Utils.log("\nLos minutos que quiero restar entran en el dia: ", minutosSumados));
+    		}
+    		
+    		minutos -= minutosSumados;
+    		
+    		if(sumarDia)
+    		{
+    			sb.append(Utils.log("\nVoy a sumar un dia a:", fin, "\n"));
+    			fin.set(Calendar.HOUR_OF_DAY, 9);
+    			fin.set(Calendar.MINUTE, 0);
+    			if(fin.get(Calendar.DAY_OF_WEEK)==Calendar.FRIDAY)
+    			{
+    				fin.add(Calendar.DATE, 3);
+    				sb.append(Utils.log("\nSe paso de viernes a lunes:", fin, "\n"));
+    			}
+    			else if(fin.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY)
+    			{
+    				fin.add(Calendar.DATE, 2);
+    				sb.append(Utils.log("\nSe paso de sabado a lunes:", fin, "\n"));
+    			}
+    			else
+    			{
+    				fin.add(Calendar.DATE, 1);
+    				sb.append(Utils.log("\nSe sumo el dia simple:", fin, "\n"));
+    			}
+    		}
+    		else
+    		{
+    			sb.append(Utils.log("\nSumare solo los minutos restados:", minutosSumados));
+    			fin.add(Calendar.MINUTE, minutosSumados);
+    		}
+    	}
+    	
+    	sb.append(Utils.log(
+    			 "\n"
+    			,"\n@@@@@@ fin=", fin
+    			,"\n@@@@@@ calcularFechaLaboral @@@@@@"
+    			,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    			));
+    	
+    	logger.debug(sb.toString());
+    	
+    	return fin;
+    }
+    
+    public static String log(long stamp, Object s1)
+    {
+    	return Utils.log("\n[",stamp,"]: ",s1," ^[",stamp,"]");
+    }
+    
+    public static String log(long stamp, Object s1, Object s2)
+    {
+    	return Utils.log("\n[",stamp,"]: ",s1,s2," ^[",stamp,"]");
+    }
+    
+    public static String log(long stamp, Object s1, Object s2, Object s3)
+    {
+    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3," ^[",stamp,"]");
+    }
+    
+    public static String log(long stamp, Object s1, Object s2, Object s3, Object s4)
+    {
+    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4," ^[",stamp,"]");
+    }
+    
+    public static String log(long stamp, Object s1, Object s2, Object s3, Object s4, Object s5)
+    {
+    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5," ^[",stamp,"]");
+    }
+    
+    public static String log(long stamp, Object s1, Object s2, Object s3, Object s4, Object s5, Object s6)
+    {
+    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6," ^[",stamp,"]");
+    }
+    
+    public static String log(long stamp, Object s1, Object s2, Object s3, Object s4, Object s5, Object s6, Object s7)
+    {
+    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7," ^[",stamp,"]");
+    }
+    
+    public static String log(long stamp, Object s1, Object s2, Object s3, Object s4, Object s5, Object s6, Object s7, Object s8)
+    {
+    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8," ^[",stamp,"]");
+    }
+    
+    public static String log(long stamp, Object s1, Object s2, Object s3, Object s4, Object s5, Object s6, Object s7, Object s8, Object s9)
+    {
+    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9," ^[",stamp,"]");
+    }
+    
+    public static String log(long stamp, Object s1, Object s2, Object s3, Object s4, Object s5, Object s6, Object s7, Object s8, Object s9, Object s10)
+    {
+    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10," ^[",stamp,"]");
+    }
+    
 }

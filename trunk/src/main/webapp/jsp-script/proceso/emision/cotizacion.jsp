@@ -2830,8 +2830,10 @@ Ext.onReady(function()
         var folio  = _fieldByName('parametros.pv_otvalor16');
         
         //agente
-        if(_0_smap1.cdsisrol=='PROMOTORAUTO'
+        if((_0_smap1.cdsisrol=='PROMOTORAUTO'
             ||_0_smap1.cdsisrol=='SUSCRIAUTO')
+            &&Ext.isEmpty(_0_smap1.ntramite)
+            )
         {
             agente.on(
             {

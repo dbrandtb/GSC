@@ -176,6 +176,15 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
             //paramMovDocu.put("pv_cdtiptra_i"  , smap1.get("cdtiptra"));
             //kernelManager.guardarArchivo(paramMovDocu);
             
+            String codidocu = smap1.get("codidocu");
+            String cddocume = smap1.get("cddocumeFlujo");
+            
+            String codigoDocumento = codidocu;
+            if(StringUtils.isBlank(codigoDocumento))
+            {
+            	codigoDocumento = cddocume;
+            }
+            
             documentosManager.guardarDocumento(
             		smap1.get("cdunieco")
             		,smap1.get("cdramo")
@@ -189,7 +198,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
             		,smap1.get("ntramite")
             		,smap1.get("tipomov")
             		,null
-            		,smap1.get("codidocu")
+            		,codigoDocumento
             		,smap1.get("cdtiptra")
             		,null
             		,null

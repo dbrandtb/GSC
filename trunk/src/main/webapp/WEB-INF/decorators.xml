@@ -187,6 +187,9 @@
         
         <pattern>/flujomesacontrol/*.action*</pattern>
         <pattern>/jsp-script/proceso/flujoMesaControl/*.jsp</pattern>
+        
+        <pattern>/emision/*.action*</pattern>
+        <pattern>/jsp-script/proceso/emision/*.jsp</pattern>
 
    	</decorator>
 	

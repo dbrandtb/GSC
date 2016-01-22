@@ -804,6 +804,13 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case PARENTESCOAUTO:
 					lista = catalogosManager.obtieneCatalogoParentescoAutos();
 					break;
+				case RECUPERAR_TDOCUME:
+					if(params==null)
+					{
+						params=new HashMap<String,String>();
+					}
+					lista = catalogosManager.recuperarTdocume(params.get("cdtiptra"));
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

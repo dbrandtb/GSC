@@ -1474,4 +1474,49 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	public List<GenericVO> obtieneCatalogoParentescoAutos()	throws Exception {
 		return catalogosDAO.obtieneCatalogoParentescoAutos();
 	}
+	
+	@Override
+	public List<GenericVO> recuperarTdocume(String cdtiptra) throws Exception
+	{
+		long stamp = System.currentTimeMillis();
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarTdocume @@@@@@"
+				,"\n@@@@@@ stamp="    , stamp
+				,"\n@@@@@@ cdtiptra=" , cdtiptra
+				));
+		
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		
+		String paso = null;
+		
+		try
+		{
+			paso = "Recuperando documentos";
+			logger.debug(Utils.log("\n@@@@@@ ",stamp," ",paso));
+			List<Map<String,String>> documentos = flujoMesaControlDAO.recuperaTdocume();
+			
+			paso = "filtrando documentos";
+			logger.debug(Utils.log("\n@@@@@@ ",stamp," ",paso));
+			for(Map<String,String> documento : documentos)
+			{
+				if(cdtiptra.equals(documento.get("CDTIPTRA")))
+				{
+					lista.add(new GenericVO(documento.get("CDDOCUME"),documento.get("DSDOCUME")));
+				}
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ stamp=" , stamp
+				,"\n@@@@@@ lista=" , lista
+				,"\n@@@@@@ recuperarTdocume @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
 }

@@ -11,6 +11,9 @@ import java.util.Map;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
+import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.DocumentosUtils;
 import mx.com.gseguros.utils.HttpUtil;
@@ -18,6 +21,8 @@ import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class DocumentosPolizaAction extends PrincipalCoreAction {
 
@@ -43,6 +48,11 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	private boolean exito           = false;
 	
 	private ConsultasManager consultasManager;
+	
+	private Map<String,Item> items;
+	
+	@Autowired
+	private PantallasManager pantallasManager;
 	
 	/**
 	 * Metodo para la descarga de los archivos de los Movimientos en los casos
@@ -123,6 +133,27 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 			{
 				smap1.put("readOnly" , "");
 			}
+		}
+		
+		String proceso = smap1.get("aux");
+		if(StringUtils.isNotBlank(proceso))
+		{
+			items = new HashMap<String,Item>();
+			
+			List<ComponenteVO> comboDocs = pantallasManager.recuperarComboDocs(proceso);
+			
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			try
+			{
+				gc.generaComponentes(comboDocs, true, false, true, false, false, false);
+				items.put("comboDocs",gc.getItems());
+			}
+			catch(Exception ex)
+			{
+				logger.error(Utils.join("Error al generar combo de docs #",System.currentTimeMillis()),ex);
+			}
+			
 		}
 
 		logger.debug(Utils.log(
@@ -382,6 +413,14 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 
 	public void setConsultasManager(ConsultasManager consultasManager) {
 		this.consultasManager = consultasManager;
+	}
+
+	public Map<String, Item> getItems() {
+		return items;
+	}
+
+	public void setItems(Map<String, Item> items) {
+		this.items = items;
 	}
 	
 }
