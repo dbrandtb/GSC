@@ -526,7 +526,7 @@ public interface SiniestrosDAO {
 	
 	public List<GenericVO> obtieneListaFacturaTramite(String ntramite, String nfactura) throws Exception;
 
-	public void procesaPagoAutomaticoSisco() throws Exception;
+	public List<Map<String, String>> procesaPagoAutomaticoSisco() throws Exception;
 	
 	public List<Map<String, String>> obtieneValidaconAranceleTramite(HashMap<String, Object> params) throws Exception;
 

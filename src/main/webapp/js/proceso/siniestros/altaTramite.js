@@ -1992,7 +1992,8 @@ Ext.onReady(function() {
 						'paramsO.pv_nmsolici_i' : panelInicialPral.down('[name="idNmsolici"]').getValue(),
 						'paramsO.pv_cdtippag_i' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
 						'paramsO.pv_cdtipate_i' : panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue(),
-						'paramsO.pv_tipmov_i'   : panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+						'paramsO.pv_tipmov_i'   : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
+						'paramsO.pv_pagoAut_i'  : "0" //pago Normal 
 					},
 					success: function(response, opt) {
 						var jsonRes=Ext.decode(response.responseText);

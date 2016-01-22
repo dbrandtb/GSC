@@ -754,22 +754,26 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 	public String generarContrarecibo(){
 		logger.debug("Entra a generarContrarecibo");
 		try {
-			params =  new HashMap<String, String>();
-			params.put("pv_nmtramite_i", (String) paramsO.get("pv_ntramite_i"));
-			params.put("pv_cdtippag_i", (String) paramsO.get("pv_cdtippag_i"));
-			params.put("pv_cdtipate_i", (String) paramsO.get("pv_cdtipate_i"));
-			loadList = siniestrosManager.loadListaDocumentos(params);
-			if(loadList == null || loadList.isEmpty()){
-				msgResult = "No se puede Generar el Contra Recibo. No hay documentos";
-				success = false;
-				return SUCCESS;
-			}
-			for(HashMap<String, String> doc: loadList){
-				if( "Si".equalsIgnoreCase((String)doc.get("obligatorio")) && !(doc.get("listo")!= null && "true".equalsIgnoreCase((String)doc.get("listo")))){
-					msgResult = "No se puede Generar el Contra Recibo ya que en Revision de Documentos no se han marcado como entregados todos los documentos obligatorios (checklist).";
-					success = false;
-					return SUCCESS;
-				}
+			
+			String tipoPago = (String) paramsO.get("pv_pagoAut_i");
+			if(tipoPago.equalsIgnoreCase("0")){
+					params =  new HashMap<String, String>();
+					params.put("pv_nmtramite_i", (String) paramsO.get("pv_ntramite_i"));
+					params.put("pv_cdtippag_i", (String) paramsO.get("pv_cdtippag_i"));
+					params.put("pv_cdtipate_i", (String) paramsO.get("pv_cdtipate_i"));
+					loadList = siniestrosManager.loadListaDocumentos(params);
+					if(loadList == null || loadList.isEmpty()){
+						msgResult = "No se puede Generar el Contra Recibo. No hay documentos";
+						success = false;
+						return SUCCESS;
+					}
+					for(HashMap<String, String> doc: loadList){
+						if( "Si".equalsIgnoreCase((String)doc.get("obligatorio")) && !(doc.get("listo")!= null && "true".equalsIgnoreCase((String)doc.get("listo")))){
+							msgResult = "No se puede Generar el Contra Recibo ya que en Revision de Documentos no se han marcado como entregados todos los documentos obligatorios (checklist).";
+							success = false;
+							return SUCCESS;
+						}
+					}
 			}
 		}catch( Exception e){
 			logger.error("Error en loadListaDocumentos {}", e.getMessage(), e);

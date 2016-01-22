@@ -57,6 +57,7 @@ Ext.onReady(function() {
 		,tbar: [{
                     text     : 'Agregar Factura'
                     ,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
+                    , hidden : (_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO)
                     ,handler : _p11_agregarFacturas
                 }]
 	});
@@ -121,7 +122,7 @@ Ext.onReady(function() {
 				text     : 'Turnar &Aacute;rea M&eacute;dica'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/user_go.png'
 				,handler : _11_turnarAreaMedica
-				,hidden:  _CDROL == _ROL_MEDICO || _CDROL == _ROL_COORD_MEDICO || _11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO
+				,hidden:  _CDROL == _ROL_MEDICO || _CDROL == _ROL_COORD_MEDICO || _CDROL == _ROL_MESASINIESTRO
 			},
 			{
 				text     : 'Solicitar Pago'
@@ -133,7 +134,7 @@ Ext.onReady(function() {
 				text     : 'Turnar Operador Reclamaci&oacute;n'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/user_go.png'
 				,handler : _11_retornarMedAjustadorAOperador
-				,hidden:  _CDROL ==  _OPERADOR_REC || _11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO
+				,hidden:  _CDROL ==  _OPERADOR_REC ||  _CDROL == _ROL_MESASINIESTRO
 			},
 			{
 				text     : 'Historial'
@@ -145,6 +146,18 @@ Ext.onReady(function() {
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/note_go.png'
 				,handler : _11_turnarDevolucionTramite
 				,hidden  : _CDROL == _ROL_MEDICO || _CDROL == _ROL_COORD_MEDICO || _11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO
+			},
+			{
+				text     : 'Turnar Operador Reclamaci&oacute;n'
+				,icon    : _CONTEXT+'/resources/fam3icons/icons/user_go.png'
+				,handler : _11_turnarAreclamaciones
+				,hidden  : _CDROL != _ROL_MESASINIESTRO
+			},
+			{
+				text     : 'Generar Contrarecibo'
+				,icon    : _CONTEXT+'/resources/fam3icons/icons/accept.png'
+				,handler : _11_GenerarContrarecibo
+				,hidden  : _CDROL != _ROL_MESASINIESTRO
 			}
 		]
 	}); 

@@ -233,7 +233,8 @@ var msgWindow;
 		    		'paramsO.pv_nmsolici_i' : record.get('nmsolici'),
 		    		'paramsO.pv_cdtippag_i' : record.get('parametros.pv_otvalor02'),
 		    		'paramsO.pv_cdtipate_i' : record.get('parametros.pv_otvalor07'),
-		    		'paramsO.pv_tipmov_i'   : record.get('parametros.pv_otvalor02')
+		    		'paramsO.pv_tipmov_i'   : record.get('parametros.pv_otvalor02'),
+		    		'paramsO.pv_pagoAut_i'  : "0" //pago Normal 
 		    	
 			},
 			success: function(response, opt) {

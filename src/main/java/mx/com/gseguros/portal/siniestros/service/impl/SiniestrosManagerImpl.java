@@ -2102,9 +2102,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 
 	@Override
-	public void procesaPagoAutomaticoSisco() throws Exception {
+	public List<Map<String, String>> procesaPagoAutomaticoSisco() throws Exception {
 		// TODO Auto-generated method stub
-		siniestrosDAO.procesaPagoAutomaticoSisco();
+		return siniestrosDAO.procesaPagoAutomaticoSisco();
 	}
 	
 	@Override
