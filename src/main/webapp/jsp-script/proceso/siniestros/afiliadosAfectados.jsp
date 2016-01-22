@@ -5260,8 +5260,8 @@
 		Ext.Ajax.request({
 			url: _UrlGenerarContrarecibo,
 			params: {
-		    		'paramsO.pv_cdunieco_i' : _11_params.CDRAMO,
-		    		'paramsO.pv_cdramo_i'   : null,
+		    		'paramsO.pv_cdunieco_i' : null,
+		    		'paramsO.pv_cdramo_i'   : _11_params.CDRAMO,
 		    		'paramsO.pv_estado_i'   : null,
 		    		'paramsO.pv_nmpoliza_i' : null,
 		    		'paramsO.pv_nmsuplem_i' : null,
@@ -5269,7 +5269,7 @@
 		    		'paramsO.pv_nmsolici_i' : null,
 		    		'paramsO.pv_cdtippag_i' : _11_params.OTVALOR02,
 		    		'paramsO.pv_cdtipate_i' : _11_params.OTVALOR07,
-		    		'paramsO.pv_tipmov_i'   : _11_params.NTRAMITE,
+		    		'paramsO.pv_tipmov_i'   : _11_params.OTVALOR02,
 		    		'paramsO.pv_pagoAut_i'  : "1"//pago Automatico 
 		    	
 			},
