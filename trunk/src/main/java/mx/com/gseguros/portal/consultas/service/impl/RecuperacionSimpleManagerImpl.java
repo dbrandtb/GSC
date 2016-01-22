@@ -188,7 +188,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				resp.setSmap(new HashMap<String,String>());
 				resp.getSmap().put("listaNombres",sb.toString());
 			}
-			else if(proc.equals(RecuperacionSimple.RECUPERAR_DIAS_FECHA_FACTURACION))
+			else if(proc.equals(RecuperacionSimple.RECUPERAR_FECHAS_LIMITE_ENDOSO))
 			{
 				String cdunieco = params.get("cdunieco");
 				String cdramo   = params.get("cdramo");
