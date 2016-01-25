@@ -61,7 +61,10 @@ public class ImpresionServiceUNIXImpl implements ImpresionService {
 	    commands.add("/bin/sh");
 	    commands.add("-c");
 	    // Se forma el comando de impresion:
-	    StringBuilder sbComando = new StringBuilder("lpr ").append("-P ").append(nombreImpresora).append(" '").append(documento).append("'");
+		StringBuilder sbComando = new StringBuilder("lpr")
+				.append(" -P").append(nombreImpresora)
+				.append(" '").append(documento).append("'")
+				.append(" -#").append(numCopias);
 	    // Si se especifica la bandeja de impresion, se agrega al comando:
 	    if(StringUtils.isNotBlank(bandeja)) {
 	    	sbComando.append(" -o InputSlot=").append(bandeja);
