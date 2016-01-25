@@ -27,10 +27,8 @@ var _urlEnviarCorreo                       = '<s:url namespace="/general" action
 ////// urls //////
 
 ////// variables //////
-var claveUsuarioCaptura;
-if(Ext.isEmpty(<s:property value="%{#session['USUARIO']"/>)){
-	//claveUsuarioCaptura = <s:property value="%{#session['USUARIO'].claveUsuarioCaptura}" />;
-}
+var claveUsuarioCaptura = '<s:property value="%{#session['USUARIO'].claveUsuarioCaptura}"/>';
+debug("claveUsuarioCaptura= ",claveUsuarioCaptura,".");
 var _p29_smap1          = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false"/>;
 debug('_p29_smap1:',_p29_smap1);
 
