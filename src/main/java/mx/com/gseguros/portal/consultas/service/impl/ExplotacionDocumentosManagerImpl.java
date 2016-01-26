@@ -483,6 +483,10 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			
 			for(Map<String,String>archivo:listaArchivos)
 			{
+				logger.debug("archivo={} rutaDocumentosPoliza={} nmcopias={} ntramite={} cddocume={}",
+						archivo, rutaDocumentosPoliza, archivo.get("nmcopias"),
+						archivo.get("ntramite"), archivo.get("cddocume"));
+				
 				if(!apagado)
 				{
 					String ntramite = archivo.get("ntramite");
