@@ -1267,6 +1267,7 @@ function _procesaAccion(
                                     ,'flujo.nmpoliza'  : nmpoliza
                                     ,'flujo.nmsituac'  : nmsituac
                                     ,'flujo.nmsuplem'  : nmsuplem
+                                    ,'flujo.aux'       : aux
                                     ,'params.url'      : _NVL(pantalla.SWEXTERNA,'N')=='N' ?
                                                              '' :
                                                              pantalla.URLPANTMC

@@ -175,6 +175,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			
 			if(flujo!=null)
 			{
+				logger.debug(Utils.log(stamp, "se va a crear el smap1 porque se entra desde flujo=", smap1));
+				
 				smap1 = new HashMap<String,String>();
 				smap1.put("ntramite" , flujo.getNtramite());
 				smap1.put("cdunieco" , flujo.getCdunieco());
@@ -839,28 +841,44 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cotizacionAutoFlotilla()
 	{
-		logger.info(
-				new StringBuilder()
-				.append("\n####################################")
-				.append("\n###### cotizacionAutoFlotilla ######")
-				.append("\n###### smap1=").append(smap1)
-				.toString()
-				);
+		long stamp = System.currentTimeMillis();
+		logger.info(Utils.log(stamp
+				,"\n####################################"
+				,"\n###### cotizacionAutoFlotilla ######"
+				,"\n###### smap1=", smap1
+				,"\n###### flujo=", flujo
+				));
+		
+		String result = ERROR;
 		
 		try
 		{
-			setCheckpoint("Validando sesion");
-			checkNull(session, "No hay sesion");
-			checkNull(session.get("USUARIO"), "No hay usuario en la sesion");
-			UserVO usuario  = (UserVO)session.get("USUARIO");
-			String cdusuari = usuario.getUser();
-			String cdsisrol = usuario.getRolActivo().getClave();
+			UserVO usuario  = Utils.validateSession(session);
 			
-			setCheckpoint("Validando datos de entrada");
-			checkNull(smap1, "No se recibieron datos");
+			String cdusuari  = usuario.getUser()
+			       ,cdsisrol = usuario.getRolActivo().getClave();
+			
+			if(flujo!=null)
+			{
+				logger.debug(Utils.log(stamp, "se creara el mapa porque viene de flujo"));
+				
+				smap1 = new HashMap<String,String>();
+				
+				smap1.put("cdunieco" , flujo.getCdunieco());
+				smap1.put("cdramo"   , flujo.getCdramo());
+				smap1.put("cdtipsit" , "AR");
+				smap1.put("ntramite" , flujo.getNtramite());
+				smap1.put("tipoflot" , flujo.getAux());
+				
+				logger.debug(Utils.log(stamp, "el mapa creado desde flujo es=", smap1));
+			}
+			
+			Utils.validate(smap1, "No se recibieron datos");
 			
 			String endoso = "MARCO_ENDOSOS_GENERAL".equals(smap1.get("pantallaOrigen")) ? "S" : "N";
+			
 			smap1.put("endoso",endoso);
+			
 			if(endoso.equals("S"))
 			{
 				smap1.put("cdramo"   , smap1.get("CDRAMO"));
@@ -868,18 +886,20 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				smap1.put("cdtipsit" , "AR");
 			}
 			
-			String cdunieco = smap1.get("cdunieco");
-			String cdramo   = smap1.get("cdramo");
-			String cdtipsit = smap1.get("cdtipsit");
-			String ntramite = smap1.get("ntramite");
-			String tipoflot = smap1.get("tipoflot"); 
+			String cdunieco = smap1.get("cdunieco")
+			       ,cdramo  = smap1.get("cdramo")
+			       ,cdtipsit = smap1.get("cdtipsit")
+			       ,ntramite = smap1.get("ntramite")
+			       ,tipoflot = smap1.get("tipoflot"); 
 			
 			smap1.put("cdsisrol" , cdsisrol);
 			smap1.put("cdusuari" , cdusuari);
 			
-			checkBlank(cdramo   , "No se recibio el producto");
-			checkBlank(cdtipsit , "No se recibio la modalidad");
-			checkBlank(tipoflot , "No se recibio el tipo de cotizacion");
+			Utils.validate(
+					cdramo    , "No se recibio el producto"
+					,cdtipsit , "No se recibio la modalidad"
+					,tipoflot , "No se recibio el tipo de cotizacion"
+					);
 			
 			ManagerRespuestaImapSmapVO resp=cotizacionAutoManager.cotizacionAutoFlotilla(
 					cdusuari
@@ -891,33 +911,30 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					,tipoflot
 					,"S".equals(endoso)
 					);
-			exito           = resp.isExito();
-			respuesta       = resp.getRespuesta();
-			respuestaOculta = resp.getRespuestaOculta();
-			if(exito)
+			
+			exito     = resp.isExito();
+			respuesta = resp.getRespuesta();
+			
+			if(!exito)
 			{
-				smap1.putAll(resp.getSmap());
-				imap=resp.getImap();
+				throw new ApplicationException(respuesta);
 			}
+			
+			smap1.putAll(resp.getSmap());
+			imap=resp.getImap();
+			
+			result = SUCCESS;
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex);
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		String result = SUCCESS;
-		if(!exito)
-		{
-			result = ERROR;
-		}
-		
-		logger.info(
-				new StringBuilder()
-				.append("\n###### result=").append(result)
-				.append("\n###### cotizacionAutoFlotilla ######")
-				.append("\n####################################")
-				.toString()
-				);
+		logger.info(Utils.log(stamp
+				,"\n###### result=", result
+				,"\n###### cotizacionAutoFlotilla ######"
+				,"\n####################################"
+				));
 		return result;
 	}
 	
@@ -1159,82 +1176,118 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String emisionAutoFlotilla()
 	{
-		logger.info(
-				new StringBuilder()
-				.append("\n#################################")
-				.append("\n###### emisionAutoFlotilla ######")
-				.append("\n###### smap1=").append(smap1)
-				.toString()
-				);
+		long stamp = System.currentTimeMillis();
+		logger.info(Utils.log(stamp
+				,"\n#################################"
+				,"\n###### emisionAutoFlotilla ######"
+				,"\n###### smap1=", smap1
+				,"\n###### flujo=", flujo
+				));
 		
-		exito = true;
+		String result = ERROR;
 		
-		setCheckpoint("Validando datos de entrada");
 		try
 		{
-			checkNull(smap1, "No se recibieron datos");
-			String cdunieco = smap1.get("cdunieco");
-			String cdramo   = smap1.get("cdramo");
-			String cdtipsit = smap1.get("cdtipsit");
-			String estado   = smap1.get("estado");
-			String nmpoliza = smap1.get("nmpoliza");
-			String ntramite = smap1.get("ntramite");
-			checkBlank(cdunieco , "No se recibio la sucursal");
-			checkBlank(cdramo   , "No se recibio el ramo");
-			checkBlank(cdtipsit , "No se recibio la modalidad");
-			checkBlank(estado   , "No se recibio el estado de la poliza");
-			checkBlank(nmpoliza , "No se recibio el numero de poliza");
-			checkBlank(ntramite , "No se recibio el numero de tramite");
+			UserVO usuario = Utils.validateSession(session);
 			
-			checkNull(session,"No hay sesion");
-			checkNull(session.get("USUARIO"), "No hay usuario en la sesion");
-			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
-			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			String cdusuari = usuario.getUser()
+			       ,cdsisrol = usuario.getRolActivo().getClave();
 			
-			ManagerRespuestaImapSmapVO resp=cotizacionAutoManager.emisionAutoFlotilla(cdunieco, cdramo, cdtipsit, estado, nmpoliza, ntramite, cdusuari);
-			exito           = resp.isExito();
-			respuesta       = resp.getRespuesta();
-			respuestaOculta = resp.getRespuestaOculta();
-			if(exito)
+			if(flujo!=null)
 			{
-				smap1.putAll(resp.getSmap());
-				smap1.put("cdsisrol" , cdsisrol);
-				imap = resp.getImap();
+				logger.debug(Utils.log(stamp, "se creara el mapa porque viene de flujo"));
 				
-				HashMap<String,String> params = new HashMap<String, String>();
-				params.put("cdunieco", cdunieco);
-				params.put("cdramo", cdramo);
-				params.put("estado", estado);
-				params.put("nmpoliza", nmpoliza);
-				params.put("nmsuplem", "0");
+				smap1 = new HashMap<String,String>();
 				
-				Map<String,String> fechas = consultasManager.consultaFeNacContratanteAuto(params);
+				smap1.put("cdunieco" , flujo.getCdunieco());
+				smap1.put("cdramo"   , flujo.getCdramo());
+				smap1.put("cdtipsit" , "AR");
+				smap1.put("estado"   , flujo.getEstado());
 				
-				if(fechas != null && !fechas.isEmpty()){
-					smap1.put("AplicaCobVida" , fechas.get("APLICA"));
-					smap1.put("FechaMinEdad"  , fechas.get("FECHAMIN"));
-					smap1.put("FechaMaxEdad"  , fechas.get("FECHAMAX"));
-				}
+				logger.debug(Utils.log(stamp, "recuperando tramite"));
+				
+				StringBuilder sb = new StringBuilder();
+				Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(sb, flujo);
+				logger.debug(sb.toString());
+				
+				Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
+				logger.debug(Utils.log(stamp, "tramite=", tramite));
+				
+				smap1.put("nmpoliza" , tramite.get("NMSOLICI"));
+				
+				smap1.put("ntramite" , flujo.getNtramite());
+				smap1.put("tipoflot" , flujo.getAux());
+				
+				logger.debug(Utils.log(stamp, "el mapa creado desde flujo es=", smap1));
 			}
+			
+			Utils.validate(smap1, "No se recibieron datos");
+			
+			String cdunieco = smap1.get("cdunieco")
+			       ,cdramo   = smap1.get("cdramo")
+			       ,cdtipsit = smap1.get("cdtipsit")
+			       ,estado   = smap1.get("estado")
+			       ,nmpoliza = smap1.get("nmpoliza")
+			       ,ntramite = smap1.get("ntramite");
+			
+			Utils.validate(
+					cdunieco  , "No se recibi\u00f3 la sucursal"
+					,cdramo   , "No se recibi\u00f3 el ramo"
+					,cdtipsit , "No se recibi\u00f3 la modalidad"
+					,estado   , "No se recibi\u00f3 el estado de la poliza"
+					,nmpoliza , "No se recibi\u00f3 el numero de poliza"
+					,ntramite , "No se recibi\u00f3 el numero de tramite"
+					);
+			
+			ManagerRespuestaImapSmapVO resp = cotizacionAutoManager.emisionAutoFlotilla(
+					cdunieco
+					,cdramo
+					,cdtipsit
+					,estado
+					,nmpoliza
+					,ntramite
+					,cdusuari
+					);
+			
+			exito     = resp.isExito();
+			respuesta = resp.getRespuesta();
+			
+			if(!exito)
+			{
+				throw new ApplicationException(respuesta);
+			}
+			
+			smap1.putAll(resp.getSmap());
+			smap1.put("cdsisrol" , cdsisrol);
+			imap = resp.getImap();
+				
+			HashMap<String,String> params = new HashMap<String, String>();
+			params.put("cdunieco" , cdunieco);
+			params.put("cdramo"   , cdramo);
+			params.put("estado"   , estado);
+			params.put("nmpoliza" , nmpoliza);
+			params.put("nmsuplem" , "0");
+			
+			Map<String,String> fechas = consultasManager.consultaFeNacContratanteAuto(params);
+			
+			if(fechas != null && !fechas.isEmpty()){
+				smap1.put("AplicaCobVida" , fechas.get("APLICA"));
+				smap1.put("FechaMinEdad"  , fechas.get("FECHAMIN"));
+				smap1.put("FechaMaxEdad"  , fechas.get("FECHAMAX"));
+			}
+			
+			result = SUCCESS;
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex);
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		String result = SUCCESS;
-		if(!exito)
-		{
-			result = ERROR;
-		}
-		
-		logger.info(
-				new StringBuilder()
-				.append("\n###### result=").append(result)
-				.append("\n###### emisionAutoFlotilla ######")
-				.append("\n#################################")
-				.toString()
-				);
+		logger.info(Utils.log(stamp
+				,"\n###### result=", result
+				,"\n###### emisionAutoFlotilla ######"
+				,"\n#################################"
+				));
 		return result;
 	}
 	

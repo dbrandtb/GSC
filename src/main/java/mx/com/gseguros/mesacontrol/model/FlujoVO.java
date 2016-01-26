@@ -16,7 +16,8 @@ public class FlujoVO
 	               ,estado
 	               ,nmpoliza
 	               ,nmsituac
-	               ,nmsuplem;
+	               ,nmsuplem
+	               ,aux;
 
 	public String getNtramite() {
 		return ntramite;
@@ -122,6 +123,14 @@ public class FlujoVO
 		this.claveent = claveent;
 	}
 	
+	public String getAux() {
+		return aux;
+	}
+
+	public void setAux(String aux) {
+		this.aux = aux;
+	}
+
 	@Override
 	public String toString()
 	{
@@ -139,6 +148,7 @@ public class FlujoVO
 				,"\nnmpoliza="  , this.nmpoliza
 				,"\nnmsituac="  , this.nmsituac
 				,"\nnmsuplem="  , this.nmsuplem
+				,"\naux="       , this.aux
 				);
 	}
 }
