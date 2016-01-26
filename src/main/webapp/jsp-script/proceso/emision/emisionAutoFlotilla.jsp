@@ -784,14 +784,14 @@ function _p31_guardar(callback)
         }
     }
     
-    if(valido)
-    {
-        valido = _fieldById('_p22_formBusqueda').hidden;
-        if(!valido)
-        {
-            mensajeWarning('Falta registrar un cliente');
-        }
-    }
+//    if(valido)
+//    {
+//        valido = _fieldById('_p22_formBusqueda').hidden;
+//        if(!valido)
+//        {
+//            mensajeWarning('Falta registrar un cliente');
+//        }
+//    }
     
     if(valido)
     {
