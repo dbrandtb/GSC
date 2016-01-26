@@ -2676,67 +2676,87 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,Documento.RECIBO
 							);
 					
+					
+					boolean imprimirCaic = false;
+					boolean imprimirAP = false;
+					
+					List<Map<String,String>> listaEndosos = emisionAutosService.obtieneEndososImprimir(cdunieco, cdramo, "M", nmpolizaEmitida, nmsuplemEmitida);
+					
+					if(listaEndosos!= null && !listaEndosos.isEmpty()){
+						Map<String,String> emision = listaEndosos.get(0);
+						if(emision != null && emision.containsKey("CAIC") && Constantes.SI.equalsIgnoreCase(emision.get("CAIC"))){
+							imprimirCaic = true;
+						}
+						if(emision != null && emision.containsKey("AP") && Constantes.SI.equalsIgnoreCase(emision.get("AP"))){
+							imprimirAP = true;
+						}
+					}
+					
 					/**
 					 * Para AP inciso 1
 					 */
-					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
-					logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
-					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAp + parametros+"\">Anexo cobertura de AP</a>";
+					if(imprimirAP){
+						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
+						logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAp + parametros+"\">Anexo cobertura de AP</a>";
+						
+						//paramsR.put("pv_cddocume_i", urlAp + parametros);
+						//paramsR.put("pv_dsdocume_i", "AP");
+						
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,"M"
+								,nmpolizaEmitida
+								,nmsuplemEmitida
+								,new Date()
+								,urlAp + parametros
+								,"AP"
+								,nmpoliza
+								,ntramite
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_AP
+								);
+					}
 					
-					//paramsR.put("pv_cddocume_i", urlAp + parametros);
-					//paramsR.put("pv_dsdocume_i", "AP");
-					
-					//kernelManager.guardarArchivo(paramsR);
-					
-					documentosManager.guardarDocumento(
-							cdunieco
-							,cdramo
-							,"M"
-							,nmpolizaEmitida
-							,nmsuplemEmitida
-							,new Date()
-							,urlAp + parametros
-							,"AP"
-							,nmpoliza
-							,ntramite
-							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-							,Constantes.SI
-							,null
-							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-							,"0"
-							,Documento.EXTERNO_AP
-							);
-					
-					/**
-					 * Para CAIC inciso 1
-					 */
-					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
-					logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
-					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaic + parametros+"\">Anexo de cobertura RC USA</a>";
-					
-					//paramsR.put("pv_cddocume_i", urlCaic + parametros);
-					//paramsR.put("pv_dsdocume_i", "CAIC");
-					
-					//kernelManager.guardarArchivo(paramsR);
-					
-					documentosManager.guardarDocumento(
-							cdunieco
-							,cdramo
-							,"M"
-							,nmpolizaEmitida
-							,nmsuplemEmitida
-							,new Date()
-							,urlCaic + parametros
-							,"CAIC"
-							,nmpoliza
-							,ntramite
-							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-							,Constantes.SI
-							,null
-							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-							,"0"
-							,Documento.EXTERNO_CAIC
-							);
+					if(imprimirCaic){
+						/**
+						 * Para CAIC inciso 1
+						 */
+						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
+						logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaic + parametros+"\">Anexo de cobertura RC USA</a>";
+						
+						//paramsR.put("pv_cddocume_i", urlCaic + parametros);
+						//paramsR.put("pv_dsdocume_i", "CAIC");
+						
+						//kernelManager.guardarArchivo(paramsR);
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,"M"
+								,nmpolizaEmitida
+								,nmsuplemEmitida
+								,new Date()
+								,urlCaic + parametros
+								,"CAIC"
+								,nmpoliza
+								,ntramite
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_CAIC
+								);
+					}
 					
 					if("C".equalsIgnoreCase(tipoGrupoInciso)){
 						/**
@@ -3783,67 +3803,87 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,Documento.RECIBO
 								);
 						
-						/**
-						 * Para AP inciso 1
-						 */
-						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
-						logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAp + parametros+"\">Anexo cobertura de AP</a>";
 						
-						//paramsR.put("pv_cddocume_i", urlAp + parametros);
-						//paramsR.put("pv_dsdocume_i", "AP");
+						boolean imprimirCaic = false;
+						boolean imprimirAP = false;
 						
-						//kernelManager.guardarArchivo(paramsR);
+						List<Map<String,String>> listaEndosos = emisionAutosService.obtieneEndososImprimir(_cdunieco, _cdramo, "M", _nmpoliza, _nmsuplem);
 						
-						documentosManager.guardarDocumento(
-								_cdunieco
-								,_cdramo
-								,"M"
-								,_nmpoliza
-								,_nmsuplem
-								,new Date()
-								,urlAp + parametros
-								,"AP"
-								,nmsolici
-								,ntramite
-								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-								,Constantes.SI
-								,null
-								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,"0"
-								,Documento.EXTERNO_AP
-								);
+						if(listaEndosos!= null && !listaEndosos.isEmpty()){
+							Map<String,String> emision = listaEndosos.get(0);
+							if(emision != null && emision.containsKey("CAIC") && Constantes.SI.equalsIgnoreCase(emision.get("CAIC"))){
+								imprimirCaic = true;
+							}
+							if(emision != null && emision.containsKey("AP") && Constantes.SI.equalsIgnoreCase(emision.get("AP"))){
+								imprimirAP = true;
+							}
+						}
+						if(imprimirAP){
+							/**
+							 * Para AP inciso 1
+							 */
+							parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
+							logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
+							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAp + parametros+"\">Anexo cobertura de AP</a>";
+							
+							//paramsR.put("pv_cddocume_i", urlAp + parametros);
+							//paramsR.put("pv_dsdocume_i", "AP");
+							
+							//kernelManager.guardarArchivo(paramsR);
+							
+							documentosManager.guardarDocumento(
+									_cdunieco
+									,_cdramo
+									,"M"
+									,_nmpoliza
+									,_nmsuplem
+									,new Date()
+									,urlAp + parametros
+									,"AP"
+									,nmsolici
+									,ntramite
+									,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+									,Constantes.SI
+									,null
+									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+									,"0"
+									,Documento.EXTERNO_AP
+									);
+						}
 						
-						/**
-						 * Para CAIC inciso 1
-						 */
-						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
-						logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaic + parametros+"\">Anexo de cobertura RC USA</a>";
+						if(imprimirCaic){
+							/**
+							 * Para CAIC inciso 1
+							 */
+							parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
+							logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
+							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaic + parametros+"\">Anexo de cobertura RC USA</a>";
+							
+							//paramsR.put("pv_cddocume_i", urlCaic + parametros);
+							//paramsR.put("pv_dsdocume_i", "CAIC");
+							
+							//kernelManager.guardarArchivo(paramsR);
+							
+							documentosManager.guardarDocumento(
+									_cdunieco
+									,_cdramo
+									,"M"
+									,_nmpoliza
+									,_nmsuplem
+									,new Date()
+									,urlCaic + parametros
+									,"CAIC"
+									,nmsolici
+									,ntramite
+									,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+									,Constantes.SI
+									,null
+									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+									,"0"
+									,Documento.EXTERNO_CAIC
+									);
+						}
 						
-						//paramsR.put("pv_cddocume_i", urlCaic + parametros);
-						//paramsR.put("pv_dsdocume_i", "CAIC");
-						
-						//kernelManager.guardarArchivo(paramsR);
-						
-						documentosManager.guardarDocumento(
-								_cdunieco
-								,_cdramo
-								,"M"
-								,_nmpoliza
-								,_nmsuplem
-								,new Date()
-								,urlCaic + parametros
-								,"CAIC"
-								,nmsolici
-								,ntramite
-								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-								,Constantes.SI
-								,null
-								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,"0"
-								,Documento.EXTERNO_CAIC
-								);
 						
 						if("C".equalsIgnoreCase(tipoGrupoInciso)){
 							/**

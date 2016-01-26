@@ -639,7 +639,7 @@ function _p29_personaSaved(json)
             ,'smap1.nmpoliza' : _p29_smap1.nmpoliza
             ,'smap1.nmsituac' : '0'
             ,'smap1.cdrol'    : '1'
-            ,'smap1.cdperson' : _p22_fieldCdperson().getValue()
+            ,'smap1.cdperson' : json.smap1.CDPERSON
             ,'smap1.nmsuplem' : '0'
             ,'smap1.status'   : 'V'
             ,'smap1.nmorddom' : json.smap1.NMORDDOM
@@ -652,7 +652,6 @@ function _p29_personaSaved(json)
             debug('### mpoliper:',json);
             if(json.exito)
             {
-                _p22_fieldCdperson().mpoliper=true;
                 if(!Ext.isEmpty(_p22_parentCallbackCallback))
                 {
                     _p22_parentCallbackCallback();
@@ -690,14 +689,14 @@ function _p29_guardar(callback)
         datosIncompletos();
     }
     
-//    if(valido)
-//    {
-//        valido = _fieldById('_p22_formBusqueda').hidden;
-//        if(!valido)
-//        {
-//            mensajeWarning('Falta registrar un cliente');
-//        }
-//    }
+    if(valido)
+    {
+        valido = _fieldByName('_p22_formBusqueda').hidden;
+        if(!valido)
+        {
+            mensajeWarning('Falta registrar un cliente');
+        }
+    }
     
     if(valido)
     {
@@ -729,7 +728,16 @@ function _p29_guardar(callback)
                     debug('### guardar:',json);
                     if(json.exito)
                     {
-                    	_p32_guardarClic(callback);
+                    	if(_p29_validaSeguro =="S"){
+                    		_p32_guardarClic(callback);
+                        }else{
+                        	if(callback){
+                                callback();
+                            }
+                            else{
+                                mensajeCorrecto('Datos guardados',json.respuesta);
+                            }
+                        }
                     }
                     else
                     {
@@ -743,7 +751,7 @@ function _p29_guardar(callback)
                 }
             });
         };
-        _fieldById('_p22_botonGuardar').handler();
+        _fieldByName('_p22_botonGuardar').handler();
     }
     
     debug('<_p29_guardar');

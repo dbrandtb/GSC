@@ -1105,9 +1105,6 @@ if(_polizaEnEmision){
         value: ''//'RFC Incorrectos'
     }]);
 	
-    
-    _p22_fieldCdperson().mpoliper = false;
-    _p22_fieldCdperson().validado = false;
 	////// loaders //////
     
     
