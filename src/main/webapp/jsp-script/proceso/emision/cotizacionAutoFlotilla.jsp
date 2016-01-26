@@ -3361,7 +3361,7 @@ function _p30_ramo5AgenteSelect(comp,records)
             debug('#### obtener cdunieco agente response:',json);
             if(json.exito)
             {
-                if(Ext.isEmpty(_p31_smap1.ntramite))
+                if(Ext.isEmpty(_p30_smap1.ntramite))
                 {
                     _p30_smap1.cdunieco=json.smap1.cdunieco;
                 }
