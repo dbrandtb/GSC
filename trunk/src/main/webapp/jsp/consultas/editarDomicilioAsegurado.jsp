@@ -247,11 +247,15 @@ Ext.onReady(function() {
                     },{
                         xtype: 'textfield',
                         fieldLabel: 'Exterior',
-                        name: 'smap1.NMNUMERO'
+                        name: 'smap1.NMNUMERO',
+                        regex: /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/,
+                        regexText: 'Solo d&iacute;gitos, letras, espacios y guiones'
                     },{
                         xtype: 'textfield',
                         fieldLabel: 'Interior',
-                        name: 'smap1.NMNUMINT'
+                        name: 'smap1.NMNUMINT',
+                        regex: /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/,
+                        regexText: 'Solo d&iacute;gitos, letras, espacios y guiones'
                     }],
 		buttonAlign: 'center', 
 		buttons:[{

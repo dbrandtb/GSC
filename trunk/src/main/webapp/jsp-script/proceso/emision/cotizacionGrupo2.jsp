@@ -726,6 +726,7 @@ Ext.onReady(function()
 										                'smap1.cdideper' : '',
 										                'smap1.cdideext' : '',
 										                'smap1.esSaludDanios' : _RamoRecupera? 'D' : 'S',
+										                'smap1.polizaEnEmision': 'S',
 										                'smap1.esCargaClienteNvo' : 'N' ,
 										                'smap1.ocultaBusqueda' : 'S' ,
 										                'smap1.cargaCP' : '',
@@ -734,7 +735,8 @@ Ext.onReady(function()
 										                'smap1.activaCveFamiliar': 'N',
 										                'smap1.modoRecuperaDanios': 'N',
 										                'smap1.modoSoloEdicion': 'N',
-										                'smap1.contrantantePrincipal': 'S'
+										                'smap1.contrantantePrincipal': 'S',
+										                'smap1.tomarUnDomicilio' : 'S'
 										            }
 										     });
 										     
@@ -765,6 +767,7 @@ Ext.onReady(function()
 												        ,codpostal: json.smap1.CDPOSTAL
 												        ,cdedo: json.smap1.CDEDO
 												        ,cdmunici: json.smap1.CDMUNICI
+												        ,nmorddom: json.smap1.NMORDDOM
 												        ,confirmaEmision: 'S'
 												    }
 												};
@@ -1077,6 +1080,7 @@ Ext.onReady(function()
 		        ,codpostal: json.smap1.CDPOSTAL
 				,cdedo: json.smap1.CDEDO
 				,cdmunici: json.smap1.CDMUNICI
+				,nmorddom: json.smap1.NMORDDOM
 		        ,confirmaEmision: 'S'
 		    }
 		};
@@ -1573,7 +1577,7 @@ Ext.onReady(function()
                 {
                     for(var prop in json.params)
                     {
-                        if(prop!='cdedo'&&prop!='cdmunici'&&prop!='clasif'&&prop!='swexiper')
+                        if(prop!='cdedo'&&prop!='cdmunici'&&prop!='clasif'&&prop!='swexiper'&&prop!='nmorddom')
                         {
                             if(prop=='pcpgocte')
                             {
@@ -1679,6 +1683,7 @@ Ext.onReady(function()
 				                'smap1.cdideper' : '',
 				                'smap1.cdideext' : '',
 				                'smap1.esSaludDanios' : _RamoRecupera? 'D' : 'S',
+				                'smap1.polizaEnEmision': 'S',
 				                'smap1.esCargaClienteNvo' : 'N' ,
 				                'smap1.ocultaBusqueda' : 'S' ,
 				                'smap1.cargaCP' : '',
@@ -1687,7 +1692,9 @@ Ext.onReady(function()
 				                'smap1.activaCveFamiliar': 'N',
 				                'smap1.modoRecuperaDanios': 'N',
 				                'smap1.modoSoloEdicion': 'N',
-				                'smap1.contrantantePrincipal': 'S'
+				                'smap1.contrantantePrincipal': 'S',
+				                'smap1.tomarUnDomicilio' : 'S',
+	                    		'smap1.cargaOrdDomicilio' : (!Ext.isEmpty(json.params['swexiper']) && (json.params['swexiper'] == 'S' || json.params['swexiper'] == 's') && !Ext.isEmpty(cargacdperson))? json.params['nmorddom'] : ''
 				            }
 			            });
                     }

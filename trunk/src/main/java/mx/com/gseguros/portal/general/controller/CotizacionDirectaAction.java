@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
@@ -100,13 +101,17 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 				}
 			}
 			
-			ManagerRespuestaSlistSmapVO resp = cotizacionManager.cotizar(
-					params.get("cdunieco"), params.get("cdramo"), params.get("cdtipsit"), 
-					params.get("username"), params.get("cdelemento"),
-					nmpoliza, feini, fefin, null, params.get("cdpersonCli"), params.get("cdideperCli"),
-					noTarificar, conIncisos, list, params.containsKey("movil"),
-					tvalopol, params.get("cdagenteAux"));
-			
+			/**
+			 * TODO: Agregar nmorddom, si cdperson es nulo y cdideper no, Importa el cliente y le crea un cdperson y default nmorddom 1
+			 */
+			ManagerRespuestaSlistSmapVO resp = null;
+//			cotizacionManager.cotizar(
+//					params.get("cdunieco"), params.get("cdramo"), params.get("cdtipsit"), 
+//					params.get("username"), params.get("cdelemento"),
+//					nmpoliza, feini, fefin, params.get("cdpersonCli"), params.get("cdideperCli"),
+//					noTarificar, conIncisos, list, params.containsKey("movil"),
+//					tvalopol, params.get("cdagenteAux"));
+//			
 			// Se vac�an los datos de entrada para no devolverlos de nuevo:
 			params = new HashMap<String, String>();
 			list   = new ArrayList<Map<String,String>>();
@@ -162,6 +167,8 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
     		boolean esFlotilla  = StringUtils.isNotBlank(params.get("flotilla"))&&params.get("flotilla").equalsIgnoreCase("si");
     		String tipoflot    = params.get("tipoflot");
     		
+    		UserVO usuarioSesion  = (UserVO)session.get("USUARIO");
+    		
     		String ntramite = cotizacionManager.procesoComprarCotizacion(params.get("cdunieco"), params.get("cdramo"), params.get("nmpoliza"), 
     				params.get("cdtipsit"), params.get("fechaInicio"), params.get("fechaFin"), params.get("ntramite"), 
     				params.get("cdagenteExt"),
@@ -169,7 +176,7 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
     				params.get("cdusuari"), params.get("cdsisrol"), params.get("cdelemento"),
     				esFlotilla, tipoflot, params.get("cdpersonCli"), params.get("cdideperCli"),
     				getText("rdf.cotizacion.nombre."+params.get("cdtipsit")),
-    				getText("rdf.cotizacion.flot.nombre."+params.get("cdtipsit")));
+    				getText("rdf.cotizacion.flot.nombre."+params.get("cdtipsit")),usuarioSesion);
     		
     		params.put("ntramite", ntramite);
     		
@@ -251,27 +258,31 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 				}
 			}
 			
-			ManagerRespuestaSlistSmapVO resp = cotizacionAutoManager.cotizarAutosFlotilla(
-					cdusuari
-					,cdsisrol
-					,cdelemen
-					,cdunieco
-					,cdramo
-					,cdtipsit
-					,estado
-					,nmpoliza
-					,feini
-					,fefin
-					,cdagente
-					,cdpersonCli
-					,cdideperCli
-					,list
-					,listaValoresSituac
-					,listaConfigSituac
-					,noTarificar
-					,tipoflot
-					,tvalopol
-					);
+			/**
+			 * TODO: Agregar orddom, si cdperson es nulo y cdideper no, Importa el cliente y le crea un cdperson y default nmorddom 1
+			 */
+			ManagerRespuestaSlistSmapVO resp = null;
+//			cotizacionAutoManager.cotizarAutosFlotilla(
+//					cdusuari
+//					,cdsisrol
+//					,cdelemen
+//					,cdunieco
+//					,cdramo
+//					,cdtipsit
+//					,estado
+//					,nmpoliza
+//					,feini
+//					,fefin
+//					,cdagente
+//					,cdpersonCli
+//					,cdideperCli
+//					,list
+//					,listaValoresSituac
+//					,listaConfigSituac
+//					,noTarificar
+//					,tipoflot
+//					,tvalopol
+//					);
 			
 			// Se vac�an los datos de entrada para no devolverlos de nuevo:
 			params             = new HashMap<String, String>();

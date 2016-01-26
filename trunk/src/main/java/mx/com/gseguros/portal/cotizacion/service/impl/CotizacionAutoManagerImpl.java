@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
@@ -1738,6 +1739,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String fefin
 			,String cdagente
 			,String cdpersonCli
+			,String nmorddomCli
 			,String cdideperCli
 			,List<Map<String,String>> tvalosit
 			,List<Map<String,String>> baseTvalosit
@@ -1745,6 +1747,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,boolean noTarificar
 			,String tipoflot
 			,Map<String,String>tvalopol
+			,UserVO usuarioSesion
 			)
 	{
 		logger.info(
@@ -1762,6 +1765,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.append("\n@@@@@@ fechaFin=")     .append(fefin)
 				.append("\n@@@@@@ cdagente=")     .append(cdagente)
 				.append("\n@@@@@@ cdpersonCli=")  .append(cdpersonCli)
+				.append("\n@@@@@@ nmorddomCli=")  .append(nmorddomCli)
 				.append("\n@@@@@@ cdideperCli=")  .append(cdideperCli)
 				.append("\n@@@@@@ tvalosit=")     .append(tvalosit)
 				.append("\n@@@@@@ baseTvalosit=") .append(baseTvalosit)
@@ -2100,6 +2104,17 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							String newCdPerson = personasDAO.obtenerNuevoCdperson();
 
 							logger.debug("Insertando nueva persona, cdperson generado: " +newCdPerson);
+							
+							String usuarioCaptura =  null;
+							
+							if(usuarioSesion!=null){
+								if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
+									usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
+								}else{
+									usuarioCaptura = usuarioSesion.getCodigoPersona();
+								}
+								
+							}
 				    		
 				    		String apellidoPat = "";
 					    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
@@ -2147,7 +2162,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(), (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc()
 									, "1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(), null
 									, apellidoPat, apellidoMat, calendarIngreso.getTime(), nacionalidad, cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli()))
-									, null, null, null, null, null, null, Integer.toString(cli.getSucursalCli()), "I");
+									, null, null, null, null, null, null, Integer.toString(cli.getSucursalCli()), usuarioCaptura, Constantes.INSERT_MODE);
 							
 							String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
 			    			if(edoAdosPos2.length() ==  1){
@@ -2158,7 +2173,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			    			
 			    			personasDAO.movimientosMdomicil(newCdPerson, "1", cli.getCalleCli(), cli.getTelefonoCli()
 				    				, cli.getCodposCli(), cli.getCodposCli()+edoAdosPos2, null/*cliDom.getMunicipioCli()*/, null/*cliDom.getColoniaCli()*/
-				    				, cli.getNumeroCli(), null, "I");
+				    				, cli.getNumeroCli(), null
+				    				,"1" // domicilio personal default
+									,usuarioCaptura
+									,Constantes.SI  //domicilio activo
+									,Constantes.INSERT_MODE);
 
 			    			//GUARDAR TVALOPER
 			    			
@@ -2171,10 +2190,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			    				null, null, null, null, null, 
 			    				null, null, cli.getTelefonoCli(), cli.getMailCli(), null, 
 			    				null, null, null, null, null, 
-			    				null, null, null, null, null);
+			    				null, null, null, null, null,
+			    				cli.getFaxCli(), cli.getCelularCli());
 			    			
 			    			
 			    			cdpersonCli = newCdPerson;
+			    			nmorddomCli = "1";
 
 						}
 					}
@@ -2196,7 +2217,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							,cdpersonCli
 							,"0"  //nmsuplem
 							,"V"  //status
-							,"1"  //nmorddom
+							,nmorddomCli  //nmorddom
 							,null //swreclam
 							,"I"  //accion
 							,"S"  //swexiper
@@ -3523,7 +3544,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String nmpoliza
 			,String nmsuplem
 			,String nmsituac
-			,List<Map<String,String>>mpoliperMpersona)
+			,List<Map<String,String>>mpoliperMpersona
+			,UserVO usuarioSesion)
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3540,6 +3562,18 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		try
 		{
+			
+			String usuarioCaptura =  null;
+			
+			if(usuarioSesion!=null){
+				if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuarioSesion.getCodigoPersona();
+				}
+				
+			}
+			
 			setCheckpoint("Iterando registros");
 			for(Map<String,String>rec:mpoliperMpersona)
 			{
@@ -3587,7 +3621,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							,rec.get("CDIDEEXT")
 							,rec.get("CDESTCIV")
 							,rec.get("CDSUCEMI")
-							,"I");
+							,usuarioCaptura
+							,Constantes.INSERT_MODE);
 					
 					endososDAO.movimientoMpoliperBeneficiario(
 							cdunieco
@@ -3653,6 +3688,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							,rec.get("CDIDEEXT")
 							,rec.get("CDESTCIV")
 							,rec.get("CDSUCEMI")
+							,usuarioCaptura
 							,"B");
 				}
 				else
@@ -3701,7 +3737,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							,rec.get("CDIDEEXT")
 							,rec.get("CDESTCIV")
 							,rec.get("CDSUCEMI")
-							,"U");
+							,usuarioCaptura
+							,Constantes.UPDATE_MODE);
 				}
 			}
 			

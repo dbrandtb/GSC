@@ -1099,6 +1099,7 @@ function _p28_cotizar(sinTarificar)
         var smap = _p28_smap1;
         _p28_smap1['cdpersonCli'] = Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.CLAVECLI;
         _p28_smap1['cdideperCli'] = Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.CDIDEPER;
+        _p28_smap1['nmorddomCli'] = Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.NMORDDOM;
         _p28_smap1['notarificar'] = !Ext.isEmpty(sinTarificar)&&sinTarificar==true?'si':'no';
         
         var agenteCmp=_fieldByLabel('AGENTE',_fieldById('_p28_form'),true);
@@ -2533,6 +2534,7 @@ function _p28_comprar()
             ,'smap1.fechaFin'      : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
             ,'smap1.ntramite'      : _p28_smap1.ntramite
             ,'smap1.cdpersonCli'   : Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.CLAVECLI
+            ,'smap1.nmorddomCli'   : Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.NMORDDOM
             ,'smap1.cdideperCli'   : Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.CDIDEPER
             ,'smap1.cdagenteExt'   : _p28_smap1.cdramo+'x'=='5x' ? _fieldByLabel('AGENTE').getValue() : ''
         }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 
@@ -55,16 +56,12 @@ public interface PersonasManager
 			,String cdideext
 			,String cdestcivil
 			,String cdsucemi
-			,String nmorddom
-			,String dsdomici
 			,String nmtelefo
-			,String cdpostal
-			,String cdedo
-			,String cdmunici
-			,String cdcoloni
-			,String nmnumero
-			,String nmnumint
+			,List<Map<String,String>> saveList
+			,List<Map<String,String>> updateList
+			,List<Map<String,String>> deleteList
 			,boolean autosave
+			,UserVO usuario
 			,long   timestamp) throws Exception;
 
 	/**
@@ -81,12 +78,16 @@ public interface PersonasManager
 			,String cdcoloni
 			,String nmnumero
 			,String nmnumint
+			,UserVO usuario
+			,String swactivo
 			,long   timestamp) throws Exception;
 	/**
 	 * Obtener el domicilio de una persona por su cdperson de PKG_CONSULTA.P_GET_MDOMICIL
 	 * @return exito,respuesta,respuestaOculta,domicilio
 	 */
 	public Map<String,Object> obtenerDomicilioPorCdperson(String cdperson,long timestamp) throws Exception;
+
+	public Map<String,Object> obtenerDomiciliosPorCdperson(String cdperson,long timestamp) throws Exception;
 	/**
 	 * Obtener los items de tatriper y los valores de tvaloper para un cdperson de PKG_LISTA.P_GET_ATRI_PER y PKG_CONSULTA.P_GET_TVALOPER
 	 * @return exito,respuesta,respuestaOculta,itemsTatriper,fieldsTatriper,tvaloper
@@ -107,6 +108,7 @@ public interface PersonasManager
 			,String otvalor36,String otvalor37,String otvalor38,String otvalor39,String otvalor40
 			,String otvalor41,String otvalor42,String otvalor43,String otvalor44,String otvalor45
 			,String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50
+			,String otvalor51, String otvalor52
 			,long timestamp
 			) throws Exception;
 	public List<Map<String,String>>cargarDocumentosPersona(String cdperson)throws Exception;
@@ -127,7 +129,7 @@ public interface PersonasManager
 	
 	public Map<String,Item> pantallaPersona(String origen, String cdsisrol, String context) throws Exception;
 	
-	public String guardarPantallaEspPersona(Map<String,String>params) throws Exception;
+	public String guardarPantallaEspPersona(Map<String,String>params, UserVO usuario) throws Exception;
 	
 	public Map<String,String>recuperarEspPersona(String cdperson) throws Exception;
 	
@@ -142,4 +144,8 @@ public interface PersonasManager
 	public String obtieneInformacionCliente(String sucursal, String ramo, String poliza) throws Exception;
 	
 	public String validaExisteAseguradoSicaps(String cdideper)throws Exception;
+
+	public Integer obtieneTipoCliWS(String codigoExterno, String compania) throws Exception;
+
+	public List<Map<String, String>> obtieneConfPatallaCli(String cdperson, String usuario, String rol, String tipoCliente) throws Exception;
 }

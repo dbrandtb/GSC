@@ -465,7 +465,8 @@ Ext.onReady(function(){
                 'smap1.pv_cdrol_i'      : inputCdrolp4,
                 'smap1.nombreAsegurado' : inputNombreaseguradop4,
                 'smap1.cdrfc'           : inputCdrfcp4,
-                'smap1.pv_cdtipsit_i'   : inputCdtipsit
+                'smap1.pv_cdtipsit_i'   : inputCdtipsit,
+                'smap1.pv_nmorddom_i'   : ''// obtiene el asignado a la poliza
             },
             type:'ajax',
             url : urlCargarp4,
@@ -526,7 +527,8 @@ Ext.onReady(function(){
                         'smap1.pv_cdrol_i'      : '2',
                         'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
                         'smap1.cdrfc'           : record.get('cdrfc'),
-                        'smap1.pv_cdtipsit_i'   : inputCdtipsit
+                        'smap1.pv_cdtipsit_i'   : inputCdtipsit,
+                        'smap1.pv_nmorddom_i'   : ''// obtiene el asignado a la poliza
                     },
                     type:'ajax',
                     url : urlCargarp4,
@@ -570,10 +572,10 @@ Ext.onReady(function(){
     }
     ////// usa valores del padre //////
     
-    _fieldByName('smap1.NMNUMERO').regex = /^[A-Za-z0-9-]*$/;
-    _fieldByName('smap1.NMNUMERO').regexText = 'Solo d&iacute;gitos, letras y guiones';
-    _fieldByName('smap1.NMNUMINT').regex = /^[A-Za-z0-9-]*$/;
-    _fieldByName('smap1.NMNUMINT').regexText = 'Solo d&iacute;gitos, letras y guiones';
+    _fieldByName('smap1.NMNUMERO').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+    _fieldByName('smap1.NMNUMERO').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
+    _fieldByName('smap1.NMNUMINT').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+    _fieldByName('smap1.NMNUMINT').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
     
     /*//////////////////*/
     ////// cargador //////

@@ -390,7 +390,7 @@ function _datComTurnarSuscripcion()
                         ,Ext.create('Ext.panel.Panel',
                         {
                             id:'tabPanelAsegurados'
-                            ,title:inputCdtipsit=='AF'||inputCdtipsit=='PU'?'Editar clientes':'Editar asegurados'
+                            ,title:inputCdtipsit=='AF'||inputCdtipsit=='PU'?'Editar clientes':'Editar contratante'
                             ,cls:'claseTitulo'
                             ,border:0
                             ,loader:
@@ -1489,7 +1489,7 @@ function _datComTurnarSuscripcion()
 										                                                            ,text     : 'Pagar'
 										                                                            ,icon     : contexto+'/resources/fam3icons/icons/money.png'
 										                                                            ,disabled : true
-										                                                            ,hidden  : true//inputCdramo!='2'
+										                                                            ,hidden  : true//TODO: Reemplazar obtDatLoaderContratante por obtieneDatosClienteContratante //inputCdramo!='2'
 										                                                            ,handler  : function()
 										                                                            {
 										                                                            	if(Ext.isEmpty(_numeroPolizaExt)){

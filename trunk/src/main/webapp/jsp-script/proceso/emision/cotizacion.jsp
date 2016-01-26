@@ -286,7 +286,8 @@ function _0_comprar()
             ,'smap1.fechaInicio'   : Ext.Date.format(Ext.getCmp('fechaInicioVigencia').getValue(),'d/m/Y')
             ,'smap1.fechaFin'      : Ext.Date.format(Ext.getCmp('fechaFinVigencia').getValue(),'d/m/Y')
             ,'smap1.ntramite'      : _0_smap1.ntramite
-            ,'smap1.cdpersonCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.get('CLAVECLI')
+            ,'smap1.cdpersonCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CLAVECLI
+            ,'smap1.nmorddomCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.NMORDDOM
             ,'smap1.cdideperCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CDIDEPER
             ,'smap1.cdagenteExt'   : (_0_smap1.cdramo == '6' || _0_smap1.cdramo == '16') ? _fieldByLabel('AGENTE').getValue() : ''
         }
@@ -2417,7 +2418,7 @@ Ext.onReady(function()
     //[parche] para AF y PU
     if(_0_smap1.cdtipsit=='AF' || _0_smap1.cdtipsit=='PU')
     {
-        _0_gridIncisos.setTitle('Datos del contratante');
+        _0_gridIncisos.setTitle('Datos del contratante prospecto');
         _0_formAgrupados.down('[name=parametros.pv_otvalor03]').addListener('change',function()
         {
             debug('cleaning');
@@ -2824,7 +2825,7 @@ Ext.onReady(function()
             }
         });
         
-        _0_gridIncisos.setTitle('Datos del contratante');
+        _0_gridIncisos.setTitle('Datos del contratante prospecto');
         
         var agente = _fieldByName('parametros.pv_otvalor17');
         var folio  = _fieldByName('parametros.pv_otvalor16');

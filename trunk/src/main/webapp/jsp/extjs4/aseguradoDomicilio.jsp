@@ -21,6 +21,7 @@ var inputCdideperp4        = '<s:property value="smap1.cdideper" />';
 var inputCdrolp4           = '<s:property value="smap1.pv_cdrol" />';
 var inputNombreaseguradop4 = '<s:property value="smap1.nombreAsegurado" escapeHtml="false" />';
 var inputCdrfcp4           = '<s:property value="smap1.cdrfc" escapeHtml="false" />';
+var inputNmorddomp4        = '<s:property value="smap1.nmorddom" escapeHtml="false" />';//ordinal del domicilio del titular
 var urlRegresarp4          = '<s:url namespace="/" action="editarAsegurados" />';
 var urlCargarp4            = '<s:url namespace="/" action="cargarPantallaDomicilio" />';
 var urlGuardarp4           = '<s:url namespace="/" action="guardarPantallaDomicilio" />';
@@ -437,7 +438,8 @@ Ext.onReady(function(){
                 'smap1.pv_cdrol_i'      : inputCdrolp4,
                 'smap1.nombreAsegurado' : inputNombreaseguradop4,
                 'smap1.cdrfc'           : inputCdrfcp4,
-                'smap1.pv_cdtipsit_i'   : inputCdtipsit
+                'smap1.pv_cdtipsit_i'   : inputCdtipsit,
+                'smap1.pv_nmorddom_i'   : '1'
             },
             type:'ajax',
             url : urlCargarp4,
@@ -495,7 +497,8 @@ Ext.onReady(function(){
                                 'smap1.pv_cdrol_i'      : '2',
                                 'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
                                 'smap1.cdrfc'           : record.get('cdrfc'),
-                                'smap1.pv_cdtipsit_i'   : inputCdtipsit
+                                'smap1.pv_cdtipsit_i'   : inputCdtipsit,
+                                'smap1.pv_nmorddom_i'   : record.get('estomador')==true? inputNmorddomp4 : '1'//Orddom del contratante si, el titular es contratante, si no se herada con el nmorddom 1 del titular, los asegurados solo tienen un domicilio
                             },
                             type:'ajax',
                             url : urlCargarp4,
@@ -578,10 +581,10 @@ Ext.onReady(function(){
     });
     
     if(Ext.isEmpty(inputCdideperp4)){
-    	_fieldByName('smap1.NMNUMERO').regex = /^[A-Za-z0-9-]*$/;
-        _fieldByName('smap1.NMNUMERO').regexText = 'Solo d&iacute;gitos, letras y guiones';
-        _fieldByName('smap1.NMNUMINT').regex = /^[A-Za-z0-9-]*$/;
-        _fieldByName('smap1.NMNUMINT').regexText = 'Solo d&iacute;gitos, letras y guiones';    	
+    	_fieldByName('smap1.NMNUMERO').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+        _fieldByName('smap1.NMNUMERO').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
+        _fieldByName('smap1.NMNUMINT').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+        _fieldByName('smap1.NMNUMINT').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';    	
     }
     
     /*//////////////////*/

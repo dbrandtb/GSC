@@ -166,6 +166,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 	@Autowired
 	private EndososManager endososManager;
 
+	
+	public ComplementariosAction() {
+		this.session=ActionContext.getContext().getSession();
+	}
+	
 	public String mostrarPantalla()
 	{
 		logger.info(
@@ -396,7 +401,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				respuestaOculta = ex.getMessage();
 				logger.error(respuesta,ex);
 				
-				this.addActionError("No se ha definido la url de la pestaÃ±a de asegurados #"+timestamp);
+				this.addActionError("No se ha definido la url de la pestaña de asegurados #"+timestamp);
 				map1.put("urlAsegurados","");
 			}
 		}
@@ -1063,6 +1068,26 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			
 			map1.put("maxLenContratante",maxLenContratante);
+
+			String nmOrdDom = null;
+			try
+			{
+				List<Map<String,String>> res= consultasManager.obtieneContratantePoliza(map1.get("cdunieco"),map1.get("cdramo"),"W",map1.get("nmpoliza"),null,"1",null);
+				
+				if(res!=null && !res.isEmpty()){
+					Map<String,String> contratante = res.get(0);
+					if(contratante.get("NMORDDOM")!=null){
+						nmOrdDom = contratante.get("NMORDDOM");
+					}
+				}
+			}
+			catch(Exception ex)
+			{
+				logger.error("Error sin impacto al obtener numero de domicilio, no se encontro ningun contratante en la poliza.",ex);
+			}
+			
+			map1.put("NMORDDOM",nmOrdDom);
+			
 			logger.debug("map1: "+map1);
 			
 		} catch (Exception ex) {
@@ -1192,10 +1217,26 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String guardarPantallaAsegurados()
 	{
+		logger.info(""
+				+ "\n############################################"
+				+ "\n###### guardarPantallaAseguradosSalud ######"
+				);
 		logger.debug(Utils.log("map1="  , map1));
 		logger.debug(Utils.log("list1=" , list1));
 		try
 		{
+			UserVO usuario = (UserVO) session.get("USUARIO");
+			String usuarioCaptura =  null;
+			
+			if(usuario!=null){
+				if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuario.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuario.getCodigoPersona();
+				}
+				
+			}
+			
 			/**
 			 * Para validar Zona de CP Estado y municipio del titular Respecto a la cotizacion
 			 */
@@ -1226,6 +1267,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					param.put("pv_estado_i",	map1.get("pv_estado"));
 					param.put("pv_nmpoliza_i",	map1.get("pv_nmpoliza"));
 					param.put("pv_cdperson_i",	cdpersonContrat);
+					param.put("pv_nmorddom_i",	map1.get("pv_nmorddom"));
 					boolean validacionDomTitu = cotizacionManager.validaDomicilioCotizacionTitular(param);
 					
 					if(!validacionDomTitu){
@@ -1298,11 +1340,13 @@ public class ComplementariosAction extends PrincipalCoreAction
 					parametros.put("pv_cdideext_i"    , cdIdeExtAseg);
 					parametros.put("pv_cdestciv_i"    , null);
 					parametros.put("pv_cdsucemi_i"    , null);
+					parametros.put("pv_cdusuario_i"   , usuarioCaptura);
 					parametros.put("pv_accion_i"      , "I");
 					logger.debug("#iteracion mov mpersonas "+i);
 					kernelManager.movMpersona(parametros);
 				}
 				
+				String cdRolAseg = (String)aseg.get("cdrol");
 				
 				parametros=new LinkedHashMap<String,Object>(0);
 				parametros.put("pv_cdunieco_i",	map1.get("pv_cdunieco"));
@@ -1310,11 +1354,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 				parametros.put("pv_estado_i",	map1.get("pv_estado"));
 				parametros.put("pv_nmpoliza_i",	map1.get("pv_nmpoliza"));
 				parametros.put("pv_nmsituac_i",	(String)aseg.get("nmsituac"));
-				parametros.put("pv_cdrol_i", 	(String)aseg.get("cdrol"));
+				parametros.put("pv_cdrol_i", 	cdRolAseg);
 				parametros.put("pv_cdperson_i",	(String)aseg.get("cdperson"));
 				parametros.put("pv_nmsuplem_i",	"0");
 				parametros.put("pv_status_i",	"V");
-				parametros.put("pv_nmorddom_i",	"1");
+				/** PARA EL CONTRATANTE SE ENVIA EL DOMICILIO QUE SE SELECCIONA EN PANTALLA SI NO SE MANDA POR DEFAULT EL 1 PARA ASEGURADOS **/
+				parametros.put("pv_nmorddom_i",	(StringUtils.isNotBlank(cdpersonContrat) && cdpersonContrat.equals((String)aseg.get("cdperson"))) ? map1.get("pv_nmorddom") : "1");
 				parametros.put("pv_swreclam_i",	null);
 				parametros.put("pv_accion_i",	"I");
 				parametros.put("pv_swexiper_i", (String)aseg.get("swexiper"));
@@ -1416,6 +1461,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 			logger.error("error al guardar asegurados",ex);
 			success=false;
 		}
+		
+		logger.info(""
+				+ "\n###### pantallaAseguradosSalud ######"
+				+ "\n####################################"
+				);
+		
 		return SUCCESS;
 	}
 
@@ -1565,20 +1616,25 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			if(lisUsuSinDir!=null&&lisUsuSinDir.size()>0)
 			{
-				mensajeRespuesta="Favor de verificar la direcci&oacute;n de los siguientes asegurados:<br/>";
-				// f a v o r
-				//0 1 2 3 4 5
-				if(lisUsuSinDir.get(0).get("nombre").substring(0,5).equalsIgnoreCase("favor"))
-				{
-					mensajeRespuesta=lisUsuSinDir.get(0).get("nombre");
-				}
-				else
-				{
-					for(int i=0;i<lisUsuSinDir.size();i++)
+				if(Ramo.SERVICIO_PUBLICO.getCdramo().equals(cdramo) || Ramo.AUTOS_FRONTERIZOS.getCdramo().equals(cdramo)){
+					mensajeRespuesta="Favor de verificar y guardar correctamente la direcci&oacute;n y datos del contratante.";
+				}else{
+					mensajeRespuesta="Favor de verificar la direcci&oacute;n de los siguientes asegurados:<br/>";
+					// f a v o r
+					//0 1 2 3 4 5
+					if(lisUsuSinDir.get(0).get("nombre").substring(0,5).equalsIgnoreCase("favor"))
 					{
-						mensajeRespuesta+=lisUsuSinDir.get(i).get("nombre")+"<br/>";
-					}					
+						mensajeRespuesta=lisUsuSinDir.get(0).get("nombre");
+					}
+					else
+					{
+						for(int i=0;i<lisUsuSinDir.size();i++)
+						{
+							mensajeRespuesta+=lisUsuSinDir.get(i).get("nombre")+"<br/>";
+						}					
+					}
 				}
+				
 				logger.debug("Se va a terminar el proceso porque faltan direcciones");
 				return SUCCESS;
 			}
@@ -2770,12 +2826,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 * Para cobertura de reduce GS
 						 */
 						
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf\">Reduce GS</a>";
-						
-						//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
-						//paramsR.put("pv_dsdocume_i", "Reduce GS");
-						
-						//kernelManager.guardarArchivo(paramsR);
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.txtinfocobredgs")+"\">Reduce GS</a>";
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -2784,7 +2835,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
+								,this.getText("manual.agente.txtinfocobredgs")
 								,"Reduce GS"
 								,nmpoliza
 								,ntramite
@@ -2801,12 +2852,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 * Para cobertura de gestoria GS
 						 */
 						
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf\">Gestoria GS</a>";
-						
-						//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
-						//paramsR.put("pv_dsdocume_i", "Gestoria GS");
-						
-						//kernelManager.guardarArchivo(paramsR);
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.txtinfocobgesgs")+"\">Gestoria GS</a>";
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -2815,7 +2861,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
+								,this.getText("manual.agente.txtinfocobgesgs")
 								,"Gestoria GS"
 								,nmpoliza
 								,ntramite
@@ -2878,13 +2924,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,Documento.EXTERNO_ESPECIF_SEGURO_VIDA
 								);
 
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf\">Condiciones Generales Seguro de Vida</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.condgralescobsegvida")+"\">Condiciones Generales Seguro de Vida</a>";
 						
-						//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf");
-						//paramsR.put("pv_dsdocume_i", "Condiciones Generales Seguro de Vida");
-						
-						//kernelManager.guardarArchivo(paramsR);
-
 						documentosManager.guardarDocumento(
 								cdunieco
 								,cdramo
@@ -2892,7 +2933,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,"http://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf"
+								,this.getText("manual.agente.condgralescobsegvida")
 								,"Condiciones Generales Seguro de Vida"
 								,nmpoliza
 								,ntramite
@@ -3892,12 +3933,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							 * Para cobertura de reduce GS
 							 */
 							
-							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf\">Reduce GS</a>";
-							
-							//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
-							//paramsR.put("pv_dsdocume_i", "Reduce GS");
-							
-							//kernelManager.guardarArchivo(paramsR);
+							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.txtinfocobredgs")+"\">Reduce GS</a>";
 							
 							documentosManager.guardarDocumento(
 									_cdunieco
@@ -3906,7 +3942,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,_nmpoliza
 									,_nmsuplem
 									,new Date()
-									,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
+									,this.getText("manual.agente.txtinfocobredgs")
 									,"Reduce GS"
 									,nmsolici
 									,ntramite
@@ -3923,12 +3959,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							 * Para cobertura de gestoria GS
 							 */
 							
-							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf\">Gestoria GS</a>";
-							
-							//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
-							//paramsR.put("pv_dsdocume_i", "Gestoria GS");
-							
-							//kernelManager.guardarArchivo(paramsR);
+							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.txtinfocobgesgs")+"\">Gestoria GS</a>";
 							
 							documentosManager.guardarDocumento(
 									_cdunieco
@@ -3937,7 +3968,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,_nmpoliza
 									,_nmsuplem
 									,new Date()
-									,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
+									,this.getText("manual.agente.txtinfocobgesgs")
 									,"Gestoria GS"
 									,nmsolici
 									,ntramite
@@ -3999,12 +4030,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,Documento.EXTERNO_ESPECIF_SEGURO_VIDA
 									);
 
-							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf\">Condiciones Generales Seguro de Vida</a>";
-							
-							//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf");
-							//paramsR.put("pv_dsdocume_i", "Condiciones Generales Seguro de Vida");
-							
-							//kernelManager.guardarArchivo(paramsR);
+							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.condgralescobsegvida")+"\">Condiciones Generales Seguro de Vida</a>";
 							
 							documentosManager.guardarDocumento(
 									_cdunieco
@@ -4013,7 +4039,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,_nmpoliza
 									,_nmsuplem
 									,new Date()
-									,"http://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf"
+									,this.getText("manual.agente.condgralescobsegvida")
 									,"Condiciones Generales Seguro de Vida"
 									,nmsolici
 									,ntramite

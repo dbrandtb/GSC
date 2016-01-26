@@ -168,7 +168,7 @@ public class PersonaAction extends PrincipalCoreAction
 				throw new ApplicationException(faltantes.toString());
 			}
 			
-			message = personasManager.guardarPantallaEspPersona(params);
+			message = personasManager.guardarPantallaEspPersona(params, usuario);
 			
 			success = true;
 		}

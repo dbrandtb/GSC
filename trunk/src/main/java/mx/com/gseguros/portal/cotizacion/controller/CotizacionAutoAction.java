@@ -972,6 +972,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			String fefin       = smap1.get("fefin");
 			String cdagente    = smap1.get("cdagente");
 			String cdpersonCli = smap1.get("cdpersonCli");
+			String nmorddomCli = smap1.get("nmorddomCli");
 			String cdideperCli = smap1.get("cdideperCli");
 			String tipoflot    = smap1.get("tipoflot");
 			checkBlank(cdunieco , "No se recibio la sucursal");
@@ -1014,6 +1015,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					,fefin
 					,cdagente
 					,cdpersonCli
+					,nmorddomCli
 					,cdideperCli
 					,slist1
 					,slist2
@@ -1021,6 +1023,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					,noTarificar
 					,tipoflot
 					,tvalopol
+					,usuario
 					);
 			
 			exito           = resp.isExito();
@@ -1526,6 +1529,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			checkBlank(nmsuplem , "No se recibio el numero de suplemento");
 			checkBlank(nmsituac , "No se recibio el numero de situacion");
 			
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
+			
 			ManagerRespuestaVoidVO resp=cotizacionAutoManager.guardarPantallaBeneficiarios(
 					cdunieco
 					,cdramo
@@ -1533,7 +1538,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					,nmpoliza
 					,nmsuplem
 					,nmsituac
-					,slist1);
+					,slist1
+					,usuarioSesion);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();

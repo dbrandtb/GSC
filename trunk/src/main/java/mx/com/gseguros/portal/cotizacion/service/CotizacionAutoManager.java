@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2SmapVO;
@@ -127,6 +128,7 @@ public interface CotizacionAutoManager
 			,String fefin
 			,String cdagente
 			,String cdpersonCli
+			,String nmorddomCli
 			,String cdideperCli
 			,List<Map<String,String>> tvalosit
 			,List<Map<String,String>> baseTvalosit
@@ -134,6 +136,7 @@ public interface CotizacionAutoManager
 			,boolean noTarificar
 			,String tipoflot
 			,Map<String,String>tvalopol
+			,UserVO usuarioSesion
 			);
 	public ManagerRespuestaVoidVO cargarValidacionTractocamionRamo5(String poliza,String rfc);
 	public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel);
@@ -191,7 +194,8 @@ public interface CotizacionAutoManager
 			,String nmpoliza
 			,String nmsuplem
 			,String nmsituac
-			,List<Map<String,String>>mpoliperMpersona);
+			,List<Map<String,String>>mpoliperMpersona
+			,UserVO usuarioSesion);
 	
 	public ManagerRespuestaSlistVO cargarParamerizacionConfiguracionCoberturasRol(
 			String cdtipsit

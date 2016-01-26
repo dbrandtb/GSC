@@ -4,14 +4,18 @@ package mx.com.gseguros.ws.autosgs.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContextException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.SqlParameter;
@@ -48,6 +52,8 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vTelefono", Types.VARCHAR));
 			declareParameter(new SqlParameter("vCalle", Types.VARCHAR));
 			declareParameter(new SqlParameter("vNumero", Types.VARCHAR));
+			declareParameter(new SqlParameter("vNumInt", Types.VARCHAR));
+			declareParameter(new SqlParameter("vNumDir", Types.SMALLINT));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -93,6 +99,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vTelefono2", Types.VARCHAR));
 			declareParameter(new SqlParameter("vTelefono3", Types.VARCHAR));
 			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
+			declareParameter(new SqlParameter("vNumDir", Types.SMALLINT));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -675,6 +682,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vNumInt", Types.VARCHAR));
 			
 			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
+			declareParameter(new SqlParameter("vNumDir", Types.SMALLINT));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -794,6 +802,56 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 					String result = null;
 					while(rs.next()){  
 						result = rs.getString(1)+"|"+rs.getString(2);
+					}  
+					return result;  
+				}
+			}));
+			
+			compile();
+		}
+	}
+
+	@Override
+	public Integer obtieneTipoCliWS(String codigoExterno, String compania) throws Exception {
+		
+		if(StringUtils.isBlank(codigoExterno) || StringUtils.isBlank(compania)){
+			throw new ApplicationException("Sin datos para tipo cliente Sigs");
+		}
+		
+		int numeroCliente = 0;
+		int tipoCliente = 0;
+		try{
+			numeroCliente = Integer.valueOf(codigoExterno.substring(codigoExterno.length()-10));
+			tipoCliente = "D".equalsIgnoreCase(compania)?1:2;
+		}catch(Exception ex){
+			throw new ApplicationException("Error en conversion de datos para tipo cliente Sigs");
+		}
+		
+		Integer resp = null;
+		
+		Map<String,Object>params=new LinkedHashMap<String,Object>();
+		params.put("vNumCliente", numeroCliente);
+		params.put("vTipoCliente", tipoCliente);
+		
+		Map<String, Object> mapResult  = ejecutaSP(new ObtieneTipoCliWS(getDataSource()), params);
+		resp = (Integer) mapResult.get("rs");
+		
+		return resp;
+	}
+	
+	public class ObtieneTipoCliWS extends StoredProcedure{
+		protected ObtieneTipoCliWS(DataSource dataSource){
+			super(dataSource, "sp_PolizasXCliente");
+			
+			declareParameter(new SqlParameter("vNumCliente", Types.INTEGER));
+			declareParameter(new SqlParameter("vTipoCliente", Types.SMALLINT));
+			
+			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){
+				@Override  
+				public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+					Integer result = null;
+					while(rs.next()){  
+						result = rs.getInt(1);
 					}  
 					return result;  
 				}

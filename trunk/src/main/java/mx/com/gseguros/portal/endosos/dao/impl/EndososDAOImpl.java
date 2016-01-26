@@ -4739,7 +4739,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected GuardarEndosoNombreRFCFecha(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES.P_MOV_MPERSONA");
+			super(dataSource, "PKG_SATELITES2.P_MOV_MPERSONA");
 			declareParameter(new SqlParameter("pv_cdperson_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipide_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdideper_i"  , OracleTypes.VARCHAR));
@@ -4763,6 +4763,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_cdideext_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdestciv_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdsucemi_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdusuario_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_accion_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));

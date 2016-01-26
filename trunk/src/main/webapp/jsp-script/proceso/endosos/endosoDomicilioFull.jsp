@@ -219,6 +219,7 @@ Ext.onReady(function()
             ,'smap1.nombreAsegurado' : ''
             ,'smap1.cdrfc'           : _5_smap1.cdrfc
             ,'smap1.pv_cdtipsit_i'   : _5_smap1.CDTIPSIT
+            ,'smap1.pv_nmorddom_i'   : ''// obtiene el asignado a la poliza
 		}
 	    ,success : function(response)
 	    {
@@ -303,10 +304,10 @@ Ext.onReady(function()
 	    }
 	});
 	
-	_fieldByName('NMNUMERO').regex = /^[A-Za-z0-9-]*$/;
-    _fieldByName('NMNUMERO').regexText = 'Solo d&iacute;gitos, letras y guiones';
-    _fieldByName('NMNUMINT').regex = /^[A-Za-z0-9-]*$/;
-    _fieldByName('NMNUMINT').regexText = 'Solo d&iacute;gitos, letras y guiones';
+	_fieldByName('NMNUMERO').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+    _fieldByName('NMNUMERO').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
+    _fieldByName('NMNUMINT').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+    _fieldByName('NMNUMINT').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
     ////// loader //////
     ////////////////////
 });

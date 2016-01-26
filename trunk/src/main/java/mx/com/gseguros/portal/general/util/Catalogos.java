@@ -136,7 +136,8 @@ public enum Catalogos {
 	TTIPSUPL(""),
 	PARENTESCOAUTO(""),
 	ORDEN_IMPRESION("TORDIMP"),
-	RECUPERAR_TDOCUME("")
+	RECUPERAR_TDOCUME(""),
+	TIPOS_DOMICILIO("TTIPDOMI")
 	;
 
 	private String cdTabla;

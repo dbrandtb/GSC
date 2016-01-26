@@ -33,6 +33,7 @@ import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
@@ -1790,6 +1791,7 @@ public class EndososManagerImpl implements EndososManager
 			,String cdtipsup
 			,String ntramiteEmi
 			,String cdsisrol
+			,UserVO usuarioSesion
 			)
 	{
 		logger.debug(Utils.log(
@@ -1812,6 +1814,17 @@ public class EndososManagerImpl implements EndososManager
 		
 		try
 		{
+			String usuarioCaptura =  null;
+			
+			if(usuarioSesion!=null){
+				if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuarioSesion.getCodigoPersona();
+				}
+				
+			}
+			
 			setCheckpoint("Iniciando endoso");
 			Map<String,String>iniciarEndosoResp=endososDAO.iniciarEndoso(
 					cdunieco
@@ -1873,7 +1886,8 @@ public class EndososManagerImpl implements EndososManager
 							,rec.get("CDIDEEXT")
 							,rec.get("CDESTCIV")
 							,rec.get("CDSUCEMI")
-							,"I");
+							,usuarioCaptura
+							,Constantes.INSERT_MODE);
 					
 					endososDAO.movimientoMpoliperBeneficiario(
 							cdunieco
@@ -1939,6 +1953,7 @@ public class EndososManagerImpl implements EndososManager
 							,rec.get("CDIDEEXT")
 							,rec.get("CDESTCIV")
 							,rec.get("CDSUCEMI")
+							,usuarioCaptura
 							,"B");
 				}
 				else
@@ -1987,7 +2002,8 @@ public class EndososManagerImpl implements EndososManager
 							,rec.get("CDIDEEXT")
 							,rec.get("CDESTCIV")
 							,rec.get("CDSUCEMI")
-							,"U");
+							,usuarioCaptura
+							,Constantes.UPDATE_MODE);
 				}
 			}
 			

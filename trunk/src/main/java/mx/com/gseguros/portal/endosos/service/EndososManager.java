@@ -383,6 +383,7 @@ public interface EndososManager
 			,String cdtipsup
 			,String ntramite
 			,String cdsisrol
+			,UserVO usuarioSesion
 			);
 	
 	/**

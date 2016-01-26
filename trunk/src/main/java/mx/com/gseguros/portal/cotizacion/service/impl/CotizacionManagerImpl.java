@@ -2196,6 +2196,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdideext_
 			,String nmpolant
 			,String nmrenova
+			,UserVO usuarioSesion
 			)
 	{
 		logger.info(
@@ -3325,6 +3326,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,asincrono
 					,cdideper_
 					,cdideext_
+					,usuarioSesion
 					);
 			
 			resp.setExito(respInterna.isExito());
@@ -3380,6 +3382,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,boolean asincrono
 			,String cdideper_
 			,String cdideext_
+			,UserVO usuarioSesion
 			)
 	{
 		logger.info(
@@ -3646,6 +3649,18 @@ public class CotizacionManagerImpl implements CotizacionManager
 		{
 			try
 			{
+				
+				String usuarioCaptura =  null;
+				
+				if(usuarioSesion!=null){
+					if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
+						usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
+					}else{
+						usuarioCaptura = usuarioSesion.getCodigoPersona();
+					}
+					
+				}
+				
 				String swexiper = "N";
 				boolean cdpersonNuevo = StringUtils.isBlank(cdpersonCli);
 				
@@ -3686,6 +3701,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 								,cdideext_   //cdideext
 								,null		 //cdestcivil
 								,null		 //cdsucemi
+								,usuarioCaptura
 								,Constantes.INSERT_MODE
 								);
 					}
@@ -3721,6 +3737,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,null       //cdcoloni
 							,nmnumeroCli
 							,nmnumintCli
+							,"1" // domicilio personal default
+							,usuarioCaptura
+							,Constantes.SI  //domicilio activo
 							,Constantes.INSERT_MODE
 							);
 				}
@@ -4208,6 +4227,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdideext_
 			,String nmpolant
 			,String nmrenova
+			,UserVO usuarioSesion
 			)
 	{
 		logger.info(
@@ -5281,6 +5301,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,false //asincrono
 					,cdideper_
 					,cdideext_
+					,usuarioSesion
 					);
 		}
 		
@@ -5420,7 +5441,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String dsdomici
 			,String nmnumero
 			,String nmnumint
-			,boolean esConfirmaEmision)
+			,String nmorddom
+			,boolean esConfirmaEmision
+			,UserVO usuarioSesion)
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -5439,6 +5462,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@ dsdomici=" , dsdomici
 				,"\n@@@@@@ nmnumero=" , nmnumero
 				,"\n@@@@@@ nmnumint=" , nmnumint
+				,"\n@@@@@@ nmorddom=" , nmorddom
 				,"\n@@@@@@ esConfirmaEmision=" , esConfirmaEmision
 				));
 		
@@ -5456,6 +5480,17 @@ public class CotizacionManagerImpl implements CotizacionManager
 				
 				if(StringUtils.isBlank(cdperson)){
 					cdperson = personasDAO.obtenerNuevoCdperson();
+				}
+				
+				String usuarioCaptura =  null;
+				
+				if(usuarioSesion!=null){
+					if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
+						usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
+					}else{
+						usuarioCaptura = usuarioSesion.getCodigoPersona();
+					}
+					
 				}
 				
 				personasDAO.movimientosMpersona(
@@ -5482,13 +5517,14 @@ public class CotizacionManagerImpl implements CotizacionManager
 						,null		 //cdideext
 						,null		 //cdestcivil
 						,null		 //cdsucemi
+						,usuarioCaptura
 						,Constantes.INSERT_MODE
 						);
 				
 
 				personasDAO.movimientosMdomicil(
 						cdperson
-						,"1"        //nmorddom
+						,nmorddom   //nmorddom
 						,dsdomici
 						,null       //nmtelefo
 						,cdpostal
@@ -5497,6 +5533,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 						,null       //cdcoloni
 						,nmnumero
 						,nmnumint
+						,"1" // domicilio personal default
+						,usuarioCaptura
+						,Constantes.SI  //domicilio activo
 						,Constantes.INSERT_MODE
 						);
 			
@@ -5514,7 +5553,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,cdperson
 					,"0"       //nmsuplem
 					,"V"       //status
-					,"1"       //nmorddom
+					,nmorddom       //nmorddom
 					,null      //swreclam
 					,Constantes.INSERT_MODE
 					,swexiper
@@ -5629,6 +5668,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String fefin
 			,String fesolici
 			,String cdpersonCli
+			,String nmorddomCli
 			,String cdideperCli
 			,boolean noTarificar
 			,boolean conIncisos
@@ -5636,6 +5676,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,boolean flagMovil
 			,Map<String,String>tvalopol
 			,String cdagente
+			,UserVO usuarioSesion
 			)throws Exception
     {
     	logger.debug(Utils.log(
@@ -5652,6 +5693,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     			,"\n@@@@@@ fesolici="    , fesolici
     			,"\n@@@@@@ cdpersonCli=" , cdpersonCli
     			,"\n@@@@@@ cdideperCli=" , cdideperCli
+    			,"\n@@@@@@ nmorddomCli=" , nmorddomCli
     			,"\n@@@@@@ noTarificar=" , noTarificar
     			,"\n@@@@@@ conIncisos="  , conIncisos
     			,"\n@@@@@@ incisos="     , incisos
@@ -6084,6 +6126,17 @@ public class CotizacionManagerImpl implements CotizacionManager
 									String newCdPerson = personasDAO.obtenerNuevoCdperson();
 
 									logger.debug("Insertando nueva persona, cdperson generado: " +newCdPerson);
+									
+									String usuarioCaptura =  null;
+									
+									if(usuarioSesion!=null){
+										if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
+											usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
+										}else{
+											usuarioCaptura = usuarioSesion.getCodigoPersona();
+										}
+										
+									}
 						    		
 						    		String apellidoPat = "";
 							    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
@@ -6131,7 +6184,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 									personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(), (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc()
 											, "1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(), null
 											, apellidoPat, apellidoMat, calendarIngreso.getTime(), nacionalidad, cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli()))
-											, null, null, null, null, null, null, Integer.toString(cli.getSucursalCli()), "I");
+											, null, null, null, null, null, null, Integer.toString(cli.getSucursalCli()), usuarioCaptura, Constantes.INSERT_MODE);
 									
 									String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
 					    			if(edoAdosPos2.length() ==  1){
@@ -6142,7 +6195,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 					    			
 					    			personasDAO.movimientosMdomicil(newCdPerson, "1", cli.getCalleCli(), cli.getTelefonoCli()
 						    				, cli.getCodposCli(), cli.getCodposCli()+edoAdosPos2, null/*cliDom.getMunicipioCli()*/, null/*cliDom.getColoniaCli()*/
-						    				, cli.getNumeroCli(), null, "I");
+						    				, cli.getNumeroCli(), null
+						    				,"1" // domicilio personal default
+											,usuarioCaptura
+											,Constantes.SI  //domicilio activo
+											,Constantes.INSERT_MODE);
 
 					    			//GUARDAR TVALOPER
 					    			
@@ -6155,10 +6212,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 					    				null, null, null, null, null, 
 					    				null, null, cli.getTelefonoCli(), cli.getMailCli(), null, 
 					    				null, null, null, null, null, 
-					    				null, null, null, null, null);
+					    				null, null, null, null, null,
+	    		    					cli.getFaxCli(), cli.getCelularCli());
 					    			
 					    			
 					    			cdpersonCli = newCdPerson;
+					    			nmorddomCli = "1";
 
 								}
 							}
@@ -6179,7 +6238,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            			,cdpersonCli //cdperson
 	            			,"0"         //nmsuplem
 	            			,"V"         //status
-	            			,"1"         //nmorddom
+	            			,nmorddomCli //nmorddom
 	            			,null        //swreclam
 	            			,"I"         //accion
 	            			,"S"         //swexiper
@@ -6507,7 +6566,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			String fechaInicio, String fechaFin, String ntramite, String cdagenteExt, String cdciaaguradora,
 			String cdplan, String cdperpag, String cdusuari, String cdsisrol, String cdelemen,
 			boolean esFlotilla, String tipoflot, String cdpersonCli, String cdideperCli,
-			String nombreReporteCotizacion, String nombreReporteCotizacionFlot) throws Exception {
+			String nombreReporteCotizacion, String nombreReporteCotizacionFlot, UserVO usuarioSesion) throws Exception {
     	
     	String paso = null;
     	
@@ -6707,6 +6766,17 @@ public class CotizacionManagerImpl implements CotizacionManager
     			    		
     			    		logger.debug("Insertando nueva persona, cdperson generado: " + newCdPerson);
     			    		
+    			    		String usuarioCaptura =  null;
+							
+							if(usuarioSesion!=null){
+								if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
+									usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
+								}else{
+									usuarioCaptura = usuarioSesion.getCodigoPersona();
+								}
+								
+							}
+    			    		
     			    		String apellidoPat = "";
     				    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
     				    		apellidoPat = cli.getApellidopCli();
@@ -6760,7 +6830,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     								"1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(),
     								null, apellidoPat, apellidoMat, calendarIngreso.getTime(), nacionalidad,
     								cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli())),
-    								null, null, null, null, null, null, String.valueOf(cli.getSucursalCli()),"I");
+    								null, null, null, null, null, null, String.valueOf(cli.getSucursalCli()), usuarioCaptura, Constantes.INSERT_MODE);
     			    		
     			    		//GUARDAR DOMICILIO
     			    		String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
@@ -6770,7 +6840,12 @@ public class CotizacionManagerImpl implements CotizacionManager
     		    			
     		    			personasDAO.movimientosMdomicil(newCdPerson,"1", cli.getCalleCli() +" "+ cli.getNumeroCli()
     		    					,cli.getTelefonoCli(), cli.getCodposCli(), cli.getCodposCli()+edoAdosPos2
-    		    					,null, null, cli.getNumeroCli(), null, "I");
+    		    					,null, null, cli.getNumeroCli(), null
+    		    					,"1" // domicilio personal default
+									,usuarioCaptura
+									,Constantes.SI  //domicilio activo
+									,Constantes.INSERT_MODE);
+    		    			
     		    			
     		    			personasDAO.insertaTvaloper("0", "0", null, "0", null,
     		    					null, null, "1", newCdPerson, null, null,
@@ -6783,7 +6858,8 @@ public class CotizacionManagerImpl implements CotizacionManager
     		    					null, null, null, null, null,
     		    					null, null, cli.getTelefonoCli(), cli.getMailCli(), null,
     		    					null, null, null, null, null,
-    		    					null, null, null, null, null);
+    		    					null, null, null, null, null,
+    		    					cli.getFaxCli(), cli.getCelularCli());
     	    				
     	    				cotizacionDAO.borrarMpoliperTodos(cdunieco, cdramo, "W", nmpoliza);
     						

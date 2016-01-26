@@ -2441,6 +2441,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String cdideext     = smap1.get("cdideext");
 			String cdestciv     = smap1.get("cdestciv");
 			String cdsucemi     = smap1.get("cdsucemi");
+			
+			UserVO usuarioSesion= (UserVO)session.get("USUARIO");
 			String cdusuari     = ((UserVO)session.get("USUARIO")).getUser();
 			String cdsisrol     = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 			String cdelemen     = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
@@ -2476,7 +2478,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					ptcumupr,		residencia,		nongrata,		cdideext,		cdestciv,							cdsucemi,			cdusuari,
 					cdsisrol,		cdelemen,		cdtipsup,		fechaEndoso,	dFechaEndoso,						tipoPantalla,		codigoCliExt,
 					sucursalEnt,	ramoEntrada,	polizaEnt,		cdpersonNew,	dsnombreComp,
-					tramite,		numsuplemen,	urlCaratula
+					tramite,		numsuplemen,	urlCaratula, usuarioSesion
 			);
 			
 			if(smap2==null)
@@ -2537,8 +2539,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String telefono3  = smap1.get("telefono3");
 			//String   = smap1.get("");
 			
-			
-			
+			UserVO usuarioSesion= (UserVO)session.get("USUARIO");
 			String cdusuari     = ((UserVO)session.get("USUARIO")).getUser();
 			String cdsisrol     = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 			String cdelemen     = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
@@ -2552,7 +2553,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			int claveEndoso = endososAutoManager.guardarEndosoDomicilioNoSICAPS(
 					tipoPantalla, sucursalEnt, ramoEntrada, polizaEnt, codigoCliExt, cdpersonNew, codigoPostal, cveEstado,
 					estado,	cveEdoSISG, cveMinicipio, municipio, cveMunSISG, cveColonia, colonia, calle, numExterior, numInterior,
-					cdusuari, cdsisrol, cdelemen, cdtipsup, fechaEndoso, dFechaEndoso, urlCaratula, telefono1, telefono2, telefono3
+					cdusuari, cdsisrol, cdelemen, cdtipsup, fechaEndoso, dFechaEndoso, urlCaratula, telefono1, telefono2, telefono3, usuarioSesion
 			);
 			
 			Utils.validate(tipoPantalla   , "No se recibio el origen del llamado");

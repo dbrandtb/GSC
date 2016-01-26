@@ -860,6 +860,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	String nmcuadro    = null;
     	String cdelemen    = null;
     	String cdpersonCli = null;
+    	String nmorddomCli = null;
     	String cdideperCli = null;
     	String cdagenteExt = null;
     	boolean esFlotilla = false;
@@ -904,6 +905,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     				ntramite    = smap1.get("ntramite");
     				cdpersonCli = smap1.get("cdpersonCli");
     				cdideperCli = smap1.get("cdideperCli");
+    				nmorddomCli = smap1.get("nmorddomCli");
     				cdagenteExt = smap1.get("cdagenteExt");
     				fechaInicio = smap1.get("fechaInicio");
     				fechaFin    = smap1.get("fechaFin");
@@ -1523,7 +1525,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     				parametros.put("pv_cdperson_i" , cdpersonCli);
     				parametros.put("pv_nmsuplem_i" , "0");
     				parametros.put("pv_status_i"   , "V");
-    				parametros.put("pv_nmorddom_i" , "1");
+    				parametros.put("pv_nmorddom_i" , nmorddomCli);
     				parametros.put("pv_swreclam_i" , null);
     				parametros.put("pv_accion_i"   , "I");
     				parametros.put("pv_swexiper_i" , "S");
@@ -1550,6 +1552,16 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(comprarCdramo)
 				    	){
 			    		
+			    		String usuarioCaptura =  null;
+						
+						if(usuario!=null){
+							if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+								usuarioCaptura = usuario.getClaveUsuarioCaptura();
+							}else{
+								usuarioCaptura = usuario.getCodigoPersona();
+							}
+							
+						}
 			    		
 			    		HashMap<String, Object> paramsTip =  new HashMap<String, Object>();
 			    		paramsTip.put("pv_cdramo_i", comprarCdramo);
@@ -1655,6 +1667,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 								parametros.put("pv_cdideext_i"    , null);
 								parametros.put("pv_cdestciv_i"    , null);
 								parametros.put("pv_cdsucemi_i"    , cli.getSucursalCli());
+								parametros.put("pv_cdusuario_i"    , usuarioCaptura);
 								parametros.put("pv_accion_i"      , "I");
 								kernelManagerSustituto.movMpersona(parametros);
 					    		
@@ -1676,6 +1689,10 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				    			paramDomicil.put("pv_cdcoloni_i", null/*cliDom.getColoniaCli()*/);
 				    			paramDomicil.put("pv_nmnumero_i", cli.getNumeroCli());
 				    			paramDomicil.put("pv_nmnumint_i", null);
+				    			paramDomicil.put("pv_cdtipdom_i", "1");
+				    			paramDomicil.put("pv_cdusuario_i", usuarioCaptura);
+				    			paramDomicil.put("pv_swactivo_i", Constantes.SI);
+				    			
 				    			paramDomicil.put("pv_accion_i", "I");
 			
 				    			kernelManagerSustituto.pMovMdomicil(paramDomicil);
@@ -1695,54 +1712,15 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				    			
 				    			paramValoper.put("pv_otvalor01", cli.getCveEle());
 				    			paramValoper.put("pv_otvalor02", cli.getPasaporteCli());
-				    			paramValoper.put("pv_otvalor03", null);
-				    			paramValoper.put("pv_otvalor04", null);
-				    			paramValoper.put("pv_otvalor05", null);
-				    			paramValoper.put("pv_otvalor06", null);
-				    			paramValoper.put("pv_otvalor07", null);
 				    			paramValoper.put("pv_otvalor08", cli.getOrirecCli());
-				    			paramValoper.put("pv_otvalor09", null);
-				    			paramValoper.put("pv_otvalor10", null);
 				    			paramValoper.put("pv_otvalor11", cli.getNacCli());
-				    			paramValoper.put("pv_otvalor12", null);
-				    			paramValoper.put("pv_otvalor13", null);
-				    			paramValoper.put("pv_otvalor14", null);
-				    			paramValoper.put("pv_otvalor15", null);
-				    			paramValoper.put("pv_otvalor16", null);
-				    			paramValoper.put("pv_otvalor17", null);
-				    			paramValoper.put("pv_otvalor18", null);
-				    			paramValoper.put("pv_otvalor19", null);
 				    			paramValoper.put("pv_otvalor20", (cli.getOcuPro() > 0) ? Integer.toString(cli.getOcuPro()) : "0");
-				    			paramValoper.put("pv_otvalor21", null);
-				    			paramValoper.put("pv_otvalor22", null);
-				    			paramValoper.put("pv_otvalor23", null);
-				    			paramValoper.put("pv_otvalor24", null);
 				    			paramValoper.put("pv_otvalor25", cli.getCurpCli());
-				    			paramValoper.put("pv_otvalor26", null);
-				    			paramValoper.put("pv_otvalor27", null);
-				    			paramValoper.put("pv_otvalor28", null);
-				    			paramValoper.put("pv_otvalor29", null);
-				    			paramValoper.put("pv_otvalor30", null);
-				    			paramValoper.put("pv_otvalor31", null);
-				    			paramValoper.put("pv_otvalor32", null);
-				    			paramValoper.put("pv_otvalor33", null);
-				    			paramValoper.put("pv_otvalor34", null);
-				    			paramValoper.put("pv_otvalor35", null);
-				    			paramValoper.put("pv_otvalor36", null);
-				    			paramValoper.put("pv_otvalor37", null);
 				    			paramValoper.put("pv_otvalor38", cli.getTelefonoCli());
 				    			paramValoper.put("pv_otvalor39", cli.getMailCli());
-				    			paramValoper.put("pv_otvalor40", null);
-				    			paramValoper.put("pv_otvalor41", null);
-				    			paramValoper.put("pv_otvalor42", null);
-				    			paramValoper.put("pv_otvalor43", null);
-				    			paramValoper.put("pv_otvalor44", null);
-				    			paramValoper.put("pv_otvalor45", null);
-				    			paramValoper.put("pv_otvalor46", null);
-				    			paramValoper.put("pv_otvalor47", null);
-				    			paramValoper.put("pv_otvalor48", null);
-				    			paramValoper.put("pv_otvalor49", null);
-				    			paramValoper.put("pv_otvalor50", null);
+
+				    			paramValoper.put("pv_otvalor51", cli.getFaxCli());
+				    			paramValoper.put("pv_otvalor52", cli.getCelularCli());
 				    			
 				    			kernelManagerSustituto.pMovTvaloper(paramValoper);
 				    			
