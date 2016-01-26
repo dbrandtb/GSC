@@ -699,7 +699,7 @@ function _p31_personaSaved(json)
             ,'smap1.nmpoliza' : _p31_smap1.nmpoliza
             ,'smap1.nmsituac' : '0'
             ,'smap1.cdrol'    : '1'
-            ,'smap1.cdperson' : _p22_fieldCdperson().getValue()
+            ,'smap1.cdperson' : json.smap1.CDPERSON
             ,'smap1.nmsuplem' : '0'
             ,'smap1.status'   : 'V'
             ,'smap1.nmorddom' : json.smap1.NMORDDOM
@@ -712,7 +712,6 @@ function _p31_personaSaved(json)
             debug('### mpoliper:',json);
             if(json.exito)
             {
-                _p22_fieldCdperson().mpoliper=true;
                 if(!Ext.isEmpty(_p22_parentCallbackCallback))
                 {
                     _p22_parentCallbackCallback();
