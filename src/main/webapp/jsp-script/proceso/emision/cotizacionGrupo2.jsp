@@ -4821,7 +4821,7 @@ function _p25_tbloqueo(closable,callback,retry)
                                 {
                                     text     : 'Regresar'
                                     ,icon    : '${icons}arrow_undo.png'
-                                    ,handler : function(){ history.back(); }
+                                    ,handler : function(){ _p25_mesacontrol(); }
                                     ,hidden  : closable
                                 }
                                 ,{
