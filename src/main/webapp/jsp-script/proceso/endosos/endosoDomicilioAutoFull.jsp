@@ -52,6 +52,9 @@ debug('_5_smap1:',_5_smap1);
 var _p5_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple" />';
 var _cdTipSupCambioDomFull = '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@CAMBIO_DOMICILIO_ASEGURADO_TITULAR.cdTipSup" />';
 
+
+_5_smap1.nmsituac = '0';
+
 //////variables //////
 //////////////////////
 
@@ -236,8 +239,12 @@ Ext.onReady(function()
             ,'smap1.pv_cdramo_i'      : _5_smap1.CDRAMO
             ,'smap1.pv_estado_i'      : _5_smap1.ESTADO
             ,'smap1.pv_nmpoliza_i'    : _5_smap1.NMPOLIZA
+            
+            ,'smap1.pv_nmsuplem_i'    : _5_smap1.NMSUPLEM
+            
             ,'smap1.pv_nmsituac_i'    : _5_smap1.nmsituac
             ,'smap1.pv_cdperson_i'    : _5_smap1.cdperson
+            ,'smap1.pv_nmorddom_i'    : ''// obtiene el asignado a la poliza
             ,'smap1.pv_cdrol_i'       : _5_smap1.cdrol
             ,'smap1.nombreAsegurado'  : ''
             ,'smap1.cdrfc'            : _5_smap1.cdrfc
@@ -332,10 +339,10 @@ Ext.onReady(function()
 	    }
 	});
 	
-	_fieldByName('NMNUMERO').regex = /^[A-Za-z0-9-\s]*$/;
-    _fieldByName('NMNUMERO').regexText = 'Solo d&iacute;gitos, letras y guiones';
-    _fieldByName('NMNUMINT').regex = /^[A-Za-z0-9-\s]*$/;
-    _fieldByName('NMNUMINT').regexText = 'Solo d&iacute;gitos, letras y guiones';
+	_fieldByName('NMNUMERO').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+    _fieldByName('NMNUMERO').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
+    _fieldByName('NMNUMINT').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+    _fieldByName('NMNUMINT').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
     
     
     Ext.Ajax.request(

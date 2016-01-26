@@ -16,8 +16,35 @@ public interface PersonasDAO
 	
 	@Deprecated
 	public Map<String,String>obtenerPersonaPorCdperson(Map<String,String>params) throws Exception;
+	
 	/**
-	 * Guarda mpersona con PKG_SATELITES.P_MOV_MPERSONA
+	 * Movimiento mpersona
+	 * @param cdperson
+	 * @param cdtipide
+	 * @param cdideper
+	 * @param dsnombre
+	 * @param cdtipper
+	 * @param otfisjur
+	 * @param otsexo
+	 * @param fenacimi
+	 * @param cdrfc
+	 * @param dsemail
+	 * @param dsnombre1
+	 * @param dsapellido
+	 * @param dsapellido1
+	 * @param feingreso
+	 * @param cdnacion
+	 * @param canaling
+	 * @param conducto
+	 * @param ptcumupr
+	 * @param residencia
+	 * @param nongrata
+	 * @param cdideext
+	 * @param cdestcivil
+	 * @param cdsucemi
+	 * @param cdusuario
+	 * @param accion
+	 * @throws Exception
 	 */
 	public void movimientosMpersona(String cdperson
 			,String cdtipide
@@ -42,6 +69,7 @@ public interface PersonasDAO
 			,String cdideext
 			,String cdestcivil
 			,String cdsucemi
+			,String cdusuario
 			,String accion) throws Exception;
 
 	/**
@@ -52,6 +80,8 @@ public interface PersonasDAO
 	 * obtener domicilio por cdperson desde PKG_CONSULTA.P_GET_MDOMICIL
 	 */
 	public Map<String,String> obtenerDomicilioPorCdperson(String cdperson) throws Exception;
+
+	public List<Map<String,String>> obtenerDomiciliosPorCdperson(String cdperson) throws Exception;
 	/**
 	 * Obtener nuevo cdperson de PKG_SATELITES.P_GEN_CDPERSON
 	 */
@@ -60,7 +90,22 @@ public interface PersonasDAO
 	public String validaExisteRFC(String cdrfc) throws Exception;
 	
 	/**
-	 * movimientos de domicilio por cdperson de PKG_SATELITES.P_MOV_MDOMICIL
+	 * Guarda mdomicil
+	 * @param cdperson
+	 * @param nmorddom
+	 * @param dsdomici
+	 * @param nmtelefo
+	 * @param cdpostal
+	 * @param cdedo
+	 * @param cdmunici
+	 * @param cdcoloni
+	 * @param nmnumero
+	 * @param nmnumint
+	 * @param cdtipdom
+	 * @param cdusuario
+	 * @param swactivo
+	 * @param accion
+	 * @throws Exception
 	 */
 	public void movimientosMdomicil(String cdperson
 			,String nmorddom
@@ -72,7 +117,12 @@ public interface PersonasDAO
 			,String cdcoloni
 			,String nmnumero
 			,String nmnumint
+			,String cdtipdom
+			,String cdusuario
+			,String swactivo
 			,String accion) throws Exception;
+
+
 	/**
 	 * Obtener los componentes de tatriper por cdrol y cdperson de PKG_LISTAS.P_GET_ATRI_PER
 	 */
@@ -94,7 +144,8 @@ public interface PersonasDAO
 			,String otvalor31,String otvalor32,String otvalor33,String otvalor34,String otvalor35
 			,String otvalor36,String otvalor37,String otvalor38,String otvalor39,String otvalor40
 			,String otvalor41,String otvalor42,String otvalor43,String otvalor44,String otvalor45
-			,String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50
+			,String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50,
+			String otvalor51, String otvalor52
 			)throws Exception;
 	
 	/**
@@ -112,7 +163,8 @@ public interface PersonasDAO
 			String otvalor31,String otvalor32,String otvalor33,String otvalor34,String otvalor35,
 			String otvalor36,String otvalor37,String otvalor38,String otvalor39,String otvalor40,
 			String otvalor41,String otvalor42,String otvalor43,String otvalor44,String otvalor45,
-			String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50
+			String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50,
+			String otvalor51, String otvalor52
 			) throws Exception;
 	
 	public List<Map<String,String>>cargarDocumentosPersona(Map<String,String> params)throws Exception;
@@ -153,5 +205,7 @@ public interface PersonasDAO
 	public String obtieneInformacionCliente(String sucursal, String ramo, String poliza) throws Exception;
 	
 	public String validaExisteAseguradoSicaps(String cdideper)throws Exception;
+	
+	public List<Map<String, String>> obtieneConfPatallaCli(String cdperson, String usuario, String rol, String tipoCliente) throws Exception;
 	
 }

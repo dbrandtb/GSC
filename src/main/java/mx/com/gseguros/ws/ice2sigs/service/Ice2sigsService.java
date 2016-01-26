@@ -1,5 +1,8 @@
 package mx.com.gseguros.ws.ice2sigs.service;
 
+import java.util.List;
+import java.util.Map;
+
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
@@ -85,6 +88,18 @@ public interface Ice2sigsService {
 	public ClienteGeneralRespuesta ejecutaWSclienteGeneral(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdperson,
 			Ice2sigsService.Operacion op, ClienteGeneral cliente, UserVO userVO, boolean async);
+
+	
+	/**
+	 * Ejecuta el metodo expuesto para las direcciones de clientes del WS Ice2Sigs
+	 * @param cdperson
+	 * @param compania
+	 * @param direccionesCliSave
+	 * @param direccionesCliUpdate
+	 * @param userVO
+	 * @return
+	 */
+	public boolean ejecutaWSdireccionClienteGeneral(String cdperson, String compania, List<Map<String,String>> direccionesCliSave, List<Map<String,String>> direccionesCliUpdate, boolean sinCodigoWS, UserVO userVO);
 	
 	
 	/**

@@ -194,7 +194,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
     }
 	
 	/**
-	 * Guarda mpersona con PKG_SATELITES.P_MOV_MPERSONA
+	 * Guarda mpersona con PKG_SATELITES2.P_MOV_MPERSONA
 	 */
 	@Override
 	public void movimientosMpersona(String cdperson
@@ -220,6 +220,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			,String cdideext
 			,String cdestcivil
 			,String cdsucemi
+			,String cdusuario
 			,String accion) throws Exception
 	{
 		Map<String,Object>params=new LinkedHashMap<String,Object>();
@@ -246,11 +247,12 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		params.put("cdideext"    , cdideext);
 		params.put("cdestcivil"  , cdestcivil);
 		params.put("pv_cdsucemi_i", cdsucemi);
+		params.put("cdusuario",    cdusuario);
 		params.put("accion"      , accion);
 		logger.debug(
 				new StringBuilder()
 				.append("\n******************************************")
-				.append("\n****** PKG_SATELITES.P_MOV_MPERSONA ******")
+				.append("\n****** PKG_SATELITES2.P_MOV_MPERSONA ******")
 				.append("\n****** params=").append(params)
 				.append("\n******************************************")
 				.toString()
@@ -261,7 +263,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	protected class MovimientosMpersona extends StoredProcedure
 	{
     	protected MovimientosMpersona(DataSource dataSource) {
-            super(dataSource,"PKG_SATELITES.P_MOV_MPERSONA");
+            super(dataSource,"PKG_SATELITES2.P_MOV_MPERSONA");
     		declareParameter(new SqlParameter("cdperson"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipide"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdideper"    , OracleTypes.VARCHAR));
@@ -285,6 +287,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			declareParameter(new SqlParameter("cdideext"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdestcivil"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdsucemi_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuario"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("accion"      , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -360,6 +363,30 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		return domicilio;
 	}
 	
+
+	@Override
+	public List<Map<String,String>> obtenerDomiciliosPorCdperson(String cdperson) throws Exception
+	{
+		Map<String,String>params    = new LinkedHashMap<String,String>();
+		params.put("cdperson",cdperson);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_MDOMICIL ******")
+				.append("\n****** params=").append(params)
+				.append("\n*****************************************")
+				.toString()
+				);
+		Map<String, Object> resultado = ejecutaSP(new ObtenerDomicilioPorCdperson(getDataSource()), params);
+		List<Map<String,String>>listaDomicilios=(List<Map<String,String>>)resultado.get("pv_registro_o");
+		if(listaDomicilios==null)
+		{
+			listaDomicilios=new ArrayList<Map<String,String>>();
+		}
+//		logger.debug("listaDomicilios: "+listaDomicilios);
+		return listaDomicilios;
+	}
+	
 	protected class ObtenerDomicilioPorCdperson extends StoredProcedure
 	{
     	protected ObtenerDomicilioPorCdperson(DataSource dataSource) {
@@ -367,7 +394,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
     		declareParameter(new SqlParameter("cdperson"    , OracleTypes.VARCHAR));
     		String[] cols=new String[]{
     				"CDPERSON" , "NMORDDOM" , "DSDOMICI"  , "NMTELEFO" , "CODPOSTAL" , "CDEDO"
-    				,"ESTADO"  , "CDMUNICI" , "MUNICIPIO" , "CDCOLONI" , "NMNUMERO"  , "NMNUMINT"
+    				,"ESTADO"  , "CDMUNICI" , "MUNICIPIO" , "CDCOLONI" , "COLONIA","NMNUMERO"  , "NMNUMINT", "CDTIPDOM","DSTIPDOM","SWACTIVO", "CDUSRCRE"
     		};
     		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -432,7 +459,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	}
 	
 	/**
-	 * movimientos de domicilio por cdperson de PKG_SATELITES.P_MOV_MDOMICIL
+	 * movimientos de domicilio por cdperson de PKG_SATELITES2.P_MOV_MDOMICIL
 	 */
 	@Override
 	public void movimientosMdomicil(String cdperson
@@ -445,6 +472,9 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			,String cdcoloni
 			,String nmnumero
 			,String nmnumint
+			,String cdtipdom
+			,String cdusuario
+			,String swactivo
 			,String accion) throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
@@ -458,11 +488,14 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		params.put("cdcoloni" , cdcoloni);
 		params.put("nmnumero" , nmnumero);
 		params.put("nmnumint" , nmnumint);
+		params.put("cdtipdom" , cdtipdom);
+		params.put("cdusuario" , cdusuario);
+		params.put("swactivo" , swactivo);
 		params.put("accion"   , accion);
 		logger.debug(
 				new StringBuilder()
 				.append("\n******************************************")
-				.append("\n****** PKG_SATELITES.P_MOV_MDOMICIL ******")
+				.append("\n****** PKG_SATELITES2.P_MOV_MDOMICIL ******")
 				.append("\n****** params=").append(params)
 				.append("\n******************************************")
 				.toString()
@@ -473,7 +506,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	protected class MovimientosMdomicil extends StoredProcedure
 	{
     	protected MovimientosMdomicil(DataSource dataSource) {
-            super(dataSource,"PKG_SATELITES.P_MOV_MDOMICIL");
+            super(dataSource,"PKG_SATELITES2.P_MOV_MDOMICIL");
     		declareParameter(new SqlParameter("cdperson"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmorddom"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("dsdomici"       , OracleTypes.VARCHAR));
@@ -484,6 +517,9 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			declareParameter(new SqlParameter("cdcoloni"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmnumero"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmnumint"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipdom"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuario"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swactivo"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("accion"         , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
@@ -577,6 +613,11 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 					,"OTVALOR36" , "OTVALOR37" , "OTVALOR38" , "OTVALOR39" , "OTVALOR40"
 					,"OTVALOR41" , "OTVALOR42" , "OTVALOR43" , "OTVALOR44" , "OTVALOR45"
 					,"OTVALOR46" , "OTVALOR47" , "OTVALOR48" , "OTVALOR49" , "OTVALOR50"
+					,"OTVALOR51" , "OTVALOR52" , "OTVALOR53" , "OTVALOR54" , "OTVALOR55","OTVALOR56" , "OTVALOR57" , "OTVALOR58" , "OTVALOR59" , "OTVALOR60"
+					,"OTVALOR61" , "OTVALOR62" , "OTVALOR63" , "OTVALOR64" , "OTVALOR65","OTVALOR66" , "OTVALOR67" , "OTVALOR68" , "OTVALOR69" , "OTVALOR60"
+					,"OTVALOR61" , "OTVALOR72" , "OTVALOR73" , "OTVALOR74" , "OTVALOR75","OTVALOR76" , "OTVALOR77" , "OTVALOR78" , "OTVALOR79" , "OTVALOR60"
+					,"OTVALOR61" , "OTVALOR82" , "OTVALOR83" , "OTVALOR84" , "OTVALOR85","OTVALOR86" , "OTVALOR87" , "OTVALOR88" , "OTVALOR89" , "OTVALOR60"
+					,"OTVALOR61" , "OTVALOR92" , "OTVALOR93" , "OTVALOR94" , "OTVALOR95","OTVALOR96" , "OTVALOR97" , "OTVALOR98" , "OTVALOR99"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -600,6 +641,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			,String otvalor36,String otvalor37,String otvalor38,String otvalor39,String otvalor40
 			,String otvalor41,String otvalor42,String otvalor43,String otvalor44,String otvalor45
 			,String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50
+			,String otvalor51,String otvalor52
 			)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
@@ -655,6 +697,28 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		params.put("pv_otvalor48" , otvalor48);
 		params.put("pv_otvalor49" , otvalor49);
 		params.put("pv_otvalor50" , otvalor50);
+		params.put("pv_otvalor51" , otvalor51);
+		params.put("pv_otvalor52" , otvalor52);
+		
+		String[] inputKeys = new String[] {
+				"pv_cdunieco","pv_cdramo","pv_estado","pv_nmpoliza","pv_nmsituac","pv_nmsuplem","pv_status","pv_cdrol","pv_cdperson","pv_cdatribu","pv_cdtipsit",
+                "pv_otvalor01","pv_otvalor02","pv_otvalor03","pv_otvalor04","pv_otvalor05","pv_otvalor06","pv_otvalor07","pv_otvalor08","pv_otvalor09","pv_otvalor10",
+                "pv_otvalor11","pv_otvalor12","pv_otvalor13","pv_otvalor14","pv_otvalor15","pv_otvalor16","pv_otvalor17","pv_otvalor18","pv_otvalor19","pv_otvalor20",
+                "pv_otvalor21","pv_otvalor22","pv_otvalor23","pv_otvalor24","pv_otvalor25","pv_otvalor26","pv_otvalor27","pv_otvalor28","pv_otvalor29","pv_otvalor30",
+                "pv_otvalor31","pv_otvalor32","pv_otvalor33","pv_otvalor34","pv_otvalor35","pv_otvalor36","pv_otvalor37","pv_otvalor38","pv_otvalor39","pv_otvalor40",
+                "pv_otvalor41","pv_otvalor42","pv_otvalor43","pv_otvalor44","pv_otvalor45","pv_otvalor46","pv_otvalor47","pv_otvalor48","pv_otvalor49","pv_otvalor50",
+                "pv_otvalor51","pv_otvalor52","pv_otvalor53","pv_otvalor54","pv_otvalor55","pv_otvalor56","pv_otvalor57","pv_otvalor58","pv_otvalor59","pv_otvalor60",
+                "pv_otvalor61","pv_otvalor62","pv_otvalor63","pv_otvalor64","pv_otvalor65","pv_otvalor66","pv_otvalor67","pv_otvalor68","pv_otvalor69","pv_otvalor70",
+                "pv_otvalor71","pv_otvalor72","pv_otvalor73","pv_otvalor74","pv_otvalor75","pv_otvalor76","pv_otvalor77","pv_otvalor78","pv_otvalor79","pv_otvalor80",
+                "pv_otvalor81","pv_otvalor82","pv_otvalor83","pv_otvalor84","pv_otvalor85","pv_otvalor86","pv_otvalor87","pv_otvalor88","pv_otvalor89","pv_otvalor90",
+                "pv_otvalor91","pv_otvalor92","pv_otvalor93","pv_otvalor94","pv_otvalor95","pv_otvalor96","pv_otvalor97","pv_otvalor98","pv_otvalor99"
+		};
+    	for(String key:inputKeys) {
+    		if(!params.containsKey(key)) {
+    			params.put(key, null);
+    		}
+    	}
+    	
 		logger.debug(
 				new StringBuilder()
 				.append("\n************************************************")
@@ -670,7 +734,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
     	protected MovimientosTvaloper(DataSource dataSource)
     	{
-            super(dataSource,"PKG_SATELITES.P_MOV_TVALOPER_NUEVO");
+            super(dataSource,"PKG_SATELITES2.P_MOV_TVALOPER_NUEVO");
             declareParameter(new SqlParameter("cdrol"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdperson"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor01" , OracleTypes.VARCHAR));
@@ -722,7 +786,62 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			declareParameter(new SqlParameter("pv_otvalor47" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor48" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor49" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor50" , OracleTypes.VARCHAR));
+
+			declareParameter(new SqlParameter("pv_otvalor50", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor51", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor52", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor53", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor54", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor55", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor56", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor57", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor58", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor59", OracleTypes.VARCHAR));
+
+			declareParameter(new SqlParameter("pv_otvalor60", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor61", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor62", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor63", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor64", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor65", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor66", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor67", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor68", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor69", OracleTypes.VARCHAR));
+
+			declareParameter(new SqlParameter("pv_otvalor70", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor71", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor72", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor73", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor74", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor75", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor76", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor77", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor78", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor79", OracleTypes.VARCHAR));
+
+			declareParameter(new SqlParameter("pv_otvalor80", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor81", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor82", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor83", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor84", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor85", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor86", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor87", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor88", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor89", OracleTypes.VARCHAR));
+
+			declareParameter(new SqlParameter("pv_otvalor90", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor91", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor92", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor93", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor94", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor95", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor96", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor97", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor98", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor99", OracleTypes.VARCHAR));
+			
     		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
             compile();
@@ -743,7 +862,8 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			String otvalor31,String otvalor32,String otvalor33,String otvalor34,String otvalor35,
 			String otvalor36,String otvalor37,String otvalor38,String otvalor39,String otvalor40,
 			String otvalor41,String otvalor42,String otvalor43,String otvalor44,String otvalor45,
-			String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50
+			String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50,
+			String otvalor51, String otvalor52
 			) throws Exception {
 		
 		Map<String,String> params = new LinkedHashMap<String, String>();
@@ -808,6 +928,8 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		params.put("pv_otvalor48", otvalor48);
 		params.put("pv_otvalor49", otvalor49);
 		params.put("pv_otvalor50", otvalor50);
+		params.put("pv_otvalor51", otvalor51);
+		params.put("pv_otvalor52", otvalor52);
 		
 		String[] inputKeys = new String[] {
 				"pv_cdunieco","pv_cdramo","pv_estado","pv_nmpoliza","pv_nmsituac","pv_nmsuplem","pv_status","pv_cdrol","pv_cdperson","pv_cdatribu","pv_cdtipsit",
@@ -815,7 +937,12 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
                 "pv_otvalor11","pv_otvalor12","pv_otvalor13","pv_otvalor14","pv_otvalor15","pv_otvalor16","pv_otvalor17","pv_otvalor18","pv_otvalor19","pv_otvalor20",
                 "pv_otvalor21","pv_otvalor22","pv_otvalor23","pv_otvalor24","pv_otvalor25","pv_otvalor26","pv_otvalor27","pv_otvalor28","pv_otvalor29","pv_otvalor30",
                 "pv_otvalor31","pv_otvalor32","pv_otvalor33","pv_otvalor34","pv_otvalor35","pv_otvalor36","pv_otvalor37","pv_otvalor38","pv_otvalor39","pv_otvalor40",
-                "pv_otvalor41","pv_otvalor42","pv_otvalor43","pv_otvalor44","pv_otvalor45","pv_otvalor46","pv_otvalor47","pv_otvalor48","pv_otvalor49","pv_otvalor50"
+                "pv_otvalor41","pv_otvalor42","pv_otvalor43","pv_otvalor44","pv_otvalor45","pv_otvalor46","pv_otvalor47","pv_otvalor48","pv_otvalor49","pv_otvalor50",
+                "pv_otvalor51","pv_otvalor52","pv_otvalor53","pv_otvalor54","pv_otvalor55","pv_otvalor56","pv_otvalor57","pv_otvalor58","pv_otvalor59","pv_otvalor60",
+                "pv_otvalor61","pv_otvalor62","pv_otvalor63","pv_otvalor64","pv_otvalor65","pv_otvalor66","pv_otvalor67","pv_otvalor68","pv_otvalor69","pv_otvalor70",
+                "pv_otvalor71","pv_otvalor72","pv_otvalor73","pv_otvalor74","pv_otvalor75","pv_otvalor76","pv_otvalor77","pv_otvalor78","pv_otvalor79","pv_otvalor80",
+                "pv_otvalor81","pv_otvalor82","pv_otvalor83","pv_otvalor84","pv_otvalor85","pv_otvalor86","pv_otvalor87","pv_otvalor88","pv_otvalor89","pv_otvalor90",
+                "pv_otvalor91","pv_otvalor92","pv_otvalor93","pv_otvalor94","pv_otvalor95","pv_otvalor96","pv_otvalor97","pv_otvalor98","pv_otvalor99"
 		};
     	for(String key:inputKeys) {
     		if(!params.containsKey(key)) {
@@ -829,7 +956,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	protected class PMovTvaloper extends StoredProcedure {
 		
 		protected PMovTvaloper(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES.P_MOV_TVALOPER");
+			super(dataSource,"PKG_SATELITES2.P_MOV_TVALOPER");
 			
 			declareParameter(new SqlParameter("pv_cdunieco",  OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo",    OracleTypes.NUMERIC));
@@ -891,7 +1018,61 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			declareParameter(new SqlParameter("pv_otvalor47", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor48", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor49", OracleTypes.VARCHAR));
+			
 			declareParameter(new SqlParameter("pv_otvalor50", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor51", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor52", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor53", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor54", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor55", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor56", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor57", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor58", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor59", OracleTypes.VARCHAR));
+
+			declareParameter(new SqlParameter("pv_otvalor60", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor61", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor62", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor63", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor64", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor65", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor66", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor67", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor68", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor69", OracleTypes.VARCHAR));
+
+			declareParameter(new SqlParameter("pv_otvalor70", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor71", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor72", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor73", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor74", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor75", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor76", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor77", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor78", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor79", OracleTypes.VARCHAR));
+
+			declareParameter(new SqlParameter("pv_otvalor80", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor81", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor82", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor83", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor84", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor85", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor86", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor87", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor88", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor89", OracleTypes.VARCHAR));
+
+			declareParameter(new SqlParameter("pv_otvalor90", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor91", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor92", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor93", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor94", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor95", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor96", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor97", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor98", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor99", OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -1395,4 +1576,36 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		}
 	}
 	
+	@Override
+	public List<Map<String, String>> obtieneConfPatallaCli(String cdperson, String usuario, String rol, String tipoCliente) throws Exception{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cdsisrol_i", rol);
+		params.put("pv_cdusuari_i", usuario);
+		params.put("pv_cdperson_i", cdperson);
+		params.put("pv_tpcteext_i", tipoCliente);
+		Map<String,Object>resultado=ejecutaSP(new ObtieneConfPatallaCli(getDataSource()), params);
+		logger.debug("Resultado de campos a configurar" + resultado.get("pv_registro_o"));
+		return ((List<Map<String,String>>)resultado.get("pv_registro_o"));
+		
+	}
+	
+	protected class ObtieneConfPatallaCli extends StoredProcedure
+	{
+		protected ObtieneConfPatallaCli(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_CAMPOS_CLIENTE_X_USUROL");
+			declareParameter(new SqlParameter("pv_cdsisrol_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdusuari_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tpcteext_i"    , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CVECAMPO", 	"SOLOLECTURA", 	"OCULTO"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
 }

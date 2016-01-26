@@ -53,6 +53,7 @@ var Cat = {
     TiposPagoPoliza           : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_PAGO_POLIZA" />',
     TiposPagoPolizaSinDxN     : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_PAGO_POLIZA_SIN_DXN" />',
     TiposPersona              : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_PERSONA" />',
+    TiposDomicilio            : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_DOMICILIO" />',
     TiposPoliza               : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_POLIZA" />',
     TipSit                    : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPSIT" />',
     Tratamientos              : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TRATAMIENTOS" />',

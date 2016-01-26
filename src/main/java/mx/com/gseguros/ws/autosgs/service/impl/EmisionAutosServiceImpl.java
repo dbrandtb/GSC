@@ -1261,6 +1261,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vNumero"    , datosEnd.get("NUMERO"));
 
 				paramsEnd.put("vNumInt"    , datosEnd.get("NUMINT"));
+				paramsEnd.put("vNumDir"   , datosEnd.get("NUMDIR"));
 			
 				paramsEnd.put("vColonia"   , datosEnd.get("COLONIA"));
 				paramsEnd.put("vTelefono1" , datosEnd.get("TELEFONO1"));
@@ -1352,6 +1353,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vTelefono" , datosEnd.get("TELEFONO1"));
 				paramsEnd.put("vCalle"     , datosEnd.get("CALLE"));
 				paramsEnd.put("vNumero"    , datosEnd.get("NUMERO"));
+				paramsEnd.put("vNumInt"    , datosEnd.get("NUMINT"));
+				paramsEnd.put("vNumDir"   , datosEnd.get("NUMDIR"));
 				
 				Integer res = autosSIGSDAO.cambioDomicilioCP(paramsEnd);
 				
@@ -1423,6 +1426,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vCveEdo" , datosEnd.get("CVEEDO"));
 				paramsEnd.put("vMpioSPM", datosEnd.get("MPIOSPM"));
 				paramsEnd.put("vNumInt" , datosEnd.get("NUMINT"));
+				paramsEnd.put("vNumDir"   , datosEnd.get("NUMDIR"));
 				
 				paramsEnd.put("vFEndoso"   , datosEnd.get("FENDOSO"));
 				

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.ClienteDAO;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
@@ -29,6 +30,11 @@ import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
+import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class PersonasManagerImpl implements PersonasManager
@@ -50,8 +56,10 @@ public class PersonasManagerImpl implements PersonasManager
 	
 	@Autowired
 	private ClienteDAO  clienteDAOSIGS;
-
-
+	
+	@Autowired
+	private AutosSIGSDAO autosSIGSDAO;
+	
 	/**
 	 * Carga los componentes de la pantalla de personas
 	 * @return exito,respuesta,respuestaOculta,itemMap
@@ -297,16 +305,12 @@ public class PersonasManagerImpl implements PersonasManager
 			,String cdideext
 			,String cdestcivil
 			,String cdsucemi
-			,String nmorddom
-			,String dsdomici
 			,String nmtelefo
-			,String cdpostal
-			,String cdedo
-			,String cdmunici
-			,String cdcoloni
-			,String nmnumero
-			,String nmnumint
+			,List<Map<String,String>> saveList
+			,List<Map<String,String>> updateList
+			,List<Map<String,String>> deleteList
 			,boolean autosave
+			,UserVO usuario
 			,long   timestamp) throws Exception
 	{
 		Map<String,Object>result=new HashMap<String,Object>();
@@ -334,15 +338,10 @@ public class PersonasManagerImpl implements PersonasManager
 				+ "\n residencia:"+residencia
 				+ "\n cdestcivil:"+cdestcivil
 				+ "\n cdscuemi:"+cdsucemi
-				+ "\n nmorddom:"+nmorddom
-				+ "\n dsdomici:"+dsdomici
 				+ "\n nmtelefo:"+nmtelefo
-				+ "\n cdpostal:"+cdpostal
-				+ "\n cdedo:"+cdedo
-				+ "\n cdmunici:"+cdmunici
-				+ "\n cdcoloni:"+cdcoloni
-				+ "\n nmnumero:"+nmnumero
-				+ "\n nmnumint:"+nmnumint
+				+ "\n saveList:"+saveList
+				+ "\n updateList:"+updateList
+				+ "\n deleteList:"+deleteList
 				+ "\n autosave:"+autosave
 				);
 		
@@ -351,32 +350,20 @@ public class PersonasManagerImpl implements PersonasManager
 		String  respuestaOculta = null;
 		String  cdpersonNuevo   = null;
 		
+		String usuarioCaptura =  null;
 		
-		/**
-		 * Se comenta validacion de RFC repetidos, puesto que El usuario lo solicit� de esa forma Pedro Hernandez 
-		 *
-		if(exito&&StringUtils.isBlank(cdperson))
-		{
-			try
-			{
-				personasDAO.validaExisteRFC(cdrfc);
+		if(usuario!=null){
+			if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+				usuarioCaptura = usuario.getClaveUsuarioCaptura();
+			}else{
+				usuarioCaptura = usuario.getCodigoPersona();
 			}
-			catch(Exception ex)
-			{
-				logger.error(timestamp+" Error al verificar persona existente",ex);
-				exito           = false;
-				respuesta       = ex.getMessage()+" #"+timestamp;
-				respuestaOculta = "sin respuesta oculta";
-			}
+			
 		}
-		*/
 		
 		if(exito&&StringUtils.isBlank(cdperson))
 		{
 			
-			/**
-			 * TODO: EVALUAR E IMPLEMENTAR CDPERSON TEMPORAL
-			 */
 			try
 			{
 				cdperson      = personasDAO.obtenerNuevoCdperson();
@@ -419,7 +406,7 @@ public class PersonasManagerImpl implements PersonasManager
 						dsemail, dsnombre1, dsapellido,
 						dsapellido1, feingreso, cdnacion,
 						canaling, conducto, ptcumupr,
-						residencia, nongrata, cdideext, cdestcivil, cdsucemi,  Constantes.INSERT_MODE);
+						residencia, nongrata, cdideext, cdestcivil, cdsucemi, usuarioCaptura, Constantes.INSERT_MODE);
 			}
 			catch(Exception ex)
 			{
@@ -434,11 +421,28 @@ public class PersonasManagerImpl implements PersonasManager
 		{
 			try
 			{
-				personasDAO.movimientosMdomicil(
-						cdperson, nmorddom, dsdomici,
-						nmtelefo, cdpostal, cdedo,
-						cdmunici, cdcoloni, nmnumero,
-						nmnumint, Constantes.INSERT_MODE);
+				for(Map<String,String> actualizar : updateList){
+					personasDAO.movimientosMdomicil(
+							cdperson, actualizar.get("NMORDDOM"), actualizar.get("DSDOMICI"),
+							nmtelefo, actualizar.get("CODPOSTAL"), actualizar.get("CDEDO"),
+							actualizar.get("CDMUNICI"), actualizar.get("CDCOLONI"), actualizar.get("NMNUMERO"),
+							actualizar.get("NMNUMINT"),actualizar.get("CDTIPDOM"), usuarioCaptura, actualizar.get("SWACTIVO"), Constantes.UPDATE_MODE);
+				}
+				for(Map<String,String> eliminar : deleteList){
+					personasDAO.movimientosMdomicil(
+							cdperson, eliminar.get("NMORDDOM"), eliminar.get("DSDOMICI"),
+							nmtelefo, eliminar.get("CODPOSTAL"), eliminar.get("CDEDO"),
+							eliminar.get("CDMUNICI"), eliminar.get("CDCOLONI"), eliminar.get("NMNUMERO"),
+							eliminar.get("NMNUMINT"),eliminar.get("CDTIPDOM"), usuarioCaptura, eliminar.get("SWACTIVO"), Constantes.DELETE_MODE);
+				}
+				for(Map<String,String> guardar : saveList){
+					personasDAO.movimientosMdomicil(
+							cdperson, null, guardar.get("DSDOMICI"),
+							nmtelefo, guardar.get("CODPOSTAL"), guardar.get("CDEDO"),
+							guardar.get("CDMUNICI"), guardar.get("CDCOLONI"), guardar.get("NMNUMERO"),
+							guardar.get("NMNUMINT"), guardar.get("CDTIPDOM"), usuarioCaptura, guardar.get("SWACTIVO"), Constantes.INSERT_MODE);
+				}
+				
 			}
 			catch(Exception ex)
 			{
@@ -469,11 +473,22 @@ public class PersonasManagerImpl implements PersonasManager
 
 	@Override
 	public void guardarPantallaDomicilio(String cdperson, String nmorddom, String dsdomici, String nmtelefo,
-			String cdpostal, String cdedo, String cdmunici, String cdcoloni, String nmnumero, String nmnumint,
+			String cdpostal, String cdedo, String cdmunici, String cdcoloni, String nmnumero, String nmnumint, UserVO usuario, String swactivo,
 			long timestamp) throws Exception {
 		
+		String usuarioCaptura =  null;
+		
+		if(usuario!=null){
+			if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+				usuarioCaptura = usuario.getClaveUsuarioCaptura();
+			}else{
+				usuarioCaptura = usuario.getCodigoPersona();
+			}
+			
+		}
+		
 		personasDAO.movimientosMdomicil(cdperson, nmorddom, dsdomici, nmtelefo, cdpostal, cdedo, cdmunici, cdcoloni,
-				nmnumero, nmnumint, Constantes.INSERT_MODE);
+				nmnumero, nmnumint, null,usuarioCaptura,swactivo,Constantes.INSERT_MODE);
 	}
 
 	/**
@@ -520,6 +535,54 @@ public class PersonasManagerImpl implements PersonasManager
 		logger.info(timestamp+""
 				+ "\nresult: "+result
 				+ "\n###### obtenerDomicilioPorCdperson ######"
+				+ "\n#########################################"
+				);
+		return result;
+	}
+	/**
+	 * Obtener el domicilio de una persona por su cdperson de PKG_CONSULTA.P_GET_MDOMICIL
+	 * @return exito,respuesta,respuestaOculta,domicilio
+	 */
+	public Map<String,Object> obtenerDomiciliosPorCdperson(String cdperson,long timestamp) throws Exception
+	{
+		Map<String,Object>result = new HashMap<String,Object>();
+		logger.info(timestamp+""
+				+ "\n#########################################"
+				+ "\n###### obtenerDomiciliosPorCdperson ######"
+				);
+		boolean exito               = true;
+		String  respuesta           = null;
+		String  respuestaOculta     = null;
+		List<Map<String,String>> domicilios = null;
+		
+		if(exito)
+		{
+			try
+			{
+				domicilios = personasDAO.obtenerDomiciliosPorCdperson(cdperson);
+			}
+			catch(Exception ex)
+			{
+				logger.error(timestamp+" error al obtener domicilios por cdperson",ex);
+				exito           = false;
+				respuesta       = "No se encontr&oacute; domiciliso anterior #"+timestamp;
+				respuestaOculta = ex.getMessage();
+			}
+		}
+		
+		if(exito)
+		{
+			respuesta       = "Todo OK";
+			respuestaOculta = "Todo OK";
+		}
+		
+		result.put("exito"           , exito);
+		result.put("respuesta"       , respuesta);
+		result.put("respuestaOculta" , respuestaOculta);
+		result.put("domicilios"       , domicilios);
+		logger.info(timestamp+""
+//				+ "\nresult: "+result
+				+ "\n###### obtenerDomiciliosPorCdperson ######"
 				+ "\n#########################################"
 				);
 		return result;
@@ -617,6 +680,7 @@ public class PersonasManagerImpl implements PersonasManager
 			,String otvalor36,String otvalor37,String otvalor38,String otvalor39,String otvalor40
 			,String otvalor41,String otvalor42,String otvalor43,String otvalor44,String otvalor45
 			,String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50
+			,String otvalor51, String otvalor52
 			,long timestamp
 			) throws Exception
 	{
@@ -675,6 +739,8 @@ public class PersonasManagerImpl implements PersonasManager
 				+ "\n otvalor48:"+otvalor48
 				+ "\n otvalor49:"+otvalor49
 				+ "\n otvalor50:"+otvalor50
+				+ "\n otvalor51:"+otvalor51
+				+ "\n otvalor52:"+otvalor52
 				);
 		boolean exito           = true;
 		String  respuesta       = null;
@@ -699,7 +765,8 @@ public class PersonasManagerImpl implements PersonasManager
 						otvalor31, otvalor32, otvalor33, otvalor34, otvalor35,
 						otvalor36, otvalor37, otvalor38, otvalor39, otvalor40,
 						otvalor41, otvalor42, otvalor43, otvalor44, otvalor45,
-						otvalor46, otvalor47, otvalor48, otvalor49, otvalor50
+						otvalor46, otvalor47, otvalor48, otvalor49, otvalor50,
+						otvalor51, otvalor52
 						);
 			}
 			catch(Exception ex)
@@ -952,7 +1019,7 @@ public class PersonasManagerImpl implements PersonasManager
 	}
 	
 	@Override
-	public String guardarPantallaEspPersona(Map<String,String>params) throws Exception
+	public String guardarPantallaEspPersona(Map<String,String>params, UserVO usuario) throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -963,6 +1030,17 @@ public class PersonasManagerImpl implements PersonasManager
 		String paso = null;
 		try
 		{
+			
+			String usuarioCaptura =  null;
+			
+			if(usuario!=null){
+				if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuario.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuario.getCodigoPersona();
+				}
+				
+			}
 			paso = "Guardando datos de persona";
 			logger2.debug("\nVoy a guardar datos de persona");
 			personasDAO.movimientosMpersona(
@@ -989,6 +1067,7 @@ public class PersonasManagerImpl implements PersonasManager
 				params.get("cdideext"),
 				params.get("cdestciv"),
 				params.get("cdsucemi"),
+				usuarioCaptura,
 				Constantes.UPDATE_MODE
 			);
 			
@@ -1187,6 +1266,16 @@ public class PersonasManagerImpl implements PersonasManager
 	public String validaExisteAseguradoSicaps(String cdideper)throws Exception
 	{
 		return personasDAO.validaExisteAseguradoSicaps(cdideper);
+	}
+	
+	@Override
+	public Integer obtieneTipoCliWS(String codigoExterno, String compania) throws Exception{
+		return autosSIGSDAO.obtieneTipoCliWS(codigoExterno, compania);
+	}
+
+	@Override
+	public List<Map<String, String>> obtieneConfPatallaCli(String cdperson, String usuario, String rol, String tipoCliente) throws Exception{
+		return personasDAO.obtieneConfPatallaCli(cdperson, usuario, rol, tipoCliente);
 	}
 	
 	/************************ BASE MANAGER **************************/

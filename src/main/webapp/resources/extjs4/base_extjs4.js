@@ -91,7 +91,7 @@ function rendererColumnasDinamico(value,comboName)
     return value;
 }
 
-function validarRFC(rfc,tper)
+function validarRFC(rfc,tper, silencioso)
 {
 	debug('validarRFC',rfc,tper);
 	var valido=rfc&&rfc.length>0&&tper&&tper.length>0;
@@ -176,33 +176,39 @@ function validarRFC(rfc,tper)
 	}
 	if(!valido)
 	{
-		var ven=Ext.create('Ext.window.Window',
-		{
-			title        : 'Error'
-			,height      : 130
-			,width       : 300
-			,modal       : true
-			,padding     : 5
-			,items       :
-			[
-			    {
-			    	xtype : 'label'
-			    	,text : 'El RFC "'+rfc+'" no es v\u00E1lido para persona '+(tper=='F'?'F\u00EDsica':(tper=='M'?'Moral':'tipo r\u00E9gimen simplificado'))
-			    }
-			]
-		    ,buttonAlign : 'center'
-		    ,buttons     :
-		    [
-		        {
-		        	text     : 'Aceptar'
-		        	,handler : function()
-		        	{
-		        		this.up().up().destroy();
-		        	}
-		        }
-		    ]
-		}).show();
-		centrarVentanaInterna(ven);
+		
+		if(Ext.isEmpty(silencioso) || !silencioso){
+			var ven=Ext.create('Ext.window.Window',
+			{
+				title        : 'Error'
+				,height      : 130
+				,width       : 300
+				,modal       : true
+				,padding     : 5
+				,items       :
+				[
+				    {
+				    	xtype : 'label'
+				    	,text : 'El RFC "'+rfc+'" no es v\u00E1lido para persona '+(tper=='F'?'F\u00EDsica':(tper=='M'?'Moral':'tipo r\u00E9gimen simplificado'))
+				    }
+				]
+			    ,buttonAlign : 'center'
+			    ,buttons     :
+			    [
+			        {
+			        	text     : 'Aceptar'
+			        	,handler : function()
+			        	{
+			        		this.up().up().destroy();
+			        	}
+			        }
+			    ]
+			}).show();
+			centrarVentanaInterna(ven);
+		}else{
+			debug('El RFC "'+rfc+'" no es v\u00E1lido para persona '+(tper=='F'?'F\u00EDsica':(tper=='M'?'Moral':'tipo r\u00E9gimen simplificado')));
+		}
+		
 	}
 	return valido;
 }

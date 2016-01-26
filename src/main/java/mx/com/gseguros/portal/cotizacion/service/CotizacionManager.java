@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
@@ -337,6 +338,7 @@ public interface CotizacionManager
 			,String cdideext_
 			,String nmpolant
 			,String nmrenova
+			,UserVO usuarioSesion
 			);
 	
 	public ManagerRespuestaSlistVO obtenerTiposSituacion();
@@ -390,6 +392,7 @@ public interface CotizacionManager
 			,String cdideext_
 			,String nmpolant
 			,String nmrenova
+			,UserVO usuarioSesion
 			);
 	public ManagerRespuestaVoidVO validarCambioZonaGMI(
 			String cdunieco
@@ -428,7 +431,9 @@ public interface CotizacionManager
 			,String dsdomici
 			,String nmnumero
 			,String nmnumint
-			,boolean esConfirmaEmision);
+			,String nmorddom
+			,boolean esConfirmaEmision
+			,UserVO usuarioSesion);
 	
 	public ManagerRespuestaSmapVO cargarTramite(String ntramite);
 	
@@ -445,6 +450,7 @@ public interface CotizacionManager
 			,String fefin
 			,String fesolici
 			,String cdpersonCli
+			,String nmorddomCli
 			,String cdideperCli
 			,boolean noTarificar
 			,boolean conIncisos
@@ -452,6 +458,7 @@ public interface CotizacionManager
 			,boolean flagMovil
 			,Map<String,String>tvalopol
 			,String cdagente
+			,UserVO usuarioSesion
 			)throws Exception;
 	
 	
@@ -684,7 +691,8 @@ public interface CotizacionManager
 			String cdpersonCli,
 			String cdideperCli,
 			String nombreReporteCotizacion,
-			String nombreReporteCotizacionFlot) throws Exception;
+			String nombreReporteCotizacionFlot,
+			UserVO usuarioSesion) throws Exception;
 	
 	@Deprecated
 	public List<Map<String,String>> recuperarListaDocumentosParametrizados(

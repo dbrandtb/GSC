@@ -127,6 +127,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case MOTIVOS_CANCELACION:
 				case MOTIVOS_REEXPEDICION:
 				case NACIONALIDAD:
+				case TIPOS_DOMICILIO:
 				case PENALIZACIONES:
 				case PLANES:
 				case REFERENCIAS_TRAMITE_NUEVO:

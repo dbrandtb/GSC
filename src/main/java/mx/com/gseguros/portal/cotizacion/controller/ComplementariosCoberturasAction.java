@@ -710,6 +710,11 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 			
 			UserVO usuSes=(UserVO)session.get("USUARIO");
 			
+			if(!smap1.containsKey("pv_nmsuplem_i") || StringUtils.isBlank(smap1.get("pv_nmsuplem_i"))){
+				logger.debug("suplemento 9999");
+				smap1.put("pv_nmsuplem_i" , "999999999999999999");
+			}
+			
 			logger.debug(smap1);
 			/*
 			pv_cdunieco_i  smap1 ready!
@@ -723,7 +728,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
             pv_status_i    #V    QUITADO X(
             pv_cdtipsit_i  session
             */
-			smap1.put("pv_nmsuplem_i" , "999999999999999999");
+			
 			//smap1.put("pv_status_i"   , "V");
 			//smap1.put("pv_cdtipsit_i" ,  datUsu.getCdtipsit());
 			Map<String,Object>parametrosCargados=null;
@@ -799,6 +804,9 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 			map.put("NMNUMINT" , rs.getString("NMNUMINT"));
 			*/
 			
+			/**
+			 * PARA CUANDO VIENE DE ENDOSOS DE AUTOS SE CARGAN OTROS CATALOGOS
+			 */
 			if(StringUtils.isNotBlank(smap1.get("domGeneral")) && Constantes.SI.equalsIgnoreCase(smap1.get("domGeneral"))){
 				smap1=kernelManager.obtenerDomicilioGeneral(smap1);
 			}else{
@@ -834,6 +842,17 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 			logger.debug(smap1);
 			logger.debug(parametros);
 			UserVO usuSes=(UserVO)session.get("USUARIO");
+			
+			String usuarioCaptura =  null;
+			
+			if(usuSes!=null){
+				if(StringUtils.isNotBlank(usuSes.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuSes.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuSes.getCodigoPersona();
+				}
+				
+			}
 			
 			
 			/**
@@ -901,6 +920,9 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 			paramDomicil.put("pv_cdcoloni_i" , smap1.get("CDCOLONI"));
 			paramDomicil.put("pv_nmnumero_i" , smap1.get("NMNUMERO"));
 			paramDomicil.put("pv_nmnumint_i" , smap1.get("NMNUMINT"));
+			paramDomicil.put("pv_cdtipdom_i" , smap1.get("CDTIPDOM"));
+			paramDomicil.put("pv_cdusuario_i", usuarioCaptura);
+			paramDomicil.put("pv_swactivo_i",  Constantes.SI);
 			paramDomicil.put("pv_accion_i"   , "U");			
 			kernelManager.pMovMdomicil(paramDomicil);
 			
@@ -1264,6 +1286,19 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 			logger.debug("smap1: "+smap1);
 			logger.debug("parametros: "+parametros);
 			
+			UserVO usuSes=(UserVO)session.get("USUARIO");
+			
+			String usuarioCaptura =  null;
+			
+			if(usuSes!=null){
+				if(StringUtils.isNotBlank(usuSes.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuSes.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuSes.getCodigoPersona();
+				}
+				
+			}
+			
 			if(smap1.get("agrupado").equalsIgnoreCase("si"))
 			//actualizar todos
 			{
@@ -1330,6 +1365,9 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 									paramBorrarDomicil.put("pv_cdcoloni_i" , null);
 									paramBorrarDomicil.put("pv_nmnumero_i" , null);
 									paramBorrarDomicil.put("pv_nmnumint_i" , null);
+									paramBorrarDomicil.put("pv_cdtipdom_i" , null);
+									paramBorrarDomicil.put("pv_cdusuario_i", usuarioCaptura);
+									paramBorrarDomicil.put("pv_swactivo_i",  Constantes.NO);
 									paramBorrarDomicil.put("pv_accion_i"   , "B");//borrar
 									kernelManager.pMovMdomicil(paramBorrarDomicil);
 								}
@@ -1362,6 +1400,9 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 									paramBorrarDomicil.put("pv_cdcoloni_i" , null);
 									paramBorrarDomicil.put("pv_nmnumero_i" , null);
 									paramBorrarDomicil.put("pv_nmnumint_i" , null);
+									paramBorrarDomicil.put("pv_cdtipdom_i" , null);
+									paramBorrarDomicil.put("pv_cdusuario_i", usuarioCaptura);
+									paramBorrarDomicil.put("pv_swactivo_i",  Constantes.NO);
 									paramBorrarDomicil.put("pv_accion_i"   , "B");//borrar
 									kernelManager.pMovMdomicil(paramBorrarDomicil);
 								}

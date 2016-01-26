@@ -82,6 +82,15 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	@Value("${tarjeta.iden.impresion.autos.url}")
 	private String tarjetaIdenImpresionAutosURL;
 	
+	@Value("${manual.agente.txtinfocobredgs}")
+	private String urlImpresionCobReduceGS;
+	
+	@Value("${manual.agente.txtinfocobgesgs}")
+	private String urlImpresionCobGestoriaGS;
+	
+	@Value("${manual.agente.condgralescobsegvida}")
+	private String urlImpresionCondicionesSegVida;
+	
 	@Autowired
 	private ServiciosManager serviciosManager;
 	
@@ -692,7 +701,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					 * Para cobertura de reduce GS
 					 */
 					
-					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf\">Reduce GS</a>";
+					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlImpresionCobReduceGS+"\">Reduce GS</a>";
 					
 					mesaControlDAO.guardarDocumento(
 							cdunieco
@@ -701,7 +710,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,nmpolizaEmitida
 							,nmsuplemEmitida
 							,new Date()
-							,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
+							,urlImpresionCobReduceGS
 							,"Reduce GS"
 							,nmpoliza
 							,ntramite
@@ -719,7 +728,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					 * Para cobertura de gestoria GS
 					 */
 					
-					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf\">Gestoria GS</a>";
+					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlImpresionCobGestoriaGS+"\">Gestoria GS</a>";
 					
 					mesaControlDAO.guardarDocumento(
 							cdunieco
@@ -728,7 +737,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,nmpolizaEmitida
 							,nmsuplemEmitida
 							,new Date()
-							,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
+							,urlImpresionCobGestoriaGS
 							,"Gestoria GS"
 							,nmpoliza
 							,ntramite

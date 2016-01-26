@@ -1,5 +1,20 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%-- Commentarios sobre la modificacion de este archivo --%>
+
+<%-- Con el fin de guardar la pantalla unicamente cuando se han realizado cambios a los datos originales de la pantalla. --%>
+	 
+<%-- Si se agrega un nuevo campo y se le realiza un setValue (cambia de valor) despues de cargar la forma (loadrecord) 
+	 hay que ejecutar la funcion resetOriginalValue() al campo, para considerar el valor cargado como valor orignal y no lo tome 
+	 como si se hubiera realizado un cambio en los valores de la pantalla, lo cual mandará a guardar toda la informacion 
+	 y actualizara el campo del usuario que actualizó los datos por ultima vez, para evitar esto y guardar unicamente cuando hay cambios
+	 y el usuario que modifica hay que ejecutar dicha funcion para que identifique ese valor como inicial. --%>
+	 
+	 
+<%-- Tener cuidado al cambiar la funcion _p22_tipoPersonaChange evitar hacer cambios a campos compartidos entre tipos de personas ya que 
+	 se pueden perder valores, o campos ocultos si desde el cofigurador de campos se bloquean u ocultan para algun rol. --%>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -9,9 +24,44 @@
 	font-size:14px; 
 	font-weight: bold;
 }
+.green-row .x-grid-cell {
+        background-color: #28B058 !important;
+}
 </style>
 
 <script>
+
+/**
+ *	Funciones que se ejecutan desde una pantalla padre.
+ */
+
+function obtDatLoaderContratante<s:property value="smap1.idPantalla" />(){
+	/**
+	 *	Declaracion de Funcion que se ejecutara desde fuera de esta pantalla, y se iguala a una funcion interna propia de este numero de pantalla idPantalla
+	 *  Se puede llamar sin ID y con un Id cuando son muchas pantallas
+	 *  No es necesario declarar esta funcion afuera
+	 */
+}
+
+function destruirLoaderContratante<s:property value="smap1.idPantalla" />(){
+	/**
+	 *	Declaracion de Funcion que se ejecutara desde fuera de esta pantalla, y se iguala a una funcion interna propia de este numero de pantalla idPantalla
+	 *  Se puede llamar sin ID y con un Id cuando son muchas pantallas
+	 *  No es necesario declarar esta funcion afuera
+	 */
+}
+
+
+Ext.onReady(function()
+{
+	
+/**
+ * Se genera un numero unico para generar un Div con nombre unico de la pantalla para poder usarse mas de una instancia en una misma pantalla
+ */
+var _genDivId  = "_divClientesID" + new Date().getTime();
+//document.getElementById("_p22_divpri").setAttribute("id", _genDivId);
+Ext.get('_p22_divpri').set({id : _genDivId});
+
 
 ////// overrides Para quitar overrides de paginas padre//////
 Ext.override(Ext.form.TextField,
@@ -40,16 +90,11 @@ Ext.override(Ext.form.NumberField,
 ////// overrides //////
 
 
-//debug('PANTALLAS PERSONA: ',Ext.ComponentQuery.query('#companiaGroupId'));
-//if(Ext.ComponentQuery.query('#companiaGroupId').length >= 1){
-//	debugError('Error, no se puede crear mas de una instancia de la pantalla de contratante');
-//}else
-//{
-
 ////// variables //////
 var _p22_urlObtenerPersonas     = '<s:url namespace="/catalogos"  action="obtenerPersonasPorRFC"              />';
 var _p22_urlGuardar             = '<s:url namespace="/catalogos"  action="guardarPantallaPersonas"            />';
 var _p22_urlObtenerDomicilio    = '<s:url namespace="/catalogos"  action="obtenerDomicilioPorCdperson"        />';
+var _p22_urlObtenerDomicilios   = '<s:url namespace="/catalogos"  action="obtenerDomiciliosPorCdperson"        />';
 var _p22_urlTatriperTvaloper    = '<s:url namespace="/catalogos"  action="obtenerTatriperTvaloperPorCdperson" />';
 var _p22_urlGuadarTvaloper      = '<s:url namespace="/catalogos"  action="guardarDatosTvaloper"               />';
 var _p22_urlPantallaDocumentos  = '<s:url namespace="/catalogos"  action="pantallaDocumentosPersona"          />';
@@ -61,13 +106,15 @@ var _p22_urlCargarNombreArchivo = '<s:url namespace="/catalogos"  action="cargar
 var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
 var _CAT_NACIONALIDAD  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@NACIONALIDAD"/>';
 
-var _UrlCargaAccionistas = '<s:url namespace="/catalogos" action="obtieneAccionistas" />';
-var _UrlGuardaAccionista = '<s:url namespace="/catalogos" action="guardaAccionista" />';
+var _UrlCargaAccionistas   = '<s:url namespace="/catalogos" action="obtieneAccionistas" />';
+var _UrlGuardaAccionista   = '<s:url namespace="/catalogos" action="guardaAccionista" />';
 var _UrlEliminaAccionistas = '<s:url namespace="/catalogos" action="eliminaAccionistas" />';
 
 var _UrlActualizaStatusPersona = '<s:url namespace="/catalogos" action="actualizaStatusPersona" />';
 var _UrlImportaPersonaWS = '<s:url namespace="/catalogos" action="importaPersonaExtWS" />';
 var _UrlguardaPersonaWS = '<s:url namespace="/catalogos" action="guardarClienteCompania" />';
+
+var _UrlCargaConfCampos = '<s:url namespace="/catalogos" action="obtieneConfPatallaCli" />';
 
 /* PARA EL LOADER */
 var _p22_urlCargarPersonaCdperson = '<s:url namespace="/catalogos" action="obtenerPersonaPorCdperson" />';
@@ -128,14 +175,46 @@ var _cargaTipoPersona;
 var _cargaSucursalEmi;
 
 var _activaCveFamiliar = false;
-var _PanelPrincipalPersonas;
+var _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />;
+
 var _panelTipoPer;
 
 var _nombreComContratante;
 
 var _modoRecuperaDanios;
 var _modoSoloEdicion; // no es compatible con _esCargaClienteNvo
+
+var _rolDeAcceso;
+var _editaIncompleto;
+
+var _editandoCliente = false;
+
 var _contrantantePrincipal;
+
+var gridDomiciliosCliente;
+var storeDomiciliosCliente;
+
+var saveListDom;
+var updateListDom;
+var deleteListDom;
+
+var _tomarUnDomicilio;
+var _domicilioSimple;
+var _numDomicilioTomado = undefined;
+var _cargaOrdDomicilio;
+
+var _domiciliosNuevos = [];
+
+var _camposAconfigurar = undefined;
+var _camposConfigurados = [];
+
+var _RFCduplicado = false;
+
+var _rfcGuardado = 'DUMMYRFCTMP';
+
+var _permiteDuplicarRFC = false;
+
+var _polizaEnEmision = false;
 
 if(!Ext.isEmpty(_p22_smap1)){
 	
@@ -147,7 +226,7 @@ if(!Ext.isEmpty(_p22_smap1)){
 	_cargaFenacMin = _p22_smap1.cargaFenacMin;
 	_cargaFenacMax = _p22_smap1.cargaFenacMax;
 	_cargaCP = _p22_smap1.cargaCP;	
-	_cargaTipoPersona = _p22_smap1.cargaTipoPersona;	
+	_cargaTipoPersona = _p22_smap1.cargaTipoPersona;
 	_cargaSucursalEmi = _p22_smap1.cargaSucursalEmi;
 	
 	_activaCveFamiliar = !Ext.isEmpty(_p22_smap1.activaCveFamiliar) && _p22_smap1.activaCveFamiliar == "S" ? true : false ;
@@ -155,12 +234,28 @@ if(!Ext.isEmpty(_p22_smap1)){
 	_modoSoloEdicion = !Ext.isEmpty(_p22_smap1.modoSoloEdicion) && _p22_smap1.modoSoloEdicion == "S" ? true : false ;
 
 	_contrantantePrincipal = !Ext.isEmpty(_p22_smap1.contrantantePrincipal) && _p22_smap1.contrantantePrincipal == "S" ? true : false ;
+	
+	_rolDeAcceso = _p22_smap1.cveModo;
+	_editaIncompleto = (_rolDeAcceso != "EDITAALL")?true:false;
+	
+	_tomarUnDomicilio = !Ext.isEmpty(_p22_smap1.tomarUnDomicilio) && _p22_smap1.tomarUnDomicilio == "S" ? true : false ;
+	_domicilioSimple = !Ext.isEmpty(_p22_smap1.domicilioSimple) && _p22_smap1.domicilioSimple == "S" ? true : false ;
+	_polizaEnEmision = !Ext.isEmpty(_p22_smap1.polizaEnEmision) && _p22_smap1.polizaEnEmision == "S" ? true : false ;
+	_cargaOrdDomicilio= _p22_smap1.cargaOrdDomicilio;
+}
+
+
+if(_polizaEnEmision){
+	_tomarUnDomicilio = true;
+	_domicilioSimple = true
 }
 
 ////// variables //////
-
-Ext.onReady(function()
-{
+	
+	if(Ext.isEmpty(_p22_smap1)){
+		mensajeWarning('No hay parametros de acceso a clientes.');
+		return;
+	}
 	
 	// Se aumenta el timeout para todas las peticiones:
 	Ext.Ajax.timeout = 1*60*60*1000; // 1 hora
@@ -175,35 +270,216 @@ Ext.onReady(function()
 		,fields : [ <s:property value="imap.gridModelFields" /> ]
 	});
 	
-	Ext.define('_p22_modeloDomicilio',
-	{
-		extend  : 'Ext.data.Model'
-		,fields : [ <s:property value="imap.fieldsDomicilio" /> ]
-	});
 	////// modelos //////
 	
-	////// componentes //////
-	////// componentes //////
+	Ext.define('DomiciliosModel',{
+        extend: 'Ext.data.Model',
+        fields: [
+              {type:'boolean', name:'SEL', persist: false},
+              {type:'string', name:'NMORDDOM'},
+              {type:'string', name:'SWACTIVO'},
+              {type:'string', name:'CDTIPDOM'},
+              {type:'string', name:'DSTIPDOM'},
+              {type:'string', name:'CODPOSTAL' },
+              {type:'string', name:'CDEDO' },
+              {type:'string', name:'ESTADO' },
+              {type:'string', name:'CDMUNICI' },
+              {type:'string', name:'MUNICIPIO' },
+              {type:'string', name:'CDCOLONI' },
+              {type:'string', name:'COLONIA' },
+              {type:'string', name:'DSDOMICI' },
+              {type:'string', name:'NMNUMERO' },
+              {type:'string', name:'NMNUMINT' },
+              {type:'string', name:'DOMTOM' }
+        ]
+    });
+    // Store
+    storeDomiciliosCliente = new Ext.data.Store({
+        model: 'DomiciliosModel',
+        proxy: {
+           type: 'ajax',
+           url : _p22_urlObtenerDomicilios,
+            reader: {
+                type: 'json',
+                root: 'slist1'
+            }
+        }
+    });
+    
+    
+    // GRID PARA DOMICILIOS DEL COTRATANTE
+    gridDomiciliosCliente = Ext.create('Ext.grid.Panel', {
+        width   : 800,
+        store   : storeDomiciliosCliente,
+        autoScroll:true,
+        columns: [
+        	{text:'Pol', dataIndex:'SEL', xtype : 'checkcolumn', width:30, sortable:false,hidden: !_tomarUnDomicilio , disabled: (!Ext.isEmpty(_cargaOrdDomicilio) && _polizaEnEmision)
+        		,listeners : {
+        			checkchange: function (chk, rowIndex, checked, eOpts){
+	    		        
+        				_numDomicilioTomado = storeDomiciliosCliente.getAt(rowIndex);
+//        				gridDomiciliosCliente.getView().addRowCls(_numDomicilioTomado,'green-row');
+        				
+	            		storeDomiciliosCliente.each(function(record, index){
+            				if(index != rowIndex){
+            					record.set('SEL',false);
+            					if(_esSaludDanios == 'S'){
+            						mensajeWarning('Domicilio seleccionado para efectos de la p&oacute;liza actual. Guarde los datos de Persona.');
+            						try{
+            							_contratanteSaved =  false;
+            						}catch(e){
+            								debug('no existe _contratanteSaved en pantalla padre');
+            						}
+            					}
+//            					gridDomiciliosCliente.getView().removeRowCls(record,'green-row');
+	            			}
+	            			
+	            		});
+	            		
+        			},
+        			beforecheckchange: function (chk, rowIndex, checked, eOpts){
+							if(!checked)return false;        			
+        			}
+        		}
+        	},
+            {text:'No.', dataIndex:'NMORDDOM', width:30, align:'left', sortable:false},
+            {text:'Tipo', dataIndex:'DSTIPDOM', width:100, align:'left', sortable:false},
+            {text:'CP.', dataIndex:'CODPOSTAL', width:60, align:'left', sortable:false},
+            {text:'Estado', dataIndex:'ESTADO', width:120, align:'left', sortable:false},
+            {text:'Municipio', dataIndex:'MUNICIPIO', width:120, align:'left', sortable:false},
+            {text:'Colonia', dataIndex:'COLONIA', width:150, align:'left', sortable:false},
+            {text:'Domicilio', dataIndex:'DSDOMICI', width:140, align:'left', sortable:false},
+            {text:'Activo', dataIndex:'SWACTIVO', width:50, align:'left', sortable:false}
+//            {text:'No. Ext', dataIndex:'NMNUMERO', width:60, align:'left', sortable:false}
+//            {text:'No. Int', dataIndex:'NMNUMINT', width:60, align:'left', sortable:false}
+        ],
+        tbar:[{
+				text: 'Agregar Domicilio',
+				icon: '${ctx}/resources/fam3icons/icons/report_add.png',
+				name: 'AgregaDomBtn',
+				handler: function(){
+					
+					if(_domicilioSimple && storeDomiciliosCliente.getCount()>0){
+						mensajeWarning('No se pueden agregar mas domicilios.');
+						return;
+					}
+						
+					agregaEditaDomicilio(false,null);
+				}
+			},{
+				text: 'Editar Domicilio',
+				icon: '${ctx}/resources/fam3icons/icons/report_edit.png',
+				handler: function(){
+					
+                var model =  gridDomiciliosCliente.getSelectionModel();
+                if(model.hasSelection()){
+                    var recordSel = model.getLastSelected();
+                    agregaEditaDomicilio(true,recordSel);
+                }else{
+                    showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+                }
+            
+				}
+			},/*'-',{
+				text: 'Tomar Domicilio',
+				tooltip: 'Tomar Domicilio para efecto de la p&oacute;liza',
+				icon: '${ctx}/resources/fam3icons/icons/award_star_gold_2.png',
+				name: 'TomaDomBtn',
+				hidden: !_tomarUnDomicilio || _domicilioSimple,
+				handler: function(){
+					
+	                var model =  gridDomiciliosCliente.getSelectionModel();
+	                if(model.hasSelection()){
+	                    var recordSel = model.getLastSelected();
+	                    
+				    	var confirm = Ext.Msg.show({
+	    		            title: 'Confirmar acci&oacute;n',
+	    		            msg: '&iquest;Desea tomar este domicilio para efectos de la p&oacute;liza?',
+	    		            buttons: Ext.Msg.YESNO,
+	    		            fn: function(buttonId, text, opt) {
+	    		            	if(buttonId == 'yes') {
+
+	    		            		_numDomicilioTomado = recordSel;
+	    		            		
+	    		            		storeDomiciliosCliente.each(function(record, index){
+	    		            			gridDomiciliosCliente.getView().removeRowCls(record,'green-row');
+	    		            		});
+	    		            		
+	    		            		gridDomiciliosCliente.getView().addRowCls(recordSel,'green-row');
+	    		            		gridDomiciliosCliente.focus();
+	    		            		
+	    		            		mensajeWarning('Domicilio Tomado. Debe guardar los datos de Persona.');
+	    		            		
+	    		            	}else{
+	    		            		gridDomiciliosCliente.focus();
+	    		            		return;
+	    		            	}
+	            			},
+	    		            icon: Ext.Msg.QUESTION
+	        			});
+	                
+	                }else{
+	                    showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+	                }
+            
+				}
+			},*/'-',{
+				text: 'Cambiar Estatus Domicilio',
+				icon: '${ctx}/resources/fam3icons/icons/flag_blue.png',
+				name: 'EstatusDomBtn',
+				hidden: true,
+				handler: function(){
+					
+	                var model =  gridDomiciliosCliente.getSelectionModel();
+	                if(model.hasSelection()){
+	                    var recordSel = model.getLastSelected();
+	                    
+	                    if(Ext.isEmpty(recordSel.get("NMORDDOM"))){
+	                    	mensajeWarning('No se puede cambiar el estatus de un domicilio que aun no se ha guardado.');
+	                    	return;
+	                    }
+	                    
+	                    var estatusActivo = recordSel.get("SWACTIVO") == "N"?false:true; 
+	                    
+	                    var mensaje = !estatusActivo?'&iquest;Est&aacute; seguro que desea cambiar a estatus activo este domicilio?' 
+	                    : '&iquest;Est&aacute; seguro que desea cambiar a estatus inactivo este domicilio?'
+	                    
+				    	var confirm = Ext.Msg.show({
+	    		            title: 'Confirmar acci&oacute;n',
+	    		            msg: mensaje,
+	    		            buttons: Ext.Msg.YESNO,
+	    		            fn: function(buttonId, text, opt) {
+	    		            	if(buttonId == 'yes') {
+	    		            		recordSel.set("SWACTIVO",estatusActivo?"N":"S");
+	    		            	}else{
+	    		            		return;
+	    		            	}
+	            			},
+	    		            icon: Ext.Msg.QUESTION
+	        			});
+	                
+	                }else{
+	                    showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+	                }
+            
+				}
+			}]
+        
+    });
+	
 	
 	////// contenido //////
-	_PanelPrincipalPersonas = Ext.create('Ext.panel.Panel',{
-		renderTo  : '_p22_divpri'
+	_PanelPrincipalPersonas<s:property value="smap1.idPantalla" /> = Ext.create('Ext.panel.Panel',{
+		renderTo  : _genDivId
 		,defaults : { style : 'margin:5px;' }
 	    ,border   : 0
-	    ,itemId   : '_p22_PanelPrincipal'
 	    ,items    :
 	    [
 	        Ext.create('Ext.form.Panel',
 	        {
-	        	 title        : _esCargaClienteNvo?"Ingrese el RFC de la Persona, posteriormente de clic en continuar para validar el RFC y seguir con la captura." : 
-	        	 				(_modoSoloEdicion? "Escriba el RFC de la Persona a buscar y de clic en 'Continuar'." : "Escriba el RFC de la Persona a buscar/agregar y de clic en 'Continuar'. Si selecciona una persona de la lista ser&aacute; editada, de lo contrario se agregar&aacute; una nueva.")
-	        	 ,itemId      : '_p22_formBusqueda'
+	        	 title        : _modoSoloEdicion? "Escriba el RFC de la persona a buscar y de clic en Continuar." : "Escriba y seleccione el RFC de la persona a Editar, &oacute; de clic en el bot&oacute;n Agregar para una nueva."
+	        	 ,name      : '_p22_formBusqueda'
 	        	 ,hidden      : !Ext.isEmpty(_cargaCdPerson)
-//	        	 ,layout      :
-//	        	 {
-//	        	     type     : 'table'
-//	        	     ,columns : 3
-//	        	 }
 	        	 ,defaults    : { style : 'margin:5px;' }
 	        	 ,items       : [{
 	        	 					xtype      : 'fieldcontainer',
@@ -232,7 +508,6 @@ Ext.onReady(function()
 						                }, {
 						                    boxLabel  : 'General de Salud',
 						                    name      : 'smap1.esSalud',
-//						                    id        : 'companiaIdSalud',
 						                    inputValue: 'S',
 						                    checked   : false
 						                }
@@ -268,11 +543,12 @@ Ext.onReady(function()
 					            		
 					            		_CDIDEPERselTMP = records[0].get('CDIDEPER');
 					            		_CDIDEEXTselTMP = records[0].get('CDIDEEXT');
-					            		_esSaludDaniosTMP = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue(); 
+					            		_esSaludDaniosTMP = Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1].getGroupValue(); 
 					            		
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.nombre]').reset();
-					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_modoRecuperaDanios?'Continuar y Recuperar Cliente':'Continuar y Editar Cliente');
+					            		_fieldByName('btnContinuarId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setText(_modoRecuperaDanios?'Continuar y Recuperar Cliente':'Continuar y Editar Cliente');
+					            		_fieldByName('btnContinuarId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).enable();
 					            	}, 
 					            	keydown: function( com, e, eOpts ){
 					            		var form=_p22_formBusqueda();
@@ -283,12 +559,6 @@ Ext.onReady(function()
 						            			if(e.getKey() == e.BACKSPACE){
 						            				form.down('[name=smap1.rfc]').getStore().removeAll();
 						            			}
-					            		}else{
-					            			_RFCsel = '';
-						            		form.down('[name=smap1.nombre]').reset();
-					            			form.down('[name=smap1.rfc]').getStore().removeAll();
-					            			
-					            			Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_esCargaClienteNvo?'Continuar': (_modoSoloEdicion?'Seleccione...' : 'Continuar y Agregar Cliente') );
 					            		}
 					            		
 					            	},
@@ -339,9 +609,9 @@ Ext.onReady(function()
 				                        	beforeload: function( store, operation, eOpts){
 				                        		operation.callback = function(records, op, succ){
 				                        			if(succ){
+					                        			
 					                        			var jsonResponse = Ext.decode(op.response.responseText);
-	//				                        			debug(typeof jsonResponse.exito);
-	//				                        			debug(jsonResponse.exito);
+
 					                        			if(!jsonResponse.exito){
 					                        				mensajeError('Error al hacer la consulta, Favor de Reintentar');
 					                        				var form=_p22_formBusqueda();
@@ -349,39 +619,25 @@ Ext.onReady(function()
 					                        				form.down('[name=smap1.nombre]').reset();
 					                        			}
 					                        			
-					                        			if(_esCargaClienteNvo && jsonResponse.exito && records.length >0){
-						                        			var form =_p22_formBusqueda();
-				        	 								form.down('[name=smap1.rfc]').reset();
-				        	 								form.down('[name=smap1.rfc]').getStore().removeAll();
-							                        		
-						                        			mensajeWarning('La persona para el RFC ingresado ya existe como cliente. Favor de volver a realizar la cotizaci&oacute;n como cliente existente.');
-						                        			form.down('[name=smap1.rfc]').reset();
-						                        			
-						                        		}else if(_esCargaClienteNvo && jsonResponse.exito){
-						                        			irModoAgregar();
-						                        		}
 					                        		}else{
-					                        				mensajeError('Error al hacer la consulta, Favor de Reintentar2');
+					                        			
+					                        				mensajeError('Error al hacer la consulta. Error de comunicaci&oacute;n, favor de reintentar');
 					                        				var form=_p22_formBusqueda();
 						            						form.down('[name=smap1.rfc]').reset();
 					                        				form.down('[name=smap1.nombre]').reset();
 					                        		}
 				                        		};
-				                        		operation.params['smap1.esSalud'] = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue(); //SALUD o DAÑOS
+				                        		operation.params['smap1.esSalud'] = Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1].getGroupValue(); //SALUD o DAÑOS
 				                        		operation.params['smap1.validaTienePoliza'] = _esCargaClienteNvo?'S':'N';
-				                        		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].disable();
-				                        		Ext.ComponentQuery.query('#companiaGroupId')[Ext.ComponentQuery.query('#companiaGroupId').length-1].disable();
+				                        		_fieldByName('btnContinuarId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).disable();
+				                        		Ext.ComponentQuery.query('#companiaGroupId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('#companiaGroupId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1].disable();
 				                        	},
 				                        	load: function(store, records, successful, eOpts){
 				                        		var form=_p22_formBusqueda();
-//				                        		debug("luego del Load");
-//				                        		debug(form.down('[name=smap1.rfc]').getValue());
-//				                        		debug(form.down('[name=smap1.rfc]').getRawValue());
 				                        		
-				                        		form.down('[name=smap1.rfc]').setRawValue(form.down('[name=smap1.rfc]').getValue())
+				                        		form.down('[name=smap1.rfc]').setRawValue(form.down('[name=smap1.rfc]').getValue());
 				                        		
-				                        		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].enable();
-				                        		Ext.ComponentQuery.query('#companiaGroupId')[Ext.ComponentQuery.query('#companiaGroupId').length-1].enable();
+				                        		Ext.ComponentQuery.query('#companiaGroupId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('#companiaGroupId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1].enable();
 				                        		
 				                        	}
 				                        }
@@ -421,11 +677,12 @@ Ext.onReady(function()
 					            		
 					            		_CDIDEPERselTMP = records[0].get('CDIDEPER');
 					            		_CDIDEEXTselTMP = records[0].get('CDIDEEXT');
-					            		_esSaludDaniosTMP = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue(); 
+					            		_esSaludDaniosTMP = Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1].getGroupValue(); 
 					            		
 					            		var form=_p22_formBusqueda();
 					            		form.down('[name=smap1.rfc]').reset();
-					            		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_modoRecuperaDanios?'Continuar y Recuperar Cliente':'Continuar y Editar Cliente');
+					            		_fieldByName('btnContinuarId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setText(_modoRecuperaDanios?'Continuar y Recuperar Cliente':'Continuar y Editar Cliente');
+					            		_fieldByName('btnContinuarId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).enable();
 					            	}, 
 					            	keydown: function( com, e, eOpts ){
 					            		var form=_p22_formBusqueda();
@@ -441,13 +698,12 @@ Ext.onReady(function()
 						            		form.down('[name=smap1.rfc]').reset();
 						            		form.down('[name=smap1.nombre]').getStore().removeAll();
 					            			
-					            			Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].setText(_esCargaClienteNvo?'Continuar': (_modoSoloEdicion?'Seleccione...' : 'Continuar y Agregar Cliente') );
+					            			_fieldByName('btnContinuarId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setText(_modoSoloEdicion?'Seleccione...' : 'Continuar y Editar Cliente');
 					            		}
 					            	},
 					            	change: function(me, val){
 						    				try{
 							    				if('string' == typeof val){
-//							    					debug('mayus de '+val);
 							    					me.setValue(val.toUpperCase());
 							    				}
 						    				}
@@ -471,7 +727,6 @@ Ext.onReady(function()
 				                        	beforeload: function( store, operation, eOpts){
 				                        		operation.callback = function(records, op, succ){
 				                        			if(succ){
-	//				                        			debug('op:',op);
 					                        			var jsonResponse = Ext.decode(op.response.responseText);
 					                        			if(!jsonResponse.exito){
 					                        				mensajeError('Error al hacer la consulta, Favor de Reintentar');	
@@ -480,27 +735,19 @@ Ext.onReady(function()
 					                        				form.down('[name=smap1.nombre]').reset();
 					                        			}
 				                        			}else{
-				                        				mensajeError('Error al hacer la consulta, Favor de Reintentar2');	
+				                        				mensajeError('Error al hacer la consulta. Error de comunicaci&oacute;n, favor de reintentar');	
 				                        				var form=_p22_formBusqueda();
 					            						form.down('[name=smap1.rfc]').reset();
 				                        				form.down('[name=smap1.nombre]').reset();
 				                        			}
 				                        		};
-				                        		operation.params['smap1.esSalud'] = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue(); //SALUD o DAÑOS
+				                        		operation.params['smap1.esSalud'] = Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1].getGroupValue(); //SALUD o DAÑOS
 				                        		operation.params['smap1.validaTienePoliza'] = _esCargaClienteNvo?'S':'N';
-				                        		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].disable();
-				                        		Ext.ComponentQuery.query('#companiaGroupId')[Ext.ComponentQuery.query('#companiaGroupId').length-1].disable();
+				                        		_fieldByName('btnContinuarId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).disable();
+				                        		Ext.ComponentQuery.query('#companiaGroupId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('#companiaGroupId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1].disable();
 				                        	},
 				                        	load: function(store, records, successful, eOpts){
-				                        		Ext.ComponentQuery.query('#btnContinuarId')[Ext.ComponentQuery.query('#btnContinuarId').length-1].enable();
-				                        		Ext.ComponentQuery.query('#companiaGroupId')[Ext.ComponentQuery.query('#companiaGroupId').length-1].enable();
-				                        		
-				                        		if(_esCargaClienteNvo && successful && store.getCount()>0){
-				                        			store.removeAll();
-				                        			var form=_p22_formBusqueda();
-				                        			if(!Ext.isEmpty(form.down('[name=smap1.rfc]').getValue())) mensajeWarning('La persona para el RFC: '+ form.down('[name=smap1.rfc]').getValue() +' ya existe como cliente. Favor de volver a realizar la cotizaci&oacute;n como cliente existente.');
-				                        			form.down('[name=smap1.rfc]').reset();
-				                        		}
+				                        		Ext.ComponentQuery.query('#companiaGroupId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('#companiaGroupId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1].enable();
 				                        		
 				                        	}
 				                        }
@@ -508,26 +755,26 @@ Ext.onReady(function()
 								},{
 										xtype      : 'hidden',
 										name       : 'smap1.snombre',
-										value      : ' '  // 1 INSERT, 2 UPDATE
+										value      : ' '
 									},
 									{
 										xtype      : 'hidden',
 										name       : 'smap1.apat',
-										value      : ' '  // 1 INSERT, 2 UPDATE
+										value      : ' '
 									},{
 										xtype      : 'hidden',
 										name       : 'smap1.amat',
-										value      : ' '  // 1 INSERT, 2 UPDATE
+										value      : ' '
 									}
 								]
 	        	 ,buttonAlign : 'center'
 	        	 ,buttons     :
 	        	 [
 	        	     {
-                         text     : _esCargaClienteNvo?'Continuar': (_modoSoloEdicion?'Seleccione...' : 'Continuar y Agregar Cliente')
+                         text     : _modoSoloEdicion?'Seleccione...' : 'Continuar y Editar Cliente'
                          ,xtype   : 'button'
-                         ,itemId  : 'btnContinuarId'
-                         ,disabled: !_esCargaClienteNvo
+                         ,name  : 'btnContinuarId'
+                         ,disabled: true
                          ,icon    : '${ctx}/resources/fam3icons/icons/building_go.png'
                          ,handler : function (){
 										var form = _p22_formBusqueda();
@@ -576,14 +823,16 @@ Ext.onReady(function()
 										
 										if( (!Ext.isEmpty(_RFCsel)&&(_RFCsel == valorRFC)) || ((!Ext.isEmpty(_RFCnomSel))&&(_RFCnomSel == valorNombre))){
 											_p22_formDatosGenerales().getForm().reset();
-											_p22_formDomicilio().getForm().reset();
+											
+											//multidomicilio
+											if(storeDomiciliosCliente)storeDomiciliosCliente.removeAll();
+											
 											_p22_formDatosGenerales().hide();
+								    		
+								    		//multidomicilio
 								    		_p22_formDomicilio().hide();
 								    		_p22_principalDatosAdicionales().hide();
 								    		
-								    		_fieldByName('CDMUNICI',_PanelPrincipalPersonas).forceSelection = false;
-        									_fieldByName('CDEDO',_PanelPrincipalPersonas).forceSelection = false;
-											
 											_p22_cdperson = _p22_cdpersonTMP;
 											_p22_tipoPersona = _p22_tipoPersonaTMP;
 											_p22_nacionalidad = _p22_nacionalidadTMP;
@@ -609,82 +858,9 @@ Ext.onReady(function()
 											
 										}else if(!Ext.isEmpty(valorRFC)){
 											
-											if(_modoSoloEdicion){
-												mensajeWarning('Seleccione una persona.');
-												return;
-											}
+											mensajeWarning('Seleccione una persona.');
+											return;
 											
-											_p22_formDatosGenerales().getForm().reset();
-											_p22_formDomicilio().getForm().reset();
-											_p22_formDatosGenerales().hide();
-						    				_p22_formDomicilio().hide();
-										    _p22_principalDatosAdicionales().hide();
-										    
-										    _fieldByName('CDMUNICI',_PanelPrincipalPersonas).forceSelection = false;
-        									_fieldByName('CDEDO',_PanelPrincipalPersonas).forceSelection = false;
-											
-										    if(form.down('[name=smap1.rfc]').getStore().count() > 0){
-										    	
-										    	var confirm = Ext.Msg.show({
-							    		            title: 'Confirmar acci&oacute;n',
-							    		            msg: 'Este RFC ya est&aacute; registrado. &iquest;Desea capturar otro cliente con este mismo RFC?<br/> De no ser as&iacute; vuelva a seleccionar un cliente de la b&uacute;squeda.',
-							    		            buttons: Ext.Msg.YESNO,
-							    		            fn: function(buttonId, text, opt) {
-							    		            	if(buttonId == 'yes') {
-							    		            		_p22_fieldRFC().setValue(valorRFC);
-															_p22_cdperson = '';
-															_p22_tipoPersona = '';
-															_p22_nacionalidad = '';
-															_CDIDEPERsel = '';
-															_CDIDEEXTsel = '';
-															municipioImportarTMP = '';
-															coloniaImportarTMP = '';
-															
-															form.down('[name=smap1.rfc]').reset();
-															form.down('[name=smap1.nombre]').reset();
-															form.down('[name=smap1.rfc]').getStore().removeAll();
-												    		form.down('[name=smap1.nombre]').getStore().removeAll();
-															
-															_esSaludDanios = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue();
-															
-															irModoAgregar();
-							    		            	}else{
-							    		            		return;
-							    		            	}
-							            			},
-							    		            icon: Ext.Msg.QUESTION
-							        			});
-							        			
-							        			centrarVentana(confirm);
-										    	
-										    }else{
-										    	_p22_fieldRFC().setValue(valorRFC);
-												_p22_cdperson = '';
-												_p22_tipoPersona = '';
-												_p22_nacionalidad = '';
-												_CDIDEPERsel = '';
-												_CDIDEEXTsel = '';
-												municipioImportarTMP = '';
-												coloniaImportarTMP = '';
-
-												_fieldByName('CDMUNICI',_PanelPrincipalPersonas).forceSelection = true;
-        										_fieldByName('CDEDO',_PanelPrincipalPersonas).forceSelection = true;
-        									
-												form.down('[name=smap1.rfc]').reset();
-												form.down('[name=smap1.nombre]').reset();
-												form.down('[name=smap1.rfc]').getStore().removeAll();
-									    		form.down('[name=smap1.nombre]').getStore().removeAll();
-												
-												_esSaludDanios = Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].getGroupValue();
-												
-												if(_esCargaClienteNvo){
-													form.down('[name=smap1.rfc]').doQuery(valorRFC,true,false);
-												}else{
-													irModoAgregar();
-												}
-												
-										    }
-										    
 										}else if(!Ext.isEmpty(valorNombre)){
 											
 											if(!Ext.isEmpty(_nombreComContratante) && !Ext.isEmpty(valorNombre) && _nombreComContratante != valorNombre){
@@ -698,13 +874,51 @@ Ext.onReady(function()
 											return;
 										}
 									}
+                     },{
+                         text     : 'Agregar Nuevo Cliente'
+                         ,xtype   : 'button'
+                         ,name    : 'btnAgregarCliId'
+                         ,hidden  : _modoSoloEdicion
+                         ,icon    : '${ctx}/resources/fam3icons/icons/building_add.png'
+                         ,handler : function (){
+                         	
+                         				var form = _p22_formBusqueda();
+										
+										form.down('[name=smap1.nombre]').reset();
+										form.down('[name=smap1.rfc]').getStore().removeAll();
+										
+										_p22_formDatosGenerales().getForm().reset();
+									
+										if(storeDomiciliosCliente)storeDomiciliosCliente.removeAll();
+										
+										_p22_formDatosGenerales().hide();
+										_p22_formDomicilio().hide();
+										_p22_principalDatosAdicionales().hide();
+										
+										_RFCsel = '';
+										_p22_cdperson = '';
+										_p22_tipoPersona = '';
+										_p22_nacionalidad = '';
+										_CDIDEPERsel = '';
+										_CDIDEEXTsel = '';
+										municipioImportarTMP = '';
+										coloniaImportarTMP = '';
+										
+										form.down('[name=smap1.rfc]').reset();
+										form.down('[name=smap1.nombre]').reset();
+										form.down('[name=smap1.rfc]').getStore().removeAll();
+										form.down('[name=smap1.nombre]').getStore().removeAll();
+										
+										_esSaludDanios = Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1].getGroupValue();
+										
+										irModoAgregar();
                      }
-                 ]
+                 }]
 	        })
 	        ,Ext.create('Ext.form.Panel',
 	        	    {
 	        	    	title     : 'Datos generales de la Persona'
-	        	    	,itemId   : '_p22_formDatosGenerales'
+	        	    	,name   : '_p22_formDatosGenerales'
                         ,border   : 0
 	        	    	,defaults : { style : 'margin:5px'}
 	        	        ,layout   :
@@ -712,12 +926,13 @@ Ext.onReady(function()
 	        	        	type     : 'table'
 	        	        	,columns : 3
 	        	        }
+	        	        ,trackResetOnLoad: true
 	        	    	,items    : [ <s:property value="imap.datosGeneralesItems" escapeHtml="false" /> ]
 	        	    })
 	        	    ,Ext.create('Ext.form.Panel',
                     {
-                        title     : 'Domicilio de la Persona'
-                        ,itemId   : '_p22_formDomicilio'
+                        title     : 'Domicilios de la Persona'
+                        ,name   : '_p22_formDomicilio'
                         ,border   : 0
                         ,defaults : { style : 'margin:5px' }
                         ,layout   :
@@ -725,27 +940,52 @@ Ext.onReady(function()
                             type     : 'table'
                             ,columns : 3
                         }
-                        ,items    : [ <s:property value="imap.itemsDomicilio" escapeHtml="false" /> ]
+                        ,items    : [gridDomiciliosCliente]
                     })
                     ,Ext.create('Ext.form.Panel',
                     {
                         title   : 'Datos adicionales de la Persona'
-                    	,itemId : '_p22_principalDatosAdicionales'
+                    	,name : '_p22_principalDatosAdicionales'
                         ,border   : 0
-                        //,defaults : { style : 'margin:5px' }
                         ,buttonAlign: 'center'
                         ,buttons    :
 	                    [{
 	                            text     : _modoRecuperaDanios?'Guardar datos y Recuperar Persona':'Guardar datos de Persona'
-	                            ,itemId  : '_p22_botonGuardar'
+	                            ,name  : '_p22_botonGuardar'
 	                            ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
 	                            ,handler : function(){
-	                            			if(!Ext.isEmpty(municipioImportarTMP)){
-	                            				mensajeWarning("El municipio '" + municipioImportarTMP + "' no se ha encontrado, favor de seleccionar el equivalente u otro municipio de la lista.");
-	                            				return;
+	                            	
+	                            	
+	                            	if(!_p22_formDatosGenerales().isValid()){
+	                            		mensajeWarning('Favor de verificar los datos generales del cliente.');
+	                            		return;
+	                            	}
+	                            	if(_RFCduplicado){
+	                            		if(_esCargaClienteNvo || !_permiteDuplicarRFC){
+	                            			if(_esCargaClienteNvo){
+	                            				mensajeWarning('La persona para el RFC ingresado ya existe como cliente. Favor de volver a realizar la cotizaci&oacute;n como cliente existente.');
+	                            			}else{
+	                            				mensajeWarning('El RFC ingresado ya existe registrado para otro Cliente.');
 	                            			}
-	                            			
-	                            			_p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);
+	                            			return;
+	                            		}
+	                            		var confirm = Ext.Msg.show({
+					    		            title: 'Aviso',
+					    		            msg: 'El RFC ingresado ya existe registrado para otro Cliente. &iquest;Desea Duplicar la Persona?',
+					    		            buttons: Ext.Msg.YESNO,
+					    		            fn: function(buttonId, text, opt) {
+					    		            	if(buttonId == 'yes') {
+					    		            		_p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);
+					    		            	}else{
+					    		            		return;
+					    		            	}
+					            			},
+					    		            icon: Ext.Msg.QUESTION
+					        			});
+	                            	}else{
+	                            		
+										_p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);	                            	
+	                            	}
 	                            }
 	                    }]
                     })
@@ -756,454 +996,598 @@ Ext.onReady(function()
 	
 	////// loaders //////
 	
-	_p22_comboCodPostal().addListener('blur',_p22_heredarColonia);
 	_p22_fieldTipoPersona().addListener('change',_p22_tipoPersonaChange);
-	_fieldByName('CDNACION',_PanelPrincipalPersonas).addListener('change',_p22_nacionalidadChange);
 	_p22_tipoPersonaChange(_p22_fieldTipoPersona(),'F');
-	_p22_nacionalidadChange(_fieldByName('CDNACION',_PanelPrincipalPersonas),'001');
-	_fieldByName('NMNUMERO',_PanelPrincipalPersonas).regex = /^[A-Za-z0-9-\s]*$/;
-	_fieldByName('NMNUMERO',_PanelPrincipalPersonas).regexText = 'Solo d&iacute;gitos, letras y guiones';
-    _fieldByName('NMNUMINT',_PanelPrincipalPersonas).regex = /^[A-Za-z0-9-\s]*$/;
-    _fieldByName('NMNUMINT',_PanelPrincipalPersonas).regexText = 'Solo d&iacute;gitos, letras y guiones';
+	_p22_fieldTipoPersona().forceSelection = true;
+
+	_p22_fieldSexo().forceSelection = true;
+	_fieldByName('CDESTCIV',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).forceSelection = true;
+	_p22_fieldCumuloPrima().forceSelection = true;
+	_fieldByName('CANALING',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).forceSelection = true;
+	
+	
+	_p22_fieldRFC().validator =  function(value){
+		if(validarRFC(value,_p22_fieldTipoPersona().getValue(), true)){
+			return true;
+		}else{
+			return 'RFC inv&aacute;lido';
+		}
+	} 
+	
+	_p22_fieldRFC().addListener('change',function(me, val){
+		try{
+			_RFCduplicado = false;
+			_fieldByName('parametros.pv_otvalor13',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />,true).setValue(val);
+		}catch(e){
+			debug('Sin campo de RFC en Art 104 para cumulo seleccionado',e)
+		}
+		
+	});
+	
+	/**
+	 * Si en modo agregar se modifican unos de los campos que forma RFC debe de volverse a calcular
+	 */
+	_p22_fieldNombre().addListener('change',
+		function(){
+			if(!_editandoCliente){
+	    		_p22_fieldRFC().setValue(''); 
+	    	}
+		}
+	);
+	_p22_fieldApat().addListener('change',
+		function(){
+			if(!_editandoCliente){
+	    		_p22_fieldRFC().setValue(''); 
+	    	}
+		}
+	);
+	_p22_fieldAmat().addListener('change',
+		function(){
+			if(!_editandoCliente){
+	    		_p22_fieldRFC().setValue(''); 
+	    	}
+		}
+	);
+
+	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).addListener('change',
+		function(){
+			if(!_editandoCliente){
+	    		_p22_fieldRFC().setValue(''); 
+	    	}
+		}
+	);
+	
+	_fieldByName('CDNACION',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).addListener('change',_p22_nacionalidadChange);
+	_p22_nacionalidadChange(_fieldByName('CDNACION',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />),'001');
+    
+
+	var RFCremoved = _p22_fieldRFC();
+	var fieldRFCMoved = Ext.clone(RFCremoved);
+	_p22_formDatosGenerales().items.remove(RFCremoved, true);
+	
+	_p22_formDatosGenerales().add([{
+        xtype: 'panel',
+        height: 10,
+        width:  400,
+		border: false,
+        colspan : 3,
+        layout: 'vbox',
+        items:[
+            {
+                xtype: 'displayfield',
+                fieldLabel: ''
+            }
+        ]
+    },fieldRFCMoved,
+	{
+        xtype: 'button',
+        text: 'Generar RFC',
+        name : 'GeneraRFCBtn',
+        handler: function(){
+        	var RFCgen;
+        	try{
+        		
+        		var RFCgen = generaRFC(_p22_fieldTipoPersona().getValue(), _fieldByName('DSNOMBRE',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue(),
+        			_p22_fieldSegundoNombre().getValue(),  _p22_fieldApat().getValue(), _p22_fieldAmat().getValue(), _fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getRawValue())
+        		
+        		_p22_fieldRFC().setValue(RFCgen);
+        	}catch(e){
+        		mensajeWarning(e);
+        	}
+        	
+        	if(!Ext.isEmpty(RFCgen) && _p22_fieldRFC().isValid() && _p22_fieldRFC().getValue() != _rfcGuardado){
+        		validaExisteCliente(RFCgen);
+        	}
+        	
+        }
+    },
+    {
+        xtype: 'displayfield',
+        value: ''//'RFC Incorrectos'
+    }]);
+	
     
     _p22_fieldCdperson().mpoliper = false;
     _p22_fieldCdperson().validado = false;
 	////// loaders //////
     
     
+    /**
+     *	Para disparar factores que determinan los datos Adicionales 
+     */
     _p22_fieldCumuloPrima().addListener('select', function(){_p22_guardarClic(_p22_datosAdicionalesClic, true);});
-    _p22_fieldResidente().addListener('select', function(){_p22_guardarClic(_p22_datosAdicionalesClic, true);});
+    _p22_fieldTipoPersona().addListener('select', function(){_p22_guardarClic(_p22_datosAdicionalesClic, true);});
+    _p22_fielCdNacion().addListener('select',     function(){_p22_guardarClic(_p22_datosAdicionalesClic, true);});
+    _p22_fieldResidente().addListener('select',   function(){_p22_guardarClic(_p22_datosAdicionalesClic, true);});
     
     _p22_formDatosGenerales().hide();
+
+    //multidomicilio
     _p22_formDomicilio().hide();
     _p22_principalDatosAdicionales().hide();
     
-    function irModoAgregar(){
-    	var windowTipo;
-    	_panelTipoPer = Ext.create('Ext.form.Panel', {
-		    defaults : { style : 'margin:5px;' },
-		    items: [	{
-		    				xtype: 'displayfield',
-		    				fieldLabel: 'RFC',
-		    				value: _p22_fieldRFC().getValue()
-		    			}
-		    			,{	xtype: 'combobox',
-						fieldLabel:'Tipo de persona',
-						itemId: 'tipoPerAgregarId',
-						allowBlank:false,
-						typeAhead:true,
-						anyMatch:true,
-						displayField:'value',
-						valueField:'key',
-						forceSelection:true,
-						editable:false,
-						queryMode:'local',
-						store:Ext.create('Ext.data.Store',{
-							model:'Generic',
-							autoLoad:true,
-							proxy:{ type:'ajax',
-									url:_URL_CARGA_CATALOGO,
-									reader:{type:'json',
-									root:'lista',
-									rootProperty:'lista'
-									},
-									extraParams:{catalogo:'TIPOS_PERSONA'}
-								},
-							listeners : {
-								load:function(str, records, successful, eOpts){
-									
-									if(_esCargaClienteNvo && !Ext.isEmpty(_cargaTipoPersona)){
-										_p22_fieldTipoPersona().setValue(_cargaTipoPersona);
-										Ext.ComponentQuery.query('#tipoPerAgregarId')[Ext.ComponentQuery.query('#tipoPerAgregarId').length-1].setValue(_cargaTipoPersona);
-										Ext.ComponentQuery.query('#tipoPerAgregarId')[Ext.ComponentQuery.query('#tipoPerAgregarId').length-1].setReadOnly(true);
-									}
-								}
-							}
-						}),
-						listeners: {
-							select: function(combo,records){
-								_p22_fieldTipoPersona().select(records[0]);
-							}
-						}
-					},{
-						xtype:'combobox',
-						fieldLabel:'C&uacute;mulo de prima',
-						name: 'PTCUMUPRAGR',
-						allowBlank:false,
-						typeAhead:true,
-						anyMatch:true,
-						displayField:'value',
-						valueField:'key',
-						forceSelection:true,
-						editable:false,
-						queryMode:'local',
-						store:Ext.create('Ext.data.Store',{
-						model:'Generic',
-						autoLoad:true,
-						proxy:{type:'ajax',
-						url:_URL_CARGA_CATALOGO,
-						reader:{type:'json',
-						root:'lista',
-						rootProperty:'lista'
-						},
-						extraParams:{catalogo:'TCUMULOS'}
-						},
-						listeners:{
-							load: function(str, records, successful, eOpts){
-								_p22_fieldCumuloPrimaModoAgregar().select(records[0]);
-								_p22_fieldCumuloPrima().select(records[0]);
-							}
-						}
-						}),
-						listeners: {
-							select: function(combo,records){
-								_p22_fieldCumuloPrima().select(records[0]);
-							}
-						}
-					},{
-						xtype:'combobox',
-						fieldLabel:'Nacionalidad',
-						allowBlank:false,
-						typeAhead:true,
-						anyMatch:true,
-						displayField:'value',
-						valueField:'key',
-						forceSelection:true,
-						editable:false,
-						queryMode:'local',
-						store:Ext.create('Ext.data.Store',{
-						model:'Generic',
-						autoLoad:true,
-						proxy:{type:'ajax',
-						url:_URL_CARGA_CATALOGO,
-						reader:{type:'json',
-						root:'lista',
-						rootProperty:'lista'
-						},
-						extraParams:{catalogo:'NACIONALIDAD'}
-						}
-						}),
-						listeners: {
-							select: function(combo,records){
-								_p22_fielCdNacion().select(records[0]);
-							},
-							change:  _p22_nacionalidadChange2
-						}
-					},{
-						xtype:'combobox',
-						fieldLabel:'Residente',
-						name: 'RESIDENTE2',
-						allowBlank:false,
-						typeAhead:true,
-						anyMatch:true,
-						displayField:'value',
-						valueField:'key',
-						forceSelection:true,
-						editable:false,
-						queryMode:'local',
-						store:Ext.create('Ext.data.Store',{
-						model:'Generic',
-						autoLoad:true,
-						proxy:{type:'ajax',
-						url:_URL_CARGA_CATALOGO,
-						reader:{type:'json',
-						root:'lista',
-						rootProperty:'lista'
-						},
-						extraParams:{catalogo:'TIPO_RESIDENCIA'}
-						}
-						}),
-						listeners: {
-							select: function(combo,records){
-								_p22_fieldResidente().select(records[0]);
-							}
-						}
-					}],
-		    buttons: [{
-		        text: 'Cancelar',
-		        handler: function() {
-		            this.up('form').getForm().reset();
-		            windowTipo.close();
-		        }
-		    }, {
-		        text: 'Aceptar',
-		        formBind: true, //only enabled once the form is valid
-		        disabled: true,
-		        handler: function() {
-		            var form = this.up('form').getForm();
-		            if (form.isValid()) {
-		            	
-		            	if(!validarRFC(_p22_fieldRFC().getValue(),_p22_fieldTipoPersona().getValue())){
-		            		return;
-		            	}
-		            	
-		                _p22_formDatosGenerales().show();
-		                _p22_formDomicilio().show();
-		                _p22_principalDatosAdicionales().show();
-		                
-		                windowTipo.close();
-		                
-		                if(_esCargaClienteNvo && !Ext.isEmpty(_cargaCP)){
-							_p22_comboCodPostal().setValue(_cargaCP);
-							_p22_formBusqueda().hide();
-							heredarPanel(_p22_formDomicilio());
-							_p22_heredarColonia();
-						}
-
-						if(_ocultaBusqueda){
-							_p22_formBusqueda().hide();
-						}
-						
-						/**
-						 * POR SI HAY UNA SUCURSAL A CARGAR EN EL MODO DE AGREGAR
-						 * @type String
-						 */
-						if(!Ext.isEmpty(_cargaSucursalEmi)){
-							_fieldByName('CDSUCEMI',_PanelPrincipalPersonas).setValue(_cargaSucursalEmi);
-						}
-		                
-						try{
-			    			var ventanaMensaje = window.parent;
-			    			
-			    			if (ventanaMensaje != window.top) {
-							  debug('Para postMessage, El parent es el mismo que el top');
-							}else{
-							  debug('Para postMessage, El parent no es el mismo que el top');
-							}
-							
-							var _codigoDanios = '';
-							var _codigoSalud  = '';
-							
-							try{
-								_codigoDanios = _CDIDEPERsel.substring(5);
-							}catch(e){
-								debug('Error al obtener codigo externo de Danios',e);
-							}
-							
-							try{
-								_codigoSalud = _CDIDEEXTsel.substring(5);
-							}catch(e){
-								debug('Error al obtener codigo externo de Salud',e);
-							}
-												
-							var objMsg = {
-								clienteIce: true,
-								modo: 'A',
-								cdperson: _p22_cdperson,
-								cdideper: _CDIDEPERsel,
-								cdideext: _CDIDEEXTsel,
-								codigoDanios: _codigoDanios,
-								codigoSalud:_codigoSalud
-							};
-							
-							ventanaMensaje.postMessage(objMsg, "*");
-							
-			    		}catch(e){
-			    			debugError('Error en postMessage',e);
-			    		}
-										    		
-		                _p22_guardarClic(_p22_datosAdicionalesClic, true);
-		            }
-		        }
-		    }]
-		});
-		
-		
-		windowTipo = Ext.create('Ext.window.Window', {
-			title: 'Elija el tipo de persona a Agregar',
-		    height: 230,
-		    width: 300,
-		    closable: false,
-		    items: [_panelTipoPer]
-		}).show();
-		centrarVentanaInterna(windowTipo);
+    function validaExisteCliente(cdRFC){
     	
+    	if(Ext.isEmpty(cdRFC)){
+    		return;
+    	}
+    	
+    	if(!validarRFC(cdRFC,_p22_fieldTipoPersona().getValue(), true)){
+    		mensajeWarning('RFC inv&aacute;lido');
+    		return;
+    	}
+    	
+    	Ext.Ajax.request(
+	    {
+	        url       : _p22_urlObtenerPersonas
+	        ,params: {
+	    		'smap1.esSalud' :  _esSaludDanios,
+	    		'smap1.rfc':  cdRFC,
+	    		'smap1.validaTienePoliza':  _esCargaClienteNvo?'S':'N'
+	    	}
+	        ,success  : function(response)
+	        {
+	            var json = Ext.decode(response.responseText);
+	            debug('response text:',json);
+	            if(json.exito){
+	            	if(json.smap1.cliEncontrado == "S"){
+	            		_RFCduplicado = true;
+						mensajeWarning('Ya existe un cliente registrado con este RFC.');        	
+	            	}else{
+	            		_RFCduplicado = false;
+	            	}
+	            }
+	            else
+	            {
+	            	mensajeError('Error al validar existencia de RFC. Consulte a soporte.');
+	            }
+	        }
+	        ,failure  : function()
+	        {
+	            errorComunicacion(null,'Error al validar existencia de RFC. Consulte a soporte.');
+	        }
+		});
     }
+    
+    
+    _p22_fieldRFC().addListener('blur',function(){
+    	debug('... En blur de validar RFC... ', ' _editandoCliente: ',_editandoCliente, ' _rfcGuardado: ',_rfcGuardado);
+    	if(_p22_fieldRFC().isValid() && !_editandoCliente && _p22_fieldRFC().getValue() != _rfcGuardado){
+    		validaExisteCliente(_p22_fieldRFC().getValue());
+    	}
+    });
+    
+    
+function irModoAgregar(){
+	
+	_fieldByName('btnContinuarId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).disable();
+	_fieldByName('GeneraRFCBtn',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
+	_permiteDuplicarRFC = false;
+	
+	municipioImportarTMP = '';
+	coloniaImportarTMP = '';
+	
+	fijarCamposAgregar(_p22_formDatosGenerales());
+	
+	_editandoCliente = false;
+	_numDomicilioTomado = undefined;
+	
+	_camposAconfigurar = undefined;
+	_camposConfigurados = [];
+	_domiciliosNuevos = [];
+	_RFCduplicado = false;
+	_rfcGuardado = 'DUMMYRFCTMP';
+	
+	
+	Ext.Ajax.request(
+    {
+        url       : _UrlCargaConfCampos
+        ,params: {
+    		'smap1.esSalud' :  _esSaludDanios,
+    		'smap1.cdperson':  _p22_cdperson ==  false?null:_p22_cdperson,
+    		'smap1.codigoExterno':  (_esSaludDanios == 'S') ? _CDIDEEXTsel : _CDIDEPERsel,
+    		'smap1.modoAgregar':  'S'
+    	}
+        ,success  : function(response)
+        {
+        	
+            var json = Ext.decode(response.responseText);
+            debug('response text:',json);
+            if(json.exito){
+            	
+            	_editandoCliente = false;
+            	_camposAconfigurar = json.slist1;
+            	
+            	debug('Lista de campos a configurar: ', _camposAconfigurar);
+            	
+            	_p22_formDatosGenerales().show(null,function(){
+            		/**
+					 * POR SI HAY UNA SUCURSAL A CARGAR EN EL MODO DE AGREGAR
+					 */
+					if(!Ext.isEmpty(_cargaSucursalEmi)){
+						_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(_cargaSucursalEmi);
+					}
+            		
+					_fieldByName('CDNACION',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue('001');
+					_p22_nacionalidadChange(_fieldByName('CDNACION',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />),'001');
+					_fieldByName('CDNACION',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).resetOriginalValue();
+					
+					_p22_fieldCumuloPrima().setValue('0');
+					_p22_fieldCumuloPrima().resetOriginalValue();
+					
+					if(!Ext.isEmpty(_cargaTipoPersona)){
+							_p22_fieldTipoPersona().setValue(_cargaTipoPersona);
+							_p22_fieldTipoPersona().setReadOnly(true);
+					}
+					
+					/**
+					 * SE CONFIGURAN CAMPOS 
+					 */
+            		if(_camposAconfigurar){
+				    	configuraCampos(_p22_formDatosGenerales());
+				    }
+				    if(_editaIncompleto){
+				    	fijarCamposEditables(_p22_formDatosGenerales(), _editandoCliente);
+				    }else{
+				    	_fieldByName('EstatusDomBtn',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).enable();
+				    }
+				    
+				    if(!Ext.isEmpty(_cargaTipoPersona)){
+				    	_p22_tipoPersonaChange(_p22_fieldTipoPersona(),_p22_fieldTipoPersona().getValue());
+					}
+				    
+            	});
+				                
+                //multidomicilio
+                _p22_formDomicilio().show();
+                
+                _p22_principalDatosAdicionales().show();
+                
+				if(_ocultaBusqueda){
+					_p22_formBusqueda().hide();
+				}
+				
+				try{
+	    			var ventanaMensaje = window.parent;
+	    			
+	    			if (ventanaMensaje != window.top) {
+					  debug('Para postMessage, El parent es el mismo que el top');
+					}else{
+					  debug('Para postMessage, El parent no es el mismo que el top');
+					}
+					
+					var _codigoDanios = '';
+					var _codigoSalud  = '';
+					
+					try{
+						_codigoDanios = _CDIDEPERsel.substring(5);
+					}catch(e){
+						debug('Error al obtener codigo externo de Danios',e);
+					}
+					
+					try{
+						_codigoSalud = _CDIDEEXTsel.substring(5);
+					}catch(e){
+						debug('Error al obtener codigo externo de Salud',e);
+					}
+										
+					var objMsg = {
+						clienteIce: true,
+						modo: 'A',
+						cdperson: _p22_cdperson,
+						cdideper: _CDIDEPERsel,
+						cdideext: _CDIDEEXTsel,
+						codigoDanios: _codigoDanios,
+						codigoSalud:_codigoSalud
+					};
+					
+					ventanaMensaje.postMessage(objMsg, "*");
+					
+	    		}catch(e){
+	    			debugError('Error en postMessage',e);
+	    		}
+								    		
+	    		/**
+	    		 *	Recalcula los componentes de Datos Adicionales 
+	    		 */
+                _p22_guardarClic(_p22_datosAdicionalesClic, true);
+            	
+            }
+            else
+            {
+            	mensajeError('Error al recuperar configuraci&oacute;n del cliente. Consulte a soporte.');
+            }
+        }
+        ,failure  : function()
+        {
+        	loadMaskTabla.hide();
+            errorComunicacion(null,'En recuperar configuraci&oacute;n del cliente. Consulte a soporte.');
+        }
+	});
+	
+}
     
 function irModoEdicion(){
 	
-	if(_modoRecuperaDanios){
-		
-		if(!Ext.isEmpty(_CDIDEPERsel)){
-			try{
-				var ventanaMensaje = window.parent;
-				
-				if (ventanaMensaje != window.top) {
-				  debug('Para postMessage, El parent es el mismo que el top');
-				}else{
-				  debug('Para postMessage, El parent no es el mismo que el top');
-				}
-				
-				var _codigoDanios = '';
-				var _codigoSalud  = '';
-				
-				try{
-					_codigoDanios = _CDIDEPERsel.substring(5);
-				}catch(e){
-					debug('Error al obtener codigo externo de Danios',e);
-				}
-				
-				try{
-					_codigoSalud = _CDIDEEXTsel.substring(5);
-				}catch(e){
-					debug('Error al obtener codigo externo de Salud',e);
-				}
-				
-				var objMsg = {
-					clienteIce: true,
-					modo: 'R',
-					cdperson: _p22_cdperson,
-					cdideper: _CDIDEPERsel,
-					cdideext: _CDIDEEXTsel,
-					codigoDanios: _codigoDanios,
-					codigoSalud:_codigoSalud
-				};
-				
-				ventanaMensaje.postMessage(objMsg, "*");
-				
-				try{
-                	if(_p22_recuperaCallback){
-                    	_p22_recuperaCallback();
-                	}
-                }catch(e){
-                	debug('Error en recupera callback',e)
-                }		
-                
-				mensajeCorrecto('Aviso','Cliente Recuperado: ' + _codigoDanios);
-			}catch(e){
-				debugError('Error en postMessage',e);
-			}
-		}else{
-			var loadMaskTabla = new Ext.LoadMask('_p22_divpri', {msg:"Recuperando Cliente..."});
-			loadMaskTabla.show();
-			Ext.Ajax.request(
+	_fieldByName('btnContinuarId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).disable();
+	_fieldByName('GeneraRFCBtn',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
+	
+	_permiteDuplicarRFC = false;
+	
+	_p22_fieldRFC().setReadOnly(true);
+	
+	_camposAconfigurar = undefined;
+	_camposConfigurados = [];
+	_domiciliosNuevos = [];
+	_numDomicilioTomado = undefined;
+	_RFCduplicado = false;
+	_rfcGuardado = 'DUMMYRFCTMP';
+	
+	Ext.Ajax.request(
 	        {
-	            url       : _UrlguardaPersonaWS
+	            url       : _UrlCargaConfCampos
 	            ,params: {
-            		'smap1.esSalud' :  'D',// solo para Danios en este caso
-            		'smap1.cdperson':  _p22_cdperson
+            		'smap1.esSalud' :  _esSaludDanios,
+            		'smap1.cdperson':  _p22_cdperson ==  false?null:_p22_cdperson,
+            		'smap1.codigoExterno':  (_esSaludDanios == 'S') ? _CDIDEEXTsel : _CDIDEPERsel
             	}
 	            ,success  : function(response)
 	            {
-	            	loadMaskTabla.hide();
 	            	
 	                var json = Ext.decode(response.responseText);
 	                debug('response text:',json);
 	                if(json.exito){
-	                	try{
-	                		var codigoExtGen = json.smap1.codigoExternoGen;
-							var ventanaMensaje = window.parent;
+	                	
+	                	_editandoCliente = true;
+	                	_camposAconfigurar = json.slist1;
+	                	
+	                	debug('Lista de campos a configurar: ', _camposAconfigurar);
+	                	
+						if(_modoRecuperaDanios){
 							
-							if (ventanaMensaje != window.top) {
-							  debug('Para postMessage, El parent es el mismo que el top');
+							if(!Ext.isEmpty(_CDIDEPERsel)){
+								try{
+									var ventanaMensaje = window.parent;
+									
+									if (ventanaMensaje != window.top) {
+									  debug('Para postMessage, El parent es el mismo que el top');
+									}else{
+									  debug('Para postMessage, El parent no es el mismo que el top');
+									}
+									
+									var _codigoDanios = '';
+									var _codigoSalud  = '';
+									
+									try{
+										_codigoDanios = _CDIDEPERsel.substring(5);
+									}catch(e){
+										debug('Error al obtener codigo externo de Danios',e);
+									}
+									
+									try{
+										_codigoSalud = _CDIDEEXTsel.substring(5);
+									}catch(e){
+										debug('Error al obtener codigo externo de Salud',e);
+									}
+									
+									var objMsg = {
+										clienteIce: true,
+										modo: 'R',
+										cdperson: _p22_cdperson,
+										cdideper: _CDIDEPERsel,
+										cdideext: _CDIDEEXTsel,
+										codigoDanios: _codigoDanios,
+										codigoSalud:_codigoSalud
+									};
+									
+									ventanaMensaje.postMessage(objMsg, "*");
+									
+									try{
+										/**
+										 *	PARA ENDOSO DE CAMBIO DE CONTRATANTE 
+										 */
+					                	if(_p22_recuperaCallback){
+					                    	_p22_recuperaCallback();
+					                	}
+					                }catch(e){
+					                	debug('Error en recupera callback',e)
+					                }		
+					                
+									mensajeCorrecto('Aviso','Cliente Recuperado: ' + _codigoDanios);
+								}catch(e){
+									debugError('Error en postMessage',e);
+								}
 							}else{
-							  debug('Para postMessage, El parent no es el mismo que el top');
+								var loadMaskTabla = new Ext.LoadMask(_genDivId, {msg:"Recuperando Cliente..."});
+								loadMaskTabla.show();
+								Ext.Ajax.request(
+						        {
+						            url       : _UrlguardaPersonaWS
+						            ,params: {
+					            		'smap1.esSalud' :  'D',// solo para Danios en este caso
+					            		'smap1.cdperson':  _p22_cdperson
+					            	}
+						            ,success  : function(response)
+						            {
+						            	loadMaskTabla.hide();
+						            	
+						                var json = Ext.decode(response.responseText);
+						                debug('response text:',json);
+						                if(json.exito){
+						                	try{
+						                		var codigoExtGen = json.smap1.codigoExternoGen;
+												var ventanaMensaje = window.parent;
+												
+												if (ventanaMensaje != window.top) {
+												  debug('Para postMessage, El parent es el mismo que el top');
+												}else{
+												  debug('Para postMessage, El parent no es el mismo que el top');
+												}
+												
+												var _codigoDanios = '';
+												var _codigoSalud  = '';
+												
+												try{
+													_codigoDanios = codigoExtGen.substring(5);
+												}catch(e){
+													debug('Error al obtener codigo externo de Danios',e);
+												}
+												
+												try{
+													_codigoSalud = _CDIDEEXTsel.substring(5);
+												}catch(e){
+													debug('Error al obtener codigo externo de Salud',e);
+												}
+												
+												var objMsg = {
+													clienteIce: true,
+													modo: 'R',
+													cdperson: _p22_cdperson,
+													cdideper: codigoExtGen,
+													cdideext: _CDIDEEXTsel,
+													codigoDanios: _codigoDanios,
+													codigoSalud:_codigoSalud
+												};
+												
+												ventanaMensaje.postMessage(objMsg, "*");
+												mensajeCorrecto('Aviso','Cliente Recuperado: ' + _codigoDanios);
+											}catch(e){
+												debugError('Error en postMessage',e);
+											}
+						                }
+						                else
+						                {
+						                    mensajeError("Error al recuperar el c&oacute;digo externo del cliente. Datos incompletos.");
+						                }
+						            }
+						            ,failure  : function()
+						            {
+						            	loadMaskTabla.hide();
+						                errorComunicacion(null,'En recuperar c&oacute;digo externo del cliente. Consulte a soporte.');
+						            }
+								});
 							}
 							
-							var _codigoDanios = '';
-							var _codigoSalud  = '';
+							return;
+						}
+						
+						if(_p22_cdperson!=false){
+							_p22_formDatosGenerales().show(null, function(){
+								
+								/**
+								 * Autosave en true para auto guardado cuando carga la pantalla o cuando cambian los factores de art 140, tvaloper
+								 */
+							    _p22_loadRecordCdperson(function(){_p22_guardarClic(_p22_datosAdicionalesClic, true);},true);
 							
-							try{
-								_codigoDanios = codigoExtGen.substring(5);
+							    setTimeout(function(){
+									/**
+									 * SE CONFIGURAN CAMPOS se espera porque carguen los combos porque si no deja abiertos los campos
+									 * ya que considera que no tienen valor y son obligatorios los desbloquea en automatico 
+									 */
+				            		if(_camposAconfigurar){
+								    	configuraCampos(_p22_formDatosGenerales());
+								    }
+								    if(_editaIncompleto){
+								    	fijarCamposEditables(_p22_formDatosGenerales(), _editandoCliente);
+								    }else{
+								    	_fieldByName('EstatusDomBtn',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).enable();
+								    }
+								    
+								    _p22_tipoPersonaChange(_p22_fieldTipoPersona(),_p22_fieldTipoPersona().getValue());
+								    
+								},600);
+								
+								
+							});
+							
+							
+							//multidomicilio
+							_p22_formDomicilio().show();
+						    _p22_principalDatosAdicionales().show();
+					
+						    if(_ocultaBusqueda){
+								_p22_formBusqueda().hide();
+							}
+							
+							
+						    try{
+								var ventanaMensaje = window.parent;
+								
+								if (ventanaMensaje != window.top) {
+								  debug('Para postMessage, El parent es el mismo que el top');
+								}else{
+								  debug('Para postMessage, El parent no es el mismo que el top');
+								}
+								
+								var _codigoDanios = '';
+								var _codigoSalud  = '';
+								
+								try{
+									_codigoDanios = _CDIDEPERsel.substring(5);
+								}catch(e){
+									debug('Error al obtener codigo externo de Danios',e);
+								}
+								
+								try{
+									_codigoSalud = _CDIDEEXTsel.substring(5);
+								}catch(e){
+									debug('Error al obtener codigo externo de Salud',e);
+								}
+								
+								var objMsg = {
+									clienteIce: true,
+									modo: 'E',
+									cdperson: _p22_cdperson,
+									cdideper: _CDIDEPERsel,
+									cdideext: _CDIDEEXTsel,
+									codigoDanios: _codigoDanios,
+									codigoSalud:_codigoSalud
+								};
+								
+								ventanaMensaje.postMessage(objMsg, "*");
+								
 							}catch(e){
-								debug('Error al obtener codigo externo de Danios',e);
+								debugError('Error en postMessage',e);
 							}
 							
-							try{
-								_codigoSalud = _CDIDEEXTsel.substring(5);
-							}catch(e){
-								debug('Error al obtener codigo externo de Salud',e);
-							}
-							
-							var objMsg = {
-								clienteIce: true,
-								modo: 'R',
-								cdperson: _p22_cdperson,
-								cdideper: codigoExtGen,
-								cdideext: _CDIDEEXTsel,
-								codigoDanios: _codigoDanios,
-								codigoSalud:_codigoSalud
-							};
-							
-							ventanaMensaje.postMessage(objMsg, "*");
-							mensajeCorrecto('Aviso','Cliente Recuperado: ' + _codigoDanios);
-						}catch(e){
-							debugError('Error en postMessage',e);
+						    
+						}else{
+							mensajeWarning('Error al cargar datos del cliente guardado.');
 						}
 	                }
 	                else
 	                {
-	                    mensajeError("Error al recuperar el c&oacute;digo externo del cliente. Datos incompletos.");
+	                	mensajeError('Error al recuperar configuraci&oacute;n del cliente. Consulte a soporte.');
 	                }
 	            }
 	            ,failure  : function()
 	            {
 	            	loadMaskTabla.hide();
-	                errorComunicacion(null,'En recuperar c&oacute;digo externo. Consulte a soporte.');
+	                errorComunicacion(null,'En recuperar configuraci&oacute;n del cliente. Consulte a soporte.');
 	            }
 			});
-		}
-		
-		return;
-	}
+			
 	
-	if(_p22_cdperson!=false){
-		_p22_formDatosGenerales().show();
-		_p22_formDomicilio().show();
-	    _p22_principalDatosAdicionales().show();
-
-	    if(_ocultaBusqueda){
-			_p22_formBusqueda().hide();
-		}
-		
-		/**
-		 * Autosave en true para auto guardado cuando carga la pantalla o cuando cambian los factores de art 140
-		 */
-	    _p22_loadRecordCdperson(function(){_p22_guardarClic(_p22_datosAdicionalesClic, true);},true);
-	    
-	    try{
-			var ventanaMensaje = window.parent;
-			
-			if (ventanaMensaje != window.top) {
-			  debug('Para postMessage, El parent es el mismo que el top');
-			}else{
-			  debug('Para postMessage, El parent no es el mismo que el top');
-			}
-			
-			var _codigoDanios = '';
-			var _codigoSalud  = '';
-			
-			try{
-				_codigoDanios = _CDIDEPERsel.substring(5);
-			}catch(e){
-				debug('Error al obtener codigo externo de Danios',e);
-			}
-			
-			try{
-				_codigoSalud = _CDIDEEXTsel.substring(5);
-			}catch(e){
-				debug('Error al obtener codigo externo de Salud',e);
-			}
-			
-			var objMsg = {
-				clienteIce: true,
-				modo: 'E',
-				cdperson: _p22_cdperson,
-				cdideper: _CDIDEPERsel,
-				cdideext: _CDIDEEXTsel,
-				codigoDanios: _codigoDanios,
-				codigoSalud:_codigoSalud
-			};
-			
-			ventanaMensaje.postMessage(objMsg, "*");
-			
-		}catch(e){
-			debugError('Error en postMessage',e);
-		}
-	    
-	}else{
-		mensajeWarning('Error al cargar datos.');
-	}
 }
     
 function importaPersonaWS(esSaludD, codigoCliExt){
@@ -1217,7 +1601,6 @@ function importaPersonaWS(esSaludD, codigoCliExt){
             	}
 	            ,success  : function(response)
 	            {
-	                //_p22_formDatosAdicionales().setLoading(false);
 	                var json = Ext.decode(response.responseText);
 	                debug('response text:',json);
 	                if(json.exito)
@@ -1245,9 +1628,13 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 						var form=_p22_formBusqueda();
 						form.down('[name=smap1.rfc]').reset();
 						form.down('[name=smap1.nombre]').reset();
-	
+
 						municipioImportarTMP = json.params.municipioImp;
 						coloniaImportarTMP = json.params.coloniaImp;
+						
+						if(!Ext.isEmpty(municipioImportarTMP)){
+                    			mensajeInfo("Se ha importado este cliente, sin embargo el municipio '" + municipioImportarTMP + "' no se ha encontrado, favor de seleccionar el municipio correcto en el domicilio importado.");
+                    	}
 	
 						irModoEdicion();
 	                }
@@ -1258,44 +1645,16 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 	            }
 	            ,failure  : function()
 	            {
-	                errorComunicacion(null,'En importar persona. Consulte a soporte.');
+	                errorComunicacion(null,'En importar cliente. Consulte a soporte.');
 	            }
 	});
     
     }
     
-    _fieldByName('CDSUCEMI',_PanelPrincipalPersonas).editable = true;
-    _fieldByName('CDSUCEMI',_PanelPrincipalPersonas).forceSelection = false;
-    _fieldByName('CDSUCEMI',_PanelPrincipalPersonas).setReadOnly(true);
+    _fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).editable = true;
+    _fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).forceSelection = false;
+    _fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setReadOnly(true);
 
-    _fieldByName('CDEDO',_PanelPrincipalPersonas).editable = true;
-    _fieldByName('CDEDO',_PanelPrincipalPersonas).forceSelection = false;
-    
-	_fieldByName('CDMUNICI',_PanelPrincipalPersonas).forceSelection = false;
-	_fieldByName('CDCOLONI',_PanelPrincipalPersonas).forceSelection = false;
-	_fieldByName('CDCOLONI',_PanelPrincipalPersonas).on({
-			change: function(me, val){
-    				try{
-	    				if('string' == typeof val){
-//	    					debug('mayus de '+val);
-	    					me.setValue(val.toUpperCase());
-	    				}
-    				}
-    				catch(e){
-    					debug(e);
-    				}
-			},
-			select: function(){
-				coloniaImportarTMP = '';
-			}
-	});
-	
-	_fieldByName('CDMUNICI',_PanelPrincipalPersonas).on({
-			select: function(){
-				municipioImportarTMP = '';
-			}
-	});
-	
     
 	/**
 	 *	Para Cliente Existente de una pantalla anterior 
@@ -1304,21 +1663,23 @@ function importaPersonaWS(esSaludD, codigoCliExt){
     	
     	setTimeout(function(){
 			_p22_cdperson = _cargaCdPerson;
-			_CDIDEPERsel = _p22_smap1.cdideper;
-			_CDIDEEXTsel = _p22_smap1.cdideext;
-			_esSaludDanios = _p22_smap1.esSaludDanios;
+//			_CDIDEPERsel = _p22_smap1.cdideper;
+//			_CDIDEEXTsel = _p22_smap1.cdideext;
 			
-			if('D' == _esSaludDanios){
-				_fieldByName('DSL_CDIDEEXT',_PanelPrincipalPersonas).hide();
-				_fieldByName('CDSUCEMI',_PanelPrincipalPersonas).hide();				
-			}else if('S' == _esSaludDanios){
-				_fieldByName('DSL_CDIDEPER',_PanelPrincipalPersonas).hide();
+
+			if(!Ext.isEmpty(_cargaCompania)){
+				_esSaludDanios = _cargaCompania;
+				Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1].setValue(_cargaCompania);
+				Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1].resetOriginalValue();
+				
+				if('D' == _cargaCompania){
+					_fieldByName('DSL_CDIDEEXT',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
+					_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();				
+				}else if('S' == _cargaCompania){
+					_fieldByName('DSL_CDIDEPER',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
+				}
 			}
 				
-			if(!Ext.isEmpty(_cargaCP)){
-				_p22_comboCodPostal().setReadOnly(true);
-			}
-			
     		irModoEdicion();
 		},1000);
     	
@@ -1329,16 +1690,18 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 	 */
     	setTimeout(function(){
     		
-    		Ext.ComponentQuery.query('#companiaGroupId')[Ext.ComponentQuery.query('#companiaGroupId').length-1].hide();
+    		Ext.ComponentQuery.query('#companiaGroupId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('#companiaGroupId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1].hide();
     		
 			if(!Ext.isEmpty(_cargaCompania)){
-				Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].setValue(_cargaCompania);
+				_esSaludDanios = _cargaCompania;
+				Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1].setValue(_cargaCompania);
+				Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1].resetOriginalValue();
 				
 				if('D' == _cargaCompania){
-					_fieldByName('DSL_CDIDEEXT',_PanelPrincipalPersonas).hide();
-					_fieldByName('CDSUCEMI',_PanelPrincipalPersonas).hide();				
+					_fieldByName('DSL_CDIDEEXT',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
+					_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();				
 				}else if('S' == _cargaCompania){
-					_fieldByName('DSL_CDIDEPER',_PanelPrincipalPersonas).hide();
+					_fieldByName('DSL_CDIDEPER',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
 				}
 			}
 			
@@ -1348,29 +1711,33 @@ function importaPersonaWS(esSaludD, codigoCliExt){
     		
 			var form=_p22_formBusqueda();
 			form.down('[name=smap1.rfc]').setFieldLabel('Ingrese el RFC');
-			form.down('[name=smap1.nombre]').hide();
-			form.down('[name=smap1.rfc]').minChars = 100;
 			
-			if(!Ext.isEmpty(_cargaCP)){
-				_p22_comboCodPostal().setReadOnly(true);
-			}
+			_p22_formBusqueda().hide();
+
+			irModoAgregar();
+			
 			
 		},1000);
 	    
     }else if(!Ext.isEmpty(_cargaCompania)){
     	setTimeout(function(){
     		
-    		Ext.ComponentQuery.query('#companiaGroupId')[Ext.ComponentQuery.query('#companiaGroupId').length-1].hide();
-			Ext.ComponentQuery.query('#companiaId')[Ext.ComponentQuery.query('#companiaId').length-1].setValue(_cargaCompania);
+    		_esSaludDanios = _cargaCompania;
+    		Ext.ComponentQuery.query('#companiaGroupId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('#companiaGroupId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1].hide();
+    		
+			Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1].setValue(_cargaCompania);
+			Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('#companiaId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1].resetOriginalValue();
 			
 			if('D' == _cargaCompania){
-				_fieldByName('DSL_CDIDEEXT',_PanelPrincipalPersonas).hide();
-				_fieldByName('CDSUCEMI',_PanelPrincipalPersonas).hide();				
+				_fieldByName('DSL_CDIDEEXT',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
+				_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();				
 			}else if('S' == _cargaCompania){
-				_fieldByName('DSL_CDIDEPER',_PanelPrincipalPersonas).hide();
+				_fieldByName('DSL_CDIDEPER',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
 			}
 			
 			_p22_formDatosGenerales().hide();
+    		
+    		//multidomicilio
     		_p22_formDomicilio().hide();
     		_p22_principalDatosAdicionales().hide();
 			
@@ -1378,62 +1745,19 @@ function importaPersonaWS(esSaludD, codigoCliExt){
     }
     
     if(!Ext.isEmpty(_cargaFenacMin)){
-    	_fieldByName('FENACIMI',_PanelPrincipalPersonas).setMinValue(_cargaFenacMin);
+    	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setMinValue(_cargaFenacMin);
     }
 
     if(!Ext.isEmpty(_cargaFenacMax)){
-    	_fieldByName('FENACIMI',_PanelPrincipalPersonas).setMaxValue(_cargaFenacMax);
+    	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setMaxValue(_cargaFenacMax);
     }
     
-});
-
 ////// funciones //////
 
 function _p22_formBusqueda()
 {
     debug('>_p22_formBusqueda<');
-    debug(Ext.ComponentQuery.query('#_p22_formBusqueda'));
-	return Ext.ComponentQuery.query('#_p22_formBusqueda')[Ext.ComponentQuery.query('#_p22_formBusqueda').length-1];
-}
-
-function _p22_heredarColonia(callbackload)
-{
-    debug('>_p22_heredarColonia');
-    var comboColonias  = _p22_comboColonias();
-    var comboCodPostal = _p22_comboCodPostal();
-    var codigoPostal   = comboCodPostal.getValue();
-    debug('comboColonias:',comboColonias,'comboCodPostal:',comboCodPostal);
-    debug('codigoPostal:',codigoPostal);
-    comboColonias.getStore().load(
-    {
-        params :
-        {
-            'params.cp' : codigoPostal
-        }
-        ,callback : function()
-        {
-            var hay=false;
-            comboColonias.getStore().each(function(record)
-            {
-                if(comboColonias.getValue()==record.get('key'))
-                {
-                    hay=true;
-                }
-            });
-            if(!hay)
-            {
-                comboColonias.setValue('');
-            }
-            
-            try{
-            	callbackload();	
-            }catch(e){
-            	debug("Excepcion al ejecutar callback");
-            }
-            
-        }
-    });
-    debug('<_p22_heredarColonia');
+	return _fieldByName('_p22_formBusqueda',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
 }
 
 function _p22_nacionalidadChange(combo,value)
@@ -1441,57 +1765,53 @@ function _p22_nacionalidadChange(combo,value)
     debug('>_p22_nacionalidadChange',value);
     if(value!='001')//extranjero
     {
-        _fieldByName('RESIDENTE',_PanelPrincipalPersonas).show();
-        _fieldByName('RESIDENTE',_PanelPrincipalPersonas).allowBlank = false;
-        _fieldByName('RESIDENTE',_PanelPrincipalPersonas).validate();
+        _fieldByName('RESIDENTE',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
+        _fieldByName('RESIDENTE',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = false;
+        _fieldByName('RESIDENTE',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).validate();
     }
     else//nacional
     {
-        _fieldByName('RESIDENTE',_PanelPrincipalPersonas).hide();
-        _fieldByName('RESIDENTE',_PanelPrincipalPersonas).allowBlank = true;
-        _fieldByName('RESIDENTE',_PanelPrincipalPersonas).validate();
+        _fieldByName('RESIDENTE',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
+        _fieldByName('RESIDENTE',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = true;
+        _fieldByName('RESIDENTE',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).validate();
     }
     debug('<_p22_nacionalidadChange');
 }
 
-function _p22_nacionalidadChange2(combo,value)
-{
-    if(value!='001')//extranjero
-    {
-        _fieldByName('RESIDENTE2',_panelTipoPer).show();
-        _fieldByName('RESIDENTE2',_panelTipoPer).allowBlank = false;
-        _fieldByName('RESIDENTE2',_panelTipoPer).validate();
-    }
-    else//nacional
-    {
-        _fieldByName('RESIDENTE2',_panelTipoPer).hide();
-        _fieldByName('RESIDENTE2',_panelTipoPer).allowBlank = true;
-        _fieldByName('RESIDENTE2',_panelTipoPer).validate();
-    }
-}
-
 function _p22_tipoPersonaChange(combo,value)
 {
+	/**
+	 *	NO FIJAR VALORES PARA CAMPOS QUE COINCIDEN ENTRE LOS TIPOS DE PERSONAS YA QUE BORRARIA INFORMACION 
+	 */
     debug('>_p22_tipoPersonaChange',value);
+    
+    if(!_editandoCliente){
+    	_p22_fieldRFC().setValue(''); 
+    }
+    
     if(value!='F')
     {
         _p22_fieldSegundoNombre().hide();
         _p22_fieldApat().hide();
         _p22_fieldAmat().hide();
         _p22_fieldSexo().hide();
-        _fieldByName('CDESTCIV',_PanelPrincipalPersonas).hide();
+        _fieldByName('CDESTCIV',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
+
+        _p22_fieldSegundoNombre().setValue('');
+        _p22_fieldApat().setValue('');
+        _p22_fieldAmat().setValue('');
+        _p22_fieldSexo().setValue('');
+        _fieldByName('CDESTCIV',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue('');
         
-        _fieldByName('DSNOMBRE',_PanelPrincipalPersonas).setFieldLabel('Raz&oacute;n social*');
-        _fieldByName('FENACIMI',_PanelPrincipalPersonas).setFieldLabel('Fecha de constituci&oacute;n*');
+        _fieldByName('DSNOMBRE',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setFieldLabel('Raz&oacute;n social*');
+        _fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setFieldLabel('Fecha de constituci&oacute;n*');
         
         if(value == 'S'){
-        	_fieldByName('FENACIMI',_PanelPrincipalPersonas).allowBlank = true;
-        	_fieldByName('FENACIMI',_PanelPrincipalPersonas).setValue('');
-        	_fieldByName('FENACIMI',_PanelPrincipalPersonas).hide();
+        	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = true;
+        	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
         }else {
-        	_fieldByName('FENACIMI',_PanelPrincipalPersonas).allowBlank = false;
-        	_fieldByName('FENACIMI',_PanelPrincipalPersonas).setValue('');
-        	_fieldByName('FENACIMI',_PanelPrincipalPersonas).show();
+        	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = false;
+        	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
         }
     }
     else
@@ -1500,86 +1820,75 @@ function _p22_tipoPersonaChange(combo,value)
         _p22_fieldApat().show();
         _p22_fieldAmat().show();
         _p22_fieldSexo().show();
-        _fieldByName('CDESTCIV',_PanelPrincipalPersonas).show();
+        _fieldByName('CDESTCIV',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
         
-        _fieldByName('DSNOMBRE',_PanelPrincipalPersonas).setFieldLabel('Nombre*');
-        _fieldByName('FENACIMI',_PanelPrincipalPersonas).setFieldLabel('Fecha de nacimiento*');
+        _fieldByName('DSNOMBRE',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setFieldLabel('Nombre*');
+        _fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setFieldLabel('Fecha de nacimiento*');
         
-        _fieldByName('FENACIMI',_PanelPrincipalPersonas).allowBlank = false;
-    	_fieldByName('FENACIMI',_PanelPrincipalPersonas).setValue('');
-    	_fieldByName('FENACIMI',_PanelPrincipalPersonas).show();
+        _fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = false;
+    	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
     }
     debug('<_p22_tipoPersonaChange');
 }
 
-function _p22_comboColonias()
+function _p22_fieldNombre()
 {
-    debug('>_p22_comboColonias<');
-    return _fieldByName('CDCOLONI',_PanelPrincipalPersonas);
-}
-
-function _p22_comboCodPostal()
-{
-    debug('>_p22_comboCodPostal<');
-    return _fieldByName('CODPOSTAL',_PanelPrincipalPersonas);
+    debug('>_p22_fieldNombre<');
+    return _fieldByName('DSNOMBRE',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
 }
 
 function _p22_fieldSegundoNombre()
 {
     debug('>_p22_fieldSegundoNombre<');
-    return _fieldByName('DSNOMBRE1',_PanelPrincipalPersonas);
+    return _fieldByName('DSNOMBRE1',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
 }
 
 function _p22_fieldApat()
 {
     debug('>_p22_fieldApat<');
-    return _PanelPrincipalPersonas.down('[name=DSAPELLIDO]');
+    return _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.down('[name=DSAPELLIDO]');
 }
 
 function _p22_fieldAmat()
 {
     debug('>_p22_fieldAmat<');
-    return _fieldByName('DSAPELLIDO1',_PanelPrincipalPersonas);
+    return _fieldByName('DSAPELLIDO1',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
 }
 
 function _p22_fieldSexo()
 {
     debug('>_p22_fieldSexo<');
-    return _fieldByName('OTSEXO',_PanelPrincipalPersonas);
+    return _fieldByName('OTSEXO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
 }
 
 function _p22_fieldTipoPersona()
 {
     debug('>_p22_fieldTipoPersona<');
-    return _fieldByName('OTFISJUR',_PanelPrincipalPersonas);
+    return _fieldByName('OTFISJUR',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
 }
 
 function _p22_fieldCumuloPrima(){
-    return _fieldByName('PTCUMUPR',_PanelPrincipalPersonas);
-}
-
-function _p22_fieldCumuloPrimaModoAgregar(){
-    return _fieldByName('PTCUMUPRAGR',_panelTipoPer);
+    return _fieldByName('PTCUMUPR',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
 }
 
 function _p22_fielCdNacion(){
-    return _fieldByName('CDNACION',_PanelPrincipalPersonas);
+    return _fieldByName('CDNACION',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
 }
 
 function _p22_fieldResidente(){
-    return _fieldByName('RESIDENTE',_PanelPrincipalPersonas);
+    return _fieldByName('RESIDENTE',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
 }
 
 function _p22_formDatosGenerales()
 {
-    return Ext.ComponentQuery.query('#_p22_formDatosGenerales')[Ext.ComponentQuery.query('#_p22_formDatosGenerales').length-1];
+    return _fieldByName('_p22_formDatosGenerales',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
 }
 
 /* PARA EL LOADER */
 function _p22_loadRecordCdperson(callbackload,autosave)
 {
     debug('>_p22_loadRecordCdperson');
-    _p22_PanelPrincipal().setLoading(true);
+    _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(true);
     Ext.Ajax.request(
     {
         url     : _p22_urlCargarPersonaCdperson
@@ -1589,12 +1898,12 @@ function _p22_loadRecordCdperson(callbackload,autosave)
         }
         ,success : function(response)
         {
-            _p22_PanelPrincipal().setLoading(false);
+            _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(false);
             var json=Ext.decode(response.responseText);
             if(json.exito)
             {
             	var record = new _p22_modeloGrid(json.smap2);
-            	_p22_PanelPrincipal().setLoading(true);
+            	_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(true);
             	
             	/**
             	 * Para cargar el cdideper y cdideext segun sea el caso.
@@ -1606,87 +1915,70 @@ function _p22_loadRecordCdperson(callbackload,autosave)
             		_CDIDEEXTsel = record.get('CDIDEEXT');
             	}
             	
-            	var valTel  = _fieldByName('TELEFONO',_PanelPrincipalPersonas).getValue(); 
-            	var valMail = _fieldByName('EMAIL',_PanelPrincipalPersonas).getValue(); 
+            	var valTel  = _fieldByName('TELEFONO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue(); 
+            	var valTel2 = _fieldByName('TELEFONO2',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue(); 
+            	var valTel3 = _fieldByName('TELEFONO3',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue(); 
+            	var valMail = _fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue(); 
             	
 			    _p22_formDatosGenerales().loadRecord(record);
 			    
-			    if(!Ext.isEmpty(valTel) && Ext.isEmpty(_fieldByName('TELEFONO',_PanelPrincipalPersonas).getValue())){
-			    	_fieldByName('TELEFONO',_PanelPrincipalPersonas).setValue(valTel);
+			    if(!Ext.isEmpty(valTel) && Ext.isEmpty(_fieldByName('TELEFONO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue())){
+			    	_fieldByName('TELEFONO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(valTel);
 			    }
-			    if(!Ext.isEmpty(valMail) && Ext.isEmpty(_fieldByName('EMAIL',_PanelPrincipalPersonas).getValue())){
-			    	_fieldByName('EMAIL',_PanelPrincipalPersonas).setValue(valMail);
+
+			    if(!Ext.isEmpty(valTel2) && Ext.isEmpty(_fieldByName('TELEFONO2',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue())){
+			    	_fieldByName('TELEFONO2',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(valTel2);
 			    }
 			    
-			    Ext.Ajax.request(
-			    {
-			        url      : _p22_urlObtenerDomicilio
-			        ,params  :
-			        {
+			    if(!Ext.isEmpty(valTel3) && Ext.isEmpty(_fieldByName('TELEFONO3',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue())){
+			    	_fieldByName('TELEFONO3',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(valTel3);
+			    }
+			    
+			    if(!Ext.isEmpty(valMail) && Ext.isEmpty(_fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue())){
+			    	_fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(valMail);
+			    }
+			    
+			    storeDomiciliosCliente.load({
+			    	params: {
 			            'smap1.cdperson' : record.get('CDPERSON'),
 			            'smap1.AUTOSAVE' : autosave?'S':'N'
-			        }
-			        ,success : function(response)
-			        {
-			            _p22_PanelPrincipal().setLoading(false);
-			            var json=Ext.decode(response.responseText);
-			            debug('json response:',json);
-			            if(json.exito)
-			            {
-			            	
-			            	/**
-			            	 * Conservar orden de Variables 
-			            	 */
-			            	var valorMun = _fieldByName('CDMUNICI',_PanelPrincipalPersonas).getValue();
-			                _p22_formDomicilio().loadRecord(new _p22_modeloDomicilio(json.smap1));
-			                
-							
-			                if(_esCargaClienteNvo && !Ext.isEmpty(_cargaCP)){
-								_p22_comboCodPostal().setValue(_cargaCP);
-							}
-			                
-			                var valorCol = _fieldByName('CDCOLONI',_PanelPrincipalPersonas).getValue();
-			                
-			                heredarPanel(_p22_formDomicilio());
-			                
-                    		_p22_heredarColonia(function(){
-                    				_fieldByName('CDCOLONI',_PanelPrincipalPersonas).setValue(valorCol);
-                    				
-                    				debug('valor de codigo colonia: ', valorCol);
-                    				debug('valor de coloniaImportarTMP: ', coloniaImportarTMP);
-                    				debug('valor de municipioImportarTMP: ', municipioImportarTMP);
-                    				
-                    				if(Ext.isEmpty(valorCol) && !Ext.isEmpty(coloniaImportarTMP)){
-                    					_fieldByName('CDCOLONI',_PanelPrincipalPersonas).setValue(coloniaImportarTMP);
-                    				}
-                    				
-                    				if(Ext.isEmpty(valorMun) && !Ext.isEmpty(municipioImportarTMP)){
-//                    					_fieldByName('CDMUNICI',_PanelPrincipalPersonas).forceSelection = false;
-                    					_fieldByName('CDMUNICI',_PanelPrincipalPersonas).setValue(municipioImportarTMP);
-                    					
-//                    					setTimeout(function(){
-//											_fieldByName('CDMUNICI',_PanelPrincipalPersonas).forceSelection = true;
-//										},500);
-                    				}
-                    			}
-                    			
-                    			
-                    		);
-                    		_fieldByName('CDMUNICI',_PanelPrincipalPersonas).forceSelection = true;
-	                        _fieldByName('CDEDO',_PanelPrincipalPersonas).forceSelection = true;
-	                        _fieldByName('CDEDO',_PanelPrincipalPersonas).validate();
-	                        _fieldByName('CDMUNICI',_PanelPrincipalPersonas).validate();
-			                
-			                try{
+			        },
+			        callback: function(records, operation, success){
+			        	_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(false);
+			        	
+			        	/**
+			        	 * TOMAR DOMICILIO 
+			        	 */
+			        	
+			        	if(!Ext.isEmpty(_cargaOrdDomicilio)){
+			        		_tomarUnDomicilio = true;
+			        		
+			        		var indexDomTom = storeDomiciliosCliente.findBy(function(recordIt){
+					        		
+			        			if(_cargaOrdDomicilio == recordIt.get('NMORDDOM')){
+			        				return true;
+			        			}else{
+			        				return false;
+			        			}
+			        				
+			        		});
+					        		
+			        		if(indexDomTom >= 0){
+			        			_numDomicilioTomado = storeDomiciliosCliente.getAt(indexDomTom);
+			        			_numDomicilioTomado.set('SEL',true);
+			        		}
+			        		
+//			        		gridDomiciliosCliente.getView().addRowCls(_numDomicilioTomado,'green-row');
+			        	}
+			        	
+			        	if(success){
+			        		try{
 			                	callbackload();
 			                }catch(e){
 			                	debug("Excepcion al ejecutar callback");
 			                }
-			                	
-			            }
-			            else
-			            {
-			            	if(autosave){
+			        	}else{
+			        		if(autosave){
 			            		try{
 				                	callbackload();
 				                }catch(e){
@@ -1695,14 +1987,10 @@ function _p22_loadRecordCdperson(callbackload,autosave)
 			            	}else{
 			            		mensajeError(json.respuesta);
 			            	}
-			            }
-			        }
-			        ,failure : function()
-			        {
-			            _p22_PanelPrincipal().setLoading(false);
-			            errorComunicacion(null,'En cargar domicilio');
+			        	}
 			        }
 			    });
+			    
             }
             else
             {
@@ -1711,7 +1999,7 @@ function _p22_loadRecordCdperson(callbackload,autosave)
         }
         ,failure : function()
         {
-            _p22_PanelPrincipal().setLoading(false);
+            _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(false);
             errorComunicacion(null,'En cargar datos generales');
         }
     });
@@ -1720,13 +2008,7 @@ function _p22_loadRecordCdperson(callbackload,autosave)
 /* PARA EL LOADER */
 
 
-function _p22_PanelPrincipal()
-{
-    debug('>_p22_PanelPrincipal<');
-    return Ext.ComponentQuery.query('#_p22_PanelPrincipal')[Ext.ComponentQuery.query('#_p22_PanelPrincipal').length-1];
-}
-
-function _p22_guardarClic(callback, autosave)
+function _p22_guardarClic(callbackGuardar, autosave)
 {
     debug('>_p22_guardarClic');
     var valido = true;
@@ -1736,17 +2018,9 @@ function _p22_guardarClic(callback, autosave)
         valido = autosave || _p22_formDatosGenerales().isValid();
         if(!valido)
         {
-            mensajeWarning('Favor de verificar los datos generales');
+            mensajeWarning('Favor de verificar los datos generales del cliente.');
         }
     }
-    
-//    if(valido)
-//    {
-//        valido = validarRFC(_p22_fieldRFC().getValue(),_p22_fieldTipoPersona().getValue());
-//        if(!valido)
-//        {
-//        }
-//    }
     
     if(valido&&_p22_fieldTipoPersona().getValue()=='F')
     {
@@ -1755,54 +2029,220 @@ function _p22_guardarClic(callback, autosave)
                  &&!Ext.isEmpty(_p22_fieldSexo().getValue()));
         if(!valido)
         {
-            mensajeWarning('Favor de introducir apellidos y sexo para persona f&iacute;sica');
-            ponerActivo(1);
+            mensajeWarning('Favor de introducir los apellidos y sexo del cliente');
         }
     }
     
-    if(valido&&Ext.isEmpty(_p22_fieldConsecutivo().getValue()))
-    {
-        _p22_fieldConsecutivo().setValue(1);
-    }
-
+    //multidomicilio
     if(valido)
     {
-    	_fieldByName('CDMUNICI',_PanelPrincipalPersonas).forceSelection = true;
-        _fieldByName('CDEDO',_PanelPrincipalPersonas).forceSelection = true;
-        
-    	var edoMunValido = (_fieldByName('CDEDO',_PanelPrincipalPersonas).getStore().getCount()>0) && (_fieldByName('CDMUNICI',_PanelPrincipalPersonas).getStore().getCount()>0) && _fieldByName('CDEDO',_PanelPrincipalPersonas).isValid() && _fieldByName('CDMUNICI',_PanelPrincipalPersonas).isValid();
+        valido = autosave || (storeDomiciliosCliente.getCount()>0);
+        if(!valido)
+        {
+            mensajeWarning('Favor de verificar los domicilios. Debe existir almenos un domicilio.');
+        }
+    }
+    
+    if(valido)
+    {
+    	var validDomicilio = true;
+    	var domFiscalActivo = 0;
     	
-        valido = autosave || edoMunValido;
-        
-        if(!valido)
-        {
-            mensajeWarning('Favor de verificar el estado y municipio.');
-        }
+    	storeDomiciliosCliente.each(function(record){
+    		if(record.get('SWACTIVO') == "S" && record.get('CDTIPDOM') == "4"){
+    			domFiscalActivo++;
+    		}
+    		
+			if(Ext.isEmpty(record.get('CODPOSTAL')) || Ext.isEmpty(record.get('CDEDO')) || Ext.isEmpty(record.get('CDMUNICI')) || Ext.isEmpty(record.get('CDCOLONI'))
+			|| Ext.isEmpty(record.get('DSDOMICI')) || Ext.isEmpty(record.get('NMNUMERO'))){
+				validDomicilio = false;
+				return false;
+			}    		
+    	});
+    	
+    	valido = autosave || validDomicilio;
+    	
+    	if(!valido){
+			mensajeWarning('Favor de verificar que los datos de domicilios est&eacute;n completos.');
+    	}
+    	if(domFiscalActivo > 1){
+    		valido =  false;
+    		mensajeWarning('No puede existir mas de un Domicilio Fiscal.');
+    	}
+    	
+    }
+    
+    if(! autosave && valido){
+    	if(_tomarUnDomicilio){
+    		
+    		if(_domicilioSimple && storeDomiciliosCliente.getCount()==1){
+				_numDomicilioTomado = storeDomiciliosCliente.getAt(0);
+				_numDomicilioTomado.set('SEL',true);
+			}
+    		
+    		if(!_numDomicilioTomado){
+    			valido = false;
+    			mensajeWarning('Debe seleccionar un domicilio para efectos de la p&oacute;liza actual.');
+    		}
+    	}
     }
     
     if(valido)
     {
-        valido = autosave || _p22_formDomicilio().isValid();
-        if(!valido)
-        {
-            mensajeWarning('Favor de verificar los datos del domicilio.');
-        }
-    }
-    
-    if(valido)
-    {
-        _p22_PanelPrincipal().setLoading(true);
+        _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(true);
         
-    	if(!Ext.isEmpty(municipioImportarTMP)){
-				_fieldByName('CDMUNICI',_PanelPrincipalPersonas).setValue('');
-		}
+        saveListDom = [];
+	    updateListDom = [];
+	    deleteListDom = [];
+	    
+    	storeDomiciliosCliente.getRemovedRecords().forEach(function(record,index,arr){
+        	deleteListDom.push(record.data);
+    	});
+        storeDomiciliosCliente.getNewRecords().forEach(function(record,index,arr){
+        	saveListDom.push(record.data);
+    	});
+        storeDomiciliosCliente.getUpdatedRecords().forEach(function(record,index,arr){
+    		updateListDom.push(record.data);
+    	});
 		
+	    debug('Domicilios Removed: ' , deleteListDom);
+	    debug('Domicilios Added: '   , saveListDom);
+	    debug('Domicilios Updated: ' , updateListDom);
+	    
 		/**
 		 * PARA CARGAR LA SUCURSAL ANTES DE GUARDAR
-		 * @type String
 		 */
-		if(!autosave && Ext.isEmpty(_fieldByName('CDSUCEMI',_PanelPrincipalPersonas).getValue()) && !Ext.isEmpty(_cargaSucursalEmi)){
-			_fieldByName('CDSUCEMI',_PanelPrincipalPersonas).setValue(_cargaSucursalEmi);
+	    
+	    alert(_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+	    alert(_cargaSucursalEmi);
+		if(!autosave && Ext.isEmpty(_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) && !Ext.isEmpty(_cargaSucursalEmi)){
+			_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(_cargaSucursalEmi);
+		}else if(!autosave && !Ext.isEmpty(_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) && !Ext.isEmpty(_cargaSucursalEmi)){
+			if(_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue() != _cargaSucursalEmi){
+				mensajeWarning('El cliente actual fue creado con otra sucursal.');
+			}
+		}
+		
+		if(!autosave){
+			
+	        if(!_p22_formDatosAdicionales().isValid()){
+            	mensajeWarning('Favor de verificar los datos adicionales del cliente.');
+            	return;
+        	}
+    		
+    		/**
+    		 *	Se valida si hay cambios en las formas para no enviar la informacion, si hay un cambio en algun dato se envia toda la informacion excepto en los domicilios
+    		 *	los domicilios se manejan indepedientes al envio de web service aunque se modifiquen otros datos y no hay cambios en domicilios, no se envian pero si hay un cambio en domicilios se envia todo
+    		 */
+			
+			var cambiosDatosGenerales   = _p22_formDatosGenerales().getForm().isDirty();
+			var cambisoDatosDomicilio   = (storeDomiciliosCliente.getModifiedRecords().length > 0);
+			var cambiosDatosAdicionales = _p22_formDatosAdicionales().getForm().isDirty();
+			var cambiosDatosAccionistas = ((accionistasStore) && (accionistasStore.getModifiedRecords().length > 0 || accionistasStore.getRemovedRecords().length > 0)) ? true : false;
+			
+    		debug('>>>>>>>>>>>>>>>>>>>>>>>>>>>>   PARA GUARDADO DE CLIENTE   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+    		debug('>>>>>>>>>>>>>>>>>> Hay Datos Generales a guardar: ', cambiosDatosGenerales);
+    		debug('>>>>>>>>>>>>>>>>>> Hay Datos de Domicilio a guardar: ', cambisoDatosDomicilio);
+    		debug('>>>>>>>>>>>>>>>>>> Hay Datos Adicionales a guardar: ', cambiosDatosAdicionales);
+    		debug('>>>>>>>>>>>>>>>>>> Hay Datos de Accionistas a guardar: ', cambiosDatosAccionistas);
+    		
+    		var guardarDatos = cambiosDatosGenerales || cambisoDatosDomicilio || cambiosDatosAdicionales || cambiosDatosAccionistas;
+    		
+    		if(_esSaludDanios == 'S' && Ext.isEmpty(_CDIDEEXTsel)){
+    			debug('>>>>>>>>>>>>>>>>>> Cliente de Salud sin codigo Externo, Se guardaran los datos para crear un nuevo codigo');
+    			guardarDatos = true;
+    		}else if(_esSaludDanios == 'D' && Ext.isEmpty(_CDIDEPERsel)){
+    			debug('>>>>>>>>>>>>>>>>>> Cliente de Danios sin codigo Externo, Se guardaran los datos para crear un nuevo codigo');
+    			guardarDatos = true;
+    		}
+    		
+    		debug('>>>>>>>>> :::::::: Guardar Datos: ', guardarDatos);
+    		
+    		if(!guardarDatos){
+				debug('>>>>>>>>> :::::::: No se actualizan los datos, solo se ejecutan callbacks ::::::::');
+				var jsonRespDummy = {
+					sinGuardado: true,
+	    			success: true,
+	    			exito  : true,
+	    			smap1  : _p22_formDatosGenerales().getValues(),
+	                smap2  : _p22_formDomicilio().getValues()
+	    		};
+	    		
+	    		if(_tomarUnDomicilio){
+					jsonRespDummy.smap1.CDPOSTAL = _numDomicilioTomado.get('CODPOSTAL');
+					jsonRespDummy.smap1.CDEDO    = _numDomicilioTomado.get('CDEDO');
+					jsonRespDummy.smap1.CDMUNICI = _numDomicilioTomado.get('CDMUNICI');
+					jsonRespDummy.smap1.NMORDDOM = _numDomicilioTomado.get('NMORDDOM');
+	    		}
+	    		
+	    		debug('>>>>>>>>> :::::::: Datos a enviar en callbacks: ', jsonRespDummy);
+	    		
+	        	try{
+                	if(_p22_cdperson!=false && _p22_parentCallback){
+                    	_p22_parentCallback(jsonRespDummy);
+                	}
+                }catch(e){
+                	debug('Error',e)
+                }
+
+                try{
+                	if(_p22_cdperson!=false && _contrantantePrincipal && _callbackContPrincipal){
+                    	_callbackContPrincipal(jsonRespDummy);
+                	}
+                }catch(e){
+                	debug('Error',e)
+                }
+                
+                _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(false);
+                
+                try{
+	    			var ventanaMensaje = window.parent;
+	    			
+	    			if (ventanaMensaje != window.top) {
+					  debug('Para postMessage, El parent es el mismo que el top');
+					}else{
+					  debug('Para postMessage, El parent no es el mismo que el top');
+					}
+					
+					var _codigoDanios = '';
+					var _codigoSalud  = '';
+					
+					try{
+						_codigoDanios = _CDIDEPERsel.substring(5);
+					}catch(e){
+						debug('Error al obtener codigo externo de Danios',e);
+					}
+					
+					try{
+						_codigoSalud = _CDIDEEXTsel.substring(5);
+					}catch(e){
+						debug('Error al obtener codigo externo de Salud',e);
+					}
+					
+					var objMsg = {
+						clienteIce: true,
+						modo: 'G',
+						success : jsonRespDummy.exito,
+						cdperson: _p22_cdperson,
+						cdideper: _CDIDEPERsel,
+						cdideext: _CDIDEEXTsel,
+						codigoDanios: _codigoDanios,
+						codigoSalud:_codigoSalud
+					};
+					
+					ventanaMensaje.postMessage(objMsg, "*");
+					if(_modoRecuperaDanios){
+						mensajeInfo('Cliente Guardado y Recuperado: ' + _codigoDanios);
+					}
+					
+	    		}catch(e){
+	    			debugError('Error en postMessage',e);
+	    		}
+	    		
+	    		mensajeCorrecto('Aviso','Datos guardados correctamente. No se ralizaron cambios a los datos del Contratante.');
+	    		
+				return;
+    		}
 		}
         
         Ext.Ajax.request(
@@ -1810,61 +2250,159 @@ function _p22_guardarClic(callback, autosave)
             url       : _p22_urlGuardar
             ,jsonData :
             {
-                smap1  : _p22_formDatosGenerales().getValues()
-                ,smap2 : _p22_formDomicilio().getValues()
-                ,smap3: {
+                 smap1  : _p22_formDatosGenerales().getValues(),
+                 smap2 : _p22_formDomicilio().getValues(),
+                 saveList   : saveListDom,
+                 deleteList : deleteListDom,
+                 updateList : updateListDom,
+                 smap3: {
                 	'AUTOSAVE': autosave?'S':'N'
                 }
             }
             ,success : function(response)
             {
-                _p22_PanelPrincipal().setLoading(false);
+                _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(false);
                 var json = Ext.decode(response.responseText);
                 debug('json response:',json);
                 if(json.exito)
                 {
                     _p22_fieldCdperson().setValue(json.smap1.CDPERSON);
+                    _p22_fieldCdperson().resetOriginalValue();
+                    
                     _p22_fieldCdperson().validado = _p22_fieldCdperson().validado||Ext.isEmpty(autosave)||autosave==false;
                     _p22_cdperson = json.smap1.CDPERSON;
                     
-                    json.smap1.CDPOSTAL = _p22_comboCodPostal().getValue();
-                    json.smap1.CDEDO    = _fieldByName('CDEDO',_PanelPrincipalPersonas).getValue();
-                    json.smap1.CDMUNICI = _fieldByName('CDMUNICI',_PanelPrincipalPersonas).getValue();
-                    
-                    
-                    if(!Ext.isEmpty(municipioImportarTMP)){
-//						_fieldByName('CDMUNICI',_PanelPrincipalPersonas).forceSelection = false;
-						_fieldByName('CDMUNICI',_PanelPrincipalPersonas).setValue(municipioImportarTMP);
-                    					
-//    					setTimeout(function(){
-//							_fieldByName('CDMUNICI',_PanelPrincipalPersonas).forceSelection = true;
-//						},500);
-					}
 		
+					if(!autosave){
+						if(!_editandoCliente){
+				        	_rfcGuardado = _p22_fieldRFC().getValue();
+						}
+						
+						storeDomiciliosCliente.load({
+					    	params: {
+					            'smap1.cdperson' : json.smap1.CDPERSON
+					        },
+					        callback: function(records, operation, success){
+					        	
+					        	if(success){
+								
+					        		debug('saveListDom',saveListDom);
+					        		var exitoGuardaDom =  true;
+					        		
+					        		Ext.Array.forEach(saveListDom,function(domicilio) {
+									    
+									    storeDomiciliosCliente.each(function(recordIt, index){
+						        		
+						        			if(    domicilio.CODPOSTAL == recordIt.get('CODPOSTAL')
+						        				&& domicilio.CDEDO     == recordIt.get('CDEDO')
+						        				&& domicilio.CDMUNICI  == recordIt.get('CDMUNICI')
+						        				&& domicilio.CDCOLONI  == recordIt.get('CDCOLONI')
+						        				&& domicilio.CDTIPDOM  == recordIt.get('CDTIPDOM')
+						        				&& domicilio.SWACTIVO  == recordIt.get('SWACTIVO')
+						        				){
+						        					/**
+						        					 *	Para los domicilios que unicamente fueron agregados, algunos se mandan en modo insert cuando no existen en WS Domicilios 
+						        					 */
+						        					if(Ext.isEmpty(domicilio.NMORDDOM)){
+						        						
+														domicilio.NMORDDOM = recordIt.get('NMORDDOM');
+						        						_domiciliosNuevos.push(recordIt.get('NMORDDOM'));						        					
+						        					}
+						        				}	
+						        				
+						        		});
+						        		
+						        		if(Ext.isEmpty(domicilio.NMORDDOM)){
+						        			mensajeError('Error al Guardar Domicilios del cliente. Consulte a Soporte.');
+						        			exitoGuardaDom =  false;
+						        		}
+									});
+									
+									if(!exitoGuardaDom) {
+										return false;
+									}
+					        		
+					        		if(_tomarUnDomicilio){
+					        			
+					        			
+					        			var indexDomSel = -1;
+					        			
+					        			if(Ext.isEmpty(_numDomicilioTomado.get('NMORDDOM'))){
+					        				
+					        				indexDomSel = storeDomiciliosCliente.findBy(function(recordIt){
+							        			if(_numDomicilioTomado.get('CODPOSTAL') == recordIt.get('CODPOSTAL')
+							        				&& _numDomicilioTomado.get('CDEDO') == recordIt.get('CDEDO')
+							        				&& _numDomicilioTomado.get('CDMUNICI') == recordIt.get('CDMUNICI')
+							        				&& _numDomicilioTomado.get('CDCOLONI') == recordIt.get('CDCOLONI')
+							        				&& _numDomicilioTomado.get('CDTIPDOM') == recordIt.get('CDTIPDOM')
+							        				&& _numDomicilioTomado.get('SWACTIVO') == recordIt.get('SWACTIVO')
+							        				){
+							        				return true;
+							        			}else{
+							        				return false;
+							        			}
+						        			});
+						        			
+					        			}else{
+					        				
+					        				indexDomSel = storeDomiciliosCliente.findBy(function(recordIt){
+							        			if(_numDomicilioTomado.get('NMORDDOM') == recordIt.get('NMORDDOM')){
+							        				return true;
+							        			}else{
+							        				return false;
+							        			}
+						        			});
+						        			
+					        			}
+					        			
+						        		if(indexDomSel >= 0){
+						        			_numDomicilioTomado = storeDomiciliosCliente.getAt(indexDomSel);
+						        			_numDomicilioTomado.set('SEL',true);
+						        		}else{
+						        			mensajeError('Error al seleccionar ordinal de domicilio. Consulte a Soporte.');
+						        			return false;
+						        		}
+						        		
+						        		json.smap1.CDPOSTAL = _numDomicilioTomado.get('CODPOSTAL');
+						        		json.smap1.CDEDO    = _numDomicilioTomado.get('CDEDO');
+						        		json.smap1.CDMUNICI = _numDomicilioTomado.get('CDMUNICI');
+						        		json.smap1.NMORDDOM = _numDomicilioTomado.get('NMORDDOM');
+						        		
+						        		_cargaOrdDomicilio = _numDomicilioTomado.get('NMORDDOM');
+						        		
+//						        		gridDomiciliosCliente.getView().addRowCls(_numDomicilioTomado,'green-row');
+					        		}
+					        		
+					        		try{
+					        			/**
+					        			 * Ejecuta Datos adicionales para terminar el guardado
+					        			 */
+					                        callbackGuardar(json);
+				                    }catch(ex){
+				                    	debug("Excepcion al ejecutar callbackGuardar",ex);
+				                    	mensajeCorrecto('Datos guardados',json.respuesta);
+				                    }
+					                    
+					        	}else{
+					        		mensajeError('Error al Guardar Domicilios del cliente. Consulte a Soporte.');
+					        	}
+					        	
+					        }
+						});
+					}else{
+						
+						 //si es autosave no es necesario ejecutar callback final parent
+						/**
+			    		 *	Se va a Datos Adicionales Clic, Recalcula los componentes de Datos Adicionales art 140
+			    		 */
+						try{
+                        	callbackGuardar(null);
+	                    }catch(e){
+	                    	debug("Excepcion al ejecutar callbackGuardar");
+	                    	mensajeCorrecto('Datos guardados',json.respuesta);
+	                    }
+					}
 
-					try{
-                        callback();
-                    }catch(e){
-                    	debug("Excepcion al ejecutar callback");
-                    	mensajeCorrecto('Datos guardados',json.respuesta);
-                    }
-
-                    try{
-                    	if(_p22_cdperson!=false && !autosave && _p22_parentCallback){
-                        	_p22_parentCallback(json);
-                    	}
-                    }catch(e){
-                    	debug('Error',e)
-                    }
-
-                    try{
-                    	if(_p22_cdperson!=false && !autosave && _contrantantePrincipal && _callbackContPrincipal){
-                        	_callbackContPrincipal(json);
-                    	}
-                    }catch(e){
-                    	debug('Error',e)
-                    }
-                    
                 }
                 else
                 {
@@ -1873,7 +2411,7 @@ function _p22_guardarClic(callback, autosave)
             }
             ,failure : function()
             {
-                _p22_PanelPrincipal().setLoading(false);
+                _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(false);
                 errorComunicacion(null,'En almacenar datos generales');
             }
         });
@@ -1885,59 +2423,146 @@ function _p22_guardarClic(callback, autosave)
 function _p22_formDomicilio()
 {
     debug('>_p22_formDomicilio<');
-    return Ext.ComponentQuery.query('#_p22_formDomicilio')[Ext.ComponentQuery.query('#_p22_formDomicilio').length-1];
+    return _fieldByName('_p22_formDomicilio',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
 }
 
 function _p22_principalDatosAdicionales()
 {
     debug('>_p22_principalDatosAdicionales<');
-    return Ext.ComponentQuery.query('#_p22_principalDatosAdicionales')[Ext.ComponentQuery.query('#_p22_principalDatosAdicionales').length-1];
+    return _fieldByName('_p22_principalDatosAdicionales',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
 }
 
 function _p22_fieldRFC()
 {
     debug('>_p22_fieldRFC<');
-    return _fieldByName('CDRFC',_PanelPrincipalPersonas);
+    return _fieldByName('CDRFC',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
 }
 
 function _p22_fieldCdperson()
 {
     debug('>_p22_fieldCdperson<');
-    return _fieldByName('CDPERSON',_PanelPrincipalPersonas);
+    return _fieldByName('CDPERSON',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
 }
 
 function _p22_fieldConsecutivo()
 {
     debug('>_p22_fieldConsecutivo<');
-    return _fieldByName('NMORDDOM',_PanelPrincipalPersonas);
+    return _fieldByName('NMORDDOM',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
 }
 
-function recargaTelefonoEmail(){
-	//rellenar al cargar telefono y correo electronico
+function recargaTelefonoEmailOriginales(){
+	//rellenar al cargar telefono y correo electronico para los valores Originales
 	
 	try{
-		debug('Tel en Datos Generales: ' , _fieldByName('TELEFONO',_PanelPrincipalPersonas).getValue());
-		debug('Tel en Datos Adicional: ' , _fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas).getValue());
+		
+		///////////   11111111
+		debug('Tel en Datos Generales: ' , _fieldByName('TELEFONO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+		debug('Tel en Datos Adicional: ' , _fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+		
+		/**
+		 *	Si se recarga y trae un valor de la recarga es el valor original 
+		 */
+		if(Ext.isEmpty(_fieldByName('TELEFONO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) && !Ext.isEmpty(_fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue())){
+			_fieldByName('TELEFONO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(_fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+			_fieldByName('TELEFONO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).resetOriginalValue();
+		}
+		
+		///////////   222222222
+		debug('Tel2 en Datos Generales: ' , _fieldByName('TELEFONO2',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+		debug('Tel2 en Datos Adicional: ' , _fieldByName('parametros.pv_otvalor51',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
 				
-		if(Ext.isEmpty(_fieldByName('TELEFONO',_PanelPrincipalPersonas).getValue()) && !Ext.isEmpty(_fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas).getValue())){
-			_fieldByName('TELEFONO',_PanelPrincipalPersonas).setValue(_fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas).getValue());
+		/**
+		 *	Si se recarga y trae un valor de la recarga es el valor original 
+		 */
+		if(Ext.isEmpty(_fieldByName('TELEFONO2',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) && !Ext.isEmpty(_fieldByName('parametros.pv_otvalor51',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue())){
+			_fieldByName('TELEFONO2',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(_fieldByName('parametros.pv_otvalor51',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+			_fieldByName('TELEFONO2',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).resetOriginalValue();
 		}
-		if(!Ext.isEmpty(_fieldByName('TELEFONO',_PanelPrincipalPersonas).getValue()) && ( Ext.isEmpty(_fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas).getValue()) || _fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas).getValue() != _fieldByName('TELEFONO',_PanelPrincipalPersonas).getValue() )){
-			_fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas).setValue(_fieldByName('TELEFONO',_PanelPrincipalPersonas).getValue());
+		
+		///////////   33333333333
+		debug('Tel3 en Datos Generales: ' , _fieldByName('TELEFONO3',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+		debug('Tel3 en Datos Adicional: ' , _fieldByName('parametros.pv_otvalor52',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+			
+		/**
+		 *	Si se recarga y trae un valor de la recarga es el valor original 
+		 */
+		if(Ext.isEmpty(_fieldByName('TELEFONO3',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) && !Ext.isEmpty(_fieldByName('parametros.pv_otvalor52',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue())){
+			_fieldByName('TELEFONO3',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(_fieldByName('parametros.pv_otvalor52',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+			_fieldByName('TELEFONO3',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).resetOriginalValue();
 		}
+		
 	}catch(e){
-		debug('Aun no existe el campo telefono. ', e);
+		debug('Aun no existe algun campo de telefono. ', e);
 	}
 	
 	try{
-		debug('Email en Datos Generales: ' , _fieldByName('EMAIL',_PanelPrincipalPersonas).getValue());
-		debug('Email en Datos Adicional: ' , _fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas).getValue());
+		debug('Email en Datos Generales: ' , _fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+		debug('Email en Datos Adicional: ' , _fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
 				
-		if(Ext.isEmpty(_fieldByName('EMAIL',_PanelPrincipalPersonas).getValue()) && !Ext.isEmpty(_fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas).getValue())){
-			_fieldByName('EMAIL',_PanelPrincipalPersonas).setValue(_fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas).getValue());
+		/**
+		 *	Si se recarga y trae un valor de la recarga es el valor original 
+		 */
+		if(Ext.isEmpty(_fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) && !Ext.isEmpty(_fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue())){
+			_fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(_fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+			_fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).resetOriginalValue();
 		}
-		if(!Ext.isEmpty(_fieldByName('EMAIL',_PanelPrincipalPersonas).getValue()) && ( Ext.isEmpty(_fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas).getValue()) || _fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas).getValue() != _fieldByName('EMAIL',_PanelPrincipalPersonas).getValue() )){
-			_fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas).setValue(_fieldByName('EMAIL',_PanelPrincipalPersonas).getValue());
+		
+	}catch(e){
+		debug('Aun no existe el campo email. ', e);
+	}
+}
+
+function recargaTelefonoEmailNuevos(){
+	//rellenar al cargar telefono y correo electronico para los valores Nuevos
+	
+	try{
+		
+		///////////   11111111
+		debug('Tel en Datos Generales: ' , _fieldByName('TELEFONO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+		debug('Tel en Datos Adicional: ' , _fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+		
+		/**
+		 *	Si se recarga y no trae ese valor y no tenia valor, se le fija el nuevo valor 
+		 */
+		if(!Ext.isEmpty(_fieldByName('TELEFONO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) && ( Ext.isEmpty(_fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) || _fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue() != _fieldByName('TELEFONO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue() )){
+			_fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(_fieldByName('TELEFONO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+		}
+		
+		///////////   222222222
+		debug('Tel2 en Datos Generales: ' , _fieldByName('TELEFONO2',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+		debug('Tel2 en Datos Adicional: ' , _fieldByName('parametros.pv_otvalor51',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+				
+		/**
+		 *	Si se recarga y no trae ese valor y no tenia valor, se le fija el nuevo valor 
+		 */
+		if(!Ext.isEmpty(_fieldByName('TELEFONO2',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) && ( Ext.isEmpty(_fieldByName('parametros.pv_otvalor51',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) || _fieldByName('parametros.pv_otvalor51',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue() != _fieldByName('TELEFONO2',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue() )){
+			_fieldByName('parametros.pv_otvalor51',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(_fieldByName('TELEFONO2',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+		}
+
+		///////////   33333333333
+		debug('Tel3 en Datos Generales: ' , _fieldByName('TELEFONO3',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+		debug('Tel3 en Datos Adicional: ' , _fieldByName('parametros.pv_otvalor52',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+			
+		/**
+		 *	Si se recarga y no trae ese valor y no tenia valor, se le fija el nuevo valor 
+		 */
+		if(!Ext.isEmpty(_fieldByName('TELEFONO3',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) && ( Ext.isEmpty(_fieldByName('parametros.pv_otvalor52',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) || _fieldByName('parametros.pv_otvalor52',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue() != _fieldByName('TELEFONO3',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue() )){
+			_fieldByName('parametros.pv_otvalor52',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(_fieldByName('TELEFONO3',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+		}
+		
+	}catch(e){
+		debug('Aun no existe algun campo de telefono. ', e);
+	}
+	
+	try{
+		debug('Email en Datos Generales: ' , _fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+		debug('Email en Datos Adicional: ' , _fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+				
+		/**
+		 *	Si se recarga y no trae ese valor y no tenia valor, se le fija el nuevo valor 
+		 */
+		if(!Ext.isEmpty(_fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) && ( Ext.isEmpty(_fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) || _fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue() != _fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue() )){
+			_fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(_fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
 		}
 		
 	}catch(e){
@@ -1961,13 +2586,13 @@ function _p22_datosAdicionalesClic()
             	}
 	            ,success  : function(response)
 	            {
-	                //_p22_formDatosAdicionales().setLoading(false);
 	                var json = Ext.decode(response.responseText);
 	                debug('response text:',json);
 	                if(json.exito)
 	                {
 	                    debug('Actualizando estatus de Persona: ');
-	                    _fieldByName('STATUS',_PanelPrincipalPersonas).setValue(json.respuesta);
+	                    _fieldByName('STATUS',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(json.respuesta);
+	                    _fieldByName('STATUS',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).resetOriginalValue();
 	                    
 	                }
 	                else
@@ -1977,12 +2602,11 @@ function _p22_datosAdicionalesClic()
 	            }
 	            ,failure  : function()
 	            {
-	                _p22_formDatosAdicionales().setLoading(false);
 	                errorComunicacion(null,'En actualizar estatus persona');
 	            }
 	});
     
-    _p22_PanelPrincipal().setLoading(true);
+    _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(true);
     
     _p22_principalDatosAdicionales().removeAll();
     
@@ -1992,7 +2616,7 @@ function _p22_datosAdicionalesClic()
         ,params  : { 'smap1.cdperson' : _p22_fieldCdperson().getValue(), 'smap1.cdrol' : '1' }
         ,success : function(response)
         {
-            _p22_PanelPrincipal().setLoading(false);
+            _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(false);
             var json = Ext.decode(response.responseText);
             debug('json response:',json);
             if(json.exito)
@@ -2013,71 +2637,18 @@ function _p22_datosAdicionalesClic()
                 Ext.create('Ext.form.Panel',
                         {
                             border    : 0
-                            ,itemId   : '_p22_formDatosAdicionales'
-//                            ,width    : 570
+                            ,name   : '_p22_formDatosAdicionales'
+//                          ,width    : 570
                             ,defaults : { style : 'margin:5px;' }
                             ,layout   :
                             {
                                 type     : 'table'
                                 ,columns : 3
                             }
+                            ,trackResetOnLoad: true
                             ,items    : Ext.decode(json.smap1.itemsTatriper.substring("items:".length))
                         })
                 );
-                
-                
-               /* Ext.create('Ext.form.Panel',
-                {
-                    title   : 'Datos adicionales'
-                    ,itemId : '_p22_principalDatosAdicionales'
-                    ,width  : 650
-                    ,height : 600
-                    ,autoScroll : true
-                    ,modal  : true
-                    ,items  :
-                    [{
-            	    	layout: 'column',
-            	    	border: false,
-            	    	html:'<span style="font-size:14px; font-weight: bold;">Para que el estatus de la persona sea completo se requiere que los campos con el s&iacute;mbolo: <img src="${ctx}/resources/fam3icons/icons/transmit_error.png" alt="">, sean capturados.</span><br/><br/>'
-            	    },
-                        Ext.create('Ext.form.Panel',
-                        {
-                            border    : 0
-                            ,itemId   : '_p22_formDatosAdicionales'
-                            ,width    : 570
-                            ,defaults : { style : 'margin:5px;' }
-                            ,layout   :
-                            {
-                                type     : 'table'
-                                ,columns : 3
-                            }
-                            ,items    : Ext.decode(json.smap1.itemsTatriper.substring("items:".length))
-                        })
-                    ]
-                    ,bbar    :
-                    [
-                        '->'
-                        ,{
-                            text     : 'Guardar'
-                            ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
-                            ,handler : _p22_guardarDatosAdicionalesClic
-                        }
-                        ,{
-                        	text: 'Cerrar'
-                        	,icon: '${ctx}/resources/fam3icons/icons/cancel.png'
-                        	,handler: function(){
-                        		_p22_principalDatosAdicionales().close();
-                        	}
-                        }
-                        ,'->'
-                    ]
-                }).show(); */
-                
-//                fieldMail=_fieldByLabel('Correo electrónico', null, true);
-//                if(fieldMail)
-//                {
-//                    fieldMail.regex = /^[_A-Z0-9-]+(\.[_A-Z0-9-]+)*@[A-Z0-9-]+(\.[A-Z0-9-]+)*(\.[A-Z]{2,4})$/;
-//                }
                 
 				fieldEstCorp = _fieldByLabel('Estructura corporativa', null, true);
 				var fieldEstCorpAux = Ext.clone(fieldEstCorp);
@@ -2086,23 +2657,11 @@ function _p22_datosAdicionalesClic()
 					var panelDatAdic = fieldEstCorp.up();
 					var indEstCorp = panelDatAdic.items.indexOf(fieldEstCorp);
 					
-					/*debug("fieldEstCorp" , fieldEstCorp);
-					
-					if(( (indEstCorp) %2) != 0){
-						panelDatAdic.insert(indEstCorp,{
-	            	    	layout: 'column',
-	            	    	border: false,
-	            	    	html:'<br/>'
-	            	    });
-						indEstCorp = indEstCorp + 1;
-					}*/
-					
 					_p22_formDatosAdicionales().items.remove(fieldEstCorp, true);
 					fieldEstCorp = fieldEstCorpAux;
 					
 					panelDatAdic.insert(indEstCorp,{
 						xtype      : 'panel',
-						//padding    :  '2px 2px 2px 2px',
 						defaults : { style : 'margin:3px' },
 						border     :  1,
 						items      : [fieldEstCorp,{
@@ -2174,13 +2733,30 @@ function _p22_datosAdicionalesClic()
 				
 				
 				try{
-					_fieldByName('TELEFONO',_PanelPrincipalPersonas).allowBlank = _fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas).allowBlank;	
+					_fieldByName('TELEFONO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = _fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank;	
+					_fieldByName('TELEFONO2',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = _fieldByName('parametros.pv_otvalor51',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank;	
+					_fieldByName('TELEFONO3',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = _fieldByName('parametros.pv_otvalor52',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank;
+					
+					if(!_fieldByName('TELEFONO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank && Ext.isEmpty(_fieldByName('TELEFONO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue())){
+						_fieldByName('TELEFONO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setReadOnly(false);
+					}
+					if(!_fieldByName('TELEFONO2',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank && Ext.isEmpty(_fieldByName('TELEFONO2',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue())){
+						_fieldByName('TELEFONO2',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setReadOnly(false);
+					}
+					if(!_fieldByName('TELEFONO3',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank && Ext.isEmpty(_fieldByName('TELEFONO3',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue())){
+						_fieldByName('TELEFONO3',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setReadOnly(false);
+					}
+					
+					
 				}catch(e){
-					debug('No se encontro el elemento de telefono para fijar obligatoriedad', e);
+					debug('No se encontro un elemento de telefono para fijar obligatoriedad', e);
 				}
 				
 				try{
-					_fieldByName('EMAIL',_PanelPrincipalPersonas).allowBlank = _fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas).allowBlank;	
+					_fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = _fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank;
+					if(!_fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank && Ext.isEmpty(_fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue())){
+						_fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setReadOnly(false);
+					}
 				}catch(e){
 					debug('No se encontro el elemento de email para fijar obligatoriedad', e);
 				}
@@ -2200,21 +2776,17 @@ function _p22_datosAdicionalesClic()
                 		}
                 	}
                 	
+                	if(item.xtype && (item.xtype == 'combo' || item.xtype == 'combobox')){
+						item.editable = true;
+					}
+                	
                 });
 				
                 _p22_formDatosAdicionales().loadRecord(new _p22_modeloTatriper(json.smap2));
                 
-                var itemsDocumento=Ext.ComponentQuery.query('[tieneDocu]');
+                var itemsDocumento=Ext.ComponentQuery.query('[tieneDocu]',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
                 debug('itemsDocumento:',itemsDocumento);
-                
-                /*debug("agregar espacio docs: ", _p22_formDatosAdicionales().items.getCount());
-                if(( (_p22_formDatosAdicionales().items.getCount()) %2 ) == 0){
-                	_p22_formDatosAdicionales().add({
-            	    	layout: 'column',
-            	    	border: false,
-            	    	html:'<br/>'
-            	     });
-                }*/
+
                 
                 for(var i=0;i<itemsDocumento.length;i++)
                 {
@@ -2226,7 +2798,6 @@ function _p22_datosAdicionalesClic()
 	                    itemDocumento.up().add(
 	                    		{
 	        						xtype      : 'panel',
-	        						//padding    :  '2px 2px 2px 2px',
 	        						defaults : { style : 'margin:3px' },
 	        						border     :  1,
 	        						items      : [
@@ -2244,14 +2815,14 @@ function _p22_datosAdicionalesClic()
 	        		                            }
 	        		                            ,{
 	        		                                xtype     : 'button'
-	        		                                ,itemId   : itemDocumento.name
+	        		                                ,name     : itemDocumento.name
 	        		                                ,icon     : '${ctx}/resources/fam3icons/icons/arrow_up.png'
 	        		                                ,tooltip  : 'Subir nuevo'
 	        		                                ,codidocu : itemDocumento.codidocu
 	        		                                ,descrip  : itemDocumento.inicialField
 	        		                                ,handler  : function(button)
 	        		                                {
-	        		                                	_DocASubir = button.itemId;
+	        		                                	_DocASubir = button.name;
 	        		                                    _p22_subirArchivo(_p22_fieldCdperson().getValue(),button.codidocu,button.descrip);
 	        		                                }
 	        		                            },{
@@ -2278,15 +2849,8 @@ function _p22_datosAdicionalesClic()
 						        	    }]
 	        					}
 	                    	);
-	                }/*else{
-	                	itemDocumento.up().add({
-                	    	layout: 'column',
-                	    	border: false,
-                	    	html:'<br/>'
-                	     });
-	                }*/
-                    //itemDocumento.destroy();
-                    //itemDocumento.allowBlank = true;
+	                }
+	                
                 }
                 
                 _p22_formDatosAdicionales().add({
@@ -2302,33 +2866,15 @@ function _p22_datosAdicionalesClic()
 					height: 50                	
         	     });
         	     
-        	     
-        	     
-				//rfc solo lextura        	     
         	     try{
-        	     	_fieldByName('parametros.pv_otvalor13',_PanelPrincipalPersonas, true).setValue(_p22_fieldRFC().getValue());
-        	     	_fieldByName('parametros.pv_otvalor13',_PanelPrincipalPersonas, true).setReadOnly(true);
-        	     }catch(e){
-        	     	debug('Error en adaptacion de  campo Cliente VIP',e);
-        	     }
-        	     
-				//cliente VIP solo lextura        	     
-        	     try{
-        	     	_fieldByName('parametros.pv_otvalor37',_PanelPrincipalPersonas, true).setReadOnly(true);
-        	     }catch(e){
-        	     	debug('Error en adaptacion de  campo Cliente VIP',e);
-        	     }
-        	     
-				
-				try{
-					_fieldByName('EMAIL',_PanelPrincipalPersonas).vtype = 'email';
-					_fieldByName('EMAIL',_PanelPrincipalPersonas).on({
+					_fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).vtype = 'email';
+					_fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).on({
 							change: function(me, val){
-				    				_fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas).setValue(val);
+				    				_fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(val);
 							}
 					});
 					
-					_fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas).hide();
+					_fieldByName('parametros.pv_otvalor39',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
 					
 				}catch(e){
 					debug('Error en adaptacion de  campo email',e);
@@ -2336,36 +2882,83 @@ function _p22_datosAdicionalesClic()
 				
 				try{
 					
-					_fieldByName('TELEFONO',_PanelPrincipalPersonas).on({
+					_fieldByName('TELEFONO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).on({
 						change: function(me, val){
-			    				_fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas).setValue(val);
+			    				_fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(val);
 						}
 					});
-					_fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas).hide();	
+					_fieldByName('parametros.pv_otvalor38',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
+					
+					////////   2222222
+					_fieldByName('TELEFONO2',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).on({
+						change: function(me, val){
+			    				_fieldByName('parametros.pv_otvalor51',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(val);
+						}
+					});
+					_fieldByName('parametros.pv_otvalor51',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
+					
+					////////   3333333
+					_fieldByName('TELEFONO3',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).on({
+						change: function(me, val){
+			    				_fieldByName('parametros.pv_otvalor52',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(val);
+						}
+					});
+					_fieldByName('parametros.pv_otvalor52',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
+					
 				}catch(e){
-					debug('Error en adaptacion de  campo telefono',e);
+					debug('Error en adaptacion de un campo de telefono',e);
 				}
 				
-				recargaTelefonoEmail();
-				
-				
-				if(!_activaCveFamiliar){
+				/**
+				 *	Antes de fijar campos con valores originales como bloqueados 
+				 */
+				recargaTelefonoEmailOriginales();
+        	     
+        	    if(_camposAconfigurar){
+			    	configuraCampos(_p22_formDatosAdicionales());
+			    }
+			    
+			    if(_editaIncompleto){
+			    	fijarCamposEditablesAdicionales(_p22_formDatosAdicionales(), _editandoCliente);
+			    }
+			    
+			    /**
+				 *	Despues de fijar valores nuevos de campos sin bloquearlos 
+				 */
+			    recargaTelefonoEmailNuevos();
+        	     
+				//rfc solo lextura en datos adicionales       	     
+        	     try{
+        	     	_fieldByName('parametros.pv_otvalor13',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />, true).setValue(_p22_fieldRFC().getValue());
+        	     	_fieldByName('parametros.pv_otvalor13',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />, true).resetOriginalValue();
+        	     	_fieldByName('parametros.pv_otvalor13',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />, true).setReadOnly(true);
+        	     }catch(e){
+        	     	debug('Error en adaptacion de  campo Cliente RFC de Generales a Adicionales, no existe el campo',e);
+        	     }
+        	     
+				//cliente VIP solo lextura        	     
+        	     try{
+        	     	_fieldByName('parametros.pv_otvalor37',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />, true).setReadOnly(true);
+        	     }catch(e){
+        	     	debug('Error en adaptacion de  campo Cliente VIP, para solo lectura, el campo no existe',e);
+        	     }
+        	     
+        	     if(!_activaCveFamiliar){
 			    	
 					try{
 						//Clave familiar
-			    		_fieldByName('parametros.pv_otvalor49', _PanelPrincipalPersonas, true).hide();	
+			    		_fieldByName('parametros.pv_otvalor49', _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />, true).hide();	
 					}catch(e){
-						debug('Sin campo de Clave Familiar');
+						debug('Sin campo de Clave Familiar, no se oculta');
 					}
 
 					try{
 						//Numero socio
-			    	_fieldByName('parametros.pv_otvalor50', _PanelPrincipalPersonas, true).hide();	
+			    	_fieldByName('parametros.pv_otvalor50', _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />, true).hide();	
 					}catch(e){
-						debug('Sin campo de Numero de Socio');
+						debug('Sin campo de Numero de Socio, no se oculta');
 					}
 			    }
-				
             }
             else
             {
@@ -2374,14 +2967,15 @@ function _p22_datosAdicionalesClic()
         }
         ,failure : function()
         {
-            _p22_PanelPrincipal().setLoading(false);
+            _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(false);
             errorComunicacion(null,'En carga conf. datos adicionales');
         }
     });
+    
     debug('<_p22_datosAdicionalesClic');
 }
 
-function _p22_guardarDatosAdicionalesClic()
+function _p22_guardarDatosAdicionalesClic(jsonCli)
 {
     debug('>_p22_guardarDatosAdicionalesClic');
     
@@ -2412,13 +3006,13 @@ function _p22_guardarDatosAdicionalesClic()
         valido = _p22_formDatosAdicionales().isValid();
         if(!valido)
         {
-            mensajeWarning('Favor de verificar los datos');
+            mensajeWarning('Favor de verificar los datos adicionales del cliente.');
         }
     }
     
     if(valido)
     {
-        _p22_formDatosAdicionales().setLoading(true);
+        _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(true);
         var jsonData = _p22_formDatosAdicionales().getValues();
         jsonData['cdperson'] = _p22_fieldCdperson().getValue();
         jsonData['cdrol'] = '1';
@@ -2433,11 +3027,12 @@ function _p22_guardarDatosAdicionalesClic()
             {
                 smap1 : jsonData,
                 smap2  : _p22_formDatosGenerales().getValues(),
-                params : _p22_formDomicilio().getValues()
+                saveList   : saveListDom,
+                updateList : updateListDom
             }
             ,success  : function(response)
             {
-                _p22_formDatosAdicionales().setLoading(false);
+                _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(false);
                 var json = Ext.decode(response.responseText);
                 debug('response text:',json);
                 if(json.exito)
@@ -2455,9 +3050,6 @@ function _p22_guardarDatosAdicionalesClic()
                 }
                 else
                 {
-                	/**
-                	 * TODO: Cambiar por Es en Proceso
-                	 */
                     if(!Ext.isEmpty(_cargaCompania)){
                     	mensajeWarning(json.respuesta);
                     }else{
@@ -2465,6 +3057,28 @@ function _p22_guardarDatosAdicionalesClic()
                     }
                     
                 }
+                
+                if(!Ext.isEmpty(jsonCli)){
+	    		
+	    			/**
+		        	 * SE MUEVEN DE POSICION LOS CALLBACK DE LA PANTALLA PRINCIPAL
+		        	 */
+		        	try{
+                    	if(_p22_cdperson!=false && _p22_parentCallback){
+                        	_p22_parentCallback(jsonCli);
+                    	}
+                    }catch(e){
+                    	debug('Error',e)
+                    }
+
+                    try{
+                    	if(_p22_cdperson!=false && _contrantantePrincipal && _callbackContPrincipal){
+                        	_callbackContPrincipal(jsonCli);
+                    	}
+                    }catch(e){
+                    	debug('Error',e)
+                    }
+	    		}
                 
                 try{
 	    			var ventanaMensaje = window.parent;
@@ -2510,7 +3124,8 @@ function _p22_guardarDatosAdicionalesClic()
 	    			debugError('Error en postMessage',e);
 	    		}
                 
-                /** PARA ACTUALIZAR EL NUEVO ESTATUS GENERAL DE LA PERSONA 
+	    		
+                /** PARA ACTUALIZAR EL NUEVO ESTATUS GENERAL DE LA PERSONA **/
                 Ext.Ajax.request(
             	        {
             	            url       : _UrlActualizaStatusPersona
@@ -2520,30 +3135,29 @@ function _p22_guardarDatosAdicionalesClic()
         	            	}
             	            ,success  : function(response)
             	            {
-            	                //_p22_formDatosAdicionales().setLoading(false);
-            	                var json = Ext.decode(response.responseText);
-            	                debug('response text:',json);
-            	                if(json.exito)
+            	                var jsonEstatus = Ext.decode(response.responseText);
+            	                debug('response text:',jsonEstatus);
+            	                if(jsonEstatus.exito)
             	                {
             	                    debug('Actualizando estatus de Persona: ');
-            	                    _fieldByName('STATUS',_PanelPrincipalPersonas).setValue(json.respuesta);
+            	                    _fieldByName('STATUS',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(jsonEstatus.respuesta);
+            	                    _fieldByName('STATUS',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).resetOriginalValue();
             	                    
             	                }
             	                else
             	                {
-            	                    mensajeError(json.respuesta);
+            	                    debugError('Error en actualiza estatus persona: ',jsonEstatus.respuesta);
             	                }
             	            }
             	            ,failure  : function()
             	            {
-            	                _p22_formDatosAdicionales().setLoading(false);
-            	                errorComunicacion(null,'En actualiza estatus persona');
+            	                debugError('Error en actualiza estatus persona');
             	            }
-            	});**/
+            	});
             }
             ,failure  : function()
             {
-                _p22_formDatosAdicionales().setLoading(false);
+                _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(false);
                 errorComunicacion(null,'En guardar datos adicionales');
             }
         });
@@ -2551,7 +3165,7 @@ function _p22_guardarDatosAdicionalesClic()
     }
     
     if(valido && (deleteList.length > 0 || saveList.length > 0 || updateList.length > 0)){
-    	_p22_formDatosAdicionales().setLoading(true);
+    	_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(true);
     	
     	Ext.Ajax.request(
     	        {
@@ -2569,7 +3183,7 @@ function _p22_guardarDatosAdicionalesClic()
     	            }
     	            ,success  : function(response)
     	            {
-    	                _p22_formDatosAdicionales().setLoading(false);
+    	                _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(false);
     	                var json = Ext.decode(response.responseText);
     	                debug('response text:',json);
     	                if(json.exito)
@@ -2584,7 +3198,7 @@ function _p22_guardarDatosAdicionalesClic()
     	            }
     	            ,failure  : function()
     	            {
-    	                _p22_formDatosAdicionales().setLoading(false);
+    	                _PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.setLoading(false);
     	                errorComunicacion(null,'En guardar datos de accionistas');
     	            }
     	});
@@ -2596,7 +3210,7 @@ function _p22_guardarDatosAdicionalesClic()
 function _p22_formDatosAdicionales()
 {
     debug('>_p22_formDatosAdicionales<');
-    return Ext.ComponentQuery.query('#_p22_formDatosAdicionales')[Ext.ComponentQuery.query('#_p22_formDatosAdicionales').length-1];
+    return _fieldByName('_p22_formDatosAdicionales',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
 }
 
 function _p22_documentosClic()
@@ -2825,8 +3439,489 @@ function callbackDocumentoSubidoPersona()
     	elemento.setValue('S');
     }
     
-    (Ext.ComponentQuery.query('[docCargado='+_DocASubir+'ImgDocId]')[Ext.ComponentQuery.query('[docCargado='+_DocASubir+'ImgDocId]').length-1]).setSrc('${ctx}/resources/fam3icons/icons/accept.png');
+    (Ext.ComponentQuery.query('[docCargado='+_DocASubir+'ImgDocId]',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('[docCargado='+_DocASubir+'ImgDocId]',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1]).setSrc('${ctx}/resources/fam3icons/icons/accept.png');
     
+}
+
+/**
+ * 	PARA ANTES DE IR A MODO AGREGAR 
+ */
+function fijarCamposAgregar(forma){
+
+	/**
+	 * Reinicia los campos a un estado inicial de la pantalla, TODO: guardar esta configuracion de la primer vez que se carga la pantalla 
+	 */
+	forma.items.each(function(item,index,len){
+		
+		if(item.xtype && (item.xtype == 'button' || item.xtype == 'displayfield' || item.xtype == 'panel')) return;
+		
+		if(item.getName && (item.getName() == 'STATUS' || item.getName() == 'DSL_CDIDEPER' || item.getName() == 'DSL_CDIDEEXT' || item.getName() == 'NONGRATA')){
+			
+			item.setReadOnly(true); 
+			
+			/**
+			 *	Para el modo agregar se fijan los valores originales iniciales en blanco 
+			 */
+			item.setValue('');
+			item.resetOriginalValue();
+		}else if(item.getName){
+			
+			item.setReadOnly(false); 
+			
+			/**
+			 *	Para el modo agregar se fijan los valores originales iniciales en blanco 
+			 */
+			item.setValue('');
+			
+			if(item.getName() == 'FEINGRESO'){
+				item.setValue(new Date());
+			}
+			
+			item.resetOriginalValue();
+		}
+		
+    });
+
+}
+
+/**
+ * 	PARA CONFIGURAR CAMPOS SOLO LECTURA U OCULTO ANTES DE BLOQUEAR CAMPOS NO EDITABLES RESTANTES en la funcion fijarCamposEditables
+ */
+function configuraCampos(forma){
+
+	try{
+		forma.items.each(function(item,index,len){
+			
+			if(item.xtype && (item.xtype == 'button' || item.xtype == 'displayfield' || item.xtype == 'panel')) return;
+			
+			if(item.getName && item.getName() == "CODPOSTAL" && !Ext.isEmpty(_cargaCP)) return;
+			if(item.getName && item.getName() == "OTFISJUR"  && !Ext.isEmpty(_cargaTipoPersona)) return;
+			if(item.getName && item.getName() == "CDSUCEMI"  && !Ext.isEmpty(_cargaSucursalEmi)) return;
+			
+			Ext.Array.forEach(_camposAconfigurar,function(campoConf) {
+				
+				if(campoConf.CVECAMPO == "AGREGARDOM"){
+					if(campoConf.OCULTO == "S"){
+						_fieldByName('AgregaDomBtn',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
+					}else{
+						_fieldByName('AgregaDomBtn',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
+					}
+				}
+				
+				if(campoConf.CVECAMPO == "ESTATUSDOM"){
+					if(campoConf.OCULTO == "S"){
+						_fieldByName('EstatusDomBtn',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
+					}else{
+						_fieldByName('EstatusDomBtn',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
+					}
+				}
+
+				
+				if(campoConf.CVECAMPO == "PERMITEDUPLICAR"){
+					if(campoConf.OCULTO == "S"){
+						_permiteDuplicarRFC = true;
+					}else{
+						_permiteDuplicarRFC = false;
+					}
+				}
+
+				
+				if(campoConf.CVECAMPO.indexOf("pv_otvalor") >=0 && campoConf.CVECAMPO.indexOf("parametro") < 0){
+					campoConf.CVECAMPO = "parametros."+campoConf.CVECAMPO;
+				}
+				
+				if(item.getName && item.getName() == campoConf.CVECAMPO /** TODO: && campoConf.CVECAMPO != 'CDRFC' */
+					&& campoConf.CVECAMPO != 'STATUS' && campoConf.CVECAMPO != 'RESIDENTE' && campoConf.CVECAMPO != 'NMORDDOM'){
+				
+					_camposConfigurados.push(campoConf.CVECAMPO);
+					
+					if(campoConf.OCULTO == "S"){
+			    		item.hide();
+			    	}else{
+			    		item.show();
+			    	}
+			    	
+			    	if(campoConf.SOLOLECTURA == "S"){
+			    		item.setReadOnly(true);	
+			    	}else{
+			    		if(campoConf.CVECAMPO != 'DSL_CDIDEPER' && campoConf.CVECAMPO != 'DSL_CDIDEEXT'){
+			    			item.setReadOnly(false);
+			    		}
+			    	}
+			    	
+			    	if(campoConf.CVECAMPO == "CDRFC" && campoConf.SOLOLECTURA == "N"){
+			    		_fieldByName('GeneraRFCBtn',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
+			    	}
+				}					    
+		});
+    });
+	}catch(e){
+		mensajeError('Error al configurar campos del cliente. Consulte a Soporte.');
+		debugError('Error al configurar campos. Consulte a Soporte.',e);
+	}
+
+}
+
+
+function fijarCamposEditables(forma, modoEdicion){
+
+	forma.items.each(function(item,index,len){
+		
+		if(item.xtype && (item.xtype == 'button' || item.xtype == 'displayfield' || item.xtype == 'panel')) return;
+		
+		/**
+		 * PARA CAMPOS POR DEFAULT VISIBLES Y FUNCIONALES
+		 */
+		if(item.isVisible()){
+	    	if( ((!item.allowBlank) || item.getName() == 'DSAPELLIDO' || item.getName() == 'DSAPELLIDO1' || item.getName() == 'OTSEXO')
+	    	     && Ext.isEmpty(item.getValue()) ){
+	    		item.setReadOnly(false); //abre campos obligatorios visibles	
+	    	}else{
+	    		if(modoEdicion){
+	    			if(_camposConfigurados.indexOf(item.getName()) < 0 ){
+	    				item.setReadOnly(true); // bloquea demas campos, si no se configuraron previamente
+	    			}
+	    		}
+	    	}		
+		
+		}else if( ((!item.allowBlank) || item.getName() == 'DSAPELLIDO' || item.getName() == 'DSAPELLIDO1' || item.getName() == 'OTSEXO')
+	    	     && Ext.isEmpty(item.getValue()) ){
+	    	     	
+			item.setReadOnly(false);//abre campos obligatorios invisibles
+			item.show(); // muestra campos obligatorios invisibles
+		}
+		
+    });
+
+}
+
+function fijarCamposEditablesAdicionales(forma, modoEdicion){
+
+	forma.items.each(function(item,index,len){
+		
+		if(item.xtype && (item.xtype == 'button' || item.xtype == 'displayfield' || item.xtype == 'panel')) return;
+		
+		/**
+		 * PARA CAMPOS POR DEFAULT VISIBLES Y FUNCIONALES
+		 */
+		if(item.isVisible()){
+	    	if(item.getName && !Ext.isEmpty(item.getValue()) && _camposConfigurados.indexOf(item.getName()) < 0  ){
+	    		item.setReadOnly(true); //bloquea campos con valor previamente no configurados
+	    	}
+		}else{
+			if(item.getName && !Ext.isEmpty(item.getValue())){
+				//Bloquea Telefono
+	    		if(item.getName() == "parametros.pv_otvalor38" && _camposConfigurados.indexOf('TELEFONO') < 0  ){
+	    			_fieldByName('TELEFONO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setReadOnly(true);
+	    		}
+	    		//Bloquea Email
+	    		if(item.getName() == "parametros.pv_otvalor39" && _camposConfigurados.indexOf('EMAIL') < 0  ){
+	    			_fieldByName('EMAIL',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setReadOnly(true);
+	    		}
+	    		//Bloquea Telefono2
+	    		if(item.getName() == "parametros.pv_otvalor51" && _camposConfigurados.indexOf('TELEFONO2') < 0  ){
+	    			_fieldByName('TELEFONO2',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setReadOnly(true);
+	    		}
+	    		//Bloquea Telefono3
+	    		if(item.getName() == "parametros.pv_otvalor52" && _camposConfigurados.indexOf('TELEFONO3') < 0  ){
+	    			_fieldByName('TELEFONO3',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setReadOnly(true);
+	    		}
+			}
+		} 	
+    });
+
+}
+
+function agregaEditaDomicilio(editMode, recordCargar){
+	
+	debug('Editar Domicilio para recordCargar',editMode);
+	
+	var windowDomicilio;
+
+	var formDomicilio = Ext.create('Ext.form.Panel',
+                    {
+                        title     : 'Domicilio de la Persona'
+                        ,border   : 0
+                        ,defaults : { style : 'margin:5px' }
+                        ,layout   :
+                        {
+                            type     : 'table'
+                            ,columns : 2
+                        }
+                        ,items    : [ <s:property value="imap.itemsDomicilio" escapeHtml="false" /> ]
+                        ,buttonAlign : 'center'
+                        ,buttons: [{
+					        text: 'Aceptar',
+					        handler: function() {
+					        	
+					        	var valido = true;
+					        	
+						    	valido = (_fieldByName('CDEDO',formDomicilio).getStore().getCount()>0) && (_fieldByName('CDMUNICI',formDomicilio).getStore().getCount()>0) && _fieldByName('CDEDO',formDomicilio).isValid() && _fieldByName('CDMUNICI',formDomicilio).isValid();
+						        
+						        if(!valido)
+						        {
+						            mensajeWarning('Favor de verificar el estado y municipio.');
+						            return;
+						        }
+						        
+					            if(this.up('form').getForm().isValid()){
+					            	
+					            	var nuevoRec = this.up('form').getForm().getValues();
+					            	if(editMode){
+              
+					            		recordCargar.set('NMORDDOM',_fieldByName('NMORDDOM',formDomicilio).getValue());
+					            		recordCargar.set('CDTIPDOM',_fieldByName('CDTIPDOM',formDomicilio).getValue());
+					            		recordCargar.set('DSTIPDOM',_fieldByName('CDTIPDOM',formDomicilio).getRawValue());
+					            		recordCargar.set('CODPOSTAL',_fieldByName('CODPOSTAL',formDomicilio).getValue());
+					            		recordCargar.set('CDEDO',_fieldByName('CDEDO',formDomicilio).getValue());
+					            		recordCargar.set('ESTADO',_fieldByName('CDEDO',formDomicilio).getRawValue());
+					            		recordCargar.set('CDMUNICI',_fieldByName('CDMUNICI',formDomicilio).getValue());
+					            		recordCargar.set('MUNICIPIO',_fieldByName('CDMUNICI',formDomicilio).getRawValue());
+					            		recordCargar.set('CDCOLONI',_fieldByName('CDCOLONI',formDomicilio).getValue());
+					            		recordCargar.set('COLONIA',_fieldByName('CDCOLONI',formDomicilio).getRawValue());
+					            		recordCargar.set('DSDOMICI',_fieldByName('DSDOMICI',formDomicilio).getValue());
+					            		recordCargar.set('NMNUMERO',_fieldByName('NMNUMERO',formDomicilio).getValue());
+					            		recordCargar.set('NMNUMINT',_fieldByName('NMNUMINT',formDomicilio).getValue());
+					            		
+					            		if(!Ext.isEmpty(municipioImportarTMP) && editMode && recordCargar.get('NMORDDOM') == "1"){
+					            			municipioImportarTMP = '';
+					            		}
+					            		if(!Ext.isEmpty(coloniaImportarTMP) && editMode && recordCargar.get('NMORDDOM') == "1"){
+					            			coloniaImportarTMP = '';
+					            		}
+					            		
+					            	}else{
+						            	nuevoRec.ESTADO = _fieldByName('CDEDO',formDomicilio).getRawValue();
+						            	nuevoRec.MUNICIPIO = _fieldByName('CDMUNICI',formDomicilio).getRawValue();
+						            	nuevoRec.COLONIA = _fieldByName('CDCOLONI',formDomicilio).getRawValue();
+						            	nuevoRec.DSTIPDOM = _fieldByName('CDTIPDOM',formDomicilio).getRawValue();
+						            	nuevoRec.SWACTIVO = 'S';
+					            	
+					            	 	storeDomiciliosCliente.add(new DomiciliosModel(nuevoRec));
+					            	 	
+					            	 	if(_domicilioSimple && storeDomiciliosCliente.getCount()==1){
+											_numDomicilioTomado = storeDomiciliosCliente.getAt(0);
+											_numDomicilioTomado.set('SEL',true);
+										}
+					            	}
+					            	
+					           		 windowDomicilio.close();
+					            }else{
+					            	mensajeWarning('Llene la informaci&oacute;n requerida.');	
+					            }
+					            
+					        }
+					    }] 
+                    });
+                    
+			//Se carga colonia porque en ocasiones no se carga hasta la segunda vez
+            _fieldByName('CDCOLONI',formDomicilio).getStore().load();
+            
+			windowDomicilio = Ext.create('Ext.window.Window', {
+	          title: editMode?'Editar Domicilio':'Agregar Domicilio',
+	          modal:true,
+	          height : 300,
+	          width  : 550,
+		      items: [formDomicilio]
+	        });
+	        
+	        /**
+	         *	PARA PERMITIR LLENAR VALORES SIN PROBLEMA 
+	         */
+	        	_fieldByName('CDEDO',formDomicilio).editable = true;
+				_fieldByName('CDEDO',formDomicilio).forceSelection = false;
+	        	_fieldByName('CDMUNICI',formDomicilio).editable = true;
+				_fieldByName('CDMUNICI',formDomicilio).forceSelection = false;
+	        	_fieldByName('CDCOLONI',formDomicilio).editable = true;
+				_fieldByName('CDCOLONI',formDomicilio).forceSelection = false;
+	        	_fieldByName('CDTIPDOM',formDomicilio).editable = true;
+				_fieldByName('CDTIPDOM',formDomicilio).forceSelection = false;
+				
+				/**
+				 * Regex para letras numeros, espacios, acentos y guines
+				 */
+				_fieldByName('NMNUMERO',formDomicilio).regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+				_fieldByName('NMNUMERO',formDomicilio).regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
+			    _fieldByName('NMNUMINT',formDomicilio).regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+			    _fieldByName('NMNUMINT',formDomicilio).regexText = 'Solo d&iacute;gitos, letras, espacios  y guiones';
+				
+			    
+			    _fieldByName('NMORDDOM',formDomicilio).allowBlank = true;
+				
+				/**
+				 *	CUANDO SE SELECCIONA ESCRIBE PARA CREAR UNA COLONIA SE PONE EN MAYUSCULAS
+				 */
+		        _fieldByName('CDCOLONI',formDomicilio).on({
+						change: function(me, val){
+			    				try{
+				    				if('string' == typeof val){
+				    					me.setValue(val.toUpperCase());
+				    				}
+			    				}
+			    				catch(e){
+			    					debug(e);
+			    				}
+						}
+				});
+				
+	        windowDomicilio.show(null,function(){
+	        	
+	        	formDomicilio.setLoading(true);
+	
+				if(editMode){
+		        	formDomicilio.loadRecord(recordCargar);
+		        	heredarPanel(formDomicilio);
+		        	
+		        	setTimeout(function(){
+		        		if(_camposAconfigurar){
+					    	configuraCampos(formDomicilio);
+					    }
+			    
+		        		if(_editaIncompleto){
+		        			/**
+		        			 * NO SE BLOQUEAN LOS CAMPOS CON VALORES DE UN DOMICILIO QUE SE ACABA DE AGREGAR
+		        			 */
+		        			if(!Ext.isEmpty(recordCargar.get('NMORDDOM')) && !Ext.Array.contains(_domiciliosNuevos,recordCargar.get('NMORDDOM'))){
+					    		fijarCamposEditables(formDomicilio,_editandoCliente);
+					    	}
+					    }
+
+					    
+						setTimeout(function(){
+							
+							/**
+							 *	Se hereda la colonia ya que se queda la clave, no cambiar orden o darle el tiempo necesario 
+							 */
+							_p22_heredarColonia();
+							heredarPanel(formDomicilio);
+
+							/**
+					     *	PARA SELECCIONAR UN MUNICIPIO NO ENCONTRADO O FIJAR LA COLONIA NO ENCONTRADA PARA CREAR UNA NUEVA 
+					     */
+					    
+						    if(!Ext.isEmpty(municipioImportarTMP) && editMode && recordCargar.get('NMORDDOM') == "1"){
+					    		_fieldByName('CDMUNICI',formDomicilio).setReadOnly(false);
+					    		_fieldByName('CDMUNICI',formDomicilio).show();
+					    		
+					    		var mensajeColImport =  ''; 
+					    		if(!Ext.isEmpty(coloniaImportarTMP)){
+									mensajeColImport = " " + coloniaImportarTMP;
+									
+									_fieldByName('CDCOLONI',formDomicilio).setReadOnly(false);
+					    			_fieldByName('CDCOLONI',formDomicilio).show();
+					    			_fieldByName('CDCOLONI',formDomicilio).setValue(coloniaImportarTMP);
+					    		}
+					    		
+						    	mensajeInfo("No se encontr&oacute; el municipio: '" + municipioImportarTMP + "' seleccione el municipio y colonia"+mensajeColImport+" correctos.");
+						    }else if(!Ext.isEmpty(coloniaImportarTMP) && editMode && recordCargar.get('NMORDDOM') == "1"){
+								_fieldByName('CDCOLONI',formDomicilio).setReadOnly(false);
+				    			_fieldByName('CDCOLONI',formDomicilio).show();
+				    			_fieldByName('CDCOLONI',formDomicilio).setValue(coloniaImportarTMP);
+				    			
+						    	mensajeInfo("No se encontr&oacute; la colonia: '" + coloniaImportarTMP + "' seleccione la colonia correcta, &oacute; escriba el nombre de la nueva colonia.");
+						    }
+					    
+							
+							/**
+							 *	PARA REGRESAR CAMPOS QUE SOLO SE PUEDE SELECCIONAR DE LA LISTA 
+							 */
+							
+							_fieldByName('CDEDO',formDomicilio).forceSelection = true;
+							_fieldByName('CDMUNICI',formDomicilio).forceSelection = true;
+							_fieldByName('CDTIPDOM',formDomicilio).forceSelection = true;
+							
+							windowDomicilio.doLayout();
+							
+							if(!_fieldByName('CODPOSTAL',formDomicilio).readOnly){
+					        	_fieldByName('CDEDO',formDomicilio).setReadOnly(false);
+					        	_fieldByName('CDMUNICI',formDomicilio).setReadOnly(false);
+					        	_fieldByName('CDCOLONI',formDomicilio).setReadOnly(false);
+					        }else if(!_fieldByName('CDEDO',formDomicilio).readOnly){
+					        	_fieldByName('CDMUNICI',formDomicilio).setReadOnly(false);
+					        	_fieldByName('CDCOLONI',formDomicilio).setReadOnly(false);
+					        }else if(!_fieldByName('CDMUNICI',formDomicilio).readOnly){
+					        	_fieldByName('CDCOLONI',formDomicilio).setReadOnly(false);
+					        }
+					        
+					        setTimeout(function(){
+					        	formDomicilio.setLoading(false);
+					        },700);
+					        
+				        },700);
+					},700);
+		        	
+		        }else{
+		        	
+		        	/**
+					 *	PARA REGRESAR CAMPOS QUE SOLO SE PUEDE SELECCIONAR DE LA LISTA 
+					 */
+					
+					_fieldByName('CDEDO',formDomicilio).forceSelection = true;
+					_fieldByName('CDMUNICI',formDomicilio).forceSelection = true;
+					_fieldByName('CDTIPDOM',formDomicilio).forceSelection = true;
+							
+		        	if(_esCargaClienteNvo && !Ext.isEmpty(_cargaCP)){
+						_fieldByName('CODPOSTAL',formDomicilio).setValue(_cargaCP);
+						_fieldByName('CODPOSTAL',formDomicilio).setReadOnly(true);
+						
+						setTimeout(function(){
+							_p22_heredarColonia();
+							heredarPanel(formDomicilio);
+					    },3000);
+					}
+					
+					    
+					formDomicilio.setLoading(false);
+		        }	        	
+		        
+	        });
+
+
+	function _p22_heredarColonia(callbackload)
+	{
+	    debug('>_p22_heredarColonia');
+	    var comboColonias  =_fieldByName('CDCOLONI',formDomicilio);
+	    var comboCodPostal = _fieldByName('CODPOSTAL',formDomicilio);
+	    var codigoPostal   = comboCodPostal.getValue();
+	    debug('comboColonias:',comboColonias,'comboCodPostal:',comboCodPostal);
+	    debug('codigoPostal:',codigoPostal);
+	    comboColonias.getStore().load(
+	    {
+	        params :
+	        {
+	            'params.cp' : codigoPostal
+	        }
+	        ,callback : function()
+	        {
+	            var hay=false;
+	            comboColonias.getStore().each(function(record)
+	            {
+	                if(comboColonias.getValue()==record.get('key'))
+	                {
+	                    hay=true;
+	                }
+	            });
+	            if(!hay)
+	            {
+	                comboColonias.setValue('');
+	            }
+	            
+	            try{
+	            	callbackload();	
+	            }catch(e){
+	            	debug("Excepcion al ejecutar callback");
+	            }
+	            
+	        }
+	    });
+	    debug('<_p22_heredarColonia');
+}
+
+_fieldByName('CODPOSTAL',formDomicilio).addListener('blur',function(){
+	_fieldByName('CDCOLONI',formDomicilio).setValue('');
+	_p22_heredarColonia();
+});
+
 }
 
 
@@ -3010,12 +4105,15 @@ function verEditarAccionistas(cdperson, cdatribu, cdestructcorp){
 			windowAccionistas.show();
 			
 }
-
-destruirContLoaderPersona = function(){
+//fin funciones on ready    
+    
+/**
+ * Funcion que recupera la informacion del contratante actual, a ejecutar desde fuera de esta pantalla, iguala una variable declarada desde fuera 
+ * Debe estar declarada antes de crear esta pantalla con el id de pantalla correspondiente. 
+ */
+destruirContLoaderPersona<s:property value="smap1.idPantalla" /> = function(){
 	
-	debug("DESTRUYENDO!!!");
-	
-	_p22_PanelPrincipal().query().forEach(function(element){
+	_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.query().forEach(function(element){
 		try{
 			element.destroy();
 		}catch(e){
@@ -3024,7 +4122,7 @@ destruirContLoaderPersona = function(){
 	});
 	
 	try{
-		_p22_PanelPrincipal().destroy();	
+		_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.destroy();	
 	}catch(e){
 		debug('Error al destruir Panel Principal en Pantalla de Clientes',e);
 	}
@@ -3036,11 +4134,13 @@ destruirContLoaderPersona = function(){
 	}
 };
 
-function destruirLoaderContratante(){
+/**
+ * Funcion que recupera la informacion del contratante actual, a ejecutar desde fuera de esta pantalla, sin necesidad de declararla desde fuera 
+ */
+
+destruirLoaderContratante<s:property value="smap1.idPantalla" /> = function(){
 	
-	debug("DESTRUYENDO!!!");
-	
-	_p22_PanelPrincipal().query().forEach(function(element){
+	_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.query().forEach(function(element){
 		try{
 			element.destroy();
 		}catch(e){
@@ -3049,7 +4149,7 @@ function destruirLoaderContratante(){
 	});
 	
 	try{
-		_p22_PanelPrincipal().destroy();	
+		_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />.destroy();	
 	}catch(e){
 		debug('Error al destruir Panel Principal en Pantalla de Clientes',e);
 	}
@@ -3059,25 +4159,30 @@ function destruirLoaderContratante(){
 	}catch(e){
 		debug('Error al destruir Window accionistas en Pantalla de Clientes',e);
 	}
-}
+};
 
-obtieneDatosClienteContratante = function(){
+/**
+ * Funcion que recupera la informacion del contratante actual, a ejecutar desde fuera de esta pantalla, iguala una variable declarada desde fuera 
+ * Debe estar declarada antes de crear esta pantalla con el id de pantalla correspondiente. 
+ */
+
+obtieneDatosClienteContratante<s:property value="smap1.idPantalla" /> = function(){
 	var datosPersona = {
 		cdperson: (_p22_cdperson != false && !Ext.isEmpty(_p22_cdperson))? _p22_cdperson : '',
-		fenacimi: _fieldByName('FENACIMI',_PanelPrincipalPersonas).getValue(),
+		fenacimi: _fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue(),
 		sexo:     _p22_fieldSexo().getValue(),
 		tipoper:  _p22_fieldTipoPersona().getValue(),
 		naciona:  _p22_fielCdNacion().getValue(),
-		nombre:   _fieldByName('DSNOMBRE',_PanelPrincipalPersonas).getValue(),
+		nombre:   _p22_fieldNombre().getValue(),
 		snombre:  _p22_fieldSegundoNombre().getValue(),
 		appat:    _p22_fieldApat().getValue(),
 		apmat:    _p22_fieldAmat().getValue(),
 		rfc:      _p22_fieldRFC().getValue(),
-		cdideper: _fieldByName('CDIDEPER',_PanelPrincipalPersonas).getValue(),
-		cdideext: _fieldByName('CDIDEEXT',_PanelPrincipalPersonas).getValue(),
-		codpos:   _p22_comboCodPostal().getValue(),
-		cdedo:    _fieldByName('CDEDO',_PanelPrincipalPersonas).getValue(),
-		cdmunici: _fieldByName('CDMUNICI',_PanelPrincipalPersonas).getValue(),
+		cdideper: _fieldByName('CDIDEPER',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue(),
+		cdideext: _fieldByName('CDIDEEXT',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue(),
+		codpos:   (_tomarUnDomicilio&&_numDomicilioTomado)?_numDomicilioTomado.get('CODPOSTAL') : '',
+		cdedo:    (_tomarUnDomicilio&&_numDomicilioTomado)?_numDomicilioTomado.get('CDEDO') : '',
+		cdmunici: (_tomarUnDomicilio&&_numDomicilioTomado)?_numDomicilioTomado.get('CDMUNICI') : '',
 		nomRecupera: _nombreComContratante
 		
 	}
@@ -3085,29 +4190,37 @@ obtieneDatosClienteContratante = function(){
 	return datosPersona;
 };
 
-function obtDatLoaderContratante(){
+/**
+ * Funcion que recupera la informacion del contratante actual, a ejecutar desde fuera de esta pantalla, sin necesidad de declararla desde fuera 
+ */
+
+obtDatLoaderContratante<s:property value="smap1.idPantalla" /> = function(){
 	
 	var datosPersona = {
 		cdperson: (_p22_cdperson != false && !Ext.isEmpty(_p22_cdperson))? _p22_cdperson : '',
-		fenacimi: _fieldByName('FENACIMI',_PanelPrincipalPersonas).getValue(),
+		fenacimi: _fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue(),
 		sexo:     _p22_fieldSexo().getValue(),
 		tipoper:  _p22_fieldTipoPersona().getValue(),
 		naciona:  _p22_fielCdNacion().getValue(),
-		nombre:   _fieldByName('DSNOMBRE',_PanelPrincipalPersonas).getValue(),
+		nombre:   _p22_fieldNombre().getValue(),
 		snombre:  _p22_fieldSegundoNombre().getValue(),
 		appat:    _p22_fieldApat().getValue(),
 		apmat:    _p22_fieldAmat().getValue(),
 		rfc:      _p22_fieldRFC().getValue(),
-		cdideper: _fieldByName('CDIDEPER',_PanelPrincipalPersonas).getValue(),
-		cdideext: _fieldByName('CDIDEEXT',_PanelPrincipalPersonas).getValue(),
-		codpos:   _p22_comboCodPostal().getValue(),
-		cdedo:    _fieldByName('CDEDO',_PanelPrincipalPersonas).getValue(),
-		cdmunici: _fieldByName('CDMUNICI',_PanelPrincipalPersonas).getValue(),
+		cdideper: _fieldByName('CDIDEPER',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue(),
+		cdideext: _fieldByName('CDIDEEXT',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue(),
+		codpos:   (_tomarUnDomicilio&&_numDomicilioTomado)?_numDomicilioTomado.get('CODPOSTAL') : '',
+		cdedo:    (_tomarUnDomicilio&&_numDomicilioTomado)?_numDomicilioTomado.get('CDEDO') : '',
+		cdmunici: (_tomarUnDomicilio&&_numDomicilioTomado)?_numDomicilioTomado.get('CDMUNICI') : '',
 		nomRecupera: _nombreComContratante
 	}
 	
 	return datosPersona;
-}
+};
+
+
+});
+
 
 ////// funciones //////
 

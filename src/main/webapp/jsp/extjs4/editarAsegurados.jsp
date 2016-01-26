@@ -21,6 +21,8 @@
 	var inputEstadop2=   '<s:property value="map1.estado" />';
 	var inputNmpolizap2= '<s:property value="map1.nmpoliza" />';
 	var inputCdtipsitp2= '<s:property value="map1.cdtipsit" />';
+	var inputNmOrdDomp2= '<s:property value="map1.NMORDDOM" />';
+//	alert(inputNmOrdDomp2);
 	debug('inputCdtipsitp2:',inputCdtipsitp2);
 	var inputMaxLenContratante = <s:property value="map1.maxLenContratante" />;
 	var gridPersonasp2;
@@ -71,7 +73,7 @@
 	var _p22_parentCallback         = false;
 	var _contratanteSaved = false;
 	
-	var codposCotizacion = 56200;
+	var _nmOrdDomContratante = inputNmOrdDomp2;
 	
 	Ext.define('RFCPersona',
 	{
@@ -267,7 +269,8 @@
         'pv_cdramo'   : inputCdramo,
         'pv_estado'   : inputEstado,
         'pv_nmpoliza' : inputNmpoliza,
-        'cdtipsit'    : inputCdtipsitp2};
+        'cdtipsit'    : inputCdtipsitp2,
+        'pv_nmorddom' : _nmOrdDomContratante};
         submitValues['map1']=map1;
         //window.console&&console.log(submitValues);
         //Submit the Ajax request and handle the response
@@ -932,12 +935,15 @@ debug("validarYGuardar flag:2");
 					                'smap1.cdideper' : recordContra.get('cdideper'),
 					                'smap1.cdideext' : recordContra.get('cdideext'),
 					                'smap1.esSaludDanios' : _RamoRecupera? 'D' : 'S',
+					                'smap1.polizaEnEmision': 'S',
 					                'smap1.esCargaClienteNvo' : 'N' ,
 					                'smap1.ocultaBusqueda' : 'S' ,
 					                'smap1.cargaCP' : '',
 					                'smap1.cargaTipoPersona' : '',
 					                'smap1.cargaSucursalEmi' : inputCduniecop2,
-					                'smap1.activaCveFamiliar': inputCduniecop2 == '1403'?'S':'N'
+					                'smap1.activaCveFamiliar': inputCduniecop2 == '1403'?'S':'N',	
+					                'smap1.tomarUnDomicilio' : 'S',
+	                    			'smap1.cargaOrdDomicilio' : inputNmOrdDomp2
 					            }
 					     });
 					     _p22_parentCallback = _p29_personaSaved;
@@ -969,12 +975,15 @@ debug("validarYGuardar flag:2");
 					                'smap1.cdideper' : '',
 					                'smap1.cdideext' : '',
 					                'smap1.esSaludDanios' : _RamoRecupera? 'D' : 'S',
+					                'smap1.polizaEnEmision': 'S',
 					                'smap1.esCargaClienteNvo' : 'N' ,
 					                'smap1.ocultaBusqueda' : 'S' ,
 					                'smap1.cargaCP' : '',
 					                'smap1.cargaTipoPersona' : '',
 					                'smap1.cargaSucursalEmi' : inputCduniecop2,
-					                'smap1.activaCveFamiliar': inputCduniecop2 == '1403'?'S':'N'
+					                'smap1.activaCveFamiliar': inputCduniecop2 == '1403'?'S':'N',
+					                'smap1.tomarUnDomicilio' : 'S',
+	                    			'smap1.cargaOrdDomicilio' : inputNmOrdDomp2
 					            }
 					     });
 					     _p22_parentCallback = _p29_personaSaved;
@@ -1603,12 +1612,15 @@ debug("validarYGuardar flag:2");
 						                'smap1.cdideper' : '',
 						                'smap1.cdideext' : '',
 						                'smap1.esSaludDanios' : _RamoRecupera? 'D' : 'S',
+						                'smap1.polizaEnEmision': 'S',
 						                'smap1.esCargaClienteNvo' : 'N' ,
 						                'smap1.ocultaBusqueda' : 'S' ,
 						                'smap1.cargaCP' : '',
 						                'smap1.cargaTipoPersona' : '',
 						                'smap1.cargaSucursalEmi' : inputCduniecop2,
-						                'smap1.activaCveFamiliar': inputCduniecop2 == '1403'?'S':'N'
+						                'smap1.activaCveFamiliar': inputCduniecop2 == '1403'?'S':'N',
+						                'smap1.tomarUnDomicilio' : 'S',
+		                    			'smap1.cargaOrdDomicilio' : inputNmOrdDomp2
 						            }
 						     });
 						     _p22_parentCallback = _p29_personaSaved;
@@ -1896,7 +1908,8 @@ debug("validarYGuardar flag:2");
                             'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
                             'smap1.cdrfc'           : record.get('cdrfc'),
                             'smap1.botonCopiar'     : rowIndex>0?'1':'0',
-                            'smap1.cdtipsit'        : inputCdtipsitp2
+                            'smap1.cdtipsit'        : inputCdtipsitp2,
+                            'smap1.nmorddom'        : _nmOrdDomContratante
                         }
                         ,autoLoad:true
                         ,scripts:true
@@ -2669,58 +2682,12 @@ debug("validarYGuardar flag:2");
     }
 }
 
-function _p29_personaSaved()
+function _p29_personaSaved(json)
 {
     debug('>_p29_personaSaved');
-    /*Ext.Ajax.request(
-    {
-        url     : _p29_urlMovimientoMpoliper
-        ,params :
-        {
-            'smap1.cdunieco'  : _p29_smap1.cdunieco
-            ,'smap1.cdramo'   : _p29_smap1.cdramo
-            ,'smap1.estado'   : _p29_smap1.estado
-            ,'smap1.nmpoliza' : _p29_smap1.nmpoliza
-            ,'smap1.nmsituac' : '1'
-            ,'smap1.cdrol'    : '1'
-            ,'smap1.cdperson' : _p22_fieldCdperson().getValue()
-            ,'smap1.nmsuplem' : '0'
-            ,'smap1.status'   : 'V'
-            ,'smap1.nmorddom' : '1'
-            ,'smap1.accion'   : 'I'
-            ,'smap1.swexiper' : _SWexiper
-        }
-        ,success : function(response)
-        {
-            var json=Ext.decode(response.responseText);
-            debug('### mpoliper:',json);
-            if(json.exito)
-            {
-                _p22_fieldCdperson().mpoliper=true;
-            }
-            else
-            {
-                mensajeError(json.respuesta);
-            }
-        }
-        ,failure : errorComunicacion
-    });*/
     
+    _nmOrdDomContratante = json.smap1.NMORDDOM;
     var datosContr = obtieneDatosClienteContratante();
-    
-//    if(!Ext.isEmpty(codposCotizacion)){
-//    	if(!Ext.isEmpty(datosContr.codpos)){
-//    		if(codposCotizacion != datosContr.codpos){
-//    			mensajeWarning("El C&oacute;digo Postal de la cotizaci&oacute;n realizada debe coincidir con el domicilio del contratante");
-//				return;	
-//    		}
-//    	}else{
-//			mensajeWarning("El C&oacute;digo Postal de la cotizaci&oacute;n realizada debe coincidir con el domicilio del contratante");
-//			return;
-//    	}
-//    
-//    }
-    	
     _contratanteSaved = true;
     
     

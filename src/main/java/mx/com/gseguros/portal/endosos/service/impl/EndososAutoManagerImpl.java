@@ -144,6 +144,15 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Value("${tarjeta.iden.impresion.autos.url}")
 	private String urlImpresionTarjetaIdentificacion;
 	
+	@Value("${manual.agente.txtinfocobredgs}")
+	private String urlImpresionCobReduceGS;
+	
+	@Value("${manual.agente.txtinfocobgesgs}")
+	private String urlImpresionCobGestoriaGS;
+	
+	@Value("${manual.agente.condgralescobsegvida}")
+	private String urlImpresionCondicionesSegVida;
+	
 	@Override
 	public Map<String,Object> construirMarcoEndosos(String cdusuari,String cdsisrol) throws Exception
 	{
@@ -3568,7 +3577,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,nmpoliza
 								,nmsuplem
 								,new Date()
-								,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
+								,urlImpresionCobReduceGS
 								,"Reduce GS"
 								,nmpoliza
 								,ntramite
@@ -3593,7 +3602,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,nmpoliza
 								,nmsuplem
 								,new Date()
-								,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
+								,urlImpresionCobGestoriaGS
 								,"Gestoria GS"
 								,nmpoliza
 								,ntramite
@@ -3637,7 +3646,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,nmpoliza
 								,nmsuplem
 								,new Date()
-								,"http://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf"
+								,urlImpresionCondicionesSegVida
 								,"Condiciones Generales Seguro de Vida"
 								,nmpoliza
 								,ntramite
@@ -5605,7 +5614,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String residencia, String nongrata, String cdideext, String cdestciv, String cdsucemi, String cdusuari,
 			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso, String tipoPantalla,
 			String codigoCliExt,String sucursalEnt,String ramoEntrada,String polizaEnt, String cdpersonNew,
-			String dsnombreComp, String ntramite, String numsuplemen, String urlCaratula
+			String dsnombreComp, String ntramite, String numsuplemen, String urlCaratula, UserVO usuarioSesion
 			) throws Exception {
 		
 		logger.debug(Utils.log(
@@ -5618,6 +5627,19 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		int endosoRecuperado = 0;
 		try
 		{
+			
+			String usuarioCaptura =  null;
+			
+			if(usuarioSesion!=null){
+				if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuarioSesion.getCodigoPersona();
+				}
+				
+			}
+			
+			
 			//ENDOSO POLIZAS SICAPS
 			if(tipoPantalla.equalsIgnoreCase("0")){
 				paso = "Iniciando endoso";
@@ -5663,6 +5685,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				params.put("pv_cdideext_i"    , cdideext);
 				params.put("pv_cdestciv_i"    , cdestciv);
 				params.put("pv_cdsucemi_i"    , cdsucemi);
+				params.put("pv_cdusuario_i"    , usuarioCaptura);
 				params.put("pv_accion_i"      , "U" );
 				logger.debug("EndososManager datos params: "+params);
 				endososDAO.guardarEndosoNombreRFCFecha(params);
@@ -5897,7 +5920,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String estado, String cveEdoSISG, String cveMinicipio, String municipio, String cveMunSISG,
 			String cveColonia, String colonia, String calle, String numExterior, String numInterior, String cdusuari,
 			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso,
-			String urlCaratula,String telefono1, String telefono2, String telefono3) throws Exception {
+			String urlCaratula,String telefono1, String telefono2, String telefono3, UserVO usuarioSesion) throws Exception {
 		
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -5937,6 +5960,17 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		try
 		{
 
+			String usuarioCaptura =  null;
+			
+			if(usuarioSesion!=null){
+				if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuarioSesion.getCodigoPersona();
+				}
+				
+			}
+			
 			//ENDOSO POLIZAS NO SICAPS
 			paso = "Obtenemos la informaci&oacute;n del cliente";
 			logger.debug(paso);
@@ -5999,6 +6033,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				paramDomicil.put("pv_cdcoloni_i" , cveColonia);
 				paramDomicil.put("pv_nmnumero_i" , numExterior);
 				paramDomicil.put("pv_nmnumint_i" , numInterior);
+				paramDomicil.put("pv_cdtipdom_i" , managerResult.get("CDTIPDOM"));
+				paramDomicil.put("pv_cdusuario_i", usuarioCaptura);
+				paramDomicil.put("pv_swactivo_i",  managerResult.get("SWACTIVO"));
 				paramDomicil.put("pv_accion_i"   , "U");
 				kernelManager.pMovMdomicil(paramDomicil);
 			}

@@ -14,6 +14,7 @@ var inputCduniecop4        = '<s:property value="smap1.CDUNIECO" />';
 var inputCdramop4          = '<s:property value="smap1.CDRAMO" />';
 var inputEstadop4          = '<s:property value="smap1.ESTADO" />';
 var inputNmpolizap4        = '<s:property value="smap1.NMPOLIZA" />';
+var inputNmsuplemp4        = '<s:property value="smap1.NMSUPLEM" />';
 var inputCdpersonp4        = '<s:property value="smap1.CDPERSON" />';
 var inputCdrfcp4           = '<s:property value="smap1.CDRFC" escapeHtml="false" />';
 var inputAsegurado         = '<s:property value="smap1.DSNOMBRE" escapeHtml="false" /> <s:property value="smap1.DSNOMBRE1" escapeHtml="false" /> <s:property value="smap1.DSAPELLIDO" escapeHtml="false" /> <s:property value="smap1.DSAPELLIDO1" escapeHtml="false" />';
@@ -287,9 +288,11 @@ Ext.onReady(function(){
                                 'smap1.pv_cdramo'   : inputCdramop4,
                                 'smap1.pv_estado'   : inputEstadop4,
                                 'smap1.pv_nmpoliza' : inputNmpolizap4,
+                                'smap1.pv_nmsuplem_i': inputNmsuplemp4,
                                 'smap1.pv_nmsituac' : '0',
                                 'smap1.pv_cdperson' : inputCdpersonp4,
                                 'smap1.pv_cdrol'    : '1',
+                                'smap1.NMORDDOM'    : _nmOrdDomEnd().getValue(),
                                 'smap1.TIPOFLOT'    : tipoFlotilla,
                                 'smap1.NTRAMITE'    : inputNtramite,
                                 'smap2.cdtipsit'    : inputCdtipsit,
@@ -453,8 +456,10 @@ Ext.onReady(function(){
                 'smap1.pv_cdramo_i'     : inputCdramop4,
                 'smap1.pv_estado_i'     : inputEstadop4,
                 'smap1.pv_nmpoliza_i'   : inputNmpolizap4,
-                'smap1.pv_nmsituac_i'   : '1',
+                'smap1.pv_nmsuplem_i'   : inputNmsuplemp4,
+                'smap1.pv_nmsituac_i'   : '0',
                 'smap1.pv_cdperson_i'   : inputCdpersonp4,
+                'smap1.pv_nmorddom_i'   : '',// obtiene el asignado a la poliza
                 'smap1.pv_cdrol_i'      : '1',
                 'smap1.nombreAsegurado' : '',
                 'smap1.cdrfc'           : inputCdrfcp4,
@@ -507,10 +512,10 @@ Ext.onReady(function(){
     });
     
     
-    _fieldByName('smap1.NMNUMERO').regex = /^[A-Za-z0-9-\s]*$/;
-    _fieldByName('smap1.NMNUMERO').regexText = 'Solo d&iacute;gitos, letras y guiones';
-    _fieldByName('smap1.NMNUMINT').regex = /^[A-Za-z0-9-\s]*$/;
-    _fieldByName('smap1.NMNUMINT').regexText = 'Solo d&iacute;gitos, letras y guiones';
+    _fieldByName('smap1.NMNUMERO').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+    _fieldByName('smap1.NMNUMERO').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
+    _fieldByName('smap1.NMNUMINT').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+    _fieldByName('smap1.NMNUMINT').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
     
     Ext.ComponentQuery.query('[name=smap1.NMTELEFO]')[Ext.ComponentQuery.query('[name=smap1.NMTELEFO]').length-1].hide();
     
@@ -555,6 +560,9 @@ Ext.onReady(function(){
     //////////////////////
     
     
+    function _nmOrdDomEnd(){
+	    return Ext.ComponentQuery.query('[name=smap1.NMORDDOM]')[Ext.ComponentQuery.query('[name=smap1.NMORDDOM]').length-1];
+	}
     function _codPosEnd(){
 	    return Ext.ComponentQuery.query('[name=smap1.CODPOSTAL]')[Ext.ComponentQuery.query('[name=smap1.CODPOSTAL]').length-1];
 	}

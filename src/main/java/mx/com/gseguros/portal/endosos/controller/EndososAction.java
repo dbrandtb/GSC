@@ -931,6 +931,17 @@ public class EndososAction extends PrincipalCoreAction
 		logger.debug("omap1: "+omap1);
 		logger.debug("slist1: "+slist1);
 		try {
+			
+			String usuarioCaptura =  null;
+			
+			if(usuario!=null){
+				if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuario.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuario.getCodigoPersona();
+				}
+				
+			}
 			/*
 			 * ya viene en el omap1 desde el jsp:
 			 * pv_cdunieco_i
@@ -982,6 +993,7 @@ public class EndososAction extends PrincipalCoreAction
 				paramPersona.put("pv_cdideext_i"    , null);
 				paramPersona.put("pv_cdestciv_i"    , null);
 				paramPersona.put("pv_cdsucemi_i"    , null);
+				paramPersona.put("pv_cdusuario_i"   , usuarioCaptura);
 				paramPersona.put("pv_accion_i"      , "M");
 				kernelManager.movMpersona(paramPersona);
 			}
@@ -1130,6 +1142,18 @@ public class EndososAction extends PrincipalCoreAction
         UserVO usuario = (UserVO) session.get("USUARIO");
 		
 		try {
+			
+			String usuarioCaptura =  null;
+			
+			if(usuario!=null){
+				if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuario.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuario.getCodigoPersona();
+				}
+				
+			}
+			
 			String cdelemen     = usuario.getEmpresa().getElementoId();
 			String cdusuari     = usuario.getUser();
 			String cdtipsup     = TipoEndoso.CORRECCION_DATOS_ASEGURADOS.getCdTipSup().toString();
@@ -1181,6 +1205,7 @@ public class EndososAction extends PrincipalCoreAction
 				paramPersona.put("pv_cdideext_i"    , null);
 				paramPersona.put("pv_cdestciv_i"    , null);
 				paramPersona.put("pv_cdsucemi_i"    , null);
+				paramPersona.put("pv_cdusuario_i"    , usuarioCaptura);
 				paramPersona.put("pv_accion_i"      , "M");
 				kernelManager.movMpersona(paramPersona);
 			}
@@ -1457,6 +1482,17 @@ public class EndososAction extends PrincipalCoreAction
 			
 			UserVO usuario=(UserVO) session.get("USUARIO");
 			
+			String usuarioCaptura =  null;
+			
+			if(usuario!=null){
+				if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuario.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuario.getCodigoPersona();
+				}
+				
+			}
+			
 			/**
 			 * Validar que el Codigo Postal pertenezca al Estado correcto
 			 */
@@ -1547,6 +1583,9 @@ public class EndososAction extends PrincipalCoreAction
 			paramDomicil.put("pv_cdcoloni_i" , smap1.get("CDCOLONI"));
 			paramDomicil.put("pv_nmnumero_i" , smap1.get("NMNUMERO"));
 			paramDomicil.put("pv_nmnumint_i" , smap1.get("NMNUMINT"));
+			paramDomicil.put("pv_cdtipdom_i" , smap1.get("CDTIPDOM"));
+			paramDomicil.put("pv_cdusuario_i", usuarioCaptura);
+			paramDomicil.put("pv_swactivo_i",  Constantes.SI);
 			paramDomicil.put("pv_accion_i"   , "U");			
 			kernelManager.pMovMdomicil(paramDomicil);
 			/*/////////////////////////////////////*/
@@ -1660,7 +1699,29 @@ public class EndososAction extends PrincipalCoreAction
 				
 				// Ejecutamos el Web Service de Cliente Salud:
 				ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("pv_cdperson"), Ice2sigsService.Operacion.ACTUALIZA, null, (UserVO) session.get("USUARIO"), true);
-				
+    			
+				ArrayList<Map<String,String>> saveList = new ArrayList<Map<String,String>>();
+				ArrayList<Map<String,String>> updateList = new ArrayList<Map<String,String>>();
+
+    			Map<String,String> domicilioEndoso = new HashMap<String,String>();
+    			
+    			
+    			/**
+    			 * SE FIJAN VALORES AUNQUE EL UNICO QUE SE TOMA ES EL NMORDDOM
+    			 */
+    			domicilioEndoso.put("NMORDDOM" ,smap1.get("NMORDDOM"));
+    			domicilioEndoso.put("CODPOSTAL",smap1.get("CODPOSTAL"));
+    			domicilioEndoso.put("CDEDO"    ,smap1.get("CDEDO"));
+    			domicilioEndoso.put("CDMUNICI" ,smap1.get("CDMUNICI"));
+    			domicilioEndoso.put("CDCOLONI" ,smap1.get("CDCOLONI"));
+    			domicilioEndoso.put("DSDOMICI" ,smap1.get("DSDOMICI"));
+    			domicilioEndoso.put("NMNUMERO" ,smap1.get("NMNUMERO"));
+    			domicilioEndoso.put("NMNUMINT" ,smap1.get("NMNUMINT"));
+    			
+    			updateList.add(domicilioEndoso);
+    			
+    			ice2sigsService.ejecutaWSdireccionClienteGeneral(smap1.get("pv_cdperson"), saludDanios, saveList, updateList, false, usuario);
+								
 			    mensaje="Se ha guardado el endoso "+resEndDomi.get("pv_nsuplogi_o");
 			    
 			} else {
@@ -1729,6 +1790,17 @@ public class EndososAction extends PrincipalCoreAction
 			logger.debug("parametros: "+parametros);
 			
 			UserVO usuario=(UserVO) session.get("USUARIO");
+			
+			String usuarioCaptura =  null;
+			
+			if(usuario!=null){
+				if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuario.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuario.getCodigoPersona();
+				}
+				
+			}
 			
 			/**
 			 * Validar que el Codigo Postal pertenezca al Estado correcto
@@ -1820,6 +1892,9 @@ public class EndososAction extends PrincipalCoreAction
 			paramDomicil.put("pv_cdcoloni_i" , smap1.get("CDCOLONI"));
 			paramDomicil.put("pv_nmnumero_i" , smap1.get("NMNUMERO"));
 			paramDomicil.put("pv_nmnumint_i" , smap1.get("NMNUMINT"));
+			paramDomicil.put("pv_cdtipdom_i" , smap1.get("CDTIPDOM"));
+			paramDomicil.put("pv_cdusuario_i", usuarioCaptura);
+			paramDomicil.put("pv_swactivo_i",  Constantes.SI);
 			paramDomicil.put("pv_accion_i"   , "U");			
 			kernelManager.pMovMdomicil(paramDomicil);
 			/*/////////////////////////////////////*/
@@ -2026,6 +2101,17 @@ public class EndososAction extends PrincipalCoreAction
 			
 			UserVO usuario=(UserVO) session.get("USUARIO");
 			
+			String usuarioCaptura =  null;
+			
+			if(usuario!=null){
+				if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuario.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuario.getCodigoPersona();
+				}
+				
+			}
+			
 			/**
 			 * Validar que el Codigo Postal pertenezca al Estado correcto
 			 */
@@ -2129,6 +2215,9 @@ public class EndososAction extends PrincipalCoreAction
 			paramDomicil.put("pv_cdcoloni_i" , smap1.get("CDCOLONI"));
 			paramDomicil.put("pv_nmnumero_i" , smap1.get("NMNUMERO"));
 			paramDomicil.put("pv_nmnumint_i" , smap1.get("NMNUMINT"));
+			paramDomicil.put("pv_cdtipdom_i" , smap1.get("CDTIPDOM"));
+			paramDomicil.put("pv_cdusuario_i", usuarioCaptura);
+			paramDomicil.put("pv_swactivo_i",  Constantes.SI);
 			paramDomicil.put("pv_accion_i"   , Constantes.UPDATE_MODE);			
 			kernelManager.pMovMdomicil(paramDomicil);
 			/*/////////////////////////////////////*/
@@ -2151,6 +2240,28 @@ public class EndososAction extends PrincipalCoreAction
 				
 				// Ejecutamos el Web Service de Cliente Salud:
 				ice2sigsService.ejecutaWSclienteGeneral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), null, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), false);
+				
+				ArrayList<Map<String,String>> saveList = new ArrayList<Map<String,String>>();
+				ArrayList<Map<String,String>> updateList = new ArrayList<Map<String,String>>();
+
+    			Map<String,String> domicilioEndoso = new HashMap<String,String>();
+    			
+    			
+    			/**
+    			 * SE FIJAN VALORES AUNQUE EL UNICO QUE SE TOMA ES EL NMORDDOM
+    			 */
+    			domicilioEndoso.put("NMORDDOM" ,smap1.get("NMORDDOM"));
+    			domicilioEndoso.put("CODPOSTAL",smap1.get("CODPOSTAL"));
+    			domicilioEndoso.put("CDEDO"    ,smap1.get("CDEDO"));
+    			domicilioEndoso.put("CDMUNICI" ,smap1.get("CDMUNICI"));
+    			domicilioEndoso.put("CDCOLONI" ,smap1.get("CDCOLONI"));
+    			domicilioEndoso.put("DSDOMICI" ,smap1.get("DSDOMICI"));
+    			domicilioEndoso.put("NMNUMERO" ,smap1.get("NMNUMERO"));
+    			domicilioEndoso.put("NMNUMINT" ,smap1.get("NMNUMINT"));
+    			
+    			updateList.add(domicilioEndoso);
+    			
+    			ice2sigsService.ejecutaWSdireccionClienteGeneral(smap1.get("pv_cdperson"), saludDanios, saveList, updateList, false, usuario);
 				
 				mensaje = "Endoso generado";
 			} else {
@@ -4079,6 +4190,17 @@ public class EndososAction extends PrincipalCoreAction
 		{
 			UserVO usuario=(UserVO) session.get("USUARIO");
 			
+			String usuarioCaptura =  null;
+			
+			if(usuario!=null){
+				if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuario.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuario.getCodigoPersona();
+				}
+				
+			}
+			
 			boolean alta=smap1.containsKey("apat");
 			
 			String cdunieco = smap2.get("CDUNIECO");
@@ -4291,6 +4413,7 @@ public class EndososAction extends PrincipalCoreAction
 				mapaMpersona.put("pv_cdideext_i"    , null);
 				mapaMpersona.put("pv_cdestciv_i"    , null);
 				mapaMpersona.put("pv_cdsucemi_i"    , null);
+				mapaMpersona.put("pv_cdusuario_i"    , usuarioCaptura);
 				mapaMpersona.put("pv_accion_i"      , "I");
 				kernelManager.movMpersona(mapaMpersona);
                 ////// mpersona //////
@@ -4441,6 +4564,9 @@ public class EndososAction extends PrincipalCoreAction
 				mapaDomicilio.put("pv_cdcoloni_i" , domicilioTitular.get("CDCOLONI"));
 				mapaDomicilio.put("pv_nmnumero_i" , domicilioTitular.get("NMNUMERO"));
 				mapaDomicilio.put("pv_nmnumint_i" , domicilioTitular.get("NMNUMINT"));
+				mapaDomicilio.put("pv_cdtipdom_i" , "1");
+				mapaDomicilio.put("pv_cdusuario_i", usuarioCaptura);
+				mapaDomicilio.put("pv_swactivo_i" , Constantes.SI);
 				mapaDomicilio.put("pv_accion_i"   , "I");
 				kernelManager.pMovMdomicil(mapaDomicilio);
 				////// 4. mdomicil //////
@@ -6407,6 +6533,7 @@ public class EndososAction extends PrincipalCoreAction
 			Date   dFechaEndoso = renderFechas.parse(sFechaEndoso);
 			String cdtipsit     = smap1.get("CDTIPSIT");
 			String nmordom      = smap2.get("NMORDDOM");
+			String cdtipdom     = smap2.get("CDTIPDOM");
 			String dsdomici     = smap2.get("DSDOMICI");
 			String nmtelefo     = smap2.get("NMTELEFO");
 			String cdpostal     = smap2.get("CODPOSTAL");
@@ -6419,6 +6546,17 @@ public class EndososAction extends PrincipalCoreAction
 			String proceso      = "END";
 			String ntramite     = smap1.get("NTRAMITE");
 			
+			
+			String usuarioCaptura =  null;
+			
+			if(usuario!=null){
+				if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuario.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuario.getCodigoPersona();
+				}
+				
+			}
 			/**
 			 * Validar que el Codigo Postal pertenezca al Estado correcto
 			 */
@@ -6504,6 +6642,9 @@ public class EndososAction extends PrincipalCoreAction
 				paramDomicilIte.put("pv_cdcoloni_i" , cdcoloni);
 				paramDomicilIte.put("pv_nmnumero_i" , nmnumext);
 				paramDomicilIte.put("pv_nmnumint_i" , nmnumint);
+				paramDomicilIte.put("pv_cdtipdom_i" , cdtipdom);
+				paramDomicilIte.put("pv_cdusuario_i", usuarioCaptura);
+				paramDomicilIte.put("pv_swactivo_i",  Constantes.SI);
 				paramDomicilIte.put("pv_accion_i"   , Constantes.UPDATE_MODE);			
 				kernelManager.pMovMdomicil(paramDomicilIte);
 				/*//////////////////*/
@@ -6674,6 +6815,29 @@ public class EndososAction extends PrincipalCoreAction
 						true, tipomov, 
 						(UserVO) session.get("USUARIO"));
 				
+				
+				ArrayList<Map<String,String>> saveList = new ArrayList<Map<String,String>>();
+				ArrayList<Map<String,String>> updateList = new ArrayList<Map<String,String>>();
+
+    			Map<String,String> domicilioEndoso = new HashMap<String,String>();
+    			
+    			
+    			/**
+    			 * SE FIJAN VALORES AUNQUE EL UNICO QUE SE TOMA ES EL NMORDDOM
+    			 */
+    			domicilioEndoso.put("NMORDDOM" ,nmordom);
+    			domicilioEndoso.put("CODPOSTAL",cdpostal);
+    			domicilioEndoso.put("CDEDO"    ,cdestado);
+    			domicilioEndoso.put("CDMUNICI" ,cdmunici);
+    			domicilioEndoso.put("CDCOLONI" ,cdcoloni);
+    			domicilioEndoso.put("DSDOMICI" ,dsdomici);
+    			domicilioEndoso.put("NMNUMERO" ,nmnumext);
+    			domicilioEndoso.put("NMNUMINT" ,nmnumint);
+    			
+    			updateList.add(domicilioEndoso);
+    			
+    			ice2sigsService.ejecutaWSdireccionClienteGeneral(cdpersonCli, saludDanios, saveList, updateList, false, usuario);
+				
 			    mensaje="Se ha guardado el endoso "+nsuplogi;
 			    
 			} else {
@@ -6769,6 +6933,7 @@ public class EndososAction extends PrincipalCoreAction
 			String cdperson     = smap1.get("cdperson");
 			String cdrol        = smap1.get("cdrol");
 			String nmordom      = smap2.get("NMORDDOM");
+			String cdtipdom     = smap2.get("CDTIPDOM");
 			String dsdomici     = smap2.get("DSDOMICI");
 			String nmtelefo     = smap2.get("NMTELEFO");
 			String cdpostal     = smap2.get("CODPOSTAL");
@@ -6780,6 +6945,17 @@ public class EndososAction extends PrincipalCoreAction
 			String cdtipsup     = TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString();
 			String proceso      = "END";
 			String ntramite     = smap1.get("NTRAMITE");
+			
+			String usuarioCaptura =  null;
+			
+			if(usuario!=null){
+				if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuario.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuario.getCodigoPersona();
+				}
+				
+			}
 			
 			/**
 			 * Validar que el Codigo Postal pertenezca al Estado correcto
@@ -6848,6 +7024,9 @@ public class EndososAction extends PrincipalCoreAction
 			paramDomicilIte.put("pv_cdcoloni_i" , cdcoloni);
 			paramDomicilIte.put("pv_nmnumero_i" , nmnumext);
 			paramDomicilIte.put("pv_nmnumint_i" , nmnumint);
+			paramDomicilIte.put("pv_cdtipdom_i" , cdtipdom);
+			paramDomicilIte.put("pv_cdusuario_i", usuarioCaptura);
+			paramDomicilIte.put("pv_swactivo_i",  Constantes.SI);
 			paramDomicilIte.put("pv_accion_i"   , Constantes.UPDATE_MODE);			
 			kernelManager.pMovMdomicil(paramDomicilIte);
 			
@@ -10826,6 +11005,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			checkNull(session                , "No hay sesion");
 			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
+			UserVO usuarioSesion = (UserVO) session.get("USUARIO");
 			String cdelemen = ((UserVO)session.get("USUARIO")).getCdElemento();
 			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
 			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
@@ -10842,6 +11022,7 @@ public class EndososAction extends PrincipalCoreAction
 					,cdtipsup
 					,ntramite
 					,cdsisrol
+					,usuarioSesion
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -11198,10 +11379,6 @@ public class EndososAction extends PrincipalCoreAction
 					 * Para cobertura de reduce GS
 					 */
 					if(StringUtils.isNotBlank(endosoIt.get("REDUCEGS")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("REDUCEGS"))){
-						//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf");
-						//paramsR.put("pv_dsdocume_i", "Reduce GS");
-						
-						//kernelManager.guardarArchivo(paramsR);
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -11210,7 +11387,7 @@ public class EndososAction extends PrincipalCoreAction
 								,nmpoliza
 								,nmsuplem
 								,new Date()
-								,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_REDUCEGS.pdf"
+								,this.getText("manual.agente.txtinfocobredgs")
 								,"Reduce GS"
 								,nmpoliza
 								,ntramite
@@ -11227,10 +11404,6 @@ public class EndososAction extends PrincipalCoreAction
 					 * Para cobertura de gestoria GS
 					 */
 					if(StringUtils.isNotBlank(endosoIt.get("GESTORIA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("GESTORIA"))){
-						//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf");
-						//paramsR.put("pv_dsdocume_i", "Gestoria GS");
-						
-						//kernelManager.guardarArchivo(paramsR);
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -11239,7 +11412,7 @@ public class EndososAction extends PrincipalCoreAction
 								,nmpoliza
 								,nmsuplem
 								,new Date()
-								,"http://gswas.com.mx/cas/web/agentes/Manuales/Texto_informativo_para_la_cobertura_de_GestoriaGS.pdf"
+								,this.getText("manual.agente.txtinfocobgesgs")
 								,"Gestoria GS"
 								,nmpoliza
 								,ntramite
@@ -11280,11 +11453,6 @@ public class EndososAction extends PrincipalCoreAction
 								,Documento.EXTERNO_ESPECIF_SEGURO_VIDA
 								);
 
-						//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf");
-						//paramsR.put("pv_dsdocume_i", "Condiciones Generales Seguro de Vida");
-						
-						//kernelManager.guardarArchivo(paramsR);
-						
 						documentosManager.guardarDocumento(
 								cdunieco
 								,cdramo
@@ -11292,7 +11460,7 @@ public class EndososAction extends PrincipalCoreAction
 								,nmpoliza
 								,nmsuplem
 								,new Date()
-								,"http://gswas.com.mx/cas/web/agentes/Manuales/CondicionesGeneralesCoberturaSeguroVida.pdf"
+								,this.getText("manual.agente.condgralescobsegvida")
 								,"Condiciones Generales Seguro de Vida"
 								,nmpoliza
 								,ntramite

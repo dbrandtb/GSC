@@ -387,6 +387,9 @@ Ext.onReady(function()
                 url       : _p31_urlPantallaCliente
                 ,scripts  : true
                 ,autoLoad : false
+                ,ajaxOptions: {
+		                            method: 'POST'
+		                     }
             }
         })
         ,Ext.create('Ext.panel.Panel',
@@ -556,12 +559,15 @@ Ext.onReady(function()
                         'smap1.cdideper' : json.smap1.cdideper,
                         'smap1.cdideext' : json.smap1.cdideext,
                         'smap1.esSaludDanios' : 'D',
+                        'smap1.polizaEnEmision': 'S',
                         'smap1.esCargaClienteNvo' :(Ext.isEmpty(json.smap1.cdperson)? 'S' : 'N' ),
                         'smap1.cargaCP' : json.smap1.cdpostal,
                         'smap1.cargaTipoPersona' : json.smap1.otfisjur,
                         'smap1.cargaSucursalEmi' : _p31_smap1.cdunieco,
 	                    'smap1.cargaFenacMin' : _aplicaCobVida?_FechaMinEdad:'',
-	                    'smap1.cargaFenacMax' : _aplicaCobVida?_FechaMaxEdad:''
+	                    'smap1.cargaFenacMax' : _aplicaCobVida?_FechaMaxEdad:'',
+	                    'smap1.tomarUnDomicilio' : 'S',
+	                    'smap1.cargaOrdDomicilio' : json.smap1.nmorddom
                     }
                 });
                 
@@ -679,7 +685,7 @@ function _p31_loadCallback()
     });
 }
 
-function _p31_personaSaved()
+function _p31_personaSaved(json)
 {
     debug('>_p31_personaSaved');
     Ext.Ajax.request(
@@ -696,7 +702,7 @@ function _p31_personaSaved()
             ,'smap1.cdperson' : _p22_fieldCdperson().getValue()
             ,'smap1.nmsuplem' : '0'
             ,'smap1.status'   : 'V'
-            ,'smap1.nmorddom' : '1'
+            ,'smap1.nmorddom' : json.smap1.NMORDDOM
             ,'smap1.accion'   : 'I'
             ,'smap1.swexiper' : _SWexiper
         }

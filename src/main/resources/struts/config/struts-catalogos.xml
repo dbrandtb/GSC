@@ -339,6 +339,10 @@
             <result type="json" />
         </action>
 
+        <action name="obtenerDomiciliosPorCdperson" class="personasAction" method="obtenerDomiciliosPorCdperson">
+            <result type="json" />
+        </action>
+
         <action name="guardarDomicilioAsegurado" class="personasAction" method="guardarDomicilioAsegurado">
             <result type="json" />
         </action>
@@ -509,7 +513,11 @@
             <result name="error">/jsp-script/general/includes/errorPantalla.jsp</result>
         </action>
         
-		<action name="importaPersonaExtWSNoSicaps" class="personasAction" method="importaPersonaExtWSNoSicaps">
+        <action name="importaPersonaExtWSNoSicaps" class="personasAction" method="importaPersonaExtWSNoSicaps">
+            <result type="json" />
+        </action>
+        
+        <action name="obtieneConfPatallaCli" class="personasAction" method="obtieneConfPatallaCli">
             <result type="json" />
         </action>
     </package>

@@ -972,20 +972,26 @@ public class CotizacionAction extends PrincipalCoreAction
 				{
 					exito           = false;
 					respuestaOculta = "Faltan direcciones";
-					respuesta       = "Favor de verificar la direcci&oacute;n de los siguientes asegurados:<br/>";
-					// f a v o r
-					//0 1 2 3 4 5
-					if(lisUsuSinDir.get(0).get("nombre").substring(0,5).equalsIgnoreCase("favor"))
-					{
-						respuesta=lisUsuSinDir.get(0).get("nombre");
-					}
-					else
-					{
-						for(int i=0;i<lisUsuSinDir.size();i++)
+					
+					if(Ramo.SERVICIO_PUBLICO.getCdramo().equals(cdramo) || Ramo.AUTOS_FRONTERIZOS.getCdramo().equals(cdramo)){
+						respuesta="Favor de verificar y guardar correctamente la direcci&oacute;n y datos del contratante.";
+					}else{
+						respuesta       = "Favor de verificar la direcci&oacute;n de los siguientes asegurados:<br/>";
+						// f a v o r
+						//0 1 2 3 4 5
+						if(lisUsuSinDir.get(0).get("nombre").substring(0,5).equalsIgnoreCase("favor"))
 						{
-							respuesta+=lisUsuSinDir.get(i).get("nombre")+"<br/>";
-						}					
+							respuesta=lisUsuSinDir.get(0).get("nombre");
+						}
+						else
+						{
+							for(int i=0;i<lisUsuSinDir.size();i++)
+							{
+								respuesta+=lisUsuSinDir.get(i).get("nombre")+"<br/>";
+							}					
+						}
 					}
+					
 					logger.debug("Se va a terminar el proceso porque faltan direcciones");
 				}
 			}
@@ -1560,6 +1566,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			String fesolici = slist1.get(0).get("FESOLICI");
 			
 			String cdpersonCli = smap1.get("cdpersonCli");
+			String nmorddomCli = smap1.get("nmorddomCli");
 			String cdideperCli = smap1.get("cdideperCli");
 			
 			boolean noTarificar = StringUtils.isNotBlank(smap1.get("notarificar"))&&smap1.get("notarificar").equals("si");
@@ -1589,6 +1596,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,fefin
 					,fesolici
 					,cdpersonCli
+					,nmorddomCli
 					,cdideperCli
 					,noTarificar
 					,conIncisos
@@ -1596,6 +1604,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,smap1.containsKey("movil")
 					,tvalopol
 					,cdagente
+					,usuario
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -2700,14 +2709,16 @@ public class CotizacionAction extends PrincipalCoreAction
 						parametros.put("param21"                  , null);
 						parametros.put("param22"                  , null);
 						parametros.put("param23"                  , null);
-						parametros.put("param24_pv_accion_i"      , "I");
+						parametros.put("param24"                  , null);
+						parametros.put("param25_pv_accion_i"      , "I");
 						String[] tipos=new String[]{
 								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
 								"VARCHAR","VARCHAR","VARCHAR","DATE",
 								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
 								"VARCHAR","DATE"   ,"VARCHAR","VARCHAR",
 								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
-								"VARCHAR","VARCHAR","VARCHAR","VARCHAR"
+								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
+								"VARCHAR"
 						};
 						storedProceduresManager.procedureVoidCall(ObjetoBD.MOV_MPERSONA.getNombre(), parametros, tipos);
 					}
@@ -2759,6 +2770,19 @@ public class CotizacionAction extends PrincipalCoreAction
 					 */
 					if(StringUtils.isNotBlank(cdIdeperAseg) && !"0".equalsIgnoreCase(cdIdeperAseg) && !"0L".equalsIgnoreCase(cdIdeperAseg)){
 						try{
+							
+							UserVO usuario = (UserVO) session.get("USUARIO");
+							String usuarioCaptura =  null;
+							
+							if(usuario!=null){
+								if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+									usuarioCaptura = usuario.getClaveUsuarioCaptura();
+								}else{
+									usuarioCaptura = usuario.getCodigoPersona();
+								}
+								
+							}
+							
 							WrapperResultados result = kernelManager.existeDomicilioContratante(cdIdeperAseg, aseg.get("cdperson"));
 							
 							if(result != null && result.getItemMap() != null && result.getItemMap().containsKey("EXISTE_DOMICILIO")){
@@ -2816,6 +2840,9 @@ public class CotizacionAction extends PrincipalCoreAction
 							    			paramDomicil.put("pv_cdcoloni_i", null/*cliDom.getColoniaCli()*/);
 							    			paramDomicil.put("pv_nmnumero_i", cliDom.getNumeroCli());
 							    			paramDomicil.put("pv_nmnumint_i", null);
+							    			paramDomicil.put("pv_cdtipdom_i", "1");
+							    			paramDomicil.put("pv_cdusuario_i", usuarioCaptura);
+							    			paramDomicil.put("pv_swactivo_i", Constantes.SI);
 							    			paramDomicil.put("pv_accion_i", "I");
 
 							    			kernelManager.pMovMdomicil(paramDomicil);
@@ -2835,54 +2862,15 @@ public class CotizacionAction extends PrincipalCoreAction
 							    			
 							    			paramValoper.put("pv_otvalor01", cliDom.getCveEle());
 							    			paramValoper.put("pv_otvalor02", cliDom.getPasaporteCli());
-							    			paramValoper.put("pv_otvalor03", null);
-							    			paramValoper.put("pv_otvalor04", null);
-							    			paramValoper.put("pv_otvalor05", null);
-							    			paramValoper.put("pv_otvalor06", null);
-							    			paramValoper.put("pv_otvalor07", null);
 							    			paramValoper.put("pv_otvalor08", cliDom.getOrirecCli());
-							    			paramValoper.put("pv_otvalor09", null);
-							    			paramValoper.put("pv_otvalor10", null);
 							    			paramValoper.put("pv_otvalor11", cliDom.getNacCli());
-							    			paramValoper.put("pv_otvalor12", null);
-							    			paramValoper.put("pv_otvalor13", null);
-							    			paramValoper.put("pv_otvalor14", null);
-							    			paramValoper.put("pv_otvalor15", null);
-							    			paramValoper.put("pv_otvalor16", null);
-							    			paramValoper.put("pv_otvalor17", null);
-							    			paramValoper.put("pv_otvalor18", null);
-							    			paramValoper.put("pv_otvalor19", null);
 							    			paramValoper.put("pv_otvalor20", (cliDom.getOcuPro() > 0) ? Integer.toString(cliDom.getOcuPro()) : "0");
-							    			paramValoper.put("pv_otvalor21", null);
-							    			paramValoper.put("pv_otvalor22", null);
-							    			paramValoper.put("pv_otvalor23", null);
-							    			paramValoper.put("pv_otvalor24", null);
 							    			paramValoper.put("pv_otvalor25", cliDom.getCurpCli());
-							    			paramValoper.put("pv_otvalor26", null);
-							    			paramValoper.put("pv_otvalor27", null);
-							    			paramValoper.put("pv_otvalor28", null);
-							    			paramValoper.put("pv_otvalor29", null);
-							    			paramValoper.put("pv_otvalor30", null);
-							    			paramValoper.put("pv_otvalor31", null);
-							    			paramValoper.put("pv_otvalor32", null);
-							    			paramValoper.put("pv_otvalor33", null);
-							    			paramValoper.put("pv_otvalor34", null);
-							    			paramValoper.put("pv_otvalor35", null);
-							    			paramValoper.put("pv_otvalor36", null);
-							    			paramValoper.put("pv_otvalor37", null);
 							    			paramValoper.put("pv_otvalor38", cliDom.getTelefonoCli());
 							    			paramValoper.put("pv_otvalor39", cliDom.getMailCli());
-							    			paramValoper.put("pv_otvalor40", null);
-							    			paramValoper.put("pv_otvalor41", null);
-							    			paramValoper.put("pv_otvalor42", null);
-							    			paramValoper.put("pv_otvalor43", null);
-							    			paramValoper.put("pv_otvalor44", null);
-							    			paramValoper.put("pv_otvalor45", null);
-							    			paramValoper.put("pv_otvalor46", null);
-							    			paramValoper.put("pv_otvalor47", null);
-							    			paramValoper.put("pv_otvalor48", null);
-							    			paramValoper.put("pv_otvalor49", null);
-							    			paramValoper.put("pv_otvalor50", null);
+							    			
+							    			paramValoper.put("pv_otvalor51", cliDom.getFaxCli());
+							    			paramValoper.put("pv_otvalor52", cliDom.getCelularCli());
 							    			
 							    			kernelManager.pMovTvaloper(paramValoper);
 							    			
@@ -3878,6 +3866,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		//proceso
 		if(exito)
 		{
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
 			ManagerRespuestaSmapVO resp = cotizacionManager.subirCensoCompleto(
 					cdunieco
 					,cdramo
@@ -3916,6 +3905,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdideext_
 					,nmpolant
 					,nmrenova
+					,usuarioSesion
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -4990,6 +4980,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		//proceso
 		if(exito)
 		{
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
 			ManagerRespuestaSmapVO resp=cotizacionManager.generarTramiteGrupo(
 					cdunieco
 					,cdramo
@@ -5036,6 +5027,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdideext_
 					,nmpolant
 					,StringUtils.isBlank(nmrenova) ? "0" : nmrenova
+					,usuarioSesion
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -6350,6 +6342,19 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			try
 			{
+				
+				UserVO usuario = (UserVO) session.get("USUARIO");
+				String usuarioCaptura =  null;
+				
+				if(usuario!=null){
+					if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+						usuarioCaptura = usuario.getClaveUsuarioCaptura();
+					}else{
+						usuarioCaptura = usuario.getCodigoPersona();
+					}
+					
+				}
+				
 				String cdperson  = smap1.get("cdperson");
 				String exiper    = "N";
 				String cdideper_ = smap1.get("cdideper_");
@@ -6399,14 +6404,16 @@ public class CotizacionAction extends PrincipalCoreAction
 						parametros.put("param21"                  , cdideext_);
 						parametros.put("param22"                  , null);
 						parametros.put("param23"                  , null);
-						parametros.put("param24_pv_accion_i"      , "I");
+						parametros.put("param24"                  , usuarioCaptura);
+						parametros.put("param25_pv_accion_i"      , "I");
 						String[] tipos=new String[]{
 								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
 								"VARCHAR","VARCHAR","VARCHAR","DATE",
 								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
 								"VARCHAR","DATE"   ,"VARCHAR","VARCHAR",
 								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
-								"VARCHAR","VARCHAR","VARCHAR","VARCHAR"
+								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
+								"VARCHAR"
 						};
 						storedProceduresManager.procedureVoidCall(ObjetoBD.MOV_MPERSONA.getNombre(), parametros, tipos);
 					}
@@ -6443,6 +6450,9 @@ public class CotizacionAction extends PrincipalCoreAction
 					paramDomicil.put("pv_cdcoloni_i" , null);
 					paramDomicil.put("pv_nmnumero_i" , smap1.get("nmnumero"));
 					paramDomicil.put("pv_nmnumint_i" , smap1.get("nmnumint"));
+					paramDomicil.put("pv_cdtipdom_i", "1");
+	    			paramDomicil.put("pv_cdusuario_i", usuarioCaptura);
+	    			paramDomicil.put("pv_swactivo_i" , Constantes.SI);
 					paramDomicil.put("pv_accion_i"   , Constantes.INSERT_MODE);
 					kernelManager.pMovMdomicil(paramDomicil);
 				}
@@ -9208,6 +9218,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			String dsdomici = smap1.get("dsdomici");
 			String nmnumero = smap1.get("nmnumero");
 			String nmnumint = smap1.get("nmnumint");
+			String nmorddom = smap1.get("nmorddom");
 			String confirmaEmision = smap1.get("confirmaEmision");
 			boolean esConfirmaEmision = (StringUtils.isNotBlank(confirmaEmision) && Constantes.SI.equalsIgnoreCase(confirmaEmision));
 			
@@ -9220,6 +9231,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			if(!esConfirmaEmision) checkBlank(cdedo    , "No se recibio el estado");
 			if(!esConfirmaEmision) checkBlank(cdmunici , "No se recibio el municipio");
 			if(esConfirmaEmision)  checkBlank(cdperson , "No se recibio el cdperson");
+			
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
 			
 			ManagerRespuestaVoidVO resp = cotizacionManager.guardarContratanteColectivo(
 					cdunieco
@@ -9236,7 +9249,9 @@ public class CotizacionAction extends PrincipalCoreAction
 					,dsdomici
 					,nmnumero
 					,nmnumint
-					,esConfirmaEmision);
+					,nmorddom
+					,esConfirmaEmision
+					,usuarioSesion);
 			
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();

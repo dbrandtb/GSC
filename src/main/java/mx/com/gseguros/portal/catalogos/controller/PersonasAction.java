@@ -152,8 +152,8 @@ public class PersonasAction extends PrincipalCoreAction
 		    		
 		    		logger.debug("Error en WS, exito false");
 		    		exito           = false;
-					respuesta       = "No se encontr� ninguna persona. Consulte a soporte, ext. 8050";
-					respuestaOculta = "No se encontr� ninguna persona. Consulte a soporte, ext. 8050";
+					respuesta       = "No se encontra la persona. Consulte a soporte.";
+					respuestaOculta = "No se encontra la persona. Consulte a soporte.";
 					slist1          = null;
 					
 		    		return SUCCESS;
@@ -269,6 +269,13 @@ public class PersonasAction extends PrincipalCoreAction
 			respuesta       = "Error inesperado #"+timestamp;
 			respuestaOculta = ex.getMessage();
 		}
+		
+		if(slist1 != null && !slist1.isEmpty()){
+			smap1.put("cliEncontrado", "S");
+		}else{
+			smap1.put("cliEncontrado", "N");
+		}
+		
 		logger.info(timestamp
 				+ "\n###### obtenerPersonasPorRFC ######"
 				+ "\n###################################"
@@ -302,8 +309,8 @@ public class PersonasAction extends PrincipalCoreAction
 				
 				logger.debug("Error en WS, exito false");
 				exito           = false;
-				respuesta       = "No se encontr� ninguna persona al Importar. Consulte a soporte, ext. 8050";
-				respuestaOculta = "No se encontr� ninguna persona al Importar. Consulte a soporte, ext. 8050";
+				respuesta       = "No se encontra la persona al Importar. Consulte a soporte.";
+				respuestaOculta = "No se encontra la persona al Importar. Consulte a soporte.";
 				slist1          = null;
 				
 				return SUCCESS;
@@ -374,6 +381,26 @@ public class PersonasAction extends PrincipalCoreAction
     			
     			Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(params);
     			
+    			
+    			saveList = new ArrayList<Map<String,String>>();
+    			updateList = new ArrayList<Map<String,String>>();
+    			deleteList = new ArrayList<Map<String,String>>();
+
+    			Map<String,String> domicilioImp = new HashMap<String,String>();
+    			
+    			domicilioImp.put("NMORDDOM",null);
+    			domicilioImp.put("CODPOSTAL", cliImport.getCodposCli());
+    			domicilioImp.put("CDEDO", cliImport.getCodposCli()+edoAdosPos2);
+    			domicilioImp.put("CDMUNICI",munycol.get("CDMUNICI"));
+    			domicilioImp.put("CDCOLONI",munycol.get("CDCOLONI"));
+    			domicilioImp.put("DSDOMICI",cliImport.getCalleCli());
+    			domicilioImp.put("NMNUMERO",cliImport.getNumeroCli());
+    			domicilioImp.put("NMNUMINT",null);
+    			
+    			saveList.add(domicilioImp);
+    			
+    			UserVO usuario=(UserVO)session.get("USUARIO");
+    			
     			Map<String,Object>managerResult = personasManager.guardarPantallaPersonas(null,//cdperson
 						"1",//cdidepe
 						"S".equalsIgnoreCase(saludDanios)? null : cliImport.getNumeroExterno(),
@@ -402,16 +429,12 @@ public class PersonasAction extends PrincipalCoreAction
 						,null//"S".equalsIgnoreCase(saludDanios)? cliImport.getNumeroExterno() : null
 						,cliImport.getEdocivilCli()<=0 ?"0" : Integer.toString(cliImport.getEdocivilCli())
 						,Integer.toString(cliImport.getSucursalCli())
-						,"1"//nmorddom
-						,cliImport.getCalleCli()
 						,cliImport.getTelefonoCli()
-						,cliImport.getCodposCli()
-						,cliImport.getCodposCli()+edoAdosPos2
-						,munycol.get("CDMUNICI")//minicipio
-						,munycol.get("CDCOLONI")//colonia
-						,cliImport.getNumeroCli()
-						,null//numero int
+						,saveList
+						,updateList
+						,deleteList
 						,false
+						,usuario
 						,timestamp);
 				
 				
@@ -430,7 +453,7 @@ public class PersonasAction extends PrincipalCoreAction
 							,null,null,(cliImport.getOcuPro() > 0) ? Integer.toString(cliImport.getOcuPro()) : "0"
 							,null,null,null,null,cliImport.getCurpCli(),null,null,null,null,null,null,null,null,null
 							,null,null,null,null,cliImport.getMailCli(),null,null,null,null,null,null,null,null,null
-							,null,null,timestamp);
+							,null,null, cliImport.getFaxCli(), cliImport.getCelularCli(),timestamp);
 					
 					exito                = (Boolean)managerResult.get("exito");
 					respuesta            = (String)managerResult.get("respuesta");
@@ -490,8 +513,8 @@ public class PersonasAction extends PrincipalCoreAction
 				
 				logger.debug("Error en WS, exito false");
 				exito           = false;
-				respuesta       = "No se encontr� ninguna persona al Importar. Consulte a soporte, ext. 8050";
-				respuestaOculta = "No se encontr� ninguna persona al Importar. Consulte a soporte, ext. 8050";
+				respuesta       = "No se encontra la persona al Importar. Consulte a soporte.";
+				respuestaOculta = "No se encontra la persona al Importar. Consulte a soporte.";
 				slist1          = null;
 				
 				return SUCCESS;
@@ -573,6 +596,26 @@ public class PersonasAction extends PrincipalCoreAction
 	    			
 	    			Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(params);
 	    			
+	    			
+	    			saveList = new ArrayList<Map<String,String>>();
+	    			updateList = new ArrayList<Map<String,String>>();
+	    			deleteList = new ArrayList<Map<String,String>>();
+
+	    			Map<String,String> domicilioImp = new HashMap<String,String>();
+	    			
+	    			domicilioImp.put("NMORDDOM",null);
+	    			domicilioImp.put("CODPOSTAL", cliImport.getCodposCli());
+	    			domicilioImp.put("CDEDO", cliImport.getCodposCli()+edoAdosPos2);
+	    			domicilioImp.put("CDMUNICI",munycol.get("CDMUNICI"));
+	    			domicilioImp.put("CDCOLONI",munycol.get("CDCOLONI"));
+	    			domicilioImp.put("DSDOMICI",cliImport.getCalleCli());
+	    			domicilioImp.put("NMNUMERO",cliImport.getNumeroCli());
+	    			domicilioImp.put("NMNUMINT",null);
+	    			
+	    			saveList.add(domicilioImp);
+	    			
+	    			UserVO usuario=(UserVO)session.get("USUARIO");
+	    			
 	    			Map<String,Object>managerResult = personasManager.guardarPantallaPersonas(null,//cdperson
 							"1",//cdidepe
 							"S".equalsIgnoreCase(saludDanios)? null : cliImport.getNumeroExterno(),
@@ -601,16 +644,12 @@ public class PersonasAction extends PrincipalCoreAction
 							,null//"S".equalsIgnoreCase(saludDanios)? cliImport.getNumeroExterno() : null
 							,cliImport.getEdocivilCli()<=0 ?"0" : Integer.toString(cliImport.getEdocivilCli())
 							,Integer.toString(cliImport.getSucursalCli())
-							,"1"//nmorddom
-							,cliImport.getCalleCli()
 							,cliImport.getTelefonoCli()
-							,cliImport.getCodposCli()
-							,cliImport.getCodposCli()+edoAdosPos2
-							,munycol.get("CDMUNICI")//minicipio
-							,munycol.get("CDCOLONI")//colonia
-							,cliImport.getNumeroCli()
-							,null//numero int
+							,saveList
+							,updateList
+							,deleteList
 							,false
+							,usuario
 							,timestamp);
 					
 					
@@ -630,7 +669,7 @@ public class PersonasAction extends PrincipalCoreAction
 								,null,null,(cliImport.getOcuPro() > 0) ? Integer.toString(cliImport.getOcuPro()) : "0"
 								,null,null,null,null,cliImport.getCurpCli(),null,null,null,null,null,null,null,null,null
 								,null,null,null,null,cliImport.getMailCli(),null,null,null,null,null,null,null,null,null
-								,null,null,timestamp);
+								,null,null, cliImport.getFaxCli(), cliImport.getCelularCli(),timestamp);
 						
 						exito                = (Boolean)managerResult.get("exito");
 						respuesta            = (String)managerResult.get("respuesta");
@@ -697,6 +736,52 @@ public class PersonasAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
+
+	public String obtieneConfPatallaCli()
+	{
+		long timestamp=System.currentTimeMillis();
+		logger.info(timestamp
+				+ "\n###################################"
+				+ "\n###### obtieneConfPatallaCli ######"
+				+ "\nsmap1: "+smap1
+				);
+		try
+		{
+			Integer tipoCliente = null;
+			UserVO usuario=(UserVO)session.get("USUARIO");
+			
+			if(StringUtils.isNotBlank(smap1.get("codigoExterno"))){
+				tipoCliente = personasManager.obtieneTipoCliWS(smap1.get("codigoExterno"), smap1.get("esSalud"));
+			}else{
+				/**
+				 *  Si no hay codigo externo puede ser un cliente nuevo o se realizo la busqueda con un codigo externo
+				 *  cruzado entre salud y danios por lo que se crea uno nuevo en la emision para la compania que se esta usando
+				 *  Se fija tipo cliente externo a nuevo
+				 */
+				tipoCliente = new Integer(1);
+			}
+			
+			if(StringUtils.isNotBlank(smap1.get("modoAgregar")) && Constantes.SI.equals(smap1.get("modoAgregar"))){
+				tipoCliente = new Integer(1);
+			}
+			
+			slist1=personasManager.obtieneConfPatallaCli(smap1.get("cdperson"), usuario.getUser(),usuario.getRolActivo().getClave(), tipoCliente.toString());
+			
+			exito = true;
+		}
+		catch(Exception ex)
+		{
+			logger.error(timestamp+" error inesperado al obtener datos de persona",ex);
+			exito           = false;
+			respuesta       = "Error inesperado #"+timestamp;
+			respuestaOculta = ex.getMessage();
+		}
+		logger.info(timestamp
+				+ "\n###### obtieneConfPatallaCli ######"
+				+ "\n###################################"
+				);
+		return SUCCESS;
+	}
 	
 	/**
 	 * Guarda los datos de la pantalla de personas
@@ -719,6 +804,8 @@ public class PersonasAction extends PrincipalCoreAction
 			if(StringUtils.isNotBlank(smap1.get("FENACIMI"))){
 				fechaNacimi = renderFechas.parse(smap1.get("FENACIMI"));
 			}
+			
+			UserVO usuario=(UserVO)session.get("USUARIO");
 					
 			Map<String,Object>managerResult=personasManager.guardarPantallaPersonas(
 					smap1.get("CDPERSON")
@@ -744,16 +831,12 @@ public class PersonasAction extends PrincipalCoreAction
 					,smap1.get("CDIDEEXT") 
 					,smap1.get("CDESTCIV") //estado civil
 					,smap1.get("CDSUCEMI") //Sucursal Emision
-					,smap2.get("NMORDDOM")
-					,smap2.get("DSDOMICI")
 					,smap2.get("NMTELEFO")
-					,smap2.get("CODPOSTAL")
-					,smap2.get("CDEDO")
-					,smap2.get("CDMUNICI")
-					,smap2.get("CDCOLONI")
-					,smap2.get("NMNUMERO")
-					,smap2.get("NMNUMINT")
+					,saveList
+					,updateList
+					,deleteList
 					,Constantes.SI.equalsIgnoreCase(smap3.get("AUTOSAVE"))?true:false
+					,usuario
 					,timestamp
 					);
 			exito                = (Boolean)managerResult.get("exito");
@@ -795,6 +878,8 @@ public class PersonasAction extends PrincipalCoreAction
 		try
 		{
 			
+			UserVO usuario=(UserVO)session.get("USUARIO");
+			
 			personasManager.guardarPantallaDomicilio(
 					smap1.get("CDPERSON")
 					,smap1.get("NMORDDOM")
@@ -806,6 +891,8 @@ public class PersonasAction extends PrincipalCoreAction
 					,smap1.get("CDCOLONI")
 					,smap1.get("NMNUMERO")
 					,smap1.get("NMNUMINT")
+					,usuario
+					,"S"//Domicilio activo
 					,timestamp
 					);
 		}
@@ -844,6 +931,46 @@ public class PersonasAction extends PrincipalCoreAction
 			respuesta       = (String)managerResult.get("respuesta");
 			respuestaOculta = (String)managerResult.get("respuestaOculta");
 			smap1           = (Map<String,String>)managerResult.get("domicilio");
+		}
+		catch(Exception ex)
+		{
+			if(smap1!=null && smap1.containsKey("AUTOSAVE") && Constantes.SI.equalsIgnoreCase(smap1.get("AUTOSAVE"))){
+				logger.error(timestamp+"Persona sin domicilio, error sin impacto");
+			}else{
+				logger.error(timestamp+" error inesperado al obtener domicilio por cdperson",ex);
+			}
+			
+			
+			exito           = false;
+			respuesta       = "Error inesperado #"+timestamp;
+			respuestaOculta = ex.getMessage();
+		}
+		logger.info(timestamp+""
+				+ "\n###### obtenerDomicilioPorCdperson ######"
+				+ "\n#########################################"
+				);
+		return SUCCESS;
+	}
+
+	/**
+	 * Obtener la direccion de una persona por su CDPERSON
+	 * @return SUCCESS
+	 */
+	public String obtenerDomiciliosPorCdperson()
+	{
+		long timestamp=System.currentTimeMillis();
+		logger.info(timestamp+""
+				+ "\n#########################################"
+				+ "\n###### obtenerDomiciliosPorCdperson ######"
+				+ "\nsmap1: "+smap1
+				);
+		try
+		{
+			Map<String,Object> managerResult=personasManager.obtenerDomiciliosPorCdperson(smap1.get("cdperson"),timestamp);
+			exito           = (Boolean)managerResult.get("exito");
+			respuesta       = (String)managerResult.get("respuesta");
+			respuestaOculta = (String)managerResult.get("respuestaOculta");
+			slist1          = (List<Map<String,String>>)managerResult.get("domicilios");
 		}
 		catch(Exception ex)
 		{
@@ -922,6 +1049,9 @@ public class PersonasAction extends PrincipalCoreAction
 				+ "\n##################################"
 				+ "\n###### guardarDatosTvaloper ######"
 				+ "\nsmap1: "+smap1
+				+ "\nsaveList:   "+saveList
+				+ "\nupdateList: "+updateList
+				
 				);
 		try
 		{
@@ -977,6 +1107,8 @@ public class PersonasAction extends PrincipalCoreAction
 					,smap1.get("parametros.pv_otvalor48")
 					,smap1.get("parametros.pv_otvalor49")
 					,smap1.get("parametros.pv_otvalor50")
+					,smap1.get("parametros.pv_otvalor51")
+					,smap1.get("parametros.pv_otvalor52")
 					,timestamp
 					);
 			
@@ -991,7 +1123,7 @@ public class PersonasAction extends PrincipalCoreAction
 			respuesta            = (String)managerResult.get("respuesta");
 			respuestaOculta      = (String)managerResult.get("respuestaOculta");
 		
-			
+			UserVO usuario=(UserVO)session.get("USUARIO");
 			
 			if(exito){
 				logger.debug("...Guarda datos de Persona en WS...");
@@ -1002,6 +1134,11 @@ public class PersonasAction extends PrincipalCoreAction
 		    	clienteGeneral.setNumeroExterno(smap1.get("codigoExterno"));
 		    	
 		    	ClienteGeneralRespuesta clientesRes = null;
+		    	ClienteGeneralRespuesta clientesRes2 = null;
+		    	
+		    	boolean sinPrimerCodigo = StringUtils.isBlank(smap1.get("codigoExterno"));
+		    	boolean sinSegundoCodigo = StringUtils.isBlank(smap1.get("codigoExterno2"));
+		    	
 		    	if(StringUtils.isBlank(smap1.get("codigoExterno"))){
 		    		 clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("cdperson"), Ice2sigsService.Operacion.INSERTA, clienteGeneral, null, false);
 		    		 
@@ -1009,7 +1146,8 @@ public class PersonasAction extends PrincipalCoreAction
 		    			 ClienteGeneral clienteGeneral2 = new ClienteGeneral();
 		    			 clienteGeneral2.setClaveCia((saludDanios.equalsIgnoreCase("S"))?"D":"S");
 		 		    	 clienteGeneral2.setNumeroExterno(smap1.get("codigoExterno2"));
-		    			 ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("cdperson"), Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral2, null, false); 
+		    			 clientesRes2 = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("cdperson"), Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral2, null, false);
+		    			 
 		    		 }
 		    		 
 		    	}else {
@@ -1019,7 +1157,8 @@ public class PersonasAction extends PrincipalCoreAction
 		    			 ClienteGeneral clienteGeneral2 = new ClienteGeneral();
 		    			 clienteGeneral2.setClaveCia((saludDanios.equalsIgnoreCase("S"))?"D":"S");
 		 		    	 clienteGeneral2.setNumeroExterno(smap1.get("codigoExterno2"));
-		    			 ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("cdperson"), Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral2, null, false); 
+		 		    	 clientesRes2 = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("cdperson"), Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral2, null, false);
+		    			 
 		    		 }
 		    	}
 		    	
@@ -1027,8 +1166,8 @@ public class PersonasAction extends PrincipalCoreAction
 		    		
 		    		logger.debug("Error en WS, exito false");
 		    		exito           = false;
-					respuesta       = "No se encontr&oacute; ninguna persona al Guardar. Consulte a soporte, ext. 8050";
-					respuestaOculta = "No se encontr&oacute; ninguna persona al Guardar. Consulte a soporte, ext. 8050";
+					respuesta       = "No se encontra la persona al Guardar. Consulte a soporte.";
+					respuestaOculta = "No se encontra la persona al Guardar. Consulte a soporte.";
 					slist1          = null;
 					
 		    		return SUCCESS;
@@ -1044,7 +1183,32 @@ public class PersonasAction extends PrincipalCoreAction
 			    		 params.put("pv_cdideper_i"  , clientesRes.getClientesGeneral()[0].getNumeroExterno());
 			    		 
 			    		 personasManager.actualizaCodigoExterno(params);
+		    		}else{
+		    			logger.debug("Codigo externo obtenido smap1: "+ smap1.get("codigoExterno"));
 		    		}
+		    		
+		    	}
+		    	
+		    	boolean exitoDomicilios = true; 
+		    	if(clientesRes != null && (Estatus.EXITO.getCodigo() == clientesRes.getCodigo())){
+		    		exitoDomicilios = ice2sigsService.ejecutaWSdireccionClienteGeneral(smap1.get("cdperson"), saludDanios, saveList, updateList, sinPrimerCodigo, usuario);
+	    		 }
+		    	
+		    	if(clientesRes2 != null && (Estatus.EXITO.getCodigo() == clientesRes2.getCodigo())){
+		    		/**
+		    		 * TODO: Validar si necesita insertar las direcciones en el codigo de compania contrario
+		    		 */
+	    			 ice2sigsService.ejecutaWSdireccionClienteGeneral(smap1.get("cdperson"), (saludDanios.equalsIgnoreCase("S"))?"D":"S", saveList, updateList, sinSegundoCodigo, usuario);
+	    		 }
+		    	
+		    	if(!exitoDomicilios){
+		    		logger.debug("Error al enviar domiciliosWS, exito false");
+		    		exito           = false;
+					respuesta       = "No se han enviado correctamente los domicilios.";
+					respuestaOculta = "No se han enviado correctamente los domicilios.";
+					slist1          = null;
+					
+		    		return SUCCESS;
 		    	}
 			}
 		

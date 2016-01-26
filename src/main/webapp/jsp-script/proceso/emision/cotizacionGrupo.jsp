@@ -123,6 +123,7 @@ var _contratanteSaved = false;
 var _callbackDomicilioAseg = false;
 
 var _ventanaPersonas;
+var _numIDpantalla;
 
 var _ventanaClausulas;
 
@@ -785,6 +786,7 @@ Ext.onReady(function()
 										                'smap1.cdideper' : '',
 										                'smap1.cdideext' : '',
 										                'smap1.esSaludDanios' : 'S',
+										                'smap1.polizaEnEmision': 'S',
 										                'smap1.esCargaClienteNvo' : 'N' ,
 										                'smap1.ocultaBusqueda' : 'S' ,
 										                'smap1.cargaCP' : '',
@@ -793,7 +795,8 @@ Ext.onReady(function()
 										                'smap1.activaCveFamiliar': 'N',
 										                'smap1.modoRecuperaDanios': 'N',
 										                'smap1.modoSoloEdicion': 'N',
-										                'smap1.contrantantePrincipal': 'S'
+										                'smap1.contrantantePrincipal': 'S',
+										                'smap1.tomarUnDomicilio' : 'S'
 										            }
 										     });
 										     
@@ -824,6 +827,7 @@ Ext.onReady(function()
 												        ,codpostal: json.smap1.CDPOSTAL
 												        ,cdedo: json.smap1.CDEDO
 												        ,cdmunici: json.smap1.CDMUNICI
+												        ,nmorddom: json.smap1.NMORDDOM
 												        ,confirmaEmision: 'S'
 												    }
 												};
@@ -1129,6 +1133,7 @@ Ext.onReady(function()
 		        ,codpostal: json.smap1.CDPOSTAL
 		        ,cdedo: json.smap1.CDEDO
 		        ,cdmunici: json.smap1.CDMUNICI
+		        ,nmorddom: json.smap1.NMORDDOM
 		        ,confirmaEmision: 'S'
 		    }
 		};
@@ -1435,7 +1440,7 @@ Ext.onReady(function()
                 {
                     for(var prop in json.params)
                     {
-                        if(prop!='cdedo'&&prop!='cdmunici'&&prop!='clasif'&&prop!='swexiper')
+                        if(prop!='cdedo'&&prop!='cdmunici'&&prop!='clasif'&&prop!='swexiper'&&prop!='nmorddom')
                         {
                             if(prop=='pcpgocte')
                             {
@@ -1538,6 +1543,7 @@ Ext.onReady(function()
 				                'smap1.cdideper' : '',
 				                'smap1.cdideext' : '',
 				                'smap1.esSaludDanios' : 'S',
+				                'smap1.polizaEnEmision': 'S',
 				                'smap1.esCargaClienteNvo' : 'N' ,
 				                'smap1.ocultaBusqueda' : 'S' ,
 				                'smap1.cargaCP' : '',
@@ -1546,7 +1552,9 @@ Ext.onReady(function()
 				                'smap1.activaCveFamiliar': 'N',
 				                'smap1.modoRecuperaDanios': 'N',
 				                'smap1.modoSoloEdicion': 'N',
-				                'smap1.contrantantePrincipal': 'S'
+				                'smap1.contrantantePrincipal': 'S',
+				                'smap1.tomarUnDomicilio' : 'S',
+	                    		'smap1.cargaOrdDomicilio' : (!Ext.isEmpty(json.params['swexiper']) && (json.params['swexiper'] == 'S' || json.params['swexiper'] == 's') && !Ext.isEmpty(cargacdperson))? json.params['nmorddom'] : ''
 				            }
 			            });
                     }
@@ -6257,10 +6265,18 @@ function _p21_editarAsegurado(grid,rowIndex)
     try{
     	_p22_parentCallback = false;
     	_callbackDomicilioAseg = false;
-    	destruirLoaderContratante();
-    	_ventanaPersonas.destroy();
+
+		var funcionEjecutar = new Function('destruirLoaderContratante'+_numIDpantalla+'();'); // alternativa de: eval('destruirLoaderContratante'+_numIDpantalla+'();');
+		funcionEjecutar();
+    	
     }catch(e){
-    	debug('No se elimina ventana de Persona');
+    	debug('No se elimina loader de cliente, destruirLoaderContratante'+_numIDpantalla+'();',e);
+    }
+    
+    try{
+		_ventanaPersonas.destroy();    	
+    }catch(e){
+    	debug('No se elimina ventana contenedora de loader Persona, _ventanaPersonas.destroy();',e);	
     }
     
     var titularComoContratante = false;
@@ -6273,6 +6289,9 @@ function _p21_editarAsegurado(grid,rowIndex)
     
     
     if(titularComoContratante){
+    	
+    	_numIDpantalla = new Date().getTime(); 
+    	
     	_ventanaPersonas = Ext.create('Ext.window.Window',
 					        {
 					            title      : 'Editar persona '+record.get('NOMBRE') + ' ' +record.get('APELLIDO_PATERNO')
@@ -6300,7 +6319,8 @@ function _p21_editarAsegurado(grid,rowIndex)
 									                'smap1.cargaSucursalEmi' : _p21_smap1.cdunieco,
 									                'smap1.activaCveFamiliar': 'N',
 									                'smap1.modoRecuperaDanios': 'N',
-									                'smap1.modoSoloEdicion': 'S'
+									                'smap1.modoSoloEdicion': 'S',
+									                'smap1.idPantalla': _numIDpantalla
 									            }
 				                }
 					        }).show();
