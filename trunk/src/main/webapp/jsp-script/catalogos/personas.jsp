@@ -52,8 +52,7 @@ function destruirLoaderContratante<s:property value="smap1.idPantalla" />(){
 }
 
 
-Ext.onReady(function()
-{
+Ext.onReady(function(){
 	
 /**
  * Se genera un numero unico para generar un Div con nombre unico de la pantalla para poder usarse mas de una instancia en una misma pantalla
@@ -2113,8 +2112,8 @@ function _p22_guardarClic(callbackGuardar, autosave)
 		 * PARA CARGAR LA SUCURSAL ANTES DE GUARDAR
 		 */
 	    
-	    alert(_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
-	    alert(_cargaSucursalEmi);
+//	    alert(_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
+//	    alert(_cargaSucursalEmi);
 		if(!autosave && Ext.isEmpty(_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) && !Ext.isEmpty(_cargaSucursalEmi)){
 			_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(_cargaSucursalEmi);
 		}else if(!autosave && !Ext.isEmpty(_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) && !Ext.isEmpty(_cargaSucursalEmi)){
