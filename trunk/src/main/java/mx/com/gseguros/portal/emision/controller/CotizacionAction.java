@@ -23,7 +23,9 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
+import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
+import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
@@ -133,6 +135,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	@Autowired
 	private FlujoMesaControlManager flujoMesaControlManager;
+	
+	@Autowired
+	private RecuperacionSimpleManager recuperacionSimpleManager;
 	
 	public CotizacionAction()
 	{
@@ -7554,24 +7559,70 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String guardarReporteCotizacionGrupo()
 	{
-		logger.info(""
-				+ "\n###########################################"
-				+ "\n###### guardarReporteCotizacionGrupo ######"
-				+ "\nsmap1 "+smap1
-				);
+		long stamp = System.currentTimeMillis();
+		logger.debug(Utils.log(stamp
+				,"\n###########################################"
+				,"\n###### guardarReporteCotizacionGrupo ######"
+				,"\n###### smap1=", smap1
+				));
 		success = true;
 		try
 		{
-			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			UserVO usuario = Utils.validateSession(session);
 			
-			String cdunieco = smap1.get("cdunieco");
-			String cdramo   = smap1.get("cdramo");
-			String estado   = smap1.get("estado");
-			String nmpoliza = smap1.get("nmpoliza");
-			String cdperpag = smap1.get("cdperpag");
-			String cdtipsit = smap1.get("cdtipsit");
-			String ntramite = smap1.get("ntramite");
-			String nGrupos  = smap1.get("nGrupos");
+			String cdusuari = usuario.getUser();
+			
+			String cdunieco  = smap1.get("cdunieco")
+			       ,cdramo   = smap1.get("cdramo")
+			       ,estado   = smap1.get("estado")
+			       ,nmpoliza = smap1.get("nmpoliza")
+			       ,cdperpag = smap1.get("cdperpag")
+			       ,cdtipsit = smap1.get("cdtipsit")
+			       ,ntramite = smap1.get("ntramite")
+			       ,nGrupos  = smap1.get("nGrupos");
+			
+			int bloqueos = 0;
+			do
+			{
+				logger.debug(Utils.log("Recuperando conteo de tbloqueo de primer ciclo"));
+				ManagerRespuestaSmapVO resp = recuperacionSimpleManager.recuperacionSimple(
+						RecuperacionSimple.RECUPERAR_CONTEO_BLOQUEO
+						,smap1
+						,usuario.getRolActivo().getClave()
+						,cdusuari
+						);
+				
+				bloqueos = Integer.parseInt(resp.getSmap().get("CONTEO"));
+				
+				logger.debug(Utils.log(stamp,"Conteo recuperado=",bloqueos));
+				
+				logger.debug(Utils.log(stamp,"Esperando 30 segundos del primer ciclo..."));
+				Thread.sleep(1000l*30l);
+				
+			}
+			while(bloqueos>0);
+			
+			do
+			{
+				logger.debug(Utils.log("Recuperando conteo de tbloqueo de segundo ciclo"));
+				ManagerRespuestaSmapVO resp = recuperacionSimpleManager.recuperacionSimple(
+						RecuperacionSimple.RECUPERAR_CONTEO_BLOQUEO
+						,smap1
+						,usuario.getRolActivo().getClave()
+						,cdusuari
+						);
+				
+				bloqueos = Integer.parseInt(resp.getSmap().get("CONTEO"));
+				
+				logger.debug(Utils.log(stamp,"Conteo recuperado=",bloqueos));
+				
+				logger.debug(Utils.log(stamp,"Esperando 30 segundos de segundo ciclo..."));
+				Thread.sleep(1000l*30l);
+				
+			}
+			while(bloqueos>0);
+			
+			logger.debug(Utils.log(stamp,"Se termino el bloqueo"));
 			
 			String urlReporteCotizacion=Utils.join(
 					  getText("ruta.servidor.reports")
@@ -7596,6 +7647,9 @@ public class CotizacionAction extends PrincipalCoreAction
 					+ "/"+ntramite
 					+ "/"+nombreArchivoCotizacion
 					;
+			
+			logger.debug(Utils.log(stamp,"Se va a ejecutar el reporte=",urlReporteCotizacion));
+			
 			HttpUtil.generaArchivo(urlReporteCotizacion, pathArchivoCotizacion);
 
 			//Map<String,Object>mapArchivo=new LinkedHashMap<String,Object>(0);
@@ -7654,6 +7708,9 @@ public class CotizacionAction extends PrincipalCoreAction
 					+ "/"+ntramite
 					+ "/"+nombreArchivoCotizacion2
 					;
+			
+			logger.debug(Utils.log(stamp,"Se va a ejecutar el reporte2=",urlReporteCotizacion2));
+			
 			HttpUtil.generaArchivo(urlReporteCotizacion2, pathArchivoCotizacion2);
 
 			//Map<String,Object>mapArchivo2=new LinkedHashMap<String,Object>(0);
@@ -7873,10 +7930,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuestaOculta = ex.getMessage();
 			logger.error(respuesta,ex);
 		}
-		logger.info(""
-				+ "\n###### guardarReporteCotizacionGrupo ######"
-				+ "\n###########################################"
-				);
+		
+		logger.debug(Utils.log(stamp
+				,"\n###### guardarReporteCotizacionGrupo ######"
+				,"\n###########################################"
+				));
+		
 		return SUCCESS;
 	}
 	
