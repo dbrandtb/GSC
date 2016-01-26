@@ -2193,8 +2193,8 @@ Ext.onReady(function()
                                             		debug('json.smap1.P2VALOR=', Number(json.smap1.P2VALOR));
                                             		var valormin = Number(me.valorCargado)*(1+Number(json.smap1.P1VALOR));
                                                     var valormax = Number(me.valorCargado)*(1+Number(json.smap1.P2VALOR));
-                                                    MontoMaximo = valormin;
-													MontoMinimo = valormax;
+                                                    MontoMaximo = valormax;
+													MontoMinimo = valormin;
 													
                                                     
                                                     if(_p30_smap1.cdsisrol =='EJECUTIVOCUENTA'){
