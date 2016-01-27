@@ -54,6 +54,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vNumero", Types.VARCHAR));
 			declareParameter(new SqlParameter("vNumInt", Types.VARCHAR));
 			declareParameter(new SqlParameter("vNumDir", Types.SMALLINT));
+			declareParameter(new SqlParameter("vUSER", Types.VARCHAR));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -100,6 +101,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vTelefono3", Types.VARCHAR));
 			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
 			declareParameter(new SqlParameter("vNumDir", Types.SMALLINT));
+			declareParameter(new SqlParameter("vUSER", Types.VARCHAR));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -683,6 +685,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			
 			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
 			declareParameter(new SqlParameter("vNumDir", Types.SMALLINT));
+			declareParameter(new SqlParameter("vUSER", Types.VARCHAR));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  

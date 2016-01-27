@@ -47,11 +47,11 @@ public interface EmisionAutosService {
 			String estado, String nmpoliza, String nmsuplem);
 
 	public int endosoCambioDomicil(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem);
+			String estado, String nmpoliza, String nmsuplem, UserVO usuarioSesion);
 
 	public int actualizaDatosCambioDomicilCP(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem);
+			String estado, String nmpoliza, String nmsuplem, UserVO usuarioSesion);
 
 	public int actualizaDatosCambioDomicilSinCP(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem);
+			String estado, String nmpoliza, String nmsuplem, UserVO usuarioSesion);
 }
