@@ -11116,6 +11116,9 @@ public class EndososAction extends PrincipalCoreAction
 		 */
 		
 		try {
+			
+			String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramite);
+			
 			List<Map<String,String>> listaEndosos = emisionAutosService.obtieneEndososImprimir(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 			
 			if(listaEndosos == null || listaEndosos.isEmpty()){
@@ -11425,14 +11428,30 @@ public class EndososAction extends PrincipalCoreAction
 								);
 					}
 
+					
 					/**
 					 * Para cobertura de Seguro de Vida
 					 */
 					if(StringUtils.isNotBlank(endosoIt.get("COBVIDA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("COBVIDA"))){
-						//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
-						//paramsR.put("pv_dsdocume_i", "Especificaciones Seguro de Vida");
 						
-						//kernelManager.guardarArchivo(paramsR);
+						String reporteEspVida = this.getText("rdf.emision.nombre.esp.cobvida");
+						String pdfEspVidaNom = "SOL_VIDA_AUTO.pdf";
+						
+						String url=this.getText("ruta.servidor.reports")
+								+ "?destype=cache"
+								+ "&desformat=PDF"
+								+ "&userid="+this.getText("pass.servidor.reports")
+								+ "&report="+reporteEspVida
+								+ "&paramform=no"
+								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+								+ "&p_unieco="+cdunieco
+								+ "&p_ramo="+cdramo
+								+ "&p_estado='M'"
+								+ "&p_poliza="+nmpoliza
+								+ "&p_suplem="+nmsuplem
+								+ "&desname="+rutaCarpeta+"/"+pdfEspVidaNom;
+						
+						HttpUtil.generaArchivo(url,rutaCarpeta+"/"+pdfEspVidaNom);
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -11441,7 +11460,7 @@ public class EndososAction extends PrincipalCoreAction
 								,nmpoliza
 								,nmsuplem
 								,new Date()
-								,"http://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf"
+								,pdfEspVidaNom
 								,"Especificaciones Seguro de Vida"
 								,nmpoliza
 								,ntramite
