@@ -2106,17 +2106,11 @@ function _p22_guardarClic(callbackGuardar, autosave)
 	    debug('Domicilios Updated: ' , updateListDom);
 	    
 		/**
-		 * PARA CARGAR LA SUCURSAL ANTES DE GUARDAR
+		 * Carga la nueva sucursal si cambia, solo se actualiza en BD si el cliente no esta asociado a una poliza.
 		 */
 	    
-//	    alert(_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue());
-//	    alert(_cargaSucursalEmi);
-		if(!autosave && Ext.isEmpty(_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) && !Ext.isEmpty(_cargaSucursalEmi)){
+		if(!autosave && !Ext.isEmpty(_cargaSucursalEmi) && _fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue() != _cargaSucursalEmi){
 			_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(_cargaSucursalEmi);
-		}else if(!autosave && !Ext.isEmpty(_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue()) && !Ext.isEmpty(_cargaSucursalEmi)){
-			if(_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue() != _cargaSucursalEmi){
-				mensajeWarning('El cliente actual fue creado con otra sucursal.');
-			}
 		}
 		
 		if(!autosave){
