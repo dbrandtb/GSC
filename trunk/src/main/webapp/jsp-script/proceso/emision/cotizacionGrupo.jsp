@@ -63,7 +63,7 @@ var _p21_urlObtenerDatosAdicionalesGrupo = '<s:url namespace="/emision"         
 var _p21_urlObtenerTvalogarsGrupo        = '<s:url namespace="/emision"         action="cargarTvalogarsGrupo"             />';
 var _p21_urlObtenerTarifaEdad            = '<s:url namespace="/emision"         action="cargarTarifasPorEdad"             />';
 var _p21_urlObtenerTarifaCobertura       = '<s:url namespace="/emision"         action="cargarTarifasPorCobertura"        />';
-var _p21_urlMesaControl                  = '<s:url namespace="/mesacontrol"     action="mcdinamica"                       />';
+var _p21_urlMesaControl                  = '<s:url namespace="/flujomesacontrol" action="mesaControl"                     />';
 var _p21_urlActualizarStatus             = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"          />';
 var _p21_urlEmitir                       = '<s:url namespace="/emision"         action="emitirColectivo"                  />';
 var _p21_urlViewDoc                      = '<s:url namespace="/documentos"      action="descargaDocInline"                />';
@@ -1166,7 +1166,7 @@ Ext.onReady(function()
     {
         Ext.create('Ext.window.Window',
         {
-            title           : 'Documentos del tr&aacute;mite ' + _p21_ntramite
+            title           : 'Documentos del tr&aacute;mite ' + (_p21_ntramite||_p21_ntramiteVacio)
             ,ventanaDocu    : true
             ,closable       : false
             ,width          : 500
@@ -1189,7 +1189,7 @@ Ext.onReady(function()
                     ,'smap1.nmpoliza' : '0'
                     ,'smap1.nmsuplem' : '0'
                     ,'smap1.nmsolici' : '0'
-                    ,'smap1.ntramite' : _p21_ntramite
+                    ,'smap1.ntramite' : (_p21_ntramite||_p21_ntramiteVacio)
                     ,'smap1.tipomov'  : '0'
                 }
             }
@@ -3933,8 +3933,7 @@ function _p21_mesacontrol(json)
         ,url           : _p21_urlMesaControl
         ,params        :
         {
-            'smap1.gridTitle'      : 'Tareas'
-            ,'smap2.pv_cdtiptra_i' : 1
+            'params.AGRUPAMC' : 'PRINCIPAL'
         }
     });
 }

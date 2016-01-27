@@ -2906,160 +2906,233 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String pantallaCotizacionGrupo2()
 	{
-		logger.info(
-				new StringBuilder()
-				.append("\n######################################")
-				.append("\n###### pantallaCotizacionGrupo2 ######")
-				.append("\n###### smap1=").append(smap1)
-				.toString()
-				);
+		long stamp = System.currentTimeMillis();
+		logger.info(Utils.log(stamp
+				,"\n######################################"
+				,"\n###### pantallaCotizacionGrupo2 ######"
+				,"\n###### smap1=" , smap1
+				,"\n###### flujo=" , flujo
+				));
 		
-		success = true;
-		exito   = true;
-		
-		String cdramo        = null;
-		String cdtipsit      = null;
-		String ntramite      = null;
-		String ntramiteVacio = null;
-		String status        = null;
-		String cdusuari      = null;
-		String cdsisrol      = null;
-		String nombreUsuario = null;
-		String cdagente      = null;
+		String cdramo         = null
+		       ,cdtipsit      = null
+		       ,ntramite      = null
+		       ,ntramiteVacio = null
+		       ,status        = null
+		       ,cdusuari      = null
+		       ,cdsisrol      = null
+		       ,nombreUsuario = null
+		       ,cdagente      = null
+		       ,paso          = null
+		       ,result        = ERROR;
 		
 		//datos completos
 		try
 		{
-			if(smap1==null)
+			try
 			{
-				throw new ApplicationException("No se recibieron datos");
+				if(flujo!=null)
+				{
+					paso = "Recuperando datos del flujo";
+					logger.debug(Utils.log(stamp, "paso=", paso));
+					
+					smap1 = new HashMap<String,String>();
+					smap1.put("cdunieco" , flujo.getCdunieco());
+					smap1.put("cdramo"   , flujo.getCdramo());
+					
+					Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(new StringBuilder(), flujo);
+					
+					Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
+					
+					String nmsolici = tramite.get("NMSOLICI");
+					if(StringUtils.isBlank(nmsolici))
+					{
+						nmsolici = "0";
+					}
+					
+					smap1.put("cdtipsit" , tramite.get("CDTIPSIT"));
+					smap1.put("estado"   , flujo.getEstado());
+					smap1.put("ntramite" , flujo.getNtramite());
+					smap1.put("cdagente" , tramite.get("CDAGENTE"));
+					smap1.put("status"   , flujo.getStatus());
+					smap1.put("sincenso" , tramite.get("OTVALOR02"));
+					
+					if(Integer.parseInt(nmsolici)>0)
+					{
+						smap1.put("nmpoliza" , nmsolici);
+					}
+					else
+					{
+						smap1.put("nmpoliza" , "");
+						smap1.put("ntramite" , "");
+						smap1.put("ntramiteVacio" , flujo.getNtramite());
+					}
+					
+					logger.debug(Utils.log(stamp,"datos recuperados del flujo smap1=",smap1));
+				}
+				
+				paso = "Verificando datos completos";
+				logger.debug(Utils.log(stamp, "paso=", paso));
+				
+				Utils.validate(smap1, "No se recibieron datos");
+				
+				cdramo   = smap1.get("cdramo");
+				cdtipsit = smap1.get("cdtipsit");
+				
+				Utils.validate(
+						cdramo    , "No hay cdramo"
+						,cdtipsit , "No hay cdtipsit"
+						);
+				
+				ntramite      = smap1.get("ntramite");
+				ntramiteVacio = smap1.get("ntramiteVacio");
+				status        = smap1.get("status");
+				cdagente      = smap1.get("cdagente");
+				
+				if(StringUtils.isBlank(status))
+				{
+					status = "0";
+				}
+				
+				paso = "Verificando datos de sesi\u00f3n";
+				logger.debug(Utils.log(stamp, "paso=", paso));
+				
+				UserVO usuario = Utils.validateSession(session);
+				
+				cdusuari      = usuario.getUser();
+				cdsisrol      = usuario.getRolActivo().getClave();
+				nombreUsuario = usuario.getName();
+				
+				smap1.put("cdsisrol" , cdsisrol);
+				
+				paso = "Invocando proceso";
+				logger.debug(Utils.log(stamp, "paso=", paso));
+				
+				ManagerRespuestaImapSmapVO resp = cotizacionManager.pantallaCotizacionGrupo(
+						cdramo
+						,cdtipsit
+						,ntramite
+						,ntramiteVacio
+						,status
+						,cdusuari
+						,cdsisrol
+						,nombreUsuario
+						,cdagente
+						);
+				exito           = resp.isExito();
+				respuesta       = resp.getRespuesta();
+				
+				if(!exito)
+				{
+					throw new ApplicationException(respuesta);
+				}
+				
+				smap1.putAll(resp.getSmap());
+				imap=resp.getImap();
+				
+				result = SUCCESS;
 			}
-			cdramo   = smap1.get("cdramo");
-			cdtipsit = smap1.get("cdtipsit");
-			if(StringUtils.isBlank(cdramo))
+			catch(Exception ex)
 			{
-				throw new ApplicationException("No se recibio el ramo");
+				Utils.generaExcepcion(ex, paso);
 			}
-			if(StringUtils.isBlank(cdtipsit))
-			{
-				throw new ApplicationException("No se recibio la modalidad");
-			}
-			ntramite      = smap1.get("ntramite");
-			ntramiteVacio = smap1.get("ntramiteVacio");
-			status        = smap1.get("status");
-			cdagente      = smap1.get("cdagente");
-			if(StringUtils.isBlank(status))
-			{
-				status = "0";
-			}
-			
-			if(session==null)
-			{
-				throw new ApplicationException("No hay sesion");
-			}
-			UserVO usuario = (UserVO)session.get("USUARIO");
-			if(usuario==null)
-			{
-				throw new ApplicationException("No hay usuario en la sesion");
-			}
-			cdusuari      = usuario.getUser();
-			cdsisrol      = usuario.getRolActivo().getClave();
-			nombreUsuario = usuario.getName();
-			
-			smap1.put("cdsisrol" , cdsisrol);
-		}
-		catch(ApplicationException ax)
-		{
-			long timestamp  = System.currentTimeMillis();
-			exito           = false;
-			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
-			respuestaOculta = ax.getMessage();
-			logger.error(respuesta,ax);
 		}
 		catch(Exception ex)
 		{
-			long timestamp  = System.currentTimeMillis();
-			exito           = false;
-			respuesta       = new StringBuilder("Error al validar datos #").append(timestamp).toString();
-			respuestaOculta = ex.getMessage();
-			logger.error(respuesta,ex);
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		//proceso
-		if(exito)
-		{
-			ManagerRespuestaImapSmapVO resp = cotizacionManager.pantallaCotizacionGrupo(
-					cdramo
-					,cdtipsit
-					,ntramite
-					,ntramiteVacio
-					,status
-					,cdusuari
-					,cdsisrol
-					,nombreUsuario
-					,cdagente
-					);
-			exito           = resp.isExito();
-			respuesta       = resp.getRespuesta();
-			respuestaOculta = resp.getRespuestaOculta();
-			if(exito)
-			{
-				smap1.putAll(resp.getSmap());
-				imap=resp.getImap();
-			}
-		}
-		
-		String result = SUCCESS;
-		if(!exito)
-		{
-			result = ERROR;
-		}
-		
-		logger.info(
-				new StringBuilder()
-				.append("\n###### result=").append(result)
-				.append("\n###### pantallaCotizacionGrupo2 ######")
-				.append("\n######################################")
-				.toString()
-				);
+		logger.info(Utils.log(stamp
+				,"\n###### result="    , result
+				,"\n###### respuesta=" , respuesta
+				,"\n###### pantallaCotizacionGrupo2 ######"
+				,"\n######################################"
+				));
 		return result;
 	}
 	
 	public String pantallaCotizacionGrupo()
 	{
-		logger.info(
-				new StringBuilder()
-				.append("\n#####################################")
-				.append("\n###### pantallaCotizacionGrupo ######")
-				.append("\n###### smap1=").append(smap1)
-				.toString()
-				);
+		long stamp = System.currentTimeMillis();
+		logger.info(Utils.log(stamp
+				,"\n#####################################"
+				,"\n###### pantallaCotizacionGrupo ######"
+				,"\n###### smap1=", smap1
+				,"\n###### flujo=", flujo
+				));
 		
-		success = true;
-		exito   = true;
-		imap    = new HashMap<String,Item>();
+		imap = new HashMap<String,Item>();
 		
-		String cdramo        = null;
-		String cdtipsit      = null;
-		String ntramite      = null;
-		String ntramiteVacio = null;
-		String status        = null;
+		String cdramo         = null
+		       ,cdtipsit      = null
+		       ,ntramite      = null
+		       ,ntramiteVacio = null
+		       ,status        = null
+		       ,cdusuari      = null
+		       ,cdsisrol      = null
+		       ,nombreUsuario = null
+		       ,nombreAgente  = null
+		       ,cdAgente      = null
+		       ,paso          = null
+		       ,result        = ERROR;
 		
-		//datos completos
-		if(exito)
+		try
 		{
 			try
 			{
-				cdramo        = smap1.get("cdramo");
-				cdtipsit      = smap1.get("cdtipsit");
-				if(StringUtils.isBlank(cdramo))
+				if(flujo!=null)
 				{
-					throw new Exception("No hay cdramo");
+					paso = "Recuperando datos del flujo";
+					logger.debug(Utils.log(stamp, "paso=", paso));
+					
+					smap1 = new HashMap<String,String>();
+					smap1.put("cdunieco" , flujo.getCdunieco());
+					smap1.put("cdramo"   , flujo.getCdramo());
+					
+					Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(new StringBuilder(), flujo);
+					
+					Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
+					
+					String nmsolici = tramite.get("NMSOLICI");
+					if(StringUtils.isBlank(nmsolici))
+					{
+						nmsolici = "0";
+					}
+					
+					smap1.put("cdtipsit" , tramite.get("CDTIPSIT"));
+					smap1.put("estado"   , flujo.getEstado());
+					smap1.put("ntramite" , flujo.getNtramite());
+					smap1.put("cdagente" , tramite.get("CDAGENTE"));
+					smap1.put("status"   , flujo.getStatus());
+					smap1.put("sincenso" , tramite.get("OTVALOR02"));
+					
+					if(Integer.parseInt(nmsolici)>0)
+					{
+						smap1.put("nmpoliza" , nmsolici);
+					}
+					else
+					{
+						smap1.put("nmpoliza" , "");
+						smap1.put("ntramite" , "");
+						smap1.put("ntramiteVacio" , flujo.getNtramite());
+					}
+					
+					logger.debug(Utils.log(stamp,"datos recuperados del flujo smap1=",smap1));
 				}
-				if(StringUtils.isBlank(cdtipsit))
-				{
-					throw new Exception("No hay cdtipsit");
-				}
+				
+				paso = "Verificando datos completos";
+				logger.debug(Utils.log(stamp, "paso=", paso));
+				
+				Utils.validate(smap1, "No se recibieron datos");
+				
+				cdramo   = smap1.get("cdramo");
+				cdtipsit = smap1.get("cdtipsit");
+				
+				Utils.validate(
+						cdramo    , "No hay cdramo"
+						,cdtipsit , "No hay cdtipsit"
+						);
+				
 				ntramite      = smap1.get("ntramite");
 				ntramiteVacio = smap1.get("ntramiteVacio");
 				status        = smap1.get("status");
@@ -3067,56 +3140,26 @@ public class CotizacionAction extends PrincipalCoreAction
 				{
 					status = "0";
 				}
-			}
-			catch(Exception ex)
-			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = new StringBuilder().append("Datos incompletos #").append(timestamp).toString();
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
-		}
-		
-		String cdusuari      = null;
-		String cdsisrol      = null;
-		String nombreUsuario = null;
-		
-		//datos sesion
-		if(exito)
-		{
-			try
-			{
-				UserVO usuario  = (UserVO) session.get("USUARIO");
+				
+				//datos sesion
+				paso = "Verificando datos de sesi\u00f3n";
+				logger.debug(Utils.log(stamp, "paso=", paso));
+				UserVO usuario  = Utils.validateSession(session);
 				cdusuari        = usuario.getUser();
 				cdsisrol        = usuario.getRolActivo().getClave();
 				nombreUsuario   = usuario.getName();
 				
 				smap1.put("cdsisrol",cdsisrol);
-			}
-			catch(Exception ex)
-			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = new StringBuilder().append("Error al obtener datos del usuario #").append(timestamp).toString();
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
-		}
-
-		String nombreAgente  = null;
-		String cdAgente      = null;
-		
-		//datos del agente
-		if(exito)
-		{
-			try
-			{
+				
 				//si entran por agente
+				paso = "Recuperando datos del agente";
+				logger.debug(Utils.log(stamp, "paso=", paso));
 				if(StringUtils.isBlank(ntramite)&&StringUtils.isBlank(ntramiteVacio))
 				{
-					DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(cdusuari,cdtipsit);
+					DatosUsuario datUsu = kernelManager.obtenerDatosUsuario(cdusuari,cdtipsit);
+					
 	        		String cdunieco = datUsu.getCdunieco();
+	        		
 	        		smap1.put("cdunieco",cdunieco);
 	        		
 	        		cdAgente     = datUsu.getCdagente();
@@ -3128,25 +3171,11 @@ public class CotizacionAction extends PrincipalCoreAction
 					cdAgente     = smap1.get("cdagente");
 					nombreAgente = cotizacionManager.cargarNombreAgenteTramite(StringUtils.isNotBlank(ntramite)?ntramite:ntramiteVacio);
 				}
-			}
-			catch(Exception ex)
-			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = new StringBuilder().append("Error al obtener datos del agente #").append(timestamp).toString();
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
-		}
-			
-		GeneradorCampos gc = null;
-		
-		//generar componentes
-		if(exito)
-		{
-			try
-			{
-				gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				
+				//generando componentes
+				paso = "Generando componentes";
+				logger.debug(Utils.log(stamp, "paso=", paso));
+				GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				
 				List<ComponenteVO>columnaEditorPlan=pantallasManager.obtenerComponentes(
 						null, null, null,
@@ -3263,377 +3292,83 @@ public class CotizacionAction extends PrincipalCoreAction
 				{
 					imap.put("botones" , null);
 				}
-			}
-			catch(Exception ex)
-			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = new StringBuilder().append("Error al generar componentes #").append(timestamp).toString();
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
-		}
-		
-		//obtener permisos
-		if(exito)
-		{
-			try
-			{
+				
+				//obtener permisos
+				paso = "Recuperando persmisos de pantalla";
+				logger.debug(Utils.log(stamp, "paso=", paso));
 				smap1.put("status",status);
 				smap1.putAll(cotizacionManager.cargarPermisosPantallaGrupo(cdsisrol, status));
+				
+				//campos para asegurados
+				paso = "Recuperando campos de asegurados";
+				logger.debug(Utils.log(stamp, "paso=", paso));
+				if(smap1.containsKey("ASEGURADOS")
+						&& StringUtils.isNotBlank(smap1.get("ASEGURADOS"))
+						&& smap1.get("ASEGURADOS").equals("S")
+				)
+				{
+					List<ComponenteVO>componentesExtraprimas=pantallasManager.obtenerComponentes(
+							null  , null , null
+							,null , null , cdsisrol
+							,"COTIZACION_GRUPO", "ASEGURADOS", null);
+					gc.generaComponentes(componentesExtraprimas, true, true, false, true, false, false);
+					imap.put("aseguradosColumns" , gc.getColumns());
+					imap.put("aseguradosFields"  , gc.getFields());
+				}
+				
+				//campos para extraprimas
+				paso = "Recuperando campos de extraprimas";
+				logger.debug(Utils.log(stamp, "paso=", paso));
+				if(smap1.containsKey("EXTRAPRIMAS")
+						&& StringUtils.isNotBlank(smap1.get("EXTRAPRIMAS"))
+						&& smap1.get("EXTRAPRIMAS").equals("S")
+				)
+				{
+					List<ComponenteVO>componentesExtraprimas=pantallasManager.obtenerComponentes(
+							null  , null , null
+							,null , null , cdsisrol
+							,"COTIZACION_GRUPO", "EXTRAPRIMAS", null);
+					gc.generaComponentes(componentesExtraprimas, true, true, false, true, true, false);
+					imap.put("extraprimasColumns" , gc.getColumns());
+					imap.put("extraprimasFields"  , gc.getFields());
+				}
+				
+				//campos para recuperados (asegurados)
+				paso = "Recuperando campos de asegurados recuperados";
+				logger.debug(Utils.log(stamp, "paso=", paso));
+				if(smap1.containsKey("ASEGURADOS_EDITAR")
+						&& StringUtils.isNotBlank(smap1.get("ASEGURADOS_EDITAR"))
+						&& smap1.get("ASEGURADOS_EDITAR").equals("S")
+				)
+				{
+					List<ComponenteVO>componentesRecuperados=pantallasManager.obtenerComponentes(
+							null  , null , null
+							,null , null , cdsisrol
+							,"COTIZACION_GRUPO", "RECUPERADOS", null);
+					gc.generaComponentes(componentesRecuperados, true, true, false, true, true, false);
+					imap.put("recuperadosColumns" , gc.getColumns());
+					imap.put("recuperadosFields"  , gc.getFields());
+				}
+				
+				/////////////////
+				result = SUCCESS;
 			}
 			catch(Exception ex)
 			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = new StringBuilder().append("Error al obtener permisos #").append(timestamp).toString();
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
+				Utils.generaExcepcion(ex, paso);
 			}
 		}
-		
-		//obtener configuraciones
-		/*
-		if(exito)
+		catch(Exception ex)
 		{
-			try
-			{
-				List<Map<String,String>>cols=cotizacionManager.cargarConfiguracionGrupo(cdramo, cdtipsit);
-				
-				List<ComponenteVO>compsColBase   = new ArrayList<ComponenteVO>();
-				List<ComponenteVO>compsColNoBase = new ArrayList<ComponenteVO>();
-				
-				Item baseCols     = new Item("basecols"    ,null,Item.ARR);
-				Item noBaseCols   = new Item("nobasecols"  ,null,Item.ARR);
-				Item baseFields   = new Item("basefields"  ,null,Item.ARR);
-				Item noBaseFields = new Item("nobasefields",null,Item.ARR);
-				
-				for(Map<String,String>iCol:cols)
-				{
-					String tipo   = iCol.get("TIPO");
-					String base   = iCol.get("BASE");
-					String nombre = iCol.get("NOMBRE");
-					if(StringUtils.isBlank(nombre))
-					{
-						throw new ApplicationException(
-								new StringBuilder()
-								.append("El componente no tiene nombre")
-								.toString()
-								);
-					}
-					if(StringUtils.isBlank(tipo))
-					{
-						throw new ApplicationException(
-								new StringBuilder()
-								.append("El componente no tiene tipo ")
-								.append(nombre)
-								.toString()
-								);
-					}
-					if(StringUtils.isBlank(base))
-					{
-						throw new ApplicationException(
-								new StringBuilder()
-								.append("El componente no tiene base ")
-								.append(nombre)
-								.toString()
-								);
-					}
-					ComponenteVO comp = null;
-					if(tipo.equals(ConfiguracionGrupo.TIPO_ATRIBUTO)
-							||tipo.equals(ConfiguracionGrupo.TIPO_DOBLE)
-							)
-					{
-						String cdatrisit = iCol.get("CDATRISIT");
-						if(StringUtils.isBlank(cdatrisit))
-						{
-							throw new ApplicationException(
-									new StringBuilder()
-									.append("El componente no esta ligado a un atributo de situacion  ")
-									.append(nombre)
-									.toString()
-									);
-						}
-						comp=cotizacionManager.cargarComponenteTatrisit(cdtipsit,cdusuari,cdatrisit);
-						comp.setColumna(Constantes.SI);
-						
-						GeneradorCampos gec=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-						gec.setCdtipsit(cdtipsit);
-						List<ComponenteVO>aux=new ArrayList<ComponenteVO>();
-						aux.add(comp);
-						gec.generaComponentes(aux, true, true, false, true, true, false);
-						if(base.equals(Constantes.SI))
-						{
-							baseFields.add(new Item(null,gec.getFields(),Item.OBJ));
-							baseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
-							compsColBase.add(comp);
-						}
-						else
-						{
-							noBaseFields.add(new Item(null,gec.getFields(),Item.OBJ));
-							noBaseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
-							compsColNoBase.add(comp);
-						}
-					}
-					else if(tipo.equals(ConfiguracionGrupo.TIPO_COBERTURA))
-					{
-						String tipogar = iCol.get("TIPOGAR");
-						if(StringUtils.isBlank(tipogar))
-						{
-							throw new ApplicationException(
-									new StringBuilder()
-									.append("El componente no tiene tipo de cobertura ")
-									.append(nombre)
-									.toString()
-									);
-						}
-						if(tipogar.equals(ConfiguracionGrupo.TIPOGAR_VALOR))
-						{
-							String cdgarant  = iCol.get("CDGARANT");
-							String cdatrigar = iCol.get("CDATRIGAR");
-							if(StringUtils.isBlank(cdgarant))
-							{
-								throw new ApplicationException(
-										new StringBuilder()
-										.append("El componente no tiene codigo de cobertura ")
-										.append(nombre)
-										.toString()
-										);
-							}
-							if(StringUtils.isBlank(cdatrigar))
-							{
-								throw new ApplicationException(
-										new StringBuilder()
-										.append("El componente no tiene codigo de atributo ")
-										.append(nombre)
-										.toString()
-										);
-							}
-							comp=cotizacionManager.cargarComponenteTatrigar(cdramo,cdtipsit,cdgarant,cdatrigar);
-							comp.setColumna(Constantes.SI);
-							
-							GeneradorCampos gec=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-							gec.setCdtipsit(cdtipsit);
-							gec.setCdgarant(cdgarant);
-							gec.setCdramo(cdramo);
-							List<ComponenteVO>aux=new ArrayList<ComponenteVO>();
-							aux.add(comp);
-							gec.generaComponentes(aux, true, true, false, true, true, false);
-							if(base.equals(Constantes.SI))
-							{
-								baseFields.add(new Item(null,gec.getFields(),Item.OBJ));
-								baseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
-								compsColBase.add(comp);
-							}
-							else
-							{
-								noBaseFields.add(new Item(null,gec.getFields(),Item.OBJ));
-								noBaseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
-								compsColNoBase.add(comp);
-							}
-						}
-						else if(tipogar.equals(ConfiguracionGrupo.TIPOGAR_INSERCION))
-						{
-							String etiqueta = iCol.get("ETIQUETA");
-							if(StringUtils.isBlank(etiqueta))
-							{
-								throw new ApplicationException(
-										new StringBuilder()
-										.append("El componente no tiene etiqueta ")
-										.append(nombre)
-										.toString()
-										);
-							}
-							List<ComponenteVO>listaAux=pantallasManager.obtenerComponentes(
-									null                , null         , null
-									,null               , null         , null
-									,"COTIZACION_GRUPO" , "COMBO_SINO" , null);
-							comp=listaAux.get(0);
-							comp.setLabel(etiqueta);
-							comp.setColumna(Constantes.SI);
-							
-							GeneradorCampos gec=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-							List<ComponenteVO>aux=new ArrayList<ComponenteVO>();
-							aux.add(comp);
-							gec.generaComponentes(aux, true, true, false, true, true, false);
-							if(base.equals(Constantes.SI))
-							{
-								baseFields.add(new Item(null,gec.getFields(),Item.OBJ));
-								baseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
-								compsColBase.add(comp);
-							}
-							else
-							{
-								noBaseFields.add(new Item(null,gec.getFields(),Item.OBJ));
-								noBaseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
-								compsColNoBase.add(comp);
-							}
-						}
-						else
-						{
-							throw new ApplicationException(
-									new StringBuilder()
-									.append("El tipo de cobertura no es correcto ")
-									.append(nombre)
-									.toString()
-									);
-						}
-					}
-					else
-					{
-						throw new ApplicationException(
-								new StringBuilder()
-								.append("El tipo de componente no es correcto ")
-								.append(nombre)
-								.toString()
-								);
-					}
-				}
-				
-				if(compsColBase.size()>0)
-				{
-					gc.generaComponentes(compsColBase, true, true, false, true, true, false);
-					imap2.put("colsBaseFields"  , baseFields);
-					imap2.put("colsBaseColumns" , baseCols);
-				}
-				else
-				{
-					imap2.put("colsBaseFields"  , null);
-					imap2.put("colsBaseColumns" , null);
-				}
-				
-				if(compsColNoBase.size()>0)
-				{
-					gc.generaComponentes(compsColNoBase, true, true, false, true, true, false);
-					imap2.put("colsNoBaseFields"  , noBaseFields);
-					imap2.put("colsNoBaseColumns" , noBaseCols);
-				}
-				else
-				{
-					imap2.put("colsNoBaseFields"  , null);
-					imap2.put("colsNoBaseColumns" , null);
-				}
-				
-				logger.debug(
-						new StringBuilder()
-						.append("\nColumnas base=").append(compsColBase)
-						.append("\nColumnas no base=").append(compsColNoBase)
-						.toString()
-						);
-			}
-			catch(ApplicationException aex)
-			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = new StringBuilder().append(aex.getMessage()).append(" #").append(timestamp).toString();
-				respuestaOculta = aex.getMessage();
-				logger.error(respuesta,aex);
-			}
-			catch(Exception ex)
-			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = new StringBuilder().append("Error al obtener configuraciones #").append(timestamp).toString();
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
-		}
-		*/
-		
-		//campos para asegurados
-		if(exito && smap1.containsKey("ASEGURADOS")
-				 && StringUtils.isNotBlank(smap1.get("ASEGURADOS"))
-				 && smap1.get("ASEGURADOS").equals("S"))
-		{
-			try
-			{
-				List<ComponenteVO>componentesExtraprimas=pantallasManager.obtenerComponentes(
-						null  , null , null
-						,null , null , cdsisrol
-						,"COTIZACION_GRUPO", "ASEGURADOS", null);
-				gc.generaComponentes(componentesExtraprimas, true, true, false, true, false, false);
-				imap.put("aseguradosColumns" , gc.getColumns());
-				imap.put("aseguradosFields"  , gc.getFields());
-			}
-			catch(Exception ex)
-			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = new StringBuilder().append("Error al obtener componentes de asegurados #").append(timestamp).toString();
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		//campos para extraprimas
-		if(exito && smap1.containsKey("EXTRAPRIMAS")
-				 && StringUtils.isNotBlank(smap1.get("EXTRAPRIMAS"))
-				 && smap1.get("EXTRAPRIMAS").equals("S"))
-		{
-			try
-			{
-				List<ComponenteVO>componentesExtraprimas=pantallasManager.obtenerComponentes(
-						null  , null , null
-						,null , null , cdsisrol
-						,"COTIZACION_GRUPO", "EXTRAPRIMAS", null);
-				gc.generaComponentes(componentesExtraprimas, true, true, false, true, true, false);
-				imap.put("extraprimasColumns" , gc.getColumns());
-				imap.put("extraprimasFields"  , gc.getFields());
-			}
-			catch(Exception ex)
-			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = new StringBuilder().append("Error al obtener componentes de extraprimas #").append(timestamp).toString();
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
-		}
-		
-		//campos para recuperados (asegurados)
-		if(exito && smap1.containsKey("ASEGURADOS_EDITAR")
-				 && StringUtils.isNotBlank(smap1.get("ASEGURADOS_EDITAR"))
-				 && smap1.get("ASEGURADOS_EDITAR").equals("S"))
-		{
-			try
-			{
-				List<ComponenteVO>componentesRecuperados=pantallasManager.obtenerComponentes(
-						null  , null , null
-						,null , null , cdsisrol
-						,"COTIZACION_GRUPO", "RECUPERADOS", null);
-				gc.generaComponentes(componentesRecuperados, true, true, false, true, true, false);
-				imap.put("recuperadosColumns" , gc.getColumns());
-				imap.put("recuperadosFields"  , gc.getFields());
-			}
-			catch(Exception ex)
-			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = new StringBuilder().append("Error al obtener componentes de recuperados #").append(timestamp).toString();
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
-		}
-		
-		if(exito)
-		{
-			respuesta       = "Todo OK";
-			respuestaOculta = "Todo OK";
-		}
-		
-		String result = SUCCESS;
-		if(!exito)
-		{
-			result = ERROR;
-		}
-		
-		logger.info(
-				new StringBuilder()
-				.append("\n###### result=").append(result)
-				.append("\n###### pantallaCotizacionGrupo ######")
-				.append("\n#####################################")
-				.toString()
-				);
+		logger.info(Utils.log(stamp
+				,"\n###### result="    , result
+				,"\n###### respuesta=" , respuesta
+				,"\n###### pantallaCotizacionGrupo ######"
+				,"\n#####################################"
+				));
 		return result;
 	}
 	

@@ -6,8 +6,8 @@
 <style>
 #canvasdiv
 {
-    width    : 2000px;
-    height   : 2000px;
+    width    : 4000px;
+    height   : 4000px;
     position : absolute;
 }
 .catEntidad
