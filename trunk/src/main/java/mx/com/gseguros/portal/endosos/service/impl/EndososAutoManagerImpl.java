@@ -5764,7 +5764,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						paramsEnd.put("vTelefono1"  , datosEnIt.get("TELEFONO1"));
 						paramsEnd.put("vTelefono2"  , datosEnIt.get("TELEFONO2"));
 						paramsEnd.put("vTelefono3"  , datosEnIt.get("TELEFONO3"));
-						paramsEnd.put("vUSER"  , cdusuari);
+						paramsEnd.put("vUSER"       , usuarioCaptura);
 						
 					try{
 						
@@ -6047,7 +6047,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			paramsEnd.put("vTelefono1"  , telefono1);
 			paramsEnd.put("vTelefono2"  , telefono2);
 			paramsEnd.put("vTelefono3"  , telefono3);
-			paramsEnd.put("vUSER"  , cdusuari);
+			paramsEnd.put("vUSER"       , usuarioCaptura);
 			
 			endosoRecuperado = -1;
 			String res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);

@@ -1996,7 +1996,7 @@ public class EndososAction extends PrincipalCoreAction
 				/**
 				 * PARA WS ENDOSO DE AUTOS
 				 */
-				int numEndRes = emisionAutosService.endosoCambioDomicil(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"));
+				int numEndRes = emisionAutosService.endosoCambioDomicil(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), usuario);
 				
 				if(numEndRes == 0){
 					mensaje = "Error al generar el endoso, sigs. Consulte a Soporte.";
@@ -7214,7 +7214,7 @@ public class EndososAction extends PrincipalCoreAction
 					/**
 					 * PARA WS ENDOSO DE AUTOS SIN TARIFICACION DONDE PUEDE INCLUIR LA COLONIA y con o sin cambio de CP
 					 */
-					numEndRes = emisionAutosService.actualizaDatosCambioDomicilSinCP(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+					numEndRes = emisionAutosService.actualizaDatosCambioDomicilSinCP(cdunieco, cdramo, estado, nmpoliza, nmsuplem, usuario);
 					
 					if(numEndRes == 0){
 						mensaje = "Error al generar el endoso, sigs. Consulte a Soporte.";

@@ -1221,7 +1221,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	
 	
 	public int endosoCambioDomicil(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem){
+			String estado, String nmpoliza, String nmsuplem, UserVO usuarioSesion){
 		
 		logger.debug(">>>>> Entrando a metodo Cambio Domicilio contratante Auto Sin Modificacion de Codigo Postal");
 		
@@ -1250,6 +1250,17 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			Map<String,String> datosEnd = datos.get(0);
 			try{
 				
+				String usuarioCaptura =  null;
+				
+				if(usuarioSesion!=null){
+					if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
+						usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
+					}else{
+						usuarioCaptura = usuarioSesion.getCodigoPersona();
+					}
+					
+				}
+				
 				HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
 				paramsEnd.put("vSucursal"  , datosEnd.get("SUCURSAL"));
 				paramsEnd.put("vRamo"      , datosEnd.get("RAMO"));
@@ -1268,6 +1279,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vTelefono2" , datosEnd.get("TELEFONO2"));
 				paramsEnd.put("vTelefono3" , datosEnd.get("TELEFONO3"));
 				paramsEnd.put("vFEndoso"   , datosEnd.get("FENDOSO"));
+
+				paramsEnd.put("vUSER"   , usuarioCaptura);
 				
 				Integer res = autosSIGSDAO.endosoDomicilio(paramsEnd);
 				
@@ -1310,7 +1323,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	}
 
 	public int actualizaDatosCambioDomicilCP(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem){
+			String estado, String nmpoliza, String nmsuplem, UserVO usuarioSesion){
 		
 		logger.debug(">>>>> Entrando a metodo actualizaDatosCambioDomicil Codigo Postal");
 		
@@ -1336,6 +1349,18 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		}	
 		
 		if(datos != null && !datos.isEmpty()){
+			
+			String usuarioCaptura =  null;
+			
+			if(usuarioSesion!=null){
+				if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuarioSesion.getCodigoPersona();
+				}
+				
+			}
+			
 			Map<String,String> datosEnd = datos.get(0);
 			try{
 				
@@ -1345,16 +1370,17 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vPoliza"    , datosEnd.get("POLIZA"));
 				paramsEnd.put("vTEndoso"   , StringUtils.isBlank(datosEnd.get("TENDOSO"))?" " : datosEnd.get("TENDOSO"));
 				paramsEnd.put("vEndoso"    , datosEnd.get("ENDOSO"));
-				paramsEnd.put("vCPostal"    , datosEnd.get("CPOSTAL"));
+				paramsEnd.put("vCPostal"   , datosEnd.get("CPOSTAL"));
 				paramsEnd.put("vCveEdo"    , datosEnd.get("CVEEDO"));
 				paramsEnd.put("vDesMun"    , datosEnd.get("DESMUN"));
-				paramsEnd.put("vMunCepomex"    , datosEnd.get("MUNCEPOMEX"));
-				paramsEnd.put("vColonia"  , datosEnd.get("COLONIA"));
-				paramsEnd.put("vTelefono" , datosEnd.get("TELEFONO1"));
+				paramsEnd.put("vMunCepomex", datosEnd.get("MUNCEPOMEX"));
+				paramsEnd.put("vColonia"   , datosEnd.get("COLONIA"));
+				paramsEnd.put("vTelefono"  , datosEnd.get("TELEFONO1"));
 				paramsEnd.put("vCalle"     , datosEnd.get("CALLE"));
 				paramsEnd.put("vNumero"    , datosEnd.get("NUMERO"));
 				paramsEnd.put("vNumInt"    , datosEnd.get("NUMINT"));
-				paramsEnd.put("vNumDir"   , datosEnd.get("NUMDIR"));
+				paramsEnd.put("vNumDir"    , datosEnd.get("NUMDIR"));
+				paramsEnd.put("vUSER"      , usuarioCaptura);
 				
 				Integer res = autosSIGSDAO.cambioDomicilioCP(paramsEnd);
 				
@@ -1379,7 +1405,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	}
 
 	public int actualizaDatosCambioDomicilSinCP(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem){
+			String estado, String nmpoliza, String nmsuplem, UserVO usuarioSesion){
 		
 		logger.debug(">>>>> Entrando a metodo Cambio Domicilio Sin Codigo Postal y cambio de Colonia");
 		
@@ -1408,6 +1434,17 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			Map<String,String> datosEnd = datos.get(0);
 			try{
 				
+				String usuarioCaptura =  null;
+				
+				if(usuarioSesion!=null){
+					if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
+						usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
+					}else{
+						usuarioCaptura = usuarioSesion.getCodigoPersona();
+					}
+					
+				}
+				
 				HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
 				paramsEnd.put("vSucursal"  , datosEnd.get("SUCURSAL"));
 				paramsEnd.put("vRamo"      , datosEnd.get("RAMO"));
@@ -1426,9 +1463,10 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vCveEdo" , datosEnd.get("CVEEDO"));
 				paramsEnd.put("vMpioSPM", datosEnd.get("MPIOSPM"));
 				paramsEnd.put("vNumInt" , datosEnd.get("NUMINT"));
-				paramsEnd.put("vNumDir"   , datosEnd.get("NUMDIR"));
+				paramsEnd.put("vNumDir" , datosEnd.get("NUMDIR"));
 				
-				paramsEnd.put("vFEndoso"   , datosEnd.get("FENDOSO"));
+				paramsEnd.put("vFEndoso", datosEnd.get("FENDOSO"));
+				paramsEnd.put("vUSER"   , usuarioCaptura);
 				
 				Integer res = autosSIGSDAO.cambioDomicilioSinCPColonia(paramsEnd);
 				
