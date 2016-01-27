@@ -44,6 +44,7 @@ import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.rehabilitacion.dao.RehabilitacionDAO;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
@@ -152,6 +153,19 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	
 	@Value("${manual.agente.condgralescobsegvida}")
 	private String urlImpresionCondicionesSegVida;
+
+	@Value("${rdf.emision.nombre.esp.cobvida}")
+	private String rdfEspecSeguroVida;
+
+	//Datos para el servidor de Reportes
+	@Value("${ruta.servidor.reports}")
+	private String rutaServidorReportes;
+
+	@Value("${pass.servidor.reports}")
+	private String passServidorReportes;
+
+	@Value("${ruta.documentos.poliza}")
+	private String rutaDocumentosPoliza;
 	
 	@Override
 	public Map<String,Object> construirMarcoEndosos(String cdusuari,String cdsisrol) throws Exception
@@ -3355,6 +3369,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		 */
 		
 		try{
+			
+			String rutaCarpeta = Utils.join(rutaDocumentosPoliza,"/",ntramite);
+			
 			List<Map<String,String>> listaEndosos = emisionAutosService.obtieneEndososImprimir(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 			
 			if(listaEndosos == null || listaEndosos.isEmpty()){
@@ -3620,6 +3637,25 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					 */
 					if(StringUtils.isNotBlank(endosoIt.get("COBVIDA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("COBVIDA"))){
 						
+						String reporteEspVida = rdfEspecSeguroVida;
+						String pdfEspVidaNom = "SOL_VIDA_AUTO.pdf";
+						
+						String url = rutaServidorReportes
+								+ "?destype=cache"
+								+ "&desformat=PDF"
+								+ "&userid="+passServidorReportes
+								+ "&report="+reporteEspVida
+								+ "&paramform=no"
+								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+								+ "&p_unieco="+cdunieco
+								+ "&p_ramo="+cdramo
+								+ "&p_estado='M'"
+								+ "&p_poliza="+nmpoliza
+								+ "&p_suplem="+nmsuplem
+								+ "&desname="+rutaCarpeta+"/"+pdfEspVidaNom;
+						
+						HttpUtil.generaArchivo(url,rutaCarpeta+"/"+pdfEspVidaNom);
+						
 						mesaControlDAO.guardarDocumento(
 								cdunieco
 								,cdramo
@@ -3627,7 +3663,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,nmpoliza
 								,nmsuplem
 								,new Date()
-								,"http://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf"
+								,pdfEspVidaNom
 								,"Especificaciones Seguro de Vida"
 								,nmpoliza
 								,ntramite
