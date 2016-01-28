@@ -84,7 +84,7 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 		try {
 			// Se validan datos:
 			Utils.validate(params, "No se recibieron datos para cotizar");
-			Utils.validate(params.get("username"),    "No existe el par\u00E1metro params.username");
+			Utils.validate(params.get("cdusuari"),    "No existe el par\u00E1metro params.cdusuari");
 			Utils.validate(params.get("cdelemento"),  "No existe el par\u00E1metro params.cdelemento");
 			Utils.validate(params.get("cdunieco"),    "No existe el par\u00E1metro params.cdunieco");
 			Utils.validate(params.get("cdramo"),      "No existe el par\u00E1metro params.cdramo");
@@ -98,7 +98,7 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 			// Se llenan datos:
 			boolean noTarificar = StringUtils.isNotBlank(params.get("notarificar")) && params.get("notarificar").equals("si");			
 			boolean conIncisos = StringUtils.isNotBlank(params.get("conincisos")) && params.get("conincisos").equals("si");
-			UserVO userVO = loginManager.obtenerDatosUsuario(params.get("username"));
+			UserVO userVO = loginManager.obtenerDatosUsuario(params.get("cdusuari"));
 			logger.debug("CDPERSON del user={}", userVO.getCodigoPersona());
 			
 			// Datos para TVALOPOL:
@@ -114,7 +114,7 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 			//si cdperson es nulo y cdideper no, Importa el cliente y le crea un cdperson y default nmorddom 1
 			ManagerRespuestaSlistSmapVO resp = cotizacionManager.cotizar(
 					params.get("cdunieco"), params.get("cdramo"), params.get("cdtipsit"), 
-					params.get("username"), params.get("cdelemento"),
+					params.get("cdusuari"), params.get("cdelemento"),
 					nmpoliza, feini, fefin, params.get("fesolici"), params.get("cdpersonCli"), params.get("nmorddomCli"), params.get("cdideperCli"),
 					noTarificar, conIncisos, list, params.containsKey("movil"),
 					tvalopol, params.get("cdagenteAux"), userVO);
@@ -172,7 +172,7 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
         	// Se llenan datos:
     		boolean esFlotilla  = StringUtils.isNotBlank(params.get("flotilla"))&&params.get("flotilla").equalsIgnoreCase("si");
     		String tipoflot    = params.get("tipoflot");
-    		UserVO userVO = loginManager.obtenerDatosUsuario(params.get("username"));
+    		UserVO userVO = loginManager.obtenerDatosUsuario(params.get("cdusuari"));
     		logger.debug("CDPERSON del user={}", userVO.getCodigoPersona());
     		
     		String ntramite = cotizacionManager.procesoComprarCotizacion(params.get("cdunieco"), params.get("cdramo"), params.get("nmpoliza"), 
@@ -254,7 +254,7 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 			
 			// Se llenan datos:
 			boolean noTarificar = StringUtils.isNotBlank(params.get("notarificar")) && params.get("notarificar").equals("si");
-			UserVO userVO = loginManager.obtenerDatosUsuario(params.get("username"));
+			UserVO userVO = loginManager.obtenerDatosUsuario(params.get("cdusuari"));
 			logger.debug("CDPERSON del user={}", userVO.getCodigoPersona());
 			
 			Map<String,String>tvalopol=new HashMap<String,String>();
