@@ -224,7 +224,10 @@ Ext.onReady(function()
     _grabarEvento('COTIZACION','ACCCOTIZA'
                   ,_p25_ntramiteVacio?_p25_ntramiteVacio:(_p25_ntramite?_p25_ntramite:''),_p25_smap1.cdunieco,_p25_smap1.cdramo);
 
-    Ext.Ajax.timeout = 30*60*1000;
+    Ext.Ajax.timeout = 60*60*1000;
+    Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+    Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+    Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
 
     ////// modelos //////
     var _p25_colsBaseFields =
