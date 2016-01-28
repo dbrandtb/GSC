@@ -368,7 +368,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					paramsTworkSin.put("pv_nmsuplem_i",	msiniper.get(i).get("NMSUPLEM"));						paramsTworkSin.put("pv_nmsituac_i",	msiniper.get(i).get("NMSITUAC"));
 					paramsTworkSin.put("pv_cdtipsit_i",	msiniper.get(i).get("CDTIPSIT"));						paramsTworkSin.put("pv_cdperson_i",	msiniper.get(i).get("CDPERSON"));
 					paramsTworkSin.put("pv_feocurre_i",	renderFechas.parse(msiniper.get(i).get("FEOCURRE")));	paramsTworkSin.put("pv_nmautser_i",	msiniper.get(i).get("NMAUTSER"));
-					paramsTworkSin.put("pv_nfactura_i",	msiniper.get(i).get("NFACTURA"));
+					paramsTworkSin.put("pv_nfactura_i",	msiniper.get(i).get("NFACTURA"));						paramsTworkSin.put("pv_reqautes_i",	msiniper.get(i).get("REQAUTES"));
 					siniestrosManager.guardaListaTworkSin(paramsTworkSin);
 				}
 				
@@ -2235,6 +2235,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							// Recorremos los conceptos de la factura
 							for(int k = 0; k < conceptos.size() ; k++){
 								Map<String, String> concepto = conceptos.get(k);
+								
 								if(concepto.get("CDUNIECO").equals(siniestroIte.get("CDUNIECO"))
 										&&concepto.get("CDRAMO").equals(siniestroIte.get("CDRAMO"))
 										&&concepto.get("ESTADO").equals(siniestroIte.get("ESTADO"))
@@ -2246,6 +2247,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 										&&concepto.get("NMSINIES").equals(siniestroIte.get("NMSINIES"))
 								){
 									conceptosxSiniestro.add(concepto);
+									logger.debug("VALORES DEL CONCEPTO ================>>>>>>>>>>>>>>> : {} {}",k,concepto);
+									
 									logger.debug("Datos de los conceptos  contador k: {} ",k);
 									logger.debug("Datos de los conceptos  concepto : {}  COPAGO: {} ",concepto,concepto.get("COPAGO"));
 									logger.debug("Datos de los clave Concepto : {}",concepto.get("CDCONCEP") );
@@ -2345,6 +2348,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 											
 											if(concepto.get("CDCONCEP").equalsIgnoreCase("-1")){
 												String scopago 			 = concepto.get("COPAGO");
+												logger.debug("====>>>> VALOR DEL COPAGO "+scopago);
+												logger.debug("====>>>> VALOR DEL COPAGO "+concepto.get("COPAGO"));
 												scopago=scopago.replace("%", "").replace("$", "").replaceAll(",", "");
 												copago=Double.valueOf(scopago);
 												precioArancel  = copago;
