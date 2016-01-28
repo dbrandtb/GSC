@@ -190,6 +190,9 @@
         
         <pattern>/emision/*.action*</pattern>
         <pattern>/jsp-script/proceso/emision/*.jsp</pattern>
+        
+        <pattern>/demo/*.action*</pattern>
+        <pattern>/jsp-script/proceso/demo/*.jsp</pattern>
 
    	</decorator>
 	
