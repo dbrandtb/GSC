@@ -358,7 +358,7 @@ if(_polizaEnEmision){
 				name: 'AgregaDomBtn',
 				handler: function(){
 					
-					if(_domicilioSimple && storeDomiciliosCliente.getCount()>0){
+					if(_domicilioSimple && storeDomiciliosCliente.getCount() > 0){
 						mensajeWarning('No se pueden agregar mas domicilios.');
 						return;
 					}
@@ -1178,6 +1178,8 @@ function irModoAgregar(){
 	
 	_fieldByName('btnContinuarId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).disable();
 	_fieldByName('GeneraRFCBtn',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
+	_fieldByName('AgregaDomBtn',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
+	
 	_permiteDuplicarRFC = false;
 	
 	municipioImportarTMP = '';
@@ -1327,6 +1329,7 @@ function irModoEdicion(){
 	
 	_fieldByName('btnContinuarId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).disable();
 	_fieldByName('GeneraRFCBtn',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
+	_fieldByName('AgregaDomBtn',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
 	
 	_permiteDuplicarRFC = false;
 	
@@ -1968,6 +1971,29 @@ function _p22_loadRecordCdperson(callbackload,autosave)
 			        	}
 			        	
 			        	if(success){
+			        		if(_domicilioSimple && storeDomiciliosCliente.getCount() > 0){
+			        			
+			        			var confAgrDom = undefined;
+			        			
+			        			if(_camposAconfigurar){
+			        				var confAgrDom = Ext.Array.findBy(_camposAconfigurar, function(campoConf, index){
+			        					if(campoConf.CVECAMPO == "AGREGARDOM"){
+			        						return true;
+			        					}else{
+			        						return false;
+			        					}
+			        				});
+			        			}
+			        			
+			        			/**
+			        			 *	Si es domicilio simple, ya hay uno o mas domicilios, y no hay configuracion del Boton de Agregar Domicilio 
+			        			 *	se oculta
+			        			 */
+			        			if(Ext.isEmpty(confAgrDom)){
+			        				_fieldByName('AgregaDomBtn',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
+			        			}
+			        		}
+			        		
 			        		try{
 			                	callbackload();
 			                }catch(e){
