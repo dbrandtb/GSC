@@ -353,7 +353,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						facturas.get(i).get("CDGARANT"),	facturas.get(i).get("CDCONVAL"),		facturas.get(i).get("DESCPORC"),
 						facturas.get(i).get("DESCNUME"),	facturas.get(i).get("CDMONEDA"),		facturas.get(i).get("TASACAMB"),
 						facturas.get(i).get("PTIMPORTA"),	facturas.get(i).get("DCTONUEX"),		renderFechas.parse(fechaEgreso),
-						facturas.get(i).get("DIASDEDU"),	facturas.get(i).get("NOMBPROV"),		null
+						facturas.get(i).get("DIASDEDU"),	facturas.get(i).get("NOMBPROV"),		null, null
 					);
 				}
 				
@@ -368,7 +368,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					paramsTworkSin.put("pv_nmsuplem_i",	msiniper.get(i).get("NMSUPLEM"));						paramsTworkSin.put("pv_nmsituac_i",	msiniper.get(i).get("NMSITUAC"));
 					paramsTworkSin.put("pv_cdtipsit_i",	msiniper.get(i).get("CDTIPSIT"));						paramsTworkSin.put("pv_cdperson_i",	msiniper.get(i).get("CDPERSON"));
 					paramsTworkSin.put("pv_feocurre_i",	renderFechas.parse(msiniper.get(i).get("FEOCURRE")));	paramsTworkSin.put("pv_nmautser_i",	msiniper.get(i).get("NMAUTSER"));
-					paramsTworkSin.put("pv_nfactura_i",	msiniper.get(i).get("NFACTURA"));						paramsTworkSin.put("pv_reqautes_i",	"0");
+					paramsTworkSin.put("pv_nfactura_i",	msiniper.get(i).get("NFACTURA"));						paramsTworkSin.put("pv_reqautes_i",	msiniper.get(i).get("REQAUTES"));
 					siniestrosManager.guardaListaTworkSin(paramsTworkSin);
 				}
 				
@@ -1247,6 +1247,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			RespuestaVO res = ice2sigsService.ejecutaWSreclamosTramite(params.get("pv_ntramite_i"), Operacion.INSERTA, false, usuario);
 			success = res.isSuccess();
 			mensaje = res.getMensaje();
+			
+			logger.debug("Valor de success ==>: {}",success);
+			logger.debug("Valor de mensaje ==>: {}",mensaje);
 			if(success){
 				List<SiniestroVO> siniestrosTramite = siniestrosManager.solicitudPagoEnviada(params);
 				paramsO = new HashMap<String, Object>();
@@ -2232,6 +2235,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							// Recorremos los conceptos de la factura
 							for(int k = 0; k < conceptos.size() ; k++){
 								Map<String, String> concepto = conceptos.get(k);
+								
 								if(concepto.get("CDUNIECO").equals(siniestroIte.get("CDUNIECO"))
 										&&concepto.get("CDRAMO").equals(siniestroIte.get("CDRAMO"))
 										&&concepto.get("ESTADO").equals(siniestroIte.get("ESTADO"))
@@ -2243,8 +2247,11 @@ public class SiniestrosAction extends PrincipalCoreAction {
 										&&concepto.get("NMSINIES").equals(siniestroIte.get("NMSINIES"))
 								){
 									conceptosxSiniestro.add(concepto);
+									logger.debug("VALORES DEL CONCEPTO ================>>>>>>>>>>>>>>> : {} {}",k,concepto);
+									
 									logger.debug("Datos de los conceptos  contador k: {} ",k);
 									logger.debug("Datos de los conceptos  concepto : {}  COPAGO: {} ",concepto,concepto.get("COPAGO"));
+									logger.debug("Datos de los clave Concepto : {}",concepto.get("CDCONCEP") );
 									
 									if(tipoFormatoCalculo.equalsIgnoreCase("1")) {
 										logger.debug("--->>>>>>> HOSPITALIZACION");
@@ -2272,6 +2279,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 											}
 										}
 										
+										// valor del copago  scopago
 										double hPTIMPORT 	= Double.parseDouble(hosp.get("PTIMPORT"));
 										double hDESTO    	= Double.parseDouble(hosp.get("DESTO"));
 										double hIVA      	= Double.parseDouble(hosp.get("IVA"));
@@ -2337,7 +2345,18 @@ public class SiniestrosAction extends PrincipalCoreAction {
 										double cantidad				= Double.valueOf(row.get("CANTIDAD"));
 										
 										if(StringUtils.isNotBlank(row.get("IMP_ARANCEL"))) {
-											precioArancel 		= Double.valueOf(row.get("IMP_ARANCEL"));
+											
+											if(concepto.get("CDCONCEP").equalsIgnoreCase("-1")){
+												String scopago 			 = concepto.get("COPAGO");
+												logger.debug("====>>>> VALOR DEL COPAGO "+scopago);
+												logger.debug("====>>>> VALOR DEL COPAGO "+concepto.get("COPAGO"));
+												scopago=scopago.replace("%", "").replace("$", "").replaceAll(",", "");
+												copago=Double.valueOf(scopago);
+												precioArancel  = copago;
+											}else{
+												precioArancel 		= Double.valueOf(row.get("IMP_ARANCEL"));
+											}
+											
 										}
 										row.put("IMP_ARANCEL",precioArancel+"");
 										
@@ -2650,24 +2669,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						}
 						facturaObj.put("siniestroPD", aseguradosxSiniestro);
 				}
-			}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			/***************************** 		P A G O		R E E M B O L S O 		*************************/
+			}/***************************** 		P A G O		R E E M B O L S O 		*************************/
 			else if(TipoPago.REEMBOLSO.getCodigo().equals(tramite.get("OTVALOR02"))){//TIPO DE PAGO POR REEMBOLSO
 				logger.debug("Paso 5.- EL PROCESO DE PAGO REEMBOLSO ");
 				double importeSiniestroUnico 	= 0d;
@@ -3274,6 +3276,20 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					String totalFacturaA = (String) totalFacturaIte.get("TOTALFACTURAIND");
 					siniestrosManager.guardarTotalProcedenteFactura(ntramiteA,nfacturaA,totalFacturaA, nmSecSinFac+"");
 					nmSecSinFac++;
+					try{
+						HashMap<String, Object> paramsPagoDirecto = new HashMap<String, Object>();
+						paramsPagoDirecto.put("pv_ntramite_i",ntramiteA);
+						String montoTramite = siniestrosManager.obtieneMontoTramitePagoDirecto(paramsPagoDirecto);
+						
+						logger.debug("Valor del Monto del Arancel ===>>>> "+montoTramite);
+						Map<String,Object> otvalor = new HashMap<String,Object>();
+						otvalor.put("pv_ntramite_i" , ntramiteA);
+						otvalor.put("pv_otvalor03_i"  , montoTramite);
+						siniestrosManager.actualizaOTValorMesaControl(otvalor);
+					}catch(Exception ex){
+						logger.debug("error al actualizar el importe de la mesa de control : {}", ex.getMessage(), ex);
+					}
+					
 				}
 				success = true; 
 				mensaje = "Datos guardados";
@@ -3315,7 +3331,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			String                   nombProv   =  params.get("nombProv");
 			
 			logger.debug("VALOR DE tipoAccion --->>>> :{}",tipoAccion);
-			siniestrosManager.guardaListaFacturaSiniestro(ntramite, nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume,cdmoneda,tasacamb,ptimporta,dctonuex,null,null,nombProv,tipoAccion);
+			siniestrosManager.guardaListaFacturaSiniestro(ntramite, nfactura, fefactura, cdtipser, cdpresta, ptimport, 
+					cdgarant, cdconval, descporc, descnume,cdmoneda,tasacamb,ptimporta,dctonuex,null,null,nombProv,tipoAccion, null);
 			//Si el ramo es Recupera se inserta en la tabla de MRECUPERA
 			if(cdramo.equalsIgnoreCase(Ramo.RECUPERA.getCdramo())){
 				logger.debug("Entra al recupera --->>>>> ");
@@ -3368,7 +3385,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				Date	feegreso  = renderFechas.parse(factura.get("FEEGRESO"));
 				String	diasdedu  = factura.get("DIASDEDU");
 				String	nombprov  = factura.get("NOMBPROV");
-				siniestrosManager.guardaListaFacturaSiniestro(ntramite, nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume,cdmoneda,tasacamb,ptimporta,dctonuex,feegreso,diasdedu,nombprov,null);
+				siniestrosManager.guardaListaFacturaSiniestro(ntramite, nfactura, fefactura, cdtipser, cdpresta, 
+						ptimport, cdgarant, cdconval, descporc, descnume,cdmoneda,tasacamb,ptimporta,dctonuex,
+						feegreso,diasdedu,nombprov,null, null);
 			}
 			success = true;
 			mensaje = "Tr&aacute;mite actualizado";
@@ -5386,6 +5405,306 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.debug("validacionGeneral : {}", validacionGeneral);
 		}catch( Exception e){
 			logger.error("Error validaAutorizacionEspecial : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+    public String actualizarMultiSiniestro()
+    {
+    	this.session = ActionContext.getContext().getSession();
+    	logger.debug(""
+    			+ "\n######################################"
+    			+ "\n######################################"
+    			+ "\n###### actualizarMultiSiniestro ######"
+    			+ "\n######                          ######"
+    			);
+    	logger.debug("params: "+params);
+    	/*try
+    	{
+    		String cdunieco  = params.get("cdunieco");
+    		String cdramo    = params.get("cdramo");
+    		String estado    = params.get("estado");
+    		String nmpoliza  = params.get("nmpoliza");
+    		String nmsituac  = params.get("nmsituac");
+    		String nmsuplem  = params.get("nmsuplem");
+    		String status    = params.get("status");
+    		String aaapertu  = params.get("aaapertu");
+    		String nmsinies  = params.get("nmsinies");
+    		
+    		String feocurre  = params.get("feocurre");
+    		Date   dFeocurre = renderFechas.parse(feocurre);
+    		String cdicd     = params.get("cdicd");
+    		String cdicd2    = params.get("cdicd2");
+    		String nreclamo  = params.get("nreclamo");
+    		
+    		String autrecla = params.get("autrecla");
+    		String commenar = params.get("commenar");
+    		String autmedic = params.get("autmedic");
+    		String commenme = params.get("commenme");
+    		
+    		boolean cancela     = StringUtils.isNotBlank(params.get("cancelar"));
+    		String  cdmotivo    = params.get("cdmotivo");
+    		String  rechazoCome = params.get("rechazocomment");
+    		String  ntramite    = params.get("ntramite");
+    		
+    		UserVO usuario = (UserVO)session.get("USUARIO");
+    		String cdrol   = usuario.getRolActivo().getClave();
+    		
+    		Map<String,String>tramiteCompleto = siniestrosManager.obtenerTramiteCompleto(ntramite);
+			String tipoPago = tramiteCompleto.get("OTVALOR02");
+    		
+    		siniestrosManager.actualizaMsinies(
+    				cdunieco,
+    				cdramo,
+    				estado,
+    				nmpoliza,
+    				nmsituac,
+    				nmsuplem,
+    				status,
+    				aaapertu,
+    				nmsinies,    				
+    				dFeocurre,
+    				cdicd,
+    				cdicd2,
+    				nreclamo);
+    		
+    		siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, null,
+    				null,null,null,null,null,
+    				Constantes.MAUTSINI_AREA_RECLAMACIONES, autrecla, Constantes.MAUTSINI_SINIESTRO, commenar, Constantes.INSERT_MODE);
+    		
+    		siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, null,
+    				null,null,null,null,null,
+    				Constantes.MAUTSINI_AREA_MEDICA, autmedic, Constantes.MAUTSINI_SINIESTRO, commenme, Constantes.INSERT_MODE);
+    		
+    		if(cancela)
+    		{
+    			Boolean rolMedico = null;
+    			if(cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO.getCdsisrol())
+    					||cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol())
+    					||cdrol.equalsIgnoreCase(RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol())
+    					||cdrol.equalsIgnoreCase(RolSistema.MEDICO.getCdsisrol())
+    					||cdrol.equalsIgnoreCase(RolSistema.MEDICO_AJUSTADOR.getCdsisrol())
+    					)
+    			{
+    				rolMedico = Boolean.TRUE;
+    			}
+    			else if(cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_SINIESTROS.getCdsisrol())
+    					||cdrol.equalsIgnoreCase(RolSistema.OPERADOR_SINIESTROS.getCdsisrol())
+    					)
+    			{
+    				rolMedico = Boolean.FALSE;
+    			}
+    			
+    			if(rolMedico==null)
+    			{
+    				throw new Exception("El usuario actual no puede cancelar");
+    			}
+    			
+    			MesaControlAction mca = new MesaControlAction();
+    			mca.setKernelManager(kernelManagerSustituto);
+    			mca.setSession(session);
+    			Map<String,String>smap1=new HashMap<String,String>();
+    			smap1.put("ntramite" , ntramite);
+    			smap1.put("status"   , EstatusTramite.RECHAZADO.getCodigo());
+    			smap1.put("cdmotivo" , cdmotivo);
+    			smap1.put("comments" , rechazoCome);
+    			mca.setSmap1(smap1);
+    			mca.actualizarStatusTramite();
+    			if(!mca.isSuccess())
+    			{
+    				throw new Exception("Error al cancelar el trámite");
+    			}
+    			
+    			String nombreReporte = null;
+    			String nombreArchivo = null;
+    			if(rolMedico)
+    			{
+    				nombreReporte = getText("rdf.siniestro.cartarechazo.medico.nombre");
+    				nombreArchivo = getText("pdf.siniestro.rechazo.medico.nombre");
+    			}
+    			else//cancelacion por area de reclamaciones
+    			{
+    				boolean esReembolso = tipoPago.equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo());
+    				if(esReembolso)
+    				{
+    					nombreReporte = getText("rdf.siniestro.cartarechazo.reembolso.nombre");
+        				nombreArchivo = getText("pdf.siniestro.rechazo.reemb.nombre");
+    				}
+    				else
+    				{
+    					nombreReporte = getText("rdf.siniestro.cartarechazo.pagodirecto.nombre");
+        				nombreArchivo = getText("pdf.siniestro.rechazo.pdir.nombre");
+    				}
+    			}
+    			
+    			File carpeta=new File(getText("ruta.documentos.poliza") + "/" + ntramite);
+    			if(!carpeta.exists())
+    			{
+    				logger.debug("no existe la carpeta::: "+ntramite);
+    				carpeta.mkdir();
+    				if(carpeta.exists())
+    				{
+    					logger.debug("carpeta creada");
+    				}
+    				else
+    				{
+    					logger.debug("carpeta NO creada");
+    				}
+    			}
+    			else
+    			{
+    				logger.debug("existe la carpeta   ::: "+ntramite);
+    			}
+    			
+    			String urlContrareciboSiniestro = ""
+    					+ getText("ruta.servidor.reports")
+    					+ "?p_usuario="  + usuario.getUser()
+    					+ "&P_NTRAMITE=" + ntramite
+    					+ "&userid="     + getText("pass.servidor.reports")
+    					+ "&report="     + nombreReporte
+    					+ "&destype=cache"
+    					+ "&desformat=PDF"
+    					+ "&ACCESSIBLE=YES"
+    					+ "&paramform=no";
+    			String pathArchivo=""
+    					+ getText("ruta.documentos.poliza")
+    					+ "/" + ntramite
+    					+ "/" + nombreArchivo;
+    			
+    			HttpUtil.generaArchivo(urlContrareciboSiniestro, pathArchivo);
+    	           	        
+    			documentosManager.guardarDocumento(
+    				cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,new Date()
+					,nombreArchivo
+					,"Carta Rechazo"
+					,null
+					,ntramite
+					,tipoPago
+					,null
+					,null
+					,TipoTramite.SINIESTRO.getCdtiptra()
+					,null
+					,null
+				);
+    		}
+    		
+    		success = true;
+    		mensaje = "Siniestro actualizado";
+    	}
+    	catch(Exception ex)
+    	{
+    		logger.error("error al actualizar siniestro desde pantalla multisiniestro",ex);
+    		success = false;
+    		mensaje = ex.getMessage();
+    	}*/
+    	success = true;
+		mensaje = "Siniestro actualizado";
+    	logger.debug(""
+    			+ "\n######                          ######"
+    			+ "\n###### actualizarMultiSiniestro ######"
+    			+ "\n######################################"
+    			+ "\n######################################"
+    			);
+    	return SUCCESS;
+    }
+    
+	public String validaArancelesTramitexProveedor(){
+		logger.debug("Entra a consultaExisteCoberturaTramite params de entrada :{}",params);
+		try {
+			String tramites = params.get("ntramite");
+			logger.debug("Valor del tramite ==>"+tramites);
+			String totalTramites[] = tramites.split("\\|");
+			logger.debug("Total de Registros"+totalTramites.length);
+			
+			loadList = new ArrayList<HashMap<String,String>>();
+			for(int i = 0; i < totalTramites.length; i++){
+				List<Map<String,String>>lista= siniestrosManager.getValidaArancelesTramitexProveedor(totalTramites[i]);
+				for(Map<String,String>ele:lista){
+					HashMap<String,String>map=new HashMap<String,String>();
+					map.put("NTRAMITE"   , ele.get("NTRAMITE"));
+					map.put("NFACTURA" , ele.get("NFACTURA"));
+					map.put("NMSINIES" , ele.get("NMSINIES"));
+					map.put("CDCONCEP" , ele.get("CDCONCEP"));
+					loadList.add(map);
+				}
+			}
+			logger.debug("Respuesta datosValidacion : {}", loadList);
+		}catch( Exception e){
+			logger.error("Error al obtener las consultaExisteCoberturaTramite : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	public String validaFacturaMontoPagoAutomatico(){
+		logger.debug("Entra a consultaExisteCoberturaTramite params de entrada :{}",params);
+		try {
+			String tramites = params.get("ntramite");
+			logger.debug("Valor del tramite ==>"+tramites);
+			String totalTramites[] = tramites.split("\\|");
+			logger.debug("Total de Registros"+totalTramites.length);
+			
+			loadList = new ArrayList<HashMap<String,String>>();
+			for(int i = 0; i < totalTramites.length; i++){
+				List<Map<String,String>>lista= siniestrosManager.getValidaFacturaMontoPagoAutomatico(totalTramites[i]);
+				for(Map<String,String>ele:lista){
+					HashMap<String,String>map=new HashMap<String,String>();
+					map.put("NTRAMITE"   , ele.get("NTRAMITE"));
+					map.put("NFACTURA" , ele.get("NFACTURA"));
+					map.put("PTIMPORT" , ele.get("PTIMPORT"));
+					loadList.add(map);
+				}
+			}
+			logger.debug("Respuesta datosValidacion : {}", loadList);
+		}catch( Exception e){
+			logger.error("Error al obtener las consultaExisteCoberturaTramite : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	public String solicitarPagoAutomatico(){
+		logger.debug("Entra a solicitarPagoAutorizacionAutomatica params de entrada :{}",params);
+		try {
+			String tramites = params.get("ntramite");
+			logger.debug("Valor del tramite ==>"+tramites);
+			String totalTramites[] = tramites.split("\\|");
+			logger.debug("Total de Registros"+totalTramites.length);
+			loadList = new ArrayList<HashMap<String,String>>();
+			for(int i = 0; i < totalTramites.length; i++){
+				List<Map<String,String>>lista= siniestrosManager.getValidaFacturaMontoPagoAutomatico(totalTramites[i]);
+				logger.debug("Total de Registros ==> "+lista.size());
+				
+				if(lista.size() > 0){
+					logger.debug("No se procesara para su pago");
+				}else{
+					logger.debug("Se mandará a llamar al pago del siniestro ==> "+totalTramites[i].toString());
+					
+					HashMap<String,String> params = new HashMap<String, String>();
+					params.put("pv_ntramite_i",totalTramites[i].toString());
+					this.params=params;
+					solicitarPago();
+					HashMap<String,String>map=new HashMap<String,String>();
+					
+					if(success){
+						map.put("mensajeRespuesta"   , totalTramites[i].toString()+" El pago se realizo con &eacute;xito.");
+					}else{
+						map.put("mensajeRespuesta"   , totalTramites[i].toString()+" "+mensaje);
+					}
+					loadList.add(map);
+				}
+			}
+		}catch( Exception e){
+			logger.error("Error al obtener las consultaExisteCoberturaTramite : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
 		success = true;
