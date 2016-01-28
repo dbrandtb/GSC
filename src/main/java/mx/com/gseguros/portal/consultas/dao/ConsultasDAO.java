@@ -478,4 +478,8 @@ public interface ConsultasDAO
 	public Map<String,String> recuperarDatosFlujoEmision(String cdramo, String tipoflot) throws Exception;
 
 	public String recuperarDiasFechaFacturacion(String cdtipsit, String cdsisrol) throws Exception;
+	
+	public void guardarDatosDemo(String ntramite, Map<String,String> params) throws Exception;
+	
+	public Map<String,String> cargarDatosDemo(String ntramite) throws Exception;
 }

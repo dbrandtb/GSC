@@ -3780,4 +3780,76 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			
 		}
 	}
+	
+	@Override
+	public void guardarDatosDemo(String ntramite, Map<String,String> params) throws Exception
+	{
+		Map<String,String> paramsDAO = new LinkedHashMap<String,String>();
+		paramsDAO.put("ntramite" , ntramite);
+		for(int i=1 ; i<=30 ; i++)
+		{
+			String indice = Utils.join("OTVALOR", StringUtils.leftPad(i+"", 2, "0"));
+			paramsDAO.put(indice, params.get(indice));
+		}
+		ejecutaSP(new GuardarDatosDemoSP(getDataSource()),paramsDAO);
+	}
+	
+	protected class GuardarDatosDemoSP extends StoredProcedure
+	{ 
+		protected GuardarDatosDemoSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_GUARDA_DATOS_DEMO");
+			declareParameter(new SqlParameter("ntramite", OracleTypes.VARCHAR));
+			for(int i=1 ; i<=30 ; i++)
+			{
+				String indice = Utils.join("OTVALOR", StringUtils.leftPad(i+"", 2, "0"));
+				declareParameter(new SqlParameter(indice, OracleTypes.VARCHAR));
+			}
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+			
+		}
+	}
+	
+	@Override
+	public Map<String,String> cargarDatosDemo(String ntramite) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		Map<String,Object> procRes = ejecutaSP(new CargarDatosDemoSP(getDataSource()),params);
+		
+		List<Map<String,String>> lista  = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		
+		Map<String,String> datos = new HashMap<String,String>();
+		
+		if(lista!=null&&lista.size()==1)
+		{
+			datos = lista.get(0);
+		}
+		
+		logger.debug(Utils.log("datos de demo=",datos));
+		
+		return datos;
+	}
+	
+	protected class CargarDatosDemoSP extends StoredProcedure
+	{
+		protected CargarDatosDemoSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_CARGA_DATOS_DEMO");
+			
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"ntramite"
+					,"OTVALOR01" ,"OTVALOR02" ,"OTVALOR03" ,"OTVALOR04" ,"OTVALOR05" ,"OTVALOR06" ,"OTVALOR07" ,"OTVALOR08" ,"OTVALOR09" ,"OTVALOR10"
+					,"OTVALOR11" ,"OTVALOR12" ,"OTVALOR13" ,"OTVALOR14" ,"OTVALOR15" ,"OTVALOR16" ,"OTVALOR17" ,"OTVALOR18" ,"OTVALOR19" ,"OTVALOR20"
+					,"OTVALOR21" ,"OTVALOR22" ,"OTVALOR23" ,"OTVALOR24" ,"OTVALOR25" ,"OTVALOR26" ,"OTVALOR27" ,"OTVALOR28" ,"OTVALOR29" ,"OTVALOR30"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
