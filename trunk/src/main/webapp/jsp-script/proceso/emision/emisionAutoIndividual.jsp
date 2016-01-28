@@ -1438,7 +1438,7 @@ function domiciliar()
       }).show());
     };
     
-	var idusu;	
+	
     if (Ext.isEmpty(claveUsuarioCaptura)) {
     	_mask('Cargando domiciliaci\u00f3n');
        Ext.Ajax.request(
@@ -1453,8 +1453,8 @@ function domiciliar()
                     	 _unmask();
                         var json = Ext.decode(response.responseText);
                         if(json.success == true){
-                            idusu = json.smap1.idUsu;
-                            callbackFunction(idUsu);
+                            
+                            callbackFunction(json.smap1.idUsu);
                                                  }
                         else{console.log(json.respuesta);}
                      }
@@ -1466,8 +1466,7 @@ function domiciliar()
               );
             }
     else {
-          idusu=claveUsuarioCaptura;
-          callbackFunction(idusu);
+          callbackFunction(claveUsuarioCaptura);
          }
 }
 ////// funciones //////
