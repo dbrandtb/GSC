@@ -2537,7 +2537,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								logger.debug("Hospitalizacion Descuento  : {} ",hosp.get("DESTO"));
 								logger.debug("Hospitalizacion IVA        : {} ",hosp.get("IVA"));
 								logger.debug("Hospitalizacion Deducible  : {} ",deducibleSiniestroIte);
-								
 								double hPTIMPORT = Double.valueOf(hosp.get("PTIMPORT"));
 								double DESTOIMP  = Double.valueOf(hosp.get("DESTO"));
 								double hIVA      = Double.valueOf(hosp.get("IVA"));
@@ -3910,7 +3909,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 										scopago="0";
 									}
 									logger.debug("Valor de respuesta :{}",StringUtils.isNotBlank(scopago));
-									if(StringUtils.isNotBlank(scopago)){
+									/*if(StringUtils.isNotBlank(scopago)){
 										if(scopago.contains("%")){
 											copagoPorc = true;
 										}
@@ -3921,7 +3920,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 										else{
 											DESTOIMP=DESTOIMP+Double.valueOf(scopago);
 										}
-									}
+									}*/
 									
 									double hPTIMPORT 	= Double.parseDouble(hosp.get("PTIMPORT"));
 									double hDESTO    	= Double.parseDouble(hosp.get("DESTO"));
