@@ -35,9 +35,163 @@ var MontoMaximo = 0;
 var MontoMinimo = 0;
 var _p30_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p30_reportsServerUser = '<s:text name="pass.servidor.reports" />';
+var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/>';
 ////// urls //////
 
 ////// variables //////
+
+   //Ext.onReady(function()
+//    {
+        Ext.util.Format.thousandSeparator=",";
+        Ext.define("Ext.override.ThousandSeparatorNumberField", {
+        override: "Ext.form.field.Number",
+            
+            /**
+            * @cfg {Boolean} useThousandSeparator
+            */
+            useThousandSeparator: false,
+            
+            /**
+             * @inheritdoc
+             */
+            toRawNumber: function (value) {
+                
+                debug("VIL >>> Cadena(value): " + value);
+                var cadena = String(value).replace(this.decimalSeparator,'.').replace(new RegExp(Ext.util.Format.thousandSeparator, "g"), '');
+                debug("VIL >>> Cadena: " + cadena);
+                
+                return cadena;
+            },
+            
+            /**
+             * @inheritdoc
+             */
+            getErrors: function (value) {
+                if (!this.useThousandSeparator) return this.callParent(arguments);
+                
+                var me = this,
+                    errors = Ext.form.field.Text.prototype.getErrors.apply(me, arguments),
+                    format = Ext.String.format,
+                    num;
+
+                value = Ext.isDefined(value) ? value : this.processRawValue(this.getRawValue());
+
+                if (value.length < 1) { // if it's blank and textfield didn't flag it then it's valid
+                    return errors;
+                }
+
+                value = me.toRawNumber(value);
+
+                if (isNaN(value.replace(Ext.util.Format.thousandSeparator,''))) {
+                    errors.push(format(me.nanText, value));
+                }
+
+                num = me.parseValue(value);
+
+                if (me.minValue === 0 && num < 0) {
+                    errors.push(this.negativeText);
+                }
+                else if (num < me.minValue) {
+                    errors.push(format(me.minText, me.minValue));
+                }
+
+                if (num > me.maxValue) {
+                    errors.push(format(me.maxText, me.maxValue));
+                }
+
+                return errors;
+            },
+            
+            /**
+             * @inheritdoc
+             */
+             valueToRaw: function (value) {
+                if (!this.useThousandSeparator) return this.callParent(arguments);
+                
+                var me = this;
+                var format = "000,000";
+                
+                for (var i = 0; i < me.decimalPrecision; i++) {
+                    if (i == 0) format += ".";
+                    format += "0";
+                }
+                
+                value = me.parseValue(Ext.util.Format.number(value, format));
+                value = me.fixPrecision(value);
+                value = Ext.isNumber(value) ? value : parseFloat(me.toRawNumber(value));
+                value = isNaN(value) ? '' : String(Ext.util.Format.number(value, format)).replace('.', me.decimalSeparator);
+                debug("VILS >>> Cadena(value) 1: " + value);
+                return value;
+            },
+            
+            /**
+             * @inheritdoc
+             */
+            getSubmitValue: function () {
+                if (!this.useThousandSeparator)
+                    return this.callParent(arguments);
+                var me = this,
+                    value = me.callParent();
+
+                if (true||!me.submitLocaleSeparator) {
+                    value = me.toRawNumber(value);
+                }
+                debug("Cadena(value) 2: " + value);
+                alert(value);
+                return value;
+            },
+            
+            /**
+             * @inheritdoc
+             */
+            setMinValue: function (value) {
+                if (!this.useThousandSeparator)
+                    return this.callParent(arguments);
+                var me = this,
+                    allowed;
+
+                me.minValue = Ext.Number.from(value, Number.NEGATIVE_INFINITY);
+                me.toggleSpinners();
+
+                // Build regexes for masking and stripping based on the configured options
+                if (me.disableKeyFilter !== true) {
+                    allowed = me.baseChars + '';
+
+                    if (me.allowExponential) {
+                        allowed += me.decimalSeparator + 'e+-';
+                    }
+                    else {
+                        allowed += Ext.util.Format.thousandSeparator;
+                        if (me.allowDecimals) {
+                            allowed += me.decimalSeparator;
+                        }
+                        if (me.minValue < 0) {
+                            allowed += '-';
+                        }
+                    }
+
+                    allowed = Ext.String.escapeRegex(allowed);
+                    me.maskRe = new RegExp('[' + allowed + ']');
+                    if (me.autoStripChars) {
+                        me.stripCharsRe = new RegExp('[^' + allowed + ']', 'gi');
+                    }
+                }
+            },
+            
+            /**
+             * @private
+             */
+            parseValue: function (value) {
+                if (!this.useThousandSeparator)
+                    return this.callParent(arguments);
+                value = parseFloat(this.toRawNumber(value));
+                return isNaN(value) ? null : value;
+            }
+        });
+    //});//FIN THOUSAND SEPARATOR 
+//Ext.util.Format.thousandSeparator = ',';
+//Ext.util.Format.decimalSeparator = '.';
+
 var _p30_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('_p30_smap1:',_p30_smap1);
 var _p28_smap1 =
@@ -850,7 +1004,7 @@ Ext.onReady(function()
             [
                 {
                     xtype    : 'button'
-                    ,hidden  : _p30_smap1.tipoflot+'x'!='Fx'
+                    ,hidden  : _p30_smap1.tipoflot+'x'!='Fx' && _p30_smap1.tipoflot+'x'!='Px'
                     ,text    : 'Limpiar'
                     ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
                     ,hidden  : true
@@ -862,8 +1016,9 @@ Ext.onReady(function()
                 ,'->'
                 ,{
                     xtype   : 'form'
-                    ,hidden : _p30_smap1.tipoflot+'x'!='Fx'
+                    ,hidden : _p30_smap1.tipoflot+'x'!='Fx' && _p30_smap1.tipoflot+'x'!='Px'
                     ,layout : 'hbox'
+                    ,hidden : _p30_smap1.tipoflot+'x'!='Fx' && _p30_smap1.tipoflot+'x'!='Px' 
                     ,items  :
                     [
                         {
@@ -872,7 +1027,8 @@ Ext.onReady(function()
                             ,name       : 'smap1.tomarMasiva'
                             ,inputValue : 'S'
                             ,style      : 'background:#223772;'
-                            ,checked    : true
+                            ,checked    : _p30_smap1.tipoflot+'x'!='Px'
+                            ,hidden     : _p30_smap1.tipoflot+'x'=='Px'
                         }
                         ,{
                             xtype         : 'filefield'
@@ -2119,6 +2275,12 @@ Ext.onReady(function()
             if('|AR|CR|PC|PP|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
             {
                 var valorCmp = _fieldById('_p30_tatrisitAutoForm'+cdtipsit).down('[fieldLabel*=VALOR VEH]');
+               
+                Ext.apply(valorCmp,
+                        {
+                         useThousandSeparator: true
+                        });
+                
                 debug('@CUSTOM valor:',valorCmp);
                 valorCmp.heredar = function(conservar)
                 {
@@ -2523,6 +2685,7 @@ Ext.onReady(function()
                     }
                 });
                 
+                tipovalorCmp.cdtipsit=cdtipsit+'';
                 tipovalorCmp.on(
                 {
                     select : function(me)
@@ -2575,11 +2738,84 @@ Ext.onReady(function()
                                     +'actual o anterior, favor de actualizar el modelo');
                             }
                         }
+                        
+                        if(_p30_smap1.tipoflot=='P' && meVal==3)
+                        {
+                           var numeroDiasFechaFacturacion;
+                            Ext.Ajax.request
+                            ({ 
+                                url     : _p30_urlRecuperacion
+                                ,params :
+                                     {
+                                       'params.consulta' :'RECUPERAR_DIAS_FECHA_FACTURACION'
+                                      ,'params.cdtipsit' : me.cdtipsit
                     }
+                            ,success : function(response)
+                            {                                   
+                             try
+                               {
+                                var json = Ext.decode(response.responseText);
+                                debug('### load status:',json);
+                                if(json.success==true)
+                                   {
+                                     var hoy = new  Date();
+                                     numeroDiasFechaFacturacion = json.params.dias;
+                                     var limite = Ext.Date.add(hoy, Ext.Date.DAY,-1*(numeroDiasFechaFacturacion));
+                                     
+                                     var campoFecha = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=FECHA DE FACTURA]');
+                                     
+                                     campoFecha.setMinValue(limite);
+                                     campoFecha.setMaxValue(hoy);
+                                     campoFecha.show();
+                                     campoFecha.allowBlank=false;
+                                     campoFecha.up('form').doLayout();
+                                     
+                                     debug('campoFecha:',campoFecha);
+                                     debug('campoFecha.up form:',campoFecha.up('form'));
+                                   }
+                                  else
+                                    {
+                                     mensajeError(json.message);
+                                    }
+                                 }
+                              catch(e)
+                                 {
+                                   manejaException(e,ck);
+                                 }
+                            }
+                        ,failure : function()
+                           {
+                             errorComunicacion(null,'Error al obtener dias para factura');
+                           }
                 });
-            }
+                        }
+                        else if(_p30_smap1.tipoflot=='P' && meVal!=3)
+                          {  var campo= _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=FECHA DE FACTURA]');
+                             campo.reset();
+                             campo.hide();
+                             campo.allowBlank=true;
+                             campo.up('form').doLayout();
+                          }  
+                        else if(_p30_smap1.tipoflot=='F')
+                        {  var campo= _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=FECHA DE FACTURA]');
+                           campo.reset();
+                           campo.showS();
+                           campo.allowBlank=true;
+                           campo.up('form').doLayout();
+                        }  
+                        }
+           });
             //tipo valor
-            
+        }
+            //tipo factura
+            if('|AR|CR|PC|PP|'.lastIndexOf('|'+cdtipsit+'|')!=-1 && _p30_smap1.tipoflot=='P')
+            {  /* ------------------------------- VALOR FACTURA ------------------- */
+                var fechaFacturaCmp = _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=FECHA DE FACTURA]');
+                fechaFacturaCmp.cdtipsit = cdtipsit+'';
+                fechaFacturaCmp.hide();
+                debug('@CUSTOM fecha fact hide:',fechaFacturaCmp);
+            }
+            //tipo factura
             //tipo cambio
             if('|AF|PU|'.lastIndexOf('|'+cdtipsit+'|')!=-1)
             {
