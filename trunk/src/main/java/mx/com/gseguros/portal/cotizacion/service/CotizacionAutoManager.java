@@ -205,4 +205,6 @@ public interface CotizacionAutoManager
 	public String obtieneValidacionRetroactividad(
 			String numSerie
 			,Date feini) throws ApplicationException;
+	
+	public List<Map<String, String>> modificadorValorVehPYME(List<Map<String, String>> slist1, String cdsisrol) throws Exception;
 }

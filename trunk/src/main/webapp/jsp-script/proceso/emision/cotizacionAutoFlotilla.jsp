@@ -1084,6 +1084,7 @@ Ext.onReady(function()
                                             {
                                                 'smap1.cdramo'    : _p30_smap1.cdramo
                                                 ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
+                                                ,'smap1.tipoflot' : _p30_smap1.tipoflot
                                             }
                                             ,success : function(form,action)
                                             {

@@ -2309,7 +2309,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	}
 	
 	@Override
-	public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel)
+	public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel)//,String tipoflot
 	{
 		logger.info(
 				new StringBuilder()
@@ -2842,11 +2842,70 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@ ").append(resp)
-				.append("\n@@@@@@ procesarCargaMasivaFlotilla @@@@@@")
+				.append("\n@@@@@@ procesarCargaMasivaFlotilla VIL@@@@@@")
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
 		return resp;
+	}
+	
+	//Para consultar los valores del vehiculo y reemplazarlos de la lista 
+	@Override
+	public List<Map<String,String>> modificadorValorVehPYME(List<Map<String,String>> slistPYME, String cdsisrol) throws Exception
+	{		
+		for(Map<String,String> inciso:slistPYME)
+	    { 
+			Map<String,String> valor = new HashMap<String, String>();
+			logger.info(
+					new StringBuilder()
+					.append("\n VILS inciso=").append(inciso)
+					.append("\n VILS pv_otvalor13=").append(inciso.get("parametros.pv_otvalor13"))
+					.toString()
+					);
+	    	String cdtipsit= inciso.get("CDTIPSIT");
+			String clave =  inciso.get("parametros.pv_otvalor06");
+			if(clave.contains(" "))
+				clave = inciso.get("dummy");
+			String modelo =  inciso.get("parametros.pv_otvalor09");
+			if(modelo==null)
+				modelo =  inciso.get("parametros.pv_otvalor05");
+				
+			
+			logger.info(
+					new StringBuilder()
+					.append("\n VILS cdtipsit=").append(cdtipsit)
+					.append("\n VILS clave=").append(clave)
+					.append("\n VILS modelo=").append(modelo)
+					.toString()
+					);
+			
+			ResponseValor wsResp = valorComercialService.obtieneDatosVehiculoGS(Integer.valueOf(clave), Integer.valueOf(modelo));
+			if(wsResp==null)
+			{
+				valor = cotizacionDAO.cargarSumaAseguradaRamo5(cdtipsit, clave, modelo, cdsisrol);
+				inciso.put("parametros.pv_otvalor13", valor.get("sumaseg"));
+				logger.info(
+						new StringBuilder()
+						.append("\n VILS pv_otvalor13=").append(inciso.get("parametros.pv_otvalor13"))
+						.toString()
+						);
+			}
+			else 
+			{
+				if(wsResp.getValor_comercial()>0d)
+					inciso.put("parametros.pv_otvalor13",String.format("%.2f", wsResp.getValor_comercial()));
+				
+				else
+					inciso.put("parametros.pv_otvalor13",Double.toString(wsResp.getValor_comercial()));
+				
+				logger.info(
+						new StringBuilder()
+						.append("\n VILS pv_otvalor13=").append(inciso.get("parametros.pv_otvalor13"))
+						.toString()
+						);
+			}
+		}
+		return slistPYME;
 	}
 	
 	@Override

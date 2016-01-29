@@ -3003,6 +3003,12 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 				.toString()
 				);
 		Map<String,Object>procResult=ejecutaSP(new CargarSumaAseguradaRamo5(getDataSource()),params);
+		logger.debug(new StringBuilder()
+				.append("\n****** VILS DEBBUG SUMAASEG ******")
+				.append("\n****** params=").append(procResult)
+				.append("\n*************************************************")
+				.toString()
+				);
 		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
 		{

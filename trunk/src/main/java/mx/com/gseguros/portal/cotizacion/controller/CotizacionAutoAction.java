@@ -1105,11 +1105,26 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			String cdramo   = smap1.get("cdramo");
 			String cdtipsit = smap1.get("cdtipsit");
 			String respetar = smap1.get("tomarMasiva");
+			String tipoflot = smap1.get("tipoflot");
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			
+			logger.info(
+					new StringBuilder()
+					.append("\n VILS tipoflot=").append(tipoflot)
+					.append("\n VILS cdsisrol=").append(cdsisrol)
+					.toString()
+					);
+
 			checkBlank(cdramo   , "No se recibio el producto");
 			checkBlank(cdtipsit , "No se recibio la modalidad");
 			checkNull(excel, "No se recibio el archivo");
 			
-			ManagerRespuestaSlistVO resp = cotizacionAutoManager.procesarCargaMasivaFlotilla(cdramo,cdtipsit,respetar,excel);
+			ManagerRespuestaSlistVO resp = cotizacionAutoManager.procesarCargaMasivaFlotilla(cdramo,cdtipsit,respetar,excel);//,tipoflot
+			//Para modificar solo PYMES ignorando el valor de vehiculo y haciendo consulta
+			if(tipoflot.contains("P"))
+			{
+				resp.setSlist( cotizacionAutoManager.modificadorValorVehPYME(resp.getSlist(), cdsisrol));
+			}	
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();
