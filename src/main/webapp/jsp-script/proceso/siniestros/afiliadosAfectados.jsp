@@ -2686,15 +2686,19 @@
 												centrarVentanaInterna(mensajeError("Verifica los datos requeridos"));
 											},
 											success: function(form, action) {
-												Ext.create('Ext.form.Panel').submit({
-													standardSubmit :true
-													,params		: {
-														'params.ntramite' : _11_params.NTRAMITE
-													}
-												});
-												 panelInicialPral.getForm().reset();
-												storeAseguradoFactura.removeAll();
-												storeConceptos.removeAll();
+												if(_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO){
+													Ext.create('Ext.form.Panel').submit({
+														standardSubmit :true
+														,params		: {
+															'params.ntramite' : _11_params.NTRAMITE
+														}
+													});
+													 panelInicialPral.getForm().reset();
+													storeAseguradoFactura.removeAll();
+													storeConceptos.removeAll();
+												}
+												
+												
 											}
 										});
 									}
