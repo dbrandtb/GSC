@@ -35,7 +35,20 @@ public class InfoVehiculoServiceImpl implements InfoVehiculoService {
 			try{
 				WrapperResultadosWS resultWS = this.ejecutaObtieneDatosVehiculoGS(claveGS, modelo);
 						
+				logger.info(
+						new StringBuilder()
+						.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+						.append("\n@@@@@@ VILS WEBSERVICE @@@@@@")
+						.append("\n@@@@@@ cdtipsit=").append(resultWS)
+						);
+				
 				resVal = (ResponseValor) resultWS.getResultadoWS();
+				logger.info(
+						new StringBuilder()
+						.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+						.append("\n@@@@@@ VILS WEBSERVICE @@@@@@")
+						.append("\n@@@@@@ cdtipsit=").append(resVal)
+						);
 				
 				if( resVal != null && resVal.getExito()){
 					logger.debug("Respuesta de WS ejecutaObtieneDatosVehiculoGS Codigo(): " + resVal.getExito());
