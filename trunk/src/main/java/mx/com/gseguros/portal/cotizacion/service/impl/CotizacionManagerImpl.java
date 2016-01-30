@@ -2677,11 +2677,22 @@ public class CotizacionManagerImpl implements CotizacionManager
 			                	estadoFamilias.put(nFamilia,true);
 			                	titulares.put(nFamilia,nombre);
 			                }
+			                else if(fila==1)
+			                {
+			                	throw new ApplicationException("La primer fila debe ser titular");
+			                }
 		                }
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (G) de la fila ",fila," "));
+		                	if(fila==1)
+		                	{
+		                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (G) de la fila ",fila," la primer fila debe ser titular "));
+		                	}
+		                	else
+		                	{
+		                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (G) de la fila ",fila," "));
+		                	}
 		                }
 	                    finally
 	                    {
@@ -4509,11 +4520,24 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		.append("|")
 		                		.toString()
 		                		);
+		                
+		                if(!"T".equals(parentesco)&&fila==1)
+		                {
+		                	throw new ApplicationException("La primer fila debe ser titular");
+		                }
+		                
                 	}
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (B) de la fila ",fila," "));
+	                	if(fila==1)
+	                	{
+	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (B) de la fila ",fila," la primer fila debe ser titular "));
+	                	}
+	                	else
+	                	{
+	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (B) de la fila ",fila," "));
+	                	}
 	                }
 	                finally
 	                {
