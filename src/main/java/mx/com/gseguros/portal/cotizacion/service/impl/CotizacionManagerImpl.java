@@ -2687,7 +2687,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                	filaBuena = false;
 		                	if(fila==1)
 		                	{
-		                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (G) de la fila ",fila," la primer fila debe ser titular "));
+		                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (G) de la fila ",fila," la primer fila debe ser titular, se excluir\u00e1n las filas hasta el siguiente titular "));
 		                	}
 		                	else
 		                	{
@@ -4532,7 +4532,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                	filaBuena = false;
 	                	if(fila==1)
 	                	{
-	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (B) de la fila ",fila," la primer fila debe ser titular "));
+	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (B) de la fila ",fila," la primer fila debe ser titular, se excluir\u00e1n las filas hasta el siguiente titular "));
 	                	}
 	                	else
 	                	{
