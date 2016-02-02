@@ -5692,28 +5692,67 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                     {
                         xtype       : 'textfield'
                         ,fieldLabel : '<span style="color:white;">Buscar:</span>'
+                        ,timeoutFn  : ''
                         ,listeners  :
                         {
                             change : function(comp,val)
                             {
-                                debug('extraprimas filtro change:',val);
-                                var grid=comp.up().up();
-                                debug('grid:',grid);
-                                grid.getStore().filterBy(function(record, id)
+                                var timeoutFn = function()
                                 {
-                                    var nombre = record.get('NOMBRE').toUpperCase().replace(/ /g,'');
-                                    var filtro = val.toUpperCase().replace(/ /g,'');
-                                    var posNombre = nombre.lastIndexOf(filtro);
-                                    
-                                    if(posNombre > -1)
+                                    debug('extraprimas filtro change:',val);
+                                    var grid = comp.up('grid');
+                                    debug('grid:',grid);
+                                    var filterFn = '';
+                                    if(Ext.isEmpty(val))
                                     {
-                                        return true;
+                                        filterFn = function(rec)
+                                        {
+                                            debug('funcion true');
+                                            return true;
+                                        };
                                     }
                                     else
                                     {
-                                        return false;
-                                    }
-                                });
+                                        filterFn = function(record)
+	                                    {
+	                                        var nombre = record.get('NOMBRE').toUpperCase().replace(/ /g,'');
+	                                        var filtro = val.toUpperCase().replace(/ /g,'');
+	                                        var posNombre = nombre.lastIndexOf(filtro);
+	                                        
+	                                        debug('filtro result:',posNombre > -1);
+	                                        
+	                                        if(posNombre > -1)
+	                                        {
+	                                            return true;
+	                                        }
+	                                        else
+	                                        {
+	                                            return false;
+	                                        }
+	                                    };
+	                                }
+	                                
+                                    cargaStorePaginadoLocal(
+		                                Ext.getStore('_p21_storeExtraprimas'+record.get('letra'))
+		                                ,_p21_urlCargarAseguradosExtraprimas
+		                                ,'slist1'
+		                                ,{
+    		                                'smap1.cdunieco'  : _p21_smap1.cdunieco
+		                                    ,'smap1.cdramo'   : _p21_smap1.cdramo
+		                                    ,'smap1.estado'   : _p21_smap1.estado
+		                                    ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+		                                    ,'smap1.nmsuplem' : '0'
+		                                    ,'smap1.cdgrupo'  : record.get('letra')
+		                                }
+		                                ,null
+		                                ,grid
+		                                ,null
+		                                ,filterFn
+		                            );
+		                        };
+		                        
+		                        clearTimeout(comp.timeoutFn);
+		                        comp.timeoutFn = setTimeout(timeoutFn,3000);
                             }
                         }
                     }
@@ -5739,14 +5778,12 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                                 var extrCmp = Ext.ComponentQuery.query('[name=extrtitu][grupo='+me.grupo+']')[0];
                                 if(extrCmp.isValid())
                                 {
-                                    extrCmp.up('grid').store.each(function(record)
+                                    var datos = extrCmp.up('grid').store.datos;
+                                    for(var i in datos)
                                     {
-                                        debug('record:',record);
-                                        if(record.get('PARENTESCO')=='T')
-                                        {
-                                            record.set('EXTPRI_OCUPACION',extrCmp.getValue());
-                                        }
-                                    });
+                                        var record = datos[i];
+                                        record.set('EXTPRI_OCUPACION',extrCmp.getValue());
+                                    }
                                 }
                             }
                             catch(e)
@@ -5760,27 +5797,23 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                 {
                     model       : '_p21_modeloExtraprima'
                     ,groupField : 'AGRUPADOR'
-                    ,autoLoad   : true
+                    ,autoLoad   : false
+                    ,pageSize   : 10
+                    ,storeId    : '_p21_storeExtraprimas'+record.get('letra')
                     ,proxy      :
-                    {
-                        type         : 'ajax'
-                        ,url         : _p21_urlCargarAseguradosExtraprimas
-                        ,extraParams :
-                        {
-                            'smap1.cdunieco'  : _p21_smap1.cdunieco
-                            ,'smap1.cdramo'   : _p21_smap1.cdramo
-                            ,'smap1.estado'   : _p21_smap1.estado
-                            ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
-                            ,'smap1.nmsuplem' : '0'
-                            ,'smap1.cdgrupo'  : record.get('letra')
-                        }
-                        ,reader      :
-                        {
-                            type  : 'json'
-                            ,root : 'slist1'
-                        }
-                    }
+			        {
+			            enablePaging : true,
+			            reader       : 'json',
+			            type         : 'memory',
+			            data         : []
+			        }
                 })
+                ,bbar :
+                {
+                    displayInfo : true
+                    ,store      : Ext.getStore('_p21_storeExtraprimas'+record.get('letra'))
+                    ,xtype      : 'pagingtoolbar'
+                }
                 ,viewConfig :
                 {
                     listeners :
@@ -5834,6 +5867,29 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                         ,startCollapsed : false
                     }
                 ]
+                ,listeners   :
+                {
+                    afterrender : function(me)
+                    {
+                        cargaStorePaginadoLocal(
+                            Ext.getStore('_p21_storeExtraprimas'+record.get('letra'))
+                            ,_p21_urlCargarAseguradosExtraprimas
+                            ,'slist1'
+                            ,{
+                                'smap1.cdunieco'  : _p21_smap1.cdunieco
+                                ,'smap1.cdramo'   : _p21_smap1.cdramo
+                                ,'smap1.estado'   : _p21_smap1.estado
+                                ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                                ,'smap1.nmsuplem' : '0'
+                                ,'smap1.cdgrupo'  : record.get('letra')
+                            }
+                            ,null
+                            ,me
+                            ,null
+                            ,null
+                        );
+                    }
+                }
                 ,buttonAlign : 'center'
                 ,buttons     :
                 [
@@ -5923,32 +5979,69 @@ function _p21_aseguradosClic(grid,rowIndex)
                     {
                         xtype       : 'textfield'
                         ,fieldLabel : '<span style="color:white;">Buscar:</span>'
+                        ,timeoutFn  : ''
                         ,listeners  :
                         {
                             change : function(comp,val)
                             {
-                                debug('asegurados filtro change:',val);
-                                var grid=comp.up().up();
-                                debug('grid:',grid);
-                                grid.getStore().filterBy(function(record, id)
+                                var timeoutFn = function()
                                 {
-                                    var nombre  = record.get('NOMBRE').toUpperCase().replace(/ /g,'');
-                                    var nombre2 = record.get('SEGUNDO_NOMBRE').toUpperCase().replace(/ /g,'');
-                                    var apat    = record.get('APELLIDO_PATERNO').toUpperCase().replace(/ /g,'');
-                                    var amat    = record.get('APELLIDO_MATERNO').toUpperCase().replace(/ /g,'');
-                                    
-                                    var filtro = val.toUpperCase().replace(/ /g,'');
-                                    var posNombre = (nombre+nombre2+apat+amat).lastIndexOf(filtro);
-                                    
-                                    if(posNombre > -1)
+                                    debug('asegurados filtro change:',val);
+                                    var grid = comp.up('grid');
+                                    debug('grid:',grid);
+                                    var filterFn = '';
+                                    if(Ext.isEmpty(val))
                                     {
-                                        return true;
+                                        filterFn = function(rec)
+                                        {
+                                            debug('funcion true');
+                                            return true;
+                                        };
                                     }
                                     else
                                     {
-                                        return false;
-                                    }
-                                });
+                                        filterFn = function(record, id)
+		                                {
+		                                    var nombre  = record.get('NOMBRE').toUpperCase().replace(/ /g,'');
+		                                    var nombre2 = record.get('SEGUNDO_NOMBRE').toUpperCase().replace(/ /g,'');
+		                                    var apat    = record.get('APELLIDO_PATERNO').toUpperCase().replace(/ /g,'');
+		                                    var amat    = record.get('APELLIDO_MATERNO').toUpperCase().replace(/ /g,'');
+		                                    
+		                                    var filtro = val.toUpperCase().replace(/ /g,'');
+		                                    var posNombre = (nombre+nombre2+apat+amat).lastIndexOf(filtro);
+		                                    
+		                                    if(posNombre > -1)
+		                                    {
+		                                        return true;
+		                                    }
+		                                    else
+		                                    {
+		                                        return false;
+		                                    }
+		                                };
+		                            }
+		                            
+		                            cargaStorePaginadoLocal(
+                                        Ext.getStore('_p21_storeAsegurados'+record.get('letra'))
+                                        ,_p21_urlCargarAseguradosGrupo
+                                        ,'slist1'
+                                        ,{
+                                            'smap1.cdunieco'  : _p21_smap1.cdunieco
+				                            ,'smap1.cdramo'   : _p21_smap1.cdramo
+				                            ,'smap1.estado'   : _p21_smap1.estado
+				                            ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+				                            ,'smap1.nmsuplem' : '0'
+				                            ,'smap1.cdgrupo'  : record.get('letra')
+                                        }
+                                        ,null
+                                        ,grid
+                                        ,null
+                                        ,filterFn
+                                    );
+                                };
+                                
+                                clearTimeout(comp.timeoutFn);
+                                comp.timeoutFn = setTimeout(timeoutFn,3000);
                             }
                         }
                     }
@@ -5957,28 +6050,23 @@ function _p21_aseguradosClic(grid,rowIndex)
                 {
                     model       : '_p21_modeloAsegurados'
                     ,groupField : 'AGRUPADOR'
-                    ,autoLoad   : true
+                    ,autoLoad   : false
+                    ,pageSize   : 10
+                    ,storeId    : '_p21_storeAsegurados'+record.get('letra')
                     ,proxy      :
                     {
-                        type         : 'ajax'
-                        ,timeout     : 1000*60*10
-                        ,url         : _p21_urlCargarAseguradosGrupo
-                        ,extraParams :
-                        {
-                            'smap1.cdunieco'  : _p21_smap1.cdunieco
-                            ,'smap1.cdramo'   : _p21_smap1.cdramo
-                            ,'smap1.estado'   : _p21_smap1.estado
-                            ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
-                            ,'smap1.nmsuplem' : '0'
-                            ,'smap1.cdgrupo'  : record.get('letra')
-                        }
-                        ,reader      :
-                        {
-                            type  : 'json'
-                            ,root : 'slist1'
-                        }
+                        enablePaging : true,
+                        reader       : 'json',
+                        type         : 'memory',
+                        data         : []
                     }
                 })
+                ,bbar :
+                {
+                    displayInfo : true
+                    ,store      : Ext.getStore('_p21_storeAsegurados'+record.get('letra'))
+                    ,xtype      : 'pagingtoolbar'
+                }
                 ,viewConfig : viewConfigAutoSize
                 ,features   :
                 [
@@ -5997,6 +6085,29 @@ function _p21_aseguradosClic(grid,rowIndex)
                         ,startCollapsed : false
                     }
                 ]
+                ,listeners :
+                {
+                    afterrender : function(me)
+                    {
+                        cargaStorePaginadoLocal(
+                            Ext.getStore('_p21_storeAsegurados'+record.get('letra'))
+                            ,_p21_urlCargarAseguradosGrupo
+                            ,'slist1'
+                            ,{
+                                'smap1.cdunieco'  : _p21_smap1.cdunieco
+                                ,'smap1.cdramo'   : _p21_smap1.cdramo
+                                ,'smap1.estado'   : _p21_smap1.estado
+                                ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                                ,'smap1.nmsuplem' : '0'
+                                ,'smap1.cdgrupo'  : record.get('letra')
+                            }
+                            ,null
+                            ,me
+                            ,null
+                            ,null
+                        );
+                    }
+                }
                 ,buttonAlign : 'center'
                 ,buttons     :
                 [
@@ -6025,7 +6136,16 @@ function _p21_guardarExtraprimas(letra)
     debug('grid a guardar:',grid);
     var store=grid.getStore();
     debug('store a guardar:',store);
-    var records=store.getModifiedRecords();
+    var records = [];
+    for(var i in store.datos)
+    {
+        var record = store.datos[i];
+        
+        if(record.dirty)
+        {
+            records.push(record);
+        }
+    }
     debug('records a guardar:',records);
     if(records.length==0)
     {
@@ -6396,7 +6516,15 @@ function _p21_guardarAsegurados(grid,callback)
     
     if(valido)
     {
-        asegurados = store.getModifiedRecords();
+        for(var i in store.datos)
+        {
+            var record = store.datos[i];
+            if(record.dirty)
+            {
+                asegurados.push(record);
+            }
+        }
+        
         valido     = asegurados.length>0||callback!=undefined;
         if(!valido)
         {
@@ -6404,6 +6532,8 @@ function _p21_guardarAsegurados(grid,callback)
             _p21_setActiveResumen();
         }
     }
+    
+    debug('asegurados:',asegurados);
     
     if(valido&&asegurados.length>0)
     {
