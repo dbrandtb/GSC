@@ -2862,15 +2862,20 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					.append("\n VILS pv_otvalor13=").append(inciso.get("parametros.pv_otvalor13"))
 					.toString()
 					);
-	    	String cdtipsit= inciso.get("CDTIPSIT");
+	    	String cdtipsit= inciso.get("cdtipsit");
 			String clave =  inciso.get("parametros.pv_otvalor06");
-			if(clave.contains(" "))
-				clave = inciso.get("dummy");
 			String modelo =  inciso.get("parametros.pv_otvalor09");
-			if(modelo==null)
+			if(cdtipsit.contains("AF"))
+				{
+				clave = inciso.get("dummy");
 				modelo =  inciso.get("parametros.pv_otvalor05");
+				}
+			if(cdtipsit.contains("PU"))
+				{
+				clave = inciso.get("dummy");
+				modelo =  inciso.get("parametros.pv_otvalor05");
+				}
 				
-			
 			logger.info(
 					new StringBuilder()
 					.append("\n VILS cdtipsit=").append(cdtipsit)
