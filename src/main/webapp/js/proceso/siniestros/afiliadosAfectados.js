@@ -128,7 +128,7 @@ Ext.onReady(function() {
 				text     : 'Solicitar Pago'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/money_dollar.png'
 				,handler : _11_solicitarPago
-				,hidden:   _CDROL == _ROL_MEDICO || _CDROL == _ROL_COORD_MEDICO  || _CDROL == _ROL_MESASINIESTRO
+				,hidden:   _CDROL == _ROL_MEDICO || _CDROL == _ROL_COORD_MEDICO  || _CDROL == _ROL_MESASINIESTRO || _11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO
 			},
 			{
 				text     : 'Turnar Operador Reclamaci&oacute;n'
