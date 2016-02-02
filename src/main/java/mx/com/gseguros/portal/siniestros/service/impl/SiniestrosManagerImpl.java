@@ -2143,4 +2143,21 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(parseExc.getMessage(), parseExc);
 		}
 	}
+	
+	@Override
+	public void actualizaTurnadoMesaControl(String ntramite) throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			siniestrosDAO.actualizaTurnadoMesaControl(ntramite);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> listadoFacturasxControl(String ntramite) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_ntramite_i", ntramite);
+		return siniestrosDAO.obtieneListadoFacturasxControntrol(params);
+	}
 }
