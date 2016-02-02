@@ -248,7 +248,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		params.put("cdestcivil"  , cdestcivil);
 		params.put("pv_cdsucemi_i", cdsucemi);
 		params.put("cdusuario",    cdusuario);
-		params.put("accion"      , accion);
+		params.put("accion"      , StringUtils.isBlank(cdperson)?accion:"U");
 		logger.debug(
 				new StringBuilder()
 				.append("\n******************************************")
