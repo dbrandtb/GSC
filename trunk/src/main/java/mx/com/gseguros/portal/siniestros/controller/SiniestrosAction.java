@@ -5710,6 +5710,18 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	public String actualizaTurnadoMesaControl(){
+		logger.debug("Entra a actualizaTurnadoMesaControl  Params: {}", params);
+		try {
+			siniestrosManager.actualizaTurnadoMesaControl(params.get("ntramite"));
+		}catch( Exception e){
+			logger.error("Error actualizaTurnadoMesaControl : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
 /****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {
 		return listaTipoAtencion;
