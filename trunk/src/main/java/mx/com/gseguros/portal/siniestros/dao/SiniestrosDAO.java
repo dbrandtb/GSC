@@ -535,4 +535,8 @@ public interface SiniestrosDAO {
 	public List<Map<String, String>> obtieneValidaFacturaMontoPagoAutomatico(HashMap<String, Object> params) throws Exception;
 	
 	public String guardaListaFacturaPagoAutomatico(HashMap<String, Object> datosFactura) throws Exception;
+	
+	public void actualizaTurnadoMesaControl(String ntramite) throws Exception;
+
+	public List<Map<String, String>> obtieneListadoFacturasxControntrol(HashMap<String, Object> datosTramite) throws Exception;
 }

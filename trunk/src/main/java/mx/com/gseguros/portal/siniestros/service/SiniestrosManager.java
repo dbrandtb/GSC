@@ -668,5 +668,9 @@ public interface SiniestrosManager {
 	public List<Map<String, String>> getValidaFacturaMontoPagoAutomatico(String ntramite) throws Exception;
 	
 	public String guardaListaFacturaPagoAutomatico(String ntramite, String nfactura, String factInicial) throws Exception;
+
+	public void actualizaTurnadoMesaControl(String ntramite) throws Exception;
+
+	public List<Map<String, String>> listadoFacturasxControl(String ntramite) throws Exception;
 	
 }

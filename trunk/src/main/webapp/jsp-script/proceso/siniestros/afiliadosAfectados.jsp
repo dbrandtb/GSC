@@ -111,6 +111,7 @@
 			var _STATUS_TRAMITE_EN_CAPTURA              = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_CAPTURA.codigo" />';
 			var _UrlGenerarContrarecibo     			= '<s:url namespace="/siniestros" 	action="generarContrarecibo"       />';
 			var panDocUrlViewDoc     					= '<s:url namespace="/documentos" 	action="descargaDocInline" />';
+			var _URL_ACTUALIZA_TURNADOMC				= '<s:url namespace="/siniestros" 	action="actualizaTurnadoMesaControl" />';
 
 			debug("VALOR DE _11_params --->",_11_params);
 			debug("VALOR DEL ROL ACTIVO --->",_CDROL);
@@ -2584,6 +2585,9 @@
 						{
 							xtype		: 'textfield',			fieldLabel	: 'No. Tr&aacute;mite',		name	: 'params.ntramite', readOnly   : true, hidden: true
 						},
+                        {
+							xtype		: 'textfield',			fieldLabel	: 'CdTiptra',			name	: 'params.cdtiptra', value   : _11_params.CDTIPTRA, hidden: true
+						},
 						{
 							xtype		: 'textfield',			fieldLabel	: 'ContraRecibo',			name	: 'params.contrarecibo', readOnly   : true
 						},
@@ -4987,24 +4991,35 @@
 														debug("VALOR DE RESPUESTA -->",usuarioTurnadoSiniestro);
 														mensajeCorrecto('&Eacute;XITO','Se ha turnado correctamente a: '+usuarioTurnadoSiniestro,function(){
 															windowLoader.close();
-															Ext.create('Ext.form.Panel').submit(
-															{
-																url		: _URL_MESACONTROL
-																,standardSubmit : true
-																,params         :
-																{
-																	'smap1.gridTitle'      : 'Siniestros en espera'
-																	,'smap2.pv_cdtiptra_i' : _11_params.CDTIPTRA
+															Ext.Ajax.request({
+																url     : _URL_ACTUALIZA_TURNADOMC
+																,params : {           
+																	'params.ntramite': _11_params.NTRAMITE
+																}
+																,success : function (response) {
+																	Ext.create('Ext.form.Panel').submit({
+																		url		: _URL_MESACONTROL
+																		,standardSubmit : true
+																		,params         : {
+																			'smap1.gridTitle'      : 'Siniestros en espera'
+																			,'smap2.pv_cdtiptra_i' : _11_params.CDTIPTRA
+																		}
+																	});
+																},
+																failure : function (){
+																	me.up().up().setLoading(false);
+																	centrarVentanaInterna(Ext.Msg.show({
+																		title:'Error',
+																		msg: 'Error de comunicaci&oacute;n',
+																		buttons: Ext.Msg.OK,
+																		icon: Ext.Msg.ERROR
+																	}));
 																}
 															});
 														});
-														
-														
-														
 								    	            },
 								    	            failure : function ()
 								    	            {
-								    	                //me.up().up().setLoading(false);
 								    	                centrarVentanaInterna(Ext.Msg.show({
 								    	                    title:'Error',
 								    	                    msg: 'Error de comunicaci&oacute;n',
@@ -5493,6 +5508,7 @@
 																							var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
 																							mensajeCorrecto('&Eacute;XITO','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro,function(){
 																								windowLoader.close();
+																								//REALIZAMOS LA ACTUALIZACION DE LOS DEMAS
 																								Ext.create('Ext.form.Panel').submit(
 																								{
 																									url		: _URL_MESACONTROL
@@ -5581,14 +5597,37 @@
 																				var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
 																				mensajeCorrecto('&Eacute;XITO','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro,function(){
 																					windowLoader.close();
-																					Ext.create('Ext.form.Panel').submit(
+																					//Actualizamos los valores del tramite
+																					
+																					Ext.Ajax.request(
 																					{
-																						url		: _URL_MESACONTROL
-																						,standardSubmit : true
-																						,params         :
+																						url     : _URL_ACTUALIZA_TURNADOMC
+																						,params : 
+																						{           
+																							'params.ntramite': _11_params.NTRAMITE
+																						}
+																						,success : function (response)
 																						{
-																							'smap1.gridTitle'      : 'Siniestros en espera'
-																							,'smap2.pv_cdtiptra_i' : _11_params.CDTIPTRA
+																							Ext.create('Ext.form.Panel').submit(
+																								{
+																									url		: _URL_MESACONTROL
+																									,standardSubmit : true
+																									,params         :
+																									{
+																										'smap1.gridTitle'      : 'Siniestros en espera'
+																										,'smap2.pv_cdtiptra_i' : _11_params.CDTIPTRA
+																									}
+																								});
+																						},
+																						failure : function ()
+																						{
+																							me.up().up().setLoading(false);
+																							centrarVentanaInterna(Ext.Msg.show({
+																								title:'Error',
+																								msg: 'Error de comunicaci&oacute;n',
+																								buttons: Ext.Msg.OK,
+																								icon: Ext.Msg.ERROR
+																							}));
 																						}
 																					});
 																				});
@@ -5753,20 +5792,33 @@
 																							debug("VALOR DE RESPUESTA -->",usuarioTurnadoSiniestro);
 																							mensajeCorrecto('&Eacute;XITO','Se ha turnado correctamente a: '+usuarioTurnadoSiniestro,function(){
 																								windowLoader.close();
-																								Ext.create('Ext.form.Panel').submit(
-																								{
-																									url		: _URL_MESACONTROL
-																									,standardSubmit : true
-																									,params         :
+																								Ext.Ajax.request({
+																									url     : _URL_ACTUALIZA_TURNADOMC
+																									,params : {           
+																										'params.ntramite': _11_params.NTRAMITE
+																									}
+																									,success : function (response) {
+																										Ext.create('Ext.form.Panel').submit({
+																												url		: _URL_MESACONTROL
+																												,standardSubmit : true
+																												,params         : {
+																													'smap1.gridTitle'      : 'Siniestros en espera'
+																													,'smap2.pv_cdtiptra_i' : _11_params.CDTIPTRA
+																												}
+																											});
+																									},
+																									failure : function ()
 																									{
-																										'smap1.gridTitle'      : 'Siniestros en espera'
-																										,'smap2.pv_cdtiptra_i' : _11_params.CDTIPTRA
+																										me.up().up().setLoading(false);
+																										centrarVentanaInterna(Ext.Msg.show({
+																											title:'Error',
+																											msg: 'Error de comunicaci&oacute;n',
+																											buttons: Ext.Msg.OK,
+																											icon: Ext.Msg.ERROR
+																										}));
 																									}
 																								});
 																							});
-																							
-																							
-																							
 																	    	            },
 																	    	            failure : function ()
 																	    	            {

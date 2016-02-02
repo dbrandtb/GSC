@@ -5334,5 +5334,47 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	@Override
+	public void actualizaTurnadoMesaControl(String ntramite) throws Exception {
+		// TODO Auto-generated method stub
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_ntramite_i", ntramite);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ActualizaTurnadoMesaControl(this.getDataSource()), params);
+	}
+	
+	protected class ActualizaTurnadoMesaControl extends StoredProcedure
+	{
+		protected ActualizaTurnadoMesaControl(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_UPD_TURNADOTRAMITE");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 
+	@Override
+	public List<Map<String, String>> obtieneListadoFacturasxControntrol(HashMap<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneListadoFacturasxControntrol(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneListadoFacturasxControntrol extends StoredProcedure {
+		protected ObtieneListadoFacturasxControntrol(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_SINIESTRO.P_OBTIENE_NFACTURAXCONTROL");
+			declareParameter(new SqlParameter("pv_ntramite_i",   OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NTRAMITE",		"NFACTURA",		"CDTIPSER",		"CDPRESTA", 	"PTIMPORT", 	"CDGARANT", 	"CDCONVAL",
+					"DESCPORC", 	"DESCNUME", 	"CDMONEDA", 	"TASACAMB",		"PTIMPORTA", 	"DCTONUEX", 	"FEEGRESO",
+					"DIASDEDU"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

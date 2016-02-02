@@ -58,6 +58,7 @@ var _URL_CONSULTA_TRAMITE       			= '<s:url namespace="/siniestros"   action="c
 var _URL_CONCEPTODESTINO        			= '<s:url namespace="/siniestros"   action="guardarConceptoDestino" />';
 var _UrlSolicitarPago           			= '<s:url namespace="/siniestros" 	action="solicitarPago"             />';
 var _mesasin_url_lista_reasignacion 		= '<s:url namespace="/siniestros" 	action="obtenerUsuariosPorRol" />';
+var _URL_ACTUALIZA_TURNADOMC				= '<s:url namespace="/siniestros" 	action="actualizaTurnadoMesaControl" />';
 
 
 
@@ -451,9 +452,25 @@ var msgWindow;
 																						,success : function (response)
 																						{
 																							var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
-																							mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
-																							loadMcdinStore();
-																							windowLoader.close();
+																							Ext.Ajax.request({
+																								url     : _URL_ACTUALIZA_TURNADOMC
+																								,params : {           
+																									'params.ntramite': record.get('ntramite')
+																								}
+																								,success : function (response){
+																									mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+																									loadMcdinStore();
+																									windowLoader.close();
+																								},
+																								failure : function (){
+																									centrarVentanaInterna(Ext.Msg.show({
+																										title:'Error',
+																										msg: 'Error de comunicaci&oacute;n',
+																										buttons: Ext.Msg.OK,
+																										icon: Ext.Msg.ERROR
+																									}));
+																								}
+																							});
 																						},
 																						failure : function ()
 																						{
@@ -529,13 +546,28 @@ var msgWindow;
 																			,success : function (response)
 																			{
 																				var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
-																				mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
-																				loadMcdinStore();
-																				windowLoader.close();
+																				Ext.Ajax.request({
+																					url     : _URL_ACTUALIZA_TURNADOMC
+																					,params : {           
+																						'params.ntramite': record.get('ntramite')
+																					}
+																					,success : function (response){
+																						mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito : '+usuarioTurnadoSiniestro);
+																						loadMcdinStore();
+																						windowLoader.close();
+																					},
+																					failure : function (){
+																						centrarVentanaInterna(Ext.Msg.show({
+																							title:'Error',
+																							msg: 'Error de comunicaci&oacute;n',
+																							buttons: Ext.Msg.OK,
+																							icon: Ext.Msg.ERROR
+																						}));
+																					}
+																				});
 																			},
 																			failure : function ()
 																			{
-																				me.up().up().setLoading(false);
 																				centrarVentanaInterna(Ext.Msg.show({
 																					title:'Error',
 																					msg: 'Error de comunicaci&oacute;n',
@@ -681,10 +713,26 @@ var msgWindow;
 								    	            }
 								    	            ,success : function (response)
 								    	            {
-								    	                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
-								    	                mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
-		        	            						loadMcdinStore();
-		        	            						windowLoader.close();
+								    	            	var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+								    	            	Ext.Ajax.request({
+															url     : _URL_ACTUALIZA_TURNADOMC
+															,params : {           
+																'params.ntramite': record.get('ntramite')
+															}
+															,success : function (response){
+																mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+				        	            						loadMcdinStore();
+				        	            						windowLoader.close();
+															},
+															failure : function (){
+																centrarVentanaInterna(Ext.Msg.show({
+																	title:'Error',
+																	msg: 'Error de comunicaci&oacute;n',
+																	buttons: Ext.Msg.OK,
+																	icon: Ext.Msg.ERROR
+																}));
+															}
+														});
 								    	            },
 								    	            failure : function ()
 								    	            {
@@ -1396,10 +1444,25 @@ var msgWindow;
 									        	            		        		//mensajeError('No se pudo turnar.');
 									        	            					},
 									        	            					success: function(form, action) {
-									        	            						mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
-									        	            						loadMcdinStore();
-									        	            						windowLoader.close();
-									        	            						
+									        	            						Ext.Ajax.request({
+																						url     : _URL_ACTUALIZA_TURNADOMC
+																						,params : {           
+																							'params.ntramite': record.get('ntramite')
+																						}
+																						,success : function (response){
+																							mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
+											        	            						loadMcdinStore();
+											        	            						windowLoader.close();
+																						},
+																						failure : function (){
+																							centrarVentanaInterna(Ext.Msg.show({
+																								title:'Error',
+																								msg: 'Error de comunicaci&oacute;n',
+																								buttons: Ext.Msg.OK,
+																								icon: Ext.Msg.ERROR
+																							}));
+																						}
+																					});
 									        	            					}
 								        	            					});
 					        	            			} else {

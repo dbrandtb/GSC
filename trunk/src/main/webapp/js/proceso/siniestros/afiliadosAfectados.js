@@ -121,7 +121,7 @@ Ext.onReady(function() {
 			{
 				text     : 'Turnar &Aacute;rea M&eacute;dica'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/user_go.png'
-				,handler : _11_turnarAreaMedica
+							,handler : _11_turnarAreaMedica
 				,hidden:  _CDROL == _ROL_MEDICO || _CDROL == _ROL_COORD_MEDICO || _CDROL == _ROL_MESASINIESTRO
 			},
 			{
@@ -150,7 +150,7 @@ Ext.onReady(function() {
 			{
 				text     : 'Turnar Operador Reclamaci&oacute;n'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/user_go.png'
-				,handler : _11_turnarAreclamaciones
+							,handler : _11_turnarAreclamaciones
 				,hidden  : _CDROL != _ROL_MESASINIESTRO
 			},
 			{
