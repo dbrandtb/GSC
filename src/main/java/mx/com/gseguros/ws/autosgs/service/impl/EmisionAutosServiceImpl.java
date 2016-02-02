@@ -743,7 +743,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			if(!exitoRecibosSigs){
 				emisionAutoRes.setExitoRecibos(false);
 				emisionAutoRes.setResRecibos((valida == null) ?9999 : valida);
-				logger.debug("Error al Ejecutar los recibos para la emision de la poliza de autos");
+				logger.debug("Error al Ejecutar la emision de la poliza de autos: "+ valida);
 			}else{
 				emisionAutoRes.setExitoRecibos(true);
 				emisionAutoRes.setResRecibos(valida);
@@ -953,25 +953,64 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			
 			try{
 				
-				HashMap<String, Object> params = new HashMap<String, Object>();
-				params.put("Sucursal"    , sucursal);
-				params.put("Ramo"        , subramo);
-				params.put("Poliza"      , nmpoliex);
-				params.put("TipoEndoso"  , StringUtils.isBlank(recibos.get(0).get("TIPEND"))?" " : recibos.get(0).get("TIPEND"));
-				params.put("NumeroEndoso", recibos.get(0).get("NUMEND"));
+				LinkedHashMap<String, Object> paramsEnd = new LinkedHashMap<String, Object>();
+				paramsEnd.put("param1" , cdunieco);
+				paramsEnd.put("param2" , cdramo);
+				paramsEnd.put("param3" , estado);
+				paramsEnd.put("param4" , nmpoliza);
+				paramsEnd.put("param5" , nmsuplem);
 				
-				valida = autosSIGSDAO.confirmaRecibosAuto(params);
-				logger.debug("Respuesta al validar recibos: " + valida);
+				List<Map<String,String>> listaEndosos = null;
 				
-				if(valida == null || valida != 0){
-					logger.error("Error en la validacion de envio de recibos a SIGS, No se han enviado correctamente los recibos.");
-					return valida;
+				try {
+					listaEndosos = storedProceduresManager.procedureListCall(
+							ObjetoBD.OBTIENE_DATOS_WS_ENDOSO_AUTO.getNombre(), paramsEnd, null);
+				} catch (Exception e2) {
+					logger.error("Error al obtener lista de endosos o emision para confirmaRecibosAuto y ejecutaVidaPorRecibo.",e2);
+				}
+				
+				if(listaEndosos != null && !listaEndosos.isEmpty()){
+					
+					for(Map<String,String> endosoIt : listaEndosos){
+						
+						String tipoEndoso =  " ";
+						
+						if(StringUtils.isNotBlank(endosoIt.get("TIPOEND")) && !"E".equalsIgnoreCase(endosoIt.get("TIPOEND"))){
+							tipoEndoso = endosoIt.get("TIPOEND");
+						}
+							
+						HashMap<String, Object> params = new HashMap<String, Object>();
+						params.put("Sucursal"    , sucursal);
+						params.put("Ramo"        , subramo);
+						params.put("Poliza"      , nmpoliex);
+						params.put("TipoEndoso"  , tipoEndoso);
+						params.put("NumeroEndoso", endosoIt.get("NUMEND"));
+						
+						valida = autosSIGSDAO.confirmaRecibosAuto(params);
+						logger.debug("Respuesta al validar recibos y emision para el Endoso: "+endosoIt.get("NUMEND")+" Tipo: "+endosoIt.get("TIPOEND")+". :: Respuesta: "+valida);
+						
+						if(valida == null || valida != 0){
+							logger.error("Error en la validacion de envio de recibos a SIGS, No se han enviado correctamente la emision para el Endoso: "+endosoIt.get("NUMEND")+" Tipo: "+endosoIt.get("TIPOEND")+".");
+							return valida;
+						}else{
+							logger.info("Envio de Recibos de Auto a SIGS realizado correctamente... Llamando spVidaxRecibo...");
+							valida = autosSIGSDAO.ejecutaVidaPorRecibo(params);
+							
+							if(valida == null || valida != 0){
+								logger.error("Error al llamado de spVidaxRecibo SIGS, No se ejecuto el proceso correctamente para el Endoso: "+endosoIt.get("NUMEND")+" Tipo: "+endosoIt.get("TIPOEND")+". Respuesta: "+valida);
+								return valida;
+							}else{
+								logger.info("Llamado de spVidaxRecibo SIGS realizado correctamente...");
+							}
+						}
+					}
 				}else{
-					logger.info("Envio de Recibos de Auto a SIGS realizado correctamente");
+					logger.warn("Aviso, No se tienen datos de Endosos Autos para confirmaRecibosAuto y ejecutaVidaPorRecibo");
+					return errorEjec;
 				}
 				
 			} catch (Exception e){
-				logger.error("Error en Confirmacion de Recibos Exitosos! " + e.getMessage(),e);
+				logger.error("Error en validacion de Emision Exitosa y VidaPorRecibo! " + e.getMessage(),e);
 				return errorEjec;
 			}
 		}else{

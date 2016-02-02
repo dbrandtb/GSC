@@ -28,6 +28,7 @@ import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
 import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
@@ -48,15 +49,6 @@ import org.springframework.stereotype.Service;
 public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	
 	private static Logger logger = LoggerFactory.getLogger(ProcesoEmisionManagerImpl.class);
-	
-	@Value("${ruta.documentos.poliza}")
-	private String rutaDocumentosPoliza;
-	
-	@Value("${ruta.servidor.reports}")
-	private String rutaServidorReportes;
-	
-	@Value("${pass.servidor.reports}")
-	private String passServidorReportes;
 	
 	@Value("${caratula.impresion.autos.url}")
 	private String caratulaImpresionAutosURL;
@@ -90,6 +82,21 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	
 	@Value("${manual.agente.condgralescobsegvida}")
 	private String urlImpresionCondicionesSegVida;
+	
+	@Value("${rdf.emision.nombre.esp.cobvida}")
+	private String rdfEspecSeguroVida;
+
+	//Datos para el servidor de Reportes
+	@Value("${ruta.servidor.reports}")
+	private String rutaServidorReportes;
+
+	@Value("${pass.servidor.reports}")
+	private String passServidorReportes;
+
+	@Value("${ruta.documentos.poliza}")
+	private String rutaDocumentosPoliza;
+	
+	
 	
 	@Autowired
 	private ServiciosManager serviciosManager;
@@ -575,57 +582,78 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 						,Documento.RECIBO
 						);
 				
+				boolean imprimirCaic = false;
+				boolean imprimirAP = false;
+				
+				List<Map<String,String>> listaEndosos = emisionAutosService.obtieneEndososImprimir(cdunieco, cdramo, "M", nmpolizaEmitida, nmsuplemEmitida);
+				
+				if(listaEndosos!= null && !listaEndosos.isEmpty()){
+					Map<String,String> emisionIt = listaEndosos.get(0);
+					if(emisionIt != null && emisionIt.containsKey("CAIC") && Constantes.SI.equalsIgnoreCase(emisionIt.get("CAIC"))){
+						imprimirCaic = true;
+					}
+					if(emisionIt != null && emisionIt.containsKey("AP") && Constantes.SI.equalsIgnoreCase(emisionIt.get("AP"))){
+						imprimirAP = true;
+					}
+				}
+				
+				
 				/**
 				 * Para AP inciso 1
 				 */
-				parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",,0,0";
-				logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
-				mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAp + parametros+"\">Anexo cobertura de AP</a>";
+				if(imprimirAP){
+					parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",,0,0";
+					logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
+					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAp + parametros+"\">Anexo cobertura de AP</a>";
+					
+					mesaControlDAO.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,urlAp + parametros
+							,"AP"
+							,nmpoliza
+							,ntramite
+							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+							,Constantes.SI
+							,null
+							,"1"
+							,"0"
+							,Documento.EXTERNO_AP
+							);
+				}
 				
-				mesaControlDAO.guardarDocumento(
-						cdunieco
-						,cdramo
-						,"M"
-						,nmpolizaEmitida
-						,nmsuplemEmitida
-						,new Date()
-						,urlAp + parametros
-						,"AP"
-						,nmpoliza
-						,ntramite
-						,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
-						,Constantes.SI
-						,null
-						,"1"
-						,"0"
-						,Documento.EXTERNO_AP
-						);
 				
 				/**
 				 * Para CAIC inciso 1
 				 */
-				parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",,0,0";
-				logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
-				mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaic + parametros+"\">Anexo de cobertura RC USA</a>";
-				
-				mesaControlDAO.guardarDocumento(
-						cdunieco
-						,cdramo
-						,"M"
-						,nmpolizaEmitida
-						,nmsuplemEmitida
-						,new Date()
-						,urlCaic + parametros
-						,"CAIC"
-						,nmpoliza
-						,ntramite
-						,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
-						,Constantes.SI
-						,null
-						,"1"
-						,"0"
-						,Documento.EXTERNO_CAIC
-						);
+				if(imprimirCaic){
+					parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",,0,0";
+					logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
+					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaic + parametros+"\">Anexo de cobertura RC USA</a>";
+					
+					mesaControlDAO.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,urlCaic + parametros
+							,"CAIC"
+							,nmpoliza
+							,ntramite
+							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+							,Constantes.SI
+							,null
+							,"1"
+							,"0"
+							,Documento.EXTERNO_CAIC
+							);
+				}
 				
 				if("C".equalsIgnoreCase(tipoGrupoInciso)){
 					/**
@@ -695,6 +723,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				
 				boolean reduceGS = (StringUtils.isNotBlank(polRes.getReduceGS()) && Constantes.SI.equalsIgnoreCase(polRes.getReduceGS()))?true:false;
 				boolean gestoria = (StringUtils.isNotBlank(polRes.getGestoria()) && Constantes.SI.equalsIgnoreCase(polRes.getGestoria()))?true:false;
+				boolean cobVida  = (StringUtils.isNotBlank(polRes.getCobvida()) && Constantes.SI.equalsIgnoreCase(polRes.getCobvida()))?true:false;
 				
 				if(reduceGS) {
 					/**
@@ -749,6 +778,66 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,Documento.EXTERNO_GESTORIA_GS
 							);
 					
+				}
+				
+				if(cobVida){
+					
+					String reporteEspVida = rdfEspecSeguroVida;
+					String pdfEspVidaNom = "SOL_VIDA_AUTO.pdf";
+					
+					String url = rutaServidorReportes
+							+ "?destype=cache"
+							+ "&desformat=PDF"
+							+ "&userid="+passServidorReportes
+							+ "&report="+reporteEspVida
+							+ "&paramform=no"
+							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+							+ "&p_unieco="+cdunieco
+							+ "&p_ramo="+cdramo
+							+ "&p_estado='M'"
+							+ "&p_poliza="+nmpolizaEmitida
+							+ "&p_suplem="+nmsuplemEmitida
+							+ "&desname="+rutaCarpeta+"/"+pdfEspVidaNom;
+					
+					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+pdfEspVidaNom);
+					
+					mesaControlDAO.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,pdfEspVidaNom
+							,"Especificaciones Seguro de Vida"
+							,nmpoliza
+							,ntramite
+							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+							,Constantes.SI
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,"0"
+							,Documento.EXTERNO_ESPECIF_SEGURO_VIDA
+							);
+
+					mesaControlDAO.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,urlImpresionCondicionesSegVida
+							,"Condiciones Generales Seguro de Vida"
+							,nmpoliza
+							,ntramite
+							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+							,Constantes.SI
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,"0"
+							,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA
+							);
 				}
 				
 				mensajeEmail += "<br/><br/><br/>Agradecemos su preferencia.<br/>"+

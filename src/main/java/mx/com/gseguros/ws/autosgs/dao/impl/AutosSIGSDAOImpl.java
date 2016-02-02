@@ -197,6 +197,39 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			compile();
 		}
 	}
+
+	@Override
+	public Integer ejecutaVidaPorRecibo(Map<String, Object> params) throws Exception {
+		Integer resp = null;
+		Map<String, Object> mapResult = ejecutaSP(new EjecutaVidaPorRecibo(getDataSource()), params);
+		resp = (Integer) mapResult.get("rs");
+		
+		return resp;
+	}
+	
+	public class EjecutaVidaPorRecibo extends StoredProcedure{
+		protected EjecutaVidaPorRecibo(DataSource dataSource){
+			super(dataSource, "spVidaxRecibo");
+			
+			declareParameter(new SqlParameter("Sucursal", Types.SMALLINT));
+			declareParameter(new SqlParameter("Ramo", Types.SMALLINT));
+			declareParameter(new SqlParameter("Poliza", Types.INTEGER));
+			declareParameter(new SqlParameter("TipoEndoso", Types.VARCHAR));
+			declareParameter(new SqlParameter("NumeroEndoso", Types.INTEGER));
+			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
+				@Override  
+				public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+					Integer result = null;
+					while(rs.next()){  
+						result = rs.getInt(1);
+					}  
+					return result;  
+				}
+			}));
+			
+			compile();
+		}
+	}
 	
 	@Override
 	public Integer endosoPlacasMotor(Map<String, Object> params) throws Exception {

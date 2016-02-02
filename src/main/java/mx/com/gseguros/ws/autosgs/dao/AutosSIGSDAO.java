@@ -14,6 +14,8 @@ public interface AutosSIGSDAO {
 	public Integer insertaReciboAuto(Map<String, Object> params) throws Exception;
 
 	public Integer confirmaRecibosAuto(Map<String, Object> params) throws Exception;
+
+	public Integer ejecutaVidaPorRecibo(Map<String, Object> params) throws Exception;
 	
 	public Integer endosoPlacasMotor(Map<String, Object> params) throws Exception;
 
