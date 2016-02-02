@@ -1603,10 +1603,26 @@ var msgWindow;
    								    	            }
    								    	            ,success : function (response)
    								    	            {
-   								    	                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
-   								    	                mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
-   		        	            						loadMcdinStore();
-   		        	            						windowLoader.close();
+   								    	                 var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+	   								    	             Ext.Ajax.request({
+																url     : _URL_ACTUALIZA_TURNADOMC
+																,params : {           
+																	'params.ntramite': record.get('ntramite')
+																}
+																,success : function (response){
+																	mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+																	loadMcdinStore();
+																	windowLoader.close();
+																},
+																failure : function (){
+																	centrarVentanaInterna(Ext.Msg.show({
+																		title:'Error',
+																		msg: 'Error de comunicaci&oacute;n',
+																		buttons: Ext.Msg.OK,
+																		icon: Ext.Msg.ERROR
+																	}));
+																}
+															});
    								    	            },
    								    	            failure : function ()
    								    	            {
