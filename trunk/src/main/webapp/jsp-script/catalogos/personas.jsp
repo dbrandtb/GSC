@@ -243,7 +243,6 @@ if(!Ext.isEmpty(_p22_smap1)){
 	_cargaOrdDomicilio= _p22_smap1.cargaOrdDomicilio;
 }
 
-
 if(_polizaEnEmision){
 	_tomarUnDomicilio = true;
 	_domicilioSimple = true
@@ -1222,7 +1221,7 @@ function irModoAgregar(){
             		/**
 					 * POR SI HAY UNA SUCURSAL A CARGAR EN EL MODO DE AGREGAR
 					 */
-					if(!Ext.isEmpty(_cargaSucursalEmi)){
+					if(!Ext.isEmpty(_cargaSucursalEmi) && _esSaludDanios == 'S' && _cargaSucursalEmi >= 1000 ){
 						_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(_cargaSucursalEmi);
 					}
             		
@@ -2135,7 +2134,7 @@ function _p22_guardarClic(callbackGuardar, autosave)
 		 * Carga la nueva sucursal si cambia, solo se actualiza en BD si el cliente no esta asociado a una poliza.
 		 */
 	    
-		if(!autosave && !Ext.isEmpty(_cargaSucursalEmi) && _fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue() != _cargaSucursalEmi){
+		if(!autosave && !Ext.isEmpty(_cargaSucursalEmi) && _esSaludDanios == 'S' && _cargaSucursalEmi >= 1000 && _fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue() != _cargaSucursalEmi){
 			_fieldByName('CDSUCEMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(_cargaSucursalEmi);
 		}
 		
