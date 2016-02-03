@@ -2813,7 +2813,7 @@ Ext.onReady(function()
                         else if(_p30_smap1.tipoflot=='F')
                         {  var campo= _fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[fieldLabel=FECHA DE FACTURA]');
                            campo.reset();
-                           campo.showS();
+                           campo.show();
                            campo.allowBlank=true;
                            campo.up('form').doLayout();
                         }  
@@ -5481,7 +5481,7 @@ function _p30_renderer(record,mapeo)
                     else if(origen+'x'=='atributox')
                     {
                         label='';//'-atributo-';
-                        var store=_fieldById('_p30_tatrisitParcialForm'+cdtipsit).down('[name='+name+']').getStore();
+                        var store=_p30_tatrisitFullForms[cdtipsit].down('[name='+name+']').getStore();
                         if(Ext.isEmpty(store))
                         {
                             debugError('No hay store de atributo:',cdtipsit,name,'.');
