@@ -1010,10 +1010,9 @@ Ext.onReady(function()
                 }
                 ,'->'
                 ,{
-                    xtype   : 'form'
+                     xtype  : 'form'
                     ,hidden : _p30_smap1.tipoflot+'x'!='Fx' && _p30_smap1.tipoflot+'x'!='Px'
                     ,layout : 'hbox'
-                    ,hidden : _p30_smap1.tipoflot+'x'!='Fx' && _p30_smap1.tipoflot+'x'!='Px' 
                     ,items  :
                     [
                         {
