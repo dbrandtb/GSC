@@ -79,23 +79,37 @@ function cargaStorePaginadoLocal(_store, _url, _root, _params, _callback, _grid,
 	        	}
 	        	_store.removeAll();
 	            var jsonResponse = Ext.decode(response.responseText);
-	            var records = [];
-	            var modelo = _store.getProxy().getModel();
-	            debug('#modelo:',modelo);
-	            for(var i in jsonResponse[_root])
+	            
+	            /*se crean los datos en otro store, un store temporal INICIO*/
+	            debug('_store.proxy.model:',_store.proxy.model);
+	            Ext.create('Ext.data.Store',
 	            {
-	                records.push(modelo.create(jsonResponse[_root][i]));
-	            }
-	            debug('#records:',records);
-	            _store.datos = records;
-	            _store.setProxy({
-	                type         : 'memory',
-	                enablePaging : true,
-	                reader       : 'json',
-	                data         : records
-	            });
-	            _store.load();
-	            _store.commitChanges();
+	                model     : _store.proxy.model
+	                ,autoLoad : true
+	                ,proxy    :
+	                {
+	                    type    : 'memory'
+	                    ,reader : 'json'
+	                    ,data   : jsonResponse[_root]
+	                }
+	                ,listeners :
+	                {
+	                    load : function(me,records)
+	                    {
+	                        debug('records storeTmp:',records);
+	                        _store.datos = records;
+	                        _store.setProxy({
+	                            type          : 'memory'
+	                            ,enablePaging : true
+	                            ,reader       : 'json'
+	                            ,data         : records
+	                        });
+	                        _store.load();
+	                        _store.commitChanges();
+	                    }
+	                }
+	            })
+	            /*se crean los datos en otro store, un store temporal FIN*/
 	        },
 	        failure   : function()
 	        {
