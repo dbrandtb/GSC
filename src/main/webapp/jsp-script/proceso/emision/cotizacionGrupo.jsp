@@ -4687,7 +4687,14 @@ function _p21_estiloEditores(cdplan)
                         //else if(_4AYM&&_4HOS&&!_4MAT)
                         else if(!_4MAT)
                         {
-                            _p21_editorAyudaMater.removeCls('_p21_editorLectura');
+                        	if(!_4HOS)
+                            {
+                            	_p21_editorAyudaMater.setValue('0');
+                            	_p21_editorAyudaMater.addCls('_p21_editorLectura');
+                            }else{
+                            	_p21_editorAyudaMater.removeCls('_p21_editorLectura');
+                            }
+                            
                         }
                     }
                     //_p21_editorAyudaMater.setReadOnly(!_4AYM);
@@ -4710,7 +4717,16 @@ function _p21_estiloEditores(cdplan)
                         //else if(_4AIV&&_4MS)
                         else if(_4MS)
                         {
-                            _p21_editorAsisInter.removeCls('_p21_editorLectura');
+                            if(!_4HOS)
+                            {
+                            	_p21_editorEmerextr.setValue('0');
+                            	_p21_editorEmerextr.addCls('_p21_editorLectura');
+                            	_p21_editorAsisInter.setValue('0');
+                                _p21_editorAsisInter.addCls('_p21_editorLectura');
+                            }else{
+                            	_p21_editorAsisInter.removeCls('_p21_editorLectura');
+                            	_p21_editorEmerextr.removeCls('_p21_editorLectura');
+                            }
                         }
                     }
                 }
