@@ -40,8 +40,6 @@ var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/
 
 ////// variables //////
 
-   //Ext.onReady(function()
-//    {
         Ext.util.Format.thousandSeparator=",";
         Ext.define("Ext.override.ThousandSeparatorNumberField", {
         override: "Ext.form.field.Number",
@@ -137,7 +135,7 @@ var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/
                     value = me.toRawNumber(value);
                 }
                 debug("Cadena(value) 2: " + value);
-                alert(value);
+//                 alert(value);
                 return value;
             },
             
@@ -188,9 +186,6 @@ var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/
                 return isNaN(value) ? null : value;
             }
         });
-    //});//FIN THOUSAND SEPARATOR 
-//Ext.util.Format.thousandSeparator = ',';
-//Ext.util.Format.decimalSeparator = '.';
 
 var _p30_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('_p30_smap1:',_p30_smap1);
@@ -1075,7 +1070,24 @@ Ext.onReady(function()
                                     
                                     if(valido)
                                     {
+                                               Ext.Ajax.request(
+                                                 {
+                                                     url      : _p30_urlCargarTipoCambioWS
+                                                     ,success : function(response)
+                                                     {
+                                                         serieCmp.setLoading(false);
+                                                         var json=Ext.decode(response.responseText);
+                                                         debug('### dolar:',json);
+                                                         _p30_precioDolarDia=json.smap1.dolar;
+                                                    }
+                                                     ,failure : function()
+                                                     {
+                                                         errorComunicacion();
+                                                     }
+                                                 });
+                                        
                                         var panelpri = _fieldById('_p30_panelpri');
+                                        var postalVal   = _fieldLikeLabel('CIRCULACI',_fieldById('_p30_form')).getValue();
                                         panelpri.setLoading(true);
                                         me.up('form').submit(
                                         {
@@ -1085,6 +1097,8 @@ Ext.onReady(function()
                                                 'smap1.cdramo'    : _p30_smap1.cdramo
                                                 ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
                                                 ,'smap1.tipoflot' : _p30_smap1.tipoflot
+                                                ,'smap1.codpos'   : postalVal
+                                                ,'smap1.cambio'   : _p30_precioDolarDia
                                             }
                                             ,success : function(form,action)
                                             {
@@ -2914,7 +2928,7 @@ Ext.onReady(function()
                             url : _p30_urlNada
                             ,params :
                             {
-                                'smap1.vim'       : meVal
+                                 'smap1.vim'      : meVal
                                 ,'smap1.cdramo'   : _p30_smap1.cdramo
                                 ,'smap1.cdtipsit' : cdtipsit
                                 ,'smap1.tipoveh'  : tipovehVal
