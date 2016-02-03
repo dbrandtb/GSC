@@ -119,11 +119,13 @@ var _p28_selectedNmsituac        = null;
 var _p28_precioDolarDia          = null;
 ////// variables //////
 
+
 Ext.onReady(function()
 {
-     Ext.util.Format.thousandSeparator=",";
+    //INICIO DE THOUSAND SEPARATOR 
+    Ext.util.Format.thousandSeparator=",";
     Ext.define("Ext.override.ThousandSeparatorNumberField", {
-    override: "Ext.form.field.Number",
+        override: "Ext.form.field.Number",
         
         /**
         * @cfg {Boolean} useThousandSeparator
@@ -212,7 +214,7 @@ Ext.onReady(function()
             var me = this,
                 value = me.callParent();
 
-            if (!me.submitLocaleSeparator) {
+            if (true||!me.submitLocaleSeparator) {
                 value = me.toRawNumber(value);
             }
             debug("Cadena(value) 2: " + value);
@@ -265,7 +267,9 @@ Ext.onReady(function()
             value = parseFloat(this.toRawNumber(value));
             return isNaN(value) ? null : value;
         }
-    }); //FIN THOUSAND SEPARATOR 
+    }); //FIN THOUSAND SEPARATOR
+    
+     
     _grabarEvento('COTIZACION','ACCCOTIZA',null,null,_p28_smap1.cdramo);
 
     Ext.Ajax.timeout = 3*60*1000;
@@ -1280,9 +1284,9 @@ function _p28_cotizar(sinTarificar)
             ,smap1 : smap
         };
         
-       json.slist1[0]["parametros.pv_otvalor13"] = json.slist1[0]["parametros.pv_otvalor13"].replace(",","");
-       json.slist1[0]["parametros.pv_otvalor27"] = json.slist1[0]["parametros.pv_otvalor27"].replace(",","");
-       json.slist1[0]["parametros.pv_otvalor29"] = json.slist1[0]["parametros.pv_otvalor29"].replace(",","");
+       //json.slist1[0]["parametros.pv_otvalor13"] = json.slist1[0]["parametros.pv_otvalor13"].replace(",","");
+       //json.slist1[0]["parametros.pv_otvalor27"] = json.slist1[0]["parametros.pv_otvalor27"].replace(",","");
+       //json.slist1[0]["parametros.pv_otvalor29"] = json.slist1[0]["parametros.pv_otvalor29"].replace(",","");
                
         var valuesFormOculto = form.formOculto.getValues();
         for(var att in valuesFormOculto)
