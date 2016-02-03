@@ -401,7 +401,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				respuestaOculta = ex.getMessage();
 				logger.error(respuesta,ex);
 				
-				this.addActionError("No se ha definido la url de la pestaña de asegurados #"+timestamp);
+				this.addActionError("No se ha definido la url de la pestaï¿½a de asegurados #"+timestamp);
 				map1.put("urlAsegurados","");
 			}
 		}
@@ -1700,7 +1700,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	            mapCoberturas.put("pv_nmsuplem_i",   "0");//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	            mapCoberturas.put("pv_cdgarant_i",   "TODO");//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	            mapCoberturas.put("pv_cdtipsup_i",   "1");
-	            kernelManager.coberturasEnd(mapCoberturas);
+	            kernelManager.coberturas(mapCoberturas);
 				/*//////////////////////*/
 				////// sigsvdef end //////
 				//////////////////////////
