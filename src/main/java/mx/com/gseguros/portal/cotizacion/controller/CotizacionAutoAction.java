@@ -1121,9 +1121,12 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			
 			ManagerRespuestaSlistVO resp = cotizacionAutoManager.procesarCargaMasivaFlotilla(cdramo,cdtipsit,respetar,excel);//,tipoflot
 			//Para modificar solo PYMES ignorando el valor de vehiculo y haciendo consulta
-			if(tipoflot.contains("P"))
+			if(tipoflot.equals("P"))
 			{
-				resp.setSlist( cotizacionAutoManager.modificadorValorVehPYME(resp.getSlist(), cdsisrol));
+				String cdpost = smap1.get("codpos");
+				String cambio = smap1.get("cambio");
+				logger.info(cambio);
+				resp.setSlist( cotizacionAutoManager.modificadorValorVehPYME(resp.getSlist(),cdsisrol, cdpost, cambio));
 			}	
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();

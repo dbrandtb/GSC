@@ -206,5 +206,5 @@ public interface CotizacionAutoManager
 			String numSerie
 			,Date feini) throws ApplicationException;
 	
-	public List<Map<String, String>> modificadorValorVehPYME(List<Map<String, String>> slist1, String cdsisrol) throws Exception;
+	public List<Map<String, String>> modificadorValorVehPYME(List<Map<String, String>> slist1, String cdsisrol, String cdpost, String cambio) throws Exception;
 }

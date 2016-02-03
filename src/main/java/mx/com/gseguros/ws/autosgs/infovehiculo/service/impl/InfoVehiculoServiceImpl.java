@@ -37,16 +37,16 @@ public class InfoVehiculoServiceImpl implements InfoVehiculoService {
 						
 				logger.info(
 						new StringBuilder()
-						.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-						.append("\n@@@@@@ VILS WEBSERVICE @@@@@@")
-						.append("\n@@@@@@ cdtipsit=").append(resultWS)
+						.append("\n@@@@@@@@@@@@@@@@@@@@@@@@")
+						.append("\n@@@@@@ WEBSERVICE @@@@@@")
+						.append("\n@@@@@@ cdtipsit= ").append(resultWS)
 						);
 				
 				resVal = (ResponseValor) resultWS.getResultadoWS();
 				logger.info(
 						new StringBuilder()
 						.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-						.append("\n@@@@@@ VILS WEBSERVICE @@@@@@")
+						.append("\n@@@@@@ WEBSERVICE @@@@@@")
 						.append("\n@@@@@@ cdtipsit=").append(resVal)
 						);
 				

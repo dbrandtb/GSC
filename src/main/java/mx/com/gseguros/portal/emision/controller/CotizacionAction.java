@@ -815,6 +815,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					&&StringUtils.isNotBlank(tipoVehiculo=smap1.get("tipoveh"))
 					&&StringUtils.isNotBlank(codigoPostal=smap1.get("codpos"))
 					;
+			logger.debug("Vils tipo de vehiculo: "+ tipoVehiculo);
 			if(!success)
 			{
 				error="No se recibi&oacute; el n&uacute;mero de serie";
