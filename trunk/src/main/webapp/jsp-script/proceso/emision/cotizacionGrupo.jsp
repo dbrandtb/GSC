@@ -2994,7 +2994,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                     text     : 'Guardar'
                                                     ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
                                                     ,handler : function(button){_p21_guardarGrupo(button.up().up());}
-                                                    ,hidden  : _p21_smap1.COBERTURAS=='N'
+                                                    ,hidden  : _p21_smap1.COBERTURAS=='N'||_p21_smap1.COBERTURAS_BOTON=='N'
                                                 }
                                             ]
                                         });
@@ -6204,7 +6204,10 @@ function _p21_guardarExtraprimas(letra)
                 debug('respuesta del guardado de extraprimas:',json);
                 if(json.exito)
                 {
-                    store.commitChanges();
+                    for(var i=0;i<records.length;i++)
+                    {
+                        records[i].commit();
+                    }
                     mensajeCorrecto('Datos guardados',json.respuesta);
                     _p21_setActiveResumen();
                 }
@@ -6514,7 +6517,7 @@ function _p21_guardarAsegurados(grid,callback)
     if(valido)
     {
         var error = '';
-        store.each(function(record)
+        $.each(store.datos,function(i,record)
         {
             if(Ext.isEmpty(record.get('NOMBRE')))
             {
@@ -6555,7 +6558,7 @@ function _p21_guardarAsegurados(grid,callback)
     {
         debug('guardar:',asegurados);
         var slist1 = [];
-        store.each(function(irecord)
+        $.each(store.datos,function(i,irecord)
         {
             debug('iterando para guardar:',irecord);
             slist1.push(
@@ -6592,7 +6595,10 @@ function _p21_guardarAsegurados(grid,callback)
                 debug('json response guardar asegurados:',json);
                 if(json.exito)
                 {
-                    grid.getStore().commitChanges();
+                    for(var i=0;i<asegurados.length;i++)
+                    {
+                        asegurados[i].commit();
+                    }
                     if(callback!=undefined)
                     {
                         callback();
