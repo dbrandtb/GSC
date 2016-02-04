@@ -2726,7 +2726,7 @@ Ext.onReady(function() {
         
         debug('Params busqueda de suplemento: ',params);
         
-        cargaStorePaginadoLocal(storeSuplementos, _URL_CONSULTA_POLIZA_ACTUAL, 'datosPolizaActual', params, function (options, success, response){
+        cargaStorePaginadoLocalTemp(storeSuplementos, _URL_CONSULTA_POLIZA_ACTUAL, 'datosPolizaActual', params, function (options, success, response){
     		if(success){
                 var jsonResponse = Ext.decode(response.responseText);
                 
@@ -2846,11 +2846,92 @@ Ext.onReady(function() {
         }
         
         //console.log('Params busqueda de polizas por RFC=');console.log(formBusqueda.getValues());
-        cargaStorePaginadoLocal(storePolizaAsegurado, 
+        cargaStorePaginadoLocalTemp(storePolizaAsegurado, 
             _URL_CONSULTA_RESULTADOS_ASEGURADO, 
             'resultadosAsegurado', 
             formBusqueda.getValues(), 
             callbackGetPolizasAsegurado);
     }
+    
+    
+    /**
+     * Funcion TEMPORAL para implementar Paginacion,
+     * carga un Store y pagina sus datos de forma local.
+     * Se debe de tener un Store con un proxy 
+     * de la siguiente forma:
+     *
+       var store=Ext.create('Ext.data.Store',
+       {
+           pageSize : 10,
+           autoLoad : true,
+           model    : 'modelPersonalizado',
+           proxy    :
+           {
+               enablePaging : true,
+               reader       : 'json',
+               type         : 'memory',
+               data         : []
+           }
+       });
+           
+     * @param {Ext.data.Store} _store
+     * @param {String} _url
+     * @param {String} _root
+     * @param {Array} _params
+     * @param {Function} _callback Function to be called 
+     * @param {Ext.grid.Panel} _grid (Optional)
+     * @param {Number} _timeout (Optional)
+     */
+    function cargaStorePaginadoLocalTemp(_store, _url, _root, _params, _callback, _grid, _timeout) {
+        
+        var timeOut = null;
+        if(_timeout) {
+            timeOut = _timeout;
+        }
+        
+        if(_grid){
+            _grid.setLoading(true);
+            if(_grid.down('pagingtoolbar')){
+                _grid.down('pagingtoolbar').moveFirst();
+            }
+        }
+        Ext.Ajax.request(
+        {
+            url       : _url,
+            params    : _params,
+            callback  : _callback,
+            timeout   : timeOut != null ? timeOut : Ext.Ajax.timeout, 
+            success   : function(response)
+            {
+                if(_grid){
+                    _grid.setLoading(false);
+                }
+                _store.removeAll();
+                var jsonResponse = Ext.decode(response.responseText);
+                _store.setProxy({
+                    type         : 'memory',
+                    enablePaging : true,
+                    reader       : 'json',
+                    data         : jsonResponse[_root]
+                });
+                _store.load();
+            },
+            failure   : function()
+            {
+                if(_grid){
+                    _grid.setLoading(false);
+                }
+                _store.removeAll();
+                Ext.Msg.show({
+                    title   : 'Error',
+                    icon    : Ext.Msg.ERROR,
+                    //msg     : 'Error cargando los datos de ' + _url,
+                    msg     : 'Error al obener los datos, intente m\u00E1s tarde',
+                    buttons : Ext.Msg.OK
+                });
+            }
+        });
+    }
+
     
 });
