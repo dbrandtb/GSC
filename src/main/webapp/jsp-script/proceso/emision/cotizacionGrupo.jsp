@@ -5771,7 +5771,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
 	                                    };
 	                                }
 	                                
-                                    cargaStorePaginadoLocal(
+                                    cargaStorePaginadoLocalFiltro(
 		                                Ext.getStore('_p21_storeExtraprimas'+record.get('letra'))
 		                                ,_p21_urlCargarAseguradosExtraprimas
 		                                ,'slist1'
@@ -5910,7 +5910,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                 {
                     afterrender : function(me)
                     {
-                        cargaStorePaginadoLocal(
+                        cargaStorePaginadoLocalFiltro(
                             Ext.getStore('_p21_storeExtraprimas'+record.get('letra'))
                             ,_p21_urlCargarAseguradosExtraprimas
                             ,'slist1'
@@ -6060,7 +6060,7 @@ function _p21_aseguradosClic(grid,rowIndex)
 		                                };
 		                            }
 		                            
-		                            cargaStorePaginadoLocal(
+		                            cargaStorePaginadoLocalFiltro(
                                         Ext.getStore('_p21_storeAsegurados'+record.get('letra'))
                                         ,_p21_urlCargarAseguradosGrupo
                                         ,'slist1'
@@ -6128,7 +6128,7 @@ function _p21_aseguradosClic(grid,rowIndex)
                 {
                     afterrender : function(me)
                     {
-                        cargaStorePaginadoLocal(
+                        cargaStorePaginadoLocalFiltro(
                             Ext.getStore('_p21_storeAsegurados'+record.get('letra'))
                             ,_p21_urlCargarAseguradosGrupo
                             ,'slist1'
