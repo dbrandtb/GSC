@@ -2597,6 +2597,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					
 					String urlIncisosFlot = this.getText("incisos.flotillas.impresion.autos.url");
 					String urlTarjIdent = this.getText("tarjeta.iden.impresion.autos.url");
+					String numIncisosReporte = this.getText("numero.incisos.reporte");
 					
 					this.mensajeEmail = "<span style=\"font-family: Verdana, Geneva, sans-serif;\">"+
 										"<br>Estimado(a) cliente,<br/><br/>"+
@@ -2794,35 +2795,57 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 * Para Tarjeta Identificacion
 						 */
 						
-//						consultasPolizaManager
+						int numeroIncisos = consultasPolizaManager.obtieneNumeroDeIncisosPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, nmsuplemEmitida);
 						
-						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
-						logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci&oacute;n</a>";
-						
-						//paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
-						//paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
-						
-						//kernelManager.guardarArchivo(paramsR);
-						
-						documentosManager.guardarDocumento(
-								cdunieco
-								,cdramo
-								,"M"
-								,nmpolizaEmitida
-								,nmsuplemEmitida
-								,new Date()
-								,urlTarjIdent + parametros
-								,"Tarjeta de Identificacion"
-								,nmpoliza
-								,ntramite
-								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-								,Constantes.SI
-								,null
-								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,"0"
-								,Documento.EXTERNO_TARJETA_IDENTIFICACION
-								);
+						if(numeroIncisos > 0 ){
+							int numeroReportes =  numeroIncisos/Integer.parseInt(numIncisosReporte);
+							int reporteSobrante = numeroIncisos % Integer.parseInt(numIncisosReporte);
+							
+							logger.debug("Tarjeta de Identificacion ::: Numero de Reportes exactos: "+ numeroReportes);
+							logger.debug("Tarjeta de Identificacion ::: Numero de incisos sobrantes: "+ reporteSobrante);
+							
+							if(reporteSobrante > 0 ){
+								numeroReportes += 1;
+							}
+							
+							/**
+							 * Se divide reporte de tarjeta de identifiacion para flotillas ya que puede ser muy grande el archivo y se divide en una cantidad
+							 * de autos por pagina predeterminada.
+							 */
+							for(int numReporte = 1; numReporte <= numeroReportes; numReporte++){
+								
+								int desdeInciso = ((numReporte-1) * Integer.parseInt(numIncisosReporte))+1;
+								int hastaInciso = numReporte * Integer.parseInt(numIncisosReporte);
+								
+								if(numReporte == numeroReportes && reporteSobrante > 0 ){
+									hastaInciso = ((numReporte-1) * Integer.parseInt(numIncisosReporte)) + reporteSobrante;
+								}
+								
+								parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,"+desdeInciso+","+hastaInciso;
+								logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+								this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci&oacute;n. " +desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos+"</a>";
+								
+								documentosManager.guardarDocumento(
+										cdunieco
+										,cdramo
+										,"M"
+										,nmpolizaEmitida
+										,nmsuplemEmitida
+										,new Date()
+										,urlTarjIdent + parametros
+										,"Tarjeta de Identificacion. " +desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos 
+										,nmpoliza
+										,ntramite
+										,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+										,Constantes.SI
+										,null
+										,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+										,"0"
+										,Documento.EXTERNO_TARJETA_IDENTIFICACION
+										);
+							}
+							
+						}
 						
 					}
 					
@@ -3727,6 +3750,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						
 						String urlIncisosFlot = this.getText("incisos.flotillas.impresion.autos.url");
 						String urlTarjIdent = this.getText("tarjeta.iden.impresion.autos.url");
+						String numIncisosReporte = this.getText("numero.incisos.reporte");
 						
 						this.mensajeEmail = "<span style=\"font-family: Verdana, Geneva, sans-serif;\">"+
 								"<br>Estimado(a) cliente,<br/><br/>"+
@@ -3920,36 +3944,63 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,Documento.EXTERNO_INCISOS_FLOTILLAS
 									);
 							
+							
+							
 							/**
 							 * Para Tarjeta Identificacion
 							 */
-							parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,1";
-							logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
-							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci&oacute;n</a>";
 							
-							//paramsR.put("pv_cddocume_i", urlTarjIdent + parametros);
-							//paramsR.put("pv_dsdocume_i", "Tarjeta de Identificacion");
+							int numeroIncisos = consultasPolizaManager.obtieneNumeroDeIncisosPoliza(_cdunieco, _cdramo, "M", _nmpoliza, _nmsuplem);
 							
-							//kernelManager.guardarArchivo(paramsR);
-							
-							documentosManager.guardarDocumento(
-									_cdunieco
-									,_cdramo
-									,"M"
-									,_nmpoliza
-									,_nmsuplem
-									,new Date()
-									,urlTarjIdent + parametros
-									,"Tarjeta de Identificacion"
-									,nmsolici
-									,ntramite
-									,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-									,Constantes.SI
-									,null
-									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-									,"0"
-									,Documento.EXTERNO_TARJETA_IDENTIFICACION
-									);
+							if(numeroIncisos > 0 ){
+								int numeroReportes =  numeroIncisos/Integer.parseInt(numIncisosReporte);
+								int reporteSobrante = numeroIncisos % Integer.parseInt(numIncisosReporte);
+								
+								logger.debug("Tarjeta de Identificacion ::: Numero de Reportes exactos: "+ numeroReportes);
+								logger.debug("Tarjeta de Identificacion ::: Numero de incisos sobrantes: "+ reporteSobrante);
+								
+								if(reporteSobrante > 0 ){
+									numeroReportes += 1;
+								}
+								
+								/**
+								 * Se divide reporte de tarjeta de identifiacion para flotillas ya que puede ser muy grande el archivo y se divide en una cantidad
+								 * de autos por pagina predeterminada.
+								 */
+								for(int numReporte = 1; numReporte <= numeroReportes; numReporte++){
+									
+									int desdeInciso = ((numReporte-1) * Integer.parseInt(numIncisosReporte))+1;
+									int hastaInciso = numReporte * Integer.parseInt(numIncisosReporte);
+									
+									if(numReporte == numeroReportes && reporteSobrante > 0 ){
+										hastaInciso = ((numReporte-1) * Integer.parseInt(numIncisosReporte)) + reporteSobrante;
+									}
+									
+									parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,"+desdeInciso+","+hastaInciso;
+									logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+									this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci&oacute;n. " +desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos+"</a>";
+									
+									documentosManager.guardarDocumento(
+											_cdunieco
+											,_cdramo
+											,"M"
+											,_nmpoliza
+											,_nmsuplem
+											,new Date()
+											,urlTarjIdent + parametros
+											,"Tarjeta de Identificacion. " +desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos
+											,nmsolici
+											,ntramite
+											,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+											,Constantes.SI
+											,null
+											,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+											,"0"
+											,Documento.EXTERNO_TARJETA_IDENTIFICACION
+											);
+								}
+								
+							}
 							
 						}
 						

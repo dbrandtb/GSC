@@ -73,6 +73,9 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	
 	@Value("${tarjeta.iden.impresion.autos.url}")
 	private String tarjetaIdenImpresionAutosURL;
+
+	@Value("${numero.incisos.reporte}")
+	private String numIncisosReporte;
 	
 	@Value("${manual.agente.txtinfocobredgs}")
 	private String urlImpresionCobReduceGS;
@@ -682,31 +685,62 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,Documento.EXTERNO_INCISOS_FLOTILLAS
 							);
 					
+					
 					/**
 					 * Para Tarjeta Identificacion
 					 */
-					parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",,0,0";
-					logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
-					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci&oacute;n</a>";
 					
-					mesaControlDAO.guardarDocumento(
-							cdunieco
-							,cdramo
-							,"M"
-							,nmpolizaEmitida
-							,nmsuplemEmitida
-							,new Date()
-							,urlTarjIdent + parametros
-							,"Tarjeta de Identificacion"
-							,nmpoliza
-							,ntramite
-							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
-							,Constantes.SI
-							,null
-							,"1"
-							,"0"
-							,Documento.EXTERNO_TARJETA_IDENTIFICACION
-							);
+					int numeroIncisos = consultasPolizaDAO.obtieneNumeroDeIncisosPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, nmsuplemEmitida);
+					
+					if(numeroIncisos > 0 ){
+						int numeroReportes =  numeroIncisos/Integer.parseInt(numIncisosReporte);
+						int reporteSobrante = numeroIncisos % Integer.parseInt(numIncisosReporte);
+						
+						logger.debug("Tarjeta de Identificacion ::: Numero de Reportes exactos: "+ numeroReportes);
+						logger.debug("Tarjeta de Identificacion ::: Numero de incisos sobrantes: "+ reporteSobrante);
+						
+						if(reporteSobrante > 0 ){
+							numeroReportes += 1;
+						}
+						
+						/**
+						 * Se divide reporte de tarjeta de identifiacion para flotillas ya que puede ser muy grande el archivo y se divide en una cantidad
+						 * de autos por pagina predeterminada.
+						 */
+						for(int numReporte = 1; numReporte <= numeroReportes; numReporte++){
+							
+							int desdeInciso = ((numReporte-1) * Integer.parseInt(numIncisosReporte))+1;
+							int hastaInciso = numReporte * Integer.parseInt(numIncisosReporte);
+							
+							if(numReporte == numeroReportes && reporteSobrante > 0 ){
+								hastaInciso = ((numReporte-1) * Integer.parseInt(numIncisosReporte)) + reporteSobrante;
+							}
+							
+							parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",,0,"+desdeInciso+","+hastaInciso;
+							logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+							mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci&oacute;n. " +desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos+"</a>";
+							
+							mesaControlDAO.guardarDocumento(
+									cdunieco
+									,cdramo
+									,"M"
+									,nmpolizaEmitida
+									,nmsuplemEmitida
+									,new Date()
+									,urlTarjIdent + parametros
+									,"Tarjeta de Identificacion. " +desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos
+									,nmpoliza
+									,ntramite
+									,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+									,Constantes.SI
+									,null
+									,"1"
+									,"0"
+									,Documento.EXTERNO_TARJETA_IDENTIFICACION
+									);
+						}
+						
+					}
 				}
 				
 				/**

@@ -900,4 +900,11 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		return null;
 	}
 
+	@Override
+	public int obtieneNumeroDeIncisosPoliza(String cdunieco, String cdramo, String cdestado,
+			String nmpoliza, String nmsuplem) throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

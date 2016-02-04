@@ -36,6 +36,8 @@ import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.commons.lang3.StringUtils;
+import org.jfree.util.Log;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
@@ -723,6 +725,54 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
             		,"CDESTADO"
             };
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public int obtieneNumeroDeIncisosPoliza(String cdunieco,String cdramo,String cdestado,String nmpoliza,String nmsuplem) throws Exception{
+    	
+    	int incisos = 0;
+    	 
+    	HashMap<String, Object> params = new HashMap<String, Object>();
+    	params.put("pv_cdunieco_i", cdunieco);
+    	params.put("pv_cdramo_i"  , cdramo);
+    	params.put("pv_estado_i"  , cdestado);
+    	params.put("pv_nmpoliza_i", nmpoliza);
+    	params.put("pv_nmsuplem_i", nmsuplem);
+    	Map<String, Object> mapResult = ejecutaSP(new ObtieneNumeroDeIncisosPoliza(getDataSource()), params);
+    	
+    	List<Map<String,String>>lista=(List<Map<String,String>>)mapResult.get("pv_registro_o");
+    	
+    	if(lista!= null && !lista.isEmpty()){
+    		Map<String, String> fila = lista.get(0);
+    		if(fila!= null && fila.containsKey("NUMINCISOS") && !StringUtils.isEmpty(fila.get("NUMINCISOS"))){
+    			incisos = Integer.parseInt(fila.get("NUMINCISOS"));
+    		}
+    	}
+    	
+    	Log.debug("Resultado:::: PKG_CONSULTA.P_GET_TOTAL_INCISOS_X_POLIZA, Se obtuvieron "+incisos+" Incisos para la Poliza " + nmpoliza);
+    	
+    	return incisos;
+    	
+    }
+    
+    protected class ObtieneNumeroDeIncisosPoliza extends StoredProcedure {
+    	protected ObtieneNumeroDeIncisosPoliza(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA.P_GET_TOTAL_INCISOS_X_POLIZA");
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+    		
+    		String[] cols=new String[]{
+    				"NUMINCISOS"
+    		};
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
     		compile();

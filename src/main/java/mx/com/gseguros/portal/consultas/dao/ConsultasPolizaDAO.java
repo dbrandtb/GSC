@@ -267,6 +267,18 @@ public interface ConsultasPolizaDAO {
      * @throws Exception
      */
     public List<Map<String,String>> obtieneRecibosPolizaAuto(String cdunieco,String cdramo,String cdestado,String nmpoliza,String nmsuplem) throws Exception;   
+
+    /**
+     * Obtiene el numero de incisos de una poliza 
+     * @param cdunieco
+     * @param cdramo
+     * @param cdestado
+     * @param nmpoliza
+     * @param nmsuplem
+     * @return
+     * @throws Exception
+     */
+    public int obtieneNumeroDeIncisosPoliza(String cdunieco,String cdramo,String cdestado,String nmpoliza,String nmsuplem) throws Exception;   
     
 	
 }
