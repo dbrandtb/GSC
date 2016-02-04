@@ -48,9 +48,69 @@ function showMessage(title, msg, buttons, icon){
  * @param {Ext.grid.Panel} _grid (Optional)
  * @param {Number} _timeout (Optional)
  */
-function cargaStorePaginadoLocal(_store, _url, _root, _params, _callback, _grid, _timeout, filterFn) {
+function cargaStorePaginadoLocal(_store, _url, _root, _params, _callback, _grid, _timeout) {
+    
+    var timeOut = null;
+    if(_timeout) {
+        timeOut = _timeout;
+    }
+    
+    if(_grid){
+        _grid.setLoading(true);
+        if(_grid.down('pagingtoolbar')){
+            _grid.down('pagingtoolbar').moveFirst();
+        }
+    }
+    Ext.Ajax.request(
+    {
+        url       : _url,
+        params    : _params,
+        callback  : _callback,
+        timeout   : timeOut != null ? timeOut : Ext.Ajax.timeout, 
+        success   : function(response)
+        {
+            if(_grid){
+                _grid.setLoading(false);
+            }
+            _store.removeAll();
+            var jsonResponse = Ext.decode(response.responseText);
+            _store.setProxy({
+                type         : 'memory',
+                enablePaging : true,
+                reader       : 'json',
+                data         : jsonResponse[_root]
+            });
+            _store.load();
+        },
+        failure   : function()
+        {
+            if(_grid){
+                _grid.setLoading(false);
+            }
+            _store.removeAll();
+            Ext.Msg.show({
+                title   : 'Error',
+                icon    : Ext.Msg.ERROR,
+                //msg     : 'Error cargando los datos de ' + _url,
+                msg     : 'Error al obener los datos, intente m\u00E1s tarde',
+                buttons : Ext.Msg.OK
+            });
+        }
+    });
+}
+
+/**
+ * Esta funcion permite que se guarden los datos en
+ * store.datos si no viene filtro, y cuando viene
+ * filtro los toma de ahí y filtra sin hacer peticion
+ * dejando intactos los store.datos y solo filtrando
+ * lo del store normal, esa propiedad .datos siempre
+ * tiene la coleccion completa
+ * NOTA: puede dar error para getSelectionModel
+ */
+function cargaStorePaginadoLocalFiltro(_store, _url, _root, _params, _callback, _grid, _timeout, filterFn) {
 	
-	debug('cargaStorePaginadoLocal filterFn:',filterFn);
+	debug('cargaStorePaginadoLocalFiltro filterFn:',filterFn);
 	
 	var timeOut = null;
 	if(_timeout) {
