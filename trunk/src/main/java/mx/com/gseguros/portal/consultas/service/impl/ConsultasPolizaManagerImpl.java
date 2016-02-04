@@ -413,5 +413,10 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 		return consultasPolizaDAOICE.obtieneRecibosPolizaAuto(cdunieco, cdramo, cdestado, nmpoliza, nmsuplem);
 	}
 
+	@Override
+	public int obtieneNumeroDeIncisosPoliza(String cdunieco,String cdramo,String cdestado,String nmpoliza,String nmsuplem) throws Exception{
+		return consultasPolizaDAOICE.obtieneNumeroDeIncisosPoliza(cdunieco, cdramo, cdestado, nmpoliza, nmsuplem);
+	}
+
 
 }
