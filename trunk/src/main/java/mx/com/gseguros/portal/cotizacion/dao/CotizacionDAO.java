@@ -562,4 +562,12 @@ public interface CotizacionDAO {
 			,String nmpoliza
 			,String nmsuplem
 			)throws Exception;
+	
+	public void actualizarFefecsitMpolisit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception;
 }

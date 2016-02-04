@@ -4952,6 +4952,25 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 			}
 			
+
+			
+			//fechas mpolisit
+			if(exito)
+			{
+				try
+				{
+					cotizacionManager.actualizarFefecsitMpolisit(cdunieco,cdramo,"W",nmpoliza,"0");
+				}
+				catch(Exception ex)
+				{
+					long etimestamp = System.currentTimeMillis();
+					logger.error(etimestamp+" error fechas",ex);
+					respuesta       = "Error al cotizar #"+etimestamp;
+					respuestaOculta = ex.getMessage();
+					exito           = false;
+				}
+			}
+			
 			//tvalopol
 			if(exito)
 			{
@@ -6264,6 +6283,8 @@ public class CotizacionAction extends PrincipalCoreAction
 					valores.put("otvalor01" , clasif);
 					valores.put("otvalor02" , sincenso ? "S" : "N");
 					
+					Map<String,String> datosFlujo = consultasManager.recuperarDatosFlujoEmision(cdramo,"C");
+					
 					String ntramiteNew = mesaControlManager.movimientoTramite(
 							cdunieco
 							,cdramo
@@ -6285,9 +6306,10 @@ public class CotizacionAction extends PrincipalCoreAction
 							,cdusuari
 							,cdsisrol
 							,null //swimpres
-							,null //cdtipflu
-							,null //cdflujomc
-							,valores, null
+	            			,datosFlujo.get("cdtipflu")
+	            			,datosFlujo.get("cdflujomc")
+							,valores
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
 							);
 					smap1.put("ntramite",ntramiteNew);
 					

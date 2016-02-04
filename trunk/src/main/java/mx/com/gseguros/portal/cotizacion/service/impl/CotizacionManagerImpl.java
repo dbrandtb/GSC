@@ -2349,6 +2349,23 @@ public class CotizacionManagerImpl implements CotizacionManager
 			}
 		}
 		
+		//fechas mpolisit
+		if(resp.isExito())
+		{
+			try
+			{
+				cotizacionDAO.actualizarFefecsitMpolisit(cdunieco, cdramo, "W", nmpoliza, "0");
+			}
+			catch(Exception ex)
+			{
+				long timestamp = System.currentTimeMillis();
+				resp.setExito(false);
+				resp.setRespuesta(new StringBuilder("Error al guardar fechas de situaciones #").append(timestamp).toString());
+				resp.setRespuestaOculta(ex.getMessage());
+				logger.error(resp.getRespuesta(),ex);
+			}
+		}
+		
 		//tvalopol
 		if(resp.isExito())
 		{
@@ -8914,6 +8931,19 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return cotizacionDAO.generarDocumentosBaseDatos(cdorddoc,nmsolici,ntramite);
 	}
 	*/
+	
+	@Override
+	@Deprecated
+	public void actualizarFefecsitMpolisit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception
+	{
+		cotizacionDAO.actualizarFefecsitMpolisit(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+	}
     
 	///////////////////////////////
 	////// getters y setters //////
