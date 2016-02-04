@@ -66,6 +66,7 @@ public enum RecuperacionSimple
 	,RECUPERAR_ROLES                                         ("L" , "RECUPERAR_ROLES")
 	,RECUPERAR_SWVISPRE_TRAMITE                              ("M" , "RECUPERAR_SWVISPRE_TRAMITE")
 	,RECUPERAR_DIAS_FECHA_FACTURACION						 ("M" , "RECUPERAR_DIAS_FECHA_FACTURACION")
+	,RECUPERAR_PERMISO_BOTON_GENERAR_COLECTIVO               ("M" , "RECUPERAR_PERMISO_BOTON_GENERAR_COLECTIVO")
 	;
 	 
 	private String tipo;

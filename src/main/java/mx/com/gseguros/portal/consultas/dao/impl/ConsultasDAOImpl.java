@@ -3852,4 +3852,35 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public String recuperarPermisoBotonEnviarCenso(String cdsisrol) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdsisrol" , cdsisrol);
+		
+		Map<String,Object> procRes = ejecutaSP(new RecuperarPermisoBotonEnviarCensoSP(getDataSource()),params);
+		
+		String permiso = (String)procRes.get("pv_permiso_o");
+		if(StringUtils.isBlank(permiso))
+		{
+			permiso = "N";
+		}
+		
+		return permiso;
+	}
+	
+	protected class RecuperarPermisoBotonEnviarCensoSP extends StoredProcedure
+	{
+		protected RecuperarPermisoBotonEnviarCensoSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_PERMISO_BOTON_CENSO");
+			
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_permiso_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

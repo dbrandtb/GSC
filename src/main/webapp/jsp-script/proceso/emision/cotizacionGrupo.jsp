@@ -3565,9 +3565,10 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
 	                                                        ,buttons     :
 	                                                        [
 	                                                            {
-	                                                                text     : 'Aceptar y continuar'
-	                                                                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-	                                                                ,handler : function(me)
+	                                                                text      : 'Aceptar y continuar'
+	                                                                ,icon     : '${ctx}/resources/fam3icons/icons/accept.png'
+	                                                                ,disabled : Number(json.smap1.filasErrores)>0
+	                                                                ,handler  : function(me)
 	                                                                {
 	                                                                    me.up('window').destroy();
 	                                                                    _p21_generarTramiteClic(
@@ -3577,6 +3578,16 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                                                                             ,complemento
                                                                             ,json.smap1.nombreCensoParaConfirmar
                                                                         );
+	                                                                }
+	                                                                ,listeners :
+	                                                                {
+	                                                                    afterrender : function(me)
+	                                                                    {
+	                                                                        if(Number(json.smap1.filasErrores)>0)
+	                                                                        {
+	                                                                            _p21_desbloqueoBotonRol(me);
+	                                                                        }
+	                                                                    }
 	                                                                }
 	                                                            }
 	                                                            ,{
@@ -3761,9 +3772,10 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
 	                                                        ,buttons     :
 	                                                        [
 	                                                            {
-	                                                                text     : 'Aceptar y subir documentos'
-	                                                                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-	                                                                ,handler : function(me)
+	                                                                text      : 'Aceptar y subir documentos'
+	                                                                ,icon     : '${ctx}/resources/fam3icons/icons/accept.png'
+	                                                                ,disabled : Number(json.smap1.filasErrores)>0
+	                                                                ,handler  : function(me)
 	                                                                {
 	                                                                    me.up('window').destroy();
 	                                                                    _p21_generarTramiteClic(
@@ -3773,6 +3785,16 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
 	                                                                        ,complemento
 	                                                                        ,json.smap1.nombreCensoParaConfirmar
 	                                                                    );
+	                                                                }
+	                                                                ,listeners :
+	                                                                {
+	                                                                    afterrender : function(me)
+	                                                                    {
+	                                                                        if(Number(json.smap1.filasErrores)>0)
+	                                                                        {
+	                                                                            _p21_desbloqueoBotonRol(me);
+	                                                                        }
+	                                                                    }
 	                                                                }
 	                                                            }
 	                                                            ,{
@@ -7328,6 +7350,65 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
          });
      }
  }
+
+function _p21_desbloqueoBotonRol(boton)
+{
+    var ck = 'Recuperando permisos de bot\u00f3n';
+    try
+    {
+        boton.setLoading(true);
+        Ext.Ajax.request(
+        {
+            url      : _p21_urlRecuperacion
+            ,params  :
+            {
+                'params.consulta' : 'RECUPERAR_PERMISO_BOTON_GENERAR_COLECTIVO'
+            }
+            ,success : function(response)
+            {
+                boton.setLoading(false);
+                var ck = 'Decodificando respuesta al recuperar permisos de bot\u00f3n';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### permisos boton:',json);
+                    if(json.success==true)
+                    {
+                         if('S'==json.params.ACTIVAR_BOTON)
+                         {
+                             boton.show();
+                             boton.enable();
+                         }
+                         else
+                         {
+                             mensajeWarning('Favor de revisar los errores de la carga');
+                             boton.disable();
+                             boton.hide();
+                         }
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                boton.setLoading(false);
+                errorComunicacion(null,'Error al recuperar permisos de bot\u00f3n');
+            }
+        });
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+}
+
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
