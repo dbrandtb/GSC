@@ -709,4 +709,13 @@ public interface CotizacionManager
 			,String ntramite
 			)throws Exception;
 	*/
+	
+	@Deprecated
+	public void actualizarFefecsitMpolisit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception;
 }
