@@ -5238,7 +5238,7 @@ function _p21_generarVentanaVistaPrevia2(sinBotones)
         ]
         ,listeners :
         {
-            render : function(me)
+            afterrender : function(me)
             {
                 Ext.Ajax.request(
                 {
@@ -5294,6 +5294,142 @@ function _p21_generarVentanaVistaPrevia2(sinBotones)
                                 concepto : 'TOTAL DE MUJERES'
                                 ,importe : 0
                             }));
+                            
+                            _p21_storeGrupos.each(function(record)
+						    {
+						        itemsVistaPrevia.push(
+						        Ext.create('Ext.grid.Panel',
+						        {
+						            title      : 'TARIFA SUBGRUPO '+record.get('letra')
+						            ,minHeight : 100
+						            ,maxHeight : 250
+						            ,store     : Ext.create('Ext.data.Store',
+						            {
+						                model     : '_p21_modeloTarifaEdad'
+						                ,grupo    : record.get('letra')
+						                ,autoLoad : true
+						                ,proxy    :
+						                {
+						                    type         : 'ajax'
+						                    ,timeout     : 1000*60*2
+						                    ,extraParams :
+						                    {
+						                        'smap1.cdunieco'  : _p21_smap1.cdunieco
+						                        ,'smap1.cdramo'   : _p21_smap1.cdramo
+						                        ,'smap1.estado'   : _p21_smap1.estado
+						                        ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+						                        ,'smap1.nmsuplem' : '0'
+						                        ,'smap1.cdplan'   : record.get('cdplan')
+						                        ,'smap1.cdgrupo'  : record.get('letra')
+						                        ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
+						                    }
+						                    ,url         : _p21_urlObtenerTarifaEdad
+						                    ,reader      :
+						                    {
+						                        type  : 'json'
+						                        ,root : 'slist1'
+						                    }
+						                }
+						                ,listeners :
+						                {
+						                    load : function(me,records,success)
+						                    {
+						                        if(success)
+						                        {
+						                            var prima  = 0;
+						                            var derpol = 0;
+						                            var recar  = 0;
+						                            var iva    = 0;
+						                            var hom    = 0;
+						                            var muj    = 0;
+						                            var pTot   = 0;
+						                            
+						                            for(var ij in records)
+						                            {
+						                                var primaPaso  = Number(records[ij].get('TARIFA_TOTAL_HOMBRES')) + Number(records[ij].get('TARIFA_TOTAL_MUJERES'));
+						                                var derpolPaso = Number(records[ij].get('DERPOL_TOTAL_GENERAL'));
+						                                var recarPaso  = Number(records[ij].get('RECARGOS_TOTAL_GENERAL'));
+						                                var ivaPaso    = Number(records[ij].get('IVA_TOTAL_GENERAL'));
+						                                
+						                                prima  += primaPaso;
+						                                derpol += derpolPaso;
+						                                recar  += recarPaso;
+						                                iva    += ivaPaso;
+						                                
+						                                pTot   += primaPaso+derpolPaso+recarPaso+ivaPaso;
+						                                
+						                                hom    += Number(records[ij].get('HOMBRES'));
+						                                muj    += Number(records[ij].get('MUJERES'));
+						                            }
+						                            
+						                            _fieldById('_p21_gridConceptosGlobales').store.getAt(0).set('subgrupo'+me.grupo , prima);
+						                            _fieldById('_p21_gridConceptosGlobales').store.getAt(1).set('subgrupo'+me.grupo , derpol);
+						                            _fieldById('_p21_gridConceptosGlobales').store.getAt(2).set('subgrupo'+me.grupo , recar);
+						                            _fieldById('_p21_gridConceptosGlobales').store.getAt(3).set('subgrupo'+me.grupo , iva);
+						                            
+						                            _fieldById('_p21_gridConceptosGlobales').store.getAt(4).set('subgrupo'+me.grupo , pTot);
+						                            _fieldById('_p21_gridConceptosGlobales').store.getAt(4).set('importe',
+						                                Number(_fieldById('_p21_gridConceptosGlobales').store.getAt(4).get('importe'))+pTot);
+						                                
+						                            _fieldById('_p21_gridConceptosGlobales').store.getAt(5).set('subgrupo'+me.grupo , hom);
+						                            _fieldById('_p21_gridConceptosGlobales').store.getAt(5).set('importe',
+						                                Number(_fieldById('_p21_gridConceptosGlobales').store.getAt(5).get('importe'))+hom);
+						                            
+						                            _fieldById('_p21_gridConceptosGlobales').store.getAt(6).set('subgrupo'+me.grupo , muj);
+						                            _fieldById('_p21_gridConceptosGlobales').store.getAt(6).set('importe',
+						                                Number(_fieldById('_p21_gridConceptosGlobales').store.getAt(6).get('importe'))+muj);
+						                            
+						                            _fieldById('_p21_gridConceptosGlobales').store.commitChanges();
+						                        }
+						                    }
+						                }
+						            })
+						            ,columns   :
+						            [
+						                {
+						                    header     : 'Edad'
+						                    ,width     : 60
+						                    ,dataIndex : 'EDAD'
+						                }
+						                ,{
+						                    header     : 'No. Hombres'
+						                    ,width     : 100
+						                    ,dataIndex : 'HOMBRES'
+						                }
+						                ,{
+						                    header     : 'No. Mujeres'
+						                    ,width     : 100
+						                    ,dataIndex : 'MUJERES'
+						                }
+						                ,{
+						                    header     : 'Tarifa por hombre'
+						                    ,flex      : 1
+						                    ,dataIndex : 'TARIFA_UNICA_HOMBRES'
+						                    ,renderer  : Ext.util.Format.usMoney
+						                }
+						                ,{
+						                    header     : 'Tarifa por mujer'
+						                    ,flex      : 1
+						                    ,dataIndex : 'TARIFA_UNICA_MUJERES'
+						                    ,renderer  : Ext.util.Format.usMoney
+						                }
+						                ,{
+						                    header     : 'Total hombres'
+						                    ,flex      : 1
+						                    ,dataIndex : 'TARIFA_TOTAL_HOMBRES'
+						                    ,renderer  : Ext.util.Format.usMoney
+						                }
+						                ,{
+						                    header     : 'Total mujeres'
+						                    ,flex      : 1
+						                    ,dataIndex : 'TARIFA_TOTAL_MUJERES'
+						                    ,renderer  : Ext.util.Format.usMoney
+						                }
+						            ]
+						        })
+						        );
+						    });
+                            
                         }
                         else
                         {
@@ -5305,141 +5441,6 @@ function _p21_generarVentanaVistaPrevia2(sinBotones)
             }
         }
     }));
-    
-    _p21_storeGrupos.each(function(record)
-    {
-        itemsVistaPrevia.push(
-        Ext.create('Ext.grid.Panel',
-        {
-            title      : 'TARIFA SUBGRUPO '+record.get('letra')
-            ,minHeight : 100
-            ,maxHeight : 250
-            ,store     : Ext.create('Ext.data.Store',
-            {
-                model     : '_p21_modeloTarifaEdad'
-                ,grupo    : record.get('letra')
-                ,autoLoad : true
-                ,proxy    :
-                {
-                    type         : 'ajax'
-                    ,timeout     : 1000*60*2
-                    ,extraParams :
-                    {
-                        'smap1.cdunieco'  : _p21_smap1.cdunieco
-                        ,'smap1.cdramo'   : _p21_smap1.cdramo
-                        ,'smap1.estado'   : _p21_smap1.estado
-                        ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
-                        ,'smap1.nmsuplem' : '0'
-                        ,'smap1.cdplan'   : record.get('cdplan')
-                        ,'smap1.cdgrupo'  : record.get('letra')
-                        ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
-                    }
-                    ,url         : _p21_urlObtenerTarifaEdad
-                    ,reader      :
-                    {
-                        type  : 'json'
-                        ,root : 'slist1'
-                    }
-                }
-                ,listeners :
-                {
-                    load : function(me,records,success)
-                    {
-                        if(success)
-                        {
-                            var prima  = 0;
-                            var derpol = 0;
-                            var recar  = 0;
-                            var iva    = 0;
-                            var hom    = 0;
-                            var muj    = 0;
-                            var pTot   = 0;
-                            
-                            for(var ij in records)
-                            {
-                                var primaPaso  = Number(records[ij].get('TARIFA_TOTAL_HOMBRES')) + Number(records[ij].get('TARIFA_TOTAL_MUJERES'));
-                                var derpolPaso = Number(records[ij].get('DERPOL_TOTAL_GENERAL'));
-                                var recarPaso  = Number(records[ij].get('RECARGOS_TOTAL_GENERAL'));
-                                var ivaPaso    = Number(records[ij].get('IVA_TOTAL_GENERAL'));
-                                
-                                prima  += primaPaso;
-                                derpol += derpolPaso;
-                                recar  += recarPaso;
-                                iva    += ivaPaso;
-                                
-                                pTot   += primaPaso+derpolPaso+recarPaso+ivaPaso;
-                                
-                                hom    += Number(records[ij].get('HOMBRES'));
-                                muj    += Number(records[ij].get('MUJERES'));
-                            }
-                            
-                            _fieldById('_p21_gridConceptosGlobales').store.getAt(0).set('subgrupo'+me.grupo , prima);
-                            _fieldById('_p21_gridConceptosGlobales').store.getAt(1).set('subgrupo'+me.grupo , derpol);
-                            _fieldById('_p21_gridConceptosGlobales').store.getAt(2).set('subgrupo'+me.grupo , recar);
-                            _fieldById('_p21_gridConceptosGlobales').store.getAt(3).set('subgrupo'+me.grupo , iva);
-                            
-                            _fieldById('_p21_gridConceptosGlobales').store.getAt(4).set('subgrupo'+me.grupo , pTot);
-                            _fieldById('_p21_gridConceptosGlobales').store.getAt(4).set('importe',
-                                Number(_fieldById('_p21_gridConceptosGlobales').store.getAt(4).get('importe'))+pTot);
-                                
-                            _fieldById('_p21_gridConceptosGlobales').store.getAt(5).set('subgrupo'+me.grupo , hom);
-                            _fieldById('_p21_gridConceptosGlobales').store.getAt(5).set('importe',
-                                Number(_fieldById('_p21_gridConceptosGlobales').store.getAt(5).get('importe'))+hom);
-                            
-                            _fieldById('_p21_gridConceptosGlobales').store.getAt(6).set('subgrupo'+me.grupo , muj);
-                            _fieldById('_p21_gridConceptosGlobales').store.getAt(6).set('importe',
-                                Number(_fieldById('_p21_gridConceptosGlobales').store.getAt(6).get('importe'))+muj);
-                            
-                            _fieldById('_p21_gridConceptosGlobales').store.commitChanges();
-                        }
-                    }
-                }
-            })
-            ,columns   :
-            [
-                {
-                    header     : 'Edad'
-                    ,width     : 60
-                    ,dataIndex : 'EDAD'
-                }
-                ,{
-                    header     : 'No. Hombres'
-                    ,width     : 100
-                    ,dataIndex : 'HOMBRES'
-                }
-                ,{
-                    header     : 'No. Mujeres'
-                    ,width     : 100
-                    ,dataIndex : 'MUJERES'
-                }
-                ,{
-                    header     : 'Tarifa por hombre'
-                    ,flex      : 1
-                    ,dataIndex : 'TARIFA_UNICA_HOMBRES'
-                    ,renderer  : Ext.util.Format.usMoney
-                }
-                ,{
-                    header     : 'Tarifa por mujer'
-                    ,flex      : 1
-                    ,dataIndex : 'TARIFA_UNICA_MUJERES'
-                    ,renderer  : Ext.util.Format.usMoney
-                }
-                ,{
-                    header     : 'Total hombres'
-                    ,flex      : 1
-                    ,dataIndex : 'TARIFA_TOTAL_HOMBRES'
-                    ,renderer  : Ext.util.Format.usMoney
-                }
-                ,{
-                    header     : 'Total mujeres'
-                    ,flex      : 1
-                    ,dataIndex : 'TARIFA_TOTAL_MUJERES'
-                    ,renderer  : Ext.util.Format.usMoney
-                }
-            ]
-        })
-        );
-    });
     
     mostrarVentana();
 }
