@@ -3148,6 +3148,12 @@ public class CotizacionAction extends PrincipalCoreAction
 				UserVO usuario  = Utils.validateSession(session);
 				cdusuari        = usuario.getUser();
 				cdsisrol        = usuario.getRolActivo().getClave();
+				
+				if(RolSistema.SUSCRIPTOR_TECNICO_ESPECIALISTA.getCdsisrol().equals(cdsisrol))
+				{
+					cdsisrol = RolSistema.SUSCRIPTOR_TECNICO.getCdsisrol();
+				}
+				
 				nombreUsuario   = usuario.getName();
 				
 				smap1.put("cdsisrol",cdsisrol);
