@@ -3004,6 +3004,11 @@ public class CotizacionAction extends PrincipalCoreAction
 				cdsisrol      = usuario.getRolActivo().getClave();
 				nombreUsuario = usuario.getName();
 				
+				if(RolSistema.SUSCRIPTOR_TECNICO_ESPECIALISTA.getCdsisrol().equals(cdsisrol))
+				{
+					cdsisrol = RolSistema.SUSCRIPTOR_TECNICO.getCdsisrol();
+				}
+				
 				smap1.put("cdsisrol" , cdsisrol);
 				
 				paso = "Invocando proceso";
