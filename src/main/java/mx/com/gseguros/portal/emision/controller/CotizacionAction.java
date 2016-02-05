@@ -7487,6 +7487,8 @@ public class CotizacionAction extends PrincipalCoreAction
 					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 					,null
 					,null
+					,null
+					,null
 					);
 			
 			String urlReporteCotizacion2=Utils.join(
@@ -7548,6 +7550,8 @@ public class CotizacionAction extends PrincipalCoreAction
 					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 					,null
 					,null
+					,null
+					,null
 					);
 			
 			if(Ramo.MULTISALUD.getCdramo().equals(cdramo))
@@ -7603,6 +7607,8 @@ public class CotizacionAction extends PrincipalCoreAction
 						,null
 						,null
 						,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+						,null
+						,null
 						,null
 						,null
 						);
@@ -7663,6 +7669,8 @@ public class CotizacionAction extends PrincipalCoreAction
 						,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 						,null
 						,null
+						,null
+						,null
 						);
 				
 				//exceles grupos
@@ -7719,6 +7727,8 @@ public class CotizacionAction extends PrincipalCoreAction
 							,null
 							,null
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,null
+							,null
 							,null
 							,null
 							);

@@ -11099,6 +11099,8 @@ public class EndososAction extends PrincipalCoreAction
 					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 					,"0"
 					,Documento.EXTERNO_CARATULA
+					,null
+					,null
 					);
 			
 		} catch (Exception e) {
@@ -11193,6 +11195,8 @@ public class EndososAction extends PrincipalCoreAction
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 							,"0"
 							,Documento.EXTERNO_CARATULA
+							,null
+							,null
 							);
 					
 					
@@ -11243,6 +11247,8 @@ public class EndososAction extends PrincipalCoreAction
 									,((TipoEndoso.EMISION_POLIZA.getCdTipSup().intValue() == Integer.parseInt(cdtipsup)) || (TipoEndoso.RENOVACION.getCdTipSup().intValue() == Integer.parseInt(cdtipsup)))?TipoTramite.POLIZA_NUEVA.getCdtiptra() : TipoTramite.ENDOSO.getCdtiptra()
 									,"0"
 									,Documento.RECIBO
+									,null
+									,null
 									);
 						}
 					}
@@ -11279,6 +11285,8 @@ public class EndososAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_AP
+								,null
+								,null
 								);
 					}
 					
@@ -11312,6 +11320,8 @@ public class EndososAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_CAIC
+								,null
+								,null
 								);
 					}
 					
@@ -11345,6 +11355,8 @@ public class EndososAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_INCISOS_FLOTILLAS
+								,null
+								,null
 								);
 						
 						
@@ -11398,6 +11410,8 @@ public class EndososAction extends PrincipalCoreAction
 										,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 										,"0"
 										,Documento.EXTERNO_TARJETA_IDENTIFICACION
+										,null
+										,null
 										);
 							}
 							
@@ -11426,6 +11440,8 @@ public class EndososAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_REDUCE_GS
+								,null
+								,null
 								);
 					}
 					
@@ -11451,6 +11467,8 @@ public class EndososAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_GESTORIA_GS
+								,null
+								,null
 								);
 					}
 
@@ -11496,6 +11514,8 @@ public class EndososAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_ESPECIF_SEGURO_VIDA
+								,null
+								,null
 								);
 
 						documentosManager.guardarDocumento(
@@ -11515,6 +11535,8 @@ public class EndososAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA
+								,null
+								,null
 								);
 					}
 				}

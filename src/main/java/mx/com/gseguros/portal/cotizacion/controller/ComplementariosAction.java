@@ -2644,6 +2644,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 							,"0"
 							,Documento.EXTERNO_CARATULA
+							,null
+							,null
 							);
 					
 					/**
@@ -2675,6 +2677,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 							,"0"
 							,Documento.RECIBO
+							,null
+							,null
 							);
 					
 					
@@ -2723,6 +2727,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_AP
+								,null
+								,null
 								);
 					}
 					
@@ -2756,6 +2762,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_CAIC
+								,null
+								,null
 								);
 					}
 					
@@ -2789,6 +2797,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_INCISOS_FLOTILLAS
+								,null
+								,null
 								);
 						
 						/**
@@ -2842,6 +2852,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 										,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 										,"0"
 										,Documento.EXTERNO_TARJETA_IDENTIFICACION
+										,null
+										,null
 										);
 							}
 							
@@ -2891,6 +2903,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_REDUCE_GS
+								,null
+								,null
 								);
 					}
 					if(gestoria){
@@ -2917,6 +2931,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_GESTORIA_GS
+								,null
+								,null
 								);
 					}
 					
@@ -2968,6 +2984,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_ESPECIF_SEGURO_VIDA
+								,null
+								,null
 								);
 
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.condgralescobsegvida")+"\">Condiciones Generales Seguro de Vida</a>";
@@ -2989,6 +3007,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA
+								,null
+								,null
 								);
 					}
 					
@@ -3797,6 +3817,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_CARATULA
+								,null
+								,null
 								);
 						
 						/**
@@ -3828,6 +3850,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.RECIBO
+								,null
+								,null
 								);
 						
 						
@@ -3875,6 +3899,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 									,"0"
 									,Documento.EXTERNO_AP
+									,null
+									,null
 									);
 						}
 						
@@ -3908,6 +3934,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 									,"0"
 									,Documento.EXTERNO_CAIC
+									,null
+									,null
 									);
 						}
 						
@@ -3942,6 +3970,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 									,"0"
 									,Documento.EXTERNO_INCISOS_FLOTILLAS
+									,null
+									,null
 									);
 							
 							
@@ -3997,6 +4027,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 											,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 											,"0"
 											,Documento.EXTERNO_TARJETA_IDENTIFICACION
+											,null
+											,null
 											);
 								}
 								
@@ -4046,6 +4078,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 									,"0"
 									,Documento.EXTERNO_REDUCE_GS
+									,null
+									,null
 									);
 						}
 						if(gestoria){
@@ -4072,6 +4106,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 									,"0"
 									,Documento.EXTERNO_GESTORIA_GS
+									,null
+									,null
 									);
 						}
 						
@@ -4122,6 +4158,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 									,"0"
 									,Documento.EXTERNO_ESPECIF_SEGURO_VIDA
+									,null
+									,null
 									);
 
 							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.condgralescobsegvida")+"\">Condiciones Generales Seguro de Vida</a>";
@@ -4143,6 +4181,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 									,"0"
 									,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA
+									,null
+									,null
 									);
 						}
 
@@ -4952,6 +4992,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 					,Constantes.SI
 					,null
 					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+					,null
+					,null
 					,null
 					,null
 					);

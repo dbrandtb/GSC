@@ -545,7 +545,8 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	public void guardarDocumento(String cdunieco, String cdramo, String estado,
 			String nmpoliza, String nmsuplem, Date feinici, String cddocume,
 			String dsdocume, String nmsolici, String ntramite, String tipmov,
-			String swvisible, String codidocu, String cdtiptra, String cdorddoc, Documento documento) throws Exception {
+			String swvisible, String codidocu, String cdtiptra, String cdorddoc
+			,Documento documento, String cdusuari, String cdsisrol) throws Exception {
 		
 		HashMap<String, Object> params =  new HashMap<String, Object>();
 		params.put("pv_cdunieco_i"  , cdunieco);
@@ -564,6 +565,8 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("pv_cdtiptra_i"  , cdtiptra);
 		params.put("cdorddoc"       , cdorddoc);
 		params.put("cdmoddoc"       , documento!=null ? documento.getCdmoddoc() : null);
+		params.put("cdusuari"       , cdusuari);
+		params.put("cdsisrol"       , cdsisrol);
 		Utils.debugProcedure(logger, "PKG_SATELITES2.P_MOV_DOCUMENTOS", params);
 		ejecutaSP(new GuardarDocumentoPolizaSP(getDataSource()), params);
 	}
@@ -587,6 +590,8 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("pv_cdtiptra_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdorddoc"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdmoddoc"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

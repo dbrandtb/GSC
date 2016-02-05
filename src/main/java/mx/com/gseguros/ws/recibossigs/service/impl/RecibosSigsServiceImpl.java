@@ -290,6 +290,8 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 						,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 						,"0"
 						,Documento.RECIBO
+						,null
+						,null
 						);
 				
 			} catch (Exception e) {

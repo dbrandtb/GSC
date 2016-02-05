@@ -207,6 +207,8 @@ public class DocumentosManagerImpl implements DocumentosManager
 			,String cdtiptra
 			,String cdorddoc
 			,Documento documento
+			,String cdusuari
+			,String cdsisrol
 			)throws Exception
 	{
 		mesaControlDAO.guardarDocumento(
@@ -226,6 +228,8 @@ public class DocumentosManagerImpl implements DocumentosManager
 				,cdtiptra
 				,cdorddoc
 				,documento
+				,cdusuari
+				,cdsisrol
 				);
 	}
 }

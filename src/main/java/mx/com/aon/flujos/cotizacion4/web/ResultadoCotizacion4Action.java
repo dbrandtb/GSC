@@ -1372,6 +1372,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            		,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 	            		,null
 	            		,null
+	            		,null
+	            		,null
 	            		);
             }
     		catch(Exception ex)
@@ -1440,6 +1442,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 						,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 						,null
 						,null
+						,null
+						,null
 						);
 	    		
 	    		//guardar excel 2
@@ -1493,6 +1497,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 						,null
 						,null
 						,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+						,null
+						,null
 						,null
 						,null
 						);

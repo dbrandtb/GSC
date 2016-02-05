@@ -15,6 +15,7 @@ import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.SituacionVO;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.dao.ProcesoDAO;
+import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
@@ -25,6 +26,8 @@ import mx.com.gseguros.utils.Constantes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+
+import com.opensymphony.xwork2.ActionContext;
 
 /**
  *
@@ -863,6 +866,10 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 	
 	public List<Map<String,String>>obtenerDocumentosPoliza(Map<String,Object>parameters) throws ApplicationException
 	{
+		if(!parameters.containsKey("pv_cdsisrol_i"))
+		{
+			parameters.put("pv_cdsisrol_i" , ((UserVO)ActionContext.getContext().getSession().get("USUARIO")).getRolActivo().getClave());
+		}
 		log.debug("### kernel sustituto obtenerDocumentosPoliza parameters: "+parameters);
 		log.debug(
 				new StringBuilder()

@@ -6756,7 +6756,7 @@ public class CotizacionManagerImpl implements CotizacionManager
                 mesaControlDAO.guardarDocumento(cdunieco, cdramo, "W",
             			"0", "0", new Date(), nombreArchivoCotizacion,
             			"COTIZACI&Oacute;N", nmpoliza, ntramite, "1",
-            			null, null, "1", null, null);
+            			null, null, "1", null, null, null, null);
             }
         	
     		if(StringUtils.isNotBlank(cdpersonCli)){

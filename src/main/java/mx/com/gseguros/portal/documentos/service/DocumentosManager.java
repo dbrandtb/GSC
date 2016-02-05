@@ -40,5 +40,7 @@ public interface DocumentosManager
 			,String cdtiptra
 			,String cdorddoc
 			,Documento documento
+			,String cdusuari
+			,String cdsisrol
 			)throws Exception;
 }

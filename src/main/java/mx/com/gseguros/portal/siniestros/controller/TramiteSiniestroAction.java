@@ -846,6 +846,8 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					,TipoTramite.SINIESTRO.getCdtiptra()
 					,null
 					,null
+					,null
+					,null
 					);
 			
 		}catch( Exception e){

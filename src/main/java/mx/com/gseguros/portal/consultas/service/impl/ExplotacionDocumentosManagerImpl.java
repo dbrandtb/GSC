@@ -367,7 +367,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null         //codidocu
 						,TipoTramite.IMPRESION.getCdtiptra()
 						,"0"
-						,Documento.REMESA_IMPRESION_LOTE
+						,Documento.REMESA_IMPRESION_LOTE, null, null
 						);
 				
 				paso = "Generando remesa excel";
@@ -406,6 +406,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,TipoTramite.IMPRESION.getCdtiptra()
 						,null           //cdorddoc
 						,null           //cdmoddoc
+, null, null
 						);
 				
 			}
@@ -1140,7 +1141,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null         //codidocu
 						,TipoTramite.IMPRESION.getCdtiptra()
 						,"0"
-						,Documento.REMESA_IMPRESION_LOTE
+						,Documento.REMESA_IMPRESION_LOTE, null, null
 						);
 				
 				paso = "Generando remesa excel";
@@ -1179,6 +1180,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,TipoTramite.IMPRESION.getCdtiptra()
 						,null           //cdorddoc
 						,null           //cdmoddoc
+, null, null
 						);
 			}
 			
