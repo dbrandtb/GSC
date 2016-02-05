@@ -556,7 +556,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 						,null
 						,"1"
 						,"0"
-						,Documento.EXTERNO_CARATULA
+						,Documento.EXTERNO_CARATULA, null, null
 						);
 				
 				/**
@@ -582,7 +582,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 						,null
 						,"1"
 						,"0"
-						,Documento.RECIBO
+						,Documento.RECIBO, null, null
 						);
 				
 				boolean imprimirCaic = false;
@@ -625,7 +625,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,null
 							,"1"
 							,"0"
-							,Documento.EXTERNO_AP
+							,Documento.EXTERNO_AP, null, null
 							);
 				}
 				
@@ -654,7 +654,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,null
 							,"1"
 							,"0"
-							,Documento.EXTERNO_CAIC
+							,Documento.EXTERNO_CAIC, null, null
 							);
 				}
 				
@@ -682,7 +682,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,null
 							,"1"
 							,"0"
-							,Documento.EXTERNO_INCISOS_FLOTILLAS
+							,Documento.EXTERNO_INCISOS_FLOTILLAS, null, null
 							);
 					
 					
@@ -736,7 +736,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 									,null
 									,"1"
 									,"0"
-									,Documento.EXTERNO_TARJETA_IDENTIFICACION
+									,Documento.EXTERNO_TARJETA_IDENTIFICACION, null, null
 									);
 						}
 						
@@ -782,7 +782,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,null
 							,"1"
 							,"0"
-							,Documento.EXTERNO_REDUCE_GS
+							,Documento.EXTERNO_REDUCE_GS, null, null
 							);
 					
 				}
@@ -809,7 +809,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,null
 							,"1"
 							,"0"
-							,Documento.EXTERNO_GESTORIA_GS
+							,Documento.EXTERNO_GESTORIA_GS, null, null
 							);
 					
 				}
@@ -851,7 +851,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,null
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 							,"0"
-							,Documento.EXTERNO_ESPECIF_SEGURO_VIDA
+							,Documento.EXTERNO_ESPECIF_SEGURO_VIDA, null, null
 							);
 
 					mesaControlDAO.guardarDocumento(
@@ -870,7 +870,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,null
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 							,"0"
-							,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA
+							,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA, null, null
 							);
 				}
 				

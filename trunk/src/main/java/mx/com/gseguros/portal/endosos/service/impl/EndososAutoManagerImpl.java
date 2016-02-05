@@ -2532,7 +2532,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null
 					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 					,"0"
-					,Documento.EXTERNO_CARATULA
+					,Documento.EXTERNO_CARATULA, null, null
 					);
 		
 		}catch(Exception e){
@@ -3429,7 +3429,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 							,null
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 							,"0"
-							,Documento.EXTERNO_CARATULA
+							,Documento.EXTERNO_CARATULA, null, null
 							);
 					
 					/**
@@ -3477,7 +3477,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 									,null
 									,((TipoEndoso.EMISION_POLIZA.getCdTipSup().intValue() == Integer.parseInt(cdtipsup)) || (TipoEndoso.RENOVACION.getCdTipSup().intValue() == Integer.parseInt(cdtipsup)))?TipoTramite.POLIZA_NUEVA.getCdtiptra() : TipoTramite.ENDOSO.getCdtiptra()
 									,"0"
-									,Documento.RECIBO
+									,Documento.RECIBO, null, null
 									);
 						}
 					}
@@ -3504,7 +3504,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
-								,Documento.EXTERNO_AP
+								,Documento.EXTERNO_AP, null, null
 								);
 					}
 					
@@ -3531,7 +3531,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
-								,Documento.EXTERNO_CAIC
+								,Documento.EXTERNO_CAIC, null, null
 								);
 					}
 					
@@ -3558,7 +3558,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
-								,Documento.EXTERNO_INCISOS_FLOTILLAS
+								,Documento.EXTERNO_INCISOS_FLOTILLAS, null, null
 								);
 						
 						
@@ -3611,7 +3611,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 										,null
 										,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 										,"0"
-										,Documento.EXTERNO_TARJETA_IDENTIFICACION
+										,Documento.EXTERNO_TARJETA_IDENTIFICACION, null, null
 										);
 							}
 							
@@ -3639,7 +3639,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
-								,Documento.EXTERNO_REDUCE_GS
+								,Documento.EXTERNO_REDUCE_GS, null, null
 								);
 					}
 					
@@ -3664,7 +3664,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
-								,Documento.EXTERNO_GESTORIA_GS
+								,Documento.EXTERNO_GESTORIA_GS, null, null
 								);
 					}
 
@@ -3708,7 +3708,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
-								,Documento.EXTERNO_ESPECIF_SEGURO_VIDA
+								,Documento.EXTERNO_ESPECIF_SEGURO_VIDA, null, null
 								);
 
 						mesaControlDAO.guardarDocumento(
@@ -3727,7 +3727,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,null
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
-								,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA
+								,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA, null, null
 								);
 					}
 				}
@@ -5847,6 +5847,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 									,TipoTramite.ENDOSO.getCdtiptra()
 									,"0"
 									,Documento.EXTERNO_CARATULA
+									,null
+									,null
 									);
 							
 							

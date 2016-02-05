@@ -869,6 +869,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					,TipoTramite.SINIESTRO.getCdtiptra()
 					,null
 					,null
+					,null
+					,null
 					);
 			
 		}catch( Exception e){
@@ -1324,6 +1326,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							,null
 							,null
 							,TipoTramite.SINIESTRO.getCdtiptra()
+							,null
+							,null
 							,null
 							,null
 							);
@@ -5513,7 +5517,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
     			mca.actualizarStatusTramite();
     			if(!mca.isSuccess())
     			{
-    				throw new Exception("Error al cancelar el trámite");
+    				throw new Exception("Error al cancelar el trï¿½mite");
     			}
     			
     			String nombreReporte = null;
@@ -5686,7 +5690,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				if(lista.size() > 0){
 					logger.debug("No se procesara para su pago");
 				}else{
-					logger.debug("Se mandará a llamar al pago del siniestro ==> "+totalTramites[i].toString());
+					logger.debug("Se mandarï¿½ a llamar al pago del siniestro ==> "+totalTramites[i].toString());
 					
 					HashMap<String,String> params = new HashMap<String, String>();
 					params.put("pv_ntramite_i",totalTramites[i].toString());

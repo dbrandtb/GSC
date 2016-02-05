@@ -628,7 +628,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 			} catch (Exception e1) {
 				logger.error("Error en llamar al PL de obtencion de ejecutaWSdireccionClienteGeneral",e1);
 				/**
-				 * ¿QUE SE DEBE DE HACER?
+				 * ï¿½QUE SE DEBE DE HACER?
 				 */
 				
 				return false;
@@ -1018,7 +1018,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 							,null
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 							,"0"
-							,Documento.RECIBO
+							,Documento.RECIBO, null, null
 							);
 				//}
 			}catch(Exception e){

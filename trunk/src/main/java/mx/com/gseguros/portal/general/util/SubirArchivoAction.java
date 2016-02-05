@@ -32,6 +32,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.opensymphony.xwork2.ActionContext;
+
 /**
  *
  * @author Jair
@@ -185,6 +187,10 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
             	codigoDocumento = cddocume;
             }
             
+            this.session = ActionContext.getContext().getSession();
+            
+            UserVO usuario = Utils.validateSession(session);
+            
             documentosManager.guardarDocumento(
             		smap1.get("cdunieco")
             		,smap1.get("cdramo")
@@ -202,6 +208,8 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
             		,smap1.get("cdtiptra")
             		,null
             		,null
+            		,usuario.getUser()
+            		,usuario.getRolActivo().getClave()
             		);
             
         }
@@ -400,6 +408,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 		}
 		catch(Exception ex)
 		{
+			logger.error("Error al cargar documentos",ex);
 			success=false;
 		}
 		logger.debug(""
