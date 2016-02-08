@@ -2669,14 +2669,22 @@ public class EndososManagerImpl implements EndososManager
 					,valoresMesaControl, null
 					);
 			
+			documentosManager.generarDocumentosParametrizados(
+					cdunieco
+					,cdramo
+					,estado //estado
+					,nmpoliza
+					,"0" //nmsituac
+					,nmsuplemRegenerado
+					,DocumentosManager.PROCESO_ENDOSO //proceso
+					,null	
+					,null //nmsolici
+			);
+			
+			
 			if(!enEspera)
 			{
 				//DOCUMENTOS
-				//DOCUMENTOS
-				//DOCUMENTOS
-				//DOCUMENTOS
-				//DOCUMENTOS
-				
 				String sucursal = cdunieco;
 				
 				String rutaCarpeta=Utils.join(rutaDocumentosPoliza,"/",ntramiteEmi);
