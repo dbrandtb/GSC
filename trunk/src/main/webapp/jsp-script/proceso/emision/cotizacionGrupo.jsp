@@ -1165,7 +1165,7 @@ Ext.onReady(function()
         
 	};
     
-    if(_p21_smap1.VENTANA_DOCUMENTOS=='S')
+    if(_p21_smap1.VENTANA_DOCUMENTOS=='S'&&(_p21_ntramite||_p21_ntramiteVacio))
     {
         Ext.create('Ext.window.Window',
         {
@@ -1183,7 +1183,7 @@ Ext.onReady(function()
             {
                 scripts   : true
                 ,autoLoad : true
-                ,url      : _p21_urlVentanaDocumentos
+                ,url      : _p21_urlVentanaDocumentosClon
                 ,params   :
                 {
                     'smap1.cdunieco'  : _p21_smap1.cdunieco
@@ -5521,7 +5521,7 @@ function _p21_emitir2(ventana,button)
 	                                {
 	                                    scripts   : true
 	                                    ,autoLoad : true
-	                                    ,url      : _p21_urlVentanaDocumentosClon
+	                                    ,url      : _p21_urlVentanaDocumentos
 	                                    ,params   :
 	                                    {
 	                                        'smap1.cdunieco'  : _p21_smap1.cdunieco
