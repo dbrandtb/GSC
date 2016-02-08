@@ -39,7 +39,7 @@ var _p35_urlPantallaCliente = '<s:url namespace="/catalogos"  action="includes/p
 //para funcion de pantalla de personas
 var obtieneDatosClienteContratante;
 //var destruirContLoaderPersona;
-var _p22_parentCallback         = false;
+var _p22_parentCallback = false;
 var _contratanteSaved = false;
 
 debug('_35_smap1:',_35_smap1);
@@ -181,7 +181,7 @@ Ext.onReady(function()
                 title       : 'Nuevo Contratante'
                 ,height     : 400
                 ,autoScroll : true
-                ,buttonAlign : 'center'
+                ,buttonAlign : 'left'
 				,loader     :
                 {
                     url       : _p35_urlPantallaCliente
