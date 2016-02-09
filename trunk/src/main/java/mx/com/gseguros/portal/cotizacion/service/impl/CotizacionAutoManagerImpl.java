@@ -2923,10 +2923,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	    	
 	    	else 
 	    		{ //NO FRONTERIZOS
-		       		logger.info(new StringBuilder().append("\n Valor xls pv_otvalor13=").append(inciso.get("parametros.pv_otvalor13")).toString());
+		       		logger.info(new StringBuilder().append("\n Valor xls pv_otvalor13=")
+		       									   .append(inciso.get("parametros.pv_otvalor13"))
+		       									   .append("Auto NO fronterizo")
+		       									   .toString());
 		       		String clave =  inciso.get("parametros.pv_otvalor06");
 					String modelo =  inciso.get("parametros.pv_otvalor09");
-	
 					logger.info(
 							 new StringBuilder()
 							 .append("\n VILS cdtipsit=").append(cdtipsit)
@@ -2934,22 +2936,42 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							 .append("\n VILS modelo=").append(modelo)
 							 .toString()
 							 );
-					 
+		 
 					ResponseValor wsResp = valorComercialService.obtieneDatosVehiculoGS(Integer.valueOf(clave), Integer.valueOf(modelo));
+					
+					if(wsResp!= null && wsResp.getExito())
+					  {
+						logger.info(
+								 new StringBuilder()
+								 .append("\n Valor del WS exitoso.")
+								 .append(wsResp)
+								 .toString()
+								 );
+						 
+							 if(wsResp.getValor_comercial()>0d)
+									 inciso.put("parametros.pv_otvalor13",String.format("%.2f", wsResp.getValor_comercial()));
+							 else
+									 inciso.put("parametros.pv_otvalor13",Double.toString(wsResp.getValor_comercial()));
+					  }
 					 
-					if(wsResp==null)
-					 {	
-						 Map<String,String> valor = new HashMap<String, String>();
-						 valor = cotizacionDAO.cargarSumaAseguradaRamo5(cdtipsit, clave, modelo, cdsisrol);
-						 inciso.put("parametros.pv_otvalor13", valor.get("sumaseg"));
-					 }
 					 else 
 					 {
-						 if(wsResp.getValor_comercial()>0d)
-								 inciso.put("parametros.pv_otvalor13",String.format("%.2f", wsResp.getValor_comercial()));
-						 else
-								 inciso.put("parametros.pv_otvalor13",Double.toString(wsResp.getValor_comercial()));
-					}
+						 logger.info(
+								 new StringBuilder()
+								 .append("\n Valor del WS nulo, empezando SP ...")
+								 .toString()
+								 );
+						
+						 Map<String,String> valor = new HashMap<String, String>();
+						 valor = cotizacionDAO.cargarSumaAseguradaRamo5(cdtipsit, clave, modelo, cdsisrol);
+						 logger.info(
+								 new StringBuilder()
+								 .append("\n SP :")
+								 .append(valor.get("sumaseg"))
+								 .toString()
+								 );
+						 inciso.put("parametros.pv_otvalor13", valor.get("sumaseg"));
+					 }
 			    }
 	    	inciso.put("parametros.pv_otvalor26",inciso.get("parametros.pv_otvalor07"));//Respaldo Valor Nada
 		}	
