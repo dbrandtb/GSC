@@ -484,4 +484,6 @@ public interface ConsultasDAO
 	public Map<String,String> cargarDatosDemo(String ntramite) throws Exception;
 	
 	public String recuperarPermisoBotonEnviarCenso(String cdsisrol) throws Exception;
+	
+	public int recuperarConteoTbloqueoTramite(String ntramite)throws Exception;
 }

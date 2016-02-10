@@ -451,7 +451,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
             		,nmsuplemEmitida
             		,DocumentosManager.PROCESO_EMISION
             		,ntramite
-            		,nmpoliza
+            		,nmpoliza, null
             		);
             
             /*

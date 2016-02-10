@@ -1028,6 +1028,7 @@ public class EndososAction extends PrincipalCoreAction
 						,documentosManager.PROCESO_ENDOSO
 						,null //ntramite
 						,null //nmsolici
+, null
 						);
 				
 				/*
@@ -1352,6 +1353,7 @@ public class EndososAction extends PrincipalCoreAction
 							,DocumentosManager.PROCESO_ENDOSO
 							,null //ntramite
 							,null //nmsolici
+, null
 							);
 					
 					/*
@@ -1622,6 +1624,7 @@ public class EndososAction extends PrincipalCoreAction
 						,DocumentosManager.PROCESO_ENDOSO
 						,null //ntramite
 						,null //nmsolici
+, null
 						);
 				
 				/*
@@ -1931,6 +1934,7 @@ public class EndososAction extends PrincipalCoreAction
 						,DocumentosManager.PROCESO_ENDOSO
 						,null //ntramite
 						,null //nmsolici
+, null
 						);
 				
 				/*
@@ -2595,6 +2599,7 @@ public class EndososAction extends PrincipalCoreAction
 							,DocumentosManager.PROCESO_ENDOSO
 							,null //ntramite
 							,null //nmsolici
+, null
 							);
 					
 					String ntramite = datosPoliza.get("ntramite");
@@ -3155,6 +3160,7 @@ public class EndososAction extends PrincipalCoreAction
 							,DocumentosManager.PROCESO_ENDOSO
 							,null //ntramite
 							,null //nmsolici
+, null
 							);
 					
 					/*
@@ -3404,6 +3410,7 @@ public class EndososAction extends PrincipalCoreAction
 							,DocumentosManager.PROCESO_ENDOSO
 							,null //ntramite
 							,null //nmsolici
+, null
 							);
 					
 					/*
@@ -4932,6 +4939,7 @@ public class EndososAction extends PrincipalCoreAction
 						,DocumentosManager.PROCESO_ENDOSO
 						,ntramite
 						,null //nmsolici
+, null
 						);
 				
 				String nmsolici    = datosPoliza.get("nmsolici");
@@ -5361,6 +5369,7 @@ public class EndososAction extends PrincipalCoreAction
 						,DocumentosManager.PROCESO_ENDOSO
 						,ntramite
 						,null //nmsolici
+, null
 						);
 				
 				String nmsolici    = datosPoliza.get("nmsolici");
@@ -5749,6 +5758,7 @@ public class EndososAction extends PrincipalCoreAction
 						,DocumentosManager.PROCESO_ENDOSO
 						,ntramite
 						,null //nmsolici
+, null
 						);
 				
 				String nmsolici    = datosPoliza.get("nmsolici");
@@ -6048,6 +6058,7 @@ public class EndososAction extends PrincipalCoreAction
 					,DocumentosManager.PROCESO_ENDOSO
 					,ntramiteEmi
 					,null //nmsolici
+, null
 					);
 			
 			String nmsolici    = datosPoliza.get("nmsolici");
@@ -6725,6 +6736,7 @@ public class EndososAction extends PrincipalCoreAction
 						,DocumentosManager.PROCESO_ENDOSO
 						,ntramite
 						,null //nmsolici
+, null
 						);
 				
 				String nmsolici    = datosPoliza.get("nmsolici");
@@ -7116,6 +7128,7 @@ public class EndososAction extends PrincipalCoreAction
 						,DocumentosManager.PROCESO_ENDOSO
 						,ntramite
 						,null //nmsolici
+, null
 						);
 				
 				String nmsolici    = datosPoliza.get("nmsolici");
@@ -7937,7 +7950,7 @@ public class EndososAction extends PrincipalCoreAction
 				,nmsuplem
 				,DocumentosManager.PROCESO_ENDOSO
 				,ntramite
-				,nmsolici
+				,nmsolici, null
 				);
 		
 		nmsolici = datosPoliza.get("nmsolici");

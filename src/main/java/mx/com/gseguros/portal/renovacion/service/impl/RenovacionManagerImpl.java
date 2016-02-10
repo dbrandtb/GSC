@@ -300,6 +300,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 							,DocumentosManager.PROCESO_EMISION
 							,ntramite
 							,null //nmsolici
+, null
 							);
 					
 					/*
