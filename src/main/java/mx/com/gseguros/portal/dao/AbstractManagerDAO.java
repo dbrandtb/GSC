@@ -9,7 +9,8 @@ import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.jdbc.object.StoredProcedure;
 
@@ -17,7 +18,7 @@ import com.opensymphony.xwork2.ActionSupport;
 
 public abstract class AbstractManagerDAO extends JdbcDaoSupport {
 
-	private static Logger logger = Logger.getLogger(AbstractManagerDAO.class);
+	private static Logger logger = LoggerFactory.getLogger(AbstractManagerDAO.class);
 	
 	private ProcesoResultadoDAO procesoResultadoDAO;
 
@@ -32,11 +33,13 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	public Map<String, Object> ejecutaSP(StoredProcedure storedProcedure, Map parameters) throws Exception {
     	
-    	logger.info(Utils.join("##### CALLING SP ", storedProcedure.getSql(), " ", parameters));
+    	//logger.info(Utils.join("##### CALLING SP ", storedProcedure.getSql(), " ", parameters));
     	long inicio = System.currentTimeMillis();
+    	logger.info("##### CALLING SP {} {} [{}]", storedProcedure.getSql(), parameters, inicio);
 		Map<String, Object> mapResult = storedProcedure.execute(parameters);
 		long tfinal = System.currentTimeMillis();
-		logger.info(Utils.join("##### FINISH  SP ", storedProcedure.getSql(), " IN ", (tfinal - inicio) / 1000d, " SECS "));
+		//logger.info(Utils.join("##### FINISH  SP ", storedProcedure.getSql(), " IN ", (tfinal - inicio) / 1000d, " SECS "));
+		logger.info( "##### FINISH  SP {}  IN {} SECS {} [{}]", storedProcedure.getSql(), (tfinal - inicio) / 1000d, parameters, inicio);
 		
         BaseVO mensajeRespuesta = traduceMensaje(mapResult);
         mapResult.put("msg_id", mensajeRespuesta.getKey());
