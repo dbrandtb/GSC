@@ -442,13 +442,21 @@ public class MesaControlAction extends PrincipalCoreAction
 					,cdmotivo
 					,cdclausu
 					,mostrarAgente
+					,null
 					);
 			
 			Boolean escalado  = (Boolean)res.get("ESCALADO");
 			String  statusEsc = (String)res.get("STATUS");
+			String  async     = (String)res.get("ASYNC");
+			
+			if(!"S".equals(async))
+			{
+				async = "N";
+			}
 			
 			smap1.put("nombreUsuarioDestino" , (String)res.get("NOMBRE"));
 			smap1.put("ESCALADO"             , escalado ? "S" : "N" );
+			smap1.put("ASYNC"                , async);
 			if(escalado)
 			{
 				smap1.put("status" , statusEsc);
@@ -588,7 +596,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			String cdusuariSesion = usu.getUser();
 			String cdsisrolSesion = "COORDINASINI";
 			String cdclausu       = null;
-			siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu,null);
+			siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu,null,null);
 			success=true;
 			
 		} catch(Exception ex) {
