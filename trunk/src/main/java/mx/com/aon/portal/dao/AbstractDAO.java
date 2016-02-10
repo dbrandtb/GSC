@@ -6,12 +6,13 @@ import java.util.Map;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.utils.Utils;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 @Deprecated
 public abstract class AbstractDAO  extends JdbcDaoSupport {
 	
-	private static Logger logger = Logger.getLogger(AbstractDAO.class);
+	private static Logger logger = LoggerFactory.getLogger(AbstractDAO.class);
 
 	/**
 	 * Mapa donde se introducen y extraen los managers para utilizarlos como servicios
@@ -48,10 +49,12 @@ public abstract class AbstractDAO  extends JdbcDaoSupport {
 		try {
 			CustomStoredProcedure storedProcedure = getStoredProcedure(storeProcedureName);
 			long inicio = System.currentTimeMillis();
-			logger.info(Utils.join("##### CALLING SP ", storedProcedure.getSql(), " ", parameters));
+			//logger.info(Utils.join("##### CALLING SP ", storedProcedure.getSql(), " ", parameters));
+			logger.info("##### CALLING SP {} {} [{}]", storedProcedure.getSql(), parameters, inicio);
 			Map result = storedProcedure.execute((Map) parameters);
     		long tfinal = System.currentTimeMillis();
-    		logger.info(Utils.join("##### FINISH  SP ", storedProcedure.getSql(), " IN ", (tfinal - inicio) / 1000d, " SECS "));
+    		//logger.info(Utils.join("##### FINISH  SP ", storedProcedure.getSql(), " IN ", (tfinal - inicio) / 1000d, " SECS "));
+    		logger.info( "##### FINISH  SP {}  IN {} SECS {} [{}]", storedProcedure.getSql(), (tfinal - inicio) / 1000d, parameters, inicio);
 			
 			return storedProcedure.mapWrapperResultados(result);
 		} catch (Exception ex) {
