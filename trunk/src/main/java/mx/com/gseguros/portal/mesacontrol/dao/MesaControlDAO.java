@@ -227,4 +227,13 @@ public interface MesaControlDAO
 	public void marcarTramiteVistaPrevia(String ntramite) throws Exception;
 	
 	public String recuperarSwvispreTramite(String ntramite) throws Exception;
+	
+	/**
+	 * Se pone un status al tramite y se retorna el actual, no se registra en los historicos
+	 * @param ntramite
+	 * @param statusTemporal
+	 * @return
+	 * @throws Exception
+	 */
+	public String marcarTramiteComoStatusTemporal(String ntramite, String statusTemporal) throws Exception;
 }

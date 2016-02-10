@@ -2478,6 +2478,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						,DocumentosManager.PROCESO_EMISION //proceso
 						,ntramite
 						,nmpoliza //nmsolici
+, null
 						);
 				
 				/*
@@ -3402,6 +3403,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						,DocumentosManager.PROCESO_EMISION //proceso
 						,ntramite
 						,nmpoliza //nmsolici
+, null
 						);
 				
 				/*
@@ -3690,7 +3692,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,_nmsuplem
 							,documentosManager.PROCESO_EMISION //proceso
 							,ntramite
-							,nmsolici
+							,nmsolici, null
 							);
 					
 					/*

@@ -3883,4 +3883,42 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public int recuperarConteoTbloqueoTramite(String ntramite)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarConteoTbloqueoTramiteSP(getDataSource()),params);
+		List<Map<String,String>> list    = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		int bloqueos = 0;
+		if(list!=null&&list.size()>0)
+		{
+			try
+			{
+				bloqueos = Integer.parseInt(list.get(0).get("REGS_TBLOQUEO"));
+			}
+			catch(Exception ex)
+			{
+				logger.error("Error al intentar parsear el num de bloqueos por tramite, se deja en 0",ex);
+				bloqueos = 0;
+			}
+		}
+		return bloqueos;
+	}
+	
+	protected class RecuperarConteoTbloqueoTramiteSP extends StoredProcedure
+	{
+		protected RecuperarConteoTbloqueoTramiteSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_BLOQUEO_TRAMITE");
+			
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{ "REGS_TBLOQUEO" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

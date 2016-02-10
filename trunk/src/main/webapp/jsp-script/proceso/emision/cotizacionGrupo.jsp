@@ -4069,12 +4069,19 @@ function _p21_turnar(status,titulo,closable)
                                         debug('### json response parametro mensaje turnar:',json2);
                                         if(json2.exito)
                                         {
-                                            mensajeCorrecto('Tr&aacute;mite guardado'
-                                                ,json2.smap1.P1VALOR
+                                            var mensajeTurnado = json2.smap1.P1VALOR
                                                     +(!Ext.isEmpty(json.smap1.nombreUsuarioDestino)?
                                                         '<br/>El tr&aacute;mite '+_p21_smap1.ntramite+' fue asignado a '+json.smap1.nombreUsuarioDestino:
                                                         ''
-                                                    )
+                                                    );
+                                            
+                                            if(json.smap1.ASYNC=='S')
+                                            {
+                                                mensajeTurnado = 'El tr\u00e1mite qued\u00f3 en espera y ser\u00e1 procesado posteriormente';
+                                            }
+                                        
+                                            mensajeCorrecto('Tr&aacute;mite guardado'
+                                                ,mensajeTurnado
                                                 ,function()
                                             {
                                                 button.up().up().destroy();

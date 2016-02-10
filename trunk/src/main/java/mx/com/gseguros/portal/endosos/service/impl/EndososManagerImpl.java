@@ -1666,7 +1666,7 @@ public class EndososManagerImpl implements EndososManager
 						,nmsuplemEndoso
 						,DocumentosManager.PROCESO_ENDOSO //proceso
 						,ntramiteEmision
-						,nmsolici
+						,nmsolici, null
 						);
 			}
 			catch(Exception ex)
@@ -2053,6 +2053,7 @@ public class EndososManagerImpl implements EndososManager
 					,DocumentosManager.PROCESO_ENDOSO //proceso
 					,ntramiteEmi
 					,null //nmsolici
+, null
 					);
 			
 			/*
@@ -2679,6 +2680,7 @@ public class EndososManagerImpl implements EndososManager
 					,DocumentosManager.PROCESO_ENDOSO //proceso
 					,null	
 					,null //nmsolici
+, null
 			);
 			
 			

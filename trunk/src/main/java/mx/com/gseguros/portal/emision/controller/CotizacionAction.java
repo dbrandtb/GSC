@@ -905,14 +905,15 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String emitirColectivo()
 	{
-		logger.debug("\n"
-				+ "\n#############################"
-				+ "\n###### emitirColectivo ######"
-				+ "\nsmap1 "+smap1
-				);
+		long stamp = System.currentTimeMillis();
+		logger.debug(Utils.log(stamp
+				,"\n#############################"
+				,"\n###### emitirColectivo ######"
+				,"\n###### smap1 ", smap1
+				));
 		
-		exito   = true;
-		success = true;
+		exito   = false;
+		success = false;
 
 		String cdperson = null;
 		
@@ -930,29 +931,22 @@ public class CotizacionAction extends PrincipalCoreAction
 		String fechaIni = smap1.get("feini");
 		String fechaFin = smap1.get("fefin");
 		
-		//obtener cdperson sesion
-		if(exito)
+		try
 		{
+			String paso = null;
 			try
 			{
+				//---------------------------------
+				paso = "Obtener datos del usuario";
+				logger.debug(Utils.log(stamp,"paso=",paso));
+				
 				DatosUsuario datUs = kernelManager.obtenerDatosUsuario(cdusuari,cdtipsit);
 				cdperson           = datUs.getCdperson();
-			}
-			catch(Exception ex)
-			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = "Error al obtener datos del usuario #"+timestamp;
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
-		}
-		
-		//validar direccion
-		if(exito)
-		{
-			try
-			{
+				
+				//----------------------------
+				paso = "Revisando domicilios";
+				logger.debug(Utils.log(stamp,"paso=",paso));
+				
 				List<Map<String,String>>lisUsuSinDir=null;
 				try
 				{
@@ -965,19 +959,19 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 				catch(Exception ex)
 				{
-					logger.warn("Error sin impacto funcional al validar domicilios: ",ex);
+					logger.error(Utils.log(stamp,"Error sin impacto funcional al validar domicilios: "),ex);
 					lisUsuSinDir=null;
 				}
 				
 				if(lisUsuSinDir!=null&&lisUsuSinDir.size()>0)
 				{
-					exito           = false;
-					respuestaOculta = "Faltan direcciones";
-					
-					if(Ramo.SERVICIO_PUBLICO.getCdramo().equals(cdramo) || Ramo.AUTOS_FRONTERIZOS.getCdramo().equals(cdramo)){
-						respuesta="Favor de verificar y guardar correctamente la direcci&oacute;n y datos del contratante.";
-					}else{
-						respuesta       = "Favor de verificar la direcci&oacute;n de los siguientes asegurados:<br/>";
+					if(Ramo.SERVICIO_PUBLICO.getCdramo().equals(cdramo) || Ramo.AUTOS_FRONTERIZOS.getCdramo().equals(cdramo))
+					{
+						respuesta = "Favor de verificar y guardar correctamente la direcci&oacute;n y datos del contratante.";
+					}
+					else
+					{
+						respuesta = "Favor de verificar la direcci&oacute;n de los siguientes asegurados:<br/>";
 						// f a v o r
 						//0 1 2 3 4 5
 						if(lisUsuSinDir.get(0).get("nombre").substring(0,5).equalsIgnoreCase("favor"))
@@ -993,25 +987,15 @@ public class CotizacionAction extends PrincipalCoreAction
 						}
 					}
 					
-					logger.debug("Se va a terminar el proceso porque faltan direcciones");
+					logger.debug(Utils.log(stamp,"Se va a terminar el proceso porque faltan direcciones"));
+					throw new ApplicationException(respuesta);
 				}
-			}
-			catch(Exception ex)
-			{
-				long  timestamp = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = "Error al revisar domicilios #"+timestamp;
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
-		}
-		
-		//maestro historico
-		if(exito)
-		{
-			try
-			{
-	            Map<String,Object>map2=new LinkedHashMap<String,Object>(0);
+				
+				//------------------------------------
+				paso = "Insertando maestro historico";
+				logger.debug(Utils.log(stamp,"paso=",paso));
+				
+				Map<String,Object>map2=new LinkedHashMap<String,Object>(0);
 	            map2.put("pv_cdunieco_i"  , cdunieco);
 	            map2.put("pv_cdramo_i"    , cdramo);
 	            map2.put("pv_estado_i"    , estado);
@@ -1036,23 +1020,12 @@ public class CotizacionAction extends PrincipalCoreAction
 	            map2.put("pv_tippodec_i"  , null);
 	            map2.put("pv_accion_i"    , "I");
 	            kernelManager.insertaMaestroHistoricoPoliza(map2);
-			}
-			catch(Exception ex)
-			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = "Error al insertar historico #"+timestamp;
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
-		}
-		
-		//tdescsup
-		if(exito)
-		{
-			try
-			{
-				cotizacionManager.movimientoTdescsup(
+				
+	            //---------------------------------------------
+	            paso = "Registrando descripcion de suplemento";
+	            logger.debug(Utils.log(stamp,"paso=",paso));
+	            
+	            cotizacionManager.movimientoTdescsup(
 						cdunieco
 						,cdramo
 						,estado
@@ -1070,27 +1043,12 @@ public class CotizacionAction extends PrincipalCoreAction
 						,cdperson
 						,Constantes.INSERT_MODE
 						);
-			}
-			catch(Exception ex)
-			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = "Error al guardar descripcion de emision #"+timestamp;
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
-		}
-		
-		String nmpolizaEmi = null;
-		String nmpoliexEmi = null;
-		String nmsuplemEmi = null;
-		
-		//emitir
-		if(exito)
-		{
-			try
-			{
-				Map<String,Object>paramEmi=new LinkedHashMap<String,Object>(0);
+	            
+	            //-----------------
+	            paso = "Emitiendo";
+	            logger.debug(Utils.log(stamp,"paso=",paso));
+	            
+	            Map<String,Object>paramEmi=new LinkedHashMap<String,Object>(0);
 				paramEmi.put("pv_cdusuari"  , cdusuari);
 				paramEmi.put("pv_cdunieco"  , cdunieco);
 				paramEmi.put("pv_cdramo"    , cdramo);
@@ -1107,9 +1065,9 @@ public class CotizacionAction extends PrincipalCoreAction
 				paramEmi.put("pv_ntramite"  , ntramite);
 				WrapperResultados wr=kernelManager.emitir(paramEmi);
 				
-				nmpolizaEmi = (String)wr.getItemMap().get("nmpoliza");
-				nmpoliexEmi = (String)wr.getItemMap().get("nmpoliex");
-				nmsuplemEmi = (String)wr.getItemMap().get("nmsuplem");
+				String nmpolizaEmi = (String)wr.getItemMap().get("nmpoliza")
+				       ,nmpoliexEmi = (String)wr.getItemMap().get("nmpoliex")
+				       ,nmsuplemEmi = (String)wr.getItemMap().get("nmsuplem");
 				
 				smap1.put("nmpolizaEmi" , nmpolizaEmi);
 				smap1.put("nmpoliexEmi" , nmpoliexEmi);
@@ -1135,26 +1093,13 @@ public class CotizacionAction extends PrincipalCoreAction
 	            }
 	            catch(Exception ex)
 	            {
-	            	logger.error("Error al grabar evento, sin impacto",ex);
+	            	logger.error(Utils.log(stamp,"Error al grabar evento, sin impacto"),ex);
 	            }
-			}
-			catch(Exception ex)
-			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = "Error al emitir #"+timestamp;
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
-		}
-		
-		String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
-		//documentos
-		if(exito)
-		{
-			try
-			{
-				documentosManager.generarDocumentosParametrizados(
+				
+				paso = "Generando documentos";
+				logger.debug(Utils.log(stamp,"paso=",paso));
+				
+				documentosManager.generarDocumentosParametrizadosAsync(
 						cdunieco
 	            		,cdramo
 	            		,"M"
@@ -1165,82 +1110,11 @@ public class CotizacionAction extends PrincipalCoreAction
 	            		,ntramite
 	            		,nmpoliza //nmsolici
 	            		);
+	            
+				//-------------------------------------
+				paso = "Insertando detalle de emision";
+				logger.debug(Utils.log(stamp,"paso=",paso));
 				
-				/*
-				File   carpeta     = new File(rutaCarpeta);
-	            if(!carpeta.exists())
-	            {
-	            	logger.info("Se va a crear la carpeta "+carpeta);
-	            	if(!carpeta.mkdir())
-	            	{
-	            		throw new Exception("No se pudo crear la carpeta para los documentos");
-	            	}
-	            }
-	            
-	            String cdorddoc = emisionManager.insercionDocumentosParametrizados(
-	            		cdunieco
-	            		,cdramo
-	            		,"M"
-	            		,nmpolizaEmi
-	            		,"0"
-	            		,nmsuplemEmi
-	            		,"EMISION"
-	            		);
-	            logger.debug("cdorddoc: {}",cdorddoc);
-	            
-	            List<Map<String,String>> docsATransferir = cotizacionManager.generarDocumentosBaseDatos(
-	            		cdorddoc
-	            		,nmpoliza
-	            		,ntramite
-	            		);
-	            
-	            String rutaDocsBaseDatos = consultasManager.recuperarTparagen(ParametroGeneral.DIRECTORIO_REPORTES);
-	            logger.debug(Utils.join("\nrutaDocsBaseDatos:",rutaDocsBaseDatos));
-	            
-	            for(Map<String,String>doc:docsATransferir)
-	            {
-	            	try
-	            	{
-	            		String origen  = Utils.join(rutaDocsBaseDatos,doc.get("CDDOCUME"));
-	            		String destino = Utils.join(getText("ruta.documentos.poliza"),"/",ntramite,"/",doc.get("CDDOCUME"));
-	            		logger.debug(Utils.log("\nIntentando mover desde:",origen,",hacia:",destino));
-	            		FileUtils.moveFile(
-	            				new File(origen)
-	            				,new File(destino)
-	            				);
-	            	}
-	            	catch(Exception ex)
-	            	{
-	            		logger.error("Error al transferir archivo ",ex);
-	            	}
-	            }
-	            */
-			}
-			catch(Exception ex)
-			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = "Error al crear los documentos #"+timestamp;
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
-		}
-		
-		//detalle
-		if(exito)
-		{
-			try
-			{
-				logger.debug("se inserta detalle nuevo para emision");
-	        	/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-	        	parDmesCon.put("pv_ntramite_i"   , ntramite);
-	        	parDmesCon.put("pv_feinicio_i"   , new Date());
-	        	parDmesCon.put("pv_cdclausu_i"   , null);
-	        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se emiti&oacute;");
-	        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
-	        	parDmesCon.put("pv_cdmotivo_i"   , null);
-	        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
-	        	kernelManager.movDmesacontrol(parDmesCon);*/
 				mesaControlManager.movimientoDetalleTramite(
 						ntramite
 						,new Date()
@@ -1251,55 +1125,39 @@ public class CotizacionAction extends PrincipalCoreAction
 						,cdsisrol
 						,"S"
 						);
-			}
-			catch(Exception ex)
-			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = "Error al guardar detalle #"+timestamp;
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
-		}
-		
-		if(exito){
-			try
-			{
-				// Ejecutamos el Web Service de Recibos:
+				
+				//---------------------------------------------
+				paso = "Ejecutando WS para recibos colectivos";
+				logger.debug(Utils.log(stamp,"paso=",paso));
+				
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo,
 						"M", nmpolizaEmi, 
-						nmsuplemEmi, rutaCarpeta,
+						nmsuplemEmi, this.getText("ruta.documentos.poliza")+"/"+ntramite,
 						cdunieco, nmpoliza,ntramite, 
 						true, TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(),
 						usuario);
-			
+				
+				respuesta = Utils.join("Se ha emitido la p&oacute;liza ",nmpolizaEmi," [",nmpoliexEmi,"]");
+				logger.debug(Utils.log(stamp,"respuesta final=",respuesta));
+				
+				//termina correctamente
+				exito   = true;
+				success = true;
 			}
 			catch(Exception ex)
 			{
-				long timestamp  = System.currentTimeMillis();
-				exito           = false;
-				respuesta       = "Error al lanzar ws recibos para colectivos"+timestamp;
-				respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
+				Utils.generaExcepcion(ex, paso);
 			}
 		}
-		
-		//exito
-		if(exito)
+		catch(Exception ex)
 		{
-			respuesta       = new StringBuilder().append("Se ha emitido la p&oacute;liza ")
-					                  .append(nmpolizaEmi)
-					                  .append(" [")
-					                  .append(nmpoliexEmi)
-					                  .append("]")
-					                  .toString();
-			respuestaOculta = "Todo OK";
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(""
-				+ "\n###### emitirColectivo ######"
-				+ "\n#############################"
-				);
+		logger.debug(Utils.log(stamp
+				,"\n###### emitirColectivo ######"
+				,"\n#############################"
+				));
 		return SUCCESS;
 	}
 

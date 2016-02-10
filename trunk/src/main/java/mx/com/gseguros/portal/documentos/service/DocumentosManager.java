@@ -19,6 +19,18 @@ public interface DocumentosManager
 			,String nmsuplem
 			,int proceso
 			,String ntramite
+			,String nmsolici, Long stamp
+			)throws Exception;
+	
+	public void generarDocumentosParametrizadosAsync(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,int proceso
+			,String ntramite
 			,String nmsolici
 			)throws Exception;
 	

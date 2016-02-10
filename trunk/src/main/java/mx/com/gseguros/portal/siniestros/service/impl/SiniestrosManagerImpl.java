@@ -9,7 +9,10 @@ import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.DaoException;
+import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
+import mx.com.gseguros.portal.general.util.EstatusTramite;
+import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
 import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
@@ -27,10 +30,10 @@ import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.model.SiniestroVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,6 +45,12 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	
 	@Autowired
 	private CotizacionDAO cotizacionDAO;
+	
+	@Autowired
+	private ConsultasDAO consultasDAO;
+	
+	@Autowired
+	private MesaControlDAO mesaControlDAO;
 	
 	private static org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(SiniestrosManagerImpl.class);
 	
@@ -1374,56 +1383,219 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			,String cdmotivo
 			,String cdclausu
 			,String swagente
+			,Long stamp
 			) throws Exception
 	{
-		log.info(""
-				+ "\n##########################"
-				+ "\n###### moverTramite ######"
-				);
+		if(stamp==null)
+		{
+			stamp = System.currentTimeMillis(); 
+		}
+		else
+		{
+			logger.debug(Utils.log(stamp, "Se llama la actualizacion de status despues de esperar tarifa"));
+		}
+		log.debug(Utils.log(stamp
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ moverTramite @@@@@@"
+				,"\n@@@@@@ ntramite="        , ntramite
+				,"\n@@@@@@ comments="        , comments
+				,"\n@@@@@@ cdusuariSesion="  , cdusuariSesion
+				,"\n@@@@@@ cdsisrolSesion="  , cdsisrolSesion
+				,"\n@@@@@@ cdusuariDestino=" , cdusuariDestino
+				,"\n@@@@@@ cdsisrolDestino=" , cdsisrolDestino
+				,"\n@@@@@@ cdmotivo="        , cdmotivo
+				,"\n@@@@@@ cdclausu="        , cdclausu
+				,"\n@@@@@@ swagente="        , swagente
+				));
 		
-		Map<String,Object> res = siniestrosDAO.moverTramite(
-				ntramite
-				,nuevoStatus
-				,comments
-				,cdusuariSesion
-				,cdsisrolSesion
-				,cdusuariDestino
-				,cdsisrolDestino
-				,cdmotivo
-				,cdclausu
-				,swagente
-				);
+		int bloqueos = consultasDAO.recuperarConteoTbloqueoTramite(ntramite);
+		logger.debug(Utils.log(stamp,"bloqueos=",bloqueos));
 		
-		try
-        {
-			cotizacionDAO.grabarEvento(new StringBuilder("\nTurnar tramite")
-        	    ,"GENERAL"    //cdmodulo
-        	    ,"TURNATRA"   //cdevento
-        	    ,new Date()   //fecha
-        	    ,cdusuariSesion
-        	    ,cdsisrolSesion
-        	    ,ntramite
-        	    ,"-1"
-        	    ,null
-        	    ,null
-        	    ,null
-        	    ,null
-        	    ,null
-        	    ,cdusuariDestino
-        	    ,cdsisrolDestino
-        	    ,nuevoStatus);
-        }
-        catch(Exception ex)
-        {
-        	logger.error("Error al grabar evento, sin impacto",ex);
-        }
+		Map<String,Object> res = new HashMap<String,Object>();
 		
-		log.info(""
-				+ "\n###### res=" + res
-				+ "\n###### moverTramite ######"
-				+ "\n##########################"
-				);
+		/*
+		 * si hay bloqueos entonces se manda asincrono y se enciende una bandera en mesa de control, este primer
+		 * caso es el normal
+		 */
+		if(bloqueos==0)
+		{
+			res = siniestrosDAO.moverTramite(
+					ntramite
+					,nuevoStatus
+					,comments
+					,cdusuariSesion
+					,cdsisrolSesion
+					,cdusuariDestino
+					,cdsisrolDestino
+					,cdmotivo
+					,cdclausu
+					,swagente
+					);
+			
+			try
+	        {
+				cotizacionDAO.grabarEvento(new StringBuilder("\nTurnar tramite")
+	        	    ,"GENERAL"    //cdmodulo
+	        	    ,"TURNATRA"   //cdevento
+	        	    ,new Date()   //fecha
+	        	    ,cdusuariSesion
+	        	    ,cdsisrolSesion
+	        	    ,ntramite
+	        	    ,"-1"
+	        	    ,null
+	        	    ,null
+	        	    ,null
+	        	    ,null
+	        	    ,null
+	        	    ,cdusuariDestino
+	        	    ,cdsisrolDestino
+	        	    ,nuevoStatus);
+	        }
+	        catch(Exception ex)
+	        {
+	        	logger.error("Error al grabar evento, sin impacto",ex);
+	        }
+		}
+		/*
+		 * en esta parte vamos a esperar a que los bloqueos terminen para hacer el turnado
+		 */
+		else
+		{
+			res.put("ESCALADO" , false);
+			res.put("NOMBRE"   , "");
+			res.put("ASYNC"    , "S");
+			
+			new MoverTramiteAsync(
+					ntramite
+					,nuevoStatus
+					,comments
+					,cdusuariSesion
+					,cdsisrolSesion
+					,cdusuariDestino
+					,cdsisrolDestino
+					,cdmotivo
+					,cdclausu
+					,swagente
+					,stamp
+					).start();
+		}
+		
+		log.debug(Utils.log(stamp
+				,"\n###### res=", res
+				,"\n###### moverTramite ######"
+				,"\n##########################"
+				));
 		return res;
+	}
+	
+	private class MoverTramiteAsync extends Thread
+	{
+		private String ntramite
+		               ,nuevoStatus
+		               ,comments
+		               ,cdusuariSesion
+		               ,cdsisrolSesion
+		               ,cdusuariDestino
+		               ,cdsisrolDestino
+		               ,cdmotivo
+		               ,cdclausu
+		               ,swagente;
+		
+		private long stamp;
+		
+		public MoverTramiteAsync(
+				String ntramite
+				,String nuevoStatus
+				,String comments
+				,String cdusuariSesion
+				,String cdsisrolSesion
+				,String cdusuariDestino
+				,String cdsisrolDestino
+				,String cdmotivo
+				,String cdclausu
+				,String swagente
+				,long stamp
+				)
+		{
+			this.ntramite        = ntramite;
+			this.nuevoStatus     = nuevoStatus;
+			this.comments        = comments;
+			this.cdusuariSesion  = cdusuariSesion;
+			this.cdsisrolSesion  = cdsisrolSesion;
+			this.cdusuariDestino = cdusuariDestino;
+			this.cdsisrolDestino = cdsisrolDestino;
+			this.cdmotivo        = cdmotivo;
+			this.cdclausu        = cdclausu;
+			this.swagente        = swagente;
+			this.stamp           = stamp;
+		}
+		
+		@Override
+		public void run()
+		{
+			try
+			{
+				/*
+				 * en este paso vamos a recuperar el status actua del tramite, y se pondra como
+				 * "En tarifa", posteriormente en otro paso le regresamos su status
+				 */
+				logger.debug(Utils.log(stamp, "Actualizando en status <En Tarifa>"));
+				String statusOriginal = mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.EN_TARIFA.getCodigo());
+				
+				int bloqueos = 0;
+				
+				do
+				{
+					logger.debug(Utils.log(stamp, "Recuperando conteo de tbloqueo de primer ciclo"));
+					bloqueos = consultasDAO.recuperarConteoTbloqueoTramite(ntramite);
+					
+					logger.debug(Utils.log(stamp, "Conteo recuperado=",bloqueos));
+					
+					logger.debug(Utils.log(stamp, "Esperando 30 segundos del primer ciclo..."));
+					Thread.sleep(1000l*30l);
+					
+				}
+				while(bloqueos>0);
+				
+				do
+				{
+					logger.debug(Utils.log(stamp, "Recuperando conteo de tbloqueo de segundo ciclo"));
+					bloqueos = consultasDAO.recuperarConteoTbloqueoTramite(ntramite);
+					
+					logger.debug(Utils.log(stamp,"Conteo recuperado=",bloqueos));
+					
+					logger.debug(Utils.log(stamp,"Esperando 30 segundos de segundo ciclo..."));
+					Thread.sleep(1000l*30l);
+					
+				}
+				while(bloqueos>0);
+				
+				/*
+				 * despues de esperar que termine de tarificar, le regresamos su status anterior
+				 */
+				logger.debug(Utils.log(stamp,"Regresando el tramite a su status anterior"));
+				mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite,statusOriginal);
+				
+				logger.debug(Utils.log(stamp,"Se actualiza el status del tramite asincronamente despues de esperar tarifa"));
+				moverTramite(
+					ntramite
+					,nuevoStatus
+					,comments
+					,cdusuariSesion
+					,cdsisrolSesion
+					,cdusuariDestino
+					,cdsisrolDestino
+					,cdmotivo
+					,cdclausu
+					,swagente
+					,stamp
+					);
+			}
+			catch(Exception ex)
+			{
+				logger.error(Utils.log(stamp,"error al mover tramite despues de esperar tarifa"),ex);
+			}
+		}
 	}
 	
 	@Override

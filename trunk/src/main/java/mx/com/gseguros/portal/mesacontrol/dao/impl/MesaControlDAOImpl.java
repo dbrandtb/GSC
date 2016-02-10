@@ -934,4 +934,40 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		}
 	}
 	
+	/**
+	 * Se pone un status al tramite y se retorna el actual, no se registra en los historicos
+	 * @param ntramite
+	 * @param statusTemporal
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public String marcarTramiteComoStatusTemporal(String ntramite, String statusTemporal) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("status"   , statusTemporal);
+		Map<String,Object> procRes = ejecutaSP(new MarcarTramiteComoStatusTemporalSP(getDataSource()),params);
+		String statusActual = (String)procRes.get("pv_status_actual_o");
+		if(StringUtils.isBlank(statusActual))
+		{
+			throw new ApplicationException("");
+		}
+		logger.debug(Utils.log("\n****** pv_status_actual_o=",statusActual));
+		return statusActual;
+	}
+	
+	protected class MarcarTramiteComoStatusTemporalSP extends StoredProcedure
+	{
+		protected MarcarTramiteComoStatusTemporalSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_MARCA_STATUS_TEMPORAL");
+    		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_status_actual_o" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("PV_MSG_ID_O"        , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("PV_TITLE_O"         , OracleTypes.VARCHAR));
+    		compile();
+		}
+	}
 }
