@@ -2053,7 +2053,7 @@ public class EndososManagerImpl implements EndososManager
 					,DocumentosManager.PROCESO_ENDOSO //proceso
 					,ntramiteEmi
 					,null //nmsolici
-, null
+					, null
 					);
 			
 			/*
@@ -2601,6 +2601,18 @@ public class EndososManagerImpl implements EndososManager
 						);
 			}
 			
+			Map<String,Object>mapaValorEndoso=new LinkedHashMap<String,Object>(0);
+			mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
+			mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
+			mapaValorEndoso.put("pv_estado_i"   , estado);
+			mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
+			mapaValorEndoso.put("pv_nmsituac_i" , "0");
+			mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplemRegenerado);
+			mapaValorEndoso.put("pv_feinival_i" , fecha);
+			mapaValorEndoso.put("pv_cdtipsup_i" , TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString());
+			this.calcularValorEndoso(mapaValorEndoso);
+			
+			
 			paso               = "Recuperando d\u00EDas v\u00E1lidos de cotizaci\u00F3n";
 			long maximos       = endososDAO.recuperarDiasDiferenciaEndosoValidos(cdramo, cdtipsup);
 			String ntramiteEmi = endososDAO.obtenerNtramiteEmision(cdunieco, cdramo, estado, nmpoliza);
@@ -2680,7 +2692,7 @@ public class EndososManagerImpl implements EndososManager
 					,DocumentosManager.PROCESO_ENDOSO //proceso
 					,null	
 					,null //nmsolici
-, null
+					, null
 			);
 			
 			
