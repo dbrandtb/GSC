@@ -4494,25 +4494,17 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						);
 			}
 			
+			// Se genera el endoso, se confirma y se genera el tramite:
 			paso = "Confirmando endoso";
 			logger.info(paso);
-			Map<String,Object> resParams = endososDAO.guardarEndosoDevolucionPrimas(
-					cdusuari
-					,cdsisrol
-					,cdelemen
-					,cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,cdtipsup
-					,tstamp
-					,feefecto
-					);
+			Map<String,Object> resParams = endososDAO.guardarEndosoDevolucionPrimas(cdusuari, cdsisrol, cdelemen,
+					cdunieco, cdramo, estado, nmpoliza, cdtipsup, tstamp, feefecto);
 			
 			String nmsuplemGen = (String) resParams.get("pv_nmsuplem_o");
 			String ntramite = (String) resParams.get("pv_ntramite_o");
 			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
 			
+			// Se envian los datos a traves del WS de autos:
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
 				logger.error("Error al ejecutar los WS de endoso");
