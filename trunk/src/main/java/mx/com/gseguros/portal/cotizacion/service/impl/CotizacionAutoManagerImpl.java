@@ -2,7 +2,6 @@ package mx.com.gseguros.portal.cotizacion.service.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -2862,119 +2861,158 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	//Para consultar los valores del vehiculo y reemplazarlos de la lista 
 	@Override
 	public List<Map<String,String>> modificadorValorVehPYME(List<Map<String,String>> slistPYME, String cdsisrol, String cdpost, String cambio) throws Exception
-	{		
-		logger.info(new StringBuilder()
-		 .append("\n cdsisrol : ").append(cdsisrol).toString());
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ modificadorValorVehPYME @@@@@@"
+				,"\n@@@@@@ slistPYME=" , slistPYME
+				,"\n@@@@@@ cdsisrol="  , cdsisrol
+				,"\n@@@@@@ cdpost="    , cdpost
+				,"\n@@@@@@ cambio="    , cambio
+				));
 		
-		for(Map<String,String> inciso:slistPYME)
-	    { 
-			logger.info(new StringBuilder().append("\n inciso: ").append(inciso).toString());
-			String cdtipsit= inciso.get("cdtipsit");
-	    	
-	    	if(cdtipsit.equals("AF") || cdtipsit.equals("PU"))
-	    		{
-	    			inciso.put("parametros.pv_otvalor24",cambio+"");//Cambio del dia
-	    			
-		    		String tipovehiculo = inciso.get("parametros.pv_otvalor31"); 	
-		    		logger.info(new StringBuilder()
-		    		 			 .append("\n Codigo Postal  = ").append(cdpost)
-		    		 			 .append("\n Valor del excel= ").append(inciso.get("parametros.pv_otvalor07"))
-		    				 	 .append("\n Numero se Serie= ").append(inciso.get("parametros.pv_otvalor03"))
-		    				 	 .append("\n tipo Vehiculo  = ").append(inciso.get("parametros.pv_otvalor31")).toString());
-		    		 
-		    		 String nserie = inciso.get("parametros.pv_otvalor03");
-		    		 VehicleValue_Struc vehiculoFronterizo = nadaService.obtieneDatosAutomovilNADA(nserie);
-		    		 		 
-		    		 logger.info(new StringBuilder()
-		 		     	   .append("\n Valor vehiculoFronterizo=").append(vehiculoFronterizo).toString());
-		    		 	//Si no hubo respuesta WS y es promotor o agente, poner espacio vacio
-		    		 if(vehiculoFronterizo == null && (cdsisrol.contains("PROMOTORAUTO") || cdsisrol.contains("EJECUTIVOCUENTA")))
-		    		 {
-		    		   logger.debug("Sin resultados del WS para promotor o agente");
-		    		   inciso.put("parametros.pv_otvalor07","");	
-		    		 }
-		    		 
-		    		 else if(vehiculoFronterizo !=null)
-		    		 {
-			    		 int tipoValorVehiculo = 3;
-			    		 
-			    		 try{
-			 				tipoValorVehiculo = cotizacionManager.obtieneTipoValorAutomovil(cdpost,tipovehiculo);
-			 				logger.debug("Tipo de Valor de auto a tomar: "+ tipoValorVehiculo);
-			 			}catch(Exception ex){
-			 				logger.error("Error al consultar el tipo de valor del automovil segun CP y tipo auto",ex);
-			 				}
-			    		 
-			    		 if(tipoValorVehiculo == 1 || tipoValorVehiculo == 0){
-			    			 logger.info(new StringBuilder()
-			 		        .append("\n Valor Consultado=").append(vehiculoFronterizo.getAvgTradeIn()).append(" - Cambio: ").append(cambio).toString());
-			    			 Double valorveh = vehiculoFronterizo.getAvgTradeIn().doubleValue() * Double.parseDouble(cambio);
-			    			 inciso.put("parametros.pv_otvalor07", valorveh+"");
-			    			
-			 			} else if(tipoValorVehiculo == 2){
-			 				 logger.info(new StringBuilder()
-			 		       .append("\n Valor Consultado=").append(vehiculoFronterizo.getTradeIn()).append(" - Cambio: ").append(cambio).toString());
-			 				 Double valorveh = vehiculoFronterizo.getTradeIn().doubleValue() * Double.parseDouble(cambio);
-			 				 inciso.put("parametros.pv_otvalor07",valorveh+"");
-			 				
-			 			}
-		    		}
-	    		}
-	    	
-	    	else 
-	    		{ //NO FRONTERIZOS
-		       		logger.info(new StringBuilder().append("\n Valor xls pv_otvalor13=")
-		       									   .append(inciso.get("parametros.pv_otvalor13"))
-		       									   .append("Auto NO fronterizo")
-		       									   .toString());
-		       		String clave =  inciso.get("parametros.pv_otvalor06");
-					String modelo =  inciso.get("parametros.pv_otvalor09");
-					logger.info(
-							 new StringBuilder()
-							 .append("\n VILS cdtipsit=").append(cdtipsit)
-							 .append("\n VILS clave=").append(clave)
-							 .append("\n VILS modelo=").append(modelo)
-							 .toString()
-							 );
-		 
-					ResponseValor wsResp = valorComercialService.obtieneDatosVehiculoGS(Integer.valueOf(clave), Integer.valueOf(modelo));
+		String paso = null;
+		
+		try
+		{
+			paso = "Iterando incisos pyme";
+			logger.debug(paso);
+			
+			for(Map<String,String> inciso:slistPYME)
+		    { 
+				if(inciso.keySet()==null)
+				{	
+					logger.debug(Utils.log("inciso iterado=",inciso));
 					
-					if(wsResp!= null && wsResp.getExito())
-					  {
-						logger.info(
-								 new StringBuilder()
-								 .append("\n Valor del WS exitoso.")
-								 .append(wsResp)
-								 .toString()
-								 );
-						 
-							 if(wsResp.getValor_comercial()>0d)
-									 inciso.put("parametros.pv_otvalor13",String.format("%.2f", wsResp.getValor_comercial()));
-							 else
-									 inciso.put("parametros.pv_otvalor13",Double.toString(wsResp.getValor_comercial()));
-					  }
-					 
-					 else 
-					 {
-						 logger.info(
-								 new StringBuilder()
-								 .append("\n Valor del WS nulo, empezando SP ...")
-								 .toString()
-								 );
-						
-						 Map<String,String> valor = new HashMap<String, String>();
-						 valor = cotizacionDAO.cargarSumaAseguradaRamo5(cdtipsit, clave, modelo, cdsisrol);
-						 logger.info(
-								 new StringBuilder()
-								 .append("\n SP :")
-								 .append(valor.get("sumaseg"))
-								 .toString()
-								 );
-						 inciso.put("parametros.pv_otvalor13", valor.get("sumaseg"));
-					 }
-			    }
-	    	inciso.put("parametros.pv_otvalor26",inciso.get("parametros.pv_otvalor07"));//Respaldo Valor Nada
-		}	
+					String cdtipsit= inciso.get("cdtipsit");
+					
+					logger.debug(Utils.log("cdtipsit del inciso iterado=",cdtipsit));
+					
+			    	if(cdtipsit.equals("AF") || cdtipsit.equals("PU"))
+			    	{
+			    		paso = "Guardando propiedades de fronterizo";
+			    		logger.debug(paso);
+			    		
+		    			inciso.put("parametros.pv_otvalor24",cambio);//Cambio del dia
+		    			
+			    		String tipovehiculo = inciso.get("parametros.pv_otvalor31");
+			    		
+			    		logger.debug(Utils.log(
+			    		 			  "\n Codigo Postal  = ", cdpost
+			    		 			 ,"\n Valor del excel= ", inciso.get("parametros.pv_otvalor07")
+			    				 	 ,"\n Numero se Serie= ", inciso.get("parametros.pv_otvalor03")
+			    				 	 ,"\n tipo Vehiculo  = ", inciso.get("parametros.pv_otvalor31")
+			    				 	 ));
+			    		 
+			    		paso = "Invocando WS de valor NADA";
+			    		logger.debug(paso);
+			    		
+			    		String nserie = inciso.get("parametros.pv_otvalor03");
+			    		VehicleValue_Struc vehiculoFronterizo = nadaService.obtieneDatosAutomovilNADA(nserie);
+			    		 		 
+			    		logger.info(Utils.log("\n Valor vehiculoFronterizo=",vehiculoFronterizo));
+			    		
+			    		//Si no hubo respuesta WS y es promotor o agente, poner espacio vacio
+			    		if(vehiculoFronterizo == null && (cdsisrol.contains("PROMOTORAUTO") || cdsisrol.contains("EJECUTIVOCUENTA")))
+			    		{
+			    			logger.debug("Sin resultados del WS para promotor o agente");
+			    		    inciso.put("parametros.pv_otvalor07","");
+			    		}
+			    		else if(vehiculoFronterizo !=null)
+			    		{
+			    			int tipoValorVehiculo = 3;
+			    			try
+			    			{
+				 				tipoValorVehiculo = cotizacionManager.obtieneTipoValorAutomovil(cdpost,tipovehiculo);
+				 				logger.debug(Utils.log("Tipo de Valor de auto a tomar: ", tipoValorVehiculo));
+				 			}
+			    			catch(Exception ex)
+				 			{
+				 				logger.error("Error al consultar el tipo de valor del automovil segun CP y tipo auto",ex);
+				 			}
+			    			
+			    			if(tipoValorVehiculo == 1 || tipoValorVehiculo == 0)
+			    			{
+			    				logger.debug(Utils.log(
+			    						"\n Valor Consultado=", vehiculoFronterizo.getAvgTradeIn()
+				    					," - Cambio: ", cambio
+				    					));
+				    			 Double valorveh = vehiculoFronterizo.getAvgTradeIn().doubleValue() * Double.parseDouble(cambio);
+				    			 inciso.put("parametros.pv_otvalor07", valorveh+"");
+				 			}
+			    			else if(tipoValorVehiculo == 2)
+			    			{
+			    				logger.debug(Utils.log(
+			    						"\n Valor Consultado=", vehiculoFronterizo.getTradeIn()
+			    						," - Cambio: ", cambio
+			    						));
+			    				Double valorveh = vehiculoFronterizo.getTradeIn().doubleValue() * Double.parseDouble(cambio);
+				 				inciso.put("parametros.pv_otvalor07",valorveh+"");
+				 			}
+			    		}
+		    		}
+			    	else 
+			    	{ //NO FRONTERIZOS
+			    		paso = "Guardando datos para residente";
+			    		logger.debug(paso);
+			    		
+			    		logger.debug(Utils.log(
+			    				"\n Valor xls pv_otvalor13=",inciso.get("parametros.pv_otvalor13")
+			    				,"Auto NO fronterizo"
+			    				));
+			    		
+			    		String clave   = inciso.get("parametros.pv_otvalor06")
+			    		       ,modelo = inciso.get("parametros.pv_otvalor09");
+			    		
+			    		logger.debug(Utils.log(
+			    				"\n VILS cdtipsit=" , cdtipsit
+			    				,"\n VILS clave="   , clave
+			    				,"\n VILS modelo="  , modelo
+			    				));
+			    		
+			    		ResponseValor wsResp = valorComercialService.obtieneDatosVehiculoGS(Integer.valueOf(clave), Integer.valueOf(modelo));
+			    		
+			    		if(wsResp!= null && wsResp.getExito())
+			    		{
+			    			logger.debug(Utils.log(
+			    					"\n Valor del WS exitoso=", wsResp
+			    					));
+			    			
+			    			if(wsResp.getValor_comercial()>0d)
+			    			{
+			    				inciso.put("parametros.pv_otvalor13",String.format("%.2f", wsResp.getValor_comercial()));
+			    			}
+			    			else
+			    			{
+			    				inciso.put("parametros.pv_otvalor13",Double.toString(wsResp.getValor_comercial()));
+			    			}
+			    		}
+			    		else
+			    		{
+			    			logger.debug("\n Valor del WS nulo, empezando SP ...");
+			    			
+			    			Map<String,String> valor = new HashMap<String, String>();
+			    			
+			    			valor = cotizacionDAO.cargarSumaAseguradaRamo5(cdtipsit, clave, modelo, cdsisrol);
+			    			
+			    			logger.debug(Utils.log("\n SP :",valor.get("sumaseg")));
+			    			
+			    			inciso.put("parametros.pv_otvalor13", valor.get("sumaseg"));
+			    		}
+			    	}
+			    	inciso.put("parametros.pv_otvalor26",inciso.get("parametros.pv_otvalor07"));//Respaldo Valor Nada
+		    	}
+		    }
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex,paso);
+		}
+		logger.debug(Utils.log(
+				 "\n@@@@@@ slistPYME=" , slistPYME
+				,"\n@@@@@@ modificadorValorVehPYME @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
 		return slistPYME;
 	}
 	
