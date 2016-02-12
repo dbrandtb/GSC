@@ -5527,6 +5527,8 @@ function _p21_emitir2(ventana,button)
                         ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
                         ,handler : function(me)
                         {
+                            mensajeWarning('Los documentos se est\u00e1n generando, pueden consultarse m\u00e1s tarde desde mesa de control cuando el tr\u00e1mite se encuentre en estatus Confirmado');
+                            /*
                             var callbackRemesa = function()
                             {
 	                            centrarVentanaInterna(Ext.create('Ext.window.Window',
@@ -5563,6 +5565,7 @@ function _p21_emitir2(ventana,button)
                                 ,json.smap1.nmpolizaEmi
                                 ,callbackRemesa
                             );
+                            */
                         }
                     }
                     ,{
@@ -5578,7 +5581,9 @@ function _p21_emitir2(ventana,button)
                     Ext.ComponentQuery.query('[ventanaDocu]')[0].destroy();
                     debug('ventana de documentos destruida');
                 }
-                mensajeCorrecto('P&oacute;liza emitida',json.respuesta);
+                mensajeCorrecto('P&oacute;liza emitida'
+                    ,json.respuesta+'<br/>Los documentos se est\u00e1n generando, pueden consultarse m\u00e1s tarde desde mesa de control cuando el tr\u00e1mite se encuentre en estatus Confirmado'
+                );
             }
             else
             {
