@@ -907,4 +907,11 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		return 0;
 	}
 
+	@Override
+	public String obtieneNmsituacContratantePoliza(String cdunieco, String cdramo, String cdestado,
+			String nmpoliza) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -67,6 +68,9 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 	
 	@Autowired
 	private MesaControlManager mesaControlManager;
+	
+	@Autowired
+	private ConsultasPolizaManager consultasPolizaManager;
 	
 	public String pantallaCoberturas()
 	{
@@ -708,11 +712,16 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 		try
 		{
 			
-			UserVO usuSes=(UserVO)session.get("USUARIO");
-			
 			if(!smap1.containsKey("pv_nmsuplem_i") || StringUtils.isBlank(smap1.get("pv_nmsuplem_i"))){
 				logger.debug("suplemento 9999");
 				smap1.put("pv_nmsuplem_i" , "999999999999999999");
+			}
+			
+			if(!smap1.containsKey("pv_nmsituac_i") || StringUtils.isBlank(smap1.get("pv_nmsituac_i"))){
+				if(smap1.containsKey("pv_cdrol_i") && StringUtils.isNotBlank(smap1.get("pv_cdrol_i")) && "1".equalsIgnoreCase(smap1.get("pv_cdrol_i"))){
+					String nmsitucRes = consultasPolizaManager.obtieneNmsituacContratantePoliza(smap1.get("pv_cdunieco_i"), smap1.get("pv_cdramo_i"), smap1.get("pv_estado_i"), smap1.get("pv_nmpoliza_i"));
+					smap1.put("pv_nmsituac_i", nmsitucRes);
+				}
 			}
 			
 			logger.debug(smap1);

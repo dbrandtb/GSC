@@ -309,7 +309,7 @@ public interface EndososAutoManager
 	
 	public Map<String,String> buscarError(String codigo,String rutaLogs,String archivo) throws Exception;
 	
-	public void confirmarEndosoCancelacionAuto(
+	public void confirmarEndosoCancelacionEndoso(
 			String cdusuari
 			,String cdsisrol
 			,String cdunieco

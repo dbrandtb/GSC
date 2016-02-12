@@ -765,7 +765,7 @@
             <result name="success">/jsp-script/proceso/endosos/endosoCancelacionAuto.jsp</result>
         </action>
         
-        <action name="confirmarEndosoCancelacionAuto" class="endososAutoAction" method="confirmarEndosoCancelacionAuto">
+        <action name="confirmarEndosoCancelacionEndoso" class="endososAutoAction" method="confirmarEndosoCancelacionEndoso">
             <result type="json" />
         </action>
         
