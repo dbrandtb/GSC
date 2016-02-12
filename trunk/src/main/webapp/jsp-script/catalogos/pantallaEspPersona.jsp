@@ -53,8 +53,6 @@ Ext.onReady(function()
         ,buttonAlign : 'center'
         ,border      : 0
         ,buttons     : _p47_buttons
-        ,height      : 295
-        ,width       : 855
         ,autoScroll  : true
     });
     ////// contenido //////
@@ -75,7 +73,7 @@ function _p47_recuperarPersona(cdperson)
     try
     {
         var form = _fieldById('_p47_form');
-        form.setLoading(true);
+        _setLoading(true,form);
         Ext.Ajax.request(
         {
             url     : _p47_urlRecuperarEspPersona
@@ -85,7 +83,7 @@ function _p47_recuperarPersona(cdperson)
             }
             ,success : function(response)
             {
-                form.setLoading(false);
+                _setLoading(false,form);
                 var ck = 'Decodificando datos de persona';
                 try
                 {
@@ -107,7 +105,7 @@ function _p47_recuperarPersona(cdperson)
             }
             ,failure : function(response)
             {
-                form.setLoading(false);
+                _setLoading(false,form);
                 errorComunicacion(null,'Error cargando datos de persona');
             }
         });
@@ -123,7 +121,23 @@ function _p47_guardarYCerrarVentana(me)
     debug('_p47_guardarYCerrarVentana');
     _p47_guardar(me,function()
     {
-        _fieldById('_p47_contenedor').destroy();
+        try
+        {
+            _fieldById('_p47_contenedor').destroy();
+        }
+        catch(e)
+        {
+            debugError('Error al intentar cerrar ventana contenedora de p47.',e);
+        }
+        
+        try
+        {
+            _p47_callback();
+        }
+        catch(e)
+        {
+            debugError('Error al intentar ejecutar _p47_callback.',e);
+        }
     });
 }
 
@@ -140,21 +154,23 @@ function _p47_guardar(me,callback)
             throw 'Favor de revisar los datos';
         }
         
-        var params = {};
-        var values = form.getValues();
-        for(var prop in values)
-        {
-            params['params.'+prop] = values[prop];
-        }
+        var params = _formValuesToParams(form.getValues());
+        params['params.cdunieco'] = _p47_params.cdunieco;
+        params['params.cdramo']   = _p47_params.cdramo;
+        params['params.estado']   = _p47_params.estado;
+        params['params.nmpoliza'] = _p47_params.nmpoliza;
+        params['params.nmsituac'] = _p47_params.nmsituac;
+        params['params.cdtipsit'] = _p47_params.cdtipsit;
+        debug('parametros para guardar espejo persona:',params);
         
-        form.setLoading(true);
+        _setLoading(true,form);
         Ext.Ajax.request(
         {
             url      : _p47_urlGuardarPersona
             ,params  : params
             ,success : function(response)
             {
-                form.setLoading(false);
+                _setLoading(false,form);
                 var ck = 'Decodificando respuesta al guardar';
                 try
                 {
@@ -175,7 +191,8 @@ function _p47_guardar(me,callback)
             }
             ,failure : function()
             {
-                form.setLoading(false);
+                _setLoading(false,form);
+                errorComunicacion(null,'Error al guardar datos de persona');
             }
         });
     }
@@ -188,6 +205,6 @@ function _p47_guardar(me,callback)
 </script>
 </head>
 <body>
-<div id="_p47_divpri" style="height:300px;width:850px;border:1px solid #CCCCCC;"></div>
+<div id="_p47_divpri" style="height:400px;border:1px solid #CCCCCC;"></div>
 </body>
 </html>

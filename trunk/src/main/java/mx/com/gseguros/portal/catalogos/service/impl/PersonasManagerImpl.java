@@ -1021,8 +1021,9 @@ public class PersonasManagerImpl implements PersonasManager
 	@Override
 	public String guardarPantallaEspPersona(Map<String,String>params, UserVO usuario) throws Exception
 	{
-		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+		long stamp = System.currentTimeMillis();
+		logger.debug(Utils.log(stamp
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarPantallaEspPersona @@@@@@"
 				,"\n@@@@@@ params=",params
 				));
@@ -1041,8 +1042,10 @@ public class PersonasManagerImpl implements PersonasManager
 				}
 				
 			}
+			
 			paso = "Guardando datos de persona";
-			logger2.debug("\nVoy a guardar datos de persona");
+			logger2.debug(Utils.log(stamp,"paso=",paso));
+			
 			personasDAO.movimientosMpersona(
 				params.get("cdperson"),
 				params.get("cdtipide"),
@@ -1071,15 +1074,45 @@ public class PersonasManagerImpl implements PersonasManager
 				Constantes.UPDATE_MODE
 			);
 			
+			String cdunieco  = params.get("cdunieco")
+			       ,cdramo   = params.get("cdramo")
+			       ,estado   = params.get("estado")
+			       ,nmpoliza = params.get("nmpoliza")
+			       ,nmsituac = params.get("nmsituac")
+			       ,cdtipsit = params.get("cdtipsit");
+			
+			if(StringUtils.isNotBlank(cdunieco)
+					&&StringUtils.isNotBlank(cdramo)
+					&&StringUtils.isNotBlank(estado)
+					&&StringUtils.isNotBlank(nmpoliza)
+					&&StringUtils.isNotBlank(cdtipsit))
+			{
+				paso = "Sincronizando tvalosit";
+				logger2.debug(Utils.log(stamp,"paso=",paso));
+				
+				personasDAO.sincronizaPersonaToValosit(
+						params.get("otsexo")
+						,StringUtils.isNotBlank(params.get("fenacimi"))?renderFechas.parse(params.get("fenacimi")):null
+						,cdtipsit
+						,cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,nmsituac
+						,"0"
+						);
+			}
+			
 			paso = "Datos guardados correctamente";
+			logger2.debug(Utils.log(stamp,"paso=",paso));
 		}
 		catch(Exception ex)
 		{
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.debug(Utils.log(
-				 "\n@@@@@@ mensaje=",paso
+		logger.debug(Utils.log(stamp
+				,"\n@@@@@@ mensaje=",paso
 				,"\n@@@@@@ guardarPantallaEspPersona @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));

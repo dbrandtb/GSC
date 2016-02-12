@@ -87,8 +87,12 @@ var _p21_urlRecuperacionSimple           = '<s:url namespace="/emision"         
 var _p21_urlRecuperacionSimpleLista      = '<s:url namespace="/emision"         action="recuperacionSimpleLista"          />';
 var _p21_urlPantallaAgentes              = '<s:url namespace="/flujocotizacion" action="principal"                        />';
 var _p21_urlComplementoCotizacion        = '<s:url namespace="/emision"         action="complementoSaludGrupo"            />';
-var _p21_urlPantallaEspPersona           = '<s:url namespace="/persona"         action="includes/pantallaEspPersona"      />';
 var _p21_urlRecuperacion                 = '<s:url namespace="/recuperacion"    action="recuperar"                        />';
+
+//estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp
+var _cotcol_urlPantallaEspPersona   = '<s:url namespace="/persona"  action="includes/pantallaEspPersona"  />'
+    ,_cotcol_urlPantallaActTvalosit = '<s:url namespace="/tvalosit" action="includes/pantallaActTvalosit" />';
+//estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp 
 
 var _p21_urlMarcarTramitePendienteVistaPrevia = '<s:url namespace="/mesacontrol" action="marcarTramiteVistaPrevia" />';
 
@@ -159,6 +163,11 @@ var _p21_arrayNombresExtrreno =
 
 var _p21_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 debug('_p21_smap1:',_p21_smap1);
+
+//se declara el mapa como cotcol para el archivo comun funcionesCotizacionGrupo.js
+var _cotcol_smap1 = _p21_smap1;
+debug('_cotcol_smap1:',_cotcol_smap1);
+//se declara el mapa como cotcol para el archivo comun funcionesCotizacionGrupo.js
 
 //Para la pantalla de agentes
 var inputCdunieco = _p21_smap1.cdunieco;
@@ -240,6 +249,9 @@ debug('_p21_editorPaquete:',_p21_editorPaquete);
 
 var _p21_TARIFA_LINEA      = 1;
 var _p21_TARIFA_MODIFICADA = 2;
+
+var _p82_callback;
+var _p47_callback;
 ////// variables //////
 
 Ext.onReady(function()
@@ -419,7 +431,7 @@ Ext.onReady(function()
         {
             tooltip  : 'Asegurados'
             ,icon    : '${ctx}/resources/fam3icons/icons/group.png'
-            ,handler : _p21_aseguradosClic
+            ,handler : _cotcol_aseguradosClic
         });
     }
     if(_p21_smap1.EXTRAPRIMAS=='S')
@@ -608,7 +620,7 @@ Ext.onReady(function()
         {
             tooltip  : 'Asegurados'
             ,icon    : '${ctx}/resources/fam3icons/icons/group.png'
-            ,handler : _p21_aseguradosClic
+            ,handler : _cotcol_aseguradosClic
         });
     }
     if(_p21_smap1.EXTRAPRIMAS=='S')
@@ -5955,10 +5967,10 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
     debug('<_p21_revisarAseguradosClic');
 }
 
-function _p21_aseguradosClic(grid,rowIndex)
+function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
 {
-    var record=grid.getStore().getAt(rowIndex);
-    debug('>_p21_aseguradosClic record:',record);
+    var record=gridSubgrupo.getStore().getAt(rowIndexSubgrupo);
+    debug('>_cotcol_aseguradosClic record:',record);
     _p21_quitarTabAsegurados(record.get('letra'));
     var columnas =
     [
@@ -5979,9 +5991,14 @@ function _p21_aseguradosClic(grid,rowIndex)
                     ,handler : _p21_recuperarAsegurado
                 }
                 ,{
-                    tooltip  : 'Editar datos b\u00E1sicos'
+                    tooltip  : 'Editar datos b\u00E1sicos de persona'
                     ,icon    : '${icons}user_edit.png'
-                    ,handler : _p21_editarDatosBaseAsegurado
+                    ,handler : _cotcol_editarDatosBaseAsegurado
+                }
+                ,{
+                    tooltip  : 'Editar datos b\u00E1sicos de inciso'
+                    ,icon    : '${icons}tag_red.png'
+                    ,handler : _cotcol_mostrarVentanaActTvalosit
                 }
                 ,{
                     tooltip  : 'Editar persona/domicilio'
@@ -6099,6 +6116,8 @@ function _p21_aseguradosClic(grid,rowIndex)
                     ,autoLoad   : false
                     ,pageSize   : 10
                     ,storeId    : '_p21_storeAsegurados'+record.get('letra')
+                    ,gridSubgrupo     : gridSubgrupo
+                    ,rowIndexSubgrupo : rowIndexSubgrupo
                     ,proxy      :
                     {
                         enablePaging : true,
@@ -6170,7 +6189,7 @@ function _p21_aseguradosClic(grid,rowIndex)
             })
         ]
     });
-    debug('<_p21_aseguradosClic');
+    debug('<_cotcol_aseguradosClic');
 }
 
 function _p21_guardarExtraprimas(letra)
@@ -6400,33 +6419,11 @@ function _p21_recuperarAsegurado(grid,rowIndex)
     debug('<_p21_recuperarAsegurado');
 }
 
-function _p21_editarDatosBaseAsegurado(grid,rowIndex)
-{
-    var record=grid.getStore().getAt(rowIndex);
-    debug('>_p21_editarDatosBaseAsegurado:',record.data);
-    var ventana = Ext.create('Ext.window.Window',
-    {
-        title   : 'Editar persona '+record.get('NOMBRE')
-        ,itemId : '_p47_contenedor' //se pone para que la ventana interna pueda cerrar la ventana
-        ,width  : 860
-        ,height : 340
-        ,modal  : true
-        ,loader :
-        {
-            url       : _p21_urlPantallaEspPersona
-            ,params   :
-            {
-                'params.cdperson' : record.get('CDPERSON')
-                ,'params.origen'  : 'cotcol'
-            }
-            ,scripts  : true
-            ,autoLoad : true
-        }
-    }).show()
-    centrarVentanaInterna(ventana);
-    
-    debug('<_p21_editarDatosBaseAsegurado');
-}
+/*
+se mueve funcion a /js/proceso/emision/funcionesCotizacionGrupo.js
+function _cotcol_editarDatosBaseAsegurado;
+se mueve funcion a /js/proceso/emision/funcionesCotizacionGrupo.js
+*/
 
 function _p21_editarAsegurado(grid,rowIndex)
 {
@@ -7358,67 +7355,16 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
      }
  }
 
+/*
+se paso al archivo .js por exceso de tamanio
 function _p21_desbloqueoBotonRol(boton)
-{
-    var ck = 'Recuperando permisos de bot\u00f3n';
-    try
-    {
-        boton.setLoading(true);
-        Ext.Ajax.request(
-        {
-            url      : _p21_urlRecuperacion
-            ,params  :
-            {
-                'params.consulta' : 'RECUPERAR_PERMISO_BOTON_GENERAR_COLECTIVO'
-            }
-            ,success : function(response)
-            {
-                boton.setLoading(false);
-                var ck = 'Decodificando respuesta al recuperar permisos de bot\u00f3n';
-                try
-                {
-                    var json = Ext.decode(response.responseText);
-                    debug('### permisos boton:',json);
-                    if(json.success==true)
-                    {
-                         if('S'==json.params.ACTIVAR_BOTON)
-                         {
-                             boton.show();
-                             boton.enable();
-                         }
-                         else
-                         {
-                             mensajeWarning('Favor de revisar los errores de la carga');
-                             boton.disable();
-                             boton.hide();
-                         }
-                    }
-                    else
-                    {
-                        mensajeError(json.message);
-                    }
-                }
-                catch(e)
-                {
-                    manejaException(e,ck);
-                }
-            }
-            ,failure : function()
-            {
-                boton.setLoading(false);
-                errorComunicacion(null,'Error al recuperar permisos de bot\u00f3n');
-            }
-        });
-    }
-    catch(e)
-    {
-        manejaException(e,ck);
-    }
-}
+se paso al archivo .js por exceso de tamanio
+*/
 
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
+<script src="${ctx}/js/proceso/emision/funcionesCotizacionGrupo.js?now=${now}"></script>
 </head>
 <body>
 <div id="_p21_divpri" style="height:1400px;"></div>

@@ -23,11 +23,10 @@ import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
-import org.springframework.jdbc.core.RowMapper;
 
 public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 {
@@ -1604,6 +1603,52 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void sincronizaPersonaToValosit(
+			String sexo
+			,Date fenacimi
+			,String cdtipsit
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			)throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("sexo"     , sexo);
+		params.put("fenacimi" , fenacimi);
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("nmsuplem" , nmsuplem);
+		ejecutaSP(new SincronizaPersonaToValositSP(getDataSource()),params);
+	}
+	
+	protected class SincronizaPersonaToValositSP extends StoredProcedure
+	{
+		protected SincronizaPersonaToValositSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_SYNC_PERSONA_TO_VALOSIT");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("sexo"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fenacimi" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
