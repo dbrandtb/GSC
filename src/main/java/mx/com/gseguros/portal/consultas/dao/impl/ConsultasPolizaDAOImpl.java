@@ -778,6 +778,52 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     		compile();
     	}
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public String obtieneNmsituacContratantePoliza(String cdunieco,String cdramo,String cdestado,String nmpoliza) throws Exception{
+    	
+    	String nmsituac = null; // valor default 
+    	
+    	HashMap<String, Object> params = new HashMap<String, Object>();
+    	params.put("pv_cdunieco_i", cdunieco);
+    	params.put("pv_cdramo_i"  , cdramo);
+    	params.put("pv_estado_i"  , cdestado);
+    	params.put("pv_nmpoliza_i", nmpoliza);
+    	Map<String, Object> mapResult = ejecutaSP(new ObtieneNmsituacContratantePoliza(getDataSource()), params);
+    	
+    	List<Map<String,String>>lista=(List<Map<String,String>>)mapResult.get("pv_registro_o");
+    	
+    	if(lista!= null && !lista.isEmpty()){
+    		Map<String, String> fila = lista.get(0);
+    		if(fila!= null && fila.containsKey("NMSITUAC") && !StringUtils.isEmpty(fila.get("NMSITUAC"))){
+    			nmsituac = fila.get("NMSITUAC");
+    		}
+    	}
+    	
+    	Log.debug("Resultado:::: PKG_CONSULTA.P_GET_NMSITUAC_CONTRATANTE, Se obtuvo nmsituac:"+nmsituac+" para el contratante de la Poliza " + nmpoliza);
+    	
+    	return nmsituac;
+    	
+    }
+    
+    protected class ObtieneNmsituacContratantePoliza extends StoredProcedure {
+    	protected ObtieneNmsituacContratantePoliza(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA.P_GET_NMSITUAC_CONTRATANTE");
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+    		
+    		String[] cols=new String[]{
+    				"NMSITUAC"
+    		};
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
     
 	@Override
 	public List<AseguradoDetalleVO> obtieneAseguradoDetalle(

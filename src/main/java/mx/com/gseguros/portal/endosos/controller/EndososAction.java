@@ -804,6 +804,29 @@ public class EndososAction extends PrincipalCoreAction
 		
 		try
 		{
+			
+			/**
+			 * Si no trae la lista de incisos se considera en automatico que es para el contratante
+			 */
+			if(slist1 ==  null || slist1.isEmpty()){
+				
+				logger.debug("Rellenando slist1 para contratante");
+				String nmsitucRes = consultasPolizaManager.obtieneNmsituacContratantePoliza(smap1.get("pv_cdunieco_i"), smap1.get("pv_cdramo_i"), smap1.get("pv_estado_i"), smap1.get("pv_nmpoliza_i"));
+				slist1 = new ArrayList<Map<String,String>>();
+				
+				HashMap<String,String> contratante =  new HashMap<String, String>(); 
+				contratante.put("CDPERSON", smap1.get("CDPERSON"));
+				contratante.put("DSNOMBRE", smap1.get("DSNOMBRE"));
+				contratante.put("DSNOMBRE1", smap1.get("DSNOMBRE1"));
+				contratante.put("DSAPELLIDO", smap1.get("DSAPELLIDO"));
+				contratante.put("DSAPELLIDO1", smap1.get("DSAPELLIDO1"));
+				contratante.put("CDRFC", smap1.get("CDRFC"));
+				contratante.put("NMSITUAC", nmsitucRes);
+				contratante.put("CDROL", "1");
+				
+				slist1.add(contratante);
+			}
+			
 			transformaEntrada(smap1, slist1, true);
 			
 			//Valida si hay un endoso anterior pendiente:
@@ -969,33 +992,19 @@ public class EndososAction extends PrincipalCoreAction
 			Map<String,String> respuestaEndosoNombres=endososManager.guardarEndosoNombres(omap1);
 			
 			for(Map<String,String>persona:slist1) {
-				Map<String,Object>paramPersona=new LinkedHashMap<String,Object>(0);
+				Map<String,String>paramPersona=new HashMap<String,String>();
 				paramPersona.put("pv_cdperson_i"    , persona.get("cdperson"));
-				paramPersona.put("pv_cdtipide_i"    , null);
-				paramPersona.put("pv_cdideper_i"    , persona.get("cdideper"));
 				paramPersona.put("pv_dsnombre_i"    , persona.get("nombre"));
-				paramPersona.put("pv_cdtipper_i"    , null);
-				paramPersona.put("pv_otfisjur_i"    , persona.get("tpersona"));
-				paramPersona.put("pv_otsexo_i"      , persona.get("sexo"));
-				paramPersona.put("pv_fenacimi_i"    , renderFechas.parse(persona.get("fenacimi")));
-				paramPersona.put("pv_cdrfc_i"       , persona.get("rfc"));
-				paramPersona.put("pv_dsemail_i"     , null);
 				paramPersona.put("pv_dsnombre1_i"   , persona.get("nombre2"));
 				paramPersona.put("pv_dsapellido_i"  , persona.get("apat"));
 				paramPersona.put("pv_dsapellido1_i" , persona.get("amat"));
-				paramPersona.put("pv_feingreso_i"   , null);
-				paramPersona.put("pv_cdnacion_i"    , persona.get("nacional"));
-				paramPersona.put("pv_canaling_i"    , persona.get("CANALING"));
-				paramPersona.put("pv_conducto_i"    , persona.get("CONDUCTO"));
-				paramPersona.put("pv_ptcumupr_i"    , persona.get("PTCUMUPR"));
-				paramPersona.put("pv_residencia_i"  , persona.get("RESIDENCIA"));
-				paramPersona.put("pv_nongrata_i"    , null);
-				paramPersona.put("pv_cdideext_i"    , null);
-				paramPersona.put("pv_cdestciv_i"    , null);
-				paramPersona.put("pv_cdsucemi_i"    , null);
-				paramPersona.put("pv_cdusuario_i"   , usuarioCaptura);
-				paramPersona.put("pv_accion_i"      , "M");
-				kernelManager.movMpersona(paramPersona);
+				paramPersona.put("pv_cdrfc_i"       , persona.get("rfc"));
+				
+				/**
+				 * Se acutalizan nombre y rfc aunque no sean contrantates, se actualizan por cdperson
+				 */
+				this.endososManager.actualizaNombreCliente(paramPersona);
+				this.endososManager.actualizaRfcCliente(paramPersona);
 			}
 			
 			// Se confirma el endoso si cumple la validacion de fechas:
@@ -11878,8 +11887,8 @@ public class EndososAction extends PrincipalCoreAction
 			if(validaLista)
 			{
 				Map<String,String> inciso1 = slist1.get(0);
-				smap1.put("Apellido_Materno" , inciso1.get("DSAPELLIDO"));
-				smap1.put("Apellido_Paterno" , inciso1.get("DSAPELLIDO1"));
+				smap1.put("Apellido_Materno" , inciso1.get("DSAPELLIDO1"));
+				smap1.put("Apellido_Paterno" , inciso1.get("DSAPELLIDO"));
 				smap1.put("CANALING"         , inciso1.get("CANALING"));
 				smap1.put("CONDUCTO"         , inciso1.get("CONDUCTO"));
 				smap1.put("PTCUMUPR"         , inciso1.get("PTCUMUPR"));
@@ -11929,8 +11938,8 @@ public class EndososAction extends PrincipalCoreAction
 				
 				for(Map<String,String> inciso : slist1)
 				{
-					inciso.put("Apellido_Materno" , inciso.get("DSAPELLIDO"));
-					inciso.put("Apellido_Paterno" , inciso.get("DSAPELLIDO1"));
+					inciso.put("Apellido_Materno" , inciso.get("DSAPELLIDO1"));
+					inciso.put("Apellido_Paterno" , inciso.get("DSAPELLIDO"));
 					inciso.put("CANALING"         , inciso.get("CANALING"));
 					inciso.put("CONDUCTO"         , inciso.get("CONDUCTO"));
 					inciso.put("PTCUMUPR"         , inciso.get("PTCUMUPR"));

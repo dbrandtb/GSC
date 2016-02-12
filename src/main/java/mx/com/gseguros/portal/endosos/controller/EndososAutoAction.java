@@ -1791,11 +1791,11 @@ public class EndososAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	public String confirmarEndosoCancelacionAuto()
+	public String confirmarEndosoCancelacionEndoso()
 	{
 		logger.debug(Utils.log(
 				 "\n############################################"
-				,"\n###### confirmarEndosoCancelacionAuto ######"
+				,"\n###### confirmarEndosoCancelacionEndoso ######"
 				,"\n###### smap1=",smap1
 				));
 		
@@ -1840,7 +1840,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(nmsuplem , "No se recibio el numero de suplemento");
 			Utils.validate(feinicio , "No se recibio la fecha de inicio");
 			
-			endososAutoManager.confirmarEndosoCancelacionAuto(
+			endososAutoManager.confirmarEndosoCancelacionEndoso(
 					user.getUser()
 					,user.getRolActivo().getClave()
 					,cdunieco
@@ -1871,7 +1871,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		}
 		
 		logger.debug(Utils.log(
-				 "\n###### confirmarEndosoCancelacionAuto ######"
+				 "\n###### confirmarEndosoCancelacionEndoso ######"
 				,"\n############################################"
 				));
 		return SUCCESS;

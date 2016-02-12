@@ -29,6 +29,17 @@ var urlGuardarp4           = '<s:url namespace="/endosos" action="guardarEndosoD
 var urlGuardarp4Simple     = '<s:url namespace="/endosos" action="guardarEndosoDomicilioSimple" />';
 var enddomUrlDoc           = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" />';
 var _ComboColoniasUrl      = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
+
+
+/**
+ * Si el situac es nulo se considera que es para el contratante ya que no trae seleccion del menu 	 
+ */
+
+if(Ext.isEmpty(inputNmsituacp4) && Ext.isEmpty(inputNmsituacp4)){
+	inputCdrolp4 = "1";  // Rol del Contratante
+}
+
+
 <s:if test='smap1!=null&&smap1.habilitaEdicion!=null&&smap1.habilitaEdicion=="1"'>
 var _p4_habilitaEdicion = true;
 </s:if>

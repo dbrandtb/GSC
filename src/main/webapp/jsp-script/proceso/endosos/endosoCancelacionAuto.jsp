@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// urls //////
-var _p41_urlConfirmarEndoso         = '<s:url namespace="/endosos" action="confirmarEndosoCancelacionAuto" />';
+var _p41_urlConfirmarEndoso         = '<s:url namespace="/endosos" action="confirmarEndosoCancelacionEndoso" />';
 var _p41_urlRecuperacionSimpleLista = '<s:url namespace="/emision" action="recuperacionSimpleLista"        />';
 ////// urls //////
 

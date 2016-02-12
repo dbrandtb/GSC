@@ -280,5 +280,14 @@ public interface ConsultasPolizaDAO {
      */
     public int obtieneNumeroDeIncisosPoliza(String cdunieco,String cdramo,String cdestado,String nmpoliza,String nmsuplem) throws Exception;   
     
-	
+    /**
+     * Obtiene el numero de nmsituac del contratate de una poliza 
+     * @param cdunieco
+     * @param cdramo
+     * @param cdestado
+     * @param nmpoliza
+     * @return
+     * @throws Exception
+     */
+    public String obtieneNmsituacContratantePoliza(String cdunieco,String cdramo,String cdestado,String nmpoliza) throws Exception;
 }
