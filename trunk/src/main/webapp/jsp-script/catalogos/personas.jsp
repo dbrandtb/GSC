@@ -2395,7 +2395,7 @@ function _p22_guardarClic(callbackGuardar, autosave)
 					                        callbackGuardar(json);
 				                    }catch(ex){
 				                    	debug("Excepcion al ejecutar callbackGuardar",ex);
-				                    	mensajeCorrecto('Datos guardados',json.respuesta);
+				                    	mensajeCorrecto('Datos de persona guardados',json.respuesta);
 				                    }
 					                    
 					        	}else{
@@ -2414,7 +2414,7 @@ function _p22_guardarClic(callbackGuardar, autosave)
                         	callbackGuardar(null);
 	                    }catch(e){
 	                    	debug("Excepcion al ejecutar callbackGuardar");
-	                    	mensajeCorrecto('Datos guardados',json.respuesta);
+	                    	mensajeCorrecto('Datos de persona guardados',json.respuesta);
 	                    }
 					}
 
@@ -3052,7 +3052,7 @@ function _p22_guardarDatosAdicionalesClic(jsonCli)
                 debug('response text:',json);
                 if(json.exito)
                 {
-                    mensajeCorrecto('Datos guardados',json.respuesta);
+                    mensajeCorrecto('Datos de persona guardados',json.respuesta);
                     
                     
                     	if(_esSaludDanios == 'S'){
