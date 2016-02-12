@@ -91,7 +91,8 @@ var _p21_urlRecuperacion                 = '<s:url namespace="/recuperacion"    
 
 //estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp
 var _cotcol_urlPantallaEspPersona   = '<s:url namespace="/persona"  action="includes/pantallaEspPersona"  />'
-    ,_cotcol_urlPantallaActTvalosit = '<s:url namespace="/tvalosit" action="includes/pantallaActTvalosit" />';
+    ,_cotcol_urlPantallaActTvalosit = '<s:url namespace="/tvalosit" action="includes/pantallaActTvalosit" />'
+    ,_cotcol_urlBorrarAsegurado     = '<s:url namespace="/emision"  action="borrarIncisoCotizacion"       />';
 //estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp 
 
 var _p21_urlMarcarTramitePendienteVistaPrevia = '<s:url namespace="/mesacontrol" action="marcarTramiteVistaPrevia" />';
@@ -5991,6 +5992,11 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
             ,items        :
             [
                 {
+                    tooltip  : 'Quitar asegurado'
+                    ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
+                    ,handler : _cotcol_quitarAsegurado
+                }
+                ,{
                     tooltip  : 'Recuperar por RFC'
                     ,icon    : '${ctx}/resources/fam3icons/icons/vcard_edit.png'
                     ,handler : _p21_recuperarAsegurado

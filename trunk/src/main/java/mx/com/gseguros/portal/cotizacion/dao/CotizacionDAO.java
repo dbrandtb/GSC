@@ -599,4 +599,13 @@ public interface CotizacionDAO {
 			,String swvalor81,String swvalor82,String swvalor83,String swvalor84,String swvalor85,String swvalor86,String swvalor87,String swvalor88,String swvalor89,String swvalor90
 			,String swvalor91,String swvalor92,String swvalor93,String swvalor94,String swvalor95,String swvalor96,String swvalor97,String swvalor98,String swvalor99
 			)throws Exception;
+	
+	public void borrarIncisoCotizacion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			)throws Exception;
+	
 }

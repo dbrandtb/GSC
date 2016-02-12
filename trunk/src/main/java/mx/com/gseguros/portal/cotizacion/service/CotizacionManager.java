@@ -718,4 +718,13 @@ public interface CotizacionManager
 			,String nmpoliza
 			,String nmsuplem
 			)throws Exception;
+	
+	public void borrarIncisoCotizacion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			)throws Exception;
+	
 }

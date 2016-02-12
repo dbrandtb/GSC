@@ -6773,4 +6773,45 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public void borrarIncisoCotizacion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		Map<String,Object> procRes = ejecutaSP(new BorrarIncisoCotizacionSP(getDataSource()),params);
+		String error = (String)procRes.get("pv_error_o");
+		if(StringUtils.isNotBlank(error))
+		{
+			throw new ApplicationException(error);
+		}
+	}
+	
+	protected class BorrarIncisoCotizacionSP extends StoredProcedure
+	{
+		protected BorrarIncisoCotizacionSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_BORRA_INCISO_COTIZACION");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }
