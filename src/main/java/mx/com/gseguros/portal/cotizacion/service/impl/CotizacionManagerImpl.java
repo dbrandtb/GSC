@@ -1976,7 +1976,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				
 				List<ComponenteVO>componentesExtraprimas=pantallasDAO.obtenerComponentes(
 						null  , null , null
-						,null , null , cdsisrol
+						,cdtipsit , null , cdsisrol
 						,"COTIZACION_GRUPO", "ASEGURADOS", null);
 				gcGral.generaComponentes(componentesExtraprimas, true, true, false, true, false, false);
 				resp.getImap().put("aseguradosColumns" , gcGral.getColumns());

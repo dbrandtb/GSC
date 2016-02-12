@@ -208,4 +208,18 @@ public interface PersonasDAO
 	
 	public List<Map<String, String>> obtieneConfPatallaCli(String cdperson, String usuario, String rol, String tipoCliente) throws Exception;
 	
+	/**
+	 * ACTUALIZA TVALOSIT SI EXISTE FECHA DE NACIMIENTO, EDAD Y/O SEXO EN SU ATRIBUTOS
+	 */
+	public void sincronizaPersonaToValosit(
+			String sexo
+			,Date fenacimi
+			,String cdtipsit
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			)throws Exception;
 }

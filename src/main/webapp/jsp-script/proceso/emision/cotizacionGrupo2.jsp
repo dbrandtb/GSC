@@ -84,8 +84,12 @@ var _p25_urlRecuperacionSimple          = '<s:url namespace="/emision"         a
 var _p25_urlPantallaAgentes             = '<s:url namespace="/flujocotizacion" action="principal"                        />';
 var _p25_urlComplementoCotizacion       = '<s:url namespace="/emision"         action="complementoSaludGrupo"            />';
 var _p25_urlGuardarConfig4TVALAT        = '<s:url namespace="/emision"         action="guardarConfiguracionGarantias"    />';
-var _p25_urlPantallaEspPersona          = '<s:url namespace="/persona"         action="includes/pantallaEspPersona"      />';
 var _p25_urlRecuperacion                = '<s:url namespace="/recuperacion"    action="recuperar"                        />';
+
+//estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp
+var _cotcol_urlPantallaEspPersona   = '<s:url namespace="/persona"  action="includes/pantallaEspPersona"  />'
+    ,_cotcol_urlPantallaActTvalosit = '<s:url namespace="/tvalosit" action="includes/pantallaActTvalosit" />';
+//estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp 
 
 var _p25_urlMarcarTramitePendienteVistaPrevia = '<s:url namespace="/mesacontrol" action="marcarTramiteVistaPrevia" />';
 
@@ -97,6 +101,11 @@ var _p25_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _p25_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 debug('_p25_smap1:',_p25_smap1);
+
+//se declara el mapa como cotcol para el archivo comun funcionesCotizacionGrupo.js
+var _cotcol_smap1 = _p25_smap1;
+debug('_cotcol_smap1:',_cotcol_smap1);
+//se declara el mapa como cotcol para el archivo comun funcionesCotizacionGrupo.js
 
 //Para la pantalla de agentes
 var inputCdunieco = _p25_smap1.cdunieco;
@@ -216,6 +225,8 @@ for(var i=0;i<_p25_itemsRiesgo.length;i++)
 }
 debug('_p25_itemsRiesgo:',_p25_itemsRiesgo);
 
+var _p82_callback;
+var _p47_callback;
 ////// variables //////
 
 Ext.onReady(function()
@@ -432,7 +443,7 @@ Ext.onReady(function()
         {
             tooltip  : 'Asegurados'
             ,icon    : '${ctx}/resources/fam3icons/icons/group.png'
-            ,handler : _p25_aseguradosClic
+            ,handler : _cotcol_aseguradosClic
         });
     }
     if(_p25_smap1.EXTRAPRIMAS=='S')
@@ -589,7 +600,7 @@ Ext.onReady(function()
         {
             tooltip  : 'Asegurados'
             ,icon    : '${ctx}/resources/fam3icons/icons/group.png'
-            ,handler : _p25_aseguradosClic
+            ,handler : _cotcol_aseguradosClic
         });
     }
     if(_p25_smap1.EXTRAPRIMAS=='S')
@@ -5357,9 +5368,9 @@ function _p25_generarVentanaVistaPrevia2(sinBotones)
     mostrarVentana();
 }
 
-function _p25_aseguradosClic(grid,rowIndex)
+function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
 {
-    var record=grid.getStore().getAt(rowIndex);
+    var record = gridSubgrupo.getStore().getAt(rowIndexSubgrupo);
     debug('>_p25_aseguradosClic record:',record);
     _p25_quitarTabAsegurados(record.get('letra'));
     var columnas =
@@ -5381,9 +5392,14 @@ function _p25_aseguradosClic(grid,rowIndex)
                     ,handler : _p25_recuperarAsegurado
                 }
                 ,{
-                    tooltip  : 'Editar datos b\u00E1sicos'
+                    tooltip  : 'Editar datos b\u00E1sicos de persona'
                     ,icon    : '${icons}user_edit.png'
-                    ,handler : _p25_editarDatosBaseAsegurado
+                    ,handler : _cotcol_editarDatosBaseAsegurado
+                }
+                ,{
+                    tooltip  : 'Editar datos b\u00E1sicos de inciso'
+                    ,icon    : '${icons}tag_red.png'
+                    ,handler : _cotcol_mostrarVentanaActTvalosit
                 }
                 ,{
                     tooltip  : 'Editar persona/domicilio'
@@ -5462,6 +5478,8 @@ function _p25_aseguradosClic(grid,rowIndex)
                     model       : '_p25_modeloAsegurados'
                     ,groupField : 'AGRUPADOR'
                     ,autoLoad   : true
+                    ,gridSubgrupo     : gridSubgrupo
+                    ,rowIndexSubgrupo : rowIndexSubgrupo
                     ,proxy      :
                     {
                         type         : 'ajax'
@@ -5517,7 +5535,7 @@ function _p25_aseguradosClic(grid,rowIndex)
             })
         ]
     });
-    debug('<_p25_aseguradosClic');
+    debug('<_cotcol_aseguradosClic');
 }
 
 function _p25_quitarTabAsegurados(letra)
@@ -5638,33 +5656,11 @@ function _p25_recuperarAsegurado(grid,rowIndex)
     debug('<_p25_recuperarAsegurado');
 }
 
-function _p25_editarDatosBaseAsegurado(grid,rowIndex)
-{
-    var record=grid.getStore().getAt(rowIndex);
-    debug('>_p25_editarDatosBaseAsegurado:',record.data);
-    var ventana = Ext.create('Ext.window.Window',
-    {
-        title   : 'Editar persona '+record.get('NOMBRE')
-        ,itemId : '_p47_contenedor' //se pone para que la ventana interna pueda cerrar la ventana
-        ,width  : 860
-        ,height : 340
-        ,modal  : true
-        ,loader :
-        {
-            url       : _p25_urlPantallaEspPersona
-            ,params   :
-            {
-                'params.cdperson' : record.get('CDPERSON')
-                ,'params.origen'  : 'cotcol'
-            }
-            ,scripts  : true
-            ,autoLoad : true
-        }
-    }).show()
-    centrarVentanaInterna(ventana);
-    
-    debug('<_p25_editarDatosBaseAsegurado');
-}
+/*
+se mueve funcion a /js/proceso/emision/funcionesCotizacionGrupo.js
+function _cotcol_editarDatosBaseAsegurado;
+se mueve funcion a /js/proceso/emision/funcionesCotizacionGrupo.js
+*/
 
 function _p25_editarAsegurado(grid,rowIndex)
 {
@@ -6700,6 +6696,7 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
+<script src="${ctx}/js/proceso/emision/funcionesCotizacionGrupo.js?now=${now}"></script>
 </head>
 <body><div id="_p25_divpri" style="height:1400px;"></div></body>
 </html>

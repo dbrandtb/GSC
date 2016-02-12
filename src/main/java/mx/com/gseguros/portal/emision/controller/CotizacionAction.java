@@ -3181,7 +3181,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				{
 					List<ComponenteVO>componentesExtraprimas=pantallasManager.obtenerComponentes(
 							null  , null , null
-							,null , null , cdsisrol
+							,cdtipsit , null , cdsisrol
 							,"COTIZACION_GRUPO", "ASEGURADOS", null);
 					gc.generaComponentes(componentesExtraprimas, true, true, false, true, false, false);
 					imap.put("aseguradosColumns" , gc.getColumns());
