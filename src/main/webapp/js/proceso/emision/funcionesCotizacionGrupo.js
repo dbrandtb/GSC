@@ -138,3 +138,73 @@ function _p21_desbloqueoBotonRol(boton)
         manejaException(e,ck);
     }
 }
+
+function _cotcol_quitarAsegurado(grid,rowIndex)
+{
+    var record = grid.getStore().getAt(rowIndex);
+    debug('>_cotcol_quitarAsegurado:',record.data,'grid.getStore():',grid.getStore());
+    
+    centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Se borrará el asegurado y no podr\u00e1 recuperarse<br>¿Desea continuar?', function(btn)
+    {
+        if(btn === 'yes')
+        {
+            var ck = 'Borrando asegurado';
+            try
+            {
+                _mask(ck);
+                Ext.Ajax.request(
+                {
+                    url      : _cotcol_urlBorrarAsegurado
+    	            ,params  :
+    	            {
+    	                'params.cdunieco'  : _cotcol_smap1.cdunieco
+    	                ,'params.cdramo'   : _cotcol_smap1.cdramo
+    	                ,'params.estado'   : _cotcol_smap1.estado
+    	                ,'params.nmpoliza' : _cotcol_smap1.nmpoliza
+    	                ,'params.nmsituac' : record.get('NMSITUAC')
+    	            }
+                    ,success : function(response)
+                    {
+                        _unmask();
+                        var ck = 'Decodificando respuesta al borrar asegurado';
+                        try
+                        {
+                            var json = Ext.decode(response.responseText);
+                            debug('### eliminar:',json);
+                            if(json.success==true)
+                            {
+                                mensajeCorrecto(
+                                    'Asegurado borrado'
+                                    ,'El asegurado ha sido eliminado de la p\u00f3liza'
+                                    ,function()
+                                    {
+                                        grid.getStore().remove(record);
+                                    }
+                                );
+                            }
+                            else
+                            {
+                                mensajeError(json.message);
+                            }
+                        }
+                        catch(e)
+                        {
+                            manejaException(e,ck);                        
+                        }
+                    }
+                    ,failure : function()
+                    {
+                        _unmask();
+                        errorComunicacion(null,'Error al borrar asegurado');
+                    }
+                });
+            }
+            catch(e)
+            {
+                manejaException(e,ck);
+            }
+        }
+    }));
+    
+    debug('<_cotcol_quitarAsegurado');
+}

@@ -8944,6 +8944,45 @@ public class CotizacionManagerImpl implements CotizacionManager
 	{
 		cotizacionDAO.actualizarFefecsitMpolisit(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
 	}
+	
+	@Override
+	public void borrarIncisoCotizacion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			)throws Exception
+	{
+		long stamp = System.currentTimeMillis();
+		logger.debug(Utils.log(stamp
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ borrarIncisoCotizacion @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ nmsituac=" , nmsituac
+				));
+		
+		String paso = null;
+		try
+		{
+			paso = "Borrando asegurado";
+			logger.debug(Utils.log(stamp,"paso=",paso));
+			
+			cotizacionDAO.borrarIncisoCotizacion(cdunieco,cdramo,estado,nmpoliza,nmsituac);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(stamp
+				,"\n@@@@@@ borrarIncisoCotizacion @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
     
 	///////////////////////////////
 	////// getters y setters //////
