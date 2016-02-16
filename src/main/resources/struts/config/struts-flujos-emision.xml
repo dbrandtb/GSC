@@ -435,7 +435,7 @@
             <result name="success" type="json" />
         </action>
        
-       <action name="CargarPoliza" class="CotizacionAction" method="CargarPoliza"><!--Buscar por poliza -->
+       <action name="cargarPoliza" class="emisionAction" method="cargarPoliza"><!--Buscar por poliza -->
             <result name="success" type="json" />
        </action>
        
