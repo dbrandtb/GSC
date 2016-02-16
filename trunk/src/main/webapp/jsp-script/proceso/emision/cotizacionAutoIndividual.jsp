@@ -692,6 +692,12 @@ Ext.onReady(function()
              _fieldLikeLabel('SUBLIMITE POR CAJON').hide();
              _fieldLikeLabel('L.U.C. ESTACIONAMIENTO').hide();
              
+             _fieldLikeLabel('TIPO DE ESTACIONAMIENTO').allowBlank=true;
+             _fieldLikeLabel('ACOMODADORES').allowBlank=true;
+             _fieldLikeLabel('NUMERO DE CAJONES').allowBlank=true;
+             _fieldLikeLabel('SUBLIMITE POR CAJON').allowBlank=true;
+             _fieldLikeLabel('L.U.C. ESTACIONAMIENTO').allowBlank=true;
+             
     		 _fieldByLabel('ESTACIONAMIENTO').on(
     			        {
     			            select : _p28_camposEstacionamiento
@@ -1336,6 +1342,12 @@ function _p28_camposEstacionamiento(combo)
 		    _fieldLikeLabel('NUMERO DE CAJONES').show();
 		    _fieldLikeLabel('SUBLIMITE POR CAJON').show();
 		    _fieldLikeLabel('L.U.C. ESTACIONAMIENTO').show();
+		    
+		    _fieldLikeLabel('TIPO DE ESTACIONAMIENTO').allowBlank=false; 
+            _fieldLikeLabel('ACOMODADORES').allowBlank=false;
+            _fieldLikeLabel('NUMERO DE CAJONES').allowBlank=false;
+            _fieldLikeLabel('SUBLIMITE POR CAJON').allowBlank=false;
+            _fieldLikeLabel('L.U.C. ESTACIONAMIENTO').allowBlank=false;
         }
 	else
 		{
@@ -1350,6 +1362,12 @@ function _p28_camposEstacionamiento(combo)
             _fieldLikeLabel('NUMERO DE CAJONES').reset();
             _fieldLikeLabel('SUBLIMITE POR CAJON').reset();
             _fieldLikeLabel('L.U.C. ESTACIONAMIENTO').reset();
+            
+            _fieldLikeLabel('TIPO DE ESTACIONAMIENTO').allowBlank=true; 
+            _fieldLikeLabel('ACOMODADORES').allowBlank=true;
+            _fieldLikeLabel('NUMERO DE CAJONES').allowBlank=true;
+            _fieldLikeLabel('SUBLIMITE POR CAJON').allowBlank=true;
+            _fieldLikeLabel('L.U.C. ESTACIONAMIENTO').allowBlank=true;
 		}
 }
 
