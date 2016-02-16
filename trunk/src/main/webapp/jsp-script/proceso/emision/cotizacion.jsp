@@ -1194,6 +1194,8 @@ function llenandoCampos (json)
                                 }
                             });
                         } else {
+                        	
+                        	if(!cargarXpoliza)
                             _fieldByLabel('AGENTE').setValue(
                                 _fieldByLabel('AGENTE').findRecord('key',primerInciso.get('parametros.pv_otvalor32'))
                             );
@@ -2515,6 +2517,7 @@ Ext.onReady(function()
     	        text     : 'Cargar Poliza'
     	        ,icon    : '${ctx}/resources/fam3icons/icons/database_refresh.png'
     	        ,handler : _0_cargarPoliza
+    	        ,hidden  : true
     	    });
     
     _0_botLimpiar=Ext.create('Ext.Button',
