@@ -4565,6 +4565,8 @@ public class EndososAction extends PrincipalCoreAction
 				mapaObtenerDomicilio.put("pv_nmsuplem_i" , nmsuplem);
 				mapaObtenerDomicilio.put("pv_cdperson_i" , cdpersonTitular);
 				mapaObtenerDomicilio.put("pv_cdtipsit_i" , cdtipsit);
+				mapaObtenerDomicilio.put("pv_nmorddom_i" , "1"); // Domicilio 1 default para los asegurados
+				
 				Map<String,String>domicilioTitular=kernelManager.obtenerDomicilio(mapaObtenerDomicilio);
 				////// 3. obtener el domicilio del titular //////
 				
