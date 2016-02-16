@@ -190,7 +190,32 @@ public class EmisionAction extends PrincipalCoreAction
 		}
 		return SUCCESS;
 	}
-		
+	
+	
+	public String cargarPoliza(){
+		logger.debug(Utils.log("" + "\n###############################"
+								+ "\n###### cargar por Poliza ######"));
+								logger.info("smap1: " + smap1);
+
+		String cdunieco = smap1.get("cdsucursal"),
+		       cdramo = smap1.get("cdramo"),
+		       cdpoliza = smap1.get("cdpoliza"),
+		       agt = smap1.get("cdusuari");
+		try {
+			     String params = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&agt=",agt),
+			     valoresCampos  = HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"),params);
+			     logger.debug(Utils.log("" + "\n Parametros Regresados"
+							+ "\nValores de Campos: ",valoresCampos));
+				smap1.put("valoresCampos", valoresCampos);
+				success = true;
+			//webResource.type("application/x-www-form-urlencoded").post(
+			} catch (Exception ex) {
+			logger.error("Error al recuperar tvlopol", ex);
+			success = false;
+			}
+		return SUCCESS;
+	}
+	
 	/**
 	 * Getters y setters
 	 */

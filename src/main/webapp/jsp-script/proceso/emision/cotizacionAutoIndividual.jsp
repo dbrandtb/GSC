@@ -559,6 +559,7 @@ Ext.onReady(function()
           ,width  : 435
           ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
           ,items  : _p28_panel7Items
+          ,hidden : true
     }
    ,{
          xtype   : 'fieldset'
