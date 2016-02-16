@@ -60,6 +60,7 @@ var _0_urlValidarEnfermCatasGMI    = '<s:url namespace="/emision"         action
 var _0_urlRecuperacionSimple       = '<s:url namespace="/emision"         action="recuperacionSimple"             />';
 var _0_urlRetroactividadDifer      = '<s:url namespace="/emision"         action="cargarRetroactividadSuplemento" />';
 var _0_urlObtieneValNumeroSerie    = '<s:url namespace="/emision" 		  action="obtieneValNumeroSerie"          />';
+var _p0_urlCargarPoliza           = '<s:url namespace="/emision"         action="cargarPoliza"                   />';
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
     <s:property value="imap.modeloExtraFields" />
@@ -91,6 +92,7 @@ var _0_storeIncisos;
 var _0_gridTarifas;
 var _0_botCotizar;
 var _0_botCargar;
+var _0_botCargarPoliza;
 var _0_botLimpiar;
 var _0_fieldNtramite;
 var _0_fieldNmpoliza;
@@ -140,6 +142,8 @@ var _0_rowEditing = Ext.create('Ext.grid.plugin.RowEditing',{
 		}
 	}
 });
+
+var cargarXpoliza = false;
 
 /*///////////////////*/
 ////// variables //////
@@ -899,8 +903,8 @@ function _0_limpiar()
 
 function _0_cargar()
 {
-	debug('>_0_cargar');
-	Ext.Msg.prompt(
+    debug('>_0_cargar');
+    Ext.Msg.prompt(
     'Cargar cotizaci&oacute;n',
     'N&uacute;mero de cotizaci&oacute;n:',
     function (buttonId, value)
@@ -924,7 +928,7 @@ function _0_cargar()
         //request
         if(valido)
         {
-        	_0_panelPri.setLoading(true);
+            _0_panelPri.setLoading(true);
             Ext.Ajax.request(
             {
                 url      : _0_urlLoad
@@ -937,191 +941,291 @@ function _0_cargar()
                 }
                 ,success : function(response)
                 {
-                	_0_panelPri.setLoading(false);
-                    var json=Ext.decode(response.responseText);
-                    debug('json response:',json);
-                    if(json.success)
-                    {
-                        if(!json.smap1.NTRAMITE)
-                        {
-                    	    _0_limpiar();
-                            for(var i=0;i<json.slist1.length;i++)
-                            {
-                                if(_0_smap1.SITUACION=='AUTO')
-                                {
-                                    debug("_0_smap1.SITUACION=='AUTO'");
-                                    if(json.slist1[i].nombre&&json.slist1[i].nombre+'x'!='x')
-                                    {
-                            	        _0_storeIncisos.add(new _0_modelo(json.slist1[i]));
-                            	    }
-                            	}
-                            	else
-                            	{
-                            	    _0_storeIncisos.add(new _0_modelo(json.slist1[i]));
-                            	}
-                            }
-                            debug('store:',_0_storeIncisos);
-                            var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
-                            primerInciso.set('FESOLICI',json.smap1.FESOLICI);
-                            if(_0_smap1.cdramo=='6')
-                            {
-                                primerInciso.set('parametros.pv_otvalor24','S');
-                            }
-                            debug('primerInciso:',primerInciso);
-                            //leer elementos anidados
-                            var form      = _0_formAgrupados;
-                            var formItems = form.items.items;
-                            var hayDerechos = false;
-                            <s:if test='%{getSmap1().get("CDATRIBU_DERECHO")!=null}'>
-                                hayDerechos = true;
-                                formItems = form.items.items[0].items.items;
-                            </s:if>
-                            debug('hayDerechos:' , hayDerechos);
-                            debug('formItems:'   , formItems);
-                            var numBlurs  = 0;
-                            for(var i=0;i<formItems.length;i++)
-                            {
-                                var item=formItems[i];
-                                if(item.hasListener('blur'))
-                                {
-                                    var numBlursSeguidos = 1;
-                                    debug('contando blur:',item);
-                                    for(var j=i+1;j<formItems.length;j++)
-                                    {
-                                        if(formItems[j].hasListener('blur'))
-                                        {
-                                            numBlursSeguidos=numBlursSeguidos+1;
-                                        }
-                                    }
-                                    if(numBlursSeguidos>numBlurs)
-                                    {
-                                        numBlurs=numBlursSeguidos;
-                                    }
-                                }
-                            }
-                            debug('numBlurs:',numBlurs);
-                            var i=0;
-                            var renderiza=function()
-                            {
-                                debug('renderiza',i);
-                                form.loadRecord(primerInciso);
-                                if(i<numBlurs)
-                                {
-                                    i=i+1;
-                                    for(var j=0;j<formItems.length;j++)
-                                    {
-                                        var iItem  = formItems[j]; 
-                                        var iItem2 = formItems[j+1];
-                                        debug('iItem2:',iItem2,'store:',iItem2?iItem2.store:'iItem2 no');
-                                        if(iItem.hasListener('blur')&&iItem2&&iItem2.store&&iItem2.heredar)
-                                        {
-                                            debug('tiene blur y lo hacemos heredar',formItems[j]);
-                                            iItem2.heredar(true);
-                                        }
-                                    }
-                                    setTimeout(renderiza,1000);
-                                }
-                                else
-                                {
-                            	    _0_fieldNmpoliza.setValue(value);
-                            	    _0_panelPri.setLoading(false);
-                            	    if(_0_smap1.cdramo=='6')
-                            	    {
-                            	        if(_0_smap1.cdtipsit=='AT')
-                            	        {
-                            	            _0_obtenerClaveGSPorAuto();
-                            	            _0_obtenerSumaAseguradaRamo6(true,true);
-                            	        }
-                            	        if(_fieldByLabel('FOLIO').getValue()==0)
-                            	        {
-                            	            _fieldByLabel('FOLIO').reset();
-                        	                if(_0_smap1.cdsisrol=='SUSCRIAUTO')
-                            	            {
-                            	                _fieldByLabel('AGENTE').getStore().load(
-                            	                {
-                            	                    params :
-                        	                        {
-                            	                        'params.agente' : primerInciso.get('parametros.pv_otvalor17')
-                            	                    }
-                            	                    ,callback : function()
-                            	                    {
-                            	                        _fieldByLabel('AGENTE').setValue(
-                            	                            _fieldByLabel('AGENTE').findRecord('key',primerInciso.get('parametros.pv_otvalor17'))
-                            	                        );
-                            	                    }
-                            	                });
-                            	            }
-                            	            else
-                            	            {
-                            	                var cdagente=_fieldByLabel('AGENTE').getValue();
-                            	                _fieldByLabel('FOLIO').reset();
-                            	                _fieldByLabel('AGENTE').setValue(
-                            	                    _fieldByLabel('AGENTE').findRecord('key',primerInciso.get('parametros.pv_otvalor17'))
-                            	                );
-                            	            }
-                            	        }
-                            	    }
-                            	    if(_0_smap1.cdtipsit=='GMI')
-                            	    {
-                            	        _0_gmiPostalSelect(1,2,3,true);
-                            	        _0_gmiCirchospSelect(1,2,3,true);
-                            	    }
-                            	    if(_0_smap1.cdtipsit == 'AF') {
-                                    	if(_0_smap1.cdsisrol == 'SUSCRIAUTO') {
-                                            _fieldByLabel('AGENTE').getStore().load({
-                                                params : {
-                                                    'params.agente' : primerInciso.get('parametros.pv_otvalor32')
-                                                },
-                                                callback : function() {
-                                                    _fieldByLabel('AGENTE').setValue(
-                                                        _fieldByLabel('AGENTE').findRecord('key',primerInciso.get('parametros.pv_otvalor32'))
-                                                    );
-                                                }
-                                            });
-                                        } else {
-                                            _fieldByLabel('AGENTE').setValue(
-                                                _fieldByLabel('AGENTE').findRecord('key',primerInciso.get('parametros.pv_otvalor32'))
-                                            );
-                                        }
-                                    }
-                                }
-                            };
-                            _0_panelPri.setLoading(true);
-                            renderiza();
-                        }
-                        else
-                        {
-                            Ext.create('Ext.form.Panel').submit(
-                            {
-                                url             : _0_urlDatosComplementarios
-                                ,standardSubmit : true
-                                ,params         :
-                                {
-                                    cdunieco         : json.smap1.CDUNIECO
-                                    ,cdramo          : json.smap1.cdramo
-                                    ,estado          : 'W'
-                                    ,nmpoliza        : json.smap1.nmpoliza
-                                    ,'map1.ntramite' : json.smap1.NTRAMITE
-                                    ,cdtipsit        : json.smap1.cdtipsit
-                                }
-                            });
-                        }
-                    }
-                    else
-                    {
-                        mensajeError(json.error);
-                    }
+                	var json=Ext.decode(response.responseText);
+                	llenandoCampos(json);
                 }
                 ,failure : function()
                 {
-                	_0_panelPri.setLoading(false);
+                    _0_panelPri.setLoading(false);
                     errorComunicacion();
                 }
             });
         }
     });
     debug('<_mcotiza_load');
-	debug('<_0_cargar');
+    debug('<_0_cargar');
+}
+
+function _0_cargarPoliza()
+{   cargarXpoliza = true;
+    Ext.create('Ext.window.Window',{
+        title        : 'Cargar por Sucursal, Ramo Y Poliza'
+        ,modal       : true
+        ,buttonAlign : 'center'
+        ,width       : 450
+        ,resizable   : false
+        ,height      : 160
+        ,items       :[
+             Ext.create('Ext.form.Panel',
+            {
+               items    :
+               [
+                    {
+                      xtype      : 'textfield'
+                     ,itemId     : 'sucursal'
+                     ,fieldLabel : 'Sucural'
+                    }
+                    ,{
+                        xtype      : 'textfield'
+                       ,itemId     : 'ramo'
+                       ,fieldLabel : 'Ramo'
+                    }
+                    ,{
+                        xtype      : 'textfield'
+                       ,itemId     : 'poliza'
+                       ,fieldLabel : 'Poliza'
+                    }
+                ]
+            })
+        ],
+        buttonAlign:'center',
+        buttons: 
+       	[
+            {
+	            text: 'Aceptar',
+	            icon: '${ctx}/resources/fam3icons/icons/accept.png',
+	            buttonAlign : 'center',
+	            handler: function(button) {
+	            	
+	            	var ventana = button.up('window');
+	            	var form = button.up('window').down('form');
+	                debug('form.getValue():',form.getValues());
+	                var valores= form.getValues();
+// 	                var valores = Ext.decode(cadena);
+	                debug('Valores:',valores);
+	                debug('Sucursal: ', valores['textfield-1059-inputEl']);
+	                var sucursal= valores['textfield-1059-inputEl'];
+	                debug('Ramo: ', valores['textfield-1060-inputEl']);
+                    var ramo = valores['textfield-1060-inputEl'];
+	                debug('Poliza: ', valores['textfield-1061-inputEl']);
+                    var poliza = valores['textfield-1061-inputEl'];
+                                        
+                    ventana.close();
+                    _0_panelPri.setLoading(true);
+                    
+	                Ext.Ajax.request(
+	                        {
+	                            url      : _p0_urlCargarPoliza
+	                             ,params  :
+	                             {
+	                                  'smap1.cdsucursal' : sucursal
+	                                 ,'smap1.cdramo' : ramo
+	                                 ,'smap1.cdpoliza' : poliza
+	                                 ,'smap1.cdusuari' : _0_smap1.cdusuari,
+	                             }
+	                             ,success : function(response)
+	                             {
+	                              _0_panelPri.setLoading(false);
+	                              var json=Ext.decode(response.responseText);
+	                              debug("valoresCampos: ",json);
+	                              var json2=Ext.decode(json.smap1.valoresCampos);
+	                              json2['success']=true;
+	                              cdper     = json2.smap1.cdper;   //D00000000111005
+	                              cdperson  = json2.smap1.cdperson;//530400
+	                              debug("valoresCampos 2: ",json2);
+	                              llenandoCampos(json2);
+	                             }
+	                            ,failure : function()
+	                            {
+	                             _0_panelPri.setLoading(false);
+	                             errorComunicacion();
+	                            }
+	                        });
+	            }
+            }
+        ]
+    }).show();
+}
+
+function llenandoCampos (json)
+{
+    _0_panelPri.setLoading(false);
+    debug('json response:',json);
+    if(json.success)
+    {
+        if(cargarXpoliza || !json.smap1.NTRAMITE)
+        {
+            _0_limpiar();
+            for(var i=0;i<json.slist1.length;i++)
+            {
+                if(_0_smap1.SITUACION=='AUTO')
+                {
+                    debug("_0_smap1.SITUACION=='AUTO'");
+                    if(json.slist1[i].nombre&&json.slist1[i].nombre+'x'!='x')
+                    {
+                        _0_storeIncisos.add(new _0_modelo(json.slist1[i]));
+                    }
+                }
+                else
+                {
+                    _0_storeIncisos.add(new _0_modelo(json.slist1[i]));
+                }
+            }
+            debug('store:',_0_storeIncisos);
+            var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
+            primerInciso.set('FESOLICI',json.smap1.FESOLICI);
+            if(_0_smap1.cdramo=='6')
+            {
+                primerInciso.set('parametros.pv_otvalor24','S');
+            }
+            debug('primerInciso:',primerInciso);
+            //leer elementos anidados
+            var form      = _0_formAgrupados;
+            var formItems = form.items.items;
+            var hayDerechos = false;
+            <s:if test='%{getSmap1().get("CDATRIBU_DERECHO")!=null}'>
+                hayDerechos = true;
+                formItems = form.items.items[0].items.items;
+            </s:if>
+            debug('hayDerechos:' , hayDerechos);
+            debug('formItems:'   , formItems);
+            var numBlurs  = 0;
+            for(var i=0;i<formItems.length;i++)
+            {
+                var item=formItems[i];
+                if(item.hasListener('blur'))
+                {
+                    var numBlursSeguidos = 1;
+                    debug('contando blur:',item);
+                    for(var j=i+1;j<formItems.length;j++)
+                    {
+                        if(formItems[j].hasListener('blur'))
+                        {
+                            numBlursSeguidos=numBlursSeguidos+1;
+                        }
+                    }
+                    if(numBlursSeguidos>numBlurs)
+                    {
+                        numBlurs=numBlursSeguidos;
+                    }
+                }
+            }
+            debug('numBlurs:',numBlurs);
+            var i=0;
+            var renderiza=function()
+            {
+                debug('renderiza',i);
+                form.loadRecord(primerInciso);
+                if(i<numBlurs)
+                {
+                    i=i+1;
+                    for(var j=0;j<formItems.length;j++)
+                    {
+                        var iItem  = formItems[j]; 
+                        var iItem2 = formItems[j+1];
+                        debug('iItem2:',iItem2,'store:',iItem2?iItem2.store:'iItem2 no');
+                        if(iItem.hasListener('blur')&&iItem2&&iItem2.store&&iItem2.heredar)
+                        {
+                            debug('tiene blur y lo hacemos heredar',formItems[j]);
+                            iItem2.heredar(true);
+                        }
+                    }
+                    setTimeout(renderiza,1000);
+                }
+                else
+                {
+                    if(!cargarXpoliza)
+                    	{
+                    	   _0_fieldNmpoliza.setValue(value);
+                    	}
+                    
+                	_0_panelPri.setLoading(false);
+                    if(_0_smap1.cdramo=='6')
+                    {
+                        if(_0_smap1.cdtipsit=='AT')
+                        {
+                            _0_obtenerClaveGSPorAuto();
+                            _0_obtenerSumaAseguradaRamo6(true,true);
+                        }
+                        if(_fieldByLabel('FOLIO').getValue()==0)
+                        {
+                            _fieldByLabel('FOLIO').reset();
+                            if(_0_smap1.cdsisrol=='SUSCRIAUTO')
+                            {
+                                _fieldByLabel('AGENTE').getStore().load(
+                                {
+                                    params :
+                                    {
+                                        'params.agente' : primerInciso.get('parametros.pv_otvalor17')
+                                    }
+                                    ,callback : function()
+                                    {
+                                        _fieldByLabel('AGENTE').setValue(
+                                            _fieldByLabel('AGENTE').findRecord('key',primerInciso.get('parametros.pv_otvalor17'))
+                                        );
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                var cdagente=_fieldByLabel('AGENTE').getValue();
+                                _fieldByLabel('FOLIO').reset();
+                                _fieldByLabel('AGENTE').setValue(
+                                    _fieldByLabel('AGENTE').findRecord('key',primerInciso.get('parametros.pv_otvalor17'))
+                                );
+                            }
+                        }
+                    }
+                    if(_0_smap1.cdtipsit=='GMI')
+                    {
+                        _0_gmiPostalSelect(1,2,3,true);
+                        _0_gmiCirchospSelect(1,2,3,true);
+                    }
+                    if(_0_smap1.cdtipsit == 'AF') {
+                        if(_0_smap1.cdsisrol == 'SUSCRIAUTO') {
+                            _fieldByLabel('AGENTE').getStore().load({
+                                params : {
+                                    'params.agente' : primerInciso.get('parametros.pv_otvalor32')
+                                },
+                                callback : function() {
+                                    _fieldByLabel('AGENTE').setValue(
+                                        _fieldByLabel('AGENTE').findRecord('key',primerInciso.get('parametros.pv_otvalor32'))
+                                    );
+                                }
+                            });
+                        } else {
+                            _fieldByLabel('AGENTE').setValue(
+                                _fieldByLabel('AGENTE').findRecord('key',primerInciso.get('parametros.pv_otvalor32'))
+                            );
+                        }
+                    }
+                }
+            };
+            _0_panelPri.setLoading(true);
+            renderiza();
+        }
+        else
+        {
+            Ext.create('Ext.form.Panel').submit(
+            {
+                url             : _0_urlDatosComplementarios
+                ,standardSubmit : true
+                ,params         :
+                {
+                    cdunieco         : json.smap1.CDUNIECO
+                    ,cdramo          : json.smap1.cdramo
+                    ,estado          : 'W'
+                    ,nmpoliza        : json.smap1.nmpoliza
+                    ,'map1.ntramite' : json.smap1.NTRAMITE
+                    ,cdtipsit        : json.smap1.cdtipsit
+                }
+            });
+        }
+    }
+    else
+    {
+        mensajeError(json.error);
+    }
 }
 
 function _0_agregarAsegu(boton)
@@ -2080,6 +2184,7 @@ Ext.onReady(function()
 		            _0_botCotizar
 		            ,_0_botLimpiar
 		            ,_0_botCargar
+		            ,_0_botCargarPoliza
 		            //>agregado para cancelar un tramite
 		            ,{
 		                text     : 'Rechazar'
@@ -2404,6 +2509,13 @@ Ext.onReady(function()
         ,icon    : '${ctx}/resources/fam3icons/icons/database_refresh.png'
         ,handler : _0_cargar
     });
+    
+    _0_botCargarPoliza=Ext.create('Ext.Button',
+    	    {
+    	        text     : 'Cargar Poliza'
+    	        ,icon    : '${ctx}/resources/fam3icons/icons/database_refresh.png'
+    	        ,handler : _0_cargarPoliza
+    	    });
     
     _0_botLimpiar=Ext.create('Ext.Button',
     {
