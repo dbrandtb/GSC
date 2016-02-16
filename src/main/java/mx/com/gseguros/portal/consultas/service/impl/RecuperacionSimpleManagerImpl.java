@@ -6,13 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
 import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2VO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
@@ -40,55 +38,13 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 	@Autowired
 	private MesaControlDAO mesaControlDAO;
 	
-	/*
-	 * Utilerias
-	 */
-	private void setCheckpoint(String checkpoint)
-	{
-		logger.debug(Utils.log("checkpoint-->",checkpoint));
-		session.put("checkpoint",checkpoint);
-	}
-	
-	private String getCheckpoint()
-	{
-		return (String)session.get("checkpoint");
-	}
-	
-	private void manejaException(Exception ex,ManagerRespuestaBaseVO resp)
-	{
-		long timestamp = System.currentTimeMillis();
-		resp.setExito(false);
-		resp.setRespuestaOculta(ex.getMessage());
-		
-		if(ex instanceof ApplicationException)
-		{
-			resp.setRespuesta(Utils.join(ex.getMessage()," #",timestamp));
-		}
-		else
-		{
-			resp.setRespuesta(Utils.join("Error ",getCheckpoint().toLowerCase()," #",timestamp));
-		}
-		
-		logger.error(resp.getRespuesta(),ex);
-		setCheckpoint("0");
-	}
-	/*
-	 * Utilerias
-	 */
-	
-	@Override
-	public void setSession(Map<String,Object>session)
-	{
-		this.session=session;
-	}
-	
 	@Override
 	public ManagerRespuestaSmapVO recuperacionSimple(
 			RecuperacionSimple proc
 			,Map<String,String>params
 			,String cdsisrol
 			,String cdusuari
-			)
+			)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -101,12 +57,14 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 		
 		ManagerRespuestaSmapVO resp=new ManagerRespuestaSmapVO(true);
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Recuperando datos");
+			paso = "Recuperando datos";
 			if(proc.equals(RecuperacionSimple.RECUPERAR_DESCUENTO_RECARGO_RAMO_5))
 			{
-				setCheckpoint("Recuperando rango de descuento/recargo");
+				paso = "Recuperando rango de descuento/recargo";
 				String cdtipsit = params.get("cdtipsit");
 				String cdagente = params.get("cdagente");
 				String negocio  = params.get("negocio");
@@ -123,7 +81,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			}
 			else if(proc.equals(RecuperacionSimple.RECUPERAR_DATOS_VEHICULO_RAMO_5))
 			{
-				setCheckpoint("Recuperando datos del vehiculo");
+				paso = "Recuperando datos del vehiculo";
 				String cdunieco = params.get("cdunieco");
 				String cdramo   = params.get("cdramo");
 				String estado   = params.get("estado");
@@ -255,11 +213,10 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				resp.setSmap(new HashMap<String,String>());
 				resp.getSmap().put("CONTEO" , consultasDAO.recuperarConteoTbloqueo(cdunieco,cdramo,estado,nmpoliza));
 			}
-			setCheckpoint("0");
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.debug(Utils.log(
@@ -276,7 +233,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			,Map<String,String>params
 			,String cdsisrol
 			,String cdusuari
-			)
+			)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -289,9 +246,11 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 		
 		ManagerRespuestaSlist2VO resp=new ManagerRespuestaSlist2VO(true);
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Recuperando datos");
+			paso = "Recuperando datos";
 			if(proc.equals(RecuperacionSimple.RECUPERAR_DETALLES_COTIZACION_AUTOS_FLOTILLA))
 			{
 				String cdunieco = params.get("cdunieco");
@@ -484,11 +443,10 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String ntramite = params.get("ntramite");
 				resp.setSlist(consultasDAO.recuperarUsuariosReasignacionTramite(ntramite));
 			}
-			setCheckpoint("0");
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.debug(Utils.log(

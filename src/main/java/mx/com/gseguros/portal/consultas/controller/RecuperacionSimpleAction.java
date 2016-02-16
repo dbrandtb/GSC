@@ -33,46 +33,6 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 	{
 		this.session=this.session=ActionContext.getContext().getSession();
 	}
-	
-	/*
-	 * Utilidades
-	 */
-	private void setCheckpoint(String checkpoint)
-	{
-		logger.debug(Utils.log("checkpoint-->",checkpoint));
-		session.put("checkpoint",checkpoint);
-	}
-	
-	private String getCheckpoint()
-	{
-		return (String)session.get("checkpoint");
-	}
-	
-	private void checkNull(Object objeto,String mensaje)throws ApplicationException
-	{
-		if(objeto==null)
-		{
-			throw new ApplicationException(mensaje);
-		}
-	}
-	
-	private void manejaException(Exception ex)
-	{
-		long timestamp  = System.currentTimeMillis();
-		exito           = false;
-		
-		if(ex instanceof ApplicationException)
-		{
-			respuesta = Utils.join(ex.getMessage()," #",timestamp);
-		}
-		else
-		{
-			respuesta = Utils.join("Error ",getCheckpoint().toLowerCase()," #",timestamp);
-		}
-		
-		logger.error(respuesta,ex);
-		setCheckpoint("0");
-	}
 	/*
 	 * Utilidades
 	 */
@@ -87,35 +47,38 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 		
 		try
 		{
-			setCheckpoint("Validando datos de entrada");
-			checkNull(smap1                  , "No se recibieron datos");
+			logger.debug("Validando datos de entrada");
+			Utils.validate(smap1                  , "No se recibieron datos");
 			String procedimiento = smap1.get("procedimiento");
-			checkNull(procedimiento          , "No se recibio el procedimiento");
-			checkNull(session                , "No hay sesion");
-			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
+			Utils.validate(procedimiento          , "No se recibio el procedimiento");
+			Utils.validate(session                , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
 			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
 			
+			RecuperacionSimple rec;
+			
 			try
 			{
-				RecuperacionSimple rec      = RecuperacionSimple.valueOf(procedimiento);
-				ManagerRespuestaSmapVO resp = recuperacionSimpleManager.recuperacionSimple(rec,smap1,cdsisrol,cdusuari);
-				exito           = resp.isExito();
-				respuesta       = resp.getRespuesta();
-				if(exito)
-				{
-					smap1.putAll(resp.getSmap());
-				}
+				rec = RecuperacionSimple.valueOf(procedimiento);
 			}
 			catch(Exception ex)
 			{
 				logger.error("Error al intentar obtener el catalogo del enum",ex);
 				throw new ApplicationException("El procedimiento no existe");
 			}
+			
+			ManagerRespuestaSmapVO resp = recuperacionSimpleManager.recuperacionSimple(rec,smap1,cdsisrol,cdusuari);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+			}
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex);
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.debug(Utils.log(
@@ -135,36 +98,39 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 		
 		try
 		{
-			setCheckpoint("Validando datos de entrada");
-			checkNull(smap1                  , "No se recibieron datos");
+			logger.debug("Validando datos de entrada");
+			Utils.validate(smap1                  , "No se recibieron datos");
 			String procedimiento = smap1.get("procedimiento");
-			checkNull(procedimiento          , "No se recibio el procedimiento");
-			checkNull(session                , "No hay sesion");
-			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
+			Utils.validate(procedimiento          , "No se recibio el procedimiento");
+			Utils.validate(session                , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
 			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
 			
+			RecuperacionSimple rec;
+			
 			try
 			{
-				RecuperacionSimple rec        = RecuperacionSimple.valueOf(procedimiento);
-				ManagerRespuestaSlist2VO resp = recuperacionSimpleManager.recuperacionSimpleLista(rec,smap1,cdsisrol,cdusuari);
-				exito     = resp.isExito();
-				respuesta = resp.getRespuesta();
-				if(exito)
-				{
-					slist1 = resp.getSlist();
-					slist2 = resp.getSlist2();
-				}
+				rec = RecuperacionSimple.valueOf(procedimiento);
 			}
 			catch(Exception ex)
 			{
 				logger.error("Error al intentar obtener el catalogo del enum",ex);
 				throw new ApplicationException("El procedimiento no existe");
 			}
+			
+			ManagerRespuestaSlist2VO resp = recuperacionSimpleManager.recuperacionSimpleLista(rec,smap1,cdsisrol,cdusuari);
+			exito     = resp.isExito();
+			respuesta = resp.getRespuesta();
+			if(exito)
+			{
+				slist1 = resp.getSlist();
+				slist2 = resp.getSlist2();
+			}
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex);
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.debug(Utils.log(
@@ -219,7 +185,6 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 	}
 
 	public void setRecuperacionSimpleManager(RecuperacionSimpleManager recuperacionSimpleManager) {
-		recuperacionSimpleManager.setSession(this.session);
 		this.recuperacionSimpleManager = recuperacionSimpleManager;
 	}
 

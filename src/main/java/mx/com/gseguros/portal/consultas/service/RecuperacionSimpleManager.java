@@ -10,21 +10,20 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 
 public interface RecuperacionSimpleManager
 {
-	public void setSession(Map<String,Object>session);
 	
 	public ManagerRespuestaSmapVO recuperacionSimple(
 			RecuperacionSimple procedimiento
 			,Map<String,String>parametros
 			,String cdsisrol
 			,String cdusuari
-			);
+			)throws Exception;
 	
 	public ManagerRespuestaSlist2VO recuperacionSimpleLista(
 			RecuperacionSimple procedimiento
 			,Map<String,String>parametros
 			,String cdsisrol
 			,String cdusuari
-			);
+			)throws Exception;
 	
 	public Map<String,String> recuperarMapa(
 			String cdusuari
