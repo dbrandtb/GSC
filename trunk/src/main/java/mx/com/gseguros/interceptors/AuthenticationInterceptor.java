@@ -6,7 +6,8 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.utils.Constantes;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -27,15 +28,14 @@ public class AuthenticationInterceptor implements Interceptor {
 
 	private static final long serialVersionUID = 4074812194873811352L;
 
-	protected final transient Logger logger = Logger.getLogger(AuthenticationInterceptor.class);
+	protected final transient Logger logger = LoggerFactory.getLogger(AuthenticationInterceptor.class);
 	
 	public void init() {
 	}
 
 	public String intercept(ActionInvocation actionInvocation) throws Exception {
 		
-		logger.info(new StringBuilder("Intercepted[Namespace=").append(actionInvocation.getProxy().getNamespace())
-				.append(" ActionName=").append(actionInvocation.getProxy().getActionName()).append("]"));
+		logger.info("Intercepted[Namespace={} ActionName={}]", actionInvocation.getProxy().getNamespace(), actionInvocation.getProxy().getActionName());
 		
 		//Obtenemos la sesion por medio del ActionInvocation
 		@SuppressWarnings("rawtypes")
@@ -43,7 +43,7 @@ public class AuthenticationInterceptor implements Interceptor {
 		
 		UserVO user = (UserVO) session.get(Constantes.USER);
 		if(user != null) {
-			logger.info(new StringBuilder("Usuario en sesion: ").append(user.getUser()));
+			logger.info("Usuario en sesion: {}", user.getUser());
 		} else {
 			logger.info("No hay usuario en sesion");
 		}
@@ -66,8 +66,7 @@ public class AuthenticationInterceptor implements Interceptor {
 				if(user.getRolActivo()!=null) {
 					if(user.getRolActivo()!=null && StringUtils.isNotBlank(user.getRolActivo().getClave())) {
 						rolAsignado = true;
-						logger.info(new StringBuilder("Rol Activo: ").append(user.getRolActivo().getClave())
-								.append(" - ").append(user.getRolActivo().getDescripcion()));
+						logger.info("Rol Activo: {} - {}", user.getRolActivo().getClave(), user.getRolActivo().getDescripcion());
 					}
 				}
 				if(!rolAsignado) {
@@ -93,8 +92,7 @@ public class AuthenticationInterceptor implements Interceptor {
 				if (user.getRolActivo() != null && StringUtils.isNotBlank(user.getRolActivo().getClave())) {
 					//rolAsignado = true;
 					logger.info("-->Ya Contiene un Rol Asignado<--");
-					logger.info(new StringBuilder("Rol Activo: ").append(user.getRolActivo().getClave())
-							.append(" - ").append(user.getRolActivo().getDescripcion()));
+					logger.info("Rol Activo: {} - {}", user.getRolActivo().getClave(), user.getRolActivo().getDescripcion());
 				}
 				logger.info("return tree invoke (jsp)");
 				if(!esMovil) {
@@ -114,8 +112,7 @@ public class AuthenticationInterceptor implements Interceptor {
 				if(user.getRolActivo()!=null) {
 					if(user.getRolActivo()!=null && StringUtils.isNotBlank(user.getRolActivo().getClave())) {
 						rolAsignado = true;
-						logger.info(new StringBuilder("Rol Activo: ").append(user.getRolActivo().getClave())
-								.append(" - ").append(user.getRolActivo().getDescripcion()));
+						logger.info("Rol Activo: {} - {}", user.getRolActivo().getClave(), user.getRolActivo().getDescripcion());
 					}
 				}
 				if(!rolAsignado) {
