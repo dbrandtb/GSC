@@ -4,10 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.portal2.web.GenericVO;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 
 public interface PersonasManager
 {
@@ -123,7 +122,7 @@ public interface PersonasManager
 
 	public String actualizaStatusPersona(Map<String, String> params)throws Exception;
 	
-	public ManagerRespuestaImapVO pantallaBeneficiarios(String cdunieco,String cdramo,String estado,String cdsisrol,String cdtipsup);
+	public Map<String,Item> pantallaBeneficiarios(String cdunieco,String cdramo,String estado,String cdsisrol,String cdtipsup)throws Exception;
 	
 	public void setSession(Map<String,Object>session);
 	

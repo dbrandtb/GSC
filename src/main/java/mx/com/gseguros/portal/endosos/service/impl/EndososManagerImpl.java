@@ -14,7 +14,6 @@ import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
@@ -1792,7 +1791,7 @@ public class EndososManagerImpl implements EndososManager
 			,String ntramiteEmi
 			,String cdsisrol
 			,UserVO usuarioSesion
-			)
+			)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -1812,6 +1811,8 @@ public class EndososManagerImpl implements EndososManager
 
 		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
 		
+		String paso = null;
+		
 		try
 		{
 			String usuarioCaptura =  null;
@@ -1825,7 +1826,7 @@ public class EndososManagerImpl implements EndososManager
 				
 			}
 			
-			setCheckpoint("Iniciando endoso");
+			paso = "Iniciando endoso";
 			Map<String,String>iniciarEndosoResp=endososDAO.iniciarEndoso(
 					cdunieco
 					,cdramo
@@ -1839,7 +1840,7 @@ public class EndososManagerImpl implements EndososManager
 			String nmsuplem = iniciarEndosoResp.get("pv_nmsuplem_o");
 			String nsuplogi = iniciarEndosoResp.get("pv_nsuplogi_o");
 			
-			setCheckpoint("Iterando registros");
+			paso = "Iterando registros";
 			for(Map<String,String>rec:mpoliperMpersona)
 			{
 				String mov    = rec.get("mov");
@@ -2007,10 +2008,10 @@ public class EndososManagerImpl implements EndososManager
 				}
 			}
 			
-			setCheckpoint("Confirmando endoso");
+			paso = "Confirmando endoso";
 			endososDAO.confirmarEndosoB(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nsuplogi,cdtipsup,"");
 			
-			setCheckpoint("Guardando tr\u00e1mite");
+			paso = "Guardando tr\u00e1mite";
 			Map<String,String>valores=new HashMap<String,String>();
 			valores.put("otvalor01" , ntramiteEmi);
 			valores.put("otvalor02" , cdtipsup);
@@ -2041,7 +2042,7 @@ public class EndososManagerImpl implements EndososManager
 					,valores, null
 					);
 			
-			setCheckpoint("Reimprimiendo documentos");
+			paso = "Reimprimiendo documentos";
 			
 			documentosManager.generarDocumentosParametrizados(
 					cdunieco
@@ -2097,11 +2098,11 @@ public class EndososManagerImpl implements EndososManager
 			}
 			*/
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex,paso);
 		}
 		
 		logger.debug(Utils.log(
@@ -2745,73 +2746,5 @@ public class EndososManagerImpl implements EndososManager
 			)throws Exception
 	{
 		return consultasDAO.recuperarUltimoNmsuplem(cdunieco,cdramo,estado,nmpoliza);
-	}
-	
-	/***********************************************************/
-	/********************** BASE MANAGER ***********************/
-	/***********************************************************/
-	/**
-	 * Guarda el estado actual en sesion
-	 */
-	private void setCheckpoint(String checkpoint)
-	{
-		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
-		session.put("checkpoint",checkpoint);
-	}
-	
-	/**
-	 * Obtiene el estado actual de sesion
-	 */
-	private String getCheckpoint()
-	{
-		return (String)session.get("checkpoint");
-	}
-	
-	/**
-	 * Da valor a los atributos exito, respuesta y respuestaOculta de resp.
-	 * Tambien guarda el checkpoint en 0
-	 */
-	private void manejaException(Exception ex,ManagerRespuestaBaseVO resp)
-	{
-		long timestamp = System.currentTimeMillis();
-		resp.setExito(false);
-		resp.setRespuestaOculta(ex.getMessage());
-		
-		if(ex instanceof ApplicationException)
-		{
-			resp.setRespuesta(
-					new StringBuilder()
-					.append(ex.getMessage())
-					.append(" #")
-					.append(timestamp)
-					.toString()
-					);
-		}
-		else
-		{
-			resp.setRespuesta(
-					new StringBuilder()
-					.append("Error ")
-					.append(getCheckpoint().toLowerCase())
-					.append(" #")
-					.append(timestamp)
-					.toString()
-					);
-		}
-		
-		logger.error(resp.getRespuesta(),ex);
-		setCheckpoint("0");
-	}
-	/***********************************************************/
-	/********************** BASE MANAGER ***********************/
-	/***********************************************************/
-	
-	/////////////////////////////////
-	////// getters and setters //////
-	/*/////////////////////////////*/
-	@Override
-	public void setSession(Map<String,Object>session)
-	{
-		this.session=session;
 	}
 }

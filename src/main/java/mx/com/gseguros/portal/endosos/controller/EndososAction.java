@@ -6314,7 +6314,7 @@ public class EndososAction extends PrincipalCoreAction
 			smap1.put("pantallaOrigen", "MARCO_ENDOSOS_NUEVO");
 		}
 		
-		logger.info("endosoDomicilioFull()");
+		logger.debug("endosoDomicilioFull()");
 		logger.debug(new StringBuilder("\n")
 	        .append("\n#################################")
 	        .append("\n#################################")
@@ -6393,7 +6393,7 @@ public class EndososAction extends PrincipalCoreAction
 	/*///////////////////////////////*/
 	public String endosoDomicilioAutoFull() {
 		
-		logger.info("endosoDomicilioFull()");
+		logger.debug("endosoDomicilioFull()");
 		logger.debug(new StringBuilder("\n")
 		.append("\n#################################")
 		.append("\n#################################")
@@ -7065,16 +7065,16 @@ public class EndososAction extends PrincipalCoreAction
 			endososManager.insertarTworksupSitTodas(mapaTworksupEnd);
 			////// inserta tworksup //////
 			//////////////////////////////
-			logger.info("Codigo Postal Original:>"+valorCodPosOriginal+"<Codigo Postal Nuevo:>"+cdpostal+"<");
+			logger.debug("Codigo Postal Original:>"+valorCodPosOriginal+"<Codigo Postal Nuevo:>"+cdpostal+"<");
 
 			
 			/**
 			 *SE COMENTA PARA YA NO TARIFICAR 
 			 * 
 			if(cdpostal.equalsIgnoreCase(valorCodPosOriginal)){
-				logger.info("El codigo Postal para Endoso de Domicilio Full no ha cambiado, no se ejecuta SIGSVALIPOL, CALCULA_VALOR_ENDOSO");
+				logger.debug("El codigo Postal para Endoso de Domicilio Full no ha cambiado, no se ejecuta SIGSVALIPOL, CALCULA_VALOR_ENDOSO");
 			}else{
-				logger.info("Codigo postal nuevo para Endoso de Domicilio Full, ejecutando SIGSVALIPOL, CALCULA_VALOR_ENDOSO");
+				logger.debug("Codigo postal nuevo para Endoso de Domicilio Full, ejecutando SIGSVALIPOL, CALCULA_VALOR_ENDOSO");
 				//////////////////////////
 				////// tarificacion //////
 				endososManager.sigsvalipolEnd(
@@ -10516,7 +10516,7 @@ public class EndososAction extends PrincipalCoreAction
 		
 	public String pantallaRecibosSubsecuentes()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n#########################################"
 				+ "\n###### pantallaRecibosSubsecuentes ######"
 				);
@@ -10537,7 +10537,7 @@ public class EndososAction extends PrincipalCoreAction
 			logger.error("error al cargar la pantalla de recibos subsecuentes",ex);
 		}
 		
-		logger.info(""
+		logger.debug(""
 				+ "\n###### pantallaRecibosSubsecuentes ######"
 				+ "\n#########################################"
 				);
@@ -10546,11 +10546,11 @@ public class EndososAction extends PrincipalCoreAction
 	
 	public String habilitarRecibosSubsecuentes()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n##########################################"
 				+ "\n###### habilitarRecibosSubsecuentes ######"
 				);
-		logger.info("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		try
 		{
 			String cdunieco      = smap1.get("cdunieco");
@@ -10571,7 +10571,7 @@ public class EndososAction extends PrincipalCoreAction
 			mensaje=ex.getMessage();
 			success=false;
 		}
-		logger.info(""
+		logger.debug(""
 				+ "\n###### habilitarRecibosSubsecuentes ######"
 				+ "\n##########################################"
 				);
@@ -10580,7 +10580,7 @@ public class EndososAction extends PrincipalCoreAction
 	
 	public String obtenerComponenteSituacionCobertura()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n#################################################")
 				.append("\n###### obtenerComponenteSituacionCobertura ######")
@@ -10651,7 +10651,7 @@ public class EndososAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### obtenerComponenteSituacionCobertura ######")
 				.append("\n#################################################")
@@ -10663,7 +10663,7 @@ public class EndososAction extends PrincipalCoreAction
 	public String endosoAtributosSituacionGeneral()
 	{
 		this.session=ActionContext.getContext().getSession();
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n#############################################")
 				.append("\n###### endosoAtributosSituacionGeneral ######")
@@ -10789,7 +10789,7 @@ public class EndososAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### result=").append(result)
 				.append("\n###### endosoAtributosSituacionGeneral ######")
@@ -10801,7 +10801,7 @@ public class EndososAction extends PrincipalCoreAction
 	
 	public String cargarTvalositTitular()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###################################")
 				.append("\n###### cargarTvalositTitular ######")
@@ -10874,7 +10874,7 @@ public class EndososAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### cargarTvalositTitular ######")
 				.append("\n###################################")
@@ -10886,7 +10886,7 @@ public class EndososAction extends PrincipalCoreAction
 	public String guardarEndosoAtributosSituacionGeneral()
 	{
 		this.session=ActionContext.getContext().getSession();
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n####################################################")
 				.append("\n###### guardarEndosoAtributosSituacionGeneral ######")
@@ -10989,7 +10989,7 @@ public class EndososAction extends PrincipalCoreAction
 			respuestaOculta = resp.getRespuestaOculta();
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### guardarEndosoAtributosSituacionGeneral ######")
 				.append("\n####################################################")
@@ -11009,8 +11009,8 @@ public class EndososAction extends PrincipalCoreAction
 		
 		try
 		{
-			setCheckpoint("Validando datos de entrada");
-			checkNull(smap1, "No se recibieron datos");
+			logger.debug("Validando datos de entrada");
+			Utils.validate(smap1, "No se recibieron datos");
 			String cdunieco = smap1.get("cdunieco");
 			String cdramo   = smap1.get("cdramo");
 			String estado   = smap1.get("estado");
@@ -11019,17 +11019,15 @@ public class EndososAction extends PrincipalCoreAction
 			String cdtipsup = smap1.get("cdtipsup");
 			String ntramite = smap1.get("ntramite");
 			
-			checkBlank(cdunieco , "No se recibio la sucursal");
-			checkBlank(cdramo   , "No se recibio el producto");
-			checkBlank(estado   , "No se recibio el estado de la poliza");
-			checkBlank(nmpoliza , "No se recibio el numero de poliza");
-			checkBlank(nmsituac , "No se recibio el numero de situacion");
-			checkBlank(cdtipsup , "No se recibio el tipo de suplemento");
-			checkBlank(ntramite , "No se recibio el numero de tramite");
+			Utils.validate(cdunieco , "No se recibio la sucursal");
+			Utils.validate(cdramo   , "No se recibio el producto");
+			Utils.validate(estado   , "No se recibio el estado de la poliza");
+			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
+			Utils.validate(nmsituac , "No se recibio el numero de situacion");
+			Utils.validate(cdtipsup , "No se recibio el tipo de suplemento");
+			Utils.validate(ntramite , "No se recibio el numero de tramite");
 			
-			checkNull(session                , "No hay sesion");
-			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
-			UserVO usuarioSesion = (UserVO) session.get("USUARIO");
+			UserVO usuarioSesion = Utils.validateSession(session);
 			String cdelemen = ((UserVO)session.get("USUARIO")).getCdElemento();
 			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
 			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
@@ -11054,7 +11052,7 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex);
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.debug(Utils.log(
@@ -11969,53 +11967,6 @@ public class EndososAction extends PrincipalCoreAction
 		}
 	}
 	
-	/****************************** BASE ACTION **********************************/
-	private void manejaException(Exception ex)
-	{
-		long timestamp  = System.currentTimeMillis();
-		exito           = false;
-		respuestaOculta = ex.getMessage();
-		
-		if(ex instanceof ApplicationException)
-		{
-			respuesta = new StringBuilder(ex.getMessage()).append(" #").append(timestamp).toString();
-		}
-		else
-		{
-			respuesta = new StringBuilder("Error ").append(getCheckpoint().toLowerCase()).append(" #").append(timestamp).toString();
-		}
-		
-		logger.error(respuesta,ex);
-		setCheckpoint("0");
-	}
-	
-	private String getCheckpoint()
-	{
-		return (String)session.get("checkpoint");
-	}
-	
-	private void setCheckpoint(String checkpoint)
-	{
-		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
-		session.put("checkpoint",checkpoint);
-	}
-	
-	private void checkNull(Object objeto,String mensaje)throws ApplicationException
-	{
-		if(objeto==null)
-		{
-			throw new ApplicationException(mensaje);
-		}
-	}
-	
-	private void checkBlank(String cadena,String mensaje)throws ApplicationException
-	{
-		if(StringUtils.isBlank(cadena))
-		{
-			throw new ApplicationException(mensaje);
-		}
-	}
-	
 	public String cargaAsegurados()
 	{
 		logger.debug("\n"
@@ -12084,7 +12035,6 @@ public class EndososAction extends PrincipalCoreAction
 
 	public void setEndososManager(EndososManager endososManager) {
 		this.endososManager = endososManager;
-		this.endososManager.setSession(session);
 	}
 
 	public Item getItem1() {

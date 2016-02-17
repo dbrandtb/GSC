@@ -4,11 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
@@ -17,7 +15,6 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.utils.Utils;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,92 +31,8 @@ public class EmisionManagerImpl implements EmisionManager
 	@Autowired
 	private CotizacionDAO cotizacionDAO;
 	
-	/*
-	 * Utilitarios
-	 */
-	private void setCheckpoint(String checkpoint)
-	{
-		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
-		session.put("checkpoint",checkpoint);
-	}
-
-	private String getCheckpoint()
-	{
-		return (String)session.get("checkpoint");
-	}
-	
-	private void manejaException(Exception ex,ManagerRespuestaBaseVO resp)
-	{
-		long timestamp = System.currentTimeMillis();
-		resp.setExito(false);
-		resp.setRespuestaOculta(ex.getMessage());
-		
-		if(ex instanceof ApplicationException)
-		{
-			resp.setRespuesta(
-					new StringBuilder()
-					.append(ex.getMessage())
-					.append(" #")
-					.append(timestamp)
-					.toString()
-					);
-		}
-		else
-		{
-			resp.setRespuesta(
-					new StringBuilder()
-					.append("Error ")
-					.append(getCheckpoint().toLowerCase())
-					.append(" #")
-					.append(timestamp)
-					.toString()
-					);
-		}
-		
-		logger.error(resp.getRespuesta(),ex);
-		setCheckpoint("0");
-	}
-	
-	private boolean isBlank(String mensaje)
-	{
-		return StringUtils.isBlank(mensaje);
-	}
-	
-	private void throwExc(String mensaje) throws ApplicationException
-	{
-		throw new ApplicationException(mensaje);
-	}
-	
-	private void checkBlank(String cadena,String mensaje)throws ApplicationException
-	{
-		if(isBlank(cadena))
-		{
-			throwExc(mensaje);
-		}
-	}
-	
-	private void checkNull(Object objeto,String mensaje)throws ApplicationException
-	{
-		if(objeto==null)
-		{
-			throwExc(mensaje);
-		}
-	}
-	
-	private void checkList(List<?>lista,String mensaje)throws ApplicationException
-	{
-		checkNull(lista,mensaje);
-		if(lista.size()==0)
-		{
-			throwExc(mensaje);
-		}
-	}
-	/*
-	 * Utilitarios
-	 */
-	
 	@Override
-	public ManagerRespuestaImapVO construirPantallaClausulasPoliza()
+	public ManagerRespuestaImapVO construirPantallaClausulasPoliza() throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -129,9 +42,11 @@ public class EmisionManagerImpl implements EmisionManager
 		ManagerRespuestaImapVO resp=new ManagerRespuestaImapVO(true);
 		resp.setImap(new HashMap<String,Item>());
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Recuperando combo de clausulas por poliza");
+			paso = "Recuperando combo de clausulas por poliza";
 			List<ComponenteVO>comboClausulas=pantallasDAO.obtenerComponentes(
 					null  //cdtiptra
 					,null //cdunieco
@@ -143,14 +58,14 @@ public class EmisionManagerImpl implements EmisionManager
 					,"COMBO_CLAUSULAS"
 					,null //orden
 					);
-			checkList(comboClausulas , "Error al obtener el combo de clausulas por poliza");
+			Utils.validate(comboClausulas , "Error al obtener el combo de clausulas por poliza");
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.generaComponentes(comboClausulas, true, false, true, false, false, false);
 			resp.getImap().put("comboClausulas" , gc.getItems());
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex,paso);
 		}
 		
 		logger.debug(Utils.log(

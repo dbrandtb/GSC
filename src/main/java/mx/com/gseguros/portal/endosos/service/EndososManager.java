@@ -370,7 +370,7 @@ public interface EndososManager
 			,String rutaServReports
 			,String passServReports
 			);
-	public void setSession(Map<String,Object>session);
+	
 	public ManagerRespuestaVoidVO guardarEndosoBeneficiarios(
 			String cdunieco
 			,String cdramo
@@ -384,7 +384,7 @@ public interface EndososManager
 			,String ntramite
 			,String cdsisrol
 			,UserVO usuarioSesion
-			);
+			)throws Exception;
 	
 	/**
 	 * 

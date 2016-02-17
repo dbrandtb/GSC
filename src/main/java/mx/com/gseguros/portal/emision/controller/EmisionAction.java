@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
@@ -13,7 +12,6 @@ import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -33,66 +31,6 @@ public class EmisionAction extends PrincipalCoreAction
 	private Map<String,Item>         imap      = null;
 	private List<Map<String,String>> slist1    = null;
 	
-	/*
-	 * Utilitarios
-	 */
-	private void manejaException(Exception ex)
-	{
-		long timestamp  = System.currentTimeMillis();
-		exito           = false;
-		
-		if(ex instanceof ApplicationException)
-		{
-			respuesta = new StringBuilder(ex.getMessage()).append(" #").append(timestamp).toString();
-		}
-		else
-		{
-			respuesta = new StringBuilder("Error ").append(getCheckpoint().toLowerCase()).append(" #").append(timestamp).toString();
-		}
-		
-		logger.error(respuesta,ex);
-		setCheckpoint("0");
-	}
-	
-	private void setCheckpoint(String checkpoint)
-	{
-		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
-		session.put("checkpoint",checkpoint);
-	}
-	
-	private String getCheckpoint()
-	{
-		return (String)session.get("checkpoint");
-	}
-	
-	private void checkNull(Object objeto,String mensaje)throws ApplicationException
-	{
-		if(objeto==null)
-		{
-			throw new ApplicationException(mensaje);
-		}
-	}
-	
-	private void checkBlank(String cadena,String mensaje)throws ApplicationException
-	{
-		if(StringUtils.isBlank(cadena))
-		{
-			throw new ApplicationException(mensaje);
-		}
-	}
-	
-	private void checkList(List<?> lista,String mensaje)throws ApplicationException
-	{
-		checkNull(lista,mensaje);
-		if(lista.size()==0)
-		{
-			throw new ApplicationException(mensaje);
-		}
-	}
-	/*
-	 * Utilitarios
-	 */
-	
 	public EmisionAction()
 	{
 		logger.debug("new EmisionAction");
@@ -109,14 +47,14 @@ public class EmisionAction extends PrincipalCoreAction
 		
 		try
 		{
-			setCheckpoint("Validando datos de entrada");
-			checkNull(smap1, "No se recibieron datos de entrada");
+			logger.debug("Validando datos de entrada");
+			Utils.validate(smap1, "No se recibieron datos de entrada");
 			
-			checkBlank(smap1.get("cdunieco") , "No se recibio la sucursal");
-			checkBlank(smap1.get("cdramo")   , "No se recibio el producto");
-			checkBlank(smap1.get("estado")   , "No se recibio el estado");
-			checkBlank(smap1.get("nmpoliza") , "No se recibio el numero de poliza");
-			checkBlank(smap1.get("nmsuplem") , "No se recibio el numero de suplemento");
+			Utils.validate(smap1.get("cdunieco") , "No se recibio la sucursal");
+			Utils.validate(smap1.get("cdramo")   , "No se recibio el producto");
+			Utils.validate(smap1.get("estado")   , "No se recibio el estado");
+			Utils.validate(smap1.get("nmpoliza") , "No se recibio el numero de poliza");
+			Utils.validate(smap1.get("nmsuplem") , "No se recibio el numero de suplemento");
 			
 			ManagerRespuestaImapVO resp=emisionManager.construirPantallaClausulasPoliza();
 			exito     = resp.isExito();
@@ -125,7 +63,7 @@ public class EmisionAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex);
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
 		String result = SUCCESS;
@@ -152,8 +90,8 @@ public class EmisionAction extends PrincipalCoreAction
 		
 		try
 		{
-			setCheckpoint("Validando datos de entrada");
-			checkList(slist1, "No se recibieron las clausulas");
+			logger.debug("Validando datos de entrada");
+			Utils.validate(slist1, "No se recibieron las clausulas");
 			
 			ManagerRespuestaVoidVO resp=emisionManager.guardarClausulasPoliza(slist1);
 			exito     = resp.isExito();
@@ -161,7 +99,7 @@ public class EmisionAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex);
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.debug(Utils.log(

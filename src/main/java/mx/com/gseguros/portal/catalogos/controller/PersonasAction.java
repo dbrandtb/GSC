@@ -11,10 +11,8 @@ import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.endosos.controller.EndososAction;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.utils.Constantes;
@@ -1469,137 +1467,88 @@ public class PersonasAction extends PrincipalCoreAction
 	
 	public String pantallaBeneficiarios()
 	{
-		logger.debug(Utils.log(
-				 "\n###################################"
+		long stamp = System.currentTimeMillis();
+		logger.debug(Utils.log(stamp
+				,"\n###################################"
 				,"\n###### pantallaBeneficiarios ######"
 				,"\n###### smap1=",smap1
 				));
 		
+		String result = ERROR;
+		
 		try
 		{
-			setCheckpoint("Validando datos de entrada");
-			checkNull(smap1, "No se recibieron datos");
-			
-			EndososAction endososAction = new EndososAction();
-			endososAction.setEndososManager(endososManager);
-			endososAction.transformaEntrada(smap1, slist1, true);
-			
-			//validados
-			String cdunieco   = smap1.get("cdunieco");
-			String cdramo     = smap1.get("cdramo");
-			String estado     = smap1.get("estado");
-			String nmpoliza   = smap1.get("nmpoliza");
-			String nmsuplem   = smap1.get("nmsuplem");
-			String nmsituac   = smap1.get("nmsituac");
-			String cdrolPipes = smap1.get("cdrolPipes");
-			String cdtipsup   = smap1.get("cdtipsup");
-			String ntramite   = smap1.get("ntramite");
-			
-			checkBlank(cdunieco   , "No se recibio la sucursal");
-			checkBlank(cdramo     , "No se recibio el producto");
-			checkBlank(estado     , "No se recibio el estado de la poliza");
-			checkBlank(nmpoliza   , "No se recibio el numero de poliza");
-			checkBlank(nmsuplem   , "No se recibio el numero de suplemento");
-			checkBlank(nmsituac   , "No se recibio el numero de situacion");
-			checkBlank(cdrolPipes , "No se recibieron los roles permitidos");
-			checkBlank(cdtipsup   , "No se recibio el tipo de suplemento");
-			if(!cdtipsup.equals("1"))
-			{
-				checkBlank(ntramite, "No se recibio el numero de tramite");
+			String paso = null;
+			try
+			{	
+				paso = "Validando datos de entrada";
+				
+				Utils.validate(smap1, "No se recibieron datos");
+				
+				EndososAction endososAction = new EndososAction();
+				endososAction.setEndososManager(endososManager);
+				endososAction.transformaEntrada(smap1, slist1, true);
+				
+				//validados
+				String cdunieco    = smap1.get("cdunieco")
+				       ,cdramo     = smap1.get("cdramo")
+				       ,estado     = smap1.get("estado")
+				       ,nmpoliza   = smap1.get("nmpoliza")
+				       ,nmsuplem   = smap1.get("nmsuplem")
+				       ,nmsituac   = smap1.get("nmsituac")
+				       ,cdrolPipes = smap1.get("cdrolPipes")
+				       ,cdtipsup   = smap1.get("cdtipsup")
+				       ,ntramite   = smap1.get("ntramite");
+				
+				Utils.validate(
+						cdunieco   , "No se recibio la sucursal"
+						,cdramo     , "No se recibio el producto"
+						,estado     , "No se recibio el estado de la poliza"
+						,nmpoliza   , "No se recibio el numero de poliza"
+						,nmsuplem   , "No se recibio el numero de suplemento"
+						,nmsituac   , "No se recibio el numero de situacion"
+						,cdrolPipes , "No se recibieron los roles permitidos"
+						,cdtipsup   , "No se recibio el tipo de suplemento"
+						);
+				
+				if(!cdtipsup.equals("1"))
+				{
+					Utils.validate(ntramite, "No se recibio el numero de tramite");
+				}
+				
+				//no validados
+				String ultimaImagen = smap1.get("ultimaImagen");
+				if(StringUtils.isBlank(ultimaImagen)
+						||!ultimaImagen.equals("S"))
+				{
+					ultimaImagen="N";
+				}
+				
+				smap1.put("ultimaImagen" , ultimaImagen);
+				
+				String cdsisrol = Utils.validateSession(session).getRolActivo().getClave();
+				
+				imap = personasManager.pantallaBeneficiarios(cdunieco,cdramo,estado,cdsisrol,cdtipsup);
+				
+				result = SUCCESS;
 			}
-			
-			//no validados
-			String ultimaImagen = smap1.get("ultimaImagen");
-			if(StringUtils.isBlank(ultimaImagen)
-					||!ultimaImagen.equals("S"))
+			catch(Exception ex)
 			{
-				ultimaImagen="N";
-			}
-			
-			smap1.put("ultimaImagen" , ultimaImagen);
-			
-			checkNull(session                , "No hay sesion");
-			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
-			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
-			
-			ManagerRespuestaImapVO resp=personasManager.pantallaBeneficiarios(cdunieco,cdramo,estado,cdsisrol,cdtipsup);
-			exito           = resp.isExito();
-			respuesta       = resp.getRespuesta();
-			respuestaOculta = resp.getRespuestaOculta();
-			if(exito)
-			{
-				imap = resp.getImap();
-			}
-			else
-			{
-				exito = false;
+				Utils.generaExcepcion(ex, paso);
 			}
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex);
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(
-				 "\n###### pantallaBeneficiarios ######"
+		logger.debug(Utils.log(stamp
+				,"\n###### pantallaBeneficiarios ######"
 				,"\n###################################"
 				));
 		
-		String result = SUCCESS;
-		if(!exito)
-		{
-			result = ERROR;
-		}
 		return result;
 	}
-	
-	/****************************** BASE ACTION **********************************/
-	private void manejaException(Exception ex)
-	{
-		long timestamp  = System.currentTimeMillis();
-		exito           = false;
-		respuestaOculta = ex.getMessage();
-		
-		if(ex instanceof ApplicationException)
-		{
-			respuesta = new StringBuilder(ex.getMessage()).append(" #").append(timestamp).toString();
-		}
-		else
-		{
-			respuesta = new StringBuilder("Error ").append(getCheckpoint().toLowerCase()).append(" #").append(timestamp).toString();
-		}
-		
-		logger.error(respuesta,ex);
-		setCheckpoint("0");
-	}
-	
-	private String getCheckpoint()
-	{
-		return (String)session.get("checkpoint");
-	}
-	
-	private void setCheckpoint(String checkpoint)
-	{
-		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
-		session.put("checkpoint",checkpoint);
-	}
-	
-	private void checkNull(Object objeto,String mensaje)throws ApplicationException
-	{
-		if(objeto==null)
-		{
-			throw new ApplicationException(mensaje);
-		}
-	}
-	
-	private void checkBlank(String cadena,String mensaje)throws ApplicationException
-	{
-		if(StringUtils.isBlank(cadena))
-		{
-			throw new ApplicationException(mensaje);
-		}
-	}
-	/****************************** BASE ACTION **********************************/
 	
 	/*
 	 * GETTERS Y SETTERS

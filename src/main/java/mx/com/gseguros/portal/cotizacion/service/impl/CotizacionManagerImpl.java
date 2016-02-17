@@ -23,7 +23,6 @@ import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ConfiguracionCoberturaDTO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
@@ -62,6 +61,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import com.opensymphony.xwork2.ActionContext;
+
 public class CotizacionManagerImpl implements CotizacionManager 
 {
 
@@ -90,97 +91,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 	
 	@Autowired
 	private transient Ice2sigsService ice2sigsService;
-	
-	private Map<String,Object> session;
-	
-	@Override
-	public void setSession(Map<String,Object>session){
-		logger.debug("setSession");
-		this.session=session;
-	}
-	
-	/**
-	 * Guarda el estado actual en sesion
-	 */
-	private void setCheckpoint(String checkpoint)
-	{
-		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
-		if(session != null) {
-			session.put("checkpoint",checkpoint);
-		}
-	}
-	
-	/**
-	 * Obtiene el estado actual de sesion
-	 */
-	private String getCheckpoint()
-	{
-		if(session != null) {
-			return (String)session.get("checkpoint");
-		} else {
-			return "";
-		}
-	}
-	
-	/**
-	 * Da valor a los atributos exito, respuesta y respuestaOculta de resp.
-	 * Tambien guarda el checkpoint en 0
-	 */
-	private void manejaException(Exception ex,ManagerRespuestaBaseVO resp)
-	{
-		long timestamp = System.currentTimeMillis();
-		resp.setExito(false);
-		resp.setRespuestaOculta(ex.getMessage());
-		
-		if(ex instanceof ApplicationException)
-		{
-			resp.setRespuesta(
-					new StringBuilder()
-					.append(ex.getMessage())
-					.append(" #")
-					.append(timestamp)
-					.toString()
-					);
-		}
-		else
-		{
-			resp.setRespuesta(
-					new StringBuilder()
-					.append("Error ")
-					.append(getCheckpoint().toLowerCase())
-					.append(" #")
-					.append(timestamp)
-					.toString()
-					);
-		}
-		
-		logger.error(resp.getRespuesta(),ex);
-		setCheckpoint("0");
-	}
-	
-	/**
-	 * Atajo a StringUtils.isBlank
-	 */
-	private boolean isBlank(String mensaje)
-	{
-		return StringUtils.isBlank(mensaje);
-	}
-	
-	/**
-	 * Arroja una ApplicationException
-	 */
-	private void throwExc(String mensaje) throws ApplicationException
-	{
-		throw new ApplicationException(mensaje);
-	}
-	
-	private void checkBlank(String cadena,String mensaje)throws ApplicationException
-	{
-		if(isBlank(cadena))
-		{
-			throwExc(mensaje);
-		}
-	}
 	
 	@Override
 	public void movimientoTvalogarGrupo(
@@ -3564,7 +3474,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            	    ,"COTIZA"     //cdevento
 	            	    ,new Date()   //fecha
 	            	    ,cdusuari
-	            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+	            	    ,((UserVO)ActionContext.getContext().getSession().get("USUARIO")).getRolActivo().getClave()
 	            	    ,ntramite
 	            	    ,cdunieco
 	            	    ,cdramo
@@ -3838,7 +3748,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		            	    ,"GENTRAGRUP" //cdevento
 		            	    ,new Date()   //fecha
 		            	    ,cdusuari
-		            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+		            	    ,((UserVO)ActionContext.getContext().getSession().get("USUARIO")).getRolActivo().getClave()
 		            	    ,ntramite
 		            	    ,cdunieco
 		            	    ,cdramo
@@ -5484,7 +5394,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String nmnumint
 			,String nmorddom
 			,boolean esConfirmaEmision
-			,UserVO usuarioSesion)
+			,UserVO usuarioSesion
+			)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -5508,6 +5419,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 				));
 		
 		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
+		
+		String paso = "Se guarda contratante colectivo";
 		
 		try
 		{
@@ -5605,7 +5518,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.debug(Utils.log(
@@ -5618,7 +5531,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 	
 	@Override
-	public ManagerRespuestaSmapVO cargarTramite(String ntramite)
+	public ManagerRespuestaSmapVO cargarTramite(String ntramite)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -5628,9 +5541,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 		
 		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Recuperando tramite");
+			paso = "Recuperando tramite";
 			
 			List<Map<String,String>>lista=mesaControlDAO.cargarTramitesPorParametrosVariables(
 					TipoTramite.POLIZA_NUEVA.getCdtiptra()
@@ -5645,19 +5560,19 @@ public class CotizacionManagerImpl implements CotizacionManager
 			
 			if(lista==null||lista.size()==0)
 			{
-				throwExc("No hay tramite");
+				throw new ApplicationException("No hay tramite");
 			}
 			if(lista.size()>1)
 			{
-				throwExc("Tramite duplicado");
+				throw new ApplicationException("Tramite duplicado");
 			}
 			resp.setSmap(lista.get(0));
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.debug(Utils.log(
@@ -6564,6 +6479,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
             try
             {
+            	Map<String,Object> session = ActionContext.getContext().getSession();
             	gc.setEsMovil(session!=null&&session.containsKey("ES_MOVIL")&&((Boolean)session.get("ES_MOVIL"))==true);
             }
             catch(Exception ex)

@@ -145,101 +145,13 @@ public class CotizacionAction extends PrincipalCoreAction
 		this.session=ActionContext.getContext().getSession();
 	}
 	
-	/**
-	 * Guarda el estado actual en sesion
-	 * @param checkpoint
-	 */
-	private void setCheckpoint(String checkpoint)
-	{
-		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
-		session.put("checkpoint",checkpoint);
-	}
-	
-	/**
-	 * Obtiene el estado actual de sesion
-	 * @return checkpoint
-	 */
-	private String getCheckpoint()
-	{
-		return (String)session.get("checkpoint");
-	}
-	
-	/**
-	 * Da valor a las variables exito, respuesta y respuestaOculta.
-	 * Tambien guarda el checkpoint en 0
-	 * @param ex
-	 */
-	private void manejaException(Exception ex)
-	{
-		long timestamp  = System.currentTimeMillis();
-		exito           = false;
-		respuestaOculta = ex.getMessage();
-		
-		if(ex instanceof ApplicationException)
-		{
-			respuesta = new StringBuilder(ex.getMessage()).append(" #").append(timestamp).toString();
-		}
-		else
-		{
-			respuesta = new StringBuilder("Error ").append(getCheckpoint().toLowerCase()).append(" #").append(timestamp).toString();
-		}
-		
-		logger.error(respuesta,ex);
-		setCheckpoint("0");
-	}
-	
-	/**
-	 * Revisa cadena vacia y arroja ApplicationException
-	 */
-	private void checkBlank(String cadena,String mensaje)throws ApplicationException
-	{
-		if(StringUtils.isBlank(cadena))
-		{
-			throw new ApplicationException(mensaje);
-		}
-	}
-	
-	/**
-	 * Revisa nulo y arroja ApplicationException
-	 */
-	private void checkNull(Object objeto,String mensaje)throws ApplicationException
-	{
-		if(objeto==null)
-		{
-			throw new ApplicationException(mensaje);
-		}
-	}
-	
-	/**
-	 * Revisa boolean y arroja ApplicationException
-	 */
-	private void checkBool(boolean bool,String mensaje)throws ApplicationException
-	{
-		if(bool==false)
-		{
-			throw new ApplicationException(mensaje);
-		}
-	}
-	
-	/**
-	 * Revisa null y lista vacia
-	 */
-	private void checkList(List<?> lista,String mensaje)throws ApplicationException
-	{
-		checkNull(lista,mensaje);
-		if(lista.size()==0)
-		{
-			throw new ApplicationException(mensaje);
-		}
-	}
-	
 	/////////////////////////////////
 	////// cotizacion dinamica //////
 	/*/////////////////////////////*/
 	public String pantallaCotizacion()
 	{
 		this.session=ActionContext.getContext().getSession();
-		logger.info("\n"
+		logger.debug("\n"
 				+ "\n################################"
 				+ "\n###### pantallaCotizacion ######"
 				+ "\n###### smap1: "+smap1
@@ -780,7 +692,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(""
+		logger.debug(""
 				+ "\nrespuesta: "+respuesta
 				+ "\n###### pantallaCotizacion ######"
 				+ "\n################################"
@@ -791,11 +703,11 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String webServiceNada()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n############################"
 				+ "\n###### webServiceNada ######"
 				);
-		logger.info("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		
 		String  vim                  = null;
 		success                      = true;
@@ -896,7 +808,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			smap1.put("AUTO_MARCA", datosAuto.getMakeDescr());
 		}
 		
-		logger.info(""
+		logger.debug(""
 				+ "\n###### webServiceNada ######"
 				+ "\n############################"
 				);
@@ -1402,9 +1314,9 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		try
 		{
-			setCheckpoint("Validando datos para cotizar");
+			logger.debug("Validando datos para cotizar");
 			
-			checkNull(smap1, "No se recibieron datos para cotizar");
+			Utils.validate(smap1, "No se recibieron datos para cotizar");
 			
 			String cdunieco = smap1.get("cdunieco");
 			String cdramo   = smap1.get("cdramo");
@@ -1412,13 +1324,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			
 			String cdagente = smap1.get("cdagenteAux");
 			
-			checkNull(session                , "No hay sesion");
-			checkNull(session.get("USUARIO") , "No hay usuario en la sesion");
+			Utils.validate(session                , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
 			UserVO usuario  = (UserVO)session.get("USUARIO");
 			String cdusuari = usuario.getUser();
 			String cdelemen = usuario.getEmpresa().getElementoId();
 			
-			checkList(slist1, "No se recibieron datos de incisos");
+			Utils.validate(slist1, "No se recibieron datos de incisos");
 			String nmpoliza = slist1.get(0).get("nmpoliza");
 			String feini    = slist1.get(0).get("feini");
 			String fefin    = slist1.get(0).get("fefin");
@@ -2193,11 +2105,11 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarCotizacion()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n##############################"
 				+ "\n###### cargarCotizacion ######"
 				);
-		logger.info("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		success = true;
 		
 		String cdunieco = smap1.get("cdunieco");
@@ -2205,9 +2117,9 @@ public class CotizacionAction extends PrincipalCoreAction
 		String estado   = "W";
 		String cdtipsit = smap1.get("cdtipsit");
 		String nmpoliza = smap1.get("nmpoliza");
-		logger.info("cdramo: "+cdramo);
-		logger.info("cdtipsit: "+cdtipsit);
-		logger.info("nmpoliza: "+nmpoliza);
+		logger.debug("cdramo: "+cdramo);
+		logger.debug("cdtipsit: "+cdtipsit);
+		logger.debug("nmpoliza: "+nmpoliza);
 		
 		UserVO usuario  = (UserVO)session.get("USUARIO");
 		String cdusuari = usuario.getUser();
@@ -2293,9 +2205,9 @@ public class CotizacionAction extends PrincipalCoreAction
 					String iCdunieco = iInciso.get("CDUNIECO");
 					String iEstado   = iInciso.get("ESTADO");
 					String iNmsituac = iInciso.get("NMSITUAC");
-					logger.info("iCdunieco: "+iCdunieco);
-					logger.info("iEstado: "+iEstado);
-					logger.info("iNmsituac: "+iNmsituac);
+					logger.debug("iCdunieco: "+iCdunieco);
+					logger.debug("iEstado: "+iEstado);
+					logger.debug("iNmsituac: "+iNmsituac);
 					LinkedHashMap<String,Object>paramsObtenerMpersonaCotizacion=new LinkedHashMap<String,Object>();
 					paramsObtenerMpersonaCotizacion.put("param1",iCdunieco);
 					paramsObtenerMpersonaCotizacion.put("param2",cdramo);
@@ -2399,7 +2311,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		//recuperar tvalopol
 		
-		logger.info(""
+		logger.debug(""
 				+ "\n###### cargarCotizacion ######"
 				+ "\n##############################"
 				);
@@ -2408,11 +2320,11 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String guardarSituacionesAuto()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n####################################"
 				+ "\n###### guardarSituacionesAuto ######"
 				);
-		logger.info("smap1: "+smap1);
+		logger.debug("smap1: "+smap1);
 		
 		String cdunieco = null;
 		String cdramo   = null;
@@ -2431,11 +2343,11 @@ public class CotizacionAction extends PrincipalCoreAction
 				cdtipsit = smap1.get("cdtipsit");
 				estado   = smap1.get("estado");
 				nmpoliza = smap1.get("nmpoliza");
-				logger.info("cdunieco: " + cdunieco);
-				logger.info("cdramo: "   + cdramo);
-				logger.info("cdtipsit: " + cdtipsit);
-				logger.info("estado: "   + estado);
-				logger.info("nmpoliza: " + nmpoliza);
+				logger.debug("cdunieco: " + cdunieco);
+				logger.debug("cdramo: "   + cdramo);
+				logger.debug("cdtipsit: " + cdtipsit);
+				logger.debug("estado: "   + estado);
+				logger.debug("nmpoliza: " + nmpoliza);
 			}
 			catch(Exception ex)
 			{
@@ -2757,8 +2669,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info("slist1: "+slist1);
-		logger.info(""
+		logger.debug("slist1: "+slist1);
+		logger.debug(""
 				+ "\n###### guardarSituacionesAuto ######"
 				+ "\n####################################"
 				);
@@ -2768,7 +2680,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	public String pantallaCotizacionGrupo2()
 	{
 		long stamp = System.currentTimeMillis();
-		logger.info(Utils.log(stamp
+		logger.debug(Utils.log(stamp
 				,"\n######################################"
 				,"\n###### pantallaCotizacionGrupo2 ######"
 				,"\n###### smap1=" , smap1
@@ -2908,7 +2820,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utils.log(stamp
+		logger.debug(Utils.log(stamp
 				,"\n###### result="    , result
 				,"\n###### respuesta=" , respuesta
 				,"\n###### pantallaCotizacionGrupo2 ######"
@@ -2920,7 +2832,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	public String pantallaCotizacionGrupo()
 	{
 		long stamp = System.currentTimeMillis();
-		logger.info(Utils.log(stamp
+		logger.debug(Utils.log(stamp
 				,"\n#####################################"
 				,"\n###### pantallaCotizacionGrupo ######"
 				,"\n###### smap1=", smap1
@@ -3235,7 +3147,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.info(Utils.log(stamp
+		logger.debug(Utils.log(stamp
 				,"\n###### result="    , result
 				,"\n###### respuesta=" , respuesta
 				,"\n###### pantallaCotizacionGrupo ######"
@@ -3246,7 +3158,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String obtenerCoberturasPlan()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n###################################"
 				+ "\n###### obtenerCoberturasPlan ######"
 				+ "\nsmap1: "+smap1
@@ -3269,7 +3181,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuestaOculta = ex.getMessage();
 			exito           = false;
 		}
-		logger.info(""
+		logger.debug(""
 				+ "\n###### obtenerCoberturasPlan ######"
 				+ "\n###################################"
 				);
@@ -3278,7 +3190,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String obtenerTatrigarCoberturas()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n#######################################"
 				+ "\n###### obtenerTatrigarCoberturas ######"
 				+ "\nsmap1: "+smap1
@@ -3309,7 +3221,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuestaOculta = ex.getMessage();
 			exito           = false;
 		}
-		logger.info(""
+		logger.debug(""
 				+ "\n###### obtenerTatrigarCoberturas ######"
 				+ "\n#######################################"
 				);
@@ -3318,7 +3230,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String subirCenso()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n########################"
 				+ "\n###### subirCenso ######"
 				+ "\n censo "+censo+""
@@ -3337,15 +3249,15 @@ public class CotizacionAction extends PrincipalCoreAction
 			//censo.renameTo(new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp));
 			try {
             	FileUtils.copyFile(censo, new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp));
-            	logger.info("archivo movido");
+            	logger.debug("archivo movido");
 			} catch (Exception e) {
 				logger.error("archivo NO movido", e);
 			}
 			
-			logger.info("censo renamed to: "+this.getText("ruta.documentos.temporal")+"/censo_"+timestamp);
+			logger.debug("censo renamed to: "+this.getText("ruta.documentos.temporal")+"/censo_"+timestamp);
 		}
 		
-		logger.info(""
+		logger.debug(""
 				+ "\n###### subirCenso ######"
 				+ "\n########################"
 				);
@@ -3355,7 +3267,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	public String subirCensoCompleto2()
 	{
 		this.session=ActionContext.getContext().getSession();
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n#################################")
 				.append("\n###### subirCensoCompleto2 ######")
@@ -3523,7 +3435,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### subirCensoCompleto2 ######")
 				.append("\n#################################")
@@ -3535,7 +3447,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	public String subirCensoCompleto()
 	{
 		this.session=ActionContext.getContext().getSession();
-		logger.info(Utils.log(
+		logger.debug(Utils.log(
 				 "\n################################"
 				,"\n###### subirCensoCompleto ######"
 				,"\n###### smap1="  , smap1
@@ -3713,7 +3625,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			if(exito)
 			{
 				//Iterate through each rows one by one
-				logger.info(""
+				logger.debug(""
 						+ "\n##############################################"
 						+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
 						);
@@ -3757,7 +3669,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                try
                 	{
 	                	cdgrupo = row.getCell(0).getNumericCellValue();
-		                logger.info("GRUPO: "+(
+		                logger.debug("GRUPO: "+(
 		                		String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"
 		                		));
 		                bufferLinea.append(
@@ -3786,7 +3698,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	{
 	                		throw new ApplicationException("El parentesco no se reconoce [T,C,H,P,D]");
 	                	}
-		                logger.info("PARENTESCO: "+(
+		                logger.debug("PARENTESCO: "+(
 		                		parentesco+"|"
 		                		));
 		                bufferLinea.append(
@@ -3818,7 +3730,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                try
                 	{
-		                logger.info("PATERNO: "+(
+		                logger.debug("PATERNO: "+(
 		                		row.getCell(2).getStringCellValue()+"|"
 		                		));
 		                bufferLinea.append(
@@ -3839,7 +3751,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                try
                 	{
-		                logger.info("MATERNO: "+(
+		                logger.debug("MATERNO: "+(
 		                		row.getCell(3).getStringCellValue()+"|"
 		                		));
 		                bufferLinea.append(
@@ -3859,7 +3771,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                try
                 	{
-		                logger.info("NOMBRE: "+(
+		                logger.debug("NOMBRE: "+(
 		                		row.getCell(4).getStringCellValue()+"|"
 		                		));
 		                bufferLinea.append(
@@ -3880,7 +3792,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                try
                 	{
 		                auxCell=row.getCell(5);
-		                logger.info("SEGUNDO NOMBRE: "+(
+		                logger.debug("SEGUNDO NOMBRE: "+(
 		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
 		                		));
 		                bufferLinea.append(
@@ -3915,7 +3827,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	{
 	                		throw new ApplicationException("No se reconoce el sexo [H,M]");
 	                	}
-		                logger.info("SEXO: "+(
+		                logger.debug("SEXO: "+(
 		                		sexo+"|"
 		                		));
 		                bufferLinea.append(
@@ -3946,7 +3858,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                		throw new ApplicationException("El anio de la fecha no es valido");
 		                	}
 		                }
-		                logger.info("FECHA NACIMIENTO: "+(
+		                logger.debug("FECHA NACIMIENTO: "+(
 		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
 		                			));
 		                bufferLinea.append(
@@ -3965,7 +3877,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                try
                 	{
-		                logger.info("COD POSTAL: "+(
+		                logger.debug("COD POSTAL: "+(
 		                		String.format("%.0f",row.getCell(8).getNumericCellValue())+"|"
 		                		));
 		                bufferLinea.append(
@@ -3977,7 +3889,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	logger.error("error al leer codigo postal como numero, se intentara como string:",ex2);
 	                	try
 	                	{
-	                		logger.info("COD POSTAL: "+row.getCell(8).getStringCellValue()+"|");
+	                		logger.debug("COD POSTAL: "+row.getCell(8).getStringCellValue()+"|");
 			                bufferLinea.append(row.getCell(8).getStringCellValue()+"|");
 	                	}
 		                catch(Exception ex)
@@ -3993,7 +3905,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                try
                 	{
-		                logger.info("ESTADO: "+(
+		                logger.debug("ESTADO: "+(
 		                		row.getCell(9).getStringCellValue()+"|"
 		                		));
 		                bufferLinea.append(
@@ -4012,7 +3924,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                try
                 	{
-		                logger.info("MUNICIPIO: "+(
+		                logger.debug("MUNICIPIO: "+(
 		                		row.getCell(10).getStringCellValue()+"|"
 		                		));
 		                bufferLinea.append(
@@ -4031,7 +3943,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                try
                 	{
-		                logger.info("COLONIA: "+(
+		                logger.debug("COLONIA: "+(
 		                		row.getCell(11).getStringCellValue()+"|"
 		                		));
 		                bufferLinea.append(
@@ -4050,7 +3962,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                try
                 	{
-		                logger.info("CALLE: "+(
+		                logger.debug("CALLE: "+(
 		                		row.getCell(12).getStringCellValue()+"|"
 		                		));
 		                bufferLinea.append(
@@ -4074,7 +3986,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	{
 	                		throw new ApplicationException("Falta numero exterior");
 	                	}
-		                logger.info("NUM EXT: "+numExt);
+		                logger.debug("NUM EXT: "+numExt);
 		                bufferLinea.append(Utils.join(numExt,"|"));
                 	}
 	                catch(Exception ex)
@@ -4090,7 +4002,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                try
                 	{
 	                	String numInt = extraerStringDeCelda(row.getCell(14));
-		                logger.info("NUM INT: "+numInt);
+		                logger.debug("NUM INT: "+numInt);
 		                bufferLinea.append(Utils.join(numInt,"|"));
                 	}
 	                catch(Exception ex)
@@ -4107,7 +4019,7 @@ public class CotizacionAction extends PrincipalCoreAction
                 	{
 	                	auxCell=row.getCell(15);
 	                	
-		                logger.info("RFC: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+		                logger.debug("RFC: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
 		                
 		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
 		                
@@ -4133,7 +4045,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                try
                 	{
 		                auxCell=row.getCell(16);
-		                logger.info("CORREO: "+(
+		                logger.debug("CORREO: "+(
 		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
 		                		));
 		                bufferLinea.append(
@@ -4153,7 +4065,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                try
                 	{
 		                auxCell=row.getCell(17);
-		                logger.info("TELEFONO: "+(
+		                logger.debug("TELEFONO: "+(
 		                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
 		                		));
 		                bufferLinea.append(
@@ -4179,7 +4091,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                {
 		                	throw new ApplicationException("Necesito el numero de empleado");
 		                }
-		                logger.info("IDENTIDAD: "+(
+		                logger.debug("IDENTIDAD: "+(
 		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
 		                		));
 		                bufferLinea.append(
@@ -4210,7 +4122,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                		throw new ApplicationException("El anio de la fecha no es valido");
 		                	}
 		                }
-		                logger.info("FECHA RECONOCIMIENTO ANTIGUEDAD: "+(
+		                logger.debug("FECHA RECONOCIMIENTO ANTIGUEDAD: "+(
 		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
 		                			));
 		                bufferLinea.append(
@@ -4327,7 +4239,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            	}
 	            }
 	            
-	            logger.info(""
+	            logger.debug(""
 	            		+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
 						+ "\n##############################################"
 						);
@@ -4402,7 +4314,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			smap1.put("nombreCensoParaConfirmar", nombreCenso);
 			exito     = true;
 			respuesta = Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]");
-			logger.info(respuesta);
+			logger.debug(respuesta);
 			return SUCCESS;
 		}
 		
@@ -4436,7 +4348,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuestaOculta = "Todo OK";
 		}
 		
-		logger.info(""
+		logger.debug(""
 				+ "\n###### subirCensoCompleto ######"
 				+ "\n################################"
 				);
@@ -4452,7 +4364,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String generarTramiteGrupo2()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n##################################")
 				.append("\n###### generarTramiteGrupo2 ######")
@@ -4658,7 +4570,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### generarTramiteGrupo2 ######")
 				.append("\n##################################")
@@ -4670,7 +4582,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	public String generarTramiteGrupo()
 	{
 		this.session=ActionContext.getContext().getSession();
-		logger.info(""
+		logger.debug(""
 				+ "\n#################################"
 				+ "\n###### generarTramiteGrupo ######"
 				+ "\nsmap1 "+smap1
@@ -4731,7 +4643,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			String nmpolant  = smap1.get("nmpolant")
 			       ,nmrenova = smap1.get("nmrenova");
 			
-			logger.info(Utils.log(
+			logger.debug(Utils.log(
 					"\ninTimestamp: " , inTimestamp
 					,"\nclasif: "     , clasif
 					,"\ncenso: "      , censo
@@ -4921,7 +4833,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						Map<Integer,String>  titulares      = new LinkedHashMap<Integer,String>();
 						
 						//Iterate through each rows one by one
-						logger.info(""
+						logger.debug(""
 								+ "\n##############################################"
 								+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
 								);
@@ -4952,7 +4864,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                    try
 			                {
 				                auxCell=row.getCell(0);
-				                logger.info("NOMBRE: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+				                logger.debug("NOMBRE: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
 				                bufferLinea.append(Utils.join(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
 				                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():""," ");
 			                }
@@ -4969,7 +4881,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			                try
 			                {
 				                auxCell=row.getCell(1);
-				                logger.info("APELLIDO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+				                logger.debug("APELLIDO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
 				                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
 				                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():""," ");
 			                }
@@ -4986,7 +4898,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                	try
 		                	{
 				                auxCell=row.getCell(2);
-				                logger.info("APELLIDO 2: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+				                logger.debug("APELLIDO 2: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
 				                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
 				                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():"");
 			                }
@@ -5003,7 +4915,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                	try
 		                	{
 				                auxCell=row.getCell(3);
-				                logger.info("EDAD: "+(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"));
+				                logger.debug("EDAD: "+(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"));
 				                bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
 				                
 				                if(row.getCell(4)!=null) {
@@ -5019,10 +4931,10 @@ public class CotizacionAction extends PrincipalCoreAction
 					                		throw new ApplicationException("El anio de la fecha no es valido");
 					                	}
 					                }
-					                logger.info("FENACIMI: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
+					                logger.debug("FENACIMI: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
 					                bufferLinea.append(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
 				                } else {
-				                	logger.info("FENACIMI: "+"|");
+				                	logger.debug("FENACIMI: "+"|");
 				                	bufferLinea.append("|");
 				                }
 			                }
@@ -5045,7 +4957,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                		{
 		                			throw new ApplicationException("El sexo no se reconoce [H,M]");
 		                		}
-				                logger.info("SEXO: "+sexo+"|");
+				                logger.debug("SEXO: "+sexo+"|");
 				                bufferLinea.append(sexo+"|");
 			                }
 			                catch(Exception ex)
@@ -5072,7 +4984,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                		{
 		                			throw new ApplicationException("El parentesco no se reconoce [T,C,P,H,D]");
 		                		}
-				                logger.info("PARENTESCO: "+parentesco+"|");
+				                logger.debug("PARENTESCO: "+parentesco+"|");
 				                bufferLinea.append(parentesco+"|");
 				                
 				                if("T".equals(parentesco))
@@ -5107,7 +5019,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                	try
 		                	{
 				                auxCell=row.getCell(7);
-				                logger.info("OCUPACION: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+				                logger.debug("OCUPACION: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
 				                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
 			                }
 			                catch(Exception ex)
@@ -5123,7 +5035,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                	try
 		                	{
 				                auxCell=row.getCell(8);
-				                logger.info("EXTRAPRIMA OCUPACION: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+				                logger.debug("EXTRAPRIMA OCUPACION: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
 				                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
 			                }
 			                catch(Exception ex)
@@ -5139,7 +5051,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                	try
 		                	{
 				                auxCell=row.getCell(9);
-				                logger.info("PESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+				                logger.debug("PESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
 				                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
 			                }
 			                catch(Exception ex)
@@ -5155,7 +5067,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			                try
 		                	{
 				                auxCell=row.getCell(10);
-				                logger.info("ESTATURA: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+				                logger.debug("ESTATURA: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
 				                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
 			                }
 			                catch(Exception ex)
@@ -5171,7 +5083,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			                try
 		                	{
 				                auxCell=row.getCell(11);
-				                logger.info("EXTRAPRIMA SOBREPESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+				                logger.debug("EXTRAPRIMA SOBREPESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
 				                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
 			                }
 			                catch(Exception ex)
@@ -5186,7 +5098,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			                
 			                try
 		                	{
-				                logger.info("GRUPO: "+String.format("%.0f",row.getCell(12).getNumericCellValue())+"|");
+				                logger.debug("GRUPO: "+String.format("%.0f",row.getCell(12).getNumericCellValue())+"|");
 				                bufferLinea.append(String.format("%.0f",row.getCell(12).getNumericCellValue())+"|");
 				                
 				                double cdgrupo=row.getCell(12).getNumericCellValue();
@@ -5211,7 +5123,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                    }
 			                
 			                bufferLinea.append("\n");
-			                logger.info("** NUEVA_FILA **");
+			                logger.debug("** NUEVA_FILA **");
 			                
 			                if(filaBuena)
 			                {
@@ -5283,7 +5195,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			            
 			            input.close();
 			            output.close();
-			            logger.info(""
+			            logger.debug(""
 			            		+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
 								+ "\n##############################################"
 								);
@@ -5291,7 +5203,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					else //censo agrupado
 					{
 						//Iterate through each rows one by one
-						logger.info(""
+						logger.debug(""
 								+ "\n##############################################"
 								+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
 								);
@@ -5315,7 +5227,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			                
 		                	try
 		                	{
-				                logger.info("EDAD: "+String.format("%.0f",row.getCell(0).getNumericCellValue())+"|");
+				                logger.debug("EDAD: "+String.format("%.0f",row.getCell(0).getNumericCellValue())+"|");
 				                bufferLinea.append(String.format("%.0f",row.getCell(0).getNumericCellValue())+"|");
 			                }
 			                catch(Exception ex)
@@ -5336,7 +5248,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			                	{
 			                		throw new ApplicationException("Genero (sexo) incorrecto");
 			                	}
-				                logger.info("SEXO: "+sexo+"|");
+				                logger.debug("SEXO: "+sexo+"|");
 				                bufferLinea.append(sexo+"|");
 			                }
 			                catch(Exception ex)
@@ -5351,7 +5263,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			                
 			                try
 		                	{
-				                logger.info("CUANTOS: "+String.format("%.0f",row.getCell(2).getNumericCellValue())+"|");
+				                logger.debug("CUANTOS: "+String.format("%.0f",row.getCell(2).getNumericCellValue())+"|");
 				                bufferLinea.append(String.format("%.0f",row.getCell(2).getNumericCellValue())+"|");
 				                
 				                nSituac = nSituac + (int)row.getCell(2).getNumericCellValue();
@@ -5368,7 +5280,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			                
 			                try
 		                	{
-				                logger.info("GRUPO: "+String.format("%.0f",row.getCell(3).getNumericCellValue())+"|");
+				                logger.debug("GRUPO: "+String.format("%.0f",row.getCell(3).getNumericCellValue())+"|");
 				                bufferLinea.append(String.format("%.0f",row.getCell(3).getNumericCellValue())+"|");
 				                
 				                double cdgrupo=row.getCell(3).getNumericCellValue();
@@ -5393,7 +5305,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                    }
 			                
 			                bufferLinea.append("\n");
-			                logger.info("** NUEVA_FILA **");
+			                logger.debug("** NUEVA_FILA **");
 			                
 			                if(filaBuena)
 			                {
@@ -5408,7 +5320,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			            }
 			            input.close();
 			            output.close();
-			            logger.info(""
+			            logger.debug(""
 			            		+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
 								+ "\n##############################################"
 								);
@@ -5566,7 +5478,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				smap1.put("nombreCensoParaConfirmar" , nombreCenso);
 				exito     = true;
 				respuesta = Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]");
-				logger.info(respuesta);
+				logger.debug(respuesta);
 				return SUCCESS;
 			}
 			
@@ -5605,7 +5517,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuestaOculta = ex.getMessage();
 			exito           = false;
 		}
-		logger.info(""
+		logger.debug(""
 				+ "\n###### generarTramiteGrupo ######"
 				+ "\n#################################"
 				);
@@ -6377,7 +6289,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String obtenerDetalleCotizacionGrupo()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n###########################################"
 				+ "\n###### obtenerDetalleCotizacionGrupo ######"
 				+ "\nsmap1: "+smap1
@@ -6425,7 +6337,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuesta       = "Error al obtener detalle #"+timestamp;
 			respuestaOculta = ex.getMessage();
 		}
-		logger.info(""
+		logger.debug(""
 				+ "\n###### obtenerDetalleCotizacionGrupo ######"
 				+ "\n###########################################"
 				);
@@ -6434,7 +6346,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarDatosCotizacionGrupo()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n########################################"
 				+ "\n###### cargarDatosCotizacionGrupo ######"
 				+ "\nsmap1 "+smap1
@@ -6458,7 +6370,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuesta       = "Error inesperado #"+timestamp;
 			respuestaOculta = ex.getMessage();
 		}
-		logger.info(""
+		logger.debug(""
 				+ "\n###### cargarDatosCotizacionGrupo ######"
 				+ "\n########################################"
 				);
@@ -6467,7 +6379,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarDatosCotizacionGrupo2()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n#########################################"
 				+ "\n###### cargarDatosCotizacionGrupo2 ######"
 				+ "\n###### smap1 "+smap1
@@ -6557,7 +6469,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(""
+		logger.debug(""
 				+ "\n###### cargarDatosCotizacionGrupo2 ######"
 				+ "\n#########################################"
 				);
@@ -6566,7 +6478,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarGruposCotizacion2()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n#####################################")
 				.append("\n###### cargarGruposCotizacion2 ######")
@@ -6640,7 +6552,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### cargarGruposCotizacion2 ######")
 				.append("\n#####################################")
@@ -6651,7 +6563,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarGruposCotizacion()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n####################################"
 				+ "\n###### cargarGruposCotizacion ######"
 				+ "\n smap1: "+smap1
@@ -6672,7 +6584,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuesta       = "Error inesperado #"+timestamp;
 			respuestaOculta = ex.getMessage();
 		}
-		logger.info(""
+		logger.debug(""
 				+ "\n###### cargarGruposCotizacion ######"
 				+ "\n####################################"
 				);
@@ -6681,7 +6593,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarDatosGrupoLinea()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n###################################"
 				+ "\n###### cargarDatosGrupoLinea ######"
 				+ "\n smap1: "+smap1
@@ -6708,7 +6620,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuesta       = "Error inesperado #"+timestamp;
 			respuestaOculta = ex.getMessage();
 		}
-		logger.info(""
+		logger.debug(""
 				+ "\n###### cargarDatosGrupoLinea ######"
 				+ "\n###################################"
 				);
@@ -6717,7 +6629,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarTvalogarsGrupo()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n##################################"
 				+ "\n###### cargarTvalogarsGrupo ######"
 				+ "\nsmap1: "+smap1
@@ -6743,7 +6655,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuesta       = "Error inesperado #"+timestamp;
 			respuestaOculta = ex.getMessage();
 		}
-		logger.info(""
+		logger.debug(""
 				+ "\n###### cargarTvalogarsGrupo ######"
 				+ "\n##################################"
 				);
@@ -6752,7 +6664,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarTarifasPorEdad()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n##################################"
 				+ "\n###### cargarTarifasPorEdad ######"
 				+ "\nsmap1: "+smap1
@@ -6781,7 +6693,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuesta       = "Error inesperado #"+timestamp;
 			respuestaOculta = ex.getMessage();
 		}
-		logger.info(""
+		logger.debug(""
 				+ "\n###### cargarTarifasPorEdad ######"
 				+ "\n##################################"
 				);
@@ -6790,7 +6702,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarTarifasPorCobertura()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n#######################################"
 				+ "\n###### cargarTarifasPorCobertura ######"
 				+ "\nsmap1: "+smap1
@@ -6819,7 +6731,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuesta       = "Error inesperado #"+timestamp;
 			respuestaOculta = ex.getMessage();
 		}
-		logger.info(""
+		logger.debug(""
 				+ "\n###### cargarTarifasPorCobertura ######"
 				+ "\n#######################################"
 				);
@@ -7006,7 +6918,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String guardarExtraprimasAsegurados()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n##########################################"
 				+ "\n###### guardarExtraprimasAsegurados ######"
 				+ "\nslist1: "+slist1
@@ -7045,7 +6957,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				logger.error(respuesta,ex);
 			}
 		}
-		logger.info(""
+		logger.debug(""
 				+ "\n###### guardarExtraprimasAsegurados ######"
 				+ "\n##########################################"
 				);
@@ -7054,7 +6966,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String ejecutaSigsvalipol()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n################################"
 				+ "\n###### ejecutaSigsvalipol ######"
 				+ "\nsmap1: "+smap1
@@ -7089,7 +7001,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				logger.error(respuesta,ex);
 			}
 		}
-		logger.info(""
+		logger.debug(""
 				+ "\n###### ejecutaSigsvalipol ######"
 				+ "\n################################"
 				);
@@ -7098,7 +7010,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarAseguradosGrupo()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n###################################"
 				+ "\n###### cargarAseguradosGrupo ######"
 				+ "\nsmap1 "+smap1
@@ -7150,7 +7062,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				logger.error(respuesta,ex);
 			}
 		}
-		logger.info(""
+		logger.debug(""
 				+ "\n###### cargarAseguradosGrupo ######"
 				+ "\n###################################"
 				);
@@ -7160,7 +7072,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	public String guardarAseguradosCotizacion()
 	{
 		this.session=ActionContext.getContext().getSession();
-		logger.info(""
+		logger.debug(""
 				+ "\n#########################################"
 				+ "\n###### guardarAseguradosCotizacion ######"
 				+ "\nsmap1 "+smap1
@@ -7213,7 +7125,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				logger.error(respuesta,ex);
 			}
 		}
-		logger.info(""
+		logger.debug(""
 				+ "\n###### guardarAseguradosCotizacion ######"
 				+ "\n#########################################"
 				);
@@ -7614,7 +7526,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarCduniecoAgenteAuto()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n######################################")
 				.append("\n###### cargarCduniecoAgenteAuto ######")
@@ -7636,7 +7548,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuestaOculta = ex.getMessage();
 			logger.error(respuesta,ex);
 		}
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\nsmap1 ")
 				.append(smap1)
@@ -7649,7 +7561,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarCdagentePorFolio()
 	{
-		logger.info(new StringBuilder()
+		logger.debug(new StringBuilder()
 		      .append("\n####################################")
 		      .append("\n###### cargarCdagentePorFolio ######")
 		      .append("\nsmap1").append(smap1)
@@ -7702,7 +7614,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(new StringBuilder()
+		logger.debug(new StringBuilder()
 		      .append("\nsmap1").append(smap1)
 		      .append("\n###### cargarCdagentePorFolio ######")
 		      .append("\n####################################")
@@ -7713,7 +7625,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String obtenerParametrosCotizacion()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n#########################################")
 				.append("\n###### obtenerParametrosCotizacion ######")
@@ -7809,7 +7721,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### smap1=").append(smap1)
 				.append("\n###### obtenerParametrosCotizacion ######")
@@ -7821,7 +7733,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarAutoPorClaveGS()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n##################################")
 				.append("\n###### cargarAutoPorClaveGS ######")
@@ -7916,7 +7828,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### smap1=").append(smap1)
 				.append("\n###### cargarAutoPorClaveGS ######")
@@ -7928,7 +7840,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarClaveGSPorAuto()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n##################################")
 				.append("\n###### cargarClaveGSPorAuto ######")
@@ -7991,7 +7903,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### smap1=").append(smap1)
 				.append("\n###### cargarClaveGSPorAuto ######")
@@ -8003,7 +7915,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarSumaAseguradaAuto()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n#####################################")
 				.append("\n###### cargarSumaAseguradaAuto ######")
@@ -8083,7 +7995,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### cargarSumaAseguradaAuto ######")
 				.append("\n#####################################")
@@ -8094,7 +8006,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String agregarClausulaICD()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n################################")
 				.append("\n###### agregarClausulaICD ######")
@@ -8174,7 +8086,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### agregarClausulaICD ######")
 				.append("\n################################")
@@ -8185,7 +8097,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarClausulaICD()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###############################")
 				.append("\n###### cargarClausulaICD ######")
@@ -8266,7 +8178,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### slist1=").append(slist1)
 				.append("\n###### cargarClausulaICD ######")
@@ -8278,7 +8190,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String borrarClausulaICD()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###############################")
 				.append("\n###### borrarClausulaICD ######")
@@ -8358,7 +8270,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### borrarClausulaICD ######")
 				.append("\n###############################")
@@ -8369,7 +8281,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String validarDescuentoAgente()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n####################################")
 				.append("\n###### validarDescuentoAgente ######")
@@ -8442,7 +8354,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuestaOculta = resp.getRespuestaOculta();
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### validarDescuentoAgente ######")
 				.append("\n####################################")
@@ -8453,7 +8365,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarClienteCotizacion()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n#####################################")
 				.append("\n###### cargarClienteCotizacion ######")
@@ -8527,7 +8439,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### cargarClienteCotizacion ######")
 				.append("\n#####################################")
@@ -8538,7 +8450,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarConceptosGlobalesGrupo()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n##########################################")
 				.append("\n###### cargarConceptosGlobalesGrupo ######")
@@ -8624,7 +8536,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### smap1=").append(smap1)
 				.append("\n###### cargarConceptosGlobalesGrupo ######")
@@ -8636,7 +8548,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String obtenerTiposSituacion()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###################################")
 				.append("\n###### obtenerTiposSituacion ######")
@@ -8655,7 +8567,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			slist1 = resp.getSlist();
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### obtenerTiposSituacion ######")
 				.append("\n###################################")
@@ -8666,7 +8578,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String guardarValoresSituaciones()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n#######################################")
 				.append("\n###### guardarValoresSituaciones ######")
@@ -8703,7 +8615,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuestaOculta = resp.getRespuestaOculta();
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### guardarValoresSituaciones ######")
 				.append("\n#######################################")
@@ -8714,7 +8626,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String validarCambioZonaGMI()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n##################################")
 				.append("\n###### validarCambioZonaGMI ######")
@@ -8778,7 +8690,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuestaOculta = resp.getRespuestaOculta();
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### validarCambioZonaGMI ######")
 				.append("\n##################################")
@@ -8789,7 +8701,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String validarEnfermedadCatastGMI()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n########################################")
 				.append("\n###### validarEnfermedadCatastGMI ######")
@@ -8846,7 +8758,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuestaOculta = resp.getRespuestaOculta();
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###### validarEnfermedadCatastGMI ######")
 				.append("\n########################################")
@@ -8865,8 +8777,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		try
 		{
-			setCheckpoint("Validando datos de entrada");
-			checkNull(smap1, "No se recibieron datos");
+			logger.debug("Validando datos de entrada");
+			Utils.validate(smap1, "No se recibieron datos");
 			String cdunieco = smap1.get("cdunieco");
 			String cdramo   = smap1.get("cdramo");
 			String estado   = smap1.get("estado");
@@ -8885,15 +8797,15 @@ public class CotizacionAction extends PrincipalCoreAction
 			String confirmaEmision = smap1.get("confirmaEmision");
 			boolean esConfirmaEmision = (StringUtils.isNotBlank(confirmaEmision) && Constantes.SI.equalsIgnoreCase(confirmaEmision));
 			
-			checkBlank(cdunieco , "No se recibio la sucursal");
-			checkBlank(cdramo   , "No se recibio el ramo");
-			checkBlank(estado   , "No se recibio el estado");
-			checkBlank(nmpoliza , "No se recibio el numero de poliza");
-			if(!esConfirmaEmision) checkBlank(nombre   , "No se recibio el nombre");
-			if(!esConfirmaEmision) checkBlank(cdpostal , "No se recibio el codigo postal");
-			if(!esConfirmaEmision) checkBlank(cdedo    , "No se recibio el estado");
-			if(!esConfirmaEmision) checkBlank(cdmunici , "No se recibio el municipio");
-			if(esConfirmaEmision)  checkBlank(cdperson , "No se recibio el cdperson");
+			Utils.validate(cdunieco , "No se recibio la sucursal");
+			Utils.validate(cdramo   , "No se recibio el ramo");
+			Utils.validate(estado   , "No se recibio el estado");
+			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
+			if(!esConfirmaEmision) Utils.validate(nombre   , "No se recibio el nombre");
+			if(!esConfirmaEmision) Utils.validate(cdpostal , "No se recibio el codigo postal");
+			if(!esConfirmaEmision) Utils.validate(cdedo    , "No se recibio el estado");
+			if(!esConfirmaEmision) Utils.validate(cdmunici , "No se recibio el municipio");
+			if(esConfirmaEmision)  Utils.validate(cdperson , "No se recibio el cdperson");
 			
 			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
 			
@@ -8922,7 +8834,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex);
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.debug(Utils.log(
@@ -8942,10 +8854,10 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		try
 		{
-			setCheckpoint("Validando datos");
-			checkNull(smap1, "No se recibieron datos");
+			logger.debug("Validando datos");
+			Utils.validate(smap1, "No se recibieron datos");
 			String ntramite = smap1.get("ntramite");
-			checkBlank(ntramite, "No se recibio el numero de tramite");
+			Utils.validate(ntramite, "No se recibio el numero de tramite");
 			
 			ManagerRespuestaSmapVO resp = cotizacionManager.cargarTramite(ntramite);
 			exito           = resp.isExito();
@@ -8958,7 +8870,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex);
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.debug(Utils.log(
@@ -9160,7 +9072,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String obtenerCoberturasPlanColec()
 	{
-		logger.info(""
+		logger.debug(""
 				+ "\n########################################"
 				+ "\n###### obtenerCoberturasPlanColec ######"
 				+ "\nsmap1: "+smap1
@@ -9179,7 +9091,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuestaOculta = ex.getMessage();
 			exito           = false;
 		}
-		logger.info(""
+		logger.debug(""
 				+ "\n###### obtenerCoberturasPlanColec ######"
 				+ "\n########################################"
 				);
@@ -9331,7 +9243,6 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public void setCotizacionManager(CotizacionManager cotizacionManager) {
 		this.cotizacionManager = cotizacionManager;
-		this.cotizacionManager.setSession(session);
 	}
 
 	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {

@@ -22,7 +22,6 @@ import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.dao.ValidacionesCotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2SmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
@@ -96,86 +95,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	private transient Ice2sigsService ice2sigsService;
 	
 	@Autowired
-	private transient NadaService nadaService; 
-	
-	private Map<String,Object> session;
-	
-	/**
-	 * Guarda el estado actual en sesion
-	 */
-	private void setCheckpoint(String checkpoint)
-	{
-		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
-		session.put("checkpoint",checkpoint);
-	}
-	
-	/**
-	 * Obtiene el estado actual de sesion
-	 */
-	private String getCheckpoint()
-	{
-		return (String)session.get("checkpoint");
-	}
-	
-	/**
-	 * Da valor a los atributos exito, respuesta y respuestaOculta de resp.
-	 * Tambien guarda el checkpoint en 0
-	 */
-	private void manejaException(Exception ex,ManagerRespuestaBaseVO resp)
-	{
-		long timestamp = System.currentTimeMillis();
-		resp.setExito(false);
-		resp.setRespuestaOculta(ex.getMessage());
-		
-		if(ex instanceof ApplicationException)
-		{
-			resp.setRespuesta(
-					new StringBuilder()
-					.append(ex.getMessage())
-					.append(" #")
-					.append(timestamp)
-					.toString()
-					);
-		}
-		else
-		{
-			resp.setRespuesta(
-					new StringBuilder()
-					.append("Error ")
-					.append(getCheckpoint().toLowerCase())
-					.append(" #")
-					.append(timestamp)
-					.toString()
-					);
-		}
-		
-		logger.error(resp.getRespuesta(),ex);
-		setCheckpoint("0");
-	}
-	
-	/**
-	 * Atajo a StringUtils.isBlank
-	 */
-	private boolean isBlank(String mensaje)
-	{
-		return StringUtils.isBlank(mensaje);
-	}
-	
-	/**
-	 * Arroja una ApplicationException
-	 */
-	private void throwExc(String mensaje) throws ApplicationException
-	{
-		throw new ApplicationException(mensaje);
-	}
-	
-	private void checkBlank(String cadena,String mensaje)throws ApplicationException
-	{
-		if(isBlank(cadena))
-		{
-			throwExc(mensaje);
-		}
-	}
+	private transient NadaService nadaService;
 	
 	@Override
 	public ManagerRespuestaImapSmapVO cotizacionAutoIndividual(
@@ -185,7 +105,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String cdtipsit
 			,String cdusuari
 			,String cdsisrol
-			)
+			)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -204,13 +124,15 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		resp.setSmap(new LinkedHashMap<String,String>());
 		resp.setImap(new LinkedHashMap<String,Item>());
 		
+		String paso = null;
+		
 		try
 		{
 			String cdagente = null;
 			
-			setCheckpoint("Obteniendo trámite y sucursal");//////
+			paso = "Obteniendo trámite y sucursal";//////
 			//cuando no hay tramite es porque cotiza un agente desde afuera
-			if(isBlank(ntramite))
+			if(StringUtils.isBlank(ntramite))
 			{
 				try
 				{
@@ -227,11 +149,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				catch(Exception ex)
 				{
-					throwExc("Usted no puede cotizar este producto");
+					throw new ApplicationException("Usted no puede cotizar este producto");
 				}
 			}
 			
-			setCheckpoint("Recuperando tipo de situación");//////
+			paso = "Recuperando tipo de situaci\u00f3n";//////
 			Map<String,String>tipoSituacion=cotizacionDAO.cargarTipoSituacion(cdramo,cdtipsit);
 			if(tipoSituacion!=null)
 			{
@@ -239,10 +161,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			else
 			{
-				throwExc("No se ha parametrizado la situación en TTIPRAM");
+				throw new ApplicationException("No se ha parametrizado la situaci\u00f3n en TTIPRAM");
 			}
 			
-			setCheckpoint("Recuperando atributos variables");//////
+			paso = "Recuperando atributos variables";//////
 			List<ComponenteVO>panel1=new ArrayList<ComponenteVO>();
 			List<ComponenteVO>panel2=new ArrayList<ComponenteVO>();
 			List<ComponenteVO>panel3=new ArrayList<ComponenteVO>();
@@ -265,7 +187,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			
 			tatrisit = aux;
 			
-			setCheckpoint("Obteniendo componentes sustitutos");//////
+			paso = "Obteniendo componentes sustitutos";//////
 			List<ComponenteVO>sustitutos = pantallasDAO.obtenerComponentes(
 					TipoTramite.POLIZA_NUEVA.getCdtiptra()
 					,cdunieco
@@ -333,7 +255,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 			}
 			
-			setCheckpoint("Construyendo componentes");//////
+			paso = "Construyendo componentes";//////
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.setCdramo(cdramo);
 			gc.setCdtipsit(cdtipsit);
@@ -359,7 +281,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			gc.generaComponentes(tatrisit, true, true, false, false, false, false);
 			resp.getImap().put("formFields" , gc.getFields());
 			
-			setCheckpoint("Recuperando atributos de poliza");
+			paso = "Recuperando atributos de poliza";
 			List<ComponenteVO>tatripol    = cotizacionDAO.cargarTatripol(cdramo, null, null);
 			List<ComponenteVO>tatripolAux = new ArrayList<ComponenteVO>();
 			for(ComponenteVO tatri:tatripol)
@@ -377,11 +299,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			gcTatripol.generaComponentes(tatripol, true, false, true, false, false, false);
 			resp.getImap().put("tatripolItems" , gcTatripol.getItems());
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex,resp);
+			Utils.generaExcepcion(ex,paso);
 		}
 
 		logger.info(
@@ -400,7 +322,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String cdramo
 			,String cdtipsup
 			,String cdusuari
-			,String cdtipsit)
+			,String cdtipsit
+			)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -416,16 +339,18 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Recuperando retroactividad");//////
+			paso = "Recuperando retroactividad";//////
 			resp.setSmap(cotizacionDAO.cargarRetroactividadSuplemento(cdunieco,cdramo,cdtipsup,cdusuari,cdtipsit));
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.info(
@@ -443,7 +368,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			String cdtipsit
 			,String clave
 			,String modelo
-			,String cdsisrol)
+			,String cdsisrol
+			)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -458,9 +384,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		ManagerRespuestaSmapVO resp=new ManagerRespuestaSmapVO(true);
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Invocando servicio web");
+			paso = "Invocando servicio web";
 			ResponseValor wsResp = valorComercialService.obtieneDatosVehiculoGS(Integer.valueOf(clave), Integer.valueOf(modelo));
 			boolean wsExito      = true;
 			if(wsResp==null)
@@ -474,7 +402,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				wsExito = false;
 			}
 			
-			setCheckpoint("Recuperando suma asegurada");
+			paso = "Recuperando suma asegurada";
 			resp.setSmap(cotizacionDAO.cargarSumaAseguradaRamo5(cdtipsit,clave,modelo,cdsisrol));
 			
 			if(wsExito&&wsResp.getValor_comercial()>0d)
@@ -486,11 +414,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				resp.getSmap().put("sumasegWS" , Double.toString(wsResp.getValor_comercial()));
 			}
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.info(
@@ -512,7 +440,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String nmpoliza
 			,String ntramite
 			,String cdusuari
-			)
+			)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -532,15 +460,17 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		resp.setImap(new HashMap<String,Item>());
 		resp.setSmap(new HashMap<String,String>());
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Procesando datos de entrada");
+			paso = "Procesando datos de entrada";
 			resp.getSmap().put("cdusuari" , cdusuari);
 			
-			setCheckpoint("Recuperando tipo de situacion");
+			paso = "Recuperando tipo de situacion";
 			resp.getSmap().putAll(cotizacionDAO.cargarTipoSituacion(cdramo, cdtipsit));
 			
-			setCheckpoint("Recuperando atributos variables de poliza");
+			paso = "Recuperando atributos variables de poliza";
 			List<ComponenteVO>tatripol = cotizacionDAO.cargarTatripol(cdramo,null,null);
 			for(ComponenteVO tatri:tatripol)
 			{
@@ -550,25 +480,25 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 			}
 			
-			setCheckpoint("Recuperando atributos variables de situacion");
+			paso = "Recuperando atributos variables de situacion";
 			List<ComponenteVO>tatrisit=cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
 			
-			setCheckpoint("Filtrando atributos de datos complementarios");
+			paso = "Filtrando atributos de datos complementarios";
 			List<ComponenteVO>aux=new ArrayList<ComponenteVO>();
 			for(ComponenteVO tatri:tatrisit)
 			{
-				if(isBlank(tatri.getSwtarifi())||tatri.getSwtarifi().equalsIgnoreCase("N"))
+				if(StringUtils.isBlank(tatri.getSwtarifi())||tatri.getSwtarifi().equalsIgnoreCase("N"))
 				{
 					aux.add(tatri);
 				}
 			}
 			tatrisit=aux;
 			
-			setCheckpoint("Recuperando componentes de pantalla");
+			paso = "Recuperando componentes de pantalla";
 			List<ComponenteVO>polizaComp=pantallasDAO.obtenerComponentes(null, null, null, null, null, null, "EMISION_AUTO_IND", "POLIZA", null);
 			List<ComponenteVO>agenteComp=pantallasDAO.obtenerComponentes(null, null, null, null, null, null, "EMISION_AUTO_IND", "AGENTE", null);
 			
-			setCheckpoint("Generando componentes");
+			paso = "Generando componentes";
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.setCdramo(cdramo);
 			gc.setCdtipsit(cdtipsit);
@@ -589,11 +519,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.getImap().put("agenteFields" , gc.getFields());
 			resp.getImap().put("agenteItems"  , gc.getItems());
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.info(
@@ -612,7 +542,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String cdramo
 			,String estado
 			,String nmpoliza
-			)
+			)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -626,17 +556,20 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				);
 		
 		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
+		
+		String paso = "Recuperando datos complementarios";
+		
 		try
 		{
 			resp.setSmap(cotizacionDAO.cargarDatosComplementariosAutoInd(cdunieco,cdramo,estado,nmpoliza));
 			
 			resp.getSmap().putAll(cotizacionDAO.cargarTvalopol(cdunieco,cdramo,estado,nmpoliza));
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.info(
@@ -656,7 +589,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String estado
 			,String nmpoliza
 			,String nmsituac
-			)
+			)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -672,15 +605,17 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
 		
+		String paso = "Recuperando valores de situaci\u00f3n";
+		
 		try
 		{
 			resp.setSmap(cotizacionDAO.cargarTvalosit(cdunieco, cdramo, estado, nmpoliza, nmsituac));
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.info(
@@ -707,7 +642,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String nmorddom
 			,String swreclam
 			,String accion
-			,String swexiper)
+			,String swexiper
+			)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -730,6 +666,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				);
 		
 		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
+		
+		String paso = "Invocando movimiento de persona";
+		
 		try
 		{
 			cotizacionDAO.borrarMpoliperTodos(cdunieco, cdramo, estado, nmpoliza);
@@ -737,7 +676,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.info(
@@ -764,7 +703,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,Map<String,String>tvalosit
 			,String ntramite
 			,String cdagente
-			)
+			)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -787,9 +726,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Actualizando poliza");
+			paso = "Actualizando poliza";
 			cotizacionDAO.actualizaMpolizas(
 					cdunieco
 					,cdramo
@@ -839,16 +780,16 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					,null //pcpgocte
 					);
 			
-			if(!isBlank(agenteSec))
+			if(!StringUtils.isBlank(agenteSec))
 			{
-				setCheckpoint("Desligando agentes anteriores");
+				paso = "Desligando agentes anteriores";
 				cotizacionDAO.borrarAgentesSecundarios(cdunieco, cdramo, estado, nmpoliza, "0");
 				
-				setCheckpoint("Recuperando cuadros de agentes");
+				paso = "Recuperando cuadros de agentes";
 				String nmcuadro    = cotizacionDAO.obtenerDatosAgente(cdagente  , cdramo).get("NMCUADRO");
     			String nmcuadroSec = cotizacionDAO.obtenerDatosAgente(agenteSec , cdramo).get("NMCUADRO");
 				
-				setCheckpoint("Guardando agente nuevo");
+				paso = "Guardando agente nuevo";
 				cotizacionDAO.movimientoMpoliage(
 						cdunieco
 						,cdramo
@@ -887,12 +828,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 			}
 				
-			setCheckpoint("Guardando datos adicionales de poliza");
+			paso = "Guardando datos adicionales de poliza";
 			Map<String,String>tvalopolAux=new HashMap<String,String>();
 			for(Entry<String,String>en:tvalopol.entrySet())
 			{
 				String key = en.getKey();
-				if(!isBlank(key)
+				if(!StringUtils.isBlank(key)
 						&&key.length()>"parametros.pv_otvalor".length()
 						&&key.substring(0,"parametros.pv_otvalor".length()).equals("parametros.pv_otvalor"))
 				{
@@ -901,12 +842,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			cotizacionDAO.movimientoTvalopol(cdunieco,cdramo,estado,nmpoliza,"0","V",tvalopolAux);
 			
-			setCheckpoint("Guardando datos adicionales de situacion");
+			paso = "Guardando datos adicionales de situacion";
 			Map<String,String>tvalositAux=new HashMap<String,String>();
 			for(Entry<String,String>en:tvalosit.entrySet())
 			{
 				String key = en.getKey();
-				if(!isBlank(key)
+				if(!StringUtils.isBlank(key)
 						&&key.length()>"parametros.pv_otvalor".length()
 						&&key.substring(0,"parametros.pv_otvalor".length()).equals("parametros.pv_otvalor"))
 				{
@@ -918,11 +859,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.setRespuesta("Datos guardados");
 			resp.setRespuestaOculta("Datos guardados");
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.info(
@@ -939,7 +880,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	public ManagerRespuestaSmapVO cargarConfiguracionCotizacion(
 			String cdramo
 			,String cdtipsit
-			,String cdusuari)
+			,String cdusuari
+			)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -953,16 +895,18 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Recuperando configuracio de cotizacion");
+			paso = "Recuperando configuracio de cotizacion";
 			resp.setSmap(cotizacionDAO.cargarConfiguracionCotizacion(cdramo, cdtipsit, cdusuari));
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.info(
@@ -980,7 +924,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			String cdramo
 			,String cdtipsit
 			,String cdusuari
-			,Map<String,String>valores)
+			,Map<String,String>valores
+			)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -995,19 +940,21 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Guardando configuracion");
+			paso = "Guardando configuracion";
 			cotizacionDAO.guardarConfiguracionCotizacion(cdramo, cdtipsit, cdusuari, valores);
 			
 			resp.setRespuesta("Se han guardado las configuraciones");
 			resp.setRespuestaOculta("Todo OK");
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.info(
@@ -1030,7 +977,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String tipoPersona
 			,String submarca
 			,String clavegs
-			)
+			)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -1049,9 +996,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Recuperando parametrizacion");
+			paso = "Recuperando parametrizacion";
 			List<List<Map<String,String>>>listas = cotizacionDAO.cargarParamerizacionConfiguracionCoberturas(
 					cdtipsit , cdsisrol    , negocio  , tipoServicio
 					,modelo  , tipoPersona , submarca , clavegs);
@@ -1063,7 +1012,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			List<Map<String,String>>latrixcam = listas.get(4);
 			List<Map<String,String>>latrirang = listas.get(5);
 			
-			setCheckpoint("Inicializando atributos a procesar");
+			paso = "Inicializando atributos a procesar";
 			Map<String,Map<String,String>>atributos = new LinkedHashMap<String,Map<String,String>>();
 			for(Map<String,String>tatrisit:ltatrisit)
 			{
@@ -1073,7 +1022,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			logger.debug(new StringBuilder("atributos=").append(atributos).toString());
 			
-			setCheckpoint("Asignando rangos");
+			paso = "Asignando rangos";
 			for(Map<String,String>rango:latrirang)
 			{
 				String cdatribu = rango.get("cdatribu");
@@ -1085,7 +1034,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			logger.debug(new StringBuilder("atributos=").append(atributos).toString());
 			
-			setCheckpoint("Procesando parametrizacion por rol");
+			paso = "Procesando parametrizacion por rol";
 			for(Map<String,String>atrixrol:latrixrol)
 			{
 				String cdatribu = atrixrol.get("cdatribu");
@@ -1103,7 +1052,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			
 			if(esCamion)
 			{
-				setCheckpoint("Procesando parametrizacion para tractocamion");
+				paso = "Procesando parametrizacion para tractocamion";
 				for(Map<String,String>atrixcam:latrixcam)
 				{
 					String cdatribu = atrixcam.get("cdatribu");
@@ -1120,7 +1069,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			else
 			{
 				/*comodin 1/2
-				setCheckpoint("Buscando comodin por modelo");
+				paso = "Buscando comodin por modelo");
 				boolean comodin = false;
 				for(Map<String,String>atrixant:latrixant)
 				{
@@ -1134,7 +1083,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				if(!comodin||true)
 				{
 				*/
-				setCheckpoint("Procesando parametrizacion por modelo");
+				paso = "Procesando parametrizacion por modelo";
 				for(Map<String,String>atrixant:latrixant)
 				{
 					String cdatribu = atrixant.get("cdatribu");
@@ -1150,7 +1099,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				/*comodin 2/2
 				}
 				*/
-				setCheckpoint("Procesando parametrizacion por tipo de persona");
+				paso = "Procesando parametrizacion por tipo de persona";
 				for(Map<String,String>atrixper:latrixper)
 				{
 					String cdatribu = atrixper.get("cdatribu");
@@ -1165,7 +1114,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				logger.debug(new StringBuilder("atributos=").append(atributos).toString());
 			}
 			
-			setCheckpoint("Transformando parametrizacion");
+			paso = "Transformando parametrizacion";
 			List<Map<String,String>>lista = new ArrayList<Map<String,String>>();
 			resp.setSlist(lista);
 			
@@ -1184,11 +1133,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				nuevo.put("maximo" , props.get("maximo"));
 			}
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.info(
@@ -1211,7 +1160,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String ntramite
 			,String tipoflot
 			,boolean endoso
-			)
+			)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -1231,13 +1180,15 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		resp.setSmap(new LinkedHashMap<String,String>());
 		resp.setImap(new LinkedHashMap<String,Item>());
 		
+		String paso = null;
+		
 		try
 		{
 			String cdagente = null;
 			
-			setCheckpoint("Obteniendo trámite y sucursal");//////
+			paso = "Obteniendo trámite y sucursal";//////
 			//cuando no hay tramite es porque cotiza un agente desde afuera
-			if(isBlank(ntramite))
+			if(StringUtils.isBlank(ntramite))
 			{
 				try
 				{
@@ -1254,11 +1205,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				catch(Exception ex)
 				{
-					throwExc("Usted no puede cotizar este producto");
+					throw new ApplicationException("Usted no puede cotizar este producto");
 				}
 			}
 			
-			setCheckpoint("Recuperando tipo de situación");//////
+			paso = "Recuperando tipo de situaci\u00f3n";//////
 			Map<String,String>tipoSituacion=cotizacionDAO.cargarTipoSituacion(cdramo,cdtipsit);
 			if(tipoSituacion!=null)
 			{
@@ -1267,10 +1218,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			else
 			{
-				throwExc("No se ha parametrizado la situación en TTIPRAM");
+				throw new ApplicationException("No se ha parametrizado la situaci\u00f3n en TTIPRAM");
 			}
 			
-			setCheckpoint("Recuperando atributos variables");//////
+			paso = "Recuperando atributos variables";//////
 			List<ComponenteVO>panel1   = new ArrayList<ComponenteVO>();
 			//List<ComponenteVO>panel2   = new ArrayList<ComponenteVO>();
 			List<ComponenteVO>panel3   = new ArrayList<ComponenteVO>();
@@ -1279,19 +1230,19 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			
 			List<ComponenteVO>tatrisit = cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
 			
-			setCheckpoint("Recuperando editor de situacion");
+			paso = "Recuperando editor de situacion";
 			List<ComponenteVO>auxEditorSit = pantallasDAO.obtenerComponentes(
 					TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, cdramo
 					, cdtipsit, null, cdsisrol
 					, "COTIZACION_FLOTILLA", "EDITOR_SITUACION", null);
 			
-			setCheckpoint("Recuperando columnas");
+			paso = "Recuperando columnas";
 			List<ComponenteVO>gridCols = pantallasDAO.obtenerComponentes(
 					TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, cdramo
 					, cdtipsit, null, cdsisrol
 					, "COTIZACION_FLOTILLA", "COLUMNAS_RENDER", null);
 			
-			setCheckpoint("Filtrando atributos");
+			paso = "Filtrando atributos";
 			List<ComponenteVO>aux      = new ArrayList<ComponenteVO>();
 			for(ComponenteVO tatri:tatrisit)
 			{
@@ -1303,7 +1254,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			tatrisit = aux;
 			
-			setCheckpoint("Obteniendo componentes sustitutos");
+			paso = "Obteniendo componentes sustitutos";
 			List<ComponenteVO>sustitutos = pantallasDAO.obtenerComponentes(
 					TipoTramite.POLIZA_NUEVA.getCdtiptra()
 					,cdunieco
@@ -1344,7 +1295,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				tatrisit = aux;
 			}
 			
-			setCheckpoint("Organizando atributos");
+			paso = "Organizando atributos";
 			/*gridCols.add(editorSit);*/
 			for(ComponenteVO tatri:tatrisit)
 			{
@@ -1384,7 +1335,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			/*gridCols.add(editorPlan);*/
 			
-			setCheckpoint("Construyendo componentes");
+			paso = "Construyendo componentes";
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.setCdramo(cdramo);
 			gc.setCdtipsit(cdtipsit);
@@ -1428,20 +1379,20 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					);
 			resp.getImap().put("cdtipsitItem" , gc.getItems());
 			
-			setCheckpoint("Recuperando situaciones");
+			paso = "Recuperando situaciones";
 			List<Map<String,String>>situaciones=consultasDAO.cargarTiposSituacionPorRamo(cdramo);
 			String situacionesCSV = "";
 			for(Map<String,String>situacion:situaciones)
 			{
 				
-				setCheckpoint("Recuperando atributos de situaciones");
+				paso = "Recuperando atributos de situaciones";
 				String cdtipsitIte = situacion.get("CDTIPSIT");
 				situacionesCSV=Utils.join(situacionesCSV,",",cdtipsitIte);
 				List<ComponenteVO>tatrisitSitIte        = cotizacionDAO.cargarTatrisit(cdtipsitIte, cdusuari);
 				List<ComponenteVO>tatrisitSitIteParcial = new ArrayList<ComponenteVO>();
 				List<ComponenteVO>tatrisitSitIteAuto    = new ArrayList<ComponenteVO>();
 				
-				setCheckpoint("Recuperando sustitutos de atributos de situaciones");
+				paso = "Recuperando sustitutos de atributos de situaciones";
 				//sustitutos
 				List<ComponenteVO>sustitutosSituacion = pantallasDAO.obtenerComponentes(
 						TipoTramite.POLIZA_NUEVA.getCdtiptra()
@@ -1486,7 +1437,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				//sustitutos
 				
-				setCheckpoint("Aislando atributos de situaciones parciales");
+				paso = "Aislando atributos de situaciones parciales";
 				for(ComponenteVO tatri:tatrisitSitIte)
 				{
 					if(tatri.getColumna().equals("S")
@@ -1502,7 +1453,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				tatrisitSitIteParcial=ComponenteVO.ordenarPorNmordenFlot(tatrisitSitIteParcial);
 				
-				setCheckpoint("Aislando atributos de auto de situaciones");
+				paso = "Aislando atributos de auto de situaciones";
 				for(ComponenteVO tatri:tatrisitSitIte)
 				{
 					if(tatri.getSwpresenflot().equals("S")
@@ -1514,14 +1465,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				tatrisitSitIteAuto=ComponenteVO.ordenarPorNmordenFlot(tatrisitSitIteAuto);
 				
-				setCheckpoint("Recuperando editor de planes de situacion");
+				paso = "Recuperando editor de planes de situacion";
 				List<ComponenteVO>auxEditorPlan = pantallasDAO.obtenerComponentes(
 						TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, cdramo
 						,cdtipsitIte, null, cdsisrol
 						,"COTIZACION_FLOTILLA", "EDITOR_PLANES", null);
 				tatrisitSitIteParcial.add(auxEditorPlan.get(0));
 				
-				setCheckpoint("Construyendo componentes de situaciones");
+				paso = "Construyendo componentes de situaciones";
 				GeneradorCampos gcIte = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				gcIte.setCdramo(cdramo);
 				gcIte.setCdtipsit(cdtipsitIte);
@@ -1553,7 +1504,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			logger.debug(Utils.log("situacionesCSV=",situacionesCSV));
 			resp.getSmap().put("situacionesCSV",situacionesCSV);
 			
-			setCheckpoint("Recuperando agrupacion de situaciones");
+			paso = "Recuperando agrupacion de situaciones";
 			Map<String,String>agrupAux = cotizacionDAO.obtenerParametrosCotizacion(
 					ParametroCotizacion.FLOTILLA_AGRUPACION_SITUACION, cdramo, cdtipsit, cdsisrol, tipoflot);
 			
@@ -1566,7 +1517,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				String claveKey = new StringBuilder("P").append(i).append("CLAVE").toString();
 				String valorKey = new StringBuilder("P").append(i).append("VALOR").toString();
 				String clave    = agrupAux.get(claveKey);
-				if(!isBlank(clave))
+				if(!StringUtils.isBlank(clave))
 				{
 					String cdtipsitOrigen = clave.split("_")[0];
 					String textoBoton     = clave.split("_")[1];
@@ -1588,7 +1539,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			
 			for(String situacionPanel:situacionesPanel)
 			{
-				setCheckpoint(new StringBuilder("Recuperando atributos de panel dinamico ").append(situacionPanel).toString());
+				paso = new StringBuilder("Recuperando atributos de panel dinamico ").append(situacionPanel).toString();
 				List<ComponenteVO>tatrisitPanel    = cotizacionDAO.cargarTatrisit(situacionPanel, cdusuari);
 				List<ComponenteVO>tatrisitPanelAux = new ArrayList<ComponenteVO>();
 				for(ComponenteVO tatri:tatrisitPanel)
@@ -1602,7 +1553,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				tatrisitPanel=tatrisitPanelAux;
 				
-				setCheckpoint(Utils.join("Ordenando atributos de panel dinamico ",situacionPanel));
+				paso = Utils.join("Ordenando atributos de panel dinamico ",situacionPanel);
 				ComponenteVO auxOrd = null;
 				for(int i=0;i<tatrisitPanel.size()-1;i++)
 				{
@@ -1628,7 +1579,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					}
 				}
 				
-				setCheckpoint("Recuperando componentes adicionales para configuracion");
+				paso = "Recuperando componentes adicionales para configuracion";
 				List<ComponenteVO>listaAdicionales=pantallasDAO.obtenerComponentes(
 						null                   //cdtiptra
 						,null                  //cdunieco
@@ -1669,7 +1620,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					}
 				}
 				
-				setCheckpoint(new StringBuilder("Construyendo panel dinamico ").append(situacionPanel).toString());
+				paso = new StringBuilder("Construyendo panel dinamico ").append(situacionPanel).toString();
 				GeneradorCampos gcPanel = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				gcPanel.setCdramo(cdramo);
 				gcPanel.setCdtipsit(situacionPanel);
@@ -1678,7 +1629,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				resp.getImap().put(new StringBuilder("paneldin_").append(situacionPanel).toString(),gcPanel.getItems());
 			}
 			
-			setCheckpoint("Recuperando mapeos de situaciones");
+			paso = "Recuperando mapeos de situaciones";
 			try
 			{
 				Map<String,String>mapeo= cotizacionDAO.obtenerParametrosCotizacion(
@@ -1690,7 +1641,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				resp.getSmap().put("mapeo" , "DIRECTO");
 			}
 			
-			setCheckpoint("Recuperando atributos de poliza");
+			paso = "Recuperando atributos de poliza";
 			List<ComponenteVO>tatripol    = cotizacionDAO.cargarTatripol(cdramo,null,null);
 			List<ComponenteVO>tatripolAux = new ArrayList<ComponenteVO>();
 			for(ComponenteVO tatri:tatripol)
@@ -1717,11 +1668,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				resp.getImap().put("tatripolItems" , null);
 			}
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.info(
@@ -1797,7 +1748,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				
 				Date fechaHoy = new Date();
 				
-				if(isBlank(nmpoliza))
+				if(StringUtils.isBlank(nmpoliza))
 				{
 					paso = ("Generando numero de poliza");
 					logger.debug("\nPaso: "+paso);
@@ -1964,7 +1915,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				for(Entry<String,String>valosit:tvalositIte.entrySet())
 				{
 					String key = valosit.getKey();
-					if(!isBlank(key)
+					if(!StringUtils.isBlank(key)
 							&&key.length()>"parametros.pv_".length()
 							&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
 					{
@@ -2001,7 +1952,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				for(Entry<String,String>valosit:baseTvalositIte.entrySet())
 				{
 					String key = valosit.getKey();
-					if(!isBlank(key)
+					if(!StringUtils.isBlank(key)
 							&&key.length()>"parametros.pv_".length()
 							&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
 					{
@@ -2041,7 +1992,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					for(Entry<String,String>valosit:confTvalositIte.entrySet())
 					{
 						String key = valosit.getKey();
-						if(!isBlank(key)
+						if(!StringUtils.isBlank(key)
 								&&key.length()>"parametros.pv_".length()
 								&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
 						{
@@ -2212,7 +2163,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				
 				
-				if(!isBlank(cdpersonCli))
+				if(!StringUtils.isBlank(cdpersonCli))
 				{
 					paso = ("Guardando contratante");
 					logger.debug("\nPaso: "+paso);
@@ -2280,7 +2231,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	}
 	
 	@Override
-	public ManagerRespuestaVoidVO cargarValidacionTractocamionRamo5(String poliza,String rfc)
+	public ManagerRespuestaVoidVO cargarValidacionTractocamionRamo5(String poliza,String rfc)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -2293,18 +2244,20 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Invocando web service");
+			paso = "Invocando web service";
 			Object polizaValida = tractoCamionService.validarPolizaTractoCamion(poliza, rfc); 
 			resp.setExito(polizaValida.getClass().equals(Boolean.class)&&polizaValida.equals(Boolean.TRUE));
 			resp.setRespuesta(String.valueOf(polizaValida));
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.info(
@@ -2318,7 +2271,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	}
 	
 	@Override
-	public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel)//,String tipoflot
+	public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel)throws Exception
+	//,String tipoflot
 	{
 		logger.info(
 				new StringBuilder()
@@ -2334,24 +2288,26 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
 		resp.setSlist(new ArrayList<Map<String,String>>());
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Recuperando parametrizacion de excel para COTIFLOT");
+			paso = "Recuperando parametrizacion de excel para COTIFLOT";
 			List<Map<String,String>>config=cotizacionDAO.cargarParametrizacionExcel("COTIFLOT",cdramo,cdtipsit);
 			logger.debug(config);
 			
-			setCheckpoint("Instanciando mapa buffer de tablas de apoyo");
+			paso = "Instanciando mapa buffer de tablas de apoyo";
 			Map<String,List<Map<String,String>>> buffer        = new HashMap<String,List<Map<String,String>>>();
 			Map<String,String>                   bufferTiposit = new HashMap<String,String>();
 			
-			setCheckpoint("Iniciando procesador de hoja de calculo");
+			paso = "Iniciando procesador de hoja de calculo";
 			FileInputStream input       = new FileInputStream(excel);
 			XSSFWorkbook    workbook    = new XSSFWorkbook(input);
 			XSSFSheet       sheet       = workbook.getSheetAt(0);
 			Iterator<Row>   rowIterator = sheet.iterator();
 			StringBuilder   sb;
 			
-			setCheckpoint("Iterando filas");
+			paso = "Iterando filas";
 			int fila = 1;
 			String[] columnas=new String[]{
 					  "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
@@ -2361,7 +2317,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			while (rowIterator.hasNext()) 
             {
 				fila = fila + 1;
-				setCheckpoint(new StringBuilder("Iterando fila ").append(fila).toString());
+				paso = new StringBuilder("Iterando fila ").append(fila).toString();
 				Row row = rowIterator.next();
 				
 				if(fila==2)
@@ -2385,7 +2341,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					String   cdtipsitCol = conf.get("CDTIPSIT");
 					String   propiedad   = conf.get("PROPIEDAD");
 					String   tipo        = conf.get("TIPO");
-					boolean  requerido   = !isBlank(conf.get("REQUERIDO"))&&conf.get("REQUERIDO").equals("S");
+					boolean  requerido   = !StringUtils.isBlank(conf.get("REQUERIDO"))&&conf.get("REQUERIDO").equals("S");
 					String   decode      = conf.get("DECODE");
 					String[] splited     = null;
 					String   cdtabla1    = conf.get("CDTABLA1");
@@ -2394,7 +2350,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					String   orCdtipsit  = conf.get("ORIGEN_CDTIPSIT");
 					String   otraProp1   = conf.get("OTRA_PROP1");
 					String   otroVal1    = conf.get("OTRO_VAL1");
-					if(!isBlank(decode))
+					if(!StringUtils.isBlank(decode))
 					{
 						splited = decode.split(",");
 					}
@@ -2417,7 +2373,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						}
 						catch(NullPointerException ex)
 						{
-							throwExc(Utils.join("La fila ",fila," tiene valores pero no tiene TIPO VEHICULO"));
+							throw new ApplicationException(Utils.join("La fila ",fila," tiene valores pero no tiene TIPO VEHICULO"));
 						}
 						sb.append(">cdtipsit!").append(valor);						
 						for(int i=0;i<splited.length/2;i++)
@@ -2452,7 +2408,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						//nuevo para recuperar cdtipsit
 						if(StringUtils.isNotBlank(orCdtipsit))
 						{
-							setCheckpoint(Utils.join("Recuperando tipo de situacion de la fila ",fila));
+							paso = Utils.join("Recuperando tipo de situacion de la fila ",fila);
 							
 							sb.append(">").append(orCdtipsit);
 							String cellValue         = null;
@@ -2475,7 +2431,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 								catch(Exception ex2)
 								{
 									sb.append("(E)");
-									throwExc(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+									throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
 								}
 							}
 							try
@@ -2536,7 +2492,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							sb.append("==").append(cdtipsitProc);
 							record.put("cdtipsit" , cdtipsitProc);
 							
-							setCheckpoint(Utils.join("Iterando fila ",fila));
+							paso = Utils.join("Iterando fila ",fila);
 						}
 						//nuevo para recuperar cdtipsit
 						
@@ -2549,7 +2505,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 								sb.append(">valorStat");
 								record.put(propiedad , valorStat);
 							}
-							else if(isBlank(decode)&&isBlank(cdtabla1))
+							else if(StringUtils.isBlank(decode)&&StringUtils.isBlank(cdtabla1))
 							{
 							    if(tipo.equals("string"))
 								{
@@ -2574,9 +2530,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 										}
 									}
 									sb.append("==").append(valor);
-									if(requerido&&isBlank(valor))
+									if(requerido&&StringUtils.isBlank(valor))
 									{
-										throwExc(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+										throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
 									}
 									record.put(propiedad,valor);
 								}
@@ -2595,7 +2551,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									}
 									if(requerido&&num==null)
 									{
-										throwExc(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+										throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
 									}
 									String valor="";
 									if(num!=null)
@@ -2620,7 +2576,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									}
 									if(requerido&&num==null)
 									{
-										throwExc(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+										throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
 									}
 									String valor="";
 									if(num!=null)
@@ -2647,7 +2603,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									}
 									if(requerido&&num==null)
 									{
-										throwExc(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+										throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
 									}
 									String valor="";
 									if(num!=null)
@@ -2659,7 +2615,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									record.put(propiedad,valor);
 									
 									//nuevo para "OTRA PROPIEDAD ESTATICA"
-									if(!isBlank(otraProp1)&&!isBlank(otroVal1)&&!isBlank(valor))
+									if(!StringUtils.isBlank(otraProp1)&&!StringUtils.isBlank(otroVal1)&&!StringUtils.isBlank(valor))
 									{
 										sb.append("(>otraProp1");
 										String[] val1Splited = otroVal1.split(","); //B+,S,C,S,N
@@ -2683,10 +2639,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 								}
 								else
 								{
-									throwExc(Utils.join("Error de parametrizacion: tipo de valor incorrecto para la columna ",col));
+									throw new ApplicationException(Utils.join("Error de parametrizacion: tipo de valor incorrecto para la columna ",col));
 								}
 							}
-							else if(!isBlank(cdtabla1))
+							else if(!StringUtils.isBlank(cdtabla1))
 							{
 								sb.append(">tabla");
 								String valor = null;
@@ -2709,12 +2665,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									}
 								}
 								sb.append("!").append(valor);
-								if(requerido&&isBlank(valor))
+								if(requerido&&StringUtils.isBlank(valor))
 								{
-									throwExc(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+									throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
 								}
 								String clave = "";
-								if(!isBlank(valor))
+								if(!StringUtils.isBlank(valor))
 								{
 									try
 									{
@@ -2732,7 +2688,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									{
 										if(ex instanceof ApplicationException)
 										{
-											throwExc(Utils.join(columnas[col],fila,": ",ex.getMessage()));
+											throw new ApplicationException(Utils.join(columnas[col],fila,": ",ex.getMessage()));
 										}
 										else
 										{
@@ -2741,7 +2697,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									}
 									
 									//nuevo para "OTRA PROPIEDAD ESTATICA"
-									if(!isBlank(otraProp1)&&!isBlank(otroVal1))
+									if(!StringUtils.isBlank(otraProp1)&&!StringUtils.isBlank(otroVal1))
 									{
 										sb.append("(>otraProp1");
 										String[] val1Splited = otroVal1.split(","); //B+,S,C,S,N
@@ -2766,7 +2722,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 								sb.append("==").append(clave);
 								record.put(propiedad,clave);
 							}
-							else if(!isBlank(decode))
+							else if(!StringUtils.isBlank(decode))
 							{
 								sb.append(">decode");
 								String original = null;
@@ -2793,11 +2749,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									}
 								}
 								sb.append("!").append(valor);
-								if(requerido&&isBlank(valor))
+								if(requerido&&StringUtils.isBlank(valor))
 								{
-									throwExc(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+									throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
 								}
-								if(!isBlank(valor))
+								if(!StringUtils.isBlank(valor))
 								{
 									for(int i=0;i<splited.length/2;i++)
 									{
@@ -2841,11 +2797,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				logger.debug(sb.toString());
             }
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 
 		logger.info(
@@ -3022,7 +2978,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String nmpoliza
 			,String cdusuari
 			,String cdsisrol
-			)
+			)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3036,9 +2992,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		ManagerRespuestaSlist2SmapVO resp = new ManagerRespuestaSlist2SmapVO(true);
 		resp.setSmap(new LinkedHashMap<String,String>());
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Buscando cotizacion");
+			paso = "Buscando cotizacion";
 			List<Map<String,String>>listaCotizaciones=consultasDAO.cargarMpolizasPorParametrosVariables(
 					null      //cdunieco
 					,cdramo
@@ -3059,10 +3017,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					);
 			if(listaCotizaciones.size()+listaEmisiones.size()==0)
 			{
-				throwExc("No existe la cotizacion");
+				throw new ApplicationException("No existe la cotizacion");
 			}
 			
-			setCheckpoint("Buscando cotizacion del usuario");
+			paso = "Buscando cotizacion del usuario";
 			Map<String,String>cotizacionEmision = consultasDAO.recuperarCotizacionFlotillas(
 					cdramo
 					,nmpoliza
@@ -3081,10 +3039,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			
 			boolean maestra = "M".equals(estado);
 			
-			checkBlank(cdunieco , "No se recupero la sucursal de la cotizacion");
-			checkBlank(estado   , "No se recupero el estado de la cotizacion");
-			checkBlank(nmpoliza , "No se recupero el numero de cotizacion");
-			checkBlank(nmsuplem , "No se recupero el suplemento de la cotizacion");
+			Utils.validate(cdunieco , "No se recupero la sucursal de la cotizacion");
+			Utils.validate(estado   , "No se recupero el estado de la cotizacion");
+			Utils.validate(nmpoliza , "No se recupero el numero de cotizacion");
+			Utils.validate(nmsuplem , "No se recupero el suplemento de la cotizacion");
 			
 			resp.getSmap().put("CDUNIECO" , cdunieco);
 			resp.getSmap().put("ESTADO"   , estado);
@@ -3094,10 +3052,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.getSmap().put("FEINI"    , feini);
 			resp.getSmap().put("FEFIN"    , fefin);
 			
-			setCheckpoint("Recuperando configuracion de incisos");
+			paso = "Recuperando configuracion de incisos";
 			resp.setSlist1(Utils.concatenarParametros(consultasDAO.cargarTconvalsit(cdunieco,cdramo,estado,nmpoliza,nmsuplem),false));
 			
-			setCheckpoint("Recuperando incisos base");
+			paso = "Recuperando incisos base";
 			List<Map<String,String>>incisosBase    = consultasDAO.cargarTbasvalsit(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
 			Map<String,String>incisoPoliza         = new HashMap<String,String>();
 			List<Map<String,String>>incisosBaseAux = new ArrayList<Map<String,String>>();
@@ -3131,7 +3089,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			incisosBase=incisosBaseAux;
 			resp.setSlist2(Utils.concatenarParametros(incisosBase,false));
 			
-			setCheckpoint("Recuperando datos generales");
+			paso = "Recuperando datos generales";
 			resp.getSmap().putAll(incisoPoliza);
 			
 			String cdperson = "";
@@ -3139,7 +3097,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			String ntramite = "";
 			if(!maestra||true)
 			{
-				setCheckpoint("Recuperando relacion poliza-contratante");
+				paso = "Recuperando relacion poliza-contratante";
 				Map<String,String>relContratante0=consultasDAO.cargarMpoliperSituac(
 						cdunieco
 						,cdramo
@@ -3151,13 +3109,13 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				
 				if(relContratante0!=null)
 				{
-					setCheckpoint("Recuperando contratante");
+					paso = "Recuperando contratante";
 					cdperson = relContratante0.get("CDPERSON");
 					Map<String,String>contratante = personasDAO.cargarPersonaPorCdperson(cdperson);
 					cdideper = contratante.get("CDIDEPER");
 				}
 				
-				setCheckpoint("Recuperando tramite");
+				paso = "Recuperando tramite";
 				List<Map<String,String>>tramites=mesaControlDAO.cargarTramitesPorParametrosVariables(
 						TipoTramite.POLIZA_NUEVA.getCdtiptra()
 						,null     //ntramite
@@ -3170,7 +3128,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						);
 				if(tramites.size()>1)
 				{
-					throwExc("Tramites duplicados para la cotizacion");
+					throw new ApplicationException("Tramites duplicados para la cotizacion");
 				}
 				if(tramites.size()==1)
 				{
@@ -3199,7 +3157,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				resp.getSmap().put("diasValidos" , "15");
 			}
 			
-			setCheckpoint("Recuperando atributos adicionales de poliza");
+			paso = "Recuperando atributos adicionales de poliza";
 			Map<String,String>tvalopol=cotizacionDAO.cargarTvalopol(
 					cdunieco
 					,cdramo
@@ -3211,11 +3169,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				resp.getSmap().put(Utils.join("aux.",en.getKey().substring("parametros.pv_".length())),en.getValue());
 			}
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.debug(Utils.log(
@@ -3235,7 +3193,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String nmpoliza
 			,String ntramite
 			,String cdusuari
-			)
+			)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -3255,15 +3213,17 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		resp.setImap(new HashMap<String,Item>());
 		resp.setSmap(new HashMap<String,String>());
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Procesando datos de entrada");
+			paso = "Procesando datos de entrada";
 			resp.getSmap().put("cdusuari" , cdusuari);
 			
-			setCheckpoint("Recuperando tipo de situacion");
+			paso = "Recuperando tipo de situacion";
 			resp.getSmap().putAll(cotizacionDAO.cargarTipoSituacion(cdramo, cdtipsit));
 			
-			setCheckpoint("Recuperando atributos variables de poliza");
+			paso = "Recuperando atributos variables de poliza";
 			List<ComponenteVO>tatripol = cotizacionDAO.cargarTatripol(cdramo,null,null);
 			for(ComponenteVO tatri:tatripol)
 			{
@@ -3273,16 +3233,16 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 			}
 			
-			setCheckpoint("Recuperando situaciones");
+			paso = "Recuperando situaciones";
 			List<Map<String,String>>situaciones=consultasDAO.cargarTiposSituacionPorRamo(cdramo);
 			for(Map<String,String>situacionIte:situaciones)
 			{
-				setCheckpoint("Recuperando atributos de situaciones");
+				paso = "Recuperando atributos de situaciones";
 				String cdtipsitIte             = situacionIte.get("CDTIPSIT");
 				List<ComponenteVO>tatrisitIte  = cotizacionDAO.cargarTatrisit(cdtipsitIte, cdusuari);
 				List<ComponenteVO>editablesIte = new ArrayList<ComponenteVO>();
 				
-				setCheckpoint("Filtrando atributos editables de situacion");
+				paso = "Filtrando atributos editables de situacion";
 				for(ComponenteVO tatri:tatrisitIte)
 				{
 					if(StringUtils.isNotBlank(tatri.getSwCompFlot())
@@ -3312,7 +3272,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				resp.getImap().put(Utils.join("tatrisit_parcial_items_",cdtipsitIte),gc.getItems());
 			}
 			
-			setCheckpoint("Recuperando componentes de pantalla");
+			paso = "Recuperando componentes de pantalla";
 			List<ComponenteVO>polizaComp  = pantallasDAO.obtenerComponentes(null, null, null, null, null, null
 					,"EMISION_AUTO_FLOT", "POLIZA", null);
 			List<ComponenteVO>agenteComp  = pantallasDAO.obtenerComponentes(null, null, null, null, null, null
@@ -3320,7 +3280,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			List<ComponenteVO>gridColumns = pantallasDAO.obtenerComponentes(null, null, null, null, null, null
 					,"EMISION_AUTO_FLOT", "COLUMNAS_RENDER", null);
 			
-			setCheckpoint("Generando componentes");
+			paso = "Generando componentes";
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.setCdramo(cdramo);
 			gc.setCdtipsit(cdtipsit);
@@ -3340,11 +3300,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.getImap().put("agenteFields" , gc.getFields());
 			resp.getImap().put("agenteItems"  , gc.getItems());
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.info(
@@ -3370,7 +3330,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,Map<String,String>tvalopol
 			,List<Map<String,String>>tvalosit
 			,String ntramite
-			)
+			)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3390,9 +3350,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Actualizando poliza");
+			paso = "Actualizando poliza";
 			cotizacionDAO.actualizaMpolizas(
 					cdunieco
 					,cdramo
@@ -3442,9 +3404,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					,null //pcpgocte
 					);
 			
-			if(!isBlank(agenteSec))
+			if(!StringUtils.isBlank(agenteSec))
 			{
-				setCheckpoint("Recuperando agentes");
+				paso = "Recuperando agentes";
 				List<Map<String,String>>agentes = consultasDAO.cargarMpoliage(cdunieco, cdramo, estado, nmpoliza);
 				String cdagente = null;
 				for(Map<String,String>agente:agentes)
@@ -3455,14 +3417,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					}
 				}
 				
-				setCheckpoint("Desligando agentes anteriores");
+				paso = "Desligando agentes anteriores";
 				cotizacionDAO.borrarAgentesSecundarios(cdunieco, cdramo, estado, nmpoliza, "0");
 				
-				setCheckpoint("Recuperando cuadros de agentes");
+				paso = "Recuperando cuadros de agentes";
 				String nmcuadro    = cotizacionDAO.obtenerDatosAgente(cdagente  , cdramo).get("NMCUADRO");
     			String nmcuadroSec = cotizacionDAO.obtenerDatosAgente(agenteSec , cdramo).get("NMCUADRO");
 				
-				setCheckpoint("Guardando agente nuevo");
+				paso = "Guardando agente nuevo";
 				cotizacionDAO.movimientoMpoliage(
 						cdunieco
 						,cdramo
@@ -3501,12 +3463,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 			}
 				
-			setCheckpoint("Guardando datos adicionales de poliza");
+			paso = "Guardando datos adicionales de poliza";
 			Map<String,String>tvalopolAux=new HashMap<String,String>();
 			for(Entry<String,String>en:tvalopol.entrySet())
 			{
 				String key = en.getKey();
-				if(!isBlank(key)
+				if(!StringUtils.isBlank(key)
 						&&key.length()>"parametros.pv_otvalor".length()
 						&&key.substring(0,"parametros.pv_otvalor".length()).equals("parametros.pv_otvalor"))
 				{
@@ -3515,14 +3477,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			cotizacionDAO.movimientoTvalopol(cdunieco,cdramo,estado,nmpoliza,"0","V",tvalopolAux);
 			
-			setCheckpoint("Guardando datos adicionales de situacion");
+			paso = "Guardando datos adicionales de situacion";
 			for(Map<String,String>tvalositIte:tvalosit)
 			{
 				Map<String,String>tvalositAux=new HashMap<String,String>();
 				for(Entry<String,String>en:tvalositIte.entrySet())
 				{
 					String key = en.getKey();
-					if(!isBlank(key)
+					if(!StringUtils.isBlank(key)
 							&&key.length()>"parametros.pv_otvalor".length()
 							&&key.substring(0,"parametros.pv_otvalor".length()).equals("parametros.pv_otvalor"))
 					{
@@ -3535,11 +3497,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.setRespuesta("Datos guardados");
 			resp.setRespuestaOculta("Datos guardados");
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.debug(Utils.log(
@@ -3562,7 +3524,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String cdelemen
 			,String cdtipsit
 			,String cdperpag
-			)
+			)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3581,15 +3543,17 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 
 		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Validando datos obligatorios de PREVEX");
+			paso = "Validando datos obligatorios de PREVEX";
 			//consultasDAO.validarDatosObligatoriosPrevex(cdunieco, cdramo, estado, nmpoliza);
 			
-			setCheckpoint("Validando datos de descuento por nomina");
+			paso = "Validando datos de descuento por nomina";
 			//consultasDAO.validarAtributosDXN(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 			
-			setCheckpoint("Tarificando");
+			paso = "Tarificando";
 			if(!notarifica)
 			{
 				cotizacionDAO.sigsvdefEnd(
@@ -3616,7 +3580,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						);
 			}
 			
-			setCheckpoint("Ejecutando validaciones");
+			paso = "Ejecutando validaciones";
 			String errores = consultasDAO.validacionesSuplemento(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, "1");
 			if(StringUtils.isNotBlank(errores))
 			{
@@ -3625,11 +3589,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			
 			resp.setSlist(cotizacionDAO.cargarDetallesCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza, cdperpag));
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.debug(Utils.log(
@@ -3641,7 +3605,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	}
 	
 	@Override
-	public ManagerRespuestaSmapVO cargarObligatorioTractocamionRamo5(String clave)
+	public ManagerRespuestaSmapVO cargarObligatorioTractocamionRamo5(String clave) throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3652,16 +3616,18 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
 		resp.setSmap(new LinkedHashMap<String,String>());
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Recuperando tipo de vehiculo");
+			paso = "Recuperando tipo de vehiculo";
 			resp.getSmap().put("tipo",cotizacionDAO.cargarTipoVehiculoRamo5(clave));
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.debug(Utils.log(
@@ -3673,7 +3639,13 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	}
 
 	@Override
-	public ManagerRespuestaSmapVO cargarDetalleNegocioRamo5(String negocio, String cdramo, String cdtipsit, String cdsisrol, String cdusuari)
+	public ManagerRespuestaSmapVO cargarDetalleNegocioRamo5(
+			String negocio
+			,String cdramo
+			,String cdtipsit
+			,String cdsisrol
+			,String cdusuari
+			)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3683,17 +3655,19 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Recuperando detalle de negocio");
+			paso = "Recuperando detalle de negocio";
 			
 			resp.setSmap(cotizacionDAO.cargarDetalleNegocioRamo5(negocio, cdramo, cdtipsit, cdsisrol, cdusuari));
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.debug(Utils.log(
@@ -3712,7 +3686,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String nmsuplem
 			,String nmsituac
 			,List<Map<String,String>>mpoliperMpersona
-			,UserVO usuarioSesion)
+			,UserVO usuarioSesion
+			)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -3726,6 +3701,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				));
 		
 		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
+		
+		String paso = null;
 		
 		try
 		{
@@ -3741,7 +3718,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				
 			}
 			
-			setCheckpoint("Iterando registros");
+			paso = "Iterando registros";
 			for(Map<String,String>rec:mpoliperMpersona)
 			{
 				String mov    = rec.get("mov");
@@ -3909,11 +3886,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 			}
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}	
 		
 		logger.debug(Utils.log(
@@ -3928,7 +3905,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	public ManagerRespuestaSlistVO cargarParamerizacionConfiguracionCoberturasRol(
 			String cdtipsit
 			,String cdsisrol
-			)
+			)throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -3941,15 +3918,17 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
 		
+		String paso = null;
+		
 		try
 		{
-			setCheckpoint("Recuperando parametrizacion");
+			paso = "Recuperando parametrizacion";
 			List<List<Map<String,String>>>listas = cotizacionDAO.cargarParamerizacionConfiguracionCoberturasRol(cdtipsit,cdsisrol);
 			
 			List<Map<String,String>>ltatrisit = listas.get(0);
 			List<Map<String,String>>latrixrol = listas.get(1);
 			
-			setCheckpoint("Inicializando atributos a procesar");
+			paso = "Inicializando atributos a procesar";
 			Map<String,Map<String,String>>atributos = new LinkedHashMap<String,Map<String,String>>();
 			for(Map<String,String>tatrisit:ltatrisit)
 			{
@@ -3959,7 +3938,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			logger.debug(new StringBuilder("atributos=").append(atributos).toString());
 			
-			setCheckpoint("Procesando parametrizacion por rol");
+			paso = "Procesando parametrizacion por rol";
 			for(Map<String,String>atrixrol:latrixrol)
 			{
 				String cdatribu = atrixrol.get("cdatribu");
@@ -3973,7 +3952,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			logger.debug(new StringBuilder("atributos=").append(atributos).toString());
 			
-			setCheckpoint("Transformando parametrizacion");
+			paso = "Transformando parametrizacion";
 			List<Map<String,String>>lista = new ArrayList<Map<String,String>>();
 			resp.setSlist(lista);
 			
@@ -3990,11 +3969,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				nuevo.put("valor"  , props.get("valor"));
 			}
 			
-			setCheckpoint("0");
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.info(
@@ -4016,12 +3995,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 
 	public void setPantallasDAO(PantallasDAO pantallasDAO) {
 		this.pantallasDAO = pantallasDAO;
-	}
-	
-	@Override
-	public void setSession(Map<String,Object>session){
-		logger.debug("setSession");
-		this.session=session;
 	}
 
 	public void setConsultasDAO(ConsultasDAO consultasDAO) {

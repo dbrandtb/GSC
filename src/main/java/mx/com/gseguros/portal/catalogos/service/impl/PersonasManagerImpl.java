@@ -7,20 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import mx.com.aon.portal2.web.GenericVO;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.ClienteDAO;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaBaseVO;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroEndoso;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
@@ -35,6 +28,7 @@ import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class PersonasManagerImpl implements PersonasManager
@@ -863,10 +857,11 @@ public class PersonasManagerImpl implements PersonasManager
 	}
 	
 	@Override
-	public ManagerRespuestaImapVO pantallaBeneficiarios(String cdunieco,String cdramo,String estado,String cdsisrol,String cdtipsup)
+	public Map<String,Item> pantallaBeneficiarios(String cdunieco,String cdramo,String estado,String cdsisrol,String cdtipsup)throws Exception
 	{
-		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+		long stamp = System.currentTimeMillis();
+		logger.debug(Utils.log(stamp
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ pantallaBeneficiarios @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
 				,"\n@@@@@@ cdramo="   , cdramo
@@ -875,12 +870,15 @@ public class PersonasManagerImpl implements PersonasManager
 				,"\n@@@@@@ cdtipsup=" , cdtipsup
 				));
 		
-		ManagerRespuestaImapVO resp = new ManagerRespuestaImapVO(true);
-		resp.setImap(new HashMap<String,Item>());
+		Map<String,Item> items = new HashMap<String,Item>();
+		
+		String paso = null;
 		
 		try
 		{
-			setCheckpoint("Validando suplemento permitido");
+			paso = "Validando suplemento permitido";
+			logger.debug(Utils.log(stamp,"paso=",paso));
+			
 			try
 			{
 				Map<String,String>permiso=endososDAO.obtenerParametrosEndoso(
@@ -899,7 +897,9 @@ public class PersonasManagerImpl implements PersonasManager
 				throw new ApplicationException("Suplemento no aplicable al producto");
 			}
 			
-			setCheckpoint("Recuperando componentes relacion poliza-persona");
+			paso = "Recuperando componentes relacion poliza-persona";
+			logger.debug(Utils.log(stamp,"paso=",paso));
+			
 			List<ComponenteVO>componentesMpoliper=pantallasDAO.obtenerComponentes(
 					null                     //cdtiptra
 					,cdunieco
@@ -912,7 +912,9 @@ public class PersonasManagerImpl implements PersonasManager
 					,null                    //orden
 					);
 			
-			setCheckpoint("Recuperando componentes persona");
+			paso = "Recuperando componentes persona";
+			logger.debug(Utils.log(stamp,"paso=",paso));
+			
 			List<ComponenteVO>componentesMpersona=pantallasDAO.obtenerComponentes(
 					null                     //cdtiptra
 					,cdunieco
@@ -927,7 +929,9 @@ public class PersonasManagerImpl implements PersonasManager
 			
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
-			setCheckpoint("Construyendo componentes relacion poliza-persona");
+			paso = "Construyendo componentes relacion poliza-persona";
+			logger.debug(Utils.log(stamp,"paso=",paso));
+			
 			gc.generaComponentes(componentesMpoliper
 					,true  //parcial
 					,true  //conField
@@ -936,22 +940,22 @@ public class PersonasManagerImpl implements PersonasManager
 					,true  //conEditor
 					,false //conButton
 					);
-			resp.getImap().put("mpoliperFields"  , gc.getFields());
-			resp.getImap().put("mpoliperColumns" , gc.getColumns());
 			
-			setCheckpoint("0");
+			items.put("mpoliperFields"  , gc.getFields());
+			items.put("mpoliperColumns" , gc.getColumns());
+			
 		}
 		catch(Exception ex)
 		{
-			manejaException(ex, resp);
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.debug(Utils.log(
-				 "\n@@@@@@ ",resp
+		logger.debug(Utils.log(stamp
+				,"\n@@@@@@ items=", items
 				,"\n@@@@@@ pantallaBeneficiarios @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
-		return resp;
+		return items;
 	}
 	
 	@Override
@@ -1310,51 +1314,6 @@ public class PersonasManagerImpl implements PersonasManager
 	public List<Map<String, String>> obtieneConfPatallaCli(String cdperson, String usuario, String rol, String tipoCliente) throws Exception{
 		return personasDAO.obtieneConfPatallaCli(cdperson, usuario, rol, tipoCliente);
 	}
-	
-	/************************ BASE MANAGER **************************/
-	private void manejaException(Exception ex,ManagerRespuestaBaseVO resp)
-	{
-		long timestamp = System.currentTimeMillis();
-		resp.setExito(false);
-		resp.setRespuestaOculta(ex.getMessage());
-		
-		if(ex instanceof ApplicationException)
-		{
-			resp.setRespuesta(
-					new StringBuilder()
-					.append(ex.getMessage())
-					.append(" #")
-					.append(timestamp)
-					.toString()
-					);
-		}
-		else
-		{
-			resp.setRespuesta(
-					new StringBuilder()
-					.append("Error ")
-					.append(getCheckpoint().toLowerCase())
-					.append(" #")
-					.append(timestamp)
-					.toString()
-					);
-		}
-		
-		logger.error(resp.getRespuesta(),ex);
-		setCheckpoint("0");
-	}
-	
-	private void setCheckpoint(String checkpoint)
-	{
-		logger.debug(new StringBuilder("checkpoint-->").append(checkpoint).toString());
-		session.put("checkpoint",checkpoint);
-	}
-	
-	private String getCheckpoint()
-	{
-		return (String)session.get("checkpoint");
-	}
-	/************************ BASE MANAGER **************************/
 	
 	/*
 	 * Getters y setters
