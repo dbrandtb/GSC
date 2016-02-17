@@ -18,8 +18,6 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 public interface CotizacionManager
 {
 	
-	public void setSession(Map<String,Object>session);
-	
 	public void movimientoTvalogarGrupo(
 			String cdunieco
 			,String cdramo
@@ -433,9 +431,10 @@ public interface CotizacionManager
 			,String nmnumint
 			,String nmorddom
 			,boolean esConfirmaEmision
-			,UserVO usuarioSesion);
+			,UserVO usuarioSesion
+			)throws Exception;
 	
-	public ManagerRespuestaSmapVO cargarTramite(String ntramite);
+	public ManagerRespuestaSmapVO cargarTramite(String ntramite)throws Exception;
 	
 	public boolean cargarBanderaCambioCuadroPorProducto(String cdramo);
 	

@@ -10,7 +10,7 @@ public interface EmisionManager
 {
 	public void setSession(Map<String,Object>session);
 	
-	public ManagerRespuestaImapVO construirPantallaClausulasPoliza();
+	public ManagerRespuestaImapVO construirPantallaClausulasPoliza() throws Exception;
 	
 	public ManagerRespuestaVoidVO guardarClausulasPoliza(List<Map<String,String>>clausulas);
 	

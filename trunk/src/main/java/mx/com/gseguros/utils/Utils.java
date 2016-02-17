@@ -503,6 +503,14 @@ public class Utils
 	{
 		boolean       debug = false;
 		StringBuilder sb    = new StringBuilder();
+		
+		boolean vieneStamp = args[0] instanceof Long;
+		
+		if(vieneStamp)
+		{
+			sb.append("\n[").append(args[0]).append("]: ");
+		}
+		
 		for(Object arg:args)
 		{
 			try
@@ -530,6 +538,12 @@ public class Utils
 			    sb.append(arg);
 			}
 		}
+		
+		if(vieneStamp)
+		{
+			sb.append(" ^[").append(args[0]).append("]");
+		}
+		
 		return sb.toString();
 	}
 	
@@ -767,266 +781,6 @@ public class Utils
     	logger.debug(sb.toString());
     	
     	return fin;
-    }
-    
-    public static String log(long stamp, Object s1)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp, Object s1, Object s2)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp, Object s1, Object s2, Object s3)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp, Object s1, Object s2, Object s3, Object s4)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp, Object s1, Object s2, Object s3, Object s4, Object s5)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp, Object s1, Object s2, Object s3, Object s4, Object s5, Object s6)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp, Object s1, Object s2, Object s3, Object s4, Object s5, Object s6, Object s7)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp, Object s1, Object s2, Object s3, Object s4, Object s5, Object s6, Object s7, Object s8)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp, Object s1, Object s2, Object s3, Object s4, Object s5, Object s6, Object s7, Object s8, Object s9)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp, Object s1, Object s2, Object s3, Object s4, Object s5, Object s6, Object s7, Object s8, Object s9, Object s10)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13, Object s14
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13, Object s14, Object s15
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13, Object s14, Object s15
-    		,Object s16
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13, Object s14, Object s15
-    		,Object s16, Object s17
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16,s17," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13, Object s14, Object s15
-    		,Object s16, Object s17, Object s18
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16,s17,s18," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13, Object s14, Object s15
-    		,Object s16, Object s17, Object s18, Object s19
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16,s17,s18,s19," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13, Object s14, Object s15
-    		,Object s16, Object s17, Object s18, Object s19, Object s20
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16,s17,s18,s19,s20," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13, Object s14, Object s15
-    		,Object s16, Object s17, Object s18, Object s19, Object s20
-    		,Object s21
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,s21," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13, Object s14, Object s15
-    		,Object s16, Object s17, Object s18, Object s19, Object s20
-    		,Object s21, Object s22
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,s21,s22," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13, Object s14, Object s15
-    		,Object s16, Object s17, Object s18, Object s19, Object s20
-    		,Object s21, Object s22, Object s23
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,s21,s22,s23," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13, Object s14, Object s15
-    		,Object s16, Object s17, Object s18, Object s19, Object s20
-    		,Object s21, Object s22, Object s23, Object s24
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,s21,s22,s23,s24," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13, Object s14, Object s15
-    		,Object s16, Object s17, Object s18, Object s19, Object s20
-    		,Object s21, Object s22, Object s23, Object s24, Object s25
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,s21,s22,s23,s24,s25," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13, Object s14, Object s15
-    		,Object s16, Object s17, Object s18, Object s19, Object s20
-    		,Object s21, Object s22, Object s23, Object s24, Object s25
-    		,Object s26
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,s21,s22,s23,s24,s25,s26," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13, Object s14, Object s15
-    		,Object s16, Object s17, Object s18, Object s19, Object s20
-    		,Object s21, Object s22, Object s23, Object s24, Object s25
-    		,Object s26, Object s27
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,s21,s22,s23,s24,s25,s26,s27," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13, Object s14, Object s15
-    		,Object s16, Object s17, Object s18, Object s19, Object s20
-    		,Object s21, Object s22, Object s23, Object s24, Object s25
-    		,Object s26, Object s27, Object s28
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,s21,s22,s23,s24,s25,s26,s27,s28," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13, Object s14, Object s15
-    		,Object s16, Object s17, Object s18, Object s19, Object s20
-    		,Object s21, Object s22, Object s23, Object s24, Object s25
-    		,Object s26, Object s27, Object s28, Object s29
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,s21,s22,s23,s24,s25,s26,s27,s28,s29," ^[",stamp,"]");
-    }
-    
-    public static String log(long stamp
-    		,Object s1, Object s2, Object s3, Object s4, Object s5
-    		,Object s6, Object s7, Object s8, Object s9, Object s10
-    		,Object s11, Object s12, Object s13, Object s14, Object s15
-    		,Object s16, Object s17, Object s18, Object s19, Object s20
-    		,Object s21, Object s22, Object s23, Object s24, Object s25
-    		,Object s26, Object s27, Object s28, Object s29, Object s30
-    		)
-    {
-    	return Utils.log("\n[",stamp,"]: ",s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16,s17,s18,s19,s20,s21,s22,s23,s24,s25,s26,s27,s28,s29,s30," ^[",stamp,"]");
     }
     
 }
