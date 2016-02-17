@@ -245,7 +245,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			
 			exito     = resp.isExito();
 			respuesta = resp.getRespuesta();
-			if(exito)
+			if(!exito)
 			{
 				throw new ApplicationException(respuesta);
 			}
