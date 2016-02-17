@@ -11120,7 +11120,7 @@ public class EndososAction extends PrincipalCoreAction
 					,null
 					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 					,"0"
-					,Documento.EXTERNO_CARATULA
+					,Documento.EXTERNO_CARATULA_B
 					,null
 					,null
 					);

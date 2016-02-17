@@ -2532,7 +2532,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null
 					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 					,"0"
-					,Documento.EXTERNO_CARATULA, null, null
+					,Documento.EXTERNO_CARATULA_B, null, null
 					);
 		
 		}catch(Exception e){
@@ -5858,7 +5858,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 									,null
 									,TipoTramite.ENDOSO.getCdtiptra()
 									,"0"
-									,Documento.EXTERNO_CARATULA
+									,Documento.EXTERNO_CARATULA_B
 									,null
 									,null
 									);
