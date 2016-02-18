@@ -196,6 +196,7 @@ Ext.onReady(function()
                     ,'->'
                     ,{
                         xtype      : 'textfield'
+                        ,itemId     : 'eliminarFiltro'
                         ,listeners :
                         {
                             change : function(me,fil)
@@ -421,7 +422,7 @@ function _p48_quitarAseguradoClic(me)
         
         var record = gridAsegurados.getSelectionModel().getSelection()[0];
         _p48_store.clearFilter();
-        
+    	_fieldById('eliminarFiltro').setValue('');
         debug('record:',record);
         
         _p48_storeMov.each(function(record2)
