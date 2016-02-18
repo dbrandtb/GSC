@@ -18,8 +18,10 @@ var _p48_params = <s:property value="%{convertToJSON('params')}" escapeHtml="fal
 debug('_p48_params:',_p48_params);
 
 var _p48_store;
+var _p48_storeRespaldo;
 var _p48_storeMov;
 var _p48_nfamilia = 0;
+var filtroBusqueda = 0;
 ////// variables //////
 
 ////// overrides //////
@@ -201,12 +203,14 @@ Ext.onReady(function()
                             {
                                 if(Ext.isEmpty(fil))
 							    {
+                                	filtroBusqueda = 0;
 							        _p48_store.clearFilter();
 							    }
 							    else
 							    {
 	                                fil = fil.toUpperCase().replace(/ /g,'');
 							        debug('filtro:',fil);
+							        filtroBusqueda = 1;
 							        _p48_store.filterBy(function(record)
 							        {
 							            var incluido = false;
@@ -419,6 +423,8 @@ function _p48_quitarAseguradoClic(me)
         }
         
         var record = gridAsegurados.getSelectionModel().getSelection()[0];
+        _p48_store.clearFilter();
+        
         debug('record:',record);
         
         _p48_storeMov.each(function(record2)
@@ -1341,138 +1347,6 @@ function _p48_rendererGrupos(val)
     debug('_p48_rendererGrupos return:',val);
     return val;
 }
-
-/*
-function(valores,editar)
-{
-    debug('validacion DEP valores:',valores,'editar:',editar,'.');
-    
-    if(Ext.isEmpty(valores))
-    {
-        throw 'No hay valores';
-    }
-    
-    if(Ext.isEmpty(editar))
-    {
-        throw 'No hay flag de editar';
-    }
-    
-    if(valores.CVE_PARENTESCO=='T'&&!editar)
-    {
-        throw 'No se puede agregar otro titular';
-    }
-    
-    if(valores.CVE_PARENTESCO=='C'&&!editar)
-    {
-        _p48_store.each(function(rec)
-        {
-            if(Number(rec.get('NMSITAUX'))==Number(valores.NMSITAUX)
-               &&rec.get('CVE_PARENTESCO')=='C'
-            )
-            {
-                throw 'Ya hay un(a) c\u00F3nyugue en la familia, en los asegurados';
-            }
-        });
-    
-        _p48_storeMov.each(function(rec)
-        {
-            if(Number(rec.get('NMSITAUX'))==Number(valores.NMSITAUX)
-               &&rec.get('CVE_PARENTESCO')=='C'
-            )
-            {
-                throw 'Ya hay un(a) c\u00F3nyugue en la familia, en los movimientos';
-            }
-        });
-    }
-    
-    valores['OTVALOR03']        = valores.CVE_PARENTESCO;
-    valores['DES_NOMBRE_GRUPO'] = valores.DSGRUPO;
-    if(valores.CVE_PARENTESCO=='T')
-    {
-        valores['DES_PARENTESCO'] = 'TITULAR';
-    }
-    else if(valores.CVE_PARENTESCO=='C')
-    {
-        valores['DES_PARENTESCO'] = 'C\u00D3NYUGE';
-    }
-    else if(valores.CVE_PARENTESCO=='P')
-    {
-        valores['DES_PARENTESCO'] = 'PADRES';
-    }
-    else if(valores.CVE_PARENTESCO=='H')
-    {
-        valores['DES_PARENTESCO'] = 'HIJO';
-    }
-    else if(valores.CVE_PARENTESCO=='D')
-    {
-        valores['DES_PARENTESCO'] = 'DEPENDIENTE';
-    }
-    debug('final valores:',valores);
-}
-
-function(records)
-{
-    var nTit = 0;
-    var nCon = 0;
-    
-    for(var i in records)
-    {
-        if(records[i].get('CVE_PARENTESCO')=='T')
-        {
-            nTit = nTit + 1;
-        }
-        else if(records[i].get('CVE_PARENTESCO')=='C')
-        {
-            nCon = nCon + 1;
-        }
-    }
-    if(nTit==0)
-    {
-        throw 'Hace falta un titular';
-    }
-    else if(nTit>1)
-    {
-        throw 'Solo debe haber un titular';
-    }
-    if(nCon>1)
-    {
-        throw 'Solo puede haber un(a) c\u00F3nyuge';
-    }
-    
-    for(var i in records)
-    {
-        var record  = records[i];
-        var valores = record.raw;
-        
-        valores['OTVALOR03'] = valores.CVE_PARENTESCO;
-        
-	    if(valores.CVE_PARENTESCO=='T')
-	    {
-	        valores['DES_PARENTESCO'] = 'TITULAR';
-	    }
-	    else if(valores.CVE_PARENTESCO=='C')
-	    {
-	        valores['DES_PARENTESCO'] = 'C\u00D3NYUGE';
-	    }
-	    else if(valores.CVE_PARENTESCO=='P')
-	    {
-	        valores['DES_PARENTESCO'] = 'PADRES';
-	    }
-	    else if(valores.CVE_PARENTESCO=='H')
-	    {
-	        valores['DES_PARENTESCO'] = 'HIJO';
-	    }
-	    else if(valores.CVE_PARENTESCO=='D')
-	    {
-	        valores['DES_PARENTESCO'] = 'DEPENDIENTE';
-	    }
-	    
-	    record.set('OTVALOR03'      , valores['OTVALOR03']);
-	    record.set('DES_PARENTESCO' , valores['DES_PARENTESCO']);
-    }
-    debug('final records:',records);
-}
-*/
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
