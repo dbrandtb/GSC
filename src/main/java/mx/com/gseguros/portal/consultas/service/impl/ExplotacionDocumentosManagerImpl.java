@@ -477,6 +477,11 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			
 			sb.append(Utils.log("\nlista=",listaArchivos));
 			
+			paso = "Armando juegos de impresiones";
+			sb.append("\n").append(paso);
+			
+			listaArchivos = this.armaJuegosDeImpresiones(listaArchivos, "nmcopias");
+			
 			paso = "Imprimiendo archivos";
 			sb.append("\n").append(paso);
 			
@@ -1556,5 +1561,188 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		logger.debug(sb.toString());
 		
 		return inputStream;
+	}
+	
+	/*public static void main(String[] args)
+	{
+		List<Map<String,String>> lista = new ArrayList<Map<String,String>>();
+		
+		Map<String,String> m1 = new LinkedHashMap<String,String>();
+		m1.put("m1"     , "");
+		m1.put("conteo" , "1");
+		
+		Map<String,String> m2 = new LinkedHashMap<String,String>();
+		m2.put("m2"     , "");
+		m2.put("conteo" , "3");
+		
+		Map<String,String> m3 = new LinkedHashMap<String,String>();
+		m3.put("m3"     , "");
+		m3.put("conteo" , "3");
+		
+		Map<String,String> m4 = new LinkedHashMap<String,String>();
+		m4.put("m4"     , "");
+		m4.put("conteo" , "3");
+		
+		Map<String,String> m5 = new LinkedHashMap<String,String>();
+		m5.put("m5"     , "");
+		m5.put("conteo" , "1");
+		
+		Map<String,String> m6 = new LinkedHashMap<String,String>();
+		m6.put("m6"     , "");
+		m6.put("conteo" , "1");
+		
+		lista.add(m1);
+		lista.add(m2);
+		lista.add(m3);
+		lista.add(m4);
+		lista.add(m5);
+		lista.add(m6);
+		
+		try
+		{
+			ExplotacionDocumentosManagerImpl.armaJuegosDeImpresiones(lista, "conteo");
+		}
+		catch(Exception ex)
+		{
+			logger.error(Utils.manejaExcepcion(ex));
+		}
+	}*/
+	
+	private List<Map<String,String>> armaJuegosDeImpresiones(List<Map<String,String>> listaOriginal, String keyConteo) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ armaJuegosDeImpresiones @@@@@@"
+				,"\n@@@@@@ listaOriginal=" , listaOriginal
+				,"\n@@@@@@ keyConteo="     , keyConteo
+				));
+		
+		List<Map<String,String>> listaArmada = new ArrayList<Map<String,String>>();
+		
+		String paso = null;
+		
+		try
+		{
+			paso = "Verificando propiedad de conteo";
+			logger.debug(paso);
+			
+			try
+			{
+				for(Map<String,String> el:listaOriginal)
+				{
+					Integer.parseInt(el.get(keyConteo));
+				}
+			}
+			catch(Exception ex)
+			{
+				logger.error(paso, ex);
+				throw new ApplicationException("La propiedad de conteo no es correcta para todos los elementos de la lista");
+			}
+			
+			paso = "Procesando lista";
+			logger.debug(paso);
+			
+			for(int i=0 ; i<listaOriginal.size() ; i++)
+			{
+				Map<String,String> el = listaOriginal.get(i);
+				
+				int conteo = Integer.parseInt(el.get(keyConteo));
+				
+				if(conteo==0)
+				{
+					logger.debug(Utils.log("No se para elemento porque tiene 0 i=", i, " el=",el));
+				}
+				else if(conteo==1)
+				{
+					logger.debug(Utils.log("Se pasa limpio el elemento i=", i, " el=",el));
+					
+					el.put(keyConteo, String.valueOf(conteo-1));
+					listaArmada.add(el);
+				}
+				else
+				{
+					logger.debug(Utils.log("Se recorren por multiple a partir de i=", i, " el=",el));
+					
+					int finMultiples = -1;
+					
+					for(int j=i ; j<listaOriginal.size() ; j++)
+					{
+						Map<String,String> elMultiplesCopias = listaOriginal.get(j);
+						
+						int conteoElMultiplesCopias = Integer.parseInt(elMultiplesCopias.get(keyConteo));
+						
+						if(conteoElMultiplesCopias < 2)
+						{
+							logger.debug(Utils.log("termina el buscado de multiples con j=", j, " el=", elMultiplesCopias));
+							finMultiples = j;
+							break;
+						}
+						
+						logger.debug(Utils.log("Se incluye en el recorrido por multiples j=", j, " el=",elMultiplesCopias));
+					}
+					
+					if(finMultiples == -1)
+					{
+						logger.debug("Hasta el ultimo elemento es multiple");
+						finMultiples = listaOriginal.size();
+					}
+					
+					logger.debug("Se van a empezar a pasar los marcados como multiples en un do-while>for");
+					
+					boolean algunMultiplePasado = false;
+					
+					do
+					{
+						logger.debug(Utils.log("Se inicia pase de multiples desde ", i, " hasta ", finMultiples));
+						
+						algunMultiplePasado = false;
+						
+						for(int j=i; j<finMultiples ; j++)
+						{
+							Map<String,String> elMultipleParaMover = listaOriginal.get(j);
+							
+							int conteoElMultipleParaMover = Integer.parseInt(elMultipleParaMover.get(keyConteo));
+							
+							if(conteoElMultipleParaMover>0)
+							{
+								logger.debug(Utils.log("Se mueve elemento multiple j=", j, " porque tiene conteo=", conteoElMultipleParaMover));
+								
+								elMultipleParaMover.put(keyConteo, String.valueOf(conteoElMultipleParaMover-1));
+								
+								listaArmada.add(elMultipleParaMover);
+								
+								algunMultiplePasado = true;
+							}
+							else
+							{
+								logger.debug(Utils.log("Se igonar elemento multiple j=", j, " porque tiene conteo=", conteoElMultipleParaMover));
+							}
+						}
+					}
+					while(algunMultiplePasado);
+				}
+				
+			}
+			
+			paso = "Reiniciando contadores";
+			logger.debug(paso);
+			
+			for(int i=0 ; i<listaArmada.size() ; i++)
+			{
+				listaArmada.get(i).put(keyConteo, "1");
+			}
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ listaArmada=", listaArmada
+				,"\n@@@@@@ armaJuegosDeImpresiones @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return listaArmada;
 	}
 }
