@@ -1,5 +1,6 @@
 package mx.com.gseguros.interceptors;
 
+import java.lang.management.ManagementFactory;
 import java.util.Map;
 
 import mx.com.aon.portal.model.UserVO;
@@ -8,6 +9,7 @@ import mx.com.gseguros.utils.Constantes;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -44,6 +46,11 @@ public class AuthenticationInterceptor implements Interceptor {
 		UserVO user = (UserVO) session.get(Constantes.USER);
 		if(user != null) {
 			logger.info("Usuario en sesion: {}", user.getUser());
+
+			String pid = ManagementFactory.getRuntimeMXBean().getName();
+			MDC.put("USERID", new StringBuilder(
+					user.getUser()).append(" ").append(System.currentTimeMillis()).toString());
+			
 		} else {
 			logger.info("No hay usuario en sesion");
 		}

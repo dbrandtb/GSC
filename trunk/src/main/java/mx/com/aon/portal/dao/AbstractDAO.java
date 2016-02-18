@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mx.com.gseguros.exception.DaoException;
-import mx.com.gseguros.utils.Utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,12 +48,10 @@ public abstract class AbstractDAO  extends JdbcDaoSupport {
 		try {
 			CustomStoredProcedure storedProcedure = getStoredProcedure(storeProcedureName);
 			long inicio = System.currentTimeMillis();
-			//logger.info(Utils.join("##### CALLING SP ", storedProcedure.getSql(), " ", parameters));
-			logger.info("##### CALLING SP {} {} [{}]", storedProcedure.getSql(), parameters, inicio);
+			logger.info("##### CALLING SP {} {}", storedProcedure.getSql(), parameters);
 			Map result = storedProcedure.execute((Map) parameters);
     		long tfinal = System.currentTimeMillis();
-    		//logger.info(Utils.join("##### FINISH  SP ", storedProcedure.getSql(), " IN ", (tfinal - inicio) / 1000d, " SECS "));
-    		logger.info( "##### FINISH  SP {}  IN {} SECS {} [{}]", storedProcedure.getSql(), (tfinal - inicio) / 1000d, parameters, inicio);
+    		logger.info("##### FINISH  SP {} IN {} SECS", storedProcedure.getSql(), (tfinal - inicio) / 1000d);
 			
 			return storedProcedure.mapWrapperResultados(result);
 		} catch (Exception ex) {
