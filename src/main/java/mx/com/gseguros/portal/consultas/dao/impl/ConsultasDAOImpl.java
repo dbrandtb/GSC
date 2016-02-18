@@ -3944,4 +3944,28 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> cargarCotizadoresActivos(String cadena)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cadena" , cadena);Map<String,Object>       procRes = ejecutaSP(new cargarCotizadoresActivosSP(getDataSource()),params);
+		List<Map<String,String>> list    = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		
+		return list;
+	}
+	
+	protected class cargarCotizadoresActivosSP extends StoredProcedure
+	{
+		protected cargarCotizadoresActivosSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_COTIZADORES_ACTIVOS");
+			declareParameter(new SqlParameter("cadena" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{ "cdusuari", "dsusuari" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

@@ -488,4 +488,6 @@ public interface ConsultasDAO
 	public int recuperarConteoTbloqueoTramite(String ntramite)throws Exception;
 
 	public List<Map<String,String>> recuperarExclusionTurnados() throws Exception;
+	
+	public List<Map<String,String>> cargarCotizadoresActivos(String cadena) throws Exception;
 }

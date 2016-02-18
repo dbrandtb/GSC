@@ -1519,4 +1519,42 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO> cargarCotizadoresActivos(String cadena) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarCotizadoresACTIVOS @@@@@@"
+				,"\n@@@@@@ cadena: @@@@@@",cadena
+				 ));
+		
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		
+		String paso = null;
+		
+		try
+		{
+			paso = "Recuperando documentos";
+			logger.debug(Utils.log("\n@@@@@@ ",paso));
+			List<Map<String,String>> documentos = consultasDAO.cargarCotizadoresActivos(cadena);
+			
+			for(Map<String,String>elemento:documentos)
+			{
+				lista.add(new GenericVO(elemento.get("cdusuari"),elemento.get("dsusuari")));
+			}
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ cargarCotizadoresACTIVOS @@@@@@"
+				,"\n@@@@@@ cadena: @@@@@@",cadena
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
 }
