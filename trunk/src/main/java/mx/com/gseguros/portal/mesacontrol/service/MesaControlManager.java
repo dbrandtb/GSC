@@ -3,6 +3,8 @@ package mx.com.gseguros.portal.mesacontrol.service;
 import java.util.Date;
 import java.util.Map;
 
+import mx.com.gseguros.portal.cotizacion.model.Item;
+
 public interface MesaControlManager
 {
     public String cargarCdagentePorCdusuari(String cdusuari)throws Exception;
@@ -59,4 +61,8 @@ public interface MesaControlManager
 			)throws Exception;
     
     public void marcarTramiteVistaPrevia(String ntramite) throws Exception;
+    
+    public void movimientoExclusionUsuario(String usuario, String accion) throws Exception;
+    
+    public Map<String, Item> pantallaExclusionTurnados(String cdsisrol) throws Exception;
 }

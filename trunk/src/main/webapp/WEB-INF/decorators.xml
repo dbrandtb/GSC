@@ -195,6 +195,8 @@
         <pattern>/jsp-script/proceso/demo/*.jsp</pattern>
         
         <pattern>/tvalosit/*.action*</pattern>
+        
+        <pattern>/mesacontrol/*.action*</pattern>
 
    	</decorator>
 	

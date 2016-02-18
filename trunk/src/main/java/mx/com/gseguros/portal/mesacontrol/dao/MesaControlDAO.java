@@ -236,4 +236,13 @@ public interface MesaControlDAO
 	 * @throws Exception
 	 */
 	public String marcarTramiteComoStatusTemporal(String ntramite, String statusTemporal) throws Exception;
+	/**
+	 * Este metodo guada o borra una exclusion de usuario
+	 * @param usuario
+	 * @param accion puede ser I insertar D borrar
+	 * @throws Exception
+	 */
+	public void movimientoExclusionUsuario(String usuario, String accion) throws Exception;
+	
+	
 }

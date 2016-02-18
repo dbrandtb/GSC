@@ -970,4 +970,25 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
     		compile();
 		}
 	}
+	
+	public void movimientoExclusionUsuario(String usuario, String accion) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("usuario" , usuario);
+		params.put("accion"   , accion);
+		ejecutaSP(new MovimientoExclusionUsuarioSP(getDataSource()),params);
+	}
+	
+	protected class MovimientoExclusionUsuarioSP extends StoredProcedure
+	{
+		protected MovimientoExclusionUsuarioSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_MOV_EXCLU_TURNADO");
+    		declareParameter(new SqlParameter("usuario" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("accion"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("PV_MSG_ID_O"        , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("PV_TITLE_O"         , OracleTypes.VARCHAR));
+    		compile();
+		}
+	}
 }
