@@ -928,6 +928,10 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			{
 				lista = consultasDAO.recuperarRolesTodos();
 			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_EXCLUSION_TURNADOS))
+			{
+				lista = consultasDAO.recuperarExclusionTurnados();
+			}			
 		}
 		catch(Exception ex)
 		{

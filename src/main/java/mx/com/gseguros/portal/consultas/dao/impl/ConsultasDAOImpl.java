@@ -3921,4 +3921,27 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> recuperarExclusionTurnados()throws Exception
+	{
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarExclusionTurnadosSP(getDataSource()),new HashMap<String,String>());
+		List<Map<String,String>> list    = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		
+		return list;
+	}
+	
+	protected class RecuperarExclusionTurnadosSP extends StoredProcedure
+	{
+		protected RecuperarExclusionTurnadosSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_EXCLUSIONES_TURNADO");
+			
+			String[] cols = new String[]{ "cdusuari", "dsusuari" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

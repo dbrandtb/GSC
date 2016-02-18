@@ -1,18 +1,29 @@
 package mx.com.gseguros.portal.mesacontrol.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.general.dao.PantallasDAO;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class MesaControlManagerImpl implements MesaControlManager
 {
 	private static Logger logger = Logger.getLogger(MesaControlManagerImpl.class);
 	private MesaControlDAO mesaControlDAO;
+	
+	@Autowired
+	private PantallasDAO pantallasDAO ;
 	
 	@Override
 	public String cargarCdagentePorCdusuari(String cdusuari)throws Exception
@@ -209,4 +220,41 @@ public class MesaControlManagerImpl implements MesaControlManager
 	{
 		mesaControlDAO.marcarTramiteVistaPrevia(ntramite);
 	}
+	
+	@Override
+	public void movimientoExclusionUsuario(String usuario, String accion) throws Exception
+	{
+		mesaControlDAO.movimientoExclusionUsuario(usuario, accion);
+	}
+	
+	@Override
+	public Map<String, Item> pantallaExclusionTurnados(String cdsisrol) throws Exception
+	{
+		
+		logger.debug(
+				Utils.log("INICIO cdsisrol >>> pantallaExclusionTurnados",cdsisrol)
+				);
+		String paso ="  ";
+		Map<String, Item> resultado = new HashMap<String, Item>();
+		try {
+			
+			paso = "Recuperando componentes";
+			List<ComponenteVO> componentesPantalla = pantallasDAO.obtenerComponentes(null, null, null, null, null, cdsisrol, "EXCLU_TURNADOS", "COMBO_USUARIO", null);
+			
+			paso= "Generando Componentes";
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.generaComponentes(componentesPantalla, true, false, true, false, false, false);
+			resultado.put("comboUsuario", gc.getItems());
+			
+		}
+		catch(Exception e){
+			Utils.generaExcepcion(e, paso);
+		}
+		
+		logger.debug(
+				Utils.log("FIN cdsisrol >>> pantallaExclusionTurnados",cdsisrol)
+				);
+		return resultado;
+	}
+	
 }
