@@ -338,30 +338,6 @@ Ext.onReady(function()
     
     ////// loaders //////
     _p49_navega(1);
-    
-    /*
-    setTimeout(function(){
-    var ck = 'Invocando ventana de impresi\u00F3n';
-                                            try
-                                            {
-                                                var venImp = Ext.create('VentanaImpresionLote',
-                                                {
-                                                    lote      : 19
-                                                    ,cdtipram : 10
-                                                    ,cdtipimp : 'G'
-                                                    ,tipolote : 'P'
-                                                    ,callback : function(){ _fieldById('_p49_gridPolizas').getStore().removeAll(); }
-                                                    ,closable : false
-                                                });
-                                                centrarVentanaInterna(venImp.show());
-                                            }
-                                            catch(e)
-                                            {
-                                                manejaException(e,ck);
-                                            }
-                                            },1000);
-    */
-    
     ////// loaders //////
 });
 
@@ -573,7 +549,13 @@ function _p49_impresionClic(tipoimp)
                                                     ,cdtipimp : json.params.cdtipimp
                                                     ,tipolote : 'P'
                                                     ,callback : function(){ _fieldById('_p49_gridPolizas').getStore().removeAll(); }
-                                                    ,closable : false
+                                                });
+                                                venImp.on(
+                                                {
+                                                    close : function()
+                                                    {
+                                                        _fieldById('_p49_gridPolizas').getStore().removeAll();
+                                                    }
                                                 });
                                                 centrarVentanaInterna(venImp.show());
                                             }
