@@ -21,7 +21,6 @@ var _p48_store;
 var _p48_storeRespaldo;
 var _p48_storeMov;
 var _p48_nfamilia = 0;
-var filtroBusqueda = 0;
 ////// variables //////
 
 ////// overrides //////
@@ -203,14 +202,12 @@ Ext.onReady(function()
                             {
                                 if(Ext.isEmpty(fil))
 							    {
-                                	filtroBusqueda = 0;
-							        _p48_store.clearFilter();
+                                	_p48_store.clearFilter();
 							    }
 							    else
 							    {
 	                                fil = fil.toUpperCase().replace(/ /g,'');
 							        debug('filtro:',fil);
-							        filtroBusqueda = 1;
 							        _p48_store.filterBy(function(record)
 							        {
 							            var incluido = false;
