@@ -812,6 +812,13 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = catalogosManager.recuperarTdocume(params.get("cdtiptra"));
 					break;
+				case COTIZADORES_ACTIVOS:
+					if(params==null)
+					{
+						params=new HashMap<String,String>();
+					}
+					lista = catalogosManager.cargarCotizadoresActivos(params.get("cadena"));
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

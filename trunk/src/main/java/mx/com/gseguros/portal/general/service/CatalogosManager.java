@@ -189,4 +189,8 @@ public interface CatalogosManager {
     public List<GenericVO> obtieneCatalogoParentescoAutos() throws Exception;
     
     public List<GenericVO> recuperarTdocume(String cdtiptra) throws Exception;
+    
+    public List<GenericVO> cargarCotizadoresActivos(String cadena) throws Exception;
+    
+    
 }
