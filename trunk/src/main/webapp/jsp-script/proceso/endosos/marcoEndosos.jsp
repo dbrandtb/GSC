@@ -1334,6 +1334,42 @@
                 mensajeError('Seleccione la p&oacute;liza');
             }
         }
+        else if(recordOperacion.get('funcion')=='endosocancelautomend')
+        {
+            debug(recordOperacion.get('funcion'));
+            var nPolizasActivas=0;
+            var polizaActiva;
+            marendStorePolizas.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nPolizasActivas=nPolizasActivas+1;
+                    polizaActiva=record;
+                }
+            });
+            if(nPolizasActivas==1)
+            {
+                Ext.getCmp('marendMenuOperaciones').collapse();
+                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                var smap1 = polizaActiva.raw;
+                smap1['DSCOMENT']='';
+                Ext.getCmp('marendLoaderFrame').getLoader().load(
+                {
+                    url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,jsonData :
+                    {
+                        'smap1'         : smap1
+                        ,'params' : smap1
+                    }
+                });
+            }
+            else
+            {
+                mensajeError('Seleccione la p&oacute;liza');
+            }
+        }
         else if(recordOperacion.get('funcion')=='endosoParentescoAntiguedad'||recordOperacion.get('funcion')=='endosoParentescoAntiguedadSimple')
         {
             debug(recordOperacion.get('funcion'));
@@ -1761,6 +1797,11 @@ Ext.onReady(function()
                     ,texto   : '27'
                     ,liga    : '<s:url namespace="/catalogos" action="includes/pantallaBeneficiariosSMD" />'
                     ,funcion : 'endosobeneficiarios'
+                },{
+                    cdtipsup : '54'
+                    ,texto   : '54'
+                    ,liga    : '<s:url namespace="/endosos" action="includes/endosoCancelacionAuto" />'
+                    ,funcion : 'endosocancelautomend'
                 },{
                     cdtipsup : '58'
                     ,texto   : '58'
