@@ -1353,6 +1353,7 @@
                 Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
                 var smap1 = polizaActiva.raw;
                 smap1['DSCOMENT']='';
+                smap1['cdtipsup']='54';
                 Ext.getCmp('marendLoaderFrame').getLoader().load(
                 {
                     url       : recordOperacion.get('liga')
