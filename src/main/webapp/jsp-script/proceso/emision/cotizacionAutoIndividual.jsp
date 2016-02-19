@@ -833,6 +833,10 @@ Ext.onReady(function()
             select : function() { _p28_herenciaAscendente(clave,marca,submarca,modelo,version); }
         });
         //clave
+        _fieldByLabel('SEGURO DE VIDA').on(
+                        {
+                            select : _p28_atributoNacimientoContratante
+                        });
         
         //tipovalor
         _fieldLikeLabel('FECHA DE FACTURA').hide();
@@ -856,9 +860,7 @@ Ext.onReady(function()
                 {
                     _p28_cargarRangoValorRamo5();
                 }
-               
-                
-/* ------------------------------- VALOR FACTURA ------------------- */
+ /* ------------------------------- VALOR FACTURA ------------------- */
              
                var valor = tipoValor.getValue();
                 if(valor-0==3)/* 3 = VALOR FACTURA*/
@@ -3814,6 +3816,27 @@ function _p28_inicializarTatripol(itemsTatripol)
             tatriItem.select('1');
         }
     }
+}
+
+function _p28_atributoNacimientoContratante(combo)
+{
+    var val = 'S';
+    
+    if(combo != 'S')
+    {
+        val = combo.getValue();
+    }
+    
+    debug('_p28_atributoNacimientoContratante val:',val,'.');
+    
+    if(val == 'S')
+        {
+            _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').allowBlank=false;
+        }
+    else
+        {
+            _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').allowBlank=true;
+        }
 }
 ////// funciones //////
 </script>
