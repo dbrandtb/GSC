@@ -2084,7 +2084,7 @@ function _p22_guardarClic(callbackGuardar, autosave)
     	valido = autosave || validDomicilio;
     	
     	if(!valido){
-			mensajeWarning('Favor de verificar que los datos de domicilios est&eacute;n completos.');
+			mensajeWarning('Favor de verificar y/o completar todos los datos de domicilios.');
     	}
     	if(domFiscalActivo > 1){
     		valido =  false;
