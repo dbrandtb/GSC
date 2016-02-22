@@ -3800,6 +3800,13 @@ function agregaEditaDomicilio(editMode, recordCargar){
 					    		fijarCamposEditables(formDomicilio,_editandoCliente);
 					    	}
 					    }
+					    
+					    if(!_fieldByName('NMNUMERO',formDomicilio).isValid()){
+					    	_fieldByName('NMNUMERO',formDomicilio).setReadOnly(false);
+					    }
+					    if(!_fieldByName('NMNUMINT',formDomicilio).isValid()){
+					    	_fieldByName('NMNUMINT',formDomicilio).setReadOnly(false);
+					    }
 
 					    
 						setTimeout(function(){
