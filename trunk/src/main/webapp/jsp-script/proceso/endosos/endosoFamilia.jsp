@@ -313,14 +313,27 @@ Ext.onReady(function()
                                                         };
                                                         mensajeCorrecto('Endoso generado',json.message,function()
                                                         {
-                                                            _generarRemesaClic(
-                                                                true
-                                                                ,_p48_params.CDUNIECO
-                                                                ,_p48_params.CDRAMO
-                                                                ,_p48_params.ESTADO
-                                                                ,_p48_params.NMPOLIZA
-                                                                ,callbackRemesa
-                                                            );
+                                                        	var cadena= json.message;
+                                                        	var palabra="guardado";
+                                                        	if (cadena.indexOf(palabra)==-1){
+                                                        		_generarRemesaClic2(
+                                                                        false
+                                                                        ,_p48_params.CDUNIECO
+                                                                        ,_p48_params.CDRAMO
+                                                                        ,_p48_params.ESTADO
+                                                                        ,_p48_params.NMPOLIZA
+                                                                        ,callbackRemesa
+                                                                    );
+                                                        	}else{
+                                                        		_generarRemesaClic(
+                                                                        true
+                                                                        ,_p48_params.CDUNIECO
+                                                                        ,_p48_params.CDRAMO
+                                                                        ,_p48_params.ESTADO
+                                                                        ,_p48_params.NMPOLIZA
+                                                                        ,callbackRemesa
+                                                                    );
+                                                        	}
                                                         });
                                                     }
                                                     else

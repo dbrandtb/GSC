@@ -231,7 +231,7 @@ function _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback,ma
 
 function _generarRemesaClic2(required,cdunieco,cdramo,estado,nmpoliza,callback,marcar)
 {
-	
+	callback();
 }
 ////// funciones //////
 <s:if test="false">
