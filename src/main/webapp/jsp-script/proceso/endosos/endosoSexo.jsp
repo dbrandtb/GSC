@@ -79,14 +79,29 @@ function _1_confirmar()
                     
                     mensajeCorrecto('Guardar endoso',json.mensaje,function()
                     {
-                        _generarRemesaClic(
-                            true
-                            ,_1_smap1.cdunieco
-                            ,_1_smap1.cdramo
-                            ,_1_smap1.estado
-                            ,_1_smap1.nmpoliza
-                            ,callbackRemesa
-                        );
+                    	var cadena= json.mensaje;
+						debug("Cadena ==>", cadena);
+                        var palabra="confirmado";
+                        debug("palabra ==>", palabra);
+                        if (cadena.indexOf(palabra)==-1){
+                    		_generarRemesaClic2(
+                                false
+                                ,_1_smap1.cdunieco
+                                ,_1_smap1.cdramo
+                                ,_1_smap1.estado
+                                ,_1_smap1.nmpoliza
+                                ,callbackRemesa
+                            );
+                    	}else{
+                    		_generarRemesaClic(
+                               true
+                               ,_1_smap1.cdunieco
+                               ,_1_smap1.cdramo
+                               ,_1_smap1.estado
+                               ,_1_smap1.nmpoliza
+                               ,callbackRemesa
+                           );
+                    	}
                     });
                 }
                 else

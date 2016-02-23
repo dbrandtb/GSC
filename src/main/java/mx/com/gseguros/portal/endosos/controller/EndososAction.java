@@ -5380,7 +5380,7 @@ public class EndososAction extends PrincipalCoreAction
 						,DocumentosManager.PROCESO_ENDOSO
 						,ntramite
 						,null //nmsolici
-, null
+						, null
 						);
 				
 				String nmsolici    = datosPoliza.get("nmsolici");

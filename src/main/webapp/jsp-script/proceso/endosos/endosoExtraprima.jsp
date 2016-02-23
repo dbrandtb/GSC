@@ -696,14 +696,27 @@ function _8_confirmar()
                     
                     mensajeCorrecto('Endoso generado',json.mensaje,function()
                     {
-                        _generarRemesaClic(
-                            true
-                            ,_8_smap1.CDUNIECO
-                            ,_8_smap1.CDRAMO
-                            ,_8_smap1.ESTADO
-                            ,_8_smap1.NMPOLIZA
-                            ,callbackRemesa
-                        );
+                    	var cadena= json.mensaje;
+                        var palabra="guardado";
+                    	if (cadena.indexOf(palabra)==-1){
+                    		_generarRemesaClic2(
+                                    false
+                                    ,_8_smap1.CDUNIECO
+                                    ,_8_smap1.CDRAMO
+                                    ,_8_smap1.ESTADO
+                                    ,_8_smap1.NMPOLIZA
+                                    ,callbackRemesa
+                                );
+                    	}else{
+                    		_generarRemesaClic(
+                                    true
+                                    ,_8_smap1.CDUNIECO
+                                    ,_8_smap1.CDRAMO
+                                    ,_8_smap1.ESTADO
+                                    ,_8_smap1.NMPOLIZA
+                                    ,callbackRemesa
+                                );
+                    	}
                     });
                 }
                 else
