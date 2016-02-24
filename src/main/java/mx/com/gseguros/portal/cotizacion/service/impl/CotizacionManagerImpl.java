@@ -8870,8 +8870,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String nmsituac
 			)throws Exception
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ borrarIncisoCotizacion @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -8885,7 +8884,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		try
 		{
 			paso = "Borrando asegurado";
-			logger.debug(Utils.log(stamp,"paso=",paso));
+			logger.debug(Utils.log("","paso=",paso));
 			
 			cotizacionDAO.borrarIncisoCotizacion(cdunieco,cdramo,estado,nmpoliza,nmsituac);
 		}
@@ -8894,7 +8893,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n@@@@@@ borrarIncisoCotizacion @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));

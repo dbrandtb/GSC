@@ -859,8 +859,7 @@ public class PersonasManagerImpl implements PersonasManager
 	@Override
 	public Map<String,Item> pantallaBeneficiarios(String cdunieco,String cdramo,String estado,String cdsisrol,String cdtipsup)throws Exception
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ pantallaBeneficiarios @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -877,7 +876,7 @@ public class PersonasManagerImpl implements PersonasManager
 		try
 		{
 			paso = "Validando suplemento permitido";
-			logger.debug(Utils.log(stamp,"paso=",paso));
+			logger.debug(Utils.log("","paso=",paso));
 			
 			try
 			{
@@ -898,7 +897,7 @@ public class PersonasManagerImpl implements PersonasManager
 			}
 			
 			paso = "Recuperando componentes relacion poliza-persona";
-			logger.debug(Utils.log(stamp,"paso=",paso));
+			logger.debug(Utils.log("","paso=",paso));
 			
 			List<ComponenteVO>componentesMpoliper=pantallasDAO.obtenerComponentes(
 					null                     //cdtiptra
@@ -913,7 +912,7 @@ public class PersonasManagerImpl implements PersonasManager
 					);
 			
 			paso = "Recuperando componentes persona";
-			logger.debug(Utils.log(stamp,"paso=",paso));
+			logger.debug(Utils.log("","paso=",paso));
 			
 			List<ComponenteVO>componentesMpersona=pantallasDAO.obtenerComponentes(
 					null                     //cdtiptra
@@ -930,7 +929,7 @@ public class PersonasManagerImpl implements PersonasManager
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
 			paso = "Construyendo componentes relacion poliza-persona";
-			logger.debug(Utils.log(stamp,"paso=",paso));
+			logger.debug(Utils.log("","paso=",paso));
 			
 			gc.generaComponentes(componentesMpoliper
 					,true  //parcial
@@ -950,7 +949,7 @@ public class PersonasManagerImpl implements PersonasManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n@@@@@@ items=", items
 				,"\n@@@@@@ pantallaBeneficiarios @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -1025,8 +1024,7 @@ public class PersonasManagerImpl implements PersonasManager
 	@Override
 	public String guardarPantallaEspPersona(Map<String,String>params, UserVO usuario) throws Exception
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarPantallaEspPersona @@@@@@"
 				,"\n@@@@@@ params=",params
@@ -1048,7 +1046,7 @@ public class PersonasManagerImpl implements PersonasManager
 			}
 			
 			paso = "Guardando datos de persona";
-			logger2.debug(Utils.log(stamp,"paso=",paso));
+			logger2.debug(Utils.log("","paso=",paso));
 			
 			personasDAO.movimientosMpersona(
 				params.get("cdperson"),
@@ -1092,7 +1090,7 @@ public class PersonasManagerImpl implements PersonasManager
 					&&StringUtils.isNotBlank(cdtipsit))
 			{
 				paso = "Sincronizando tvalosit";
-				logger2.debug(Utils.log(stamp,"paso=",paso));
+				logger2.debug(Utils.log("","paso=",paso));
 				
 				personasDAO.sincronizaPersonaToValosit(
 						params.get("otsexo")
@@ -1108,14 +1106,14 @@ public class PersonasManagerImpl implements PersonasManager
 			}
 			
 			paso = "Datos guardados correctamente";
-			logger2.debug(Utils.log(stamp,"paso=",paso));
+			logger2.debug(Utils.log("","paso=",paso));
 		}
 		catch(Exception ex)
 		{
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n@@@@@@ mensaje=",paso
 				,"\n@@@@@@ guardarPantallaEspPersona @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

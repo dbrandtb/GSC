@@ -56,8 +56,7 @@ public class TvalositAction extends PrincipalCoreAction
 	})
 	public String pantallaActTvalosit()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n#################################"
 				,"\n###### pantallaActTvalosit ######"
 				,"\n###### params=",params
@@ -103,7 +102,7 @@ public class TvalositAction extends PrincipalCoreAction
 			message = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### result=",result
 				,"\n###### pantallaActTvalosit ######"
 				,"\n#################################"
@@ -116,8 +115,7 @@ public class TvalositAction extends PrincipalCoreAction
 			)
 	public String cargarPantallaActTvalosit()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n#######################################"
 				,"\n###### cargarPantallaActTvalosit ######"
 				,"\n###### params=", params
@@ -152,7 +150,7 @@ public class TvalositAction extends PrincipalCoreAction
 			message = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### cargarPantallaActTvalosit ######"
 				,"\n#######################################"
 				));
@@ -165,8 +163,7 @@ public class TvalositAction extends PrincipalCoreAction
 			)
 	public String guardarPantallaActTvalosit()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n########################################"
 				,"\n###### guardarPantallaActTvalosit ######"
 				,"\n###### params=", params
@@ -209,7 +206,7 @@ public class TvalositAction extends PrincipalCoreAction
 			message = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### guardarPantallaActTvalosit ######"
 				,"\n########################################"
 				));

@@ -1467,8 +1467,7 @@ public class PersonasAction extends PrincipalCoreAction
 	
 	public String pantallaBeneficiarios()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###################################"
 				,"\n###### pantallaBeneficiarios ######"
 				,"\n###### smap1=",smap1
@@ -1542,7 +1541,7 @@ public class PersonasAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### pantallaBeneficiarios ######"
 				,"\n###################################"
 				));

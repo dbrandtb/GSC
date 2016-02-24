@@ -70,8 +70,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cotizacionAutoIndividual()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n######################################"
 				,"\n###### cotizacionAutoIndividual ######"
 				,"\n###### smap1=" , smap1
@@ -86,25 +85,25 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			
 			if(flujo!=null)
 			{
-				logger.debug(Utils.log(stamp, "se va a crear el smap1 porque se entra desde flujo=", smap1));
+				logger.debug(Utils.log("", "se va a crear el smap1 porque se entra desde flujo=", smap1));
 				
 				smap1 = new HashMap<String,String>();
 				smap1.put("ntramite" , flujo.getNtramite());
 				smap1.put("cdunieco" , flujo.getCdunieco());
 				smap1.put("cdramo"   , flujo.getCdramo());
 				
-				logger.debug(Utils.log(stamp, "recuperando tramite"));
+				logger.debug(Utils.log("", "recuperando tramite"));
 				
 				StringBuilder sb = new StringBuilder();
 				Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(sb, flujo);
 				logger.debug(sb.toString());
 				
 				Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
-				logger.debug(Utils.log(stamp, "tramite=", tramite));
+				logger.debug(Utils.log("", "tramite=", tramite));
 				
 				smap1.put("cdtipsit" , tramite.get("CDTIPSIT"));
 				
-				logger.debug(Utils.log(stamp, "smap1 creado=", smap1));
+				logger.debug(Utils.log("", "smap1 creado=", smap1));
 			}
 			
 			String cdusuari  = usuario.getUser()
@@ -152,7 +151,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### exito="  , exito
 				,"\n###### result=" , result
 				,"\n###### cotizacionAutoIndividual ######"
@@ -163,14 +162,13 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cargarRetroactividadSuplemento()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n############################################"
 				,"\n###### cargarRetroactividadSuplemento ######"
 				,"\n###### smap1=", smap1
 				));
 		
-		logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+		logger.debug(Utils.log("","Validando datos de entrada"));
 		
 		try
 		{
@@ -207,7 +205,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### cargarRetroactividadSuplemento ######"
 				,"\n############################################"
 				));
@@ -216,14 +214,13 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cargarSumaAseguradaRamo5()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n######################################"
 				,"\n###### cargarSumaAseguradaRamo5 ######"
 				,"\n###### smap1=", smap1
 				));
 		
-		logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+		logger.debug(Utils.log("","Validando datos de entrada"));
 		
 		try
 		{
@@ -257,7 +254,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### exito=" , exito
 				,"\n###### smap1=" , smap1
 				,"\n###### cargarSumaAseguradaRamo5 ######"
@@ -268,8 +265,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String emisionAutoIndividual()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###################################"
 				,"\n###### emisionAutoIndividual ######"
 				,"\n###### flujo=" , flujo
@@ -289,14 +285,14 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				smap1.put("cdramo"   , flujo.getCdramo());
 				smap1.put("estado"   , flujo.getEstado());
 				
-				logger.debug(Utils.log(stamp, "recuperando tramite"));
+				logger.debug(Utils.log("", "recuperando tramite"));
 				
 				StringBuilder sb = new StringBuilder();
 				Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(sb, flujo);
 				logger.debug(sb.toString());
 				
 				Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
-				logger.debug(Utils.log(stamp, "tramite=", tramite));
+				logger.debug(Utils.log("", "tramite=", tramite));
 				
 				smap1.put("cdtipsit" , tramite.get("CDTIPSIT"));
 				
@@ -304,7 +300,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				
 				smap1.put("ntramite" , flujo.getNtramite());
 				
-				logger.debug(Utils.log(stamp, "smap1 creado=", smap1));
+				logger.debug(Utils.log("", "smap1 creado=", smap1));
 			}
 			
 			Utils.validate(smap1, "No se recibieron datos");
@@ -364,7 +360,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### result=", result
 				,"\n###### emisionAutoIndividual ######"
 				,"\n###################################"
@@ -374,8 +370,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cargarDatosComplementariosAutoInd()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###############################################"
 				,"\n###### cargarDatosComplementariosAutoInd ######"
 				,"\n###### smap1=", smap1
@@ -383,7 +378,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+			logger.debug(Utils.log("","Validando datos de entrada"));
 			
 			Utils.validate(smap1, "No se recibieron datos");
 			
@@ -416,7 +411,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### exito=" , exito
 				,"\n###### smap1=" , smap1
 				,"\n###### cargarDatosComplementariosAutoInd ######"
@@ -427,8 +422,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cargarValoresSituacion()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n####################################"
 				,"\n###### cargarValoresSituacion ######"
 				,"\n###### smap1=", smap1
@@ -436,7 +430,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+			logger.debug(Utils.log("","Validando datos de entrada"));
 			
 			Utils.validate(smap1, "No se recibieron datos");
 			
@@ -471,7 +465,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### exito=" , exito
 				,"\n###### smap1=" , smap1
 				,"\n###### cargarValoresSituacion ######"
@@ -482,8 +476,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String movimientoMpoliper()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n################################"
 				,"\n###### movimientoMpoliper ######"
 				,"\n###### smap1=", smap1
@@ -491,7 +484,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+			logger.debug(Utils.log("","Validando datos de entrada"));
 			
 			Utils.validate(smap1, "No se recibieron datos de entrada");
 			
@@ -551,7 +544,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### movimientoMpoliper ######"
 				,"\n################################"
 				));
@@ -560,8 +553,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String guardarComplementariosAutoIndividual()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n##################################################"
 				,"\n###### guardarComplementariosAutoIndividual ######"
 				,"\n###### smap1=" , smap1
@@ -570,7 +562,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+			logger.debug(Utils.log("","Validando datos de entrada"));
 			
 			Utils.validate(smap1, "No se recibieron datos de poliza");
 			
@@ -621,7 +613,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### guardarComplementariosAutoIndividual ######"
 				,"\n##################################################"
 				));
@@ -630,8 +622,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String guardarConfigCotizacion()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n#####################################"
 				,"\n###### guardarConfigCotizacion ######"
 				,"\n###### smap1=", smap1
@@ -639,7 +630,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+			logger.debug(Utils.log("","Validando datos de entrada"));
 			
 			Utils.validate(smap1, "No se recibieron datos");
 			
@@ -668,7 +659,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### exito="     , exito
 				,"\n###### respuesta=" , respuesta
 				,"\n###### guardarConfigCotizacion ######"
@@ -679,8 +670,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cargarConfigCotizacion()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n####################################"
 				,"\n###### cargarConfigCotizacion ######"
 				,"\n###### smap1=", smap1
@@ -688,7 +678,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+			logger.debug(Utils.log("","Validando datos de entrada"));
 			
 			Utils.validate(smap1, "No se recibieron datos de entrada");
 			
@@ -719,7 +709,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### exito="     , exito
 				,"\n###### respuesta=" , respuesta
 				,"\n###### cargarConfigCotizacion ######"
@@ -730,8 +720,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cargarParamerizacionConfiguracionCoberturas()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n#########################################################"
 				,"\n###### cargarParamerizacionConfiguracionCoberturas ######"
 				,"\n###### smap1=", smap1
@@ -739,7 +728,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+			logger.debug(Utils.log("","Validando datos de entrada"));
 			
 			Utils.validate(smap1, "No se recibieron datos");
 			
@@ -789,7 +778,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### exito="     , exito
 				,"\n###### respuesta=" , respuesta
 				,"\n###### cargarParamerizacionConfiguracionCoberturas ######"
@@ -800,8 +789,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cotizacionAutoFlotilla()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n####################################"
 				,"\n###### cotizacionAutoFlotilla ######"
 				,"\n###### smap1=", smap1
@@ -819,7 +807,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			
 			if(flujo!=null)
 			{
-				logger.debug(Utils.log(stamp, "se creara el mapa porque viene de flujo"));
+				logger.debug(Utils.log("", "se creara el mapa porque viene de flujo"));
 				
 				smap1 = new HashMap<String,String>();
 				
@@ -829,7 +817,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				smap1.put("ntramite" , flujo.getNtramite());
 				smap1.put("tipoflot" , flujo.getAux());
 				
-				logger.debug(Utils.log(stamp, "el mapa creado desde flujo es=", smap1));
+				logger.debug(Utils.log("", "el mapa creado desde flujo es=", smap1));
 			}
 			
 			Utils.validate(smap1, "No se recibieron datos");
@@ -889,7 +877,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### result=", result
 				,"\n###### cotizacionAutoFlotilla ######"
 				,"\n####################################"
@@ -899,8 +887,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cotizarAutosFlotilla()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n##################################"
 				,"\n###### cotizarAutosFlotilla ######"
 				,"\n###### smap1="  , smap1
@@ -911,7 +898,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+			logger.debug(Utils.log("","Validando datos de entrada"));
 			
 			
 			UserVO usuario  = Utils.validateSession(session);
@@ -1004,7 +991,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### exito="     , exito
 				,"\n###### respuesta=" , respuesta
 				,"\n###### cotizarAutosFlotilla ######"
@@ -1015,8 +1002,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cargarValidacionTractocamionRamo5()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###############################################"
 				,"\n###### cargarValidacionTractocamionRamo5 ######"
 				,"\n###### smap1=", smap1
@@ -1024,7 +1010,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+			logger.debug(Utils.log("","Validando datos de entrada"));
 			
 			Utils.validate(smap1,"No se recibieron datos para el web service");
 			
@@ -1048,7 +1034,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### cargarValidacionTractocamionRamo5 ######"
 				,"\n###############################################"
 				));
@@ -1057,8 +1043,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String procesarCargaMasivaFlotilla()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n#########################################"
 				,"\n###### procesarCargaMasivaFlotilla ######"
 				,"\n###### smap1="            , smap1
@@ -1069,7 +1054,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+			logger.debug(Utils.log("","Validando datos de entrada"));
 			
 			Utils.validate(smap1, "No se recibieron datos");
 			
@@ -1117,7 +1102,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### exito="  , exito
 				,"\n###### slist1=" , slist1
 				,"\n###### procesarCargaMasivaFlotilla ######"
@@ -1128,8 +1113,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cargarCotizacionAutoFlotilla()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n##########################################"
 				,"\n###### cargarCotizacionAutoFlotilla ######"
 				,"\n###### smap1=",smap1
@@ -1137,7 +1121,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+			logger.debug(Utils.log("","Validando datos de entrada"));
 			
 			Utils.validate(smap1, "No se recibieron datos");
 			
@@ -1172,7 +1156,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### exito="     , exito
 				,"\n###### respuesta=" , respuesta
 				,"\n###### cargarCotizacionAutoFlotilla ######"
@@ -1183,8 +1167,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String emisionAutoFlotilla()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n#################################"
 				,"\n###### emisionAutoFlotilla ######"
 				,"\n###### smap1=", smap1
@@ -1202,7 +1185,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			
 			if(flujo!=null)
 			{
-				logger.debug(Utils.log(stamp, "se creara el mapa porque viene de flujo"));
+				logger.debug(Utils.log("", "se creara el mapa porque viene de flujo"));
 				
 				smap1 = new HashMap<String,String>();
 				
@@ -1211,21 +1194,21 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				smap1.put("cdtipsit" , "AR");
 				smap1.put("estado"   , flujo.getEstado());
 				
-				logger.debug(Utils.log(stamp, "recuperando tramite"));
+				logger.debug(Utils.log("", "recuperando tramite"));
 				
 				StringBuilder sb = new StringBuilder();
 				Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(sb, flujo);
 				logger.debug(sb.toString());
 				
 				Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
-				logger.debug(Utils.log(stamp, "tramite=", tramite));
+				logger.debug(Utils.log("", "tramite=", tramite));
 				
 				smap1.put("nmpoliza" , tramite.get("NMSOLICI"));
 				
 				smap1.put("ntramite" , flujo.getNtramite());
 				smap1.put("tipoflot" , flujo.getAux());
 				
-				logger.debug(Utils.log(stamp, "el mapa creado desde flujo es=", smap1));
+				logger.debug(Utils.log("", "el mapa creado desde flujo es=", smap1));
 			}
 			
 			Utils.validate(smap1, "No se recibieron datos");
@@ -1290,7 +1273,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### result=", result
 				,"\n###### emisionAutoFlotilla ######"
 				,"\n#################################"
@@ -1300,8 +1283,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String guardarComplementariosAutoFlotilla()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n################################################"
 				,"\n###### guardarComplementariosAutoFlotilla ######"
 				,"\n###### smap1="  , smap1
@@ -1310,7 +1292,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+			logger.debug(Utils.log("","Validando datos de entrada"));
 			
 			Utils.validate(smap1  , "No se recibieron datos de poliza");
 			
@@ -1364,7 +1346,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### exito="     , exito
 				,"\n###### respuesta=" , respuesta
 				,"\n###### guardarComplementariosAutoFlotilla ######"
@@ -1375,8 +1357,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String recotizarAutoFlotilla()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###################################"
 				,"\n###### recotizarAutoFlotilla ######"
 				,"\n###### smap1=",smap1
@@ -1384,7 +1365,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+			logger.debug(Utils.log("","Validando datos de entrada"));
 			
 			Utils.validate(smap1, "No se recibieron datos");
 			
@@ -1439,7 +1420,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### exito="  , exito
 				,"\n###### slist1=" , slist1
 				,"\n###### recotizarAutoFlotilla ######"
@@ -1450,8 +1431,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cargarObligatorioTractocamionRamo5()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n################################################"
 				,"\n###### cargarObligatorioTractocamionRamo5 ######"
 				,"\n###### smap1=",smap1
@@ -1459,7 +1439,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+			logger.debug(Utils.log("","Validando datos de entrada"));
 			
 			Utils.validate(smap1, "No se recibieron datos");
 			
@@ -1483,7 +1463,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### cargarObligatorioTractocamionRamo5 ######"
 				,"\n################################################"
 				));
@@ -1492,8 +1472,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cargarDetalleNegocioRamo5()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n#######################################"
 				,"\n###### cargarDetalleNegocioRamo5 ######"
 				,"\n###### smap1=", smap1
@@ -1501,7 +1480,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+			logger.debug(Utils.log("","Validando datos de entrada"));
 			
 			Utils.validate(smap1, "No se recibieron datos para cargar detalle de negocio");
 			
@@ -1541,8 +1520,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String guardarPantallaBeneficiarios()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n##########################################"
 				,"\n###### guardarPantallaBeneficiarios ######"
 				,"\n###### smap1="  , smap1
@@ -1551,7 +1529,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 
 		try
 		{
-			logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+			logger.debug(Utils.log("","Validando datos de entrada"));
 			
 			Utils.validate(smap1, "No se recibieron datos");
 			
@@ -1597,7 +1575,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### exito="     , exito
 				,"\n###### respuesta=" , respuesta
 				,"\n###### guardarPantallaBeneficiarios ######"
@@ -1608,8 +1586,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String cargarParamerizacionConfiguracionCoberturasRol()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n############################################################"
 				,"\n###### cargarParamerizacionConfiguracionCoberturasRol ######"
 				,"\n###### smap1=", smap1
@@ -1617,7 +1594,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			logger.debug(Utils.log(stamp,"Validando datos de entrada"));
+			logger.debug(Utils.log("","Validando datos de entrada"));
 			
 			Utils.validate(smap1, "No se recibieron datos");
 			
@@ -1646,7 +1623,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### exito="  , exito
 				,"\n###### slist1=" , slist1
 				,"\n###### cargarParamerizacionConfiguracionCoberturasRol ######"
@@ -1657,8 +1634,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	public String obtieneValNumeroSerie()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###################################"
 				,"\n###### obtieneValNumeroSerie ######"
 				,"\n###### smap1=", smap1
@@ -1669,7 +1645,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		try
 		{
 			paso = "Validando datos de entrada";
-			logger.debug(Utils.log(stamp,"paso=",paso));
+			logger.debug(Utils.log("","paso=",paso));
 			
 			Utils.validate(smap1, "No se recibieron datos de poliza");
 			
@@ -1698,7 +1674,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### obtieneValNumeroSerie ######"
 				,"\n###################################"
 				));

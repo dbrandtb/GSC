@@ -65,8 +65,7 @@ public class DemosAction extends PrincipalCoreAction
 		    })
 	public String template()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n######################"
 				,"\n###### template ######"
 				,"\n###### flujo="  , flujo
@@ -79,7 +78,7 @@ public class DemosAction extends PrincipalCoreAction
 			try
 			{
 				paso = "Validando datos";
-				logger.debug(Utils.log(stamp,"paso=",paso));
+				logger.debug(Utils.log("","paso=",paso));
 				
 				UserVO usuario = Utils.validateSession(session);
 				
@@ -97,7 +96,7 @@ public class DemosAction extends PrincipalCoreAction
 						);
 				
 				paso = "Recuperando componentes";
-				logger.debug(Utils.log(stamp,"paso=",paso));
+				logger.debug(Utils.log("","paso=",paso));
 				
 				List<ComponenteVO> uno = pantallasDAO.obtenerComponentes(
 						null//cdtiptra
@@ -136,7 +135,7 @@ public class DemosAction extends PrincipalCoreAction
 						);
 				
 				paso = "Generando componentes";
-				logger.debug(Utils.log(stamp,"paso=",paso));
+				logger.debug(Utils.log("","paso=",paso));
 				
 				GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				
@@ -198,7 +197,7 @@ public class DemosAction extends PrincipalCoreAction
 			message = Utils.manejaExcepcion(ex);
 		}
 
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### result=" , result
 				,"\n###### template ######"
 				,"\n######################"
@@ -211,8 +210,7 @@ public class DemosAction extends PrincipalCoreAction
 			)
 	public String guardarDatosDemo()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n##############################"
 				,"\n###### guardarDatosDemo ######"
 				,"\n###### params=", params
@@ -224,14 +222,14 @@ public class DemosAction extends PrincipalCoreAction
 			try
 			{
 				paso = "Verificando datos";
-				logger.debug(Utils.log(stamp, "paso=", paso));
+				logger.debug(Utils.log("", "paso=", paso));
 				
 				Utils.validate(params, "No se recibieron datos");
 				
 				String ntramite = params.get("ntramite");
 				
 				paso = "Guardando datos";
-				logger.debug(Utils.log(stamp, "paso=", paso));
+				logger.debug(Utils.log("", "paso=", paso));
 				
 				consultasDAO.guardarDatosDemo(ntramite,params);
 				
@@ -247,7 +245,7 @@ public class DemosAction extends PrincipalCoreAction
 			message = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### success=", success
 				,"\n###### message=", message
 				,"\n###### guardarDatosDemo ######"
@@ -261,8 +259,7 @@ public class DemosAction extends PrincipalCoreAction
 			)
 	public String cargarDatosDemo()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n#############################"
 				,"\n###### cargarDatosDemo ######"
 				,"\n###### params=", params
@@ -274,14 +271,14 @@ public class DemosAction extends PrincipalCoreAction
 			try
 			{
 				paso = "Verificando datos";
-				logger.debug(Utils.log(stamp, "paso=", paso));
+				logger.debug(Utils.log("", "paso=", paso));
 				
 				Utils.validate(params, "No se recibieron datos");
 				
 				String ntramite = params.get("ntramite");
 				
 				paso = "Recuperando datos";
-				logger.debug(Utils.log(stamp, "paso=", paso));
+				logger.debug(Utils.log("", "paso=", paso));
 				
 				params = consultasDAO.cargarDatosDemo(ntramite);
 				
@@ -297,7 +294,7 @@ public class DemosAction extends PrincipalCoreAction
 			message = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### success=", success
 				,"\n###### message=", message
 				,"\n###### cargarDatosDemo ######"

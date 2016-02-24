@@ -466,8 +466,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			,UserVO usuario
 	)throws Exception
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarMapa @@@@@@"
 				,"\n@@@@@@ cdusuari=" , cdusuari
@@ -483,7 +482,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			if(consulta.equals(RecuperacionSimple.RECUPERAR_IMPRESIONES_DISPONIBLES))
 			{
 				paso = "Recuperando impresiones disponibles";
-				logger.debug(Utils.log(stamp," paso: ",paso));
+				logger.debug(Utils.log(""," paso: ",paso));
 				
 				String cdtipram = params.get("cdtipram");
 				String tipolote = params.get("tipolote");
@@ -500,7 +499,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_DETALLE_IMPRESION_LOTE))
 			{
 				paso = "Recuperando detalle de impresiones de lote";
-				logger.debug(Utils.log(stamp," paso: ",paso));
+				logger.debug(Utils.log(""," paso: ",paso));
 				
 				String lote = params.get("lote");
 				
@@ -513,7 +512,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_SWVISPRE_TRAMITE))
 			{
 				paso = "Recuperando estado de vista previa de tr\u00e1mite";
-				logger.debug(Utils.log(stamp," paso: ",paso));
+				logger.debug(Utils.log(""," paso: ",paso));
 				
 				String ntramite = params.get("ntramite");
 				
@@ -524,14 +523,14 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_DIAS_FECHA_FACTURACION))
 			{
 				paso = "Recuperando fecha de facturaci\u00f3n";
-				logger.debug(Utils.log(stamp," paso: ",paso));
+				logger.debug(Utils.log(""," paso: ",paso));
 				String cdtipsit = params.get("cdtipsit");
 				mapa.put("dias" , consultasDAO.recuperarDiasFechaFacturacion(cdtipsit, cdsisrol));
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_PERMISO_BOTON_GENERAR_COLECTIVO))
 			{
 				paso = "Recuperando permisos de bot\u00f3n";
-				logger.debug(Utils.log(stamp," paso: ",paso));
+				logger.debug(Utils.log(""," paso: ",paso));
 				String cdtipsit = params.get("cdtipsit");
 				mapa.put("ACTIVAR_BOTON" , consultasDAO.recuperarPermisoBotonEnviarCenso(cdsisrol));
 			}
@@ -540,7 +539,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 		{
 			Utils.generaExcepcion(ex, paso);
 		}
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n@@@@@@ mapa=",mapa
 				,"\n@@@@@@ recuperarMapa @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -557,8 +556,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			,UserVO usuario
 	)throws Exception
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarLista @@@@@@"
 				,"\n@@@@@@ cdusuari=" , cdusuari
@@ -574,7 +572,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			if(consulta.equals(RecuperacionSimple.RECUPERAR_INCISOS_POLIZA_GRUPO_FAMILIA))
 			{
 				paso = "Recuperando incisos de p\u00F3liza/grupo/familia";
-				logger.debug(Utils.log(stamp," paso: ",paso));
+				logger.debug(Utils.log(""," paso: ",paso));
 				String cdunieco = params.get("cdunieco");
 				String cdramo   = params.get("cdramo");
 				String estado   = params.get("estado");
@@ -595,7 +593,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_MOVIMIENTOS_ENDOSO_ALTA_BAJA_ASEGURADO))
 			{
 				paso = "Recuperando movimientos de endoso de alta/baja de asegurados";
-				logger.debug(Utils.log(stamp," paso: ",paso));
+				logger.debug(Utils.log(""," paso: ",paso));
 				String cdunieco = params.get("cdunieco");
 				String cdramo   = params.get("cdramo");
 				String estado   = params.get("estado");
@@ -612,7 +610,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_POLIZAS_PARA_EXPLOTAR_DOCS))
 			{
 				paso = "Recuperando polizas para explotar documentos";
-				logger.debug(Utils.log(stamp," paso: ",paso));
+				logger.debug(Utils.log(""," paso: ",paso));
 				
 				String cdtipram     = params.get("cdtipram");
 				String cduniecos    = params.get("cduniecos");
@@ -645,7 +643,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_IMPRESORAS))
 			{
 				paso = "Recuperando impresoras por papel";
-				logger.debug(Utils.log(stamp," paso: ",paso));
+				logger.debug(Utils.log(""," paso: ",paso));
 				
 				String papel    = params.get("papel");
 				String cdunieco = usuario.getCdUnieco();
@@ -661,7 +659,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_PERMISOS_IMPRESION))
 			{
 				paso = "Recuperando permisos por sucursal";
-				logger.debug(Utils.log(stamp," paso: ",paso));
+				logger.debug(Utils.log(""," paso: ",paso));
 				
 				String cdusuariPer = params.get("cdusuari");
 				String cdunieco    = params.get("cdunieco");
@@ -676,17 +674,17 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				List<Map<String,String>> sucursales = consultasDAO.recuperarConfigImpresionSucursales(cdusuariPer,cdunieco,cdtipram);
 				
 				paso = "Recuperando permisos por agente";
-				logger.debug(Utils.log(stamp," paso: ",paso));
+				logger.debug(Utils.log(""," paso: ",paso));
 				
 				List<Map<String,String>> agentes = consultasDAO.recuperarConfigImpresionAgentes(cdusuariPer,cdunieco,cdtipram);
 				
 				paso = "Recuperando permisos por usuario";
-				logger.debug(Utils.log(stamp," paso: ",paso));
+				logger.debug(Utils.log(""," paso: ",paso));
 				
 				List<Map<String,String>> usuarios = consultasDAO.recuperarConfigImpresionUsuarios(cdusuariPer,cdunieco,cdtipram);
 				
 				paso = "Integrando permisos";
-				logger.debug(Utils.log(stamp," paso: ",paso));
+				logger.debug(Utils.log(""," paso: ",paso));
 				
 				List<Map<String,String>> resumen = new ArrayList<Map<String,String>>();
 				for(Map<String,String>sucursal:sucursales)
@@ -728,13 +726,13 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 					resumen.add(nuevo);
 				}
 				
-				logger.debug(Utils.log(stamp,"@@@@@@ lista permisos=",resumen));
+				logger.debug(Utils.log("","@@@@@@ lista permisos=",resumen));
 				lista = resumen;
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_RECIBOS_PARA_EXPLOTAR_DOCS))
 			{
 				paso = "Recuperando recibos en lote";
-				logger.debug(Utils.log(stamp," paso: ",paso));
+				logger.debug(Utils.log(""," paso: ",paso));
 				
 				String cdtipram  = params.get("cdtipram");
 				String cduniecos = params.get("cduniecos");
@@ -753,7 +751,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_DETALLE_REMESA))
 			{
 				paso = "Recuperando detalle de remesa";
-				logger.debug(Utils.log(stamp," paso: ",paso));
+				logger.debug(Utils.log(""," paso: ",paso));
 				
 				String ntramite = params.get("ntramite");
 				String tipolote = params.get("tipolote");
@@ -937,7 +935,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 		{
 			Utils.generaExcepcion(ex, paso);
 		}
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n@@@@@@ lista=",lista==null ? "null" : lista.size()
 				,"\n@@@@@@ recuperarLista @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
