@@ -44,8 +44,7 @@ public class NuevoCotizacionAction extends PrincipalCoreAction
 			)
 	public String borrarIncisoCotizacion()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n####################################"
 				,"\n###### borrarIncisoCotizacion ######"
 				,"\n###### params=", params
@@ -80,7 +79,7 @@ public class NuevoCotizacionAction extends PrincipalCoreAction
 			message = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### success=" , success
 				,"\n###### message=" , message
 				,"\n###### borrarIncisoCotizacion ######"

@@ -817,8 +817,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String emitirColectivo()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n#############################"
 				,"\n###### emitirColectivo ######"
 				,"\n###### smap1 ", smap1
@@ -850,14 +849,14 @@ public class CotizacionAction extends PrincipalCoreAction
 			{
 				//---------------------------------
 				paso = "Obtener datos del usuario";
-				logger.debug(Utils.log(stamp,"paso=",paso));
+				logger.debug(Utils.log("","paso=",paso));
 				
 				DatosUsuario datUs = kernelManager.obtenerDatosUsuario(cdusuari,cdtipsit);
 				cdperson           = datUs.getCdperson();
 				
 				//----------------------------
 				paso = "Revisando domicilios";
-				logger.debug(Utils.log(stamp,"paso=",paso));
+				logger.debug(Utils.log("","paso=",paso));
 				
 				List<Map<String,String>>lisUsuSinDir=null;
 				try
@@ -871,7 +870,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 				catch(Exception ex)
 				{
-					logger.error(Utils.log(stamp,"Error sin impacto funcional al validar domicilios: "),ex);
+					logger.error(Utils.log("","Error sin impacto funcional al validar domicilios: "),ex);
 					lisUsuSinDir=null;
 				}
 				
@@ -899,13 +898,13 @@ public class CotizacionAction extends PrincipalCoreAction
 						}
 					}
 					
-					logger.debug(Utils.log(stamp,"Se va a terminar el proceso porque faltan direcciones"));
+					logger.debug(Utils.log("","Se va a terminar el proceso porque faltan direcciones"));
 					throw new ApplicationException(respuesta);
 				}
 				
 				//------------------------------------
 				paso = "Insertando maestro historico";
-				logger.debug(Utils.log(stamp,"paso=",paso));
+				logger.debug(Utils.log("","paso=",paso));
 				
 				Map<String,Object>map2=new LinkedHashMap<String,Object>(0);
 	            map2.put("pv_cdunieco_i"  , cdunieco);
@@ -935,7 +934,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 	            //---------------------------------------------
 	            paso = "Registrando descripcion de suplemento";
-	            logger.debug(Utils.log(stamp,"paso=",paso));
+	            logger.debug(Utils.log("","paso=",paso));
 	            
 	            cotizacionManager.movimientoTdescsup(
 						cdunieco
@@ -958,7 +957,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            
 	            //-----------------
 	            paso = "Emitiendo";
-	            logger.debug(Utils.log(stamp,"paso=",paso));
+	            logger.debug(Utils.log("","paso=",paso));
 	            
 	            Map<String,Object>paramEmi=new LinkedHashMap<String,Object>(0);
 				paramEmi.put("pv_cdusuari"  , cdusuari);
@@ -1005,11 +1004,11 @@ public class CotizacionAction extends PrincipalCoreAction
 	            }
 	            catch(Exception ex)
 	            {
-	            	logger.error(Utils.log(stamp,"Error al grabar evento, sin impacto"),ex);
+	            	logger.error(Utils.log("","Error al grabar evento, sin impacto"),ex);
 	            }
 				
 				paso = "Generando documentos";
-				logger.debug(Utils.log(stamp,"paso=",paso));
+				logger.debug(Utils.log("","paso=",paso));
 				
 				documentosManager.generarDocumentosParametrizadosAsync(
 						cdunieco
@@ -1025,7 +1024,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            
 				//-------------------------------------
 				paso = "Insertando detalle de emision";
-				logger.debug(Utils.log(stamp,"paso=",paso));
+				logger.debug(Utils.log("","paso=",paso));
 				
 				mesaControlManager.movimientoDetalleTramite(
 						ntramite
@@ -1040,7 +1039,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				//---------------------------------------------
 				paso = "Ejecutando WS para recibos colectivos";
-				logger.debug(Utils.log(stamp,"paso=",paso));
+				logger.debug(Utils.log("","paso=",paso));
 				
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo,
 						"M", nmpolizaEmi, 
@@ -1050,7 +1049,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						usuario);
 				
 				respuesta = Utils.join("Se ha emitido la p&oacute;liza ",nmpolizaEmi," [",nmpoliexEmi,"]");
-				logger.debug(Utils.log(stamp,"respuesta final=",respuesta));
+				logger.debug(Utils.log("","respuesta final=",respuesta));
 				
 				//termina correctamente
 				exito   = true;
@@ -1066,7 +1065,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### emitirColectivo ######"
 				,"\n#############################"
 				));
@@ -2679,8 +2678,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String pantallaCotizacionGrupo2()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n######################################"
 				,"\n###### pantallaCotizacionGrupo2 ######"
 				,"\n###### smap1=" , smap1
@@ -2707,7 +2705,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				if(flujo!=null)
 				{
 					paso = "Recuperando datos del flujo";
-					logger.debug(Utils.log(stamp, "paso=", paso));
+					logger.debug(Utils.log("", "paso=", paso));
 					
 					smap1 = new HashMap<String,String>();
 					smap1.put("cdunieco" , flujo.getCdunieco());
@@ -2741,11 +2739,11 @@ public class CotizacionAction extends PrincipalCoreAction
 						smap1.put("ntramiteVacio" , flujo.getNtramite());
 					}
 					
-					logger.debug(Utils.log(stamp,"datos recuperados del flujo smap1=",smap1));
+					logger.debug(Utils.log("","datos recuperados del flujo smap1=",smap1));
 				}
 				
 				paso = "Verificando datos completos";
-				logger.debug(Utils.log(stamp, "paso=", paso));
+				logger.debug(Utils.log("", "paso=", paso));
 				
 				Utils.validate(smap1, "No se recibieron datos");
 				
@@ -2768,7 +2766,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 				
 				paso = "Verificando datos de sesi\u00f3n";
-				logger.debug(Utils.log(stamp, "paso=", paso));
+				logger.debug(Utils.log("", "paso=", paso));
 				
 				UserVO usuario = Utils.validateSession(session);
 				
@@ -2784,7 +2782,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				smap1.put("cdsisrol" , cdsisrol);
 				
 				paso = "Invocando proceso";
-				logger.debug(Utils.log(stamp, "paso=", paso));
+				logger.debug(Utils.log("", "paso=", paso));
 				
 				ManagerRespuestaImapSmapVO resp = cotizacionManager.pantallaCotizacionGrupo(
 						cdramo
@@ -2820,7 +2818,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### result="    , result
 				,"\n###### respuesta=" , respuesta
 				,"\n###### pantallaCotizacionGrupo2 ######"
@@ -2831,8 +2829,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String pantallaCotizacionGrupo()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n#####################################"
 				,"\n###### pantallaCotizacionGrupo ######"
 				,"\n###### smap1=", smap1
@@ -2861,7 +2858,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				if(flujo!=null)
 				{
 					paso = "Recuperando datos del flujo";
-					logger.debug(Utils.log(stamp, "paso=", paso));
+					logger.debug(Utils.log("", "paso=", paso));
 					
 					smap1 = new HashMap<String,String>();
 					smap1.put("cdunieco" , flujo.getCdunieco());
@@ -2895,11 +2892,11 @@ public class CotizacionAction extends PrincipalCoreAction
 						smap1.put("ntramiteVacio" , flujo.getNtramite());
 					}
 					
-					logger.debug(Utils.log(stamp,"datos recuperados del flujo smap1=",smap1));
+					logger.debug(Utils.log("","datos recuperados del flujo smap1=",smap1));
 				}
 				
 				paso = "Verificando datos completos";
-				logger.debug(Utils.log(stamp, "paso=", paso));
+				logger.debug(Utils.log("", "paso=", paso));
 				
 				Utils.validate(smap1, "No se recibieron datos");
 				
@@ -2921,7 +2918,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				//datos sesion
 				paso = "Verificando datos de sesi\u00f3n";
-				logger.debug(Utils.log(stamp, "paso=", paso));
+				logger.debug(Utils.log("", "paso=", paso));
 				UserVO usuario  = Utils.validateSession(session);
 				cdusuari        = usuario.getUser();
 				cdsisrol        = usuario.getRolActivo().getClave();
@@ -2937,7 +2934,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				//si entran por agente
 				paso = "Recuperando datos del agente";
-				logger.debug(Utils.log(stamp, "paso=", paso));
+				logger.debug(Utils.log("", "paso=", paso));
 				if(StringUtils.isBlank(ntramite)&&StringUtils.isBlank(ntramiteVacio))
 				{
 					DatosUsuario datUsu = kernelManager.obtenerDatosUsuario(cdusuari,cdtipsit);
@@ -2958,7 +2955,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				//generando componentes
 				paso = "Generando componentes";
-				logger.debug(Utils.log(stamp, "paso=", paso));
+				logger.debug(Utils.log("", "paso=", paso));
 				GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				
 				List<ComponenteVO>columnaEditorPlan=pantallasManager.obtenerComponentes(
@@ -3079,13 +3076,13 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				//obtener permisos
 				paso = "Recuperando persmisos de pantalla";
-				logger.debug(Utils.log(stamp, "paso=", paso));
+				logger.debug(Utils.log("", "paso=", paso));
 				smap1.put("status",status);
 				smap1.putAll(cotizacionManager.cargarPermisosPantallaGrupo(cdsisrol, status));
 				
 				//campos para asegurados
 				paso = "Recuperando campos de asegurados";
-				logger.debug(Utils.log(stamp, "paso=", paso));
+				logger.debug(Utils.log("", "paso=", paso));
 				if(smap1.containsKey("ASEGURADOS")
 						&& StringUtils.isNotBlank(smap1.get("ASEGURADOS"))
 						&& smap1.get("ASEGURADOS").equals("S")
@@ -3102,7 +3099,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				//campos para extraprimas
 				paso = "Recuperando campos de extraprimas";
-				logger.debug(Utils.log(stamp, "paso=", paso));
+				logger.debug(Utils.log("", "paso=", paso));
 				if(smap1.containsKey("EXTRAPRIMAS")
 						&& StringUtils.isNotBlank(smap1.get("EXTRAPRIMAS"))
 						&& smap1.get("EXTRAPRIMAS").equals("S")
@@ -3119,7 +3116,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				//campos para recuperados (asegurados)
 				paso = "Recuperando campos de asegurados recuperados";
-				logger.debug(Utils.log(stamp, "paso=", paso));
+				logger.debug(Utils.log("", "paso=", paso));
 				if(smap1.containsKey("ASEGURADOS_EDITAR")
 						&& StringUtils.isNotBlank(smap1.get("ASEGURADOS_EDITAR"))
 						&& smap1.get("ASEGURADOS_EDITAR").equals("S")
@@ -3147,7 +3144,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### result="    , result
 				,"\n###### respuesta=" , respuesta
 				,"\n###### pantallaCotizacionGrupo ######"
@@ -7134,8 +7131,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String guardarReporteCotizacionGrupo()
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###########################################"
 				,"\n###### guardarReporteCotizacionGrupo ######"
 				,"\n###### smap1=", smap1
@@ -7169,9 +7165,9 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				bloqueos = Integer.parseInt(resp.getSmap().get("CONTEO"));
 				
-				logger.debug(Utils.log(stamp,"Conteo recuperado=",bloqueos));
+				logger.debug(Utils.log("","Conteo recuperado=",bloqueos));
 				
-				logger.debug(Utils.log(stamp,"Esperando 30 segundos del primer ciclo..."));
+				logger.debug(Utils.log("","Esperando 30 segundos del primer ciclo..."));
 				Thread.sleep(1000l*30l);
 				
 			}
@@ -7189,15 +7185,15 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				bloqueos = Integer.parseInt(resp.getSmap().get("CONTEO"));
 				
-				logger.debug(Utils.log(stamp,"Conteo recuperado=",bloqueos));
+				logger.debug(Utils.log("","Conteo recuperado=",bloqueos));
 				
-				logger.debug(Utils.log(stamp,"Esperando 30 segundos de segundo ciclo..."));
+				logger.debug(Utils.log("","Esperando 30 segundos de segundo ciclo..."));
 				Thread.sleep(1000l*30l);
 				
 			}
 			while(bloqueos>0);
 			
-			logger.debug(Utils.log(stamp,"Se termino el bloqueo"));
+			logger.debug(Utils.log("","Se termino el bloqueo"));
 			
 			String urlReporteCotizacion=Utils.join(
 					  getText("ruta.servidor.reports")
@@ -7223,7 +7219,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					+ "/"+nombreArchivoCotizacion
 					;
 			
-			logger.debug(Utils.log(stamp,"Se va a ejecutar el reporte=",urlReporteCotizacion));
+			logger.debug(Utils.log("","Se va a ejecutar el reporte=",urlReporteCotizacion));
 			
 			HttpUtil.generaArchivo(urlReporteCotizacion, pathArchivoCotizacion);
 
@@ -7286,7 +7282,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					+ "/"+nombreArchivoCotizacion2
 					;
 			
-			logger.debug(Utils.log(stamp,"Se va a ejecutar el reporte2=",urlReporteCotizacion2));
+			logger.debug(Utils.log("","Se va a ejecutar el reporte2=",urlReporteCotizacion2));
 			
 			HttpUtil.generaArchivo(urlReporteCotizacion2, pathArchivoCotizacion2);
 
@@ -7516,7 +7512,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			logger.error(respuesta,ex);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n###### guardarReporteCotizacionGrupo ######"
 				,"\n###########################################"
 				));

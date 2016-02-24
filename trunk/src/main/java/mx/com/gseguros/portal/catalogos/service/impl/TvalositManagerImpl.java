@@ -42,9 +42,7 @@ public class TvalositManagerImpl implements TvalositManager
 			,String contexto
 			)throws Exception
 	{
-		long stamp = System.currentTimeMillis();
-		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ pantallaActTvalosit @@@@@@"
 				,"\n@@@@@@ origen="   , origen
@@ -60,7 +58,7 @@ public class TvalositManagerImpl implements TvalositManager
 		try
 		{
 			paso = "Recuperando componentes";
-			logger.debug(Utils.log(stamp,"paso=",paso));
+			logger.debug(Utils.log("","paso=",paso));
 			
 			List<ComponenteVO> listaItems = pantallasDAO.obtenerComponentes(
 					null                     , null    , null
@@ -68,7 +66,7 @@ public class TvalositManagerImpl implements TvalositManager
 					,"PANTALLA_ACT_TVALOSIT" , "ITEMS" , null);
 			
 			paso = "Construyendo componentes";
-			logger.debug(Utils.log(stamp,"paso=",paso));
+			logger.debug(Utils.log("","paso=",paso));
 			
 			GeneradorCampos gc = new GeneradorCampos(contexto);
 			
@@ -82,7 +80,7 @@ public class TvalositManagerImpl implements TvalositManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n@@@@@@ items=", items
 				,"\n@@@@@@ pantallaActTvalosit @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -100,9 +98,7 @@ public class TvalositManagerImpl implements TvalositManager
 			,String nmsituac
 			)throws Exception
 	{
-		long stamp = System.currentTimeMillis();
-		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarPantallaActTvalosit @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -119,7 +115,7 @@ public class TvalositManagerImpl implements TvalositManager
 		try
 		{
 			paso = "Recuperando datos de situaci\u00f3n";
-			logger.debug(Utils.log(stamp,"paso=",paso));
+			logger.debug(Utils.log("","paso=",paso));
 			
 			List<Map<String,String>>tvalosits = consultasDAO.cargarTvalosit(cdunieco,cdramo,estado,nmpoliza,"0");
 			
@@ -142,7 +138,7 @@ public class TvalositManagerImpl implements TvalositManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n@@@@@@ datos=", datos
 				,"\n@@@@@@ cargarPantallaActTvalosit @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -162,8 +158,7 @@ public class TvalositManagerImpl implements TvalositManager
 			,Map<String,String> otvalores
 			)throws Exception
 	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarPantallaActTvalosit @@@@@@"
 				,"\n@@@@@@ cdunieco="  , cdunieco
@@ -179,7 +174,7 @@ public class TvalositManagerImpl implements TvalositManager
 		try
 		{
 			paso = "Recopilando switches y valores";
-			logger.debug(Utils.log(stamp,"paso=",paso));
+			logger.debug(Utils.log("","paso=",paso));
 			
 			String[] valores   = new String[100]
 					 ,switches = new String[100];
@@ -203,7 +198,7 @@ public class TvalositManagerImpl implements TvalositManager
 			}
 			
 			paso = "Guardando valores";
-			logger.debug(Utils.log(stamp,"paso=",paso));
+			logger.debug(Utils.log("","paso=",paso));
 			
 			cotizacionDAO.guardarPantallaActTvalosit(
 					cdunieco
@@ -240,7 +235,7 @@ public class TvalositManagerImpl implements TvalositManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.debug(Utils.log(stamp
+		logger.debug(Utils.log(""
 				,"\n@@@@@@ guardarPantallaActTvalosit @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
