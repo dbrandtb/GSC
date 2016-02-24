@@ -446,14 +446,18 @@ function _35_confirmar()
                     
                     mensajeCorrecto('Endoso generado',json.mensaje,function()
                     {
-                        _generarRemesaClic(
-                            true
-                            ,_35_smap1.CDUNIECO
-                            ,_35_smap1.CDRAMO
-                            ,_35_smap1.ESTADO
-                            ,_35_smap1.NMPOLIZA
-                            ,callbackRemesa
-                        );
+                    	if(json.endosoConfirmado){
+                        	_generarRemesaClic(
+	                            true
+	                            ,_35_smap1.CDUNIECO
+	                            ,_35_smap1.CDRAMO
+	                            ,_35_smap1.ESTADO
+	                            ,_35_smap1.NMPOLIZA
+	                            ,callbackRemesa
+	                        );
+                        }else{
+                        	callbackRemesa();
+                        }
                     });
                 }
                 else

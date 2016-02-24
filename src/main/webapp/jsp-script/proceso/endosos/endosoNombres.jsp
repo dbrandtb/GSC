@@ -325,14 +325,19 @@ Ext.onReady(function(){
                                                 buttons : Ext.Msg.OK
                                                 ,fn     : function()
                                                 {
-                                                    _generarRemesaClic(
-                                                        true
-                                                        ,endnomInput['cdunieco']
-                                                        ,endnomInput['cdramo']
-                                                        ,endnomInput['estado']
-                                                        ,endnomInput['nmpoliza']
-                                                        ,callbackRemesa
-                                                    );
+                                                	
+                                                	if(json.endosoConfirmado){
+				                                        _generarRemesaClic(
+	                                                        true
+	                                                        ,endnomInput['cdunieco']
+	                                                        ,endnomInput['cdramo']
+	                                                        ,endnomInput['estado']
+	                                                        ,endnomInput['nmpoliza']
+	                                                        ,callbackRemesa
+	                                                    );
+						                            }else{
+						                            	callbackRemesa();
+						                            }
                                                 }
                                             });
                     					}
