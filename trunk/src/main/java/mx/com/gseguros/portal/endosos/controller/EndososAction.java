@@ -86,6 +86,7 @@ public class EndososAction extends PrincipalCoreAction
 	private Item                     item2;
 	private Item                     item3;
 	private String                   mensaje;
+	private boolean                  endosoConfirmado;//Para saber si el endoso se ha enviado a la mesa de autorizacion
 	private Map<String,String>       parametros;
 	private Map<String,Item>         imap1;
 	private String                   error;
@@ -546,6 +547,7 @@ public class EndososAction extends PrincipalCoreAction
 			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(smap1.get("CDUNIECO"), smap1.get("CDRAMO"),smap1.get("ESTADO"), smap1.get("NMPOLIZA"), nmsuplem, nsuplogi, cdtipsup, "", dFechaEndoso, null);			
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 				mensaje = "Endoso generado";
 				
             } else {
@@ -656,6 +658,7 @@ public class EndososAction extends PrincipalCoreAction
 			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(smap1.get("CDUNIECO"), smap1.get("CDRAMO"),smap1.get("ESTADO"), smap1.get("NMPOLIZA"), nmsuplem, nsuplogi, cdtipsup, "", dFechaEndoso, null);			
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 				mensaje = "Endoso generado";
 				
             } else {
@@ -1022,6 +1025,7 @@ public class EndososAction extends PrincipalCoreAction
 		    
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 				
 				/*///////////////////////////////////*/
 				////// re generar los documentos //////
@@ -1225,6 +1229,7 @@ public class EndososAction extends PrincipalCoreAction
 
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 				
 				// Regeneramos los documentos:
 				this.regeneraDocumentos(
@@ -1348,6 +1353,7 @@ public class EndososAction extends PrincipalCoreAction
 			    
 				// Si el endoso fue confirmado:
 				if(respConfirmacionEndoso.isConfirmado()) {
+					endosoConfirmado = true;
 
 				    ///////////////////////////////////////
 				    ////// re generar los documentos //////
@@ -1619,6 +1625,7 @@ public class EndososAction extends PrincipalCoreAction
 		    
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 				
 			    ///////////////////////////////////////
 			    ////// re generar los documentos //////
@@ -1929,6 +1936,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 				
 				///////////////////////////////////////
 				////// re generar los documentos //////
@@ -2244,6 +2252,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 				
 				// TODO: preguntarle a Alvaro si aqui no se generan documentos:
 				
@@ -2594,6 +2603,7 @@ public class EndososAction extends PrincipalCoreAction
 			    
 				// Si el endoso fue confirmado:
 				if(respConfirmacionEndoso.isConfirmado()) {
+					endosoConfirmado = true;
 				
 				    ///////////////////////////////////////
 				    ////// re generar los documentos //////
@@ -3155,6 +3165,7 @@ public class EndososAction extends PrincipalCoreAction
 		    
 				// Si el endoso fue confirmado:
 				if(respConfirmacionEndoso.isConfirmado()) {
+					endosoConfirmado = true;
 				
 				    ///////////////////////////////////////
 				    ////// re generar los documentos //////
@@ -3405,6 +3416,7 @@ public class EndososAction extends PrincipalCoreAction
 				
 				// Si el endoso fue confirmado:
 				if(respConfirmacionEndoso.isConfirmado()) {
+					endosoConfirmado = true;
 					
 					///////////////////////////////////////
 					////// re generar los documentos //////
@@ -3669,6 +3681,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 				
 				// Regeneramos los documentos:
 				this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, null,cdusuari);
@@ -5366,6 +5379,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 
 			    ///////////////////////////////////////
 			    ////// re generar los documentos //////
@@ -5755,6 +5769,7 @@ public class EndososAction extends PrincipalCoreAction
 		    
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 				
 			    ///////////////////////////////////////
 			    ////// re generar los documentos //////
@@ -6734,6 +6749,7 @@ public class EndososAction extends PrincipalCoreAction
 		    
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 				///////////////////////////////////////
 			    ////// re generar los documentos //////
 			    /*///////////////////////////////////*/
@@ -7126,6 +7142,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 				///////////////////////////////////////
 				////// re generar los documentos //////
 				/*///////////////////////////////////*/
@@ -7587,6 +7604,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 				
 				// Regeneramos los documentos:
 				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
@@ -7890,6 +7908,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 				
 				// Regeneramos los documentos:
 				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
@@ -8241,6 +8260,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 				
 				List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
 			    logger.debug("documentos que se regeneran: "+listaDocu);
@@ -8627,6 +8647,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 				
 				// Regeneramos los documentos:
 				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
@@ -8872,6 +8893,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 				
 				// Regeneramos los documentos:
 				String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
@@ -9225,6 +9247,7 @@ public class EndososAction extends PrincipalCoreAction
 	   		
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 	   			
 				// Regeneramos los documentos:
 	   			String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
@@ -9685,6 +9708,7 @@ public class EndososAction extends PrincipalCoreAction
 		
 		// Si el endoso fue confirmado:
 		if(respConfirmacionEndoso.isConfirmado()) {
+			endosoConfirmado = true;
 		
 			// Regeneramos los documentos:
 			String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
@@ -10187,6 +10211,7 @@ public class EndososAction extends PrincipalCoreAction
 	
 	//Si el endoso fue confirmado:
 	if(respConfirmacionEndoso.isConfirmado()) {
+		endosoConfirmado = true;
 	
 	//Regeneramos los documentos:
 	String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
@@ -10448,6 +10473,7 @@ public class EndososAction extends PrincipalCoreAction
 	
 	//Si el endoso fue confirmado:
 	if(respConfirmacionEndoso.isConfirmado()) {
+		endosoConfirmado = true;
 	
 	//Regeneramos los documentos:
 	String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
@@ -12188,6 +12214,14 @@ public class EndososAction extends PrincipalCoreAction
 
 	public void setColumnas(String columnas) {
 		this.columnas = columnas;
+	}
+
+	public boolean isEndosoConfirmado() {
+		return endosoConfirmado;
+	}
+
+	public void setEndosoConfirmado(boolean endosoConfirmado) {
+		this.endosoConfirmado = endosoConfirmado;
 	}
 
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
