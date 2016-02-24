@@ -366,14 +366,19 @@ function _5_confirmar(boton)
                     
                     mensajeCorrecto('Endoso generado',json.mensaje,function()
                     {
-                        _generarRemesaClic(
-                            true
-                            ,_5_smap1.CDUNIECO
-                            ,_5_smap1.CDRAMO
-                            ,_5_smap1.ESTADO
-                            ,_5_smap1.NMPOLIZA
-                            ,callbackRemesa
-                        );
+                    	if(json.endosoConfirmado){
+                    		_generarRemesaClic(
+	                            true
+	                            ,_5_smap1.CDUNIECO
+	                            ,_5_smap1.CDRAMO
+	                            ,_5_smap1.ESTADO
+	                            ,_5_smap1.NMPOLIZA
+	                            ,callbackRemesa
+	                        );
+                    	}else{
+                    		callbackRemesa();
+                    	}
+                    	
                     });
 				}
 				else

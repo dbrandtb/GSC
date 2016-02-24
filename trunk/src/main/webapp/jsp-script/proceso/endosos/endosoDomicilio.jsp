@@ -351,14 +351,19 @@ Ext.onReady(function(){
                                     buttons : Ext.Msg.OK,
                                     fn      : function()
                                     {
-                                        _generarRemesaClic(
-                                            true
-                                            ,inputCduniecop4
-                                            ,inputCdramop4
-                                            ,inputEstadop4
-                                            ,inputNmpolizap4
-                                            ,callbackRemesa
-                                        );
+                                    	if(json.endosoConfirmado){
+			                            	_generarRemesaClic(
+	                                            true
+	                                            ,inputCduniecop4
+	                                            ,inputCdramop4
+	                                            ,inputEstadop4
+	                                            ,inputNmpolizap4
+	                                            ,callbackRemesa
+	                                        );
+			                            }else{
+			                            	callbackRemesa();
+			                            }
+                                        
                                     }
                                 });
                             },
