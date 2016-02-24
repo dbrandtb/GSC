@@ -3283,7 +3283,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                     text     : 'Guardar'
                                                     ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
                                                     ,handler : function(button){_p25_guardarGrupo(button.up().up());}
-                                                    ,hidden  : _p25_smap1.COBERTURAS=='N'
+                                                    ,hidden  : _p25_smap1.COBERTURAS=='N'||_p25_smap1.COBERTURAS_BOTON=='N'
                                                 }
                                             ]
                                         });
@@ -3744,9 +3744,10 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                                                         ,buttons     :
                                                         [
                                                             {
-                                                                text     : 'Aceptar y continuar'
-                                                                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                                                                ,handler : function(me)
+                                                                text      : 'Aceptar y continuar'
+                                                                ,icon     : '${ctx}/resources/fam3icons/icons/accept.png'
+                                                                ,disabled : Number(json.smap1.filasErrores)>0
+                                                                ,handler  : function(me)
                                                                 {
                                                                     me.up('window').destroy();
                                                                     _p25_generarTramiteClic(
@@ -3756,6 +3757,16 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                                                                         ,complemento
                                                                         ,json.smap1.nombreCensoParaConfirmar
                                                                     );
+                                                                }
+                                                                ,listeners :
+                                                                {
+                                                                    afterrender : function(me)
+                                                                    {
+                                                                        if(Number(json.smap1.filasErrores)>0)
+                                                                        {
+                                                                            _p25_desbloqueoBotonRol(me);
+                                                                        }
+                                                                    }
                                                                 }
                                                             }
                                                             ,{
@@ -3940,9 +3951,10 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
 	                                                    ,buttons     :
 	                                                    [
 	                                                        {
-	                                                            text     : 'Aceptar y subir documentos'
-	                                                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-	                                                            ,handler : function(me)
+	                                                            text      : 'Aceptar y subir documentos'
+	                                                            ,icon     : '${ctx}/resources/fam3icons/icons/accept.png'
+                                                                ,disabled : Number(json.smap1.filasErrores)>0
+	                                                            ,handler  : function(me)
 	                                                            {
 	                                                                me.up('window').destroy();
                                                                     _p25_generarTramiteClic(
@@ -3953,6 +3965,16 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                                                                         ,json.smap1.nombreCensoParaConfirmar
                                                                     );
 	                                                            }
+                                                                ,listeners :
+                                                                {
+                                                                    afterrender : function(me)
+                                                                    {
+                                                                        if(Number(json.smap1.filasErrores)>0)
+                                                                        {
+                                                                            _p25_desbloqueoBotonRol(me);
+                                                                        }
+                                                                    }
+                                                                }
 	                                                        }
 	                                                        ,{
 	                                                            text     : 'Modificar datos'
@@ -4200,12 +4222,20 @@ function _p25_turnar(status,titulo,closable)
                                         debug('### json response parametro mensaje turnar:',json2);
                                         if(json2.exito)
                                         {
-                                            mensajeCorrecto('Tr&aacute;mite guardado'
-                                                ,json2.smap1.P1VALOR
+                                        
+                                            var mensajeTurnado = json2.smap1.P1VALOR
                                                     +(!Ext.isEmpty(json.smap1.nombreUsuarioDestino)?
                                                         '<br/>El tr&aacute;mite '+_p25_smap1.ntramite+' fue asignado a '+json.smap1.nombreUsuarioDestino:
                                                         ''
-                                                    )
+                                                    );
+                                            
+                                            if(json.smap1.ASYNC=='S')
+                                            {
+                                                mensajeTurnado = 'El tr\u00e1mite qued\u00f3 en espera y ser\u00e1 procesado posteriormente';
+                                            }
+                                        
+                                            mensajeCorrecto('Tr&aacute;mite guardado'
+                                                ,mensajeTurnado
                                                 ,function()
                                             {
                                                 button.up().up().destroy();
@@ -4448,28 +4478,67 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                     {
                         xtype       : 'textfield'
                         ,fieldLabel : '<span style="color:white;">Buscar:</span>'
+                        ,timeoutFn  : ''
                         ,listeners  :
                         {
                             change : function(comp,val)
                             {
-                                debug('extraprimas filtro change:',val);
-                                var grid=comp.up().up();
-                                debug('grid:',grid);
-                                grid.getStore().filterBy(function(record, id)
+                                var timeoutFn = function()
                                 {
-                                    var nombre = record.get('nombre').toUpperCase().replace(/ /g,'');
-                                    var filtro = val.toUpperCase().replace(/ /g,'');
-                                    var posNombre = nombre.lastIndexOf(filtro);
-                                    
-                                    if(posNombre > -1)
+                                    debug('extraprimas filtro change:',val);
+                                    var grid = comp.up('grid');
+                                    debug('grid:',grid);
+                                    var filterFn = '';
+                                    if(Ext.isEmpty(val))
                                     {
-                                        return true;
+                                        filterFn = function(rec)
+                                        {
+                                            debug('funcion true');
+                                            return true;
+                                        };
                                     }
                                     else
                                     {
-                                        return false;
+                                        filterFn = function(record)
+                                        {
+                                            var nombre = record.get('NOMBRE').toUpperCase().replace(/ /g,'');
+                                            var filtro = val.toUpperCase().replace(/ /g,'');
+                                            var posNombre = nombre.lastIndexOf(filtro);
+                                            
+                                            debug('filtro result:',posNombre > -1);
+                                            
+                                            if(posNombre > -1)
+                                            {
+                                                return true;
+                                            }
+                                            else
+                                            {
+                                                return false;
+                                            }
+                                        };
                                     }
-                                });
+                                    
+                                    cargaStorePaginadoLocalFiltro(
+                                        Ext.getStore('_p25_storeExtraprimas'+record.get('letra'))
+                                        ,_p25_urlCargarAseguradosExtraprimas
+                                        ,'slist1'
+                                        ,{
+                                            'smap1.cdunieco'  : _p25_smap1.cdunieco
+                                            ,'smap1.cdramo'   : _p25_smap1.cdramo
+                                            ,'smap1.estado'   : _p25_smap1.estado
+                                            ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                                            ,'smap1.nmsuplem' : '0'
+                                            ,'smap1.cdgrupo'  : record.get('letra')
+                                        }
+                                        ,null
+                                        ,grid
+                                        ,null
+                                        ,filterFn
+                                    );
+                                };
+                                
+                                clearTimeout(comp.timeoutFn);
+                                comp.timeoutFn = setTimeout(timeoutFn,3000);
                             }
                         }
                     }
@@ -4496,15 +4565,15 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                                 var extrCmp = Ext.ComponentQuery.query('[name=extrtitu][grupo='+me.grupo+']')[0];
                                 if(extrCmp.isValid())
                                 {
-                                    extrCmp.up('grid').store.each(function(record)
+                                    mensajeWarning('Falta identificar atributo de extraprima ocupacional');
+                                    /*
+                                    var datos = extrCmp.up('grid').store.datos;
+                                    for(var i in datos)
                                     {
-                                        debug('record:',record);
-                                        if(record.get('parentesco')=='TITULAR')
-                                        {
-                                            //record.set('EXTPRI_OCUPACION',extrCmp.getValue());
-                                            mensajeWarning('Falta identificar atributo de extraprima ocupacional');
-                                        }
-                                    });
+                                        var record = datos[i];
+                                        record.set('EXTPRI_OCUPACION',extrCmp.getValue());
+                                    }
+                                    */
                                 }
                             }
                             catch(e)
@@ -4519,48 +4588,23 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                 {
                     model       : '_p25_modeloExtraprima'
                     ,groupField : 'agrupador'
-                    ,autoLoad   : true
+                    ,autoLoad   : false
+                    ,pageSize   : 10
+                    ,storeId    : '_p25_storeExtraprimas'+record.get('letra')
                     ,proxy      :
                     {
-                        type         : 'ajax'
-                        ,url         : _p25_urlCargarAseguradosExtraprimas
-                        ,extraParams :
-                        {
-                            'smap1.cdunieco'   : _p25_smap1.cdunieco
-                            ,'smap1.cdramo'    : _p25_smap1.cdramo
-                            ,'smap1.estado'    : _p25_smap1.estado
-                            ,'smap1.nmpoliza'  : _p25_smap1.nmpoliza
-                            ,'smap1.nmsuplem'  : '0'
-                            ,'smap1.cdgrupo'   : record.get('letra')
-                            ,'smap1.timestamp' : timestamp
-                        }
-                        ,reader      :
-                        {
-                            type  : 'json'
-                            ,root : 'slist1'
-                        }
-                    }
-                    ,listeners :
-                    {
-                        load : function(me,records,success,e)
-                        {
-                            if(success)
-                            {
-                                debug('### records de extraprimas:',records);
-                                me.removeAll();
-                                Ext.each(records,function(record)
-                                {
-                                    me.add(new _p25_modeloExtraprima(record.raw));
-                                });
-                                me.commitChanges();
-                            }
-                            else
-                            {
-                                mensajeError('Error al cargar situaciones #'+timestamp);
-                            }
-                        }
+                        enablePaging : true,
+                        reader       : 'json',
+                        type         : 'memory',
+                        data         : []
                     }
                 })
+                ,bbar :
+                {
+                    displayInfo : true
+                    ,store      : Ext.getStore('_p25_storeExtraprimas'+record.get('letra'))
+                    ,xtype      : 'pagingtoolbar'
+                }
                 ,viewConfig : viewConfigAutoSize
                 ,features   :
                 [
@@ -4579,6 +4623,29 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                         ,startCollapsed : false
                     }
                 ]
+                ,listeners   :
+                {
+                    afterrender : function(me)
+                    {
+                        cargaStorePaginadoLocalFiltro(
+                            Ext.getStore('_p25_storeExtraprimas'+record.get('letra'))
+                            ,_p25_urlCargarAseguradosExtraprimas
+                            ,'slist1'
+                            ,{
+                                'smap1.cdunieco'  : _p25_smap1.cdunieco
+                                ,'smap1.cdramo'   : _p25_smap1.cdramo
+                                ,'smap1.estado'   : _p25_smap1.estado
+                                ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                                ,'smap1.nmsuplem' : '0'
+                                ,'smap1.cdgrupo'  : record.get('letra')
+                            }
+                            ,null
+                            ,me
+                            ,null
+                            ,null
+                        );
+                    }
+                }
                 ,buttonAlign : 'center'
                 ,buttons     :
                 [
@@ -4621,7 +4688,16 @@ function _p25_guardarExtraprimas(letra)
     debug('grid a guardar:',grid);
     var store=grid.getStore();
     debug('store a guardar:',store);
-    var records=store.getModifiedRecords();
+    var records = [];
+    for(var i in store.datos)
+    {
+        var record = store.datos[i];
+        
+        if(record.dirty)
+        {
+            records.push(record);
+        }
+    }
     debug('records a guardar:',records);
     if(records.length==0)
     {
@@ -4670,7 +4746,10 @@ function _p25_guardarExtraprimas(letra)
                 debug('respuesta del guardado de extraprimas:',json);
                 if(json.exito)
                 {
-                    store.commitChanges();
+                    for(var i=0;i<records.length;i++)
+                    {
+                        records[i].commit();
+                    }
                     mensajeCorrecto('Datos guardados',json.respuesta);
                     _p25_setActiveResumen();
                 }
@@ -5163,7 +5242,7 @@ function _p25_generarVentanaVistaPrevia2(sinBotones)
         ]
         ,listeners :
         {
-            render : function(me)
+            afterrender : function(me)
             {
                 Ext.Ajax.request(
                 {
@@ -5219,6 +5298,142 @@ function _p25_generarVentanaVistaPrevia2(sinBotones)
                                 concepto : 'TOTAL DE MUJERES'
                                 ,importe : 0
                             }));
+                            
+                            _p25_storeGrupos.each(function(record)
+						    {
+						        itemsVistaPrevia.push(
+						        Ext.create('Ext.grid.Panel',
+						        {
+						            title      : 'TARIFA SUBGRUPO '+record.get('letra')
+						            ,minHeight : 100
+						            ,maxHeight : 250
+						            ,store     : Ext.create('Ext.data.Store',
+						            {
+						                model     : '_p25_modeloTarifaEdad'
+						                ,grupo    : record.get('letra')
+						                ,autoLoad : true
+						                ,proxy    :
+						                {
+						                    type         : 'ajax'
+						                    ,timeout     : 1000*60*2
+						                    ,extraParams :
+						                    {
+						                        'smap1.cdunieco'  : _p25_smap1.cdunieco
+						                        ,'smap1.cdramo'   : _p25_smap1.cdramo
+						                        ,'smap1.estado'   : _p25_smap1.estado
+						                        ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+						                        ,'smap1.nmsuplem' : '0'
+						                        ,'smap1.cdplan'   : record.get('cdplan')
+						                        ,'smap1.cdgrupo'  : record.get('letra')
+						                        ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
+						                    }
+						                    ,url         : _p25_urlObtenerTarifaEdad
+						                    ,reader      :
+						                    {
+						                        type  : 'json'
+						                        ,root : 'slist1'
+						                    }
+						                }
+						                ,listeners :
+						                {
+						                    load : function(me,records,success)
+						                    {
+						                        if(success)
+						                        {
+						                            var prima  = 0;
+						                            var derpol = 0;
+						                            var recar  = 0;
+						                            var iva    = 0;
+						                            var hom    = 0;
+						                            var muj    = 0;
+						                            var pTot   = 0;
+						                            
+						                            for(var ij in records)
+						                            {
+						                                var primaPaso  = Number(records[ij].get('TARIFA_TOTAL_HOMBRES')) + Number(records[ij].get('TARIFA_TOTAL_MUJERES'));
+						                                var derpolPaso = Number(records[ij].get('DERPOL_TOTAL_GENERAL'));
+						                                var recarPaso  = Number(records[ij].get('RECARGOS_TOTAL_GENERAL'));
+						                                var ivaPaso    = Number(records[ij].get('IVA_TOTAL_GENERAL'));
+						                                
+						                                prima  += primaPaso;
+						                                derpol += derpolPaso;
+						                                recar  += recarPaso;
+						                                iva    += ivaPaso;
+						                                
+						                                pTot   += primaPaso+derpolPaso+recarPaso+ivaPaso;
+						                                
+						                                hom    += Number(records[ij].get('HOMBRES'));
+						                                muj    += Number(records[ij].get('MUJERES'));
+						                            }
+						                            
+						                            _fieldById('_p25_gridConceptosGlobales').store.getAt(0).set('subgrupo'+me.grupo , prima);
+						                            _fieldById('_p25_gridConceptosGlobales').store.getAt(1).set('subgrupo'+me.grupo , derpol);
+						                            _fieldById('_p25_gridConceptosGlobales').store.getAt(2).set('subgrupo'+me.grupo , recar);
+						                            _fieldById('_p25_gridConceptosGlobales').store.getAt(3).set('subgrupo'+me.grupo , iva);
+						                            
+						                            _fieldById('_p25_gridConceptosGlobales').store.getAt(4).set('subgrupo'+me.grupo , pTot);
+						                            _fieldById('_p25_gridConceptosGlobales').store.getAt(4).set('importe',
+						                                Number(_fieldById('_p25_gridConceptosGlobales').store.getAt(4).get('importe'))+pTot);
+						                                
+						                            _fieldById('_p25_gridConceptosGlobales').store.getAt(5).set('subgrupo'+me.grupo , hom);
+						                            _fieldById('_p25_gridConceptosGlobales').store.getAt(5).set('importe',
+						                                Number(_fieldById('_p25_gridConceptosGlobales').store.getAt(5).get('importe'))+hom);
+						                            
+						                            _fieldById('_p25_gridConceptosGlobales').store.getAt(6).set('subgrupo'+me.grupo , muj);
+						                            _fieldById('_p25_gridConceptosGlobales').store.getAt(6).set('importe',
+						                                Number(_fieldById('_p25_gridConceptosGlobales').store.getAt(6).get('importe'))+muj);
+						                            
+						                            _fieldById('_p25_gridConceptosGlobales').store.commitChanges();
+						                        }
+						                    }
+						                }
+						            })
+						            ,columns   :
+						            [
+						                {
+						                    header     : 'Edad'
+						                    ,width     : 60
+						                    ,dataIndex : 'EDAD'
+						                }
+						                ,{
+						                    header     : 'No. Hombres'
+						                    ,width     : 100
+						                    ,dataIndex : 'HOMBRES'
+						                }
+						                ,{
+						                    header     : 'No. Mujeres'
+						                    ,width     : 100
+						                    ,dataIndex : 'MUJERES'
+						                }
+						                ,{
+						                    header     : 'Tarifa por hombre'
+						                    ,flex      : 1
+						                    ,dataIndex : 'TARIFA_UNICA_HOMBRES'
+						                    ,renderer  : Ext.util.Format.usMoney
+						                }
+						                ,{
+						                    header     : 'Tarifa por mujer'
+						                    ,flex      : 1
+						                    ,dataIndex : 'TARIFA_UNICA_MUJERES'
+						                    ,renderer  : Ext.util.Format.usMoney
+						                }
+						                ,{
+						                    header     : 'Total hombres'
+						                    ,flex      : 1
+						                    ,dataIndex : 'TARIFA_TOTAL_HOMBRES'
+						                    ,renderer  : Ext.util.Format.usMoney
+						                }
+						                ,{
+						                    header     : 'Total mujeres'
+						                    ,flex      : 1
+						                    ,dataIndex : 'TARIFA_TOTAL_MUJERES'
+						                    ,renderer  : Ext.util.Format.usMoney
+						                }
+						            ]
+						        })
+						        );
+						    });
+                            
                         }
                         else
                         {
@@ -5230,141 +5445,6 @@ function _p25_generarVentanaVistaPrevia2(sinBotones)
             }
         }
     }));
-    
-    _p25_storeGrupos.each(function(record)
-    {
-        itemsVistaPrevia.push(
-        Ext.create('Ext.grid.Panel',
-        {
-            title      : 'TARIFA SUBGRUPO '+record.get('letra')
-            ,minHeight : 100
-            ,maxHeight : 250
-            ,store     : Ext.create('Ext.data.Store',
-            {
-                model     : '_p25_modeloTarifaEdad'
-                ,grupo    : record.get('letra')
-                ,autoLoad : true
-                ,proxy    :
-                {
-                    type         : 'ajax'
-                    ,timeout     : 1000*60*2
-                    ,extraParams :
-                    {
-                        'smap1.cdunieco'  : _p25_smap1.cdunieco
-                        ,'smap1.cdramo'   : _p25_smap1.cdramo
-                        ,'smap1.estado'   : _p25_smap1.estado
-                        ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
-                        ,'smap1.nmsuplem' : '0'
-                        ,'smap1.cdplan'   : record.get('cdplan')
-                        ,'smap1.cdgrupo'  : record.get('letra')
-                        ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
-                    }
-                    ,url         : _p25_urlObtenerTarifaEdad
-                    ,reader      :
-                    {
-                        type  : 'json'
-                        ,root : 'slist1'
-                    }
-                }
-                ,listeners :
-                {
-                    load : function(me,records,success)
-                    {
-                        if(success)
-                        {
-                            var prima  = 0;
-                            var derpol = 0;
-                            var recar  = 0;
-                            var iva    = 0;
-                            var hom    = 0;
-                            var muj    = 0;
-                            var pTot   = 0;
-                            
-                            for(var ij in records)
-                            {
-                                var primaPaso  = Number(records[ij].get('TARIFA_TOTAL_HOMBRES')) + Number(records[ij].get('TARIFA_TOTAL_MUJERES'));
-                                var derpolPaso = Number(records[ij].get('DERPOL_TOTAL_GENERAL'));
-                                var recarPaso  = Number(records[ij].get('RECARGOS_TOTAL_GENERAL'));
-                                var ivaPaso    = Number(records[ij].get('IVA_TOTAL_GENERAL'));
-                                
-                                prima  += primaPaso;
-                                derpol += derpolPaso;
-                                recar  += recarPaso;
-                                iva    += ivaPaso;
-                                
-                                pTot   += primaPaso+derpolPaso+recarPaso+ivaPaso;
-                                
-                                hom    += Number(records[ij].get('HOMBRES'));
-                                muj    += Number(records[ij].get('MUJERES'));
-                            }
-                            
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(0).set('subgrupo'+me.grupo , prima);
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(1).set('subgrupo'+me.grupo , derpol);
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(2).set('subgrupo'+me.grupo , recar);
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(3).set('subgrupo'+me.grupo , iva);
-                            
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(4).set('subgrupo'+me.grupo , pTot);
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(4).set('importe',
-                                Number(_fieldById('_p25_gridConceptosGlobales').store.getAt(4).get('importe'))+pTot);
-                                
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(5).set('subgrupo'+me.grupo , hom);
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(5).set('importe',
-                                Number(_fieldById('_p25_gridConceptosGlobales').store.getAt(5).get('importe'))+hom);
-                            
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(6).set('subgrupo'+me.grupo , muj);
-                            _fieldById('_p25_gridConceptosGlobales').store.getAt(6).set('importe',
-                                Number(_fieldById('_p25_gridConceptosGlobales').store.getAt(6).get('importe'))+muj);
-                            
-                            _fieldById('_p25_gridConceptosGlobales').store.commitChanges();
-                        }
-                    }
-                }
-            })
-            ,columns   :
-            [
-                {
-                    header     : 'Edad'
-                    ,width     : 60
-                    ,dataIndex : 'EDAD'
-                }
-                ,{
-                    header     : 'No. Hombres'
-                    ,width     : 100
-                    ,dataIndex : 'HOMBRES'
-                }
-                ,{
-                    header     : 'No. Mujeres'
-                    ,width     : 100
-                    ,dataIndex : 'MUJERES'
-                }
-                ,{
-                    header     : 'Tarifa por hombre'
-                    ,flex      : 1
-                    ,dataIndex : 'TARIFA_UNICA_HOMBRES'
-                    ,renderer  : Ext.util.Format.usMoney
-                }
-                ,{
-                    header     : 'Tarifa por mujer'
-                    ,flex      : 1
-                    ,dataIndex : 'TARIFA_UNICA_MUJERES'
-                    ,renderer  : Ext.util.Format.usMoney
-                }
-                ,{
-                    header     : 'Total hombres'
-                    ,flex      : 1
-                    ,dataIndex : 'TARIFA_TOTAL_HOMBRES'
-                    ,renderer  : Ext.util.Format.usMoney
-                }
-                ,{
-                    header     : 'Total mujeres'
-                    ,flex      : 1
-                    ,dataIndex : 'TARIFA_TOTAL_MUJERES'
-                    ,renderer  : Ext.util.Format.usMoney
-                }
-            ]
-        })
-        );
-    });
     
     mostrarVentana();
 }
@@ -5449,64 +5529,96 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
                     {
                         xtype       : 'textfield'
                         ,fieldLabel : '<span style="color:white;">Buscar:</span>'
+                        ,timeoutFn  : ''
                         ,listeners  :
                         {
                             change : function(comp,val)
                             {
-                                debug('asegurados filtro change:',val);
-                                var grid=comp.up().up();
-                                debug('grid:',grid);
-                                grid.getStore().filterBy(function(record, id)
+                                var timeoutFn = function()
                                 {
-                                    var nombre  = record.get('NOMBRE').toUpperCase().replace(/ /g,'');
-                                    var nombre2 = record.get('SEGUNDO_NOMBRE').toUpperCase().replace(/ /g,'');
-                                    var apat    = record.get('APELLIDO_PATERNO').toUpperCase().replace(/ /g,'');
-                                    var amat    = record.get('APELLIDO_MATERNO').toUpperCase().replace(/ /g,'');
-                                    
-                                    var filtro = val.toUpperCase().replace(/ /g,'');
-                                    var posNombre = (nombre+nombre2+apat+amat).lastIndexOf(filtro);
-                                    
-                                    if(posNombre > -1)
+                                    debug('asegurados filtro change:',val);
+                                    var grid = comp.up('grid');
+                                    debug('grid:',grid);
+                                    var filterFn = '';
+                                    if(Ext.isEmpty(val))
                                     {
-                                        return true;
+                                        filterFn = function(rec)
+                                        {
+                                            debug('funcion true');
+                                            return true;
+                                        };
                                     }
                                     else
                                     {
-                                        return false;
+                                        filterFn = function(record, id)
+                                        {
+                                            var nombre  = record.get('NOMBRE').toUpperCase().replace(/ /g,'');
+                                            var nombre2 = record.get('SEGUNDO_NOMBRE').toUpperCase().replace(/ /g,'');
+                                            var apat    = record.get('APELLIDO_PATERNO').toUpperCase().replace(/ /g,'');
+                                            var amat    = record.get('APELLIDO_MATERNO').toUpperCase().replace(/ /g,'');
+                                            
+                                            var filtro = val.toUpperCase().replace(/ /g,'');
+                                            var posNombre = (nombre+nombre2+apat+amat).lastIndexOf(filtro);
+                                            
+                                            if(posNombre > -1)
+                                            {
+                                                return true;
+                                            }
+                                            else
+                                            {
+                                                return false;
+                                            }
+                                        };
                                     }
-                                });
+                                    
+                                    cargaStorePaginadoLocalFiltro(
+                                        Ext.getStore('_p25_storeAsegurados'+record.get('letra'))
+                                        ,_p25_urlCargarAseguradosGrupo
+                                        ,'slist1'
+                                        ,{
+                                            'smap1.cdunieco'  : _p25_smap1.cdunieco
+                                            ,'smap1.cdramo'   : _p25_smap1.cdramo
+                                            ,'smap1.estado'   : _p25_smap1.estado
+                                            ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                                            ,'smap1.nmsuplem' : '0'
+                                            ,'smap1.cdgrupo'  : record.get('letra')
+                                        }
+                                        ,null
+                                        ,grid
+                                        ,null
+                                        ,filterFn
+                                    );
+                                };
+                                
+                                clearTimeout(comp.timeoutFn);
+                                comp.timeoutFn = setTimeout(timeoutFn,3000);
                             }
                         }
                     }
                 ]
                 ,store      : Ext.create('Ext.data.Store',
                 {
-                    model       : '_p25_modeloAsegurados'
-                    ,groupField : 'AGRUPADOR'
-                    ,autoLoad   : true
+                    model             : '_p25_modeloAsegurados'
+                    ,groupField       : 'AGRUPADOR'
+                    ,autoLoad         : false
+                    ,pageSize         : 10
+                    ,storeId          : '_p25_storeAsegurados'+record.get('letra')
                     ,gridSubgrupo     : gridSubgrupo
                     ,rowIndexSubgrupo : rowIndexSubgrupo
-                    ,proxy      :
+                    ,proxy            :
                     {
-                        type         : 'ajax'
-                        ,timeout     : 1000*60*10
-                        ,url         : _p25_urlCargarAseguradosGrupo
-                        ,extraParams :
-                        {
-                            'smap1.cdunieco'  : _p25_smap1.cdunieco
-                            ,'smap1.cdramo'   : _p25_smap1.cdramo
-                            ,'smap1.estado'   : _p25_smap1.estado
-                            ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
-                            ,'smap1.nmsuplem' : '0'
-                            ,'smap1.cdgrupo'  : record.get('letra')
-                        }
-                        ,reader      :
-                        {
-                            type  : 'json'
-                            ,root : 'slist1'
-                        }
+                        enablePaging : true,
+                        reader       : 'json',
+                        type         : 'memory',
+                        data         : []
                     }
                 })
+                ,bbar :
+                {
+                    displayInfo : true
+                    ,store      : Ext.getStore('_p25_storeAsegurados'+record.get('letra'))
+                    ,xtype      : 'pagingtoolbar'
+                }
                 ,viewConfig : viewConfigAutoSize
                 ,features   :
                 [
@@ -5525,6 +5637,29 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
                         ,startCollapsed : false
                     }
                 ]
+                ,listeners :
+                {
+                    afterrender : function(me)
+                    {
+                        cargaStorePaginadoLocalFiltro(
+                            Ext.getStore('_p25_storeAsegurados'+record.get('letra'))
+                            ,_p25_urlCargarAseguradosGrupo
+                            ,'slist1'
+                            ,{
+                                'smap1.cdunieco'  : _p25_smap1.cdunieco
+                                ,'smap1.cdramo'   : _p25_smap1.cdramo
+                                ,'smap1.estado'   : _p25_smap1.estado
+                                ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                                ,'smap1.nmsuplem' : '0'
+                                ,'smap1.cdgrupo'  : record.get('letra')
+                            }
+                            ,null
+                            ,me
+                            ,null
+                            ,null
+                        );
+                    }
+                }
                 ,buttonAlign : 'center'
                 ,buttons     :
                 [
@@ -5849,7 +5984,7 @@ function _p25_guardarAsegurados(grid,callback)
     if(valido)
     {
         var error = '';
-        store.each(function(record)
+        $.each(store.datos,function(i,record)
         {
             if(Ext.isEmpty(record.get('NOMBRE')))
             {
@@ -5867,7 +6002,15 @@ function _p25_guardarAsegurados(grid,callback)
     
     if(valido)
     {
-        asegurados = store.getModifiedRecords();
+        for(var i in store.datos)
+        {
+            var record = store.datos[i];
+            if(record.dirty)
+            {
+                asegurados.push(record);
+            }
+        }
+        
         valido     = asegurados.length>0||callback!=undefined;
         if(!valido)
         {
@@ -5876,11 +6019,13 @@ function _p25_guardarAsegurados(grid,callback)
         }
     }
     
+    debug('asegurados:',asegurados);
+    
     if(valido&&asegurados.length>0)
     {
         debug('guardar:',asegurados);
         var slist1 = [];
-        store.each(function(irecord)
+        $.each(store.datos,function(i,irecord)
         {
             debug('iterando para guardar:',irecord);
             slist1.push(
@@ -5917,7 +6062,10 @@ function _p25_guardarAsegurados(grid,callback)
                 debug('json response guardar asegurados:',json);
                 if(json.exito)
                 {
-                    grid.getStore().commitChanges();
+                    for(var i=0;i<asegurados.length;i++)
+                    {
+                        asegurados[i].commit();
+                    }
                     if(callback!=undefined)
                     {
                         callback();
@@ -6705,6 +6853,65 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
         });
     }
 }
+
+function _p25_desbloqueoBotonRol(boton)
+{
+    var ck = 'Recuperando permisos de bot\u00f3n';
+    try
+    {
+        boton.setLoading(true);
+        Ext.Ajax.request(
+        {
+            url      : _p25_urlRecuperacion
+            ,params  :
+            {
+                'params.consulta' : 'RECUPERAR_PERMISO_BOTON_GENERAR_COLECTIVO'
+            }
+            ,success : function(response)
+            {
+                boton.setLoading(false);
+                var ck = 'Decodificando respuesta al recuperar permisos de bot\u00f3n';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### permisos boton:',json);
+                    if(json.success==true)
+                    {
+                         if('S'==json.params.ACTIVAR_BOTON)
+                         {
+                             boton.show();
+                             boton.enable();
+                         }
+                         else
+                         {
+                             mensajeWarning('Favor de revisar los errores de la carga');
+                             boton.disable();
+                             boton.hide();
+                         }
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                boton.setLoading(false);
+                errorComunicacion(null,'Error al recuperar permisos de bot\u00f3n');
+            }
+        });
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+}
+
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
