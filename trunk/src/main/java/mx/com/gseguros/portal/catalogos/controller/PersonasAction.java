@@ -150,8 +150,8 @@ public class PersonasAction extends PrincipalCoreAction
 		    		
 		    		logger.debug("Error en WS, exito false");
 		    		exito           = false;
-					respuesta       = "No se encontra la persona. Consulte a soporte.";
-					respuestaOculta = "No se encontra la persona. Consulte a soporte.";
+					respuesta       = "No se encontr\u00F3 la persona. Consulte a soporte.";
+					respuestaOculta = "No se encontr\u00F3 la persona. Consulte a soporte.";
 					slist1          = null;
 					
 		    		return SUCCESS;
@@ -307,8 +307,8 @@ public class PersonasAction extends PrincipalCoreAction
 				
 				logger.debug("Error en WS, exito false");
 				exito           = false;
-				respuesta       = "No se encontra la persona al Importar. Consulte a soporte.";
-				respuestaOculta = "No se encontra la persona al Importar. Consulte a soporte.";
+				respuesta       = "No se encontr\u00F3 la persona al Importar. Consulte a soporte.";
+				respuestaOculta = "No se encontr\u00F3 la persona al Importar. Consulte a soporte.";
 				slist1          = null;
 				
 				return SUCCESS;
@@ -460,7 +460,7 @@ public class PersonasAction extends PrincipalCoreAction
 				}
 				
 			}else {
-				logger.debug("No se encontro coincidencia con el WS o hay mas de una.");
+				logger.debug("No se encontr\u00F3 coincidencia con el WS o hay mas de una.");
 				if(listaClientesGS == null){
 					logger.debug("Lista de Clientes es nula");	
 				}else{
@@ -511,8 +511,8 @@ public class PersonasAction extends PrincipalCoreAction
 				
 				logger.debug("Error en WS, exito false");
 				exito           = false;
-				respuesta       = "No se encontra la persona al Importar. Consulte a soporte.";
-				respuestaOculta = "No se encontra la persona al Importar. Consulte a soporte.";
+				respuesta       = "No se encontr\u00F3 la persona al Importar. Consulte a soporte.";
+				respuestaOculta = "No se encontr\u00F3 la persona al Importar. Consulte a soporte.";
 				slist1          = null;
 				
 				return SUCCESS;
@@ -677,7 +677,7 @@ public class PersonasAction extends PrincipalCoreAction
 				}
 				
 			}else {
-				logger.debug("No se encontro coincidencia con el WS o hay mas de una.");
+				logger.debug("No se encontr\u00F3 coincidencia con el WS o hay mas de una.");
 				if(listaClientesGS == null){
 					logger.debug("Lista de Clientes es nula");	
 				}else{
@@ -1164,8 +1164,8 @@ public class PersonasAction extends PrincipalCoreAction
 		    		
 		    		logger.debug("Error en WS, exito false");
 		    		exito           = false;
-					respuesta       = "No se encontra la persona al Guardar. Consulte a soporte.";
-					respuestaOculta = "No se encontra la persona al Guardar. Consulte a soporte.";
+					respuesta       = "No se encontr\u00F3 la persona al Guardar. Consulte a soporte.";
+					respuestaOculta = "No se encontr\u00F3 la persona al Guardar. Consulte a soporte.";
 					slist1          = null;
 					
 		    		return SUCCESS;
