@@ -833,6 +833,8 @@ Ext.onReady(function()
             select : function() { _p28_herenciaAscendente(clave,marca,submarca,modelo,version); }
         });
         //clave
+                
+        //Cambia Atributos campo Fecha de nacimiento dependiendo del seguro de vida
         _fieldByLabel('SEGURO DE VIDA').on(
                         {
                             select : _p28_atributoNacimientoContratante

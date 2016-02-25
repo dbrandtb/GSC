@@ -534,6 +534,16 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String cdtipsit = params.get("cdtipsit");
 				mapa.put("ACTIVAR_BOTON" , consultasDAO.recuperarPermisoBotonEnviarCenso(cdsisrol));
 			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_ESTADO_BOTON_EMITIR))
+			{
+				paso = "Recuperando permisos de boton comprar";
+				logger.debug(Utils.log(" paso: ",paso));
+				String cdtipsit = params.get("cdtipsit");
+				Utils.validate(
+						 cdtipsit , "No se recibio el parametro cdtipsit"
+						);
+				mapa.put("ACTIVAR_BOTON_COMPRAR" , consultasDAO.recuperarPermisoBotonEmitir(cdsisrol,cdusuari,cdtipsit));
+			}
 		}
 		catch(Exception ex)
 		{
@@ -929,7 +939,14 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_EXCLUSION_TURNADOS))
 			{
 				lista = consultasDAO.recuperarExclusionTurnados();
-			}			
+			}	
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_CLAVES_PLAN_RAMO4))
+			{
+				String cdramo=params.get("cdramo"),
+					   cdtipsit=params.get("cdtipsit"),
+				       cdplan=params.get("cdplan");
+				lista = consultasDAO.recuperarClavesPlanRamo4(cdramo, cdtipsit, cdplan);
+			}	
 		}
 		catch(Exception ex)
 		{

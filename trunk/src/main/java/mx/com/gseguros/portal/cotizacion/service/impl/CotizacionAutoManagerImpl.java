@@ -2865,7 +2865,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			
 			for(Map<String,String> inciso:slistPYME)
 		    { 
-				if(inciso.keySet()==null)
+				if(inciso.keySet()!=null)
 				{	
 					logger.debug(Utils.log("inciso iterado=",inciso));
 					
@@ -3000,6 +3000,53 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				));
 		return slistPYME;
 	}
+	
+	//Para consultar los valores del vehiculo y reemplazarlos de la lista 
+		@Override
+		public List<Map<String,String>> validaVacioDescRecg(List<Map<String,String>> slistPYME) throws Exception
+		{
+			logger.debug(Utils.log(
+					 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+					,"\n@@@@@@ validaVacioDescRecg @@@@@@@@@@"
+					,"\n@@@@@@ slistPYME=" , slistPYME
+					));
+			
+			String paso = null;
+			try
+			{
+				paso = "Iterando incisos DESC/RECG";
+				logger.debug(paso);
+				
+				for(Map<String,String> inciso:slistPYME)
+			    { 
+					if(inciso.keySet()!=null)
+					{	
+						String cdtipsit= inciso.get("cdtipsit");
+							
+				    	if(cdtipsit.equals("AF") || cdtipsit.equals("PU"))
+				    	{	logger.debug(Utils.log("pv_otvalor25: ",inciso.get("parametros.pv_otvalor25")));
+				    	    if(inciso.get("parametros.pv_otvalor25").equals("0.00"))
+							  {inciso.put("parametros.pv_otvalor25","");}		
+				    	}
+				    	else 
+				    	{	 logger.debug(Utils.log("pv_otvalor19: ",inciso.get("parametros.pv_otvalor19")));
+				    		if(inciso.get("parametros.pv_otvalor19").equals("0.00"))
+						    {inciso.put("parametros.pv_otvalor19","");}					
+				    	}
+			    	}
+			    }
+			}
+			catch(Exception ex)
+			{
+				Utils.generaExcepcion(ex,paso);
+			}
+			logger.debug(Utils.log(
+					 "\n@@@@@@ slistPYME=" , slistPYME
+					,"\n@@@@@@ validaVacioDescRecg @@@@@@@@@@"
+					,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+					));
+			return slistPYME;
+		}
 	
 	@Override
 	public ManagerRespuestaSlist2SmapVO cargarCotizacionAutoFlotilla(

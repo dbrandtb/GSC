@@ -221,4 +221,5 @@ public interface CotizacionAutoManager
 			,Date feini) throws ApplicationException;
 	
 	public List<Map<String, String>> modificadorValorVehPYME(List<Map<String, String>> slist1, String cdsisrol, String cdpost, String cambio) throws Exception;
+	public List<Map<String,String>> validaVacioDescRecg(List<Map<String,String>> slistPYME) throws Exception;
 }
