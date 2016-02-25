@@ -422,6 +422,19 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 		
+		if(exito)
+		{
+			try
+			{
+				map1.put("customCode" , consultasManager.recuperarCodigoCustom("58", cdsisrol));
+			}
+			catch(Exception ex)
+			{
+				map1.put("customCode" , "/* error */");
+				logger.error("Error sin impacto funcional",ex);
+			}
+		}
+		
 		if(!exito)
 		{
 			result = ERROR;

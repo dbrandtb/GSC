@@ -490,4 +490,6 @@ public interface ConsultasDAO
 	public List<Map<String,String>> recuperarExclusionTurnados() throws Exception;
 	
 	public List<Map<String,String>> cargarCotizadoresActivos(String cadena) throws Exception;
+	
+	public String recuperarCodigoCustom(String cdpantalla, String cdsisrol) throws Exception;
 }

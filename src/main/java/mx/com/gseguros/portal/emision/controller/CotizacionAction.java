@@ -667,6 +667,19 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
+		if(exito)
+		{
+			try
+			{
+				smap1.put("customCode" , consultasManager.recuperarCodigoCustom("0", cdsisrol));
+			}
+			catch(Exception ex)
+			{
+				smap1.put("customCode" , "/* error */");
+				logger.error("Error sin impacto funcional",ex);
+			}
+		}
+		
 		//respuesta
 		String respuesta = null;
 		if(exito)
@@ -3129,6 +3142,16 @@ public class CotizacionAction extends PrincipalCoreAction
 					gc.generaComponentes(componentesRecuperados, true, true, false, true, true, false);
 					imap.put("recuperadosColumns" , gc.getColumns());
 					imap.put("recuperadosFields"  , gc.getFields());
+				}
+				
+				try
+				{
+					smap1.put("customCode" , consultasManager.recuperarCodigoCustom("21", cdsisrol));
+				}
+				catch(Exception ex)
+				{
+					smap1.put("customCode" , "/* error */");
+					logger.error("Error sin impacto funcional al recuperar codigo custom",ex);
 				}
 				
 				/////////////////

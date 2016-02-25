@@ -1949,6 +1949,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		//atributo variable para recuperar tatrigar
 		
+		try
+		{
+			resp.getSmap().put("customCode", consultasDAO.recuperarCodigoCustom("25", cdsisrol));
+		}
+		catch(Exception ex)
+		{
+			resp.getSmap().put("customCode", "/* error */");
+			logger.error("Error sin impacto al recuperar codigo custom",ex);
+		}
+		
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@ ").append(resp)

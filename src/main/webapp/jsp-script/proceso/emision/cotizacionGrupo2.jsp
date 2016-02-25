@@ -1532,6 +1532,9 @@ Ext.onReady(function()
         });
     }
     //para ramo 1 quieren heredar derechos de poliza según paquete
+    
+    //codigo dinamico recuperado de la base de datos
+    <s:property value="smap1.customCode" escapeHtml="false" />
     ////// custom //////
     
     ////// loaders //////

@@ -2478,6 +2478,9 @@ function _datComTurnarSuscripcion()
                 venDocuTramite.collapse();
                 //para ver documentos en vivo
                 
+                //codigo dinamico recuperado de la base de datos
+                <s:property value="map1.customCode" escapeHtml="false" />
+                
                 ///////////////////////////////////////////////
                 ////// Cargador de formulario (sin grid) //////
                 /*///////////////////////////////////////////*/
