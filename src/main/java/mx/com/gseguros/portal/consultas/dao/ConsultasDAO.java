@@ -492,4 +492,8 @@ public interface ConsultasDAO
 	public List<Map<String,String>> cargarCotizadoresActivos(String cadena) throws Exception;
 	
 	public String recuperarCodigoCustom(String cdpantalla, String cdsisrol) throws Exception;
+	
+	public String recuperarPermisoBotonEmitir(String cdsisrol, String cdusuari, String cdtipsit) throws Exception;
+	
+	public List<Map<String,String>> recuperarClavesPlanRamo4(String cdramo, String cdusuari, String cdtipsit) throws Exception;
 }

@@ -3757,7 +3757,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("pv_cdsisrol_i" , cdsisrol);
 		Map<String,Object> procRes  = ejecutaSP(new RecuperarDias(getDataSource()),params);
 		String dias = (String)procRes.get("pv_rangofec_o");
-		logger.debug(Utils.log("VILS dias >>> ",dias));
+		logger.debug(Utils.log("Dias permitidos para valor Factura: ",dias));
 		if(StringUtils.isBlank(dias))
 		{
 			throw new ApplicationException(Utils.join("Error al consultar los dias para la fecha de facturacion ",cdtipsit,"/",cdsisrol));
@@ -3949,7 +3949,8 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	public List<Map<String,String>> cargarCotizadoresActivos(String cadena)throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
-		params.put("cadena" , cadena);Map<String,Object>       procRes = ejecutaSP(new cargarCotizadoresActivosSP(getDataSource()),params);
+		params.put("cadena" , cadena);
+		Map<String,Object> procRes = ejecutaSP(new cargarCotizadoresActivosSP(getDataSource()),params);
 		List<Map<String,String>> list    = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		
 		return list;
@@ -3962,6 +3963,71 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			super(dataSource,"PKG_CONSULTA.P_GET_COTIZADORES_ACTIVOS");
 			declareParameter(new SqlParameter("cadena" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{ "cdusuari", "dsusuari" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String recuperarPermisoBotonEmitir(String cdsisrol, String cdusuari, String cdtipsit) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdsisrol" , cdsisrol);
+		params.put("cdusuari" , cdusuari);
+		params.put("cdtipsit" , cdtipsit);
+		
+		Map<String,Object> procRes = ejecutaSP(new recuperarPermisoBotonEmitirSP(getDataSource()),params);
+		
+		String permiso = (String)procRes.get("pv_swemitir_o");
+		if(StringUtils.isBlank(permiso))
+		{
+			permiso = "N";
+		}
+		
+		return permiso;
+	}
+	
+	protected class recuperarPermisoBotonEmitirSP extends StoredProcedure
+	{
+		protected recuperarPermisoBotonEmitirSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_PERMISO_BOTON_EMITIR");
+			
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_swemitir_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public  List<Map<String,String>>  recuperarClavesPlanRamo4(String cdramo, String cdtipsit, String cdplan) throws Exception
+	{
+		
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdramo"   , cdramo  );
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdplan" , cdplan);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarClavesPlanRamo4SP(getDataSource()),params);
+		List<Map<String,String>> list  = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		
+		return list;
+	}
+	
+	protected class RecuperarClavesPlanRamo4SP extends StoredProcedure
+	{
+		protected RecuperarClavesPlanRamo4SP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_TRAD.P_GET_PLANES_TRAD");
+			declareParameter(new SqlParameter("cdramo" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{ "otclave", "otvalor", "otvalor14"}; 	
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

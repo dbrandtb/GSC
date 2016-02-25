@@ -1085,6 +1085,9 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			{
 				throw new ApplicationException(respuesta);
 			}
+
+			//Pone vacio en los valores desc/rec de la lista
+			resp.setSlist(cotizacionAutoManager.validaVacioDescRecg(resp.getSlist()));
 			
 			//Para modificar solo PYMES ignorando el valor de vehiculo y haciendo consulta
 			if(tipoflot.equals("P"))

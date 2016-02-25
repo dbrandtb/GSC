@@ -163,6 +163,7 @@ var _p25_editorNombreGrupo=
 
 var _p25_editorPlan = <s:property value="imap.editorPlanesColumn" />.editor;
 _p25_editorPlan.on('change',_p25_editorPlanChange);
+_p25_editorPlan.on('blur',_p25_editorPlanHijos);
 debug('_p25_editorPlan:',_p25_editorPlan);
 
 var _p25_colsExtColumns =
@@ -2136,6 +2137,74 @@ function _p25_agregarTab(tab)
 function _p25_tabpanel()
 {
     return Ext.ComponentQuery.query('#_p25_tabpanel')[0];
+}
+
+function _p25_editorPlanHijos(combo)
+{
+	debug('>_p25_editorPlanHijos');
+
+	if(Number(_p25_smap1.cdramo)==4)
+		{
+		
+			Ext.Ajax.request(
+	        {
+	            url      : _p25_urlRecuperacion
+	            ,params  :
+	            {
+	            	 'params.consulta' :'RECUPERAR_CLAVES_PLAN_RAMO4'
+	                ,'params.cdramo'        : _p25_smap1.cdramo
+	                ,'params.cdtipsit'      : _p25_smap1.cdtipsit
+	                ,'params.cdplan'        : combo.getValue()
+	                
+	            }
+	        ,success : function(response)
+            {   
+	        	var ck = 'Recuperando dependientes de combo';                          
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### json resulatnte: _p25_editorPlanHijos',json);
+                    if(json.success==true)
+                    {
+                        var cols = _p25_query('#'+_p25_tabGrupos.itemId)[0].items.items[0].columns;
+                        for(var i=0;i<cols.length;i++)
+                        	{
+                        	 if(cols[i].text=='CLAVE DE PLAN')
+                        		 {
+                        		   var comboClave = cols[i].field;
+                        		   debug(comboClave);
+                        		   comboClave.store.removeAll();
+                        		   
+                        		   for(var j=0; j<json.list.length ;j++)
+                        			   {
+                        			   
+	                        			   comboClave.store.add( {
+	                        				   key   : json.list[j].otclave
+	                        				  ,value : json.list[j].otvalor
+	                        			   
+	                        			   } );
+                        			   
+                        			   }
+                        		 }
+                        	}
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                errorComunicacion(null,'Error al cargar dependientes de plan');
+            }
+			
+			});
+		}
 }
 
 function _p25_editorPlanChange(combo,newValue,oldValue,eOpts)

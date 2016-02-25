@@ -24,6 +24,7 @@ var urlPantallaBeneficiarios			   = '<s:url namespace="/catalogos"  action="incl
 var _p28_urlCargarIdUsu                    = '<s:url namespace="/emision"    action="obtieneIdUsu"        />';
 var urlReintentarWS                        = '<s:url namespace="/"        action="reintentaWSautos" />';
 var _urlEnviarCorreo                       = '<s:url namespace="/general" action="enviaCorreo"      />';
+var _p29_urlRecuperacion                   = '<s:url namespace="/recuperacion"    action="recuperar"                       />';
 ////// urls //////
 
 ////// variables //////
@@ -52,6 +53,7 @@ var _FechaMaxEdad  = _p29_smap1.FechaMaxEdad;
 
 var ramogs;
 var poliza;
+var _p29_habilitarBotonEmitir  = "S";
 
 var _url_domiciliacion = '<s:text name="portal.agentes.domiciliacion.url" />';
 var _URL_IDUSULOGIN = '<s:text name="sigs.obtenerIdususByLogin.url" />';
@@ -256,7 +258,8 @@ Ext.onReady(function()
 	                    itemId   : '_p29_botonEmitir'
 	                    ,text    : 'Emitir'
 	                    ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
-	                    ,handler : _p29_emitirClic
+	                    ,handler :  _p29_emitirClic
+                        ,hidden  :  (_p29_habilitarBotonEmitir == 'N')
 	                }
 	                ,{
 	                    itemId   : '_p29_botonGuardar'
@@ -316,6 +319,9 @@ Ext.onReady(function()
 	////// custom //////
 	
 	////// loaders //////
+	
+	bloquearBotonEmitir();
+	
 	Ext.Ajax.request(
 	{
 	    url     : _p29_urlCargarDatosComplementarios
@@ -462,7 +468,7 @@ Ext.onReady(function()
 	        	    	{
 	        	    		if(_p29_smap1.cdsisrol!='SUSCRIAUTO'){
 	        	    			mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
-	        					 _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
+	        					_fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
 	        				}else{
 	        					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
 	        					_fieldById('_p29_botonEmitir').setDisabled(false);
@@ -557,13 +563,13 @@ function _p29_loadCallback()
            		      	    	{
            		      	    		if(_p29_smap1.cdsisrol!='SUSCRIAUTO'){
            		      	    			mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
-           		      					 _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
+           		      	    	        _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
            		      				}else{
            		      					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
-           		      					_fieldById('_p29_botonEmitir').setDisabled(false);
+           		      				    _fieldById('_p29_botonEmitir').setDisabled(false);
            		      				}
            		      	    	}else{
-           		      	    		_fieldById('_p29_botonEmitir').setDisabled(false);
+           		      	    	    _fieldById('_p29_botonEmitir').setDisabled(false);
            		      	    	}
            				}
            				,failure : errorComunicacion
@@ -937,6 +943,7 @@ function _p29_mostrarVistaPrevia()
                                     ,text    : 'Emitir'
                                     ,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
                                     ,handler : _p29_emitirFinal
+//                                  ,hidden  : _p29_habilitarBotonEmitir == 'N'
                                 },{
                                 	itemId : 'botonEnvioEmail'
                                     ,xtype : 'button'
@@ -1440,38 +1447,99 @@ function domiciliar()
           
       }).show());
     };
-    
-	
-    if (Ext.isEmpty(claveUsuarioCaptura)) {
-    	_mask('Cargando domiciliaci\u00f3n');
-       Ext.Ajax.request(
-                 { 
-                     url     : _p28_urlCargarIdUsu
-                     ,params :
-                     {
-                         'smap1.cdusuari' : _p29_smap1.cdusuari
-                     }
-                     ,success : function(response)
-                     {
-                    	 _unmask();
-                        var json = Ext.decode(response.responseText);
-                        if(json.success == true){
-                            
-                            callbackFunction(json.smap1.idUsu);
-                                                 }
-                        else{console.log(json.respuesta);}
-                     }
-                     ,failure  : function(response)
-                     {   _unmask();
-                         console.log(response);
-                     }
-                }
-              );
-            }
-    else {
-          callbackFunction(claveUsuarioCaptura);
-         }
+  
+    callbackFunction(claveUsuarioCaptura);
 }
+
+function obtenerIDUsusigs(callback)
+{
+	if (Ext.isEmpty(claveUsuarioCaptura)) {
+    
+		_mask('Cargando Usuario');
+	    Ext.Ajax.request(
+            { 
+                url     : _p28_urlCargarIdUsu
+                ,params :
+                {
+                    'smap1.cdusuari' : _p29_smap1.cdusuari
+                }
+                ,success : function(response)
+                {
+                    _unmask();
+                   var json = Ext.decode(response.responseText);
+                   if(json.success == true){
+                       
+                	   claveUsuarioCaptura = json.smap1.idUsu;
+                	   
+                	   if(!Ext.isEmpty(callback))
+                	   {
+                		   callback();
+                	   }
+                                            }
+                   else{console.log(json.respuesta);}
+                }
+                ,failure  : function(response)
+                {   _unmask();
+                    console.log(response);
+                }
+           }
+         );
+    }
+}
+
+function bloquearBotonEmitir() 
+{
+      Ext.Ajax.request(
+            {
+                 url     : _p29_urlRecuperacion
+                ,params :
+                {
+                     'params.consulta'     : 'RECUPERAR_ESTADO_BOTON_EMITIR'
+                    ,'params.cdtipsit'     : _p29_smap1.cdtipsit
+                }
+                ,success : function(response)
+                {
+                	_unmask();
+                    var json = Ext.decode(response.responseText);
+                    debug('### Response Boton Comprar:',json);
+                    if(json.success ==  true)
+                    {
+                    	var ck = 'Decodificando respuesta al recuperar permisos de boton Comprar';
+                        try
+                        {
+                            var json = Ext.decode(response.responseText);
+                            debug('### permisos boton comprar:',json);
+                            if(json.success==true)
+                            {
+                                if(json.params.ACTIVAR_BOTON_COMPRAR == 'N')
+                                    { mensajeWarning('Sin permisos para Emitir');
+                                      _fieldById('_p29_botonEmitir').hide();
+                                    }
+                                
+                                _p29_habilitarBotonEmitir = json.params.ACTIVAR_BOTON_COMPRAR+"";
+                            }
+                            else
+                            {
+                                mensajeError(json.message);
+                            }
+                        }
+                        catch(e)
+                        {
+                            manejaException(e,ck);
+                        }                    
+                    }
+                    else
+                    {
+                        mensajeError(json.respuesta);
+                    }
+                }
+                ,failure : function()
+                {
+                	_unmask();
+                    errorComunicacion();
+                }
+            });
+        }
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
