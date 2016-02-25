@@ -3149,6 +3149,9 @@ Ext.onReady(function()
             errorComunicacion();
         }
     });
+    
+    //codigo dinamico recuperado de la base de datos
+    <s:property value="smap1.customCode" escapeHtml="false" />
     ////// custom //////
     
     ////// loaders //////

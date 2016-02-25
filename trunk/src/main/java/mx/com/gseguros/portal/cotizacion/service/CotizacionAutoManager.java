@@ -46,6 +46,7 @@ public interface CotizacionAutoManager
 			,String nmpoliza
 			,String ntramite
 			,String cdusuari
+			,String cdsisrol
 			)throws Exception;
 	public ManagerRespuestaSmapVO cargarDatosComplementariosAutoInd(
 			String cdunieco
@@ -159,6 +160,7 @@ public interface CotizacionAutoManager
 			,String nmpoliza
 			,String ntramite
 			,String cdusuari
+			,String cdsisrol
 			)throws Exception;
 	public ManagerRespuestaVoidVO guardarComplementariosAutoFlotilla(
 			String cdunieco

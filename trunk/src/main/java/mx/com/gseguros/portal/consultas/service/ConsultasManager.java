@@ -127,4 +127,6 @@ public interface ConsultasManager
 	
 	@Deprecated
 	public Map<String,String> recuperarDatosFlujoEmision(String cdramo, String tipoflot) throws Exception;
+	
+	public String recuperarCodigoCustom(String cdpantalla, String cdsisrol) throws Exception;
 }

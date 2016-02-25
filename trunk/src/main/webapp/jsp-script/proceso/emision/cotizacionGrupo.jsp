@@ -1297,6 +1297,9 @@ Ext.onReady(function()
     {
         debugError('error inofensivo al querer mover boton de agentes',e);
     }
+    
+    //codigo dinamico recuperado de la base de datos
+    <s:property value="smap1.customCode" escapeHtml="false" />
     ////// custom //////
     
     ////// loaders //////

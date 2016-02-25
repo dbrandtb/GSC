@@ -370,6 +370,17 @@ public class ConsultasManagerImpl implements ConsultasManager
 		return consultasDAO.recuperarDatosFlujoEmision(cdramo,tipoflot);
 	}
 	
+	@Override
+	public String recuperarCodigoCustom(String cdpantalla, String cdsisrol) throws Exception
+	{
+		logger.debug(Utils.log("\n@@@@@@ > recuperarCodigoCustom cdpantalla=", cdpantalla, ", cdsisrol=", cdsisrol));
+		
+		String codigo = consultasDAO.recuperarCodigoCustom(cdpantalla,cdsisrol);
+		
+		logger.debug(Utils.log("\n@@@@@@ < recuperarCodigoCustom codigo=", codigo));
+		return codigo;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	///////////////////////////////

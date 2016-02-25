@@ -299,7 +299,18 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			gcTatripol.generaComponentes(tatripol, true, false, true, false, false, false);
 			resp.getImap().put("tatripolItems" , gcTatripol.getItems());
 			
+			paso = "Recuperando codigo custom de pantalla";
+			logger.debug(paso);
 			
+			try
+			{
+				resp.getSmap().put("customCode", consultasDAO.recuperarCodigoCustom("28", cdsisrol));
+			}
+			catch(Exception ex)
+			{
+				resp.getSmap().put("customCode" , "/* error */");
+				logger.error("Error sin impacto funcional");
+			}
 		}
 		catch(Exception ex)
 		{
@@ -440,21 +451,21 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String nmpoliza
 			,String ntramite
 			,String cdusuari
+			,String cdsisrol
 			)throws Exception
 	{
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ emisionAutoIndividual @@@@@@")
-				.append("\n@@@@@@ cdunieco=").append(cdunieco)
-				.append("\n@@@@@@ cdramo=")  .append(cdramo)
-				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
-				.append("\n@@@@@@ estado=")  .append(estado)
-				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
-				.append("\n@@@@@@ ntramite=").append(ntramite)
-				.append("\n@@@@@@ cdusuari=").append(cdusuari)
-				.toString()
-				);
+		logger.info(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ emisionAutoIndividual @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ cdtipsit=" , cdtipsit
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ ntramite=" , ntramite
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				));
 		
 		ManagerRespuestaImapSmapVO resp=new ManagerRespuestaImapSmapVO(true);
 		resp.setImap(new HashMap<String,Item>());
@@ -519,6 +530,16 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.getImap().put("agenteFields" , gc.getFields());
 			resp.getImap().put("agenteItems"  , gc.getItems());
 			
+			paso = "Recuperando codigo custom de pantalla";
+			try
+			{
+				resp.getSmap().put("customCode" , consultasDAO.recuperarCodigoCustom("29", cdsisrol));
+			}
+			catch(Exception ex)
+			{
+				resp.getSmap().put("customCode" , "/* error */");
+				logger.error("Error sin impacto funcional", ex);
+			}
 			
 		}
 		catch(Exception ex)
@@ -1668,7 +1689,15 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				resp.getImap().put("tatripolItems" , null);
 			}
 			
-			
+			try
+			{
+				resp.getSmap().put("customCode", consultasDAO.recuperarCodigoCustom("30", cdsisrol));
+			}
+			catch(Exception ex)
+			{
+				resp.getSmap().put("customCode" , "/* error */");
+				logger.error("Error sin impacto funcional");
+			}
 		}
 		catch(Exception ex)
 		{
@@ -3193,21 +3222,21 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String nmpoliza
 			,String ntramite
 			,String cdusuari
+			,String cdsisrol
 			)throws Exception
 	{
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ emisionAutoFlotilla @@@@@@")
-				.append("\n@@@@@@ cdunieco=").append(cdunieco)
-				.append("\n@@@@@@ cdramo=")  .append(cdramo)
-				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
-				.append("\n@@@@@@ estado=")  .append(estado)
-				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
-				.append("\n@@@@@@ ntramite=").append(ntramite)
-				.append("\n@@@@@@ cdusuari=").append(cdusuari)
-				.toString()
-				);
+		logger.info(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ emisionAutoFlotilla @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ cdtipsit=" , cdtipsit
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ ntramite=" , ntramite
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				));
 		
 		ManagerRespuestaImapSmapVO resp=new ManagerRespuestaImapSmapVO(true);
 		resp.setImap(new HashMap<String,Item>());
@@ -3300,7 +3329,16 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.getImap().put("agenteFields" , gc.getFields());
 			resp.getImap().put("agenteItems"  , gc.getItems());
 			
-			
+			paso = "Recuperando codigo custom de pantalla";
+			try
+			{
+				resp.getSmap().put("customCode" , consultasDAO.recuperarCodigoCustom("31", cdsisrol));
+			}
+			catch(Exception ex)
+			{
+				resp.getSmap().put("customCode" , "/* error */");
+				logger.error("Error sin impacto funcional", ex);
+			}
 		}
 		catch(Exception ex)
 		{

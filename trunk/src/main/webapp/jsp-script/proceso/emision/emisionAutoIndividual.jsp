@@ -310,6 +310,9 @@ Ext.onReady(function()
 	////// custom //////
 	_fieldByLabel('AGENTE').hide();
 	_fieldByName('porparti').setMaxValue(99);
+	
+	//codigo dinamico recuperado de la base de datos
+	<s:property value="smap1.customCode" escapeHtml="false" />
 	////// custom //////
 	
 	////// loaders //////

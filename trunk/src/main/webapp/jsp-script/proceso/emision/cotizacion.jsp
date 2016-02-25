@@ -3597,6 +3597,9 @@ Ext.onReady(function()
     
     // Para TODOS LOS PRODUCTOS (si aplican), se agrega validacion de Codigo Postal vs Estado:
     agregaValidacionCPvsEstado();
+    
+    //codigo dinamico recuperado de la base de datos
+    <s:property value="smap1.customCode" escapeHtml="false" />
 
 });
 </script>

@@ -3968,4 +3968,41 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public String recuperarCodigoCustom(String cdpantalla, String cdsisrol) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdpantalla" , cdpantalla);
+		params.put("cdsisrol"   , cdsisrol);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarCodigoCustomSP(getDataSource()),params);
+		String codigo = (String)procRes.get("codigo");
+		if(StringUtils.isBlank(codigo))
+		{
+			codigo = Utils.join("/* sin codigo custom para pantalla ",cdpantalla," y rol ",cdsisrol," */");
+		}
+		codigo = Utils.join(
+				 "\n/*********************************************************/"
+				,"\n/****** INICIO DE CODIGO CUSTOM DESDE BASE DE DATOS ******/\n"
+				,codigo
+				,"\n/****** FIN DE CODIGO CUSTOM DESDE BASE DE DATOS ******/"
+				,"\n/******************************************************/"
+				);
+		logger.debug(Utils.log("\n****** codigo=", codigo));
+		return codigo;
+	}
+	
+	protected class RecuperarCodigoCustomSP extends StoredProcedure
+	{
+		protected RecuperarCodigoCustomSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_CODIGO_CUSTOM_PANTALLA");
+			declareParameter(new SqlParameter("cdpantalla" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("codigo"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

@@ -324,7 +324,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			String cdusuari  = usuario.getUser()
 			       ,cdsisrol = usuario.getRolActivo().getClave();
 			
-			ManagerRespuestaImapSmapVO resp=cotizacionAutoManager.emisionAutoIndividual(cdunieco,cdramo,cdtipsit,estado,nmpoliza,ntramite,cdusuari);
+			ManagerRespuestaImapSmapVO resp=cotizacionAutoManager.emisionAutoIndividual(cdunieco,cdramo,cdtipsit,estado,nmpoliza,ntramite,cdusuari,cdsisrol);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			
@@ -1237,6 +1237,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					,nmpoliza
 					,ntramite
 					,cdusuari
+					,cdsisrol
 					);
 			
 			exito     = resp.isExito();
