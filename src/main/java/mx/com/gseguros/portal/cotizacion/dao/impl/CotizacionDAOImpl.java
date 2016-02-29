@@ -4440,9 +4440,9 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	 String otclave = null;
     	 for(Map<String,String>elem:lista)
     	 {
-    		 if(elem.get("OTVALOR").equals(otvalor))
+    		 if(elem.get("OTVALOR").trim().equals(otvalor.trim()))	
     		 {
-    			 otclave = elem.get("OTCLAVE");
+    			otclave = elem.get("OTCLAVE");
     		 }
     	 }
     	 if(otclave==null)
