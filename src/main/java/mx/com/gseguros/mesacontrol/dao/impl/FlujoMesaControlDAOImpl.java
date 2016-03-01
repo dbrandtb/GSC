@@ -350,8 +350,8 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("cdtipflu" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdestadomc" , OracleTypes.VARCHAR));
-			String[] cols=new String[]{ "CDTIPFLU","CDFLUJOMC","CDESTADOMC","CDSISROL", "SWVER", "SWTRABAJO", 
-										"SWCOMPRA", "SWREASIG", "CDROLASIG" };
+			String[] cols=new String[]{ "CDTIPFLU","CDFLUJOMC","CDESTADOMC", "CDSISROL", "SWVER", "SWTRABAJO", 
+										"SWCOMPRA", "SWREASIG", "CDROLASIG", "SWVERDEF" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -821,18 +821,31 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	
 	// SP 25
 	@Override
-	public void movimientoTfluestrol(String cdtipflu,String cdflujomc,String cdestadomc,String cdsisrol,String swver,String swtrabajo,String swcompra,String swreasig,String cdrolasig,String accion) throws Exception
+	public void movimientoTfluestrol(
+			String cdtipflu
+			,String cdflujomc
+			,String cdestadomc
+			,String cdsisrol
+			,String swver
+			,String swtrabajo
+			,String swcompra
+			,String swreasig
+			,String cdrolasig
+			,String swverdef
+			,String accion
+			)throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdtipflu"   , cdtipflu);
-		params.put("cdflujomc"   , cdflujomc);
-		params.put("cdestadomc"   , cdestadomc);
+		params.put("cdflujomc"  , cdflujomc);
+		params.put("cdestadomc" , cdestadomc);
 		params.put("cdsisrol"   , cdsisrol);
-		params.put("swver"   , swver);
-		params.put("swtrabajo"   , swtrabajo);
+		params.put("swver"      , swver);
+		params.put("swtrabajo"  , swtrabajo);
 		params.put("swcompra"   , swcompra);
 		params.put("swreasig"   , swreasig);
-		params.put("cdrolasig"   , cdrolasig);
+		params.put("cdrolasig"  , cdrolasig);
+		params.put("swverdef"   , swverdef);
 		params.put("accion"     , accion);
 		
 		ejecutaSP(new MovimientoTfluestrolSP(getDataSource()),params);
@@ -852,6 +865,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("cdrolasig"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("swver"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("swtrabajo"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swverdef"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("accion"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));

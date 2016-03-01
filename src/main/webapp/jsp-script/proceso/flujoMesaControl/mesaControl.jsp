@@ -45,6 +45,22 @@ for(var i in _p54_filtroItemsDin)
 {
     _p54_filtroItems.push(_p54_filtroItemsDin[i]);
 }
+
+_p54_gridButtons = [ <s:property value="items.botonesGrid" escapeHtml="false" /> ];
+
+/*
+/////////////////////////////
+//No hay filtrado en paginado
+/////////////////////////////
+
+_p54_gridButtons.push('->');
+_p54_gridButtons.push(
+{
+    xtype       : 'textfield'
+    ,fieldLabel : '<span style="color:white;">Filtro (pend.):</span>'
+    ,labelWidth : 60
+});
+*/
 ////// componentes dinamicos //////
 
 Ext.onReady(function()
@@ -181,7 +197,7 @@ Ext.onReady(function()
                         }
                     }
                     ,{
-                        text     : 'Reporte'
+                        text     : 'Reporte (pendiente)'
                         ,icon    : '${icons}printer.png'
                         ,handler : function(me)
                         {}
@@ -190,26 +206,10 @@ Ext.onReady(function()
             })
             ,Ext.create('Ext.grid.Panel',
             {
-                title   : 'Tareas'
-                ,itemId : '_p54_grid'
-                ,height : 420
-                ,tbar   :
-                [
-                    {
-                        text     : 'Nuevo tr\u00e1mite'
-                        ,icon    : '${icons}add.png'
-                        ,handler : function(me)
-                        {
-                            _p54_windowNuevo.showNew();
-                        }
-                    }
-                    ,'->'
-                    ,{
-                        xtype       : 'textfield'
-                        ,fieldLabel : '<span style="color:white;">Filtro:</span>'
-                        ,labelWidth : 60
-                    }
-                ]
+                title        : 'Tareas'
+                ,itemId      : '_p54_grid'
+                ,height      : 420
+                ,tbar        : _p54_gridButtons
                 ,columns     : [ <s:property value="items.gridColumns" escapeHtml="false" /> ]
                 ,store       : _p54_store
                 ,dockedItems :
@@ -506,6 +506,33 @@ Ext.onReady(function()
             }
         }
     });
+    
+    try
+    {
+        var comboStatus = _fieldByLabel('STATUS');
+        
+        debug('comboStatus:',comboStatus);
+        
+        comboStatus.store.padre = comboStatus;
+        comboStatus.store.on(
+        {
+            load : function(me)
+            {
+                me.padre.forceSelection = true;
+                me.padre.setEditable(true);
+            }
+        });
+        
+        if(comboStatus.store.getCount()>0)
+        {
+            comboStatus.forceSelection = true;
+            comboStatus.setEditable(true);
+        }
+    }
+    catch(e)
+    {
+        manejaException(e);
+    }
     ////// custom //////
     
     ////// loaders //////

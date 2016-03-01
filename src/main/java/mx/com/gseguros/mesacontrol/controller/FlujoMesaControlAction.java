@@ -1328,7 +1328,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String recuperarTramites()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n###############################"
 				,"\n###### recuperarTramites ######"
 				,"\n###### params=" , params
@@ -1354,7 +1354,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,cdagente = params.get("CDAGENTE")
 			       ,ntramite = params.get("NTRAMITE")
 			       ,fedesde  = params.get("FEDESDE")
-			       ,fehasta  = params.get("FEHASTA");			
+			       ,fehasta  = params.get("FEHASTA");
 			
 			Utils.validate(
 					agrupamc , "No se recibi\u00f3n el agrupador"
@@ -1371,8 +1371,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			}
 			
 			Map<String,Object> manRes = flujoMesaControlManager.recuperarTramites(
-					sb
-					,agrupamc
+					agrupamc
 					,status
 					,usuario.getUser()
 					,usuario.getRolActivo().getClave()
@@ -1394,13 +1393,11 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### list=",list
 					,"\n###### recuperarTramites ######"
 					,"\n###############################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{

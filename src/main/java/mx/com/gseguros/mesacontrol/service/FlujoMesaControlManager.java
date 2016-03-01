@@ -206,8 +206,7 @@ public interface FlujoMesaControlManager
 			)throws Exception;
 	
 	public Map<String,Object> recuperarTramites(
-			StringBuilder sb
-			,String agrupamc
+			String agrupamc
 			,String status
 			,String cdusuari
 			,String cdsisrol

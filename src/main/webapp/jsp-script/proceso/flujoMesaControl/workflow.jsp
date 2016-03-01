@@ -1769,6 +1769,12 @@ Ext.onReady(function()
                                                 ,width     : 55
                                             }
                                             ,{
+                                                text       : 'INICIO'
+                                                ,xtype     : 'checkcolumn'
+                                                ,dataIndex : 'SWVERDEF'
+                                                ,width     : 55
+                                            }
+                                            ,{
                                                 text       : 'TRAB.'
                                                 ,xtype     : 'checkcolumn'
                                                 ,dataIndex : 'SWTRABAJO'
@@ -1796,6 +1802,7 @@ Ext.onReady(function()
                                                 ,'DSSISROL'
                                                 ,{ name : 'SWVER'     , type : 'boolean' }
                                                 ,{ name : 'SWTRABAJO' , type : 'boolean' }
+                                                ,{ name : 'SWVERDEF'  , type : 'boolean' }
                                                 ,{ name : 'SWCOMPRA'  , type : 'boolean' }
                                                 ,{ name : 'SWREASIG'  , type : 'boolean' }
                                                 ,'CDROLASIG'
@@ -3744,6 +3751,7 @@ function _p52_cargarDatosEstado(cdestadomc)
         {
             record.set('SWVER'     , false);
             record.set('SWTRABAJO' , false);
+            record.set('SWVERDEF'  , false);
             record.set('SWCOMPRA'  , false);
             record.set('SWREASIG'  , false);
         });
@@ -3799,6 +3807,10 @@ function _p52_cargarDatosEstado(cdestadomc)
                                     if('S'==ite.SWTRABAJO)
                                     {
                                         record.set('SWTRABAJO',true);
+                                    }
+                                    if('S'==ite.SWVERDEF)
+                                    {
+                                        record.set('SWVERDEF',true);
                                     }
                                     if('S'==ite.SWCOMPRA)
                                     {
@@ -4102,6 +4114,7 @@ function _p52_guardarDatosEstado(bot,callback)
             datos.TIPO      = 'P';
             datos.SWVER     = record.get("SWVER")     ? "S" : "N";
             datos.SWTRABAJO = record.get("SWTRABAJO") ? "S" : "N";
+            datos.SWVERDEF  = record.get("SWVERDEF")  ? "S" : "N";
             datos.SWCOMPRA  = record.get("SWCOMPRA")  ? "S" : "N";
             datos.SWREASIG  = record.get("SWREASIG")  ? "S" : "N";
             jsonData.list.push(datos);
