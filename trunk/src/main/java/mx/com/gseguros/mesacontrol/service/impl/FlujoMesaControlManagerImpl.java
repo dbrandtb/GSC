@@ -20,11 +20,15 @@ import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
+public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
+{
+	private static Logger logger = LoggerFactory.getLogger(FlujoMesaControlManagerImpl.class);
 	
 	@Autowired
 	private FlujoMesaControlDAO flujoMesaControlDAO;
@@ -792,6 +796,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 							,"S".equals(ite.get("SWCOMPRA")) ? "S" : "N"
 							,"S".equals(ite.get("SWREASIG")) ? "S" : "N"
 							,"" //cdrolasig
+							,"S".equals(ite.get("SWVERDEF")) ? "S" : "N"
 							,"I"
 							);
 				}
@@ -1549,6 +1554,18 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 					,null //orden
 					);
 			
+			List<ComponenteVO> botones = pantallasDAO.obtenerComponentes(
+					agrupamc //cdtiptra
+					,null //cdunieco
+					,null //cdramo
+					,null //cdtipsit
+					,null //estado
+					,cdsisrol
+					,"MESA_CONTROL"//pantalla
+					,"BOTONES"//seccion
+					,null //orden
+					);
+			
 			paso = "Generando componentes";
 			sb.append("\n").append(paso);
 			
@@ -1567,6 +1584,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			gc.generaComponentes(form, true, false, true, false, false, false);
 			
 			items.put("formItems" , gc.getItems());
+			
+			gc.generaComponentes(botones, true, false, false, false, false, true);
+			
+			items.put("botonesGrid" , gc.getButtons());
 			
 			Map<String,String> mapa = new HashMap<String,String>();
 			if(cdsisrol.equals(RolSistema.AGENTE.getCdsisrol()))
@@ -1592,8 +1613,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 	
 	@Override
 	public Map<String,Object> recuperarTramites(
-			StringBuilder sb
-			,String agrupamc
+			String agrupamc
 			,String status
 			,String cdusuari
 			,String cdsisrol
@@ -1610,7 +1630,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 			,int limit
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarTramites @@@@@@"
 				,"\n@@@@@@ agrupamc=" , agrupamc
@@ -1634,7 +1654,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 		try
 		{
 			paso = "Recuperando tr\u00e1mites";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			result = flujoMesaControlDAO.recuperarTramites(
 					agrupamc
@@ -1653,13 +1673,14 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager {
 					,start
 					,limit
 					);
+			
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ result=" , result
 				,"\n@@@@@@ recuperarTramites @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

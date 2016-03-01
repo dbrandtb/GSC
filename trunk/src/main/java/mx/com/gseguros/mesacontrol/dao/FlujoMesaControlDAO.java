@@ -264,13 +264,23 @@ public interface FlujoMesaControlDAO {
 	 * @param swcompra
 	 * @param swreasig
 	 * @param cdrolasig
+	 * @param swverdef
 	 * @param accion
 	 * @throws Exception
 	 */
-	public void movimientoTfluestrol(String cdtipflu, String cdflujomc,
-			String cdestadomc, String cdsisrol, String swver, String swtrabajo,
-			String swcompra, String swreasig, String cdrolasig, String accion)
-			throws Exception;
+	public void movimientoTfluestrol(
+			String cdtipflu
+			,String cdflujomc
+			,String cdestadomc
+			,String cdsisrol
+			,String swver
+			,String swtrabajo
+			,String swcompra
+			,String swreasig
+			,String cdrolasig
+			,String swverdef
+			,String accion
+			)throws Exception;
 
 	/**
 	 * 
