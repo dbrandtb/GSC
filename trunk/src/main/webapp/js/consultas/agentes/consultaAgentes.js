@@ -156,10 +156,10 @@ Ext.onReady(function() {
            title: 'P&Oacute;LIZA - AGENTE',
            modal:true,
            height: 230,
-           //closable: (datoRequerido == 1) ,
+           closable: false ,
            closeAction: 'hide',
            items:[panelModificacionInsercion],
-           
+           buttonAlign : 'center',
            buttons:[{
                   text: 'Aceptar',
                   icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
@@ -232,6 +232,7 @@ Ext.onReady(function() {
               },
             {
                   text: 'Cancelar',
+                  id  :'btnCancelar',
                   icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
                   handler: function() {
 					ventanaGrid.close();
@@ -514,8 +515,11 @@ Ext.onReady(function() {
                                     	bandera= 0;
                                         valorIndex=0;
                                         //datoRequerido = 0;
+                                        Ext.getCmp('btnCancelar').disable();
                                         actualizacionInsercion(null,null,null,null);
                 					});
+                                }else{
+                                	Ext.getCmp('btnCancelar').enable();
                                 }
                             }else{
                                 Ext.getCmp('btnAgregarAgente').disable();
@@ -631,8 +635,11 @@ Ext.onReady(function() {
 					                    	bandera= 0;
 					                        valorIndex=0;
 					                        //datoRequerido = 0;
+					                        Ext.getCmp('btnCancelar').disable();
 					                        actualizacionInsercion(null,null,null,null);
 										});
+					                }else{
+					                	Ext.getCmp('btnCancelar').enable();
 					                }
 					            }else{
 					                Ext.Msg.show({
@@ -679,8 +686,11 @@ Ext.onReady(function() {
                     	bandera= 0;
                         valorIndex=0;
                         //datoRequerido = 0;
+                        Ext.getCmp('btnCancelar').disable();
                         actualizacionInsercion(null,null,null,null);
 					});
+                }else{
+                	Ext.getCmp('btnCancelar').enable();
                 }
             }else{
                 Ext.getCmp('btnAgregarAgente').disable();
