@@ -519,7 +519,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						
 						File local = new File(filePath);
 						
-						InputStream remoto = HttpUtil.obtenInputStream(cddocume);
+						InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
 						FileUtils.copyInputStreamToFile(remoto, local);
 					}
 					
@@ -1435,7 +1435,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					
 					File local = new File(filePath);
 					
-					InputStream remoto = HttpUtil.obtenInputStream(cddocume);
+					InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
 					FileUtils.copyInputStreamToFile(remoto, local);
 				}
 				

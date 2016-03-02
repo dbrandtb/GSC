@@ -608,4 +608,13 @@ public interface CotizacionDAO {
 			,String nmsituac
 			)throws Exception;
 	
+	public void reenumerarSituaciones(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			)throws Exception;
+	
 }
