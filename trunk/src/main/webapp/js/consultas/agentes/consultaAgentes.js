@@ -11,6 +11,7 @@ Ext.onReady(function() {
     var valorIndex= 0;
     var contadorGral = 0;
     var datosInternos = [];
+    //var datoRequerido= 1;
 
     /*GENERACION DE MODELOS Y STORE*/
     Ext.define('modeloGridClau',{
@@ -155,6 +156,7 @@ Ext.onReady(function() {
            title: 'P&Oacute;LIZA - AGENTE',
            modal:true,
            height: 230,
+           //closable: (datoRequerido == 1) ,
            closeAction: 'hide',
            items:[panelModificacionInsercion],
            
@@ -232,8 +234,7 @@ Ext.onReady(function() {
                   text: 'Cancelar',
                   icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
                   handler: function() {
-                       Ext.getCmp('btnGuardaRegistro').disable();
-                      ventanaGrid.close();
+					ventanaGrid.close();
                   }
             }
            ]
@@ -342,7 +343,6 @@ Ext.onReady(function() {
 			                    icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
 			                    text: 'Agregar agente',
 			                    id:'btnAgregarAgente',
-			                    disabled:true,
 			                    scope: this,
 			                    handler: function() {
 			                        bandera= 0;
@@ -375,7 +375,6 @@ Ext.onReady(function() {
             ,buttons : [{
                 text: "Guardar"
                 ,id:'btnGuardaRegistro'    
-                ,disabled:true
                 ,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
                 ,
                 handler: function() {
@@ -437,6 +436,7 @@ Ext.onReady(function() {
                                         if(jsonResp.success==true){
                                         	contadorGral=0;
                                             datosInternos = [];
+                                            Ext.getCmp('btnGuardaRegistro').disable();
                                             centrarVentanaInterna(Ext.Msg.show({
                                                 title:'Guardado',
                                                 msg: 'Se modificaron los datos de los agentes',
@@ -446,12 +446,12 @@ Ext.onReady(function() {
                                             expande(1);
                                         }
                                         else{
-                                            Ext.Msg.show({
+                                        	centrarVentanaInterna(Ext.Msg.show({
                                                 title:'Error',
                                                 msg: 'Error al modificar los registros del Agente',
                                                 buttons: Ext.Msg.OK,
                                                 icon: Ext.Msg.ERROR
-                                            });
+                                            }));
                                         }
                                     },
                                     failure:function(response,opts)
@@ -480,19 +480,18 @@ Ext.onReady(function() {
                 		{
                     		mensaje= 'El agente no se puede repetir';
                 		}
-                    	Ext.Msg.show({
+                    	centrarVentanaInterna(Ext.Msg.show({
                                title: 'Aviso',
                                msg: mensaje,
                                buttons: Ext.Msg.OK,
                                icon: Ext.Msg.WARNING
-                           });
+                           }));
                     }
                 }    
             },
             {
                 text: "Recargar"
                 ,id:'btnRecargar'
-                ,disabled:true
                 ,icon:_CONTEXT+'/resources/fam3icons/icons/arrow_refresh.png'
                 , handler: function() {
                     storGridClau.removeAll();
@@ -511,15 +510,12 @@ Ext.onReady(function() {
                                 if(records.length <= 0){
                                     Ext.getCmp('btnAgregarAgente').disable();
                                     Ext.getCmp('btnRecargar').disable();
-                                    Ext.Msg.show({
-                                         title: 'Aviso',
-                                         msg: 'No se encontraron datos',
-                                         buttons: Ext.Msg.OK,
-                                         icon: Ext.Msg.ERROR
-                                     });
-                                }else{
-                                    Ext.getCmp('btnAgregarAgente').enable();
-                                    Ext.getCmp('btnRecargar').enable();
+                                    mensajeWarning('No se encontraron datos, se requiere al menos un Agente',function(){
+                                    	bandera= 0;
+                                        valorIndex=0;
+                                        //datoRequerido = 0;
+                                        actualizacionInsercion(null,null,null,null);
+                					});
                                 }
                             }else{
                                 Ext.getCmp('btnAgregarAgente').disable();
@@ -546,36 +542,6 @@ Ext.onReady(function() {
 			'params.estado' : Ext.getCmp('estado').getValue(),
 			'params.nmpoliza' : Ext.getCmp('poliza').getValue()
 		};
-		
-		storGridClau.load({
-			params: params,
-			callback: function(records, operation, success){
-				if(success){
-					if(records.length <= 0){
-						Ext.getCmp('btnAgregarAgente').disable();
-						Ext.getCmp('btnRecargar').disable();
-						Ext.Msg.show({
-							 title: 'Aviso',
-							 msg: 'No se encontraron datos',
-							 buttons: Ext.Msg.OK,
-							 icon: Ext.Msg.ERROR
-						 });
-					}else{
-						Ext.getCmp('btnAgregarAgente').enable();
-						Ext.getCmp('btnRecargar').enable();
-					}
-				}else{
-					Ext.getCmp('btnAgregarAgente').disable();
-					Ext.getCmp('btnRecargar').disable();
-					Ext.Msg.show({
-						 title: 'Error',
-						 msg: 'Error al obtener los datos',
-						 buttons: Ext.Msg.OK,
-						 icon: Ext.Msg.ERROR
-					 });
-				}
-			}
-		});
 		
     	if(bandera == 0)
         {
@@ -661,21 +627,14 @@ Ext.onReady(function() {
 					        callback: function(records, operation, success){
 					            if(success){
 					                if(records.length <= 0){
-					                    Ext.getCmp('btnAgregarAgente').disable();
-					                    Ext.getCmp('btnRecargar').disable();
-					                    Ext.Msg.show({
-					                         title: 'Aviso',
-					                         msg: 'No se encontraron datos',
-					                         buttons: Ext.Msg.OK,
-					                         icon: Ext.Msg.ERROR
-					                     });
-					                }else{
-					                    Ext.getCmp('btnAgregarAgente').enable();
-					                    Ext.getCmp('btnRecargar').enable();
+					                	mensajeWarning('No se encontraron datos, se requiere al menos un Agente',function(){
+					                    	bandera= 0;
+					                        valorIndex=0;
+					                        //datoRequerido = 0;
+					                        actualizacionInsercion(null,null,null,null);
+										});
 					                }
 					            }else{
-					                Ext.getCmp('btnAgregarAgente').disable();
-					                Ext.getCmp('btnRecargar').disable();
 					                Ext.Msg.show({
 					                     title: 'Error',
 					                     msg: 'Error al obtener los datos',
@@ -713,27 +672,25 @@ Ext.onReady(function() {
         callback: function(records, operation, success){
             if(success){
                 if(records.length <= 0){
-                    Ext.getCmp('btnAgregarAgente').disable();
-                    Ext.getCmp('btnRecargar').disable();
-                    Ext.Msg.show({
-                         title: 'Aviso',
-                         msg: 'No se encontraron datos',
-                         buttons: Ext.Msg.OK,
-                         icon: Ext.Msg.ERROR
-                     });
-                }else{
                     Ext.getCmp('btnAgregarAgente').enable();
-                    Ext.getCmp('btnRecargar').enable();
+                    Ext.getCmp('btnGuardaRegistro').disable();
+                    Ext.getCmp('btnRecargar').disable();
+                    mensajeWarning('No se encontraron datos, se requiere al menos un Agente',function(){
+                    	bandera= 0;
+                        valorIndex=0;
+                        //datoRequerido = 0;
+                        actualizacionInsercion(null,null,null,null);
+					});
                 }
             }else{
                 Ext.getCmp('btnAgregarAgente').disable();
                 Ext.getCmp('btnRecargar').disable();
-                Ext.Msg.show({
+                centrarVentanaInterna(Ext.Msg.show({
                      title: 'Error',
                      msg: 'Error al obtener los datos',
                      buttons: Ext.Msg.OK,
                      icon: Ext.Msg.ERROR
-                 });
+                 }));
             }
         }
     });
