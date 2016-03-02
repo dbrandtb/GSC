@@ -8894,9 +8894,14 @@ public class CotizacionManagerImpl implements CotizacionManager
 		try
 		{
 			paso = "Borrando asegurado";
-			logger.debug(Utils.log("","paso=",paso));
+			logger.debug(paso);
 			
 			cotizacionDAO.borrarIncisoCotizacion(cdunieco,cdramo,estado,nmpoliza,nmsituac);
+			
+			paso = "Reenumerando p\u00f3liza";
+			logger.debug(paso);
+			
+			cotizacionDAO.reenumerarSituaciones(cdunieco,cdramo,estado,nmpoliza,"0",nmsituac);
 		}
 		catch(Exception ex)
 		{

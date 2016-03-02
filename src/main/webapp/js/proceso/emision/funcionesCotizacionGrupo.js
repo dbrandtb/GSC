@@ -178,7 +178,7 @@ function _cotcol_quitarAsegurado(grid,rowIndex)
                                     ,'El asegurado ha sido eliminado de la p\u00f3liza'
                                     ,function()
                                     {
-                                        grid.getStore().remove(record);
+                                        _cotcol_aseguradosClic(grid.getStore().gridSubgrupo,grid.getStore().rowIndexSubgrupo);
                                     }
                                 );
                             }
