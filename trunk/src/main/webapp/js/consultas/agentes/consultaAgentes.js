@@ -167,12 +167,12 @@ Ext.onReady(function() {
                         if (panelModificacionInsercion.form.isValid()) {
                             var datos=panelModificacionInsercion.form.getValues();
                             if(parseFloat(datos.sesionComision) > parseFloat(datos.participacion)){
-                                Ext.Msg.show({
+                            	centrarVentanaInterna(Ext.Msg.show({
                                     title:'Error',
                                     msg: 'El valor de la partici&oacute;n debe ser mayor a Cesi&oacute;n de comisi&oacute;n',
                                     buttons: Ext.Msg.OK,
                                     icon: Ext.Msg.WARNING
-                                });
+                                }));
                             }
                             else
                             {
@@ -221,12 +221,12 @@ Ext.onReady(function() {
                                 }
                             }
                         } else {
-                            Ext.Msg.show({
+                        	centrarVentanaInterna(Ext.Msg.show({
                                    title: 'Aviso',
                                    msg: 'Complete la informaci&oacute;n requerida',
                                    buttons: Ext.Msg.OK,
                                    icon: Ext.Msg.WARNING
-                               });
+                               }));
                         }
                     }
               },
@@ -458,12 +458,12 @@ Ext.onReady(function() {
                                     failure:function(response,opts)
                                     {
                                         menuPrincipal.setLoading(false);
-                                        Ext.Msg.show({
+                                        centrarVentanaInterna(Ext.Msg.show({
                                             title:'Error',
                                             msg: 'Error de comunicaci&oacute;n',
                                             buttons: Ext.Msg.OK,
                                             icon: Ext.Msg.ERROR
-                                        });
+                                        }));
                                     }
                                 });
                     } else {
@@ -511,25 +511,25 @@ Ext.onReady(function() {
                                 if(records.length <= 0){
                                     Ext.getCmp('btnAgregarAgente').disable();
                                     Ext.getCmp('btnRecargar').disable();
-                                    mensajeWarning('No se encontraron datos, se requiere al menos un Agente',function(){
+                                    centrarVentanaInterna(mensajeWarning('No se encontraron datos, se requiere al menos un Agente',function(){
                                     	bandera= 0;
                                         valorIndex=0;
                                         //datoRequerido = 0;
                                         Ext.getCmp('btnCancelar').disable();
                                         actualizacionInsercion(null,null,null,null);
-                					});
+                					}));
                                 }else{
                                 	Ext.getCmp('btnCancelar').enable();
                                 }
                             }else{
                                 Ext.getCmp('btnAgregarAgente').disable();
                                 Ext.getCmp('btnRecargar').disable();
-                                Ext.Msg.show({
+                                centrarVentanaInterna(Ext.Msg.show({
                                      title: 'Error',
                                      msg: 'Error al obtener los datos',
                                      buttons: Ext.Msg.OK,
                                      icon: Ext.Msg.ERROR
-                                 });
+                                 }));
                             }
                         }
                     });
@@ -581,12 +581,12 @@ Ext.onReady(function() {
                 failure : function ()
                 {
                     me.up().up().setLoading(false);
-                    Ext.Msg.show({
+                    centrarVentanaInterna(Ext.Msg.show({
                         title:'Error',
                         msg: 'Error de comunicaci&oacute;n',
                         buttons: Ext.Msg.OK,
                         icon: Ext.Msg.ERROR
-                    });
+                    }));
                 }
             });
         }
@@ -631,23 +631,23 @@ Ext.onReady(function() {
 					        callback: function(records, operation, success){
 					            if(success){
 					                if(records.length <= 0){
-					                	mensajeWarning('No se encontraron datos, se requiere al menos un Agente',function(){
+					                	centrarVentanaInterna(mensajeWarning('No se encontraron datos, se requiere al menos un Agente',function(){
 					                    	bandera= 0;
 					                        valorIndex=0;
 					                        //datoRequerido = 0;
 					                        Ext.getCmp('btnCancelar').disable();
 					                        actualizacionInsercion(null,null,null,null);
-										});
+										}));
 					                }else{
 					                	Ext.getCmp('btnCancelar').enable();
 					                }
 					            }else{
-					                Ext.Msg.show({
+					            	centrarVentanaInterna(Ext.Msg.show({
 					                     title: 'Error',
 					                     msg: 'Error al obtener los datos',
 					                     buttons: Ext.Msg.OK,
 					                     icon: Ext.Msg.ERROR
-					                 });
+					                 }));
 					            }
 					        }
 					    });
@@ -656,12 +656,12 @@ Ext.onReady(function() {
                 failure : function ()
                 {
                     me.up().up().setLoading(false);
-                    Ext.Msg.show({
+                    centrarVentanaInterna(Ext.Msg.show({
                         title:'Error',
                         msg: 'Error de comunicaci&oacute;n',
                         buttons: Ext.Msg.OK,
                         icon: Ext.Msg.ERROR
-                    });
+                    }));
                 }
             });
     }
@@ -679,16 +679,16 @@ Ext.onReady(function() {
         callback: function(records, operation, success){
             if(success){
                 if(records.length <= 0){
-                    Ext.getCmp('btnAgregarAgente').enable();
+                    Ext.getCmp('btnAgregarAgente').enable();s
                     Ext.getCmp('btnGuardaRegistro').disable();
                     Ext.getCmp('btnRecargar').disable();
-                    mensajeWarning('No se encontraron datos, se requiere al menos un Agente',function(){
+                    centrarVentanaInterna(mensajeWarning('No se encontraron datos, se requiere al menos un Agente',function(){
                     	bandera= 0;
                         valorIndex=0;
                         //datoRequerido = 0;
                         Ext.getCmp('btnCancelar').disable();
                         actualizacionInsercion(null,null,null,null);
-					});
+					}));
                 }else{
                 	Ext.getCmp('btnCancelar').enable();
                 }
