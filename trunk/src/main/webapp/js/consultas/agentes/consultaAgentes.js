@@ -519,6 +519,7 @@ Ext.onReady(function() {
                                         actualizacionInsercion(null,null,null,null);
                 					}));
                                 }else{
+                                	Ext.getCmp('btnRecargar').enable();
                                 	Ext.getCmp('btnCancelar').enable();
                                 }
                             }else{
@@ -691,6 +692,7 @@ Ext.onReady(function() {
 					}));
                 }else{
                 	Ext.getCmp('btnCancelar').enable();
+                	Ext.getCmp('btnRecargar').enable();
                 }
             }else{
                 Ext.getCmp('btnAgregarAgente').disable();
