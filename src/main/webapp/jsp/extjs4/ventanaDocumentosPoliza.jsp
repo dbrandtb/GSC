@@ -66,6 +66,7 @@ var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocI
 var venDocUrlImpConrec   = '<s:url namespace ="/documentos" action="generarContrarecibo"         />';
 var panDocUrlFusionar    = '<s:url namespace ="/documentos" action="fusionarDocumentos"          />';
 var _URLhabilitaSigRec   = '<s:url namespace ="/documentos" action="habilitaSigRec"              />';
+var _URLregeneraReporte  = '<s:url namespace ="/documentos" action="regeneraReporte"             />';
 var panDocUrlDetalleTra  = '<s:url namespace="/mesacontrol" action="movimientoDetalleTramite"    />';
 
 var panDocUrlActualizarNombreDocumento = '<s:url namespace="/documentos" action="actualizarNombreDocumento" />';
@@ -224,6 +225,8 @@ Ext.onReady(function()
             ,'editable'
             ,'feinicio'
             ,'fefinal'
+            ,'nmsituac'
+            ,'nmcertif'
         ]
     });
     
@@ -736,6 +739,27 @@ Ext.onReady(function()
                             }
                             return res;
                         }
+                    },{// NO MOVER DE ORDEN LAS COLUMNAS YA QUE LAS ACCIONES ESTAN EN BASE AL ORDEN DE LA COLUMNA
+                        dataIndex     : 'liga'
+                        ,width        : 30
+                        ,renderer     : function(value, metadata, record)
+                        {
+                            debug(value);
+                            var res='';
+                            var splited=value.split('#_#');//nombre#_#descripcion
+                            debug(splited);
+                            var nom=splited[0];
+                            var desc=splited[1];
+                            if(nom&&nom.length>4)
+                            {
+                                var http=nom.substr(0,4);
+                                if(http!='http' && record.get("tipmov")!= "USUARIO")
+                                {
+                                    res='<img src="${ctx}/resources/fam3icons/icons/page_refresh.png" data-qtip="Regenerar" style="cursor:pointer;" />';
+                                }
+                            }
+                            return res;
+                        }
                     },{
                         dataIndex : 'editable'
                         ,width    : 30
@@ -1000,6 +1024,63 @@ Ext.onReady(function()
                				{
                 				this.onDownloadClick(record);
                				}
+                		}else if(cellIndex==5)//Regenerar
+                		{
+                			debug($(td).find('img').length);
+                			if($(td).find('img').length>0)//si hay accion
+               				{
+               					
+               					var windowDocs =  grid;//.up('window');
+               					windowDocs.setLoading(true);
+               					Ext.Ajax.request({
+                                    url       : _URLregeneraReporte
+                                    ,params   : {
+                                        'smap1.pv_cdunieco_i' : panDocInputCdunieco,
+                                        'smap1.pv_cdramo_i'   : panDocInputCdramo,
+                                        'smap1.pv_estado_i'   : panDocInputEstado,
+                                        'smap1.pv_nmpoliza_i' : panDocInputNmpoliza,
+                                        'smap1.pv_nmsuplem_i' : record.get('nmsuplem'),
+                                        'smap1.pv_cddocume_i' : record.get('cddocume'),
+                                        'smap1.pv_nmsituac_i' : record.get('nmsituac'),
+                                        'smap1.pv_nmcertif_i' : record.get('nmcertif')
+                                        
+                                    }
+                                    ,success  : function(response){
+                                        windowDocs.setLoading(false);
+                                        
+                                        var json=Ext.decode(response.responseText);
+                                        
+                                        if(json.success)
+                                        {
+                                            Ext.Msg.show({
+                                                title:'Aviso',
+                                                msg: "Documento Regenerado.",
+                                                buttons: Ext.Msg.OK,
+                                                icon:'x-message-box-ok'  
+                                            });
+                                        }
+                                        else
+                                        {
+                                            Ext.Msg.show({
+                                                title:'Error',
+                                                msg: 'Error al regenerar el documento.',
+                                                buttons: Ext.Msg.OK,
+                                                icon: Ext.Msg.ERROR
+                                            });
+                                        }
+                                    }
+                                    ,failure  : function()
+                                    {
+                                        windowDocs.setLoading(false);
+                                        Ext.Msg.show({
+                                            title:'Error',
+                                            msg: 'Error de comunicaci&oacute;n',
+                                            buttons: Ext.Msg.OK,
+                                            icon: Ext.Msg.ERROR
+                                        });
+                                    }
+                                });
+               				}
                 		}
                 	}
                 }
@@ -1015,8 +1096,16 @@ Ext.onReady(function()
                 , target         : '_blank'
                 , params         :
                 {
-                    subfolder  : record.get('ntramite')
-                    ,filename : record.get('cddocume') 
+                    subfolder  : record.get('ntramite'),
+                    filename : record.get('cddocume'),
+                    'smap1.pv_cdunieco_i' : panDocInputCdunieco,
+                    'smap1.pv_cdramo_i'   : panDocInputCdramo,
+                    'smap1.pv_estado_i'   : panDocInputEstado,
+                    'smap1.pv_nmpoliza_i' : panDocInputNmpoliza,
+                    'smap1.pv_nmsuplem_i' : record.get('nmsuplem'),
+                    'smap1.pv_cddocume_i' : record.get('cddocume'),
+                    'smap1.pv_nmsituac_i' : record.get('nmsituac'),
+                    'smap1.pv_nmcertif_i' : record.get('nmcertif')
                 }
             });
         }
@@ -1025,7 +1114,15 @@ Ext.onReady(function()
         	var numRand=Math.floor((Math.random()*100000)+1);
             debug('numRand a: ',numRand);
         	
-        	var urlImg = panDocUrlViewDoc+'?subfolder='+record.get('ntramite')+'&filename='+record.get('cddocume');
+        	var urlImg = panDocUrlViewDoc+'?subfolder='+record.get('ntramite')+'&filename='+record.get('cddocume')
+        				+'&smap1.pv_cdunieco_i=' + panDocInputCdunieco
+			            +'&smap1.pv_cdramo_i='   + panDocInputCdramo
+				        +'&smap1.pv_estado_i='   + panDocInputEstado
+				        +'&smap1.pv_nmpoliza_i=' + panDocInputNmpoliza
+				        +'&smap1.pv_nmsuplem_i=' + record.get('nmsuplem')
+				        +'&smap1.pv_cddocume_i=' + record.get('cddocume')
+				        +'&smap1.pv_nmsituac_i=' + record.get('nmsituac')
+			         	+'&smap1.pv_nmcertif_i=' + record.get('nmcertif');
         	
         	var windowVerDocu=Ext.create('Ext.window.Window',
         	{

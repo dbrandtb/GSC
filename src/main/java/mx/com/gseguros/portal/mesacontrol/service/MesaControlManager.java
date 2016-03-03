@@ -65,4 +65,20 @@ public interface MesaControlManager
     public void movimientoExclusionUsuario(String usuario, String accion) throws Exception;
     
     public Map<String, Item> pantallaExclusionTurnados(String cdsisrol) throws Exception;
+    
+    /**
+     * Regenera un reporte erroneo
+     * @param cdunieco
+     * @param cdramo
+     * @param estado
+     * @param nmpoliza
+     * @param nmsuplem
+     * @param cddocume
+     * @param nmsituac
+     * @param nmcertif
+     * @return
+     * @throws Exception
+     */
+    public boolean regeneraReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cddocume, String nmsituac, String nmcertif) throws Exception;
+    
 }
