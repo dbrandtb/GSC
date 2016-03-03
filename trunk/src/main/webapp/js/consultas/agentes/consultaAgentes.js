@@ -355,11 +355,15 @@ Ext.onReady(function() {
 				   		this.callParent();
 			       },
 			       onRemoveClick: function(grid, rowIndex){
-			    	   var record=this.getStore().getAt(rowIndex);
-			    	   guardaEliminaPorcentajeAgentes(record.data.cdagente, record.data.cdagente, record.data.nmsuplem, record.data.cdtipoAg, record.data.porredau, record.data.nmcuadro, record.data.cdsucurs,record.data.porparti, 'D' );
-			    	   this.getStore().removeAt(rowIndex);
-			       }
-			       ,
+			    	   debug("Valor ===>",storGridClau.data.length);
+			    	   if(+storGridClau.data.length > 1){
+			    		   var record=this.getStore().getAt(rowIndex);
+				    	   guardaEliminaPorcentajeAgentes(record.data.cdagente, record.data.cdagente, record.data.nmsuplem, record.data.cdtipoAg, record.data.porredau, record.data.nmcuadro, record.data.cdsucurs,record.data.porparti, 'D' );
+				    	   this.getStore().removeAt(rowIndex);
+			    	   }else{
+			    		   centrarVentanaInterna(mensajeWarning('Antes de eliminar el agente, ingrese el nuevo agente.'));
+		    		   }
+			       },
 			       onAddClick: function(grid, rowIndex){
 			       	 var record=this.getStore().getAt(rowIndex);
 			    	   claveAgente= Ext.getCmp('pv_cdagente_i').setValue(record.data.cdagente);
@@ -668,6 +672,7 @@ Ext.onReady(function() {
     }
     
     storGridClau.removeAll();
+    
     var params = {
         'params.cdunieco' : Ext.getCmp('unieco').getValue(),
         'params.cdramo' : Ext.getCmp('ramo').getValue(),
@@ -680,7 +685,7 @@ Ext.onReady(function() {
         callback: function(records, operation, success){
             if(success){
                 if(records.length <= 0){
-                    Ext.getCmp('btnAgregarAgente').enable();s
+                    Ext.getCmp('btnAgregarAgente').enable();
                     Ext.getCmp('btnGuardaRegistro').disable();
                     Ext.getCmp('btnRecargar').disable();
                     centrarVentanaInterna(mensajeWarning('No se encontraron datos, se requiere al menos un Agente',function(){
