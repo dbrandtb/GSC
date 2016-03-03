@@ -946,6 +946,20 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 					   cdtipsit=params.get("cdtipsit"),
 				       cdplan=params.get("cdplan");
 				lista = consultasDAO.recuperarClavesPlanRamo4(cdramo, cdtipsit, cdplan);
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_LISTA_TATRISIT_SIN_PADRE))
+			{
+				paso = "Recuperando lista Tatrisit sin Padre ";
+				logger.debug(Utils.log(" paso: ",paso));
+				
+				String cdtipsit=params.get("cdtipsit"),
+				       cdatribu=params.get("cdatribu");
+				
+				Utils.validate(
+						 cdtipsit , "No se recibio el parametro cdtipsit"
+						,cdatribu , "No se recibio el parametro cdatribu"
+						);
+				lista = consultasDAO.recuperarListaTatrisitSinPadre(cdtipsit,cdatribu);
 			}	
 		}
 		catch(Exception ex)
