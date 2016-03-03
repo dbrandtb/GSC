@@ -3978,7 +3978,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("cdusuari" , cdusuari);
 		params.put("cdtipsit" , cdtipsit);
 		
-		Map<String,Object> procRes = ejecutaSP(new recuperarPermisoBotonEmitirSP(getDataSource()),params);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarPermisoBotonEmitirSP(getDataSource()),params);
 		
 		String permiso = (String)procRes.get("pv_swemitir_o");
 		if(StringUtils.isBlank(permiso))
@@ -3989,9 +3989,9 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		return permiso;
 	}
 	
-	protected class recuperarPermisoBotonEmitirSP extends StoredProcedure
+	protected class RecuperarPermisoBotonEmitirSP extends StoredProcedure
 	{
-		protected recuperarPermisoBotonEmitirSP(DataSource dataSource)
+		protected RecuperarPermisoBotonEmitirSP(DataSource dataSource)
 		{
 			super(dataSource,"PKG_CONSULTA.P_GET_PERMISO_BOTON_EMITIR");
 			
@@ -4068,6 +4068,32 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			declareParameter(new SqlOutParameter("codigo"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	public  List<Map<String,String>> recuperarListaTatrisitSinPadre(String tipsit, String atribu) throws Exception
+	{		
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdatribu" , atribu );
+		params.put("cdtipsit" , tipsit);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarListaTatrisitSinPadreSP(getDataSource()),params);
+		List<Map<String,String>> list  = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		
+		return list;
+	}
+	
+	protected class RecuperarListaTatrisitSinPadreSP extends StoredProcedure
+	{
+		protected RecuperarListaTatrisitSinPadreSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_LISTA_TATRISIT_SIN_PADRE");
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdatribu" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{ "otclave", "otvalor"}; 	
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

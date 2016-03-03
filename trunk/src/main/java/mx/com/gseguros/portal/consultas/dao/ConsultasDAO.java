@@ -496,4 +496,6 @@ public interface ConsultasDAO
 	public String recuperarPermisoBotonEmitir(String cdsisrol, String cdusuari, String cdtipsit) throws Exception;
 	
 	public List<Map<String,String>> recuperarClavesPlanRamo4(String cdramo, String cdusuari, String cdtipsit) throws Exception;
+	
+	public  List<Map<String,String>> recuperarListaTatrisitSinPadre(String tipsit, String atribu) throws Exception;
 }

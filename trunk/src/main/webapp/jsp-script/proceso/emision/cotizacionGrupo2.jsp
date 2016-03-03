@@ -1,21 +1,21 @@
 <%@ include file="/taglibs.jsp"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style>
-.valorNoOriginal
-{
-    background : #FFFF99;
+.valorNoOriginal {
+	background: #FFFF99;
 }
-._p25_editorLectura
+._p25_editorLectura 
 {
-    visibility : hidden;
+	visibility: hidden;
 }
-.tatrigarHide
-{
-    display : none;
+
+.tatrigarHide {
+	display: none;
 }
 </style>
 <script>
@@ -229,6 +229,8 @@ debug('_p25_itemsRiesgo:',_p25_itemsRiesgo);
 
 var _p82_callback;
 var _p47_callback;
+
+var listaSinPadre = [];
 ////// variables //////
 
 Ext.onReady(function()
@@ -525,11 +527,56 @@ Ext.onReady(function()
                 {
                     beforeedit : function(editor,context)
                     {
+                    	debug( 'VEditor: ', editor);
+                    	debug( 'VContext: ', context);
                         if(!(
                             !_p25_ntramite||_p25_ntramiteVacio||(!Ext.isEmpty(_p25_smap1.sincenso)&&_p25_smap1.sincenso=='S')
                         ))
                         {
                             return false;
+                        }
+                       // Iteramos sobre cada  columna					
+					   for(var i in _p25_tabGruposLinealCols)
+                        {
+                            // Checamos que existan datos en el store y el listener que desencadena el evento
+                            if(!Ext.isEmpty(_p25_tabGruposLinealCols[i].editor) && !Ext.isEmpty(_p25_tabGruposLinealCols[i].editor.store) && _p25_tabGruposLinealCols[i].editor.hasListener('blur'))
+                            {
+                                 // Si la siguiente columna es hija y tiene las caracteristocas del padre
+                                 if(!Ext.isEmpty(_p25_tabGruposLinealCols[Number(i)+1].editor) && !Ext.isEmpty(_p25_tabGruposLinealCols[Number(i)+1].editor.store))
+                                 {
+                                     //dataIndex contiene los valores que apuntamos dentro del hijo
+                                     var editorComboHijo = _p25_tabGruposLinealCols[Number(i)+1].editor;
+                                     editorComboHijo.store.respaldoValor = context.record.get(_p25_tabGruposLinealCols[Number(i)+1].dataIndex);
+                                     editorComboHijo.store.padre = _p25_tabGruposLinealCols[Number(i)+1].editor;
+                                     editorComboHijo.store.beforeedit = true;
+                                     editorComboHijo.setLoading(true);
+                                     editorComboHijo.store.on(
+                                     {
+                                         // Si existe la funcion load, seteamos el valor directamente 
+                                         load: function(store, records, successful, eOpts)
+                                         {
+                                             if(store.beforeedit===true)
+                                             {
+                                                 store.beforeedit=false;
+                                                 debug('load '+store.respaldoValor);
+                                                 store.padre.setValue(store.respaldoValor);
+                                                 store.padre.setLoading(false);
+                                             }
+                                         }
+                                     });
+                                 }
+
+                                 setTimeout(
+                                     function(j)
+                                     {   
+                                         // blur que espera 1s a que las listas esten cargadas
+                                         debug('se dispara blur '+j);
+                                         _p25_tabGruposLinealCols[j].editor.fireEvent('blur',_p25_tabGruposLinealCols[j].editor);
+                                     }
+                                     ,1000
+                                     ,i
+                                 );
+                            }
                         }
                     }
                 }
@@ -652,12 +699,55 @@ Ext.onReady(function()
                 {
                     beforeedit : function(editor,context)
                     {
+                    	debug( 'VEditor: ', editor);
+                        debug( 'VContext: ', context);
                         if(!(
                             !_p25_ntramite||_p25_ntramiteVacio||(!Ext.isEmpty(_p25_smap1.sincenso)&&_p25_smap1.sincenso=='S')
                         ))
                         {
                             return false;
                         }
+                        // Iteramos sobre cada columna:                      
+    					for(var i in _p25_tabGruposModifiCols)
+						{
+                            // Checamos que existan datos en el store y el listener que desencadena el evento
+						    if(!Ext.isEmpty(_p25_tabGruposModifiCols[i].editor) && !Ext.isEmpty(_p25_tabGruposModifiCols[i].editor.store) && _p25_tabGruposModifiCols[i].editor.hasListener('blur'))
+						    {
+                                 // Si la siguiente columna es hija y tiene las caracteristocas del padre
+						    	 if(!Ext.isEmpty(_p25_tabGruposModifiCols[Number(i)+1].editor) && !Ext.isEmpty(_p25_tabGruposModifiCols[Number(i)+1].editor.store))
+						    	 {
+						    	     _p25_tabGruposModifiCols[Number(i)+1].editor.store.respaldoValor = context.record.get(_p25_tabGruposModifiCols[Number(i)+1].dataIndex);
+						    	     _p25_tabGruposModifiCols[Number(i)+1].editor.store.padre = _p25_tabGruposModifiCols[Number(i)+1].editor;
+						    	     _p25_tabGruposModifiCols[Number(i)+1].editor.store.beforeedit = true;
+						    	     _p25_tabGruposModifiCols[Number(i)+1].editor.setLoading(true);
+						    	     _p25_tabGruposModifiCols[Number(i)+1].editor.store.on(
+						    	     {
+                                         // Si existe la funcion load, seteamos el valor directamente 
+						    	         load: function(store, records, successful, eOpts)
+						    	         {
+						    	             if(store.beforeedit===true)
+						    	             {
+						    	                 store.beforeedit=false;
+						    	                 debug('load '+store.respaldoValor);
+						    	                 store.padre.setValue(store.respaldoValor);
+						    	                 store.padre.setLoading(false);
+						    	             }
+						    	         }
+						    	     });
+						    	 }
+
+						         setTimeout(
+						             function(j)
+						             {
+                                         // blur que espera 1s a que las listas esten cargadas:
+						                 debug('se dispara blur '+j);
+						                 _p25_tabGruposModifiCols[j].editor.fireEvent('blur',_p25_tabGruposModifiCols[j].editor);
+						             }
+						             ,1000
+						             ,i
+						         );
+						    }
+						}                      
                     }
                 }
             })
@@ -1536,6 +1626,23 @@ Ext.onReady(function()
     
     //codigo dinamico recuperado de la base de datos
     <s:property value="smap1.customCode" escapeHtml="false" />
+    
+    /////// SE VAN A CARGAR LAS LISTAS DE TODOS LOS COMBOS QUE SEAN TATRISIT    
+     for(var i in _p25_colsExtColumns)
+     {
+	    if(!Ext.isEmpty(_p25_colsExtColumns[i].editor) && !Ext.isEmpty(_p25_colsExtColumns[i].editor.store) && !Ext.isEmpty(_p25_colsExtColumns[i].editor.cdatribu))
+	     {
+	        recupeListaTatrisitSinPadre(_p25_colsExtColumns[i].editor);
+	     }
+     }   
+     
+     for(var i in _p25_colsBaseColumns)
+     {
+        if(!Ext.isEmpty(_p25_colsBaseColumns[i].editor) && !Ext.isEmpty(_p25_colsBaseColumns[i].editor.store) && !Ext.isEmpty(_p25_colsBaseColumns[i].editor.cdatribu))
+         {
+            recupeListaTatrisitSinPadre(_p25_colsExtColumns[i].editor);
+         }
+     }   
     ////// custom //////
     
     ////// loaders //////
@@ -2185,6 +2292,7 @@ function _p25_editorPlanHijos(combo)
 	                        			   } );
                         			   
                         			   }
+	                        			   comboClave.store.fireEvent('load',comboClave.store);
                         		 }
                         	}
                     }
@@ -6984,10 +7092,86 @@ function _p25_desbloqueoBotonRol(boton)
     }
 }
 
+function recupeListaTatrisitSinPadre(combo)
+{   
+       Ext.Ajax.request(
+               {
+                   url     : _p25_urlRecuperacion
+                   ,params :
+                   {
+                       'params.consulta'     : 'RECUPERAR_LISTA_TATRISIT_SIN_PADRE'
+                      ,'params.cdtipsit'     : _p25_smap1.cdtipsit 
+                      ,'params.cdatribu'     : combo.cdatribu
+                   }
+                   ,success : function(response)
+                   {
+                       _p25_editorPlan.setLoading(false);
+                       var json = Ext.decode(response.responseText);
+                       debug('Lista Tatrsit sin Padre:',json);
+                       listaSinPadre[combo.name] = json.list;
+                       debug('listaSinPadre:',listaSinPadre);
+                   }
+                   ,failure : function()
+                   {
+                       _p25_editorPlan.setLoading(false);
+                       errorComunicacion();
+                   }
+               });
+}
+
+function rendererDinamico(value,combo,view)
+{
+    debug('>rendererDinamico value,combo,view:',value,combo,view);
+    var store=combo.store;
+    if(!Ext.isEmpty(combo) && !Ext.isEmpty(combo.store) && !Ext.isEmpty(listaSinPadre[combo.name]))
+    {
+        debug('Lista sin Padre');
+        var store = listaSinPadre[combo.name];
+        for(var i in store)
+        {   
+            if(store[i].otclave==value)
+            {
+                value = store[i].otvalor;
+                break;
+            }
+        }
+    }
+    else if(store.getCount()>0)
+    {
+    	 debug('Lista sin Padre ELSE IF');
+        var record=combo.findRecordByValue(value);
+        if(record)
+        {
+            value=record.get('value');
+        }
+    }
+    else
+    {
+    	 debug('Lista sin Padre ELSE');
+        value='Cargando...';
+        if(Ext.isEmpty(store.padreView))
+        {
+            store.padreView=view;
+            store.on(
+            {
+                load : function(me)
+                {
+                    me.padreView.refresh();
+                }
+            });
+        }
+    }
+    debug('valor con combo,value',combo,value,'.')
+    return value;
+}
+
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
-<script src="${ctx}/js/proceso/emision/funcionesCotizacionGrupo.js?now=${now}"></script>
+<script
+	src="${ctx}/js/proceso/emision/funcionesCotizacionGrupo.js?now=${now}"></script>
 </head>
-<body><div id="_p25_divpri" style="height:1400px;"></div></body>
+<body>
+	<div id="_p25_divpri" style="height: 1400px;"></div>
+</body>
 </html>
