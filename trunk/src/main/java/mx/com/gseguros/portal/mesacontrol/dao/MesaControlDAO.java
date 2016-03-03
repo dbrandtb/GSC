@@ -243,6 +243,20 @@ public interface MesaControlDAO
 	 * @throws Exception
 	 */
 	public void movimientoExclusionUsuario(String usuario, String accion) throws Exception;
-	
+
+	/**
+	 * Regenera un reporte erroneo
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @param cddocume
+	 * @param nmsituac
+	 * @param nmcertif
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean regeneraReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cddocume, String nmsituac, String nmcertif) throws Exception;
 	
 }

@@ -14,6 +14,7 @@ import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.DocumentosUtils;
 import mx.com.gseguros.utils.HttpUtil;
@@ -46,6 +47,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	private String  respuesta;
 	private String  respuestaOculta = null;
 	private boolean exito           = false;
+	private int reintentoRegeneraRepore = 1;// variable para solo reintentar la regeneracion de reporte una vez 
 	
 	private ConsultasManager consultasManager;
 	
@@ -53,6 +55,9 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	
 	@Autowired
 	private PantallasManager pantallasManager;
+	
+	@Autowired
+	private MesaControlManager mesaControlManager;
 	
 	/**
 	 * Metodo para la descarga de los archivos de los Movimientos en los casos
@@ -82,12 +87,74 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 				contentType = obtieneContentType(filename);
 			}
 		} catch (Exception e) {
-			addActionError(e.getMessage());
+			boolean reintentoRealizado = false; 
+			if(fileInputStream == null){
+				reintentoRealizado = reintentaRegeneraReporte();
+			}
+			
+			// para mantener el flujo como estaba y si no se realiza el reintento pone el mensaje de error al Action
+			if(!reintentoRealizado){
+				addActionError(e.getMessage());
+			}
 		}
+		
+		if(fileInputStream == null){
+			reintentaRegeneraReporte();
+		}
+		
 		success = true;
 		return SUCCESS;
 	}
 	
+	/**
+	 * Regenera un reporte que se ha generado con errores 
+	 */
+	public String regeneraReporte() {
+		
+		logger.debug("**********  Parametros de entrada para regenerar reporte ***********");
+		logger.debug("smap1: " + smap1);
+		
+		try {
+			success = mesaControlManager.regeneraReporte(smap1.get("pv_cdunieco_i"), smap1.get("pv_cdramo_i"), smap1.get("pv_estado_i"), 
+					smap1.get("pv_nmpoliza_i"), smap1.get("pv_nmsuplem_i"), smap1.get("pv_cddocume_i"), smap1.get("pv_nmsituac_i"),
+					smap1.get("pv_nmcertif_i"));
+			
+		} catch (Exception e) {
+			logger.error("Error al regenerar el reporte "+ smap1, e);
+			addActionError(e.getMessage());
+			success = false;
+		}
+
+		return SUCCESS;
+	}
+	
+	/**
+	 * Reintenta la regeneracion de un reporte regresa false si no hace el reintento. (se maneja un solo reintento para evitar recursividad)
+	 * @return
+	 */
+	private boolean reintentaRegeneraReporte(){
+		
+		if(reintentoRegeneraRepore <= 0) return false; 
+		
+		reintentoRegeneraRepore = reintentoRegeneraRepore - 1;
+		
+		try{
+			
+			if(smap1 == null){
+				logger.warn("Error sin Impacto, no hay parametros a regenerar reporte.");
+			}
+			
+			logger.debug("<<<<<>>>>>  Volviendo a regenerar reporte...");
+			regeneraReporte();
+			
+			logger.debug("<<<<<>>>>>  Volviendo a descargar reporte...");
+			descargaDocumento();
+		}catch(Exception ex){
+			logger.error("Error al reintentar reporte", ex);
+		}
+		
+		return true;
+	}
 	
 	public String ventanaDocumentosPoliza()
 	{

@@ -190,9 +190,6 @@ public class MesaControlManagerImpl implements MesaControlManager
 		return ntramite;
 	}
 	
-	/*
-	 * Getters y setters
-	 */
 	@Override
 	public void guardarRegistroContrarecibo(String ntramite,String cdusuari)throws Exception
 	{
@@ -255,6 +252,10 @@ public class MesaControlManagerImpl implements MesaControlManager
 				Utils.log("FIN cdsisrol >>> pantallaExclusionTurnados",cdsisrol)
 				);
 		return resultado;
+	}
+	
+	public boolean regeneraReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cddocume, String nmsituac, String nmcertif) throws Exception{
+		return mesaControlDAO.regeneraReporte(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cddocume, nmsituac, nmcertif);
 	}
 	
 }
