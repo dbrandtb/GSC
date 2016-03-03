@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -186,12 +187,21 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 			int ordenOrig = 0;
 			String[] arrayLetras = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","x","y","z"};
 			
+			Map<String, Integer> agrupadores = new HashMap<String, Integer>();
+			
+			
 			while (itCopagos.hasNext()) {
 				CopagoVO copagoVO = itCopagos.next();
 				// Si el copago tiene Nivel Padre se asigna como agrupador:
 				if(copagoVO.getNivel() == 1) {
 					agrupador = copagoVO.getDescripcion();
+					agrupadores.put(agrupador, 0);
 					ordenOrig++;
+				} else {
+					if(agrupador != null && agrupadores.get(agrupador) != null) {
+						agrupadores.put(agrupador, agrupadores.get(agrupador)+1);
+						logger.debug("agrupadores:" + agrupadores);
+					}
 				}
 				/*
 				// Si el copago no es visible o no hay descripcion, lo eliminamos:
@@ -202,6 +212,31 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 				copagoVO.setAgrupador(agrupador);
 				copagoVO.setOrdenAgrupador(arrayLetras[ordenOrig-1]+" "+agrupador);
 			}
+			
+			// Se eliminan los agrupadores que no tienen hijos:
+			for(Iterator<Map.Entry<String, Integer>> it = agrupadores.entrySet().iterator(); it.hasNext(); ) {
+				Map.Entry<String, Integer> entry = it.next();
+				if(entry.getValue() == 0 ) {
+					it.remove();
+				}
+			}
+			
+			logger.debug("map final:"+ agrupadores);
+			
+			itCopagos = copagos.iterator();
+			while (itCopagos.hasNext()) {
+				CopagoVO copagoVO = itCopagos.next();
+				for (String keyAgrupa : agrupadores.keySet()) {
+					if(keyAgrupa.equals(copagoVO.getDescripcion())) {
+						logger.debug("se elimina " + copagoVO);
+						itCopagos.remove();
+						continue;
+					}				
+				}
+			}
+			
+			logger.debug("agrupadores final:" + agrupadores);
+			
 //		} else {
 //			copagos = consultasPolizaDAOSISA.obtieneCopagosPoliza(poliza);
 //		}
