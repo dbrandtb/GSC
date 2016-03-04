@@ -6161,6 +6161,7 @@ function _p25_guardarAsegurados(grid,callback)
     
     var valido = true;
     
+    /*
     if(valido)
     {
         var error = '';
@@ -6177,6 +6178,7 @@ function _p25_guardarAsegurados(grid,callback)
             mensajeError(error);
         }
     }
+    */
     
     var asegurados = [];
     
