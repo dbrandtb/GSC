@@ -696,7 +696,7 @@ if(_polizaEnEmision){
 						            		form.down('[name=smap1.rfc]').reset();
 						            		form.down('[name=smap1.nombre]').getStore().removeAll();
 					            			
-					            			_fieldByName('btnContinuarId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setText(_modoSoloEdicion?'Seleccione...' : 'Continuar y Editar Cliente');
+					            			_fieldByName('btnContinuarId',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setText(_modoSoloEdicion?'Seleccione...' : (_modoRecuperaDanios?'Continuar y Recuperar Cliente':'Continuar y Editar Cliente'));
 					            		}
 					            	},
 					            	change: function(me, val){
@@ -769,7 +769,7 @@ if(_polizaEnEmision){
 	        	 ,buttons     :
 	        	 [
 	        	     {
-                         text     : _modoSoloEdicion?'Seleccione...' : 'Continuar y Editar Cliente'
+                         text     : _modoSoloEdicion?'Seleccione...' : (_modoRecuperaDanios?'Continuar y Recuperar Cliente':'Continuar y Editar Cliente')
                          ,xtype   : 'button'
                          ,name  : 'btnContinuarId'
                          ,disabled: true
