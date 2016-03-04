@@ -5049,6 +5049,15 @@ function _p30_detalles()
             debug('### detalles:',json);
             if(json.exito)
             {
+            	
+                for(var i in json.slist1)
+                	{
+                	  if('|Iva|Derechos de Póliza|'.indexOf('|'+json.slist1[i].COBERTURA+'|')!=-1)
+                		{
+                		  json.slist1[i].TITULO= json.slist1[i].TITULO+' (Conceptos Globales)';
+                		}
+                	}
+            	
                 centrarVentanaInterna(Ext.create('Ext.window.Window',
                 {
                     title       : 'Detalles de cotizaci&oacute;n'
