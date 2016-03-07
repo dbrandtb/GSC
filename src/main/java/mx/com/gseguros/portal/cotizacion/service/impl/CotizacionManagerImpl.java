@@ -449,6 +449,82 @@ public class CotizacionManagerImpl implements CotizacionManager
 				);
 		return resp;
 	}
+
+	@Override
+	public ManagerRespuestaSlistVO cargarGruposCotizacionReexpedicion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarGruposCotizacionReexpedicion @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ estado=")  .append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.toString()
+				);
+		
+		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
+		
+		try
+		{
+			List<Map<String,String>>listaAux    =cotizacionDAO.cargarGruposCotizacion2(cdunieco,cdramo,estado,nmpoliza);
+			List<Map<String,String>>listaGrupos = new ArrayList<Map<String,String>>();
+			
+			for(Map<String,String>grupo:listaAux)
+			{
+				Map<String,String>grupoEditado=new HashMap<String,String>();
+				
+				for(Entry<String,String>en:grupo.entrySet())
+				{
+					String key = en.getKey();
+					if(StringUtils.isNotBlank(key)
+							&&key.length()>"otvalor".length()
+							&&key.substring(0, "otvalor".length()).equals("otvalor")
+							)
+					{
+						grupoEditado.put(new StringBuilder("pv_").append(key).toString(),en.getValue());
+					}
+					else
+					{
+						grupoEditado.put(key,en.getValue());
+					}
+				}
+				listaGrupos.add(grupoEditado);
+			}
+			
+			resp.setSlist(listaGrupos);
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString());
+			resp.setRespuestaOculta(ax.getMessage());
+			logger.error(resp.getRespuesta(),ax);
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder("Error al cargar grupos #").append(timestamp).toString());
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cargarGruposCotizacionReexpedicion @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
 	
 	@Override
 	public List<Map<String,String>>cargarGruposCotizacion(
@@ -6147,7 +6223,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 							    	
 						    		//GUARDAR MPERSONA
 						    		
-									personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(), (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc()
+									personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(), cli.getNombreCli()
 											, "1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(), null
 											, apellidoPat, apellidoMat, calendarIngreso.getTime(), nacionalidad, cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli()))
 											, null, null, null, null, null, null, Integer.toString(cli.getSucursalCli()), usuarioCaptura, Constantes.INSERT_MODE);
@@ -6793,7 +6869,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     				    	
     			    		//GUARDAR MPERSONA
     						personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(),
-    								(cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc(),
+    								cli.getNombreCli(),
     								"1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(),
     								null, apellidoPat, apellidoMat, calendarIngreso.getTime(), nacionalidad,
     								cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli())),
