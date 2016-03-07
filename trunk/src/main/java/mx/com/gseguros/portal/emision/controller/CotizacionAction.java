@@ -7226,6 +7226,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					, "&p_poliza="      , nmpoliza
 					, "&p_cdperpag="    , cdperpag
 					, "&p_perpag="      , cdperpag
+					, "&p_usuari="      , cdusuari
 					, "&p_suplem=0"
 					, "&p_cdplan="
                     , "&destype=cache"
@@ -7289,6 +7290,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					, "&p_estado="      , estado
 					, "&p_poliza="      , nmpoliza
 					, "&p_cdperpag="    , cdperpag
+					, "&p_usuari="      , cdusuari
 					, "&p_suplem=0"
 					, "&p_cdplan="
                   , "&destype=cache"
@@ -7412,6 +7414,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						, "&p_estado="      , estado
 						, "&p_poliza="      , nmpoliza
 						, "&p_perpag="      , cdperpag
+						, "&p_usuari="      , cdusuari
 						, "&p_suplem=0"
 	                    , "&destype=cache"
 	                    , "&desformat=PDF"
