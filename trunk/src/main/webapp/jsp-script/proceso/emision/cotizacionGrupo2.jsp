@@ -549,7 +549,8 @@ Ext.onReady(function()
                                      editorComboHijo.store.respaldoValor = context.record.get(_p25_tabGruposLinealCols[Number(i)+1].dataIndex);
                                      editorComboHijo.store.padre = _p25_tabGruposLinealCols[Number(i)+1].editor;
                                      editorComboHijo.store.beforeedit = true;
-                                     editorComboHijo.setLoading(true);
+                                     //se comenta el loading porque no siempre carga a la derecha
+                                     //editorComboHijo.setLoading(true);
                                      editorComboHijo.store.on(
                                      {
                                          // Si existe la funcion load, seteamos el valor directamente 
@@ -560,7 +561,8 @@ Ext.onReady(function()
                                                  store.beforeedit=false;
                                                  debug('load '+store.respaldoValor);
                                                  store.padre.setValue(store.respaldoValor);
-                                                 store.padre.setLoading(false);
+                                                 //se comenta el loading porque no siempre carga a la derecha
+                                                 //store.padre.setLoading(false);
                                              }
                                          }
                                      });
@@ -719,7 +721,8 @@ Ext.onReady(function()
 						    	     _p25_tabGruposModifiCols[Number(i)+1].editor.store.respaldoValor = context.record.get(_p25_tabGruposModifiCols[Number(i)+1].dataIndex);
 						    	     _p25_tabGruposModifiCols[Number(i)+1].editor.store.padre = _p25_tabGruposModifiCols[Number(i)+1].editor;
 						    	     _p25_tabGruposModifiCols[Number(i)+1].editor.store.beforeedit = true;
-						    	     _p25_tabGruposModifiCols[Number(i)+1].editor.setLoading(true);
+						    	     //se comenta el loading porque no siempre hereda el de la derecha
+						    	     //_p25_tabGruposModifiCols[Number(i)+1].editor.setLoading(true);
 						    	     _p25_tabGruposModifiCols[Number(i)+1].editor.store.on(
 						    	     {
                                          // Si existe la funcion load, seteamos el valor directamente 
@@ -730,7 +733,8 @@ Ext.onReady(function()
 						    	                 store.beforeedit=false;
 						    	                 debug('load '+store.respaldoValor);
 						    	                 store.padre.setValue(store.respaldoValor);
-						    	                 store.padre.setLoading(false);
+						    	                 //se comenta el loading porque no siempre hereda el de la derecha
+						    	                 //store.padre.setLoading(false);
 						    	             }
 						    	         }
 						    	     });
