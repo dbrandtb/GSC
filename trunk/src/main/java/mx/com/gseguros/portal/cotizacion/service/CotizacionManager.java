@@ -88,6 +88,12 @@ public interface CotizacionManager
 			,String cdramo
 			,String estado
 			,String nmpoliza);
+
+	public ManagerRespuestaSlistVO cargarGruposCotizacionReexpedicion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza);
 	
 	public Map<String,String>cargarDatosGrupoLinea(
 			String cdunieco

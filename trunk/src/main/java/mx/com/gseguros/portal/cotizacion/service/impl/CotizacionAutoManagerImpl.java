@@ -2153,7 +2153,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					    	
 				    		//GUARDAR MPERSONA
 				    		
-							personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(), (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc()
+							personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(), cli.getNombreCli()
 									, "1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(), null
 									, apellidoPat, apellidoMat, calendarIngreso.getTime(), nacionalidad, cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli()))
 									, null, null, null, null, null, null, Integer.toString(cli.getSucursalCli()), usuarioCaptura, Constantes.INSERT_MODE);

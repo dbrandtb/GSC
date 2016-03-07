@@ -1653,7 +1653,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 								parametros.put("pv_cdperson_i"    , newCdPerson);
 								parametros.put("pv_cdtipide_i"    , "1");
 								parametros.put("pv_cdideper_i"    , cli.getNumeroExterno());
-								parametros.put("pv_dsnombre_i"    , (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc());
+								parametros.put("pv_dsnombre_i"    , cli.getNombreCli());
 								parametros.put("pv_cdtipper_i"    , "1");
 								parametros.put("pv_otfisjur_i"    , tipoPersona);
 								parametros.put("pv_otsexo_i"      , sexo);

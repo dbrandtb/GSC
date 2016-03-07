@@ -182,7 +182,7 @@ public class PersonasAction extends PrincipalCoreAction
 			    		}
 				    	
 				    	agregar.put("CDRFC",    cli.getRfcCli());
-				    	agregar.put("DSNOMBRE",    (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc());
+				    	agregar.put("DSNOMBRE", cli.getNombreCli());
 				    	agregar.put("DSNOMBRE1",   "");
 				    	
 				    	String apellidoPat = "";
@@ -205,7 +205,7 @@ public class PersonasAction extends PrincipalCoreAction
 				    	}
 				    	agregar.put("DIRECCIONCLI", cli.getCalleCli()+" "+(StringUtils.isNotBlank(cli.getNumeroCli())?cli.getNumeroCli():"")+(StringUtils.isNotBlank(cli.getCodposCli())?" C.P. "+cli.getCodposCli():"")+" "+cli.getColoniaCli()+" "+cli.getMunicipioCli());
 				    	
-				    	agregar.put("NOMBRE_COMPLETO", cli.getRfcCli()+" - "+ ((cli.getFismorCli() == 1) ? (cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli()) : cli.getRazSoc()) + " - " + agregar.get("DIRECCIONCLI"));
+				    	agregar.put("NOMBRE_COMPLETO", cli.getRfcCli()+" - "+ (cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli()) + " - " + agregar.get("DIRECCIONCLI"));
 				    	
 				    	agregar.put("CODPOSTAL", cli.getCodposCli());
 				    	String edoAdosPos = Integer.toString(cli.getEstadoCli());
@@ -402,7 +402,7 @@ public class PersonasAction extends PrincipalCoreAction
     			Map<String,Object>managerResult = personasManager.guardarPantallaPersonas(null,//cdperson
 						"1",//cdidepe
 						"S".equalsIgnoreCase(saludDanios)? null : cliImport.getNumeroExterno(),
-						(cliImport.getFismorCli() == 1) ? cliImport.getNombreCli() : cliImport.getRazSoc(),
+						cliImport.getNombreCli(),
 						"1",//cdtipper
 						tipoPersona, sexo, calendar.getTime(), cliImport.getRfcCli(), cliImport.getMailCli()
 						,null //segundo nombre
@@ -617,7 +617,7 @@ public class PersonasAction extends PrincipalCoreAction
 	    			Map<String,Object>managerResult = personasManager.guardarPantallaPersonas(null,//cdperson
 							"1",//cdidepe
 							"S".equalsIgnoreCase(saludDanios)? null : cliImport.getNumeroExterno(),
-							(cliImport.getFismorCli() == 1) ? cliImport.getNombreCli() : cliImport.getRazSoc(),
+							cliImport.getNombreCli(),
 							"1",//cdtipper
 							tipoPersona, sexo, calendar.getTime(), cliImport.getRfcCli(), cliImport.getMailCli()
 							,null //segundo nombre
