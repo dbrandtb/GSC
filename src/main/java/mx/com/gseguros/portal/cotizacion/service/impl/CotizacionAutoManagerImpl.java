@@ -2947,7 +2947,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				 				inciso.put("parametros.pv_otvalor07",valorveh+"");
 				 			}
 			    		}
-			    		//----------------------DESCRIPCION -------------------------------------
+			    		//----------------------ESCRIPCION VEHICULO-------------------------------
 		    			inciso.put("parametros.pv_otvalor06" , vehiculoFronterizo.getMakeDescr() +" "+ vehiculoFronterizo.getSeriesDescr() +" "+ vehiculoFronterizo.getBodyDescr());
 		    			logger.debug(Utils.log("Descripcion del vehculo Fronterizo: ", inciso.get("parametros.pv_otvalor06")));
 			    	}
@@ -2961,10 +2961,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			    				,"Auto NO fronterizo"
 			    				));
 			    		
-			    		String  clave  = inciso.get("parametros.pv_otvalor06")
-			    		       ,modelo = inciso.get("parametros.pv_otvalor09")
-			    			   ,servicio = inciso.get("parametros.pv_otvalor03")
-			    			   , uso = inciso.get("parametros.pv_otvalor04");
+			    		String  clave,modelo,servicio,uso;
+			    		
+			    		clave  = inciso.get("parametros.pv_otvalor06");
+			    		modelo = inciso.get("parametros.pv_otvalor09");
+			    		servicio = inciso.get("parametros.pv_otvalor03");
+			    		uso = inciso.get("parametros.pv_otvalor04");
 			    		
 			    		logger.debug(Utils.log(
 			    				"\n cdtipsit=" , cdtipsit
@@ -2973,7 +2975,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			    				,"\n servicio="  , servicio
 			    				,"\n uso="  , uso
 			    				));
-			    		
+			    		if(modelo!=null && servicio!=null && uso!=null && clave!=null)
+			    		{			    		
 			    		ResponseValor wsResp = valorComercialService.obtieneDatosVehiculoGS(Integer.valueOf(clave), Integer.valueOf(modelo));
 			    		
 			    		if(wsResp!= null && wsResp.getExito())
@@ -2999,11 +3002,18 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			    			
 			    			valor = cotizacionDAO.cargarSumaAseguradaRamo5(cdtipsit, clave, modelo, cdsisrol);
 			    			
+			    			if(valor == null)
+			    			{
+			    				logger.debug(Utils.log("Sin valores encontrados"));
+			    			}
+			    			else
+			    			{
 			    			logger.debug(Utils.log("\n SP :",valor.get("sumaseg")));
-			    			
 			    			inciso.put("parametros.pv_otvalor13", valor.get("sumaseg"));
+			    			}
 			    		}
 
+			    		//----------------------DESCRIPCION VEHICULO------------------------------
 			    		List<GenericVO> lista = catalogosDAO.cargarAutosPorCadenaRamo5(clave,cdtipsit,servicio,uso);
 			    		
 			    		String anio = inciso.get("parametros.pv_otvalor09").trim();
@@ -3020,15 +3030,17 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			    		            else if	(cdtipsit.equals("PC"))	{inciso.put("parametros.pv_otvalor54",datos[i+1]);}
 			    		            else if	(cdtipsit.equals("PP"))	{inciso.put("parametros.pv_otvalor58",datos[i+1]);}
 			    		            else if	(cdtipsit.equals("MC"))	{inciso.put("parametros.pv_otvalor03",datos[i+1]);}
+			    		            else if	(cdtipsit.equals("MO"))	{inciso.put("parametros.pv_otvalor10",datos[i+1]);}
 			    		        
 			    		    		i = datos.length+1;
 			    		    		j = lista.size()+1;
 			    		    	}
 			    			}
 			    		}
+			    		inciso.put("parametros.pv_otvalor26",inciso.get("parametros.pv_otvalor07"));//Respaldo Valor Nada
 			    	}
-			    	inciso.put("parametros.pv_otvalor26",inciso.get("parametros.pv_otvalor07"));//Respaldo Valor Nada
-		    	}
+		    	 }
+			  }
 		    }
 		}
 		catch(Exception ex)
