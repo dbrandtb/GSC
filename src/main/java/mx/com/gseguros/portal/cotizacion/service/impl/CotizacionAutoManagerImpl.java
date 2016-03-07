@@ -2899,15 +2899,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			    		
 			    		String nserie = inciso.get("parametros.pv_otvalor03");
 			    		VehicleValue_Struc vehiculoFronterizo = null;
-						
-			    		try {
-			    			paso = "consultando nadaService con el numero de serie "+nserie;
-							vehiculoFronterizo = nadaService.obtieneDatosAutomovilNADA(nserie);
-						} catch (Exception e) {
-							logger.debug(paso);
-						}
-			    		 		 
-			    		logger.info(Utils.log("\n Valor vehiculoFronterizo=",vehiculoFronterizo));
+			    		
+		    			paso = "consultando nadaService con el numero de serie "+nserie;
+						vehiculoFronterizo = nadaService.obtieneDatosAutomovilNADA(nserie);
 			    		
 			    		//Si no hubo respuesta WS y es promotor o agente, poner espacio vacio
 			    		if(vehiculoFronterizo == null && (cdsisrol.contains("PROMOTORAUTO") || cdsisrol.contains("EJECUTIVOCUENTA")))
@@ -2917,6 +2911,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			    		}
 			    		else if(vehiculoFronterizo !=null)
 			    		{
+			    			logger.info(Utils.log("\n Valor vehiculoFronterizo=",vehiculoFronterizo));
 			    			int tipoValorVehiculo = 3;
 			    			try
 			    			{
@@ -2946,10 +2941,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			    				Double valorveh = vehiculoFronterizo.getTradeIn().doubleValue() * Double.parseDouble(cambio);
 				 				inciso.put("parametros.pv_otvalor07",valorveh+"");
 				 			}
+			    			//----------------------ESCRIPCION VEHICULO-------------------------------
+			    			inciso.put("parametros.pv_otvalor06" , vehiculoFronterizo.getMakeDescr() +" "+ vehiculoFronterizo.getSeriesDescr() +" "+ vehiculoFronterizo.getBodyDescr());
+			    			logger.debug(Utils.log("Descripcion del vehculo Fronterizo: ", inciso.get("parametros.pv_otvalor06")));
 			    		}
-			    		//----------------------ESCRIPCION VEHICULO-------------------------------
-		    			inciso.put("parametros.pv_otvalor06" , vehiculoFronterizo.getMakeDescr() +" "+ vehiculoFronterizo.getSeriesDescr() +" "+ vehiculoFronterizo.getBodyDescr());
-		    			logger.debug(Utils.log("Descripcion del vehculo Fronterizo: ", inciso.get("parametros.pv_otvalor06")));
 			    	}
 			    	else 
 			    	{ //NO FRONTERIZOS
