@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
@@ -36,6 +37,7 @@ import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
+import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
@@ -69,6 +71,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	private static final DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	private CotizacionDAO  cotizacionDAO;
+	
+	@Autowired
+	private transient CatalogosDAO catalogosDAO;
 	
 	private ValidacionesCotizacionDAO  validacionesCotizacionDAOSIGS;
 	
@@ -2893,7 +2898,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			    		logger.debug(paso);
 			    		
 			    		String nserie = inciso.get("parametros.pv_otvalor03");
-			    		VehicleValue_Struc vehiculoFronterizo = nadaService.obtieneDatosAutomovilNADA(nserie);
+			    		VehicleValue_Struc vehiculoFronterizo = null;
+						
+			    		try {
+			    			paso = "consultando nadaService con el numero de serie "+nserie;
+							vehiculoFronterizo = nadaService.obtieneDatosAutomovilNADA(nserie);
+						} catch (Exception e) {
+							logger.debug(paso);
+						}
 			    		 		 
 			    		logger.info(Utils.log("\n Valor vehiculoFronterizo=",vehiculoFronterizo));
 			    		
@@ -2935,7 +2947,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				 				inciso.put("parametros.pv_otvalor07",valorveh+"");
 				 			}
 			    		}
-		    		}
+			    		//----------------------DESCRIPCION -------------------------------------
+		    			inciso.put("parametros.pv_otvalor06" , vehiculoFronterizo.getMakeDescr() +" "+ vehiculoFronterizo.getSeriesDescr() +" "+ vehiculoFronterizo.getBodyDescr());
+		    			logger.debug(Utils.log("Descripcion del vehculo Fronterizo: ", inciso.get("parametros.pv_otvalor06")));
+			    	}
 			    	else 
 			    	{ //NO FRONTERIZOS
 			    		paso = "Guardando datos para residente";
@@ -2946,13 +2961,17 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			    				,"Auto NO fronterizo"
 			    				));
 			    		
-			    		String clave   = inciso.get("parametros.pv_otvalor06")
-			    		       ,modelo = inciso.get("parametros.pv_otvalor09");
+			    		String  clave  = inciso.get("parametros.pv_otvalor06")
+			    		       ,modelo = inciso.get("parametros.pv_otvalor09")
+			    			   ,servicio = inciso.get("parametros.pv_otvalor03")
+			    			   , uso = inciso.get("parametros.pv_otvalor04");
 			    		
 			    		logger.debug(Utils.log(
-			    				"\n VILS cdtipsit=" , cdtipsit
-			    				,"\n VILS clave="   , clave
-			    				,"\n VILS modelo="  , modelo
+			    				"\n cdtipsit=" , cdtipsit
+			    				,"\n clave="   , clave
+			    				,"\n modelo="  , modelo
+			    				,"\n servicio="  , servicio
+			    				,"\n uso="  , uso
 			    				));
 			    		
 			    		ResponseValor wsResp = valorComercialService.obtieneDatosVehiculoGS(Integer.valueOf(clave), Integer.valueOf(modelo));
@@ -2983,6 +3002,29 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			    			logger.debug(Utils.log("\n SP :",valor.get("sumaseg")));
 			    			
 			    			inciso.put("parametros.pv_otvalor13", valor.get("sumaseg"));
+			    		}
+
+			    		List<GenericVO> lista = catalogosDAO.cargarAutosPorCadenaRamo5(clave,cdtipsit,servicio,uso);
+			    		
+			    		String anio = inciso.get("parametros.pv_otvalor09").trim();
+			    		for( int j = 0 ; j<lista.size() ; j++)
+			    		{
+			    			String conjunto =lista.get(j).getValue();
+			    			String datos[] = conjunto.split(" - ");
+			    			for(int i = 0 ; i<datos.length ; i++ )
+			    			{
+			    			if(datos[i].trim().equals(anio))
+			    		    	{
+			    				 	     if	(cdtipsit.equals("AR"))	{inciso.put("parametros.pv_otvalor61",datos[i+1]);}
+			    				 	else if	(cdtipsit.equals("CR"))	{ inciso.put("parametros.pv_otvalor56",datos[i+1]);}
+			    		            else if	(cdtipsit.equals("PC"))	{inciso.put("parametros.pv_otvalor54",datos[i+1]);}
+			    		            else if	(cdtipsit.equals("PP"))	{inciso.put("parametros.pv_otvalor58",datos[i+1]);}
+			    		            else if	(cdtipsit.equals("MC"))	{inciso.put("parametros.pv_otvalor03",datos[i+1]);}
+			    		        
+			    		    		i = datos.length+1;
+			    		    		j = lista.size()+1;
+			    		    	}
+			    			}
 			    		}
 			    	}
 			    	inciso.put("parametros.pv_otvalor26",inciso.get("parametros.pv_otvalor07"));//Respaldo Valor Nada
