@@ -2691,8 +2691,8 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String pantallaCotizacionGrupo2()
 	{
-		logger.debug(Utils.log(""
-				,"\n######################################"
+		logger.debug(Utils.log(
+				 "\n######################################"
 				,"\n###### pantallaCotizacionGrupo2 ######"
 				,"\n###### smap1=" , smap1
 				,"\n###### flujo=" , flujo
@@ -2793,6 +2793,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 				
 				smap1.put("cdsisrol" , cdsisrol);
+				smap1.put("cdusuari" , cdusuari);
 				
 				paso = "Invocando proceso";
 				logger.debug(Utils.log("", "paso=", paso));
@@ -2943,7 +2944,8 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				nombreUsuario   = usuario.getName();
 				
-				smap1.put("cdsisrol",cdsisrol);
+				smap1.put("cdsisrol" , cdsisrol);
+				smap1.put("cdusuari" , cdusuari);
 				
 				//si entran por agente
 				paso = "Recuperando datos del agente";

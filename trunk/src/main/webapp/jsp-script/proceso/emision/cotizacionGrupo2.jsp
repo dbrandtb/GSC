@@ -4523,6 +4523,7 @@ function _p25_imprimir()
             + '&p_cdplan='
             + '&p_cdperpag='    + _fieldByName('cdperpag').getValue()
             + '&p_perpag='      + _fieldByName('cdperpag').getValue()
+            + '&p_usuari='      + _p25_smap1.cdusuari
             + '&destype=cache'
             + "&desformat=PDF"
             + "&userid="        + _p25_reportsServerUser
@@ -4576,6 +4577,7 @@ function _p25_imprimir2()
             + '&p_cdplan='
             + '&p_cdperpag='    + _fieldByName('cdperpag').getValue()
             + '&p_perpag='      + _fieldByName('cdperpag').getValue()
+            + '&p_usuari='      + _p25_smap1.cdusuari
             + '&destype=cache'
             + "&desformat=PDF"
             + "&userid="        + _p25_reportsServerUser
