@@ -732,4 +732,6 @@ public interface CotizacionManager
 			,String nmsituac
 			)throws Exception;
 	
+	@Deprecated
+	public boolean isEstatusGeneraDocumentosCotizacion(String status) throws Exception;
 }

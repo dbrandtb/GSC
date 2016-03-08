@@ -8989,6 +8989,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
+	
+	@Override
+	@Deprecated
+	public boolean isEstatusGeneraDocumentosCotizacion(String status) throws Exception
+	{
+		return cotizacionDAO.isEstatusGeneraDocumentosCotizacion(status);
+	}
     
 	///////////////////////////////
 	////// getters y setters //////

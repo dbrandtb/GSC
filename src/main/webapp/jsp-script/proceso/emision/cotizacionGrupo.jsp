@@ -4050,24 +4050,25 @@ function _p21_turnar(status,titulo,closable)
                             {
                                 status = json.smap1.status;
                                 ventana.setLoading(true);
-                                if(status+'x'=='17x')
+                                
+                                //se llaman los documentos, en Java se condiciona si se generan o no
+                                Ext.Ajax.request(
 			                    {
-			                        Ext.Ajax.request(
+			                        url     : _p21_guardarReporteCotizacion
+			                        ,params :
 			                        {
-			                            url     : _p21_guardarReporteCotizacion
-			                            ,params :
-			                            {
-			                                'smap1.cdunieco'  : _p21_smap1.cdunieco
-			                                ,'smap1.cdramo'   : _p21_smap1.cdramo
-			                                ,'smap1.estado'   : _p21_smap1.estado
-			                                ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
-			                                ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
-			                                ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
-			                                ,'smap1.ntramite' : _p21_smap1.ntramite
-			                                ,'smap1.nGrupos'  : _p21_storeGrupos.getCount()
-			                            }
-			                        });
-			                    }
+			                            'smap1.cdunieco'  : _p21_smap1.cdunieco
+			                            ,'smap1.cdramo'   : _p21_smap1.cdramo
+			                            ,'smap1.estado'   : _p21_smap1.estado
+			                            ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+			                            ,'smap1.cdperpag' : _fieldByName('cdperpag').getValue()
+			                            ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
+			                            ,'smap1.ntramite' : _p21_smap1.ntramite
+			                            ,'smap1.nGrupos'  : _p21_storeGrupos.getCount()
+			                            ,'smap1.status'   : status
+			                        }
+			                    });
+			                    
                                 Ext.Ajax.request(
                                 {
                                     url      : _p21_urlCargarParametros
