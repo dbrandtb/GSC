@@ -182,20 +182,20 @@ public class PersonasAction extends PrincipalCoreAction
 			    		}
 				    	
 				    	agregar.put("CDRFC",    cli.getRfcCli());
-				    	agregar.put("DSNOMBRE", cli.getNombreCli());
+				    	agregar.put("DSNOMBRE", (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc());
 				    	agregar.put("DSNOMBRE1",   "");
 				    	
 				    	String apellidoPat = "";
 				    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
 				    		apellidoPat = cli.getApellidopCli();
 				    	}
-				    	agregar.put("DSAPELLIDO",     apellidoPat);
+				    	agregar.put("DSAPELLIDO", (cli.getFismorCli() == 1) ? apellidoPat : "");
 				    	
 				    	String apellidoMat = "";
 				    	if(StringUtils.isNotBlank(cli.getApellidomCli()) && !cli.getApellidomCli().trim().equalsIgnoreCase("null")){
 				    		apellidoMat = cli.getApellidomCli();
 				    	}
-				    	agregar.put("DSAPELLIDO1",     apellidoMat);
+				    	agregar.put("DSAPELLIDO1", (cli.getFismorCli() == 1) ? apellidoMat : "");
 				    	
 				    	if(cli.getFecnacCli()!= null){
 				    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
@@ -205,7 +205,7 @@ public class PersonasAction extends PrincipalCoreAction
 				    	}
 				    	agregar.put("DIRECCIONCLI", cli.getCalleCli()+" "+(StringUtils.isNotBlank(cli.getNumeroCli())?cli.getNumeroCli():"")+(StringUtils.isNotBlank(cli.getCodposCli())?" C.P. "+cli.getCodposCli():"")+" "+cli.getColoniaCli()+" "+cli.getMunicipioCli());
 				    	
-				    	agregar.put("NOMBRE_COMPLETO", cli.getRfcCli()+" - "+ (cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli()) + " - " + agregar.get("DIRECCIONCLI"));
+				    	agregar.put("NOMBRE_COMPLETO", cli.getRfcCli()+" - "+ ((cli.getFismorCli() == 1) ? (cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli()) : cli.getRazSoc()) + " - " + agregar.get("DIRECCIONCLI"));
 				    	
 				    	agregar.put("CODPOSTAL", cli.getCodposCli());
 				    	String edoAdosPos = Integer.toString(cli.getEstadoCli());
@@ -402,12 +402,12 @@ public class PersonasAction extends PrincipalCoreAction
     			Map<String,Object>managerResult = personasManager.guardarPantallaPersonas(null,//cdperson
 						"1",//cdidepe
 						"S".equalsIgnoreCase(saludDanios)? null : cliImport.getNumeroExterno(),
-						cliImport.getNombreCli(),
+						(cliImport.getFismorCli() == 1) ? cliImport.getNombreCli() : cliImport.getRazSoc(),
 						"1",//cdtipper
 						tipoPersona, sexo, calendar.getTime(), cliImport.getRfcCli(), cliImport.getMailCli()
 						,null //segundo nombre
-						,apellidoPat
-						,apellidoMat
+						,(cliImport.getFismorCli() == 1) ? apellidoPat : ""
+						,(cliImport.getFismorCli() == 1) ? apellidoMat : ""
 						,calendarIngreso.getTime()
 						,nacionalidad
 						,cliImport.getCanconCli() <= 0 ? "0" : (Integer.toString(cliImport.getCanconCli()))// canaling
@@ -617,12 +617,12 @@ public class PersonasAction extends PrincipalCoreAction
 	    			Map<String,Object>managerResult = personasManager.guardarPantallaPersonas(null,//cdperson
 							"1",//cdidepe
 							"S".equalsIgnoreCase(saludDanios)? null : cliImport.getNumeroExterno(),
-							cliImport.getNombreCli(),
+							(cliImport.getFismorCli() == 1) ? cliImport.getNombreCli() : cliImport.getRazSoc(),
 							"1",//cdtipper
 							tipoPersona, sexo, calendar.getTime(), cliImport.getRfcCli(), cliImport.getMailCli()
 							,null //segundo nombre
-							,apellidoPat
-							,apellidoMat
+							,(cliImport.getFismorCli() == 1) ? apellidoPat : ""
+							,(cliImport.getFismorCli() == 1) ? apellidoMat : ""
 							,calendarIngreso.getTime()
 							,nacionalidad
 							,cliImport.getCanconCli() <= 0 ? "0" : (Integer.toString(cliImport.getCanconCli()))// canaling

@@ -6223,9 +6223,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 							    	
 						    		//GUARDAR MPERSONA
 						    		
-									personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(), cli.getNombreCli()
+									personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(), (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc()
 											, "1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(), null
-											, apellidoPat, apellidoMat, calendarIngreso.getTime(), nacionalidad, cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli()))
+											, (cli.getFismorCli() == 1) ? apellidoPat : "", (cli.getFismorCli() == 1) ? apellidoMat: "", calendarIngreso.getTime(), nacionalidad, cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli()))
 											, null, null, null, null, null, null, Integer.toString(cli.getSucursalCli()), usuarioCaptura, Constantes.INSERT_MODE);
 									
 									String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
@@ -6869,9 +6869,9 @@ public class CotizacionManagerImpl implements CotizacionManager
     				    	
     			    		//GUARDAR MPERSONA
     						personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(),
-    								cli.getNombreCli(),
+    								(cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc(),
     								"1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(),
-    								null, apellidoPat, apellidoMat, calendarIngreso.getTime(), nacionalidad,
+    								null, (cli.getFismorCli() == 1) ? apellidoPat : "", (cli.getFismorCli() == 1) ? apellidoMat : "", calendarIngreso.getTime(), nacionalidad,
     								cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli())),
     								null, null, null, null, null, null, String.valueOf(cli.getSucursalCli()), usuarioCaptura, Constantes.INSERT_MODE);
     			    		
