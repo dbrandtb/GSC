@@ -5614,6 +5614,7 @@ function _p21_imprimir()
             + '&p_suplem=0'
             + '&p_cdperpag='    + _fieldByName('cdperpag').getValue()
             + '&p_perpag='      + _fieldByName('cdperpag').getValue()
+            + '&p_usuari='      + _p21_smap1.cdusuari
             + '&p_cdplan='
             + '&destype=cache'
             + "&desformat=PDF"
@@ -5667,6 +5668,7 @@ function _p21_imprimir2()
             + '&p_suplem=0'
             + '&p_cdperpag='    + _fieldByName('cdperpag').getValue()
             + '&p_perpag='      + _fieldByName('cdperpag').getValue()
+            + '&p_usuari='      + _p21_smap1.cdusuari
             + '&p_cdplan='
             + '&destype=cache'
             + "&desformat=PDF"
