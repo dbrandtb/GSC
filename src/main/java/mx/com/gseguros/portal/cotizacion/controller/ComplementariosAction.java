@@ -4415,21 +4415,21 @@ public class ComplementariosAction extends PrincipalCoreAction
 			    		agregar = new HashMap<String,String>();
 			    		
 				    	agregar.put("RFCCLI",    cli.getRfcCli());
-				    	agregar.put("NOMBRECLI", cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli());
-				    	agregar.put("NOMBRE",    cli.getNombreCli());
+				    	agregar.put("NOMBRECLI", (cli.getFismorCli() == 1) ? (cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli()) : cli.getRazSoc() );
+				    	agregar.put("NOMBRE",    (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc());
 				    	agregar.put("SNOMBRE",   "");
 				    	
 				    	String apellidoPat = "";
 				    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
 				    		apellidoPat = cli.getApellidopCli();
 				    	}
-				    	agregar.put("APPAT",     apellidoPat);
+				    	agregar.put("APPAT",     (cli.getFismorCli() == 1) ? apellidoPat : "");
 				    	
 				    	String apellidoMat = "";
 				    	if(StringUtils.isNotBlank(cli.getApellidomCli()) && !cli.getApellidomCli().trim().equalsIgnoreCase("null")){
 				    		apellidoMat = cli.getApellidomCli();
 				    	}
-				    	agregar.put("APMAT",     apellidoMat);
+				    	agregar.put("APMAT",     (cli.getFismorCli() == 1) ? apellidoMat : "");
 				    	
 				    	if(cli.getFecnacCli()!= null){
 				    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));

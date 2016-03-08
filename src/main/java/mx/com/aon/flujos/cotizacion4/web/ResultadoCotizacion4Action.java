@@ -1653,7 +1653,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 								parametros.put("pv_cdperson_i"    , newCdPerson);
 								parametros.put("pv_cdtipide_i"    , "1");
 								parametros.put("pv_cdideper_i"    , cli.getNumeroExterno());
-								parametros.put("pv_dsnombre_i"    , cli.getNombreCli());
+								parametros.put("pv_dsnombre_i"    , (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc());
 								parametros.put("pv_cdtipper_i"    , "1");
 								parametros.put("pv_otfisjur_i"    , tipoPersona);
 								parametros.put("pv_otsexo_i"      , sexo);
@@ -1661,8 +1661,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 								parametros.put("pv_cdrfc_i"       , cli.getRfcCli());
 								parametros.put("pv_dsemail_i"     , cli.getMailCli());
 								parametros.put("pv_dsnombre1_i"   , null);
-								parametros.put("pv_dsapellido_i"  , apellidoPat);
-								parametros.put("pv_dsapellido1_i" , apellidoMat);
+								parametros.put("pv_dsapellido_i"  , (cli.getFismorCli() == 1) ? apellidoPat : "");
+								parametros.put("pv_dsapellido1_i" , (cli.getFismorCli() == 1) ? apellidoMat : "");
 								parametros.put("pv_feingreso_i"   , calendarIngreso.getTime());
 								parametros.put("pv_cdnacion_i"    , nacionalidad);
 								parametros.put("pv_canaling_i"    , cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli())));
