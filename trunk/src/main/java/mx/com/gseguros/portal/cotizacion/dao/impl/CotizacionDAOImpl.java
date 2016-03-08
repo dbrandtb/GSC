@@ -6850,4 +6850,27 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	public boolean isEstatusGeneraDocumentosCotizacion(String status) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("status" , status);
+		Map<String,Object> procRes = ejecutaSP(new IsEstatusGeneraDocumentosCotizacionSP(getDataSource()),params);
+		String conteo = (String)procRes.get("pv_conteo_o");
+		logger.debug(Utils.log("conteo=",conteo));
+		return Integer.parseInt(conteo)>0;
+	}
+	
+	protected class IsEstatusGeneraDocumentosCotizacionSP extends StoredProcedure
+	{
+		protected IsEstatusGeneraDocumentosCotizacionSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_STATUS_GENERAN_COTI");
+			declareParameter(new SqlParameter("status" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_conteo_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

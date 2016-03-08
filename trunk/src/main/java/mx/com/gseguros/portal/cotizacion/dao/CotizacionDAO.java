@@ -617,4 +617,5 @@ public interface CotizacionDAO {
 			,String nmsituac
 			)throws Exception;
 	
+	public boolean isEstatusGeneraDocumentosCotizacion(String status) throws Exception;
 }
