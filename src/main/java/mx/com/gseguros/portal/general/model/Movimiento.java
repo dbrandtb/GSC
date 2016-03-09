@@ -4,6 +4,7 @@ public enum Movimiento
 {
 	DESHACER_PASO_ASEGURADO ("V"),
 	PASO_QUITAR_ASEGURADO   ("M"),
+	AGREGAR_FAMILIA			("A"),
 	SACAENDOSO              ("V");
 	
 	String tipo;

@@ -22,6 +22,11 @@
             <result name="success">/jsp-script/proceso/emision/cotizacionGrupo2.jsp</result>
         </action>
         
+        <action name="includes/cotizacionGrupo" class="CotizacionAction" method="pantallaCotizacionGrupo">
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/emision/cotizacionGrupo3.jsp</result>
+        </action>
+        
         <action name="mcotizacion" class="CotizacionAction" method="pantallaCotizacion">
             <result name="success">/jsp-script/proceso/emision/cotizaciontouch.jsp</result>
         </action>
@@ -82,6 +87,15 @@
            <result type="json" />
        </action>
        
+       <action name="subirCensoCompleto3" class="CotizacionAction" method="subirCensoCompleto3">
+           <interceptor-ref name="json">
+               <param name="enableSMD">true</param>
+               <param name="ignoreSMDMethodInterfaces">false</param>
+           </interceptor-ref>
+           <result type="json" />
+       </action>
+       
+       
        <action name="generarTramiteGrupo" class="CotizacionAction" method="generarTramiteGrupo">
            <interceptor-ref name="json">
                <param name="enableSMD">true</param>
@@ -107,6 +121,10 @@
        </action>
        
        <action name="cargarDatosCotizacionGrupo2" class="CotizacionAction" method="cargarDatosCotizacionGrupo2">
+           <result type="json" />
+       </action>
+       
+       <action name="cargarDatosCotizacionGrupoEndoso" class="CotizacionAction" method="cargarDatosCotizacionGrupoEndoso">
            <result type="json" />
        </action>
        

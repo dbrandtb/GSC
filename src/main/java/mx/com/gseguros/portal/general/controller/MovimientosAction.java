@@ -157,6 +157,10 @@ public class MovimientosAction extends PrincipalCoreAction
 			{
 				params.putAll(movimientosManager.ejecutarRecuperandoMapa(usuario,mov,params,list));
 			}
+			else if("A".equals(mov.getTipo()))
+			{
+				params.putAll(movimientosManager.ejecutarRecuperandoMapaAltaFamilia(usuario,mov,params,list));
+			}
 			else if("L".equals(mov.getTipo()))
 			{
 				list = movimientosManager.ejecutarRecuperandoLista(usuario,mov,params,list);

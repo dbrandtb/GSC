@@ -4847,4 +4847,88 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	@Override
+	public List<Map<String,String>> obtenerInfoFamiliaEndoso(Map<String, String> params) throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n****************************************************")
+				.append("\n****** PKG_CONSULTA.P_Get_Datos_InfoFamEndoso ******")
+				.append("\n****** params=").append(params)
+				.append("\n****************************************************")
+				.toString()
+				);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerInfoFamiliaEndoso(this.getDataSource()), params);
+		return (List<Map<String,String>>) resultadoMap.get("PV_REGISTRO_O");
+	}
+	
+	protected class ObtenerInfoFamiliaEndoso extends StoredProcedure
+	{
+		
+		protected ObtenerInfoFamiliaEndoso(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_Get_Datos_InfoFamEndoso");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDTIPSIT"  , "EXISTEREGISTRO"
+                    ,"CDAGENTE" , "NTRAMITE"
+			};
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String regeneraSuplementoFamiliaEndoso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nsuplogi
+			,Date fecha
+			)throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("nsuplogi" , nsuplogi);
+		params.put("fecha"    , fecha);
+		Map<String,Object> procRes = ejecutaSP(new RegeneraSuplementoFamiliaEndoso(getDataSource()),params);
+		String nmsuplemNuevo = (String)procRes.get("pv_nmsuplem_o");
+		if(StringUtils.isBlank(nmsuplemNuevo))
+		{
+			throw new ApplicationException("No se gener\u00F3 el suplemento nuevo");
+		}
+		logger.debug("\nNuevo suplemento: {}",nmsuplemNuevo);
+		return nmsuplemNuevo;
+	}
+	
+	protected class RegeneraSuplementoFamiliaEndoso extends StoredProcedure {
+		protected RegeneraSuplementoFamiliaEndoso(DataSource dataSource) {
+			super(dataSource, "PKG_ENDOSOS.P_REGENERA_SUPLEMENTOALTA");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("nsuplogi" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("fecha"    , OracleTypes.DATE));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

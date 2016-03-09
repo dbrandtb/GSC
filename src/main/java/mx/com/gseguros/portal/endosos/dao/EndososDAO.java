@@ -641,5 +641,16 @@ public interface EndososDAO
 	public List<Map<String,String>> CambioClientenombreRFCfechaNacimiento(Map<String, String> params)throws Exception;
 	
 	public void actualizaMpolisitNuevaVigencia(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String feefecto) throws Exception;
+
+	public List<Map<String,String>> obtenerInfoFamiliaEndoso(Map<String, String> params)throws Exception;
 	
+	public String regeneraSuplementoFamiliaEndoso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nsuplogi
+			,Date fecha
+			)throws Exception;
 }

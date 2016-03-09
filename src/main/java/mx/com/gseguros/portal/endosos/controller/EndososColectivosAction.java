@@ -231,18 +231,30 @@ public class EndososColectivosAction extends PrincipalCoreAction
 					,nmsolici             , "No se recibi\u00F3 la cotizaci\u00F3n"
 					);
 			
-			if(TipoEndoso.ALTA_ASEGURADOS.getCdTipSup()==Integer.parseInt(cdtipsup))
+			if(TipoEndoso.ALTA_ASEGURADOS.getCdTipSup() == Integer.parseInt(cdtipsup))
 			{
-				/*
-				endososManager.confirmarEndosoAltaFamilia(
-						cdunieco
+				List<String> incisos = new ArrayList<String>();
+				
+				message = endososManager.confirmarEndosoAltaFamilia(
+						usuario.getUser()
+						,usuario.getRolActivo().getClave()
+						,usuario.getEmpresa().getElementoId()
+						,cdunieco
 						,cdramo
 						,estado
 						,nmpoliza
 						,cdtipsup
-						,list
-						);
-				*/
+						,nmsuplem
+						,nsuplogi
+						,Utils.parse(fecha)
+						,rutaDocumentosPoliza
+						,rutaServidorReports
+						,passServidorReports
+						,usuario
+						,incisos
+						,cdtipsitPrimerInciso
+						,nmsolici
+					);
 			}
 			else
 			{

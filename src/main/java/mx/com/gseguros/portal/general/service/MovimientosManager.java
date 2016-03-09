@@ -22,6 +22,13 @@ public interface MovimientosManager
 			,List<Map<String,String>> list
 			)throws Exception;
 	
+	public Map<String,String> ejecutarRecuperandoMapaAltaFamilia(
+			UserVO usuario
+			,Movimiento movimiento
+			,Map<String,String> params
+			,List<Map<String,String>> list
+			)throws Exception;
+	
 	public List<Map<String,String>> ejecutarRecuperandoLista(
 			UserVO usuario
 			,Movimiento movimiento

@@ -11,6 +11,8 @@ var _p48_urlRecuperarItemsFormulario = '<s:url namespace="/endosos"      action=
 var _p48_urlConfirmarEndoso          = '<s:url namespace="/endosos"      action="confirmarEndosoFamilias"           />';
 var _p48_urlMovimientos              = '<s:url namespace="/movimientos"  action="ejecutar"                          />';
 var _p48_urlMovimientosSMD           = '<s:url namespace="/movimientos"  action="ejecutarSMD"                       />';
+var _p48_urlAgregarFamilia           = '<s:url namespace="/emision"  	 action="includes/cotizacionGrupo"          />';
+var _p48_urlInforFamiliaEndoso       = '<s:url namespace="/endosos"      action="obtieneInfoFamiliaEndoso"          />';
 ////// urls //////
 
 ////// variables //////
@@ -280,7 +282,7 @@ Ext.onReady(function()
                                                 ,nmsuplem             : _p48_params.nmsuplem_endoso
                                                 ,nsuplogi             : _p48_params.nsuplogi
                                                 ,fecha                : Ext.Date.format(_fieldByName('FEFECHA').getValue(),'d/m/Y')
-                                                ,cdtipsitPrimerInciso : _p48_store.getAt(0).get('CDTIPSIT')
+                                                ,cdtipsitPrimerInciso : "MSC"//null//_p48_store.getAt(0).get('CDTIPSIT')
                                                 ,nmsolici             : _p48_params.NMSOLICI
                                             }
                                             ,list : []
@@ -293,6 +295,7 @@ Ext.onReady(function()
                                         debug('datos para confirmar:',datos);
                                         
                                         _setLoading(true,_fieldById('_p48_panelpri'));
+                                        
                                         Ext.Ajax.request(
                                         {
                                             url       : _p48_urlConfirmarEndoso
@@ -491,7 +494,7 @@ function _p48_quitarAseguradoClic(me)
             debug('datos:',datos);
             Ext.Ajax.request(
             {
-                url       : _p48_urlMovimientosSMD
+                url       : _p48_urlMovimientosSMD 			//1.- 
                 ,jsonData : { params : datos }
                 ,success  : function(response)
                 {
@@ -880,6 +883,166 @@ function _p48_agregarDepClic()
 
 function _p48_agregarFamClic()
 {
+	debug("_p48_params ==>",_p48_params, _p48_params.cdtipsup,_p48_params.FEPROREN);
+    var datos =
+    {
+        
+            CDUNIECO              : _p48_params.CDUNIECO
+            ,CDRAMO               : _p48_params.CDRAMO
+            ,ESTADO               : _p48_params.ESTADO
+            ,NMPOLIZA             : _p48_params.NMPOLIZA
+            ,cdtipsup             : _p48_params.cdtipsup
+            ,FEPROREN             : _p48_params.FEPROREN
+            ,movimiento           : 'AGREGAR_FAMILIA'
+    };
+    
+    debug('datos:',datos);
+    
+    Ext.Ajax.request(
+    {
+        url       : _p48_urlMovimientosSMD 			//1.- 
+        ,jsonData : { params : datos }
+        ,success  : function(response)
+        {
+            var ck = 'Decodificando respuesta al quitar asegurado';
+            try
+            {
+                var json = Ext.decode(response.responseText);
+                debug('### quitar:',json);
+                if(json.success==true)
+                {
+                	_p48_validarEstadoBotonCancelar();
+                	 _p48_params.nmsuplem_endoso = json.params.nmsuplem_endoso;
+                     _p48_params.nsuplogi        = json.params.nsuplogi;
+                     debug('_p48_params:',_p48_params);
+                     _p48_storeMov.proxy.extraParams['params.nmsuplem'] = _p48_params.nmsuplem_endoso;
+                     
+                     //Llamar aun procedcer para sabe si ya se subio un documento en 
+                    
+                    var submitValues={};
+							params = {
+									'cdunieco'    :  _p48_params.CDUNIECO,
+									'cdramo'      :  _p48_params.CDRAMO,
+									'estado'      :  _p48_params.ESTADO,
+									'nmpoliza'    :  _p48_params.NMPOLIZA,
+			                        'nmsuplem'    :  _p48_params.nmsuplem_endoso,
+			                        'ntramite'    :  _p48_params.NTRAMITE
+							}
+							submitValues['smap1']= params;
+							
+                    Ext.Ajax.request( {
+						url    : _p48_urlInforFamiliaEndoso
+						,jsonData: Ext.encode(submitValues)
+						/*,smap1:{
+							'smap1.cdunieco'    :  _p48_params.CDUNIECO,
+							'smap1.cdramo'      :  _p48_params.CDRAMO,
+							'smap1.estado'      :  _p48_params.ESTADO,
+							'smap1.nmpoliza'    :  _p48_params.NMPOLIZA,
+	                        'smap1.nmsuplem'    :  _p48_params.nmsuplem_endoso,
+	                        'smap1.ntramite'    :  _p48_params.NTRAMITE
+						}*/
+						,success : function (response) {
+							var jsonRes = Ext.decode(response.responseText).slist1[0];
+							debug("VALOR DEL JSONRES -->",jsonRes);
+							
+							var windowHistSinies = Ext.create('Ext.window.Window',{
+		                 		modal       : true,
+		                 		buttonAlign : 'center',
+		                 		width       : 1000,
+		                 		height      : 700,
+		                 		autoScroll  : true,
+		                 		closeAction: 'hide',
+		                 		loader      : {
+		                 			url     : _p48_urlAgregarFamilia,
+		                 			params  : {
+		                 				'smap1.cdunieco'  : _p48_params.CDUNIECO
+		                                ,'smap1.cdramo'   : _p48_params.CDRAMO
+		                                ,'smap1.cdtipsit' : jsonRes.CDTIPSIT
+		                                ,'smap1.estado'   : _p48_params.ESTADO
+		                                ,'smap1.nmpoliza' : _p48_params.NMPOLIZA
+		                                ,'smap1.ntramite' : _p48_params.NTRAMITE
+		                                ,'smap1.cdagente' : jsonRes.CDAGENTE
+		                                ,'smap1.status'   : jsonRes.EXISTEREGISTRO == 0?"18":"19"
+		                                ,'smap1.sincenso' : "N"
+		                                ,'smap1.nmsuplem' : _p48_params.nmsuplem_endoso
+		                 			},
+		                 			scripts  : true,
+		                 			loadMask : true,
+		                 			autoLoad : true,
+		                 			ajaxOptions: {
+		                 				method: 'POST'
+		                 			}
+		                 		},
+		                 		buttons: [{
+		                 			//icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+		                 			icon: '${icons}cancel.png',
+		                 			text: 'Cerrar',
+		                 			handler: function() {
+		                 				windowHistSinies.close();
+		                 			}
+		                 		}]
+		                 	}).show();
+		                 	centrarVentana(windowHistSinies);
+							
+							
+							
+							
+							/*var montoDisponible = json.SUMADISP;
+							Ext.getCmp('idSalarioMin').setValue(montoDisponible);					// Valor del monto disponible
+							Ext.getCmp('idReqPenalizacion').setValue(jsonRes.REQPENALIZACION);		// Valor para verificar si requiere penalizacion
+							Ext.getCmp('idValMaternidad').setValue(jsonRes.VALMATERNIDAD);			// Valor para verificar la validacion de maternidad
+							Ext.getCmp('idReqValidacionMat').setValue(jsonRes.REQVALSUMASEGURADA);	// Valor para verificar la validacion de maternidad
+							Ext.getCmp('idValSesiones').setValue(jsonRes.VALSESIONES);				// Valor para Validacion de Sesiones
+							if(+Ext.getCmp('idValSesiones').getValue() > 0){
+								Ext.getCmp('idCopagoPrevio').show();
+								Ext.getCmp('idCopagoFin').hide();
+							}else{
+								Ext.getCmp('idCopagoPrevio').hide();
+								Ext.getCmp('idCopagoFin').show();
+							}*/
+						},
+						failure : function (){
+							Ext.Msg.show({
+								title:'Error',
+								msg: 'Error de comunicaci&oacute;n',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.ERROR
+							});
+						}
+                    });
+                     
+                     
+                     
+                     /**/
+                }
+                else
+                {
+                    mensajeError(json.message);
+                }
+            }
+            catch(e)
+            {
+                manejaException(e,ck);
+            }
+        }
+        ,failure : function()
+        {
+            quitados = quitados + 1;
+            if(quitados==recordsQueSeQuitan.length)
+            {
+                _setLoading(false,'_p48_gridAsegurados');
+            }
+            errorComunicacion(null,'Error al quitar asegurado');
+        }
+    });
+	
+	
+	
+	/**/
+}
+
+/*function _p48_agregarFamClic()
+{
     debug('_p48_agregarFamClic');
     var ck = 'Agregando familia';
     try
@@ -888,7 +1051,7 @@ function _p48_agregarFamClic()
         {
             centrarVentanaInterna(Ext.create('Ext.window.Window',
             {
-                title  : 'AGREGAR FAMILIA'
+                title  : 'DATOS DEL TITULAR'
                 ,modal : true
                 ,items :
                 [
@@ -902,23 +1065,6 @@ function _p48_agregarFamClic()
                         ,items    :
                         [
                             _p48_crearFormulario(mpersona,tatrisit,tatrirol)
-                        ]
-                        ,tbar        :
-                        [
-                            {
-                                text     : 'Agregar otro'
-                                ,icon    : '${icons}add.png'
-                                ,handler : function(me)
-                                {
-                                    _p48_obtenerComponentes('FAM',_p48_store.getAt(0).get('CDTIPSIT'),function(mpersona,tatrisit,tatrirol,validacion)
-                                    {
-                                        var form = _p48_crearFormulario(mpersona,tatrisit,tatrirol);
-                                        me.up('panel').add(form);
-                                        form.down('[fieldLabel=FAMILIA]')
-                                            .setValue(me.up('panel').down('form').down('[fieldLabel=FAMILIA]').getValue());
-                                    },me.up('window'));
-                                }
-                            }
                         ]
                         ,listeners :
                         {
@@ -1035,15 +1181,15 @@ function _p48_agregarFamClic()
     {
         manejaException(e,ck);
     }
-}
+}*/
 
 function _p48_crearFormulario(mpersona,tatrisit,tatrirol)
 {
     debug('>_p48_crearFormulario');
     return Ext.create('Ext.form.Panel',
     {
-        title     : 'ASEGURADO'
-        ,defaults : { style : 'margin:5px;' }
+        //title     : 'ASEGURADO',
+        defaults : { style : 'margin:5px;' }
         ,width    : 850
         ,items    :
         [
@@ -1066,7 +1212,7 @@ function _p48_crearFormulario(mpersona,tatrisit,tatrirol)
                     type     : 'table'
                     ,columns : 3
                 }
-            }
+            }/*
             ,{
                 xtype   : 'fieldset'
                 ,title  : '<span style="font:bold 14px Calibri;">DATOS ADICIONALES</span>'
@@ -1076,7 +1222,7 @@ function _p48_crearFormulario(mpersona,tatrisit,tatrirol)
                     type     : 'table'
                     ,columns : 3
                 }
-            }
+            }*/
         ]
     });
 }
