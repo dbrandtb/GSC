@@ -354,6 +354,90 @@ public class MovimientosManagerImpl implements MovimientosManager
 	}
 	
 	@Override
+	public Map<String,String> ejecutarRecuperandoMapaAltaFamilia(
+			UserVO usuario
+			,Movimiento movimiento
+			,Map<String,String> params
+			,List<Map<String,String>> list
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ ejecutarRecuperandoMapaAltaFamilia @@@@@@"
+				,"\n@@@@@@ cdusuari="   , usuario.getUser()
+				,"\n@@@@@@ movimiento=" , movimiento
+				,"\n@@@@@@ params="     , params
+				,"\n@@@@@@ list="       , list
+				));
+		Map<String,String> mapa = new HashMap<String,String>();
+		String             paso = "Ejecutando movimiento";
+		try
+		{
+			if(movimiento.equals(Movimiento.AGREGAR_FAMILIA))
+			{
+				Utils.validate(params.get("FEPROREN") , "No hay fecha de inicio");
+				Utils.validate(params.get("cdtipsup") , "No hay clave de endoso");
+				
+				String cdusuari = usuario.getUser();
+				String cdelemen = usuario.getEmpresa().getElementoId();
+				Date   fechaEnd = Utils.parse(params.get("FEPROREN"));
+				String cdunieco = params.get("CDUNIECO");
+				String cdramo   = params.get("CDRAMO");
+				String estado   = params.get("ESTADO");
+				String nmpoliza = params.get("NMPOLIZA");
+				String cdtipsup = params.get("cdtipsup");
+				
+				paso = "Guardando endoso";
+				logger.debug("Paso: {}",paso);
+				Map<String,String> endoso = endososDAO.iniciarEndoso(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,fechaEnd
+						,cdelemen
+						,cdusuari
+						,"END"
+						,cdtipsup
+						);
+				
+				String nmsuplemEndoso = endoso.get("pv_nmsuplem_o");
+				String nsuplogiEndoso = endoso.get("pv_nsuplogi_o");
+				logger.debug("nmsuplemEndoso: {}, nsuplogiEndoso: {}",nmsuplemEndoso,nsuplogiEndoso);
+				mapa.put("nmsuplem_endoso" , nmsuplemEndoso);
+				mapa.put("nsuplogi"        , nsuplogiEndoso);
+				
+				/*paso = "Quitando relaci\u00F3n p\u00F3liza-situaci\u00F3n";
+				logger.debug("Paso: {}",paso);
+				cotizacionDAO.movimientoMpolisit();
+				
+				paso = "Quitando valores adicionales de situaci\u00F3n";
+				logger.debug("Paso: {}",paso);
+				cotizacionDAO.movimientoTvalosit();
+				
+				paso = "Quitando relaci\u00F3n p\u00F3liza-persona";
+				logger.debug("Paso: {}",paso);
+				cotizacionDAO.movimientoMpoliper();
+				
+				paso = "Guardando indicador temporal";
+				logger.debug("Paso: {}",paso);
+				endososDAO.movimientoTworksupEnd();*/
+			}
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error ejecutando movimiento",ex);
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				 "\n@@@@@@ mapa=",mapa
+				,"\n@@@@@@ ejecutarRecuperandoMapaAltaFamilia @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return mapa;
+	}
+	
+	@Override
 	public List<Map<String,String>> ejecutarRecuperandoLista(
 			UserVO usuario
 			,Movimiento movimiento

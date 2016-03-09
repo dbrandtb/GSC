@@ -77,6 +77,14 @@ public interface CotizacionManager
 			,String nmpoliza
 			,String ntramite);
 	
+	public Map<String,String> cargarDatosCotizacionGrupoEndoso(
+			String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String nmpoliza
+			,String ntramite) throws Exception;
+	
 	public List<Map<String,String>>cargarGruposCotizacion(
 			String cdunieco
 			,String cdramo
@@ -734,4 +742,31 @@ public interface CotizacionManager
 	
 	@Deprecated
 	public boolean isEstatusGeneraDocumentosCotizacion(String status) throws Exception;
+	
+	public void guardarCensoCompletoMultisaludEndoso(
+			String nombreArchivo
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdedo
+			,String cdmunici
+			,String cdplan1
+			,String cdplan2
+			,String cdplan3
+			,String cdplan4
+			,String cdplan5
+			,String complemento
+			,String nmsuplem
+			)throws Exception;
+
+	public void ejecutasigsvdefEnd(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdgarant
+			,String cdtipsup)throws Exception;
 }

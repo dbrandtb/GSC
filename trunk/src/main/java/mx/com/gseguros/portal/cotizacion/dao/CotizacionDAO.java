@@ -618,4 +618,14 @@ public interface CotizacionDAO {
 			)throws Exception;
 	
 	public boolean isEstatusGeneraDocumentosCotizacion(String status) throws Exception;
+	
+	public Map<String, String> cargarDatosCotizacionGrupoEndoso(
+			Map<String, String> params) throws Exception;
+	
+	public void guardarCensoCompletoMultisaludEndoso(String nombreArchivo,
+			String cdunieco, String cdramo, String estado, String nmpoliza,
+			String cdestadoCli, String cdmuniciCli, String cdplan1,
+			String cdplan2, String cdplan3, String cdplan4, String cdplan5,
+			String complemento, String nmsuplem) throws Exception;
+	
 }

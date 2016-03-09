@@ -12029,6 +12029,43 @@ public class EndososAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String obtieneInfoFamiliaEndoso()
+	{
+		logger.debug("\n"
+				+ "\n######################################"
+				+ "\n######################################"
+				+ "\n###### obtieneInfoFamiliaEndoso ######"
+				+ "\n######                 		 ######"
+				);
+		logger.debug("smap1: "+smap1);
+		try
+		{
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			String nmsuplem = smap1.get("nmsuplem");
+			String ntramite = smap1.get("ntramite");
+			
+			slist1=endososManager.obtenerInfoFamiliaEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite);
+			
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			logger.error("error al cargar asegurados para el endoso de parentesco",ex);
+			error=ex.getMessage();
+			success=false;
+		}
+		logger.debug("\n"
+				+ "\n######                 	     ######"
+				+ "\n###### obtieneInfoFamiliaEndoso ######"
+				+ "\n######################################"
+				+ "\n######################################"
+				);
+		return SUCCESS;
+	}
+	
 	
 	/****************************** BASE ACTION **********************************/
 	

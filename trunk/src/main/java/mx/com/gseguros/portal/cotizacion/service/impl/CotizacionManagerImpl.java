@@ -375,6 +375,44 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 	
 	@Override
+	public Map<String,String> cargarDatosCotizacionGrupoEndoso(
+			String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String nmpoliza
+			,String ntramite) throws Exception
+	{
+		logger.info(""
+				+ "\n##############################################"
+				+ "\n###### cargarDatosCotizacionGrupoEndoso ######"
+				+ "\n cdunieco "+cdunieco
+				+ "\n cdramo "+cdramo
+				+ "\n cdtipsit "+cdtipsit
+				+ "\n estado "+estado
+				+ "\n nmpoliza "+nmpoliza
+				+ "\n ntramite "+ntramite
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("cdtipsit" , cdtipsit);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("ntramite" , ntramite);
+		Map<String,String>datos=cotizacionDAO.cargarDatosCotizacionGrupoEndoso(params);
+		if(datos==null)
+		{
+			datos=new HashMap<String,String>();
+		}
+		logger.info(""
+				+ "\n###### cargarDatosCotizacionGrupoEndoso ######"
+				+ "\n##############################################"
+				);
+		return datos;
+	}
+	
+	@Override
 	public ManagerRespuestaSlistVO cargarGruposCotizacion2(
 			String cdunieco
 			,String cdramo
@@ -8997,6 +9035,115 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return cotizacionDAO.isEstatusGeneraDocumentosCotizacion(status);
 	}
     
+	@Override
+	public void guardarCensoCompletoMultisaludEndoso(
+			String nombreArchivo
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdedo
+			,String cdmunici
+			,String cdplan1
+			,String cdplan2
+			,String cdplan3
+			,String cdplan4
+			,String cdplan5
+			,String complemento
+			,String nmsuplem
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarCensoCompleto @@@@@@"
+				,"\n@@@@@@ nombreArchivo=" , nombreArchivo
+				,"\n@@@@@@ cdunieco="      , cdunieco
+				,"\n@@@@@@ cdramo="        , cdramo
+				,"\n@@@@@@ estado="        , estado
+				,"\n@@@@@@ mpoliza="       , nmpoliza
+				,"\n@@@@@@ cdedo="         , cdedo
+				,"\n@@@@@@ cdmunici="      , cdmunici
+				,"\n@@@@@@ cdplan1="       , cdplan1
+				,"\n@@@@@@ cdplan2="       , cdplan2
+				,"\n@@@@@@ cdplan3="       , cdplan3
+				,"\n@@@@@@ cdplan4="       , cdplan4
+				,"\n@@@@@@ cdplan5="       , cdplan5
+				,"\n@@@@@@ complemento="   , complemento
+				,"\n@@@@@@ nmsuplem="      , nmsuplem
+				));
+		
+		cotizacionDAO.guardarCensoCompletoMultisaludEndoso(
+				nombreArchivo
+				,cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,cdedo
+				,cdmunici
+				,cdplan1
+				,cdplan2
+				,cdplan3
+				,cdplan4
+				,cdplan5
+				,complemento
+				,nmsuplem
+				);
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ guardarCensoCompleto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public void ejecutasigsvdefEnd(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdgarant
+			,String cdtipsup
+			)throws Exception
+	{
+		logger.debug(Utils.log(""
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ ejecutasigsvdefEnd @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ nmsuplem=" , nmsuplem
+				,"\n@@@@@@ cdgarant=" , cdgarant
+				,"\n@@@@@@ cdtipsup=" , cdtipsup
+				));
+		
+		String paso = null;
+		try
+		{
+			cotizacionDAO.sigsvdefEnd(
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,nmsituac
+				,nmsuplem
+				,cdgarant
+				,cdtipsup
+			);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(""
+				,"\n@@@@@@ ejecutasigsvdefEnd @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {

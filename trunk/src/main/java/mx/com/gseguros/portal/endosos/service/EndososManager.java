@@ -477,6 +477,27 @@ public interface EndososManager
 	
 	public String obtieneNumeroAtributo(String cdtipsit, String nombreAtributo) throws Exception;
 	
+	public String confirmarEndosoAltaFamilia(
+			String cdusuari
+			,String cdsisrol
+			,String cdelemen
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,String nmsuplem
+			,String nsuplogi
+			,Date fecha
+			,String rutaDocumentosPoliza
+			,String rutaServidorReports
+			,String passServidorReports
+			,UserVO usuario
+			,List<String> incisos
+			,String cdtipsitPrimerInciso
+			,String nmsolici
+			)throws Exception;
+	
 	public String confirmarEndosoBajaFamilia(
 			String cdusuari
 			,String cdsisrol
@@ -505,4 +526,12 @@ public interface EndososManager
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+	
+	public List<Map<String,String>> obtenerInfoFamiliaEndoso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String ntramite) throws Exception;
 }

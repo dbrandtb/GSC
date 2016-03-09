@@ -420,6 +420,72 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
+	public Map<String,String>cargarDatosCotizacionGrupoEndoso(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>resultado=ejecutaSP(new CargarDatosCotizacionGrupoEndoso(getDataSource()), params);
+		List<Map<String,String>>listaDatos=(List<Map<String,String>>)resultado.get("pv_registro_o");
+		Map<String,String>datos=new LinkedHashMap<String,String>();
+		if(listaDatos!=null&&listaDatos.size()>0)
+		{
+			datos=listaDatos.get(0);
+		}
+		return datos;
+	}
+	
+	protected class CargarDatosCotizacionGrupoEndoso extends StoredProcedure
+	{
+		private String[] columnas=new String[]{
+			"cdrfc"
+			,"cdperson"
+			,"cdideper_"
+			,"cdideext_"
+			,"nombre"
+			,"codpostal"
+			,"cdedo"
+			,"cdmunici"
+			,"dsdomici"
+			,"nmnumero"
+			,"nmnumint"
+			,"cdgiro"
+			,"cdrelconaseg"
+			,"cdformaseg"
+			,"ntramite"
+			,"nmpoliza"
+			,"cdperpag"
+			,"cdagente"
+			,"clasif"
+			,"pcpgocte"
+			,"tipoDerPol"
+			,"montoDerPol"
+			,"recargoPers"
+			,"recargoPago"
+			,"dctocmer"
+			,"cdpool"
+			,"swexiper"
+			,"feini"
+			,"fefin"
+			,"nmpolant"
+			,"nmrenova"
+			,"nmorddom"
+		};
+		
+		protected CargarDatosCotizacionGrupoEndoso(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_DATOS_COTIZACION_ENDOSO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(columnas)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
 	public List<Map<String,String>>cargarGruposCotizacion2(String cdunieco,String cdramo,String estado,String nmpoliza)throws Exception, Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
@@ -6868,6 +6934,67 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			super(dataSource,"PKG_CONSULTA.P_GET_STATUS_GENERAN_COTI");
 			declareParameter(new SqlParameter("status" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_conteo_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void guardarCensoCompletoMultisaludEndoso(
+			String nombreArchivo
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdestadoCli
+			,String cdmuniciCli
+			,String cdplan1
+			,String cdplan2
+			,String cdplan3
+			,String cdplan4
+			,String cdplan5
+			,String complemento
+			,String nmsuplem
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("censo"       , nombreArchivo);
+		params.put("cdunieco"    , cdunieco);
+		params.put("cdramo"      , cdramo);
+		params.put("estado"      , estado);
+		params.put("nmpoliza"    , nmpoliza);
+		params.put("cdestado"    , cdestadoCli);
+		params.put("cdmunici"    , cdmuniciCli);
+		params.put("cdplan1"     , cdplan1);
+		params.put("cdplan2"     , cdplan2);
+		params.put("cdplan3"     , cdplan3);
+		params.put("cdplan4"     , cdplan4);
+		params.put("cdplan5"     , cdplan5);
+		params.put("complemento" , complemento);
+		params.put("nmsuplem"    , nmsuplem);
+		ejecutaSP(new GuardarCensoCompletoMultisaludEndoso(getDataSource()),params);
+	}
+	
+	protected class GuardarCensoCompletoMultisaludEndoso extends StoredProcedure
+	{
+		protected GuardarCensoCompletoMultisaludEndoso(DataSource dataSource)
+		{
+			super(dataSource,"PKG_DESARROLLO.P_LAYOUT_CENSO_MS_COLEC_DEF");
+			declareParameter(new SqlParameter("censo"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdestado"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdmunici"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan1"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan2"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan3"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan4"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan5"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("complemento" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
