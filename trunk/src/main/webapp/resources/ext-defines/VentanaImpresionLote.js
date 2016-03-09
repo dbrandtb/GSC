@@ -521,7 +521,7 @@ Ext.define('VentanaImpresionLote',
             Ext.Ajax.request(
             {
                 url      : _GLOBAL_URL_IMPRIMIR_LOTE
-                ,timeout : 1000*60*10
+                ,timeout : 1000*60*60*3
                 ,params  :
                 {
                     'params.lote'      : me.lote
@@ -611,7 +611,7 @@ Ext.define('VentanaImpresionLote',
             Ext.Ajax.request(
             {
                 url      : _GLOBAL_URL_ESPERAR_DESCARGA_LOTE
-                ,timeout : 1000*60*10
+                ,timeout : 1000*60*60*3
                 ,success : function(response)
                 {
                     _setLoading(false,win);
