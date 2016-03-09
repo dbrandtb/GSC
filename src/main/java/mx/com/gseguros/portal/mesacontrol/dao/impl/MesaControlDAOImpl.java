@@ -993,18 +993,19 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	}
 	
 	@Override
-	public boolean regeneraReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cddocume, String nmsituac, String nmcertif) throws Exception{
+	public boolean regeneraReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cddocume, String nmsituac, String nmcertif, String cdmoddoc) throws Exception{
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdunieco" , cdunieco);
-		params.put("cdramo"  , cdramo);
-		params.put("estado"  , estado);
-		params.put("nmpoliza"   , nmpoliza);
-		params.put("nmsuplem"   , nmsuplem);
-		params.put("cddocume"   , cddocume);
-		params.put("nmsituac"   , nmsituac);
-		params.put("nmcertif"   , nmcertif);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("nmcertif" , nmcertif);
+		params.put("cdmoddoc" , cdmoddoc);
+		params.put("cddocume" , cddocume);
 		
-//		ejecutaSP(new RegeneraReporte(getDataSource()),params);
+		ejecutaSP(new RegeneraReporte(getDataSource()),params);
 		
 		return true;
 	}
@@ -1013,17 +1014,18 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected RegeneraReporte(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_");
+			super(dataSource,"pkg_db_report.regen_data_report");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("nmsuplem"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cddocume"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsituac"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmcertif"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("PV_MSG_ID_O"        , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("PV_TITLE_O"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdmoddoc"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cddocume"   , OracleTypes.VARCHAR));
+//			declareParameter(new SqlOutParameter("pv_msg_id_o"        , OracleTypes.NUMERIC));
+//			declareParameter(new SqlOutParameter("pv_title_o"         , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

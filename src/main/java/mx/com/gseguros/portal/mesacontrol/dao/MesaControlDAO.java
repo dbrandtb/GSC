@@ -254,9 +254,10 @@ public interface MesaControlDAO
 	 * @param cddocume
 	 * @param nmsituac
 	 * @param nmcertif
+	 * @param cdmoddoc
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean regeneraReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cddocume, String nmsituac, String nmcertif) throws Exception;
+	public boolean regeneraReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cddocume, String nmsituac, String nmcertif, String cdmoddoc) throws Exception;
 	
 }
