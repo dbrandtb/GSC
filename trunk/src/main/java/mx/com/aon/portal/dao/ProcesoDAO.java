@@ -3078,7 +3078,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 			String cols[] = new String[] { "nmsolici", "cddocume", "dsdocume",
 					"feinici", "ntramite", "tipmov", "nmsuplem", "nsuplogi",
-					"editable", "feinicio", "fefinal", "nmsituac", "nmcertif" };
+					"editable", "feinicio", "fefinal", "nmsituac", "nmcertif", "cdmoddoc" };
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
 			{

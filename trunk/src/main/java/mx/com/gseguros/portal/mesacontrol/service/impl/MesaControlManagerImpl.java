@@ -254,8 +254,8 @@ public class MesaControlManagerImpl implements MesaControlManager
 		return resultado;
 	}
 	
-	public boolean regeneraReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cddocume, String nmsituac, String nmcertif) throws Exception{
-		return mesaControlDAO.regeneraReporte(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cddocume, nmsituac, nmcertif);
+	public boolean regeneraReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cddocume, String nmsituac, String nmcertif, String cdmoddoc) throws Exception{
+		return mesaControlDAO.regeneraReporte(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cddocume, nmsituac, nmcertif, cdmoddoc);
 	}
 	
 }

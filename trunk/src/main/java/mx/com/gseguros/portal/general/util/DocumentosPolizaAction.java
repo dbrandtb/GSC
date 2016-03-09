@@ -117,7 +117,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		try {
 			success = mesaControlManager.regeneraReporte(smap1.get("pv_cdunieco_i"), smap1.get("pv_cdramo_i"), smap1.get("pv_estado_i"), 
 					smap1.get("pv_nmpoliza_i"), smap1.get("pv_nmsuplem_i"), smap1.get("pv_cddocume_i"), smap1.get("pv_nmsituac_i"),
-					smap1.get("pv_nmcertif_i"));
+					smap1.get("pv_nmcertif_i"), smap1.get("pv_cdmoddoc_i"));
 			
 		} catch (Exception e) {
 			logger.error("Error al regenerar el reporte "+ smap1, e);

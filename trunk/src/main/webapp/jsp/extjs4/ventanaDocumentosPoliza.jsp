@@ -227,6 +227,7 @@ Ext.onReady(function()
             ,'fefinal'
             ,'nmsituac'
             ,'nmcertif'
+            ,'cdmoddoc'
         ]
     });
     
@@ -1042,7 +1043,8 @@ Ext.onReady(function()
                                         'smap1.pv_nmsuplem_i' : record.get('nmsuplem'),
                                         'smap1.pv_cddocume_i' : record.get('cddocume'),
                                         'smap1.pv_nmsituac_i' : record.get('nmsituac'),
-                                        'smap1.pv_nmcertif_i' : record.get('nmcertif')
+                                        'smap1.pv_nmcertif_i' : record.get('nmcertif'),
+                                        'smap1.pv_cdmoddoc_i' : record.get('cdmoddoc')
                                         
                                     }
                                     ,success  : function(response){
@@ -1105,7 +1107,8 @@ Ext.onReady(function()
                     'smap1.pv_nmsuplem_i' : record.get('nmsuplem'),
                     'smap1.pv_cddocume_i' : record.get('cddocume'),
                     'smap1.pv_nmsituac_i' : record.get('nmsituac'),
-                    'smap1.pv_nmcertif_i' : record.get('nmcertif')
+                    'smap1.pv_nmcertif_i' : record.get('nmcertif'),
+                    'smap1.pv_cdmoddoc_i' : record.get('cdmoddoc')
                 }
             });
         }
@@ -1122,7 +1125,8 @@ Ext.onReady(function()
 				        +'&smap1.pv_nmsuplem_i=' + record.get('nmsuplem')
 				        +'&smap1.pv_cddocume_i=' + record.get('cddocume')
 				        +'&smap1.pv_nmsituac_i=' + record.get('nmsituac')
-			         	+'&smap1.pv_nmcertif_i=' + record.get('nmcertif');
+			         	+'&smap1.pv_nmcertif_i=' + record.get('nmcertif')
+			         	+'&smap1.pv_cdmoddoc_i=' + record.get('cdmoddoc');
         	
         	var windowVerDocu=Ext.create('Ext.window.Window',
         	{
