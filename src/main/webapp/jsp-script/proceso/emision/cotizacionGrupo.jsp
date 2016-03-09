@@ -5852,7 +5852,10 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                                     for(var i in datos)
                                     {
                                         var record = datos[i];
-                                        record.set('EXTPRI_OCUPACION',extrCmp.getValue());
+                                        if(record.get('PARENTESCO')=='T')
+                                        {
+                                            record.set('EXTPRI_OCUPACION',extrCmp.getValue());
+                                        }
                                     }
                                 }
                             }
