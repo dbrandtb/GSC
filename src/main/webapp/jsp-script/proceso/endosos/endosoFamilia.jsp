@@ -13,6 +13,8 @@ var _p48_urlMovimientos              = '<s:url namespace="/movimientos"  action=
 var _p48_urlMovimientosSMD           = '<s:url namespace="/movimientos"  action="ejecutarSMD"                       />';
 var _p48_urlAgregarFamilia           = '<s:url namespace="/emision"  	 action="includes/cotizacionGrupo"          />';
 var _p48_urlInforFamiliaEndoso       = '<s:url namespace="/endosos"      action="obtieneInfoFamiliaEndoso"          />';
+var _p21_urlBorrarRespaldoCenso          = '<s:url namespace="/emision"         action="borrarRespaldoCenso"              />';
+
 ////// urls //////
 
 ////// variables //////
@@ -1490,6 +1492,7 @@ function _p48_rendererGrupos(val)
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
+<script src="${ctx}/js/proceso/emision/funcionesCotizacionGrupo.js?now=${now}"></script>
 </head>
 <body>
 <div id="_p48_divpri" style="height:500px;border:1px solid #999999"></div>
