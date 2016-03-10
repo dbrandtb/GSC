@@ -1025,8 +1025,8 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("nmcertif"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdmoddoc"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cddocume"   , OracleTypes.VARCHAR));
-//			declareParameter(new SqlOutParameter("pv_msg_id_o"        , OracleTypes.NUMERIC));
-//			declareParameter(new SqlOutParameter("pv_title_o"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"        , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"         , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
