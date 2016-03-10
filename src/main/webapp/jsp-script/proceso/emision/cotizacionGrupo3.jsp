@@ -1850,8 +1850,8 @@ Ext.onReady(function()
     
     Ext.Ajax.request(
     {
-        url      : _p21_urlCargarParametros
-        ,params  :
+        //url      : _p21_urlCargarParametros,
+        params  :
         {
             'smap1.parametro' : 'TITULO_COTIZACION'
             ,'smap1.cdramo'   : _p21_smap1.cdramo
@@ -1887,8 +1887,8 @@ Ext.onReady(function()
     
     Ext.Ajax.request(
     {
-        url     : _p21_urlCargarParametros
-        ,params :
+        //url     : _p21_urlCargarParametros,
+        params :
         {
             'smap1.parametro' : 'COMP_LECT_RIESGO_COT_GRUP'
             ,'smap1.cdramo'   : _p21_smap1.cdramo
@@ -3979,6 +3979,16 @@ function _p21_mesacontrol(json)
         }
     });
 }
+function _p21_recarga(status,titulo,closable){
+	mensajeCorrecto('Familia guardada'
+            ,'Familia guardada correctamente.'
+            ,function()
+        {
+            _p21_reload(null,19,_p21_smap1.nmpoliza);
+        });
+}
+
+
 
 function _p21_turnar(status,titulo,closable)
 {
@@ -4072,8 +4082,8 @@ function _p21_turnar(status,titulo,closable)
 			                    
                                 Ext.Ajax.request(
                                 {
-                                    url      : _p21_urlCargarParametros
-                                    ,params  :
+                                    //url      : _p21_urlCargarParametros,
+                                    params  :
                                     {
                                         'smap1.parametro' : 'MENSAJE_TURNAR'
                                         ,'smap1.cdramo'   : _p21_smap1.cdramo
@@ -4817,12 +4827,7 @@ function _p21_subirDetallePersonas()
     
     var form = _p21_tabConcepto().down('[xtype=form]');
     
-    debug("Valor de ===> ",form.isValid());
-    debug("Valor de ===> ",form);
-    
-    
     var valido=form.isValid();
-    
     if(!valido)
     {
         mensajeWarning('Verificar datos del contratante');
@@ -4840,85 +4845,63 @@ function _p21_subirDetallePersonas()
         data.smap1['nmpoliza'] = _p21_smap1.nmpoliza;
         data.smap1['nmsuplem'] = Ext.isEmpty(_p21_smap1.nmsuplem)?'0':_p21_smap1.nmsuplem;
         form.setLoading(true);
-        Ext.Ajax.request(
-        {
-            url       : _p21_urlGuardarContratanteColectivo
-            ,jsonData : data
-            ,success  : function(response)
-            {
-                form.setLoading(false);
-                var json = Ext.decode(response.responseText);
-                if(json.exito)
+        centrarVentanaInterna(Ext.create('Ext.window.Window',
                 {
-                    centrarVentanaInterna(Ext.create('Ext.window.Window',
-                    {
-                        title   : 'Cargar archivo de personas'
-                        ,width  : 400
-                        ,modal  : true
-                        ,items  :
-                        [
-                            Ext.create('Ext.form.Panel',
-                            {
-                                url          : _p21_urlSubirCenso
-                                ,items       :
-                                [
+                    title   : 'Cargar archivo de personas'
+                    ,width  : 400
+                    ,modal  : true
+                    ,items  :
+                    [
+                        Ext.create('Ext.form.Panel',
+                        {
+                            url          : _p21_urlSubirCenso
+                            ,items       :
+                            [
+                                {
+                                    xtype       : 'filefield'
+                                    ,fieldLabel : 'Archivo'
+                                    ,buttonText : 'Examinar...'
+                                    ,buttonOnly : false
+                                    ,name       : 'censo'
+                                    ,labelAlign : 'top'
+                                    ,width      : 330
+                                    ,style      : 'margin:5px;'
+                                    ,allowBlank : false
+                                    ,msgTarget  : 'side'
+                                    ,cAccept    : ['xls','xlsx']
+                                    ,listeners  :
                                     {
-                                        xtype       : 'filefield'
-                                        ,fieldLabel : 'Archivo'
-                                        ,buttonText : 'Examinar...'
-                                        ,buttonOnly : false
-                                        ,name       : 'censo'
-                                        ,labelAlign : 'top'
-                                        ,width      : 330
-                                        ,style      : 'margin:5px;'
-                                        ,allowBlank : false
-                                        ,msgTarget  : 'side'
-                                        ,cAccept    : ['xls','xlsx']
-                                        ,listeners  :
+                                        change : function(me)
                                         {
-                                            change : function(me)
+                                            var indexofPeriod = me.getValue().lastIndexOf("."),
+                                            uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
+                                            if (!Ext.Array.contains(this.cAccept, uploadedExtension))
                                             {
-                                                var indexofPeriod = me.getValue().lastIndexOf("."),
-                                                uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
-                                                if (!Ext.Array.contains(this.cAccept, uploadedExtension))
+                                                centrarVentanaInterna(Ext.MessageBox.show(
                                                 {
-                                                    centrarVentanaInterna(Ext.MessageBox.show(
-                                                    {
-                                                        title   : 'Error de tipo de archivo',
-                                                        msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
-                                                        buttons : Ext.Msg.OK,
-                                                        icon    : Ext.Msg.WARNING
-                                                    }));
-                                                    me.reset();
-                                                }
+                                                    title   : 'Error de tipo de archivo',
+                                                    msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
+                                                    buttons : Ext.Msg.OK,
+                                                    icon    : Ext.Msg.WARNING
+                                                }));
+                                                me.reset();
                                             }
                                         }
                                     }
-                                ]
-                                ,buttonAlign : 'center'
-                                ,buttons     :
-                                [
-                                    {
-                                        text     : 'Cargar archivo'
-                                        ,icon    : '${ctx}/resources/fam3icons/icons/group_edit.png'
-                                        ,handler : function(me){ _p21_subirArchivoCompleto(me); }
-                                    }
-                                ]
-                            })
-                        ]
-                    }).show());
-                }
-                else
-                {
-                    mensajeWarning(json.respuesta);
-                }
-            }
-            ,failure  : function()
-            {
-                form.setLoading(false);
-                errorComunicacion();
-            }
-        });
+                                }
+                            ]
+                            ,buttonAlign : 'center'
+                            ,buttons     :
+                            [
+                                {
+                                    text     : 'Cargar archivo'
+                                    ,icon    : '${ctx}/resources/fam3icons/icons/group_edit.png'
+                                    ,handler : function(me){ _p21_subirArchivoCompleto(me); }
+                                }
+                            ]
+                        })
+                    ]
+                }).show());
     }
     debug('<_p21_subirDetallePersonas');
 }
@@ -7159,8 +7142,9 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                         if(json.exito)
                         {
                         
-                            var callback = function() { 
-                            	//_p21_turnar(19,'Observaciones de la carga',false); 
+                            var callback = function() {
+                            	
+                            	_p21_recarga(19,'Observaciones de la carga',false); 
                            	};
                             
                             if(Ext.isEmpty(nombreCensoParaConfirmar))

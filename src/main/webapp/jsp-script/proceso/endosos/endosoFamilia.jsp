@@ -282,7 +282,7 @@ Ext.onReady(function()
                                                 ,nmsuplem             : _p48_params.nmsuplem_endoso
                                                 ,nsuplogi             : _p48_params.nsuplogi
                                                 ,fecha                : Ext.Date.format(_fieldByName('FEFECHA').getValue(),'d/m/Y')
-                                                ,cdtipsitPrimerInciso : "MSC"//null//_p48_store.getAt(0).get('CDTIPSIT')
+                                                ,cdtipsitPrimerInciso : _p48_params.cdtipsup == 9?"MSC":_p48_store.getAt(0).get('CDTIPSIT')
                                                 ,nmsolici             : _p48_params.NMSOLICI
                                             }
                                             ,list : []
@@ -983,23 +983,6 @@ function _p48_agregarFamClic()
 		                 		}]
 		                 	}).show();
 		                 	centrarVentana(windowHistSinies);
-							
-							
-							
-							
-							/*var montoDisponible = json.SUMADISP;
-							Ext.getCmp('idSalarioMin').setValue(montoDisponible);					// Valor del monto disponible
-							Ext.getCmp('idReqPenalizacion').setValue(jsonRes.REQPENALIZACION);		// Valor para verificar si requiere penalizacion
-							Ext.getCmp('idValMaternidad').setValue(jsonRes.VALMATERNIDAD);			// Valor para verificar la validacion de maternidad
-							Ext.getCmp('idReqValidacionMat').setValue(jsonRes.REQVALSUMASEGURADA);	// Valor para verificar la validacion de maternidad
-							Ext.getCmp('idValSesiones').setValue(jsonRes.VALSESIONES);				// Valor para Validacion de Sesiones
-							if(+Ext.getCmp('idValSesiones').getValue() > 0){
-								Ext.getCmp('idCopagoPrevio').show();
-								Ext.getCmp('idCopagoFin').hide();
-							}else{
-								Ext.getCmp('idCopagoPrevio').hide();
-								Ext.getCmp('idCopagoFin').show();
-							}*/
 						},
 						failure : function (){
 							Ext.Msg.show({

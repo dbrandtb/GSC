@@ -3182,6 +3182,343 @@ public class CotizacionAction extends PrincipalCoreAction
 		return result;
 	}
 	
+	public String pantallaCotizacionGrupoEndoso()
+	{
+		logger.debug(Utils.log(""
+				,"\n###########################################"
+				,"\n###### pantallaCotizacionGrupoEndoso ######"
+				,"\n###### smap1=", smap1
+				,"\n###### flujo=", flujo
+				));
+		
+		imap = new HashMap<String,Item>();
+		
+		String cdramo         = null
+		       ,cdtipsit      = null
+		       ,ntramite      = null
+		       ,ntramiteVacio = null
+		       ,status        = null
+		       ,cdusuari      = null
+		       ,cdsisrol      = null
+		       ,nombreUsuario = null
+		       ,nombreAgente  = null
+		       ,cdAgente      = null
+		       ,paso          = null
+		       ,result        = ERROR;
+		
+		try
+		{
+			try
+			{
+				if(flujo!=null)
+				{
+					paso = "Recuperando datos del flujo";
+					logger.debug(Utils.log("", "paso=", paso));
+					
+					smap1 = new HashMap<String,String>();
+					smap1.put("cdunieco" , flujo.getCdunieco());
+					smap1.put("cdramo"   , flujo.getCdramo());
+					
+					Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(new StringBuilder(), flujo);
+					
+					Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
+					
+					String nmsolici = tramite.get("NMSOLICI");
+					if(StringUtils.isBlank(nmsolici))
+					{
+						nmsolici = "0";
+					}
+					
+					smap1.put("cdtipsit" , tramite.get("CDTIPSIT"));
+					smap1.put("estado"   , flujo.getEstado());
+					smap1.put("ntramite" , flujo.getNtramite());
+					smap1.put("cdagente" , tramite.get("CDAGENTE"));
+					smap1.put("status"   , flujo.getStatus());
+					smap1.put("sincenso" , tramite.get("OTVALOR02"));
+					
+					if(Integer.parseInt(nmsolici)>0)
+					{
+						smap1.put("nmpoliza" , nmsolici);
+					}
+					else
+					{
+						smap1.put("nmpoliza" , "");
+						smap1.put("ntramite" , "");
+						smap1.put("ntramiteVacio" , flujo.getNtramite());
+					}
+					
+					logger.debug(Utils.log("","datos recuperados del flujo smap1=",smap1));
+				}
+				
+				paso = "Verificando datos completos";
+				logger.debug(Utils.log("", "paso=", paso));
+				
+				Utils.validate(smap1, "No se recibieron datos");
+				
+				cdramo   = smap1.get("cdramo");
+				cdtipsit = smap1.get("cdtipsit");
+				
+				Utils.validate(
+						cdramo    , "No hay cdramo"
+						,cdtipsit , "No hay cdtipsit"
+						);
+				
+				ntramite      = smap1.get("ntramite");
+				ntramiteVacio = smap1.get("ntramiteVacio");
+				status        = smap1.get("status");
+				if(StringUtils.isBlank(status))
+				{
+					status = "0";
+				}
+				
+				//datos sesion
+				paso = "Verificando datos de sesi\u00f3n";
+				logger.debug(Utils.log("", "paso=", paso));
+				UserVO usuario  = Utils.validateSession(session);
+				cdusuari        = usuario.getUser();
+				cdsisrol        = usuario.getRolActivo().getClave();
+				
+				if(RolSistema.SUSCRIPTOR_TECNICO_ESPECIALISTA.getCdsisrol().equals(cdsisrol))
+				{
+					cdsisrol = RolSistema.SUSCRIPTOR_TECNICO.getCdsisrol();
+				}
+				
+				nombreUsuario   = usuario.getName();
+				
+				smap1.put("cdsisrol" , cdsisrol);
+				smap1.put("cdusuari" , cdusuari);
+				
+				//si entran por agente
+				paso = "Recuperando datos del agente";
+				logger.debug(Utils.log("", "paso=", paso));
+				if(StringUtils.isBlank(ntramite)&&StringUtils.isBlank(ntramiteVacio))
+				{
+					DatosUsuario datUsu = kernelManager.obtenerDatosUsuario(cdusuari,cdtipsit);
+					
+	        		String cdunieco = datUsu.getCdunieco();
+	        		
+	        		smap1.put("cdunieco",cdunieco);
+	        		
+	        		cdAgente     = datUsu.getCdagente();
+	        		nombreAgente = nombreUsuario;
+				}
+				//si entran por tramite o tramite vacio
+				else if(StringUtils.isNotBlank(ntramite)||StringUtils.isNotBlank(ntramiteVacio))
+				{
+					cdAgente     = smap1.get("cdagente");
+					nombreAgente = cotizacionManager.cargarNombreAgenteTramite(StringUtils.isNotBlank(ntramite)?ntramite:ntramiteVacio);
+				}
+				
+				//generando componentes
+				paso = "Generando componentes";
+				logger.debug(Utils.log("", "paso=", paso));
+				GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				
+				List<ComponenteVO>columnaEditorPlan=pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "EDITOR_PLANES", null);
+				gc.generaComponentes(columnaEditorPlan, true, false, false, true, true, false);
+				imap.put("editorPlanesColumn",gc.getColumns());
+				
+				List<ComponenteVO>columnaEditorSumaAseg=pantallasManager.obtenerComponentes(
+						null, null, cdramo,
+						null, null, null,
+						"COTIZACION_GRUPO", "EDITOR_SUMA_ASEG", null);
+				gc.generaComponentes(columnaEditorSumaAseg, true, false, false, true, true, false);
+				imap.put("editorSumaAsegColumn",gc.getColumns());
+				
+				List<ComponenteVO>columnaEditorPAquete=pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "EDITOR_PAQUETE", null);
+				gc.generaComponentes(columnaEditorPAquete, true, false, false, true, true, false);
+				imap.put("editorPaqueteColumn",gc.getColumns());
+				
+				List<ComponenteVO>columnaEditorAyudaMater=pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "EDITOR_AYUDAMATER", null);
+				gc.generaComponentes(columnaEditorAyudaMater, true, false, false, true, true, false);
+				imap.put("editorAyudaMaterColumn",gc.getColumns());
+				
+				List<ComponenteVO>columnaEditorAsisInterMater=pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "EDITOR_ASISINTE", null);
+				gc.generaComponentes(columnaEditorAsisInterMater, true, false, false, true, true, false);
+				imap.put("editorAsisInterColumn",gc.getColumns());
+				
+				List<ComponenteVO>columnaEditorEmerextr=pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "EDITOR_EMEREXTR", null);
+				gc.generaComponentes(columnaEditorEmerextr, true, false, false, true, true, false);
+				imap.put("editorEmerextrColumn",gc.getColumns());
+				
+				List<ComponenteVO>columnaEditorDeducible=pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "EDITOR_DEDUCIBLE", null);
+				gc.generaComponentes(columnaEditorDeducible, true, false, false, true, true, false);
+				imap.put("editorDeducibleColumn",gc.getColumns());
+				
+				List<ComponenteVO>componentesContratante=pantallasManager.obtenerComponentes(
+						null               , "|"+cdramo+"|" , "|"+status+"|" ,
+						null               , null           , cdsisrol       ,
+						"COTIZACION_GRUPO" , "CONTRATANTE"  , null);
+				gc.generaComponentes(componentesContratante, true,true,true,false,false,false);
+				imap.put("itemsContratante"  , gc.getItems());
+				imap.put("fieldsContratante" , gc.getFields());
+				
+				List<ComponenteVO>componentesRiesgo=pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, cdsisrol,
+						"COTIZACION_GRUPO", "RIESGO", null);
+				gc.generaComponentes(componentesRiesgo, true,true,true,false,false,false);
+				imap.put("itemsRiesgo"  , gc.getItems());
+				imap.put("fieldsRiesgo" , gc.getFields());
+				
+				List<ComponenteVO>componentesAgente=pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "AGENTE", null);
+				componentesAgente.get(0).setDefaultValue(nombreAgente);
+				componentesAgente.get(1).setDefaultValue(cdAgente);
+				gc.generaComponentes(componentesAgente, true,false,true,false,false,false);
+				imap.put("itemsAgente"  , gc.getItems());
+				
+				List<ComponenteVO>comboFormaPago=pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "COMBO_FORMA_PAGO", null);
+				gc.generaComponentes(comboFormaPago, true,false,true,false,false,false);
+				imap.put("comboFormaPago"  , gc.getItems());
+				
+				List<ComponenteVO>comboRepartoPago=pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "COMBO_REPARTO_PAGO", null);
+				gc.generaComponentes(comboRepartoPago, true,false,true,false,false,false);
+				imap.put("comboRepartoPago"  , gc.getItems());
+				
+				List<ComponenteVO>comboPool = pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, cdsisrol,
+						"COTIZACION_GRUPO", "COMBO_POOL", null);
+				gc.generaComponentes(comboPool, true,false,true,false,false,false);
+				imap.put("comboPool"  , gc.getItems());
+				
+				List<ComponenteVO>datosPoliza = pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, cdsisrol,
+						"COTIZACION_GRUPO", "DATOS_POLIZA", null);
+				gc.generaComponentes(datosPoliza, true,false,true,false,false,false);
+				imap.put("datosPoliza"  , gc.getItems());
+				
+				List<ComponenteVO>botones=pantallasManager.obtenerComponentes(
+						null, null, "|"+status+"|",
+						null, null, cdsisrol,
+						"COTIZACION_GRUPO", "BOTONESEND", null);
+				if(botones!=null&&botones.size()>0)
+				{
+					gc.generaComponentes(botones, true, false, false, false, false, true);
+					imap.put("botones" , gc.getButtons());
+				}
+				else
+				{
+					imap.put("botones" , null);
+				}
+				
+				//obtener permisos
+				paso = "Recuperando persmisos de pantalla";
+				logger.debug(Utils.log("", "paso=", paso));
+				smap1.put("status",status);
+				smap1.putAll(cotizacionManager.cargarPermisosPantallaGrupo(cdsisrol, status));
+				
+				//campos para asegurados
+				paso = "Recuperando campos de asegurados";
+				logger.debug(Utils.log("", "paso=", paso));
+				if(smap1.containsKey("ASEGURADOS")
+						&& StringUtils.isNotBlank(smap1.get("ASEGURADOS"))
+						&& smap1.get("ASEGURADOS").equals("S")
+				)
+				{
+					List<ComponenteVO>componentesExtraprimas=pantallasManager.obtenerComponentes(
+							null  , null , null
+							,cdtipsit , null , cdsisrol
+							,"COTIZACION_GRUPO", "ASEGURADOS", null);
+					gc.generaComponentes(componentesExtraprimas, true, true, false, true, false, false);
+					imap.put("aseguradosColumns" , gc.getColumns());
+					imap.put("aseguradosFields"  , gc.getFields());
+				}
+				
+				//campos para extraprimas
+				paso = "Recuperando campos de extraprimas";
+				logger.debug(Utils.log("", "paso=", paso));
+				if(smap1.containsKey("EXTRAPRIMAS")
+						&& StringUtils.isNotBlank(smap1.get("EXTRAPRIMAS"))
+						&& smap1.get("EXTRAPRIMAS").equals("S")
+				)
+				{
+					List<ComponenteVO>componentesExtraprimas=pantallasManager.obtenerComponentes(
+							null  , null , null
+							,null , null , cdsisrol
+							,"COTIZACION_GRUPO", "EXTRAPRIMAS", null);
+					gc.generaComponentes(componentesExtraprimas, true, true, false, true, true, false);
+					imap.put("extraprimasColumns" , gc.getColumns());
+					imap.put("extraprimasFields"  , gc.getFields());
+				}
+				
+				//campos para recuperados (asegurados)
+				paso = "Recuperando campos de asegurados recuperados";
+				logger.debug(Utils.log("", "paso=", paso));
+				if(smap1.containsKey("ASEGURADOS_EDITAR")
+						&& StringUtils.isNotBlank(smap1.get("ASEGURADOS_EDITAR"))
+						&& smap1.get("ASEGURADOS_EDITAR").equals("S")
+				)
+				{
+					List<ComponenteVO>componentesRecuperados=pantallasManager.obtenerComponentes(
+							null  , null , null
+							,null , null , cdsisrol
+							,"COTIZACION_GRUPO", "RECUPERADOS", null);
+					gc.generaComponentes(componentesRecuperados, true, true, false, true, true, false);
+					imap.put("recuperadosColumns" , gc.getColumns());
+					imap.put("recuperadosFields"  , gc.getFields());
+				}
+				
+				try
+				{
+					smap1.put("customCode" , consultasManager.recuperarCodigoCustom("21", cdsisrol));
+				}
+				catch(Exception ex)
+				{
+					smap1.put("customCode" , "/* error */");
+					logger.error("Error sin impacto funcional al recuperar codigo custom",ex);
+				}
+				
+				/////////////////
+				result = SUCCESS;
+			}
+			catch(Exception ex)
+			{
+				Utils.generaExcepcion(ex, paso);
+			}
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(""
+				,"\n###### result="    , result
+				,"\n###### respuesta=" , respuesta
+				,"\n###### pantallaCotizacionGrupoEndoso ######"
+				,"\n###########################################"
+				));
+		return result;
+	}
+	
 	public String obtenerCoberturasPlan()
 	{
 		logger.debug(""
@@ -3514,7 +3851,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 		
 		//mpolizas
-		if(exito)
+		/*if(exito)
 		{
 			try
 			{
@@ -3578,7 +3915,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				respuestaOculta = ex.getMessage();
 				exito           = false;
 			}
-		}
+		}*/
 		
 		boolean pagoRepartido = false;
 		if(exito)
@@ -7639,7 +7976,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		
 		//contratante
-		logger.debug("28.- Valor de resp.exito:{}",resp.exito);
+		/*logger.debug("28.- Valor de resp.exito:{}",resp.exito);
 		if(resp.exito)
 		{
 			try
@@ -7775,7 +8112,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				resp.respuestaOculta = ex.getMessage();
 				logger.error(respuesta,ex);
 			}
-		}
+		}*/
 		
 		//tramite
 		logger.debug("38.- resp.exito:{} hayTramite:{} hayTramiteVacio: {} censoAtrasado: {}",resp.exito,hayTramite,hayTramiteVacio,censoAtrasado);
