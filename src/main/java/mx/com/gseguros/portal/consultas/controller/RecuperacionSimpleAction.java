@@ -140,6 +140,58 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String recuperacionSimpleListaEndoso()
+	{
+		logger.debug(Utils.log(
+				 "\n#####################################"
+				,"\n###### recuperacionSimpleListaEndoso ######"
+				,"\n###### smap1=" , smap1
+				));
+		
+		try
+		{
+			logger.debug("Validando datos de entrada");
+			Utils.validate(smap1                  , "No se recibieron datos");
+			String procedimiento = smap1.get("procedimiento");
+			Utils.validate(procedimiento          , "No se recibio el procedimiento");
+			Utils.validate(session                , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			
+			RecuperacionSimple rec;
+			
+			try
+			{
+				rec = RecuperacionSimple.valueOf(procedimiento);
+			}
+			catch(Exception ex)
+			{
+				logger.error("Error al intentar obtener el catalogo del enum",ex);
+				throw new ApplicationException("El procedimiento no existe");
+			}
+			
+			ManagerRespuestaSlist2VO resp = recuperacionSimpleManager.recuperacionSimpleLista(rec,smap1,cdsisrol,cdusuari);
+			exito     = resp.isExito();
+			respuesta = resp.getRespuesta();
+			if(exito)
+			{
+				slist1 = resp.getSlist();
+				slist2 = resp.getSlist2();
+			}
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### recuperacionSimpleListaEndoso ######"
+				,"\n#####################################"
+				));
+		return SUCCESS;
+	}
+	
 	/*
 	 * Getters y setters
 	 */

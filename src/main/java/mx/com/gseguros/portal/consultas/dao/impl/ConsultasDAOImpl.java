@@ -2108,6 +2108,51 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	}
 	
 	@Override
+	public List<Map<String,String>> recuperarRevisionColectivosEndosos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		Map<String,Object> procResult  = ejecutaSP(new RecuperarRevisionColectivosEndosos(getDataSource()),params);
+		List<Map<String,String>> lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		return lista;
+	}
+	
+	protected class RecuperarRevisionColectivosEndosos extends StoredProcedure
+	{
+		protected RecuperarRevisionColectivosEndosos(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_REVISION_COLECTIVOEND");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+            		"CDUNIECO"  , "CDRAMO"     , "ESTADO" , "NMPOLIZA" , "CDGRUPO"
+            		,"NMSITUAC" , "PARENTESCO" , "NOMBRE" , "EDAD"     , "SEXO"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
 	public List<Map<String,String>> recuperarRevisionColectivos(
 			String cdunieco
 			,String cdramo
@@ -2148,7 +2193,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
-
+	
 	@Override
 	public boolean copiaDocumentosTdocupol(
 			 String cduniecoOrig

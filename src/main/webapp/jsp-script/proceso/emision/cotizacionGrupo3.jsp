@@ -89,6 +89,7 @@ var _p21_urlPantallaAgentes              = '<s:url namespace="/flujocotizacion" 
 var _p21_urlComplementoCotizacion        = '<s:url namespace="/emision"         action="complementoSaludGrupo"            />';
 var _p21_urlRecuperacion                 = '<s:url namespace="/recuperacion"    action="recuperar"                        />';
 var _p21_urlBorrarRespaldoCenso          = '<s:url namespace="/emision"         action="borrarRespaldoCenso"              />';
+var _p21_urlRestaurarRespaldoCenso       = '<s:url namespace="/emision"         action="restaurarRespaldoCenso"           />';
 
 //estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp
 var _cotcol_urlPantallaEspPersona   = '<s:url namespace="/persona"  action="includes/pantallaEspPersona"  />'
@@ -3460,11 +3461,12 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
 	                                            url      : _p21_urlRecuperacionSimpleLista
 	                                            ,params  :
 	                                            {
-	                                                'smap1.procedimiento' : 'RECUPERAR_REVISION_COLECTIVOS'
+	                                                'smap1.procedimiento' : 'RECUPERAR_REVISION_COLECTIVOS_ENDOSOS'
 	                                                ,'smap1.cdunieco'     : _p21_smap1.cdunieco
 	                                                ,'smap1.cdramo'       : _p21_smap1.cdramo
-	                                                ,'smap1.estado'       : 'W'
+	                                                ,'smap1.estado'       : _p21_smap1.estado
 	                                                ,'smap1.nmpoliza'     : json.smap1.nmpoliza
+	                                                ,'smap1.nmsuplem'     : _p21_smap1.nmsuplem
 	                                            }
 	                                            ,success : function(response)
 	                                            {
@@ -3667,11 +3669,12 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
 	                                            url      : _p21_urlRecuperacionSimpleLista
 	                                            ,params  :
 	                                            {
-	                                                'smap1.procedimiento' : 'RECUPERAR_REVISION_COLECTIVOS'
+	                                                'smap1.procedimiento' : 'RECUPERAR_REVISION_COLECTIVOS_ENDOSOS'
 	                                                ,'smap1.cdunieco'     : _p21_smap1.cdunieco
 	                                                ,'smap1.cdramo'       : _p21_smap1.cdramo
-	                                                ,'smap1.estado'       : 'W'
+	                                                ,'smap1.estado'       : _p21_smap1.estado ///
 	                                                ,'smap1.nmpoliza'     : json.smap1.nmpoliza
+	                                                ,'smap1.nmsuplem'     : _p21_smap1.nmsuplem
 	                                            }
 	                                            ,success : function(response)
 	                                            {
