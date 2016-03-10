@@ -1000,11 +1000,11 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("cdramo"   , cdramo);
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
-		params.put("nmsituac" , StringUtils.isBlank(nmsituac)? "" : nmsituac);
-		params.put("nmsuplem" , StringUtils.isBlank(nmsuplem)? "" : nmsuplem);
-		params.put("nmcertif" , StringUtils.isBlank(nmcertif)? "" : nmcertif);
-		params.put("cdmoddoc" , StringUtils.isBlank(cdmoddoc)? "" : cdmoddoc);
-		params.put("cddocume" , StringUtils.isBlank(cddocume)? "" : cddocume);
+		params.put("nmsituac" , StringUtils.isBlank(nmsituac) || "null".equalsIgnoreCase(nmsituac)? "" : nmsituac);
+		params.put("nmsuplem" , StringUtils.isBlank(nmsuplem) || "null".equalsIgnoreCase(nmsuplem)? "" : nmsuplem);
+		params.put("nmcertif" , StringUtils.isBlank(nmcertif) || "null".equalsIgnoreCase(nmcertif)? "" : nmcertif);
+		params.put("cdmoddoc" , StringUtils.isBlank(cdmoddoc) || "null".equalsIgnoreCase(cdmoddoc)? "" : cdmoddoc);
+		params.put("cddocume" , StringUtils.isBlank(cddocume) || "null".equalsIgnoreCase(cddocume)? "" : cddocume);
 		
 		ejecutaSP(new RegeneraReporte(getDataSource()),params);
 		
