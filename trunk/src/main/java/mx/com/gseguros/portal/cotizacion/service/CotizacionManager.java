@@ -769,4 +769,19 @@ public interface CotizacionManager
 			,String nmsuplem
 			,String cdgarant
 			,String cdtipsup)throws Exception;
+	
+	@Deprecated
+	public void restaurarRespaldoCenso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
+
+	@Deprecated
+	public void borrarRespaldoCenso(
+			String cdunieco
+			,String cdramo
+			,String nmpoliza
+			)throws Exception;
 }

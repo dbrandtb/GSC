@@ -628,4 +628,17 @@ public interface CotizacionDAO {
 			String cdplan2, String cdplan3, String cdplan4, String cdplan5,
 			String complemento, String nmsuplem) throws Exception;
 	
+	public void restaurarRespaldoCenso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
+	
+	public void borrarRespaldoCenso(
+			String cdunieco
+			,String cdramo
+			,String nmpoliza
+			)throws Exception;
+	
 }

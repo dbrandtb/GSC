@@ -10896,6 +10896,92 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String restaurarRespaldoCenso()
+	{
+		logger.debug(Utils.log(
+				 "\n####################################"
+				,"\n###### restaurarRespaldoCenso ######"
+				,"\n###### smap1=" , smap1
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(smap1, "No se recibieron datos");
+			
+			String cdunieco  = smap1.get("cdunieco")
+			       ,cdramo   = smap1.get("cdramo")
+			       ,estado   = smap1.get("estado")
+			       ,nmpoliza = smap1.get("nmpoliza");
+			
+			Utils.validate(
+					cdunieco  , "No se recibi\u00f3 la sucursal"
+					,cdramo   , "No se recibi\u00f3 el producto"
+					,estado   , "No se recibi\u00f3 el estado"
+					,nmpoliza , "No se recibi\u00f3 la p\u00f3liza"
+					);
+			
+			cotizacionManager.restaurarRespaldoCenso(cdunieco,cdramo,estado,nmpoliza);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### success="   , success
+				,"\n###### respuesta=" , respuesta
+				,"\n###### restaurarRespaldoCenso ######"
+				,"\n####################################"
+				));
+		return SUCCESS;
+	}
+	
+	public String borrarRespaldoCenso()
+	{
+		logger.debug(Utils.log(
+				 "\n#################################"
+				,"\n###### borrarRespaldoCenso ######"
+				,"\n###### smap1=" , smap1
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(smap1, "No se recibieron datos");
+			
+			String cdunieco  = smap1.get("cdunieco")
+			       ,cdramo   = smap1.get("cdramo")
+			       ,nmpoliza = smap1.get("nmpoliza");
+			
+			Utils.validate(
+					cdunieco  , "No se recibi\u00f3 la sucursal"
+					,cdramo   , "No se recibi\u00f3 el producto"
+					,nmpoliza , "No se recibi\u00f3 la p\u00f3liza"
+					);
+			
+			cotizacionManager.borrarRespaldoCenso(cdunieco,cdramo,nmpoliza);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### success="   , success
+				,"\n###### respuesta=" , respuesta
+				,"\n###### borrarRespaldoCenso ######"
+				,"\n#################################"
+				));
+		return SUCCESS;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/

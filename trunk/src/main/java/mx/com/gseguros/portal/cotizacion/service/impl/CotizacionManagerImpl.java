@@ -9144,6 +9144,29 @@ public class CotizacionManagerImpl implements CotizacionManager
 				));
 	}
 	
+	@Override
+	@Deprecated
+	public void restaurarRespaldoCenso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		cotizacionDAO.restaurarRespaldoCenso(cdunieco,cdramo,estado,nmpoliza);
+	}
+	
+	@Override
+	@Deprecated
+	public void borrarRespaldoCenso(
+			String cdunieco
+			,String cdramo
+			,String nmpoliza
+			)throws Exception
+	{
+		cotizacionDAO.borrarRespaldoCenso(cdunieco,cdramo,nmpoliza);
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {

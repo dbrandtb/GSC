@@ -85,6 +85,8 @@ var _p25_urlPantallaAgentes             = '<s:url namespace="/flujocotizacion" a
 var _p25_urlComplementoCotizacion       = '<s:url namespace="/emision"         action="complementoSaludGrupo"            />';
 var _p25_urlGuardarConfig4TVALAT        = '<s:url namespace="/emision"         action="guardarConfiguracionGarantias"    />';
 var _p25_urlRecuperacion                = '<s:url namespace="/recuperacion"    action="recuperar"                        />';
+var _p25_urlRestaurarRespaldoCenso      = '<s:url namespace="/emision"         action="restaurarRespaldoCenso"           />';
+var _p25_urlBorrarRespaldoCenso         = '<s:url namespace="/emision"         action="borrarRespaldoCenso"              />';
 
 //estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp
 var _cotcol_urlPantallaEspPersona   = '<s:url namespace="/persona"  action="includes/pantallaEspPersona"  />'
@@ -6965,8 +6967,53 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
 	                                                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
 	                                                            ,handler : function(me)
 	                                                            {
-	                                                                me.up('window').destroy();
-                                                                    _p25_subirArchivoCompleto(button,json.smap1.nombreCensoParaConfirmar);
+	                                                                var ck = 'Borrando respaldo';
+                                                                    try
+                                                                    {
+                                                                        _mask(ck);
+                                                                        Ext.Ajax.request(
+                                                                        {
+                                                                            url      : _p25_urlBorrarRespaldoCenso
+                                                                            ,params  :
+                                                                            {
+                                                                                'smap1.cdunieco'  : _p25_smap1.cdunieco
+                                                                                ,'smap1.cdramo'   : _p25_smap1.cdramo
+                                                                                ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                                                                            }
+                                                                            ,success : function(response)
+                                                                            {
+                                                                                _unmask();
+                                                                                var ck = 'Decodificando respuesta al borrar respaldo';
+                                                                                try
+                                                                                {
+                                                                                    var jsonBorr = Ext.decode(response.responseText);
+                                                                                    debug('### borrar resp:',jsonBorr);
+                                                                                    if(jsonBorr.success===true)
+                                                                                    {
+                                                                                        me.up('window').destroy();
+                                                                                        _p25_subirArchivoCompleto(button,json.smap1.nombreCensoParaConfirmar);
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        mensajeError(jsonBorr.respuesta);
+                                                                                    }
+                                                                                }
+                                                                                catch(e)
+                                                                                {
+                                                                                    manejaException(e,ck);
+                                                                                }
+                                                                            }
+                                                                            ,failure : function()
+                                                                            {
+                                                                                _unmask();
+                                                                                errorComunicacion(null,'Error borrando respaldo');
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                    catch(e)
+                                                                    {
+                                                                        manejaException(e,ck);
+                                                                    }
 	                                                            }
 	                                                        }
 	                                                        ,{
@@ -6974,8 +7021,54 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
 	                                                            ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
 	                                                            ,handler : function(me)
 	                                                            {
-	                                                                me.up('window').destroy();
-	                                                                _p25_resubirCenso = 'S';
+	                                                                var ck = 'Restaurando respaldo';
+                                                                    try
+                                                                    {
+                                                                        _mask(ck);
+                                                                        Ext.Ajax.request(
+                                                                        {
+                                                                            url      : _p25_urlRestaurarRespaldoCenso
+                                                                            ,params  :
+                                                                            {
+                                                                                'smap1.cdunieco'  : _p25_smap1.cdunieco
+                                                                                ,'smap1.cdramo'   : _p25_smap1.cdramo
+                                                                                ,'smap1.estado'   : _p25_smap1.estado
+                                                                                ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                                                                            }
+                                                                            ,success : function(response)
+                                                                            {
+                                                                                _unmask();
+                                                                                var ck = 'Decodificando respuesta al restaurar respaldo';
+                                                                                try
+                                                                                {
+                                                                                    var jsonRest = Ext.decode(response.responseText);
+                                                                                    debug('### restaurar:',jsonRest);
+                                                                                    if(jsonRest.success===true)
+                                                                                    {
+                                                                                        me.up('window').destroy();
+                                                                                        _p25_resubirCenso = 'S';
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        mensajeError(jsonRest.respuesta);
+                                                                                    }
+                                                                                }
+                                                                                catch(e)
+                                                                                {
+                                                                                    manejaException(e,ck);
+                                                                                }
+                                                                            }
+                                                                            ,failure : function()
+                                                                            {
+                                                                                _unmask();
+                                                                                errorComunicacion(null,'Error al restaurar respaldo');
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                    catch(e)
+                                                                    {
+                                                                        manejaException(e,ck);
+                                                                    }
 	                                                            }
 	                                                        }
 	                                                    ]
