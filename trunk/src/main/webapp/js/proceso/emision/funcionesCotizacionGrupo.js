@@ -682,11 +682,12 @@ function _p21_subirArchivoCompletoEndoso(button,nombreCensoParaConfirmar)
 	                                        url      : _p21_urlRecuperacionSimpleLista
 	                                        ,params  :
 	                                        {
-	                                            'smap1.procedimiento' : 'RECUPERAR_REVISION_COLECTIVOS'
+	                                            'smap1.procedimiento' : 'RECUPERAR_REVISION_COLECTIVOS_ENDOSOS'
 	                                            ,'smap1.cdunieco'     : _p21_smap1.cdunieco
 	                                            ,'smap1.cdramo'       : _p21_smap1.cdramo
 	                                            ,'smap1.estado'       : _p21_smap1.estado
 	                                            ,'smap1.nmpoliza'     : json.smap1.nmpoliza
+	                                            ,'smap1.nmsuplem'     : _p21_smap1.nmsuplem
 	                                        }
 	                                        ,success : function(response)
 	                                        {

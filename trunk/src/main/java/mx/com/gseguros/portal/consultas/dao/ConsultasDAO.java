@@ -282,6 +282,14 @@ public interface ConsultasDAO
 			,String nmpoliza
 			)throws Exception;
 
+	public List<Map<String,String>> recuperarRevisionColectivosEndosos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			)throws Exception;
+	
 	public boolean copiaDocumentosTdocupol(
 			 String cduniecoOrig
 			,String cdramoOrig

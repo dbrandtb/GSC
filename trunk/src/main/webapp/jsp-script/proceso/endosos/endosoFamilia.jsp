@@ -13,8 +13,8 @@ var _p48_urlMovimientos              = '<s:url namespace="/movimientos"  action=
 var _p48_urlMovimientosSMD           = '<s:url namespace="/movimientos"  action="ejecutarSMD"                       />';
 var _p48_urlAgregarFamilia           = '<s:url namespace="/emision"  	 action="includes/cotizacionGrupo"          />';
 var _p48_urlInforFamiliaEndoso       = '<s:url namespace="/endosos"      action="obtieneInfoFamiliaEndoso"          />';
-var _p21_urlBorrarRespaldoCenso          = '<s:url namespace="/emision"         action="borrarRespaldoCenso"              />';
-
+var _p21_urlBorrarRespaldoCenso      = '<s:url namespace="/emision"      action="borrarRespaldoCenso"              />';
+var _p21_urlRestaurarRespaldoCenso   = '<s:url namespace="/emision"      action="restaurarRespaldoCenso"           />';
 ////// urls //////
 
 ////// variables //////
