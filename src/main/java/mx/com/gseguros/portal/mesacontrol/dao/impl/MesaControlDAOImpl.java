@@ -995,15 +995,16 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	@Override
 	public boolean regeneraReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cddocume, String nmsituac, String nmcertif, String cdmoddoc) throws Exception{
 		Map<String,String> params = new LinkedHashMap<String,String>();
+		
 		params.put("cdunieco" , cdunieco);
 		params.put("cdramo"   , cdramo);
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
-		params.put("nmsituac" , nmsituac);
-		params.put("nmsuplem" , nmsuplem);
-		params.put("nmcertif" , nmcertif);
-		params.put("cdmoddoc" , cdmoddoc);
-		params.put("cddocume" , cddocume);
+		params.put("nmsituac" , StringUtils.isBlank(nmsituac)? "" : nmsituac);
+		params.put("nmsuplem" , StringUtils.isBlank(nmsuplem)? "" : nmsuplem);
+		params.put("nmcertif" , StringUtils.isBlank(nmcertif)? "" : nmcertif);
+		params.put("cdmoddoc" , StringUtils.isBlank(cdmoddoc)? "" : cdmoddoc);
+		params.put("cddocume" , StringUtils.isBlank(cddocume)? "" : cddocume);
 		
 		ejecutaSP(new RegeneraReporte(getDataSource()),params);
 		
