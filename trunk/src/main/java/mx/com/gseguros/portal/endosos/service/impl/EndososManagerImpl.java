@@ -2663,7 +2663,7 @@ public class EndososManagerImpl implements EndososManager
 					,cdramo
 					,estado
 					,nmpoliza
-					,nmsuplem//,nmsuplemRegenerado
+					,nmsuplemRegenerado
 					,cdunieco //cdsucadm
 					,cdunieco //cdsucdoc
 					,TipoTramite.ENDOSO.getCdtiptra() //cdtiptra

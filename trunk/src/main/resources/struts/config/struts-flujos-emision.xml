@@ -22,7 +22,7 @@
             <result name="success">/jsp-script/proceso/emision/cotizacionGrupo2.jsp</result>
         </action>
         
-        <action name="includes/cotizacionGrupo" class="CotizacionAction" method="pantallaCotizacionGrupo">
+        <action name="includes/cotizacionGrupo" class="CotizacionAction" method="pantallaCotizacionGrupoEndoso">
             <result name="error">/jsp-script/general/errorPantalla.jsp</result>
             <result name="success">/jsp-script/proceso/emision/cotizacionGrupo3.jsp</result>
         </action>
