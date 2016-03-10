@@ -349,7 +349,7 @@ Ext.onReady(function()
     
     var _p25_extraprimaFields =
     [
-        'nmsituac'
+        { name : 'nmsituac' , type : 'int' }
         ,'nombre'
         ,'familia'
         ,'titular'
@@ -4834,6 +4834,8 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                             ,null
                             ,null
                         );
+                        
+                        Ext.getStore('_p25_storeExtraprimas'+record.get('letra')).sort('nmsituac','ASC');
                     }
                 }
                 ,buttonAlign : 'center'
@@ -5848,6 +5850,8 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
                             ,null
                             ,null
                         );
+                        
+                        Ext.getStore('_p25_storeAsegurados'+record.get('letra')).sort('NMSITUAC','ASC');
                     }
                 }
                 ,buttonAlign : 'center'
