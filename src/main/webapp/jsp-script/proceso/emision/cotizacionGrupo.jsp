@@ -5963,6 +5963,8 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                             ,null
                             ,null
                         );
+                        
+                        Ext.getStore('_p21_storeExtraprimas'+record.get('letra')).sort('NMSITUAC','ASC');
                     }
                 }
                 ,buttonAlign : 'center'
@@ -6193,6 +6195,8 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
                             ,null
                             ,null
                         );
+                        
+                        Ext.getStore('_p21_storeAsegurados'+record.get('letra')).sort('NMSITUAC','ASC');
                     }
                 }
                 ,buttonAlign : 'center'
