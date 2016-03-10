@@ -333,6 +333,12 @@ function generaRFCPersonaMoral(nombre, fecha) {
     // Se agrega el digito verificador:
     nombre += new String(generaDigitoVerificador(nombre));
     
+    // TODO: Se trunca la cadena a 12 posiciones, ya que hay casos que genera 13 caracteres, revisar algoritmo con Rafael Guzman
+    if(nombre.length > 12) {
+    	debug('Se trunca RFC persona moral de ', nombre, ' a ', nombre.substr(0, 12));
+        nombre = nombre.substr(0, 12);
+    }
+    
     return nombre;
 }
 
