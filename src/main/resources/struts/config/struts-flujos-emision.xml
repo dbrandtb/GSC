@@ -460,6 +460,15 @@
         <action name="obtieneIdUsu" class="emisionAction" method="obtieneIdUsu"><!--Buscar por poliza -->
             <result name="success" type="json" />
        </action>
+        
+        <action name="restaurarRespaldoCenso" class="CotizacionAction" method="restaurarRespaldoCenso">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="borrarRespaldoCenso" class="CotizacionAction" method="borrarRespaldoCenso">
+            <result name="success" type="json" />
+        </action>
+        
     </package>
     
 </struts>
