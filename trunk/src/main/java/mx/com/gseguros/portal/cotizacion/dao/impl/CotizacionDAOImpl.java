@@ -6980,7 +6980,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	{
 		protected GuardarCensoCompletoMultisaludEndoso(DataSource dataSource)
 		{
-			super(dataSource,"PKG_DESARROLLO.P_LAYOUT_CENSO_MS_COLEC_DEF");
+			super(dataSource,"PKG_DESARROLLO.P_LAYOUT_CENSO_MS_COLEC_DEF2");
 			declareParameter(new SqlParameter("censo"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"      , OracleTypes.VARCHAR));

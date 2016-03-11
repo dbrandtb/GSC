@@ -4030,7 +4030,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                String parentesco = null;
 	                String nombre     = "";
 	                double cdgrupo    = -1d;
-	                
+	                //GRUPO
 	                try
                 	{
 	                	cdgrupo = row.getCell(0).getNumericCellValue();
@@ -4050,10 +4050,32 @@ public class CotizacionAction extends PrincipalCoreAction
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(0)),"-"));
 	                }
-	                
+	                //DEPENDIENTE
 	                try
                 	{
-	                	parentesco = row.getCell(1).getStringCellValue();
+	                	String dependiente = row.getCell(1).getStringCellValue();
+	                	logger.debug("dependiente ==> "+dependiente);
+	                	logger.debug("DEPENDIENTE: "+(
+	                			dependiente+"|"
+		                		));
+		                bufferLinea.append(
+		                		StringUtils.isNotBlank(dependiente)?dependiente+"|":"0|"
+                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (B) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
+	                }
+
+	                //PARENTESCO
+	                try
+                	{
+	                	parentesco = row.getCell(2).getStringCellValue();
 	                	if(!"T".equalsIgnoreCase(parentesco)
 	                			&&!"C".equalsIgnoreCase(parentesco)
 	                			&&!"H".equalsIgnoreCase(parentesco)
@@ -4081,62 +4103,42 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	filaBuena = false;
 	                	if(fila==1)
 	                	{
-	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (B) de la fila ",fila," la primer fila debe ser titular, se excluir\u00e1n las filas hasta el siguiente titular "));
+	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (C) de la fila ",fila," la primer fila debe ser titular, se excluir\u00e1n las filas hasta el siguiente titular "));
 	                	}
 	                	else
 	                	{
-	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (B) de la fila ",fila," "));
+	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (C) de la fila ",fila," "));
 	                	}
-	                }
-	                finally
-	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
-	                }
-	                
-	                try
-                	{
-		                logger.debug("PATERNO: "+(
-		                		row.getCell(2).getStringCellValue()+"|"
-		                		));
-		                bufferLinea.append(
-		                		row.getCell(2).getStringCellValue()+"|"
-		                		);
-		                
-		                nombre = Utils.join(nombre,row.getCell(2).getStringCellValue()," ");
-                	}
-	                catch(Exception ex)
-	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido paterno' (C) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(2)),"-"));
 	                }
-	                
+	                //PATERNO
 	                try
                 	{
-		                logger.debug("MATERNO: "+(
+		                logger.debug("PATERNO: "+(
 		                		row.getCell(3).getStringCellValue()+"|"
 		                		));
 		                bufferLinea.append(
 		                		row.getCell(3).getStringCellValue()+"|"
 		                		);
+		                
 		                nombre = Utils.join(nombre,row.getCell(3).getStringCellValue()," ");
                 	}
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido materno' (D) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido paterno' (D) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(3)),"-"));
 	                }
-	                
+	                //MATERNO
 	                try
                 	{
-		                logger.debug("NOMBRE: "+(
+		                logger.debug("MATERNO: "+(
 		                		row.getCell(4).getStringCellValue()+"|"
 		                		));
 		                bufferLinea.append(
@@ -4147,16 +4149,36 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Nombre' (E) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido materno' (E) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(4)),"-"));
 	                }
-	                
+	                //PRIMER NOMBRE
 	                try
                 	{
-		                auxCell=row.getCell(5);
+		                logger.debug("NOMBRE: "+(
+		                		row.getCell(5).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(5).getStringCellValue()+"|"
+		                		);
+		                nombre = Utils.join(nombre,row.getCell(5).getStringCellValue()," ");
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Nombre' (F) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(5)),"-"));
+	                }
+	                //SEGUNDO NOMBRE
+	                try
+                	{
+		                auxCell=row.getCell(6);
 		                logger.debug("SEGUNDO NOMBRE: "+(
 		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
 		                		));
@@ -4176,16 +4198,16 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Segundo nombre' (F) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Segundo nombre' (G) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(5)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
 	                }
-	                
+	                //SEXO
 	                try
                 	{
-	                	String sexo = row.getCell(6).getStringCellValue();
+	                	String sexo = row.getCell(7).getStringCellValue();
 	                	if(!"H".equalsIgnoreCase(sexo)
 	                			&&!"M".equalsIgnoreCase(sexo)
 	                	)
@@ -4202,16 +4224,16 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (G) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (H) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(7)),"-"));
 	                }
-	                
+	                //FECHA NACIMIENTO
 	                try
                 	{
-		                auxDate=row.getCell(7).getDateCellValue();
+		                auxDate=row.getCell(8).getDateCellValue();
 		                if(auxDate!=null)
 		                {
 		                	Calendar cal = Calendar.getInstance();
@@ -4233,20 +4255,20 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de nacimiento' (H) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de nacimiento' (I) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(7)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(8)),"-"));
 	                }
-	                
+	                //CODIGO POSTAL
 	                try
                 	{
 		                logger.debug("COD POSTAL: "+(
-		                		String.format("%.0f",row.getCell(8).getNumericCellValue())+"|"
+		                		String.format("%.0f",row.getCell(9).getNumericCellValue())+"|"
 		                		));
 		                bufferLinea.append(
-		                		String.format("%.0f",row.getCell(8).getNumericCellValue())+"|"
+		                		String.format("%.0f",row.getCell(9).getNumericCellValue())+"|"
 		                		);
                 	}
 	                catch(Exception ex2)
@@ -4254,42 +4276,23 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	logger.error("error al leer codigo postal como numero, se intentara como string:",ex2);
 	                	try
 	                	{
-	                		logger.debug("COD POSTAL: "+row.getCell(8).getStringCellValue()+"|");
-			                bufferLinea.append(row.getCell(8).getStringCellValue()+"|");
+	                		logger.debug("COD POSTAL: "+row.getCell(9).getStringCellValue()+"|");
+			                bufferLinea.append(row.getCell(9).getStringCellValue()+"|");
 	                	}
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' (I) de la fila ",fila," "));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' (J) de la fila ",fila," "));
 		                }
-	                }
-	                finally
-	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(8)),"-"));
-	                }
-	                
-	                try
-                	{
-		                logger.debug("ESTADO: "+(
-		                		row.getCell(9).getStringCellValue()+"|"
-		                		));
-		                bufferLinea.append(
-		                		row.getCell(9).getStringCellValue()+"|"
-		                		);
-                	}
-	                catch(Exception ex)
-	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estado' (J) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(9)),"-"));
 	                }
-	                
+	                //ESTADO
 	                try
                 	{
-		                logger.debug("MUNICIPIO: "+(
+		                logger.debug("ESTADO: "+(
 		                		row.getCell(10).getStringCellValue()+"|"
 		                		));
 		                bufferLinea.append(
@@ -4299,16 +4302,16 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Municipio' (K) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estado' (K) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(10)),"-"));
 	                }
-	                
+	                //MUNICIPIO
 	                try
                 	{
-		                logger.debug("COLONIA: "+(
+		                logger.debug("MUNICIPIO: "+(
 		                		row.getCell(11).getStringCellValue()+"|"
 		                		));
 		                bufferLinea.append(
@@ -4318,16 +4321,16 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Colonia' (L) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Municipio' (L) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(11)),"-"));
 	                }
-	                
+	                //COLONIA
 	                try
                 	{
-		                logger.debug("CALLE: "+(
+		                logger.debug("COLONIA: "+(
 		                		row.getCell(12).getStringCellValue()+"|"
 		                		));
 		                bufferLinea.append(
@@ -4337,16 +4340,35 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Calle' (M) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Colonia' (M) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(12)),"-"));
 	                }
-	                
+	                //CALLE
 	                try
                 	{
-	                	String numExt = extraerStringDeCelda(row.getCell(13));
+		                logger.debug("CALLE: "+(
+		                		row.getCell(13).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(13).getStringCellValue()+"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Calle' (N) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(13)),"-"));
+	                }
+	                //NUM. EXTERIOR
+	                try
+                	{
+	                	String numExt = extraerStringDeCelda(row.getCell(14));
 	                	if(StringUtils.isBlank(numExt))
 	                	{
 	                		throw new ApplicationException("Falta numero exterior");
@@ -4357,32 +4379,32 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero exterior' (N) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero exterior' (O) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(13)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(14)),"-"));
 	                }
-	                
+	                //NUM. INTERIOR
 	                try
                 	{
-	                	String numInt = extraerStringDeCelda(row.getCell(14));
+	                	String numInt = extraerStringDeCelda(row.getCell(15));
 		                logger.debug("NUM INT: "+numInt);
 		                bufferLinea.append(Utils.join(numInt,"|"));
                 	}
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero interior' (O) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero interior' (P) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(14)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(15)),"-"));
 	                }
-	                
+	                //RFC
 	                try
                 	{
-	                	auxCell=row.getCell(15);
+	                	auxCell=row.getCell(16);
 	                	
 		                logger.debug("RFC: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
 		                
@@ -4400,16 +4422,16 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'RFC' (P) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'RFC' (Q) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(15)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(16)),"-"));
 	                }
-	                
+	                //CORREO
 	                try
                 	{
-		                auxCell=row.getCell(16);
+		                auxCell=row.getCell(17);
 		                logger.debug("CORREO: "+(
 		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
 		                		));
@@ -4424,12 +4446,12 @@ public class CotizacionAction extends PrincipalCoreAction
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(16)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(17)),"-"));
 	                }
-	                
+	                //TELEFONO
 	                try
                 	{
-		                auxCell=row.getCell(17);
+		                auxCell=row.getCell(18);
 		                logger.debug("TELEFONO: "+(
 		                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
 		                		));
@@ -4440,16 +4462,16 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Telefono' (R) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Telefono' (S) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(17)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(18)),"-"));
 	                }
-	                
+	                //IDENTIDAD
 	                try
                 	{
-		                auxCell=row.getCell(18);
+		                auxCell=row.getCell(19);
 		                if(pideNumCliemte&&
 		                		(auxCell==null||auxCell.getStringCellValue()==null||StringUtils.isBlank(auxCell.getStringCellValue()))
 		                )
@@ -4466,16 +4488,16 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' (S) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' (T) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(18)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
 	                }
-	                
+	                //RECONOCIMIENTO
 	                try
                 	{
-		                auxDate=row.getCell(19)!=null?row.getCell(19).getDateCellValue():null;
+		                auxDate=row.getCell(20)!=null?row.getCell(20).getDateCellValue():null;
 		                if(auxDate!=null)
 		                {
 		                	Calendar cal = Calendar.getInstance();
@@ -4487,7 +4509,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                		throw new ApplicationException("El anio de la fecha no es valido");
 		                	}
 		                }
-		                logger.debug("FECHA RECONOCIMIENTO ANTIGUEDAD: "+(
+		                logger.debug("FECHA RECONOCIMIENTO ANTIGUEDAD  ===>: "+(
 		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
 		                			));
 		                bufferLinea.append(
@@ -4497,11 +4519,11 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de reconocimiento antiguedad' (T) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de reconocimiento antiguedad' (U) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(20)),"-"));
 	                }
 	                
 	                logger.debug(Utils.log("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
@@ -4542,14 +4564,14 @@ public class CotizacionAction extends PrincipalCoreAction
 	            {
 	            	boolean       sonGruposValidos = true;
 	            	StringBuilder errorGrupos      = new StringBuilder();
-	            	for(int i=0;i<gruposValidos.length;i++)
+	            	/*for(int i=0;i<gruposValidos.length;i++)
 	            	{
 	            		if(!gruposValidos[i])
 	            		{
 	            			sonGruposValidos = false;
 	            			errorGrupos.append("Debe haber al menos un asegurado v\u00E1lido para el grupo ").append(i+1).append("\n");
 	            		}
-	            	}
+	            	}*/
 	            	if(!sonGruposValidos)
 	            	{
 	            		exito           = false;
