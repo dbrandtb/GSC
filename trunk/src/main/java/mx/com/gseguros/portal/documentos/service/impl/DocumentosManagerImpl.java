@@ -3,20 +3,17 @@ package mx.com.gseguros.portal.documentos.service.impl;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
-import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Utils;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,14 +144,16 @@ public class DocumentosManagerImpl implements DocumentosManager
 			paso = "Generando y registrando documentos temporales";
 			logger.debug(Utils.log(stamp,"paso=",paso));
 			
-			List<Map<String,String>> docsATransferir = cotizacionDAO.generarDocumentosBaseDatos(
+			//List<Map<String,String>> docsATransferir = 
+			cotizacionDAO.generarDocumentosBaseDatos(
             		cdorddoc
             		,nmsolici
             		,ntramite
             		);
-			
+
+			/*
 			logger.debug(Utils.log(stamp,"\nlista documentos a transferir=",docsATransferir));
-			
+
 			paso = "Recuperando ruta temporal de documentos";
 			logger.debug(Utils.log(stamp,"paso=",paso));
 			
@@ -182,6 +181,7 @@ public class DocumentosManagerImpl implements DocumentosManager
             		logger.error(Utils.join(stamp,"Error (#",stamp,") al transferir archivo "),ex);
             	}
             }
+            */
 			
 			paso = "Se finaliza la generaci\u00F3n de documentos parametrizados";
 			logger.debug(Utils.log(stamp,"paso=",paso));
