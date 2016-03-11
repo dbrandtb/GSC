@@ -4535,6 +4535,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		    String.format("%.0f",row.getCell(0).getNumericCellValue())
 		                		    ).append("|").toString()
 		                		);
+		                
+		                if(cdgrupo>grupos.size())
+		                {
+		                	bufferErroresCenso.append(Utils.join("Grupo no permitido: ",cdgrupo," (grupos: ",grupos.size(),") en la fila ",fila," "));
+		                	throw new ApplicationException("El grupo de excel no existe");
+		                }
                 	}
 	                catch(Exception ex)
 	                {
@@ -5129,9 +5135,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                	}
 	                }
 	                
-	                if(cdgrupo>0d)
+	                if(cdgrupo>0d && cdgrupo<=grupos.size())
 	                {
 	                	logger.debug(Utils.log("cdgrupo=",cdgrupo,", valido=",gruposValidos[((int)cdgrupo)-1]));
+	                }
+	                else
+	                {
+	                	logger.debug(Utils.log("cdgrupo=",cdgrupo,", !no se puede imprimir valido"));
 	                }
 	            }
 	            

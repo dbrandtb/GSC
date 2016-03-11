@@ -3833,6 +3833,16 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                                                         ,height : 500
                                                         ,title  : 'Revisar asegurados del censo'
                                                         ,closable : false
+                                                        ,listeners :
+                                                        {
+                                                            afterrender : function()
+                                                            {
+                                                                if(json2.slist1.length==0)
+                                                                {
+                                                                    setTimeout(function(){mensajeError('No se registraron asegurados, favor de revisar a detalle los errores');},1000);
+                                                                }
+                                                            }
+                                                        }
                                                         ,items  :
                                                         [
                                                             Ext.create('Ext.panel.Panel',
@@ -4040,6 +4050,16 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
 	                                                    ,height : 500
 	                                                    ,title  : 'Revisar asegurados del censo'
 	                                                    ,closable : false
+                                                        ,listeners :
+                                                        {
+                                                            afterrender : function()
+                                                            {
+                                                                if(json2.slist1.length==0)
+                                                                {
+                                                                    setTimeout(function(){mensajeError('No se registraron asegurados, favor de revisar a detalle los errores');},1000);
+                                                                }
+                                                            }
+                                                        }
 	                                                    ,items  :
 	                                                    [
 	                                                        Ext.create('Ext.panel.Panel',
@@ -6870,6 +6890,16 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
 	                                                    ,height : 500
 	                                                    ,title  : 'Revisar asegurados del censo'
 	                                                    ,closable : false
+                                                        ,listeners :
+                                                        {
+                                                            afterrender : function()
+                                                            {
+                                                                if(json2.slist1.length==0)
+                                                                {
+                                                                    setTimeout(function(){mensajeError('No se registraron asegurados, favor de revisar a detalle los errores');},1000);
+                                                                }
+                                                            }
+                                                        }
 	                                                    ,items  :
 	                                                    [
 	                                                        Ext.create('Ext.panel.Panel',
@@ -7021,7 +7051,7 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
 	                                                            }
 	                                                        }
 	                                                        ,{
-	                                                            text     : 'Modificar datos'
+	                                                            text     : 'Restaurar datos e intentar de nuevo'
 	                                                            ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
 	                                                            ,handler : function(me)
 	                                                            {

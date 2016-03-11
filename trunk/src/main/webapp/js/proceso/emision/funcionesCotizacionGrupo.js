@@ -320,6 +320,16 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                                                         ,height : 500
                                                         ,title  : 'Revisar asegurados del censo'
                                                         ,closable : false
+                                                        ,listeners :
+                                                        {
+                                                            afterrender : function()
+                                                            {
+                                                                if(json2.slist1.length==0)
+                                                                {
+                                                                    setTimeout(function(){mensajeError('No se registraron asegurados, favor de revisar a detalle los errores');},1000);
+                                                                }
+                                                            }
+                                                        }
                                                         ,items  :
                                                         [
                                                             Ext.create('Ext.panel.Panel',
@@ -418,7 +428,7 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                                                         [
                                                             {
                                                                 text     : 'Aceptar y continuar'
-                                                                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                                                ,icon    : _GLOBAL_CONTEXTO+'/resources/fam3icons/icons/accept.png'
                                                                 ,handler : function(me)
                                                                 {
                                                                     var ck = 'Borrando respaldo';
@@ -471,8 +481,8 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                                                                 }
                                                             }
                                                             ,{
-                                                                text     : 'Modificar datos'
-                                                                ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
+                                                                text     : 'Restaurar datos e intentar de nuevo'
+                                                                ,icon    : _GLOBAL_CONTEXTO+'/resources/fam3icons/icons/pencil.png'
                                                                 ,handler : function(me)
                                                                 {
                                                                     var ck = 'Restaurando respaldo';
@@ -707,8 +717,18 @@ function _p21_subirArchivoCompletoEndoso(button,nombreCensoParaConfirmar)
 	                                                {
 	                                                    width   : 600
 	                                                    ,height : 500
-	                                                    ,title  : 'Revisar asegurados del censo 3'
+	                                                    ,title  : 'Revisar asegurados del censo'
 	                                                    ,closable : false
+                                                        ,listeners :
+                                                        {
+                                                            afterrender : function()
+                                                            {
+                                                                if(json2.slist1.length==0)
+                                                                {
+                                                                    setTimeout(function(){mensajeError('No se registraron asegurados, favor de revisar a detalle los errores');},1000);
+                                                                }
+                                                            }
+                                                        }
 	                                                    ,items  :
 	                                                    [
 	                                                        Ext.create('Ext.panel.Panel',
@@ -807,7 +827,7 @@ function _p21_subirArchivoCompletoEndoso(button,nombreCensoParaConfirmar)
                                                         [
                                                             {
                                                                 text     : 'Aceptar y continuar'
-                                                                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                                                ,icon    : _GLOBAL_CONTEXTO+'/resources/fam3icons/icons/accept.png'
                                                                 ,handler : function(me)
                                                                 {
                                                                     var ck = 'Borrando respaldo';
@@ -860,8 +880,8 @@ function _p21_subirArchivoCompletoEndoso(button,nombreCensoParaConfirmar)
                                                                 }
                                                             }
                                                             ,{
-                                                                text     : 'Modificar datos'
-                                                                ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
+                                                                text     : 'Restaurar datos e intentar de nuevo'
+                                                                ,icon    : _GLOBAL_CONTEXTO+'/resources/fam3icons/icons/pencil.png'
                                                                 ,handler : function(me)
                                                                 {
                                                                     var ck = 'Restaurando respaldo';
