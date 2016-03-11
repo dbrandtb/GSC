@@ -4953,6 +4953,12 @@ public class CotizacionAction extends PrincipalCoreAction
 		                bufferLinea.append(
 		                		String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"
 		                		);
+		                
+		                if(cdgrupo>olist1.size())
+		                {
+		                	bufferErroresCenso.append(Utils.join("Grupo no permitido: ",cdgrupo," (grupos: ",olist1.size(),") en la fila ",fila," "));
+		                	throw new ApplicationException("El grupo de excel no existe");
+		                }
                 	}
 	                catch(Exception ex)
 	                {
@@ -5437,9 +5443,13 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	}
 	                }
 	                
-	                if(cdgrupo>0d)
+	                if(cdgrupo>0d && cdgrupo<=olist1.size())
 	                {
 	                	logger.debug(Utils.log("cdgrupo=",cdgrupo,", valido=",gruposValidos[((int)cdgrupo)-1]));
+	                }
+	                else
+	                {
+	                	logger.debug(Utils.log("cdgrupo=",cdgrupo,", !no se puede imprimir valido"));
 	                }
 	            }
 	            
