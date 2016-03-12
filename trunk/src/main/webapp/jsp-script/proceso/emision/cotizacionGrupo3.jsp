@@ -764,6 +764,7 @@ Ext.onReady(function()
                         [
                             {
                                 xtype   : 'fieldset'
+                               	,itemId : '_p21_fieldsetContratante'
                                 ,title  : '<span style="font:bold 14px Calibri;">DATOS DEL CONTRATANTE</span>'
                                 //,hidden: (_p21_smap1.cdsisrol=='SUSCRIPTOR'&& (_p21_smap1.status-0==19 || _p21_smap1.status-0==21 || _p21_smap1.status-0==23) ) ? true :false
                                 ,layout :
@@ -897,6 +898,7 @@ Ext.onReady(function()
                             }
                             ,{
                                 xtype     : 'fieldset'
+                               	,itemId : '_p21_fieldsetInfPoliza'
                                 ,title    : '<span style="font:bold 14px Calibri;">INFORMACI&Oacute;N DE LA P&Oacute;LIZA</span>'
                                 ,defaults : { style : 'margin:5px;' }
                                 ,layout   :
@@ -7091,7 +7093,9 @@ function _p21_mostrarVentanaComplementoCotizacion(complemento,callback)
             }
         ]
     }).show());
-    
+    _fieldLikeLabel(json.smap1[indice],_fieldById('_p21_fieldsetRiesgo')).readOnly = true;
+    _fieldLikeLabel(json.smap1[indice],_fieldById('_p21_fieldsetInfPoliza')).readOnly = true;
+    _fieldLikeLabel(json.smap1[indice],_fieldById('_p21_fieldsetContratante')).readOnly = true;
 }
 /*
 se paso al archivo funcionesCotizacionGrupo.js por exceso de tamanio
