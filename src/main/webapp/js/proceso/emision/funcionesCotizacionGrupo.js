@@ -884,7 +884,10 @@ function _p21_subirArchivoCompletoEndoso(button,nombreCensoParaConfirmar)
                                                                 ,icon    : _GLOBAL_CONTEXTO+'/resources/fam3icons/icons/pencil.png'
                                                                 ,handler : function(me)
                                                                 {
-                                                                    var ck = 'Restaurando respaldo';
+                                                                	me.up('window').destroy();
+                                                                    _p21_resubirCenso = 'S';
+                                                                	
+                                                                	/*var ck = 'Restaurando respaldo';
                                                                     try
                                                                     {
                                                                         _mask(ck);
@@ -908,8 +911,7 @@ function _p21_subirArchivoCompletoEndoso(button,nombreCensoParaConfirmar)
                                                                                     debug('### restaurar:',jsonRest);
                                                                                     if(jsonRest.success===true)
                                                                                     {
-                                                                                        me.up('window').destroy();
-                                                                                        _p21_resubirCenso = 'S';
+                                                                                        
                                                                                     }
                                                                                     else
                                                                                     {
@@ -931,7 +933,7 @@ function _p21_subirArchivoCompletoEndoso(button,nombreCensoParaConfirmar)
                                                                     catch(e)
                                                                     {
                                                                         manejaException(e,ck);
-                                                                    }
+                                                                    }*/
                                                                  }
                                                              }
                                                          ]
