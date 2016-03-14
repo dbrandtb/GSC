@@ -5721,7 +5721,7 @@ public class EndososAction extends PrincipalCoreAction
                 		);
                 ////// inserta tworksup //////
                 //////////////////////////////
-                
+                //aqui va el llamado al Sp que mecomento Alex
                 //////////////////////////
                 ////// tarificacion //////
     			endososManager.sigsvalipolEnd(
