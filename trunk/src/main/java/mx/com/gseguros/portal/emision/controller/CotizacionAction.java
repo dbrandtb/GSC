@@ -3366,7 +3366,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				List<ComponenteVO>componentesContratante=pantallasManager.obtenerComponentes(
 						null               , "|"+cdramo+"|" , "|"+status+"|" ,
 						null               , null           , cdsisrol       ,
-						"COTIZACION_GRUPO" , "CONTRATANTE"  , null);
+						"COTIZACION_GRUPO" , "CONTRATANTEEND"  , null);
 				gc.generaComponentes(componentesContratante, true,true,true,false,false,false);
 				imap.put("itemsContratante"  , gc.getItems());
 				imap.put("fieldsContratante" , gc.getFields());
@@ -3374,7 +3374,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				List<ComponenteVO>componentesRiesgo=pantallasManager.obtenerComponentes(
 						null, null, null,
 						null, null, cdsisrol,
-						"COTIZACION_GRUPO", "RIESGO", null);
+						"COTIZACION_GRUPO", "RIESGOEND", null);
 				gc.generaComponentes(componentesRiesgo, true,true,true,false,false,false);
 				imap.put("itemsRiesgo"  , gc.getItems());
 				imap.put("fieldsRiesgo" , gc.getFields());
@@ -3405,14 +3405,14 @@ public class CotizacionAction extends PrincipalCoreAction
 				List<ComponenteVO>comboPool = pantallasManager.obtenerComponentes(
 						null, null, null,
 						null, null, cdsisrol,
-						"COTIZACION_GRUPO", "COMBO_POOL", null);
+						"COTIZACION_GRUPO", "COMBO_POOLEND", null);
 				gc.generaComponentes(comboPool, true,false,true,false,false,false);
 				imap.put("comboPool"  , gc.getItems());
 				
 				List<ComponenteVO>datosPoliza = pantallasManager.obtenerComponentes(
 						null, null, null,
 						null, null, cdsisrol,
-						"COTIZACION_GRUPO", "DATOS_POLIZA", null);
+						"COTIZACION_GRUPO", "DATOS_POLIZAEND", null);
 				gc.generaComponentes(datosPoliza, true,false,true,false,false,false);
 				imap.put("datosPoliza"  , gc.getItems());
 				
@@ -4028,6 +4028,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                filasLeidas = filasLeidas + 1;
 	                
 	                String parentesco = null;
+	                String dependiente = null;
 	                String nombre     = "";
 	                double cdgrupo    = -1d;
 	                //GRUPO
@@ -4053,19 +4054,20 @@ public class CotizacionAction extends PrincipalCoreAction
 	                //DEPENDIENTE
 	                try
                 	{
-	                	String dependiente = row.getCell(1).getStringCellValue();
-	                	logger.debug("dependiente ==> "+dependiente);
-	                	logger.debug("DEPENDIENTE: "+(
-	                			dependiente+"|"
-		                		));
-		                bufferLinea.append(
-		                		StringUtils.isNotBlank(dependiente)?dependiente+"|":"0|"
-                		);
+	                	/*dependiente = StringUtils.isNotBlank(
+	                			row.getCell(1).getStringCellValue())?row.getCell(1).getStringCellValue():"0";
+	                	bufferLinea.append(
+	                		dependiente+"|"
+                		);*/
+	                	bufferLinea.append(
+		                		String.format("%.0f",row.getCell(1).getNumericCellValue())+"|"
+		                		);
+	                	
                 	}
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (B) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Dependiente' (B) de la fila ",fila," "));
 	                }
 	                finally
 	                {
@@ -4085,17 +4087,15 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	{
 	                		throw new ApplicationException("El parentesco no se reconoce [T,C,H,P,D]");
 	                	}
-		                logger.debug("PARENTESCO: "+(
-		                		parentesco+"|"
-		                		));
+	                	
 		                bufferLinea.append(
 		                		parentesco+"|"
 		                		);
 		                
-		                if(fila==1&&!"T".equals(parentesco))
+		                /*if(fila==1&&!"T".equals(parentesco))
 		                {
 		                	throw new ApplicationException("La primer fila debe ser titular");
-		                }
+		                }*/
 		                
                 	}
 	                catch(Exception ex)
@@ -4597,10 +4597,10 @@ public class CotizacionAction extends PrincipalCoreAction
 		            	{
 		            		output.print(familias.get(n));
 		            	}
-		            	else
+		            	/*else
 		            	{
 		            		bufferErroresCenso.append(Utils.join("La familia ",n," del titular '",titulares.get(n),"' no fue incluida por error en la fila ",errorFamilia.get(n),"\n"));
-		            	}
+		            	}*/
 		            }
 		            
 					smap1.put("erroresCenso"    , bufferErroresCenso.toString());
@@ -4681,7 +4681,7 @@ public class CotizacionAction extends PrincipalCoreAction
 								,cdplanes[0] , cdplanes[1] , cdplanes[2]
 								,cdplanes[3] , cdplanes[4] , "N"
 								,nmsuplem
-								);
+						);
 					}
 					catch(Exception ex)
 					{
