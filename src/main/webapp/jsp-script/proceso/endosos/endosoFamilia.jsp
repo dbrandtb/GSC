@@ -791,17 +791,8 @@ function _p48_agregarFamClic()
                     Ext.Ajax.request( {
 						url    : _p48_urlInforFamiliaEndoso
 						,jsonData: Ext.encode(submitValues)
-						/*,smap1:{
-							'smap1.cdunieco'    :  _p48_params.CDUNIECO,
-							'smap1.cdramo'      :  _p48_params.CDRAMO,
-							'smap1.estado'      :  _p48_params.ESTADO,
-							'smap1.nmpoliza'    :  _p48_params.NMPOLIZA,
-	                        'smap1.nmsuplem'    :  _p48_params.nmsuplem_endoso,
-	                        'smap1.ntramite'    :  _p48_params.NTRAMITE
-						}*/
 						,success : function (response) {
 							var jsonRes = Ext.decode(response.responseText).slist1[0];
-							debug("VALOR DEL JSONRES -->",jsonRes);
 							
 							var windowHistSinies = Ext.create('Ext.window.Window',{
 		                 		modal       : true,
@@ -809,7 +800,7 @@ function _p48_agregarFamClic()
 		                 		width       : 1000,
 		                 		height      : 700,
 		                 		autoScroll  : true,
-		                 		closeAction: 'hide',
+		                 		closeAction : 'hide',
 		                 		loader      : {
 		                 			url     : _p48_urlAgregarFamilia,
 		                 			params  : {
@@ -831,6 +822,13 @@ function _p48_agregarFamClic()
 		                 				method: 'POST'
 		                 			}
 		                 		},
+		                 		listeners:{
+	        						 close:function(){
+	        							 if(true){
+	        								windowHistSinies.destroy();
+	        							 }
+	        						 }
+	        					}/*,
 		                 		buttons: [{
 		                 			//icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
 		                 			icon: '${icons}cancel.png',
@@ -838,8 +836,9 @@ function _p48_agregarFamClic()
 		                 			handler: function() {
 		                 				windowHistSinies.close();
 		                 			}
-		                 		}]
+		                 		}]*/
 		                 	}).show();
+							
 		                 	centrarVentana(windowHistSinies);
 						},
 						failure : function (){
