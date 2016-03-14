@@ -4054,15 +4054,13 @@ public class CotizacionAction extends PrincipalCoreAction
 	                //DEPENDIENTE
 	                try
                 	{
-	                	/*dependiente = StringUtils.isNotBlank(
-	                			row.getCell(1).getStringCellValue())?row.getCell(1).getStringCellValue():"0";
-	                	bufferLinea.append(
-	                		dependiente+"|"
-                		);*/
-	                	bufferLinea.append(
-		                		String.format("%.0f",row.getCell(1).getNumericCellValue())+"|"
-		                		);
+	                	logger.debug("DEPENDIENTE: "+(
+                			String.format("%.0f",row.getCell(1).getNumericCellValue())+"|"
+                		));
 	                	
+	                	bufferLinea.append(
+	                		String.format("%.0f",row.getCell(1).getNumericCellValue())+"|"
+                		);
                 	}
 	                catch(Exception ex)
 	                {
@@ -4087,6 +4085,10 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	{
 	                		throw new ApplicationException("El parentesco no se reconoce [T,C,H,P,D]");
 	                	}
+
+	                	logger.debug("PATERNO: "+(
+	                		row.getCell(3).getStringCellValue()+"|"
+                		));
 	                	
 		                bufferLinea.append(
 		                		parentesco+"|"

@@ -825,6 +825,7 @@ function _p48_agregarFamClic()
 		                 		listeners:{
 	        						 close:function(){
 	        							 if(true){
+	        								//windowHistSinies.removeAll();
 	        								windowHistSinies.destroy();
 	        							 }
 	        						 }
