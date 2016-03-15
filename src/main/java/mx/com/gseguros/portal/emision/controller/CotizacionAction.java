@@ -8335,7 +8335,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				String cdtipsup   = TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString();
 				
-				cotizacionManager.ejecutasigsvdefEnd(
+				/*cotizacionManager.ejecutasigsvdefEnd(
             		cdunieco
             		,cdramo
             		,estado
@@ -8344,7 +8344,7 @@ public class CotizacionAction extends PrincipalCoreAction
             		,nmsuplem
             		,"TODO"
             		,cdtipsup
-        		);
+        		);*/
 				
 			     //PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_END
 				endososManager.sigsvalipolEnd(
