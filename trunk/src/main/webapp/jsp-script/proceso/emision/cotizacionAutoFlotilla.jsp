@@ -5049,22 +5049,111 @@ function _p30_detalles()
             debug('### detalles:',json);
             if(json.exito)
             {
+            	//Editor de incisos de arbol en detalles de cotizacion Colectivos
+            	var totalCoberturas = 0;
+            	var totalGlobales = 0;
             	
-                for(var i in json.slist1)
-                	{
-                	  if('|Iva|Derechos de Póliza|'.indexOf('|'+json.slist1[i].COBERTURA+'|')!=-1)
-                		{
-                		  json.slist1[i].TITULO= json.slist1[i].TITULO+' (Conceptos Globales)';
-                		}
-                	}
+            	var nuevoElementoCoberturas;
+                var nuevoElementoGlobales;
+                var nuevoElementoTotal;
+
+                var ordenRecargos = 700;
+                var ordenDerechos = 800;
+                var ordenIva = 900;
             	
-                centrarVentanaInterna(Ext.create('Ext.window.Window',
+               for(var i in json.slist1)
+               	{	 
+            	   var totalIncisos = json.slist1.length;
+            	   var j= Number(i);
+            	   var cobertura = json.slist1[j].COBERTURA;
+            	   
+            	   debug('### Cobertura: ',j,'/',totalIncisos,' - ',cobertura);
+            	   
+            	    	 if(cobertura.indexOf('Recargo')!=-1)
+                			  {
+            	    		   totalGlobales += Number(json.slist1[j].PRIMA);
+                			   ordenRecargos = Number(ordenRecargos) - 5 ;
+                			   json.slist1[j].ORDEN = ordenRecargos+"";
+                			  }
+            	    	 else if(cobertura.indexOf('Derechos')!=-1)
+                			  {
+            	    		   totalGlobales += Number(json.slist1[j].PRIMA);
+                			   ordenDerechos = Number(ordenDerechos) - 5 ;
+                			   json.slist1[j].ORDEN = ordenDerechos+"";	  
+                			  }
+            	    	 else if(cobertura.indexOf('Iva')!=-1)
+                			  {
+            	    		  totalGlobales += Number(json.slist1[j].PRIMA);
+                			   ordenIva = Number(ordenIva) - 5 ;
+                			   json.slist1[j].ORDEN = ordenIva+"";
+                			  }
+                		
+                	 else
+                	 {totalCoberturas += Number(json.slist1[j].PRIMA);}
+               	
+                     var sigEle = j+1;
+                     var tituloAct =  json.slist1[j].TITULO;
+                     var tituloSig = json.slist1[sigEle].TITULO;
+                     
+                     debug('Titulo Actual: ',tituloAct,' Siguiente ',tituloSig,' Sig elemento ',sigEle);
+                     
+                     if( sigEle<=totalIncisos && (tituloAct != tituloSig))
+                     {
+			               	nuevoElementoCoberturas = {
+			                        COBERTURA  :  'Total de Coberturas'
+			                       ,PRIMA      :  totalCoberturas+""
+			                       ,ORDEN      :  '500'
+			                       ,TITULO     :  json.slist1[j].TITULO
+			                       ,CDRAMO     :  json.slist1[j].CDRAMO
+			                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
+			                       ,ESTADO     :  json.slist1[j].ESTADO
+			                       ,NMPOLIZA   :  json.slist1[j].NMPOLIZA
+			                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
+			                }
+			                nuevoElementoGlobales = {
+			                        COBERTURA  : 'Total de Conceptos Globales'
+			                       ,PRIMA      :  totalGlobales+""
+			                       ,ORDEN      :  '995'
+			                       ,TITULO     :  json.slist1[j].TITULO
+			                       ,CDRAMO     :  json.slist1[j].CDRAMO
+			                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
+			                       ,ESTADO     :  json.slist1[j].ESTADO
+			                       ,NMPOLIZA   :  json.slist1[j].NMPOLIZA
+			                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
+			                }
+			                nuevoElementoTotal = {
+			                        COBERTURA: 'Total por Inciso'
+			                       ,PRIMA      :  (totalGlobales+totalCoberturas)+""
+			                       ,ORDEN      :  '999'
+			                       ,TITULO     :  json.slist1[j].TITULO
+			                       ,CDRAMO     :  json.slist1[j].CDRAMO
+			                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
+			                       ,ESTADO     :  json.slist1[j].ESTADO
+			                       ,NMPOLIZA   :  json.slist1[j].NMPOLIZA
+			                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
+			                       }
+			               	
+			               	json.slist1.push(nuevoElementoCoberturas);
+			                json.slist1.push(nuevoElementoGlobales);
+			                json.slist1.push(nuevoElementoTotal);
+			               	
+			               	totalCoberturas = 0;
+			                totalGlobales = 0;
+			                ordenRecargos = 700;
+			                ordenDerechos = 800;
+			                ordenIva = 900;
+                     }
+	            }
+
+               debug('### detalles:',json);
+                              
+               centrarVentanaInterna(Ext.create('Ext.window.Window',
                 {
                     title       : 'Detalles de cotizaci&oacute;n'
                     ,width      : 600
                     ,maxHeight  : 600
                     ,autoScroll : true
-                    ,modal      : true
+                    ,modal      : true  
                     ,items      :
                     [
                         Ext.create('Ext.grid.Panel',
@@ -5128,8 +5217,8 @@ function _p30_detalles()
                                             }
                                         }
                                     ]
-                                    ,ftype          : 'groupingsummary'
-                                    ,startCollapsed : false
+                                 ,ftype          : 'grouping'//'groupingsummary'
+                                 ,startCollapsed : false
                                 }
                             ]
                         })
@@ -5147,7 +5236,10 @@ function _p30_detalles()
                                         var sum = 0;
                                         for ( var i = 0; i < json.slist1.length; i++)
                                         {
-                                            sum += parseFloat(json.slist1[i].PRIMA);
+                                            if(json.slist1[i].COBERTURA == 'Total por Inciso')
+                                            	{
+                                            	   sum += parseFloat(json.slist1[i].PRIMA);
+                                                }
                                         }
                                         this.setText('Total: '+ Ext.util.Format.usMoney(sum));
                                         this.callParent();
