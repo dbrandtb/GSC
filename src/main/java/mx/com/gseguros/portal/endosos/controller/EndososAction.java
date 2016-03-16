@@ -29,6 +29,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
+import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.endosos.model.RespuestaConfirmacionEndosoVO;
@@ -114,6 +115,9 @@ public class EndososAction extends PrincipalCoreAction
 	
 	@Autowired
 	private MesaControlManager mesaControlManager;
+	
+	@Autowired
+	private CotizacionManager cotizacionManager;
 	
 	private boolean exito           = false;
 	private String  respuesta;
@@ -5719,6 +5723,19 @@ public class EndososAction extends PrincipalCoreAction
                 		,nmsuplem
                 		,nmsituacIte, "I"
                 		);
+                
+				//////////////////////////////
+                ////// inserta tworksup //////
+                cotizacionManager.ejecutasigsvdefEnd(
+	        		cdunieco
+	        		,cdramo
+	        		,estado
+	        		,nmpoliza
+	        		,nmsituacIte
+	        		,nmsuplem
+	        		,"TODO"
+	        		,cdtipsup
+	    		);
                 ////// inserta tworksup //////
                 //////////////////////////////
                 //aqui va el llamado al Sp que mecomento Alex
@@ -5784,7 +5801,7 @@ public class EndososAction extends PrincipalCoreAction
 						,DocumentosManager.PROCESO_ENDOSO
 						,ntramite
 						,null //nmsolici
-, null
+						,null
 						);
 				
 				String nmsolici    = datosPoliza.get("nmsolici");
