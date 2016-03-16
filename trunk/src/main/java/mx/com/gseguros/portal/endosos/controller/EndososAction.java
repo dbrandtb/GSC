@@ -5335,7 +5335,16 @@ public class EndososAction extends PrincipalCoreAction
                 		);
                 ////// inserta tworksup //////
                 //////////////////////////////
-                
+                cotizacionManager.ejecutasigsvdefEnd(
+	        		cdunieco
+	        		,cdramo
+	        		,estado
+	        		,nmpoliza
+	        		,nmsituacIte
+	        		,nmsuplem
+	        		,"TODO"
+	        		,cdtipsup
+	    		);
                 //////////////////////////
                 ////// tarificacion //////
     			endososManager.sigsvalipolEnd(
