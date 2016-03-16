@@ -4055,13 +4055,33 @@ public class CotizacionAction extends PrincipalCoreAction
 	                try
                 	{
 		                auxCell=row.getCell(1);
-		                logger.debug("DEPENDIENTE: "+(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"0|"));
-		                bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"0|");
+		                
+		                dependiente = auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"0|";
+		                
+		                logger.debug("DEPENDIENTE: "+dependiente);
+		                bufferLinea.append(dependiente);
 	                }
 	                catch(Exception ex)
 	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Dependiente' (B) de la fila ",fila," "));
+	                	logger.error("error al leer dependiente como numero, se intentara como string:",ex);
+	                	try
+	                	{
+	                		dependiente = row.getCell(1).getStringCellValue()+"|";
+	                		
+	                		if("|".equals(dependiente))
+	                		{
+	                			dependiente = "0|";
+	                		}
+	                		
+	                		logger.debug("DEPENDIENTE: "+dependiente);
+			                bufferLinea.append(dependiente);
+	                	}
+		                catch(Exception ex2)
+		                {
+		                	logger.error("error dependiente:",ex2);
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Dependiente' (B) de la fila ",fila," "));
+		                }
 	                }
 	                finally
 	                {
@@ -4102,7 +4122,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                		throw new ApplicationException("El parentesco no se reconoce [T,C,H,P,D]");
 	                	}
 
-	                	logger.debug("PATERNO: "+(
+	                	logger.debug("PARENTESCO: "+(
 	                		row.getCell(3).getStringCellValue()+"|"
                 		));
 	                	
@@ -4205,7 +4225,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                		);
 		                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():"");
 		                
-		                if("T".equals(parentesco))
+		                if("T".equals(parentesco)||!"0|".equals(dependiente))
 		                {
 		                	nFamilia++;
 		                	familias.put(nFamilia,"");
