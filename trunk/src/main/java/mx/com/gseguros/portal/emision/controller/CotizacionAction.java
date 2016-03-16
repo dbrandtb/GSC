@@ -4051,8 +4051,24 @@ public class CotizacionAction extends PrincipalCoreAction
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(0)),"-"));
 	                }
-	                //DEPENDIENTE
+	                
 	                try
+                	{
+		                auxCell=row.getCell(1);
+		                logger.debug("DEPENDIENTE: "+(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"0|"));
+		                bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"0|");
+	                }
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Dependiente' (B) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
+	                }
+	                //DEPENDIENTE
+	                /*try
                 	{
 	                	logger.debug("DEPENDIENTE: "+(
                 			String.format("%.0f",row.getCell(1).getNumericCellValue())+"|"
@@ -4070,7 +4086,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
-	                }
+	                }*/
 
 	                //PARENTESCO
 	                try
