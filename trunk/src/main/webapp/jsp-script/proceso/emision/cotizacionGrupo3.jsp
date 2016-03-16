@@ -1710,7 +1710,7 @@ Ext.onReady(function()
     catch(e)
     {}
     
-    Ext.Ajax.request(
+    /*Ext.Ajax.request(
     {
         //url      : _p21_urlCargarParametros,
         params  :
@@ -1745,7 +1745,7 @@ Ext.onReady(function()
             _fieldByLabel('PRODUCTO').hide();
             errorComunicacion();
         }
-    });
+    });*/
     
     
     _fieldByName('cdpool').on(
