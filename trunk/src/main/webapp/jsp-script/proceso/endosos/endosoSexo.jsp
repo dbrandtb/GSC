@@ -241,7 +241,7 @@ Ext.onReady(function()
                 ,buttons     :
                               [
                                   {
-                                      text     : 'Confirmar endoso ==>'
+                                      text     : 'Confirmar endoso'
                                       ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
                                       ,handler : _1_confirmar
                                   }
