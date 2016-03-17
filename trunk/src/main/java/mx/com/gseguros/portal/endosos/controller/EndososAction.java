@@ -1731,7 +1731,7 @@ public class EndososAction extends PrincipalCoreAction
 				clienteGeneral.setClaveCia(saludDanios);
 				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("pv_cdperson"), Ice2sigsService.Operacion.ACTUALIZA, null, (UserVO) session.get("USUARIO"), true);
+				ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("pv_cdperson"), Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), true);
     			
 				ArrayList<Map<String,String>> saveList = new ArrayList<Map<String,String>>();
 				ArrayList<Map<String,String>> updateList = new ArrayList<Map<String,String>>();
@@ -6824,7 +6824,7 @@ public class EndososAction extends PrincipalCoreAction
 				}
 				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, cdpersonCli, Ice2sigsService.Operacion.ACTUALIZA, null, (UserVO) session.get("USUARIO"), true);
+				ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, cdpersonCli, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), true);
 
 				
 				String sucursal = cdunieco;
@@ -7216,7 +7216,7 @@ public class EndososAction extends PrincipalCoreAction
 					clienteGeneral.setClaveCia(saludDanios);
 					
 					// Ejecutamos el Web Service de Cliente Salud:
-					ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, cdperson, Ice2sigsService.Operacion.ACTUALIZA, null, (UserVO) session.get("USUARIO"), true);
+					ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, cdperson, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), true);
 //					ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 					//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 					
