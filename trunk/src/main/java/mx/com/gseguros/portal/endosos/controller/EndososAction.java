@@ -42,10 +42,12 @@ import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
+import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
+import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
@@ -119,6 +121,9 @@ public class EndososAction extends PrincipalCoreAction
 	@Autowired
 	private CotizacionManager cotizacionManager;
 	
+	@Autowired
+	private SiniestrosManager  siniestrosManager;
+	
 	private boolean exito           = false;
 	private String  respuesta;
 	private String  respuestaOculta = null;
@@ -191,7 +196,7 @@ public class EndososAction extends PrincipalCoreAction
 		logger.debug(""
 				+ "\n############################"
 				+ "\n############################"
-				+ "\n###### validarCP ######"
+				+ "\n###### validarCP ###########"
 				+ "\n######                ######"
 				);
 		
@@ -208,7 +213,7 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		logger.debug(""
 				+ "\n######                ######"
-				+ "\n###### validarCP ######"
+				+ "\n###### validarCP ###########"
 				+ "\n############################"
 				+ "\n############################"
 				);
@@ -357,6 +362,11 @@ public class EndososAction extends PrincipalCoreAction
 		{
 			transformaEntrada(smap1, slist1, true);
 			
+			//Si despues de transforma entrada no hay cdrol de contratante o inciso se deja default el rol 1
+			if(StringUtils.isBlank(smap1.get("pv_cdrol"))){
+				smap1.put("pv_cdrol", "1");
+			}
+			
 			// Valida si hay un endoso anterior pendiente:
 			RespuestaVO resp = endososManager.validaEndosoAnterior(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"),
 					smap1.get("pv_estado"), smap1.get("pv_nmpoliza"),
@@ -425,8 +435,8 @@ public class EndososAction extends PrincipalCoreAction
 		smap1.put("pv_cdperson", smap1.get("CDPERSON"));
 		
 		logger.debug(new StringBuilder()
-		.append("\n#####################################")
-		.append("\n#####################################")
+		.append("\n#########################################")
+		.append("\n#########################################")
 		.append("\n###### pantallaEndosoDomicilioAuto ######")
 		.append("\n######                         ######").toString());
 		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
@@ -1760,10 +1770,10 @@ public class EndososAction extends PrincipalCoreAction
 			error = ex.getMessage();
 		}
 		logger.debug("\n######                             ######"
-				+ "\n######                             ######"
-				+ "\n###### guardar endoso de domicilio ######"
-				+ "\n#########################################"
-				+ "\n#########################################");
+				   + "\n######                             ######"
+				   + "\n###### guardar endoso de domicilio ######"
+				   + "\n#########################################"
+			       + "\n#########################################");
 		return SUCCESS;
 	}
 	/*//////////////////////////////////////////////////*/
@@ -2845,7 +2855,7 @@ public class EndososAction extends PrincipalCoreAction
 	public String entrarEndosoParentescoAntiguedad()
 	{
 		logger.debug(Utils.log(
-				"\n#############################################"
+				"\n###############################################"
 				,"\n###### entrarEndosoParentescoAntiguedad ######"
 				,"\n###### smap1="  , smap1
 				,"\n###### slist1=" , slist1
@@ -2908,7 +2918,7 @@ public class EndososAction extends PrincipalCoreAction
 		logger.debug(Utils.log(
 				"\n###### respuesta=",respuesta
 				,"\n###### entrarEndosoParentescoAntiguedad ######"
-				,"\n#############################################"
+				,"\n##############################################"
 				));
 		return respuesta;
 	}
@@ -6974,10 +6984,10 @@ public class EndososAction extends PrincipalCoreAction
 	public String guardarEndosoDomicilioAutoFull() {
 		this.session=ActionContext.getContext().getSession();
 		logger.debug("\n"
-				+ "\n########################################"
-				+ "\n########################################"
+				+ "\n############################################"
+				+ "\n############################################"
 				+ "\n###### guardarEndosoDomicilioAutoFull ######"
-				+ "\n######                            ######"
+				+ "\n######                                ######"
 				);
 		logger.debug("smap1: "+smap1);
 		logger.debug("smap2: "+smap2);
@@ -8164,6 +8174,114 @@ public class EndososAction extends PrincipalCoreAction
 					resp.setSuccess(false);
 				}
 			}
+			
+			GeneradorCampos gcTatri            = null;
+			GeneradorCampos gcGral             = null;
+			List<ComponenteVO>tatrisitOriginal = null;
+			
+			//componentes
+			if(resp.isSuccess())
+			{
+				try
+				{
+					gcTatri = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+					gcTatri.setCdramo(cdramo);
+					gcTatri.setCdtipsit(cdtipsit);
+					
+					gcGral = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+					gcGral.setCdramo(cdramo);
+					
+					//TATRISIT ORIGINAL
+					tatrisitOriginal = cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
+					
+					//columnas base
+					List<ComponenteVO>tatrisitColsBase = new ArrayList<ComponenteVO>();
+					for(ComponenteVO iTatri:tatrisitOriginal)
+					{
+						if(StringUtils.isNotBlank(iTatri.getSwsuscri())
+								&&iTatri.getSwsuscri().equals("N")
+								&&iTatri.getSwGrupo().equals("S")
+								&&iTatri.getSwGrupoLinea().equals("N")
+								)
+						{
+							logger.debug(new StringBuilder("SE AGREGA PARA COLUMNA BASE ").append(iTatri).toString());
+							iTatri.setColumna("S");
+							tatrisitColsBase.add(iTatri);
+						}
+					}
+					
+					if(tatrisitColsBase.size()>0)
+					{
+						gcTatri.generaComponentes(tatrisitColsBase, true, true, false, true, true, false);
+						imap1.put("colsBaseFields"  , gcTatri.getFields());
+						imap1.put("colsBaseColumns" , gcTatri.getColumns());
+					}
+					else
+					{
+						imap1.put("colsBaseFields"  , null);
+						imap1.put("colsBaseColumns" , null);
+					}
+					//columnas base
+					
+					//columnas extendidas (de coberturas)
+					List<ComponenteVO> tatrisitColsCober = new ArrayList<ComponenteVO>();
+					for(ComponenteVO iTatri:tatrisitOriginal)
+					{
+						if(StringUtils.isNotBlank(iTatri.getSwsuscri())
+								&&iTatri.getSwsuscri().equals("N")
+								&&iTatri.getSwGrupo().equals("S")
+								)
+						{
+							logger.debug(new StringBuilder("SE AGREGA PARA COLUMNA DE COBERTURA ").append(iTatri).toString());
+							iTatri.setColumna("S");
+							tatrisitColsCober.add(iTatri);
+						}
+					}
+					if(tatrisitColsCober.size()>0)
+					{
+						gcTatri.generaComponentes(tatrisitColsCober, true, true, false, true, true, false);
+						imap1.put("colsExtFields"  , gcTatri.getFields());
+						imap1.put("colsExtColumns" , gcTatri.getColumns());
+					}
+					else
+					{
+						imap1.put("colsExtFields"  , null);
+						imap1.put("colsExtColumns" , null);
+					}
+					//columnas extendidas (de coberturas)
+					
+					//factores
+					List<ComponenteVO>factores = new ArrayList<ComponenteVO>();
+					for(ComponenteVO iTatri:tatrisitOriginal)
+					{
+						if(StringUtils.isNotBlank(iTatri.getSwsuscri())
+								&&iTatri.getSwsuscri().equals("N")
+								&&iTatri.getSwGrupo().equals("N")
+								&&iTatri.getSwGrupoFact().equals("S")
+								)
+						{
+							logger.debug(new StringBuilder("SE AGREGA PARA FACTOR ").append(iTatri).toString());
+							iTatri.setColumna("S");
+							factores.add(iTatri);
+							iTatri.setMenorCero(true);
+						}
+					}
+					
+					List<ComponenteVO>columnaEditorPlan=pantallasManager.obtenerComponentes(
+							null, null, null,
+							null, null, null,
+							"COTIZACION_GRUPO", "EDITOR_PLANES_REEXP", null);
+					gcGral.generaComponentes(columnaEditorPlan, true, false, false, true, true, false);
+					imap1.put("editorPlanesColumn",gcGral.getColumns());
+					
+					
+				}
+				catch(Exception ex)
+				{
+					logger.error("Error al obtener componentes",ex);
+				}
+			}
+			//componentes
 		}
 		catch(Exception ex)
 		{
@@ -8235,12 +8353,15 @@ public class EndososAction extends PrincipalCoreAction
 		logger.debug("smap1:"+smap1);
 		logger.debug("smap2:"+smap2);
 		logger.debug("smap3:"+smap3);
+		logger.debug("Grupos a actualizar slist1:"+slist1);
+		logger.debug("Grupos a no actualizar slist2:"+slist2);
 		
 		this.session=ActionContext.getContext().getSession();
 		
 		try {
 			UserVO usuario        = (UserVO)session.get("USUARIO");
 			String cdunieco       = smap1.get("CDUNIECO");
+			String newcdunieco    = smap2.get("NEWCDUNIECO");
 			String cdramo         = smap1.get("CDRAMO");
 			String estado         = smap1.get("ESTADO");
 			String nmpoliza       = smap1.get("NMPOLIZA");
@@ -8258,6 +8379,15 @@ public class EndososAction extends PrincipalCoreAction
 			String comentaReexp   = smap2.get("comment");
 			String cdplan         = smap2.get("cdplan");
 			
+			String usuarioTramite =  "";
+			
+			boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
+			boolean esPolizaColectiva  = (StringUtils.isNotBlank(smap1.get("TIPOFLOT")) && "F".equalsIgnoreCase(smap1.get("TIPOFLOT")));//flotilla o Colectiva
+
+			boolean actualizarGrupos =  (slist1 != null && !slist1.isEmpty());
+			boolean clonarGrupos     =  (slist2 != null && !slist2.isEmpty());
+			
+			
 			//PKG_ENDOSOS.P_ENDOSO_INICIA
 			Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza,
 					sFecha, cdelemento, cdusuari, proceso, cdtipsup);
@@ -8265,10 +8395,56 @@ public class EndososAction extends PrincipalCoreAction
 			String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
 			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
 			
+			if(StringUtils.isBlank(newcdunieco)){
+				newcdunieco = cdunieco;
+			}
+			
 			//P_CLONAR_POLIZA_REEXPED
-			Map<String,String>resReexped = endososManager.pClonarPolizaReexped(cdunieco, cdramo, estado, nmpoliza, sFecha, cdplan, cdusuari);
+			Map<String,String>resReexped = endososManager.pClonarPolizaReexped(cdunieco, cdramo, estado, nmpoliza, sFecha, cdplan, cdusuari, newcdunieco);
 			String nmpolizaNuevaPoliza = resReexped.get("pv_nmpolnew_o");
 			String ntramiteNuevaPoliza = resReexped.get("pv_ntramite_o");
+			
+			/**
+			 * Si se actializaron planes y suma asegurada de grupos
+			 */
+			if(esProductoSalud && esPolizaColectiva && (actualizarGrupos || clonarGrupos)){
+				
+				//Se clonan tablas para tarificacion de grupos que no cambian valores
+				if(clonarGrupos){
+					boolean exitoGrupos = endososManager.clonaGruposReexp(cdunieco, cdramo, estado, nmpoliza, newcdunieco, nmpolizaNuevaPoliza, slist2);
+					
+					if(!exitoGrupos){
+						long timestamp = System.currentTimeMillis();
+						
+						error="Error al Clonar Grupos para endoso de Reexpedicion"+ timestamp;
+						logger.error(error);
+						success=false;
+						return SUCCESS;
+					}
+				}
+
+				// Se actualizan valores de tarificacion por grupo que haya cambiado y disparan valores por defecto
+				if(actualizarGrupos){
+					boolean exitoGrupos = endososManager.actualizaGruposReexp(newcdunieco, cdramo, "W", nmpolizaNuevaPoliza, slist1);
+					
+					if(exitoGrupos){
+						exitoGrupos = endososManager.valoresDefectoGruposReexp(newcdunieco, cdramo, "W", nmpolizaNuevaPoliza,"0", cdtipsup, slist1); 
+						
+						if(exitoGrupos){
+							cotizacionManager.ejecutasigsvdefEnd(newcdunieco, cdramo, "W", nmpolizaNuevaPoliza, "TODO", "0", "TODO", cdtipsup);
+						}
+					}
+					
+					if(!exitoGrupos){
+						long timestamp = System.currentTimeMillis();
+						error="Error al Actualizar Grupos para endoso de Reexpedicion"+ timestamp;
+						logger.error(error);
+						success=false;
+						return SUCCESS;
+					}
+				}
+				
+			}
 			
 			//pkg_cancela.p_selecciona_poliza_unica
 			cancelacionManager.seleccionaPolizaUnica(cdunieco, cdramo, nmpoliza, null, dFecha);
@@ -8283,6 +8459,38 @@ public class EndososAction extends PrincipalCoreAction
 			
 			
 			consultasManager.copiarArchivosUsuarioTramite(cdunieco, cdramo, estado, nmpoliza, ntramiteNuevaPoliza, this.getText("ruta.documentos.poliza"));
+			
+			/**
+			 * Para cambiar el estatus del tramite nuevo
+			 */
+			if(esProductoSalud && esPolizaColectiva){
+				long timestamp = System.currentTimeMillis();
+				
+				/**
+				 * Si se hicieron cambios a los gruos se manda a estatus cotizador,
+				 * si no se realizaron cambios se manda a estatus carga completa
+				 */
+				if(actualizarGrupos){
+					Map<String, Object> res =  siniestrosManager.moverTramite(ntramiteNuevaPoliza, EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo(), "Se Reexpide Poliza del tramite original: "+ ntramite , usuario.getUser(), usuario.getRolActivo().getClave(), 
+							null, RolSistema.SUSCRIPTOR_TECNICO.getCdsisrol(), null, null, "N", timestamp);
+					
+					if(res.containsKey("NOMBRE") && StringUtils.isNotBlank((String)res.get("NOMBRE"))){
+						usuarioTramite = " asignado a:"+(String)res.get("NOMBRE");
+					}
+					
+					usuarioTramite+=" en suscripci\u00F3n";
+				}else{
+					Map<String, Object> res =  siniestrosManager.moverTramite(ntramiteNuevaPoliza, EstatusTramite.TRAMITE_COMPLETO.getCodigo(), "Se Reexpide Poliza del tramite original: "+ ntramite , usuario.getUser(), usuario.getRolActivo().getClave(), 
+							null, RolSistema.SUSCRIPTOR.getCdsisrol(), null, null, "N", timestamp);
+					
+					if(res.containsKey("NOMBRE") && StringUtils.isNotBlank((String)res.get("NOMBRE"))){
+						usuarioTramite = " asignado a:"+(String)res.get("NOMBRE");
+					}
+					
+					usuarioTramite+=" en suscripci\u00F3n";
+					
+				}
+			}
 			
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
@@ -8333,7 +8541,7 @@ public class EndososAction extends PrincipalCoreAction
 				}
 				
 				mensaje="Se ha generado la p&oacute;liza "+nmpolizaNuevaPoliza
-						+" con n&uacute;mero de tr&aacute;mite "+ntramiteNuevaPoliza;
+						+" con n&uacute;mero de tr&aacute;mite "+ntramiteNuevaPoliza + usuarioTramite;
 				
 				String sucursal = cdunieco;
 				
@@ -9364,10 +9572,10 @@ public class EndososAction extends PrincipalCoreAction
 	public String endosoContratante() {
 	
 		logger.debug(new StringBuilder("\n")
-		.append("\n##########################")
-		.append("\n##########################")
+		.append("\n###############################")
+		.append("\n###############################")
 		.append("\n###### endosoContratante ######")
-		.append("\n######              ######").toString());
+		.append("\n######                   ######").toString());
 		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
 		
 		this.session=ActionContext.getContext().getSession();
@@ -9453,10 +9661,10 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		
 		logger.debug(new StringBuilder("\n")
-		.append("\n######              ######")
+		.append("\n######                   ######")
 		.append("\n###### endosoContratante ######")
-		.append("\n##########################")
-		.append("\n##########################").toString());
+		.append("\n###############################")
+		.append("\n###############################").toString());
 		
 		return resp!=null&&resp.isSuccess() ? SUCCESS : ERROR;
 	}
@@ -9470,10 +9678,10 @@ public class EndososAction extends PrincipalCoreAction
 	public String cargarContratantesEndosoContratante()
 	{
 	logger.debug("\n"
-	+ "\n#######################################"
-	+ "\n#######################################"
+	+ "\n#################################################"
+	+ "\n#################################################"
 	+ "\n###### cargarContratantesEndosoContratante ######"
-	+ "\n######                           ######"
+	+ "\n######                                     ######"
 	);
 	logger.debug("smap1: "+smap1);
 	try
@@ -9499,10 +9707,10 @@ public class EndososAction extends PrincipalCoreAction
 	success=false;
 	}
 	logger.debug("\n"
-	+ "\n######                           ######"
+	+ "\n######                                     ######"
 	+ "\n###### cargarContratantesEndosoContratante ######"
-	+ "\n#######################################"
-	+ "\n#######################################"
+	+ "\n#################################################"
+	+ "\n#################################################"
 	);
 	return SUCCESS;
 	}
@@ -9551,10 +9759,10 @@ public class EndososAction extends PrincipalCoreAction
 	/*/////////////////////////////*/
 	public String guardarEndosoContratante() {
 		logger.debug("\n"
-		+ "\n#################################"
-		+ "\n#################################"
+		+ "\n######################################"
+		+ "\n######################################"
 		+ "\n###### guardarEndosoContratante ######"
-		+ "\n######                     ######"
+		+ "\n######                          ######"
 		);
 		logger.debug("smap1: "+smap1);
 		logger.debug("smap2: "+smap2);
@@ -9620,7 +9828,7 @@ public class EndososAction extends PrincipalCoreAction
 		paramsMpopliper.put("pv_cdrol_i"   , contratanteIte.get("CDROL"));
 		paramsMpopliper.put("pv_cdperson_i", contratanteIte.get("CDPERSON"));
 		paramsMpopliper.put("pv_nmsuplem_i", nmsuplem);
-		paramsMpopliper.put("pv_status_i"  , contratanteIte.get("STATUS"));
+		paramsMpopliper.put("pv_status_i"  , contratanteIte.get("STATUS"));//aunque el estatus se envia igual la accion de Eliminar lo fija en muerto
 		paramsMpopliper.put("pv_nmorddom_i", contratanteIte.get("NMORDDOM"));
 		paramsMpopliper.put("pv_swreclam_i", contratanteIte.get("SWRECLAM"));
 		paramsMpopliper.put("pv_accion_i", 	 Constantes.DELETE_MODE);
@@ -9631,6 +9839,9 @@ public class EndososAction extends PrincipalCoreAction
 		//* insertar vivo
 		paramsMpopliper.put("pv_cdperson_i", smap2.get("cdpersonNvoContr"));
 		paramsMpopliper.put("pv_accion_i", 	 Constantes.INSERT_MODE);
+		
+		//por default se manda al primer domicilio
+		paramsMpopliper.put("pv_nmorddom_i", "1");
 		
 		kernelManager.movMpoliper(paramsMpopliper);
 		
@@ -9933,10 +10144,10 @@ public class EndososAction extends PrincipalCoreAction
 		error = ex.getMessage();
 		}
 		logger.debug("\n"
-		+ "\n######                     ######"
+		+ "\n######                          ######"
 		+ "\n###### guardarEndosoContratante ######"
-		+ "\n#################################"
-		+ "\n#################################"
+		+ "\n######################################"
+		+ "\n######################################"
 		);
 		return SUCCESS;
 	}
@@ -9970,10 +10181,10 @@ public class EndososAction extends PrincipalCoreAction
 	public String endosoCambioClienteAuto() {
 		
 		logger.debug(new StringBuilder("\n")
-		.append("\n##########################")
-		.append("\n##########################")
+		.append("\n#####################################")
+		.append("\n#####################################")
 		.append("\n###### endosoCambioClienteAuto ######")
-		.append("\n######                     ######").toString());
+		.append("\n######                         ######").toString());
 		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
 		
 		this.session=ActionContext.getContext().getSession();
@@ -10035,10 +10246,10 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		
 		logger.debug(new StringBuilder("\n")
-		.append("\n######                     ######")
+		.append("\n######                         ######")
 		.append("\n###### endosoCambioClienteAuto ######")
-		.append("\n##########################")
-		.append("\n##########################").toString());
+		.append("\n#####################################")
+		.append("\n#####################################").toString());
 		
 		return resp.isSuccess() ? SUCCESS : ERROR;
 	}
@@ -10070,8 +10281,8 @@ public class EndososAction extends PrincipalCoreAction
 	public String endosoNombreCliente() {
 	
 	logger.debug(new StringBuilder("\n")
-	.append("\n##########################")
-	.append("\n##########################")
+	.append("\n#################################")
+	.append("\n#################################")
 	.append("\n###### endosoNombreCliente ######")
 	.append("\n######                     ######").toString());
 	logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
@@ -10137,8 +10348,8 @@ public class EndososAction extends PrincipalCoreAction
 	logger.debug(new StringBuilder("\n")
 	.append("\n######                     ######")
 	.append("\n###### endosoNombreCliente ######")
-	.append("\n##########################")
-	.append("\n##########################").toString());
+	.append("\n#################################")
+	.append("\n#################################").toString());
 	
 	return resp.isSuccess() ? SUCCESS : ERROR;
 	}
@@ -10187,8 +10398,8 @@ public class EndososAction extends PrincipalCoreAction
 	/*/////////////////////////////*/
 	public String guardarEndosoNombreCliente() {
 	logger.debug("\n"
-	+ "\n#################################"
-	+ "\n#################################"
+	+ "\n########################################"
+	+ "\n########################################"
 	+ "\n###### guardarEndosoNombreCliente ######"
 	+ "\n######                            ######"
 	);
@@ -10298,8 +10509,8 @@ public class EndososAction extends PrincipalCoreAction
 	logger.debug("\n"
 	+ "\n######                            ######"
 	+ "\n###### guardarEndosoNombreCliente ######"
-	+ "\n#################################"
-	+ "\n#################################"
+	+ "\n########################################"
+	+ "\n########################################"
 	);
 	return SUCCESS;
 	}
@@ -10331,10 +10542,10 @@ public class EndososAction extends PrincipalCoreAction
 	public String endosoRfcCliente() {
 	
 	logger.debug(new StringBuilder("\n")
-	.append("\n##########################")
-	.append("\n##########################")
-	.append("\n###### endosoRFCCliente ######")
-	.append("\n######                     ######").toString());
+	.append("\n###############################")
+	.append("\n###############################")
+	.append("\n###### endosoRFCCliente  ######")
+	.append("\n######                   ######").toString());
 	logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
 	
 	this.session=ActionContext.getContext().getSession();
@@ -10396,10 +10607,10 @@ public class EndososAction extends PrincipalCoreAction
 	}
 	
 	logger.debug(new StringBuilder("\n")
-	.append("\n######                     ######")
-	.append("\n###### endosoRFCCliente ######")
-	.append("\n##########################")
-	.append("\n##########################").toString());
+	.append("\n######                   ######")
+	.append("\n###### endosoRFCCliente  ######")
+	.append("\n###############################")
+	.append("\n###############################").toString());
 	
 	return resp.isSuccess() ? SUCCESS : ERROR;
 	}
@@ -10448,10 +10659,10 @@ public class EndososAction extends PrincipalCoreAction
 	/*/////////////////////////////*/
 	public String guardarEndosoRfcCliente() {
 	logger.debug("\n"
-	+ "\n#################################"
-	+ "\n#################################"
+	+ "\n#####################################"
+	+ "\n#####################################"
 	+ "\n###### guardarEndosoRfcCliente ######"
-	+ "\n######                            ######"
+	+ "\n######                         ######"
 	);
 	logger.debug("smap1: "+smap1);
 	logger.debug("smap2: "+smap2);
@@ -10555,10 +10766,10 @@ public class EndososAction extends PrincipalCoreAction
 	error = ex.getMessage();
 	}
 	logger.debug("\n"
-	+ "\n######                            ######"
-	+ "\n###### guardarEndosoRfcCliente ######"
-	+ "\n#################################"
-	+ "\n#################################"
+	+ "\n######                          ######"
+	+ "\n###### guardarEndosoRfcCliente  ######"
+	+ "\n######################################"
+	+ "\n######################################"
 	);
 	return SUCCESS;
 	}

@@ -516,7 +516,8 @@ public class EndososManagerImpl implements EndososManager
 			,String nmpoliza
 			,String fecha
 			,String cdplan
-			,String cdusuario) throws Exception
+			,String cdusuario
+			,String newcdunieco) throws Exception
 	{
 		Map<String,String>params=new HashMap<String,String>();
 		params.put("pv_cdunieco_i", cdunieco);
@@ -526,10 +527,115 @@ public class EndososManagerImpl implements EndososManager
 		params.put("pv_feinival_i", fecha);
 		params.put("pv_cdplan_i"  , cdplan);
 		params.put("pv_cduser_i"  , cdusuario);
+		params.put("pv_cdunieco_new_i", newcdunieco);
 		logger.debug("EndososManager pClonarPolizaReexped params: "+params);
 		Map<String,String> mapa=endososDAO.pClonarPolizaReexped(params);
 		logger.debug("EndososManager pClonarPolizaReexped response map: "+mapa);
         return mapa;
+	}
+
+	@Override
+	public boolean clonaGruposReexp(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cduniecoNueva
+			,String nmpolizaNueva
+			,List<Map<String,String>> grupos) throws Exception
+	{
+		boolean exito = true;
+		for(Map<String,String> grupo: grupos){
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("pv_cdunieco_i", cdunieco);
+			params.put("pv_cdramo_i"  , cdramo);
+			params.put("pv_estado_i"  , estado);
+			params.put("pv_nmpoliza_i", nmpoliza);
+			params.put("pv_cdunieco_new_i", cduniecoNueva);
+			params.put("pv_nmpolnew_i", nmpolizaNueva);
+			params.put("pv_cdgrupo_i"   , grupo.get("letra"));
+			
+			logger.debug("EndososManager clonar grupo params: "+params);
+			exito = endososDAO.clonaGrupoReexp(params);
+			if(!exito){
+				logger.error("Error al avtualizar los valores de los grupos para endoso de Reexpedicion en poliza Colectiva");
+				break;
+			}
+		}
+		
+		return exito;
+	}
+
+	@Override
+	public boolean actualizaGruposReexp(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,List<Map<String,String>> grupos) throws Exception
+	{
+		boolean exito = true;
+		for(Map<String,String> grupo: grupos){
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("pv_cdunieco_i", cdunieco);
+			params.put("pv_cdramo_i"  , cdramo);
+			params.put("pv_estado_i"  , estado);
+			params.put("pv_nmpoliza_i", nmpoliza);
+			params.put("pv_cdgrupo_i"   , grupo.get("letra"));
+			params.put("pv_cdplan_i"  , grupo.get("cdplan"));
+			
+			StringBuilder valoresGrupo = new StringBuilder(); 
+			
+			for (Map.Entry<String, String> entry : grupo.entrySet()) {
+				if(entry.getKey().contains("otvalor")){
+					String otvalor = new String(entry.getKey());
+					otvalor =  otvalor.replace("pv_otvalor", "otvalor");
+					valoresGrupo.append(otvalor).append("@").append(entry.getValue()).append("|");
+				}
+			}
+			params.put("pv_cdcadena_i", valoresGrupo.toString());
+			
+			logger.debug("EndososManager actualizar grupo params: "+params);
+			exito = endososDAO.actualizaGrupoReexp(params);
+			if(!exito){
+				logger.error("Error al avtualizar los valores de los grupos para endoso de Reexpedicion en poliza Colectiva");
+				break;
+			}
+		}
+		
+		return exito;
+	}
+
+	@Override
+	public boolean valoresDefectoGruposReexp(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdtipsup
+			,List<Map<String,String>> grupos) throws Exception
+	{
+		boolean exito = true;
+		for(Map<String,String> grupo: grupos){
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("pv_cdunieco_i", cdunieco);
+			params.put("pv_cdramo_i"  , cdramo);
+			params.put("pv_estado_i"  , estado);
+			params.put("pv_nmpoliza_i", nmpoliza);
+			params.put("pv_nmsuplem_i", nmsuplem);
+			params.put("pv_cdgrupo_i" , grupo.get("letra"));
+			params.put("pv_cdtipsup_i", cdtipsup);
+			
+			logger.debug("EndososManager valores defecto grupo params: "+params);
+			exito = endososDAO.valoresDefectoGrupoReexp(params);
+			if(!exito){
+				logger.error("Error en ejecutar valores por defecto de los grupos para endoso de Reexpedicion en poliza Colectiva");
+				break;
+			}
+		}
+		
+		return exito;
 	}
 	
 	//PKG_CONSULTA.P_OBT_VALOSIT_ULTIMA_IMAGEN

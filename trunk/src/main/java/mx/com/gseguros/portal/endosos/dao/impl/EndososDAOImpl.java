@@ -1400,8 +1400,111 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_feinival_i" , OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_cdplan_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cduser_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_new_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_nmpolnew_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public boolean clonaGrupoReexp(Map<String, String> params) throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n*************************************")
+				.append("\n****** P_CLONAR_GAR_COLEC ******")
+				.append("\n****** params=").append(params)
+				.append("\n*************************************")
+				.toString()
+				);
+		this.ejecutaSP(new ClonaGrupoReexp(this.getDataSource()), params);
+
+		return true;
+	}
+	
+	protected class ClonaGrupoReexp extends StoredProcedure
+	{
+		protected ClonaGrupoReexp(DataSource dataSource)
+		{
+			super(dataSource, "P_CLONAR_GAR_COLEC");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgrupo_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_new_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpolnew_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public boolean actualizaGrupoReexp(Map<String, String> params) throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n*************************************")
+				.append("\n****** PKG_SATELITES2.P_CAMBIA_PLAN_VALORES_REEXP ******")
+				.append("\n****** params=").append(params)
+				.append("\n*************************************")
+				.toString()
+				);
+		this.ejecutaSP(new ActualizaGrupoReexp(this.getDataSource()), params);
+		
+		return true;
+	}
+	
+	protected class ActualizaGrupoReexp extends StoredProcedure
+	{
+		protected ActualizaGrupoReexp(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES2.P_CAMBIA_PLAN_VALORES_REEXP");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgrupo_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdplan_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdcadena_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o" , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public boolean valoresDefectoGrupoReexp(Map<String, String> params) throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************************")
+				.append("\n****** PKG_SATELITES2.P_INSERTA_TWORKSUP_GRUPO ******")
+				.append("\n****** params=").append(params)
+				.append("\n*****************************************************")
+				.toString()
+				);
+		this.ejecutaSP(new ValoresDefectoGrupoReexp(this.getDataSource()), params);
+		
+		return true;
+	}
+	
+	protected class ValoresDefectoGrupoReexp extends StoredProcedure
+	{
+		protected ValoresDefectoGrupoReexp(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES2.P_INSERTA_TWORKSUP_GRUPO");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgrupo_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsup_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

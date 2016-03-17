@@ -8741,6 +8741,91 @@ public class CotizacionAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
+
+	public String cargarGruposCotizacionReexpedicion()
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n################################################")
+				.append("\n###### cargarGruposCotizacionReexpedicion ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		exito   = true;
+		success = true;
+		
+		String cdunieco = null;
+		String cdramo   = null;
+		String estado   = null;
+		String nmpoliza = null;
+		
+		//datos completos
+		try
+		{
+			if(smap1==null)
+			{
+				throw new Exception("No se recibieron datos");
+			}
+			cdunieco = smap1.get("cdunieco");
+			cdramo   = smap1.get("cdramo");
+			estado   = smap1.get("estado");
+			nmpoliza = smap1.get("nmpoliza");
+			if(StringUtils.isBlank(cdunieco))
+			{
+				throw new ApplicationException("No se recibio la sucursal");
+			}
+			if(StringUtils.isBlank(cdramo))
+			{
+				throw new ApplicationException("No se recibio el producto");
+			}
+			if(StringUtils.isBlank(estado))
+			{
+				throw new ApplicationException("No se recibio el estado");
+			}
+			if(StringUtils.isBlank(nmpoliza))
+			{
+				throw new ApplicationException("No se recibio la poliza");
+			}
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder("Error al validar datos para cargar grupos #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		//proceso
+		if(exito)
+		{
+			ManagerRespuestaSlistVO resp = cotizacionManager.cargarGruposCotizacionReexpedicion(cdunieco,cdramo,estado,nmpoliza);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				slist1 = resp.getSlist();
+			}
+		}
+		
+		logger.debug(
+				new StringBuilder()
+				.append("\n###### cargarGruposCotizacionReexpedicion ######")
+				.append("\n################################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
 	
 	public String cargarGruposCotizacion()
 	{

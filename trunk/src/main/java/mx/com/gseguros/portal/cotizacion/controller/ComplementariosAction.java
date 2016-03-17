@@ -1293,7 +1293,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				catch(Exception ex)
 				{
 					logger.error("Error de validaci&oacute;n de C&oacute;digo Postal (Estado y Municipio) de la cotizaci&oacute;n debe coincidir con el domicilio del asegurado contratante.",ex);
-					mensajeRespuesta = "Error al validar el C&oacutge;digo Postal. Consulte a Soporte.";
+					mensajeRespuesta = "Error al validar el C&oacute;digo Postal. Consulte a Soporte.";
 					success = false;
 					return SUCCESS;
 				}

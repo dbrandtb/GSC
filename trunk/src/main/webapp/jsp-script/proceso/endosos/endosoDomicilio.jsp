@@ -35,7 +35,7 @@ var _ComboColoniasUrl      = '<s:url namespace="/catalogos" action="obtieneCatal
  * Si el situac es nulo se considera que es para el contratante ya que no trae seleccion del menu 	 
  */
 
-if(Ext.isEmpty(inputNmsituacp4) && Ext.isEmpty(inputNmsituacp4)){
+if(Ext.isEmpty(inputCdrolp4) && Ext.isEmpty(inputNmsituacp4)){
 	inputCdrolp4 = "1";  // Rol del Contratante
 }
 
@@ -421,6 +421,8 @@ Ext.onReady(function(){
             }
         ]
     });
+    
+    
     debug('_p4_habilitaEdicion:',_p4_habilitaEdicion);
     formPanelp4.items.items[2].items.items[4].setEditable(true);
     
@@ -509,6 +511,14 @@ Ext.onReady(function(){
                     'params.cp' : resp.data['smap1.CODPOSTAL']
                 }
             });
+            
+                //copiar el valor de RFC de datos generales y pasarlos a adicionales
+		     try{
+		     	_fieldByName('parametros.pv_otvalor13',formPanelp4, true).setValue(_fieldByName('smap1.rfc',formPanelp4, true).getValue());
+		     	_fieldByName('parametros.pv_otvalor13',formPanelp4, true).setReadOnly(true);
+		     }catch(e){
+		     	debug('Error en adaptacion de  campo Cliente RFC de Generales a Adicionales, no existe el campo',e);
+		     }
         },
         failure:function()
         {

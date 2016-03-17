@@ -110,6 +110,11 @@ public interface EndososDAO
 	
 	public void                     actualizaCopagoValosit(Map<String, String> params)         throws Exception;
 	public Map<String, String>      pClonarPolizaReexped(Map<String, String> params)           throws Exception;
+
+	public boolean clonaGrupoReexp(Map<String, String> params) throws Exception;
+	public boolean actualizaGrupoReexp(Map<String, String> params) throws Exception;
+	public boolean valoresDefectoGrupoReexp(Map<String, String> params) throws Exception;
+	
 	public List<Map<String,String>> obtenerValositUltimaImagen(
 			String cdunieco
 			,String cdramo

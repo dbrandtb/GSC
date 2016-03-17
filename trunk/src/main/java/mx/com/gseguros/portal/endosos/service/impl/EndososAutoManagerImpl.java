@@ -4745,6 +4745,10 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String ntramite = (String) resParams.get("pv_ntramite_o");
 			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
 			
+			logger.debug(">>>nmsuplemGen retornado de cancelacion: " +nmsuplemGen);
+			logger.debug(">>>ntramite retornado de cancelacion: " +ntramite);
+			logger.debug(">>>tipoGrupoInciso retornado de cancelacion: " +tipoGrupoInciso);
+			
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
 				logger.error("Error al ejecutar los WS de endoso");

@@ -155,6 +155,7 @@ public interface EndososManager
 			,String nmpoliza
 			,String nmsuplem
 			,String deducible) throws Exception;
+	
 	public Map<String,String>        pClonarPolizaReexped(
 			String cdunieco
 			,String cdramo
@@ -162,7 +163,34 @@ public interface EndososManager
 			,String nmpoliza
 			,String fecha
 			,String cdplan
-			,String cdusuario) throws Exception;
+			,String cdusuario
+			,String newcdunieco) throws Exception;
+
+	public boolean clonaGruposReexp(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cduniecoNueva
+			,String nmpolizaNueva
+			,List<Map<String,String>> grupos) throws Exception;
+
+	public boolean actualizaGruposReexp(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,List<Map<String,String>> grupos) throws Exception;
+	
+	public boolean valoresDefectoGruposReexp(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdtipsup
+			,List<Map<String,String>> grupos) throws Exception;
+	
 	public List<Map<String, String>> obtenerValositUltimaImagen(
 			String cdunieco
 			,String cdramo
