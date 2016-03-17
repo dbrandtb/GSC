@@ -356,7 +356,7 @@ public class EndososAction extends PrincipalCoreAction
 		        ,"\n###### slist1=" , slist1
 		        ));
 		
-		respuesta = ERROR;
+		String respuestaAction = ERROR;
 		
 		try
 		{
@@ -387,22 +387,22 @@ public class EndososAction extends PrincipalCoreAction
 			item2=actionDomicilio.getItem2();
 			item3=actionDomicilio.getItem3();
 			
-			respuesta = SUCCESS;
+			respuestaAction = SUCCESS;
 		}
 		catch(Exception ex)
 		{
 			logger.error("error al cargar pantalla de endoso de valosit simple",ex);
 			error=ex.getMessage();
-			respuesta = ERROR;
+			respuestaAction = ERROR;
 		}
 		
 		logger.debug(Utils.log(
-				 "\n###### respuesta=",respuesta
+				 "\n###### respuestaAction=",respuestaAction
 				,"\n###### pantallaEndosoDomicilio ######"
 		        ,"\n#####################################"
 		        ));
 		
-		return respuesta;
+		return respuestaAction;
 	}
 	/*//////////////////////////////////////////*/
 	////// pantalla de endoso de domicilio Auto  //////
