@@ -3084,4 +3084,23 @@ public class EndososManagerImpl implements EndososManager
 		
 		return lista;
 	}
+	
+	@Override
+	public void  clonarGarantiaCapitales(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String cdgrupo
+			,String cdplan
+			,String sexo) throws Exception
+	{
+		logger.debug("EndososManager clonarGarantiaCapitales params {},{},{},{},{},{},{},{},{}"
+				,cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,cdgrupo,cdplan,sexo);
+		
+		endososDAO.clonarGarantiaCapitales(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,cdgrupo,cdplan,sexo);
+		logger.debug("EndososManager clonarGarantiaCapitales end");
+	}
 }

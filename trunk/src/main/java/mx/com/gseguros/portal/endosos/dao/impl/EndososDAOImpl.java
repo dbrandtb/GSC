@@ -5034,4 +5034,57 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	@Override
+	public void clonarGarantiaCapitales(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String cdgrupo
+			,String cdplan
+			,String sexo
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		params.put("pv_nmsituac_i" , nmsituac);
+		params.put("pv_cdgrupo_i" , cdgrupo);
+		params.put("pv_cdplan_i" , cdplan);
+		params.put("pv_sexo_i" , sexo);
+		logger.debug(
+				new StringBuilder()
+				.append("\n***********************************************************")
+				.append("\n****** PKG_SATELITES2.P_CLONAR_GARANTIAS_Y_CAPITALES ******")
+				.append("\n****** params=").append(params)
+				.append("\n***********************************************************")
+				.toString()
+				);
+		this.ejecutaSP(new ClonarGarantiaCapitales(this.getDataSource()), Utils.ponFechas(params));
+	}
+	
+	protected class ClonarGarantiaCapitales extends StoredProcedure
+	{
+		protected ClonarGarantiaCapitales(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES2.P_CLONAR_GARANTIAS_Y_CAPITALES");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgrupo_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdplan_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_sexo_i"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o" , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

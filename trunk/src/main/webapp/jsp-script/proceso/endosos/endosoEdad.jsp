@@ -54,6 +54,9 @@ function _1_confirmar()
 				nmsituac  : record.get('nmsituac')
 				,cdperson : record.get('cdperson')
 				,fenacimi : Ext.Date.format(record.get('fenacimi'),'d/m/Y')
+				,cdplan   : _1_slist1[0].CDPLAN
+                ,cdgrupo  : _1_slist1[0].CDGRUPO
+                ,sexo     : _1_slist1[0].CVE_SEXO
 			});
 		});
 		debug(json);

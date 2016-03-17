@@ -808,7 +808,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			}else {
 				if(TipoPago.DIRECTO.getCodigo().equals(tipoPago)){
 					nombreRdf = getText("rdf.siniestro.cartarechazo.pagodirecto.nombre");
-				} else if(TipoPago.REEMBOLSO.getCodigo().equals(tipoPago)){
+				} else{
 					nombreRdf = getText("rdf.siniestro.cartarechazo.reembolso.nombre");
 				}
 			}

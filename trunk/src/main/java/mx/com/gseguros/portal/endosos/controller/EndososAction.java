@@ -5261,8 +5261,11 @@ public class EndososAction extends PrincipalCoreAction
 				String nmsituacIte=inciso.get("nmsituac");
 				String cdpersonIte=inciso.get("cdperson");
 				String fenacimiIte=inciso.get("fenacimi");
-                
-                /////////////////////
+				String sexo=inciso.get("sexo");
+				String cdplan=inciso.get("cdplan");
+				String cdgrupo=inciso.get("cdgrupo");
+				
+				/////////////////////
                 ////// valosit //////
                 
                 ////// 1. mapa valosit base //////
@@ -5319,7 +5322,7 @@ public class EndososAction extends PrincipalCoreAction
 				
 				/////////////////////////////////
                 ////// valores por defecto //////
-                Map<String,String> mapaCoberturas=new HashMap<String,String>(0);
+                /*Map<String,String> mapaCoberturas=new HashMap<String,String>(0);
                 mapaCoberturas.put("pv_cdunieco_i",   cdunieco);//se agrega desde el formulario
                 mapaCoberturas.put("pv_cdramo_i",     cdramo);//se agrega desde el formulario
                 mapaCoberturas.put("pv_estado_i",     estado);
@@ -5328,7 +5331,7 @@ public class EndososAction extends PrincipalCoreAction
                 mapaCoberturas.put("pv_nmsuplem_i",   nmsuplem);
                 mapaCoberturas.put("pv_cdgarant_i",   "TODO");
                 mapaCoberturas.put("pv_cdtipsup_i",   cdtipsup);
-                kernelManager.coberturas(mapaCoberturas);
+                kernelManager.coberturas(mapaCoberturas);*/
                 ////// valores por defecto //////
                 /////////////////////////////////
                 
@@ -5345,15 +5348,16 @@ public class EndososAction extends PrincipalCoreAction
                 		);
                 ////// inserta tworksup //////
                 //////////////////////////////
-                cotizacionManager.ejecutasigsvdefEnd(
+                endososManager.clonarGarantiaCapitales(
 	        		cdunieco
 	        		,cdramo
 	        		,estado
 	        		,nmpoliza
-	        		,nmsituacIte
 	        		,nmsuplem
-	        		,"TODO"
-	        		,cdtipsup
+	        		,nmsituacIte
+	        		,cdgrupo
+	        		,cdplan
+	        		,sexo
 	    		);
                 //////////////////////////
                 ////// tarificacion //////
@@ -5659,6 +5663,8 @@ public class EndososAction extends PrincipalCoreAction
 			for(Map<String,String>inciso:slist1) {
 				String nmsituacIte=inciso.get("nmsituac");
 				String cdpersonIte=inciso.get("cdperson");
+				String cdplan=inciso.get("cdplan");
+				String cdgrupo=inciso.get("cdgrupo");
 				
                 
                 /////////////////////
@@ -5718,7 +5724,7 @@ public class EndososAction extends PrincipalCoreAction
 				
 				/////////////////////////////////
                 ////// valores por defecto //////
-                Map<String,String> mapaCoberturas=new HashMap<String,String>(0);
+                /*Map<String,String> mapaCoberturas=new HashMap<String,String>(0);
                 mapaCoberturas.put("pv_cdunieco_i",   cdunieco);//se agrega desde el formulario
                 mapaCoberturas.put("pv_cdramo_i",     cdramo);//se agrega desde el formulario
                 mapaCoberturas.put("pv_estado_i",     estado);
@@ -5727,7 +5733,7 @@ public class EndososAction extends PrincipalCoreAction
                 mapaCoberturas.put("pv_nmsuplem_i",   nmsuplem);
                 mapaCoberturas.put("pv_cdgarant_i",   "TODO");
                 mapaCoberturas.put("pv_cdtipsup_i",   cdtipsup);
-                kernelManager.coberturas(mapaCoberturas);
+                kernelManager.coberturas(mapaCoberturas);*/
                 ////// valores por defecto //////
                 /////////////////////////////////
                 
@@ -5745,15 +5751,16 @@ public class EndososAction extends PrincipalCoreAction
                 
 				//////////////////////////////
                 ////// inserta tworksup //////
-                cotizacionManager.ejecutasigsvdefEnd(
+                endososManager.clonarGarantiaCapitales(
 	        		cdunieco
 	        		,cdramo
 	        		,estado
 	        		,nmpoliza
-	        		,nmsituacIte
 	        		,nmsuplem
-	        		,"TODO"
-	        		,cdtipsup
+	        		,nmsituacIte
+	        		,cdgrupo
+	        		,cdplan
+	        		,sexo
 	    		);
                 ////// inserta tworksup //////
                 //////////////////////////////
@@ -5825,62 +5832,6 @@ public class EndososAction extends PrincipalCoreAction
 				
 				String nmsolici    = datosPoliza.get("nmsolici");
 				String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramite);
-				
-				/*
-			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
-			    		cdunieco
-			    		,cdramo
-			    		,estado
-			    		,nmpoliza
-			    		,nmsuplem
-			    		,cdtipsup
-			    		);
-			    logger.debug("documentos que se regeneran: "+listaDocu);
-			    
-			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
-			    
-				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
-				for(Map<String,String> docu:listaDocu) {
-					logger.debug("docu iterado: "+docu);
-					String descripc=docu.get("descripc");
-					String descripl=docu.get("descripl");
-					String url=this.getText("ruta.servidor.reports")
-							+ "?destype=cache"
-							+ "&desformat=PDF"
-							+ "&userid="+this.getText("pass.servidor.reports")
-							+ "&report="+descripl
-							+ "&paramform=no"
-							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-							+ "&p_unieco="+cdunieco
-							+ "&p_ramo="+cdramo
-							+ "&p_estado="+estado
-							+ "&p_poliza="+nmpoliza
-							+ "&p_suplem="+nmsuplem
-							+ "&desname="+rutaCarpeta+"/"+descripc;
-					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN")) {
-						// C R E D E N C I A L _ X X X X X X . P D F
-						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
-					}
-					logger.debug(""
-							+ "\n#################################"
-							+ "\n###### Se solicita reporte ######"
-							+ "\na "+url+""
-							+ "\n#################################");
-					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					logger.debug(""
-							+ "\n######                    ######"
-							+ "\n###### reporte solicitado ######"
-							+ "\na "+url+""
-							+ "\n################################"
-							+ "\n################################"
-							+ "");
-				}
-				*/
-			    /*///////////////////////////////////*/
-				////// re generar los documentos //////
-			    ///////////////////////////////////////
-				
 				String saludDanios = "S";
 				ClienteGeneral clienteGeneral = new ClienteGeneral();
 				clienteGeneral.setClaveCia(saludDanios);

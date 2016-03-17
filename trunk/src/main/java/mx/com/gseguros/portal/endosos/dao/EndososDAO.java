@@ -658,4 +658,15 @@ public interface EndososDAO
 			,String nsuplogi
 			,Date fecha
 			)throws Exception;
+	
+	public void  clonarGarantiaCapitales(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String cdgrupo
+			,String cdplan
+			,String sexo) throws Exception;
 }
