@@ -94,9 +94,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				
 				logger.debug(Utils.log("", "recuperando tramite"));
 				
-				StringBuilder sb = new StringBuilder();
-				Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(sb, flujo);
-				logger.debug(sb.toString());
+				Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
 				
 				Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
 				logger.debug(Utils.log("", "tramite=", tramite));
@@ -287,9 +285,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				
 				logger.debug(Utils.log("", "recuperando tramite"));
 				
-				StringBuilder sb = new StringBuilder();
-				Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(sb, flujo);
-				logger.debug(sb.toString());
+				Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
 				
 				Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
 				logger.debug(Utils.log("", "tramite=", tramite));
@@ -1199,9 +1195,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				
 				logger.debug(Utils.log("", "recuperando tramite"));
 				
-				StringBuilder sb = new StringBuilder();
-				Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(sb, flujo);
-				logger.debug(sb.toString());
+				Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
 				
 				Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
 				logger.debug(Utils.log("", "tramite=", tramite));
