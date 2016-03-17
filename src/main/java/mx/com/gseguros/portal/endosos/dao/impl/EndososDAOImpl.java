@@ -5019,7 +5019,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	
 	protected class RegeneraSuplementoFamiliaEndoso extends StoredProcedure {
 		protected RegeneraSuplementoFamiliaEndoso(DataSource dataSource) {
-			super(dataSource, "P_REGENERA_SUPLEMENTOALTA");
+			super(dataSource, "PKG_ENDOSOS.P_REGENERA_SUPLEMENTOALTA");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
