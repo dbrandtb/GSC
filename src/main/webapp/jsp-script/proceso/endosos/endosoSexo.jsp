@@ -50,10 +50,13 @@ function _1_confirmar()
         json['slist1'] = [];
         _1_store.each(function(record)
         {
+        	debug("Valor del Record ==>",record);
             json['slist1'].push(
             {
                 nmsituac  : record.get('nmsituac')
                 ,cdperson : record.get('cdperson')
+                ,cdplan   : _1_slist1[0].CDPLAN
+                ,cdgrupo  : _1_slist1[0].CDGRUPO
             });
         });
         debug(json);
@@ -238,7 +241,7 @@ Ext.onReady(function()
                 ,buttons     :
                               [
                                   {
-                                      text     : 'Confirmar endoso'
+                                      text     : 'Confirmar endoso ==>'
                                       ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
                                       ,handler : _1_confirmar
                                   }
