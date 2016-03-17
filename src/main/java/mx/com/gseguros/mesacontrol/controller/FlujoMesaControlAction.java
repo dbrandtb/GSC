@@ -32,18 +32,26 @@ import com.opensymphony.xwork2.ActionContext;
 public class FlujoMesaControlAction extends PrincipalCoreAction
 {
 	private static final long serialVersionUID = 4896753376957054283L;
-	private static Logger     logger           = LoggerFactory.getLogger(FlujoMesaControlAction.class);
 	
-	private boolean                  success;
-	private String                   message;
-	private Map<String,Item>         items;
-	private FlujoVO                  flujo;
-	private Map<String,String>       params;
-	private Map<String,Object>       datosTramite;
+	private static Logger logger = LoggerFactory.getLogger(FlujoMesaControlAction.class);
+	
+	private boolean success;
+	
+	private String message;
+	
+	private Map<String,Item> items;
+	
+	private FlujoVO flujo;
+	
+	private Map<String,String> params;
+	
+	private Map<String,Object> datosTramite;
+	
 	private List<Map<String,String>> list;
-	private int                      start
-	                                 ,limit
-	                                 ,total;
+	
+	private int start
+	            ,limit
+	            ,total;
 	
 	public FlujoMesaControlAction()
 	{
@@ -61,7 +69,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 	)
 	public String workflow()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n######################"
 				,"\n###### workflow ######"
 				));
@@ -72,20 +80,15 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		{
 			UserVO usuario = Utils.validateSession(session);
 			
-			items = flujoMesaControlManager.workflow(
-					sb
-					,usuario.getRolActivo().getClave()
-					);
+			items = flujoMesaControlManager.workflow(usuario.getRolActivo().getClave());
 			
 			result = SUCCESS;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### result=",result
 					,"\n###### workflow ######"
 					,"\n######################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -116,7 +119,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String registrarEntidad()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n##############################"
 				,"\n###### registrarEntidad ######"
 				,"\n###### params=",params
@@ -147,8 +150,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			String cdentidad = flujoMesaControlManager.registrarEntidad(
-					sb
-					,cdtipflu
+					cdtipflu
 					,cdflujomc
 					,tipo
 					,clave
@@ -161,12 +163,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### registrarEntidad ######"
 					,"\n##############################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -181,7 +181,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String borrarEntidad()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n###########################"
 				,"\n###### borrarEntidad ######"
 				,"\n###### params=",params
@@ -208,8 +208,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			flujoMesaControlManager.borrarEntidad(
-					sb
-					,cdtipflu
+					cdtipflu
 					,cdflujomc
 					,tipo
 					,clave
@@ -218,12 +217,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### borrarEntidad ######"
 					,"\n###########################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -238,7 +235,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String registrarConnection()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n#################################"
 				,"\n###### registrarConnection ######"
 				,"\n###### params=",params
@@ -263,8 +260,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			String cdaccion = flujoMesaControlManager.registrarConnection(
-					sb
-					,cdtipflu
+					cdtipflu
 					,cdflujomc
 					,idorigen
 					,iddestin
@@ -274,12 +270,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### registrarConnection ######"
 					,"\n#################################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -294,7 +288,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String borrarConnection()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n##############################"
 				,"\n###### borrarConnection ######"
 				,"\n###### params=",params
@@ -317,20 +311,17 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			flujoMesaControlManager.borrarConnection(
-					sb
-					,cdtipflu
+					cdtipflu
 					,cdflujomc
 					,cdaccion
 					);
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### borrarConnection ######"
 					,"\n##############################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -345,7 +336,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String movimientoTtipflumc()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n#################################"
 				,"\n###### movimientoTtipflumc ######"
 				,"\n###### params=",params
@@ -372,8 +363,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			flujoMesaControlManager.movimientoTtipflumc(
-					sb
-					,accion
+					accion
 					,cdtipflu
 					,dstipflu
 					,cdtiptra
@@ -384,12 +374,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### movimientoTtipflumc ######"
 					,"\n#################################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -404,7 +392,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String movimientoTflujomc()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n################################"
 				,"\n###### movimientoTflujomc ######"
 				,"\n###### params=",params
@@ -431,8 +419,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			flujoMesaControlManager.movimientoTflujomc(
-					sb
-					,accion
+					accion
 					,cdtipflu
 					,cdflujomc
 					,dsflujomc
@@ -442,12 +429,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### movimientoTflujomc ######"
 					,"\n################################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -462,7 +447,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String movimientoCatalogo()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n################################"
 				,"\n###### movimientoCatalogo ######"
 				,"\n###### params=",params
@@ -483,20 +468,17 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			flujoMesaControlManager.movimientoCatalogo(
-					sb
-					,accion
+					accion
 					,tipo
 					,params
 					);
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### movimientoCatalogo ######"
 					,"\n################################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -511,7 +493,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String cargarModelado()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n############################"
 				,"\n###### cargarModelado ######"
 				,"\n###### params=",params
@@ -532,19 +514,16 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			list = flujoMesaControlManager.cargarModelado(
-					sb
-					,cdtipflu
+					cdtipflu
 					,cdflujomc
 					);
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### cargarModelado ######"
 					,"\n############################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -559,7 +538,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String cargarDatosEstado()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n###############################"
 				,"\n###### cargarDatosEstado ######"
 				,"\n###### params=",params
@@ -582,8 +561,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			Map<String,Object> res = flujoMesaControlManager.cargarDatosEstado(
-					sb
-					,cdtipflu
+					cdtipflu
 					,cdflujomc
 					,cdestadomc
 					);
@@ -593,12 +571,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### cargarDatosEstado ######"
 					,"\n###############################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -615,7 +591,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			})
 	public String guardarDatosEstado()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n################################"
 				,"\n###### guardarDatosEstado ######"
 				,"\n###### params=" , params
@@ -665,8 +641,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			flujoMesaControlManager.guardarDatosEstado(
-					sb
-					,cdtipflu
+					cdtipflu
 					,cdflujomc
 					,cdestadomc
 					,accion
@@ -686,12 +661,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### guardarDatosEstado ######"
 					,"\n################################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -706,7 +679,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String cargarDatosValidacion()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n###################################"
 				,"\n###### cargarDatosValidacion ######"
 				,"\n###### params=",params
@@ -728,8 +701,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			Map<String,String> res = flujoMesaControlManager.cargarDatosValidacion(
-					sb
-					,cdtipflu
+					cdtipflu
 					,cdflujomc
 					,cdvalida
 					);
@@ -738,12 +710,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### cargarDatosValidacion ######"
 					,"\n###################################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -758,7 +728,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String guardarDatosValidacion()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n####################################"
 				,"\n###### guardarDatosValidacion ######"
 				,"\n###### params=",params
@@ -794,8 +764,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			flujoMesaControlManager.guardarDatosValidacion(
-					sb
-					,cdtipflu
+					cdtipflu
 					,cdflujomc
 					,cdvalida
 					,webid
@@ -809,12 +778,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### guardarDatosValidacion ######"
 					,"\n####################################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -831,7 +798,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			})
 	public String guardarCoordenadas()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n################################"
 				,"\n###### guardarCoordenadas ######"
 				,"\n###### params=" , params
@@ -850,20 +817,17 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			Utils.validate(list, "No se recibieron entidades");
 			
 			flujoMesaControlManager.guardarCoordenadas(
-					sb
-					,cdtipflu
+					cdtipflu
 					,cdflujomc
 					,list
 					);
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### guardarCoordenadas ######"
 					,"\n################################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -878,7 +842,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String ejecutaValidacion()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n###############################"
 				,"\n###### ejecutaValidacion ######"
 				,"\n###### flujo="  , flujo
@@ -896,21 +860,17 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			Utils.validate(cdvalidafk , "No se recibi\u00f3 clave de validaci\u00f3n");
 			
 			params.put("salida" , flujoMesaControlManager.ejecutaValidacion(
-					sb
-					,flujo
+					flujo
 					,cdvalidafk
 					));
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### params=" , params
 					,"\n###### ejecutaValidacion ######"
 					,"\n###############################"
 					));
-			
-			logger.debug(sb.toString());
-			
 		}
 		catch(Exception ex)
 		{
@@ -924,7 +884,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String cargarDatosRevision()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n#################################"
 				,"\n###### cargarDatosRevision ######"
 				,"\n###### params=",params
@@ -947,8 +907,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			Map<String,Object> res = flujoMesaControlManager.cargarDatosRevision(
-					sb
-					,cdtipflu
+					cdtipflu
 					,cdflujomc
 					,cdrevisi
 					);
@@ -958,12 +917,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### cargarDatosRevision ######"
 					,"\n#################################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -980,7 +937,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			})
 	public String guardarDatosRevision()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n##################################"
 				,"\n###### guardarDatosRevision ######"
 				,"\n###### params=" , params
@@ -1017,8 +974,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			flujoMesaControlManager.guardarDatosRevision(
-					sb
-					,cdtipflu
+					cdtipflu
 					,cdflujomc
 					,cdrevisi
 					,dsrevisi
@@ -1031,12 +987,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### guardarDatosRevision ######"
 					,"\n##################################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -1051,7 +1005,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String movimientoTdocume()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n###############################"
 				,"\n###### movimientoTdocume ######"
 				,"\n###### params=",params
@@ -1075,8 +1029,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			flujoMesaControlManager.movimientoTdocume(
-					sb
-					,accion
+					accion
 					,cddocume
 					,dsdocume
 					,cdtiptra
@@ -1084,12 +1037,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### movimientoTdocume ######"
 					,"\n###############################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -1104,7 +1055,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String cargarDatosAccion()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n###############################"
 				,"\n###### cargarDatosAccion ######"
 				,"\n###### params=",params
@@ -1127,8 +1078,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			Map<String,Object> res = flujoMesaControlManager.cargarDatosAccion(
-					sb
-					,cdtipflu
+					cdtipflu
 					,cdflujomc
 					,cdaccion
 					);
@@ -1138,12 +1088,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### cargarDatosAccion ######"
 					,"\n###############################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -1160,7 +1108,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			})
 	public String guardarDatosAccion()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n################################"
 				,"\n###### guardarDatosAccion ######"
 				,"\n###### params=" , params
@@ -1198,8 +1146,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			flujoMesaControlManager.guardarDatosAccion(
-					sb
-					,cdtipflu
+					cdtipflu
 					,cdflujomc
 					,cdaccion
 					,dsaccion
@@ -1215,12 +1162,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### guardarDatosAccion ######"
 					,"\n################################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -1238,23 +1183,21 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 	)
 	public String debugScreen()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n#########################"
 				,"\n###### debugScreen ######"
 				));
 		String result = ERROR;
 		try
 		{
-			items = flujoMesaControlManager.debugScreen(sb);
+			items = flujoMesaControlManager.debugScreen();
 			
 			result = SUCCESS;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### debugScreen ######"
 					,"\n#########################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -1271,7 +1214,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 	)
 	public String mesaControl()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n#########################"
 				,"\n###### mesaControl ######"
 				));
@@ -1295,8 +1238,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			}
 			
 			Map<String,Object> manRes = flujoMesaControlManager.mesaControl(
-					sb
-					,usuario.getRolActivo().getClave()
+					usuario.getRolActivo().getClave()
 					,agrupamc
 					,usuario.getUser()
 					);
@@ -1309,12 +1251,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			result = SUCCESS;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### mesaControl ######"
 					,"\n#########################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -1411,7 +1351,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String recuperarPolizaUnica()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n##################################"
 				,"\n###### recuperarPolizaUnica ######"
 				,"\n###### params=",params
@@ -1435,17 +1375,15 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,nmpoliza , "No se recibi\u00f3n la p\u00f3nliza"
 					);
 			
-			params.putAll(flujoMesaControlManager.recuperarPolizaUnica(sb,cdunieco,cdramo,estado,nmpoliza));
+			params.putAll(flujoMesaControlManager.recuperarPolizaUnica(cdunieco,cdramo,estado,nmpoliza));
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### params=",params
 					,"\n###### recuperarPolizaUnica ######"
 					,"\n##################################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -1460,7 +1398,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String registrarTramite()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n##############################"
 				,"\n###### registrarTramite ######"
 				,"\n###### params=",params
@@ -1497,8 +1435,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			String ntramite = flujoMesaControlManager.registrarTramite(
-					sb
-					,cdsucdoc
+					cdsucdoc
 					,cdramo
 					,estado
 					,nmpoliza
@@ -1528,13 +1465,11 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### params=",params
 					,"\n###### registrarTramite ######"
 					,"\n##############################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -1548,7 +1483,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String cargarAccionesEntidad()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n###################################"
 				,"\n###### cargarAccionesEntidad ######"
 				,"\n###### params=",params
@@ -1575,8 +1510,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			list = flujoMesaControlManager.cargarAccionesEntidad(
-					sb
-					,cdtipflu
+					cdtipflu
 					,cdflujomc
 					,tipoent
 					,cdentidad
@@ -1589,12 +1523,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### cargarAccionesEntidad ######"
 					,"\n###################################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -1611,7 +1543,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 	)
 	public String pantallaExterna()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n#############################"
 				,"\n###### pantallaExterna ######"
 				,"\n###### params=" , params
@@ -1653,13 +1585,11 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			result = SUCCESS;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### result=",result
 					,"\n###### pantallaExterna ######"
 					,"\n#############################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -1677,7 +1607,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 	)
 	public String controladorExterno()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n#################################"
 				,"\n###### controladorExterno ######"
 				,"\n###### flujo="  , flujo
@@ -1693,13 +1623,11 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			result = SUCCESS;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### result=",result
 					,"\n###### controladorExterno ######"
 					,"\n################################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -1717,7 +1645,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 	)
 	public String pantallaDiagnosticoFlujo()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n######################################"
 				,"\n###### pantallaDiagnosticoFlujo ######"
 				,"\n###### flujo=", flujo
@@ -1733,13 +1661,11 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			result = SUCCESS;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### result=",result
 					,"\n###### pantallaDiagnosticoFlujo ######"
 					,"\n######################################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -1754,7 +1680,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String cambiarFechaRecepcion()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n#########################"
 				,"\n###### procesoDemo ######"
 				,"\n###### flujo=",flujo
@@ -1766,8 +1692,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			Utils.validate(flujo, "No se recibieron datos");
 			
 			flujoMesaControlManager.procesoDemo(
-					sb
-					,flujo
+					flujo
 					,usuario.getUser()
 					,usuario.getRolActivo().getClave()
 					);
@@ -1775,12 +1700,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			message = "Se agreg\u00f3 un nuevo registro de detalle para el tr\u00e1mite";
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### procesoDemo ######"
 					,"\n#########################"
 					));
-			
-			logger.debug(sb.toString());
 		}
 		catch(Exception ex)
 		{
@@ -1794,7 +1717,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String ejecutaRevision()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n#############################"
 				,"\n###### ejecutaRevision ######"
 				,"\n###### flujo="  , flujo
@@ -1806,20 +1729,15 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			Utils.validate(flujo  , "No se recibieron datos del flujo");
 			
-			list = flujoMesaControlManager.ejecutaRevision(
-					sb
-					,flujo
-					);
+			list = flujoMesaControlManager.ejecutaRevision(flujo);
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### params=" , params
 					,"\n###### ejecutaRevision ######"
 					,"\n#############################"
 					));
-			
-			logger.debug(sb.toString());
 			
 		}
 		catch(Exception ex)
@@ -1834,7 +1752,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String turnarTramite()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n###########################"
 				,"\n###### turnarTramite ######"
 				,"\n###### params=" , params
@@ -1863,8 +1781,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			message = flujoMesaControlManager.turnarTramite(
-					sb
-					,ntramite
+					ntramite
 					,statusOld
 					,cdtipasigOld
 					,statusNew
@@ -1876,14 +1793,11 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### message=" , message
 					,"\n###### turnarTramite ######"
 					,"\n###########################"
 					));
-			
-			logger.debug(sb.toString());
-			
 		}
 		catch(Exception ex)
 		{
@@ -1897,7 +1811,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String recuperarDatosTramiteValidacionCliente()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n####################################################"
 				,"\n###### recuperarDatosTramiteValidacionCliente ######"
 				,"\n###### flujo=" , flujo
@@ -1910,20 +1824,17 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			Utils.validate(flujo, "No se recibieron datos de flujo");
 			
-			datosTramite = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(sb,flujo);
+			datosTramite = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
 			
 			datosTramite.put("CDUSUARI" , cdusuari);
 			datosTramite.put("CDSISROL" , cdsisrol);
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### recuperarDatosTramiteValidacionCliente ######"
 					,"\n####################################################"
 					));
-			
-			logger.debug(sb.toString());
-			
 		}
 		catch(Exception ex)
 		{
@@ -1937,7 +1848,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			)
 	public String turnar()
 	{
-		StringBuilder sb = new StringBuilder(Utils.log(
+		logger.debug(Utils.log(
 				 "\n#############################"
 				,"\n###### turnarDesdeComp ######"
 				,"\n###### params=" , params
@@ -1967,8 +1878,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					);
 			
 			message = flujoMesaControlManager.turnarDesdeComp(
-					sb
-					,cdusuari
+					cdusuari
 					,cdsisrol
 					,cdtipflu
 					,cdflujomc
@@ -1981,13 +1891,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			success = true;
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n###### turnarDesdeComp ######"
 					,"\n#############################"
 					));
-			
-			logger.debug(sb.toString());
-			
 		}
 		catch(Exception ex)
 		{

@@ -40,12 +40,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	private MesaControlDAO mesaControlDAO;
 	
 	@Override
-	public Map<String,Item> workflow(
-			StringBuilder sb
-			,String cdsisrol
-			) throws Exception
+	public Map<String,Item> workflow(String cdsisrol) throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ workflow @@@@@@"
 				,"\n@@@@@@ cdsisrol=",cdsisrol
@@ -57,7 +54,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		try
 		{
 			paso = "Recuperando componentes";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
@@ -79,10 +76,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ workflow @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -91,8 +88,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public void movimientoTtipflumc(
-			StringBuilder sb
-			,String accion
+			String accion
 			,String cdtipflu
 			,String dstipflu
 			,String cdtiptra
@@ -101,7 +97,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String cdtipsup
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ movimientoTtipflumc @@@@@@"
 				,"\n@@@@@@ accion="     , accion
@@ -114,7 +110,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				));
 		
 		String paso = "Guardando tr\u00E1mite";
-		sb.append("\n").append(paso);
+		logger.debug(paso);
 		
 		try
 		{
@@ -130,9 +126,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ movimientoTtipflumc @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -140,8 +136,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public void movimientoTflujomc(
-			StringBuilder sb
-			,String accion
+			String accion
 			,String cdtipflu
 			,String cdflujomc
 			,String dsflujomc
@@ -149,7 +144,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String cdtipram
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ movimientoTflujomc @@@@@@"
 				,"\n@@@@@@ accion="     , accion
@@ -161,7 +156,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				));
 		
 		String paso = "Guardando proceso";
-		sb.append("\n").append(paso);
+		logger.debug(paso);
 		
 		try
 		{
@@ -176,10 +171,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ movimientoTflujomc @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -187,13 +182,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public void movimientoCatalogo(
-			StringBuilder sb
-			,String accion
+			String accion
 			,String tipo
 			,Map<String,String> params
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ movimientoCatalogo @@@@@@"
 				,"\n@@@@@@ accion=" , accion
@@ -202,7 +196,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				));
 		
 		String paso = "Guardando cat\u00e1logo";
-		sb.append("\n").append(paso);
+		logger.debug(paso);
 		
 		try
 		{
@@ -248,10 +242,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ movimientoCatalogo @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -259,8 +253,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public String registrarEntidad(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String tipo
 			,String clave
@@ -269,7 +262,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String ypos
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ registrarEntidad @@@@@@"
 				,"\n@@@@@@ cdtipflu="  , cdtipflu
@@ -283,7 +276,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		
 		String cdentidad = null
 		       ,paso     = "Registrando entidad";
-		sb.append("\n").append(paso);
+		logger.debug(paso);
 		
 		try
 		{
@@ -370,10 +363,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ cdentidad=",cdentidad
 				,"\n@@@@@@ registrarEntidad @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -383,15 +376,14 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public void borrarEntidad(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String tipo
 			,String clave
 			,String webid
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ borrarEntidad @@@@@@"
 				,"\n@@@@@@ cdtipflu="  , cdtipflu
@@ -402,7 +394,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				));
 		
 		String paso = "Borrando entidad";
-		sb.append("\n").append(paso);
+		logger.debug(paso);
 		
 		try
 		{
@@ -489,10 +481,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ borrarEntidad @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -500,12 +492,11 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public List<Map<String,String>> cargarModelado(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarModelado @@@@@@"
 				,"\n@@@@@@ cdtipflu="  , cdtipflu
@@ -518,7 +509,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		try
 		{
 			paso = "Recuperando status";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			List<Map<String,String>> estados = flujoMesaControlDAO.recuperaTfluest(cdtipflu, cdflujomc, null);
 			
@@ -531,7 +522,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				}
 				
 				paso = "Recuperando pantallas";
-				sb.append("\n").append(paso);
+				logger.debug(paso);
 				
 				List<Map<String,String>> pantallas = flujoMesaControlDAO.recuperaTflupant(
 						cdtipflu
@@ -546,7 +537,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				}
 				
 				paso = "Recuperando componentes";
-				sb.append("\n").append(paso);
+				logger.debug(paso);
 				
 				List<Map<String,String>> componentes = flujoMesaControlDAO.recuperaTflucomp(
 						cdtipflu
@@ -594,10 +585,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ list=" , list
 				,"\n@@@@@@ cargarModelado @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -607,13 +598,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public Map<String,Object> cargarDatosEstado(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdestadomc
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarDatosEstado @@@@@@"
 				,"\n@@@@@@ cdtipflu="   , cdtipflu
@@ -627,7 +617,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		try
 		{
 			paso = "Recuperando status";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			List<Map<String,String>> lista  = flujoMesaControlDAO.recuperaTfluest(cdtipflu, cdflujomc, cdestadomc);
 			Map<String,String>       estado = null;
@@ -673,12 +663,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			estado.put("TIMEWRN2M" , String.format("%.0f",Math.floor(wrn2%60d)));
 			
 			paso = "Recuperando permisos";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			List<Map<String,String>> permisos = flujoMesaControlDAO.recuperaTfluestrol(cdtipflu, cdflujomc, estado.get("CDESTADOMC"));
 			
 			paso = "Recuperando avisos";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			List<Map<String,String>> avisos = flujoMesaControlDAO.recuperaTfluestavi(cdtipflu, cdflujomc, estado.get("CDESTADOMC"));
 
@@ -696,7 +686,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				listaProps.add(aviso);
 			}
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\nmapa="  , estado
 					,"\nlista=" , listaProps
 					));
@@ -706,10 +696,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ cargarDatosEstado @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -718,8 +708,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public void guardarDatosEstado(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdestadomc
 			,String accion
@@ -737,7 +726,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,List<Map<String,String>>list
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarDatosEstado @@@@@@"
 				,"\n@@@@@@ cdtipflu="   , cdtipflu
@@ -762,7 +751,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		try
 		{
 			paso = "Guardando datos de status";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			flujoMesaControlDAO.movimientoTfluest(
 					cdtipflu
@@ -779,7 +768,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					);
 			
 			paso = "Guardando permisos y avisos";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			for(Map<String,String>ite : list)
 			{
@@ -820,10 +809,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ guardarDatosEstado @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -831,14 +820,13 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public String registrarConnection(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String idorigen
 			,String iddestin
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ registrarConnection @@@@@@"
 				,"\n@@@@@@ cdtipflu="  , cdtipflu
@@ -853,7 +841,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		try
 		{
 			paso = "Registrando conexi\u00f3n";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			cdaccion = flujoMesaControlDAO.movimientoTfluacc(
 					cdtipflu
@@ -871,10 +859,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ cdaccion=",cdaccion
 				,"\n@@@@@@ registrarConnection @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -884,13 +872,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public Map<String,String> cargarDatosValidacion(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdvalida
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarDatosValidacion @@@@@@"
 				,"\n@@@@@@ cdtipflu="  , cdtipflu
@@ -904,7 +891,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		try
 		{
 			paso = "Recuperando validaciones";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			List<Map<String,String>> validaciones = flujoMesaControlDAO.recuperaTfluval(cdtipflu, cdflujomc, cdvalida);
 			
@@ -924,10 +911,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ cargarDatosValidacion @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -936,8 +923,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public void guardarDatosValidacion(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdvalida
 			,String webid
@@ -949,7 +935,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String accion
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarDatosValidacion @@@@@@"
 				,"\n@@@@@@ cdtipflu="   , cdtipflu
@@ -965,7 +951,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				));
 		
 		String paso = "Guardando datos de validaci\u00f3n";
-		sb.append("\n").append(paso);
+		logger.debug(paso);
 		
 		try
 		{
@@ -984,10 +970,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ guardarDatosValidacion @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -995,13 +981,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public void guardarCoordenadas(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,List<Map<String,String>>list
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarCoordenadas @@@@@@"
 				,"\n@@@@@@ cdtipflu="  , cdtipflu
@@ -1027,10 +1012,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ guardarCoordenadas @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -1038,12 +1023,11 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public String ejecutaValidacion(
-			StringBuilder sb
-			,FlujoVO flujo
+			FlujoVO flujo
 			,String cdvalidafk
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ ejecutaValidacion @@@@@@"
 				,"\n@@@@@@ flujo="      , flujo
@@ -1056,7 +1040,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		try
 		{
 			paso = "Ejecutando validaci\u00f3n";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			salida = flujoMesaControlDAO.ejecutaValidacion(
 					flujo.getNtramite()
@@ -1072,10 +1056,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ salida=",salida
 				,"\n@@@@@@ ejecutaValidacion @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -1086,13 +1070,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public Map<String,Object> cargarDatosRevision(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdrevisi
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarDatosRevision @@@@@@"
 				,"\n@@@@@@ cdtipflu="  , cdtipflu
@@ -1106,7 +1089,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		try
 		{
 			paso = "Recuperando revisi\u00f3n";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			List<Map<String,String>> lista    = flujoMesaControlDAO.recuperaTflurev(cdtipflu, cdflujomc);
 			Map<String,String>       revision = null;
@@ -1126,11 +1109,11 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			}
 			
 			paso = "Recuperando documentos";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			List<Map<String,String>> permisos = flujoMesaControlDAO.recuperaTflurevdoc(cdtipflu, cdflujomc, cdrevisi);
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\nmapa="  , revision
 					,"\nlista=" , permisos
 					));
@@ -1140,10 +1123,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ cargarDatosRevision @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -1152,8 +1135,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public void guardarDatosRevision(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdrevisi
 			,String dsrevisi
@@ -1164,7 +1146,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,List<Map<String,String>>list
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarDatosRevision @@@@@@"
 				,"\n@@@@@@ cdtipflu="  , cdtipflu
@@ -1182,7 +1164,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		try
 		{
 			paso = "Guardando datos de revisi\u00f3n";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			flujoMesaControlDAO.movimientoTflurev(
 					cdtipflu
@@ -1196,7 +1178,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					);
 			
 			paso = "Guardando documentos";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			for(Map<String,String>ite : list)
 			{
@@ -1212,10 +1194,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ guardarDatosRevision @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -1223,14 +1205,13 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public void movimientoTdocume(
-			StringBuilder sb
-			,String accion
+			String accion
 			,String cddocume
 			,String dsdocume
 			,String cdtiptra
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ movimientoTdocume @@@@@@"
 				,"\n@@@@@@ accion="   , accion
@@ -1240,7 +1221,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				));
 		
 		String paso = "Guardando documento";
-		sb.append("\n").append(paso);
+		logger.debug(paso);
 		
 		try
 		{
@@ -1248,9 +1229,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ movimientoTdocume @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -1258,13 +1239,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public void borrarConnection(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdaccion
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ borrarConnection @@@@@@"
 				,"\n@@@@@@ cdtipflu="  , cdtipflu
@@ -1273,7 +1253,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				));
 		
 		String paso = "Borrando acci\u00f3n";
-		sb.append("\n").append(paso);
+		logger.debug(paso);
 		
 		try
 		{
@@ -1293,10 +1273,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ borrarConnection @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -1304,13 +1284,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public Map<String,Object> cargarDatosAccion(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdaccion
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarDatosAccion @@@@@@"
 				,"\n@@@@@@ cdtipflu="  , cdtipflu
@@ -1324,7 +1303,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		try
 		{
 			paso = "Recuperando acci\u00f3n";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			List<Map<String,String>> lista    = flujoMesaControlDAO.recuperaTfluacc(cdtipflu, cdflujomc);
 			Map<String,String>       accion = null;
@@ -1344,11 +1323,11 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			}
 			
 			paso = "Recuperando permisos";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			List<Map<String,String>> permisos = flujoMesaControlDAO.recuperaTfluaccrol(cdtipflu, cdflujomc, cdaccion);
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\nmapa="  , accion
 					,"\nlista=" , permisos
 					));
@@ -1358,10 +1337,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ cargarDatosAccion @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -1370,8 +1349,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public void guardarDatosAccion(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdaccion
 			,String dsaccion
@@ -1385,7 +1363,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,List<Map<String,String>>list
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarDatosAccion @@@@@@"
 				,"\n@@@@@@ cdtipflu="  , cdtipflu
@@ -1407,7 +1385,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		try
 		{
 			paso = "Guardando datos de acci\u00f3n";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			flujoMesaControlDAO.movimientoTfluacc(
 					cdtipflu
@@ -1424,7 +1402,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					);
 			
 			paso = "Guardando permisos";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			for(Map<String,String>ite : list)
 			{
@@ -1440,19 +1418,19 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ guardarDatosAccion @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
 	
 	@Override
-	public Map<String,Item> debugScreen(StringBuilder sb) throws Exception
+	public Map<String,Item> debugScreen() throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ debugScreen @@@@@@"
 				));
@@ -1461,7 +1439,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		try
 		{
 			paso = "Recuperando componentes";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			List<ComponenteVO> comps = pantallasDAO.obtenerComponentes(
 					null  //cdtiptra
@@ -1480,7 +1458,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			
 			items.put("items" , gc.getItems());
 			
-			sb.append(Utils.log(
+			logger.debug(Utils.log(
 					 "\n@@@@@@ items=",items
 					,"\n@@@@@@ debugScreen @@@@@@"
 					,"\n@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -1488,20 +1466,19 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		return items;
 	}
 	
 	@Override
 	public Map<String,Object> mesaControl(
-			StringBuilder sb
-			,String cdsisrol
+			String cdsisrol
 			,String agrupamc
 			,String cdusuari
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ mesaControl @@@@@@"
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
@@ -1513,7 +1490,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		try
 		{
 			paso = "Recuperando componentes de filtro";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			List<ComponenteVO> filtro = pantallasDAO.obtenerComponentes(
 					agrupamc //cdtiptra
@@ -1528,7 +1505,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					);
 			
 			paso = "Recuperando componentes de grid";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			List<ComponenteVO> grid = pantallasDAO.obtenerComponentes(
 					agrupamc //cdtiptra
@@ -1567,7 +1544,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					);
 			
 			paso = "Generando componentes";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
@@ -1601,9 +1578,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ result=",result
 				,"\n@@@@@@ mesaControl @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -1690,14 +1667,13 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public Map<String,String> recuperarPolizaUnica(
-			StringBuilder sb
-			,String cdunieco
+			String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarPolizaUnica @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
@@ -1718,10 +1694,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ recuperarPolizaUnica @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -1730,7 +1706,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public String registrarTramite(
-			StringBuilder sb , String cdunieco , String cdramo     , String estado   , String nmpoliza
+			String cdunieco  , String cdramo   , String estado     , String nmpoliza
 			,String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra
 			,Date ferecepc   , String cdagente , String referencia , String nombre
 			,Date festatus   , String status   , String comments   , String nmsolici
@@ -1739,7 +1715,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,Map<String, String> valores, String cdtipsup
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ registrarTramite @@@@@@"
 				,"\n@@@@@@ cdunieco="   , cdunieco
@@ -1769,7 +1745,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				));
 		
 		String paso = "Registrando tr\u00e1mite";
-		sb.append("\n").append(paso);
+		logger.debug(paso);
 		String ntramite = null;
 		try
 		{		
@@ -1813,9 +1789,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ ntramite=",ntramite
 				,"\n@@@@@@ registrarTramite @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -1825,8 +1801,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public List<Map<String,String>>cargarAccionesEntidad(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String tipoent
 			,String cdentidad
@@ -1834,7 +1809,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String cdsisrol
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarAccionesEntidad @@@@@@"
 				,"\n@@@@@@ cdtipflu="  , cdtipflu
@@ -1851,7 +1826,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		try
 		{
 			paso = "Recuperando acciones de entidad";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			List<Map<String,String>> tmp = flujoMesaControlDAO.cargarAccionesEntidad(
 					cdtipflu
 					,cdflujomc
@@ -1915,10 +1890,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ cargarAccionesEntidad @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
@@ -1927,13 +1902,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public void procesoDemo(
-			StringBuilder sb
-			,FlujoVO flujo
+			FlujoVO flujo
 			,String cdusuari
 			,String cdsisrol
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ procesoDemo @@@@@@"
 				,"\n@@@@@@ flujo="    , flujo
@@ -1942,7 +1916,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				));
 
 		String paso = "Cambiando fecha";
-		sb.append("\n").append(paso);
+		logger.debug(paso);
 		
 		try
 		{
@@ -1959,19 +1933,19 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ procesoDemo @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
 	
 	@Override
-	public List<Map<String,String>> ejecutaRevision(StringBuilder sb, FlujoVO flujo)throws Exception
+	public List<Map<String,String>> ejecutaRevision(FlujoVO flujo)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ ejecutaRevision @@@@@@"
 				,"\n@@@@@@ flujo=",flujo
@@ -1983,7 +1957,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		try
 		{
 			paso = "Recuperando lista de documentos faltantes";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			docsFaltan = flujoMesaControlDAO.recuperarDocumentosRevisionFaltantes(
 					flujo.getCdtipflu()
@@ -1994,10 +1968,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ docsFaltan=",docsFaltan
 				,"\n@@@@@@ ejecutaRevision @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2008,8 +1982,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public String turnarTramite(
-			StringBuilder sb
-			,String ntramite
+			 String ntramite
 			,String statusOld
 			,String cdtipasigOld
 			,String statusNew
@@ -2019,7 +1992,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String comments
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ turnarTramite @@@@@@"
 				,"\n@@@@@@ ntramite="     , ntramite
@@ -2045,7 +2018,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				destinoSimple = false;
 				
 				paso = "Recuperando datos del tr\u00e1mite";
-				sb.append("\n").append(paso);
+				logger.debug(paso);
 				Map<String,Object> datosTramite = flujoMesaControlDAO.recuperarDatosTramiteValidacionCliente(
 						null//cdtipflu
 						,null//cdflujomc
@@ -2066,9 +2039,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				String cdflujomc = tramite.get("CDFLUJOMC");
 				
 				paso = "Recuperando rol destino";
-				sb.append("\n").append(paso);
+				logger.debug(paso);
+				
 				List<Map<String,String>> roles         = flujoMesaControlDAO.recuperaTfluestrol(cdtipflu, cdflujomc, statusNew);
-				sb.append(Utils.log("\nroles=",roles));
+				logger.debug(Utils.log("\nroles=",roles));
 				String                   cdsisrolTurnado = null;
 				for(Map<String,String>rol:roles)
 				{
@@ -2082,7 +2056,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				{
 					throw new ApplicationException("No hay rol definido para ver el status nuevo");
 				}
-				sb.append(Utils.log("\ncdsisrolNuevo=",cdsisrolTurnado));
+				logger.debug(Utils.log("\ncdsisrolNuevo=",cdsisrolTurnado));
 				
 				String cadenaTipoTurnado = null;
 				if("3".equals(cdtipasigNew))
@@ -2098,11 +2072,33 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					throw new ApplicationException("El tipo de asignaci\u00f3n no es correcto");
 				}
 				
-				paso = "Recuperando usuario destino del tr\u00e1mite";
-				sb.append(Utils.log("\n",paso,", tipo=",cadenaTipoTurnado));
-				usuarioDestino = flujoMesaControlDAO.recuperarUsuarioParaTurnado(cdsisrolTurnado,cadenaTipoTurnado);
-				usuarioDestino.put("cdsisrol" , cdsisrolTurnado);
-				sb.append(Utils.log("\nusuario destino=",usuarioDestino));
+				paso = "Verificando si lo tenia ese rol anteriormente";
+				logger.debug(paso);
+				
+				Map<String,String> usuarioMismoRolAnteriormente =
+						flujoMesaControlDAO.recuperarUsuarioHistoricoTramitePorRol(ntramite,cdsisrolTurnado);
+				
+				if(StringUtils.isNotBlank(usuarioMismoRolAnteriormente.get("cdusuari"))
+						&&StringUtils.isNotBlank(usuarioMismoRolAnteriormente.get("dsusuari"))
+						)
+				{
+					logger.debug(Utils.log("si lo tenia antes alguien del mismo rol <",cdsisrolTurnado,"> era <",usuarioMismoRolAnteriormente.get("dsusuari"),">"));
+					usuarioDestino = usuarioMismoRolAnteriormente;
+					usuarioDestino.put("cdsisrol" , cdsisrolTurnado);
+				}
+				else
+				{
+					paso = "Recuperando usuario destino del tr\u00e1mite";
+					logger.debug(Utils.log("\n",paso,", tipo=",cadenaTipoTurnado));
+					usuarioDestino = flujoMesaControlDAO.recuperarUsuarioParaTurnado(cdsisrolTurnado,cadenaTipoTurnado);
+					usuarioDestino.put("cdsisrol" , cdsisrolTurnado);
+					logger.debug(Utils.log("\nusuario destino=",usuarioDestino));
+				}
+				
+				paso = "Guardando historico de tramite";
+				logger.debug(paso);
+				
+				flujoMesaControlDAO.guardarHistoricoTramite(new Date(),ntramite,usuarioDestino.get("cdusuari"),cdsisrolTurnado,statusOld);
 			}
 			
 			if(!"1".equals(cdtipasigOld)) //antes lo tenia un usuario especifico
@@ -2143,7 +2139,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			}
 			
 			paso = "Actualizando status";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
 			
 			flujoMesaControlDAO.actualizarStatusTramite(
 					ntramite
@@ -2153,7 +2149,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					);
 			
 			paso = "Actualizando recuperando descripci\u00f3n de status";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
+			
 			List<Map<String,String>>estados = flujoMesaControlDAO.recuperaTestadomc(statusNew);
 			if(estados==null||estados.size()==0)
 			{
@@ -2165,7 +2162,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			}
 			
 			paso = "Guardando detalle de tr\u00e1mite";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
+			
 			mesaControlDAO.movimientoDetalleTramite(
 					ntramite
 					,new Date()//feinicio
@@ -2191,9 +2189,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ message=",message
 				,"\n@@@@@@ turnarTramite @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2202,9 +2200,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
-	public Map<String,Object> recuperarDatosTramiteValidacionCliente(StringBuilder sb, FlujoVO flujo)throws Exception
+	public Map<String,Object> recuperarDatosTramiteValidacionCliente(FlujoVO flujo)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarDatosTramiteValidacionCliente @@@@@@"
 				,"\n@@@@@@ flujo=",flujo
@@ -2231,9 +2229,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ datos=",datos
 				,"\n@@@@@@ recuperarDatosTramiteValidacionCliente @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2243,8 +2241,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public String turnarDesdeComp(
-			StringBuilder sb
-			,String cdusuari
+			String cdusuari
 			,String cdsisrol
 			,String cdtipflu
 			,String cdflujomc
@@ -2255,7 +2252,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String comments
 			)throws Exception
 	{
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ turnarDesdeComp @@@@@@"
 				,"\n@@@@@@ cdusuari="  , cdusuari
@@ -2275,7 +2272,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		try
 		{
 			paso = "Recuperando status anterior";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
+			
 			List<Map<String,String>>statusesOld = flujoMesaControlDAO.recuperaTfluest(cdtipflu, cdflujomc, statusOld);
 			if(statusesOld.size()==0)
 			{
@@ -2286,10 +2284,11 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				throw new ApplicationException("Status anterior repetido");
 			}
 			Map<String,String> statusAnterior = statusesOld.get(0);
-			sb.append(Utils.log("=",statusAnterior));
+			logger.debug(Utils.log("=",statusAnterior));
 			
 			paso = "Recuperando status nuevo";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
+			
 			List<Map<String,String>>statusesNew = flujoMesaControlDAO.recuperaTfluest(cdtipflu, cdflujomc, statusNew);
 			if(statusesNew.size()==0)
 			{
@@ -2300,13 +2299,13 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				throw new ApplicationException("Status nuevo repetido");
 			}
 			Map<String,String> statusNuevo = statusesNew.get(0);
-			sb.append(Utils.log("=",statusNuevo));
+			logger.debug(Utils.log("=",statusNuevo));
 			
 			paso = "Invocando turnado general";
-			sb.append("\n").append(paso);
+			logger.debug(paso);
+			
 			message = this.turnarTramite(
-					sb
-					,ntramite
+					ntramite
 					,statusOld
 					,statusAnterior.get("CDTIPASIG")
 					,statusNew
@@ -2318,10 +2317,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso, sb.toString());
+			Utils.generaExcepcion(ex, paso);
 		}
 		
-		sb.append(Utils.log(
+		logger.debug(Utils.log(
 				 "\n@@@@@@ message=",message
 				,"\n@@@@@@ turnarDesdeComp @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

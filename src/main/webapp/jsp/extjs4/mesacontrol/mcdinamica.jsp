@@ -523,6 +523,14 @@ function _4_swagenteRadioGroup()
 
 Ext.onReady(function()
 {
+    if(Number(mcdinInput['tiptra'])     == 1
+        || Number(mcdinInput['tiptra']) == 15
+        || Number(mcdinInput['tiptra']) == 17
+    )
+    {
+        alert('Existe una versi\u00f3n nueva de la mesa de control');
+    }
+
 	// Se aumenta el timeout para todas las peticiones:
 	Ext.Ajax.timeout = 60000; // 60 seconds
 	

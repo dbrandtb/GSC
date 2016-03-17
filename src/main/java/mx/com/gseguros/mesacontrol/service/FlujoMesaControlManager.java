@@ -11,13 +11,11 @@ public interface FlujoMesaControlManager
 {
 	
 	public Map<String,Item> workflow(
-			StringBuilder sb
-			,String cdsisrol
+			String cdsisrol
 			)throws Exception;
 	
 	public void movimientoTtipflumc(
-			StringBuilder sb
-			,String accion
+			String accion
 			,String cdtipflu
 			,String dstipflu
 			,String cdtiptra
@@ -27,8 +25,7 @@ public interface FlujoMesaControlManager
 			)throws Exception;
 	
 	public void movimientoTflujomc(
-			StringBuilder sb
-			,String accion
+			String accion
 			,String cdtipflu
 			,String cdflujomc
 			,String dsflujomc
@@ -37,15 +34,13 @@ public interface FlujoMesaControlManager
 			)throws Exception;
 	
 	public void movimientoCatalogo(
-			StringBuilder sb
-			,String accion
+			String accion
 			,String tipo
 			,Map<String,String> params
 			)throws Exception;
 	
 	public String registrarEntidad(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String tipo
 			,String clave
@@ -55,8 +50,7 @@ public interface FlujoMesaControlManager
 			)throws Exception;
 	
 	public void borrarEntidad(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String tipo
 			,String clave
@@ -64,21 +58,18 @@ public interface FlujoMesaControlManager
 			)throws Exception;
 	
 	public List<Map<String,String>> cargarModelado(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			)throws Exception;
 	
 	public Map<String,Object> cargarDatosEstado(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdestadomc
 			)throws Exception;
 	
 	public void guardarDatosEstado(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdestadomc
 			,String accion
@@ -97,23 +88,20 @@ public interface FlujoMesaControlManager
 			)throws Exception;
 	
 	public String registrarConnection(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String idorigen
 			,String iddestin
 			)throws Exception;
 	
 	public Map<String,String> cargarDatosValidacion(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdvalida
 			)throws Exception;
 	
 	public void guardarDatosValidacion(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdvalida
 			,String webid
@@ -126,28 +114,24 @@ public interface FlujoMesaControlManager
 			)throws Exception;
 	
 	public void guardarCoordenadas(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,List<Map<String,String>>list
 			)throws Exception;
 	
 	public String ejecutaValidacion(
-			StringBuilder sb
-			,FlujoVO flujo
+			FlujoVO flujo
 			,String cdvalidafk
 			)throws Exception;
 	
 	public Map<String,Object> cargarDatosRevision(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdrevisi
 			)throws Exception;
 	
 	public void guardarDatosRevision(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdrevisi
 			,String dsrevisi
@@ -159,30 +143,26 @@ public interface FlujoMesaControlManager
 			)throws Exception;
 	
 	public void movimientoTdocume(
-			StringBuilder sb
-			,String accion
+			String accion
 			,String cddocume
 			,String dsdocume
 			,String cdtiptra
 			)throws Exception;
 	
 	public void borrarConnection(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdaccion
 			)throws Exception;
 	
 	public Map<String,Object> cargarDatosAccion(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdaccion
 			)throws Exception;
 	
 	public void guardarDatosAccion(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String cdaccion
 			,String dsaccion
@@ -196,11 +176,10 @@ public interface FlujoMesaControlManager
 			,List<Map<String,String>>list
 			)throws Exception;
 	
-	public Map<String,Item> debugScreen(StringBuilder sb) throws Exception;
+	public Map<String,Item> debugScreen() throws Exception;
 	
 	public Map<String,Object> mesaControl(
-			StringBuilder sb
-			,String cdsisrol
+			String cdsisrol
 			,String agrupamc
 			,String cdusuari
 			)throws Exception;
@@ -224,15 +203,14 @@ public interface FlujoMesaControlManager
 			)throws Exception;
 	
 	public Map<String,String> recuperarPolizaUnica(
-			StringBuilder sb
-			,String cdunieco
+			String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza
 			)throws Exception;
 	
 	public String registrarTramite(
-			StringBuilder sb , String cdunieco , String cdramo     , String estado   , String nmpoliza
+			String cdunieco  , String cdramo   , String estado     , String nmpoliza
 			,String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra
 			,Date ferecepc   , String cdagente , String referencia , String nombre
 			,Date festatus   , String status   , String comments   , String nmsolici
@@ -242,8 +220,7 @@ public interface FlujoMesaControlManager
 			)throws Exception;
 	
 	public List<Map<String,String>>cargarAccionesEntidad(
-			StringBuilder sb
-			,String cdtipflu
+			String cdtipflu
 			,String cdflujomc
 			,String tipoent
 			,String cdentidad
@@ -252,17 +229,15 @@ public interface FlujoMesaControlManager
 			)throws Exception;
 	
 	public void procesoDemo(
-			StringBuilder sb
-			,FlujoVO flujo
+			FlujoVO flujo
 			,String cdusuari
 			,String cdsisrol
 			)throws Exception;
 	
-	public List<Map<String,String>> ejecutaRevision(StringBuilder sb, FlujoVO flujo)throws Exception;
+	public List<Map<String,String>> ejecutaRevision(FlujoVO flujo)throws Exception;
 	
 	public String turnarTramite(
-			StringBuilder sb
-			,String ntramite
+			String ntramite
 			,String statusOld
 			,String cdtipasigOld
 			,String statusNew
@@ -272,11 +247,10 @@ public interface FlujoMesaControlManager
 			,String comments
 			)throws Exception;
 	
-	public Map<String,Object> recuperarDatosTramiteValidacionCliente(StringBuilder sb, FlujoVO flujo)throws Exception;
+	public Map<String,Object> recuperarDatosTramiteValidacionCliente(FlujoVO flujo)throws Exception;
 	
 	public String turnarDesdeComp(
-			StringBuilder sb
-			,String cdusuari
+			String cdusuari
 			,String cdsisrol
 			,String cdtipflu
 			,String cdflujomc
