@@ -28,12 +28,26 @@ var _8_formLectura;
 var _8_panelPri;
 var _8_panelEndoso;
 
-var _8_urlLoaderLectura = '<s:url namespace="/consultasPoliza" action="consultaDatosPoliza" />';
+var _8_tabGruposLinealCols;
+var _8_storeGrupos;
+var _8_editorPlan;
 
+var _8_urlLoaderLectura = '<s:url namespace="/consultasPoliza" action="consultaDatosPoliza" />';
+var _8_urlCargarGrupos = '<s:url namespace="/emision" action="cargarGruposCotizacionReexpedicion" />';
 var _8_urlGuardar = '<s:url namespace="/endosos" action="guardarEndosoReexpedicion" />';
 
+_8_smap1.cdunieco = _8_smap1.CDUNIECO;
+_8_smap1.cdramo = _8_smap1.CDRAMO;
+_8_smap1.estado = _8_smap1.ESTADO;
+_8_smap1.nmpoliza = _8_smap1.NMPOLIZA;
+_8_smap1.cdtipsit = _8_smap1.CDTIPSIT;
+
+var _TIPOFLOT =  _8_smap1.TIPOFLOT;
+
 debug('_8_smap1:',_8_smap1);
-////// variables //////
+
+//
+//// variables //////
 ///////////////////////
 
 Ext.onReady(function()
@@ -121,7 +135,168 @@ Ext.onReady(function()
     });
     _8_panelEndoso   = new _8_PanelEndoso();
     _8_formLectura   = new _8_FormLectura();
+
     
+    _fieldByName('cdplan',_8_panelEndoso).hidden = _TIPOFLOT != "F"? false:true;
+    _fieldByName('cdplan',_8_panelEndoso).allowBlank = true;
+    _fieldByName('dsplan',_8_formLectura).hidden = _TIPOFLOT != "F"? false:true;
+    _fieldByName('NEWCDUNIECO',_8_panelEndoso).value  = _8_smap1.CDUNIECO;
+    
+	var _8_colsBaseColumns =
+	[
+	    <s:if test='%{getImap1().get("colsBaseColumns")!=null}'>
+	        <s:property value="imap1.colsBaseColumns" escapeHtml="false" />
+	    </s:if>
+	];
+	debug('_8_colsBaseColumns:',_8_colsBaseColumns);
+	
+	//////////////////////////////////////////////////
+	
+	////// modelos //////
+	
+	var _8_modeloGrupoFields =
+    [
+        'letra'
+        ,'nombre'
+        ,'cdplan'
+    ];
+    
+    var _8_colsBaseFields =
+    [
+        <s:if test='%{getImap1().get("colsBaseFields")!=null}'>
+            <s:property value="imap1.colsBaseFields" escapeHtml="false" />
+        </s:if>
+    ];
+    debug('_8_colsBaseFields:',_8_colsBaseFields);
+    
+
+	var fieldName;
+    for(var i=0;i<_8_colsBaseFields.length;i++)
+    {
+    	fieldName = _8_colsBaseFields[i].name;
+    	
+    	try{
+	    	if(!Ext.isEmpty(fieldName) && fieldName.indexOf("parametros.pv_otvalor") >= 0 ){
+	    		  _8_colsBaseFields[i].name = fieldName.replace("parametros.pv_otvalor","pv_otvalor");
+	    	}
+    	}
+    	catch(e){
+    		debugError('Error en mapeo de columna',e);
+    	}
+    	
+        _8_modeloGrupoFields.push(_8_colsBaseFields[i].name);
+    }
+    
+    debug('_8_modeloGrupoFields:',_8_modeloGrupoFields);
+    
+	
+	Ext.define('_8_modeloGrupo',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields : _8_modeloGrupoFields
+    });
+    
+    
+    _8_storeGrupos = Ext.create('Ext.data.Store',
+    {
+        model : '_8_modeloGrupo'
+        ,proxy   : {
+		           type: 'ajax',
+		           url : _8_urlCargarGrupos,
+		            reader: {
+		                type: 'json',
+		                root: 'slist1'
+		            }
+		        }
+    });
+    
+    if( _TIPOFLOT == "F"){
+		_8_storeGrupos.load({
+			params: {
+	            'smap1.cdunieco'  : _8_smap1.cdunieco
+	            ,'smap1.cdramo'   : _8_smap1.cdramo
+	            ,'smap1.estado'   : _8_smap1.estado
+	            ,'smap1.nmpoliza' : _8_smap1.nmpoliza
+	        },
+		    callback: function(records, operation, success){
+		    	if(success){
+		    		_8_storeGrupos.sort('letra','ASC');
+		    	}else{
+		    		mensajeError("Error al cargar los grupos.");
+		    	}
+		    }
+		});    	
+    }
+    
+    var _8_editorNombreGrupo=
+	{
+	    xtype       : 'textfield'
+	    ,allowBlank : false
+	    ,readOnly   : true
+	    ,minLength  : 3
+	};
+	
+	_8_editorPlan = <s:property value="imap1.editorPlanesColumn" />.editor;
+	
+    
+    _8_tabGruposLinealCols =
+    [
+        {
+            header     : 'ID'
+            ,dataIndex : 'letra'
+            ,width     : 40
+        }
+        ,{
+            header     : 'NOMBRE'
+            ,dataIndex : 'nombre'
+            ,width     : 150
+            ,editor    : _8_editorNombreGrupo
+        }
+        ,{
+            header     : 'PLAN'
+            ,dataIndex : 'cdplan'
+            ,width     : 100
+            ,editor    : _8_editorPlan
+            ,renderer  : function(v)
+            {
+                return rendererColumnasDinamico(v,'cdplan');
+            }
+        }
+    ];
+    
+    Ext.Array.each(_8_colsBaseColumns,function(col)
+    {
+    	try{
+	    	if(!Ext.isEmpty(col.dataIndex) && col.dataIndex.indexOf("parametros.pv_otvalor") >= 0 ){
+	    		col.dataIndex = col.dataIndex.replace("parametros.pv_otvalor","pv_otvalor");
+	    	}
+	    	if(col.editor && col.editor.name && !Ext.isEmpty(col.editor.name) && col.editor.name.indexOf("parametros.pv_otvalor") >= 0 ){
+				col.editor.name = col.editor.name.replace("parametros.pv_otvalor","pv_otvalor");  	
+	    	}
+    	}
+    	catch(e){
+    		debugError('Error en mapeo de columna',e);
+    	}
+    	
+    	col.flex = undefined;
+    	col.width = 200;
+        _8_tabGruposLinealCols.push(col);
+    });
+    
+    var _panelPlanesEndosoCole =  Ext.create('Ext.grid.Panel',
+        {
+        	 title    : 'Planes Por Grupo'
+			,columns : _8_tabGruposLinealCols
+            ,store   : _8_storeGrupos
+            ,hidden  : _TIPOFLOT != "F"? true:false
+            ,height  : 200
+            ,plugins : Ext.create('Ext.grid.plugin.RowEditing',
+            {
+                clicksToEdit  : 1
+                ,errorSummary : false
+            })
+        });
+        
     _8_panelPri=Ext.create('Ext.panel.Panel',
     {
         renderTo     : '_8_divPri'
@@ -141,6 +316,7 @@ Ext.onReady(function()
         ,items       :
         [
             _8_formLectura
+            ,_panelPlanesEndosoCole
             ,_8_panelEndoso
         ]
     });
@@ -224,6 +400,27 @@ function _8_confirmar()
     	}
     }
     
+    var updateGroups = [];
+    var noUpdateGroups = [];
+    
+    if( _TIPOFLOT == "F"){
+    	 _8_storeGrupos.getUpdatedRecords().forEach(function(record,index,arr){
+    		updateGroups.push(record.data);
+    	});
+		
+	    debug('Endos Reexpedicion, Grupos a Actualizar: ' , updateGroups);
+    }
+
+    if( _TIPOFLOT == "F"){
+    	 _8_storeGrupos.each(function(record){
+    		if(!record.dirty){
+    			noUpdateGroups.push(record.data);
+    		}
+    	});
+		
+	    debug('Endos Reexpedicion, Grupos a no Actualizar: ' , noUpdateGroups);
+    }
+    
     if(valido)
     {
         var json=
@@ -231,6 +428,8 @@ function _8_confirmar()
             smap1  : _8_smap1
             ,smap2 : _8_panelEndoso.getValues()
             ,smap3 : _8_formLectura.getValues()
+            ,slist1: updateGroups
+            ,slist2: noUpdateGroups
         }
         debug('datos que se enviaran:',json);
         _setLoading(true,_8_panelPri);
@@ -258,14 +457,20 @@ function _8_confirmar()
                     
                     mensajeCorrecto('Endoso generado',json.mensaje,function()
                     {
-                        _generarRemesaClic(
-                            true
-                            ,_8_smap1.CDUNIECO
-                            ,_8_smap1.CDRAMO
-                            ,_8_smap1.ESTADO
-                            ,_8_smap1.NMPOLIZA
-                            ,callbackRemesa
-                        );
+                    	
+                    	if(json.endosoConfirmado){
+                        	_generarRemesaClic(
+	                            true
+	                            ,_8_smap1.CDUNIECO
+	                            ,_8_smap1.CDRAMO
+	                            ,_8_smap1.ESTADO
+	                            ,_8_smap1.NMPOLIZA
+	                            ,callbackRemesa
+	                        );
+                        }else{
+                        	callbackRemesa();
+                        }
+			                            
                     });
                 }
                 else

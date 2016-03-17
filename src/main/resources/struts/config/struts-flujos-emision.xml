@@ -135,6 +135,10 @@
        <action name="cargarGruposCotizacion2" class="CotizacionAction" method="cargarGruposCotizacion2">
            <result type="json" />
        </action>
+
+       <action name="cargarGruposCotizacionReexpedicion" class="CotizacionAction" method="cargarGruposCotizacionReexpedicion">
+           <result type="json" />
+       </action>
        
        <action name="cargarDatosGrupoLinea" class="CotizacionAction" method="cargarDatosGrupoLinea">
            <result type="json" />
