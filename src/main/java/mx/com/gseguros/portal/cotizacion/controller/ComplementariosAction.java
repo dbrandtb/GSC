@@ -199,7 +199,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			{
 				try
 				{
-					Map<String,Object> datosTramite = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(new StringBuilder(), flujo);
+					Map<String,Object> datosTramite = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
 					Map<String,String> tramite      = (Map<String,String>)datosTramite.get("TRAMITE");
 					cdunieco = flujo.getCdunieco();
 					cdramo   = flujo.getCdramo();
@@ -3134,7 +3134,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				ntramiteAut = null;
 				ntramite    = flujo.getNtramite();
 				
-				Map<String,Object> datos   = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(new StringBuilder(),flujo);
+				Map<String,Object> datos   = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
 				Map<String,String> tramite = (Map<String,String>)datos.get("TRAMITE");
 				cdunieco = tramite.get("CDUNIECO");
 				cdramo   = tramite.get("CDRAMO");
@@ -4940,10 +4940,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			flujo.setNtramite(ntramite);
 			try
 			{
-				Map<String,Object> datosValidacionJS = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(
-						new StringBuilder()
-						,flujo
-						);
+				Map<String,Object> datosValidacionJS = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
 				nmpoliza = ((Map<String,String>)datosValidacionJS.get("TRAMITE")).get("NMSOLICI");
 			}
 			catch(Exception ex)
