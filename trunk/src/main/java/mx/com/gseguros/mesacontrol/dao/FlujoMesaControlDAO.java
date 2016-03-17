@@ -598,4 +598,8 @@ public interface FlujoMesaControlDAO {
 	public String recuperarRolRecienteTramite(String ntramite, String cdusuari) throws Exception;
 	
 	public void restarTramiteUsuario(String cdusuari,String cdsisrol) throws Exception;
+	
+	public Map<String,String> recuperarUsuarioHistoricoTramitePorRol(String ntramite, String cdsisrol) throws Exception;
+	
+	public void guardarHistoricoTramite(Date fecha, String ntramite, String cdusuari, String cdsisrol, String status) throws Exception;
 }

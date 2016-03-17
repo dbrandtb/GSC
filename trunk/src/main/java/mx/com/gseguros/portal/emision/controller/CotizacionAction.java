@@ -186,7 +186,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				smap1.put("cdunieco" , flujo.getCdunieco());
 				smap1.put("cdramo"   , flujo.getCdramo());
 				smap1.put("cdtipsit" ,
-						((Map<String,String>)(flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(new StringBuilder(), flujo))
+						((Map<String,String>)(flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo))
 						    .get("TRAMITE"))
 						    .get("CDTIPSIT")
 						);
@@ -2728,7 +2728,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					smap1.put("cdunieco" , flujo.getCdunieco());
 					smap1.put("cdramo"   , flujo.getCdramo());
 					
-					Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(new StringBuilder(), flujo);
+					Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
 					
 					Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
 					
@@ -2882,7 +2882,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					smap1.put("cdunieco" , flujo.getCdunieco());
 					smap1.put("cdramo"   , flujo.getCdramo());
 					
-					Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(new StringBuilder(), flujo);
+					Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
 					
 					Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
 					
@@ -3219,7 +3219,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					smap1.put("cdunieco" , flujo.getCdunieco());
 					smap1.put("cdramo"   , flujo.getCdramo());
 					
-					Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(new StringBuilder(), flujo);
+					Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
 					
 					Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
 					

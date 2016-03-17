@@ -2028,4 +2028,62 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			compile();
 		}
 	}
+	
+	@Override
+	public Map<String,String> recuperarUsuarioHistoricoTramitePorRol(String ntramite, String cdsisrol) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("cdsisrol" , cdsisrol);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarUsuarioHistoricoTramitePorRolSP(getDataSource()),params);
+		String cdusuari = (String) procRes.get("pv_cdusuari_o");
+		String dsusuari = (String) procRes.get("pv_dsusuari_o");
+		Map<String,String> usuario = new HashMap<String,String>();
+		usuario.put("cdusuari" , cdusuari);
+		usuario.put("dsusuari" , dsusuari);
+		return usuario;
+	}
+	
+	protected class RecuperarUsuarioHistoricoTramitePorRolSP extends StoredProcedure
+	{
+		protected RecuperarUsuarioHistoricoTramitePorRolSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_GET_USER_HIST_TRAM_X_ROL");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdusuari_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_dsusuari_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void guardarHistoricoTramite(Date fecha, String ntramite, String cdusuari, String cdsisrol, String status) throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("fecha"    , fecha);
+		params.put("ntramite" , ntramite);
+		params.put("cdusuari" , cdusuari);
+		params.put("cdsisrol" , cdsisrol);
+		params.put("status"   , status);
+		ejecutaSP(new GuardarHistoricoTramiteSP(getDataSource()),params);
+	}
+	
+	protected class GuardarHistoricoTramiteSP extends StoredProcedure
+	{
+		protected GuardarHistoricoTramiteSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_INSERTA_THMESACONTROL");
+			declareParameter(new SqlParameter("fecha"    , OracleTypes.TIMESTAMP));
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
