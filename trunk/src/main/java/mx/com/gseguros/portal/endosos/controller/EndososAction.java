@@ -8382,7 +8382,7 @@ public class EndososAction extends PrincipalCoreAction
 						exitoGrupos = endososManager.valoresDefectoGruposReexp(newcdunieco, cdramo, "W", nmpolizaNuevaPoliza,"0", cdtipsup, slist1); 
 						
 						if(exitoGrupos){
-							cotizacionManager.ejecutasigsvdefEnd(newcdunieco, cdramo, "W", nmpolizaNuevaPoliza, "TODO", "0", "TODO", cdtipsup);
+							cotizacionManager.ejecutasigsvdefEnd(newcdunieco, cdramo, "W", nmpolizaNuevaPoliza, "0", "0", "TODO", cdtipsup);
 						}
 					}
 					
