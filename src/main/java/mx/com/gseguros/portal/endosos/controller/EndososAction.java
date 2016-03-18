@@ -8426,7 +8426,7 @@ public class EndososAction extends PrincipalCoreAction
 							null, RolSistema.SUSCRIPTOR_TECNICO.getCdsisrol(), null, null, "N", timestamp);
 					
 					if(res.containsKey("NOMBRE") && StringUtils.isNotBlank((String)res.get("NOMBRE"))){
-						usuarioTramite = " asignado a:"+(String)res.get("NOMBRE");
+						usuarioTramite = " asignado a: "+(String)res.get("NOMBRE");
 					}
 					
 					usuarioTramite+=" en suscripci\u00F3n";
@@ -8435,7 +8435,7 @@ public class EndososAction extends PrincipalCoreAction
 							null, RolSistema.SUSCRIPTOR.getCdsisrol(), null, null, "N", timestamp);
 					
 					if(res.containsKey("NOMBRE") && StringUtils.isNotBlank((String)res.get("NOMBRE"))){
-						usuarioTramite = " asignado a:"+(String)res.get("NOMBRE");
+						usuarioTramite = " asignado a: "+(String)res.get("NOMBRE");
 					}
 					
 					usuarioTramite+=" en suscripci\u00F3n";
