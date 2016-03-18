@@ -21,6 +21,8 @@ var inputNombreaseguradop4 = '<s:property value="smap1.nombreAsegurado" escapeHt
 var inputCdrfcp4           = '<s:property value="smap1.cdrfc" escapeHtml="false" />';
 var inputCdtipsit          = '<s:property value="smap1.cdtipsit" />';
 var inputNtramite          = '<s:property value="smap1.ntramite" />';
+var _tipoFlot              = '<s:property value="smap1.TIPOFLOT" />';
+
 var inputEndosoSimple      = <s:property value="endosoSimple" />;
 var inputFechaInicio       = inputEndosoSimple ? '<s:property value="mensaje" />' : new Date();
 var urlRegresarp4          = '<s:url namespace="/"        action="editarAsegurados" />';
@@ -424,38 +426,38 @@ Ext.onReady(function(){
     
     
     debug('_p4_habilitaEdicion:',_p4_habilitaEdicion);
-    formPanelp4.items.items[2].items.items[4].setEditable(true);
+    _fieldByName('smap1.CDCOLONI',formPanelp4).setEditable(true);
     
     if(!_p4_habilitaEdicion)//si es asegurado solo puede leer cp, estado y municipio
     {
-        formPanelp4.items.items[2].items.items[1].setReadOnly(true);//cp
-        formPanelp4.items.items[2].items.items[2].setReadOnly(true);//estado
-        formPanelp4.items.items[2].items.items[3].setReadOnly(true);//municipio
+        _fieldByName('smap1.CODPOSTAL',formPanelp4).setReadOnly(true);//cp
+        _fieldByName('smap1.CDEDO'    ,formPanelp4).setReadOnly(true);//estado
+        _fieldByName('smap1.CDMUNICI' ,formPanelp4).setReadOnly(true);//municipio
     }
     
     //establecer cargar colonia al cambiar cod pos
-    formPanelp4.items.items[2].items.items[1].on('blur',function()
+    _fieldByName('smap1.CODPOSTAL',formPanelp4).on('blur',function()
     {
         debug('cod pos change');
-        formPanelp4.items.items[2].items.items[4].getStore().load(
+        _fieldByName('smap1.CDCOLONI',formPanelp4).getStore().load(
         {
             params :
             {
-                'params.cp' : formPanelp4.items.items[2].items.items[1].getValue()
+                'params.cp' : _fieldByName('smap1.CODPOSTAL',formPanelp4).getValue()
             }
             ,callback : function()
             {
                 var hay=false;
-                formPanelp4.items.items[2].items.items[4].getStore().each(function(record)
+                _fieldByName('smap1.CDCOLONI',formPanelp4).getStore().each(function(record)
                 {
-                    if(formPanelp4.items.items[2].items.items[4].getValue()==record.get('key'))
+                    if(_fieldByName('smap1.CDCOLONI',formPanelp4).getValue()==record.get('key'))
                     {
                         hay=true;
                     }
                 });
                 if(!hay)
                 {
-                    formPanelp4.items.items[2].items.items[4].setValue('');
+                    _fieldByName('smap1.CDCOLONI',formPanelp4).setValue('');
                 }
             }
         });
@@ -598,10 +600,16 @@ Ext.onReady(function(){
     }
     ////// usa valores del padre //////
     
-    _fieldByName('smap1.NMNUMERO').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
-    _fieldByName('smap1.NMNUMERO').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
-    _fieldByName('smap1.NMNUMINT').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
-    _fieldByName('smap1.NMNUMINT').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
+    _fieldByName('smap1.NMNUMERO',formPanelp4).regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+    _fieldByName('smap1.NMNUMERO',formPanelp4).regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
+    _fieldByName('smap1.NMNUMINT',formPanelp4).regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+    _fieldByName('smap1.NMNUMINT',formPanelp4).regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
+    
+    if(!Ext.isEmpty(_tipoFlot) && "F" == _tipoFlot){
+    	_fieldByName('smap1.CODPOSTAL',formPanelp4).setReadOnly(false);
+    	_fieldByName('smap1.CDEDO',formPanelp4).setReadOnly(false);
+    	_fieldByName('smap1.CDMUNICI',formPanelp4).setReadOnly(false);
+    }
     
     /*//////////////////*/
     ////// cargador //////
