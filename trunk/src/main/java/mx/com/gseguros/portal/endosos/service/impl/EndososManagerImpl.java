@@ -3103,4 +3103,31 @@ public class EndososManagerImpl implements EndososManager
 		endososDAO.clonarGarantiaCapitales(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,cdgrupo,cdplan,sexo);
 		logger.debug("EndososManager clonarGarantiaCapitales end");
 	}
+	
+	@Override
+	public void actualizaExtraprimaValosit2(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String extraprima
+			,String extraprimaOcu
+			) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i"   , cdunieco);
+		params.put("pv_cdramo_i"     , cdramo);
+		params.put("pv_estado_i"     , estado);
+		params.put("pv_nmpoliza_i"   , nmpoliza);
+		params.put("pv_nmsituac_i"   , nmsituac);
+		params.put("pv_nmsuplem_i"   , nmsuplem);
+		params.put("pv_extraprima_sob_i" , extraprima);
+		params.put("pv_extraprima_ocu_i" , extraprimaOcu);
+		logger.debug("EndososManager actualizaExtraprimaValosit params: "+params);
+		endososDAO.actualizaExtraprimaValosit2(params);
+		logger.debug("EndososManager actualizaExtraprimaValosit end");
+	}
+	
 }

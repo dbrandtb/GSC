@@ -52,6 +52,8 @@ var _8_storeClaTipos;
 var _8_storeClaDisp;
 var _8_storeClaUsa;
 var loadExcluTimeoutVar;
+var booleanPeso = "0"; 
+var booleanOcup = "0";
 
 var _8_urlGuardar = '<s:url namespace="/endosos" action="guardarEndosoExtraprima" />';
 
@@ -505,7 +507,7 @@ Ext.onReady(function()
             debug('_8_FormExtraprima initComponent');
             Ext.apply(this,
             {
-                title      : 'Extraprima'
+                title      : 'Extraprima ===>'
                 ,defaults  :
                 {
                     style : 'margin : 5px;'
@@ -517,41 +519,71 @@ Ext.onReady(function()
                 }
                 ,items     :
                 [
-                    <s:property value="imap1.itemExtraprimaLectura" />
+                     <s:property value="imap1.itemExtraprimaLectura" />
                     ,<s:property value="imap1.itemExtraprima" />
+                   	,<s:property value="imap1.itemExtraprimaLecturaOcu" />
+                    ,<s:property value="imap1.itemExtraprimaOcu" />
                 ]
                 ,listeners :
                 {
                     afterrender : function(me)
                     {
-                        var comboOriginal = me.items.items[0];
-                        var comboNuevo    = me.items.items[1];
-                        var extraOrigin   = _8_smap1.extraprima;
+                        var comboOriginal  		= me.items.items[0];
+                        var comboNuevo     		= me.items.items[1];
+                        var txtOcupacional 		= me.items.items[2];
+                        var txtNuevoOcupacional = me.items.items[3];
+                        
+                        var extraOrigin   = _8_smap1.extraprima;	//_8_smap1.extraprima		_8_smap1.masextraprima	
+                        var extraOrigOcu  = _8_smap1.extraprimaOcu;	//_8_smap1.extraprimaOcu	_8_smap1.masextraprimaOcu
+
                         
                         comboOriginal.setValue(extraOrigin);
-                        comboNuevo   .setValue(extraOrigin);
+                        comboNuevo.setValue(extraOrigin);
                         
+                        txtOcupacional.setValue(extraOrigOcu);
+                        txtNuevoOcupacional.setValue(extraOrigOcu);
+                        
+                        //COMBO PARA LA EXTRAPRIMA DE SOBREPESO
                         comboNuevo.on('change',function(combo,newVal,oldVal)
                         {
-                            var extraOrigin = _8_smap1.extraprima;
+                        	var extraOrigin = _8_smap1.extraprima;
                             var incremento  = _8_smap1.masextraprima=='si';
-                            
-                            debug('comparando',extraOrigin,newVal,'incremento '+(incremento?'si':'no'));
-                            
-                            if(incremento==true)
-                            {
-                                if(newVal*1<extraOrigin*1)
-                                {
+                            if(incremento==true) {
+                            	booleanPeso = "1";
+                                if(newVal*1<extraOrigin*1) {
+                                	booleanPeso = "0";
                                     combo.setValue(oldVal);
-                                    mensajeError('No se puede decrementar la extraprima');
+                                    mensajeError('No se puede decrementar la extraprima de sobrepeso');
                                 }
                             }
-                            else
-                            {
-                                if(newVal*1>extraOrigin*1)
-                                {
+                            else{
+                            	booleanPeso = "1";
+                                if(newVal*1>extraOrigin*1){
+                                	booleanPeso = "0";
                                     combo.setValue(oldVal);
-                                    mensajeError('No se puede incrementar la extraprima');
+                                    mensajeError('No se puede incrementar la extraprima de sobrepeso');
+                                }
+                            }
+                        });
+                        
+                        txtNuevoOcupacional.on('change',function(textfield,newVal,oldVal){
+                        	var extraOrigin = _8_smap1.extraprimaOcu;
+                            var incremento  = _8_smap1.masextraprimaOcu=='si';
+                            
+                            if(incremento==true){
+                            	booleanOcup = "1";
+                            	if(newVal*1<extraOrigin*1){
+                            		booleanOcup = "0";
+                                	textfield.setValue(oldVal);
+                                    mensajeError('No se puede decrementar la extraprima ocupacional');
+                                }
+                            }
+                            else{
+                            	booleanOcup = "1";
+                                if(newVal*1>extraOrigin*1){
+                                	booleanOcup = "0";
+                                	textfield.setValue(oldVal);
+                                    mensajeError('No se puede incrementar la extraprima ocupacional');
                                 }
                             }
                         });
@@ -582,7 +614,10 @@ Ext.onReady(function()
                 }
                 ,listeners :
                 {
-                    afterrender : function(me){heredarPanel(me);}
+                    afterrender : function(me){
+                    	debug("Valor de ME ==>",me);
+                    	//heredarPanel(me);
+                   	}
                 }
                 ,items     : [ <s:property value="imap1.itemsLectura" /> ]
             });
@@ -654,13 +689,16 @@ function _8_confirmar()
     
     if(valido)
     {
-        var json=
+    	var json=
         {
             smap1  : _8_smap1
             ,smap2 :
             {
-                fecha_endoso : Ext.Date.format(_8_fieldFechaEndoso.getValue(),'d/m/Y')
-                ,extraprima  : _8_formExtraprima.items.items[1].getValue()
+                fecha_endoso 	: Ext.Date.format(_8_fieldFechaEndoso.getValue(),'d/m/Y')
+                ,extraprima  	: _8_formExtraprima.items.items[1].getValue()
+                ,extraprimaOcu  : _8_formExtraprima.items.items[3].getValue()
+                ,banderapeso    : booleanPeso
+               	,banderaocup    : booleanOcup
             }
         }
         
