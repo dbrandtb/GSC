@@ -3065,6 +3065,13 @@ public class CotizacionAction extends PrincipalCoreAction
 				gc.generaComponentes(comboRepartoPago, true,false,true,false,false,false);
 				imap.put("comboRepartoPago"  , gc.getItems());
 				
+				List<ComponenteVO>comboMorbilidad=pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"COTIZACION_GRUPO", "COMBO_MORBILIDAD", null);
+				gc.generaComponentes(comboMorbilidad, true,false,true,false,false,false);
+				imap.put("comboMorbilidad"  , gc.getItems());
+				
 				List<ComponenteVO>comboPool = pantallasManager.obtenerComponentes(
 						null, null, null,
 						null, null, cdsisrol,
@@ -6121,7 +6128,14 @@ public class CotizacionAction extends PrincipalCoreAction
 				params.put("pv_otvalor15" , smap1.get("cdrelconaseg"));
 				params.put("pv_otvalor16" , smap1.get("cdformaseg"));
 				params.put("pv_otvalor17" , smap1.get("cdperpag"));
+				params.put("pv_otvalor19" , smap1.get("morbilidad"));
 				kernelManager.pMovTvalopol(params);
+			}
+			
+			//se guarda morbilidad
+			if(exito)
+			{
+				cotizacionManager.insertaMorbilidad(cdunieco,cdramo,"W",nmpoliza,"0");
 			}
 			
 			//enviar archivo
