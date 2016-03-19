@@ -573,4 +573,14 @@ public interface EndososManager
 			,String cdgrupo
 			,String cdplan
 			,String sexo) throws Exception;
+	
+	public void actualizaExtraprimaValosit2(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String extraprima
+			,String extraprimaOcu) throws Exception;
 }

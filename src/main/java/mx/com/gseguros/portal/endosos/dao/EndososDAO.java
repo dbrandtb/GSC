@@ -669,4 +669,6 @@ public interface EndososDAO
 			,String cdgrupo
 			,String cdplan
 			,String sexo) throws Exception;
+	
+	public void actualizaExtraprimaValosit2(Map<String, String> params)     throws Exception;
 }

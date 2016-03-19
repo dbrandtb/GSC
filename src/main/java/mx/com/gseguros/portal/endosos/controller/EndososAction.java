@@ -8603,13 +8603,23 @@ public class EndososAction extends PrincipalCoreAction
 			
 			String llaveExtraprima     = "";
 			String cdatribuExtraprima  = "";
+			String llaveExtraprimaOcu     = "";
+			String cdatribuExtraprimaOcu  = "";
 			
-			String nombreItemExtraprimaOriginal = "EXTRAPRIMA ORIGINAL";
-			String nombreItemNuevaExtraprima    = "NUEVA EXTRAPRIMA";
 			
-			String llaveItemExtraprimaOriginal = "itemExtraprimaLectura";
-			String llaveItemNuevaExtraprima    = "itemExtraprima";
-			String llavePanelLectura           = "itemsLectura";
+			String nombreItemExtraprimaOriginal 	= "Extraprima sobrepeso";
+			String nombreItemNuevaExtraprima    	= "Nueva extraprima sobrepeso";
+			String nombreItemExtraprimaOriginalOcu 	= "Extraprima ocupacional";
+			String nombreItemNuevaExtraprimaOcu    	= "Nueva extraprima ocupacional";
+			
+			String llaveItemExtraprimaOriginal	  	= "itemExtraprimaLectura";
+			String llaveItemNuevaExtraprima    	  	= "itemExtraprima";
+			String llaveItemExtraprimaOriginalOcu 	= "itemExtraprimaLecturaOcu";
+			String llaveItemNuevaExtraprimaOcu    	= "itemExtraprimaOcu";
+			
+			
+			
+			String llavePanelLectura          		= "itemsLectura";
 			
 			String pantalla = "ENDOSO_EXTRAPRIMA";
 			
@@ -8622,15 +8632,23 @@ public class EndososAction extends PrincipalCoreAction
 					
 					for(ComponenteVO tatri:tatrisitAux)
 					{
-						if(tatri.getLabel().lastIndexOf("EXTRAPRIMA")>-1)
+						if(tatri.getLabel().lastIndexOf("EXTRAPRIMA S")>-1)
 						{
 							cdatribuExtraprima = tatri.getNameCdatribu();
 							llaveExtraprima    = new StringBuilder("otvalor").append(StringUtils.leftPad(tatri.getNameCdatribu(),2,"0")).toString();
+						}
+						
+						if(tatri.getLabel().lastIndexOf("EXTRAPRIMA O")>-1)
+						{
+							cdatribuExtraprimaOcu = tatri.getNameCdatribu();
+							llaveExtraprimaOcu    = new StringBuilder("otvalor").append(StringUtils.leftPad(tatri.getNameCdatribu(),2,"0")).toString();
 						}
 					}
 					
 					logger.debug(new StringBuilder("cdatribuExtraprima=").append(cdatribuExtraprima).toString());
 					logger.debug(new StringBuilder("llaveExtraprima=")   .append(llaveExtraprima).toString());
+					logger.debug(new StringBuilder("cdatribuExtraprimaOcu=").append(cdatribuExtraprimaOcu).toString());
+					logger.debug(new StringBuilder("llaveExtraprimaOcu=")   .append(llaveExtraprimaOcu).toString());
 				}
 				catch(Exception ex)
 				{
@@ -8643,8 +8661,7 @@ public class EndososAction extends PrincipalCoreAction
 			if(resp.isSuccess()) {
 				try {
 					Map<String,Object>valosit=kernelManager.obtieneValositSituac(cdunieco,cdramo,estado,nmpoliza,nmsituac);
-					if(llaveExtraprima.length()>0
-							&&valosit.containsKey(llaveExtraprima)) {
+					if(llaveExtraprima.length()>0&&valosit.containsKey(llaveExtraprima)) {
 						String extraprima=(String)valosit.get(llaveExtraprima);
 						if(StringUtils.isBlank(extraprima)) {
 							extraprima="0";
@@ -8652,6 +8669,18 @@ public class EndososAction extends PrincipalCoreAction
 						logger.debug("extraprima del asegurado: "+extraprima);
 						smap1.put("extraprima"    , extraprima);
 						smap1.put("masextraprima" , smap2.get("masextraprima"));
+					} else {
+						throw new Exception("No hay extraprima definida para este producto");
+					}
+					
+					if(llaveExtraprimaOcu.length()>0&&valosit.containsKey(llaveExtraprimaOcu)) {
+						String extraprima=(String)valosit.get(llaveExtraprimaOcu);
+						if(StringUtils.isBlank(extraprima)) {
+							extraprima="0";
+						}
+						logger.debug("extraprima del asegurado: "+extraprima);
+						smap1.put("extraprimaOcu"    , extraprima);
+						smap1.put("masextraprimaOcu" , smap2.get("masextraprima"));
 					} else {
 						throw new Exception("No hay extraprima definida para este producto");
 					}
@@ -8665,23 +8694,39 @@ public class EndososAction extends PrincipalCoreAction
 					}
 					tatrisit=temp;
 					
+					List<ComponenteVO>tatrisitOcu = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
+					List<ComponenteVO>tempOcu     = new ArrayList<ComponenteVO>();
+					for(ComponenteVO tatrisitIte:tatrisitOcu) {
+						if(tatrisitIte.getNameCdatribu().equalsIgnoreCase(cdatribuExtraprimaOcu)) {
+							tempOcu.add(tatrisitIte);
+						}
+					}
+					tatrisitOcu=tempOcu;
+					
 					GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 					gc.setCdtipsit(cdtipsit);
 					
 					imap1=new HashMap<String,Item>();
+					
 					tatrisit.get(0).setLabel(nombreItemNuevaExtraprima);
-					
 					gc.generaParcial(tatrisit);
-					
 					imap1.put(llaveItemNuevaExtraprima,gc.getItems());
-					
 					tatrisit.get(0).setSoloLectura(true);
 					tatrisit.get(0).setLabel(nombreItemExtraprimaOriginal);
-					
 					gc.generaParcial(tatrisit);
-					
 					imap1.put(llaveItemExtraprimaOriginal,gc.getItems());
 					
+					//imap1=new HashMap<String,Item>();
+					tatrisitOcu.get(0).setLabel(nombreItemNuevaExtraprimaOcu);
+					gc.generaParcial(tatrisitOcu);
+					imap1.put(llaveItemNuevaExtraprimaOcu,gc.getItems());
+					tatrisitOcu.get(0).setSoloLectura(true);
+					tatrisitOcu.get(0).setLabel(nombreItemExtraprimaOriginalOcu);
+					gc.generaParcial(tatrisitOcu);
+					imap1.put(llaveItemExtraprimaOriginalOcu,gc.getItems());
+					
+					
+					logger.debug("Valor del imap1 Total ===>"+imap1);
 					gc.generaParcial(pantallasManager.obtenerComponentes(
 							null, cdunieco, cdramo,
 							cdtipsit, estado, rol,
@@ -8781,7 +8826,10 @@ public class EndososAction extends PrincipalCoreAction
 			String cdtipsup   = smap1.get("masextraprima").equalsIgnoreCase("si")?
 					TipoEndoso.EXTRAPRIMA_MAS.getCdTipSup().toString():
 						TipoEndoso.EXTRAPRIMA_MENOS.getCdTipSup().toString();
-			String extraprima = smap2.get("extraprima");
+			String extraprima 	 = smap2.get("extraprima");
+			String extraprimaOcu = smap2.get("extraprimaOcu");
+			String banderapeso 	 = smap2.get("banderapeso");
+			String banderaocup   = smap2.get("banderaocup");
 			String fecha      = smap2.get("fecha_endoso");
 			Date   dFecha     = renderFechas.parse(fecha);
 			String cdelemento = usuario.getEmpresa().getElementoId();
@@ -8795,7 +8843,7 @@ public class EndososAction extends PrincipalCoreAction
 			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
 			
 			//PKG_ENDOSOS.P_INS_NEW_EXTRAPRIMA_TVALOSIT
-			endososManager.actualizaExtraprimaValosit(cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem, extraprima);
+			endososManager.actualizaExtraprimaValosit2(cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem, extraprima, extraprimaOcu);
 			
 			//Iteracion
 			for(Map<String,String>cla:slist1) {
@@ -8808,21 +8856,23 @@ public class EndososAction extends PrincipalCoreAction
 						nmsituac, cdclausu, nmsuplem, Constantes.STATUS_VIVO, cdtipcla, 
 						null, dslinea, Constantes.INSERT_MODE);
 			}
-			
-			//pkg_satelites.valida_extraprima_situac_read
-			String statusValidacionExtraprimas=(String)kernelManager.validarExtraprimaSituacRead(
-					cdunieco,cdramo, estado, nmpoliza, nmsituac, nmsuplem).getItemMap().get("status");
-			logger.debug("tiene status la extraprima: "+statusValidacionExtraprimas);
-			if(statusValidacionExtraprimas.equalsIgnoreCase("N")) {
-				error="Favor de verificar las extraprimas y los endosos de extraprima";
-				throw new Exception(error);
+			logger.debug("Valor de banderapeso ==>"+banderapeso);
+			if(banderapeso.equalsIgnoreCase("1")){
+				//pkg_satelites.valida_extraprima_situac_read
+				String statusValidacionExtraprimas=(String)kernelManager.validarExtraprimaSituacRead(
+						cdunieco,cdramo, estado, nmpoliza, nmsituac, nmsuplem).getItemMap().get("status");
+				logger.debug("tiene status la extraprima: "+statusValidacionExtraprimas);
+				if(statusValidacionExtraprimas.equalsIgnoreCase("N")) {
+					error="Favor de verificar las extraprimas y los endosos de extraprima";
+					throw new Exception(error);
+				}
 			}
 			
 			//PKG_SATELITES.P_INSERTA_TWORKSUP_END
 			endososManager.movimientoTworksupEnd(cdunieco, cdramo, estado, nmpoliza, cdtipsup, nmsuplem, nmsituac, "I");
 
             //PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_END
-            endososManager.sigsvalipolEnd(cdusuari, cdelemento, cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem, /*cdtipsit,*/ cdtipsup);
+            endososManager.sigsvalipolEnd(cdusuari, cdelemento, cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem, cdtipsup);
 			
 			//PKG_ENDOSOS.P_CALC_VALOR_ENDOSO
 			endososManager.calcularValorEndoso(cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem, dFecha, cdtipsup);			
