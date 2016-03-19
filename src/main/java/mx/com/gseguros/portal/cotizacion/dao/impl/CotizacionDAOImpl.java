@@ -390,6 +390,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,"clasif"
 			,"pcpgocte"
 			,"tipoDerPol"
+			,"morbilidad"
 			,"montoDerPol"
 			,"recargoPers"
 			,"recargoPago"
@@ -456,6 +457,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,"clasif"
 			,"pcpgocte"
 			,"tipoDerPol"
+			,"morbilidad"
 			,"montoDerPol"
 			,"recargoPers"
 			,"recargoPago"
@@ -7059,4 +7061,30 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	
+    @Override
+	public void insertaMorbilidad(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem) throws Exception {
+    	Map<String,String>params=new LinkedHashMap<String,String>();
+    	params.put("cdunieco" , cdunieco);
+    	params.put("cdramo"   , cdramo);
+    	params.put("estado"   , estado);
+    	params.put("nmpoliza" , nmpoliza);
+    	params.put("nmsuplem" , nmsuplem);
+    	ejecutaSP(new InsertaMorbilidadSP(getDataSource()),params);
+	}
+    
+    protected class InsertaMorbilidadSP extends StoredProcedure {
+    	protected InsertaMorbilidadSP(DataSource dataSource) {
+    		super(dataSource,"P_INSERTA_MORBILIDAD");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+	
 }

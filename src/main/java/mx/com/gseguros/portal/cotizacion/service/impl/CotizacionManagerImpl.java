@@ -9177,6 +9177,31 @@ public class CotizacionManagerImpl implements CotizacionManager
 		cotizacionDAO.borrarRespaldoCenso(cdunieco,cdramo,nmpoliza);
 	}
 	
+	
+	@Override
+	public void insertaMorbilidad(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem) throws Exception {
+		
+		logger.debug(Utils.log(""
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ insertaMorbilidad @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ nmsuplem=" , nmsuplem));
+		String paso = "Insertando morbilidad";
+		try {
+			cotizacionDAO.insertaMorbilidad(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+		} catch(Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(""
+				,"\n@@@@@@ insertaMorbilidad @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
