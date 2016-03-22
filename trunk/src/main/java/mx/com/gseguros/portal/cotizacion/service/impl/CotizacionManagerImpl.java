@@ -7090,7 +7090,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	        		,nmsuplem
 					);
     		
-    		cotizacionDAO.insertaMorbilidad(cdunieco,cdramo,estado,nmpoliza,nmpoliza);
+    		cotizacionDAO.insertaMorbilidad(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
     		
     		cotizacionDAO.ejecutaTarificacionConcurrente(
 	    			cdunieco
@@ -7150,7 +7150,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		        		,nmsuplem
 						);
     			
-    			cotizacionDAO.insertaMorbilidad(cdunieco,cdramo,estado,nmpoliza,nmpoliza);
+    			cotizacionDAO.insertaMorbilidad(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
     			
     		    cotizacionDAO.ejecutaTarificacionConcurrente(
         			cdunieco
