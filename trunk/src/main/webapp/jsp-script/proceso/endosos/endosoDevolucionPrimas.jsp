@@ -28,8 +28,34 @@ var _p39_storeCoberturas = null;
 ////// dinamicos //////
 var _p39_incisoColumns    = [ <s:property value="imap.incisoColumns"    escapeHtml="false" /> ];
 var _p39_coberturaColumns = [ <s:property value="imap.coberturaColumns" escapeHtml="false" /> ];
-////// dinamicos //////
 
+// Agrego una columna tipo checkbox para reemplazar la SINO existente 
+_p39_coberturaColumns.push(
+{   
+    xtype:'checkcolumn'
+    ,text: 'DEVOLVER'
+    ,dataIndex : 'DEVOLVER'
+    ,width:200
+    ,listeners :
+    {
+    	checkchange : function(me, rowIndex , checked)
+	    {
+            centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Se guardar\u00e1 el status de devoluci\u00f3n de la cobertura <br>¿Desea continuar?', function(btn)
+        	{
+            	if(btn === 'yes')
+        	    {
+            		debug("Cambio me :",me);
+        	        debug("Cambio checked :",checked);
+        	        debug("Cambio rowIndex :",rowIndex);
+        	        var record = _p39_storeCoberturas.getAt(rowIndex);
+        	        _p39_guardarCambio(record);
+        	    }
+        	 }));   
+	    }
+    }
+});
+////// dinamicos //////
+    
 Ext.onReady(function()
 {
     ////// modelos //////
@@ -99,7 +125,8 @@ Ext.onReady(function()
             ,'NMSITUAC'
             ,'CDGARANT'
             ,'DSGARANT'
-            ,'DEVOLVER'
+            //convierte a boolean el campo con nombre devolver que usa la coumna checkbox
+            ,{ name : 'DEVOLVER', type : 'boolean'} 
         ]
     });
     ////// modelos //////
@@ -109,10 +136,16 @@ Ext.onReady(function()
     {
         model : '_p39_modeloInciso'
     });
+    
     for(var i in _p39_slist1)
     {
-        _p39_storeIncisos.add(new _p39_modeloInciso(_p39_slist1[i]));
+    	var record = new _p39_modeloInciso(_p39_slist1[i]);
+        debug('record VILS: ',i,' >>> ',record);
+        _p39_storeIncisos.add(record);
+        // Llama a funcion que setea en S cada inciso
+        _p39_cargarCoberturasInciso(record,true);
     }
+    
     debug('_p39_storeIncisos.data:',_p39_storeIncisos.data);
     
     _p39_storeCoberturas = Ext.create('Ext.data.Store',
@@ -184,6 +217,11 @@ Ext.onReady(function()
                                         debug('### polizas load',records,operation,success);
                                         if(success&&records.length>0)
                                         {
+                                        	for(i in records)
+                                       		{   // Setea entre los valores de coberturas de inciso cambiando el valor SN por trueFalse
+	                                        	records[i].set('DEVOLVER', records[i].raw.DEVOLVER =='S');
+	                                        	records[i].set('OTVALOR01', records[i].raw.OTVALOR01 =='S');
+                                       		}
                                         }
                                         else
                                         {
@@ -211,22 +249,6 @@ Ext.onReady(function()
                 ,maxHeight : 300
                 ,columns   : _p39_coberturaColumns
                 ,store     : _p39_storeCoberturas
-                ,plugins    :
-                [
-                    Ext.create('Ext.grid.plugin.RowEditing',
-                    {
-                        clicksToEdit  : 1
-                        ,errorSummary : false
-                        ,listeners    :
-                        {
-                            edit : function(editor,context)
-                            {
-                                debug(context.record.data);
-                                _p39_guardarCambio(context.record);
-                            }
-                        }
-                    })
-                ]
             })
             ,Ext.create('Ext.form.Panel',
             {
@@ -336,6 +358,7 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
+    
     Ext.Ajax.request(
     {
         url      : _p39_urlRecuperacionSimple
@@ -416,6 +439,88 @@ function _p39_renderer(valor,mapeo,view)
     return valor;
 }
 
+//Funcion que carga coberturas y seteando y guardando valores en BD
+function _p39_cargarCoberturasInciso(record)
+{   //alert('ENTRE V');
+    debug('valores a enviar VIL :', record,'.');
+	Ext.Ajax.request
+	({ 
+        url    : _p39_urlRecuperacionSimpleLista
+        ,params :
+        {
+       	    'smap1.tstamp' : _p39_smap1.tstamp
+         	 ,'smap1.cdunieco' : record.data['CDUNIECO']
+         	 ,'smap1.cdramo' : record.data['CDRAMO']
+         	 ,'smap1.estado' : record.data['ESTADO']
+         	 ,'smap1.nmpoliza' : record.data['NMPOLIZA']
+         	 ,'smap1.nmsituac' : record.data['NMSITUAC']
+             ,'smap1.procedimiento' : 'RECUPERAR_COBERTURAS_ENDOSO_DEVOLUCION_PRIMAS'
+         }
+         ,success : function(response)
+         {
+             _unmask();
+            var json = Ext.decode(response.responseText);
+            if(json.success == true)
+            {
+         	    debug('valores DEVUELTOS VILS :', json);
+         	    for(var i in json.slist1)
+         	    {	
+            	    json.slist1.DEVOLVER = json.slist1.DEVOLVER == 'S';
+          		    _p39_seteaSyGuardar(json.slist1[i]);
+         	    }
+            }
+            else{debugError('error al recuperar coberturas de iniso:',json.respuesta);}
+         }
+         ,failure  : function()
+         {   
+        	 _unmask();
+             debugError('error de comunicacion al cargar coberturas de iniso');
+         }
+    });    
+}
+
+//Se utiliza una sola vez seteando S en valores inicales
+function _p39_seteaSyGuardar(record)
+{
+    debug('>_p39_seteaSyGuardar ',record,'');
+    var valores={
+        tstamp : _p39_smap1.tstamp
+    };
+    for(var key in record)
+    {
+        var value=record[key];
+        debug(typeof value,key,value);
+        if((typeof value=='object')&&value&&value.getDate)
+        {
+            var fecha='';
+            fecha+=value.getDate();
+            if((fecha+'x').length==2)//1x
+            {
+                fecha = ('x'+fecha).replace('x','0');//x1=01
+            }
+            fecha+='/   ';
+            fecha+=value.getMonth()+1<10?
+                   (('x'+(value.getMonth()+1)).replace('x','0'))
+                   :(value.getMonth()+1);
+            fecha+='/';
+            fecha+=value.getFullYear();
+            value=fecha;
+        }
+        valores[key]=value;
+    }
+    valores['NMSUPLEM']  = '999';
+    valores['STATUS']    = 'V';
+    valores['CDTIPSIT']  = record.CDGARANT;
+    valores['OTVALOR01'] = 'S';
+    valores['DEVOLVER'] = 'S';
+    debug('valores a enviar:',valores);
+    
+    guardar(valores);
+
+    debug('<_p39_seteaSyGuardar');
+}
+
+//Prepara valores para guardar
 function _p39_guardarCambio(record,callback,i)
 {
     debug('>_p39_guardarCambio record.data,!callback?,i',record.data,Ext.isEmpty(callback),i);
@@ -434,7 +539,7 @@ function _p39_guardarCambio(record,callback,i)
             {
                 fecha = ('x'+fecha).replace('x','0');//x1=01
             }
-            fecha+='/';
+            fecha+='/   ';
             fecha+=value.getMonth()+1<10?
                    (('x'+(value.getMonth()+1)).replace('x','0'))
                    :(value.getMonth()+1);
@@ -447,9 +552,19 @@ function _p39_guardarCambio(record,callback,i)
     valores['NMSUPLEM']  = '999';
     valores['STATUS']    = 'V';
     valores['CDTIPSIT']  = record.get('CDGARANT');
-    valores['OTVALOR01'] = record.get('DEVOLVER');
+    valores['OTVALOR01'] = record.get('DEVOLVER')? 'S' : 'N';
+    valores['DEVOLVER'] = record.get('DEVOLVER')? 'S' : 'N';
     debug('valores a enviar:',valores);
     
+    guardar(valores);
+
+    debug('<_p39_guardarCambio');
+}
+
+//Funcion que guarda valores por cobertura
+function guardar(valores)
+{
+	_mask();
     Ext.Ajax.request(
     {
         url       : _p39_urlGuardarTvalositEndoso
@@ -459,6 +574,7 @@ function _p39_guardarCambio(record,callback,i)
         }
         ,success  : function(response)
         {
+        	_unmask();
             var json=Ext.decode(response.responseText);
             debug('### guardar tvalosit endoso:',json);
             if(json.success)
@@ -473,11 +589,11 @@ function _p39_guardarCambio(record,callback,i)
         }
         ,failure : function()
         {
+        	_unmask();
             grid.getStore().rejectChanges();
             errorComunicacion();
         }
     });
-    debug('<_p39_guardarCambio');
 }
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
