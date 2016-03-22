@@ -566,23 +566,25 @@ Ext.onReady(function()
                             }
                         });
                         
-                        txtNuevoOcupacional.on('change',function(textfield,newVal,oldVal){
+                        txtNuevoOcupacional.on('blur',function(textfield,newVal,oldVal){
                         	var extraOrigin = _8_smap1.extraprimaOcu;
-                            var incremento  = _8_smap1.masextraprimaOcu=='si';
-                            
-                            if(incremento==true){
+                        	var incremento  = _8_smap1.masextraprimaOcu=='si';
+                        	var valornuevo = me.items.items[3].getValue();
+                        	var valorOriginal = me.items.items[2].getValue();
+                        	
+                        	if(incremento==true){
                             	booleanOcup = "1";
-                            	if(newVal*1<extraOrigin*1){
+                            	if(valornuevo*1<extraOrigin*1){
                             		booleanOcup = "0";
-                                	textfield.setValue(oldVal);
+                            		me.items.items[3].setValue(valorOriginal);
                                     mensajeError('No se puede decrementar la extraprima ocupacional');
                                 }
                             }
                             else{
                             	booleanOcup = "1";
-                                if(newVal*1>extraOrigin*1){
+                                if(valornuevo*1>extraOrigin*1){
                                 	booleanOcup = "0";
-                                	textfield.setValue(oldVal);
+                                	me.items.items[3].setValue(valorOriginal);
                                     mensajeError('No se puede incrementar la extraprima ocupacional');
                                 }
                             }
