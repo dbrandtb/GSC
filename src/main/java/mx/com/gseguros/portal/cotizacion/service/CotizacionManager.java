@@ -785,18 +785,4 @@ public interface CotizacionManager
 			,String nmpoliza
 			)throws Exception;
 	
-	
-	/**
-	 * Inserta el dato de morbilidad en una poliza
-	 * @param cdunieco
-	 * @param cdramo
-	 * @param estado
-	 * @param nmpoliza
-	 * @param nmsuplem
-	 * @throws Exception
-	 */
-	public void insertaMorbilidad(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem) throws Exception;
-	
-	
 }
