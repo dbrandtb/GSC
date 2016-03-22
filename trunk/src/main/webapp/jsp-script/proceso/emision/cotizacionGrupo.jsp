@@ -956,7 +956,6 @@ Ext.onReady(function()
                                     })
                                     ,<s:property value="imap.comboFormaPago" />
                                     ,<s:property value="imap.comboRepartoPago" />
-                                    ,<s:property value="imap.comboMorbilidad" />
                                     ,{
                                         xtype       : 'numberfield'
                                         ,fieldLabel : 'PORCENTAJE A CARGO DEL CLIENTE'

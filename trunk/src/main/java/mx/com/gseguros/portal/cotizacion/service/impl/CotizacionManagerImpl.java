@@ -3990,6 +3990,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			        		,"0"
 							);
 					
+					cotizacionDAO.insertaMorbilidad(cdunieco,cdramo,"W",nmpoliza,"0");
+					
 					cotizacionDAO.ejecutaTarificacionConcurrente(
 							cdunieco
 							,cdramo
@@ -7088,6 +7090,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 	        		,nmsuplem
 					);
     		
+    		cotizacionDAO.insertaMorbilidad(cdunieco,cdramo,estado,nmpoliza,nmpoliza);
+    		
     		cotizacionDAO.ejecutaTarificacionConcurrente(
 	    			cdunieco
 	    			,cdramo
@@ -7145,6 +7149,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 		        		,nmpoliza
 		        		,nmsuplem
 						);
+    			
+    			cotizacionDAO.insertaMorbilidad(cdunieco,cdramo,estado,nmpoliza,nmpoliza);
     			
     		    cotizacionDAO.ejecutaTarificacionConcurrente(
         			cdunieco
@@ -8933,6 +8939,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 		        		,"0"
 						);
 				
+				logger.debug(Utils.log("\n&&&&&& insertaMorbilidad [id=",timestamp,"] &&&&&&"));
+				cotizacionDAO.insertaMorbilidad(cdunieco,cdramo,"W",nmpoliza,"0");
+				
 				logger.debug(Utils.log("\n&&&&&& ejecutaTarificacionConcurrente [id=",timestamp,"] &&&&&&"));
 				cotizacionDAO.ejecutaTarificacionConcurrente(
 						cdunieco
@@ -9175,31 +9184,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 			)throws Exception
 	{
 		cotizacionDAO.borrarRespaldoCenso(cdunieco,cdramo,nmpoliza);
-	}
-	
-	
-	@Override
-	public void insertaMorbilidad(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem) throws Exception {
-		
-		logger.debug(Utils.log(""
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ insertaMorbilidad @@@@@@"
-				,"\n@@@@@@ cdunieco=" , cdunieco
-				,"\n@@@@@@ cdramo="   , cdramo
-				,"\n@@@@@@ estado="   , estado
-				,"\n@@@@@@ nmpoliza=" , nmpoliza
-				,"\n@@@@@@ nmsuplem=" , nmsuplem));
-		String paso = "Insertando morbilidad";
-		try {
-			cotizacionDAO.insertaMorbilidad(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
-		} catch(Exception ex) {
-			Utils.generaExcepcion(ex, paso);
-		}
-		
-		logger.debug(Utils.log(""
-				,"\n@@@@@@ insertaMorbilidad @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 	}
 	
 	///////////////////////////////

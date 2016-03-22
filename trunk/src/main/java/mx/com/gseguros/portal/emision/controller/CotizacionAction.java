@@ -3065,13 +3065,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				gc.generaComponentes(comboRepartoPago, true,false,true,false,false,false);
 				imap.put("comboRepartoPago"  , gc.getItems());
 				
-				List<ComponenteVO>comboMorbilidad=pantallasManager.obtenerComponentes(
-						null, null, null,
-						null, null, null,
-						"COTIZACION_GRUPO", "COMBO_MORBILIDAD", null);
-				gc.generaComponentes(comboMorbilidad, true,false,true,false,false,false);
-				imap.put("comboMorbilidad"  , gc.getItems());
-				
 				List<ComponenteVO>comboPool = pantallasManager.obtenerComponentes(
 						null, null, null,
 						null, null, cdsisrol,
@@ -6132,12 +6125,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				kernelManager.pMovTvalopol(params);
 			}
 			
-			//se guarda morbilidad
-			if(exito)
-			{
-				cotizacionManager.insertaMorbilidad(cdunieco,cdramo,"W",nmpoliza,"0");
-			}
-			
 			//enviar archivo
 			if(exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)&&!sincenso&&!complemento&&StringUtils.isBlank(nombreCensoConfirmado))
 			{
@@ -8381,7 +8368,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			try
 			{
-				logger.debug("50.- cotizacionManager.ejecutaTarificacionConcurrente");
+				logger.debug("50.- cotizacionManager.sigsvalipolEnd");
 				
 				String cdtipsup   = TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString();
 				
