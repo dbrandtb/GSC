@@ -1557,4 +1557,44 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
 	}
+
+	@Override
+	public List<GenericVO> obtieneMotivosReexp(String cdramo, String cdtipsit) throws Exception
+	{
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ obtieneMotivosReexp @@@@@@"
+				,"\n@@@@@@ cdramo: @@@@@@",cdramo
+				,"\n@@@@@@ cdtipsit: @@@@@@",cdtipsit
+				));
+		
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		
+		String paso = null;
+		
+		try
+		{
+			paso = "Obtieniendo lista de motivos de reexpedicion";
+			logger.debug(Utils.log("\n@@@@@@ ",paso));
+			List<Map<String,String>> motivos = consultasDAO.obtieneMotivosReexp(cdramo,cdtipsit);
+			
+			for(Map<String,String>elemento:motivos)
+			{
+				lista.add(new GenericVO(elemento.get("codigo"),elemento.get("motivo")));
+			}
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				"\n@@@@@@ obtieneMotivosReexp @@@@@@"
+				,"\n@@@@@@ cdramo: @@@@@@"  ,cdramo
+				,"\n@@@@@@ cdtipsit: @@@@@@",cdtipsit
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
 }

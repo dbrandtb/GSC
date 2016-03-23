@@ -125,7 +125,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case MC_TIPOS_TRAMITE:
 				case MESES:
 				case MOTIVOS_CANCELACION:
-				case MOTIVOS_REEXPEDICION:
 				case NACIONALIDAD:
 				case TIPOS_DOMICILIO:
 				case PENALIZACIONES:
@@ -818,6 +817,13 @@ public class CatalogosAction extends PrincipalCoreAction {
 						params=new HashMap<String,String>();
 					}
 					lista = catalogosManager.cargarCotizadoresActivos(params.get("cadena"));
+					break;
+				case MOTIVOS_REEXPEDICION:
+					if(params==null)
+					{
+						params=new HashMap<String,String>();
+					}
+					lista = catalogosManager.obtieneMotivosReexp(params.get("cdramo"), params.get("cdtipsit"));
 					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);

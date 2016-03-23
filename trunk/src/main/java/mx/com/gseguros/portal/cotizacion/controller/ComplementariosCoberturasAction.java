@@ -1365,7 +1365,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 									
 									Map<String,String> paramBorrarDomicil=new LinkedHashMap<String,String>(0);
 									paramBorrarDomicil.put("pv_cdperson_i" , cdpersonAfectadoValosit);
-									paramBorrarDomicil.put("pv_nmorddom_i" , null);
+									paramBorrarDomicil.put("pv_nmorddom_i" , "1");//numero de domicilio default para asegurados
 									paramBorrarDomicil.put("pv_msdomici_i" , null);
 									paramBorrarDomicil.put("pv_nmtelefo_i" , null);
 									paramBorrarDomicil.put("pv_cdpostal_i" , null);
@@ -1374,7 +1374,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 									paramBorrarDomicil.put("pv_cdcoloni_i" , null);
 									paramBorrarDomicil.put("pv_nmnumero_i" , null);
 									paramBorrarDomicil.put("pv_nmnumint_i" , null);
-									paramBorrarDomicil.put("pv_cdtipdom_i" , null);
+									paramBorrarDomicil.put("pv_cdtipdom_i" , "1");//tipdom default para domicilio unico de asegurados
 									paramBorrarDomicil.put("pv_cdusuario_i", usuarioCaptura);
 									paramBorrarDomicil.put("pv_swactivo_i",  Constantes.NO);
 									paramBorrarDomicil.put("pv_accion_i"   , "B");//borrar
