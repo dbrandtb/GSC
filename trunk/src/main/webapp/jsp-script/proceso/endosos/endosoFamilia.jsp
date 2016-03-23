@@ -77,6 +77,7 @@ var _p48_comboGrupos = <s:property value="items.comboGrupos" escapeHtml="false" 
 
 Ext.onReady(function()
 {
+	Ext.Ajax.timeout = 60*60*1000;
     ////// modelos //////
     Ext.define('_p48_modelo',
     {
@@ -258,14 +259,16 @@ Ext.onReady(function()
                                     {
                                         if(_p48_storeMov.getCount()==0)
                                         {
-                                            throw 'No hay cambios';
+                                           
+                                        	throw 'No hay cambios';
                                         }
                                         
                                         if(!_fieldById('_p48_formEndoso').isValid())
                                         {
                                             throw 'Revisar datos del endoso';
                                         }
-                                        
+                                       	
+                                        debug()
                                         var datos =
                                         {
                                             params : 
@@ -795,6 +798,7 @@ function _p48_agregarFamClic()
 							var jsonRes = Ext.decode(response.responseText).slist1[0];
 							
 							var windowHistSinies = Ext.create('Ext.window.Window',{
+								name        : 'panelbusqueda',
 		                 		modal       : true,
 		                 		buttonAlign : 'center',
 		                 		width       : 1000,

@@ -507,7 +507,7 @@ Ext.onReady(function()
             debug('_8_FormExtraprima initComponent');
             Ext.apply(this,
             {
-                title      : 'Extraprima ===>'
+                title      : 'Extraprima'
                 ,defaults  :
                 {
                     style : 'margin : 5px;'
