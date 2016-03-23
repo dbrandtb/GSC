@@ -228,43 +228,43 @@ Ext.onReady(function()
 	    	debug('respuesta',json);
 	    	_5_formDomicil.loadRecord(new _5_modeloDomicil(json.smap1));
 	    	
-	    	debug('codpost:',_5_formDomicil.items.items[1]);
-	    	debug('colonia:',_5_formDomicil.items.items[4]);
-	    	_5_formDomicil.items.items[4].setEditable(true);
+	    	debug('codpost:',_fieldByName('CODPOSTAL',_5_formDomicil));
+	    	debug('colonia:',_fieldByName('CDCOLONI',_5_formDomicil));
+	    	_fieldByName('CDCOLONI',_5_formDomicil).setEditable(true);
 	    	
 	    	//cargar colonia
-	    	_5_formDomicil.items.items[4].getStore().load(
+	    	_fieldByName('CDCOLONI',_5_formDomicil).getStore().load(
             {
                 params :
                 {
-                    'params.cp' : _5_formDomicil.items.items[1].getValue()
+                    'params.cp' : _fieldByName('CODPOSTAL',_5_formDomicil).getValue()
                 }
             });
 	    	//cargar colonia
 	    	
 	    	//establecer cargar colonia al cambiar cod pos
-	    	_5_formDomicil.items.items[1].on('blur',function()
+	    	_fieldByName('CODPOSTAL',_5_formDomicil).on('blur',function()
 	    	{
 	    		debug('cod pos change');
-	    		_5_formDomicil.items.items[4].getStore().load(
+	    		_fieldByName('CDCOLONI',_5_formDomicil).getStore().load(
 	    		{
 	    			params :
 	    			{
-	    				'params.cp' : _5_formDomicil.items.items[1].getValue()
+	    				'params.cp' : _fieldByName('CODPOSTAL',_5_formDomicil).getValue()
 	    			}
 	    		    ,callback : function()
 	    		    {
 	    		    	var hay=false;
-	    		    	_5_formDomicil.items.items[4].getStore().each(function(record)
+	    		    	_fieldByName('CDCOLONI',_5_formDomicil).getStore().each(function(record)
 	    		    	{
-	    		    		if(_5_formDomicil.items.items[4].getValue()==record.get('key'))
+	    		    		if(_fieldByName('CDCOLONI',_5_formDomicil).getValue()==record.get('key'))
 	    		    		{
 	    		    			hay=true;
 	    		    		}
 	    		    	});
 	    		    	if(!hay)
 	    		    	{
-	    		    		_5_formDomicil.items.items[4].setValue('');
+	    		    		_fieldByName('CDCOLONI',_5_formDomicil).setValue('');
 	    		    	}
 	    		    }
 	    		});

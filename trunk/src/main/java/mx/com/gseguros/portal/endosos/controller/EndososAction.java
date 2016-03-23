@@ -316,50 +316,72 @@ public class EndososAction extends PrincipalCoreAction
 	public String pantallaEndosoDomicilio()
 	{
 		
-		if(!smap1.containsKey("pv_nmpoliza") && smap1.containsKey("NMPOLIZA")){
-			String cdtipsit1 = null;
-			String nombrePersona = null;
-			try {
-				cdtipsit1 = endososManager.recuperarCdtipsitInciso1((String)smap1.get("CDUNIECO"), (String)smap1.get("CDRAMO"), (String)smap1.get("ESTADO"), (String)smap1.get("NMPOLIZA"));
-				
-				long timestamp = System.currentTimeMillis();
-				Map<String, Object> datos = personasManager.obtenerPersonaPorCdperson(smap1.get("CDPERSON"), timestamp);
-				Map<String,String> persona = (Map<String,String>)datos.get("persona");
-				
-				nombrePersona = persona.get("DSNOMBRE")+" "+(StringUtils.isNotBlank(persona.get("DSAPELLIDO1"))?persona.get("DSAPELLIDO1"):"");
-				
-			} catch (Exception e) {
-				logger.error("Error al obtener el cdtipsit de la poliza para el primer inciso",e);
-			}
-			
-			smap1.put("pv_nmpoliza", smap1.get("NMPOLIZA"));
-			smap1.put("pv_estado", smap1.get("ESTADO"));
-			smap1.put("cdrfc", smap1.get("CDRFC"));
-			smap1.put("pv_nmsituac", null);
-			smap1.put("pv_cdrol", null);
-			smap1.put("pv_cdunieco", smap1.get("CDUNIECO"));
-			smap1.put("ntramite", smap1.get("NTRAMITE"));
-			smap1.put("habilitaEdicion", "0");
-			smap1.put("botonCopiar", "0");
-			smap1.put("pv_cdramo", smap1.get("CDRAMO"));
-			smap1.put("cdtipsit", cdtipsit1);
-			smap1.put("pv_cdperson", smap1.get("CDPERSON"));
-			smap1.put("nombreAsegurado", nombrePersona);
-			
-			smap1.put("pantallaOrigen", "MARCO_ENDOSOS_NUEVO");
-		}
-		
-		logger.debug(Utils.log(
-		         "\n#####################################"
-		        ,"\n###### pantallaEndosoDomicilio ######"
-		        ,"\n###### smap1="  , smap1
-		        ,"\n###### slist1=" , slist1
-		        ));
-		
 		String respuestaAction = ERROR;
 		
 		try
 		{
+			if(!smap1.containsKey("pv_nmpoliza") && smap1.containsKey("NMPOLIZA")){
+				String cdtipsit1 = null;
+				String nombrePersona = null;
+				try {
+					cdtipsit1 = endososManager.recuperarCdtipsitInciso1((String)smap1.get("CDUNIECO"), (String)smap1.get("CDRAMO"), (String)smap1.get("ESTADO"), (String)smap1.get("NMPOLIZA"));
+					
+					long timestamp = System.currentTimeMillis();
+					Map<String, Object> datos = personasManager.obtenerPersonaPorCdperson(smap1.get("CDPERSON"), timestamp);
+					Map<String,String> persona = (Map<String,String>)datos.get("persona");
+					
+					nombrePersona = persona.get("DSNOMBRE")+" "+(StringUtils.isNotBlank(persona.get("DSAPELLIDO1"))?persona.get("DSAPELLIDO1"):"");
+					
+				} catch (Exception e) {
+					logger.error("Error al obtener el cdtipsit de la poliza para el primer inciso",e);
+				}
+				
+				smap1.put("pv_nmpoliza", smap1.get("NMPOLIZA"));
+				smap1.put("pv_estado", smap1.get("ESTADO"));
+				smap1.put("cdrfc", smap1.get("CDRFC"));
+				smap1.put("pv_nmsituac", null);
+				smap1.put("pv_cdrol", null);
+				smap1.put("pv_cdunieco", smap1.get("CDUNIECO"));
+				smap1.put("ntramite", smap1.get("NTRAMITE"));
+				smap1.put("habilitaEdicion", "0");
+				smap1.put("botonCopiar", "0");
+				smap1.put("pv_cdramo", smap1.get("CDRAMO"));
+				smap1.put("cdtipsit", cdtipsit1);
+				smap1.put("pv_cdperson", smap1.get("CDPERSON"));
+				smap1.put("nombreAsegurado", nombrePersona);
+				
+			}
+			
+			/**
+			 * Si no trae la lista de incisos se considera en automatico que es para el contratante
+			 */
+			if(slist1 ==  null || slist1.isEmpty()){
+				
+				logger.debug("Rellenando slist1 para contratante");
+				String nmsitucRes = consultasPolizaManager.obtieneNmsituacContratantePoliza(smap1.get("pv_cdunieco_i"), smap1.get("pv_cdramo_i"), smap1.get("pv_estado_i"), smap1.get("pv_nmpoliza_i"));
+				slist1 = new ArrayList<Map<String,String>>();
+				
+				HashMap<String,String> contratante =  new HashMap<String, String>(); 
+				contratante.put("CDPERSON", smap1.get("CDPERSON"));
+				contratante.put("DSNOMBRE", smap1.get("DSNOMBRE"));
+				contratante.put("DSNOMBRE1", smap1.get("DSNOMBRE1"));
+				contratante.put("DSAPELLIDO", smap1.get("DSAPELLIDO"));
+				contratante.put("DSAPELLIDO1", smap1.get("DSAPELLIDO1"));
+				contratante.put("CDRFC", smap1.get("CDRFC"));
+				contratante.put("NMSITUAC", nmsitucRes);
+				contratante.put("CDROL", "1");
+				
+				slist1.add(contratante);
+			}
+			
+			logger.debug(Utils.log(
+			         "\n#####################################"
+			        ,"\n###### pantallaEndosoDomicilio ######"
+			        ,"\n###### smap1="  , smap1
+			        ,"\n###### slist1=" , slist1
+			        ));
+			
+			
 			transformaEntrada(smap1, slist1, true);
 			
 			//Si despues de transforma entrada no hay cdrol de contratante o inciso se deja default el rol 1
@@ -6288,14 +6310,11 @@ public class EndososAction extends PrincipalCoreAction
 			smap1.put("pv_cdrol", null);
 			smap1.put("pv_cdunieco", smap1.get("CDUNIECO"));
 			smap1.put("ntramite", smap1.get("NTRAMITE"));
-//			smap1.put("habilitaEdicion", "0");
-//			smap1.put("botonCopiar", "0");
 			smap1.put("pv_cdramo", smap1.get("CDRAMO"));
 			smap1.put("cdtipsit", cdtipsit1);
 			smap1.put("cdperson", smap1.get("CDPERSON"));
 			smap1.put("pv_cdperson_i", smap1.get("CDPERSON"));
 			smap1.put("nombreAsegurado", nombrePersona);
-			
 			
 			smap1.put("Apellido_Materno", apmat);
 			smap1.put("Apellido_Paterno", appat);
@@ -6313,7 +6332,6 @@ public class EndososAction extends PrincipalCoreAction
 			smap1.put("segundo_nombre", segundoNombre);
 			smap1.put("nombreAsegurado", nombrePersona);
 			
-			smap1.put("pantallaOrigen", "MARCO_ENDOSOS_NUEVO");
 		}
 		
 		logger.debug("endosoDomicilioFull()");
@@ -6323,6 +6341,7 @@ public class EndososAction extends PrincipalCoreAction
 	        .append("\n###### endosoDomicilioFull ######")
 	        .append("\n######                     ######").toString());
 		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("slist1: ").append(slist1).toString());
 		
 		this.session=ActionContext.getContext().getSession();
 		
@@ -6556,6 +6575,12 @@ public class EndososAction extends PrincipalCoreAction
 			String sFechaEndoso = smap3.get("fecha_endoso");
 			Date   dFechaEndoso = renderFechas.parse(sFechaEndoso);
 			String cdtipsit     = smap1.get("CDTIPSIT");
+			
+			String cdpersonCli = smap1.get("CDPERSON");
+			if(StringUtils.isBlank(cdpersonCli)){
+				cdpersonCli = smap1.get("cdperson");
+			}
+			
 			String nmordom      = smap2.get("NMORDDOM");
 			String cdtipdom     = smap2.get("CDTIPDOM");
 			String dsdomici     = smap2.get("DSDOMICI");
@@ -6570,6 +6595,14 @@ public class EndososAction extends PrincipalCoreAction
 			String proceso      = "END";
 			String ntramite     = smap1.get("NTRAMITE");
 			
+			boolean esPolizaColectiva  = (StringUtils.isNotBlank(smap1.get("TIPOFLOT")) && "F".equalsIgnoreCase(smap1.get("TIPOFLOT")));//flotilla o Colectiva
+			
+			/**
+			 * Para determinar si una poliza es contributoria o no contributoria, PCPGOCTE en 0 pagan titulares,
+			 * entre 0 y 100 se divide entre contratante y titulares, 100 paga contratante
+			 * si no trae valor por default se considera que solo paga el contratante.
+			 */
+			boolean soloPagaContratante = (StringUtils.isBlank(smap1.get("PCPGOCTE")) || "100".equalsIgnoreCase(smap1.get("PCPGOCTE")));
 			
 			String usuarioCaptura =  null;
 			
@@ -6598,66 +6631,133 @@ public class EndososAction extends PrincipalCoreAction
 			String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
 			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
 			
-			String keyCodPostal = "";
-			String keyEstado    = "";
-			String keyMunicipio = "";
-			if(cdtipsit.equalsIgnoreCase("SL")||cdtipsit.equalsIgnoreCase("SN")) {
-				keyCodPostal = "pv_otvalor03";
-				keyEstado    = "pv_otvalor04";
-				keyMunicipio = "pv_otvalor17";
-
-			}
-			//PKG_CONSULTA.P_OBT_VALOSIT_ULTIMA_IMAGEN
-			List<Map<String,String>>valositsPoliza=endososManager.obtenerValositUltimaImagen(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
-			/*
-			CDUNIECO,CDRAMO,ESTADO,NMPOLIZA,NMSITUAC,NMSUPLEM,STATUS,CDTIPSIT,OTVALOR01,OTVALOR02
-			,OTVALOR03,OTVALOR04,OTVALOR05,OTVALOR06,OTVALOR07,OTVALOR08,OTVALOR09,OTVALOR10,OTVALOR11
-			,OTVALOR12,OTVALOR13,OTVALOR14,OTVALOR15,OTVALOR16,OTVALOR17,OTVALOR18,OTVALOR19,OTVALOR20
-			,OTVALOR21,OTVALOR22,OTVALOR23,OTVALOR24,OTVALOR25,OTVALOR26,OTVALOR27,OTVALOR28,OTVALOR29
-			,OTVALOR30,OTVALOR31,OTVALOR32,OTVALOR33,OTVALOR34,OTVALOR35,OTVALOR36,OTVALOR37,OTVALOR38
-			,OTVALOR39,OTVALOR40,OTVALOR41,OTVALOR42,OTVALOR43,OTVALOR44,OTVALOR45,OTVALOR46,OTVALOR47
-			,OTVALOR48,OTVALOR49,OTVALOR50
-			*/
 			
-			for(Map<String,String>valositIte:valositsPoliza) {
-				String nmsituacIte=valositIte.get("NMSITUAC");
+			if(!esPolizaColectiva){
+				String keyCodPostal = "";
+				String keyEstado    = "";
+				String keyMunicipio = "";
+				if(cdtipsit.equalsIgnoreCase("SL")||cdtipsit.equalsIgnoreCase("SN")) {
+					keyCodPostal = "pv_otvalor03";
+					keyEstado    = "pv_otvalor04";
+					keyMunicipio = "pv_otvalor17";
+
+				}
+				//PKG_CONSULTA.P_OBT_VALOSIT_ULTIMA_IMAGEN
+				List<Map<String,String>>valositsPoliza=endososManager.obtenerValositUltimaImagen(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+				/*
+				CDUNIECO,CDRAMO,ESTADO,NMPOLIZA,NMSITUAC,NMSUPLEM,STATUS,CDTIPSIT,OTVALOR01,OTVALOR02
+				,OTVALOR03,OTVALOR04,OTVALOR05,OTVALOR06,OTVALOR07,OTVALOR08,OTVALOR09,OTVALOR10,OTVALOR11
+				,OTVALOR12,OTVALOR13,OTVALOR14,OTVALOR15,OTVALOR16,OTVALOR17,OTVALOR18,OTVALOR19,OTVALOR20
+				,OTVALOR21,OTVALOR22,OTVALOR23,OTVALOR24,OTVALOR25,OTVALOR26,OTVALOR27,OTVALOR28,OTVALOR29
+				,OTVALOR30,OTVALOR31,OTVALOR32,OTVALOR33,OTVALOR34,OTVALOR35,OTVALOR36,OTVALOR37,OTVALOR38
+				,OTVALOR39,OTVALOR40,OTVALOR41,OTVALOR42,OTVALOR43,OTVALOR44,OTVALOR45,OTVALOR46,OTVALOR47
+				,OTVALOR48,OTVALOR49,OTVALOR50
+				*/
 				
-				//otvalor05 -> pv_otvalor05
-				Map<String,String>otvalorValositIte=new HashMap<String,String>();
-				for(Entry<String,String>en:valositIte.entrySet()) {
-					String key   = en.getKey();
-					String value = en.getValue();
+				for(Map<String,String>valositIte:valositsPoliza) {
+					String nmsituacIte=valositIte.get("NMSITUAC");
 					
-					if(key.substring(0,5).equalsIgnoreCase("otval")) {
-						otvalorValositIte.put("pv_"+(key.toLowerCase()),value);
+					//otvalor05 -> pv_otvalor05
+					Map<String,String>otvalorValositIte=new HashMap<String,String>();
+					for(Entry<String,String>en:valositIte.entrySet()) {
+						String key   = en.getKey();
+						String value = en.getValue();
+						
+						if(key.substring(0,5).equalsIgnoreCase("otval")) {
+							otvalorValositIte.put("pv_"+(key.toLowerCase()),value);
+						}
 					}
+					
+					otvalorValositIte.put(keyCodPostal , cdpostal);
+					otvalorValositIte.put(keyEstado    , cdestado);
+					otvalorValositIte.put(keyMunicipio , cdmunici);
+					
+					//PKG_SATELITES2.P_MOV_TVALOSIT
+					kernelManager.insertaValoresSituaciones(cdunieco, cdramo, estado, nmpoliza
+							,nmsituacIte, nmsuplem, Constantes.STATUS_VIVO, cdtipsit, Constantes.INSERT_MODE, otvalorValositIte);
 				}
 				
-				otvalorValositIte.put(keyCodPostal , cdpostal);
-				otvalorValositIte.put(keyEstado    , cdestado);
-				otvalorValositIte.put(keyMunicipio , cdmunici);
+				//PKG_SATELITES.P_OBT_DATOS_MPOLIPER
+				/* nmsituac,cdrol,fenacimi,sexo,cdperson,nombre
+				 * ,segundo_nombre,Apellido_Paterno ,Apellido_Materno
+				 * ,cdrfc,Parentesco,tpersona,nacional,swexiper
+				 */
+				List<Map<String,Object>>mpoliperPoliza=kernelManager.obtenerAsegurados(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+				for(Map<String,Object>mpoliperIte:mpoliperPoliza) {
+					String cdpersonIte=(String)mpoliperIte.get("cdperson");
+					
+					//////////////////////
+					////// mdomicil //////
+					//PKG_SATELITES.P_MOV_MDOMICIL
+					/*//////////////////*/
+					Map<String,String>paramDomicilIte=new LinkedHashMap<String,String>(0);
+					paramDomicilIte.put("pv_cdperson_i" , cdpersonIte);
+					paramDomicilIte.put("pv_nmorddom_i" , (StringUtils.isNotBlank(cdpersonCli) && cdpersonCli.equalsIgnoreCase(cdpersonIte))? nmordom : "1"); //si el cdperson es del endoso puede ser contratante y traer un nmordom distinto a 1 o 1, si el cdperson no es cdperson siempre es 1
+					paramDomicilIte.put("pv_msdomici_i" , dsdomici);
+					paramDomicilIte.put("pv_nmtelefo_i" , nmtelefo);
+					paramDomicilIte.put("pv_cdpostal_i" , cdpostal);
+					paramDomicilIte.put("pv_cdedo_i"    , cdestado);
+					paramDomicilIte.put("pv_cdmunici_i" , cdmunici);
+					paramDomicilIte.put("pv_cdcoloni_i" , cdcoloni);
+					paramDomicilIte.put("pv_nmnumero_i" , nmnumext);
+					paramDomicilIte.put("pv_nmnumint_i" , nmnumint);
+					paramDomicilIte.put("pv_cdtipdom_i" , cdtipdom);
+					paramDomicilIte.put("pv_cdusuario_i", usuarioCaptura);
+					paramDomicilIte.put("pv_swactivo_i",  Constantes.SI);
+					paramDomicilIte.put("pv_accion_i"   , Constantes.UPDATE_MODE);			
+					kernelManager.pMovMdomicil(paramDomicilIte);
+					/*//////////////////*/
+					////// mdomicil //////
+					//////////////////////
+				}
 				
-				//PKG_SATELITES2.P_MOV_TVALOSIT
-				kernelManager.insertaValoresSituaciones(cdunieco, cdramo, estado, nmpoliza
-						,nmsituacIte, nmsuplem, Constantes.STATUS_VIVO, cdtipsit, Constantes.INSERT_MODE, otvalorValositIte);
-			}
-			
-			//PKG_SATELITES.P_OBT_DATOS_MPOLIPER
-			/* nmsituac,cdrol,fenacimi,sexo,cdperson,nombre
-			 * ,segundo_nombre,Apellido_Paterno ,Apellido_Materno
-			 * ,cdrfc,Parentesco,tpersona,nacional,swexiper
-			 */
-			List<Map<String,Object>>mpoliperPoliza=kernelManager.obtenerAsegurados(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
-			for(Map<String,Object>mpoliperIte:mpoliperPoliza) {
-				String cdpersonIte=(String)mpoliperIte.get("cdperson");
+				//////////////////////////////
+	            ////// inserta tworksup //////
+	            Map<String,String>mapaTworksupEnd=new LinkedHashMap<String,String>(0);
+	            mapaTworksupEnd.put("pv_cdunieco_i" , cdunieco);
+	            mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
+	            mapaTworksupEnd.put("pv_estado_i"   , estado);
+	            mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
+	            mapaTworksupEnd.put("pv_cdtipsup_i" , cdtipsup);
+	            mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
+	            endososManager.insertarTworksupSitTodas(mapaTworksupEnd);
+	            ////// inserta tworksup //////
+	            //////////////////////////////
+	            
+	            //////////////////////////
+	            ////// tarificacion //////
+				endososManager.sigsvalipolEnd(
+						cdusuari
+						,cdelemento
+						,cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,"0"
+						,nmsuplem
+						,cdtipsup
+						);
+	            ////// tarificacion //////
+				//////////////////////////
 				
-				//////////////////////
-				////// mdomicil //////
-				//PKG_SATELITES.P_MOV_MDOMICIL
-				/*//////////////////*/
+				//////////////////////////
+				////// valor endoso //////
+				Map<String,Object>mapaValorEndoso=new LinkedHashMap<String,Object>(0);
+				mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
+				mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
+				mapaValorEndoso.put("pv_estado_i"   , estado);
+				mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
+				mapaValorEndoso.put("pv_nmsituac_i" , "1");
+				mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
+				mapaValorEndoso.put("pv_feinival_i" , dFechaEndoso);
+				mapaValorEndoso.put("pv_cdtipsup_i" , cdtipsup);
+				endososManager.calcularValorEndoso(mapaValorEndoso);
+				////// valor endoso //////
+				//////////////////////////
+			}else{
 				Map<String,String>paramDomicilIte=new LinkedHashMap<String,String>(0);
-				paramDomicilIte.put("pv_cdperson_i" , cdpersonIte);
-				paramDomicilIte.put("pv_nmorddom_i" , nmordom);
+				paramDomicilIte.put("pv_cdperson_i" , cdpersonCli);//cdperson del asegurado titular seleccionado
+				paramDomicilIte.put("pv_nmorddom_i" , nmordom);//nmordom del asegurado titular seleccionado
 				paramDomicilIte.put("pv_msdomici_i" , dsdomici);
 				paramDomicilIte.put("pv_nmtelefo_i" , nmtelefo);
 				paramDomicilIte.put("pv_cdpostal_i" , cdpostal);
@@ -6671,54 +6771,8 @@ public class EndososAction extends PrincipalCoreAction
 				paramDomicilIte.put("pv_swactivo_i",  Constantes.SI);
 				paramDomicilIte.put("pv_accion_i"   , Constantes.UPDATE_MODE);			
 				kernelManager.pMovMdomicil(paramDomicilIte);
-				/*//////////////////*/
-				////// mdomicil //////
-				//////////////////////
 			}
 			
-			//////////////////////////////
-            ////// inserta tworksup //////
-            Map<String,String>mapaTworksupEnd=new LinkedHashMap<String,String>(0);
-            mapaTworksupEnd.put("pv_cdunieco_i" , cdunieco);
-            mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
-            mapaTworksupEnd.put("pv_estado_i"   , estado);
-            mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
-            mapaTworksupEnd.put("pv_cdtipsup_i" , cdtipsup);
-            mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
-            endososManager.insertarTworksupSitTodas(mapaTworksupEnd);
-            ////// inserta tworksup //////
-            //////////////////////////////
-            
-            //////////////////////////
-            ////// tarificacion //////
-			endososManager.sigsvalipolEnd(
-					cdusuari
-					,cdelemento
-					,cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,"0"
-					,nmsuplem
-					,cdtipsup
-					);
-            ////// tarificacion //////
-			//////////////////////////
-			
-			//////////////////////////
-			////// valor endoso //////
-			Map<String,Object>mapaValorEndoso=new LinkedHashMap<String,Object>(0);
-			mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
-			mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
-			mapaValorEndoso.put("pv_estado_i"   , estado);
-			mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
-			mapaValorEndoso.put("pv_nmsituac_i" , "1");
-			mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
-			mapaValorEndoso.put("pv_feinival_i" , dFechaEndoso);
-			mapaValorEndoso.put("pv_cdtipsup_i" , cdtipsup);
-			endososManager.calcularValorEndoso(mapaValorEndoso);
-			////// valor endoso //////
-			//////////////////////////
 			
 			// Se confirma el endoso si cumple la validacion de fechas: 
 			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(
@@ -6814,56 +6868,55 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 
 				
-				String saludDanios = "S";
-				
-				ClienteGeneral clienteGeneral = new ClienteGeneral();
-				clienteGeneral.setClaveCia(saludDanios);
-				String cdpersonCli = smap1.get("CDPERSON");
-				if(StringUtils.isBlank(cdpersonCli)){
-					cdpersonCli = smap1.get("cdperson");
+				//Si no es una poliza colectiva,  o si es una poliza colectiva y pagan los titulares, se consideran contratantes
+				if(!esPolizaColectiva || (esPolizaColectiva && !soloPagaContratante)){
+					
+					String saludDanios = "S";
+					
+					ClienteGeneral clienteGeneral = new ClienteGeneral();
+					clienteGeneral.setClaveCia(saludDanios);
+					
+					// Ejecutamos el Web Service de Cliente Salud:
+					ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, cdpersonCli, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), true);
+					
+					String sucursal = cdunieco;
+					//String nmsolici = listaDocu.get(0).get("nmsolici");
+					String nmtramite = ntramite;
+					
+					String tipomov = TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString();
+					
+					// Ejecutamos el Web Service de Recibos:
+					ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
+							estado, nmpoliza, 
+							nmsuplem, rutaCarpeta, 
+							sucursal, nmsolici, nmtramite, 
+							true, tipomov, 
+							(UserVO) session.get("USUARIO"));
+					
+					
+					ArrayList<Map<String,String>> saveList = new ArrayList<Map<String,String>>();
+					ArrayList<Map<String,String>> updateList = new ArrayList<Map<String,String>>();
+
+	    			Map<String,String> domicilioEndoso = new HashMap<String,String>();
+	    			
+	    			
+	    			/**
+	    			 * SE FIJAN VALORES AUNQUE EL UNICO QUE SE TOMA ES EL NMORDDOM
+	    			 */
+	    			domicilioEndoso.put("NMORDDOM" ,nmordom);
+	    			domicilioEndoso.put("CODPOSTAL",cdpostal);
+	    			domicilioEndoso.put("CDEDO"    ,cdestado);
+	    			domicilioEndoso.put("CDMUNICI" ,cdmunici);
+	    			domicilioEndoso.put("CDCOLONI" ,cdcoloni);
+	    			domicilioEndoso.put("DSDOMICI" ,dsdomici);
+	    			domicilioEndoso.put("NMNUMERO" ,nmnumext);
+	    			domicilioEndoso.put("NMNUMINT" ,nmnumint);
+	    			
+	    			updateList.add(domicilioEndoso);
+	    			
+	    			ice2sigsService.ejecutaWSdireccionClienteGeneral(cdpersonCli, saludDanios, saveList, updateList, false, usuario);
 				}
-				
-				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, cdpersonCli, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), true);
 
-				
-				String sucursal = cdunieco;
-				//String nmsolici = listaDocu.get(0).get("nmsolici");
-				String nmtramite = ntramite;
-				
-				String tipomov = TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString();
-				
-				// Ejecutamos el Web Service de Recibos:
-				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
-						estado, nmpoliza, 
-						nmsuplem, rutaCarpeta, 
-						sucursal, nmsolici, nmtramite, 
-						true, tipomov, 
-						(UserVO) session.get("USUARIO"));
-				
-				
-				ArrayList<Map<String,String>> saveList = new ArrayList<Map<String,String>>();
-				ArrayList<Map<String,String>> updateList = new ArrayList<Map<String,String>>();
-
-    			Map<String,String> domicilioEndoso = new HashMap<String,String>();
-    			
-    			
-    			/**
-    			 * SE FIJAN VALORES AUNQUE EL UNICO QUE SE TOMA ES EL NMORDDOM
-    			 */
-    			domicilioEndoso.put("NMORDDOM" ,nmordom);
-    			domicilioEndoso.put("CODPOSTAL",cdpostal);
-    			domicilioEndoso.put("CDEDO"    ,cdestado);
-    			domicilioEndoso.put("CDMUNICI" ,cdmunici);
-    			domicilioEndoso.put("CDCOLONI" ,cdcoloni);
-    			domicilioEndoso.put("DSDOMICI" ,dsdomici);
-    			domicilioEndoso.put("NMNUMERO" ,nmnumext);
-    			domicilioEndoso.put("NMNUMINT" ,nmnumint);
-    			
-    			updateList.add(domicilioEndoso);
-    			
-    			ice2sigsService.ejecutaWSdireccionClienteGeneral(cdpersonCli, saludDanios, saveList, updateList, false, usuario);
-				
 			    mensaje="Se ha guardado el endoso "+nsuplogi;
 			    
 			} else {
@@ -11996,7 +12049,7 @@ public class EndososAction extends PrincipalCoreAction
 			{
 				if(!"T".equals(slist1.get(0).get("CVE_PARENTESCO")))
 				{
-					throw new ApplicationException("Debe seleccionar al titular");
+					throw new ApplicationException("Debe seleccionar un titular para este endoso.");
 				}
 			}
 			else if(smap1.get("cdtipsup").equals(TipoEndoso.DEDUCIBLE_MAS.getCdTipSup().toString())
