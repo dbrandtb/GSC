@@ -2302,6 +2302,8 @@ public class EndososManagerImpl implements EndososManager
 		 * Obtener los endosos a revertir
 		 */
 		
+		logger.debug("<<<<<<<<<>>>>>>>>>>   Entrando a Revierte Endoso, se obtienen los endosos a revertir...   <<<<<<<<<>>>>>>>>>>");
+		
 		List<Map<String,String>> listaEnd = null;
 		
 		if(esEndosoB){
