@@ -4014,6 +4014,33 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+
+	@Override
+	public List<Map<String,String>> obtieneMotivosReexp(String cdramo, String cdtipsit) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_cdtipsit_i" , cdtipsit);
+		Map<String,Object> procRes = ejecutaSP(new ObtieneMotivosReexp(getDataSource()),params);
+		List<Map<String,String>> list    = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		
+		return list;
+	}
+	
+	protected class ObtieneMotivosReexp extends StoredProcedure
+	{
+		protected ObtieneMotivosReexp(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_MOTIVOS_CANC_REEXP");
+			declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{ "codigo", "motivo" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	@Override
 	public String recuperarPermisoBotonEmitir(String cdsisrol, String cdusuari, String cdtipsit) throws Exception

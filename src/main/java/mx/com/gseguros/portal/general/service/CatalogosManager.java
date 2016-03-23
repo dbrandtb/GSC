@@ -191,6 +191,8 @@ public interface CatalogosManager {
     public List<GenericVO> recuperarTdocume(String cdtiptra) throws Exception;
     
     public List<GenericVO> cargarCotizadoresActivos(String cadena) throws Exception;
+
+    public List<GenericVO> obtieneMotivosReexp(String cdramo, String cdtipsit) throws Exception;
     
     
 }
