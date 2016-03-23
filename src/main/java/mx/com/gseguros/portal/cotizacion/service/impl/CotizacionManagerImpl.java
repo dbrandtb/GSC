@@ -1842,6 +1842,53 @@ public class CotizacionManagerImpl implements CotizacionManager
 				List<ComponenteVO>tatripol=cotizacionDAO.cargarTatripol(cdramo,cdtipsit,"C");
 				if(tatripol!=null&&tatripol.size()>0)
 				{
+					logger.debug("Si hay tatripol");
+					
+					/*
+					 * se recuperan componentes que sirven para omitir elementos de tatripol
+					 */
+					List<ComponenteVO> listaTatripolOmitidos = pantallasDAO.obtenerComponentes(
+							null               , null                , cdramo
+							,cdtipsit          , null                , cdsisrol
+							,"COTIZACION_GRUPO", "TATRIPOL_OMITIDOS" , null
+							);
+					
+					if(listaTatripolOmitidos!=null && listaTatripolOmitidos.size()>0)
+					{
+						logger.debug("Si hay tatripol omitidos desde editor pantallas");
+						
+						List<ComponenteVO> tatripolAux = new ArrayList<ComponenteVO>();
+						for(ComponenteVO tatripolItem : tatripol)
+						{
+							boolean omitido = false;
+							for(ComponenteVO tatripolOmitido : listaTatripolOmitidos)
+							{
+								if(tatripolOmitido.getNameCdatribu().equals(tatripolItem.getNameCdatribu()))
+								{
+									logger.debug(Utils.log(
+											"tatripol omitido original: <"
+											,tatripolItem.getNameCdatribu()
+											,"> editor pantallas: <"
+											,tatripolOmitido.getNameCdatribu()
+											,">"
+											));
+									omitido = true;
+									break;
+								}
+							}
+							if(!omitido)
+							{
+								logger.debug(Utils.log("No se omite <",tatripolItem.getNameCdatribu(),">"));
+								tatripolAux.add(tatripolItem);
+							}
+						}
+						tatripol = tatripolAux;
+					}
+					else
+					{
+						logger.debug("No hay tatripol omitidos desde editor de pantallas");
+					}
+					
 					gcGral.generaComponentes(tatripol,true,false,true,false,false,false);
 					resp.getImap().put("itemsRiesgo",gcGral.getItems());
 				}
