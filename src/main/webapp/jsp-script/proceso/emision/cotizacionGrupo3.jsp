@@ -4673,63 +4673,64 @@ function _p21_subirDetallePersonas()
         data.smap1['nmpoliza'] = _p21_smap1.nmpoliza;
         data.smap1['nmsuplem'] = Ext.isEmpty(_p21_smap1.nmsuplem)?'0':_p21_smap1.nmsuplem;
         form.setLoading(true);
-        centrarVentanaInterna(Ext.create('Ext.window.Window',
+        windowLoader = Ext.create('Ext.window.Window', {
+            title   : 'Cargar archivo de personas'
+            ,closeAction : 'hide'
+            ,width  : 400
+            ,modal  : true
+            ,items  :
+            [
+                Ext.create('Ext.form.Panel',
                 {
-                    title   : 'Cargar archivo de personas'
-                    ,width  : 400
-                    ,modal  : true
-                    ,items  :
+                    url          : _p21_urlSubirCenso
+                    ,items       :
                     [
-                        Ext.create('Ext.form.Panel',
                         {
-                            url          : _p21_urlSubirCenso
-                            ,items       :
-                            [
+                            xtype       : 'filefield'
+                            ,fieldLabel : 'Archivo'
+                            ,buttonText : 'Examinar...'
+                            ,buttonOnly : false
+                            ,name       : 'censo'
+                            ,labelAlign : 'top'
+                            ,width      : 330
+                            ,style      : 'margin:5px;'
+                            ,allowBlank : false
+                            ,msgTarget  : 'side'
+                            ,cAccept    : ['xls','xlsx']
+                            ,listeners  :
+                            {
+                                change : function(me)
                                 {
-                                    xtype       : 'filefield'
-                                    ,fieldLabel : 'Archivo'
-                                    ,buttonText : 'Examinar...'
-                                    ,buttonOnly : false
-                                    ,name       : 'censo'
-                                    ,labelAlign : 'top'
-                                    ,width      : 330
-                                    ,style      : 'margin:5px;'
-                                    ,allowBlank : false
-                                    ,msgTarget  : 'side'
-                                    ,cAccept    : ['xls','xlsx']
-                                    ,listeners  :
+                                    var indexofPeriod = me.getValue().lastIndexOf("."),
+                                    uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
+                                    if (!Ext.Array.contains(this.cAccept, uploadedExtension))
                                     {
-                                        change : function(me)
+                                        centrarVentanaInterna(Ext.MessageBox.show(
                                         {
-                                            var indexofPeriod = me.getValue().lastIndexOf("."),
-                                            uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
-                                            if (!Ext.Array.contains(this.cAccept, uploadedExtension))
-                                            {
-                                                centrarVentanaInterna(Ext.MessageBox.show(
-                                                {
-                                                    title   : 'Error de tipo de archivo',
-                                                    msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
-                                                    buttons : Ext.Msg.OK,
-                                                    icon    : Ext.Msg.WARNING
-                                                }));
-                                                me.reset();
-                                            }
-                                        }
+                                            title   : 'Error de tipo de archivo',
+                                            msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
+                                            buttons : Ext.Msg.OK,
+                                            icon    : Ext.Msg.WARNING
+                                        }));
+                                        me.reset();
                                     }
                                 }
-                            ]
-                            ,buttonAlign : 'center'
-                            ,buttons     :
-                            [
-                                {
-                                    text     : 'Cargar archivo'
-                                    ,icon    : '${ctx}/resources/fam3icons/icons/group_edit.png'
-                                    ,handler : function(me){ _p21_subirArchivoCompletoEndoso(me); }
-                                }
-                            ]
-                        })
+                            }
+                        }
                     ]
-                }).show());
+                    ,buttonAlign : 'center'
+                    ,buttons     :
+                    [
+                        {
+                            text     : 'Cargar archivo'
+                            ,icon    : '${ctx}/resources/fam3icons/icons/group_edit.png'
+                            ,handler : function(me){ _p21_subirArchivoCompletoEndoso(me); }
+                        }
+                    ]
+                })
+            ]
+        });
+       	centrarVentanaInterna(windowLoader.show());
     }
     debug('<_p21_subirDetallePersonas');
 }
