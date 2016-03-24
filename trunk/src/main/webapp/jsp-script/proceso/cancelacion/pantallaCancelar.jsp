@@ -94,7 +94,7 @@ Ext.onReady(function(){
                                 }
                             ,success  : 
                                 function(response){
-                                    panCanForm.setLoading(false);
+                                    
                                     jsonData = Ext.decode(response.responseText);
                                     if(jsonData.success==true){
                                         form.submit({
