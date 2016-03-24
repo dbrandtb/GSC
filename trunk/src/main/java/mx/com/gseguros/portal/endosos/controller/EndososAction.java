@@ -12339,7 +12339,6 @@ public class EndososAction extends PrincipalCoreAction
 			String ntramite = smap1.get("ntramite");
 			
 			slist1=endososManager.obtenerInfoFamiliaEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite);
-			
 			success=true;
 		}
 		catch(Exception ex)

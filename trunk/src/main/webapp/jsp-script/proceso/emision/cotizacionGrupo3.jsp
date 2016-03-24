@@ -794,7 +794,7 @@ Ext.onReady(function()
                                     {
                                         fieldLabel  : 'PRODUCTO'
                                         ,labelWidth : 250
-                                        ,value      : 'Cargando...'
+                                        ,value      : _p21_smap1.prodGenerado//'Cargando...'
                                     })
                                     ,Ext.create('Ext.form.field.Number',
                                     {
