@@ -818,6 +818,7 @@ function _p48_agregarFamClic()
 		                                ,'smap1.status'   : jsonRes.EXISTEREGISTRO == 0?"18":"19"
 		                                ,'smap1.sincenso' : "N"
 		                                ,'smap1.nmsuplem' : _p48_params.nmsuplem_endoso
+		                                ,'smap1.prodGenerado' : jsonRes.PRODUCTO
 		                 			},
 		                 			scripts  : true,
 		                 			loadMask : true,
