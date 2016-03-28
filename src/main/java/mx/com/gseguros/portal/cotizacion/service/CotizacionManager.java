@@ -428,7 +428,7 @@ public interface CotizacionManager
 			String circulo
 			,String cdatribu)throws Exception;
 	
-	public ManagerRespuestaVoidVO guardarContratanteColectivo(
+	public String guardarContratanteColectivo(
 			String cdunieco
 			,String cdramo
 			,String estado

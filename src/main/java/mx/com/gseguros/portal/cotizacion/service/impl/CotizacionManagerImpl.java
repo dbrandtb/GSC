@@ -5560,7 +5560,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 	
 	@Override
-	public ManagerRespuestaVoidVO guardarContratanteColectivo(
+	public String guardarContratanteColectivo(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -5601,8 +5601,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@ esConfirmaEmision=" , esConfirmaEmision
 				));
 		
-		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
-		
 		String paso = "Se guarda contratante colectivo";
 		
 		try
@@ -5610,10 +5608,71 @@ public class CotizacionManagerImpl implements CotizacionManager
 			String swexiper = Constantes.SI;
 			if(StringUtils.isBlank(cdperson)){
 				cdperson = personasDAO.obtenerNuevoCdperson();
+				
+				logger.debug("<<<>>> Nuevo cdperson generado <<<>>> " + cdperson);
 				swexiper = Constantes.NO; // para generar un cdperson de prospecto
+				
+				String usuarioCaptura =  null;
+				
+				if(usuarioSesion!=null){
+					if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
+						usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
+					}else{
+						usuarioCaptura = usuarioSesion.getCodigoPersona();
+					}
+					
+				}
+				
+				personasDAO.movimientosMpersona(
+					cdperson
+					,"1"         //cdtipide
+					,null        //cdideper
+					,nombre
+					,"1"         //cdtipper
+					,"M"         //otfisjur
+					,"H"         //otsexo
+					,new Date()  //fenacimi
+					,rfc
+					,""          //dsemail
+					,null        //dsnombre1
+					,null        //dsapellido
+					,null        //dsapellido1
+					,new Date()  //feingreso
+					,null        //cdnacion
+					,null        //canaling
+					,null        //conducto
+					,null        //ptcumupr
+					,null        //residencia
+					,null		 //nongrata
+					,null		 //cdideext
+					,null		 //cdestcivil
+					,null		 //cdsucemi
+					,usuarioCaptura
+					,Constantes.INSERT_MODE
+				);
+				
+
+				nmorddom = "1";
+				personasDAO.movimientosMdomicil(
+					cdperson
+					,nmorddom   //nmorddom
+					,dsdomici
+					,null       //nmtelefo
+					,cdpostal
+					,cdedo
+					,cdmunici
+					,null       //cdcoloni
+					,nmnumero
+					,nmnumint
+					,"1" // domicilio personal default
+					,usuarioCaptura
+					,Constantes.SI  //domicilio activo
+					,Constantes.INSERT_MODE
+				);
+				
 			}
 			
-			logger.debug("Asignando nuevo contratante para poliza colectiva, cdperson:"+ cdperson+" numero de domicilio: "+nmorddom);
+			logger.debug("Asignando contratante para poliza colectiva, cdperson:"+ cdperson+" numero de domicilio: "+nmorddom);
 			
 			cotizacionDAO.borrarMpoliperSituac0(cdunieco, cdramo, estado, nmpoliza, "0", "1");
 			
@@ -5642,12 +5701,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		logger.debug(Utils.log(
-				 "\n@@@@@@ " , resp
+				 "\n@@@@@@ Contratante guardado cdperson:" ,cdperson 
 				,"\n@@@@@@ guardarContratanteColectivo @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		
-		return resp;
+		return cdperson;
 	}
 	
 	@Override
