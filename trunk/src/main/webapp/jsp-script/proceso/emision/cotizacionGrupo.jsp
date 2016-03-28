@@ -138,11 +138,13 @@ var _callbackAseguradoExclusiones =  function (){
    	_ventanaClausulas.close();
 };
 
+var _p_21_panelPrincipal
+
 var codpostalDefinitivo;
 var cdedoDefinitivo;
 var cdmuniciDefinitivo;
 
-_defaultNmordomProspecto = '1';// valor default del numero de domicilio del prospecto
+_defaultNmordomProspecto = undefined;// valor default del numero de domicilio del prospecto
 var nmorddomProspecto = _defaultNmordomProspecto; 
 
 var expande                 = function(){};
@@ -743,7 +745,7 @@ Ext.onReady(function()
     ////// componentes //////
     
     ////// contenido //////
-    Ext.create('Ext.tab.Panel',
+    _p_21_panelPrincipal = Ext.create('Ext.tab.Panel',
     {
         renderTo   : '_p21_divpri'
         ,itemId    : '_p21_tabpanel'
@@ -859,14 +861,20 @@ Ext.onReady(function()
 										            ,jsonData : params
 										            ,success  : function(response)
 										            {
-										                var json = Ext.decode(response.responseText);
-										                if(json.exito){
+										                var jsonCont = Ext.decode(response.responseText);
+										                if(jsonCont.exito){
 										                	mensajeCorrecto('Aviso','Contratante Guardado Correctamente.');
 										                	_contratanteSaved = true;
+										                	
+//										                	if(Ext.isEmpty(_fieldByName('cdperson',_p_21_panelPrincipal).getValue())){
+//										                		_fieldByName('cdperson',_p_21_panelPrincipal).setValue(jsonCont.smap1.cdperson);
+//										                		alert(jsonCont.smap1.cdperson);
+//										                	}
+										                	
 										                }
 										                else
 										                {
-										                    mensajeWarning(json.respuesta);
+										                    mensajeWarning(jsonCont.respuesta);
 										                }
 										            }
 										            ,failure  : function()
@@ -1165,14 +1173,18 @@ Ext.onReady(function()
             ,jsonData : params
             ,success  : function(response)
             {
-                var json = Ext.decode(response.responseText);
-                if(json.exito){
+                var jsonCont = Ext.decode(response.responseText);
+                if(jsonCont.exito){
                 	mensajeCorrecto('Aviso','Contratante Guardado Correctamente.');
                 	_contratanteSaved = true;
+//                	if(Ext.isEmpty(_fieldByName('cdperson',_p_21_panelPrincipal).getValue())){
+//                		_fieldByName('cdperson',_p_21_panelPrincipal).setValue(jsonCont.smap1.cdperson);
+//                		alert(jsonCont.smap1.cdperson);
+//                	}
                 }
                 else
                 {
-                    mensajeWarning(json.respuesta);
+                    mensajeWarning(jsonCont.respuesta);
                 }
             }
             ,failure  : function()
@@ -1308,12 +1320,31 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
-    _p21_fieldRfc().on(
+    _p21_fieldRfc('cdrfc',_p_21_panelPrincipal).on(
     {
         'blur'    : _p21_rfcBlur
         ,'change' : function()
         {
-            _fieldByName('cdperson').reset();
+            _fieldByName('cdperson',_p_21_panelPrincipal).reset();
+            nmorddomProspecto = _defaultNmordomProspecto;
+        }
+    });
+    
+    _fieldByName('codpostal',_p_21_panelPrincipal).on(
+    {
+        'change' : function(combo, records, eOpts )
+        {
+        	
+        	debug('change cdpos : eOpts',eOpts);
+            nmorddomProspecto = _defaultNmordomProspecto;
+        }
+    });
+    
+    _fieldByName('cdmunici',_p_21_panelPrincipal).on(
+    {
+        'change' : function(combo, records, eOpts )
+        {
+        	debug('change cdmunici : eOpts',eOpts);
             nmorddomProspecto = _defaultNmordomProspecto;
         }
     });
@@ -4604,28 +4635,28 @@ function _p21_rfcBlur(field)
                                             {
                                                 var record = grid.getStore().getAt(rowIndex);
                                                 debug('record:',record);
-                                                _fieldByName('cdrfc').setValue(record.get('RFCCLI'));
+                                                _fieldByName('cdrfc',_p_21_panelPrincipal).setValue(record.get('RFCCLI'));
                                                 
-                                                _fieldByName('cdperson').setValue(record.get('CLAVECLI'));
+                                                _fieldByName('cdperson',_p_21_panelPrincipal).setValue(record.get('CLAVECLI'));
                                                 
-                                                _fieldByName('cdideper_').setValue(record.get('CDIDEPER'));
-                                                _fieldByName('cdideext_').setValue(record.get('CDIDEEXT'));
+                                                _fieldByName('cdideper_',_p_21_panelPrincipal).setValue(record.get('CDIDEPER'));
+                                                _fieldByName('cdideext_',_p_21_panelPrincipal).setValue(record.get('CDIDEEXT'));
                                                 
-                                                _fieldByName('nombre').setValue(record.get('NOMBRECLI'));
-                                                _fieldByName('codpostal').setValue(record.get('CODPOSTAL'));
+                                                _fieldByName('nombre',_p_21_panelPrincipal).setValue(record.get('NOMBRECLI'));
+                                                _fieldByName('codpostal',_p_21_panelPrincipal).setValue(record.get('CODPOSTAL'));
                                                 
-                                                _fieldByName('cdedo').heredar(true,function()
+                                                _fieldByName('cdedo',_p_21_panelPrincipal).heredar(true,function()
                                                 {
-                                                    _fieldByName('cdedo').setValue(record.get('CDEDO'));
-                                                    _fieldByName('cdmunici').heredar(true,function()
+                                                    _fieldByName('cdedo',_p_21_panelPrincipal).setValue(record.get('CDEDO'));
+                                                    _fieldByName('cdmunici',_p_21_panelPrincipal).heredar(true,function()
                                                     {
-                                                        _fieldByName('cdmunici').setValue(record.get('CDMUNICI'));
+                                                        _fieldByName('cdmunici',_p_21_panelPrincipal).setValue(record.get('CDMUNICI'));
                                                     });
                                                 });
                                                 
-                                                _fieldByName('dsdomici').setValue(record.get('DSDOMICIL'));
-                                                _fieldByName('nmnumero').setValue(record.get('NMNUMERO'));
-                                                _fieldByName('nmnumint').setValue(record.get('NMNUMINT'));
+                                                _fieldByName('dsdomici',_p_21_panelPrincipal).setValue(record.get('DSDOMICIL'));
+                                                _fieldByName('nmnumero',_p_21_panelPrincipal).setValue(record.get('NMNUMERO'));
+                                                _fieldByName('nmnumint',_p_21_panelPrincipal).setValue(record.get('NMNUMINT'));
                                                 
                                                 nmorddomProspecto = record.get('NMORDOM');
                                                 
@@ -4892,6 +4923,16 @@ function _p21_guardarContratante(_callbackContratante){
         {
             formContr.setLoading(false);
             try{
+            	var jsonCont = Ext.decode(response.responseText);
+				if(jsonCont.exito){
+					if(Ext.isEmpty(_fieldByName('cdperson',_p_21_panelPrincipal).getValue())){
+	            		_fieldByName('cdperson',_p_21_panelPrincipal).setValue(jsonCont.smap1.cdperson);
+	            	}
+				}else{
+					debugError('Error al guardar contratante.');
+				}
+            	
+                	
             	_callbackContratante();
             }catch(err){
             	debugError('Error',err);
@@ -4949,6 +4990,11 @@ function _p21_subirDetallePersonas()
                 var json = Ext.decode(response.responseText);
                 if(json.exito)
                 {
+                	
+                	if(Ext.isEmpty(_fieldByName('cdperson',_p_21_panelPrincipal).getValue())){
+	            		_fieldByName('cdperson',_p_21_panelPrincipal).setValue(json.smap1.cdperson);
+	            	}
+	            	
                     centrarVentanaInterna(Ext.create('Ext.window.Window',
                     {
                         title   : 'Cargar archivo de personas'

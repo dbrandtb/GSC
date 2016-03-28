@@ -11109,7 +11109,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			
 			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
 			
-			ManagerRespuestaVoidVO resp = cotizacionManager.guardarContratanteColectivo(
+			String cdpersonGuardado = cotizacionManager.guardarContratanteColectivo(
 					cdunieco
 					,cdramo
 					,estado
@@ -11128,9 +11128,16 @@ public class CotizacionAction extends PrincipalCoreAction
 					,esConfirmaEmision
 					,usuarioSesion);
 			
-			exito           = resp.isExito();
-			respuesta       = resp.getRespuesta();
-			respuestaOculta = resp.getRespuestaOculta();
+			if(StringUtils.isBlank(cdperson)){
+				smap1.put("cdperson", cdpersonGuardado);
+			}
+			
+			if(StringUtils.isBlank(cdpersonGuardado)){
+				exito =  false;
+				respuesta =  "No se guard&oacute; correctamente la informaci&oacute;n del contratante";
+			}else{
+				exito = true;
+			}
 		}
 		catch(Exception ex)
 		{
