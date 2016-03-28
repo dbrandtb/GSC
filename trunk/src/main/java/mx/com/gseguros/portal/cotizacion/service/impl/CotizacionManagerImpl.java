@@ -3754,114 +3754,114 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//contratante
-		if(resp.isExito())
-		{
-			try
-			{
-				
-				String usuarioCaptura =  null;
-				
-				if(usuarioSesion!=null){
-					if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
-						usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
-					}else{
-						usuarioCaptura = usuarioSesion.getCodigoPersona();
-					}
-					
-				}
-				
-				String swexiper = "N";
-				boolean cdpersonNuevo = StringUtils.isBlank(cdpersonCli);
-				
-				if(cdpersonNuevo){
-					cdpersonCli = personasDAO.obtenerNuevoCdperson();
-				}else{
-					Map<String,String> datosCont = this.obtieneDatosContratantePoliza(cdunieco, cdramo, "W", nmpoliza, "0");
-					if(datosCont != null && !datosCont.isEmpty() && Constantes.SI.equalsIgnoreCase(datosCont.get("SWEXIPER"))){
-						swexiper = "S";
-					}
-				}
-				
-				if(cdpersonNuevo||reinsertaContratante||censoAtrasado||resubirCenso)
-				{
-					
-					if(!Constantes.SI.equalsIgnoreCase(swexiper)){
-						personasDAO.movimientosMpersona(
-								cdpersonCli
-								,"1"         //cdtipide
-								,cdideper_   //cdideper
-								,nombreCli
-								,"1"         //cdtipper
-								,"M"         //otfisjur
-								,"H"         //otsexo
-								,new Date()  //fenacimi
-								,rfcCli
-								,""          //dsemail
-								,null        //dsnombre1
-								,null        //dsapellido
-								,null        //dsapellido1
-								,new Date()  //feingreso
-								,"001"        //cdnacion
-								,null        //canaling
-								,null        //conducto
-								,null        //ptcumupr
-								,null        //residencia
-								,null		 //nongrata
-								,cdideext_   //cdideext
-								,null		 //cdestcivil
-								,null		 //cdsucemi
-								,usuarioCaptura
-								,Constantes.INSERT_MODE
-								);
-					}
-				}
-				
-				cotizacionDAO.movimientoMpoliper(
-						cdunieco
-						,cdramo
-						,"W"
-						,nmpoliza
-						,"0"       //nmsituac
-						,"1"       //cdrol
-						,cdpersonCli
-						,"0"       //nmsuplem
-						,"V"       //status
-						,"1"       //nmorddom
-						,null      //swreclam
-						,Constantes.INSERT_MODE
-						,swexiper
-						);
-				
-				logger.debug("VALOR DE SWEXIPER : "+ swexiper);
-				
-				if(!Constantes.SI.equalsIgnoreCase(swexiper)){
-					personasDAO.movimientosMdomicil(
-							cdpersonCli
-							,"1"        //nmorddom
-							,dsdomiciCli
-							,null       //nmtelefo
-							,codpostalCli
-							,cdedoCli
-							,cdmuniciCli
-							,null       //cdcoloni
-							,nmnumeroCli
-							,nmnumintCli
-							,"1" // domicilio personal default
-							,usuarioCaptura
-							,Constantes.SI  //domicilio activo
-							,Constantes.INSERT_MODE
-							);
-				}
-			}
-            catch(Exception ex)
-            {
-            	long timestamp = System.currentTimeMillis();
-            	resp.setExito(false);
-            	resp.setRespuesta(new StringBuilder("Error al guardar el contratante #").append(timestamp).toString());
-            	resp.setRespuestaOculta(ex.getMessage());
-            	logger.error(resp.getRespuesta(),ex);
-            }
-		}
+//		if(resp.isExito())
+//		{
+//			try
+//			{
+//				
+//				String usuarioCaptura =  null;
+//				
+//				if(usuarioSesion!=null){
+//					if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
+//						usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
+//					}else{
+//						usuarioCaptura = usuarioSesion.getCodigoPersona();
+//					}
+//					
+//				}
+//				
+//				String swexiper = "N";
+//				boolean cdpersonNuevo = StringUtils.isBlank(cdpersonCli);
+//				
+//				if(cdpersonNuevo){
+//					cdpersonCli = personasDAO.obtenerNuevoCdperson();
+//				}else{
+//					Map<String,String> datosCont = this.obtieneDatosContratantePoliza(cdunieco, cdramo, "W", nmpoliza, "0");
+//					if(datosCont != null && !datosCont.isEmpty() && Constantes.SI.equalsIgnoreCase(datosCont.get("SWEXIPER"))){
+//						swexiper = "S";
+//					}
+//				}
+//				
+//				if(cdpersonNuevo||reinsertaContratante||censoAtrasado||resubirCenso)
+//				{
+//					
+//					if(!Constantes.SI.equalsIgnoreCase(swexiper)){
+//						personasDAO.movimientosMpersona(
+//								cdpersonCli
+//								,"1"         //cdtipide
+//								,cdideper_   //cdideper
+//								,nombreCli
+//								,"1"         //cdtipper
+//								,"M"         //otfisjur
+//								,"H"         //otsexo
+//								,new Date()  //fenacimi
+//								,rfcCli
+//								,""          //dsemail
+//								,null        //dsnombre1
+//								,null        //dsapellido
+//								,null        //dsapellido1
+//								,new Date()  //feingreso
+//								,"001"        //cdnacion
+//								,null        //canaling
+//								,null        //conducto
+//								,null        //ptcumupr
+//								,null        //residencia
+//								,null		 //nongrata
+//								,cdideext_   //cdideext
+//								,null		 //cdestcivil
+//								,null		 //cdsucemi
+//								,usuarioCaptura
+//								,Constantes.INSERT_MODE
+//								);
+//					}
+//				}
+//				
+//				cotizacionDAO.movimientoMpoliper(
+//						cdunieco
+//						,cdramo
+//						,"W"
+//						,nmpoliza
+//						,"0"       //nmsituac
+//						,"1"       //cdrol
+//						,cdpersonCli
+//						,"0"       //nmsuplem
+//						,"V"       //status
+//						,"1"       //nmorddom
+//						,null      //swreclam
+//						,Constantes.INSERT_MODE
+//						,swexiper
+//						);
+//				
+//				logger.debug("VALOR DE SWEXIPER : "+ swexiper);
+//				
+//				if(!Constantes.SI.equalsIgnoreCase(swexiper)){
+//					personasDAO.movimientosMdomicil(
+//							cdpersonCli
+//							,"1"        //nmorddom
+//							,dsdomiciCli
+//							,null       //nmtelefo
+//							,codpostalCli
+//							,cdedoCli
+//							,cdmuniciCli
+//							,null       //cdcoloni
+//							,nmnumeroCli
+//							,nmnumintCli
+//							,"1" // domicilio personal default
+//							,usuarioCaptura
+//							,Constantes.SI  //domicilio activo
+//							,Constantes.INSERT_MODE
+//							);
+//				}
+//			}
+//            catch(Exception ex)
+//            {
+//            	long timestamp = System.currentTimeMillis();
+//            	resp.setExito(false);
+//            	resp.setRespuesta(new StringBuilder("Error al guardar el contratante #").append(timestamp).toString());
+//            	resp.setRespuestaOculta(ex.getMessage());
+//            	logger.error(resp.getRespuesta(),ex);
+//            }
+//		}
 		
 		//tramite
 		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado))
@@ -5607,76 +5607,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 		
 		try
 		{
-			String swexiper = "N";
-			
-			if(esConfirmaEmision){
-				swexiper = "S";
+			String swexiper = Constantes.SI;
+			if(StringUtils.isBlank(cdperson)){
+				cdperson = personasDAO.obtenerNuevoCdperson();
+				swexiper = Constantes.NO; // para generar un cdperson de prospecto
 			}
 			
-			if(!esConfirmaEmision){
-				
-				if(StringUtils.isBlank(cdperson)){
-					cdperson = personasDAO.obtenerNuevoCdperson();
-				}
-				
-				String usuarioCaptura =  null;
-				
-				if(usuarioSesion!=null){
-					if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
-						usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
-					}else{
-						usuarioCaptura = usuarioSesion.getCodigoPersona();
-					}
-					
-				}
-				
-				personasDAO.movimientosMpersona(
-						cdperson
-						,"1"         //cdtipide
-						,null        //cdideper
-						,nombre
-						,"1"         //cdtipper
-						,"M"         //otfisjur
-						,"H"         //otsexo
-						,new Date()  //fenacimi
-						,rfc
-						,""          //dsemail
-						,null        //dsnombre1
-						,null        //dsapellido
-						,null        //dsapellido1
-						,new Date()  //feingreso
-						,null        //cdnacion
-						,null        //canaling
-						,null        //conducto
-						,null        //ptcumupr
-						,null        //residencia
-						,null		 //nongrata
-						,null		 //cdideext
-						,null		 //cdestcivil
-						,null		 //cdsucemi
-						,usuarioCaptura
-						,Constantes.INSERT_MODE
-						);
-				
-
-				personasDAO.movimientosMdomicil(
-						cdperson
-						,nmorddom   //nmorddom
-						,dsdomici
-						,null       //nmtelefo
-						,cdpostal
-						,cdedo
-						,cdmunici
-						,null       //cdcoloni
-						,nmnumero
-						,nmnumint
-						,"1" // domicilio personal default
-						,usuarioCaptura
-						,Constantes.SI  //domicilio activo
-						,Constantes.INSERT_MODE
-						);
-			
-			}
+			logger.debug("Asignando nuevo contratante para poliza colectiva, cdperson:"+ cdperson+" numero de domicilio: "+nmorddom);
 			
 			cotizacionDAO.borrarMpoliperSituac0(cdunieco, cdramo, estado, nmpoliza, "0", "1");
 			

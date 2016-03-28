@@ -4374,6 +4374,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		    if(!soloBD && (Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i")) 
 		    		|| Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i"))
 		    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i"))
+		    		|| (Ramo.MULTISALUD.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i")) && TipoSituacion.MULTISALUD_COLECTIVO.getCdtipsit().equalsIgnoreCase(map1.get("cdtipsit")))
 		    	) && (slist1 == null || slist1.isEmpty())){
 		    	logger.debug("Buscando RFC en WS...");
 		    	
@@ -4383,11 +4384,15 @@ public class ComplementariosAction extends PrincipalCoreAction
 		    	
 		    	String cdtipsitGS = null;
 		    	
+		    	params.put("pv_cdtipsit_i", params.get("cdtipsit"));
+		    	
 		    	if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i"))){
 		    		cdtipsitGS = kernelManager.obtenCdtipsitGS(params);
 		    	}else if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i"))
 		    			|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(map1.get("pv_cdramo_i"))
 			    	){
+		    		cdtipsitGS = kernelManager.obtenSubramoGS(params);
+		    	}else{
 		    		cdtipsitGS = kernelManager.obtenSubramoGS(params);
 		    	}
 		    	
@@ -4446,6 +4451,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		    			}
 				    	agregar.put("CDEDO", edoAdosPos);
 				    	agregar.put("CDMUNICI", "");
+				    	agregar.put("NMORDDOM", "1");// DEFAULT NUMERO DE ORDINAL DE DOMICILIO AL IMPORTAR 
 				    	agregar.put("DSDOMICIL", cli.getCalleCli());
 				    	agregar.put("NMNUMERO", cli.getNumeroCli());
 				    	agregar.put("NMNUMINT", "");
