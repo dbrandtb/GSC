@@ -82,8 +82,9 @@ public interface PersonasDAO
 	public Map<String,String> obtenerDomicilioPorCdperson(String cdperson) throws Exception;
 
 	public List<Map<String,String>> obtenerDomiciliosPorCdperson(String cdperson) throws Exception;
+	
 	/**
-	 * Obtener nuevo cdperson de PKG_SATELITES.P_GEN_CDPERSON
+	 * Obtener nuevo cdperson permanente
 	 */
 	public String obtenerNuevoCdperson() throws Exception;
 
@@ -189,6 +190,11 @@ public interface PersonasDAO
 	
 	public Map<String,String> recuperarEspPersona(String cdperson) throws Exception;
 	
+	/**
+	 * Obtiene un nuevo cdperson temporal
+	 * @return
+	 * @throws Exception
+	 */
 	public String obtieneCdperson() throws Exception;
 	
 	public void actualizaCdideper(String cdunieco, String cdramo, String estado, String nmpoliza, 
