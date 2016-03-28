@@ -7273,142 +7273,146 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		//contratante
 		logger.debug("28.- Valor de resp.exito:{}",resp.exito);
-		if(resp.exito)
-		{
-			try
-			{
+		
+		logger.debug("29,30,31,32,33,34,35,36,37.- XXX Se Quito insercion de contratante MOV_MPERSONA,MOV_MPOLIPER,MDOMICIL");
+//		if(resp.exito)
+//		{
+//			try
+//			{
+//				
+//				UserVO usuario = (UserVO) session.get("USUARIO");
+//				String usuarioCaptura =  null;
+//				
+//				if(usuario!=null){
+//					if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+//						usuarioCaptura = usuario.getClaveUsuarioCaptura();
+//					}else{
+//						usuarioCaptura = usuario.getCodigoPersona();
+//					}
+//					
+//				}
 				
-				UserVO usuario = (UserVO) session.get("USUARIO");
-				String usuarioCaptura =  null;
+//				String cdperson  = smap1.get("cdperson");
+//				String exiper    = "N";
+//				String cdideper_ = smap1.get("cdideper_");
+//				String cdideext_ = smap1.get("cdideext_");
+//				
+//				boolean nuevoCdperson = StringUtils.isBlank(cdperson);
+//				logger.debug("29.- Valor de nuevoCdperson: {}",nuevoCdperson);
+//				if(nuevoCdperson)
+//				{
+//					logger.debug("30.- storedProceduresManager.procedureParamsCall");
+//					Map<String,Object>cdpersonMap=storedProceduresManager.procedureParamsCall(
+//							ObjetoBD.GENERAR_CDPERSON.getNombre(),
+//							new LinkedHashMap<String,Object>(),
+//							null,
+//							new String[]{"pv_cdperson_o"},
+//							null);
+//					cdperson = (String)cdpersonMap.get("pv_cdperson_o");
+//				}else{
+//					logger.debug("31.- cotizacionManager.obtieneDatosContratantePoliza");
+//					Map<String,String> datosCont = cotizacionManager.obtieneDatosContratantePoliza(cdunieco, cdramo, "W", nmpoliza, "0");
+//					if(datosCont != null && !datosCont.isEmpty() && Constantes.SI.equalsIgnoreCase(datosCont.get("SWEXIPER"))){
+//						exiper = "S";
+//					}
+//				}
 				
-				if(usuario!=null){
-					if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
-						usuarioCaptura = usuario.getClaveUsuarioCaptura();
-					}else{
-						usuarioCaptura = usuario.getCodigoPersona();
-					}
-					
-				}
+//				logger.debug("32.- reinsertaContratante: {} censoAtrasado: {} resubirCenso:{} ",reinsertaContratante,censoAtrasado,resubirCenso);
+//				if(reinsertaContratante||censoAtrasado||resubirCenso)
+//				{
+//					logger.debug("33.- valor:{}", !Constantes.SI.equalsIgnoreCase(exiper));
+//					if(!Constantes.SI.equalsIgnoreCase(exiper)){
+//						LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
+//						parametros.put("param01_pv_cdperson_i"    , cdperson);
+//						parametros.put("param02_pv_cdtipide_i"    , "1");
+//						parametros.put("param03_pv_cdideper_i"    , cdideper_);
+//						parametros.put("param04_pv_dsnombre_i"    , smap1.get("nombre"));
+//						parametros.put("param05_pv_cdtipper_i"    , "1");
+//						parametros.put("param06_pv_otfisjur_i"    , "M");
+//						parametros.put("param07_pv_otsexo_i"      , "H");
+//						parametros.put("param08_pv_fenacimi_i"    , new Date());
+//						parametros.put("param09_pv_cdrfc_i"       , smap1.get("cdrfc"));
+//						parametros.put("param10_pv_dsemail_i"     , "");
+//						parametros.put("param11_pv_dsnombre1_i"   , null);
+//						parametros.put("param12_pv_dsapellido_i"  , null);
+//						parametros.put("param13_pv_dsapellido1_i" , null);
+//						parametros.put("param14_pv_feingreso_i"   , new Date());
+//						parametros.put("param15_pv_cdnacion_i"    , "001");
+//						parametros.put("param16"                  , null);
+//						parametros.put("param17"                  , null);
+//						parametros.put("param18"                  , null);
+//						parametros.put("param19"                  , null);
+//						parametros.put("param20"                  , null);
+//						parametros.put("param21"                  , cdideext_);
+//						parametros.put("param22"                  , null);
+//						parametros.put("param23"                  , null);
+//						parametros.put("param24"                  , usuarioCaptura);
+//						parametros.put("param25_pv_accion_i"      , "I");
+//						String[] tipos=new String[]{
+//								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
+//								"VARCHAR","VARCHAR","VARCHAR","DATE",
+//								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
+//								"VARCHAR","DATE"   ,"VARCHAR","VARCHAR",
+//								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
+//								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
+//								"VARCHAR"
+//						};
+//						logger.debug("33.- MOV_MPERSONA");
+//						storedProceduresManager.procedureVoidCall(ObjetoBD.MOV_MPERSONA.getNombre(), parametros, tipos);
+//					}
+//				}
 				
-				String cdperson  = smap1.get("cdperson");
-				String exiper    = "N";
-				String cdideper_ = smap1.get("cdideper_");
-				String cdideext_ = smap1.get("cdideext_");
+//				logger.debug("33,34,35,36,37.- XX Se Quito insercion de contratante MOV_MPERSONA,MOV_MPOLIPER,MDOMICIL");
 				
-				boolean nuevoCdperson = StringUtils.isBlank(cdperson);
-				logger.debug("29.- Valor de nuevoCdperson: {}",nuevoCdperson);
-				if(nuevoCdperson)
-				{
-					logger.debug("30.- storedProceduresManager.procedureParamsCall");
-					Map<String,Object>cdpersonMap=storedProceduresManager.procedureParamsCall(
-							ObjetoBD.GENERAR_CDPERSON.getNombre(),
-							new LinkedHashMap<String,Object>(),
-							null,
-							new String[]{"pv_cdperson_o"},
-							null);
-					cdperson = (String)cdpersonMap.get("pv_cdperson_o");
-				}else{
-					logger.debug("31.- cotizacionManager.obtieneDatosContratantePoliza");
-					Map<String,String> datosCont = cotizacionManager.obtieneDatosContratantePoliza(cdunieco, cdramo, "W", nmpoliza, "0");
-					if(datosCont != null && !datosCont.isEmpty() && Constantes.SI.equalsIgnoreCase(datosCont.get("SWEXIPER"))){
-						exiper = "S";
-					}
-				}
-				
-				logger.debug("32.- nuevoCdperson: {} reinsertaContratante: {} censoAtrasado: {} resubirCenso:{} ",nuevoCdperson,reinsertaContratante,censoAtrasado,resubirCenso);
-				if(nuevoCdperson||reinsertaContratante||censoAtrasado||resubirCenso)
-				{
-					logger.debug("33.- valor:{}", !Constantes.SI.equalsIgnoreCase(exiper));
-					if(!Constantes.SI.equalsIgnoreCase(exiper)){
-						LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
-						parametros.put("param01_pv_cdperson_i"    , cdperson);
-						parametros.put("param02_pv_cdtipide_i"    , "1");
-						parametros.put("param03_pv_cdideper_i"    , cdideper_);
-						parametros.put("param04_pv_dsnombre_i"    , smap1.get("nombre"));
-						parametros.put("param05_pv_cdtipper_i"    , "1");
-						parametros.put("param06_pv_otfisjur_i"    , "M");
-						parametros.put("param07_pv_otsexo_i"      , "H");
-						parametros.put("param08_pv_fenacimi_i"    , new Date());
-						parametros.put("param09_pv_cdrfc_i"       , smap1.get("cdrfc"));
-						parametros.put("param10_pv_dsemail_i"     , "");
-						parametros.put("param11_pv_dsnombre1_i"   , null);
-						parametros.put("param12_pv_dsapellido_i"  , null);
-						parametros.put("param13_pv_dsapellido1_i" , null);
-						parametros.put("param14_pv_feingreso_i"   , new Date());
-						parametros.put("param15_pv_cdnacion_i"    , "001");
-						parametros.put("param16"                  , null);
-						parametros.put("param17"                  , null);
-						parametros.put("param18"                  , null);
-						parametros.put("param19"                  , null);
-						parametros.put("param20"                  , null);
-						parametros.put("param21"                  , cdideext_);
-						parametros.put("param22"                  , null);
-						parametros.put("param23"                  , null);
-						parametros.put("param24"                  , usuarioCaptura);
-						parametros.put("param25_pv_accion_i"      , "I");
-						String[] tipos=new String[]{
-								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
-								"VARCHAR","VARCHAR","VARCHAR","DATE",
-								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
-								"VARCHAR","DATE"   ,"VARCHAR","VARCHAR",
-								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
-								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
-								"VARCHAR"
-						};
-						logger.debug("33.- MOV_MPERSONA");
-						storedProceduresManager.procedureVoidCall(ObjetoBD.MOV_MPERSONA.getNombre(), parametros, tipos);
-					}
-				}
-				
-				LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
-				parametros.put("param01_pv_cdunieco_i" , cdunieco);
-				parametros.put("param02_pv_cdramo_i"   , cdramo);
-				parametros.put("param03_pv_estado_i"   , "W");
-				parametros.put("param04_pv_nmpoliza_i" , nmpoliza);
-				parametros.put("param05_pv_nmsituac_i" , "0");
-				parametros.put("param06_pv_cdrol_i"    , "1");
-				parametros.put("param07_pv_cdperson_i" , cdperson);
-				parametros.put("param08_pv_nmsuplem_i" , "0");
-				parametros.put("param09_pv_status_i"   , "V");
-				parametros.put("param10_pv_nmorddom_i" , "1");
-				parametros.put("param11_pv_swreclam_i" , null);
-				parametros.put("param12_pv_accion_i"   , "I");
-				parametros.put("param13_pv_swexiper_i" , exiper);
-				logger.debug("34.- MOV_MPOLIPER");
-				storedProceduresManager.procedureVoidCall(ObjetoBD.MOV_MPOLIPER.getNombre(), parametros, null);
-				logger.debug("35.-VALOR DE SWEXIPER : "+ exiper);
-				
-				logger.debug("36.- validacion: {}",!Constantes.SI.equalsIgnoreCase(exiper));
-				if(!Constantes.SI.equalsIgnoreCase(exiper)){
-					Map<String,String> paramDomicil = new HashMap<String, String>();
-					paramDomicil.put("pv_cdperson_i" , cdperson);
-					paramDomicil.put("pv_nmorddom_i" , "1");
-					paramDomicil.put("pv_msdomici_i" , smap1.get("dsdomici"));
-					paramDomicil.put("pv_nmtelefo_i" , null);
-					paramDomicil.put("pv_cdpostal_i" , smap1.get("codpostal"));
-					paramDomicil.put("pv_cdedo_i"    , smap1.get("cdedo"));
-					paramDomicil.put("pv_cdmunici_i" , smap1.get("cdmunici"));
-					paramDomicil.put("pv_cdcoloni_i" , null);
-					paramDomicil.put("pv_nmnumero_i" , smap1.get("nmnumero"));
-					paramDomicil.put("pv_nmnumint_i" , smap1.get("nmnumint"));
-					paramDomicil.put("pv_cdtipdom_i", "1");
-	    			paramDomicil.put("pv_cdusuario_i", usuarioCaptura);
-	    			paramDomicil.put("pv_swactivo_i" , Constantes.SI);
-					paramDomicil.put("pv_accion_i"   , Constantes.INSERT_MODE);
-					logger.debug("37.- kernelManager.pMovMdomicil");
-					kernelManager.pMovMdomicil(paramDomicil);
-				}
-				
-			}
-			catch(Exception ex)
-			{
-				long timestamp       = System.currentTimeMillis();
-				resp.exito           = false;
-				resp.respuesta       = "Error al guardar el contratante #"+timestamp;
-				resp.respuestaOculta = ex.getMessage();
-				logger.error(respuesta,ex);
-			}
-		}
+//				LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
+//				parametros.put("param01_pv_cdunieco_i" , cdunieco);
+//				parametros.put("param02_pv_cdramo_i"   , cdramo);
+//				parametros.put("param03_pv_estado_i"   , "W");
+//				parametros.put("param04_pv_nmpoliza_i" , nmpoliza);
+//				parametros.put("param05_pv_nmsituac_i" , "0");
+//				parametros.put("param06_pv_cdrol_i"    , "1");
+//				parametros.put("param07_pv_cdperson_i" , cdperson);
+//				parametros.put("param08_pv_nmsuplem_i" , "0");
+//				parametros.put("param09_pv_status_i"   , "V");
+//				parametros.put("param10_pv_nmorddom_i" , "1");
+//				parametros.put("param11_pv_swreclam_i" , null);
+//				parametros.put("param12_pv_accion_i"   , "I");
+//				parametros.put("param13_pv_swexiper_i" , exiper);
+//				logger.debug("34.- MOV_MPOLIPER");
+//				storedProceduresManager.procedureVoidCall(ObjetoBD.MOV_MPOLIPER.getNombre(), parametros, null);
+//				logger.debug("35.-VALOR DE SWEXIPER : "+ exiper);
+//				
+//				logger.debug("36.- validacion: {}",!Constantes.SI.equalsIgnoreCase(exiper));
+//				if(!Constantes.SI.equalsIgnoreCase(exiper)){
+//					Map<String,String> paramDomicil = new HashMap<String, String>();
+//					paramDomicil.put("pv_cdperson_i" , cdperson);
+//					paramDomicil.put("pv_nmorddom_i" , "1");
+//					paramDomicil.put("pv_msdomici_i" , smap1.get("dsdomici"));
+//					paramDomicil.put("pv_nmtelefo_i" , null);
+//					paramDomicil.put("pv_cdpostal_i" , smap1.get("codpostal"));
+//					paramDomicil.put("pv_cdedo_i"    , smap1.get("cdedo"));
+//					paramDomicil.put("pv_cdmunici_i" , smap1.get("cdmunici"));
+//					paramDomicil.put("pv_cdcoloni_i" , null);
+//					paramDomicil.put("pv_nmnumero_i" , smap1.get("nmnumero"));
+//					paramDomicil.put("pv_nmnumint_i" , smap1.get("nmnumint"));
+//					paramDomicil.put("pv_cdtipdom_i", "1");
+//	    			paramDomicil.put("pv_cdusuario_i", usuarioCaptura);
+//	    			paramDomicil.put("pv_swactivo_i" , Constantes.SI);
+//					paramDomicil.put("pv_accion_i"   , Constantes.INSERT_MODE);
+//					logger.debug("37.- kernelManager.pMovMdomicil");
+//					kernelManager.pMovMdomicil(paramDomicil);
+//				}
+//				
+//			}
+//			catch(Exception ex)
+//			{
+//				long timestamp       = System.currentTimeMillis();
+//				resp.exito           = false;
+//				resp.respuesta       = "Error al guardar el contratante #"+timestamp;
+//				resp.respuestaOculta = ex.getMessage();
+//				logger.error(respuesta,ex);
+//			}
+//		}
 		
 		//tramite
 		logger.debug("38.- resp.exito:{} hayTramite:{} hayTramiteVacio: {} censoAtrasado: {}",resp.exito,hayTramite,hayTramiteVacio,censoAtrasado);
@@ -11085,6 +11089,11 @@ public class CotizacionAction extends PrincipalCoreAction
 			String nmnumero = smap1.get("nmnumero");
 			String nmnumint = smap1.get("nmnumint");
 			String nmorddom = smap1.get("nmorddom");
+			
+			if(StringUtils.isBlank(nmorddom)){
+				nmorddom =  "1"; // valor default de domicilio
+			}
+			
 			String confirmaEmision = smap1.get("confirmaEmision");
 			boolean esConfirmaEmision = (StringUtils.isNotBlank(confirmaEmision) && Constantes.SI.equalsIgnoreCase(confirmaEmision));
 			

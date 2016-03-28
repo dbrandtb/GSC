@@ -142,6 +142,9 @@ var codpostalDefinitivo;
 var cdedoDefinitivo;
 var cdmuniciDefinitivo;
 
+_defaultNmordomProspecto = '1';// valor default del numero de domicilio del prospecto
+var nmorddomProspecto = _defaultNmordomProspecto; 
+
 var expande                 = function(){};
 
 var _p21_arrayNombresFactores =
@@ -342,7 +345,7 @@ Ext.onReady(function()
     {
         extend  : 'Ext.data.Model'
         ,fields : ["RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","DISPLAY", "CDIDEPER"
-        ,'CODPOSTAL','CDEDO','CDMUNICI','DSDOMICIL','NMNUMERO','NMNUMINT']
+        ,'CODPOSTAL','CDEDO','CDMUNICI','DSDOMICIL','NMNUMERO','NMNUMINT','CDIDEEXT','NMORDDOM']
     });
     
     Ext.define('_p21_modeloExtraprima',
@@ -1311,6 +1314,7 @@ Ext.onReady(function()
         ,'change' : function()
         {
             _fieldByName('cdperson').reset();
+            nmorddomProspecto = _defaultNmordomProspecto;
         }
     });
     
@@ -1771,10 +1775,8 @@ Ext.onReady(function()
         _p21_tbloqueo(false);
     }
     
-    _fieldByName('nmnumero').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
-    _fieldByName('nmnumero').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
-    _fieldByName('nmnumint').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
-    _fieldByName('nmnumint').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
+    _fieldByName('nmnumero').regex = undefined;
+    _fieldByName('nmnumint').regex = undefined;
     
     if(!_p21_ntramite)
     {
@@ -3434,6 +3436,18 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                         debug('### generar tramite:',json);
                         if(json.exito)
                         {
+                        	/**
+                        	 * PARA EJECUTAR EL GUARDADO DEL CONTRATANTE DESPUES DE GENERAR EL NUMERO DE POLIZA
+                        	 */
+                        	var nmpolizaTmp = _p21_smap1.nmpoliza;
+                        	if(Ext.isEmpty(nmpolizaTmp)){
+                        		nmpolizaTmp = json.smap1.nmpoliza;
+                        	}
+                        	if(!Ext.isEmpty(nmpolizaTmp)){
+                        		_p21_smap1.nmpoliza = nmpolizaTmp;
+                        		_p21_guardarContratante();
+                        	}
+                        	
                             if(_p21_ntramite||_p21_ntramiteVacio)
                             {
                                 if(callback)
@@ -4590,15 +4604,14 @@ function _p21_rfcBlur(field)
                                             {
                                                 var record = grid.getStore().getAt(rowIndex);
                                                 debug('record:',record);
-                                                _fieldByName('cdrfc')    .setValue(record.get('RFCCLI'));
+                                                _fieldByName('cdrfc').setValue(record.get('RFCCLI'));
                                                 
-                                                //SE GENERA UN NUEVO CDPERSON PARA PROSPECTOS
-                                                _fieldByName('cdperson') .setValue('');
+                                                _fieldByName('cdperson').setValue(record.get('CLAVECLI'));
                                                 
                                                 _fieldByName('cdideper_').setValue(record.get('CDIDEPER'));
-                                                _fieldByName('cdideext_').setValue(record.raw.CDIDEEXT);
+                                                _fieldByName('cdideext_').setValue(record.get('CDIDEEXT'));
                                                 
-                                                _fieldByName('nombre')   .setValue(record.get('NOMBRECLI'));
+                                                _fieldByName('nombre').setValue(record.get('NOMBRECLI'));
                                                 _fieldByName('codpostal').setValue(record.get('CODPOSTAL'));
                                                 
                                                 _fieldByName('cdedo').heredar(true,function()
@@ -4610,9 +4623,12 @@ function _p21_rfcBlur(field)
                                                     });
                                                 });
                                                 
-                                                _fieldByName('dsdomici') .setValue(record.get('DSDOMICIL'));
-                                                _fieldByName('nmnumero') .setValue(record.get('NMNUMERO'));
-                                                _fieldByName('nmnumint') .setValue(record.get('NMNUMINT'));
+                                                _fieldByName('dsdomici').setValue(record.get('DSDOMICIL'));
+                                                _fieldByName('nmnumero').setValue(record.get('NMNUMERO'));
+                                                _fieldByName('nmnumint').setValue(record.get('NMNUMINT'));
+                                                
+                                                nmorddomProspecto = record.get('NMORDOM');
+                                                
                                                 /*debug('cliente obtenido de WS? ', json.clienteWS);
                                                 gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
                                                 if(json.clienteWS)
@@ -4832,6 +4848,65 @@ function _p21_estiloEditores(cdplan)
     debug('<_p21_estiloEditores');
 }
 
+function _p21_guardarContratante(_callbackContratante){
+    debug('>_p21_guardarContratante');
+    
+    var formContr = _p21_tabConcepto().down('[xtype=form]');
+    
+    var disabled = _p21_tabpanel().isDisabled();
+    if(disabled)
+    {
+        _p21_tabpanel().setDisabled(false);
+    }
+    
+    var parametros = formContr.getValues();
+    debug('valores de la forma de contratante:',parametros);
+    
+    if(disabled)
+    {
+        _p21_tabpanel().setDisabled(true);
+    }
+    
+    
+    var data = {
+        smap1 : parametros
+    };
+    
+    debug(">>>>>>>>>DATA<<<<<<<<<",data);
+    
+    data.smap1['cdunieco'] = _p21_smap1.cdunieco;
+    data.smap1['cdramo']   = _p21_smap1.cdramo;
+    data.smap1['estado']   = Ext.isEmpty(_p21_smap1.estado)?'W':_p21_smap1.estado;
+    data.smap1['nmpoliza'] = _p21_smap1.nmpoliza;
+    data.smap1['nmsuplem'] = Ext.isEmpty(_p21_smap1.nmsuplem)?'0':_p21_smap1.nmsuplem;
+    data.smap1['nmorddom'] = nmorddomProspecto;
+    
+    debug(">>>>>>>>>DATA final<<<<<<<<<",data);
+    
+    formContr.setLoading(true);
+    Ext.Ajax.request(
+    {
+        url       : _p21_urlGuardarContratanteColectivo
+        ,jsonData : data
+        ,success  : function(response)
+        {
+            formContr.setLoading(false);
+            try{
+            	_callbackContratante();
+            }catch(err){
+            	debugError('Error',err);
+            }
+        }
+        ,failure  : function()
+        {
+            formContr.setLoading(false);
+            errorComunicacion();
+        }
+    });
+    
+    debug('<_p21_guardarContratante');
+}
+
 function _p21_subirDetallePersonas()
 {
     debug('>_p21_subirDetallePersonas');
@@ -4850,11 +4925,19 @@ function _p21_subirDetallePersonas()
         {
             smap1 : form.getValues()
         };
+        
+        debug(">>>>>>>>>DATA <<<<<<<<<",data);
+        
+        
         data.smap1['cdunieco'] = _p21_smap1.cdunieco;
         data.smap1['cdramo']   = _p21_smap1.cdramo;
         data.smap1['estado']   = _p21_smap1.estado;
         data.smap1['nmpoliza'] = _p21_smap1.nmpoliza;
         data.smap1['nmsuplem'] = Ext.isEmpty(_p21_smap1.nmsuplem)?'0':_p21_smap1.nmsuplem;
+        data.smap1['nmorddom'] = nmorddomProspecto;
+        
+        debug(">>>>>>>>>DATA final<<<<<<<<<",data);
+        
         form.setLoading(true);
         Ext.Ajax.request(
         {
