@@ -6,6 +6,11 @@
 /*///////////////////*/
 var endnomStoreAseg;
 
+var _panelPrincipal;
+var _gridAsegurados;
+
+var unaPersonaMoral = false;
+
 var endnomUrlGuardar       = '<s:url namespace="/endosos" action="guardarEndosoNombres" />';
 var endnomUrlGuardarSimple = '<s:url namespace="/endosos" action="guardarEndosoNombresSimple" />';
 var endnomUrlDoc           = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" />';
@@ -105,6 +110,20 @@ Ext.onReady(function(){
 	    		debug('loaded');
    			    var indices=[];
    			    var contador=0;
+   			       			    
+   			    if(endnomStoreAseg.getTotalCount() == 1){
+	    			var aseg1 = endnomStoreAseg.getAt(0);
+	    			if(aseg1.get('tpersona') == 'M'){
+	    				unaPersonaMoral = true;
+	    				debug('_gridAsegurados: ',_gridAsegurados)
+	    				_gridAsegurados.getView().headerCt.child('[dataIndex=nombre]').setText("Raz&oacute;n Social");
+	    				_gridAsegurados.getView().headerCt.child('[dataIndex=segundo_nombre]').hide();
+	    				_gridAsegurados.getView().headerCt.child('[dataIndex=Apellido_Paterno]').hide();
+	    				_gridAsegurados.getView().headerCt.child('[dataIndex=Apellido_Materno]').hide();
+
+	    			}
+	    		}
+   			    
 	    		endnomStoreAseg.each(function(record1)
    			    {
    			        var cdperson=record1.get('cdperson');
@@ -130,6 +149,7 @@ Ext.onReady(function(){
    			        contador=contador+1;
    			    });
 	    		debug(indices);
+	    		
 	    		for(contador=indices.length-1;contador>=0;contador--)
 	    		{
 	    			debug('quitando indice','-->'+indices[contador]);
@@ -153,18 +173,9 @@ Ext.onReady(function(){
 	///////////////////////
 	////// contenido //////
 	/*///////////////////*/
-	Ext.create('Ext.panel.Panel',
-	{
-		border    : 0
-		,renderTo : 'endnomDivPri'
-		,defaults :
-		{
-		    style : 'margin : 5px;'
-		}
-	    ,items    :
-	    [
-	        
-            Ext.create('Ext.grid.Panel',
+    
+    
+    _gridAsegurados = Ext.create('Ext.grid.Panel',
 		    {
 		        title     : 'Asegurados seleccionados'
 		        ,store    : endnomStoreAseg
@@ -188,7 +199,7 @@ Ext.onReady(function(){
 		            ,{
 		                header     : 'Nombre'
 		                ,dataIndex : 'nombre'
-		                ,flex      : 1
+		                ,flex      : 3
 		                ,editor    :
 		                {
 		                    xtype : 'textfield'
@@ -197,7 +208,7 @@ Ext.onReady(function(){
 		            ,{
 		                header     : 'Segundo nombre'
 		                ,dataIndex : 'segundo_nombre'
-		                ,flex      : 1
+		                ,flex      : 3
 		                ,editor    :
 		                {
 		                    xtype : 'textfield'
@@ -206,7 +217,7 @@ Ext.onReady(function(){
 		            ,{
 		                header     : 'Apellido paterno'
 		                ,dataIndex : 'Apellido_Paterno'
-		                ,flex      : 1
+		                ,flex      : 3
 		                ,editor    :
 		                {
 		                    xtype : 'textfield'
@@ -215,7 +226,7 @@ Ext.onReady(function(){
 		            ,{
 		                header     : 'Apellido materno'
 		                ,dataIndex : 'Apellido_Materno'
-		                ,flex      : 1
+		                ,flex      : 3
 		                ,editor    :
 		                {
 		                    xtype : 'textfield'
@@ -224,14 +235,28 @@ Ext.onReady(function(){
 		            ,{
 		                header     : 'RFC'
 		                ,dataIndex : 'cdrfc'
-		                ,flex      : 1
+		                ,flex      : 2
 		                ,editor    :
 		                {
 		                    xtype : 'textfield'
 		                }
 		            }
 		        ]
-		    })
+		    });
+    
+    
+	_panelPrincipal = Ext.create('Ext.panel.Panel',
+	{
+		border    : 0
+		,renderTo : 'endnomDivPri'
+		,defaults :
+		{
+		    style : 'margin : 5px;'
+		}
+	    ,items    :
+	    [
+	        
+            _gridAsegurados
 		    ,Ext.create('Ext.form.Panel',
             {
                 title        : 'Informaci&oacute;n del endoso'

@@ -855,6 +855,9 @@ public class EndososAction extends PrincipalCoreAction
 				
 				HashMap<String,String> contratante =  new HashMap<String, String>(); 
 				contratante.put("CDPERSON", smap1.get("CDPERSON"));
+				
+				contratante.put("OTFISJUR", smap1.get("OTFISJUR"));
+
 				contratante.put("DSNOMBRE", smap1.get("DSNOMBRE"));
 				contratante.put("DSNOMBRE1", smap1.get("DSNOMBRE1"));
 				contratante.put("DSAPELLIDO", smap1.get("DSAPELLIDO"));
