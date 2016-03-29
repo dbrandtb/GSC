@@ -38,6 +38,7 @@ var _p48_colsMovimi   = [
                             {
                                 xtype    : 'actioncolumn'
                                 ,width   : 50
+                                ,hidden  : _p48_params.operacion!='baja'
                                 ,items   :
                                 [
                                     {
@@ -56,6 +57,7 @@ var _p48_colsMovimi   = [
                                 text       : 'MOV.'
                                 ,width     : 70
                                 ,dataIndex : 'MOV'
+                               	,hidden    : _p48_params.operacion!='baja'
                                 ,renderer  : function(v)
                                 {
                                     if(v=='-')
@@ -657,6 +659,7 @@ function _p48_deshacerMov(v,row,col,item,e,record)
                 {
                     title        : 'Quitar asegurado/familia'
                     ,modal       : true
+                    ,_p34_window : 'si'
                     ,html        : '<div style="padding:5px;">¿Desea quitar el asegurado o la familia?</div>'
                     ,buttonAlign : 'center'
                     ,buttons     :
@@ -801,6 +804,7 @@ function _p48_agregarFamClic()
 								name        : 'panelbusqueda',
 		                 		modal       : true,
 		                 		buttonAlign : 'center',
+		                 		_p34_window : 'si',
 		                 		width       : 1000,
 		                 		height      : 700,
 		                 		autoScroll  : true,
@@ -1154,6 +1158,7 @@ function _p48_editarAsegurado(v,row,col,item,e,record)
 	            {
 	                title  : 'EDITAR ASEGURADO'
 	                ,modal : true
+	                ,_p34_window : 'si'
 	                ,items :
 	                [
 	                    Ext.create('Ext.form.Panel',
