@@ -3193,7 +3193,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
     if(valido)
     {
         var form=_p21_tabConcepto().down('[xtype=form]');
-        form.setLoading(true);
+        //form.setLoading(true);
         var timestamp = new Date().getTime();
         
         var micallback=function()
@@ -3246,7 +3246,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                     }
                     ,success  : function(response)
                     {
-                        form.setLoading(false);
+                        //form.setLoading(false);
                         var json=Ext.decode(response.responseText);
                         debug('### generar tramite:',json);
                         if(json.exito)
@@ -3302,6 +3302,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
 	                                                    {
 	                                                        width   : 600
 	                                                        ,height : 500
+	                                                        ,_p34_window : 'si'
 	                                                        ,title  : 'Revisar asegurados del censo'
 	                                                        ,closable : false
                                                             ,listeners :
@@ -3351,6 +3352,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
 	                                                                                ,closeAction : 'destroy'
 	                                                                                ,title       : 'Errores al procesar censo'
 	                                                                                ,width       : 800
+	                                                                                ,_p34_window : 'si'
 	                                                                                ,height      : 500
 	                                                                                ,items       :
 	                                                                                [
@@ -3520,6 +3522,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
 				                                        {
 				                                            width   : 600
 				                                            ,height : 500
+				                                            ,_p34_window : 'si'
 				                                            ,title  : 'Revisar asegurados del censo'
 				                                            ,closable : false
                                                             ,listeners :
@@ -3567,6 +3570,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
 	                                                                            {
 	                                                                                modal        : true
 	                                                                                ,closeAction : 'destroy'
+                                                                                	,_p34_window : 'si'
 	                                                                                ,title       : 'Errores al procesar censo'
 	                                                                                ,width       : 800
 	                                                                                ,height      : 500
@@ -3696,6 +3700,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                                             ,title       : 'Subir documentos de tu tr&aacute;mite ('+json.smap1.ntramite+')'
                                             ,closable    : false
                                             ,modal       : true
+                                            ,_p34_window : 'si'
                                             ,loadingMask : true
                                             ,loader      :
                                             {
@@ -3745,7 +3750,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                     }
                     ,failure  : function()
                     {
-                        form.setLoading(false);
+                        //form.setLoading(false);
                         errorComunicacion();
                     }
                 });
@@ -3773,7 +3778,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                 }
                 ,failure : function()
                 {
-                    form.setLoading(false);
+                    //form.setLoading(false);
                     errorComunicacion();
                 }
             });
@@ -3820,11 +3825,11 @@ function _p21_mesacontrol(json)
     });
 }
 function _p21_recarga(status,titulo,closable){
-	mensajeCorrecto('Familia guardada'
-            ,'Familia guardada correctamente.'
+	mensajeCorrecto('Asegurados'
+            ,'Asegurado guardado correctamente.'
             ,function()
         {
-            _p21_reload(null,19,_p21_smap1.nmpoliza);
+			marendNavegacion(2);
         });
 }
 
@@ -3839,6 +3844,7 @@ function _p21_turnar(status,titulo,closable)
         ,width       : 500
         ,height      : 330
         ,modal       : true
+        ,_p34_window : 'si'
         ,closable    : closable==undefined ? true : closable
         ,items       :
         [
@@ -4109,6 +4115,7 @@ function _p21_detallesClic()
                     title       : 'Detalles de cotizaci&oacute;n'
                     ,maxHeight  : 500
                     ,width      : 650
+                    ,_p34_window : 'si'
                     ,autoScroll : true
                     ,modal      : true
                     ,bbar       :
@@ -4288,6 +4295,7 @@ function _p21_comprarClic()
                             ,modal       : true
                             ,buttonAlign : 'center'
                             ,loadingMask : true
+                            ,_p34_window : 'si'
                             ,loader      :
                             {
                                 url       : _p21_urlVentanaDocumentos
@@ -4384,7 +4392,7 @@ function _p21_rfcBlur(field)
                 debug('json response:',json);
                 if(json&&json.slist1&&json.slist1.length>0)
                 {
-                    centrarVentanaInterna(Ext.create('Ext.window.Window',
+                    /*centrarVentanaInterna(Ext.create('Ext.window.Window',
                     {
                         width        : 600
                         ,height      : 400
@@ -4465,7 +4473,7 @@ function _p21_rfcBlur(field)
                                 }
                             ]
                         })
-                    }).show());
+                    }).show());*/
                 }
                 else
                 {
@@ -4672,10 +4680,11 @@ function _p21_subirDetallePersonas()
         data.smap1['estado']   = _p21_smap1.estado;
         data.smap1['nmpoliza'] = _p21_smap1.nmpoliza;
         data.smap1['nmsuplem'] = Ext.isEmpty(_p21_smap1.nmsuplem)?'0':_p21_smap1.nmsuplem;
-        form.setLoading(true);
+        //form.setLoading(true);
         windowLoader = Ext.create('Ext.window.Window', {
             title   : 'Cargar archivo de personas'
             ,closeAction : 'hide'
+           	,_p34_window : 'si'
             ,width  : 400
             ,modal  : true
             ,items  :
@@ -4769,6 +4778,7 @@ function _p21_tbloqueo(closable,callback,retry)
                             title     : 'Cotizaci\u00F3n en proceso...'
                             ,width    : 400
                             ,height   : 150
+                            ,_p34_window : 'si'
                             ,modal    : true
                             ,closable : false
                             ,html     : '<div style="padding:5px;border:0px solid black;">'
@@ -4787,7 +4797,10 @@ function _p21_tbloqueo(closable,callback,retry)
                                 ,{
                                     text     : 'Recargar'
                                     ,icon    : '${icons}arrow_refresh.png'
-                                    ,handler : function(me){ me.up('window').setLoading(true); location.reload(); }
+                                    ,handler : function(me){ 
+                                    			//me.up('window').setLoading(true); 
+                                    			location.reload(); 
+                                  			}
                                     ,hidden  : closable
                                 }
                                 ,{
@@ -4914,7 +4927,7 @@ function _p21_tbloqueo(closable,callback,retry)
         }
         ,failure : function()
         {
-            me.setLoading(false);
+            //me.setLoading(false);
             errorComunicacion(null,'Error al contar bloqueos');
         }
     });
@@ -4956,6 +4969,7 @@ function _p21_generarVentanaVistaPrevia2(sinBotones)
             ,height   : 400
             ,closable : !Ext.isEmpty(sinBotones)&&sinBotones==true
             ,modal    : true
+            ,_p34_window : 'si'
             ,items    :
             [
                 Ext.create('Ext.tab.Panel',
@@ -5501,6 +5515,7 @@ function _p21_imprimir2()
         ,width         : 700
         ,height        : 500
         ,collapsible   : true
+        ,_p34_window   : 'si'
         ,titleCollapse : true
         ,html : '<iframe innerframe="'
                 + numRand
@@ -5538,6 +5553,7 @@ function _p21_agentes()
         ,width       : 800
         ,height      : 400
         ,autoScroll  : true
+        ,_p34_window : 'si'
         ,closeAction : 'destroy'
         ,loader      :
         {
@@ -6158,6 +6174,7 @@ function _p21_recuperarAsegurado(grid,rowIndex)
         ,width    : 600
         ,height   : 370
         ,modal    : true
+        ,_p34_window : 'si'
         ,defaults : { style : 'margin:5px;' }
         ,items    :
         [
@@ -6300,6 +6317,7 @@ function _p21_editarAsegurado(grid,rowIndex)
 					            ,autoScroll: true
 					            ,width     : 900
 					            ,height    : 900
+					            ,_p34_window : 'si'
 					            ,loader    : 
 					            {
 				                    url       : _p25_urlPantallaPersonas
@@ -6346,6 +6364,7 @@ function _p21_editarAsegurado(grid,rowIndex)
 		        ,width  : 450
 		        ,height : 400
 		        ,modal  : true
+		        ,_p34_window : 'si'
 		        ,loader : {
 	            url       : _p25_urlPantallaDomicilio
 	            ,params   :
@@ -6483,6 +6502,7 @@ function _p21_editarCoberturas(grid,row)
             ,width  : 900
             ,height : 500
             ,modal  : true
+            ,_p34_window : 'si'
             ,loader :
             {
                 url       : _p21_urlEditarCoberturas
@@ -6516,6 +6536,7 @@ function _p21_editarExclusiones(grid,row)
             ,width  : 900
             ,height : 500
             ,modal  : true
+            ,_p34_window : 'si'
             ,loader :
             {
                 url       : _p21_urlEditarExclusiones
@@ -6555,6 +6576,7 @@ function _p21_crearVentanaClausulas()
         ,width  : 800
         ,height : 500
         ,modal  : true
+        ,_p34_window : 'si'
         ,loader : {
                 url       : _p21_urlEditarExclusiones
                 ,params   :
