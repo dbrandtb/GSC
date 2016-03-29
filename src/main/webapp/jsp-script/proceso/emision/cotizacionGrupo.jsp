@@ -138,7 +138,7 @@ var _callbackAseguradoExclusiones =  function (){
    	_ventanaClausulas.close();
 };
 
-var _p_21_panelPrincipal
+var _p_21_panelPrincipal;
 
 var codpostalDefinitivo;
 var cdedoDefinitivo;
@@ -1310,7 +1310,7 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
-    _p21_fieldRfc('cdrfc',_p_21_panelPrincipal).on(
+    _fieldByName('cdrfc',_p_21_panelPrincipal).on(
     {
         'blur'    : _p21_rfcBlur
         ,'change' : function()
