@@ -636,12 +636,12 @@ function _datComTurnarSuscripcion()
 		                                        {
 		                                            type: 'ajax',
 		                                            url:urlCargarCatalogos,
-		                                            <s:if test='map1.SITUACION=="AUTO"'>
-		                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_PAGO_POLIZA_SIN_DXN"/>'},
-		                                            </s:if>
-		                                            <s:else>
-		                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_PAGO_POLIZA"/>'},
-		                                            </s:else>
+		                                            extraParams :
+		                                            {
+		                                                catalogo           : 'FORMAS_PAGO_POLIZA_POR_RAMO_TIPSIT'
+		                                                ,'params.cdramo'   : inputCdramo
+		                                                ,'params.cdtipsit' : inputCdtipsit
+		                                            },
 		                                            reader:
 		                                            {
 		                                                type: 'json',

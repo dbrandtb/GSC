@@ -194,5 +194,5 @@ public interface CatalogosManager {
 
     public List<GenericVO> obtieneMotivosReexp(String cdramo, String cdtipsit) throws Exception;
     
-    
+    public List<GenericVO> recuperarFormasDePagoPorRamoTipsit(String cdramo, String cdtipsit) throws Exception;
 }

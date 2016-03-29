@@ -825,6 +825,13 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = catalogosManager.obtieneMotivosReexp(params.get("cdramo"), params.get("cdtipsit"));
 					break;
+				case FORMAS_PAGO_POLIZA_POR_RAMO_TIPSIT:
+					if(params == null)
+					{
+						params = new HashMap<String,String>();
+					}
+					lista = catalogosManager.recuperarFormasDePagoPorRamoTipsit(params.get("cdramo"), params.get("cdtipsit"));
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

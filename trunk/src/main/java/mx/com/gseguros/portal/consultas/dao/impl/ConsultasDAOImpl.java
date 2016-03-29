@@ -4144,8 +4144,8 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		}
 	}
 	
-	public  List<Map<String,String>> recuperarListaTatrisitSinPadre(String tipsit, String atribu) throws Exception
-	{		
+	public List<Map<String,String>> recuperarListaTatrisitSinPadre(String tipsit, String atribu) throws Exception
+	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdatribu" , atribu );
 		params.put("cdtipsit" , tipsit);
@@ -4163,6 +4163,39 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdatribu" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{ "otclave", "otvalor"}; 	
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> recuperarFormasDePagoPorRamoTipsit(String cdramo, String cdtipsit) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdramo"   , cdramo  );
+		params.put("cdtipsit" , cdtipsit);
+		
+		Map<String,Object> procRes = ejecutaSP(new RecuperarFormasDePagoPorRamoTipsitSP(getDataSource()),params);
+		
+		List<Map<String,String>> list = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		
+		logger.debug(Utils.log("PKG_LISTAS.P_GET_FORMA_PAGO list=",list));
+		
+		return list;
+	}
+	
+	protected class RecuperarFormasDePagoPorRamoTipsitSP extends StoredProcedure
+	{
+		protected RecuperarFormasDePagoPorRamoTipsitSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_LISTAS.P_GET_FORMA_PAGO");
+			declareParameter(new SqlParameter("cdramo" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NMTABLA", "CDRAMO", "CDTIPSIT", "CODIGO", "DESCRIPC", "DESCRIPL"
+			}; 	
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
