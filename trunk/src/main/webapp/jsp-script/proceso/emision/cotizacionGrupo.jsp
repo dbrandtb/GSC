@@ -1320,12 +1320,28 @@ Ext.onReady(function()
         }
     });
     
+    _fieldByName('nombre',_p_21_panelPrincipal).on(
+    {
+        'select' : function()
+        {
+        	_fieldByName('cdperson',_p_21_panelPrincipal).setValue('');
+            nmorddomProspecto = _defaultNmordomProspecto;
+        }
+    });
+    
     _fieldByName('codpostal',_p_21_panelPrincipal).on(
     {
         'select' : function()
         {
-        	
-//        	debug('change cdpos : eOpts',eOpts);
+        	_fieldByName('cdperson',_p_21_panelPrincipal).setValue('');
+            nmorddomProspecto = _defaultNmordomProspecto;
+        }
+    });
+    
+    _fieldByName('cdedo',_p_21_panelPrincipal).on(
+    {
+        'select' : function()
+        {
         	_fieldByName('cdperson',_p_21_panelPrincipal).setValue('');
             nmorddomProspecto = _defaultNmordomProspecto;
         }
@@ -1335,7 +1351,6 @@ Ext.onReady(function()
     {
         'select' : function()
         {
-//        	debug('change cdmunici : eOpts',eOpts);
         	_fieldByName('cdperson',_p_21_panelPrincipal).setValue('');
             nmorddomProspecto = _defaultNmordomProspecto;
         }
