@@ -138,9 +138,14 @@ var _callbackAseguradoExclusiones =  function (){
    	_ventanaClausulas.close();
 };
 
+var _p_21_panelPrincipal;
+
 var codpostalDefinitivo;
 var cdedoDefinitivo;
 var cdmuniciDefinitivo;
+
+_defaultNmordomProspecto = undefined;// valor default del numero de domicilio del prospecto
+var nmorddomProspecto = _defaultNmordomProspecto; 
 
 var expande                 = function(){};
 
@@ -342,7 +347,7 @@ Ext.onReady(function()
     {
         extend  : 'Ext.data.Model'
         ,fields : ["RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","DISPLAY", "CDIDEPER"
-        ,'CODPOSTAL','CDEDO','CDMUNICI','DSDOMICIL','NMNUMERO','NMNUMINT']
+        ,'CODPOSTAL','CDEDO','CDMUNICI','DSDOMICIL','NMNUMERO','NMNUMINT','CDIDEEXT','NMORDDOM']
     });
     
     Ext.define('_p21_modeloExtraprima',
@@ -741,7 +746,7 @@ Ext.onReady(function()
     ////// componentes //////
     
     ////// contenido //////
-    Ext.create('Ext.tab.Panel',
+    _p_21_panelPrincipal = Ext.create('Ext.tab.Panel',
     {
         renderTo   : '_p21_divpri'
         ,itemId    : '_p21_tabpanel'
@@ -1049,14 +1054,14 @@ Ext.onReady(function()
             ,jsonData : params
             ,success  : function(response)
             {
-                var json = Ext.decode(response.responseText);
-                if(json.exito){
+                var jsonCont = Ext.decode(response.responseText);
+                if(jsonCont.exito){
                 	mensajeCorrecto('Aviso','Contratante Guardado Correctamente.');
                 	_contratanteSaved = true;
                 }
                 else
                 {
-                    mensajeWarning(json.respuesta);
+                    mensajeWarning(jsonCont.respuesta);
                 }
             }
             ,failure  : function()
@@ -1200,7 +1205,44 @@ Ext.onReady(function()
         'blur'    : _p21_rfcBlur
         ,'change' : function()
         {
-            _fieldByName('cdperson').reset();
+            _fieldByName('cdperson',_p_21_panelPrincipal).reset();
+            nmorddomProspecto = _defaultNmordomProspecto;
+        }
+    });
+    
+    _fieldByName('nombre',_p_21_panelPrincipal).on(
+    {
+        'select' : function()
+        {
+        	_fieldByName('cdperson',_p_21_panelPrincipal).setValue('');
+            nmorddomProspecto = _defaultNmordomProspecto;
+        }
+    });
+    
+    _fieldByName('codpostal',_p_21_panelPrincipal).on(
+    {
+        'select' : function()
+        {
+        	_fieldByName('cdperson',_p_21_panelPrincipal).setValue('');
+            nmorddomProspecto = _defaultNmordomProspecto;
+        }
+    });
+    
+    _fieldByName('cdedo',_p_21_panelPrincipal).on(
+    {
+        'select' : function()
+        {
+        	_fieldByName('cdperson',_p_21_panelPrincipal).setValue('');
+            nmorddomProspecto = _defaultNmordomProspecto;
+        }
+    });
+    
+    _fieldByName('cdmunici',_p_21_panelPrincipal).on(
+    {
+        'select' : function()
+        {
+        	_fieldByName('cdperson',_p_21_panelPrincipal).setValue('');
+            nmorddomProspecto = _defaultNmordomProspecto;
         }
     });
     
@@ -1632,10 +1674,8 @@ Ext.onReady(function()
         //_p21_tbloqueo(false);
     }
     
-    _fieldByName('nmnumero').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
-    _fieldByName('nmnumero').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
-    _fieldByName('nmnumint').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
-    _fieldByName('nmnumint').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
+    _fieldByName('nmnumero').regex = undefined;
+    _fieldByName('nmnumint').regex = undefined;
     
     if(!_p21_ntramite)
     {
@@ -3224,9 +3264,15 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                 conceptos['asincrono']             = asincrono;
                 
                 if(_p21_smap1.cdsisrol=='SUSCRIPTOR'&& (_p21_smap1.status-0==19 || _p21_smap1.status-0==21 || _p21_smap1.status-0==23)){
+                	
+                	conceptos.swexiper = 'S';
+                	
                 	conceptos.codpostal = codpostalDefinitivo; 
                 	conceptos.cdedo     = cdedoDefinitivo; 
-                	conceptos.cdmunici  = cdmuniciDefinitivo; 
+                	conceptos.cdmunici  = cdmuniciDefinitivo;
+                	
+                }else{
+                	conceptos.swexiper = 'N';
                 }
                 
                 var grupos = [];
@@ -4427,30 +4473,32 @@ function _p21_rfcBlur(field)
                                             {
                                                 var record = grid.getStore().getAt(rowIndex);
                                                 debug('record:',record);
-                                                _fieldByName('cdrfc')    .setValue(record.get('RFCCLI'));
+                                                _fieldByName('cdrfc',_p_21_panelPrincipal).setValue(record.get('RFCCLI'));
                                                 
-                                                //SE GENERA UN NUEVO CDPERSON PARA PROSPECTOS
-                                                _fieldByName('cdperson') .setValue('');
+//                                                _fieldByName('cdperson',_p_21_panelPrincipal).setValue(record.get('CLAVECLI'));
+                                                //se obtiene cdperson temporal para prospecto
+                                                _fieldByName('cdperson',_p_21_panelPrincipal).setValue('');
                                                 
-                                                _fieldByName('cdideper_').setValue(record.get('CDIDEPER'));
-                                                _fieldByName('cdideext_').setValue(record.raw.CDIDEEXT);
+                                                _fieldByName('cdideper_',_p_21_panelPrincipal).setValue(record.get('CDIDEPER'));
+                                                _fieldByName('cdideext_',_p_21_panelPrincipal).setValue(record.get('CDIDEEXT'));
                                                 
-                                                _fieldByName('nombre')   .setValue(record.get('NOMBRECLI'));
-                                                _fieldByName('codpostal').setValue(record.get('CODPOSTAL'));
-                                               // _fieldByName('codpostal').setReadOnly(true);
+                                                _fieldByName('nombre',_p_21_panelPrincipal).setValue(record.get('NOMBRECLI'));
+                                                _fieldByName('codpostal',_p_21_panelPrincipal).setValue(record.get('CODPOSTAL'));
                                                 
-                                                _fieldByName('cdedo').heredar(true,function()
+                                                _fieldByName('cdedo',_p_21_panelPrincipal).heredar(true,function()
                                                 {
-                                                    _fieldByName('cdedo').setValue(record.get('CDEDO'));
-                                                    _fieldByName('cdmunici').heredar(true,function()
+                                                    _fieldByName('cdedo',_p_21_panelPrincipal).setValue(record.get('CDEDO'));
+                                                    _fieldByName('cdmunici',_p_21_panelPrincipal).heredar(true,function()
                                                     {
-                                                        _fieldByName('cdmunici').setValue(record.get('CDMUNICI'));
+                                                        _fieldByName('cdmunici',_p_21_panelPrincipal).setValue(record.get('CDMUNICI'));
                                                     });
                                                 });
                                                 
-                                                _fieldByName('dsdomici') .setValue(record.get('DSDOMICIL'));
-                                                _fieldByName('nmnumero') .setValue(record.get('NMNUMERO'));
-                                                _fieldByName('nmnumint') .setValue(record.get('NMNUMINT'));
+                                                _fieldByName('dsdomici',_p_21_panelPrincipal).setValue(record.get('DSDOMICIL'));
+                                                _fieldByName('nmnumero',_p_21_panelPrincipal).setValue(record.get('NMNUMERO'));
+                                                _fieldByName('nmnumint',_p_21_panelPrincipal).setValue(record.get('NMNUMINT'));
+                                                
+                                                nmorddomProspecto = record.get('NMORDOM');
                                                 grid.up().up().destroy();
                                             }
                                         }
@@ -4675,6 +4723,10 @@ function _p21_subirDetallePersonas()
         {
             smap1 : form.getValues()
         };
+        
+        debug(">>>>>>>>> DATA <<<<<<<<<",data);
+        
+        
         data.smap1['cdunieco'] = _p21_smap1.cdunieco;
         data.smap1['cdramo']   = _p21_smap1.cdramo;
         data.smap1['estado']   = _p21_smap1.estado;
@@ -5446,6 +5498,7 @@ function _p21_imprimir()
             + '&p_suplem=0'
             + '&p_cdperpag='    + _fieldByName('cdperpag').getValue()
             + '&p_perpag='      + _fieldByName('cdperpag').getValue()
+            + '&p_usuari='      + _p21_smap1.cdusuari
             + '&p_cdplan='
             + '&destype=cache'
             + "&desformat=PDF"
@@ -5499,6 +5552,7 @@ function _p21_imprimir2()
             + '&p_suplem=0'
             + '&p_cdperpag='    + _fieldByName('cdperpag').getValue()
             + '&p_perpag='      + _fieldByName('cdperpag').getValue()
+            + '&p_usuari='      + _p21_smap1.cdusuari
             + '&p_cdplan='
             + '&destype=cache'
             + "&desformat=PDF"
@@ -5684,7 +5738,10 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                                     for(var i in datos)
                                     {
                                         var record = datos[i];
-                                        record.set('EXTPRI_OCUPACION',extrCmp.getValue());
+                                        if(record.get('PARENTESCO')=='T')
+                                        {
+                                            record.set('EXTPRI_OCUPACION',extrCmp.getValue());
+                                        }
                                     }
                                 }
                             }
@@ -5790,6 +5847,8 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                             ,null
                             ,null
                         );
+                        
+                        Ext.getStore('_p21_storeExtraprimas'+record.get('letra')).sort('NMSITUAC','ASC');
                     }
                 }
                 ,buttonAlign : 'center'
@@ -6020,6 +6079,8 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
                             ,null
                             ,null
                         );
+                        
+                        Ext.getStore('_p21_storeAsegurados'+record.get('letra')).sort('NMSITUAC','ASC');
                     }
                 }
                 ,buttonAlign : 'center'
