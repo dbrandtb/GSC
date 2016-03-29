@@ -1038,7 +1038,7 @@ Ext.onReady(function()
                             ,listeners :
                             {
                                 change : function(me)
-                                {
+                                {   var descripcion = '';
                                     var indexofPeriod = me.getValue().lastIndexOf("."),
                                     uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
                                     debug('uploadedExtension:',uploadedExtension);
@@ -1187,22 +1187,35 @@ Ext.onReady(function()
                                                                                 {
                                                                                     var encontrado = new Generic(json.lista[indiceRecuperado]);
                                                                                     var splited    = encontrado.get('value').split(' - ');
-                                                                                    debug('splited:',splited);
-                                                                                    var marca      = _p30_storeMarcasRamo5   .getAt(_p30_storeMarcasRamo5   .find('value' , splited[1],0,false,false,true)).get('key');
-                                                                                    var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('aux'   , splited[1]+'@'+splited[2],0,false,false,true)).get('key');
-                                                                                    var version    = _p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('value' , splited[4],0,false,false,true)).get('key');
-                                                                                    record.set(json.params.marcaName    , marca);
-                                                                                    record.set(json.params.submarcaName , submarca);
-                                                                                    record.set(json.params.versionName  , version);
-                                                                                    
-                                                                                    if('x'+record.get('cdtipsit')=='xCR')
+
+                                                                                    var marcaTemp = _p30_storeMarcasRamo5.find('value' , splited[1],0,false,false,true);
+                                                                                    var submarcaTemp = _p30_storeSubmarcasRamo5.find('aux'   , splited[1]+'@'+splited[2],0,false,false,true);
+                                                                                    var versionTemp = _p30_storeVersionesRamo5.find('value' , splited[4],0,false,false,true);
+                                                                                    if(marcaTemp != -1 && submarcaTemp != 1 && versionTemp != -1)
                                                                                     {
-                                                                                        var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
-                                                                                        record.set(tipoVehiName,json.lista[j].aux);
-                                                                                        //alert(record.get(tipoVehiName));
+		                                                                                  var marca     = _p30_storeMarcasRamo5.getAt(marcaTemp).get('key');
+		                                                                                  var submarca  = _p30_storeSubmarcasRamo5.getAt(submarcaTemp).get('key');
+		                                                                                  var version   = _p30_storeVersionesRamo5.getAt(versionTemp).get('key');
+		                                                                                  record.set(json.params.marcaName    , marca);
+		                                                                                  record.set(json.params.submarcaName , submarca);
+		                                                                                  record.set(json.params.versionName  , version);
+		                                                                                  
+		                                                                                  if('x'+record.get('cdtipsit')=='xCR')
+		                                                                                  {
+		                                                                                      var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
+		                                                                                      record.set(tipoVehiName,json.lista[j].aux);
+		                                                                                      //alert(record.get(tipoVehiName));
+		                                                                                  }
+		                                                                                  _p30_bufferAutos[llaveAuto]=encontrado;
                                                                                     }
-                                                                                
-                                                                                    _p30_bufferAutos[llaveAuto]=encontrado;
+                                                                                    else
+                                                                                    {
+                                                                                    	var inc = (Number(json.params.indice)+1)+'';
+                                                                                    	if (marcaTemp == -1)         {var texto ='Se ha removido la descripcion de marca del inciso '+(inc.toString());}
+                                                                                    	else if (submarcaTemp == -1) {var texto ='Se ha removido la descripcion de submarca del inciso '+(inc.toString());}
+                                                                                    	else if (versionTemp == -1)  {var texto ='Se ha removido la descripcion de version del inciso '+(inc.toString());}
+                                                                                    	descripcion = texto +'. '+ descripcion; debug('### texto descriptivo:',descripcion);
+                                                                                    }
                                                                                 }
                                                                                 else
                                                                                 {
@@ -1213,6 +1226,13 @@ Ext.onReady(function()
                                                                             {
                                                                                 errores.push('No se pudo recuperar el auto '+record.get(json.params.claveName)+' en modelo '+record.get(json.params.modeloName)+' (inciso '+record.get('nmsituac')+')');
                                                                             }
+                                                                            
+                                                                            debug('### descriptivo:',descripcion);
+                                                                            if(descripcion.length>5)
+                                                                            { 	
+                                                                                mensajeWarning(descripcion);
+                                                                            }
+                                                                            
                                                                             procesados=procesados+1;
                                                                             if(procesados==len)
                                                                             {
@@ -1397,6 +1417,7 @@ Ext.onReady(function()
                 ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
                 ,handler : function(bot)
                 {
+                	 
                     if(!Ext.isEmpty(_p30_editorCdtipsit.getValue()))
                     {
                         _p30_selectedRecord.set('cdtipsit',_p30_editorCdtipsit.getValue());
@@ -1539,7 +1560,7 @@ Ext.onReady(function()
                             _p30_paneles[json.smap1.cdtipsit].valores    = {};
                             _p30_paneles[json.smap1.cdtipsit].valoresBkp = {};
                             for(var i in json.slist1)
-                            {
+                            {   
                                 _p30_paneles[json.smap1.cdtipsit].valores['parametros.pv_otvalor'+(('00'+json.slist1[i].CDATRIBU).slice(-2))]    = json.slist1[i].VALOR;
                                 _p30_paneles[json.smap1.cdtipsit].valoresBkp['parametros.pv_otvalor'+(('00'+json.slist1[i].CDATRIBU).slice(-2))] = json.slist1[i].VALOR;
                             }
