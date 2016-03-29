@@ -1756,7 +1756,7 @@ public class EndososAction extends PrincipalCoreAction
 				clienteGeneral.setClaveCia(saludDanios);
 				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("pv_cdperson"), Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), true);
+				ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("pv_cdperson"), Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), false);
     			
 				ArrayList<Map<String,String>> saveList = new ArrayList<Map<String,String>>();
 				ArrayList<Map<String,String>> updateList = new ArrayList<Map<String,String>>();
@@ -6880,7 +6880,7 @@ public class EndososAction extends PrincipalCoreAction
 					clienteGeneral.setClaveCia(saludDanios);
 					
 					// Ejecutamos el Web Service de Cliente Salud:
-					ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, cdpersonCli, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), true);
+					ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, cdpersonCli, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), false);
 					
 					String sucursal = cdunieco;
 					//String nmsolici = listaDocu.get(0).get("nmsolici");
@@ -7272,7 +7272,7 @@ public class EndososAction extends PrincipalCoreAction
 					clienteGeneral.setClaveCia(saludDanios);
 					
 					// Ejecutamos el Web Service de Cliente Salud:
-					ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, cdperson, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), true);
+					ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, cdperson, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), false);
 //					ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 					//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 					
