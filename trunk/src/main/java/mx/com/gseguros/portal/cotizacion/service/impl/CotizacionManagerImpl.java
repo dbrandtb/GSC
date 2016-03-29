@@ -2335,6 +2335,14 @@ public class CotizacionManagerImpl implements CotizacionManager
 		ManagerRespuestaSmapVO resp=new ManagerRespuestaSmapVO(true);
 		resp.setSmap(new HashMap<String,String>());
 		
+		String swexiperCli = Constantes.NO;
+		
+		if(tvalopol !=null && !tvalopol.isEmpty() && tvalopol.containsKey("swexiper") && StringUtils.isNotBlank(tvalopol.get("swexiper"))){
+			if(Constantes.SI.equalsIgnoreCase(tvalopol.get("swexiper"))){
+				swexiperCli =  Constantes.SI;
+			}
+		}
+		
 		//nmpoliza
 		if(resp.isExito()&&StringUtils.isBlank(nmpoliza))
 		{
@@ -2491,6 +2499,47 @@ public class CotizacionManagerImpl implements CotizacionManager
 				resp.setRespuestaOculta(ex.getMessage());
 				logger.error(resp.getRespuesta(),ex);
 			}
+		}
+		
+		//contratante
+		if(resp.isExito())
+		{
+			try
+			{
+				if(StringUtils.isBlank(cdpersonCli)){
+					cdpersonCli = this.guardarContratanteColectivo(cdunieco, cdramo, "W", nmpoliza, "0", rfcCli, cdpersonCli, nombreCli,
+							codpostalCli, cdedoCli, cdmuniciCli, dsdomiciCli, nmnumeroCli, nmnumintCli, "1", false, usuarioSesion);
+					swexiperCli = Constantes.NO;
+				}
+				
+				logger.debug("Guardar Tramite Grupo 2, Guardar contratante, swexiper: "+swexiperCli);
+				cotizacionDAO.movimientoMpoliper(
+						cdunieco
+						,cdramo
+						,"W"
+						,nmpoliza
+						,"0"       //nmsituac
+						,"1"       //cdrol
+						,cdpersonCli
+						,"0"       //nmsuplem
+						,"V"       //status
+						,"1"       //nmorddom
+						,null      //swreclam
+						,Constantes.INSERT_MODE
+						,swexiperCli
+						);
+				
+				logger.debug("VALOR DE SWEXIPER : "+ swexiperCli);
+				
+			}
+            catch(Exception ex)
+            {
+            	long timestamp = System.currentTimeMillis();
+            	resp.setExito(false);
+            	resp.setRespuesta(new StringBuilder("Error al guardar el contratante #").append(timestamp).toString());
+            	resp.setRespuestaOculta(ex.getMessage());
+            	logger.error(resp.getRespuesta(),ex);
+            }
 		}
 		
 		boolean hayTramite      = StringUtils.isNotBlank(ntramite);
@@ -3752,116 +3801,6 @@ public class CotizacionManagerImpl implements CotizacionManager
             	logger.error(resp.getRespuesta(),ex);
             }
 		}
-		
-		//contratante
-//		if(resp.isExito())
-//		{
-//			try
-//			{
-//				
-//				String usuarioCaptura =  null;
-//				
-//				if(usuarioSesion!=null){
-//					if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
-//						usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
-//					}else{
-//						usuarioCaptura = usuarioSesion.getCodigoPersona();
-//					}
-//					
-//				}
-//				
-//				String swexiper = "N";
-//				boolean cdpersonNuevo = StringUtils.isBlank(cdpersonCli);
-//				
-//				if(cdpersonNuevo){
-//					cdpersonCli = personasDAO.obtenerNuevoCdperson();
-//				}else{
-//					Map<String,String> datosCont = this.obtieneDatosContratantePoliza(cdunieco, cdramo, "W", nmpoliza, "0");
-//					if(datosCont != null && !datosCont.isEmpty() && Constantes.SI.equalsIgnoreCase(datosCont.get("SWEXIPER"))){
-//						swexiper = "S";
-//					}
-//				}
-//				
-//				if(cdpersonNuevo||reinsertaContratante||censoAtrasado||resubirCenso)
-//				{
-//					
-//					if(!Constantes.SI.equalsIgnoreCase(swexiper)){
-//						personasDAO.movimientosMpersona(
-//								cdpersonCli
-//								,"1"         //cdtipide
-//								,cdideper_   //cdideper
-//								,nombreCli
-//								,"1"         //cdtipper
-//								,"M"         //otfisjur
-//								,"H"         //otsexo
-//								,new Date()  //fenacimi
-//								,rfcCli
-//								,""          //dsemail
-//								,null        //dsnombre1
-//								,null        //dsapellido
-//								,null        //dsapellido1
-//								,new Date()  //feingreso
-//								,"001"        //cdnacion
-//								,null        //canaling
-//								,null        //conducto
-//								,null        //ptcumupr
-//								,null        //residencia
-//								,null		 //nongrata
-//								,cdideext_   //cdideext
-//								,null		 //cdestcivil
-//								,null		 //cdsucemi
-//								,usuarioCaptura
-//								,Constantes.INSERT_MODE
-//								);
-//					}
-//				}
-//				
-//				cotizacionDAO.movimientoMpoliper(
-//						cdunieco
-//						,cdramo
-//						,"W"
-//						,nmpoliza
-//						,"0"       //nmsituac
-//						,"1"       //cdrol
-//						,cdpersonCli
-//						,"0"       //nmsuplem
-//						,"V"       //status
-//						,"1"       //nmorddom
-//						,null      //swreclam
-//						,Constantes.INSERT_MODE
-//						,swexiper
-//						);
-//				
-//				logger.debug("VALOR DE SWEXIPER : "+ swexiper);
-//				
-//				if(!Constantes.SI.equalsIgnoreCase(swexiper)){
-//					personasDAO.movimientosMdomicil(
-//							cdpersonCli
-//							,"1"        //nmorddom
-//							,dsdomiciCli
-//							,null       //nmtelefo
-//							,codpostalCli
-//							,cdedoCli
-//							,cdmuniciCli
-//							,null       //cdcoloni
-//							,nmnumeroCli
-//							,nmnumintCli
-//							,"1" // domicilio personal default
-//							,usuarioCaptura
-//							,Constantes.SI  //domicilio activo
-//							,Constantes.INSERT_MODE
-//							);
-//				}
-//			}
-//            catch(Exception ex)
-//            {
-//            	long timestamp = System.currentTimeMillis();
-//            	resp.setExito(false);
-//            	resp.setRespuesta(new StringBuilder("Error al guardar el contratante #").append(timestamp).toString());
-//            	resp.setRespuestaOculta(ex.getMessage());
-//            	logger.error(resp.getRespuesta(),ex);
-//            }
-//		}
 		
 		//tramite
 		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado))
@@ -5606,8 +5545,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 		try
 		{
 			String swexiper = Constantes.SI;
-			if(StringUtils.isBlank(cdperson)){
-				cdperson = personasDAO.obtenerNuevoCdperson();
+			if(!esConfirmaEmision && StringUtils.isBlank(cdperson)){
+				cdperson = personasDAO.obtieneCdperson();
 				
 				logger.debug("<<<>>> Nuevo cdperson generado <<<>>> " + cdperson);
 				swexiper = Constantes.NO; // para generar un cdperson de prospecto
@@ -5670,6 +5609,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,Constantes.INSERT_MODE
 				);
 				
+			}else if(!esConfirmaEmision && StringUtils.isNotBlank(cdperson)){
+				swexiper = Constantes.NO;
+			}if(esConfirmaEmision && StringUtils.isBlank(cdperson)){
+				logger.error("El cdperson no puede ser nulo al confirmar la emision");
+				return cdperson;
 			}
 			
 			logger.debug("Asignando contratante para poliza colectiva, cdperson:"+ cdperson+" numero de domicilio: "+nmorddom);
@@ -9227,6 +9171,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 			)throws Exception
 	{
 		cotizacionDAO.borrarRespaldoCenso(cdunieco,cdramo,nmpoliza);
+	}
+
+	@Override
+	public void borrarMpoliperSituac0(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,
+			String cdrol)throws Exception{
+		cotizacionDAO.borrarMpoliperSituac0(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdrol);
 	}
 	
 	///////////////////////////////

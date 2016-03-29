@@ -865,12 +865,6 @@ Ext.onReady(function()
 										                if(jsonCont.exito){
 										                	mensajeCorrecto('Aviso','Contratante Guardado Correctamente.');
 										                	_contratanteSaved = true;
-										                	
-//										                	if(Ext.isEmpty(_fieldByName('cdperson',_p_21_panelPrincipal).getValue())){
-//										                		_fieldByName('cdperson',_p_21_panelPrincipal).setValue(jsonCont.smap1.cdperson);
-//										                		alert(jsonCont.smap1.cdperson);
-//										                	}
-										                	
 										                }
 										                else
 										                {
@@ -1177,10 +1171,6 @@ Ext.onReady(function()
                 if(jsonCont.exito){
                 	mensajeCorrecto('Aviso','Contratante Guardado Correctamente.');
                 	_contratanteSaved = true;
-//                	if(Ext.isEmpty(_fieldByName('cdperson',_p_21_panelPrincipal).getValue())){
-//                		_fieldByName('cdperson',_p_21_panelPrincipal).setValue(jsonCont.smap1.cdperson);
-//                		alert(jsonCont.smap1.cdperson);
-//                	}
                 }
                 else
                 {
@@ -1332,19 +1322,21 @@ Ext.onReady(function()
     
     _fieldByName('codpostal',_p_21_panelPrincipal).on(
     {
-        'change' : function(combo, records, eOpts )
+        'select' : function()
         {
         	
-        	debug('change cdpos : eOpts',eOpts);
+//        	debug('change cdpos : eOpts',eOpts);
+        	_fieldByName('cdperson',_p_21_panelPrincipal).setValue('');
             nmorddomProspecto = _defaultNmordomProspecto;
         }
     });
     
     _fieldByName('cdmunici',_p_21_panelPrincipal).on(
     {
-        'change' : function(combo, records, eOpts )
+        'select' : function()
         {
-        	debug('change cdmunici : eOpts',eOpts);
+//        	debug('change cdmunici : eOpts',eOpts);
+        	_fieldByName('cdperson',_p_21_panelPrincipal).setValue('');
             nmorddomProspecto = _defaultNmordomProspecto;
         }
     });
@@ -3440,10 +3432,18 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                 conceptos['asincrono']             = asincrono;
                 
                 if(_p21_smap1.cdsisrol=='SUSCRIPTOR'&& (_p21_smap1.status-0==19 || _p21_smap1.status-0==21 || _p21_smap1.status-0==23)){
+                	
+                	conceptos.swexiper = 'S';
+                	
                 	conceptos.codpostal = codpostalDefinitivo; 
                 	conceptos.cdedo     = cdedoDefinitivo; 
-                	conceptos.cdmunici  = cdmuniciDefinitivo; 
+                	conceptos.cdmunici  = cdmuniciDefinitivo;
+                	
+                }else{
+                	conceptos.swexiper = 'N';
                 }
+                
+//                alert('exiper' + conceptos.swexiper);
                 
                 var grupos = [];
                 _p21_storeGrupos.each(function(record)
@@ -3467,18 +3467,6 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                         debug('### generar tramite:',json);
                         if(json.exito)
                         {
-                        	/**
-                        	 * PARA EJECUTAR EL GUARDADO DEL CONTRATANTE DESPUES DE GENERAR EL NUMERO DE POLIZA
-                        	 */
-                        	var nmpolizaTmp = _p21_smap1.nmpoliza;
-                        	if(Ext.isEmpty(nmpolizaTmp)){
-                        		nmpolizaTmp = json.smap1.nmpoliza;
-                        	}
-                        	if(!Ext.isEmpty(nmpolizaTmp)){
-                        		_p21_smap1.nmpoliza = nmpolizaTmp;
-                        		_p21_guardarContratante();
-                        	}
-                        	
                             if(_p21_ntramite||_p21_ntramiteVacio)
                             {
                                 if(callback)
@@ -4637,7 +4625,9 @@ function _p21_rfcBlur(field)
                                                 debug('record:',record);
                                                 _fieldByName('cdrfc',_p_21_panelPrincipal).setValue(record.get('RFCCLI'));
                                                 
-                                                _fieldByName('cdperson',_p_21_panelPrincipal).setValue(record.get('CLAVECLI'));
+//                                                _fieldByName('cdperson',_p_21_panelPrincipal).setValue(record.get('CLAVECLI'));
+                                                //se obtiene cdperson temporal para prospecto
+                                                _fieldByName('cdperson',_p_21_panelPrincipal).setValue('');
                                                 
                                                 _fieldByName('cdideper_',_p_21_panelPrincipal).setValue(record.get('CDIDEPER'));
                                                 _fieldByName('cdideext_',_p_21_panelPrincipal).setValue(record.get('CDIDEEXT'));
@@ -4879,75 +4869,6 @@ function _p21_estiloEditores(cdplan)
     debug('<_p21_estiloEditores');
 }
 
-function _p21_guardarContratante(_callbackContratante){
-    debug('>_p21_guardarContratante');
-    
-    var formContr = _p21_tabConcepto().down('[xtype=form]');
-    
-    var disabled = _p21_tabpanel().isDisabled();
-    if(disabled)
-    {
-        _p21_tabpanel().setDisabled(false);
-    }
-    
-    var parametros = formContr.getValues();
-    debug('valores de la forma de contratante:',parametros);
-    
-    if(disabled)
-    {
-        _p21_tabpanel().setDisabled(true);
-    }
-    
-    
-    var data = {
-        smap1 : parametros
-    };
-    
-    debug(">>>>>>>>>DATA<<<<<<<<<",data);
-    
-    data.smap1['cdunieco'] = _p21_smap1.cdunieco;
-    data.smap1['cdramo']   = _p21_smap1.cdramo;
-    data.smap1['estado']   = Ext.isEmpty(_p21_smap1.estado)?'W':_p21_smap1.estado;
-    data.smap1['nmpoliza'] = _p21_smap1.nmpoliza;
-    data.smap1['nmsuplem'] = Ext.isEmpty(_p21_smap1.nmsuplem)?'0':_p21_smap1.nmsuplem;
-    data.smap1['nmorddom'] = nmorddomProspecto;
-    
-    debug(">>>>>>>>>DATA final<<<<<<<<<",data);
-    
-    formContr.setLoading(true);
-    Ext.Ajax.request(
-    {
-        url       : _p21_urlGuardarContratanteColectivo
-        ,jsonData : data
-        ,success  : function(response)
-        {
-            formContr.setLoading(false);
-            try{
-            	var jsonCont = Ext.decode(response.responseText);
-				if(jsonCont.exito){
-					if(Ext.isEmpty(_fieldByName('cdperson',_p_21_panelPrincipal).getValue())){
-	            		_fieldByName('cdperson',_p_21_panelPrincipal).setValue(jsonCont.smap1.cdperson);
-	            	}
-				}else{
-					debugError('Error al guardar contratante.');
-				}
-            	
-                	
-            	_callbackContratante();
-            }catch(err){
-            	debugError('Error',err);
-            }
-        }
-        ,failure  : function()
-        {
-            formContr.setLoading(false);
-            errorComunicacion();
-        }
-    });
-    
-    debug('<_p21_guardarContratante');
-}
-
 function _p21_subirDetallePersonas()
 {
     debug('>_p21_subirDetallePersonas');
@@ -4967,7 +4888,7 @@ function _p21_subirDetallePersonas()
             smap1 : form.getValues()
         };
         
-        debug(">>>>>>>>>DATA <<<<<<<<<",data);
+        debug(">>>>>>>>> DATA <<<<<<<<<",data);
         
         
         data.smap1['cdunieco'] = _p21_smap1.cdunieco;
@@ -4975,9 +4896,10 @@ function _p21_subirDetallePersonas()
         data.smap1['estado']   = _p21_smap1.estado;
         data.smap1['nmpoliza'] = _p21_smap1.nmpoliza;
         data.smap1['nmsuplem'] = Ext.isEmpty(_p21_smap1.nmsuplem)?'0':_p21_smap1.nmsuplem;
+        data.smap1['confirmaEmision'] = 'N';
         data.smap1['nmorddom'] = nmorddomProspecto;
         
-        debug(">>>>>>>>>DATA final<<<<<<<<<",data);
+        debug(">>>>>>>>> DATA final<<<<<<<<<",data);
         
         form.setLoading(true);
         Ext.Ajax.request(
@@ -4990,7 +4912,6 @@ function _p21_subirDetallePersonas()
                 var json = Ext.decode(response.responseText);
                 if(json.exito)
                 {
-                	
                 	if(Ext.isEmpty(_fieldByName('cdperson',_p_21_panelPrincipal).getValue())){
 	            		_fieldByName('cdperson',_p_21_panelPrincipal).setValue(json.smap1.cdperson);
 	            	}
