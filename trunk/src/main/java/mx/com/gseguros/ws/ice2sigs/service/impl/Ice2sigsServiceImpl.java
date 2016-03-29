@@ -476,8 +476,15 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 						String claveCia = cliente.getClaveCia();
 						String numExt   = cliente.getNumeroExterno();
 						cliente = ((ArrayList<ClienteGeneral>) result.getItemList()).get(0);
-						cliente.setClaveCia(claveCia);
-						cliente.setNumeroExterno(numExt);
+						
+						if(StringUtils.isNotBlank(claveCia)){
+							cliente.setClaveCia(claveCia);
+						}
+						
+						if(StringUtils.isBlank(cliente.getNumeroExterno()) && StringUtils.isNotBlank(numExt)){
+							cliente.setNumeroExterno(numExt);
+						}
+						
 					}else{
 						cliente = ((ArrayList<ClienteGeneral>) result.getItemList()).get(0);
 					}
