@@ -1597,4 +1597,45 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO> recuperarFormasDePagoPorRamoTipsit(String cdramo, String cdtipsit) throws Exception
+	{
+
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarFormasDePagoPorRamoTipsit @@@@@@"
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ cdtipsit=" , cdtipsit
+				));
+		
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		
+		String paso = null;
+		
+		try
+		{
+			paso = "Obtieniendo lista de formas de pago por ramo y tipsit";
+			logger.debug(paso);
+			
+			List<Map<String,String>> formasPago = consultasDAO.recuperarFormasDePagoPorRamoTipsit(cdramo,cdtipsit);
+			
+			for(Map<String,String>elemento:formasPago)
+			{
+				lista.add(new GenericVO(elemento.get("CODIGO"),elemento.get("DESCRIPC")));
+			}
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista=", lista
+				,"\n@@@@@@ recuperarFormasDePagoPorRamoTipsit @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
 }
