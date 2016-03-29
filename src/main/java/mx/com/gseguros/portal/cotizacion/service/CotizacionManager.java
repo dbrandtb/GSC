@@ -784,5 +784,8 @@ public interface CotizacionManager
 			,String cdramo
 			,String nmpoliza
 			)throws Exception;
+
+	public void borrarMpoliperSituac0(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,
+			String cdrol)throws Exception;
 	
 }

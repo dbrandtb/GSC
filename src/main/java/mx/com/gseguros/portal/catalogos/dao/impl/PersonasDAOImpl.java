@@ -1399,7 +1399,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		protected ObtieneCdpersonSP(DataSource dataSource) {
 			
 			super(dataSource, "PKG_COTIZA.P_GET_CDPERSON");
-			declareParameter(new SqlOutParameter("pv_cdperson_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_cdperson_o", OracleTypes.VARCHAR));
 		    declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
 		    declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			compile();
