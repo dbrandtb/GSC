@@ -40,6 +40,8 @@ import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.service.CatalogosManager;
+import mx.com.gseguros.portal.general.util.CatalogosAction;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoTramite;
@@ -86,6 +88,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	private MesaControlDAO mesaControlDAO;
 
 	private EndososDAO     endososDAO;
+	
+	@Autowired
+	private transient CatalogosManager catalogosManager;
 	
 	@Autowired
 	private transient CotizacionManager cotizacionManager;
@@ -2846,6 +2851,69 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.toString()
 				);
 		return resp;
+	}
+	
+	//Segun negocio valida inciso del archivo 
+	@Override
+	public List<Map<String,String>> validaExcelCdtipsitXNegocio(String tipoflot, String negocio, List<Map<String,String>> slistPYME) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ validaExcelCdtipsitXNegocio @@@@@@"
+				,"\n@@@@@@ slistPYME=" , slistPYME
+				,"\n@@@@@@ Producto =" , tipoflot
+				,"\n@@@@@@ Negocio =" , negocio
+				));
+		
+		String paso = null;
+		
+		try
+		{ // 7,P
+			List<GenericVO> listCdtipsitXNegocio = catalogosManager.cargarTiposSituacionPorNegocioRamo5(negocio, tipoflot);
+			
+			logger.debug(Utils.log("Vils tipos de vehiculo: ",listCdtipsitXNegocio));
+			
+			if(listCdtipsitXNegocio == null)
+			{
+				return slistPYME;
+			}
+			
+			String autosValidos = " ";
+			for(GenericVO valido : listCdtipsitXNegocio)
+			{
+				autosValidos += valido.getKey()+" ";
+			}
+			
+			paso = "Iterando incisos pyme para validacion del Negocio";
+			logger.debug(paso);
+
+			Integer tamanio = slistPYME.size();
+			
+			for(int i=0; i<tamanio ;i++)
+		    { 				
+				if(slistPYME.get(i).keySet()!=null)
+				{
+					String valorInciso = slistPYME.get(i).get("cdtipsit");
+					logger.debug(Utils.log("Vils Inciso y Valor: ",valorInciso,"-",autosValidos));
+					int valido = autosValidos.indexOf(valorInciso); 
+					if(valido == -1)
+					{int e = i;
+					 slistPYME.remove(e);
+					 i--;
+					 tamanio--;}	
+				}
+		    }
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex,paso);
+		}
+		logger.debug(Utils.log(
+				 "\n@@@@@@ slistPYME=" , slistPYME
+				,"\n@@@@@@ validaExcelCdtipsitXNegocio @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return slistPYME;
 	}
 	
 	//Para consultar los valores del vehiculo y reemplazarlos de la lista 
