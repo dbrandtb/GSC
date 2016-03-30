@@ -4,6 +4,12 @@ var gridDatosAsegurado;
 var windowCoberturas;
 
 Ext.onReady(function() {
+	
+    // Se aumenta el timeout para todas las peticiones:
+    Ext.Ajax.timeout = 1*1000*60;
+    Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+    Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+    Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
 
     Ext.selection.CheckboxModel.override({
         mode: 'SINGLE',
@@ -681,6 +687,9 @@ Ext.onReady(function() {
         id      : 'gridDatosAsegurado',
         width   : 950,
         autoScroll:true,
+        //width   : 900,
+        //height  : 350,
+        //autoScroll:true,
         items:[{
            xtype:'textfield', name:'cdrfc', fieldLabel: 'RFC', readOnly: true, labelWidth: 120
         }],
@@ -771,12 +780,29 @@ Ext.onReady(function() {
                     values['params.nmsituac']=record.get('nmsituac');
                     values['params.cdtipsit']=record.get('cdtipsit');
                     debug('parametros para obtener los datos de tatrisit:', values);
-                    // Se invoca al loader del panel que contendrá los datos de tatrisit:
-                    var pnlDatosTatrisit = tabDatosGeneralesPoliza.down('panel[name=pnlDatosTatrisit]');
-                    pnlDatosTatrisit.getLoader().load({
-                        params: values
-                    });
-                    pnlDatosTatrisit.setTitle('Detalle de ' + record.get('nombre') + ':');
+                	
+                	// Se crea ventana para mostrar el detalle del asegurado:
+                	Ext.create('Ext.window.Window', {
+                		title       : 'Detalle de ' + record.get('nombre') + ':',
+                        modal       : true,
+                        width       : 600,
+                        items: [{
+                            xtype  : 'panel',
+                            name   : 'pnlDatosTatrisit',
+                            autoScroll  : true,
+                            loader: {
+                                url : _URL_LOADER_VER_TATRISIT,
+                                scripts  : true,
+                                loadMask : true,
+                                autoLoad : true,
+                                ajaxOptions : {
+                                    method: 'POST'
+                                },
+                                params: values
+                            }
+                        }]
+                    }).show();
+                	
                 }
             },{
                 xtype        : 'actioncolumn',
@@ -1041,28 +1067,7 @@ Ext.onReady(function() {
             title: 'ASEGURADOS',
             itemId: 'tabDatosAsegurados',
             items:[
-                gridDatosAsegurado, 
-                {
-                    xtype  : 'panel',
-                    name   : 'pnlDatosTatrisit',
-                    titleAlign: 'center',
-                    height : 900,
-                    loader: {
-                        url: _URL_LOADER_VER_TATRISIT,
-                        scripts  : true,
-                        loadMask : true,
-                        autoLoad : false,
-                        ajaxOptions: {
-                            method: 'POST'
-                        },
-                        listeners:{
-                        	load: function(){
-                        		var pnlDatosTatrisit = tabDatosGeneralesPoliza.down('panel[name=pnlDatosTatrisit]');
-                        		pnlDatosTatrisit.getHeader().focus(false,200);
-                        	}
-                        }
-                    }
-                }
+                gridDatosAsegurado
             ]
         }, {
             itemId: 'tbDocumentos',
@@ -1689,8 +1694,6 @@ Ext.onReady(function() {
         gridCopagosPoliza.getStore().removeAll();
         gridDatosAsegurado.getStore().removeAll();
         //Limpiamos seccion de Datos de tatrisit:
-        tabDatosGeneralesPoliza.down('panel[name=pnlDatosTatrisit]').setTitle('');
-        tabDatosGeneralesPoliza.down('panel[name=pnlDatosTatrisit]').update('');
         tabDatosGeneralesPoliza.setActiveTab(0);
         tabPanelAgentes.setActiveTab(0);
         tabDatosGeneralesPoliza.hide();
