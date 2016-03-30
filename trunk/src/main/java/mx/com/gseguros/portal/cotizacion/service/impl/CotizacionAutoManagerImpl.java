@@ -2873,8 +2873,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			
 			logger.debug(Utils.log("Vils tipos de vehiculo: ",listCdtipsitXNegocio));
 			
-			if(listCdtipsitXNegocio == null)
+			if(listCdtipsitXNegocio.isEmpty())
 			{
+				slistPYME.clear();
 				return slistPYME;
 			}
 			
