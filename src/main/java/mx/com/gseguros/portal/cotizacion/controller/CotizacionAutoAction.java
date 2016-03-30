@@ -1091,6 +1091,12 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			//Elimina incisos que no correspondan al negocio seleccionado
 			resp.setSlist(cotizacionAutoManager.validaExcelCdtipsitXNegocio(tipoflot,negocio,resp.getSlist()));
 			
+			if(resp.getSlist().isEmpty())
+			{
+				respuesta="Sin incisos por tipo de negocio";
+				throw new ApplicationException(respuesta);
+			}
+			
 			//Para modificar solo PYMES ignorando el valor de vehiculo y haciendo consulta
 			if(tipoflot.equals("P"))
 			{
