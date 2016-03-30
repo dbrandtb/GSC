@@ -8485,7 +8485,7 @@ public class EndososAction extends PrincipalCoreAction
 						usuarioTramite = " asignado a: "+(String)res.get("NOMBRE");
 					}
 					
-					usuarioTramite+=" en suscripci\u00F3n";
+					usuarioTramite+=" en suscripci\u00F3n t&eacute;cnica para su recotizaci&oacute;n";
 				}else{
 					Map<String, Object> res =  siniestrosManager.moverTramite(ntramiteNuevaPoliza, EstatusTramite.TRAMITE_COMPLETO.getCodigo(), "Se Reexpide Poliza del tramite original: "+ ntramite , usuario.getUser(), usuario.getRolActivo().getClave(), 
 							null, RolSistema.SUSCRIPTOR.getCdsisrol(), null, null, "N", timestamp);
@@ -8494,7 +8494,7 @@ public class EndososAction extends PrincipalCoreAction
 						usuarioTramite = " asignado a: "+(String)res.get("NOMBRE");
 					}
 					
-					usuarioTramite+=" en suscripci\u00F3n";
+					usuarioTramite+=" en suscripci\u00F3n de emisi&oacute;n para su reexpedici&oacute;n";
 					
 				}
 			}
