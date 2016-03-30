@@ -1058,16 +1058,19 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			       ,cdtipsit = smap1.get("cdtipsit")
 			       ,respetar = smap1.get("tomarMasiva")
 			       ,tipoflot = smap1.get("tipoflot")
-			       ,cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			       ,cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+			       ,negocio  = smap1.get("negocio");
 			
 			logger.debug(Utils.join(
 					"\n VILS tipoflot="  , tipoflot
 					,"\n VILS cdsisrol=" , cdsisrol
+					,"\n VILS negociol=" , negocio
 					));
 
 			Utils.validate(
 					cdramo    , "No se recibi\u00f3 el producto"
 					,cdtipsit , "No se recibi\u00f3 la modalidad"
+					,negocio, "No se recibio negocio"
 					);
 			
 			Utils.validate(excel, "No se recibi\u00f3 el archivo");
@@ -1084,6 +1087,9 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 
 			//Pone vacio en los valores desc/rec de la lista
 			resp.setSlist(cotizacionAutoManager.validaVacioDescRecg(resp.getSlist()));
+			
+			//Elimina incisos que no correspondan al negocio seleccionado
+			resp.setSlist(cotizacionAutoManager.validaExcelCdtipsitXNegocio(tipoflot,negocio,resp.getSlist()));
 			
 			//Para modificar solo PYMES ignorando el valor de vehiculo y haciendo consulta
 			if(tipoflot.equals("P"))
