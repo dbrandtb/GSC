@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.tmp.MensajesVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
@@ -1090,11 +1091,20 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			
 			//Elimina incisos que no correspondan al negocio seleccionado
 			resp.setSlist(cotizacionAutoManager.validaExcelCdtipsitXNegocio(tipoflot,negocio,resp.getSlist()));
-			
 			if(resp.getSlist().isEmpty())
 			{
 				respuesta="Sin incisos por tipo de negocio";
 				throw new ApplicationException(respuesta);
+			}
+			else
+			{
+				int lugarMensaje = resp.getSlist().size();
+				Map<String, String> msn = resp.getSlist().get(lugarMensaje-1);
+				if(msn.get("removidos") != null) 
+				{
+				respuestaOculta = "Se quitaron los incisos"+msn.get("removidos")+" por no corresponder al tipo de negocio seleccionado";
+				resp.getSlist().remove(lugarMensaje-1);
+				}
 			}
 			
 			//Para modificar solo PYMES ignorando el valor de vehiculo y haciendo consulta
