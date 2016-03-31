@@ -1109,6 +1109,12 @@ Ext.onReady(function()
                                                 {
                                                     var mrecords = [];
                                                     var msnIncInv = json.respuestaOculta;
+                                                    
+                                                    if(Ext.isEmpty(json.slist1))
+                                                    {
+                                                    	mensajeWarning(msnIncInv);	
+                                                    }
+                                                    
                                                     for(var i in json.slist1)
                                                     {
                                                         var record=new _p30_modelo(json.slist1[i]);
@@ -1212,10 +1218,10 @@ Ext.onReady(function()
                                                                                     else
                                                                                     {
                                                                                     	var inc = (Number(json.params.indice)+1)+'';
-                                                                                    	if (marcaTemp == -1)         {var texto ='Se ha removido la descripcion de marca del inciso '+(inc.toString());}
-                                                                                    	else if (submarcaTemp == -1) {var texto ='Se ha removido la descripcion de submarca del inciso '+(inc.toString());}
-                                                                                    	else if (versionTemp == -1)  {var texto ='Se ha removido la descripcion de version del inciso '+(inc.toString());}
-                                                                                    	descripcion = texto +'. '+ descripcion; debug('### texto descriptivo:',descripcion);
+                                                                                    	if (marcaTemp == -1)         {var texto ='Se ha removido la descripcion de marca del inciso '+(inc.toString())+"<br/>";}
+                                                                                    	else if (submarcaTemp == -1) {var texto ='Se ha removido la descripcion de submarca del inciso '+(inc.toString())+"<br/>";}
+                                                                                    	else if (versionTemp == -1)  {var texto ='Se ha removido la descripcion de version del inciso '+(inc.toString())+"<br/>";}
+                                                                                    	descripcion = texto + descripcion; debug('### texto descriptivo:',descripcion);
                                                                                     }
                                                                                 }
                                                                                 else
