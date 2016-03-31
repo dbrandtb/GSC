@@ -361,23 +361,28 @@ Ext.onReady(function(){
             }
         ]
     });
-    var combocoloni=formPanelp4.items.items[2].items.items[4];
+    var combocoloni=_fieldByName('smap1.CDCOLONI',formPanelp4);
     combocoloni.setEditable(true);
     //combocoloni.forceSelection=false;
     
+    //Si es un producto de salud
     if((inputCdramop4+'x')=='2x'||(inputCdramop4+'x')=='4x')
     {
+    	//si es la situacion de un titular que no es contratante o de un asegurado
 	    if(inputNmsituacp4>0)//si es asegurado solo puede leer cp, estado y municipio
 	    {
-	    	if(inputCdtipsitp4!='MS')
+	    	
+//	    	se bloquean los campos para los productos que no son de multisalud 
+	    	if(inputCdtipsitp4 != 'MS')
 	    	{
-	    		formPanelp4.items.items[2].items.items[1].setReadOnly(true);//cp
+	    		_fieldByName('smap1.CODPOSTAL',formPanelp4).setReadOnly(true);//cp
+	    		_fieldByName('smap1.CDEDO',formPanelp4).setReadOnly(true);//estado
+	    		_fieldByName('smap1.CDMUNICI',formPanelp4).setReadOnly(true);//municipio
 	    	}
-	    	formPanelp4.items.items[2].items.items[2].setReadOnly(true);//estado
-	    	formPanelp4.items.items[2].items.items[3].setReadOnly(true);//municipio
 	    }
     }else if( ((inputCdramop4+'x')=='16x' || (inputCdramop4+'x')=='6x') && inputCdrolp4 == "1" && !Ext.isEmpty(inputCdideperp4)){
     	
+    	//si es un producto de autos fronterizos o servicio publico se bloque solo el campo del codigo postal
     	formPanelp4.items.items[2].items.items.forEach(function(element, index, array){
     		debug('elem ITerada: ', element);
     		if('smap1.CODPOSTAL' == element.name ){
@@ -389,28 +394,28 @@ Ext.onReady(function(){
     }
     
     //establecer cargar colonia al cambiar cod pos
-    formPanelp4.items.items[2].items.items[1].on('blur',function()
+    _fieldByName('smap1.CODPOSTAL',formPanelp4).on('blur',function()
     {
         debug('cod pos change');
-        formPanelp4.items.items[2].items.items[4].getStore().load(
+        _fieldByName('smap1.CDCOLONI',formPanelp4).getStore().load(
         {
             params :
             {
-                'params.cp' : formPanelp4.items.items[2].items.items[1].getValue()
+                'params.cp' : _fieldByName('smap1.CODPOSTAL',formPanelp4).getValue()
             }
             ,callback : function()
             {
                 var hay=false;
-                formPanelp4.items.items[2].items.items[4].getStore().each(function(record)
+                _fieldByName('smap1.CDCOLONI',formPanelp4).getStore().each(function(record)
                 {
-                    if(formPanelp4.items.items[2].items.items[4].getValue()==record.get('key'))
+                    if(_fieldByName('smap1.CDCOLONI',formPanelp4).getValue()==record.get('key'))
                     {
                         hay=true;
                     }
                 });
                 if(!hay)
                 {
-                	formPanelp4.items.items[2].items.items[4].setValue('');
+                	_fieldByName('smap1.CDCOLONI',formPanelp4).setValue('');
                 }
             }
         });
@@ -581,10 +586,10 @@ Ext.onReady(function(){
     });
     
     if(Ext.isEmpty(inputCdideperp4)){
-    	_fieldByName('smap1.NMNUMERO').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
-        _fieldByName('smap1.NMNUMERO').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
-        _fieldByName('smap1.NMNUMINT').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
-        _fieldByName('smap1.NMNUMINT').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';    	
+    	_fieldByName('smap1.NMNUMERO',formPanelp4).regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+        _fieldByName('smap1.NMNUMERO',formPanelp4).regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
+        _fieldByName('smap1.NMNUMINT',formPanelp4).regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
+        _fieldByName('smap1.NMNUMINT',formPanelp4).regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';    	
     }
     
     /*//////////////////*/
