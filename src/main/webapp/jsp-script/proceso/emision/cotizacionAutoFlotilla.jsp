@@ -1038,7 +1038,7 @@ Ext.onReady(function()
                             ,listeners :
                             {
                                 change : function(me)
-                                {   var descripcion = '';
+                                {   var descripcion ='-';
                                     var indexofPeriod = me.getValue().lastIndexOf("."),
                                     uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
                                     debug('uploadedExtension:',uploadedExtension);
@@ -1098,6 +1098,7 @@ Ext.onReady(function()
                                                 ,'smap1.tipoflot' : _p30_smap1.tipoflot
                                                 ,'smap1.codpos'   : postalVal
                                                 ,'smap1.cambio'   : _p30_precioDolarDia
+                                                ,'smap1.negocio'  : _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue()
                                             }
                                             ,success : function(form,action)
                                             {
@@ -1107,7 +1108,7 @@ Ext.onReady(function()
                                                 if(json.exito)
                                                 {
                                                     var mrecords = [];
-                                                    
+                                                    var msnIncInv = json.respuestaOculta;
                                                     for(var i in json.slist1)
                                                     {
                                                         var record=new _p30_modelo(json.slist1[i]);
@@ -1228,9 +1229,14 @@ Ext.onReady(function()
                                                                             }
                                                                             
                                                                             debug('### descriptivo:',descripcion);
+                                //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                                                                             if(descripcion.length>5)
                                                                             { 	
-                                                                                mensajeWarning(descripcion);
+                                                                            	mensajeWarning(descripcion);
+                                                                            	if(msnIncInv != null)
+                                                                            	{
+                                                                            		mensajeWarning(descripcion + msnIncInv);
+                                                                            	}
                                                                             }
                                                                             
                                                                             procesados=procesados+1;
@@ -1312,6 +1318,7 @@ Ext.onReady(function()
                                                 {
                                                     mensajeError(json.respuesta);
                                                 }
+                                                
                                             }
                                             ,failure : function()
                                             {
