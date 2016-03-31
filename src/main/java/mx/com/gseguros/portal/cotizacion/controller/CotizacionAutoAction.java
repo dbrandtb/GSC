@@ -1092,9 +1092,9 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			//Elimina incisos que no correspondan al negocio seleccionado
 			resp.setSlist(cotizacionAutoManager.validaExcelCdtipsitXNegocio(tipoflot,negocio,resp.getSlist()));
 			if(resp.getSlist().isEmpty())
-			{
-				respuesta="Sin incisos por tipo de negocio";
-				throw new ApplicationException(respuesta);
+			{	
+				respuestaOculta="Sin incisos por tipo de negocio";
+				return SUCCESS;
 			}
 			else
 			{
