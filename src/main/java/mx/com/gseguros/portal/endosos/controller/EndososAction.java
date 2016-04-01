@@ -864,6 +864,7 @@ public class EndososAction extends PrincipalCoreAction
 				contratante.put("DSAPELLIDO1", smap1.get("DSAPELLIDO1"));
 				contratante.put("CDRFC", smap1.get("CDRFC"));
 				contratante.put("NMSITUAC", nmsitucRes);
+				contratante.put("nmsituac", nmsitucRes);
 				contratante.put("CDROL", "1");
 				
 				slist1.add(contratante);
@@ -1049,6 +1050,15 @@ public class EndososAction extends PrincipalCoreAction
 				this.endososManager.actualizaRfcCliente(paramPersona);
 			}
 			
+			String nmsituac = "0"; //valor default
+			
+			if(slist1 !=null && !slist1.isEmpty() && slist1.size() == 1){
+				Map<String,String> personaEndoso =  slist1.get(0);
+				if(personaEndoso.containsKey("NMSITUAC") && StringUtils.isNotBlank(personaEndoso.get("NMSITUAC"))){
+					nmsituac = personaEndoso.get("NMSITUAC");
+				}
+			}
+			
 			// Se confirma el endoso si cumple la validacion de fechas:
 			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso((String)omap1.get("pv_cdunieco_i"),
 					(String)omap1.get("pv_cdramo_i"),
@@ -1075,12 +1085,12 @@ public class EndososAction extends PrincipalCoreAction
 						,(String)omap1.get("pv_cdramo_i")
 						,(String)omap1.get("pv_estado_i")
 						,(String)omap1.get("pv_nmpoliza_i")
-						,"0" //nmsituac
+						,nmsituac
 						,respuestaEndosoNombres.get("pv_nmsuplem_o")
 						,documentosManager.PROCESO_ENDOSO
 						,null //ntramite
 						,null //nmsolici
-, null
+						, null
 						);
 				
 				/*
