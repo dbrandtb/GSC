@@ -1038,7 +1038,7 @@ Ext.onReady(function()
                             ,listeners :
                             {
                                 change : function(me)
-                                {   var descripcion ='-';
+                                {   var descripcion ='';
                                     var indexofPeriod = me.getValue().lastIndexOf("."),
                                     uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
                                     debug('uploadedExtension:',uploadedExtension);
@@ -1243,6 +1243,11 @@ Ext.onReady(function()
                                                                             	{
                                                                             		mensajeWarning(descripcion + msnIncInv);
                                                                             	}
+                                                                            }
+                                                                            
+                                                                            if(msnIncInv != null && descripcion.length<5)
+                                                                            {
+                                                                                mensajeWarning(msnIncInv);
                                                                             }
                                                                             
                                                                             procesados=procesados+1;
