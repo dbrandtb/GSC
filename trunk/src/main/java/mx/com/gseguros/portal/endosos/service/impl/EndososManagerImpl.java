@@ -59,8 +59,6 @@ public class EndososManagerImpl implements EndososManager
     @Value("${pass.servidor.reports}")
     private String passwordServidorReportes;
     
-    private Map<String,Object> session;
-    
     @Autowired
 	private EndososDAO      endososDAO;
     @Autowired
