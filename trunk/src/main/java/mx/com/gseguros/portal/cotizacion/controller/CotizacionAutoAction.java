@@ -1093,7 +1093,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			resp.setSlist(cotizacionAutoManager.validaExcelCdtipsitXNegocio(tipoflot,negocio,resp.getSlist()));
 			if(resp.getSlist().isEmpty())
 			{	
-				respuestaOculta="Sin incisos por tipo de negocio";
+				respuestaOculta="No se agregarón los incisos por no corresponder al negocio seleccionado.";
 				return SUCCESS;
 			}
 			else
@@ -1102,7 +1102,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				Map<String, String> msn = resp.getSlist().get(lugarMensaje-1);
 				if(msn.get("removidos") != null) 
 				{
-				respuestaOculta = "Se quitaron los incisos"+msn.get("removidos")+" por no corresponder al tipo de negocio seleccionado";
+				respuestaOculta = "No se agregarón los incisos"+msn.get("removidos")+" por no corresponder al negocio seleccionado.";
 				resp.getSlist().remove(lugarMensaje-1);
 				}
 			}

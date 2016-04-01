@@ -2889,7 +2889,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			logger.debug(paso);
 
 			Integer tamanio = slistPYME.size();
-			String incisosinvalidos="";
+			String incisosinvalidos=": ";
 			
 			for(int i=0; i<tamanio ;i++)
 		    { 				
@@ -2899,14 +2899,17 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					logger.debug(Utils.log("Vils Inciso y Valor: ",valorInciso,"-",autosValidos));
 					int valido = autosValidos.indexOf(valorInciso); 
 					if(valido == -1)
-					{int e = i;
-					incisosinvalidos += " ,"+slistPYME.get(e).get("parametros.pv_otvalor06");
-					 slistPYME.remove(e);
-					 i--;
-					 tamanio--;}	
+					{
+						int e = i;
+						incisosinvalidos += slistPYME.get(e).get("parametros.pv_otvalor06")+", ";
+						slistPYME.remove(e);
+						i--;
+						tamanio--;
+					}	
 				}
 		    }
-
+			int largo = incisosinvalidos.length();
+			incisosinvalidos =incisosinvalidos.substring(0,(largo-2));
 			logger.debug(Utils.log("Incisos Ivalidos: ",incisosinvalidos," \nLista de Maps: ",slistPYME));
 			Map<String, String> removidos= new HashMap<String, String>();
 			if(!incisosinvalidos.isEmpty())
