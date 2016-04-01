@@ -321,6 +321,7 @@ Ext.onReady(function(){
                                         ,CONDUCTO   : record.get('CONDUCTO')
                                         ,PTCUMUPR   : record.get('PTCUMUPR')
                                         ,RESIDENCIA : record.get('RESIDENCIA')
+                                        ,NMSITUAC   : record.get('nmsituac')
                     				});
                     			});
                     			json['slist1']=slist1;
