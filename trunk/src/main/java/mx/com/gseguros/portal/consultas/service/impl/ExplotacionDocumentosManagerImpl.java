@@ -21,6 +21,7 @@ import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
+import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -92,6 +93,9 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 	@Autowired
 	@Qualifier("consultasDAOICEImpl")
 	private ConsultasPolizaDAO consultasPolizaDAO;
+	
+	@Autowired
+	private EndososDAO endososDAO;
 	
 	@Override
 	public Map<String,Item> pantallaExplotacionDocumentos(String cdusuari, String cdsisrol) throws Exception
@@ -296,7 +300,13 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 							,movAgente.get("nmpoliza")
 							,movAgente.get("nmsuplem")
 							,tipolote
-							,"P".equals(tipolote) ? movAgente.get("ntramite") : null
+							//,"P".equals(tipolote) ? movAgente.get("ntramite") : null
+							,"P".equals(tipolote) ? endososDAO.obtenerNtramiteEmision(
+									movAgente.get("cdunieco")
+									,movAgente.get("cdramo")
+									,movAgente.get("estado")
+									,movAgente.get("nmpoliza")
+									) : null
 							,"R".equals(tipolote) ? movAgente.get("nmrecibo") : null
 							,StringUtils.isBlank(movAgente.get("orden")) ? "1" : movAgente.get("orden")
 							);
@@ -953,7 +963,8 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			paso = "Recuperando tr\u00e1mite";
 			sb.append("\n").append(paso);
 			
-			String ntramiteOpe = consultasDAO.recuperarTramitePorNmsuplem(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+			String ntramiteOpe  = consultasDAO.recuperarTramitePorNmsuplem(cdunieco,cdramo,estado,nmpoliza,nmsuplem)
+			       ,ntramiteEmi = endososDAO.obtenerNtramiteEmision(cdunieco, cdramo, estado, nmpoliza);
 			
 			paso = "Recuperando tipo de ramo";
 			sb.append("\n").append(paso);
@@ -1079,7 +1090,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,nmpoliza
 						,nmsuplem
 						,"P"
-						,ntramiteOpe
+						,ntramiteEmi
 						,null
 						,"1"
 						);
@@ -1185,7 +1196,8 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,TipoTramite.IMPRESION.getCdtiptra()
 						,null           //cdorddoc
 						,null           //cdmoddoc
-, null, null
+						,null
+						,null
 						);
 			}
 			
