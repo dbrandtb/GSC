@@ -185,7 +185,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	{
 		protected MovimientoMpolisitTvalositGrupo(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES.P_ACTUALIZA_MPOLISIT_TVALOSIT");
+			super(dataSource,"PKG_SATELITES2.P_ACTUALIZA_MPOLISIT_TVALOSIT");
 			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
@@ -198,6 +198,11 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("otvalor10" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("otvalor11" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("otvalor12" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor22" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor23" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor24" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor25" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor26" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("otvalor13" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("otvalor16" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
@@ -569,7 +574,12 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					,"cesicomi"
 					,"pondubic"
 					,"descbono"
-					,"porcgast"
+					,"gastadmi"
+					,"utilidad"
+					,"comiagen"
+					,"comiprom"
+					,"bonoince"
+					,"otrogast"
 					,"nombre"
 					,"ayudamater"
 					,"letra"
