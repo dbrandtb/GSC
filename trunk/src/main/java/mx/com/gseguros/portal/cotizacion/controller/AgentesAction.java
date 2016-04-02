@@ -112,7 +112,7 @@ public class AgentesAction extends PrincipalCoreAction
 	   public String guardaPorcentajeAgentes(){
 	   	logger.debug(" **** Entrando a guardaPorcentajeAgentes ****");
 	   	try {
-	   			/*Obtenemos los datos globales para el envio*/
+	   			//Obtenemos los datos globales para el envio
 		   		for(int i=0;i<datosPorcentajeAgente.size();i++)
 		   		{
 		   			//System.out.println("CONTADOR  "+i+ " VALOR --> "+datosPorcentajeAgente.get(i));
@@ -129,6 +129,7 @@ public class AgentesAction extends PrincipalCoreAction
 			   		mapArchivo.put("pi_NMCUADRO" , datosPorcentajeAgente.get(i).get("nmcuadro"));
 			   		mapArchivo.put("pi_CDSUCURS" , datosPorcentajeAgente.get(i).get("cdsucurs"));
 			   		mapArchivo.put("pi_PORPARTI" , datosPorcentajeAgente.get(i).get("porparti"));
+			   		mapArchivo.put("pi_NVOPCCOM" , datosPorcentajeAgente.get(i).get("nvacomision"));
 			   		WrapperResultados result=kernelManager.guardarPorcentajeAgentes(mapArchivo) ;		   		
 		   		}
 	   	}catch( Exception e){
@@ -158,6 +159,7 @@ public class AgentesAction extends PrincipalCoreAction
 			   		mapArchivo.put("pi_NMCUADRO" , params.get("nmcuadro"));
 			   		mapArchivo.put("pi_CDSUCURS" , params.get("cdsucurs"));
 			   		mapArchivo.put("pi_PORPARTI" , params.get("porparti"));
+			   		mapArchivo.put("pi_NVOPCCOM" , params.get("nvacomision"));
 			   		mapArchivo.put("pi_ACCION"   , params.get("accion"));
 			   		WrapperResultados result=kernelManager.guardarEliminarPorcentajeAgentes(mapArchivo) ;
 			   		

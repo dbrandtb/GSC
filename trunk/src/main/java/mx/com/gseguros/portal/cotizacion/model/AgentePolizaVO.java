@@ -29,6 +29,8 @@ public class AgentePolizaVO implements Serializable{
 	private String nmsuplem;
 	private String nmcuadro;
 	private String cdsucurs;
+	private String comision;
+	private String nvacomision;
 	
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
@@ -107,6 +109,26 @@ public class AgentePolizaVO implements Serializable{
 
 	public void setCdsucurs(String cdsucurs) {
 		this.cdsucurs = cdsucurs;
+	}
+
+
+	public String getComision() {
+		return comision;
+	}
+
+
+	public void setComision(String comision) {
+		this.comision = comision;
+	}
+
+
+	public String getNvacomision() {
+		return nvacomision;
+	}
+
+
+	public void setNvacomision(String nvacomision) {
+		this.nvacomision = nvacomision;
 	}
 	
 }

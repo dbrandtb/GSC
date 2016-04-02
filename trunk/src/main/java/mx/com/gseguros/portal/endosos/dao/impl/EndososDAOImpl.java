@@ -4980,7 +4980,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			String[] cols = new String[]{
 					"CDTIPSIT"  , "EXISTEREGISTRO"
                     ,"CDAGENTE" , "NTRAMITE"
-                    //,"PRODUCTO"
+                    ,"PRODUCTO"
 			};
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));

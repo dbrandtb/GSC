@@ -4512,9 +4512,12 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		consulta.setNmsuplem(rs.getString("nmsuplem"));
     		consulta.setNmcuadro(rs.getString("nmcuadro"));
     		consulta.setCdsucurs(rs.getString("cdsucurs"));
+    		consulta.setComision(rs.getString("pocompro"));
+    		consulta.setNvacomision(rs.getString("nvopccom"));
     		return consulta;
     	}
     }
+    
     
     
     protected class ObtieneDatosGeneralAgente extends CustomStoredProcedure {
@@ -4552,7 +4555,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     	
     	protected GuardarPorcentajePoliza(DataSource dataSource) {
     		
-    		super(dataSource, "PKG_SATELITES.P_MOV_MPOLIAGE_PORCENTAJES");
+    		super(dataSource, "PKG_SATELITES2.P_MOV_MPOLIAGE_PORCENTAJES");
     		declareParameter(new SqlParameter("pi_CDUNIECO", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_CDRAMO", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_ESTADO", OracleTypes.VARCHAR));
@@ -4565,7 +4568,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		declareParameter(new SqlParameter("pi_NMCUADRO", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_CDSUCURS", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_PORPARTI", OracleTypes.VARCHAR));
-    		
+    		declareParameter(new SqlParameter("pi_NVOPCCOM", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("po_CDERROR", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("po_DSERROR", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("po_TIPOERROR", OracleTypes.VARCHAR));
@@ -4597,8 +4600,8 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		declareParameter(new SqlParameter("pi_NMCUADRO", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_CDSUCURS", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_PORPARTI", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_NVOPCCOM", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_ACCION", OracleTypes.VARCHAR));
-    		
     		declareParameter(new SqlOutParameter("po_CDERROR", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("po_DSERROR", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("po_TIPOERROR", OracleTypes.VARCHAR));
