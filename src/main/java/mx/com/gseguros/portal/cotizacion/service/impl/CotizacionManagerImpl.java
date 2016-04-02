@@ -158,27 +158,38 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String otvalor10
 			,String otvalor11
 			,String otvalor12
+			,String otvalor22
+			,String otvalor23
+			,String otvalor24
+			,String otvalor25
+			,String otvalor26
 			,String otvalor13
 			,String otvalor16)throws Exception
 	{
-		logger.info(""
-				+ "\n#############################################"
-				+ "\n###### movimientoMpolisitTvalositGrupo ######"
-				+ "\ncdunieco "+cdunieco
-				+ "\ncdramo "+cdramo
-				+ "\nestado "+estado
-				+ "\nnmpoliza "+nmpoliza
-				+ "\ncdgrupo "+cdgrupo
-				+ "\notvalor06 "+otvalor06
-				+ "\notvalor07 "+otvalor07
-				+ "\notvalor08 "+otvalor08
-				+ "\notvalor09 "+otvalor09
-				+ "\notvalor10 "+otvalor10
-				+ "\notvalor11 "+otvalor11
-				+ "\notvalor12 "+otvalor12
-				+ "\notvalor13 "+otvalor13
-				+ "\notvalor16 "+otvalor16
-				);
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ movimientoMpolisitTvalositGrupo @@@@@@"
+				,"\n@@@@@@ cdunieco " , cdunieco
+				,"\n@@@@@@ cdramo " , cdramo
+				,"\n@@@@@@ estado " , estado
+				,"\n@@@@@@ nmpoliza " , nmpoliza
+				,"\n@@@@@@ cdgrupo " , cdgrupo
+				,"\n@@@@@@ otvalor06 " , otvalor06
+				,"\n@@@@@@ otvalor07 " , otvalor07
+				,"\n@@@@@@ otvalor08 " , otvalor08
+				,"\n@@@@@@ otvalor09 " , otvalor09
+				,"\n@@@@@@ otvalor10 " , otvalor10
+				,"\n@@@@@@ otvalor11 " , otvalor11
+				,"\n@@@@@@ otvalor12 " , otvalor12
+				,"\n@@@@@@ otvalor22 " , otvalor22
+				,"\n@@@@@@ otvalor23 " , otvalor23
+				,"\n@@@@@@ otvalor24 " , otvalor24
+				,"\n@@@@@@ otvalor25 " , otvalor25
+				,"\n@@@@@@ otvalor26 " , otvalor26
+				,"\n@@@@@@ otvalor13 " , otvalor13
+				,"\n@@@@@@ otvalor16 " , otvalor16
+				));
+		
 		Map<String,String>params=new HashMap<String,String>();
 		params.put("cdunieco"  , cdunieco);
 		params.put("cdramo"    , cdramo);
@@ -192,13 +203,19 @@ public class CotizacionManagerImpl implements CotizacionManager
 		params.put("otvalor10" , otvalor10);
 		params.put("otvalor11" , otvalor11);
 		params.put("otvalor12" , otvalor12);
+		params.put("otvalor22" , otvalor22);
+		params.put("otvalor23" , otvalor23);
+		params.put("otvalor24" , otvalor24);
+		params.put("otvalor25" , otvalor25);
+		params.put("otvalor26" , otvalor26);
 		params.put("otvalor13" , otvalor13);
 		params.put("otvalor16" , otvalor16);
 		cotizacionDAO.movimientoMpolisitTvalositGrupo(params);
-		logger.info("" 
-				+ "\n###### movimientoMpolisitTvalositGrupo ######"
-				+ "\n#############################################"
-				);
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ movimientoMpolisitTvalositGrupo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
 	}
 
 	@Override

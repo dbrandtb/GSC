@@ -44,8 +44,14 @@ public interface CotizacionManager
 			,String otvalor10
 			,String otvalor11
 			,String otvalor12
+			,String otvalor22
+			,String otvalor23
+			,String otvalor24
+			,String otvalor25
+			,String otvalor26
 			,String otvalor13
-			,String otvalor16)throws Exception;
+			,String otvalor16
+			)throws Exception;
 	
 	public void movimientoMpoligarGrupo(
 			String  cdunieco

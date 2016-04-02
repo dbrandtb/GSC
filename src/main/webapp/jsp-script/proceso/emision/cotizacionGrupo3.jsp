@@ -292,7 +292,12 @@ Ext.onReady(function()
             ,'cesicomi'
             ,'pondubic'
             ,'descbono'
-            ,'porcgast'
+            ,'gastadmi'
+            ,'utilidad'
+            ,'comiagen'
+            ,'comiprom'
+            ,'bonoince'
+            ,'otrogast'
             ,'paquete'
         ]
     });
@@ -2551,7 +2556,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                     ,columns :
                                                     [
                                                         {
-                                                            header     : 'Extraprima o renovaci&oacute;n'
+                                                            header     : 'Extraprima o<br/>renovaci&oacute;n'
                                                             ,dataIndex : 'extrreno'
                                                             ,flex      : 1
                                                             ,editor    :
@@ -2563,7 +2568,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                             }
                                                         }
                                                         ,{
-                                                            header     : 'Incremento inflaci&oacute;n'
+                                                            header     : 'Incremento<br/>inflaci&oacute;n'
                                                             ,dataIndex : 'incrinfl'
                                                             ,flex      : 1
                                                             ,editor    :
@@ -2611,8 +2616,68 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                             }
                                                         }
                                                         ,{
-                                                            header     : 'Porcentaje de gastos'
-                                                            ,dataIndex : 'porcgast'
+                                                            header     : 'Gastos de<br/>administraci\u00f3n'
+                                                            ,dataIndex : 'gastadmi'
+                                                            ,flex      : 1
+                                                            ,editor    :
+                                                            {
+                                                                xtype             : 'numberfield'
+                                                                ,allowBlank       : false
+                                                                ,allowDecimals    : true
+                                                                ,decimalSeparator : '.'
+                                                            }
+                                                        }
+                                                        ,{
+                                                            header     : 'Utilidad'
+                                                            ,dataIndex : 'utilidad'
+                                                            ,flex      : 1
+                                                            ,editor    :
+                                                            {
+                                                                xtype             : 'numberfield'
+                                                                ,allowBlank       : false
+                                                                ,allowDecimals    : true
+                                                                ,decimalSeparator : '.'
+                                                            }
+                                                        }
+                                                        ,{
+                                                            header     : 'Comisi\u00f3n<br/>del agente'
+                                                            ,dataIndex : 'comiagen'
+                                                            ,flex      : 1
+                                                            ,editor    :
+                                                            {
+                                                                xtype             : 'numberfield'
+                                                                ,allowBlank       : false
+                                                                ,allowDecimals    : true
+                                                                ,decimalSeparator : '.'
+                                                            }
+                                                        }
+                                                        ,{
+                                                            header     : 'Comisi\u00f3n<br/>del promotor'
+                                                            ,dataIndex : 'comiprom'
+                                                            ,flex      : 1
+                                                            ,editor    :
+                                                            {
+                                                                xtype             : 'numberfield'
+                                                                ,allowBlank       : false
+                                                                ,allowDecimals    : true
+                                                                ,decimalSeparator : '.'
+                                                            }
+                                                        }
+                                                        ,{
+                                                            header     : 'Bonos e<br/>incentivos'
+                                                            ,dataIndex : 'bonoince'
+                                                            ,flex      : 1
+                                                            ,editor    :
+                                                            {
+                                                                xtype             : 'numberfield'
+                                                                ,allowBlank       : false
+                                                                ,allowDecimals    : true
+                                                                ,decimalSeparator : '.'
+                                                            }
+                                                        }
+                                                        ,{
+                                                            header     : 'Otros gastos de<br/>adquisici\u00f3n'
+                                                            ,dataIndex : 'otrogast'
                                                             ,flex      : 1
                                                             ,editor    :
                                                             {

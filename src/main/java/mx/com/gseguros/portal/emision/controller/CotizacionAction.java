@@ -4311,7 +4311,7 @@ public class CotizacionAction extends PrincipalCoreAction
                 	}
 	                catch(Exception ex2)
 	                {
-	                	logger.error("error al leer codigo postal como numero, se intentara como string:",ex2);
+	                	logger.warn("error al leer codigo postal como numero, se intentara como string:",ex2);
 	                	try
 	                	{
 	                		logger.debug("COD POSTAL: "+row.getCell(9).getStringCellValue()+"|");
@@ -5230,7 +5230,7 @@ public class CotizacionAction extends PrincipalCoreAction
                 	}
 	                catch(Exception ex2)
 	                {
-	                	logger.error("error al leer codigo postal como numero, se intentara como string:",ex2);
+	                	logger.warn("error al leer codigo postal como numero, se intentara como string:",ex2);
 	                	try
 	                	{
 	                		logger.debug("COD POSTAL: "+row.getCell(8).getStringCellValue()+"|");
@@ -7007,13 +7007,34 @@ public class CotizacionAction extends PrincipalCoreAction
 						String pondubic   = pondubicL!=null? pondubicL.toString() : "";
 						Object descbonoL  = iGrupo.get("descbono");
 						String descbono   = descbonoL!=null? descbonoL.toString() : "";
-						Object porcgastL  = iGrupo.get("porcgast");
-						String porcgast   = porcgastL!=null? porcgastL.toString() : "";
+						
+						//nuevos factores de Lolita
+						Object gastadmiL = iGrupo.get("gastadmi");
+						String gastadmi  = gastadmiL!=null? gastadmiL.toString() : "";
+						
+						Object utilidadL = iGrupo.get("utilidad");
+						String utilidad  = utilidadL!=null? utilidadL.toString() : "";
+						
+						Object comiagenL = iGrupo.get("comiagen");
+						String comiagen  = comiagenL!=null? comiagenL.toString() : "";
+						
+						Object comipromL = iGrupo.get("comiprom");
+						String comiprom  = comipromL!=null? comipromL.toString() : "";
+						
+						Object bonoinceL = iGrupo.get("bonoince");
+						String bonoince  = bonoinceL!=null? bonoinceL.toString() : "";
+						
+						Object otrogastL = iGrupo.get("otrogast");
+						String otrogast  = otrogastL!=null? otrogastL.toString() : "";
+						
+						//nuevos factores de Lolita fin
+						
 						logger.debug("3.- Entra  la cotizacionManager.movimientoMpolisitTvalositGrupo ");
 						cotizacionManager.movimientoMpolisitTvalositGrupo(
 								cdunieco, cdramo, "W", nmpoliza,
 								cdgrupo, ptsumaaseg, incrinfl, extrreno,
-								cesicomi, pondubic, descbono, porcgast,
+								cesicomi, pondubic, descbono, gastadmi,
+								utilidad, comiagen, comiprom, bonoince, otrogast,
 								(String)iGrupo.get("nombre"),ayudamater);
 						
 						logger.debug("4.- Entra a actualizaValoresDefectoSituacion");
@@ -7040,8 +7061,26 @@ public class CotizacionAction extends PrincipalCoreAction
 						String pondubic   = pondubicL!=null? pondubicL.toString() : "0";
 						Object descbonoL  = iGrupo.get("descbono");
 						String descbono   = descbonoL!=null? descbonoL.toString() : "0";
-						Object porcgastL  = iGrupo.get("porcgast");
-						String porcgast   = porcgastL!=null? porcgastL.toString() : "0";
+						
+						//nuevos factores de Lolita
+						Object gastadmiL = iGrupo.get("gastadmi");
+						String gastadmi  = gastadmiL!=null? gastadmiL.toString() : "0";
+						
+						Object utilidadL = iGrupo.get("utilidad");
+						String utilidad  = utilidadL!=null? utilidadL.toString() : "0";
+						
+						Object comiagenL = iGrupo.get("comiagen");
+						String comiagen  = comiagenL!=null? comiagenL.toString() : "0";
+						
+						Object comipromL = iGrupo.get("comiprom");
+						String comiprom  = comipromL!=null? comipromL.toString() : "0";
+						
+						Object bonoinceL = iGrupo.get("bonoince");
+						String bonoince  = bonoinceL!=null? bonoinceL.toString() : "0";
+						
+						Object otrogastL = iGrupo.get("otrogast");
+						String otrogast  = otrogastL!=null? otrogastL.toString() : "0";
+						//nuevos factores de Lolita fin
 						
 						List<Map<String,String>>tvalogars=(List<Map<String,String>>)iGrupo.get("tvalogars");
 						for(Map<String,String>iTvalogar:tvalogars)
@@ -7057,7 +7096,8 @@ public class CotizacionAction extends PrincipalCoreAction
 						cotizacionManager.movimientoMpolisitTvalositGrupo(
 								cdunieco, cdramo, "W", nmpoliza,
 								cdgrupo, ptsumaaseg, incrinfl, extrreno,
-								cesicomi, pondubic, descbono, porcgast,
+								cesicomi, pondubic, descbono, gastadmi,
+								utilidad, comiagen, comiprom, bonoince, otrogast,
 								(String)iGrupo.get("nombre"),ayudamater);
 					}
 				}
@@ -7648,13 +7688,34 @@ public class CotizacionAction extends PrincipalCoreAction
 						String pondubic   = pondubicL!=null? pondubicL.toString() : "";
 						Object descbonoL  = iGrupo.get("descbono");
 						String descbono   = descbonoL!=null? descbonoL.toString() : "";
-						Object porcgastL  = iGrupo.get("porcgast");
-						String porcgast   = porcgastL!=null? porcgastL.toString() : "";
+						
+						//nuevos factores de lolita
+						Object gastadmiL = iGrupo.get("gastadmi");
+						String gastadmi  = gastadmiL!=null? gastadmiL.toString() : "";
+						
+						Object utilidadL = iGrupo.get("utilidad");
+						String utilidad  = utilidadL!=null? utilidadL.toString() : "";
+						
+						Object comiagenL = iGrupo.get("comiagen");
+						String comiagen  = comiagenL!=null? comiagenL.toString() : "";
+						
+						Object comipromL = iGrupo.get("comiprom");
+						String comiprom  = comipromL!=null? comipromL.toString() : "";
+						
+						Object bonoinceL = iGrupo.get("bonoince");
+						String bonoince  = bonoinceL!=null? bonoinceL.toString() : "";
+						
+						Object otrogastL = iGrupo.get("otrogast");
+						String otrogast  = otrogastL!=null? otrogastL.toString() : "";
+						
+						//nuevos factores de lolita fin
+						
 						logger.debug("3.- Entra  la cotizacionManager.movimientoMpolisitTvalositGrupo ");
 						cotizacionManager.movimientoMpolisitTvalositGrupo(
 								cdunieco, cdramo, estado, nmpoliza,
 								cdgrupo, ptsumaaseg, incrinfl, extrreno,
-								cesicomi, pondubic, descbono, porcgast,
+								cesicomi, pondubic, descbono, gastadmi,
+								utilidad, comiagen, comiprom, bonoince, otrogast,
 								(String)iGrupo.get("nombre"),ayudamater);
 						
 						logger.debug("4.- Entra a actualizaValoresDefectoSituacion");
@@ -7681,8 +7742,26 @@ public class CotizacionAction extends PrincipalCoreAction
 						String pondubic   = pondubicL!=null? pondubicL.toString() : "0";
 						Object descbonoL  = iGrupo.get("descbono");
 						String descbono   = descbonoL!=null? descbonoL.toString() : "0";
-						Object porcgastL  = iGrupo.get("porcgast");
-						String porcgast   = porcgastL!=null? porcgastL.toString() : "0";
+						
+						//nuevos factores de Lolita
+						Object gastadmiL = iGrupo.get("gastadmi");
+						String gastadmi  = gastadmiL!=null? gastadmiL.toString() : "0";
+						
+						Object utilidadL = iGrupo.get("utilidad");
+						String utilidad  = utilidadL!=null? utilidadL.toString() : "0";
+						
+						Object comiagenL = iGrupo.get("comiagen");
+						String comiagen  = comiagenL!=null? comiagenL.toString() : "0";
+						
+						Object comipromL = iGrupo.get("comiprom");
+						String comiprom  = comipromL!=null? comipromL.toString() : "0";
+						
+						Object bonoinceL = iGrupo.get("bonoince");
+						String bonoince  = bonoinceL!=null? bonoinceL.toString() : "0";
+						
+						Object otrogastL = iGrupo.get("otrogast");
+						String otrogast  = otrogastL!=null? otrogastL.toString() : "0";
+						//nuevos factores de Lolita fin
 						
 						List<Map<String,String>>tvalogars=(List<Map<String,String>>)iGrupo.get("tvalogars");
 						for(Map<String,String>iTvalogar:tvalogars)
@@ -7698,7 +7777,8 @@ public class CotizacionAction extends PrincipalCoreAction
 						cotizacionManager.movimientoMpolisitTvalositGrupo(
 								cdunieco, cdramo, estado, nmpoliza,
 								cdgrupo, ptsumaaseg, incrinfl, extrreno,
-								cesicomi, pondubic, descbono, porcgast,
+								cesicomi, pondubic, descbono, gastadmi,
+								utilidad, comiagen, comiprom, bonoince, otrogast,
 								(String)iGrupo.get("nombre"),ayudamater);
 					}
 				}
