@@ -473,8 +473,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		
 		protected CargarDatosCotizacionGrupoEndoso(DataSource dataSource)
 		{
-			super(dataSource,"P_GET_DATOS_COTIZACION_ENDOSO");
-			//super(dataSource,"PKG_CONSULTA.P_GET_DATOS_COTIZACION_ENDOSO");
+			super(dataSource,"PKG_CONSULTA.P_GET_DATOS_COTIZACION_ENDOSO");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
