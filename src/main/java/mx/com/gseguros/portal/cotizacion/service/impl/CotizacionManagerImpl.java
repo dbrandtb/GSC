@@ -3603,6 +3603,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
 		resp.setSmap(new HashMap<String,String>());
 		
+		final String LINEA = "1";
+		
 		//mpolisit y tvalosit
 		if(resp.isExito())
 		{
@@ -3637,6 +3639,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,grupoIteCdplan
 							,grupoIteValoresSit
 							);
+					
+					if(clasif.equals(LINEA)&&LINEA_EXTENDIDA.equals("S"))
+					{
+						cotizacionDAO.actualizaValoresDefectoSituacion(cdunieco, cdramo, "W", nmpoliza, "0");
+					}
 				}
 			}
             catch(Exception ex)
@@ -3736,8 +3743,6 @@ public class CotizacionManagerImpl implements CotizacionManager
             	logger.error(resp.getRespuesta(),ex);
             }
 		}
-		
-		final String LINEA = "1";
 		
 		//tvalogar
 		if(resp.isExito()&&(
