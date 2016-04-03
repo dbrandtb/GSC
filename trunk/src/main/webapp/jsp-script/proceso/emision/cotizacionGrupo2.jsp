@@ -3304,7 +3304,8 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                         {
                                                             if(_p25_factoresColumns.length>0
                                                                 //&&_p25_smap1.FACTORES=='S'
-                                                                &&Ext.isEmpty(record.get(_p25_factoresColumns[0].editor.name))
+                                                                //&&Ext.isEmpty(record.get(_p25_factoresColumns[0].editor.name))
+                                                                && (!_p25_ntramite||_p25_ntramiteVacio)
                                                             )
                                                             {
                                                                 var ponerValoresFactores=function()
@@ -3315,7 +3316,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                                     for(var i in _p25_valoresFactores)
                                                                     {
                                                                         var elem  = _p25_valoresFactores[i];
-                                                                        var name  = elem.NAME;
+                                                                        var name  = 'parametros.pv_'+elem.NAME;
                                                                         var valor = elem.VALOR;
                                                                         record.set(name,valor);
                                                                     }
