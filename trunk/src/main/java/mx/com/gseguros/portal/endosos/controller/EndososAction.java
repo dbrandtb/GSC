@@ -1006,8 +1006,27 @@ public class EndososAction extends PrincipalCoreAction
 				}else{
 					usuarioCaptura = usuario.getCodigoPersona();
 				}
-				
 			}
+			
+			String cdtipsit1 = null;
+			try {
+				cdtipsit1 = endososManager.recuperarCdtipsitInciso1((String)omap1.get("pv_cdunieco_i"),
+						(String)omap1.get("pv_cdramo_i"),
+						(String)omap1.get("pv_estado_i"),
+						(String)omap1.get("pv_nmpoliza_i"));
+			} catch (Exception e) {
+				logger.error("Error al obtener el cdtipsit de la poliza para el primer inciso",e);
+			}
+			
+			String nmsituac = "0"; //valor default todas
+			
+			if(slist1 !=null && !slist1.isEmpty() && slist1.size() == 1){
+				Map<String,String> personaEndoso =  slist1.get(0);//temporalmente solo se toma uno 
+				if(personaEndoso.containsKey("NMSITUAC") && StringUtils.isNotBlank(personaEndoso.get("NMSITUAC"))){
+					nmsituac = personaEndoso.get("NMSITUAC");
+				}
+			}
+			
 			/*
 			 * ya viene en el omap1 desde el jsp:
 			 * pv_cdunieco_i
@@ -1048,15 +1067,25 @@ public class EndososAction extends PrincipalCoreAction
 				 */
 				this.endososManager.actualizaNombreCliente(paramPersona);
 				this.endososManager.actualizaRfcCliente(paramPersona);
-			}
-			
-			String nmsituac = "0"; //valor default
-			
-			if(slist1 !=null && !slist1.isEmpty() && slist1.size() == 1){
-				Map<String,String> personaEndoso =  slist1.get(0);
-				if(personaEndoso.containsKey("NMSITUAC") && StringUtils.isNotBlank(personaEndoso.get("NMSITUAC"))){
-					nmsituac = personaEndoso.get("NMSITUAC");
-				}
+				
+				
+				/**
+				 * Se inserta tworksup para que el programa de impresion sepa que situaciones tomar para imrpimir
+				 */
+				
+				//////////////////////////////
+			    ////// inserta tworksup //////
+			    endososManager.movimientoTworksupEnd((String)omap1.get("pv_cdunieco_i"),
+						(String)omap1.get("pv_cdramo_i"),
+						(String)omap1.get("pv_estado_i"),
+						(String)omap1.get("pv_nmpoliza_i")
+			    		,TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString()
+			    		,respuestaEndosoNombres.get("pv_nmsuplem_o")
+			    		,persona.get("NMSITUAC"), "I"
+			    		);
+			    ////// inserta tworksup //////
+				
+				
 			}
 			
 			// Se confirma el endoso si cumple la validacion de fechas:
@@ -1069,12 +1098,27 @@ public class EndososAction extends PrincipalCoreAction
 					TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString(),
 					"",
 					(Date)omap1.get("pv_fecha_i"),
-					"SL"
+					cdtipsit1
 					);
 		    
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
 				endosoConfirmado = true;
+				
+				//Se inserta Tworksup para Impresiones
+				for(Map<String,String>persona:slist1) {
+					//////////////////////////////
+				    ////// inserta tworksup //////
+				    endososManager.movimientoTworksupEnd((String)omap1.get("pv_cdunieco_i"),
+							(String)omap1.get("pv_cdramo_i"),
+							(String)omap1.get("pv_estado_i"),
+							(String)omap1.get("pv_nmpoliza_i")
+				    		,TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString()
+				    		,respuestaEndosoNombres.get("pv_nmsuplem_o")
+				    		,persona.get("NMSITUAC"), "I"
+				    		);
+				    ////// inserta tworksup //////
+				}
 				
 				/*///////////////////////////////////*/
 				////// re generar los documentos //////
@@ -6288,30 +6332,11 @@ public class EndososAction extends PrincipalCoreAction
 	/*///////////////////////////////*/
 	public String endosoDomicilioFull() {
 		
-		
 		if(!smap1.containsKey("cdperson") && smap1.containsKey("CDPERSON")){
 			String cdtipsit1 = null;
-			String nombrePersona = null;
-			String primerNombre = null;
-			String segundoNombre = null;
-			String appat = null;
-			String apmat = null;
 			
 			try {
 				cdtipsit1 = endososManager.recuperarCdtipsitInciso1((String)smap1.get("CDUNIECO"), (String)smap1.get("CDRAMO"), (String)smap1.get("ESTADO"), (String)smap1.get("NMPOLIZA"));
-				
-				long timestamp = System.currentTimeMillis();
-				Map<String, Object> datos = personasManager.obtenerPersonaPorCdperson(smap1.get("CDPERSON"), timestamp);
-				Map<String,String> persona = (Map<String,String>)datos.get("persona");
-				
-				nombrePersona = persona.get("DSNOMBRE")+" "+(StringUtils.isNotBlank(persona.get("DSAPELLIDO"))?persona.get("DSAPELLIDO"):"");
-				
-				primerNombre = persona.get("DSNOMBRE");
-				segundoNombre = persona.get("DSNOMBRE1");
-				appat = persona.get("DSAPELLIDO");
-				apmat = persona.get("DSAPELLIDO1");
-				
-				
 			} catch (Exception e) {
 				logger.error("Error al obtener el cdtipsit de la poliza para el primer inciso",e);
 			}
@@ -6325,25 +6350,7 @@ public class EndososAction extends PrincipalCoreAction
 			smap1.put("ntramite", smap1.get("NTRAMITE"));
 			smap1.put("pv_cdramo", smap1.get("CDRAMO"));
 			smap1.put("cdtipsit", cdtipsit1);
-			smap1.put("cdperson", smap1.get("CDPERSON"));
-			smap1.put("pv_cdperson_i", smap1.get("CDPERSON"));
-			smap1.put("nombreAsegurado", nombrePersona);
-			
-			smap1.put("Apellido_Materno", apmat);
-			smap1.put("Apellido_Paterno", appat);
 			smap1.put("CDTIPSIT", cdtipsit1);
-			
-			/**
-			 * TODO: obtener el parentesco del inciso seleccionado
-			 */
-			smap1.put("Parentesco", "T");
-			smap1.put("cdrol", "2");
-			smap1.put("activo", "true");
-			smap1.put("fenacimi", smap1.get("FENACIMI"));
-			smap1.put("nombre", primerNombre);
-			smap1.put("nombrecompleto", nombrePersona);
-			smap1.put("segundo_nombre", segundoNombre);
-			smap1.put("nombreAsegurado", nombrePersona);
 			
 		}
 		
@@ -6590,9 +6597,7 @@ public class EndososAction extends PrincipalCoreAction
 			String cdtipsit     = smap1.get("CDTIPSIT");
 			
 			String cdpersonCli = smap1.get("CDPERSON");
-			if(StringUtils.isBlank(cdpersonCli)){
-				cdpersonCli = smap1.get("cdperson");
-			}
+			String cdpersonAsegTitular = smap1.get("cdperson");
 			
 			String nmordom      = smap2.get("NMORDDOM");
 			String cdtipdom     = smap2.get("CDTIPDOM");
@@ -6607,6 +6612,12 @@ public class EndososAction extends PrincipalCoreAction
 			String cdtipsup     = TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString();
 			String proceso      = "END";
 			String ntramite     = smap1.get("NTRAMITE");
+			
+			String nmsituac = "0"; //valor default nmsituac todas
+			
+			if(smap1.containsKey("nmsituac") && StringUtils.isNotBlank(smap1.get("nmsituac"))){
+				nmsituac = smap1.get("nmsituac");
+			}
 			
 			boolean esPolizaColectiva  = (StringUtils.isNotBlank(smap1.get("TIPOFLOT")) && "F".equalsIgnoreCase(smap1.get("TIPOFLOT")));//flotilla o Colectiva
 			
@@ -6695,30 +6706,55 @@ public class EndososAction extends PrincipalCoreAction
 				 * ,segundo_nombre,Apellido_Paterno ,Apellido_Materno
 				 * ,cdrfc,Parentesco,tpersona,nacional,swexiper
 				 */
+				
+				
+				Map<String,String>paramDomicilAsegTitular=new LinkedHashMap<String,String>(0);
+				paramDomicilAsegTitular.put("pv_cdperson_i" , cdpersonAsegTitular);
+				paramDomicilAsegTitular.put("pv_nmorddom_i" , StringUtils.isNotBlank(nmordom)? nmordom : "1"); 
+				paramDomicilAsegTitular.put("pv_msdomici_i" , dsdomici);
+				paramDomicilAsegTitular.put("pv_nmtelefo_i" , nmtelefo);
+				paramDomicilAsegTitular.put("pv_cdpostal_i" , cdpostal);
+				paramDomicilAsegTitular.put("pv_cdedo_i"    , cdestado);
+				paramDomicilAsegTitular.put("pv_cdmunici_i" , cdmunici);
+				paramDomicilAsegTitular.put("pv_cdcoloni_i" , cdcoloni);
+				paramDomicilAsegTitular.put("pv_nmnumero_i" , nmnumext);
+				paramDomicilAsegTitular.put("pv_nmnumint_i" , nmnumint);
+				paramDomicilAsegTitular.put("pv_cdtipdom_i" , cdtipdom);
+				paramDomicilAsegTitular.put("pv_cdusuario_i", usuarioCaptura);
+				paramDomicilAsegTitular.put("pv_swactivo_i",  Constantes.SI);
+				paramDomicilAsegTitular.put("pv_accion_i"   , Constantes.UPDATE_MODE);			
+				kernelManager.pMovMdomicil(paramDomicilAsegTitular);
+				
+				
 				List<Map<String,Object>>mpoliperPoliza=kernelManager.obtenerAsegurados(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 				for(Map<String,Object>mpoliperIte:mpoliperPoliza) {
 					String cdpersonIte=(String)mpoliperIte.get("cdperson");
+					String cdrolIte=(String)mpoliperIte.get("cdrol");
 					
 					//////////////////////
 					////// mdomicil //////
 					//PKG_SATELITES.P_MOV_MDOMICIL
 					/*//////////////////*/
-					Map<String,String>paramDomicilIte=new LinkedHashMap<String,String>(0);
-					paramDomicilIte.put("pv_cdperson_i" , cdpersonIte);
-					paramDomicilIte.put("pv_nmorddom_i" , (StringUtils.isNotBlank(cdpersonCli) && cdpersonCli.equalsIgnoreCase(cdpersonIte))? nmordom : "1"); //si el cdperson es del endoso puede ser contratante y traer un nmordom distinto a 1 o 1, si el cdperson no es cdperson siempre es 1
-					paramDomicilIte.put("pv_msdomici_i" , dsdomici);
-					paramDomicilIte.put("pv_nmtelefo_i" , nmtelefo);
-					paramDomicilIte.put("pv_cdpostal_i" , cdpostal);
-					paramDomicilIte.put("pv_cdedo_i"    , cdestado);
-					paramDomicilIte.put("pv_cdmunici_i" , cdmunici);
-					paramDomicilIte.put("pv_cdcoloni_i" , cdcoloni);
-					paramDomicilIte.put("pv_nmnumero_i" , nmnumext);
-					paramDomicilIte.put("pv_nmnumint_i" , nmnumint);
-					paramDomicilIte.put("pv_cdtipdom_i" , cdtipdom);
-					paramDomicilIte.put("pv_cdusuario_i", usuarioCaptura);
-					paramDomicilIte.put("pv_swactivo_i",  Constantes.SI);
-					paramDomicilIte.put("pv_accion_i"   , Constantes.UPDATE_MODE);			
-					kernelManager.pMovMdomicil(paramDomicilIte);
+					
+					if(StringUtils.isNotBlank(cdrolIte) && !cdrolIte.equalsIgnoreCase("1")){
+						Map<String,String>paramDomicilIte=new LinkedHashMap<String,String>(0);
+						paramDomicilIte.put("pv_cdperson_i" , cdpersonIte);
+						paramDomicilIte.put("pv_nmorddom_i" , "1"); //Domicilio default para asegurados 
+						paramDomicilIte.put("pv_msdomici_i" , dsdomici);
+						paramDomicilIte.put("pv_nmtelefo_i" , nmtelefo);
+						paramDomicilIte.put("pv_cdpostal_i" , cdpostal);
+						paramDomicilIte.put("pv_cdedo_i"    , cdestado);
+						paramDomicilIte.put("pv_cdmunici_i" , cdmunici);
+						paramDomicilIte.put("pv_cdcoloni_i" , cdcoloni);
+						paramDomicilIte.put("pv_nmnumero_i" , nmnumext);
+						paramDomicilIte.put("pv_nmnumint_i" , nmnumint);
+						paramDomicilIte.put("pv_cdtipdom_i" , cdtipdom);
+						paramDomicilIte.put("pv_cdusuario_i", usuarioCaptura);
+						paramDomicilIte.put("pv_swactivo_i",  Constantes.SI);
+						paramDomicilIte.put("pv_accion_i"   , Constantes.UPDATE_MODE);			
+						kernelManager.pMovMdomicil(paramDomicilIte);
+					}
+					
 					/*//////////////////*/
 					////// mdomicil //////
 					//////////////////////
@@ -6760,7 +6796,7 @@ public class EndososAction extends PrincipalCoreAction
 				mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
 				mapaValorEndoso.put("pv_estado_i"   , estado);
 				mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
-				mapaValorEndoso.put("pv_nmsituac_i" , "1");
+				mapaValorEndoso.put("pv_nmsituac_i" , "1"); //no importa
 				mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
 				mapaValorEndoso.put("pv_feinival_i" , dFechaEndoso);
 				mapaValorEndoso.put("pv_cdtipsup_i" , cdtipsup);
@@ -6768,22 +6804,37 @@ public class EndososAction extends PrincipalCoreAction
 				////// valor endoso //////
 				//////////////////////////
 			}else{
-				Map<String,String>paramDomicilIte=new LinkedHashMap<String,String>(0);
-				paramDomicilIte.put("pv_cdperson_i" , cdpersonCli);//cdperson del asegurado titular seleccionado
-				paramDomicilIte.put("pv_nmorddom_i" , nmordom);//nmordom del asegurado titular seleccionado
-				paramDomicilIte.put("pv_msdomici_i" , dsdomici);
-				paramDomicilIte.put("pv_nmtelefo_i" , nmtelefo);
-				paramDomicilIte.put("pv_cdpostal_i" , cdpostal);
-				paramDomicilIte.put("pv_cdedo_i"    , cdestado);
-				paramDomicilIte.put("pv_cdmunici_i" , cdmunici);
-				paramDomicilIte.put("pv_cdcoloni_i" , cdcoloni);
-				paramDomicilIte.put("pv_nmnumero_i" , nmnumext);
-				paramDomicilIte.put("pv_nmnumint_i" , nmnumint);
-				paramDomicilIte.put("pv_cdtipdom_i" , cdtipdom);
-				paramDomicilIte.put("pv_cdusuario_i", usuarioCaptura);
-				paramDomicilIte.put("pv_swactivo_i",  Constantes.SI);
-				paramDomicilIte.put("pv_accion_i"   , Constantes.UPDATE_MODE);			
-				kernelManager.pMovMdomicil(paramDomicilIte);
+				
+				//////////////////////////////
+			    ////// inserta tworksup //////
+			    endososManager.movimientoTworksupEnd(
+			    		cdunieco
+			    		,cdramo
+			    		,estado
+			    		,nmpoliza
+			    		,cdtipsup
+			    		,nmsuplem
+			    		,nmsituac, "I"
+			    		);
+			    ////// inserta tworksup //////
+			    
+			    //////////////////////////////
+				Map<String,String>paramDomicilAsegTitular=new LinkedHashMap<String,String>(0);
+				paramDomicilAsegTitular.put("pv_cdperson_i" , cdpersonAsegTitular);//cdperson del asegurado titular seleccionado
+				paramDomicilAsegTitular.put("pv_nmorddom_i" , nmordom);//nmordom del asegurado titular seleccionado
+				paramDomicilAsegTitular.put("pv_msdomici_i" , dsdomici);
+				paramDomicilAsegTitular.put("pv_nmtelefo_i" , nmtelefo);
+				paramDomicilAsegTitular.put("pv_cdpostal_i" , cdpostal);
+				paramDomicilAsegTitular.put("pv_cdedo_i"    , cdestado);
+				paramDomicilAsegTitular.put("pv_cdmunici_i" , cdmunici);
+				paramDomicilAsegTitular.put("pv_cdcoloni_i" , cdcoloni);
+				paramDomicilAsegTitular.put("pv_nmnumero_i" , nmnumext);
+				paramDomicilAsegTitular.put("pv_nmnumint_i" , nmnumint);
+				paramDomicilAsegTitular.put("pv_cdtipdom_i" , cdtipdom);
+				paramDomicilAsegTitular.put("pv_cdusuario_i", usuarioCaptura);
+				paramDomicilAsegTitular.put("pv_swactivo_i",  Constantes.SI);
+				paramDomicilAsegTitular.put("pv_accion_i"   , Constantes.UPDATE_MODE);			
+				kernelManager.pMovMdomicil(paramDomicilAsegTitular);
 			}
 			
 			
@@ -6804,6 +6855,23 @@ public class EndososAction extends PrincipalCoreAction
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
 				endosoConfirmado = true;
+				
+				//tworsksup para impresiones
+				if(esPolizaColectiva){
+					//////////////////////////////
+				    ////// inserta tworksup //////
+				    endososManager.movimientoTworksupEnd(
+				    		cdunieco
+				    		,cdramo
+				    		,estado
+				    		,nmpoliza
+				    		,cdtipsup
+				    		,nmsuplem
+				    		,nmsituac, "I"
+				    		);
+				    ////// inserta tworksup //////
+				}
+				
 				///////////////////////////////////////
 			    ////// re generar los documentos //////
 			    /*///////////////////////////////////*/
@@ -6812,12 +6880,12 @@ public class EndososAction extends PrincipalCoreAction
 						,cdramo
 						,estado
 						,nmpoliza
-						,"0" //nmsituac
+						,nmsituac //nmsituac
 						,nmsuplem
 						,DocumentosManager.PROCESO_ENDOSO
 						,ntramite
 						,null //nmsolici
-, null
+						,null
 						);
 				
 				String nmsolici    = datosPoliza.get("nmsolici");
@@ -6890,7 +6958,7 @@ public class EndososAction extends PrincipalCoreAction
 					clienteGeneral.setClaveCia(saludDanios);
 					
 					// Ejecutamos el Web Service de Cliente Salud:
-					ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, cdpersonCli, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), false);
+					ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, cdpersonAsegTitular, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), false);
 					
 					String sucursal = cdunieco;
 					//String nmsolici = listaDocu.get(0).get("nmsolici");
@@ -6927,7 +6995,7 @@ public class EndososAction extends PrincipalCoreAction
 	    			
 	    			updateList.add(domicilioEndoso);
 	    			
-	    			ice2sigsService.ejecutaWSdireccionClienteGeneral(cdpersonCli, saludDanios, saveList, updateList, false, usuario);
+	    			ice2sigsService.ejecutaWSdireccionClienteGeneral(cdpersonAsegTitular, saludDanios, saveList, updateList, false, usuario);
 				}
 
 			    mensaje="Se ha guardado el endoso "+nsuplogi;
