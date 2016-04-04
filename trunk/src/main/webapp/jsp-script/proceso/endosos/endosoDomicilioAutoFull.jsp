@@ -53,7 +53,7 @@ var _p5_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacio
 var _cdTipSupCambioDomFull = '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@CAMBIO_DOMICILIO_ASEGURADO_TITULAR.cdTipSup" />';
 
 
-_5_smap1.nmsituac = '0';
+_5_smap1.nmsituac = '0';  //para cargar el domicilio porque en ocasiones no lo carga
 
 //////variables //////
 //////////////////////
@@ -186,19 +186,6 @@ Ext.onReady(function()
 	_5_panelEndoso   = new _5_PanelEndoso();
 	//_5_panelTatriper = new _5_PanelTatriper();
 	
-	if(!Ext.isEmpty(_5_smap1.CDTIPSIT1) && _5_smap1.CDTIPSIT1 == 'MSC'){
-		_fieldByName('CDEDO',_5_formDomicil).getStore().addListener('beforeload',function( store, operation, eOpts){
-			_fieldByName('CDEDO',_5_formDomicil).getStore().getProxy().extraParams['params.cdtipsit']='MSC';
-		});
-		
-		_fieldByName('CDMUNICI',_5_formDomicil).getStore().addListener('beforeload',function(store, operation){
-			_fieldByName('CDMUNICI',_5_formDomicil).getStore().getProxy().extraParams['params.cdtipsit']='MSC';
-		});
-		
-		_fieldByName('CDEDO',_5_formDomicil).value1 = 'MSC';		
-		_fieldByName('CDMUNICI',_5_formDomicil).value1 = 'MSC';
-	}
-	
 	_5_panelPri=Ext.create('Ext.panel.Panel',
 	{
 		renderTo  : 'divEndDomCP'
@@ -239,9 +226,7 @@ Ext.onReady(function()
             ,'smap1.pv_cdramo_i'      : _5_smap1.CDRAMO
             ,'smap1.pv_estado_i'      : _5_smap1.ESTADO
             ,'smap1.pv_nmpoliza_i'    : _5_smap1.NMPOLIZA
-            
             ,'smap1.pv_nmsuplem_i'    : _5_smap1.NMSUPLEM
-            
             ,'smap1.pv_nmsituac_i'    : _5_smap1.nmsituac
             ,'smap1.pv_cdperson_i'    : _5_smap1.cdperson
             ,'smap1.pv_nmorddom_i'    : ''// obtiene el asignado a la poliza
@@ -457,8 +442,8 @@ function _5_confirmar(boton)
 						json=Ext.decode(response.responseText);
 						if(json.success==true)
 						{
-							var callbackRemesa = function()
-							{
+							mensajeCorrecto('Endoso generado',json.mensaje);
+							
 							    //////////////////////////////////
 		                        ////// usa codigo del padre //////
 		                        /*//////////////////////////////*/
@@ -466,19 +451,8 @@ function _5_confirmar(boton)
 		                        /*//////////////////////////////*/
 		                        ////// usa codigo del padre //////
 		                        //////////////////////////////////
-		                    };
 		                    
-		                    mensajeCorrecto('Endoso generado',json.mensaje,function()
-		                    {
-		                        _generarRemesaClic(
-                                    true
-                                    ,_5_smap1.CDUNIECO
-                                    ,_5_smap1.CDRAMO
-                                    ,_5_smap1.ESTADO
-                                    ,_5_smap1.NMPOLIZA
-                                    ,callbackRemesa
-                                );
-		                    });
+		                    
 						}
 						else
 						{
@@ -515,6 +489,5 @@ function _comboColoniasEnd(){
 }
 //////funciones //////
 //////////////////////
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="divEndDomCP" style="height:1000px;"></div>
