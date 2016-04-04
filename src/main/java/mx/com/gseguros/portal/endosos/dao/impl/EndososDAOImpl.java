@@ -231,7 +231,6 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		return map;
 	}
 	
-	/*
 	protected class ReimprimeDocumentos extends StoredProcedure
 	{
 		String columnas[]=new String[]{
@@ -256,9 +255,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
-	**
+	/**
 	 * PKG_CONSULTA.P_reImp_documentos
-	 *
+	 */
 	@Override
 	@Deprecated
 	public List<Map<String,String>> reimprimeDocumentos(Map<String,String>params) throws Exception
@@ -307,7 +306,6 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 		return lista;
 	}
-	*/
 	
 	protected class ObtieneCoberturasDisponibles extends StoredProcedure
 	{

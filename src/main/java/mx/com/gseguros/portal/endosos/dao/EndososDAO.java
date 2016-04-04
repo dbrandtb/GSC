@@ -27,7 +27,6 @@ public interface EndososDAO
     		,String dscoment
     		)throws Exception;
     public Map<String, String>      guardarEndosoDomicilio(Map<String, Object> params)         throws Exception;
-    /*
     @Deprecated
     public List<Map<String,String>> reimprimeDocumentos(Map<String,String>params)              throws Exception;
     public List<Map<String,String>> reimprimeDocumentos(
@@ -37,7 +36,7 @@ public interface EndososDAO
 			,String nmpoliza
 			,String nmsuplem
 			,String cdtipsup)throws Exception;
-	*/
+	
     public List<Map<String,String>> obtieneCoberturasDisponibles (Map<String,String>params)    throws Exception;
     @Deprecated
     public Map<String, String>      iniciaEndoso(Map<String, Object> params)        throws Exception;
