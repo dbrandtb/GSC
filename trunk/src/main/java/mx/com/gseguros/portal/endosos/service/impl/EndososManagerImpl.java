@@ -121,7 +121,7 @@ public class EndososManagerImpl implements EndososManager
 	
 	/**
 	 * PKG_CONSULTA.P_reImp_documentos
-	 *
+	 **/
 	@Override
 	public List<Map<String, String>> reimprimeDocumentos(
 			String cdunieco
@@ -145,7 +145,6 @@ public class EndososManagerImpl implements EndososManager
 		logger.debug("EndososManager reimprimeDocumentos lista size: "+lista.size());
 		return lista;
 	}
-	*/
 	
 	@Override
 	public List<Map<String, String>> obtieneCoberturasDisponibles(Map<String, String> params) throws Exception
