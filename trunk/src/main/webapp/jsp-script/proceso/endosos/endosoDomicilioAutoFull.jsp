@@ -479,6 +479,7 @@ function _5_confirmar(boton)
 
 
 Ext.ComponentQuery.query('[name=NMTELEFO]')[Ext.ComponentQuery.query('[name=NMTELEFO]').length-1].hide();
+Ext.ComponentQuery.query('[name=NMTELEFO]')[Ext.ComponentQuery.query('[name=NMTELEFO]').length-1].maxLength = 100;
 
 function _codPosEnd(){
     return Ext.ComponentQuery.query('[name=CODPOSTAL]')[Ext.ComponentQuery.query('[name=CODPOSTAL]').length-1];
