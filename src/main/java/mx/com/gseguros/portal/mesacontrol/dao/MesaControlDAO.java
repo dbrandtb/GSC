@@ -132,6 +132,14 @@ public interface MesaControlDAO
 	 * @throws Exception
 	 */
 	public void borrarDocumento(String ntramite, String cddocume) throws Exception;
+
+	public void borraDomicilioAsegSiCodposCambia(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdpos)throws Exception;
 	
 	/**
 	 * Guarda un documento asociado a una poliza

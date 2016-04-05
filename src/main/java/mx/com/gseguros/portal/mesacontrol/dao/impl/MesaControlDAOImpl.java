@@ -542,6 +542,43 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	}
 
 	@Override
+	public void borraDomicilioAsegSiCodposCambia(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdpos)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		params.put("pv_codpostal_i", cdpos);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_ELIMINA_MDOMICIL_ASEGURADOS", params);
+		ejecutaSP(new BorraDomicilioAsegSiCodposCambia(getDataSource()),params);
+	}
+	
+	protected class BorraDomicilioAsegSiCodposCambia extends StoredProcedure
+	{
+		protected BorraDomicilioAsegSiCodposCambia(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES2.P_ELIMINA_MDOMICIL_ASEGURADOS");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_codpostal_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
 	public void guardarDocumento(String cdunieco, String cdramo, String estado,
 			String nmpoliza, String nmsuplem, Date feinici, String cddocume,
 			String dsdocume, String nmsolici, String ntramite, String tipmov,
