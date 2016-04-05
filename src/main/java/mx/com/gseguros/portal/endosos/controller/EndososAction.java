@@ -1109,13 +1109,17 @@ public class EndososAction extends PrincipalCoreAction
 				for(Map<String,String>persona:slist1) {
 					//////////////////////////////
 				    ////// inserta tworksup //////
+					String nmSituacParaWorksup = (StringUtils.isNotBlank(persona.get("NMSITUAC"))
+													&& !persona.get("NMSITUAC").equalsIgnoreCase("0")
+													)?persona.get("NMSITUAC"):null;
+					
 				    endososManager.movimientoTworksupEnd((String)omap1.get("pv_cdunieco_i"),
 							(String)omap1.get("pv_cdramo_i"),
 							(String)omap1.get("pv_estado_i"),
 							(String)omap1.get("pv_nmpoliza_i")
 				    		,TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString()
 				    		,respuestaEndosoNombres.get("pv_nmsuplem_o")
-				    		,persona.get("NMSITUAC"), "I"
+				    		,nmSituacParaWorksup, "I"
 				    		);
 				    ////// inserta tworksup //////
 				}
