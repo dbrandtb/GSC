@@ -372,13 +372,14 @@ Ext.onReady(function(){
 	    if(inputNmsituacp4>0)//si es asegurado solo puede leer cp, estado y municipio
 	    {
 	    	
-//	    	se bloquean los campos para los productos que no son de multisalud 
-	    	if(inputCdtipsitp4 != 'MS')
-	    	{
-	    		_fieldByName('smap1.CODPOSTAL',formPanelp4).setReadOnly(true);//cp
-	    		_fieldByName('smap1.CDEDO',formPanelp4).setReadOnly(true);//estado
-	    		_fieldByName('smap1.CDMUNICI',formPanelp4).setReadOnly(true);//municipio
-	    	}
+//	    	se bloquean los campos para los productos que no son de multisalud...
+//	    	SE COMENTA PARA DEJAR BLOQUEDOS Y SE HEREDA DOMICILIO DE COTIZACION 
+//	    	if(inputCdtipsitp4 != 'MS')
+//	    	{
+//	    		_fieldByName('smap1.CODPOSTAL',formPanelp4).setReadOnly(true);//cp
+//	    		_fieldByName('smap1.CDEDO',formPanelp4).setReadOnly(true);//estado
+//	    		_fieldByName('smap1.CDMUNICI',formPanelp4).setReadOnly(true);//municipio
+//	    	}
 	    }
     }else if( ((inputCdramop4+'x')=='16x' || (inputCdramop4+'x')=='6x') && inputCdrolp4 == "1" && !Ext.isEmpty(inputCdideperp4)){
     	

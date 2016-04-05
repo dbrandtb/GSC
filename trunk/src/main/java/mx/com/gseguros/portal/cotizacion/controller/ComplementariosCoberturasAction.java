@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
@@ -71,6 +72,9 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 	
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
+	
+	@Autowired
+	private ConsultasManager consultasManager;
 	
 	public String pantallaCoberturas()
 	{
@@ -1311,6 +1315,43 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 			if(smap1.get("agrupado").equalsIgnoreCase("si"))
 			//actualizar todos
 			{
+				
+				/**
+				 * Para Hererdar domicilio a asegurados cuando se cambia de la cotizacion
+				 */
+				if(consultasManager.esProductoSalud(smap1.get("cdramo"))){
+					logger.debug(" <<<<>>>>>> Entrando a Borrando de domicilios de asegurados si cambia el codigo postal <<<<<>>>>> ");
+					
+					List<Map<String,String>> valositsPoliza=endososManager.obtenerValositUltimaImagen(smap1.get("cdunieco"),smap1.get("cdramo"),smap1.get("estado"),smap1.get("nmpoliza"),"0");
+					
+					if(valositsPoliza != null && !valositsPoliza.isEmpty()){
+						
+						logger.debug(" <<<<>>>>>> Verificando vvalisit de 0 <<<<<>>>>> ");
+						
+						Map<String,String> valosit =  valositsPoliza.get(0);
+						if(valosit!=null && valosit.containsKey("CDATRIBU") && StringUtils.isNotBlank(valosit.get("CDATRIBU"))){
+							
+							/**PARA OBTENER EL NUMERO DE ATRIBUTO DEL CODIGO POSTAL PARA ESTE PRODUCTO**/
+							String keyCodPostal = "pv_otvalor"+valosit.get("CDATRIBU");
+							
+							logger.debug(" <<<<>>>>>> Obteniendo llave de codigo postal  <<<<<>>>>> ::::  "+keyCodPostal);
+							
+							if(StringUtils.isNotBlank(keyCodPostal)){
+								String valorCodPosPantalla = parametros.get(keyCodPostal);
+
+								logger.debug(" <<<<>>>>>> Obteniendo VALOR de codigo postal de pantalla  <<<<<>>>>> ::::  "+valorCodPosPantalla);
+								
+								if(StringUtils.isNotBlank(valorCodPosPantalla)){
+									logger.debug(" <<<<>>>>>> Borrando domicilios de asegurados si cambia el codigo postal <<<<<>>>>> ");
+									mesaControlManager.borraDomicilioAsegSiCodposCambia(smap1.get("cdunieco"), smap1.get("cdramo"),smap1.get("estado"),
+											smap1.get("nmpoliza"), "0", valorCodPosPantalla);
+								}
+							}
+							
+						}
+					}
+				}
+				
 				logger.debug("se tienen agrupados");
 				Map<String,String>paramsAsegurados=new LinkedHashMap<String,String>(0);
 				paramsAsegurados.put("pv_cdunieco", smap1.get("cdunieco"));

@@ -208,6 +208,24 @@ public class MesaControlManagerImpl implements MesaControlManager
 		mesaControlDAO.borrarDocumento(ntramite,cddocume);
 	}
 	
+	@Override
+	public void borraDomicilioAsegSiCodposCambia(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdpos)throws Exception
+	{
+		mesaControlDAO.borraDomicilioAsegSiCodposCambia(
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,nmsuplem
+				,cdpos);
+	}
+	
 	public void setMesaControlDAO(MesaControlDAO mesaControlDAO) {
 		this.mesaControlDAO = mesaControlDAO;
 	}
