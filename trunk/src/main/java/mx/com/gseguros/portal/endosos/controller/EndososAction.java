@@ -6144,86 +6144,23 @@ public class EndososAction extends PrincipalCoreAction
 			String nmsolici = null;
 			String rutaCarpeta = null;
 			
-			
-			if(cdtipsit.equalsIgnoreCase("MSC")){
-				///////////////////////////////////////
-				///// Generacion de Documentos ///////
-				///////////////////////////////////////
-				Map<String,String> datosPoliza = documentosManager.generarDocumentosParametrizados(
-					cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,"0"
-					,nmsuplem
-					,DocumentosManager.PROCESO_ENDOSO
-					,ntramiteEmi
-					,null
-					,null
-				);
-				nmsolici    = datosPoliza.get("nmsolici");
-				rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramiteEmi);
-				
-			}else{
-				///////////////////////////////////////
-			    ////// re generar los documentos //////
-			    /*///////////////////////////////////*/
-			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
-			    		cdunieco
-			    		,cdramo
-			    		,estado
-			    		,nmpoliza
-			    		,nmsuplem
-			    		,cdtipsup
-			    		);
-			    logger.debug("documentos que se regeneran: "+listaDocu);
-			    
-			    rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramiteEmi;
-			    nmsolici    = listaDocu.size()>0?listaDocu.get(0).get("nmsolici"):nmpoliza;
-			    
-				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
-				for(Map<String,String> docu:listaDocu)
-				{
-					logger.debug("docu iterado: "+docu);
-					String descripc=docu.get("descripc");
-					String descripl=docu.get("descripl");
-					String url=this.getText("ruta.servidor.reports")
-							+ "?destype=cache"
-							+ "&desformat=PDF"
-							+ "&userid="+this.getText("pass.servidor.reports")
-							+ "&report="+descripl
-							+ "&paramform=no"
-							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-							+ "&p_unieco="+cdunieco
-							+ "&p_ramo="+cdramo
-							+ "&p_estado="+estado
-							+ "&p_poliza="+nmpoliza
-							+ "&p_suplem="+nmsuplem
-							+ "&desname="+rutaCarpeta+"/"+descripc;
-					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
-					{
-						// C R E D E N C I A L _ X X X X X X . P D F
-						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
-					}
-					logger.debug(""
-							+ "\n#################################"
-							+ "\n###### Se solicita reporte ######"
-							+ "\na "+url+""
-							+ "\n#################################");
-					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					logger.debug(""
-							+ "\n######                    ######"
-							+ "\n###### reporte solicitado ######"
-							+ "\na "+url+""
-							+ "\n################################"
-							+ "\n################################"
-							+ "");
-				}
-			    /*///////////////////////////////////*/
-				////// re generar los documentos //////
-			    ///////////////////////////////////////
-			}
+			///////////////////////////////////////
+			///// Generacion de Documentos ///////
+			///////////////////////////////////////
+			Map<String,String> datosPoliza = documentosManager.generarDocumentosParametrizados(
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,"0"
+				,nmsuplem
+				,DocumentosManager.PROCESO_ENDOSO
+				,ntramiteEmi
+				,null
+				,null
+			);
+			nmsolici    = datosPoliza.get("nmsolici");
+			rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramiteEmi);
 			
 			String sucursal = cdunieco;
 			
