@@ -197,6 +197,8 @@
         <pattern>/tvalosit/*.action*</pattern>
         
         <pattern>/mesacontrol/*.action*</pattern>
+        
+        <pattern>/erickjaime/*.action*</pattern>
 
    	</decorator>
 	
