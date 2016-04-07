@@ -27,6 +27,59 @@
         <script type="text/javascript" src="${ctx}/resources/scripts/util/custom_overrides.js?${now}"></script>
         <!-- Manejo de la extension de la sesion: -->
         <script type="text/javascript" src="${ctx}/resources/scripts/util/session_timeout.js?${now}"></script>
+        
+        <!-- Manejo de sesion unica de usuario: -->
+        <script>
+        var bloqueoXSession= false;
+        setInterval(
+        function()
+        {
+        	Ext.Ajax.request(
+                    {
+                        url     : '<s:url namespace="/seguridad" action="mantenerSesionUnica"/>'
+                        ,params :
+                        {
+                             'params.cdsisrol'     : '<s:property value="%{#session['USUARIO'].rolActivo.clave}" />'
+                            ,'params.cdusuari'     : '<s:property value="%{#session['USUARIO'].user}" />'
+                        }
+                        ,success : function(response)
+                        {
+                            var json = Ext.decode(response.responseText);
+                            debug('### Valida session Unica BLOQUEO/DESBLOQUEO:',json);
+                            if(json.success==true)
+                            {
+                            	if(json.params.bloqueo=='S')
+                            	{
+	                           		if(bloqueoXSession==false)
+                           			{   
+// 	                           			debug('### Valida session >>> BLOQUEO:',json);
+                           			    _maskSession('Ha cambiado su Usuario y/o Rol<br>Si desea continuar no cierre &eacute;sta ventana e inicie una sesi&oacute;n con el Usuario y Rol que &eacute;sta ventana indica.
+                           			    		
+                           			    bloqueoXSession =true;
+                           			}
+                           		}
+	                            else
+	                            {
+                           	   		if(bloqueoXSession==true)
+                           	   		{
+//                            	   		    debug('### Valida session >>> DES-BLOQUEO:',json);
+                            			_unmask();
+                            			bloqueoXSession=false;
+                            		}
+	                            }
+                            }
+                           	else
+                           	{
+                           		mensajeError('Error en la validacion de session');
+                           	}
+                        }
+                        ,failure : function()
+                        {
+                            errorComunicacion(null,'Al validar sesion');
+                        }
+                    });
+        },5*1000);</script>
+        
     </head>
     <body>
         <decorator:body />

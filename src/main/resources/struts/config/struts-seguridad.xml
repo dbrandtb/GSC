@@ -73,6 +73,10 @@
             <result name="success">/jsp/portal/login.jsp</result>
         </action>
         
+        <action name="mantenerSesionUnica" class="autenticacionAction" method="mantenerSesionUnica">
+            <result type="json" />
+        </action>
+        
         <action name="logoutJson" class="autenticacionAction" method="logoutUsuario">
             <result type="json" />
         </action>
