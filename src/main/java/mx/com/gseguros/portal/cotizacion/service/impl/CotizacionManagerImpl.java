@@ -36,6 +36,7 @@ import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
+import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
@@ -3834,6 +3835,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 					Map<String,String>otvalorMesaControl=new HashMap<String,String>();
 					otvalorMesaControl.put("otvalor01" , clasif);
 					otvalorMesaControl.put("otvalor02" , sincenso ? "S" : "N");
+					
+					Map<String,String> datosFlujo = consultasDAO.recuperarDatosFlujoEmision(cdramo,"C");
+					
 					ntramite = mesaControlDAO.movimientoMesaControl(
 							cdunieco
 							,cdramo
@@ -3853,8 +3857,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,nmpoliza
 							,cdtipsit
 							,cdusuari
-							,cdsisrol, null,null,null
-							,otvalorMesaControl, null
+							,cdsisrol
+							,null //swimpres
+							,datosFlujo.get("cdtipflu")
+	            			,datosFlujo.get("cdflujomc")
+							,otvalorMesaControl
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
 							);
 					resp.getSmap().put("ntramite" , ntramite);
 					

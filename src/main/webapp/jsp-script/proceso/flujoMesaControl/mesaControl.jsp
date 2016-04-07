@@ -83,8 +83,9 @@ Ext.onReady(function()
             ,type        : 'ajax'
             ,extraParams :
             {
-                'params.AGRUPAMC' : _p54_params.AGRUPAMC
-                ,'params.STATUS'  : '-1'
+                'params.AGRUPAMC'  : _p54_params.AGRUPAMC
+                ,'params.STATUS'   : '-1'
+                ,'params.CDAGENTE' : _p54_params.CDAGENTE
             }
             ,reader      :
             {
