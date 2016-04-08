@@ -4,6 +4,7 @@
 <script type="text/javascript">
 
 	/* ********** VARIABLES GLOBALES ************** */
+    var _GLOBAL_URL_MANTENER_SESION_UNICA = '<s:url namespace="/seguridad" action="mantenerSesionUnica" />';
 	
 	var _global_urlConsultaDinamica        = '<s:url namespace="/consultas" action="consultaDinamica" />';
 	var _GLOBAL_URL_LOGIN                  = '<s:url namespace="/seguridad" action="login" />';
@@ -40,7 +41,7 @@
         ,_GLOBAL_COMP_URL_RECUPERACION_SIMPLE_LISTA = '<s:url namespace="/emision"          action="recuperacionSimpleLista"   />'
         ,_GLOBAL_COMP_URL_ACTUALIZAR_STATUS_TRAMITE = '<s:url namespace="/mesacontrol"      action="actualizarStatusTramite"   />';
     
-    <s:url namespace="/flujomesacontrol" action="mesaControl" var="urlMesaFlujo" includeParams="get">
+        <s:url namespace="/flujomesacontrol" action="mesaControl" var="urlMesaFlujo" includeParams="get">
         <s:param name="params.AGRUPAMC" value="%{'PRINCIPAL'}" />
     </s:url>
     
