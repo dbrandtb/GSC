@@ -262,6 +262,7 @@ Ext.onReady(function()
             Ext.apply(this,
             {
                 title      : 'Datos de la p&oacute;liza'
+                ,hidden    : true
                 ,defaults  :
                 {
                     style : 'margin : 5px;'
