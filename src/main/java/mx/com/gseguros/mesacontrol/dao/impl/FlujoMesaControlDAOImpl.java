@@ -1533,26 +1533,28 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			,String ntramite
 			,String fedesde
 			,String fehasta
+			,String cdpersonCliente
 			,int start
 			,int limit
 			)throws Exception
 	{
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
-		params.put("agrupamc" , agrupamc);
-		params.put("status"   , status);
-		params.put("cdusuari" , cdusuari);
-		params.put("cdsisrol" , cdsisrol);
-		params.put("cdunieco" , cdunieco);
-		params.put("cdramo"   , cdramo);
-		params.put("cdtipsit" , cdtipsit);
-		params.put("estado"   , estado);
-		params.put("nmpoliza" , nmpoliza);
-		params.put("cdagente" , cdagente);
-		params.put("ntramite" , ntramite);
-		params.put("fedesde"  , fedesde);
-		params.put("fehasta"  , fehasta);
-		params.put("start"    , start);
-		params.put("limit"    , limit);
+		params.put("agrupamc"        , agrupamc);
+		params.put("status"          , status);
+		params.put("cdusuari"        , cdusuari);
+		params.put("cdsisrol"        , cdsisrol);
+		params.put("cdunieco"        , cdunieco);
+		params.put("cdramo"          , cdramo);
+		params.put("cdtipsit"        , cdtipsit);
+		params.put("estado"          , estado);
+		params.put("nmpoliza"        , nmpoliza);
+		params.put("cdagente"        , cdagente);
+		params.put("ntramite"        , ntramite);
+		params.put("fedesde"         , fedesde);
+		params.put("fehasta"         , fehasta);
+		params.put("cdpersonCliente" , cdpersonCliente);
+		params.put("start"           , start);
+		params.put("limit"           , limit);
 		Map<String,Object> procRes = ejecutaSP(new RecuperarTramitesSP(getDataSource()),params);
 		Map<String,Object> result  = new HashMap<String,Object>();
 		List<Map<String,String>> lista = (List<Map<String,String>>)procRes.get("pv_registro_o");
@@ -1580,28 +1582,29 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		protected RecuperarTramitesSP(DataSource dataSource)
 		{
 			super(dataSource,"PKG_MESACONTROL.P_GET_TRAMITES");
-			declareParameter(new SqlParameter("agrupamc" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("fedesde"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("fehasta"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("start"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("limit"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("agrupamc"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"          , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"          , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"          , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdagente"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ntramite"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fedesde"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fehasta"         , OracleTypes.VARCHAR));
+			//declareParameter(new SqlParameter("cdpersonCliente" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("start"           , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("limit"           , OracleTypes.VARCHAR));
 			String cols[]=new String[]{
 					"NTRAMITE"  , "CDTIPFLU" , "DSTIPFLU" , "CDFLUJOMC" , "DSFLUJOMC"
 					,"STATUS"   , "DSSTATUS" , "CDUNIECO" , "CDRAMO"    , "CDTIPSIT"
 					,"DSTIPSIT" , "ESTADO"   , "NMPOLIZA" , "FECSTATU"  , "FERECEPC"
 					,"NMSOLICI"
 					};
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols,true)));
 			declareParameter(new SqlOutParameter("pv_total_o"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

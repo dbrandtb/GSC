@@ -134,11 +134,11 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("cdsucadm"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsucdoc"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtiptra"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("ferecepc"   , OracleTypes.DATE));
+			declareParameter(new SqlParameter("ferecepc"   , OracleTypes.TIMESTAMP));
 			declareParameter(new SqlParameter("cdagente"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("referencia" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nombre"     , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("festatus"   , OracleTypes.DATE));
+			declareParameter(new SqlParameter("festatus"   , OracleTypes.TIMESTAMP));
 			declareParameter(new SqlParameter("status"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("comments"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsolici"   , OracleTypes.VARCHAR));

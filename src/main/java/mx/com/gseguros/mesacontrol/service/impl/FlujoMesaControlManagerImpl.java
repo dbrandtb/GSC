@@ -1603,6 +1603,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String ntramite
 			,String fedesde
 			,String fehasta
+			,String cdpersonCliente
 			,int start
 			,int limit
 			)throws Exception
@@ -1610,21 +1611,22 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarTramites @@@@@@"
-				,"\n@@@@@@ agrupamc=" , agrupamc
-				,"\n@@@@@@ status="   , status
-				,"\n@@@@@@ cdusuari=" , cdusuari
-				,"\n@@@@@@ cdsisrol=" , cdsisrol
-				,"\n@@@@@@ cdunieco=" , cdunieco
-				,"\n@@@@@@ cdramo="   , cdramo
-				,"\n@@@@@@ cdtipsit=" , cdtipsit
-				,"\n@@@@@@ estado="   , estado
-				,"\n@@@@@@ nmpoliza=" , nmpoliza
-				,"\n@@@@@@ cdagente=" , cdagente
-				,"\n@@@@@@ ntramite=" , ntramite
-				,"\n@@@@@@ fedesde="  , fedesde
-				,"\n@@@@@@ fehasta="  , fehasta
-				,"\n@@@@@@ start="    , start
-				,"\n@@@@@@ limit="    , limit
+				,"\n@@@@@@ agrupamc="         , agrupamc
+				,"\n@@@@@@ status="           , status
+				,"\n@@@@@@ cdusuari="         , cdusuari
+				,"\n@@@@@@ cdsisrol="         , cdsisrol
+				,"\n@@@@@@ cdunieco="         , cdunieco
+				,"\n@@@@@@ cdramo="           , cdramo
+				,"\n@@@@@@ cdtipsit="         , cdtipsit
+				,"\n@@@@@@ estado="           , estado
+				,"\n@@@@@@ nmpoliza="         , nmpoliza
+				,"\n@@@@@@ cdagente="         , cdagente
+				,"\n@@@@@@ ntramite="         , ntramite
+				,"\n@@@@@@ fedesde="          , fedesde
+				,"\n@@@@@@ fehasta="          , fehasta
+				,"\n@@@@@@ cdpersonCliente="  , cdpersonCliente
+				,"\n@@@@@@ start="            , start
+				,"\n@@@@@@ limit="            , limit
 				));
 		String             paso   = null;
 		Map<String,Object> result = null;
@@ -1647,6 +1649,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,ntramite
 					,fedesde
 					,fehasta
+					,cdpersonCliente
 					,start
 					,limit
 					);

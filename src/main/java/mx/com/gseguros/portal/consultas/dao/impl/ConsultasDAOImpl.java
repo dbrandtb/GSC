@@ -4202,4 +4202,36 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> recuperarClientesPorNombreApellido(String cadena) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cadena", cadena);
+		
+		Map<String,Object> procRes = ejecutaSP(new RecuperarClientesPorNombreApellidoSP(getDataSource()),params);
+		
+		List<Map<String,String>> list = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		
+		logger.debug(Utils.log("PKG_CONSULTA.P_GET_CLIENTES_X_NOMBRE_APE list=",list));
+		
+		return list;
+	}
+	
+	protected class RecuperarClientesPorNombreApellidoSP extends StoredProcedure
+	{
+		protected RecuperarClientesPorNombreApellidoSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_CLIENTES_X_NOMBRE_APE");
+			
+			declareParameter(new SqlParameter("cadena" , OracleTypes.VARCHAR));
+			
+			String[] cols = new String[]{ "CDPERSON" , "NOMBRE" };
+			
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

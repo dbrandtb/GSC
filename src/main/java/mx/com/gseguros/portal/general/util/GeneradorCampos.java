@@ -29,6 +29,7 @@ public class GeneradorCampos
     private static final String descExcTipoCampoVacio = "El campo no tiene tipo campo (A,N,T,F,P)";
 	private static final String descExcTipoCampoOtro  = "El campo tiene tipo campo incorrecto (A,N,T,F,P)";
 	private static final String prefijoRutaIconos     = "/resources/fam3icons/icons/";
+    private static final String formatoFechaHora      = "d/m/Y H:i";
     
     public  String idPrefix;
     private Item   items;
@@ -279,7 +280,7 @@ public class GeneradorCampos
         		item.setComposedName("Ext.create('Ext.field.Number',{");
         	}
         }
-        else if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_FECHA))
+        else if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_FECHA)||tipoCampo.equals(ComponenteVO.TIPOCAMPO_FECHA_HORA))
         {
         	if(!esMovil)
         	{
@@ -371,6 +372,10 @@ public class GeneradorCampos
         if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_FECHA))
         {
         	item.add("format",GeneradorCampos.formatoFecha);
+        }
+        else if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_FECHA_HORA))
+        {
+        	item.add("format",GeneradorCampos.formatoFechaHora);
         }
         ////// format //////
         
@@ -784,10 +789,11 @@ public class GeneradorCampos
      */
     private Item generaField(List<ComponenteVO> listcomp, ComponenteVO comp, Integer idx) throws Exception
     {
-    	String tipoAlfanum  = "string";
-    	String tipoFecha    = "date";
-    	String tipoEntero   = "int";
-    	String tipoFlotante = "float";
+    	String tipoAlfanum   = "string";
+    	String tipoFecha     = "date";
+    	String tipoEntero    = "int";
+    	String tipoFlotante  = "float";
+    	String tipoFechaHora = "date2Aux";
     	
     	String name = comp.getNameCdatribu();
     	if(comp.isFlagEsAtribu())
@@ -817,6 +823,10 @@ public class GeneradorCampos
         		{
         			type = tipoFecha;
         		}
+        		else if(tipo.equalsIgnoreCase(ComponenteVO.TIPOCAMPO_FECHA_HORA))
+        		{
+        			type = tipoFechaHora;
+        		}
         		else if(tipo.equalsIgnoreCase(ComponenteVO.TIPOCAMPO_NUMERICO))
         		{
         			type = tipoEntero;
@@ -841,11 +851,23 @@ public class GeneradorCampos
         Item field=new Item();
         field.setType(Item.OBJ);
         field.add("name", name);
-        field.add("type", type);
+        
+        if(type.equals(tipoFechaHora))
+        {
+        	field.add("type", tipoFecha);
+        }
+        else
+        {
+        	field.add("type", type);
+        }
         
         if(type.equals(tipoFecha))
         {
         	field.add(Item.crear("dateFormat", GeneradorCampos.formatoFecha));
+        }
+        else if(type.equals(tipoFechaHora))
+        {
+        	field.add(Item.crear("dateFormat", GeneradorCampos.formatoFechaHora));
         }
         
         return field;
@@ -898,7 +920,8 @@ public class GeneradorCampos
 	        }
 	        
 	        String tipoCampo = comp.getTipoCampo();
-	        boolean esFecha = StringUtils.isNotBlank(tipoCampo)&&tipoCampo.equalsIgnoreCase(ComponenteVO.TIPOCAMPO_FECHA);
+	        boolean esFecha     = StringUtils.isNotBlank(tipoCampo)&&tipoCampo.equalsIgnoreCase(ComponenteVO.TIPOCAMPO_FECHA);
+	        boolean esFechaHora = StringUtils.isNotBlank(tipoCampo)&&tipoCampo.equalsIgnoreCase(ComponenteVO.TIPOCAMPO_FECHA_HORA);
 	    
 		    col=new Item();
 		    col.setType(Item.OBJ);
@@ -928,6 +951,11 @@ public class GeneradorCampos
 		    {
 		    	col.add("xtype"  , GeneradorCampos.xtypeDatecolumn);
 		    	col.add("format" , GeneradorCampos.formatoFecha);
+		    }
+		    else if(esFechaHora)
+		    {
+		    	col.add("xtype"  , GeneradorCampos.xtypeDatecolumn);
+		    	col.add("format" , GeneradorCampos.formatoFechaHora);
 		    }
     	}
     	

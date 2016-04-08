@@ -510,4 +510,6 @@ public interface ConsultasDAO
 	public List<Map<String,String>> recuperarListaTatrisitSinPadre(String tipsit, String atribu) throws Exception;
 	
 	public List<Map<String,String>> recuperarFormasDePagoPorRamoTipsit(String cdramo, String cdtipsit) throws Exception;
+	
+	public List<Map<String,String>> recuperarClientesPorNombreApellido(String cadena) throws Exception;
 }

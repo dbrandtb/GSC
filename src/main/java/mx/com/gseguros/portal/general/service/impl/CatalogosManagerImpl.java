@@ -1638,4 +1638,40 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO> recuperarClientesPorNombreApellido(String cadena) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarClientesPorNombreApellido @@@@@@"
+				,"\n@@@@@@ cadena=", cadena
+				));
+		
+		String paso = "Recuperando clientes";
+		
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		
+		try
+		{
+			List<Map<String,String>> clientesMapas = consultasDAO.recuperarClientesPorNombreApellido(cadena);
+			
+			for(Map<String,String> clienteMapa : clientesMapas)
+			{
+				lista.add(new GenericVO(clienteMapa.get("CDPERSON"),clienteMapa.get("NOMBRE")));
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista=", lista
+				,"\n@@@@@@ recuperarClientesPorNombreApellido @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		return lista;
+	}
 }
