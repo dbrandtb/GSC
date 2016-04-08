@@ -882,25 +882,6 @@
 		<action name="tipoAutorizacion"> <!--Revisar -->
 			<result>/jsp-script/proceso/siniestros/tipoAutorizacion.jsp</result>
 		</action>
-		
-		<action name="consultaDatosConfiguracionProveedor" class="siniestrosAction" method="consultaDatosConfiguracionProveedor">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					datosValidacion.*,
-					success
-				</param>
-			</result>
-		</action>
-
-		<action name="guardarConfiguracionProveedor" class="siniestrosAction" method="guardarConfiguracionProveedor">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					success
-				</param>
-			</result>
-		</action>
 
 		<action name="includes/configuracionLayout" class="siniestrosAction" method="configuracionLayoutProveedor">
 			<result>/jsp-script/proceso/siniestros/configuracionLayout.jsp</result>
@@ -1128,6 +1109,25 @@
            </interceptor-ref>
            <result type="json" />
        </action>
+       
+		<action name="consultaDatosConfiguracionProveedor" class="configuracionLayoutAction" method="consultaDatosConfiguracionProveedor">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosValidacion.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="guardarConfiguracionProveedor" class="configuracionLayoutAction" method="guardarConfiguracionProveedor">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success
+				</param>
+			</result>
+		</action>
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>

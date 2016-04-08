@@ -4509,7 +4509,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			String[] cols = new String[]{
 					"CLAVEPROVEEDOR",	"NOMBPROVEEDOR",	"APLICAIVA",
 					"APLICAIVADESC",	"SECUENCIAIVA",		"SECIVADESC",
-					"APLICAIVARET",		"IVARETDESC"
+					"APLICAIVARET",		"IVARETDESC", 		"CVECONFI",
+					"DESCRIPC"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -4541,10 +4542,11 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     }
     
 	@Override
-	public String guardaConfiguracionProveedor(String cdpresta, String aplicaIVA,String secuenciaIVA,
+	public String guardaConfiguracionProveedor(String cdpresta, String tipoLayout, String aplicaIVA,String secuenciaIVA,
 			 String aplicaIVARET,String cduser, Date fechaProcesamiento, String proceso) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdpresta_i", cdpresta);
+		params.put("pv_cveconfi_i", tipoLayout);
 		params.put("pv_aplicaIVA_i", aplicaIVA);
 		params.put("pv_secuenciaIVA_i", secuenciaIVA);
 		params.put("pv_aplicaIVARet_i", aplicaIVARET);
@@ -4562,6 +4564,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		
     		super(dataSource,"PKG_SINIESTRO.P_MOV_CONFPROV");
     		declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cveconfi_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_aplicaIVA_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_secuenciaIVA_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_aplicaIVARet_i",   OracleTypes.VARCHAR));

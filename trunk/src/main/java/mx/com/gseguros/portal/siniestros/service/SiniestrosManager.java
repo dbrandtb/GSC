@@ -605,7 +605,7 @@ public interface SiniestrosManager {
 	
 	public String obtieneAplicaConceptoIVA(String idConcepto)throws Exception;
 	
-	public String guardaConfiguracionProveedor(String cdpresta, String aplicaIVA,String secuenciaIVA, 
+	public String guardaConfiguracionProveedor(String cdpresta, String tipoLayout, String aplicaIVA,String secuenciaIVA, 
 			String aplicaIVARET,String cduser, Date fechaProcesamiento, String proceso) throws Exception;
 	
 	public List<GenericVO>obtenerAtributosLayout(String descripcion) throws Exception;

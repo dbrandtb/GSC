@@ -4971,23 +4971,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
-	/**
-	* Funcion donde obtenemos los datos de las validaciones del siniestro
-	* @param params
-	* @return List<Map<String, String>> datosValidacion
-	*/ 
-	public String consultaDatosConfiguracionProveedor(){
-		logger.debug("Entra a consultaDatosProveedorSiniestro params de entrada :{} ",params);
-		try {
-			datosValidacion = siniestrosManager.getConsultaConfiguracionProveedor(params.get("cdpresta"));
-			logger.debug("Respuesta datosValidacion : {}",datosValidacion);
-		}catch( Exception e){
-			logger.error("Error al obtener consultaDatosProveedorSiniestro : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;
-	}
+
 	
 	/**
 	* Funcion para obtener si aplica o no iva en los conceptos
@@ -5009,23 +4993,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	}
 	
 	
-	public String  guardarConfiguracionProveedor(){
-		logger.debug("Entra a guardarConfiguracionProveedor params de entrada :{}",params);
-		try {
-			Date   fechaProcesamiento = new Date();
-			this.session=ActionContext.getContext().getSession();
-			UserVO usuario=(UserVO) session.get("USUARIO");
-			
-			
-			String respuesta = siniestrosManager.guardaConfiguracionProveedor(params.get("cmbProveedorMod"),params.get("idaplicaIVA"),
-					params.get("secuenciaIVA"),params.get("idaplicaIVARET"),usuario.getUser(), fechaProcesamiento, params.get("proceso"));
-		}catch( Exception e){
-			logger.error("Error al obtener el monto del arancel : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;
-	}
 	
 	/**
 	* Funcion para la visualizacion de la autorizacion de servicio 

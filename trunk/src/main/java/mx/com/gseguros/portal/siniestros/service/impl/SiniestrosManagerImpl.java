@@ -1961,10 +1961,10 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	
 	@Override
 	//String tipoConcepto, String idProveedor, String idConceptoTipo
-	public String guardaConfiguracionProveedor(String cdpresta, String aplicaIVA,
+	public String guardaConfiguracionProveedor(String cdpresta, String tipoLayout, String aplicaIVA,
 			String secuenciaIVA, String aplicaIVARET, String cduser, Date fechaProcesamiento, String proceso) throws Exception {
 		try {
-			return siniestrosDAO.guardaConfiguracionProveedor(cdpresta, aplicaIVA, secuenciaIVA, aplicaIVARET,cduser,fechaProcesamiento, proceso);
+			return siniestrosDAO.guardaConfiguracionProveedor(cdpresta, tipoLayout, aplicaIVA, secuenciaIVA, aplicaIVARET,cduser,fechaProcesamiento, proceso);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
