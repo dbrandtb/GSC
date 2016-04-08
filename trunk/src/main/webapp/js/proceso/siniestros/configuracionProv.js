@@ -8,16 +8,18 @@ Ext.onReady(function() {
 	//Declaracion de los modelos 
 	Ext.define('modeloProveedores',{
 		extend:'Ext.data.Model',
-		fields:['CLAVEPROVEEDOR','NOMBPROVEEDOR','APLICAIVA','APLICAIVADESC','SECUENCIAIVA','SECIVADESC','APLICAIVARET','IVARETDESC']
+		fields:[{type:'string',		name:'CLAVEPROVEEDOR'},		{type:'string',		name:'NOMBPROVEEDOR'},
+		        {type:'string',		name:'APLICAIVA'},			{type:'string',		name:'APLICAIVADESC'},
+		        {type:'string',		name:'SECUENCIAIVA'},		{type:'string',		name:'SECIVADESC'},
+		        {type:'string',		name:'APLICAIVARET'},		{type:'string',		name:'IVARETDESC'}
+        ]
 	});
 	
 	Ext.define('modelListadoProvMedico',{
 		extend: 'Ext.data.Model',
 		fields: [
-			{type:'string',		name:'cdpresta'},
-			{type:'string',		name:'nombre'},
-			{type:'string',		name:'cdespeci'},
-			{type:'string',		name:'descesp'}
+			{type:'string',		name:'cdpresta'},			{type:'string',		name:'nombre'},
+			{type:'string',		name:'cdespeci'},			{type:'string',		name:'descesp'}
 		]
 	});
 	//Declaracion de los stores
@@ -135,6 +137,7 @@ Ext.onReady(function() {
 					},
 					success: function(response) {
 						var res = Ext.decode(response.responseText);
+						debug("Valor de la respuesta ===> ",res);
 						if(res.datosValidacion &&res.datosValidacion.length == 0) {
 							//Preguntamos que ya existe el proveedor dado de alta
 						}else{
@@ -296,7 +299,6 @@ Ext.onReady(function() {
 				id             : 'clausulasGridId'
 				,title         : 'Proveedores'
 				,store         :  storeGridProveedores
-				//,collapsible   : true
 				,titleCollapse : true
 				,style         : 'margin:5px'
 				,height        : 400
@@ -317,54 +319,31 @@ Ext.onReady(function() {
 							tooltip: 'Configurar layout',
 							scope: this,
 							handler : configuracionLayoutProveedor
-						}
-						,{
-							icon:_CONTEXT+'/resources/fam3icons/icons/database_lightning.png',
-							tooltip: 'Subir Archivo Conf A',
-							scope: this,
-							handler : configuracionSubirCargaMasiva
-						}
-						,{
-							icon:_CONTEXT+'/resources/fam3icons/icons/database_lightning.png',
-							tooltip: 'Subir Archivo 2',
-							scope: this,
-							handler : configuracionSubirCargaMasiva2
 						}]
 					},
 					{
-						header     : 'Cve Proveedor',dataIndex : 'CLAVEPROVEEDOR',flex      : 1	, hidden   : true
+						header     : 'Cve Proveedor',dataIndex : 'CLAVEPROVEEDOR',	flex : 1, 	hidden   : true
 					},
 					{
-						header     : 'Proveedor',dataIndex : 'NOMBPROVEEDOR',flex      : 1
+						header     : 'Proveedor',	dataIndex  : 'NOMBPROVEEDOR',	flex : 1
 					},
 					{
-						header     : 'Aplica IVA',dataIndex : 'APLICAIVA',flex      : 1	, hidden   : true
+						header     : 'Aplica IVA',	dataIndex  : 'APLICAIVA',		flex : 1,	hidden   : true
 					},
 					{
-						header     : 'Aplica IVA'			,dataIndex : 'APLICAIVADESC'
-						,flex      : 1
+						header     : 'Aplica IVA',	dataIndex : 'APLICAIVADESC',	flex : 1
 					},
 					{
-						header     : 'Secuencia IVA'
-						,dataIndex : 'SECUENCIAIVA'
-						,flex      : 1
-						, hidden   : true
+						header     : 'Secuencia IVA',dataIndex : 'SECUENCIAIVA',	flex : 1, 	hidden   : true
 					},
 					{
-						header     : 'Secuencia IVA'
-						,dataIndex : 'SECIVADESC'
-						,flex      : 1
+						header     : 'Secuencia IVA',dataIndex : 'SECIVADESC',		flex : 1
 					},
 					{
-						header     : 'Aplica IVA Retenido'
-						,dataIndex : 'APLICAIVARET'
-						,flex      : 1
-						, hidden   : true
+						header     : 'Aplica IVA Retenido',	dataIndex : 'APLICAIVARET',flex : 1, hidden   : true
 					},
 					{
-						header     : 'Aplica IVA Retenido'
-						,dataIndex : 'IVARETDESC'
-						,flex      : 1
+						header     : 'Aplica IVA Retenido',dataIndex : 'IVARETDESC',	flex : 1
 					}
 				],
 				bbar     :{
@@ -380,8 +359,6 @@ Ext.onReady(function() {
 			})
 		]
 	});
-	
-	
 	cargarPaginacion();
 	
 	function cargarPaginacion(){
@@ -452,184 +429,7 @@ Ext.onReady(function() {
 	}
 	
 	
-	function configuracionSubirCargaMasiva(grid,rowIndex){
-		var record = grid.getStore().getAt(rowIndex);
-		debug("Valor enviado ===>"+record.get('CLAVEPROVEEDOR'));
-		
-		Ext.Ajax.request({
-			url     : _URL_EXISTE_CONF_PROV
-			,params:{
-				'params.cdpresta': record.get('CLAVEPROVEEDOR')
-			}
-			,success : function (response){
-				debug(Ext.decode(response.responseText).validacionGeneral);
-				if( Ext.decode(response.responseText).validacionGeneral =="S"){
-					/*var _p22_windowAgregarDocu=Ext.create('Ext.window.Window',
-					{
-						title       : 'Subir Archivo de Carga Masiva'
-						,closable    : false
-						,modal       : true
-						,width       : 500
-						//,height   : 700
-						,bodyPadding : 5
-						,items       :
-						[
-							panelSeleccionDocumento= Ext.create('Ext.form.Panel',
-							{
-								border       : 0
-								,url         : _URL_Carga_Masiva
-								,timeout     : 600
-								,buttonAlign : 'center'
-								,items       :
-								[
-									{
-										xtype       : 'filefield'
-										,fieldLabel : 'Documento'
-										,buttonText : 'Examinar...'
-										,name       : 'fileName'
-										,buttonOnly : false
-										,width      : 450
-										,name       : 'file'
-										,cAccept    : ['xls','xlsx']
-										,listeners  :
-										{
-											change : function(me)
-											{
-												var indexofPeriod = me.getValue().lastIndexOf("."),
-												uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
-												if (!Ext.Array.contains(this.cAccept, uploadedExtension))
-												{
-													Ext.MessageBox.show(
-													{
-														title   : 'Error de tipo de archivo',
-														msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
-														buttons : Ext.Msg.OK,
-														icon    : Ext.Msg.WARNING
-													});
-													me.reset();
-													Ext.getCmp('_p22_botGuaDoc').setDisabled(true);
-												}
-												else
-												{
-													Ext.getCmp('_p22_botGuaDoc').setDisabled(false);
-												}
-											}
-										}
-									}
-								]
-								,buttons     :
-								[
-									{
-										id        : '_p22_botGuaDoc'
-										,text     : 'Agregar'
-										,icon     : '${ctx}/resources/fam3icons/icons/disk.png'
-										,disabled : true
-										,handler  : function (button,e)
-										{
-											button.setDisabled(true);
-											Ext.getCmp('_p22_BotCanDoc').setDisabled(true);
-											
-											button.up().up().getForm().submit(
-											{
-												params        :
-												{
-													'params.pi_nmtabla': '4010'//_NMTABLA
-													,'params.tipotabla': '1'//_TIPOTABLA
-												},
-												waitMsg: 'Ejecutando Carga Masiva...',
-												success: function(form, action) {
-													_p22_windowAgregarDocu.destroy();
-													mensajeCorrecto('Exito', 'La carga masiva se ha ejecutado correctamente.');
-													recargagridTabla5Claves();
-												},
-												failure: function(form, action) {
-													
-													manejaErrorSubmit(form, action, function() {
-														
-														Ext.getCmp('_p22_botGuaDoc').setDisabled(false);
-														Ext.getCmp('_p22_BotCanDoc').setDisabled(false);
-														
-														if(action.result.resultado.key == 1) {
-															// Error en validacion de formato:
-															msgServer = 'Error en la validación ¿Desea descargar el archivo de errores?';
-															Ext.Msg.show({
-																title: 'Error', 
-																msg: msgServer, 
-																buttons: Ext.Msg.YESNO, 
-																icon: Ext.Msg.ERROR,
-																fn: function(btn){
-																	if (btn == 'yes'){
-																		//Ext.create('Ext.form.Panel').submit({
-																			//url            : _URL_DESCARGA_DOCUMENTOS,
-																			//standardSubmit : true,
-																			//target         : '_blank',
-																			//params         : {
-																				//path     : _RUTA_DOCUMENTOS_TEMPORAL,
-																				//filename : action.result.fileFileName 
-																			//}
-																		//});
-																	}
-																}
-															 });
-														} else if (action.result.resultado.key == 2) {
-															// Error en carga masiva:
-															Ext.Msg.show({title: 'Error', msg: action.result.resultado.value, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
-														}
-													});
-												}
-											});
-										}
-									}
-									,{
-										id       : '_p22_BotCanDoc'
-										,text    : 'Cancelar'
-										,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-										,handler : function (button,e)
-										{
-											_p22_windowAgregarDocu.destroy();
-										}
-									}
-								]
-							})
-						]
-					}).show();
-					centrarVentanaInterna(_p22_windowAgregarDocu);*/
-				}else{
-					mensajeWarning('No se ha configurado el Layout del proveedor');
-				}
-			},
-			failure : function (){
-				me.up().up().setLoading(false);
-				centrarVentanaInterna(Ext.Msg.show({
-					title:'Error',
-					msg: 'Error de comunicaci&oacute;n',
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-				}));
-			}
-		});
-		
-		
-		
-		//windowLoader = Ext.create('Ext.window.Window',{}).show();
-		//centrarVentanaInterna(windowLoader);
-	}
-	
-	function configuracionSubirCargaMasiva2(grid,rowIndex){
-		Ext.Ajax.request({
-			url: _URL_Carga_Masiva,
-			params: {
-				'params.fileName'  : 'C:\\Users\\Alberto\\Desktop\\libro1.xls'
-			},
-			success: function(response) {
-				var res = Ext.decode(response.responseText);
-				debug("VALOR DE RES ======> ", res);
-			},
-			failure: function(){
-				centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
-			}
-		});
-	}
+
 	
 	
 	function eliminarProveedor(grid,rowIndex){
@@ -667,5 +467,4 @@ Ext.onReady(function() {
 			}
 		}));
 	}
-
 });
