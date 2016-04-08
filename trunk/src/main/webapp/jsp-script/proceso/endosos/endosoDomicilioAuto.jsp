@@ -23,7 +23,7 @@ var inputNtramite          = '<s:property value="smap1.NTRAMITE" />';
 var tipoFlotilla           = '<s:property value="smap1.TIPOFLOT" />';
 var inputFechaInicio       = new Date();
 var urlRegresarp4          = '<s:url namespace="/"        action="editarAsegurados" />';
-var urlCargarp4            = '<s:url namespace="/"        action="cargarPantallaDomicilio" />';
+var urlCargarp4            = '<s:url namespace="/catalogos"  action="obtenerDomicilioContratante" />';
 var urlGuardarp4           = '<s:url namespace="/endosos" action="guardarEndosoDomicilioAuto" />';
 var enddomUrlDoc           = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" />';
 var _ComboColoniasUrl      = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';

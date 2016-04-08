@@ -951,6 +951,39 @@ public class PersonasAction extends PrincipalCoreAction
 	}
 
 	/**
+	 * Obtener la direccion del contratante de una poliza
+	 * @return SUCCESS
+	 */
+	public String obtenerDomicilioContratante()
+	{
+		long timestamp=System.currentTimeMillis();
+		logger.info(timestamp+""
+				+ "\n#########################################"
+				+ "\n###### obtenerDomicilioContratante ######"
+				+ "\nsmap1: "+smap1
+				);
+		try
+		{
+			Map<String,Object> managerResult=personasManager.obtenerDomicilioContratante(smap1,timestamp);
+			exito           = (Boolean)managerResult.get("exito");
+			respuesta       = (String)managerResult.get("respuesta");
+			respuestaOculta = (String)managerResult.get("respuestaOculta");
+			smap1           = (Map<String,String>)managerResult.get("domicilio");
+		}
+		catch(Exception ex)
+		{
+			exito           = false;
+			respuesta       = "Error inesperado #"+timestamp;
+			respuestaOculta = ex.getMessage();
+		}
+		logger.info(timestamp+""
+				+ "\n###### obtenerDomicilioContratante ######"
+				+ "\n#########################################"
+				);
+		return SUCCESS;
+	}
+
+	/**
 	 * Obtener la direccion de una persona por su CDPERSON
 	 * @return SUCCESS
 	 */

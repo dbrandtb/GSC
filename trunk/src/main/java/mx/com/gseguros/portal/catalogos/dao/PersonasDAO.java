@@ -76,6 +76,16 @@ public interface PersonasDAO
 	 * Actualiza factores para determinar campos de Personas en Articulo 140
 	 */
 	public void actualizaFactoresArt140(String cdperson, String cdnacion, String otfisjur,String residencia, String ptcumupr) throws Exception;
+	
+	/**
+	 * Obtiene el Domicilio del contratante de una poliza
+	 * @param params
+	 * @param timestamp
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String,String> obtenerDomicilioContratante(Map<String, String> params) throws Exception;
+	
 	/**
 	 * obtener domicilio por cdperson desde PKG_CONSULTA.P_GET_MDOMICIL
 	 */
