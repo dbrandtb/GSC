@@ -526,6 +526,7 @@ public interface FlujoMesaControlDAO {
 			,String ntramite
 			,String fedesde
 			,String fehasta
+			,String cdpersonCliente
 			,int start
 			,int limit
 			)throws Exception;

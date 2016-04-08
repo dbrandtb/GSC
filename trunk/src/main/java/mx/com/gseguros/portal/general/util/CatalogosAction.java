@@ -832,6 +832,12 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = catalogosManager.recuperarFormasDePagoPorRamoTipsit(params.get("cdramo"), params.get("cdtipsit"));
 					break;
+				case CLIENTES:
+					if(params!=null)
+					{
+						lista = catalogosManager.recuperarClientesPorNombreApellido(params.get("cadena"));
+					}
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

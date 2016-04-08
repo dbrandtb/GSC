@@ -1,5 +1,6 @@
 package mx.com.gseguros.mesacontrol.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -1296,6 +1297,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,fedesde  = params.get("FEDESDE")
 			       ,fehasta  = params.get("FEHASTA");
 			
+			String cdpersonCliente = params.get("CDPERSONCLI");
+			
 			Utils.validate(
 					agrupamc , "No se recibi\u00f3n el agrupador"
 					,status  , "No se recibi\u00f3n el status"
@@ -1324,6 +1327,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,ntramite
 					,fedesde
 					,fehasta
+					,cdpersonCliente
 					,start
 					,limit
 					);
@@ -1423,8 +1427,6 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,nombre     = params.get("NOMBRE")
 			       ,status     = params.get("STATUS")
 			       ,comments   = params.get("COMMENTS")
-			       ,ferecepc   = params.get("FERECEPC")
-			       ,festatus   = params.get("FESTATUS")
 			       ,estado     = params.get("ESTADO");
 			       
 			Utils.validate(
@@ -1433,6 +1435,9 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdflujomc , "No se recibi\u00f3 el proceso"
 					,status    , "No se recibi\u00f3 el status"
 					);
+			
+			Date ferecepc  = new Date()
+			     ,festatus = new Date();
 			
 			String ntramite = flujoMesaControlManager.registrarTramite(
 					cdsucdoc
@@ -1443,11 +1448,11 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdsucadm
 					,cdsucdoc
 					,cdtiptra
-					,ferecepc != null ? Utils.parse(ferecepc) : null
+					,ferecepc
 					,cdagente
 					,referencia
 					,nombre
-					,festatus != null ? Utils.parse(festatus) : null
+					,festatus
 					,status
 					,comments
 					,null //nmsolici
