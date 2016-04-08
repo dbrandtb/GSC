@@ -7,17 +7,18 @@
 		<title>Consulta Clausulas</title>
 			<script type="text/javascript">
 				var _CONTEXT = '${ctx}';
-				var _URL_CATALOGOS 				=	'<s:url namespace="/catalogos" 	action="obtieneCatalogo" />';
-				var _CATALOGO_PROVEEDORES		=	'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
-				var _SINO						=	'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SINO" />';
-				var _SECUENCIA					=	'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SECUENCIA_IVA" />';
-				var _URL_CONSULTA_PROVEEDOR		=	'<s:url namespace="/siniestros" action="consultaDatosConfiguracionProveedor" />';
-				var _URL_MOV_PROVEEDOR			=	'<s:url namespace="/siniestros" action="guardarConfiguracionProveedor" />';
+				var _CATALOGO_PROVEEDORES	=	'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
+				var _SINO					=	'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SINO" />';
+				var _SECUENCIA				=	'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SECUENCIA_IVA" />';
+				var _URL_CATALOGOS 			=	'<s:url namespace="/catalogos" 		action="obtieneCatalogo" />';
+				var _URL_CONSULTA_PROVEEDOR	=	'<s:url namespace="/siniestros" 	action="consultaDatosConfiguracionProveedor" />';
+				var _URL_MOV_PROVEEDOR		=	'<s:url namespace="/siniestros" 	action="guardarConfiguracionProveedor" />';
+				var _VER_CONFIG_LAYOUT 		=   '<s:url namespace="/siniestros"		action="includes/configuracionLayout" />';
 				
-				var _VER_CONFIG_LAYOUT 			= '<s:url namespace="/siniestros"	action="includes/configuracionLayout" />';
-				var _URL_EXISTE_CONF_PROV 		= '<s:url namespace="/siniestros"	action="validaExisteConfiguracionProv" />';
 				
-				var _URL_Carga_Masiva			= '<s:url namespace="/annotations" 	action="validaArchivoExcel" />';
+				
+				var _URL_EXISTE_CONF_PROV 	=   '<s:url namespace="/siniestros"		action="validaExisteConfiguracionProv" />';
+				var _URL_Carga_Masiva		=	'<s:url namespace="/annotations" 	action="validaArchivoExcel" />';
 			</script>
 			<script type="text/javascript" src="${ctx}/js/proceso/siniestros/configuracionProv.js"></script>
 	</head>

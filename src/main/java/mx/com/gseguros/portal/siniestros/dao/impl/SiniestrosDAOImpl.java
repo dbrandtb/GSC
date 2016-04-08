@@ -4507,7 +4507,9 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			super(dataSource, "PKG_SINIESTRO.P_LISTA_CONFIGPROV");
 			declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
 			String[] cols = new String[]{
-					"CLAVEPROVEEDOR","NOMBPROVEEDOR","APLICAIVA","APLICAIVADESC","SECUENCIAIVA","SECIVADESC","APLICAIVARET","IVARETDESC"
+					"CLAVEPROVEEDOR",	"NOMBPROVEEDOR",	"APLICAIVA",
+					"APLICAIVADESC",	"SECUENCIAIVA",		"SECIVADESC",
+					"APLICAIVARET",		"IVARETDESC"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -4519,7 +4521,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	@Override
 	public String obtieneAplicaConceptoIVA(String idConcepto) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
-		//params.put("pv_tipoConcepto_i", tipoConcepto);
 		params.put("pv_idConcepto_i", idConcepto);
 		Map<String, Object> resultado = ejecutaSP(new ObtieneAplicaConceptoIVA(getDataSource()), params);
 		logger.debug( resultado.get("pv_registro_o"));
@@ -4531,7 +4532,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     	protected ObtieneAplicaConceptoIVA(DataSource dataSource) {
     		
     		super(dataSource, "PKG_SINIESTRO.P_GET_CONCEPTOIVA");
-    		declareParameter(new SqlParameter("pv_idConcepto_i",   OracleTypes.VARCHAR));		// Id. del concepto
+    		declareParameter(new SqlParameter("pv_idConcepto_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
