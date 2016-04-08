@@ -5,7 +5,7 @@
 ///////////////////////
 ////// FUNCIONES //////
 /*///////////////////*/
-var _ice_debug=false;
+var _ice_debug=true;
 
 function debug(a,b,c,d,e)
 {
@@ -2440,6 +2440,26 @@ function _mask(text)
         ,border      : 0
         ,style       : 'padding:5px;'
         ,closeAction : 'destroy'
+        ,items       :
+        [{
+            xtype  : 'displayfield'
+            ,value : _NVL(text,'Cargando...')
+        }]
+    }).show());
+}
+
+function _maskSession(text)
+{
+    _unmask();
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title        : 'Cargando...'
+        ,itemId      : '_global_loadingWindow'
+        ,modal       : true
+        ,border      : 0
+        ,style       : 'padding:5px;'
+        ,closeAction : 'destroy'
+        ,closable    : false
         ,items       :
         [{
             xtype  : 'displayfield'
