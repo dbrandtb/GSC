@@ -1292,33 +1292,19 @@ public class EndososAction extends PrincipalCoreAction
 			String nsuplogi=respuestaIniciarEndoso.get("pv_nsuplogi_o");
 			
 			for(Map<String,String>persona:slist1) {
-				Map<String,Object>paramPersona=new LinkedHashMap<String,Object>(0);
+				Map<String,String>paramPersona=new HashMap<String,String>();
 				paramPersona.put("pv_cdperson_i"    , persona.get("cdperson"));
-				paramPersona.put("pv_cdtipide_i"    , null);
-				paramPersona.put("pv_cdideper_i"    , persona.get("cdideper"));
 				paramPersona.put("pv_dsnombre_i"    , persona.get("nombre"));
-				paramPersona.put("pv_cdtipper_i"    , null);
-				paramPersona.put("pv_otfisjur_i"    , persona.get("tpersona"));
-				paramPersona.put("pv_otsexo_i"      , persona.get("sexo"));
-				paramPersona.put("pv_fenacimi_i"    , renderFechas.parse(persona.get("fenacimi")));
-				paramPersona.put("pv_cdrfc_i"       , persona.get("rfc"));
-				paramPersona.put("pv_dsemail_i"     , null);
 				paramPersona.put("pv_dsnombre1_i"   , persona.get("nombre2"));
 				paramPersona.put("pv_dsapellido_i"  , persona.get("apat"));
 				paramPersona.put("pv_dsapellido1_i" , persona.get("amat"));
-				paramPersona.put("pv_feingreso_i"   , null);
-				paramPersona.put("pv_cdnacion_i"    , persona.get("nacional"));
-				paramPersona.put("pv_canaling_i"    , persona.get("CANALING"));
-				paramPersona.put("pv_conducto_i"    , persona.get("CONDUCTO"));
-				paramPersona.put("pv_ptcumupr_i"    , persona.get("PTCUMUPR"));
-				paramPersona.put("pv_residencia_i"  , persona.get("RESIDENCIA"));
-				paramPersona.put("pv_nongrata_i"    , null);
-				paramPersona.put("pv_cdideext_i"    , null);
-				paramPersona.put("pv_cdestciv_i"    , null);
-				paramPersona.put("pv_cdsucemi_i"    , null);
-				paramPersona.put("pv_cdusuario_i"    , usuarioCaptura);
-				paramPersona.put("pv_accion_i"      , "M");
-				kernelManager.movMpersona(paramPersona);
+				paramPersona.put("pv_cdrfc_i"       , persona.get("rfc"));
+				
+				/**
+				 * Se acutalizan nombre y rfc aunque no sean contrantates, se actualizan por cdperson
+				 */
+				this.endososManager.actualizaNombreCliente(paramPersona);
+				this.endososManager.actualizaRfcCliente(paramPersona);
 			}
 			
 			// Se confirma el endoso si cumple la validacion de fechas: 
