@@ -53,7 +53,7 @@
 	                           		if(bloqueoXSession==false)
                            			{   
 // 	                           			debug('### Valida session >>> BLOQUEO:',json);
-                           			    _maskSession('Ha cambiado su Usuario y/o Rol<br>Si desea continuar no cierre &eacute;sta ventana e inicie una sesi&oacute;n con el Usuario y Rol que &eacute;sta ventana indica.
+                           			    _maskSession('Ha cambiado su Usuario y/o Rol<br>Si desea continuar no cierre &eacute;sta ventana e inicie una sesi&oacute;n con el Usuario y Rol que &eacute;sta ventana indica');
                            			    		
                            			    bloqueoXSession =true;
                            			}

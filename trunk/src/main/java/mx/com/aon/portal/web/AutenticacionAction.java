@@ -140,6 +140,7 @@ public class AutenticacionAction extends PrincipalCoreAction {
 		userVO.setFormatDate(dateFormat);
 		userVO.setDecimalSeparator(isoVO.getFormatoNumerico());
 
+		session.put(Constantes.USER, userVO);
 		session.put("userVO", userVO);
 
 		//TODO: cambiar a nuevo manager *****
@@ -264,15 +265,15 @@ public class AutenticacionAction extends PrincipalCoreAction {
 	}
 	*/
 	
-	private boolean validaSessionUnica(String usuario, String sessionId) throws Exception {
-
-		boolean exito = false;
-
-		
-		
-
-		return exito;
-	}
+//	private boolean validaSessionUnica(String usuario, String sessionId) throws Exception {
+//
+//		boolean exito = false;
+//
+//		
+//		
+//
+//		return exito;
+//	}
 	
 	public void setLoginManager(LoginManager loginManager) {
 		this.loginManager = loginManager;
