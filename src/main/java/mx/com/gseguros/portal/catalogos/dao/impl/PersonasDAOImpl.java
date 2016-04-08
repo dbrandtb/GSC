@@ -402,6 +402,53 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
     	}
     }
 	
+	
+	@Override
+	public Map<String,String> obtenerDomicilioContratante(Map<String, String> params) throws Exception
+	{
+		Map<String,String>domicilio = null;
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_DATOS_CONTRATANTE ******")
+				.append("\n****** params=").append(params)
+				.append("\n*****************************************")
+				.toString()
+				);
+		Map<String, Object> resultado = ejecutaSP(new ObtenerDomicilioContratante(getDataSource()), params);
+		List<Map<String,String>>listaDomicilios=(List<Map<String,String>>)resultado.get("pv_registro_o");
+		if(listaDomicilios==null)
+		{
+			listaDomicilios=new ArrayList<Map<String,String>>();
+		}
+		if(listaDomicilios.size()>0)
+		{
+			domicilio=listaDomicilios.get(0);
+		}
+		logger.debug("domicilio: "+domicilio);
+		
+		return domicilio;
+	}
+	
+	protected class ObtenerDomicilioContratante extends StoredProcedure
+	{
+    	protected ObtenerDomicilioContratante(DataSource dataSource) {
+            super(dataSource,"PKG_CONSULTA.P_GET_DATOS_CONTRATANTE");
+    		declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliza_i"    , OracleTypes.VARCHAR));
+    		String[] cols=new String[]{
+    				"NMORDDOM" , "DSDOMICI"  , "NMTELEFO" , "CODPOSTAL" , "CDEDO"
+    				, "CDMUNICI", "CDCOLONI" ,"NMNUMERO"  , "NMNUMINT", "CDTIPDOM","SWACTIVO", "CDUSRCRE"
+    		};
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+	
 	/**
 	 * Obtener nuevo cdperson de PKG_SATELITES.P_GEN_CDPERSON
 	 */

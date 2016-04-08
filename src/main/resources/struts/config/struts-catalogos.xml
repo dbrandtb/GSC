@@ -335,6 +335,10 @@
             <result type="json" />
         </action>
         
+        <action name="obtenerDomicilioContratante" class="personasAction" method="obtenerDomicilioContratante">
+            <result type="json" />
+        </action>
+        
         <action name="obtenerDomicilioPorCdperson" class="personasAction" method="obtenerDomicilioPorCdperson">
             <result type="json" />
         </action>

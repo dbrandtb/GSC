@@ -15,6 +15,15 @@ public interface PersonasManager
 	 * @return exito,respuesta,respuestaOculta,itemMap
 	 */
 	public Map<String,Object> pantallaPersonas(String cdsisrol,long timestamp) throws Exception;
+	
+	/**
+	 * Obtiene el Domicilio del contratante de una poliza
+	 * @param params
+	 * @param timestamp
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String,Object> obtenerDomicilioContratante(Map<String, String> params,long timestamp) throws Exception;
 
 	public Map<String,String> obtieneMunicipioYcolonia(Map<String, String> params) throws Exception;
 

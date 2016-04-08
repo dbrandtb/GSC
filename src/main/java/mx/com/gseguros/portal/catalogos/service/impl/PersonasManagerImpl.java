@@ -489,6 +489,55 @@ public class PersonasManagerImpl implements PersonasManager
 	 * Obtener el domicilio de una persona por su cdperson de PKG_CONSULTA.P_GET_MDOMICIL
 	 * @return exito,respuesta,respuestaOculta,domicilio
 	 */
+	public Map<String,Object> obtenerDomicilioContratante(Map<String, String> params,long timestamp) throws Exception
+	{
+		Map<String,Object>result = new HashMap<String,Object>();
+		logger.info(timestamp+""
+				+ "\n#########################################"
+				+ "\n###### obtenerDomicilioContratante ######"
+				);
+		boolean exito               = true;
+		String  respuesta           = null;
+		String  respuestaOculta     = null;
+		Map<String,String>domicilio = null;
+		
+		if(exito)
+		{
+			try
+			{
+				domicilio = personasDAO.obtenerDomicilioContratante(params);
+			}
+			catch(Exception ex)
+			{
+				logger.error(timestamp+" error al obtener domicilio del contratante ",ex);
+				exito           = false;
+				respuesta       = "No se encontr&oacute; domicilio contratante #"+timestamp;
+				respuestaOculta = ex.getMessage();
+			}
+		}
+		
+		if(exito)
+		{
+			respuesta       = "Todo OK";
+			respuestaOculta = "Todo OK";
+		}
+		
+		result.put("exito"           , exito);
+		result.put("respuesta"       , respuesta);
+		result.put("respuestaOculta" , respuestaOculta);
+		result.put("domicilio"       , domicilio);
+		logger.info(timestamp+""
+				+ "\nresult: "+result
+				+ "\n###### obtenerDomicilioContratante ######"
+				+ "\n#########################################"
+				);
+		return result;
+	}
+	
+	/**
+	 * Obtener el domicilio de una persona por su cdperson de PKG_CONSULTA.P_GET_MDOMICIL
+	 * @return exito,respuesta,respuestaOculta,domicilio
+	 */
 	public Map<String,Object> obtenerDomicilioPorCdperson(String cdperson,long timestamp) throws Exception
 	{
 		Map<String,Object>result = new HashMap<String,Object>();

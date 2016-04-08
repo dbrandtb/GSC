@@ -34,8 +34,8 @@ _5_smap1:
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _5_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
-var _5_urlLoadMdomicil = '<s:url namespace="/"        action="cargarPantallaDomicilio" />';
-var _5_urlGuardar      = '<s:url namespace="/endosos" action="guardarEndosoDomicilioAutoFull" />';
+var _5_urlLoadMdomicil = '<s:url namespace="/catalogos"  action="obtenerDomicilioContratante" />';
+var _5_urlGuardar      = '<s:url namespace="/endosos"    action="guardarEndosoDomicilioAutoFull" />';
 
 var _5_panelLectura;
 var _5_formDomicil;
@@ -154,6 +154,7 @@ Ext.onReady(function()
 			Ext.apply(this,
 			{
 				title      : 'Datos de p&oacute;liza'
+				,hidden: true
 				,layout    :
                 {
                     type     : 'table'
@@ -244,6 +245,10 @@ Ext.onReady(function()
 	    	
 	    	datosIniciales = json.smap1;
 	    	
+			_fieldByName('CDEDO',_5_formDomicil).forceSelection = false;
+			_fieldByName('CDMUNICI',_5_formDomicil).forceSelection = false;
+			_fieldByName('CDCOLONI',_5_formDomicil).forceSelection = false;
+	    	
 	    	_5_formDomicil.loadRecord(new _5_modeloDomicil(json.smap1));
 	    	
 	    	heredarPanel(_5_formDomicil);
@@ -258,6 +263,17 @@ Ext.onReady(function()
                 params :
                 {
                     'params.cp' : _codPosEnd().getValue()
+                },
+                callback: function (){
+                	_fieldByName('CDEDO',_5_formDomicil).forceSelection = true;
+					_fieldByName('CDMUNICI',_5_formDomicil).forceSelection = true;
+					_fieldByName('CDCOLONI',_5_formDomicil).forceSelection = true;
+					
+					try{
+						_5_formDomicil.doLayout();
+					}catch(e){
+						debugError('No se pudo hacer dolayut a panel de domicilio',e);
+					}
                 }
             });
 	    	//cargar colonia
@@ -476,7 +492,6 @@ function _5_confirmar(boton)
 	},1500);
 
 }
-
 
 Ext.ComponentQuery.query('[name=NMTELEFO]')[Ext.ComponentQuery.query('[name=NMTELEFO]').length-1].hide();
 Ext.ComponentQuery.query('[name=NMTELEFO]')[Ext.ComponentQuery.query('[name=NMTELEFO]').length-1].maxLength = 100;

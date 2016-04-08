@@ -860,6 +860,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			numeroCliente = Integer.valueOf(codigoExterno.substring(codigoExterno.length()-10));
 			tipoCliente = "D".equalsIgnoreCase(compania)?1:2;
 		}catch(Exception ex){
+			logger.debug("Error en conversion de datos para tipo cliente Sigs",ex);
 			throw new ApplicationException("Error en conversion de datos para tipo cliente Sigs");
 		}
 		
