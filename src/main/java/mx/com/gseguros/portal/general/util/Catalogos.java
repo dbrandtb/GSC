@@ -140,7 +140,8 @@ public enum Catalogos {
 	TIPOS_DOMICILIO("TTIPDOMI"),
 	COTIZADORES_ACTIVOS(""),
 	FORMAS_PAGO_POLIZA_POR_RAMO_TIPSIT(""),
-	CLIENTES("")
+	CLIENTES(""),
+	CONFLAYOUT("LAYOUTCON")
 	;
 
 	private String cdTabla;

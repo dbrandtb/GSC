@@ -11,7 +11,8 @@ Ext.onReady(function() {
 		fields:[{type:'string',		name:'CLAVEPROVEEDOR'},		{type:'string',		name:'NOMBPROVEEDOR'},
 		        {type:'string',		name:'APLICAIVA'},			{type:'string',		name:'APLICAIVADESC'},
 		        {type:'string',		name:'SECUENCIAIVA'},		{type:'string',		name:'SECIVADESC'},
-		        {type:'string',		name:'APLICAIVARET'},		{type:'string',		name:'IVARETDESC'}
+		        {type:'string',		name:'APLICAIVARET'},		{type:'string',		name:'IVARETDESC'},
+		        {type:'string',		name:'DESCRIPC'},			{type:'string',		name:'CVECONFI'}
         ]
 	});
 	
@@ -113,6 +114,20 @@ Ext.onReady(function() {
 			}
 		}
 	});
+	
+	var storeTipoLayout = Ext.create('Ext.data.JsonStore', {
+		model:'Generic',
+		proxy: {
+			type: 'ajax',
+			url: _URL_CATALOGOS,
+			extraParams : {catalogo:_CATALOGO_ConfLayout},
+			reader: {
+				type: 'json',
+				root: 'lista'
+			}
+		}
+	});
+	storeTipoLayout.load();
 
 	cmbProveedor = Ext.create('Ext.form.field.ComboBox', {
 		fieldLabel : 'Proveedor',			displayField : 'nombre',			name:'params.cmbProveedor',
@@ -187,7 +202,14 @@ Ext.onReady(function() {
 		colspan	   :2,				fieldLabel   : 'Secuencia IVA',		allowBlank		: false,
 		editable   : false,			displayField : 'value',				valueField:'key',			    		forceSelection  : true,
 		labelWidth : 170,			queryMode    :'local',				editable  :false,						name			:'params.secuenciaIVA',
-		width		 : 350,			store : storeSecuenciaIVA
+		width	   : 350,			store : storeSecuenciaIVA
+	});
+	
+	var tipoLayout= Ext.create('Ext.form.ComboBox',{
+		colspan	   :2,				fieldLabel   : 'Layout',			allowBlank       : false,
+		editable   :false,			displayField : 'value',				valueField: 'key',			    		forceSelection  : true,
+		labelWidth : 170,			queryMode    :'local',				editable  :false,						name			:'params.tipoLayout',
+		width	   : 350,			store: storeTipoLayout,				emptyText:'Seleccione...'
 	});
 	
 	panelProveedor = Ext.create('Ext.form.Panel', {
@@ -197,13 +219,13 @@ Ext.onReady(function() {
 		bodyPadding: 5,
 		items: [
 			cmbProveedorModificable,
+			tipoLayout,
 			aplicaIVA,
 			secuenciaIVA,
 			aplicaIVARET,
 			{	xtype  : 'textfield',	fieldLabel 	: 'Proceso',		labelWidth: 100,
 				width	:350,			name   :'params.proceso',		hidden :true
 			}
-			
 		],
 		buttonAlign : 'center'
 		,buttons: [{
@@ -216,18 +238,18 @@ Ext.onReady(function() {
 						waitMsg:'Procesando...',
 						failure: function(form, action) {
 							//Se cambia el valor 
-							Ext.Msg.show({
+							centrarVentanaInterna(Ext.Msg.show({
 								title: 'ERROR',
 								msg: action.result.errorMessage,
 								buttons: Ext.Msg.OK,
 								icon: Ext.Msg.ERROR
-							});
+							}));
 						},
 						success: function(form, action) {
 							panelProveedor.form.reset();
-							modificacionClausula.close();
+							configuracionProveedor.close();
 							cargarPaginacion();
-							mensajeCorrecto('&Eacute;XITO','La configuraci&oacute;n del proveedor fue exitoso.',function(){});
+							centrarVentanaInterna(mensajeCorrecto('&Eacute;XITO','La configuraci&oacute;n del proveedor fue exitoso.',function(){}));
 						}
 					});
 				} else {
@@ -244,18 +266,18 @@ Ext.onReady(function() {
 			icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
 			buttonAlign : 'center',
 			handler: function() {
-				modificacionClausula.close();
+				configuracionProveedor.close();
 			}
 		}]
 	});
 	
-	modificacionClausula = Ext.create('Ext.window.Window',{
+	configuracionProveedor = Ext.create('Ext.window.Window',{
 		title        : 'Datos Proveedor'
 		,modal       : true
 		,closeAction: 'hide'
 		,buttonAlign : 'center'
-		,width		 : 710
-		,height      : 210
+		//,width		 : 710
+		//,height      : 210
 		,items       : [
 			panelProveedor
 		]
@@ -328,6 +350,12 @@ Ext.onReady(function() {
 						header     : 'Proveedor',	dataIndex  : 'NOMBPROVEEDOR',	flex : 1
 					},
 					{
+						header     : 'Cve Layout',	dataIndex : 'CVECONFI',	flex : 1, 	hidden   : true
+					},
+					{
+						header     : 'Layout',		dataIndex  : 'DESCRIPC',	flex : 1
+					},
+					{
 						header     : 'Aplica IVA',	dataIndex  : 'APLICAIVA',		flex : 1,	hidden   : true
 					},
 					{
@@ -370,12 +398,15 @@ Ext.onReady(function() {
 			if(success){
 				var jsonResponse = Ext.decode(response.responseText);
 				if(jsonResponse.datosValidacion &&jsonResponse.datosValidacion.length == 0) {
-					showMessage("Aviso", "No existe configuraci&oacute;n del proveedor seleccionado.", Ext.Msg.OK, Ext.Msg.INFO);
+					if(panelInicialPral.down('combo[name=params.cmbProveedor]').getValue() == null){
+						centrarVentanaInterna(showMessage("Aviso", "No existe configuraci&oacute;n del proveedor.", Ext.Msg.OK, Ext.Msg.INFO));
+					}else{
+						centrarVentanaInterna(showMessage("Aviso", "No existe configuraci&oacute;n del proveedor seleccionado.", Ext.Msg.OK, Ext.Msg.INFO));
+					}
 					return;
 				}
 			}else{
-				showMessage('Error', 'Error al obtener los datos', 
-				Ext.Msg.OK, Ext.Msg.ERROR);
+				centrarVentanaInterna(showMessage('Error', 'Error al obtener los datos',Ext.Msg.OK, Ext.Msg.ERROR));
 			}
 		});
 	}
@@ -387,22 +418,27 @@ Ext.onReady(function() {
 				'params.cdpresta': record.get('CLAVEPROVEEDOR')
 			}
 		});
+		
 		panelProveedor.down('combo[name=params.cmbProveedorMod]').setValue(record.get('CLAVEPROVEEDOR'));
+		panelProveedor.down('combo[name=params.tipoLayout]').setValue(record.get('CVECONFI'));
 		panelProveedor.down('combo[name=params.idaplicaIVARET]').setValue(record.get('APLICAIVARET'));
 		panelProveedor.down('combo[name=params.idaplicaIVA]').setValue(record.get('APLICAIVA'));
 		panelProveedor.down('combo[name=params.secuenciaIVA]').setValue(record.get('SECUENCIAIVA'));
 		panelProveedor.down('[name=params.proceso]').setValue('U');
-		modificacionClausula.show();
+		centrarVentanaInterna(configuracionProveedor.show());
 	}
 	
 	function agregarProveedor(){
 		panelProveedor.down('combo[name=params.cmbProveedorMod]').setValue('');
+		panelProveedor.down('combo[name=params.tipoLayout]').setValue('');
 		panelProveedor.down('combo[name=params.idaplicaIVARET]').setValue('S');
 		panelProveedor.down('combo[name=params.idaplicaIVA]').setValue('S');
 		panelProveedor.down('combo[name=params.secuenciaIVA]').setValue('A');
 		panelProveedor.down('[name=params.proceso]').setValue('I');
-		modificacionClausula.show();
+		centrarVentanaInterna(configuracionProveedor.show());
 	}
+	
+	
 	
 	function configuracionLayoutProveedor(grid,rowIndex){
 		var record = grid.getStore().getAt(rowIndex);

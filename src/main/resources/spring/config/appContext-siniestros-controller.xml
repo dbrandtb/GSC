@@ -40,4 +40,11 @@
         <property name="catalogosManager"   ref="catalogosManagerImpl"></property>
         <property name="ice2sigsService"    ref="ice2sigsServiceImpl"></property>
     </bean>
+    <bean id="configuracionLayoutAction" class="mx.com.gseguros.portal.siniestros.controller.ConfiguracionLayoutAction" scope="prototype">
+        <property name="siniestrosManager" ref="siniestrosManagerImpl"/>
+        <property name="kernelManagerSustituto" ref="kernelManagerSustituto"/>
+        <property name="pantallasManager"   ref="pantallasManagerImpl"></property>
+        <property name="catalogosManager"   ref="catalogosManagerImpl"></property>
+        <property name="ice2sigsService"    ref="ice2sigsServiceImpl"></property>
+    </bean>
 </beans>
