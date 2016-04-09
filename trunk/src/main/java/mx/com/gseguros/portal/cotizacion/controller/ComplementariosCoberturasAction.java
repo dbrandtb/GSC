@@ -998,6 +998,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
             		,null//cdmotivo
             		,usuarioSesion.getRolActivo().getClave()
             		,"N"
+            		,null
             		);
             
 			success=true;

@@ -31,6 +31,7 @@ import mx.com.gseguros.portal.general.model.Reporte;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.ReportesManager;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
+import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoArchivo;
@@ -1162,6 +1163,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            			,null//cdmotivo
 	            			,cdsisrol
 	            			,"S"
+	            			,EstatusTramite.PENDIENTE.getCodigo()
 	            			);
 	            }
 	    		catch(Exception ex)
@@ -1249,6 +1251,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            			,null//cdmotivo
 	            			,cdsisrol
 	            			,"S"//swagente
+	            			,EstatusTramite.PENDIENTE.getCodigo()
 	            			);
 	            	
 	            	try

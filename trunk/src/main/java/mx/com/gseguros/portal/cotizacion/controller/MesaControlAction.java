@@ -381,6 +381,7 @@ public class MesaControlAction extends PrincipalCoreAction
 					,null//cdmotivo
 					,user.getRolActivo().getClave()
 					,"S"
+					,EstatusTramite.PENDIENTE.getCodigo()
 					);
 					
 			success=true;
@@ -697,6 +698,7 @@ public class MesaControlAction extends PrincipalCoreAction
 		{
 			UserVO usu=(UserVO)session.get("USUARIO");
 			smap1.put("pv_cdusuari_fin_i",usu.getUser());
+			smap1.put("pv_cdsisrol_fin_i",usu.getRolActivo().getClave());
 			smap1.put("pv_cdmotivo_i", null);
 			kernelManager.mesaControlFinalizarDetalle(smap1);
 			success=true;
@@ -1050,6 +1052,7 @@ public class MesaControlAction extends PrincipalCoreAction
 					,null
 					,usu.getRolActivo().getClave()
 					,"S"
+					,EstatusTramite.PENDIENTE.getCodigo()
 					);
 			////// se guarda el detalle //////
         	//////////////////////////////////
@@ -1147,6 +1150,7 @@ public class MesaControlAction extends PrincipalCoreAction
 					,null
 					,cdsisrol
 					,"N"
+					,EstatusTramite.PENDIENTE.getCodigo()
 					);
 			
         	mensaje = "Tr&aacute;mite regresado";
@@ -1179,12 +1183,18 @@ public class MesaControlAction extends PrincipalCoreAction
 			
 			Utils.validate(smap1 , "No se recibieron datos");
 			
-			String ntramite = smap1.get("ntramite");
-			String dscoment = smap1.get("dscoment");
+			String ntramite  = smap1.get("ntramite")
+			       ,dscoment = smap1.get("dscoment")
+			       ,status   = smap1.get("status");
 			
 			Utils.validate(ntramite , "No se recibio el numero de tramite");
 			
-			mesaControlManager.movimientoDetalleTramite(ntramite, new Date(), null, dscoment, user.getUser(), null, user.getRolActivo().getClave(),null);
+			mesaControlManager.movimientoDetalleTramite(
+					ntramite, new Date(), null
+					,dscoment, user.getUser(), null
+					,user.getRolActivo().getClave(),null
+					,status
+					);
 		}
 		catch(Exception ex)
 		{

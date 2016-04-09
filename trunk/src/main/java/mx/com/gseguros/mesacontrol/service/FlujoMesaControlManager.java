@@ -199,6 +199,7 @@ public interface FlujoMesaControlManager
 			,String fedesde
 			,String fehasta
 			,String cdpersonCliente
+			,String filtro
 			,int start
 			,int limit
 			)throws Exception;

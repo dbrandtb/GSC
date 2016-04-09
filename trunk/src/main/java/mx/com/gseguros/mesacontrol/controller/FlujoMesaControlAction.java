@@ -1249,6 +1249,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			params.put("CDUSUARI" , usuario.getUser());
 			params.put("CDSISROL" , usuario.getRolActivo().getClave());
+			params.put("CDUNIECO" , usuario.getCdUnieco());
 			
 			result = SUCCESS;
 			
@@ -1295,7 +1296,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,cdagente = params.get("CDAGENTE")
 			       ,ntramite = params.get("NTRAMITE")
 			       ,fedesde  = params.get("FEDESDE")
-			       ,fehasta  = params.get("FEHASTA");
+			       ,fehasta  = params.get("FEHASTA")
+			       ,filtro   = params.get("FILTRO");
 			
 			String cdpersonCliente = params.get("CDPERSONCLI");
 			
@@ -1328,6 +1330,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,fedesde
 					,fehasta
 					,cdpersonCliente
+					,filtro
 					,start
 					,limit
 					);

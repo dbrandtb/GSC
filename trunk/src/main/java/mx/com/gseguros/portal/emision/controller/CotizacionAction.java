@@ -1052,6 +1052,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,null
 						,cdsisrol
 						,"S"
+						,EstatusTramite.CONFIRMADO.getCodigo()
 						);
 				
 				//---------------------------------------------
@@ -7428,6 +7429,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,null
 							,cdsisrol
 							,"S"
+							,EstatusTramite.PENDIENTE.getCodigo()
 							);
 	            	
 	            	smap1.put("nombreUsuarioDestino"
@@ -8243,6 +8245,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,null
 							,cdsisrol
 							,"S"
+							,EstatusTramite.PENDIENTE.getCodigo()
 							);
 	            	
 	            	smap1.put("nombreUsuarioDestino"

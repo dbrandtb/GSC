@@ -47,6 +47,26 @@ for(var i in _p54_filtroItemsDin)
 }
 
 _p54_gridButtons = [ <s:property value="items.botonesGrid" escapeHtml="false" /> ];
+_p54_gridButtons.push('->');
+_p54_gridButtons.push(
+{
+    xtype       : 'textfield'
+    ,itemId     : '_p54_filtroCmp'
+    ,fieldLabel : '<span style="color:white;">Filtro:</span>'
+    ,labelWidth : 60
+    ,espera     : ''
+    ,listeners  :
+    {
+        change : function(me,val)
+        {
+            clearTimeout(me.espera);
+            me.espera=setTimeout(function()
+            {
+                Ext.ComponentQuery.query('[xtype=button][text=Buscar]')[0].handler(Ext.ComponentQuery.query('[xtype=button][text=Buscar]')[0]);
+            },1500);
+        }
+    }
+});
 
 /*
 /////////////////////////////
@@ -93,15 +113,6 @@ Ext.onReady(function()
                 ,root          : 'list'
                 ,totalProperty : 'total'
             }
-        }
-    });
-    _p54_store.load(
-    {
-        params :
-        {
-            page   : 1
-            ,start : 0
-            ,limit : _p54_tamanioPag
         }
     });
     ////// stores //////
@@ -167,9 +178,24 @@ Ext.onReady(function()
                 ,buttons     :
                 [
                     {
-                        text     : 'Buscar'
-                        ,icon    : '${icons}zoom.png'
-                        ,handler : function(me)
+                        text       : 'Buscar'
+                        ,icon      : '${icons}zoom.png'
+                        ,listeners :
+                        {
+                            afterrender : function(me)
+                            {
+                                _setLoading(true,me);
+                                setTimeout(
+                                    function()
+                                    {
+                                        _setLoading(false,me);
+                                        me.handler(me);
+                                    }
+                                    ,1.5*1000
+                                );
+                            }
+                        }
+                        ,handler   : function(me)
                         {
                             var ck = 'Recuperando tr\u00e1mites';
                             try
@@ -180,7 +206,10 @@ Ext.onReady(function()
                                     throw 'Favor de revisar los datos';
                                 }
                                 
-                                _p54_store.proxy.extraParams = _formValuesToParams(form.getValues());
+                                var values = form.getValues();
+                                values.FILTRO = _fieldById('_p54_filtroCmp').getValue();
+                                
+                                _p54_store.proxy.extraParams = _formValuesToParams(values);
                                 _p54_grid.down('pagingtoolbar').moveFirst();
                             }
                             catch(e)
@@ -214,12 +243,14 @@ Ext.onReady(function()
                 ,columns     : [ <s:property value="items.gridColumns" escapeHtml="false" /> ]
                 ,store       : _p54_store
                 ,dockedItems :
-                [{
-                    xtype        : 'pagingtoolbar'
-                    ,store       : _p54_store
-                    ,dock        : 'bottom'
-                    ,displayInfo : true
-                }]
+                [
+                    {
+                        xtype        : 'pagingtoolbar'
+                        ,store       : _p54_store
+                        ,dock        : 'bottom'
+                        ,displayInfo : true
+                    }
+                ]
                 ,selModel  :
                 {
                     type           : 'rowmodel'
