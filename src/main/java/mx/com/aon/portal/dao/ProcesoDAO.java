@@ -3432,8 +3432,17 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
 		{
-			String cols[]=new String[]{"NTRAMITE","NMORDINA","CDTIPTRA","CDCLAUSU","FECHAINI","FECHAFIN",
-					"COMMENTS","CDUSUARI_INI","CDUSUARI_FIN","usuario_ini","usuario_fin","cdmotivo","SWAGENTE"};
+			String cols[]=new String[]{
+					"NTRAMITE"      , "NMORDINA"     , "CDTIPTRA"
+					,"CDCLAUSU"     , "FECHAINI"     , "FECHAFIN"
+					,"COMMENTS"     , "CDUSUARI_INI" , "CDUSUARI_FIN"
+					,"usuario_ini"  , "usuario_fin"  , "cdmotivo"
+					,"SWAGENTE"
+					,"STATUS"       , "DSSTATUS"
+					,"CDSISROL_INI" , "DSSISROL_INI"
+					,"CDSISROL_FIN" , "DSSISROL_FIN"
+					,"DSUSUARI_INI" , "DSUSUARI_FIN"
+					};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
 			{
@@ -4153,13 +4162,14 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     /*///////////////////////////////////////////////////////*/
     protected class MesaControlFinalizarDetalle extends CustomStoredProcedure {
     	protected MesaControlFinalizarDetalle(DataSource dataSource) {
-    		super(dataSource,"PKG_SATELITES.P_UPDATE_TDMESA");
+    		super(dataSource,"PKG_SATELITES2.P_UPDATE_TDMESA");
     		
     		declareParameter(new SqlParameter("pv_nmordina_i",     OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_ntramite_i",     OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdusuari_fin_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdsisrol_fin_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_comments_i",     OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_fechafin_i",     OracleTypes.DATE));
+    		declareParameter(new SqlParameter("pv_fechafin_i",     OracleTypes.TIMESTAMP));
     		//declareParameter(new SqlParameter("pv_cdmotivo_i",     OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("PV_MSG_ID_O",    OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("PV_TITLE_O",     OracleTypes.VARCHAR));

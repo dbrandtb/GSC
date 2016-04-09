@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
@@ -1604,6 +1605,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String fedesde
 			,String fehasta
 			,String cdpersonCliente
+			,String filtro
 			,int start
 			,int limit
 			)throws Exception
@@ -1625,6 +1627,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@ fedesde="          , fedesde
 				,"\n@@@@@@ fehasta="          , fehasta
 				,"\n@@@@@@ cdpersonCliente="  , cdpersonCliente
+				,"\n@@@@@@ filtro="           , filtro
 				,"\n@@@@@@ start="            , start
 				,"\n@@@@@@ limit="            , limit
 				));
@@ -1653,6 +1656,33 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,start
 					,limit
 					);
+			
+			if(StringUtils.isNotBlank(filtro))
+			{
+				
+				List<Map<String,String>> slist1 = (List<Map<String,String>>)result.get("lista");
+				
+				List<Map<String,String>> aux = new ArrayList<Map<String,String>>();
+				
+				for(Map<String,String>rec:slist1)
+				{
+					for(Entry<String,String>en:rec.entrySet())
+					{
+						String value = en.getValue();
+						if(value==null)
+						{
+							value = "";
+						}
+						if(value.toUpperCase().indexOf(filtro.toUpperCase())!=-1)
+						{
+							aux.add(rec);
+							break;
+						}
+					}
+				}
+				
+				result.put("lista", aux);
+			}
 			
 		}
 		catch(Exception ex)
@@ -1787,7 +1817,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,cdusuari
 					,null//cdmotivo
 					,cdsisrol
-					,"S", null, null
+					,"S"
+					,null
+					,null
+					,status
 					);
 		}
 		catch(Exception ex)
@@ -1931,7 +1964,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,cdusuari
 					,null//cdmotivo
 					,cdsisrol
-					,"S", null, null
+					,"S"
+					,null
+					,null
+					,"-1"
 					);
 		}
 		catch(Exception ex)
@@ -2178,6 +2214,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,"S"
 					,usuarioDestino.get("cdusuari")
 					,usuarioDestino.get("cdsisrol")
+					,statusNew
 					);
 			
 			if(destinoSimple)

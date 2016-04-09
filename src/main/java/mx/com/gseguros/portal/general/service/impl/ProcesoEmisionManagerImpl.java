@@ -199,7 +199,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	        	
 	        	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null,
 	        			"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")",
-	        			cdusuari, null, cdsisrol,"N", null, null);
+	        			cdusuari, null, cdsisrol,"N", null, null, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
 	        	
 	        	mesaControlDAO.actualizaStatusMesaControl(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
 	        	
@@ -234,7 +234,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					
 		        	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null,
 		        			"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")",
-		        			cdusuari, null, cdsisrol,"N", null, null);
+		        			cdusuari, null, cdsisrol,"N", null, null, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
 					
 		        	mesaControlDAO.actualizaStatusMesaControl(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
 		        	
@@ -885,7 +885,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 			logger.debug("se inserta detalle nuevo para emision");
 	        	
 	        mesaControlDAO.movimientoDetalleTramite(ntramite,new Date(),null,
-	        		"El tr\u00e1mite se emiti\u00f3",cdusuari,null,cdsisrol,"S", null, null);
+	        		"El tr\u00e1mite se emiti\u00f3",cdusuari,null,cdsisrol,"S", null, null, EstatusTramite.CONFIRMADO.getCodigo());
 			
 		} catch(Exception ex) {
 			Utils.generaExcepcion(ex, paso);

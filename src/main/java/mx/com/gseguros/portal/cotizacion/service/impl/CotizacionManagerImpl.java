@@ -3874,7 +3874,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,cdusuari
 							,null       //cdmotivo
 							,cdsisrol
-							,"S", null, null
+							,"S"
+							,null
+							,null
+							,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo()
 							);
 					
 					resp.getSmap().put("nombreUsuarioDestino"
@@ -6754,20 +6757,24 @@ public class CotizacionManagerImpl implements CotizacionManager
     			mesaControlDAO.actualizarNmsoliciTramite(ntramite, nmpoliza);
             	logger.debug("se inserta detalle nuevo");
             	
-            	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null,
-            			"Se guard\u00f3 una cotizaci\u00f3n nueva para el tr\u00e1mite", cdusuari, null, cdsisrol,"S", null, null);
+            	mesaControlDAO.movimientoDetalleTramite(
+            			ntramite, new Date(), null
+            			,"Se guard\u00f3 una cotizaci\u00f3n nueva para el tr\u00e1mite"
+            			,cdusuari, null, cdsisrol,"S", null, null
+            			,EstatusTramite.PENDIENTE.getCodigo()
+            			);
         		
     		} else { //se genera un tramite
     			
     			paso = "Generando el tr�mite";
     			
             	ntramite = mesaControlDAO.movimientoMesaControl(cdunieco, cdramo,"W", "0", "0", 
-            			null, null, "1", new Date(), cdagente, null, "", new Date(), "2",
+            			null, null, "1", new Date(), cdagente, null, "", new Date(), EstatusTramite.PENDIENTE.getCodigo(),
             			"", nmpoliza, cdtipsit, cdusuari, cdsisrol, null, null, null, null, null);
             	
             	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null
             			,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
-            			,cdusuari, null, cdsisrol,"S", null, null);
+            			,cdusuari, null, cdsisrol,"S", null, null, EstatusTramite.PENDIENTE.getCodigo());
             	
             	try {
 	            	cotizacionDAO.grabarEvento(new StringBuilder("\nCotizar tramite grupo"), 

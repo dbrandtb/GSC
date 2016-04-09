@@ -218,6 +218,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			,String swagente
 			,String cdusuariDest
 			,String cdsisrolDest
+			,String status
 			)throws Exception
 	{
 		Map<String,Object>params=new LinkedHashMap<String,Object>();
@@ -231,6 +232,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("swagente"     , swagente);
 		params.put("cdusuariDest" , cdusuariDest);
 		params.put("cdsisrolDest" , cdsisrolDest);
+		params.put("status"       , status);
 		logger.debug(
 				new StringBuilder()
 				.append("\n**********************************************")
@@ -257,6 +259,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("swagente"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuariDest" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrolDest" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

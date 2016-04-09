@@ -38,6 +38,10 @@ Ext.define('VentanaHistorial',
                             ,"CDUSUARI_FIN"
                             ,"usuario_ini"
                             ,"usuario_fin"
+                            ,"STATUS"       , "DSSTATUS"
+                            ,"CDSISROL_INI" , "DSSISROL_INI"
+                            ,"CDSISROL_FIN" , "DSSISROL_FIN"
+                            ,"DSUSUARI_INI" , "DSUSUARI_FIN"
                         ]
                         ,autoLoad : true
                         ,proxy    :
@@ -72,24 +76,32 @@ Ext.define('VentanaHistorial',
                             ,xtype     : 'datecolumn'
                             ,dataIndex : 'FECHAINI'
                             ,format    : 'd M Y H:i'
-                            ,width     : 130
+                            ,width     : 140
                         }
                         ,{
                             header     : 'Usuario inicio'
                             ,dataIndex : 'usuario_ini'
-                            ,width     : 150
+                            ,width     : 250
+                            ,renderer  : function(v,md,rec)
+                            {
+                                return _NVL(rec.get('DSUSUARI_INI')) + ' - ' +  _NVL(rec.get('DSSISROL_INI'));
+                            }
                         }
                         ,{
                             header     : 'Fecha de fin'
                             ,xtype     : 'datecolumn'
                             ,dataIndex : 'FECHAFIN'
                             ,format    : 'd M Y H:i'
-                            ,width     : 90
+                            ,width     : 140
                         }
                         ,{
                             header     : 'Usuario fin'
                             ,dataIndex : 'usuario_fin'
-                            ,width     : 150
+                            ,width     : 250
+                            ,renderer  : function(v,md,rec)
+                            {
+                                return _NVL(rec.get('DSUSUARI_FIN')) + ' - ' +  _NVL(rec.get('DSSISROL_FIN'));
+                            }
                         }
                         ,{
                             width         : 30

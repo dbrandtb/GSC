@@ -284,7 +284,10 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,cdusuari
 						,null                      //cdmotivo
 						,cdsisrol
-						,"S", null, null
+						,"S"
+						,null
+						,null
+						,EstatusTramite.IMPRESION_PENDIENTE.getCodigo()
 						);
 				
 				for(Map<String,String>movAgente:movsAgente)
@@ -630,7 +633,10 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,cdusuari
 						,null       //cdmotivo
 						,cdsisrol
-						,"S", null, null
+						,"S"
+						,null
+						,null
+						,remesa.get("status")
 						);
 			}
 			
@@ -910,7 +916,10 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					,cdusuari
 					,null       //cdmotivo
 					,cdsisrol
-					,"S", null, null
+					,"S"
+					,null
+					,null
+					,status
 					);
 		}
 		catch(Exception ex)
@@ -1076,7 +1085,10 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,cdusuari
 						,null                      //cdmotivo
 						,cdsisrol
-						,"S", null, null
+						,"S"
+						,null
+						,null
+						,EstatusTramite.IMPRESION_PENDIENTE.getCodigo()
 						);
 				
 				paso = "Registrando relaci\u00F3n de movimiento";
@@ -1289,7 +1301,10 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,cdusuari
 						,null                      //cdmotivo
 						,cdsisrol
-						,"S", null, null
+						,"S"
+						,null
+						,null
+						,EstatusTramite.IMPRESO.getCodigo()
 						);
 			}
 		}
@@ -1554,7 +1569,10 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,cdusuari
 						,null       //cdmotivo
 						,cdsisrol
-						,"S", null, null
+						,"S"
+						,null
+						,null
+						,remesa.get("status")
 						);
 			}
 			
