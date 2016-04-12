@@ -835,13 +835,18 @@ Ext.onReady(function()
         //clave
                 
         //Cambia Atributos campo Fecha de nacimiento dependiendo del seguro de vida
-        _fieldByLabel('SEGURO DE VIDA').on(
-                        {
-                            select : _p28_atributoNacimientoContratante
-                        });
-        
+        if(!Ext.isEmpty(_fieldByLabel('SEGURO DE VIDA',null,true)))
+        {
+	        _fieldByLabel('SEGURO DE VIDA').on(
+	                        {
+	                            select : _p28_atributoNacimientoContratante
+	                        });
+        }
         //tipovalor
-        _fieldLikeLabel('FECHA DE FACTURA').hide();
+        if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE FACTURA',null,true)))
+        {
+            _fieldLikeLabel('FECHA DE FACTURA').hide();
+        }
         tipoValor.on(
         {
             select : function()
@@ -892,6 +897,7 @@ Ext.onReady(function()
                     	                        var limite = Ext.Date.add(hoy, Ext.Date.DAY,-1*(numeroDiasFechaFacturacion));
                     	                        
                     	                        _fieldLikeLabel('FECHA DE FACTURA').setMinValue(limite);
+                                                
                     	                    }
                     	                    else
                     	                    {
@@ -912,16 +918,21 @@ Ext.onReady(function()
                 		
                 	var hoy = new  Date();
                 	var limite = Ext.Date.add(hoy, Ext.Date.DAY,numeroDiasFechaFacturacion);
-                	
-                	_fieldLikeLabel('FECHA DE FACTURA').setMinValue(limite);
-                	_fieldLikeLabel('FECHA DE FACTURA').setMaxValue(hoy);
-                	_fieldLikeLabel('FECHA DE FACTURA').show();
-                	_fieldLikeLabel('FECHA DE FACTURA').allowBlank=false;
+                	if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE FACTURA',null,true)))
+                    {
+                	    _fieldLikeLabel('FECHA DE FACTURA').setMinValue(limite);
+                	    _fieldLikeLabel('FECHA DE FACTURA').setMaxValue(hoy);
+                	    _fieldLikeLabel('FECHA DE FACTURA').show();
+                	    _fieldLikeLabel('FECHA DE FACTURA').allowBlank=false;
+                	}
                 }
 		else
                 {
-                    _fieldLikeLabel('FECHA DE FACTURA').hide();
-                    _fieldLikeLabel('FECHA DE FACTURA').allowBlank=true;
+                    if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE FACTURA',null,true)))
+                    {
+                        _fieldLikeLabel('FECHA DE FACTURA').hide();
+                        _fieldLikeLabel('FECHA DE FACTURA').allowBlank=true;
+                    }
                 }
                 
                 }
@@ -936,14 +947,17 @@ Ext.onReady(function()
         //sumaAsegurada
         
         //parametrizacion coberturas
+        if(!Ext.isEmpty(_fieldLikeLabel('NEGOCIO',null,true)))
         _fieldByLabel('NEGOCIO').on(
         {
             change : function(){ _p28_cargarParametrizacionCoberturas(); }
         });
+        if(!Ext.isEmpty(_fieldLikeLabel('TIPO PERSONA',null,true)))
         _fieldByLabel('TIPO PERSONA').on(
         {
             change : function(){ _p28_cargarParametrizacionCoberturas(); }
         });
+        if(!Ext.isEmpty(_fieldLikeLabel('TIPO SERVICIO',null,true)))
         _fieldByLabel('TIPO SERVICIO').on(
         {
             change : function(me,val)
@@ -951,7 +965,10 @@ Ext.onReady(function()
                 if(me.findRecord('key',val)!=false)
                 {
                     _p28_cargarParametrizacionCoberturas();
+                    if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)))
+                    {
                     _fieldLikeLabel('CLAVE').store.proxy.extraParams['params.servicio']=val;
+                    }
                 }
             }
         });
@@ -996,7 +1013,10 @@ Ext.onReady(function()
                         {
                             me.clearValue();
                         }
+                        
+                        if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)))
                         _fieldLikeLabel('CLAVE').store.proxy.extraParams['params.uso']=me.getValue();
+                        
                         if(!Ext.isEmpty(micallback))
                         {
                             micallback(_fieldByLabel('TIPO USO'));
@@ -1039,24 +1059,34 @@ Ext.onReady(function()
         {
             change : function(me,val)
             {
-                var claveCmp = _fieldLikeLabel('CLAVE');
-                var modelo   = _fieldByLabel('MODELO').getValue(); 
-                claveCmp.store.proxy.extraParams['params.uso']=val;
-                if(!Ext.isEmpty(claveCmp.getValue())&&!Ext.isEmpty(modelo))
+            	valido = false;
+            	debug('### VIL valido:',valido);
+                
+                var valido  = !Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true))
+                            &&!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true));
+               debug('### VIL valido:',valido);
+                
+                if(valido)
                 {
-                    var fs = _fieldById('_p28_fieldsetVehiculo');
-                    for(var i in fs.items.items)
-                    {
-                        try
-                        {
-                            fs.items.items[i].setValue();
-                            fs.items.items[i].clearValue();
-                        }
-                        catch(e)
-                        {
-                            debugError(e);
-                        }
-                    }
+                    var claveCmp = _fieldLikeLabel('CLAVE');
+                    var modelo   = _fieldByLabel('MODELO').getValue();
+	                claveCmp.store.proxy.extraParams['params.uso']=val;
+	                if(!Ext.isEmpty(claveCmp.getValue())&&!Ext.isEmpty(modelo))
+	                 {
+	                    var fs = _fieldById('_p28_fieldsetVehiculo');
+	                    for(var i in fs.items.items)
+	                    {
+	                        try
+	                        {
+	                            fs.items.items[i].setValue();
+	                            fs.items.items[i].clearValue();
+	                        }
+	                        catch(e)
+	                        {
+	                            debugError(e);
+	                        }
+	                    }
+	                }
                 }
             }
         });
@@ -1975,7 +2005,13 @@ function _p28_ramo5ClienteChange(combcl)
     var nombre  = _fieldLikeLabel('NOMBRE CLIENTE');
     var tipoper = _fieldByLabel('TIPO PERSONA');
     var codpos  = _fieldLikeLabel('CP CIRCULACI');
-    var fenacim = _fieldLikeLabel('FECHA DE NAC');
+    
+    var fenacim = '';
+    if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE',null,true)))
+    {
+        fenacim = _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE');
+    }
+    
     
     //cliente nuevo
     if(combcl.getValue()=='S')
@@ -1983,13 +2019,18 @@ function _p28_ramo5ClienteChange(combcl)
         nombre.reset();
         tipoper.reset();
         codpos.reset();
-        fenacim.reset();
+        if(!Ext.isEmpty(fenacim))
+        {
+            fenacim.reset();
+        }
         
         nombre.setReadOnly(false);
         tipoper.setReadOnly(false);
         codpos.setReadOnly(false);
-        fenacim.setReadOnly(false);
-        
+        if(!Ext.isEmpty(fenacim))
+        {
+            fenacim.setReadOnly(false);
+        }
         _p28_recordClienteRecuperado=null;
     }
     //recuperar cliente
@@ -1998,12 +2039,18 @@ function _p28_ramo5ClienteChange(combcl)
         nombre.reset();
         tipoper.reset();
         codpos.reset();
-        fenacim.reset();
+        if(!Ext.isEmpty(fenacim))
+        {
+            fenacim.reset();
+        }
         
         nombre.setReadOnly(true);
         tipoper.setReadOnly(true);
         codpos.setReadOnly(true);
-        fenacim.setReadOnly(true);
+        if(!Ext.isEmpty(fenacim))
+        {
+            fenacim.setReadOnly(true);
+        }
         
         var ventana=Ext.create('Ext.window.Window',
         {
@@ -2081,7 +2128,10 @@ function _p28_ramo5ClienteChange(combcl)
                                 nombre.setValue(record.raw.NOMBRECLI);
                                 tipoper.setValue(record.raw.TIPOPERSONA);
                                 codpos.setValue(record.raw.CODPOSTAL);
-                                fenacim.setValue(record.raw.FENACIMICLI);
+                                if(!Ext.isEmpty(fenacim))
+                                {
+                                    fenacim.setValue(record.raw.FENACIMICLI);
+                                }
                                 ventana.destroy();
                             }
                         }
@@ -3392,12 +3442,23 @@ function _p28_cargarParametrizacionCoberturas(callback)
 {
     debug('>_p28_cargarParametrizacionCoberturas callback:',!Ext.isEmpty(callback),'DUMMY');
     
-    var _f1_negocio      = _fieldByLabel('NEGOCIO').getValue();
-    var _f1_tipoServicio = _fieldByLabel('TIPO SERVICIO').getValue();
-    var _f1_modelo       = _fieldByLabel('MODELO').getValue();
-    var _f1_tipoPersona  = _fieldByLabel('TIPO PERSONA').getValue();
-    var _f1_submarca     = _fieldByLabel('SUBMARCA').getValue();
-    var _f1_clavegs      = _fieldLikeLabel('AUTO').getValue();
+     if(!Ext.isEmpty(_fieldByLabel('NEGOCIO',null,true)))
+    {var _f1_negocio      = _fieldByLabel('NEGOCIO').getValue();}
+    
+    if(!Ext.isEmpty(_fieldLikeLabel('TIPO SERVICIO',null,true)))
+    {var _f1_tipoServicio = _fieldByLabel('TIPO SERVICIO').getValue();}
+    
+    if(!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true)))
+    {var _f1_modelo       = _fieldByLabel('MODELO').getValue();}
+    
+    if(!Ext.isEmpty(_fieldLikeLabel('TIPO PERSONA',null,true)))
+    {var _f1_tipoPersona  = _fieldByLabel('TIPO PERSONA').getValue();}
+    
+    if(!Ext.isEmpty(_fieldLikeLabel('SUBMARCA',null,true)))
+    {var _f1_tipoPersona  = _fieldByLabel('SUBMARCA').getValue();}
+    
+    if(!Ext.isEmpty(_fieldLikeLabel('AUTO',null,true)))
+    {var _f1_clavegs      = _fieldLikeLabel('AUTO').getValue();}
     
     var valido = !Ext.isEmpty(_f1_negocio)
                  &&!Ext.isEmpty(_f1_tipoServicio)
@@ -3835,11 +3896,19 @@ function _p28_atributoNacimientoContratante(combo)
     
     if(val == 'S')
         {
-            _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').allowBlank=false;
+            if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE',null,true)))
+            {
+                _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').allowBlank=false;
+            }
+
         }
     else
         {
-            _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').allowBlank=true;
+           if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE',null,true)))
+           {
+                _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').allowBlank=true;
+           }
+
         }
 }
 ////// funciones //////
