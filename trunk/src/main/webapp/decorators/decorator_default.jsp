@@ -45,7 +45,7 @@
                         ,success : function(response)
                         {
                             var json = Ext.decode(response.responseText);
-                            debug('### Valida session Unica BLOQUEO/DESBLOQUEO:',json);
+//                             debug('### Valida session Unica BLOQUEO/DESBLOQUEO:',json);
                             if(json.success==true)
                             {
                             	if(json.params.bloqueo=='S')
@@ -78,7 +78,7 @@
                             errorComunicacion(null,'Al validar sesion');
                         }
                     });
-        },5*1000);</script>
+        },10*1000);</script>
         
     </head>
     <body>
