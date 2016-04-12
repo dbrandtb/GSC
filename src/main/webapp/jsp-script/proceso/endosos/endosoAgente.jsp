@@ -432,14 +432,18 @@ function _10_confirmar()
                     
                     mensajeCorrecto('Endoso generado',json.mensaje,function()
                     {
-                        _generarRemesaClic(
-                            true
-                            ,_10_smap1.CDUNIECO
-                            ,_10_smap1.CDRAMO
-                            ,_10_smap1.ESTADO
-                            ,_10_smap1.NMPOLIZA
-                            ,callbackRemesa
-                        );
+                    	if(json.endosoConfirmado){
+                        	_generarRemesaClic(
+	                            true
+	                            ,_10_smap1.CDUNIECO
+	                            ,_10_smap1.CDRAMO
+	                            ,_10_smap1.ESTADO
+	                            ,_10_smap1.NMPOLIZA
+	                            ,callbackRemesa
+    	                    );
+                        }else{
+                        	callbackRemesa();
+                        }
                     });
                 }
                 else
