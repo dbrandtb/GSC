@@ -271,12 +271,12 @@ Ext.onReady(function()
                 ,buttons     :
                 [
                     {
-                        text     : 'Confirmar'
+                         text     : 'Confirmar'
                         ,itemId  : '_p39_botonConfirmar'
                         ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
                         ,handler : function(me)
-                        {
-                            if(!me.up('form').getForm().isValid())
+                        { //                    	
+                        	if(!me.up('form').getForm().isValid())
                             {
                                 datosIncompletos();
                                 return;
@@ -442,6 +442,7 @@ function _p39_renderer(valor,mapeo,view)
 //Funcion que carga coberturas y seteando y guardando valores en BD
 function _p39_cargarCoberturasInciso(record)
 {   //alert('ENTRE V');
+    _mask();
     debug('valores a enviar VIL :', record,'.');
 	Ext.Ajax.request
 	({ 
@@ -458,7 +459,6 @@ function _p39_cargarCoberturasInciso(record)
          }
          ,success : function(response)
          {
-             _unmask();
             var json = Ext.decode(response.responseText);
             if(json.success == true)
             {
@@ -482,6 +482,7 @@ function _p39_cargarCoberturasInciso(record)
 //Se utiliza una sola vez seteando S en valores inicales
 function _p39_seteaSyGuardar(record)
 {
+	_mask();
     debug('>_p39_seteaSyGuardar ',record,'');
     var valores={
         tstamp : _p39_smap1.tstamp
