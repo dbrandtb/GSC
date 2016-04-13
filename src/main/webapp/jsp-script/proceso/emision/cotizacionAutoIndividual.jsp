@@ -2865,7 +2865,9 @@ function _p28_limitarCoberturasDependientesSumasegRamo5()
                 debug('### obtener rangos coberturas dependientes:',json);
                 if(json.exito)
                 {
-                    var equipoEspecial = _fieldByLabel('SUMA ASEGURADA EQUIPO ESPECIAL');
+                    var equipoEspecial = 0;
+                    if(!Ext.isEmpty(_fieldLikeLabel('SUMA ASEGURADA EQUIPO ESPECIAL',null,true)))
+                    {equipoEspecial = _fieldByLabel('SUMA ASEGURADA EQUIPO ESPECIAL');}
                     var min            = suma*(1+(json.smap1.P1VALOR-0));
                     var max            = suma*(1+(json.smap1.P2VALOR-0));
                     debug('min:',min,'max:',max);
