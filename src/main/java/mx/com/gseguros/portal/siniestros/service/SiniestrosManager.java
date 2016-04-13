@@ -610,7 +610,7 @@ public interface SiniestrosManager {
 	
 	public List<GenericVO>obtenerAtributosLayout(String descripcion) throws Exception;
 	
-	public String guardaLayoutProveedor(String cdpresta, String claveAtributo, String claveFormatoAtributo,
+	public String guardaLayoutProveedor(String cdpresta, String tipoLayout, String claveAtributo, String claveFormatoAtributo,
 			String valorMinimo, String valorMaximo, String columnaExcel, String claveFormatoFecha,String atributoRequerido, String nmordina, String tipoAccion) throws Exception;
 
 	public List<Map<String, String>> consultaConfiguracionLayout(String cdpresta) throws Exception;
@@ -654,7 +654,7 @@ public interface SiniestrosManager {
 	
 	public String validaExisteConfiguracionProv2() throws Exception;
 	
-	public List<Map<String, String>> requiereConfiguracionLayoutProveedor(String cdpresta) throws Exception;
+	public List<Map<String, String>> requiereConfiguracionLayoutProveedor(String cdpresta, String cveLayout) throws Exception;
 	
 	public List<GenericVO> getConsultaListaContrareciboAutEsp(String cdramo, String ntramite) throws Exception;
 	
@@ -673,5 +673,7 @@ public interface SiniestrosManager {
 	public void actualizaTurnadoMesaControl(String ntramite) throws Exception;
 
 	public List<Map<String, String>> listadoFacturasxControl(String ntramite) throws Exception;
+	
+	public List<Map<String, String>> obtieneConfiguracionLayoutExcel(String cdpresta, String cveLayout, String campoExcel) throws Exception;
 	
 }

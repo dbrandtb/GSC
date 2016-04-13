@@ -7,6 +7,7 @@
 		<title>Consulta Clausulas</title>
 		<script type="text/javascript">
 			var _CONTEXT = '${ctx}';
+			var _URL_CATALOGOS 				=	'<s:url namespace="/catalogos"  action="obtieneCatalogo" />';
 			var _SINO						=	'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SINO" />';
 			var _SECUENCIA					=	'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SECUENCIA_IVA" />';
 			var _CATALOGO_PROVEEDORES		=	'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
@@ -15,9 +16,12 @@
 			var _CATALOGO_CVECOLUMNA		=	'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CVECOLUMNA"/>';
 			var _CATALOGO_FORMATOFECHA		=	'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@FORMATOFECHA"/>';
 			var _ATRIBUTO_LAYOUT			=	'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@ATRIBUTOLAYOUT"/>';
-			var _URL_CATALOGOS 				=	'<s:url namespace="/catalogos"  action="obtieneCatalogo" />';
+			var _CATALOGO_ConfLayout		= 	'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CONFLAYOUT"/>';
+			
+			
 			var _URL_GUARDA_CONFIGURACION	=	'<s:url namespace="/siniestros" action="guardaConfiguracionLayout" />';
 			var _URL_CONSULTA_CONF_LAYOUT	=	'<s:url namespace="/siniestros" action="consultaConfiguracionLayout" />';
+					
 			
 			var valorAction = <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
 			debug('Valor de valorAction : ',valorAction);

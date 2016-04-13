@@ -7096,5 +7096,27 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             compile();
     	}
     }
+    
+	@Override
+	public void guardarLayoutGenerico(
+			String nombreArchivo
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("pi_filename"       , nombreArchivo);
+		ejecutaSP(new GuardarLayoutGenerico(getDataSource()),params);
+	}
+	
+	protected class GuardarLayoutGenerico extends StoredProcedure
+	{
+		protected GuardarLayoutGenerico(DataSource dataSource)
+		{
+			super(dataSource,"PKG_DESARROLLO.P_CONF_LAYOU_SINIESTRO");
+			declareParameter(new SqlParameter("pi_filename"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 }

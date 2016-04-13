@@ -654,5 +654,5 @@ public interface CotizacionDAO {
 	public void insertaMorbilidad(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem) throws Exception;
 	
-	
+	public void guardarLayoutGenerico(String nombreArchivo) throws Exception;
 }

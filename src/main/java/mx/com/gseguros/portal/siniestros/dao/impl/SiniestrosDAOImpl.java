@@ -4622,6 +4622,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		protected GuardaLayoutProveedor(DataSource dataSource) {
 			super(dataSource, "PKG_SINIESTRO.P_MOV_CONFLAYOUT");
 			declareParameter(new SqlParameter("pv_cdpresta_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cveconfi_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cveatri_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmordina_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cveformato_i", OracleTypes.VARCHAR));
@@ -5154,8 +5155,11 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			// TODO: Terminar cuando este listo el SP
 			super(dataSource, "PKG_SINIESTRO.P_OBTIENE_LAYOUT_INFOPROV");
 			declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cveconfi_i",   OracleTypes.VARCHAR));
 			String[] cols = new String[]{
-					"MAXREGISTRO","CVEFORMATO","VALORMIN","VALORMAX","FORMATDATE","SWOBLIGA"
+					"MAXREGISTRO","CVEFORMATO","VALORMIN","VALORMAX","FORMATDATE","SWOBLIGA",
+					"CVEEXCEL"
+					
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -5374,6 +5378,30 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					"NTRAMITE",		"NFACTURA",		"CDTIPSER",		"CDPRESTA", 	"PTIMPORT", 	"CDGARANT", 	"CDCONVAL",
 					"DESCPORC", 	"DESCNUME", 	"CDMONEDA", 	"TASACAMB",		"PTIMPORTA", 	"DCTONUEX", 	"FEEGRESO",
 					"DIASDEDU"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+    @Override
+	public List<Map<String, String>> obtieneConfiguracionLayoutExcel(HashMap<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneConfiguracionLayoutExcel(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+    protected class ObtieneConfiguracionLayoutExcel extends StoredProcedure {
+		protected ObtieneConfiguracionLayoutExcel(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_SINIESTRO.P_GET_CONF_EXCEL");
+			declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cveexcel_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cveconfi_i",   OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CVEFORMATO","VALORMIN","VALORMAX","FORMATDATE","SWOBLIGA"
+					
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

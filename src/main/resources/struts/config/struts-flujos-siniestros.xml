@@ -887,24 +887,6 @@
 			<result>/jsp-script/proceso/siniestros/configuracionLayout.jsp</result>
 		</action>
 		
-		<action name="guardaConfiguracionLayout" class="siniestrosAction" method="guardaConfiguracionLayout">
-			<interceptor-ref name="json">
-				<param name="enableSMD">true</param>
-				<param name="ignoreSMDMethodInterfaces">false</param>
-			</interceptor-ref>
-			<result name="success" type="json"/>
-		</action>
-		
-		<action name="consultaConfiguracionLayout" class="siniestrosAction" method="consultaConfiguracionLayout">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					datosInformacionAdicional.*,
-					success
-				</param>
-			</result>
-		</action>
-		
 		<action name="includes/historialCPTPagados" class="detalleSiniestroAction">
 			<result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/verHistorialCPTPagados.jsp</result>
 		</action>
@@ -1110,6 +1092,14 @@
            <result type="json" />
        </action>
        
+       <action name="subirexcelConfiguracion2" class="siniestrosAction" method="subirexcelConfiguracion2">
+           <interceptor-ref name="json">
+               <param name="enableSMD">true</param>
+               <param name="ignoreSMDMethodInterfaces">false</param>
+           </interceptor-ref>
+           <result type="json" />
+       </action>
+       
 		<action name="consultaDatosConfiguracionProveedor" class="configuracionLayoutAction" method="consultaDatosConfiguracionProveedor">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
@@ -1128,6 +1118,25 @@
 				</param>
 			</result>
 		</action>
+		
+		<action name="guardaConfiguracionLayout" class="configuracionLayoutAction" method="guardaConfiguracionLayout">
+			<interceptor-ref name="json">
+				<param name="enableSMD">true</param>
+				<param name="ignoreSMDMethodInterfaces">false</param>
+			</interceptor-ref>
+			<result name="success" type="json"/>
+		</action>
+		
+		<action name="consultaConfiguracionLayout" class="configuracionLayoutAction" method="consultaConfiguracionLayout">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosInformacionAdicional.*,
+					success
+				</param>
+			</result>
+		</action>
+		
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>

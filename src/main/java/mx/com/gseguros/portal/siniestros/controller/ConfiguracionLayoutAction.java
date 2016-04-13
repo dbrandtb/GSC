@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.struts2.json.JSONException;
+import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,12 +43,9 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 	private PantallasManager       pantallasManager;
 	private transient CatalogosManager catalogosManager;
 	private transient Ice2sigsService ice2sigsService;
-	
-
-    
-
-
+	private List<HashMap<String,String>> datosTablas;
 	private List<Map<String,String>> datosValidacion;
+	private List<Map<String,String>>  datosInformacionAdicional;
 	private boolean success;
 
 	/**
@@ -85,12 +84,71 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	/**
+	* metodo para el guardado del alta del tramite
+	* @param Json con todos los valores del formulario y los grid
+	* @return Lista AutorizaServiciosVO con la informacion de los asegurados
+	*/
+	public String guardaConfiguracionLayout(){
+		logger.debug("Entra a guardaAltaTramite Params: {} datosTablas {}", params,datosTablas);
+		try{
+			//Realizamos la insercion de los guardados
+			siniestrosManager.guardaLayoutProveedor(params.get("cmbProveedor"),params.get("tipoLayout"), null,null,null,null,null,null,null,null,"D");
+			for(int i=0;i<datosTablas.size();i++) {
+				siniestrosManager.guardaLayoutProveedor(
+					params.get("cmbProveedor"), 
+					params.get("tipoLayout"),
+					datosTablas.get(i).get("claveAtributo"),
+					datosTablas.get(i).get("claveFormatoAtributo"),
+					datosTablas.get(i).get("valorMinimo"),
+					datosTablas.get(i).get("valorMaximo"),
+					datosTablas.get(i).get("columnaExcel"),
+					datosTablas.get(i).get("claveFormatoFecha"),
+					datosTablas.get(i).get("atributoRequerido"),
+					i+"",
+					null
+				);
+			}
+		}catch( Exception e){
+			logger.error("Error en el guardado de alta de tramite : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
 	
+	/**
+	* Funcion para obtener el listado del alta del tramite
+	* @param ntramite
+	* @return Lista AltaTramiteVO - tramite Alta Tramite
+	*/
+	public String consultaConfiguracionLayout(){
+		logger.debug("Entra a consultaConfiguracionLayout Params: {}", params);
+		try {
+			datosInformacionAdicional = siniestrosManager.consultaConfiguracionLayout(params.get("cdpresta"));
+		}catch( Exception e){
+			logger.error("Error consultaListadoAltaTramite: {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
 	public Map<String, String> getSmap1() {
 		return smap1;
 	}
 	public void setSmap1(Map<String, String> smap1) {
 		this.smap1 = smap1;
+	}
+	
+	public String getSmap1Json(){
+		String r=null;
+		try{
+			r=JSONUtil.serialize(smap1);
+		}
+		catch (JSONException ex){
+			logger.error("error al convertir smap a json",ex);
+		}
+		return r;
 	}
 	public String getError() {
 		return error;
@@ -146,11 +204,6 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		this.success = success;
 	}
 
-	public SiniestrosManager getSiniestrosManager() {
-		return siniestrosManager;
-	}
-
-
 	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {
 		this.siniestrosManager = siniestrosManager;
 	}
@@ -176,18 +229,8 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 	}
 
 
-	public PantallasManager getPantallasManager() {
-		return pantallasManager;
-	}
-
-
 	public void setPantallasManager(PantallasManager pantallasManager) {
 		this.pantallasManager = pantallasManager;
-	}
-
-
-	public CatalogosManager getCatalogosManager() {
-		return catalogosManager;
 	}
 
 
@@ -203,5 +246,21 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 
 	public void setIce2sigsService(Ice2sigsService ice2sigsService) {
 		this.ice2sigsService = ice2sigsService;
+	}
+
+	public List<HashMap<String, String>> getDatosTablas() {
+		return datosTablas;
+	}
+
+	public void setDatosTablas(List<HashMap<String, String>> datosTablas) {
+		this.datosTablas = datosTablas;
+	}
+
+	public List<Map<String, String>> getDatosInformacionAdicional() {
+		return datosInformacionAdicional;
+	}
+
+	public void setDatosInformacionAdicional(List<Map<String, String>> datosInformacionAdicional) {
+		this.datosInformacionAdicional = datosInformacionAdicional;
 	}
 }

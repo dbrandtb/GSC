@@ -539,4 +539,6 @@ public interface SiniestrosDAO {
 	public void actualizaTurnadoMesaControl(String ntramite) throws Exception;
 
 	public List<Map<String, String>> obtieneListadoFacturasxControntrol(HashMap<String, Object> datosTramite) throws Exception;
+	
+	public List<Map<String, String>> obtieneConfiguracionLayoutExcel(HashMap<String, Object> params) throws Exception;
 }

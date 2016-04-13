@@ -1983,7 +1983,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 
 	@Override
-	public String guardaLayoutProveedor(String cdpresta, String claveAtributo,
+	public String guardaLayoutProveedor(String cdpresta, String tipoLayout, String claveAtributo,
 			String claveFormatoAtributo, String valorMinimo,
 			String valorMaximo, String columnaExcel, String claveFormatoFecha,
 			String atributoRequerido, String nmordina, String tipoAccion) throws Exception {
@@ -1999,6 +1999,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			
 			HashMap<String,Object> paramsConfLayout=new HashMap<String,Object>();
 			paramsConfLayout.put("pv_cdpresta_i",cdpresta);
+			paramsConfLayout.put("pv_cveconfi_i",tipoLayout);
 			paramsConfLayout.put("pv_cveatri_i", claveAtributo);
 			paramsConfLayout.put("pv_nmordina_i",nmordina);
 			paramsConfLayout.put("pv_cveformato_i",claveFormatoAtributo);
@@ -2248,9 +2249,10 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	public List<Map<String, String>> requiereConfiguracionLayoutProveedor(String cdpresta) throws Exception {
+	public List<Map<String, String>> requiereConfiguracionLayoutProveedor(String cdpresta, String cveLayout) throws Exception {
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		params.put("pv_cdpresta_i", cdpresta);
+		params.put("pv_cveconfi_i", cveLayout);
 		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
 		return siniestrosDAO.obtieneConfiguracionLayoutProveedor(params);
 	}
@@ -2331,5 +2333,15 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		params.put("pv_ntramite_i", ntramite);
 		return siniestrosDAO.obtieneListadoFacturasxControntrol(params);
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneConfiguracionLayoutExcel(String cdpresta, String cveLayout, String campoExcel ) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdpresta_i", cdpresta);
+		params.put("pv_cveexcel_i", campoExcel);
+		params.put("pv_cveconfi_i", cveLayout);
+		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
+		return siniestrosDAO.obtieneConfiguracionLayoutExcel(params);
 	}
 }

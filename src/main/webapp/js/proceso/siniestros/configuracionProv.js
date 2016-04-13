@@ -276,8 +276,6 @@ Ext.onReady(function() {
 		,modal       : true
 		,closeAction: 'hide'
 		,buttonAlign : 'center'
-		//,width		 : 710
-		//,height      : 210
 		,items       : [
 			panelProveedor
 		]
@@ -446,7 +444,7 @@ Ext.onReady(function() {
 			title         : 'Configuraci&oacute;n Layout'
 			,buttonAlign  : 'center'
 			,width        : 800
-			,height       : 550
+			,height       : 600
 			,autoScroll   : true
 			,loader       : {
 				url       : _VER_CONFIG_LAYOUT
@@ -455,6 +453,7 @@ Ext.onReady(function() {
 				,params   : {
 					'params.ntramite'		:	"10043",
 					'params.cdpresta'		:	record.get('CLAVEPROVEEDOR'),
+					'params.tipoLayout'     : 	record.get('CVECONFI'),
 					'params.idaplicaIVA'	:	record.get('APLICAIVA'),
 					'params.secuenciaIVA'	:	record.get('SECUENCIAIVA'),
 					'params.idaplicaIVARET'	:	record.get('APLICAIVARET')
@@ -470,6 +469,7 @@ Ext.onReady(function() {
 	
 	function eliminarProveedor(grid,rowIndex){
 		var record = grid.getStore().getAt(rowIndex);
+		debug("Valor del Record===>",record);
 		centrarVentanaInterna(Ext.Msg.show({
 			title: 'Aviso',
 			msg: '&iquest;Esta seguro que desea eliminar la configuraci&oacute; del proveedor?',
@@ -480,11 +480,12 @@ Ext.onReady(function() {
 					Ext.Ajax.request({
 						url: _URL_MOV_PROVEEDOR,
 						params: {
-							'params.cmbProveedorMod'  : record.get('CLAVEPROVEEDOR'),
-							'params.idaplicaIVA'   : record.get('APLICAIVA'),
+							'params.cmbProveedorMod': record.get('CLAVEPROVEEDOR'),
+							'params.idaplicaIVA'    : record.get('APLICAIVA'),
 							'params.secuenciaIVA'   : record.get('SECUENCIAIVA'),
-							'params.idaplicaIVARET'     : record.get('APLICAIVARET'),
-							'params.proceso'     : "D"
+							'params.idaplicaIVARET' : record.get('APLICAIVARET'),
+							'params.tipoLayout'     : record.get('CVECONFI'),
+							'params.proceso'        : "D"
 						},
 						success: function(response) {
 							var res = Ext.decode(response.responseText);
