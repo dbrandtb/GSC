@@ -1674,4 +1674,15 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO> obtieneCatalogoConvenios() throws Exception {
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ obtieneCatalogoConvenios @@@@@@")
+				.toString()
+				);
+		return catalogosDAO.recuperarListaConvenios();
+	}
 }
