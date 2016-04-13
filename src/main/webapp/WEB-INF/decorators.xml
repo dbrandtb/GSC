@@ -199,6 +199,8 @@
         <pattern>/mesacontrol/*.action*</pattern>
         
         <pattern>/erickjaime/*.action*</pattern>
+        
+        <pattern>/convenios/*.action*</pattern>
 
    	</decorator>
 	
