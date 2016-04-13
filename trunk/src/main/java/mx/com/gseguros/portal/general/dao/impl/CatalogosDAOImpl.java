@@ -1713,7 +1713,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		}
 	}
     
-
 	protected class ObtieneCatalogoParentescoAutos extends StoredProcedure {
 	
 		protected ObtieneCatalogoParentescoAutos(DataSource dataSource) {
@@ -1730,4 +1729,35 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			return new GenericVO(rs.getString("CODIGO"),rs.getString("DESCRIPCION"));
 		}
 	}
+	
+	@Override
+	public List<GenericVO> recuperarListaConvenios() throws Exception
+	{
+		Map<String,Object>       procRes    = ejecutaSP(new RecuperarListaConvenios(getDataSource()),new LinkedHashMap<String,String>());
+		List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		logger.debug(Utils.log(listaMapas));
+		List<GenericVO>          lista      = new ArrayList<GenericVO>();
+		if(listaMapas!=null)
+		{
+			for(Map<String,String> mapa : listaMapas)
+			{
+				lista.add(new GenericVO(mapa.get("CDCONVEN"),mapa.get("DSCONVEN")));
+			}
+		}
+		return lista;
+	}
+	
+	protected class RecuperarListaConvenios extends StoredProcedure
+	{
+		protected RecuperarListaConvenios(DataSource dataSource)
+		{
+			super(dataSource,"Pkg_Consulta.P_GET_CAT_TCONVENIOS");
+			declareParameter(new SqlOutParameter("pv_cdconven_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"CDCONVEN","DSCONVEN"})));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

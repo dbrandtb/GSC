@@ -839,6 +839,13 @@ public class CatalogosAction extends PrincipalCoreAction {
 						lista = catalogosManager.recuperarClientesPorNombreApellido(params.get("cadena"));
 					}
 					break;
+				case CATALOGO_CONVENIOS:
+					if(params == null)
+					{
+						params = new HashMap<String,String>();
+					}
+					lista = catalogosManager.obtieneCatalogoConvenios();
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;
