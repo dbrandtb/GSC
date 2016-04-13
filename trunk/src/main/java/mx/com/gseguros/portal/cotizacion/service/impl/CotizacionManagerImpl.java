@@ -9238,4 +9238,25 @@ public class CotizacionManagerImpl implements CotizacionManager
 		this.consultasDAO = consultasDAO;
 	}
 	
+	@Override
+	public void guardarLayoutGenerico(
+			String nombreArchivo
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarLayoutGenerico @@@@@@"
+				,"\n@@@@@@ nombreArchivo=" , nombreArchivo
+				));
+		
+		cotizacionDAO.guardarLayoutGenerico(
+				nombreArchivo
+				);
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ guardarLayoutGenerico @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
 }

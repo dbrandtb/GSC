@@ -170,6 +170,20 @@ Ext.onReady(function() {
 	});
 	storeCampoRequerido.load();
 	
+	var storeTipoLayout = Ext.create('Ext.data.JsonStore', {
+		model:'Generic',
+		proxy: {
+			type: 'ajax',
+			url: _URL_CATALOGOS,
+			extraParams : {catalogo:_CATALOGO_ConfLayout},
+			reader: {
+				type: 'json',
+				root: 'lista'
+			}
+		}
+	});
+	storeTipoLayout.load();
+	
 	//Informacion proveedor
 	cmbProveedor = Ext.create('Ext.form.field.ComboBox', {
 		fieldLabel : 'Proveedor',			displayField : 'nombre',			name:'cmbProveedor',			valueField : 'cdpresta',
@@ -193,7 +207,13 @@ Ext.onReady(function() {
 	aplicaIVARETDesc = Ext.create('Ext.form.field.ComboBox',{
 		fieldLabel   : 'Aplica IVA Retenido',	displayField : 'value',			name:'idaplicaIVARET',			valueField:'key',
 		forceSelection  : true,				queryMode    :'local',				editable   : false,
-		store : storeAplicaIVARet,			readOnly : true
+		store : storeAplicaIVARet,			readOnly : true,					colspan	   :2
+	});
+	
+	tipoLayout= Ext.create('Ext.form.field.ComboBox',{
+		fieldLabel   : 'Layout',			displayField : 'value',				name:'tipoLayout',				valueField: 'key',
+		forceSelection  : true,				queryMode    :'local',				editable   : false,
+		store : storeTipoLayout,			readOnly : true,					colspan	   :2
 	});
 	
 	//Datos informacion Grid
@@ -219,7 +239,7 @@ Ext.onReady(function() {
 	
 	cmbAplicaRequerido = Ext.create('Ext.form.ComboBox', {
 		name:'idAplicaRequerido',		store: storeCampoRequerido,		queryMode:'local',
-		displayField: 'value',		valueField: 'key',				editable:false,				allowBlank:false
+		displayField: 'value',		valueField: 'key',				editable:false,				allowBlank :false
 	});
 	
     /*////////////////////////////////////////////////////////////////
@@ -399,6 +419,7 @@ Ext.onReady(function() {
 		},
 		items		:[
 			cmbProveedor,
+			tipoLayout,
 			aplicaIVADesc,
 			secuenciaIVADesc,
 			aplicaIVARETDesc,
@@ -412,7 +433,7 @@ Ext.onReady(function() {
 		],
 		buttonAlign:'center',
 		buttons: [{
-			id:'botonCotizar',
+			id:'botonGuardar',
 			icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
 			text: 'Guardar Configuraci&oacute;n',
 			handler: function() {
@@ -425,6 +446,7 @@ Ext.onReady(function() {
     				var datosTablas = [];
     				
     				storeLayoutProveedor.each(function(record,index){
+    					debug("Valor del record ==>",record);
     					datosTablas.push({
 							claveAtributo:record.get('claveAtributo'),
 							claveFormatoAtributo:record.get('claveFormatoAtributo'),
@@ -432,7 +454,8 @@ Ext.onReady(function() {
 							valorMaximo:record.get('valorMaximo'),
 							columnaExcel:record.get('columnaExcel'),
 							atributoRequerido : record.get('atributoRequerido'),
-							claveFormatoFecha:record.get('claveFormatoFecha')
+							claveFormatoFecha:record.get('claveFormatoFecha'),
+							tipoLayout : valorAction.tipoLayout
 						});
 					});
 					
@@ -477,7 +500,6 @@ Ext.onReady(function() {
 						Ext.Ajax.request({
 							url: _URL_GUARDA_CONFIGURACION,
 							jsonData:Ext.encode(submitValues),
-							
 							success:function(response,opts){
 								panelInicialPral.setLoading(false);
 								var jsonResp = Ext.decode(response.responseText);
@@ -531,6 +553,7 @@ Ext.onReady(function() {
 			}
 		});
 		panelInicialPral.down('combo[name=cmbProveedor]').setValue(valorAction.cdpresta);
+		panelInicialPral.down('combo[name=tipoLayout]').setValue(valorAction.tipoLayout);
 		panelInicialPral.down('combo[name=idaplicaIVA]').setValue(valorAction.idaplicaIVA);
 		panelInicialPral.down('combo[name=secuenciaIVA]').setValue(valorAction.secuenciaIVA);
 		panelInicialPral.down('combo[name=idaplicaIVARET]').setValue(valorAction.idaplicaIVARET);

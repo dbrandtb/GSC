@@ -794,4 +794,8 @@ public interface CotizacionManager
 	public void borrarMpoliperSituac0(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,
 			String cdrol)throws Exception;
 	
+	public void guardarLayoutGenerico(
+			String nombreArchivo
+			)throws Exception;
+	
 }

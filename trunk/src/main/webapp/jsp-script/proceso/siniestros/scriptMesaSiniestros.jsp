@@ -72,7 +72,8 @@ var _URL_EXISTE_COBERTURA				= '<s:url namespace="/siniestros" 	action="consulta
 var _URL_EXISTE_CONF_PROV 				= '<s:url namespace="/siniestros"	action="validaExisteConfiguracionProv" />';
 var _p21_urlSubirCenso                  = '<s:url namespace="/emision"      action="subirCenso"                       />';
 var _p21_urlSubirCensoCompleto          = '<s:url namespace="/siniestros"   action="subirexcelConfiguracion"          />';
-
+var _p21_urlSubirCensoCompleto2         = '<s:url namespace="/siniestros"   action="subirexcelConfiguracion2"          />';
+var _CATALOGO_ConfLayout				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CONFLAYOUT"/>';
 
 var windowLoader;
 var msgWindow;
@@ -120,6 +121,7 @@ var msgWindow;
                     ,items       :
                     [
                         cmbProveedor,
+                        tipoLayout,
                         {
                             xtype       : 'filefield'
                             ,fieldLabel : 'Archivo'
@@ -179,6 +181,8 @@ var msgWindow;
         if(valido)
         {
         	var cdprestador = form.down('combo[name=cmbProveedor]').getValue();
+        	var layoutConf  = form.down('combo[name=tipoLayout]').getValue();
+        	
         	debug("Valor del PRESTADOR DE SERVICIO ===>",cdprestador);
         	
             form.setLoading(true);
@@ -205,16 +209,9 @@ var msgWindow;
 				                    debug ("Valor de los conceptos ==> ",conceptos);
 				                    //debug("_p21_smap1 ===>",_p21_smap1);
 				                    conceptos['timestamp']             = timestamp;
-				                    conceptos['clasif']                = '1';
-				                    conceptos['LINEA_EXTENDIDA']       = '1';
-				                    conceptos['cdunieco']              = '1';
-				                    conceptos['cdramo']                = '1';
-				                    conceptos['cdtipsit']              = '1';
-				                    conceptos['ntramiteVacio']         = '1';
 				                    conceptos['nombreCensoConfirmado'] = nombreCensoParaConfirmar;
-				                    conceptos['estado']                = '1';
-				                    conceptos['nmsuplem']              = '1';
-				                    debug("Valor del Concepto ==> ",conceptos);
+				                    conceptos['cdpresta']              = cdprestador;
+				                    conceptos['tipoLayout']            = layoutConf;
 				                    var grupos = [];
 				                    
         							Ext.Ajax.request(
@@ -260,12 +257,6 @@ var msgWindow;
 				                             errorComunicacion();
 				                         }
 				                     });
-        							
-        							
-	            					//form.setLoading(false);
-        							
-        							
-        							
             				}else{
             					mensajeWarning('El provedor seleccionado, no tiene la configuraci&oacute;n para pago.');
             				}
@@ -280,36 +271,6 @@ var msgWindow;
             				}));
             			}
             		});
-                	/*form.setLoading(false);
-                    if(!Ext.isEmpty(nombreCensoParaConfirmar))
-                    {
-                        debug('se quita allowblank');
-                        form.down('filefield').allowBlank = false;
-                    }
-                
-                    var conceptos = [];
-                    
-                    debug ("Valor de los conceptos ==> ",conceptos);
-                    //debug("_p21_smap1 ===>",_p21_smap1);
-                    conceptos['timestamp']             = timestamp;
-                    conceptos['clasif']                = '1';
-                    conceptos['LINEA_EXTENDIDA']       = '1';
-                    conceptos['cdunieco']              = '1';
-                    conceptos['cdramo']                = '1';
-                    conceptos['cdtipsit']              = '1';
-                    conceptos['ntramiteVacio']         = '1';
-                    conceptos['nombreCensoConfirmado'] = nombreCensoParaConfirmar;
-                    conceptos['estado']                = '1';
-                    conceptos['nmsuplem']              = '1';
-                    debug("Valor del Concepto ==> ",conceptos);
-                    var grupos = [];
-                    _p21_storeGrupos.each(function(record)
-                    {
-                        var grupo = record.data;
-                        grupo['tvalogars']=record.tvalogars;
-                        grupos.push(grupo);
-                    });*/
-
                  }
                  ,failure : function()
                  {
@@ -323,40 +284,194 @@ var msgWindow;
                  }
              });
          }
-        
-        
-        /*if(valido){
-        	//Obtenemos la información del proveedor
-        	var cdprestador = form.down('combo[name=cmbProveedor]').getValue();
-    		//Validamos que exista la configuracion del proveedor
-        	Ext.Ajax.request({
-    			url     : _URL_EXISTE_CONF_PROV
-    			,params:{
-    				'params.cdpresta': cdprestador
-    			}
-    			,success : function (response){
-    				debug("Respuesta de configuracion ==> ",Ext.decode(response.responseText).validacionGeneral);
-    				if( Ext.decode(response.responseText).validacionGeneral =="S"){
-							//Continuamos con el proceso del guardado del archivo
-    				}else{
-    					mensajeWarning('El provedor seleccionado, no tiene la configuraci&oacute;n para pago.');
-    				}
-    			},
-    			failure : function (){
-    				me.up().up().setLoading(false);
-    				centrarVentanaInterna(Ext.Msg.show({
-    					title:'Error',
-    					msg: 'Error de comunicaci&oacute;n',
-    					buttons: Ext.Msg.OK,
-    					icon: Ext.Msg.ERROR
-    				}));
-    			}
-    		});
-        	
-        	debug("Valor del PRESTADOR DE SERVICIO ===>",cdprestador);
-
-         }*/
      }
+    
+	function subirDocumentoParaWindow2(){
+        windowLoader = Ext.create('Ext.window.Window', {
+            title   : 'Cargar documento NOVA'
+            ,closeAction : 'hide'
+           	,width  : 400
+            ,modal  : true
+    		,bodyStyle:'padding:5px;'
+            ,items  :
+            [
+                Ext.create('Ext.form.Panel',
+                {
+                    url          : _p21_urlSubirCenso
+                    ,border 	 : 0
+                    ,bodyPadding : 5
+                    ,items       :
+                    [
+                        cmbProveedor,
+                        {
+                            xtype       : 'filefield'
+                            ,fieldLabel : 'Archivo'
+                            ,buttonText : 'Examinar...'
+                            ,buttonOnly : false
+                            ,name       : 'censo'
+                            ,labelWidth : 100
+                            ,width      : 330
+                            ,allowBlank : false
+                            ,msgTarget  : 'side'
+                            ,cAccept    : ['xls','xlsx']
+                            ,listeners  :
+                            {
+                                change : function(me)
+                                {
+                                    var indexofPeriod = me.getValue().lastIndexOf("."),
+                                    uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
+                                    if (!Ext.Array.contains(this.cAccept, uploadedExtension))
+                                    {
+                                        centrarVentanaInterna(Ext.MessageBox.show(
+                                        {
+                                            title   : 'Error de tipo de archivo',
+                                            msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
+                                            buttons : Ext.Msg.OK,
+                                            icon    : Ext.Msg.WARNING
+                                        }));
+                                        me.reset();
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                    ,buttonAlign : 'center'
+                    ,buttons     :
+                    [
+                        {
+                            text     : 'Cargar archivo'
+                            ,icon    : '${ctx}/resources/fam3icons/icons/group_edit.png'
+                            ,handler : function(me){ _p21_subirArchivoParametrizadosLayout2(me); } //_p21_subirArchivoParametrizadosLayout
+                        }
+                    ]
+                })
+            ]
+        });
+       	centrarVentanaInterna(windowLoader.show());
+	}
+	
+    function _p21_subirArchivoParametrizadosLayout2(button,nombreCensoParaConfirmar)
+    {
+        var form=button.up().up();
+        var valido=form.isValid();
+        if(!valido)
+        {
+            datosIncompletos();
+        }
+        
+        if(valido)
+        {
+        	var cdprestador = form.down('combo[name=cmbProveedor]').getValue();
+        	debug("Valor del PRESTADOR DE SERVICIO ===>",cdprestador);
+        	
+            form.setLoading(true);
+            var timestamp = new Date().getTime();
+            form.submit(
+            {
+                params   :
+                {
+                    'smap1.timestamp' : timestamp
+                    ,'smap1.ntramite' : ''
+                }
+                ,success : function()
+                {
+                	Ext.Ajax.request({
+            			url     : _URL_EXISTE_CONF_PROV
+            			,params:{
+            				'params.cdpresta': cdprestador
+            			}
+            			,success : function (response){
+            				debug("Respuesta de configuracion ==> ",Ext.decode(response.responseText).validacionGeneral);
+            				if( Ext.decode(response.responseText).validacionGeneral =="S"){
+        							//Continuamos para la validacion del archivo, para eso tenemos que validar con el excel
+				                    var conceptos = {};
+				                    debug ("Valor de los conceptos ==> ",conceptos);
+				                    //debug("_p21_smap1 ===>",_p21_smap1);
+				                    conceptos['timestamp']             = timestamp;
+				                    conceptos['clasif']                = '1';
+				                    conceptos['LINEA_EXTENDIDA']       = '1';
+				                    conceptos['cdunieco']              = '1';
+				                    conceptos['cdramo']                = '1';
+				                    conceptos['cdtipsit']              = '1';
+				                    conceptos['ntramiteVacio']         = '1';
+				                    conceptos['nombreCensoConfirmado'] = nombreCensoParaConfirmar;
+				                    conceptos['estado']                = '1';
+				                    conceptos['nmsuplem']              = '1';
+				                    debug("Valor del Concepto ==> ",conceptos);
+				                    var grupos = [];
+				                    
+        							Ext.Ajax.request(
+		                    		{
+				                        url       : _p21_urlSubirCensoCompleto2
+				                        ,jsonData :
+				                        {
+				                            smap1   : conceptos
+				                            ,olist1 : grupos
+				                        }
+				                        ,success  : function(response)
+				                        {
+				                            form.setLoading(false);
+				                            var json=Ext.decode(response.responseText);
+				                            debug('### subir censo completo response:',json);
+				                            if(json.exito)
+				                            {
+				                            	form.setLoading(false);
+				                             }
+				                             else
+				                             {
+				                            	 form.setLoading(false);
+				                                 centrarVentanaInterna(Ext.create('Ext.window.Window',
+				                                 {
+				                                     modal  : true
+				                                     ,title : 'Error'
+				                                     ,items :
+				                                     [
+				                                         {
+				                                             xtype     : 'textarea'
+				                                             ,width    : 700
+				                                             ,height   : 400
+				                                             ,readOnly : true
+				                                             ,value    : json.respuesta
+				                                         }
+				                                     ]
+				                                 }).show());
+				                             }
+				                         }
+				                         ,failure  : function()
+				                         {
+				                             form.setLoading(false);
+				                             errorComunicacion();
+				                         }
+				                     });
+            				}else{
+            					mensajeWarning('El provedor seleccionado, no tiene la configuraci&oacute;n para pago.');
+            				}
+            			},
+            			failure : function (){
+            				me.up().up().setLoading(false);
+            				centrarVentanaInterna(Ext.Msg.show({
+            					title:'Error',
+            					msg: 'Error de comunicaci&oacute;n',
+            					buttons: Ext.Msg.OK,
+            					icon: Ext.Msg.ERROR
+            				}));
+            			}
+            		});
+                 }
+                 ,failure : function()
+                 {
+                     if(!Ext.isEmpty(nombreCensoParaConfirmar))
+                     {
+                         debug('se quita allowblank');
+                         form.down('filefield').allowBlank = false;
+                     }
+                     form.setLoading(false);
+                     errorComunicacion(null,'Error complementando datos');
+                 }
+             });
+         }
+     }
+    
 	function complementarAltaWindow(grid,rowIndex){
 		
 		var record = grid.getStore().getAt(rowIndex);
@@ -2339,6 +2454,21 @@ Ext.onReady(function()
 		    		}
 		    	}
 		    });
+		    
+			var storeTipoLayout = Ext.create('Ext.data.JsonStore', {
+				model:'Generic',
+				proxy: {
+					type: 'ajax',
+					url: _URL_CATALOGOS,
+					extraParams : {catalogo:_CATALOGO_ConfLayout},
+					reader: {
+						type: 'json',
+						root: 'lista'
+					}
+				}
+			});
+			storeTipoLayout.load();
+		    
 			cmbProveedor = Ext.create('Ext.form.field.ComboBox', {
 				fieldLabel : 'Proveedor',			displayField : 'nombre',			name:'cmbProveedor',
 				valueField   : 'cdpresta',			forceSelection : true,
@@ -2347,6 +2477,13 @@ Ext.onReady(function()
 				hideTrigger:true,					allowBlank:false
 				,labelWidth : 100
                 ,width      : 330
+			});
+			
+			tipoLayout= Ext.create('Ext.form.ComboBox',{
+				fieldLabel   : 'Layout',	allowBlank   : false,
+				editable   :false,			displayField : 'value',				valueField: 'key',			    		forceSelection  : true,
+				labelWidth : 100,			queryMode    :'local',				editable  :false,						name			:'tipoLayout',
+				width	   : 330,			store: storeTipoLayout,				emptyText:'Seleccione...'
 			});
 		    
 			Ext.Ajax.timeout = 5*60*1000;
