@@ -201,6 +201,7 @@
         <pattern>/erickjaime/*.action*</pattern>
         
         <pattern>/convenios/*.action*</pattern>
+        <pattern>/jsp-script/proceso/convenios/*.jsp</pattern>
 
    	</decorator>
 	
