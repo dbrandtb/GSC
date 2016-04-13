@@ -319,6 +319,78 @@ function _4_onSuscripcionClick(row)
 	debug('<_4_onSuscripcionClick');
 }
 
+function _4_onComplementariosAbiertoClick(rowIndex)
+{
+    var record = mcdinStore.getAt(rowIndex);
+    
+    var agrupacion = _mescon_mapaTiposRamo[record.get('cdramo')+'_'+record.get('cdtipsit')+'_AGRUPACION'];
+    
+    if(record.get('cdtipsit')=='MSC')
+    {
+        Ext.create('Ext.form.Panel').submit(
+        {
+            url             : mesConUrlComGrupo
+            ,standardSubmit : true
+            ,params         :
+            {
+                'smap1.cdunieco'  : record.get('cdunieco')
+                ,'smap1.cdramo'   : record.get('cdramo')
+                ,'smap1.cdtipsit' : record.get('cdtipsit')
+                ,'smap1.estado'   : record.get('estado')
+                ,'smap1.nmpoliza' : record.get('nmpoliza')
+                ,'smap1.ntramite' : record.get('ntramite')
+                ,'smap1.cdagente' : record.get('cdagente')
+                ,'smap1.status'   : record.get('status')
+                ,'smap1.sincenso' : record.raw.otvalor02
+            }
+        });
+    }
+    else
+    {
+        if(agrupacion=='GRUPO')
+        {
+            Ext.create('Ext.form.Panel').submit(
+            {
+                url             : mesConUrlComGrupo2
+                ,standardSubmit : true
+                ,params         :
+                {
+                    'smap1.cdunieco'  : record.get('cdunieco')
+                    ,'smap1.cdramo'   : record.get('cdramo')
+                    ,'smap1.cdtipsit' : record.get('cdtipsit')
+                    ,'smap1.estado'   : record.get('estado')
+                    ,'smap1.nmpoliza' : record.get('nmpoliza')
+                    ,'smap1.ntramite' : record.get('ntramite')
+                    ,'smap1.cdagente' : record.get('cdagente')
+                    ,'smap1.status'   : record.get('status')
+                    ,'smap1.sincenso' : record.raw.otvalor02
+                }
+            });
+        }
+        else if(agrupacion=='SOLO')
+        {
+            Ext.create('Ext.form.Panel').submit(
+            {
+                url             : mesConUrlDatCom
+                ,standardSubmit : true
+                ,params         :
+                {
+                    cdunieco  : record.get('cdunieco')
+                    ,cdramo   : record.get('cdramo')
+                    ,estado   : record.get('estado')
+                    ,nmpoliza : record.get(' nmpoliza')
+                    ,'map1.ntramite' : record.get('ntramite')
+                    ,cdtipsit : record.get('cdtipsit')
+                }
+            });
+        }
+        else
+        {
+            mensajeError('Ramo mal clasificado (TTIPRAM)');
+        }
+    }
+}
+
 function _4_onComplementariosClick(rowIndex)
 {
     debug(rowIndex);
