@@ -110,7 +110,7 @@ public class ConsultaConveniosManagerImpl implements ConveniosManager{
 	}	
 	
 	@Override
-	public void guardarEnBase(String cdunieco, String cdramo, String estado, String nmpoliza, String diasgrac, String cdconven, String status, Date fecregis, String cdusureg, Date fecmodif, String cdusumod, String operacion) throws Exception
+	public void guardarEnBase(String cdunieco, String cdramo, String estado, String cdtipsit, String nmpoliza, String diasgrac, String cdconven, String status, Date fecregis, String cdusureg, Date fecmodif, String cdusumod, String operacion) throws Exception
 	{
 		String paso = null;
 		
@@ -118,7 +118,7 @@ public class ConsultaConveniosManagerImpl implements ConveniosManager{
 		{
 			paso = "insertando en base";		
 			
-			consultasDAO.insertarConvenioPoliza(cdunieco, cdramo, estado, nmpoliza, diasgrac, cdconven, status, fecregis, cdusureg, fecmodif, cdusumod, operacion);
+			consultasDAO.insertarConvenioPoliza(cdunieco, cdramo, estado, cdtipsit, nmpoliza, diasgrac, cdconven, status, fecregis, cdusureg, fecmodif, cdusumod, operacion);
 	
 			paso = "terminando de insertar en base";
 			//dao.guardarDatos

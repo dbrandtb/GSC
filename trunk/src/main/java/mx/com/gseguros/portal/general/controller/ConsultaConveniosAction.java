@@ -88,10 +88,11 @@ public class ConsultaConveniosAction extends PrincipalCoreAction{
 			String cdunieco = params.get("cdunieco");
 			String cdramo   = params.get("cdramo");
 			String estado   = params.get("estado");
+			String cdtipsit   = params.get("cdtipsit");
 			String nmpoliza = params.get("nmpoliza");
 			String diasgrac = params.get("diasgrac");
 			String cdconven = params.get("cdconven");
-			String status   = params.get("estatus");			
+			String status   = params.get("estatus");
 			Date fecregis = new Date();
 			usuVO = new UserVO();
 			String cdusureg = Utils.validateSession(session).getUser();
@@ -101,6 +102,7 @@ public class ConsultaConveniosAction extends PrincipalCoreAction{
 					,"\n###### cdunieco ",cdunieco
 					,"\n###### cdramo ",cdramo
 					,"\n###### estado ",estado
+					,"\n###### cdtipsit",cdtipsit
 					,"\n###### nmpoliza ",nmpoliza
 					,"\n###### diasgrac ",diasgrac
 					,"\n###### cdconven ",cdconven
@@ -108,7 +110,7 @@ public class ConsultaConveniosAction extends PrincipalCoreAction{
 					,"\n###### fecha ",fecregis									
 					,"\n###### usuario ",cdusureg
 					));
-			conveniosManager.guardarEnBase(cdunieco,cdramo,estado,nmpoliza,diasgrac,cdconven,status,fecregis,cdusureg,fecregis,cdusureg,"I");
+			conveniosManager.guardarEnBase(cdunieco,cdramo,estado,cdtipsit,nmpoliza,diasgrac,cdconven,status,fecregis,cdusureg,fecregis,cdusureg,"I");
 			logger.debug(Utils.log(
 					 "\n###########################"
 					,"\n###### termina guardarEnBase ######"
@@ -139,7 +141,7 @@ public class ConsultaConveniosAction extends PrincipalCoreAction{
 			Utils.validate(params,"No se recibieron datos");		
 			String cdunieco = params.get("cdunieco");
 			String cdramo   = params.get("cdramo");
-//			String estado   = params.get("estado");
+			String cdtipsit   = params.get("cdtipsit");
 			String estado   = "M";
 			String nmpoliza = params.get("nmpoliza");
 			String diasgrac = params.get("diasgrac");
@@ -161,7 +163,7 @@ public class ConsultaConveniosAction extends PrincipalCoreAction{
 					,"\n###### fecha ",fecregis									
 					,"\n###### usuario ",cdusureg
 					));
-			conveniosManager.guardarEnBase(cdunieco,cdramo,estado,nmpoliza,diasgrac,cdconven,status,null,null,fecregis,cdusureg,"U");
+			conveniosManager.guardarEnBase(cdunieco,cdramo,estado,cdtipsit,nmpoliza,diasgrac,cdconven,status,null,null,fecregis,cdusureg,"U");
 			logger.debug(Utils.log(
 					 "\n###########################"
 					,"\n###### termina editandoBase ######"

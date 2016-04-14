@@ -9,6 +9,7 @@
 
 ////// variables //////
 var store;
+var win;
 ////// variables //////
 
 ////// overrides //////
@@ -44,6 +45,82 @@ Ext.onReady(function()
     ////// stores //////
     
     ////// componentes //////
+win = Ext.create('Ext.window.Window',
+            {
+        title   : 'Agregar nuevo convenio'
+        ,width  : 300
+        ,height : 400
+        ,modal  : true
+        ,closable : true
+        ,closeAction: 'hide'
+        ,items  : [
+    	Ext.create('Ext.form.Panel',
+	    {
+	        title     : 'Consulta y registro de convenios'
+	        ,layout   :
+	        {
+	            type     : 'table'
+	            ,columns : 1
+	        }
+	        ,defaults :
+	        {
+	            style : 'margin:5px;'
+	        }
+	        ,items : itemsInsert
+	        ,buttonAlign : 'center'			                        		        					                        
+        ,buttons :
+        [
+//             {
+//                 text     : 'cerrar'
+//                 ,handler : function(me){
+//                     me.up('window').close();
+//                 }				                             
+//             }
+//             ,
+            {
+            text     : 'guardar'
+            ,handler : function(me){
+            	var values = me.up("form").getValues();
+            	_mask('Guardando...');
+            	Ext.Ajax.request({
+                            url     : '<s:url namespace="/convenios" action="guardarEnBase" />'
+                            ,params :
+                            {
+                                'params.cdunieco'    : values.cdunieco
+                                ,'params.cdramo'     : values.cdramo
+                                ,'params.cdtipsit'   : values.cdtipsit
+                                ,'params.estado' 	 : values.estado
+                                ,'params.nmpoliza' 	 : values.nmpoliza
+                                ,'params.diasgrac' 	 : values.nmdias
+                                ,'params.cdconven' 	 : values.convenio
+                                ,'params.estatus' 	 : values.estatus
+                            }
+                            ,success : function(response)
+                            {
+                                _unmask();
+                                var json = Ext.decode(response.responseText);
+                                if(json.success==true){
+                                    mensajeCorrecto('datos guardados','se guardo');
+                                    me.up('window').close();
+                                }
+                                else
+                                {
+                                    mensajeError('Error al guardar',json.message);
+                                    me.up('window').close();
+                                }
+                            }
+                            ,failure : function()
+                            {
+                                _unmask();
+                                errorComunicacion(null,'Error de red al guardar');
+                            }
+                        }); 
+            }
+    	  }
+        ]
+	    })
+	    ]
+    });
     ////// componentes //////
     
     ////// contenido //////
@@ -88,6 +165,7 @@ Ext.onReady(function()
                                 {
                                     'params.cdunieco'    : values.cdunieco
                                     ,'params.cdramo'     : values.cdramo
+                                    ,'params.cdtipsit'   : values.cdtipsit
                                     ,'params.estado' 	 : values.estatus
                                     ,'params.nmpoliza' 	 : values.nmpoliza
                                 }
@@ -99,7 +177,7 @@ Ext.onReady(function()
                                     {
                                     	store.removeAll();
                                         store.add(json.list);
-//                                         debug('json',json);
+                                        debug('json',json);
                                     }
                                     else
                                     {
@@ -116,82 +194,10 @@ Ext.onReady(function()
                     }
 		            ,{
 		                text     : 'agregar'
-                        ,icon    : '${icons}add.png'
+                        ,icon    : '${icons}add.png'                        
                         ,handler : function(me)
                         {
-		                    Ext.create('Ext.window.Window',
-				                    {
-				                        title   : 'Agregar nuevo convenio'
-				                        ,width  : 300
-				                        ,height : 400
-				                        ,modal  : true
-				                        ,closable : false
-				                        ,items  : [
-			                        	Ext.create('Ext.form.Panel',
-	                        		    {
-	                        		        title     : 'Consulta y registro de convenios'
-	                        		        ,layout   :
-	                        		        {
-	                        		            type     : 'table'
-	                        		            ,columns : 1
-	                        		        }
-	                        		        ,defaults :
-	                        		        {
-	                        		            style : 'margin:5px;'
-	                        		        }
-	                        		        ,items : itemsInsert
-	                        		        ,buttonAlign : 'center'
-			                        		        	
-				                        	
-				                        ,buttons :
-				                        [
-				                            {
-				                                text     : 'cerrar'
-				                                ,handler : function(me){
-				                                    me.up('window').close();
-				                                }				                             
-				                            }
-				                            ,{
-				                            text     : 'guardar'
-			                                ,handler : function(me){
-			                                	var values = me.up("form").getValues();
-			                                	_mask('Guardando...');
-			                                	Ext.Ajax.request({
-			                                                url     : '<s:url namespace="/convenios" action="guardarEnBase" />'
-			                                                ,params :
-			                                                {
-			                                                    'params.cdunieco'    : values.cdunieco
-			                                                    ,'params.cdramo'     : values.cdramo
-			                                                    ,'params.estado' 	 : values.estado
-			                                                    ,'params.nmpoliza' 	 : values.nmpoliza
-			                                                    ,'params.diasgrac' 	 : values.nmdias
-			                                                    ,'params.cdconven' 	 : values.convenio
-			                                                    ,'params.estatus' 	 : values.estatus
-			                                                }
-			                                                ,success : function(response)
-			                                                {
-			                                                    _unmask();
-			                                                    var json = Ext.decode(response.responseText);
-			                                                    if(json.success==true){
-			                                                        mensajeCorrecto('datos guardados','se guardo');				                                                        
-			                                                    }
-			                                                    else
-			                                                    {
-			                                                        mensajeError('Error al guardar',json.message);
-			                                                    }
-			                                                }
-			                                                ,failure : function()
-			                                                {
-			                                                    _unmask();
-			                                                    errorComunicacion(null,'Error de red al guardar');
-			                                                }
-			                                            }); 
-			                                }
-				                    	  }
-				                        ]
-	                        		    })
-	                        		    ]
-				                    }).show();
+							win.show();
                         }
 		            }
  		            ,{
@@ -199,7 +205,8 @@ Ext.onReady(function()
 		                ,icon    : '${icons}arrow_refresh.png'
 		                ,handler : function()
 		                {
-		                	store.removeAll();
+		                	me.up('form').getForm().reset();
+// 		                	store.removeAll();
 		                }
 		            } 
 		        ]
@@ -231,7 +238,7 @@ Ext.onReady(function()
                                             ,'params.estado' 	 : values.ESTADO
                                             ,'params.nmpoliza' 	 : values.NMPOLIZA
                                             ,'params.diasgrac' 	 : values.DIASGRAC
-//                                             ,'params.leyenda' 	 : values.LEYENDA
+                                            ,'params.cdtipsit'   : values.CDTIPSIT
                                             ,'params.cdconven' 	 : values.CODIGO
                                             ,'params.estatus' 	 : values.STATUS
                                         }
