@@ -4260,9 +4260,9 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("pv_cdunieco_i" , cdunieco);
 		params.put("pv_cdramo_i" , cdramo);
-//		params.put("pv_cdtipsit_i" , cdtipsit);
 		params.put("pv_estado_i" , estado);
 		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_cdtipsit_i" , cdtipsit);
 		Map<String,Object>       procRes    = ejecutaSP(new RecuperarConveniosPorPoliza(getDataSource()),params);
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -4289,9 +4289,9 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			super(dataSource,"Pkg_Consulta.P_GET_DATOS_CONVENIOS");
 			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
-//			declareParameter(new SqlParameter("pv_cdtipsit_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"CDUNIECO","DSRAMO","CDRAMO","CDTIPSIT","NMPOLIZA","CONTRATANTE","AGENTE","DIASGRAC","LEYENDA","CODIGO","STATUS"})));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -4300,21 +4300,27 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	}
 
 	@Override
-	public void insertarConvenioPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String diasgrac, String cdconven, String status, Date fecregis, String cdusureg, Date fecmodif, String cdusumod, String operacion) throws Exception
+	public void insertarConvenioPoliza(String cdunieco, String cdramo, String estado, String cdtipsit, String nmpoliza, String diasgrac, String cdconven, String status, Date fecregis, String cdusureg, Date fecmodif, String cdusumod, String operacion) throws Exception
 	{
 		
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ insertarConvenioPolizaDAO @@@@@@"
 				,"\n@@@@@@ cdunieco= ",cdunieco
-				,"\n@@@@@@ cdramo= ",cdramo
-				,"\n@@@@@@ estado= ",estado
-				,"\n@@@@@@ nmpoliza= ",nmpoliza
-				,"\n@@@@@@ pv_diasgrac_i ",	diasgrac
-				,"\n@@@@@@ pv_cdconven_i ", cdconven
-				,"\n@@@@@@ pv_status_i ", status
+				,"\n@@@@@@ pv_cdunieco_i", cdunieco
+				,"\n@@@@@@ pv_cdramo_i", cdramo	
+				,"\n@@@@@@ pv_estado_i", estado
+				,"\n@@@@@@ pv_nmpoliza_i", nmpoliza
+				,"\n@@@@@@ pv_diasgrac_i", diasgrac
+				,"\n@@@@@@ pv_cdconven_i", cdconven
+				,"\n@@@@@@ pv_status_i", status	
+				,"\n@@@@@@ pv_fecregis_i", fecregis
+				,"\n@@@@@@ pv_cdusureg_i", cdusureg
+				,"\n@@@@@@ pv_fecmodif_i", fecmodif
+				,"\n@@@@@@ pv_cdusumod_i", cdusumod
 				,"\n@@@@@@ pv_accion_i", operacion
-				));	
+				,"\n@@@@@@ pv_cdtipsit_i", cdtipsit
+				));
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
 		params.put("pv_cdunieco_i", cdunieco);
 		params.put("pv_cdramo_i", cdramo);
@@ -4322,12 +4328,13 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("pv_nmpoliza_i", nmpoliza);
 		params.put("pv_diasgrac_i", diasgrac);
 		params.put("pv_cdconven_i", cdconven);
-		params.put("pv_status_i", status);		
+		params.put("pv_status_i", status);
 		params.put("pv_fecregis_i", fecregis);
 		params.put("pv_cdusureg_i", cdusureg);
 		params.put("pv_fecmodif_i", fecmodif);
 		params.put("pv_cdusumod_i", cdusumod);
-		params.put("pv_accion_i", operacion);
+		params.put("pv_cdtipsit_i", cdtipsit);
+		params.put("pv_accion_i", operacion);		
 		Map<String,Object>  procRes    = ejecutaSP(new InsertarConvenioPoliza(getDataSource()),params);
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -4341,7 +4348,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			super(dataSource,"pkg_satelites2.P_MOV_TCONVENIOS");			
 			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));			
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i"   , OracleTypes.VARCHAR));    
 			declareParameter(new SqlParameter("pv_diasgrac_i"   , OracleTypes.VARCHAR));
@@ -4351,6 +4358,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			declareParameter(new SqlParameter("pv_cdusureg_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_fecmodif_i"   , OracleTypes.TIMESTAMP));
 			declareParameter(new SqlParameter("pv_cdusumod_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_accion_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
