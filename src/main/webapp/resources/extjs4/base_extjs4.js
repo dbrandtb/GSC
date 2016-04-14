@@ -2453,7 +2453,7 @@ function _maskSession(text)
     _unmask();
     centrarVentanaInterna(Ext.create('Ext.window.Window',
     {
-        title        : 'Cargando...'
+        title        : 'En espera...'
         ,itemId      : '_global_loadingWindow'
         ,modal       : true
         ,border      : 0
