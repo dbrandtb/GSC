@@ -581,8 +581,10 @@ Ext.onReady(function()
         ,title  : '<span style="font:bold 14px Calibri;">DATOS ADICIONALES DE P&Oacute;LIZA</span>'
         ,hidden : _p28_smap1.cdramo+'x'=='5x'
                   ?(
-                      _p28_smap1.cdtipsit+'x'!='CRx'||_p28_smap1.cdsisrol!='SUSCRIAUTO'
-                  )
+              		    _p28_smap1.cdtipsit+'x'!='CRx'|| 
+              		    ('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
+              		    //_p28_smap1.cdtipsit+'x'!='CRx'||_p28_smap1.cdsisrol!='SUSCRIAUTO'
+                   )
                   :false
         ,items  : tatripolItems
     }
@@ -732,7 +734,10 @@ Ext.onReady(function()
         var version   = _fieldByName('parametros.pv_otvalor10');
         var tipoValor = _fieldByLabel('TIPO VALOR');
         var sumaAsegu = _fieldLikeLabel('VALOR VEH');
-        var combcl    = _fieldLikeLabel('CLIENTE NUEVO');
+        
+        var combcl = 'S';
+        if(!Ext.isEmpty(_fieldLikeLabel('CLIENTE NUEVO',null,true)))
+        {combcl    = _fieldLikeLabel('CLIENTE NUEVO');}
         
         Ext.apply(_fieldByName('parametros.pv_otvalor13'),
                 {
@@ -754,8 +759,8 @@ Ext.onReady(function()
             agente.setReadOnly(true);
             _p28_ramo5AgenteSelect(agente,_p28_smap1.cdagente);
         }
-        else if(_p28_smap1.cdsisrol=='PROMOTORAUTO'
-            ||_p28_smap1.cdsisrol=='SUSCRIAUTO')
+        else ('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1)
+        	/* if(_p28_smap1.cdsisrol=='PROMOTORAUTO'||_p28_smap1.cdsisrol=='SUSCRIAUTO') */
         {
             agente.on(
             {
@@ -1727,7 +1732,8 @@ function _p28_cotizar(sinTarificar)
                                         ,icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
                                         ,disabled : true
                                         ,handler  : _p28_detalles
-                                        ,hidden   : _p28_smap1.cdsisrol!='SUSCRIAUTO'
+                                        ,hidden   : ('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1)
+                                        	        //_p28_smap1.cdsisrol!='SUSCRIAUTO'
                                     }
                                     ,{
                                         itemId    : '_p28_botonCoberturas'
@@ -2196,7 +2202,9 @@ function _p28_limpiar()
     if(_p28_smap1.cdramo+'x'=='5x')
     {
         _p28_calculaVigencia();
-        _fieldLikeLabel('CLIENTE NUEVO').setValue('S');    
+        
+        if(!Ext.isEmpty(_fieldLikeLabel('CLIENTE NUEVO',null,true)))
+        {_fieldLikeLabel('CLIENTE NUEVO').setValue('S');}    
         
         if(_p28_smap1.cdsisrol=='EJECUTIVOCUENTA')
         {
@@ -2634,7 +2642,10 @@ function llenandoCampos(json)
                                 _p28_recordClienteRecuperado = new _p28_modeloRecuperado(primerInciso.raw);
                                 debug('_p28_recordClienteRecuperado:',_p28_recordClienteRecuperado);
                             
-                                var combcl      = _fieldLikeLabel('CLIENTE NUEVO');
+                                var combcl = 'S';
+                                if(!Ext.isEmpty(_fieldLikeLabel('CLIENTE NUEVO',null,true)))
+                                {combcl = _fieldLikeLabel('CLIENTE NUEVO');}
+                                
                                 combcl.semaforo = true;
                                 combcl.setValue('N');
                                 combcl.semaforo = false;
@@ -2727,8 +2738,8 @@ function llenandoCampos(json)
         if(_p28_smap1.cdramo+'x'=='5x'
             &&
             (
-                _p28_smap1.cdsisrol=='SUSCRIAUTO'
-                ||_p28_smap1.cdsisrol=='PROMOTORAUTO'
+            	('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1)
+            	//_p28_smap1.cdsisrol=='SUSCRIAUTO'||_p28_smap1.cdsisrol=='PROMOTORAUTO'
             ))
         {
             var agente  = _fieldByName('parametros.pv_otvalor01');
