@@ -31,8 +31,10 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ClausulaVO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
+import mx.com.gseguros.portal.general.service.ConveniosManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -66,6 +68,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	private boolean success;
 
 	private String mensajeRes;
+	
+	private String mensajeConv;
 
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
@@ -121,6 +125,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 
 	private List<Map<String, String>> loadList;
 
+	ConveniosManager conveniosManager;
+	
 	/**
 	 * Indica si el usuario es de CallCenter
 	 */
@@ -265,6 +271,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 		logger.debug("Parametros de entrada: "+params);
 		
 		mensajeRes = "";
+		
 		try {
 			
 //			groupTipoBusqueda
@@ -931,6 +938,66 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * Obtiene los mensajes del action
+	 * 
+	 * @return String result
+	 */
+	public String obtieneAvisos() {
+		logger.debug(" **** Entrando a obtieneMensajesAction ****");
+		
+		logger.debug("Parametros de entrada: "+params);
+		
+		mensajeRes = "";
+		
+		mensajeConv = "";
+		
+		try {
+			
+//			groupTipoBusqueda			
+			if(params.containsKey("tipoBusqueda") && StringUtils.isNotBlank(params.get("tipoBusqueda")) && "5".equals(params.get("tipoBusqueda"))){
+				datosSuplemento = consultasPolizaManager.obtieneHistoricoPolizaCorto(params.get("sucursal"), params.get("producto"), params.get("numpolizacorto"));
+			}else{
+				PolizaAseguradoVO poliza = new PolizaAseguradoVO();
+				poliza.setIcodpoliza(params.get("icodpoliza"));
+				poliza.setNmpoliex(params.get("nmpoliex"));
+				datosSuplemento = consultasPolizaManager.obtieneHistoricoPoliza(poliza);
+			}
+			
+			if (datosSuplemento != null) {
+				logger.debug("Historicos encontrados: {}", datosSuplemento.size());
+			}
+
+			if (datosSuplemento != null && !datosSuplemento.isEmpty()) {
+
+					mensajeRes = consultasPolizaManager.obtieneMensajeAgente(new PolizaVO(datosSuplemento.get(0).getCdunieco(),
+																								  datosSuplemento.get(0).getCdramo(), 
+																								  datosSuplemento.get(0).getEstado(), 
+																								  datosSuplemento.get(0).getNmpoliza()));
+
+					mensajeConv = conveniosManager.buscarPoliza(datosSuplemento.get(0).getCdunieco(),
+																		 datosSuplemento.get(0).getCdramo(),
+																		 null,
+																		 datosSuplemento.get(0).getEstado(), 
+																		 datosSuplemento.get(0).getNmpoliza()
+																		 ).get(0).get("LEYENDA");
+//					listMensajes.add(avisos);
+					logger.debug("Mensaje para Agente: {}", mensajeRes);
+					logger.debug("Mensaje convenio: {}", mensajeConv);
+			}
+
+		} catch (Exception e) {
+			logger.error("Error al obtener los consultaDatosSuplemento {}", datosSuplemento, e);
+			mensajeRes = Utils.manejaExcepcion(e);
+			success = false;
+			return SUCCESS;
+		}
+
+		success = true;
+		return SUCCESS;
+
+	}
+	
 	// Getters and setters:
 
 	public List<AseguradoVO> getDatosAsegurados() {
@@ -1159,6 +1226,14 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 
 	public void setAgentesPoliza(ArrayList<AgentePolizaVO> agentesPoliza) {
 		this.agentesPoliza = agentesPoliza;
+	}
+
+	public String getMensajeConv() {
+		return mensajeConv;
+	}
+
+	public void setMensajeConv(String mensajeConv) {
+		this.mensajeConv = mensajeConv;
 	}
 
 }

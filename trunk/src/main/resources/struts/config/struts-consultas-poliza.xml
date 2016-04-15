@@ -240,6 +240,18 @@
             <result name="origen_ice">/jsp/consultas/polizas/includes/datosTatrisit.jsp</result>
             <result name="origen_sisa">/jsp/consultas/polizas/includes/datosAseguradoSISA.jsp</result>
         </action>
+        
+        <action name="consultaAvisos" class="ConsultasPolizaAction"
+			method="obtieneAvisos">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+                    mensajeRes,
+                    mensajeConv,
+                    success
+                </param>
+			</result>
+		</action>
 
 	</package>
 
