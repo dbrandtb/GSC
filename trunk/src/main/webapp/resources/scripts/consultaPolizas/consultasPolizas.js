@@ -43,6 +43,17 @@ Ext.onReady(function() {
         }
     });
     storeTiposConsulta.load();
+    
+    var storeTiposBusqueda = Ext.create('Ext.data.Store', {
+        fields: ['key', 'value'],
+        data : [
+            {'key': 5,'value':'Por n\u00FAmero de p\u00F3liza'},
+            {'key': 1,'value':'Por p\u00F3liza en car\u00E1tula'},
+            {'key': 2,'value':'Por RFC'},
+            {'key': 3,'value':'Por clave de asegurado'},
+            {'key': 4,'value':'Por nombre'}
+        ]
+    });
 
     var listViewOpcionesConsulta = Ext.create('Ext.grid.Panel', {
         collapsible:true,
@@ -155,14 +166,15 @@ Ext.onReady(function() {
     
     
     var storeSuplementos = new Ext.data.Store({
-        pageSize : 20,
         model: 'SuplementoModel',
         proxy: {
-            type         : 'memory'
-                ,enablePaging : true
-                ,reader      : 'json'
-                ,data        : []
+            type: 'ajax',
+            url : _URL_CONSULTA_DATOS_SUPLEMENTO,
+            reader: {
+                type: 'json',
+                root: 'datosSuplemento'
             }
+        }
     });
     
     var gridSuplementos = Ext.create('Ext.grid.Panel', {
@@ -1274,28 +1286,26 @@ Ext.onReady(function() {
                     },
                     items : [
                         {
-                            xtype: 'radiogroup',
-                            name: 'groupTipoBusqueda',
-                            flex: 20,
+                            xtype       : 'combo',
+                            name        : 'params.tipoBusqueda',
+                            queryMode   : 'local',
+                            valueField  : 'key',
+                            displayField: 'value',
+                            flex : 17,
                             columns: 1,
-                            vertical: true,
-                            items: [
-                                {boxLabel: 'Por n\u00FAmero de p\u00F3liza', name: 'tipoBusqueda', inputValue: 1, checked: true, width: 160},
-                                {boxLabel: 'Por RFC', name: 'tipoBusqueda', inputValue: 2},
-                                {boxLabel: 'Por clave de asegurado', name: 'tipoBusqueda', inputValue: 3},
-                                {boxLabel: 'Por nombre', name: 'tipoBusqueda', inputValue: 4},
-                                {boxLabel: 'Por n\u00FAmero de p\u00F3liza corto', name: 'tipoBusqueda', inputValue: 5}
-                                
-                            ],
-                            listeners : {
-                                change : function(radiogroup, newValue, oldValue, eOpts) {
-                                    Ext.getCmp('subpanelBusquedas').query('panel').forEach(function(c){c.hide();});
-                                    //Ext.getCmp('subpanelBusquedas').query('textfield').forEach(function(c){c.setValue('');});
+                            store: storeTiposBusqueda,
+                            listeners: {
+                            	render : function(combo, eOpts ) {
+                            		combo.select(combo.getStore().getAt(0)); // Seleccionar primer elemento
+                            	},
+                            	change : function(combo, newValue, oldValue, eOpts) {
+                            		Ext.getCmp('subpanelBusquedas').query('panel').forEach(function(c){c.hide();});
                                     this.up('form').getForm().findField('params.rfc').setValue('');
                                     this.up('form').getForm().findField('params.cdperson').setValue('');
                                     this.up('form').getForm().findField('params.nombre').setValue('');
+                                    console.log('newValue', newValue);
                                     
-                                    switch (newValue.tipoBusqueda) {
+                                    switch (newValue) {
                                         case 1:
                                             Ext.getCmp('subpanelBusquedaGral').show();
                                             break;
@@ -1312,18 +1322,14 @@ Ext.onReady(function() {
                                             Ext.getCmp('subpanelBusquedaPolCorto').show();
                                             break;
                                     }
-                                }
+                            	}
                             }
                         },
                         {
-                            xtype: 'tbspacer',
-                            flex: 2.5
-                        },
-                        {
-                            id: 'subpanelBusquedas',
-                            layout : 'vbox',
-                            align:'stretch',
-                            flex: 70,
+                            id    : 'subpanelBusquedas',
+                            layout: 'vbox',
+                            align : 'stretch',
+                            flex  : 76,
                             border: false,
                             items: [
                                 {
@@ -1432,19 +1438,17 @@ Ext.onReady(function() {
                                 },
                                 {
                                     id: 'subpanelBusquedaPolCorto',
-                                    layout : 'vbox',
-                                    align:'stretch',
+                                    layout : 'hbox',
+                                    align:'left',
                                     border: false,
                                     hidden: true,
                                     defaults: {
-                                        labelAlign: 'right',
-                                        enforceMaxLength: true,
-                                        msgTarget: 'side'
+                                        labelAlign: 'right'
                                     },
                                     items : [
                                         {
                                             xtype: 'combo',
-                                            width: 280,
+                                            //width: 280,
                                             name : 'params.sucursal',
                                             fieldLabel : 'Sucursal',
                                             allowBlank: false,
@@ -1455,21 +1459,25 @@ Ext.onReady(function() {
 											forceSelection:true,
 											editable:true,
 											queryMode:'local',
-											store:Ext.create('Ext.data.Store',{
-											model:'Generic',
-											autoLoad:true,
-											proxy:{type:'ajax',
-											url: _URL_CARGA_CATALOGO,
-											reader:{type:'json',
-											root:'lista',
-											rootProperty:'lista'
-											},
-											extraParams:{catalogo:'MC_SUCURSALES_SALUD'}
-											}
+											store:Ext.create('Ext.data.Store', {
+    											model:'Generic',
+    											autoLoad:true,
+    											proxy: {
+                                                type:'ajax',
+        											url: _URL_CARGA_CATALOGO,
+        											reader:{
+                                                        type:'json',
+                                                        root:'lista',
+                                                        rootProperty:'lista'
+                                                    },
+                                                    extraParams:{
+    												    catalogo:'MC_SUCURSALES_SALUD'
+                                                    }
+                                                }
 											})
                                         },{
                                             xtype: 'combo',
-                                            width: 280,
+                                            //width: 280,
                                             name : 'params.producto',
                                             fieldLabel : 'Producto',
                                             allowBlank: false,
@@ -1481,22 +1489,26 @@ Ext.onReady(function() {
 											editable:true,
 											queryMode:'local',
 											store:Ext.create('Ext.data.Store',{
-											model:'Generic',
-											autoLoad:true,
-											proxy:{type:'ajax',
-											url: _URL_CARGA_CATALOGO,
-											reader:{type:'json',
-											root:'lista',
-											rootProperty:'lista'
-											},
-											extraParams:{catalogo:'RAMOS'}
-											}
+    											model:'Generic',
+    											autoLoad:true,
+    											proxy: {
+    												type:'ajax',
+        											url: _URL_CARGA_CATALOGO,
+        											reader:{
+        												type:'json',
+        												root:'lista',
+        												rootProperty:'lista'
+                                                    },
+                                                    extraParams:{
+                                                        catalogo:'RAMOS'
+                                                    }
+    											}
 											})
                                         },{
                                             xtype: 'textfield',
                                             name : 'params.numpolizacorto',
-                                            width: 280,
-                                            fieldLabel : 'N&uacute;mero de P&oacute;liza',
+                                            width: 200,
+                                            fieldLabel : 'P&oacute;liza',
                                             allowBlank: false
                                         }
                                     ]
@@ -1504,17 +1516,12 @@ Ext.onReady(function() {
                             ]
                         },
                         {
-                            xtype:'tbspacer',
-                            flex: 2.5
-                        },
-                        {
-                            xtype : 'button',
-                            flex:10,
-                            text: 'Buscar',
+                            xtype: 'button',
+                            flex : 6,
+                            text : 'Buscar',
                             handler: function(btn, e) {
                                 var formBusqueda = this.up('form').getForm();
-                                //Obtenemos el valor elegido en 'groupTipoBusqueda' para elegir el tipo de busqueda a realizar.
-                                switch (formBusqueda.findField('groupTipoBusqueda').getValue().tipoBusqueda) {
+                                switch (formBusqueda.findField('params.tipoBusqueda').getValue()) {
                                     case 1:
                                         // Busqueda por Datos Generales de la poliza:
                                         if(!formBusqueda.findField('params.nmpoliex').isValid()){
@@ -1559,12 +1566,7 @@ Ext.onReady(function() {
                                             mensajeWarning('Llene los datos requeridos.');
                                             return;
                                         }
-                                        var paramsForm = formBusqueda.getValues();
-                                        var tipob = paramsForm.tipoBusqueda;
-                                        paramsForm['params.tipoBusqueda'] = tipob;
-                                        
-                                        cargaStoreSuplementos(paramsForm);
-                                        
+                                        cargaStoreSuplementos(formBusqueda.getValues());
                                     break;
                                 }
                             }
@@ -1574,7 +1576,7 @@ Ext.onReady(function() {
                     layout: 'column',
                     margin: '5',
                     border: false,
-                    name: 'mensajeAgente',
+                    name: 'avisos',
                     html:''
                  }
             ]
@@ -1629,54 +1631,50 @@ Ext.onReady(function() {
         
         debug('Params busqueda de suplemento: ',params);
         
-        /*gridSuplementos.setLoading(true);
         storeSuplementos.load({
             params: params,
             callback: function(records, operation, success) {
-                
-                gridSuplementos.setLoading(false);
-                //gridSuplementos.getView().el.focus();
-                
-                //Limpiar seleccion de la lista de opciones de consulta
-                limpiaSeleccionTiposConsulta();
-                
-                //Mostrar un mensaje para el agente  
-                cambiaTextoMensajeAgente('Esto es un mensaje de prueba para la aplicacion donde no se puede meter mucho mas texto del que puede ser.');
-                
-                if (!success) {
-                    showMessage(_MSG_ERROR, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.ERROR);
-                    return;
-                }
-                if(records.length == 0){
-                    showMessage(_MSG_SIN_DATOS, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.INFO);
-                    return;
+                if(success) {
+                	
+                    gridSuplementos.setLoading(false);
+                    
+                    //Limpiar seleccion de la lista de opciones de consulta:
+                    limpiaSeleccionTiposConsulta();
+                    
+                    obtieneAvisosPoliza(params);
+                    
+                } else {
+                    showMessage('Error', 'Error al obtener el hist\u00F3rico de la p\u00F3liza', Ext.Msg.OK, Ext.Msg.ERROR);
                 }
             }
-        });*/
-        
-        cargaStorePaginadoLocal(storeSuplementos, _URL_CONSULTA_DATOS_SUPLEMENTO, 'datosSuplemento', params, function (options, success, response){
-            if(success){
-                var jsonResponse = Ext.decode(response.responseText);
-                
-                if(!jsonResponse.success) {
-                    showMessage(_MSG_ERROR, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.ERROR);
-                    return;
+        });
+    }
+    
+    
+    /**
+     * Mostrar avisos de la poliza:
+     */
+    function obtieneAvisosPoliza(params) {
+    	// Avisos:
+        Ext.Ajax.request({
+            url       : _URL_CONSULTA_DATOS_SUPLEMENTO,
+            params    : params,
+            callback  : function (options, success, response){
+                if(success){
+                    var jsonResponse = Ext.decode(response.responseText);
+                    
+                    if(!Ext.isEmpty(jsonResponse.mensajeRes)){
+                        panelBusqueda.down('[name=avisos]').update('<span style="color:#E96707;font-size:14px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Aviso: '+jsonResponse.mensajeRes+'</span>');
+                    }else {
+                        panelBusqueda.down('[name=avisos]').update('<span></span>');
+                    }
+                    
+                }else{
+                    showMessage('Error', 'Error al obtener los avisos.', Ext.Msg.OK, Ext.Msg.ERROR);
                 }
-                
-                gridSuplementos.setLoading(false);
-                //gridSuplementos.getView().el.focus();
-                
-                //Limpiar seleccion de la lista de opciones de consulta
-                limpiaSeleccionTiposConsulta();
-                
-                //Mostrar un mensaje para el agente  
-                cambiaTextoMensajeAgente(jsonResponse.mensajeRes);
-                
-            }else{
-                showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
             }
-        }, gridSuplementos);
-        
+        });
+    	
     }
 	
     // FUNCION PARA OBTENER RECIBOS DEL AGENTE
@@ -1703,14 +1701,6 @@ Ext.onReady(function() {
     function limpiaSeleccionTiposConsulta() {
         listViewOpcionesConsulta.getSelectionModel().deselectAll();
         listViewOpcionesConsulta.collapse('top', false);
-    }
-
-    function cambiaTextoMensajeAgente(texto) {
-        if(!Ext.isEmpty(texto)){
-            panelBusqueda.down('[name=mensajeAgente]').update('<span style="color:#E96707;font-size:14px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Aviso: '+texto+'</span>');
-        }else {
-            panelBusqueda.down('[name=mensajeAgente]').update('<span></span>');
-        }
     }
     
     function cargaPolizasAsegurado(formBusqueda, btn) {
