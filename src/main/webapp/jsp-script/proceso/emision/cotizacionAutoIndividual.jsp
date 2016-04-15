@@ -2011,7 +2011,7 @@ function _p28_ramo5ClienteChange(combcl)
     var nombre  = _fieldLikeLabel('NOMBRE CLIENTE',null,true);
     
     var tipoper;
-    if(!Ext.isEmpty(_fieldLikeLabel('CP CIRCULACI',null,true)))
+    if(!Ext.isEmpty(_fieldLikeLabel('TIPO PERSONA',null,true)))
     {tipoper = _fieldByLabel('TIPO PERSONA',null,true);}
     
     var codpos;
