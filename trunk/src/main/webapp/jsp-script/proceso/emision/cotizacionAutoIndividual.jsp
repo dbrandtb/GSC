@@ -2009,7 +2009,10 @@ function _p28_ramo5ClienteChange(combcl)
     debug('>_p28_ramo5ClienteChange value:',combcl.getValue());
     
     var nombre  = _fieldLikeLabel('NOMBRE CLIENTE',null,true);
-    var tipoper = _fieldByLabel('TIPO PERSONA',null,true);
+    
+    var tipoper;
+    if(!Ext.isEmpty(_fieldLikeLabel('CP CIRCULACI',null,true)))
+    {tipoper = _fieldByLabel('TIPO PERSONA',null,true);}
     
     var codpos;
     if(!Ext.isEmpty(_fieldLikeLabel('CP CIRCULACI',null,true)))
