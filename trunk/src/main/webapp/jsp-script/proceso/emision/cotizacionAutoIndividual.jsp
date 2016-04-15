@@ -2008,9 +2008,17 @@ function _p28_ramo5ClienteChange(combcl)
 {
     debug('>_p28_ramo5ClienteChange value:',combcl.getValue());
     
-    var nombre  = _fieldLikeLabel('NOMBRE CLIENTE');
-    var tipoper = _fieldByLabel('TIPO PERSONA');
-    var codpos  = _fieldLikeLabel('CP CIRCULACI');
+    var nombre  = _fieldLikeLabel('NOMBRE CLIENTE',null,true);
+    var tipoper = _fieldByLabel('TIPO PERSONA',null,true);
+    var codpos  = _fieldLikeLabel('CP CIRCULACI',null,true);
+    
+    if(Ext.isEmpty(nombre)
+        ||Ext.isEmpty(tipoper)
+        ||Ext.isEmpty(codpos)
+    )
+    {
+        return;
+    }
     
     var fenacim = '';
     if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE',null,true)))
@@ -3455,23 +3463,30 @@ function _p28_cargarParametrizacionCoberturas(callback)
 {
     debug('>_p28_cargarParametrizacionCoberturas callback:',!Ext.isEmpty(callback),'DUMMY');
     
+    var _f1_negocio;
+    var _f1_tipoServicio;
+    var _f1_modelo;
+    var _f1_tipoPersona;
+    var _f1_submarca;
+    var _f1_clavegs;
+    
      if(!Ext.isEmpty(_fieldByLabel('NEGOCIO',null,true)))
-    {var _f1_negocio      = _fieldByLabel('NEGOCIO').getValue();}
+    { _f1_negocio      = _fieldByLabel('NEGOCIO').getValue();}
     
     if(!Ext.isEmpty(_fieldLikeLabel('TIPO SERVICIO',null,true)))
-    {var _f1_tipoServicio = _fieldByLabel('TIPO SERVICIO').getValue();}
+    { _f1_tipoServicio = _fieldByLabel('TIPO SERVICIO').getValue();}
     
     if(!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true)))
-    {var _f1_modelo       = _fieldByLabel('MODELO').getValue();}
+    { _f1_modelo       = _fieldByLabel('MODELO').getValue();}
     
     if(!Ext.isEmpty(_fieldLikeLabel('TIPO PERSONA',null,true)))
-    {var _f1_tipoPersona  = _fieldByLabel('TIPO PERSONA').getValue();}
+    { _f1_tipoPersona  = _fieldByLabel('TIPO PERSONA').getValue();}
     
     if(!Ext.isEmpty(_fieldLikeLabel('SUBMARCA',null,true)))
-    {var _f1_tipoPersona  = _fieldByLabel('SUBMARCA').getValue();}
+    { _f1_submarca     = _fieldByLabel('SUBMARCA').getValue();}
     
     if(!Ext.isEmpty(_fieldLikeLabel('AUTO',null,true)))
-    {var _f1_clavegs      = _fieldLikeLabel('AUTO').getValue();}
+    { _f1_clavegs      = _fieldLikeLabel('AUTO').getValue();}
     
     var valido = !Ext.isEmpty(_f1_negocio)
                  &&!Ext.isEmpty(_f1_tipoServicio)
@@ -3677,22 +3692,25 @@ function _p28_cargarConfig()
             {
                 for(var prop in json.smap1)
                 {
-                    var cmp = _fieldByName(prop);
-                    if(!Ext.isEmpty(cmp.heredar))
+                    var cmp = _fieldByName(prop,null,true);
+                    if(!Ext.isEmpty(cmp))
                     {
-                        cmp.forceSelection=false;
-                    }
-                    cmp.setValue(json.smap1[prop]);
-                    if(!Ext.isEmpty(cmp.heredar))
-                    {
-                        cmp.heredar(true,function(me)
+                        if(!Ext.isEmpty(cmp.heredar))
                         {
-                            me.forceSelection=true;
-                            if(me.findRecord('key',me.getValue())==false)
+                            cmp.forceSelection=false;
+                        }
+                        cmp.setValue(json.smap1[prop]);
+                        if(!Ext.isEmpty(cmp.heredar))
+                        {
+                            cmp.heredar(true,function(me)
                             {
-                                me.reset();
-                            }
-                        });
+                                me.forceSelection=true;
+                                if(me.findRecord('key',me.getValue())==false)
+                                {
+                                    me.reset();
+                                }
+                            });
+                        }
                     }
                 }
                 _p28_inicializarTatripol();
