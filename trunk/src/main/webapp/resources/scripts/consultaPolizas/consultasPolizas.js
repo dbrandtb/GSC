@@ -178,11 +178,11 @@ Ext.onReady(function() {
     });
     
     var gridSuplementos = Ext.create('Ext.grid.Panel', {
-        id : 'suplemento-form',
+        id    : 'suplemento-form',
         store : storeSuplementos,
         selType: 'checkboxmodel',
         //autoScroll:true,
-        defaults: {sortable : true, width:120, align : 'right'},
+        defaults: {sortable : true, align : 'right'},
         columns : [{
             text : '#',
             dataIndex : 'nsuplogi',
@@ -191,7 +191,7 @@ Ext.onReady(function() {
             id : 'dstipsup',
             text : 'Tipo de endoso',
             dataIndex : 'dstipsup',
-            width:250
+            width:420
         }, {
             text : 'Fecha de emisi\u00F3n',
             dataIndex : 'feemisio',
@@ -1271,7 +1271,7 @@ Ext.onReady(function() {
             colspan:2,
             collapsible:true,
             width:990,
-            height:190,
+            height:120,
             items: [
                 {
                     xtype: 'form',
@@ -1582,7 +1582,7 @@ Ext.onReady(function() {
             ]
         },
         {
-            title:'HISTORICO DE MOVIMIENTOS',
+            title:'HIST\u00D3RICO DE MOVIMIENTOS',
             width:990,
             height:150,
             colspan:2,
@@ -1664,7 +1664,11 @@ Ext.onReady(function() {
                     var jsonResponse = Ext.decode(response.responseText);
                     
                     if(!Ext.isEmpty(jsonResponse.mensajeRes)){
-                        panelBusqueda.down('[name=avisos]').update('<span style="color:#E96707;font-size:14px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Aviso: '+jsonResponse.mensajeRes+'</span>');
+                        panelBusqueda.down('[name=avisos]').update('<span style="color:#E96707;font-size:14px;font-weight:bold;">'+jsonResponse.mensajeRes+'</span>');
+                        panelBusqueda.down('[name=avisos]').animate({duration:500, to: {opacity: 1}}).animate({to: {opacity: 0}})
+                            .animate({duration:500, to: {opacity: 1}}).animate({to: {opacity: 0}})
+                            .animate({duration:500, to: {opacity: 1}}).animate({to: {opacity: 0}})
+                            .animate({duration:500, to: {opacity: 1}});
                     }else {
                         panelBusqueda.down('[name=avisos]').update('<span></span>');
                     }
@@ -1674,7 +1678,6 @@ Ext.onReady(function() {
                 }
             }
         });
-    	
     }
 	
     // FUNCION PARA OBTENER RECIBOS DEL AGENTE
