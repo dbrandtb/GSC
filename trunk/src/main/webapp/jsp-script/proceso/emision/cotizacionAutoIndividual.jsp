@@ -783,61 +783,64 @@ Ext.onReady(function()
         combcl.setValue('S');
         //cliente nuevo
         
-        //version
-        version.anidado = true;
-        version.heredar = function()
-        {
-            version.getStore().load(
-            {
-                params :
-                {
-                    'params.submarca' : submarca.getValue()
-                    ,'params.modelo'  : modelo.getValue()
-                }
-            });
-        };
-        
-        submarca.on(
-        {
-            select : function(){ version.reset(); }
-        });
-        
-        modelo.on(
-        {
-            select : function()
-            {
-                version.getStore().load(
-                {
-                    params :
-                    {
-                        'params.submarca' : submarca.getValue()
-                        ,'params.modelo'  : modelo.getValue()
-                    }
-                });
-            }
-            ,change : function()
-            {
-                tipoValor.setValue('');
-            }
-        });
-        //version
-        
-        //clave
-        clave.on(
-        {
-            select : function(combo,records){ _p28_herenciaDescendiente(clave,marca,submarca,modelo,version,records[0]); }
-        });
-        
-        modelo.on(
-        {
-            select : function() { _p28_herenciaAscendente(clave,marca,submarca,modelo,version); }
-        });
-        
-        version.on(
-        {
-            select : function() { _p28_herenciaAscendente(clave,marca,submarca,modelo,version); }
-        });
-        //clave
+        if(('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
+        {	
+	        //version
+	        version.anidado = true;
+	        version.heredar = function()
+	        {
+	            version.getStore().load(
+	            {
+	                params :
+	                {
+	                    'params.submarca' : submarca.getValue()
+	                    ,'params.modelo'  : modelo.getValue()
+	                }
+	            });
+	        };
+	        
+	        submarca.on(
+	        {
+	            select : function(){ version.reset(); }
+	        });
+	        
+	        modelo.on(
+	        {
+	            select : function()
+	            {
+	                version.getStore().load(
+	                {
+	                    params :
+	                    {
+	                        'params.submarca' : submarca.getValue()
+	                        ,'params.modelo'  : modelo.getValue()
+	                    }
+	                });
+	            }
+	            ,change : function()
+	            {
+	                tipoValor.setValue('');
+	            }
+	        });
+	        //version
+	        
+	        //clave
+	        clave.on(
+	        {
+	            select : function(combo,records){ _p28_herenciaDescendiente(clave,marca,submarca,modelo,version,records[0]); }
+	        });
+	        
+	        modelo.on(
+	        {
+	            select : function() { _p28_herenciaAscendente(clave,marca,submarca,modelo,version); }
+	        });
+	        
+	        version.on(
+	        {
+	            select : function() { _p28_herenciaAscendente(clave,marca,submarca,modelo,version); }
+	        });
+	        //clave
+        }
                 
         //Cambia Atributos campo Fecha de nacimiento dependiendo del seguro de vida
         if(!Ext.isEmpty(_fieldByLabel('SEGURO DE VIDA',null,true)))
@@ -945,10 +948,13 @@ Ext.onReady(function()
         //tipovalor
         
         //sumaAsegurada
-        sumaAsegu.on(
+        if(('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
         {
-            change : function(){ _p28_limitarCoberturasDependientesSumasegRamo5(); }
-        });
+	        sumaAsegu.on(
+	        {
+	            change : function(){ _p28_limitarCoberturasDependientesSumasegRamo5(); }
+	        });
+        }
         //sumaAsegurada
         
         //parametrizacion coberturas
@@ -970,9 +976,10 @@ Ext.onReady(function()
                 if(me.findRecord('key',val)!=false)
                 {
                     _p28_cargarParametrizacionCoberturas();
-                    if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)))
+                    if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)) && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
                     {
-                    _fieldLikeLabel('CLAVE').store.proxy.extraParams['params.servicio']=val;
+                    	var yy = _fieldLikeLabel('CLAVE');
+                        _fieldLikeLabel('CLAVE').store.proxy.extraParams['params.servicio']=val;
                     }
                 }
             }
@@ -1019,8 +1026,8 @@ Ext.onReady(function()
                             me.clearValue();
                         }
                         
-                        if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)))
-                        _fieldLikeLabel('CLAVE').store.proxy.extraParams['params.uso']=me.getValue();
+                        if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)) && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
+                        {_fieldLikeLabel('CLAVE').store.proxy.extraParams['params.uso']=me.getValue();}
                         
                         if(!Ext.isEmpty(micallback))
                         {
@@ -1068,13 +1075,18 @@ Ext.onReady(function()
             	debug('### VIL valido:',valido);
                 
                 var valido  = !Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true))
-                            &&!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true));
+                            &&!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true))
+                            && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1);
                debug('### VIL valido:',valido);
                 
                 if(valido)
                 {
-                    var claveCmp = _fieldLikeLabel('CLAVE');
-                    var modelo   = _fieldByLabel('MODELO').getValue();
+                    var claveCmp = "";
+                 	if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)))
+                    {claveCmp=_fieldLikeLabel('CLAVE');}
+                    var modelo = "";
+                    if(!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true)))
+                    {modelo = _fieldByLabel('MODELO').getValue();}
 	                claveCmp.store.proxy.extraParams['params.uso']=val;
 	                if(!Ext.isEmpty(claveCmp.getValue())&&!Ext.isEmpty(modelo))
 	                 {
@@ -1150,86 +1162,89 @@ Ext.onReady(function()
         //camion
         
         //negocio
-        _fieldByLabel('NEGOCIO').on(
+         if(('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
         {
-            change : function(me,val)
-            {
-                if(me.findRecord('key',val)!=false)
-                {
-                    marca.getStore().load(
-                    {
-                        params :
-                        {
-                            'params.cdnegocio' : val
-                        }
-                    });
-                    if(_p28_smap1.cdtipsit+'x'=='CRx'||_p28_smap1.cdtipsit+'x'=='PCx')
-                    {
-                        _fieldByLabel('CARGA').getStore().load(
-                        {
-                            params :
-                            {
-                                'params.negocio' : _fieldByLabel('NEGOCIO').getValue()
-                            }
-                        });
-                    }
-                    
-                    var negoCmp = _fieldByLabel('NEGOCIO');
-                    var negoVal = negoCmp.getValue();
-                    negoCmp.setLoading(true);
-                    Ext.Ajax.request(
-                    {
-                        url     : _p28_urlCargarDetalleNegocioRamo5
-                        ,params :
-                        {
-                            'smap1.negocio' : negoVal,
-                            'smap1.cdramo'  : _p28_smap1.cdramo,
-                            'smap1.cdtipsit': _p28_smap1.cdtipsit
-                        }
-                        ,success : function(response)
-                        {
-                            negoCmp.setLoading(false);
-                            var json = Ext.decode(response.responseText);
-                            debug('### detalle negocio:',json);
-                            if(Number(json.smap1.MULTIANUAL) != 0) {
-                                _fieldByName('fefin').validator=function(val)
-                                {
-                                    var feiniVal = Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y');
-                                    debug('feiniVal:',feiniVal);
-                                    var fefinVal=[];
-                                    for(var i=1; i <= Number(json.smap1.MULTIANUAL); i++)
-                                    {
-                                        debug('mas anios:',i);
-                                        fefinVal.push(Ext.Date.format(Ext.Date.add(Ext.Date.parse(feiniVal,'d/m/Y'),Ext.Date.YEAR,i),'d/m/Y'));
-                                    }
-                                    debug('validar contra:',fefinVal);
-                                    var valido = true;
-                                    if(!Ext.Array.contains(fefinVal,val))
-                                    {
-                                        valido = 'Solo se permite:';
-                                        for(var i in fefinVal)
-                                        {
-                                            valido = valido + ' ' + fefinVal[i];
-                                            if(fefinVal.length>1&&i<fefinVal.length-1)
-                                            {
-                                                valido = valido + ',';
-                                            }
-                                        }
-                                    }
-                                    return valido;
-                                }
-                            }
-                            _fieldByName('fefin').isValid();
-                        }
-                        ,failure : function()
-                        {
-                            negoCmp.setLoading(false);
-                            errorComunicacion();
-                        }
-                    });
-                }
-            }
-        });
+	        _fieldByLabel('NEGOCIO').on(
+	        {
+	            change : function(me,val)
+	            {
+	                if(me.findRecord('key',val)!=false)
+	                {
+	                    marca.getStore().load(
+	                    {
+	                        params :
+	                        {
+	                            'params.cdnegocio' : val
+	                        }
+	                    });
+	                    if(_p28_smap1.cdtipsit+'x'=='CRx'||_p28_smap1.cdtipsit+'x'=='PCx')
+	                    {
+	                        _fieldByLabel('CARGA').getStore().load(
+	                        {
+	                            params :
+	                            {
+	                                'params.negocio' : _fieldByLabel('NEGOCIO').getValue()
+	                            }
+	                        });
+	                    }
+	                    
+	                    var negoCmp = _fieldByLabel('NEGOCIO');
+	                    var negoVal = negoCmp.getValue();
+	                    negoCmp.setLoading(true);
+	                    Ext.Ajax.request(
+	                    {
+	                        url     : _p28_urlCargarDetalleNegocioRamo5
+	                        ,params :
+	                        {
+	                            'smap1.negocio' : negoVal,
+	                            'smap1.cdramo'  : _p28_smap1.cdramo,
+	                            'smap1.cdtipsit': _p28_smap1.cdtipsit
+	                        }
+	                        ,success : function(response)
+	                        {
+	                            negoCmp.setLoading(false);
+	                            var json = Ext.decode(response.responseText);
+	                            debug('### detalle negocio:',json);
+	                            if(Number(json.smap1.MULTIANUAL) != 0) {
+	                                _fieldByName('fefin').validator=function(val)
+	                                {
+	                                    var feiniVal = Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y');
+	                                    debug('feiniVal:',feiniVal);
+	                                    var fefinVal=[];
+	                                    for(var i=1; i <= Number(json.smap1.MULTIANUAL); i++)
+	                                    {
+	                                        debug('mas anios:',i);
+	                                        fefinVal.push(Ext.Date.format(Ext.Date.add(Ext.Date.parse(feiniVal,'d/m/Y'),Ext.Date.YEAR,i),'d/m/Y'));
+	                                    }
+	                                    debug('validar contra:',fefinVal);
+	                                    var valido = true;
+	                                    if(!Ext.Array.contains(fefinVal,val))
+	                                    {
+	                                        valido = 'Solo se permite:';
+	                                        for(var i in fefinVal)
+	                                        {
+	                                            valido = valido + ' ' + fefinVal[i];
+	                                            if(fefinVal.length>1&&i<fefinVal.length-1)
+	                                            {
+	                                                valido = valido + ',';
+	                                            }
+	                                        }
+	                                    }
+	                                    return valido;
+	                                }
+	                            }
+	                            _fieldByName('fefin').isValid();
+	                        }
+	                        ,failure : function()
+	                        {
+	                            negoCmp.setLoading(false);
+	                            errorComunicacion();
+	                        }
+	                    });
+	                }
+	            }
+	        });
+        }
         //negocio
         
         //asistencia eua y canada
@@ -2867,6 +2882,7 @@ function _p28_cargarRangoValorRamo5(callback)
     debug('<_p28_cargarRangoValorRamo5');
 }
 
+
 function _p28_limitarCoberturasDependientesSumasegRamo5()
 {
     var sumaAsegu = _fieldLikeLabel('VALOR VEH');
@@ -2892,21 +2908,23 @@ function _p28_limitarCoberturasDependientesSumasegRamo5()
                 {
                     var equipoEspecial = 0;
                     if(!Ext.isEmpty(_fieldLikeLabel('SUMA ASEGURADA EQUIPO ESPECIAL',null,true)))
-                    {equipoEspecial = _fieldByLabel('SUMA ASEGURADA EQUIPO ESPECIAL');}
-                    var min            = suma*(1+(json.smap1.P1VALOR-0));
-                    var max            = suma*(1+(json.smap1.P2VALOR-0));
-                    debug('min:',min,'max:',max);
-                    equipoEspecial.setMinValue(min);
-                    equipoEspecial.setMaxValue(max);
-                    equipoEspecial.isValid();
+	                {
+                    	equipoEspecial = _fieldByLabel('SUMA ASEGURADA EQUIPO ESPECIAL');
+	                    var min            = suma*(1+(json.smap1.P1VALOR-0));
+	                    var max            = suma*(1+(json.smap1.P2VALOR-0));
+	                    debug('min:',min,'max:',max);
+	                    equipoEspecial.setMinValue(min);
+	                    equipoEspecial.setMaxValue(max);
+	                    equipoEspecial.isValid();
                     
-                    var adaptaciones = _fieldByLabel('SUMA ASEGURADA ADAPTACIONES Y CONVERSIONES');
-                    min              = suma*(1+(json.smap1.P3VALOR-0));
-                    max              = suma*(1+(json.smap1.P4VALOR-0));
-                    debug('min:',min,'max:',max);
-                    adaptaciones.setMinValue(min);
-                    adaptaciones.setMaxValue(max);
-                    adaptaciones.isValid();
+	                    var adaptaciones = _fieldByLabel('SUMA ASEGURADA ADAPTACIONES Y CONVERSIONES');
+	                    min              = suma*(1+(json.smap1.P3VALOR-0));
+	                    max              = suma*(1+(json.smap1.P4VALOR-0));
+	                    debug('min:',min,'max:',max);
+	                    adaptaciones.setMinValue(min);
+	                    adaptaciones.setMaxValue(max);
+	                    adaptaciones.isValid();
+	                }
                 }
                 else
                 {
@@ -2917,6 +2935,7 @@ function _p28_limitarCoberturasDependientesSumasegRamo5()
         });
     }
 }
+
 
 function _p28_nmpolizaChange(me)
 {
