@@ -1732,7 +1732,7 @@ function _p28_cotizar(sinTarificar)
                                         ,icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
                                         ,disabled : true
                                         ,handler  : _p28_detalles
-                                        ,hidden   : ('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1)
+                                        ,hidden   : ('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
                                         	        //_p28_smap1.cdsisrol!='SUSCRIAUTO'
                                     }
                                     ,{
