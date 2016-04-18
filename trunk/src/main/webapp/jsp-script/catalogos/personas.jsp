@@ -2260,6 +2260,12 @@ function _p22_guardarClic(callbackGuardar, autosave)
     		}
 		}
         
+		var feIngreso =  _fieldByName('FEINGRESO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue();
+		
+		if(Ext.isEmpty(feIngreso)){
+			_fieldByName('FEINGRESO',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setValue(new Date());
+		}
+		
         Ext.Ajax.request(
         {
             url       : _p22_urlGuardar
