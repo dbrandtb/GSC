@@ -2188,6 +2188,36 @@ public class EndososManagerImpl implements EndososManager
 				));
 		return resp;
 	}
+
+	
+	@Override
+	public void guardaAseguradoAlterno(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String aseguradoAlterno
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardaAseguradoAlterno @@@@@@"
+				,"\n@@@@@@ cdunieco="         , cdunieco
+				,"\n@@@@@@ cdramo="           , cdramo
+				,"\n@@@@@@ estado="           , estado
+				,"\n@@@@@@ nmpoliza="         , nmpoliza
+				,"\n@@@@@@ nmsuplem="         , nmsuplem
+				,"\n@@@@@@ aseguradoAlterno=" , aseguradoAlterno
+				));
+		
+		endososDAO.guardaAseguradoAlterno(cdunieco,cdramo,estado,nmpoliza,nmsuplem,aseguradoAlterno);
+		
+		logger.debug(Utils.log(
+				"\n@@@@@@ guardaAseguradoAlterno @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
 	
 	public List<Map<String,String>> obtenerListaDocumentosEndosos(PolizaVO poliza) throws Exception {
 		return endososDAO.obtenerListaDocumentosEndosos(poliza);

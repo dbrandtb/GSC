@@ -578,9 +578,18 @@ public class EndososAutoAction extends PrincipalCoreAction
 	public String endosoAseguradoAlterno()
 	{
 		
+		try {
+			if(smap2 == null){
+				smap2 =  new HashMap<String, String>();
+			}
+			smap2.putAll(endososAutoManager.obtieneAseguradoAlterno(smap1.get("CDUNIECO"), smap1.get("CDRAMO"), smap1.get("ESTADO"), smap1.get("NMPOLIZA"), null)) ;
+		} catch (Exception e) {
+			logger.error("No se pudo cargar los valores del Asegurado alterno", e);
+		}
+		
 		smap1.put("pv_cdunieco", smap1.get("CDUNIECO"));
-		smap1.put("pv_cdramo", smap1.get("CDRAMO"));
-		smap1.put("pv_estado", smap1.get("ESTADO"));
+		smap1.put("pv_cdramo"  , smap1.get("CDRAMO"));
+		smap1.put("pv_estado"  , smap1.get("ESTADO"));
 		smap1.put("pv_nmpoliza", smap1.get("NMPOLIZA"));
 		smap1.put("pv_cdperson", smap1.get("CDPERSON"));
 		smap1.put("FEINIVAL", null);
@@ -893,8 +902,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		return isSuccess() ? SUCCESS : ERROR;
 	}
 	
-	
-		public String guardarEndosoAseguradoAlterno() {
+	public String guardarEndosoAseguradoAlterno() {
         
 		logger.debug(Utils.log(
 				"\n###########################################"
@@ -914,6 +922,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String status   = smap1.get("STATUS");
 			String ntramite = smap1.get("NTRAMITE");
 			
+			String aseguradoAlterno = smap1.get("ASEG_ALTERNO");
+			
 			Utils.validate(cdunieco , "No se recibio la sucursal");
 			Utils.validate(cdramo   , "No se recibio el producto");
 			Utils.validate(estado   , "No se recibio el estado de la poliza");
@@ -928,11 +938,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String fechaEndoso   = smap1.get("FEINIVAL");
 			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
 			
-			Map<String,String> otvalores = new HashMap<String,String>();
-			for(int i = 1; i<= 50; i++){
-				otvalores.put(new StringBuilder("otvalor").append(StringUtils.leftPad(String.valueOf(i), 2, "0")).toString(),smap1.get(new StringBuilder("OTVALOR").append(StringUtils.leftPad(String.valueOf(i), 2, "0")).toString()));
-			}
-			
 			endososAutoManager.guardarEndosoAseguradoAlterno(
 					cdunieco,
 					cdramo,
@@ -945,7 +950,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					status,
 					fechaEndoso,
 					dFechaEndoso,
-					otvalores,
+					aseguradoAlterno,
 					cdsisrol
 					);
 			

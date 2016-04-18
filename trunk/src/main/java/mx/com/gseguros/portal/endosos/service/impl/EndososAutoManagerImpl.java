@@ -2542,6 +2542,30 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		return true;
 	}
 
+	
+	@Override
+	public Map<String,String> obtieneAseguradoAlterno(String cdunieco, String cdramo ,String estado ,String nmpoliza, String nmsuplem) throws Exception {
+		
+		
+		List<Map<String,String>> datos = null;
+		Map<String,String> asegAlterno = null;
+		
+		HashMap<String, String> params = new LinkedHashMap<String, String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		
+		datos = endososDAO.obtieneDatosEndAseguradoAlterno(params);
+		
+		if(datos!=null && !datos.isEmpty()){
+			asegAlterno = datos.get(0);
+		}
+		
+		return asegAlterno;
+	}
+	
 	@Override
 	public void guardarEndosoAseguradoAlterno(
 			String cdunieco
@@ -2555,13 +2579,13 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String status
 			,String fechaEndoso
 			,Date dFechaEndoso
-			,Map<String, String> otvalores
+			,String aseguradoAlterno
 			,String cdsisrol
 		)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
+				,"\n@@@@@@ guardarEndosoAseguradoAlterno @@@@@@"
 				,"\n@@@@@@ cdunieco="     , cdunieco
 				,"\n@@@@@@ cdramo="       , cdramo
 				,"\n@@@@@@ estado="       , estado
@@ -2571,7 +2595,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ cdtipsup="     , cdtipsup
 				,"\n@@@@@@ fechaEndoso="  , fechaEndoso
 				,"\n@@@@@@ dFechaEndoso=" , dFechaEndoso
-				,"\n@@@@@@ otvalores="    , otvalores
+				,"\n@@@@@@ aseguradoAlterno=", aseguradoAlterno
 				,"\n@@@@@@ cdsisrol="     , cdsisrol
 				));
 		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
@@ -2598,9 +2622,10 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String nmsuplem = iniciarEndosoResp.get("pv_nmsuplem_o");
 			String nsuplogi = iniciarEndosoResp.get("pv_nsuplogi_o");
 			
-			paso ="Registra los valores en TVALOPOL";
-			logger.info(paso);
-			cotizacionDAO.movimientoTvalopol(cdunieco, cdramo, estado, nmpoliza, nmsuplem, status, otvalores);
+			paso ="Registra los valores en TVALOPOL para asegurado alterno";
+			logger.info(paso);			
+			endososManager.guardaAseguradoAlterno(cdunieco, cdramo, estado, nmpoliza, nmsuplem, aseguradoAlterno);
+
 			paso ="Se confirma el endoso";
 			logger.info(paso);
 			endososDAO.confirmarEndosoB(cdunieco,cdramo,estado,nmpoliza,nmsuplem, nsuplogi, cdtipsup, null);
@@ -2662,7 +2687,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		
 		logger.debug(Utils.log(
 				 "\n@@@@@@ " , resp
-				,"\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
+				,"\n@@@@@@ guardarEndosoAseguradoAlterno @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
