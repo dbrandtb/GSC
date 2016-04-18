@@ -123,6 +123,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				//Se invoca servicio para obtener los datos del auto
 				try
 				{
+					params.put("param6" , endosoIt.get("TIPOEND"));//tipoend
+					params.put("param7" , endosoIt.get("NUMEND"));//numend
 					
 					List<Map<String,String>>lista = null;
 					
@@ -134,8 +136,6 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						lista = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_SRV_PUBLICO.getNombre(), params, null);
 					}else if(cdramo.equalsIgnoreCase(Ramo.AUTOS_RESIDENTES.getCdramo())){
 						
-						params.put("param6" , endosoIt.get("TIPOEND"));//tipoend
-						params.put("param7" , endosoIt.get("NUMEND"));//numend
 						lista = storedProceduresManager.procedureListCall(
 								ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_RESIDENTES.getNombre(), params, null);
 						

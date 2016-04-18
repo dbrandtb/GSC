@@ -261,6 +261,15 @@ public interface EndososDAO
 			,String cdparent
 			,String porbenef
 			,String accion)throws Exception;
+
+	public void guardaAseguradoAlterno(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String aseguradoAlterno
+			)throws Exception;
 	
 	
 	/**

@@ -2533,6 +2533,43 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+
+	
+	@Override
+	public void guardaAseguradoAlterno(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String aseguradoAlterno
+			)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("aseguradoAlterno", aseguradoAlterno);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.INSERTA_ASEGURADO_ALTERNO", params);
+		ejecutaSP(new GuardaAseguradoAlterno(getDataSource()),params);
+	}
+	
+	protected class GuardaAseguradoAlterno extends StoredProcedure {
+		protected GuardaAseguradoAlterno(DataSource dataSource) {
+			super(dataSource,"PKG_SATELITES2.P_INSERTA_ASEGURADO_ALTERNO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("aseguradoAlterno"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	
 	

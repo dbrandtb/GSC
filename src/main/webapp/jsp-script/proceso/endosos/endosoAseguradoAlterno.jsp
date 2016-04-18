@@ -3,10 +3,12 @@
 <script>
 	var _CONTEXT = '${ctx}';
 	var asegAlterno                      = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
+	var smap2Alterno                      = <s:property value="%{convertToJSON('smap2')}" escapeHtml="false" />;
 	var guarda_Aseg_alterno              = '<s:url namespace="/endosos" action="guardarEndosoAseguradoAlterno" />';
 	var _pAsegAlte_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple"             />';
 	
 	debug('asegAlterno :',asegAlterno);
+	debug('smap2Alterno :',smap2Alterno);
 	
 	Ext.onReady(function() {
 		
@@ -37,7 +39,7 @@
 			        name		: 'asegAlt',
 			        width		: 600,
 			        labelWidth	: 150,
-			        value 		: asegAlterno.OTVALOR02,
+			        value 		: smap2Alterno.AsegAlterno,
 			        allowBlank	: false
 		    	}
 	    	]
@@ -53,7 +55,7 @@
 					if (formPanel.form.isValid()) {
                         // Realizamos el proceso de guardado
 						var submitValues={};
-						asegAlterno.OTVALOR02 = panelInicialPral.down('[name="asegAlt"]').getValue();
+						asegAlterno.ASEG_ALTERNO = panelInicialPral.down('[name="asegAlt"]').getValue();
 						asegAlterno.FEINIVAL  = Ext.Date.format(panelInicialPral.down('[name="feInival"]').getValue(),'d/m/Y');
         				submitValues['smap1']= asegAlterno;
         				

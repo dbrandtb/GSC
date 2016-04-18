@@ -138,6 +138,19 @@ public interface EndososAutoManager
 			,String cdtipsup
 			,UserVO usuarioSesion
 			)throws Exception;
+	
+	
+	/**
+	 * Para recuperar datos del asegurado alterno
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String,String> obtieneAseguradoAlterno(String cdunieco, String cdramo ,String estado ,String nmpoliza, String nmsuplem) throws Exception;
 
 	public void guardarEndosoAseguradoAlterno(
 			String cdunieco
@@ -151,7 +164,7 @@ public interface EndososAutoManager
 			,String status
 			,String fechaEndoso
 			,Date dFechaEndoso
-			,Map<String, String> otvalores
+			,String aseguradoAlterno
 			,String cdsisrol
 			)throws Exception;
 	
