@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.consultas.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Map;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ValidationDataException;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
@@ -36,6 +38,7 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.utils.Utils;
 
+import org.apache.axis2.clustering.LoadBalanceEventHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
@@ -124,7 +127,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	private Map<String, Item> itemMap;
 
 	private List<Map<String, String>> loadList;
-
+	
+	@Autowired
 	ConveniosManager conveniosManager;
 	
 	/**
@@ -942,50 +946,48 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	 * Obtiene los mensajes del action
 	 * 
 	 * @return String result
+	 * @throws ValidationDataException 
 	 */
-	public String obtieneAvisos() {
-		logger.debug(" **** Entrando a obtieneMensajesAction ****");
+	public String obtieneAvisos() throws ValidationDataException {
+		logger.debug(Utils.log(" **** Entrando a obtieneMensajesAction ****"));
 		
-		logger.debug("Parametros de entrada: "+params);
+		logger.debug(Utils.log("Parametros de entrada: "+params));
 		
 		mensajeRes = "";
 		
 		mensajeConv = "";
-		
-		try {
-			
-//			groupTipoBusqueda			
-			if(params.containsKey("tipoBusqueda") && StringUtils.isNotBlank(params.get("tipoBusqueda")) && "5".equals(params.get("tipoBusqueda"))){
-				datosSuplemento = consultasPolizaManager.obtieneHistoricoPolizaCorto(params.get("sucursal"), params.get("producto"), params.get("numpolizacorto"));
-			}else{
-				PolizaAseguradoVO poliza = new PolizaAseguradoVO();
-				poliza.setIcodpoliza(params.get("icodpoliza"));
-				poliza.setNmpoliex(params.get("nmpoliex"));
-				datosSuplemento = consultasPolizaManager.obtieneHistoricoPoliza(poliza);
-			}
-			
-			if (datosSuplemento != null) {
-				logger.debug("Historicos encontrados: {}", datosSuplemento.size());
-			}
-
-			if (datosSuplemento != null && !datosSuplemento.isEmpty()) {
-
-					mensajeRes = consultasPolizaManager.obtieneMensajeAgente(new PolizaVO(datosSuplemento.get(0).getCdunieco(),
-																								  datosSuplemento.get(0).getCdramo(), 
-																								  datosSuplemento.get(0).getEstado(), 
-																								  datosSuplemento.get(0).getNmpoliza()));
-
-					mensajeConv = conveniosManager.buscarPoliza(datosSuplemento.get(0).getCdunieco(),
-																		 datosSuplemento.get(0).getCdramo(),
-																		 null,
-																		 datosSuplemento.get(0).getEstado(), 
-																		 datosSuplemento.get(0).getNmpoliza()
-																		 ).get(0).get("LEYENDA");
-//					listMensajes.add(avisos);
+		logger.debug(Utils.log(" **** Entrando a groupTipoBusqueda ****"));
+		Utils.validate(params,"No se recibieron datos");
+		String cdunieco  = params.get("sucursal");
+		String cdramo  = params.get("producto");
+		String estado  = "M";
+		String nmpoliza = params.get("numpolizacorto");
+		try {		
+					logger.debug(Utils.log(" **** datos suplemento diferente de null ****"));
+					logger.debug(Utils.log(" **** datos de poliza ****\n",
+										   "****",cdunieco,"****\n",
+										   "****",cdramo,"****\n",
+										   "****",estado,"****\n",
+										   "****",nmpoliza,"****\n"));
+					mensajeRes = consultasPolizaManager.obtieneMensajeAgente(new PolizaVO(cdunieco,
+																						  cdramo, 
+																						  estado, 
+																						  nmpoliza));
+					if(mensajeRes == null){
+						mensajeRes = "";
+					}
+					loadList = conveniosManager.buscarPoliza(cdunieco, cdramo, null, estado, nmpoliza);
+					if(loadList.size() > 0){
+						mensajeConv = loadList.get(0).get("LEYENDA");
+					}
+					logger.debug(Utils.log(" **** datos de poliza ****\n",loadList.size(),"**********"));
+//					mensajeConv = conveniosManager.buscarPoliza(datosSuplemento.get(0).getCdunieco(),
+//																datosSuplemento.get(0).getCdramo(),
+//																" ",
+//																datosSuplemento.get(0).getEstado(), 
+//																datosSuplemento.get(0).getNmpoliza()).get(0).get("LEYENDA");
 					logger.debug("Mensaje para Agente: {}", mensajeRes);
 					logger.debug("Mensaje convenio: {}", mensajeConv);
-			}
-
 		} catch (Exception e) {
 			logger.error("Error al obtener los consultaDatosSuplemento {}", datosSuplemento, e);
 			mensajeRes = Utils.manejaExcepcion(e);

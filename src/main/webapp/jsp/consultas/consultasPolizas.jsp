@@ -12,6 +12,7 @@
             var _URL_CONSULTA_DATOS_POLIZA        = '<s:url namespace="/consultasPoliza" action="consultaDatosPoliza" />';
             var _URL_CONSULTA_DATOS_POLIZA_TVALOPOL='<s:url namespace="/consultasPoliza" action="consultaDatosPolizaTvalopol" />';
             var _URL_CONSULTA_DATOS_SUPLEMENTO    = '<s:url namespace="/consultasPoliza" action="consultaDatosSuplemento" />';
+            var _URL_CONSULTA_DATOS_MENSAJES      = '<s:url namespace="/consultasPoliza" action="consultaAvisos" />';
             var _URL_CONSULTA_DATOS_TARIFA_POLIZA = '<s:url namespace="/consultasPoliza" action="consultaDatosTarifaPoliza" />';
             var _URL_CONSULTA_DATOS_ASEGURADO     = '<s:url namespace="/consultasPoliza" action="consultaDatosAsegurado" />';
             var _URL_CONSULTA_POLIZAS_ASEGURADO   = '<s:url namespace="/consultasPoliza" action="consultaPolizasAsegurado" />';
