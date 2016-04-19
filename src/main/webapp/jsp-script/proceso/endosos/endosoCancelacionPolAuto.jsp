@@ -200,6 +200,10 @@ Ext.onReady(function()
     })
     ////// contenido //////
     
+    
+    _fieldByName('cdunieco',panCanForm).forceSelection =  false;
+    _fieldByName('cdunieco',panCanForm).setValue(_p43_smap1.CDUNIECO);
+    
     ////// custom //////
     
     ////// loaders //////
