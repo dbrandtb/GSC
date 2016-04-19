@@ -58,7 +58,6 @@
             // Eliminamos los filtros para que enviemos todas las coberturas editadas:
             storeCoberturasEditadas_p3.clearFilter();
         	
-            _setLoading(true,form);
             var json={};
             json['omap1']=form.getValues();
             json['omap1']['pv_cdunieco_i'] = inputCduniecop3;
@@ -102,6 +101,14 @@
             json['smap1']=_p3_smap1;
 
             debug(json);
+            
+            if(slist1.length <= 0){
+				mensajeWarning('No se modificaron coberturas.');
+				return;
+            }
+            
+            _setLoading(true,form);
+            
             Ext.Ajax.request(
             {
                 url       : endcobUrlGuardar
