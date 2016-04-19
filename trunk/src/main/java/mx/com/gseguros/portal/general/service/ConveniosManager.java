@@ -14,4 +14,9 @@ public interface ConveniosManager {
 	
 	public List<Map<String, String>> buscarPoliza(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza) throws Exception;
 	
+	public Map<String,Item> recuperarCancelacionesElementosPantalla() throws Exception;
+
+	public void guardarCancelacionesEnBase(String cdunieco, String cdramo, String estado, String nmpoliza, String status, Date fecregis, String cdusureg, Date fecmodif, String cdusumod, String operacion) throws Exception;
+	
+	public List<Map<String, String>> buscarCancelacionesPoliza(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza) throws Exception;
 }

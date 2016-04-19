@@ -151,4 +151,126 @@ public class ConsultaConveniosManagerImpl implements ConveniosManager{
 		}
 		return infoGrid;
 	}
+
+	public Map<String,Item> recuperarCancelacionesElementosPantalla() throws Exception
+	{
+		String paso = null;
+		Map<String,Item> elementos = new HashMap<String,Item>();
+		
+		try
+		{
+			paso = "Probando paso";
+			
+			paso = "Recuperando elementos";
+			
+			List<ComponenteVO> itemsForm = pantallasDAO.obtenerComponentes(
+					null //cdtiptra
+					,null //cdunieco
+					,null //cdramo
+					,null //cdtipsit
+					,null //estado
+					,null //cdsisrol
+					,"PANTALLA_CANCELACION_CONVENIOS"
+					,"FORMULARIO"
+					,null //orden
+					);
+			
+			paso = "Generando elementos";
+			
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			gc.generaComponentes(itemsForm, true, false, true, false, false, false);
+			
+			elementos.put("itemsFormulario" , gc.getItems());
+			
+			List<ComponenteVO> itemsGrid = pantallasDAO.obtenerComponentes(
+					null //cdtiptra
+					,null //cdunieco
+					,null //cdramo
+					,null //cdtipsit
+					,null //estado
+					,null //cdsisrol
+					,"PANTALLA_CANCELACION_CONVENIOS"
+					,"MODELO_CONVENIO"
+					,null //orden
+					);
+			
+			paso = "Generando elementos";
+			
+			gc.generaComponentes(itemsGrid, true, true, true, true, true, false);
+			
+			elementos.put("itemsGrid" , gc.getColumns());
+			
+			elementos.put("itemsGridModel" , gc.getFields());
+			
+			List<ComponenteVO> itemsInsert = pantallasDAO.obtenerComponentes(
+					null //cdtiptra
+					,null //cdunieco
+					,null //cdramo
+					,null //cdtipsit
+					,null //estado
+					,null //cdsisrol
+					,"PANTALLA_CANCELACION_CONVENIOS"
+					,"FORMULARIO_INSERT"
+					,null //orden
+					);
+			
+			paso = "Generando elementos";
+			
+			gc.generaComponentes(itemsInsert, true, false, true, false, false, false);
+			
+			elementos.put("itemsInsert" , gc.getItems());
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		return elementos;
+	}	
+	
+	@Override
+	public void guardarCancelacionesEnBase(String cdunieco, String cdramo, String estado, String nmpoliza, String status, Date fecregis, String cdusureg, Date fecmodif, String cdusumod, String operacion) throws Exception
+	{
+		String paso = null;
+		
+		try
+		{
+			paso = "insertando en base";		
+			
+			consultasDAO.insertarCancelacionesConvenioPoliza(cdunieco, cdramo, estado, nmpoliza, status, fecregis, cdusureg, fecmodif, cdusumod, operacion);
+	
+			paso = "terminando de insertar en base";
+			//dao.guardarDatos
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				 "\n@@@@@@ guardarEnBase @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+
+	@Override
+	public List<Map<String, String>> buscarCancelacionesPoliza(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza) throws Exception {
+		String paso = null;
+		List<Map<String, String>> infoGrid = null;
+		try
+		{
+			paso = "Antes de buscar poliza";
+		
+			infoGrid = consultasDAO.recuperarCancelacionesConveniosPorPoliza(cdunieco, cdramo, cdtipsit, estado, nmpoliza);
+			
+			paso = "Despues de buscar poliza";
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		return infoGrid;
+	}
+
 }

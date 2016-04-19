@@ -4365,4 +4365,116 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+
+	public List<Map<String,String>> recuperarCancelacionesConveniosPorPoliza(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ buscarPorPolizaDAO @@@@@@"
+				,"\n@@@@@@ cdunieco=",cdunieco
+				,"\n@@@@@@ cdramo=",cdramo
+				,"\n@@@@@@ cdtipsit=",cdtipsit
+				,"\n@@@@@@ estado=",estado
+				,"\n@@@@@@ nmpoliza=",nmpoliza
+				));	
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i" , cdramo);
+		params.put("pv_estado_i" , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_cdtipsit_i" , cdtipsit);
+		Map<String,Object>       procRes    = ejecutaSP(new RecuperarCancelacionesConveniosPorPoliza(getDataSource()),params);
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ regresa ",procRes.size()
+				,"\n@@@@@@"
+				));
+		List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ regresa ",listaMapas.size()
+				,"\n@@@@@@"
+				));
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ termina buscarPorPolizaDAO @@@@@@"
+				));	
+		return listaMapas;
+	}
+	
+	protected class RecuperarCancelacionesConveniosPorPoliza extends StoredProcedure
+	{
+		protected RecuperarCancelacionesConveniosPorPoliza(DataSource dataSource)
+		{
+			super(dataSource,"Pkg_Consulta.P_GET_DATOS_TPOLPROTEG");
+			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"CDUNIECO","DSRAMO","CDRAMO","CDTIPSIT","NMPOLIZA","CONTRATANTE","AGENTE","STATUS"})));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public void insertarCancelacionesConvenioPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String status, Date fecregis, String cdusureg, Date fecmodif, String cdusumod, String operacion) throws Exception
+	{
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ insertarConvenioPolizaDAO @@@@@@"
+				,"\n@@@@@@ cdunieco= ",cdunieco
+				,"\n@@@@@@ pv_cdunieco_i", cdunieco
+				,"\n@@@@@@ pv_cdramo_i", cdramo	
+				,"\n@@@@@@ pv_estado_i", estado
+				,"\n@@@@@@ pv_nmpoliza_i", nmpoliza
+				,"\n@@@@@@ pv_status_i", status	
+				,"\n@@@@@@ pv_fecregis_i", fecregis
+				,"\n@@@@@@ pv_cdusureg_i", cdusureg
+				,"\n@@@@@@ pv_fecmodif_i", fecmodif
+				,"\n@@@@@@ pv_cdusumod_i", cdusumod
+				,"\n@@@@@@ pv_accion_i", operacion
+				));
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_status_i", status);
+		params.put("pv_fecregis_i", fecregis);
+		params.put("pv_cdusureg_i", cdusureg);
+		params.put("pv_fecmodif_i", fecmodif);
+		params.put("pv_cdusumod_i", cdusumod);		
+		params.put("pv_accion_i", operacion);		
+		Map<String,Object>  procRes    = ejecutaSP(new InsertarCancelacionesConvenioPoliza(getDataSource()),params);
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ termina insertarConvenioPolizaDAO @@@@@@"
+				));	
+	}
+	
+	protected class InsertarCancelacionesConvenioPoliza extends StoredProcedure
+	{
+		protected InsertarCancelacionesConvenioPoliza(DataSource dataSource)
+		{
+			super(dataSource,"pkg_satelites2.P_MOV_TPOLPROTEG");			
+			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));			
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fecregis_i"   , OracleTypes.TIMESTAMP));
+			declareParameter(new SqlParameter("pv_cdusureg_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fecmodif_i"   , OracleTypes.TIMESTAMP));
+			declareParameter(new SqlParameter("pv_cdusumod_i"   , OracleTypes.VARCHAR));			
+			declareParameter(new SqlParameter("pv_accion_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
 }
