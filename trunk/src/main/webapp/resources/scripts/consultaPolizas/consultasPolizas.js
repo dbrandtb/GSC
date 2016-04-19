@@ -1302,7 +1302,7 @@ Ext.onReady(function() {
                             		Ext.getCmp('subpanelBusquedas').query('panel').forEach(function(c){c.hide();});
                                     this.up('form').getForm().findField('params.rfc').setValue('');
                                     this.up('form').getForm().findField('params.cdperson').setValue('');
-                                    this.up('form').getForm().findField('params.nombre').setValue('');
+                                    this.up('form').getForm().findField('params.nombre').setValue('');                                    
                                     console.log('newValue', newValue);
                                     
                                     switch (newValue) {
@@ -1657,14 +1657,18 @@ Ext.onReady(function() {
     function obtieneAvisosPoliza(params) {
     	// Avisos:
         Ext.Ajax.request({
-            url       : _URL_CONSULTA_DATOS_SUPLEMENTO,
+        	url       : _URL_CONSULTA_DATOS_MENSAJES,       	
             params    : params,
             callback  : function (options, success, response){
                 if(success){
                     var jsonResponse = Ext.decode(response.responseText);
-                    
-                    if(!Ext.isEmpty(jsonResponse.mensajeRes)){
-                        panelBusqueda.down('[name=avisos]').update('<span style="color:#E96707;font-size:14px;font-weight:bold;">'+jsonResponse.mensajeRes+'</span>');
+                    debug("avisos",panelBusqueda.down('[name=avisos]'));
+                    if(!Ext.isEmpty(jsonResponse.mensajeRes || !Ext.isEmpty(jsonResponse.mensajeConv))){
+                    	panelBusqueda.down('[name=avisos]').update('<span style="color:#E96707;font-size:16px;font-weight:bold;">'
+                    												+jsonResponse.mensajeRes
+                    												+'</br>'
+                    												+jsonResponse.mensajeConv
+                    												+'</span>');
                         panelBusqueda.down('[name=avisos]').animate({duration:500, to: {opacity: 1}}).animate({to: {opacity: 0}})
                             .animate({duration:500, to: {opacity: 1}}).animate({to: {opacity: 0}})
                             .animate({duration:500, to: {opacity: 1}}).animate({to: {opacity: 0}})
@@ -1672,7 +1676,7 @@ Ext.onReady(function() {
                     }else {
                         panelBusqueda.down('[name=avisos]').update('<span></span>');
                     }
-                    
+                    debug("avisos",panelBusqueda.down('[name=avisos]'));
                 }else{
                     showMessage('Error', 'Error al obtener los avisos.', Ext.Msg.OK, Ext.Msg.ERROR);
                 }
