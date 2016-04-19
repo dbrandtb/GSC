@@ -29,7 +29,7 @@ import mx.com.gseguros.utils.Utils;
 @Namespace("/convenios")
 public class ConsultaConveniosAction extends PrincipalCoreAction{
 	
-	private Logger logger = LoggerFactory.getLogger(JaimeErickAction.class);
+	private Logger logger = LoggerFactory.getLogger(ConsultaConveniosAction.class);
 	
 	private boolean success;
 	
@@ -49,11 +49,11 @@ public class ConsultaConveniosAction extends PrincipalCoreAction{
 		        @Result(name="error"   , location="/jsp-script/general/errorPantalla.jsp"),
 		        @Result(name="success" , location="/jsp-script/proceso/convenios/endosoConvenio.jsp")
 		    })
-	public String iniciaPantalla()
+	public String consultaConvenios()
 	{
 		logger.debug(Utils.log(
 				 "\n###########################"
-				,"\n###### jspErickJaime ######"
+				,"\n###### consultaConvenios ######"
 				));
 		
 		String result = ERROR;
@@ -215,6 +215,173 @@ public class ConsultaConveniosAction extends PrincipalCoreAction{
 				));
 		return SUCCESS;
 	}
+	
+	@Action(value   = "consultaCancelacioneConvenios",
+		    results = {
+		        @Result(name="error"   , location="/jsp-script/general/errorPantalla.jsp"),
+		        @Result(name="success" , location="/jsp-script/proceso/convenios/exclusionConvenios.jsp")
+		    })
+	public String consultaCancelacioneConvenios()
+	{
+		logger.debug(Utils.log(
+				 "\n###########################"
+				,"\n###### consultaCancelacioneConvenios ######"
+				));
+		
+		String result = ERROR;
+		
+		try
+		{
+			items = conveniosManager.recuperarCancelacionesElementosPantalla();
+			result = SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### result=" , result
+				,"\n###### Consulta convenios de cancelacion ######"
+				,"\n###########################"
+				));
+		return result;
+	}
+	
+	@Action(value   = "guardarCancelacionesEnBase",
+			results = { @Result(name="success", type="json") }
+			)
+	public String guardarCancelacionesEnBase()
+	{		
+		UserVO usuVO = null;
+		try
+		{
+			Utils.validate(params,"No se recibieron datos");		
+			String cdunieco = params.get("cdunieco");
+			String cdramo   = params.get("cdramo");
+			String estado   = params.get("estado");
+			String nmpoliza = params.get("nmpoliza");
+			String status   = params.get("estatus");
+			Date fecregis = new Date();
+			usuVO = new UserVO();
+			String cdusureg = Utils.validateSession(session).getUser();
+			logger.debug(Utils.log(
+					 "\n###########################"
+					,"\n###### guardarCancelacionesEnBase ######"
+					,"\n###### cdunieco ",cdunieco
+					,"\n###### cdramo ",cdramo
+					,"\n###### estado ",estado
+					,"\n###### nmpoliza ",nmpoliza
+					,"\n###### status ",status	
+					,"\n###### fecha ",fecregis									
+					,"\n###### usuario ",cdusureg
+					));
+			conveniosManager.guardarCancelacionesEnBase(cdunieco,cdramo,estado,nmpoliza,status,fecregis,cdusureg,fecregis,cdusureg,"I");
+			logger.debug(Utils.log(
+					 "\n###########################"
+					,"\n###### termina guardarCancelacionesEnBase ######"
+					));
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### success=" , success
+				,"\n###### guardarEnBase ######"
+				,"\n###########################"
+				));
+		return SUCCESS;
+	}
+	
+	@Action(value   = "editarCancelacionesEnBase",
+			results = { @Result(name="success", type="json") }
+			)
+	public String editarCancelacionesEnBase()
+	{		
+		UserVO usuVO = null;
+		try
+		{
+			Utils.validate(params,"No se recibieron datos");		
+			String cdunieco = params.get("cdunieco");
+			String cdramo   = params.get("cdramo");
+			String cdtipsit   = params.get("cdtipsit");
+			String estado   = "M";
+			String nmpoliza = params.get("nmpoliza");
+			String diasgrac = params.get("diasgrac");
+			String cdconven = params.get("cdconven");
+			String status   = params.get("estatus");			
+			Date fecregis = new Date();
+			usuVO = new UserVO();
+			String cdusureg = Utils.validateSession(session).getUser();
+			logger.debug(Utils.log(
+					 "\n###########################"
+					,"\n###### editarCancelacionesEnBase ######"
+					,"\n###### cdunieco ",cdunieco
+					,"\n###### cdramo ",cdramo
+					,"\n###### estado ",estado
+					,"\n###### nmpoliza ",nmpoliza
+					,"\n###### diasgrac ",diasgrac
+					,"\n###### cdconven ",cdconven
+					,"\n###### status ",status	
+					,"\n###### fecha ",fecregis									
+					,"\n###### usuario ",cdusureg
+					));
+			conveniosManager.guardarCancelacionesEnBase(cdunieco,cdramo,estado,nmpoliza,status,null,null,fecregis,cdusureg,"U");
+			logger.debug(Utils.log(
+					 "\n###########################"
+					,"\n###### termina editarCancelacionesEnBase ######"
+					));
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### success=" , success
+				,"\n###### guardarEnBase ######"
+				,"\n###########################"
+				));
+		return SUCCESS;
+	}
+	
+	@Action(value   = "buscarCancelacionesPorPoliza",
+			results = { @Result(name="success", type="json") }
+			)
+	public String buscarCancelacionesPorPoliza()
+	{
+		logger.debug(Utils.log(
+				 "\n###########################"
+				,"\n###### buscarCancelacionesPorPoliza ######"
+				));		
+		try
+		{
+			Utils.validate(params,"No se recibieron datos");
+			String cdunieco  = params.get("cdunieco");
+			String cdramo  = params.get("cdramo");
+			String cdtipsit  = params.get("cdtipsit");
+			String estado  = params.get("estado");
+			String nmpoliza = params.get("nmpoliza");
+			list = conveniosManager.buscarCancelacionesPoliza(cdunieco, cdramo, cdtipsit, estado, nmpoliza);
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### success=" , success
+				,"\n###### buscarCancelacionesPorPoliza ######"
+				,"\n###########################"
+				));
+		return SUCCESS;
+	}
+
 	
 	public boolean isSuccess() {
 		return success;

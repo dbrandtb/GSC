@@ -78,7 +78,7 @@ win = Ext.create('Ext.window.Window',
 //             }
 //             ,
             {
-            text     : 'guardar'
+            text     : 'GUARDAR'
             ,handler : function(me){
             	var values = me.up("form").getValues();
             	_mask('Guardando...');
@@ -152,7 +152,7 @@ win = Ext.create('Ext.window.Window',
 		        ,buttons :
 		        [
 		            {
-                        text     : 'buscar'
+                        text     : 'BUSCAR'
                         ,icon    : '${icons}find.png'
                         ,handler : function(me)
                         {
@@ -193,7 +193,7 @@ win = Ext.create('Ext.window.Window',
                         }
                     }
 		            ,{
-		                text     : 'agregar'
+		                text     : 'AGREGAR'
                         ,icon    : '${icons}add.png'                        
                         ,handler : function(me)
                         {
@@ -201,7 +201,7 @@ win = Ext.create('Ext.window.Window',
                         }
 		            }
  		            ,{
-		                text     : 'limpiar'
+		                text     : 'LIMPIAR'
 		                ,icon    : '${icons}arrow_refresh.png'
 		                ,handler : function()
 		                {
