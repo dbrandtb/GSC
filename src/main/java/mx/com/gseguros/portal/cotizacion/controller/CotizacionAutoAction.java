@@ -1102,7 +1102,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				Map<String, String> msn = resp.getSlist().get(lugarMensaje-1);
 				if(msn.get("removidos") != null) 
 				{
-				respuestaOculta = "No se agregarón los incisos"+msn.get("removidos")+" por no corresponder al negocio seleccionado.";
+				respuestaOculta = "No se agregarón los incisos con clave"+msn.get("removidos")+" por no corresponder al negocio seleccionado.";
 				resp.getSlist().remove(lugarMensaje-1);
 				}
 			}
