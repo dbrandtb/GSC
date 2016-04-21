@@ -2890,6 +2890,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 
 			Integer tamanio = slistPYME.size();
 			String incisosinvalidos=": ";
+			String noKey="",AF="",AFL="",PU="",PUL="",MO="",TC="",RQ="";
 			
 			for(int i=0; i<tamanio ;i++)
 		    { 				
@@ -2901,7 +2902,40 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					if(valido == -1)
 					{
 						int e = i;
+						if(slistPYME.get(e).containsKey("dummy"))
+						{
+							if(slistPYME.get(e).get("dummy").contains("71199999"))
+							{	
+								AF = "<br>Automóvil(es) Fronterizo (71199999)";
+							}
+							else if(slistPYME.get(e).get("dummy").contains("71199996"))
+							{
+							   AFL= "<br>Automóvil(es) Legalizado (71199996)";
+							}
+							else if(slistPYME.get(e).get("dummy").contains("71199998"))
+							{
+								PU = "<br>Pick Up Fronterizo (71199998)";
+							}
+							else if(slistPYME.get(e).get("dummy").contains("71199997"))
+							{
+								PUL="<br>Pick up Legalizado (71199997)";
+							}
+							else if(slistPYME.get(e).get("dummy").contains("75199999"))
+							{
+								MO = "<br>Motocicleta(s) (75199999)";
+							}
+							else if(slistPYME.get(e).get("dummy").contains("72199922"))
+							{
+								TC = "<br>Tracto Armado(s) (72199922)";
+							}
+							else if(slistPYME.get(e).get("dummy").contains("72199923"))
+							{
+								RQ = "<br>Remolque indistinto(s) (72199923)";
+							}
+						}
+						else
 						incisosinvalidos += slistPYME.get(e).get("parametros.pv_otvalor06")+", ";
+
 						slistPYME.remove(e);
 						i--;
 						tamanio--;
@@ -2910,7 +2944,16 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		    }
 			int largo = incisosinvalidos.length();
 			incisosinvalidos =incisosinvalidos.substring(0,(largo-2));
-			logger.debug(Utils.log("Incisos Ivalidos: ",incisosinvalidos," \nLista de Maps: ",slistPYME));
+			noKey= AF+AFL+PU+PUL+MO+TC+RQ;
+			if(!incisosinvalidos.isEmpty())
+			{
+				incisosinvalidos="No se agregarón los inciso(s) con clave"+ incisosinvalidos;
+				logger.debug(Utils.log("Incisos Invalidos: ",incisosinvalidos," \nLista de Maps: ",slistPYME));
+			}
+			if(!noKey.isEmpty())
+			{
+				incisosinvalidos= incisosinvalidos+"<br>Y los tipos:"+ noKey +"<br>por no corresponder al negocio seleccionado.";
+			}			
 			Map<String, String> removidos= new HashMap<String, String>();
 			if(!incisosinvalidos.isEmpty())
 			{
