@@ -6406,11 +6406,13 @@ function _p21_guardarExtraprimas(letra)
                 ,nmpoliza         : _p21_smap1.nmpoliza
                 ,nmsuplem         : '0'
                 ,nmsituac         : record.get('NMSITUAC')
+                ,cdtipsit         : _p21_smap1.cdtipsit
                 ,ocupacion        : record.get('OCUPACION')
                 ,extpri_ocupacion : record.get('EXTPRI_OCUPACION')
                 ,peso             : record.get('PESO')
                 ,estatura         : record.get('ESTATURA')
                 ,extpri_estatura  : record.get('EXTPRI_SOBREPESO')
+                ,cdgrupo          : letra
             };
             asegurados.push(asegurado);
         });
