@@ -922,45 +922,87 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String nmpoliza
 			,String nmsuplem
 			,String nmsituac
+			,String cdtipsit
 			,String ocupacion
 			,String extraprimaOcupacion
 			,String peso
 			,String estatura
 			,String extraprimaSobrepeso
+			,String cdgrupo
 			)throws Exception
 	{
-		logger.info(""
-				+ "\n########################################"
-				+ "\n###### guardarExtraprimaAsegurado ######"
-				+ "\ncdunieco "+cdunieco
-				+ "\ncdramo "+cdramo
-				+ "\nestado "+estado
-				+ "\nnmpoliza "+nmpoliza
-				+ "\nnmsuplem "+nmsuplem
-				+ "\nnmsituac "+nmsituac
-				+ "\nocupacion "+ocupacion
-				+ "\nextraprimaOcupacion "+extraprimaOcupacion
-				+ "\npeso "+peso
-				+ "\nestatura "+estatura
-				+ "\nextraprimaSobrepeso "+extraprimaSobrepeso
-				);
-		Map<String,String>params=new HashMap<String,String>();
-		params.put("cdunieco"            , cdunieco);
-		params.put("cdramo"              , cdramo);
-		params.put("estado"              , estado);
-		params.put("nmpoliza"            , nmpoliza);
-		params.put("nmsuplem"            , nmsuplem);
-		params.put("nmsituac"            , nmsituac);
-		params.put("ocupacion"           , ocupacion);
-		params.put("extraprimaOcupacion" , extraprimaOcupacion);
-		params.put("peso"                , peso);
-		params.put("estatura"            , estatura);
-		params.put("extraprimaSobrepeso" , extraprimaSobrepeso);
-		cotizacionDAO.guardarExtraprimaAsegurado(params);
-		logger.info(""
-				+ "\n###### guardarExtraprimaAsegurado ######"
-				+ "\n########################################"
-				);
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarExtraprimaAsegurado @@@@@@"
+				,"\n@@@@@@ cdunieco="            , cdunieco
+				,"\n@@@@@@ cdramo="              , cdramo
+				,"\n@@@@@@ estado="              , estado
+				,"\n@@@@@@ nmpoliza="            , nmpoliza
+				,"\n@@@@@@ nmsuplem="            , nmsuplem
+				,"\n@@@@@@ nmsituac="            , nmsituac
+				,"\n@@@@@@ cdtipsit="            , cdtipsit
+				,"\n@@@@@@ ocupacion="           , ocupacion
+				,"\n@@@@@@ extraprimaOcupacion=" , extraprimaOcupacion
+				,"\n@@@@@@ peso="                , peso
+				,"\n@@@@@@ estatura="            , estatura
+				,"\n@@@@@@ extraprimaSobrepeso=" , extraprimaSobrepeso
+				,"\n@@@@@@ cdgrupo="             , cdgrupo
+				));
+		
+		String paso = null;
+		
+		try
+		{
+			paso = "Actualizando valores adicionales de situaci\u00f3n";
+			logger.debug(paso);
+			
+			cotizacionDAO.guardarExtraprimaAsegurado(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,nmsituac
+					,ocupacion
+					,extraprimaOcupacion
+					,peso
+					,estatura
+					,extraprimaSobrepeso
+					);
+			
+			paso = "Recuperando coberturas de extraprimas";
+			logger.debug(paso);
+			
+			List<Map<String,String>> coberturasDeExtraprimas = consultasDAO.recuperaCoberturasExtraprima(cdramo,cdtipsit);
+			
+			for(Map<String,String> coberturaExtraprima : coberturasDeExtraprimas)
+			{
+				String cdgarant = coberturaExtraprima.get("CDGARANT");
+				
+				paso = Utils.join("Ejecutando valores por defecto para la cobertura ",cdgarant);
+				logger.debug(paso);
+				
+				cotizacionDAO.valoresPorDefecto(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,nmsituac
+						,nmsuplem
+						,cdgarant
+						,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+						);
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ guardarExtraprimaAsegurado @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
 	}
 	
 	@Override
@@ -3503,6 +3545,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,cdideper_
 					,cdideext_
 					,usuarioSesion
+					,false
 					);
 			
 			resp.setExito(respInterna.isExito());
@@ -3559,47 +3602,47 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdideper_
 			,String cdideext_
 			,UserVO usuarioSesion
+			,boolean censoCompleto
 			)
 	{
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ procesoColectivoInterno @@@@@@")
-				.append("\n@@@@@@ grupos=")              .append(grupos)
-				.append("\n@@@@@@ cdunieco=")            .append(cdunieco)
-				.append("\n@@@@@@ cdramo=")              .append(cdramo)
-				.append("\n@@@@@@ nmpoliza=")            .append(nmpoliza)
-				.append("\n@@@@@@ hayTramite=")          .append(hayTramite)
-				.append("\n@@@@@@ hayTramiteVacio=")     .append(hayTramiteVacio)
-				.append("\n@@@@@@ clasif=")              .append(clasif)
-				.append("\n@@@@@@ LINEA_EXTENDIDA=")     .append(LINEA_EXTENDIDA)
-				.append("\n@@@@@@ cdtipsit=")            .append(cdtipsit)
-				.append("\n@@@@@@ cdpersonCli=")         .append(cdpersonCli)
-				.append("\n@@@@@@ nombreCli=")           .append(nombreCli)
-				.append("\n@@@@@@ rfcCli=")              .append(rfcCli)
-				.append("\n@@@@@@ dsdomiciCli=")         .append(dsdomiciCli)
-				.append("\n@@@@@@ codpostalCli=")        .append(codpostalCli)
-				.append("\n@@@@@@ cdedoCli=")            .append(cdedoCli)
-				.append("\n@@@@@@ cdmuniciCli=")         .append(cdmuniciCli)
-				.append("\n@@@@@@ nmnumeroCli=")         .append(nmnumeroCli)
-				.append("\n@@@@@@ nmnumintCli=")         .append(nmnumintCli)
-				.append("\n@@@@@@ ntramite=")            .append(ntramite)
-				.append("\n@@@@@@ ntramiteVacio=")       .append(ntramiteVacio)
-				.append("\n@@@@@@ cdagente=")            .append(cdagente)
-				.append("\n@@@@@@ cdusuari=")            .append(cdusuari)
-				.append("\n@@@@@@ cdelemen=")            .append(cdelemen)
-				.append("\n@@@@@@ reinsertaContratante=").append(reinsertaContratante)
-				.append("\n@@@@@@ sincenso=")            .append(sincenso)
-				.append("\n@@@@@@ censoAtrasado=")       .append(censoAtrasado)
-				.append("\n@@@@@@ cdperpag=")            .append(cdperpag)
-				.append("\n@@@@@@ resubirCenso=")        .append(resubirCenso)
-				.append("\n@@@@@@ cdsisrol=")            .append(cdsisrol)
-				.append("\n@@@@@@ complemento=")         .append(complemento)
-				.append("\n@@@@@@ asincrono=")           .append(asincrono)
-				.append("\n@@@@@@ cdideper_=")           .append(cdideper_)
-				.append("\n@@@@@@ cdideext_=")           .append(cdideext_)
-				.toString()
-				);
+		logger.info(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ procesoColectivoInterno @@@@@@"
+				,"\n@@@@@@ grupos="               , grupos
+				,"\n@@@@@@ cdunieco="             , cdunieco
+				,"\n@@@@@@ cdramo="               , cdramo
+				,"\n@@@@@@ nmpoliza="             , nmpoliza
+				,"\n@@@@@@ hayTramite="           , hayTramite
+				,"\n@@@@@@ hayTramiteVacio="      , hayTramiteVacio
+				,"\n@@@@@@ clasif="               , clasif
+				,"\n@@@@@@ LINEA_EXTENDIDA="      , LINEA_EXTENDIDA
+				,"\n@@@@@@ cdtipsit="             , cdtipsit
+				,"\n@@@@@@ cdpersonCli="          , cdpersonCli
+				,"\n@@@@@@ nombreCli="            , nombreCli
+				,"\n@@@@@@ rfcCli="               , rfcCli
+				,"\n@@@@@@ dsdomiciCli="          , dsdomiciCli
+				,"\n@@@@@@ codpostalCli="         , codpostalCli
+				,"\n@@@@@@ cdedoCli="             , cdedoCli
+				,"\n@@@@@@ cdmuniciCli="          , cdmuniciCli
+				,"\n@@@@@@ nmnumeroCli="          , nmnumeroCli
+				,"\n@@@@@@ nmnumintCli="          , nmnumintCli
+				,"\n@@@@@@ ntramite="             , ntramite
+				,"\n@@@@@@ ntramiteVacio="        , ntramiteVacio
+				,"\n@@@@@@ cdagente="             , cdagente
+				,"\n@@@@@@ cdusuari="             , cdusuari
+				,"\n@@@@@@ cdelemen="             , cdelemen
+				,"\n@@@@@@ reinsertaContratante=" , reinsertaContratante
+				,"\n@@@@@@ sincenso="             , sincenso
+				,"\n@@@@@@ censoAtrasado="        , censoAtrasado
+				,"\n@@@@@@ cdperpag="             , cdperpag
+				,"\n@@@@@@ resubirCenso="         , resubirCenso
+				,"\n@@@@@@ cdsisrol="             , cdsisrol
+				,"\n@@@@@@ complemento="          , complemento
+				,"\n@@@@@@ asincrono="            , asincrono
+				,"\n@@@@@@ cdideper_="            , cdideper_
+				,"\n@@@@@@ cdideext_="            , cdideext_
+				,"\n@@@@@@ censoCompleto="        , censoCompleto
+				));
 		
 		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
 		resp.setSmap(new HashMap<String,String>());
@@ -3685,7 +3728,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//sigsvdef
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento)&&asincrono==false)
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento||censoCompleto)&&asincrono==false)
 		{
 			try
 			{
@@ -3878,6 +3921,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,null
 							,null
 							,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo()
+							,false
 							);
 					
 					resp.getSmap().put("nombreUsuarioDestino"
@@ -5136,6 +5180,106 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
 	                }
 	                
+	                try
+                	{
+		                auxCell=row.getCell(20);
+		                logger.debug(
+		                		new StringBuilder("EXTRAPRIMA OCUPACION: ")
+		                		.append(
+		                				auxCell!=null?
+		                						new StringBuilder(String.format("%.2f",auxCell.getNumericCellValue())).append("|").toString()
+		                						:"|"
+		                		).toString());
+		                bufferLinea.append(
+		                		auxCell!=null?
+		                				new StringBuilder(String.format("%.2f",auxCell.getNumericCellValue())).append("|").toString()
+		                				:"|");
+	                }
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de ocupacion' (U) de la fila ",fila," "));
+	                }
+                    finally
+                    {
+                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(8)),"-"));
+                    }
+	                
+	                try
+                	{
+		                auxCell=row.getCell(21);
+		                logger.debug(
+		                		new StringBuilder("PESO: ")
+		                		.append(
+		                				auxCell!=null?
+		                						new StringBuilder(String.format("%.2f",auxCell.getNumericCellValue())).append("|").toString()
+		                						:"|"
+		                		).toString());
+		                bufferLinea.append(
+		                		auxCell!=null?
+		                				new StringBuilder(String.format("%.2f",auxCell.getNumericCellValue())).append("|").toString()
+		                				:"|");
+	                }
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Peso' (V) de la fila ",fila," "));
+	                }
+                    finally
+                    {
+                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(9)),"-"));
+                    }
+	                
+	                try
+                	{
+		                auxCell=row.getCell(22);
+		                logger.debug(
+		                		new StringBuilder("ESTATURA: ")
+		                		.append(
+		                				auxCell!=null?
+		                						new StringBuilder(String.format("%.2f",auxCell.getNumericCellValue())).append("|").toString()
+		                						:"|"
+		                		).toString());
+		                bufferLinea.append(
+		                		auxCell!=null?
+		                				new StringBuilder(String.format("%.2f",auxCell.getNumericCellValue())).append("|").toString()
+		                				:"|");
+	                }
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estatura' (W) de la fila ",fila," "));
+	                }
+                    finally
+                    {
+                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(10)),"-"));
+                    }
+	                
+	                try
+                	{
+		                auxCell=row.getCell(23);
+		                logger.debug(
+		                		new StringBuilder("EXTRAPRIMA SOBREPESO: ")
+		                		.append(
+		                				auxCell!=null?
+		                						new StringBuilder(String.format("%.2f",auxCell.getNumericCellValue())).append("|").toString()
+		                						:"|"
+		                		).toString());
+		                bufferLinea.append(
+		                		auxCell!=null?
+		                				new StringBuilder(String.format("%.2f",auxCell.getNumericCellValue())).append("|").toString()
+		                				:"|");
+	                }
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de sobrepeso' (X) de la fila ",fila," "));
+	                }
+                    finally
+                    {
+                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(11)),"-"));
+                    }
+	                
 	                logger.debug(Utils.log("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
 	                
 	                if(filaBuena)
@@ -5408,6 +5552,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,cdideper_
 					,cdideext_
 					,usuarioSesion
+					,true
 					);
 		}
 		
@@ -6761,7 +6906,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             			ntramite, new Date(), null
             			,"Se guard\u00f3 una cotizaci\u00f3n nueva para el tr\u00e1mite"
             			,cdusuari, null, cdsisrol,"S", null, null
-            			,EstatusTramite.PENDIENTE.getCodigo()
+            			,EstatusTramite.PENDIENTE.getCodigo(),false
             			);
         		
     		} else { //se genera un tramite
@@ -6774,7 +6919,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             	
             	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null
             			,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
-            			,cdusuari, null, cdsisrol,"S", null, null, EstatusTramite.PENDIENTE.getCodigo());
+            			,cdusuari, null, cdsisrol,"S", null, null, EstatusTramite.PENDIENTE.getCodigo(),false);
             	
             	try {
 	            	cotizacionDAO.grabarEvento(new StringBuilder("\nCotizar tramite grupo"), 
@@ -8722,6 +8867,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 					}
 				}
 				
+				//cotizacionDAO.movimientoTbloqueo(cdunieco, cdramo, "W", nmpoliza, "-8", Constantes.DELETE_MODE);
+				
 				logger.debug(Utils.log("\n&&&&&& ejecutaTarificacionConcurrente [id=",timestamp,"] &&&&&&"));
 				ejecutaTarificacionConcurrente(
 	            		cdunieco
@@ -9216,6 +9363,41 @@ public class CotizacionManagerImpl implements CotizacionManager
 		cotizacionDAO.borrarMpoliperSituac0(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdrol);
 	}
 	
+	@Override
+	public void guardarLayoutGenerico(
+			String nombreArchivo
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarLayoutGenerico @@@@@@"
+				,"\n@@@@@@ nombreArchivo=" , nombreArchivo
+				));
+		
+		cotizacionDAO.guardarLayoutGenerico(
+				nombreArchivo
+				);
+		
+		logger.debug(Utils.log(
+				"\n@@@@@@ guardarLayoutGenerico @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	@Deprecated
+	public void movimientoTbloqueo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String accion
+			)throws Exception
+	{
+		cotizacionDAO.movimientoTbloqueo(cdunieco,cdramo,estado,nmpoliza,nmsituac,accion);
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
@@ -9236,27 +9418,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 
 	public void setConsultasDAO(ConsultasDAO consultasDAO) {
 		this.consultasDAO = consultasDAO;
-	}
-	
-	@Override
-	public void guardarLayoutGenerico(
-			String nombreArchivo
-			)throws Exception
-	{
-		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ guardarLayoutGenerico @@@@@@"
-				,"\n@@@@@@ nombreArchivo=" , nombreArchivo
-				));
-		
-		cotizacionDAO.guardarLayoutGenerico(
-				nombreArchivo
-				);
-		
-		logger.debug(Utils.log(
-				 "\n@@@@@@ guardarLayoutGenerico @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
 	}
 	
 }
