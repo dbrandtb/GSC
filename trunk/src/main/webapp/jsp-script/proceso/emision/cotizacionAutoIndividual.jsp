@@ -726,23 +726,57 @@ Ext.onReady(function()
         _p28_calculaVigencia();
         //fechas
     
-        var agente    = _fieldByLabel('AGENTE');
-        var clave     = _fieldByName('parametros.pv_otvalor06');
-        var marca     = _fieldByName('parametros.pv_otvalor07');
-        var submarca  = _fieldByName('parametros.pv_otvalor08');
-        var modelo    = _fieldByName('parametros.pv_otvalor09');
-        var version   = _fieldByName('parametros.pv_otvalor10');
-        var tipoValor = _fieldByLabel('TIPO VALOR');
-        var sumaAsegu = _fieldLikeLabel('VALOR VEH');
+        var agente;
+        if(!Ext.isEmpty(_fieldByLabel('AGENTE',null,true)))
+        {
+            agente    = _fieldByLabel('AGENTE');
+        }
+        var clave;
+        if(!Ext.isEmpty(_fieldByLabel('parametros.pv_otvalor06',null,true)))
+        {
+        	clave     = _fieldByName('parametros.pv_otvalor06');
+        }
+        var marca;
+        if(!Ext.isEmpty(_fieldByLabel('parametros.pv_otvalor07',null,true)))
+        {
+        	marca     = _fieldByName('parametros.pv_otvalor07');
+        }
+        var submarca;
+        if(!Ext.isEmpty(_fieldByLabel('parametros.pv_otvalor08',null,true)))
+        {
+        	submarca  = _fieldByName('parametros.pv_otvalor08');
+        }
+        var modelo;
+        if(!Ext.isEmpty(_fieldByLabel('parametros.pv_otvalor09',null,true)))
+        {
+        	modelo    = _fieldByName('parametros.pv_otvalor09');
+        }
+        var version;
+        if(!Ext.isEmpty(_fieldByLabel('parametros.pv_otvalor10',null,true)))
+        {
+        	version   = _fieldByName('parametros.pv_otvalor10');
+        }
+        var tipoValor;
+        if(!Ext.isEmpty(_fieldByLabel('TIPO VALOR',null,true)))
+       	{
+       	    tipoValor = _fieldByLabel('TIPO VALOR');
+       	}
+        var sumaAsegu;
+        if(!Ext.isEmpty(_fieldByLabel('VALOR VEH',null,true)))
+        {
+        	sumaAsegu = _fieldLikeLabel('VALOR VEH');
+        }
         
         var combcl = 'S';
-        if(!Ext.isEmpty(_fieldLikeLabel('CLIENTE NUEVO',null,true)))
-        {combcl    = _fieldLikeLabel('CLIENTE NUEVO');}
+        combcl    = _fieldLikeLabel('CLIENTE NUEVO');
         
+        if(!Ext.isEmpty( _fieldByName('parametros.pv_otvalor13',null,true)))
+	    {
         Ext.apply(_fieldByName('parametros.pv_otvalor13'),
                 {
                  useThousandSeparator: true,
                 });
+	    }
         Ext.apply(_fieldByName('parametros.pv_otvalor27'),
                 {
                  useThousandSeparator: true,
@@ -855,97 +889,101 @@ Ext.onReady(function()
         {
             _fieldLikeLabel('FECHA DE FACTURA').hide();
         }
-        tipoValor.on(
-        {
-            select : function()
-            {
-                var valor = tipoValor.getValue();
-                if(_p28_smap1.cdramo+'x'=='5x'&&valor-0==3)
-                {
-                    var modelo = _fieldByLabel('MODELO').getValue()-0;
-                    var anioAc = new Date().getFullYear()-0;
-                    if(anioAc-modelo>1)
-                    {
-                        mensajeWarning('Solo se permite para modelos del a&ntilde;o actual o anterior');
-                        tipoValor.setValue('');
-                    }
-                    _p28_cargarRangoValorRamo5();
-                }
-                else
-                {
-                    _p28_cargarRangoValorRamo5();
-                }
- /* ------------------------------- VALOR FACTURA ------------------- */
-             
-               var valor = tipoValor.getValue();
-                if(valor-0==3)/* 3 = VALOR FACTURA*/
-                {
-                	var numeroDiasFechaFacturacion;
-                	
-                	 Ext.Ajax.request(
-                             { 
-                                 url     : _p28_urlRecuperacion
-                             
-                                 ,params :
-                                 {
-                                     'params.consulta' :'RECUPERAR_DIAS_FECHA_FACTURACION'
-                                    ,'params.cdtipsit' : _p28_smap1.cdtipsit
-                    	             
-                    	            }
-                    	            ,success : function(response)
-                    	            {                 	                
-                    	                try
-                    	                {
-                    	                    var json = Ext.decode(response.responseText);
-                    	                    debug('### load status:',json);
-                    	                    if(json.success==true)
-                    	                    {
-                    	                    	numeroDiasFechaFacturacion = json.params.dias;
-                    	                        var hoy = new  Date();
-                    	                        var limite = Ext.Date.add(hoy, Ext.Date.DAY,-1*(numeroDiasFechaFacturacion));
-                    	                        
-                    	                        _fieldLikeLabel('FECHA DE FACTURA').setMinValue(limite);
-                                                
-                    	                    }
-                    	                    else
-                    	                    {
-                    	                        mensajeError(json.message);
-                    	                    }
-                    	                }
-                    	                catch(e)
-                    	                {
-                    	                    manejaException(e,ck);
-                    	                }
-                    	            }
-                    	            ,failure : function()
-                    	            {
-                    	                errorComunicacion(null,'Error al dias de factura');
-                    	            }
-                    	        });
-                		
-                		
-                	var hoy = new  Date();
-                	var limite = Ext.Date.add(hoy, Ext.Date.DAY,numeroDiasFechaFacturacion);
-                	if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE FACTURA',null,true)))
-                    {
-                	    _fieldLikeLabel('FECHA DE FACTURA').setMinValue(limite);
-                	    _fieldLikeLabel('FECHA DE FACTURA').setMaxValue(hoy);
-                	    _fieldLikeLabel('FECHA DE FACTURA').show();
-                	    _fieldLikeLabel('FECHA DE FACTURA').allowBlank=false;
-                	}
-                }
-		else
-                {
-                    if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE FACTURA',null,true)))
-                    {
-                        _fieldLikeLabel('FECHA DE FACTURA').hide();
-                        _fieldLikeLabel('FECHA DE FACTURA').allowBlank=true;
-                    }
-                }
-                
-                }
-        });
-        //tipovalor
+    
+        if(!Ext.isEmpty(_fieldByLabel('TIPO VALOR',null,true)))
+         {
+	        tipoValor.on(
+	        {
+	            select : function()
+	            {
+	                var valor = tipoValor.getValue();
+	                if(_p28_smap1.cdramo+'x'=='5x'&&valor-0==3)
+	                {
+	                    var modelo = _fieldByLabel('MODELO').getValue()-0;
+	                    var anioAc = new Date().getFullYear()-0;
+	                    if(anioAc-modelo>1)
+	                    {
+	                        mensajeWarning('Solo se permite para modelos del a&ntilde;o actual o anterior');
+	                        tipoValor.setValue('');
+	                    }
+	                    _p28_cargarRangoValorRamo5();
+	                }
+	                else
+	                {
+	                    _p28_cargarRangoValorRamo5();
+	                }
+	 /* ------------------------------- VALOR FACTURA ------------------- */
+	             
+	               var valor = tipoValor.getValue();
+	                if(valor-0==3)/* 3 = VALOR FACTURA*/
+	                {
+	                	var numeroDiasFechaFacturacion;
+	                	
+	                	 Ext.Ajax.request(
+	                             { 
+	                                 url     : _p28_urlRecuperacion
+	                             
+	                                 ,params :
+	                                 {
+	                                     'params.consulta' :'RECUPERAR_DIAS_FECHA_FACTURACION'
+	                                    ,'params.cdtipsit' : _p28_smap1.cdtipsit
+	                    	             
+	                    	            }
+	                    	            ,success : function(response)
+	                    	            {                 	                
+	                    	                try
+	                    	                {
+	                    	                    var json = Ext.decode(response.responseText);
+	                    	                    debug('### load status:',json);
+	                    	                    if(json.success==true)
+	                    	                    {
+	                    	                    	numeroDiasFechaFacturacion = json.params.dias;
+	                    	                        var hoy = new  Date();
+	                    	                        var limite = Ext.Date.add(hoy, Ext.Date.DAY,-1*(numeroDiasFechaFacturacion));
+	                    	                        
+	                    	                        _fieldLikeLabel('FECHA DE FACTURA').setMinValue(limite);
+	                                                
+	                    	                    }
+	                    	                    else
+	                    	                    {
+	                    	                        mensajeError(json.message);
+	                    	                    }
+	                    	                }
+	                    	                catch(e)
+	                    	                {
+	                    	                    manejaException(e,ck);
+	                    	                }
+	                    	            }
+	                    	            ,failure : function()
+	                    	            {
+	                    	                errorComunicacion(null,'Error al dias de factura');
+	                    	            }
+	                    	        });
+	                		
+	                		
+	                	var hoy = new  Date();
+	                	var limite = Ext.Date.add(hoy, Ext.Date.DAY,numeroDiasFechaFacturacion);
+	                	if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE FACTURA',null,true)))
+	                    {
+	                	    _fieldLikeLabel('FECHA DE FACTURA').setMinValue(limite);
+	                	    _fieldLikeLabel('FECHA DE FACTURA').setMaxValue(hoy);
+	                	    _fieldLikeLabel('FECHA DE FACTURA').show();
+	                	    _fieldLikeLabel('FECHA DE FACTURA').allowBlank=false;
+	                	}
+	                }
+			else
+	                {
+	                    if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE FACTURA',null,true)))
+	                    {
+	                        _fieldLikeLabel('FECHA DE FACTURA').hide();
+	                        _fieldLikeLabel('FECHA DE FACTURA').allowBlank=true;
+	                    }
+	                }
+	                
+	                }
+	        });
+	        //tipovalor
+         }
         
         //sumaAsegurada
         if(('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
@@ -987,127 +1025,131 @@ Ext.onReady(function()
         //parametrizacion coberturas
         
         //uso
-        var usoCmp = _fieldByLabel('TIPO USO');
-        debug('@CUSTOM uso:',usoCmp);
-        usoCmp.anidado = true;
-        usoCmp.heredar = function(remoto,micallback)
+        var usoCmp;
+        if('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1)
         {
-            var negocioCmp  = _fieldByLabel('NEGOCIO');
-            var servicioCmp = _fieldByLabel('TIPO SERVICIO');
-            var negocioVal  = negocioCmp.getValue();
-            var servicioVal = servicioCmp.getValue();
-            debug('negocioVal:'  , negocioVal);
-            debug('servicioVal:' , servicioVal);
-            if(!Ext.isEmpty(negocioVal)
-                &&!Ext.isEmpty(servicioVal)
-                )
-            {
-                _fieldByLabel('TIPO USO').getStore().load(
-                {
-                    params :
-                    {
-                        'params.cdnegocio' : negocioVal
-                        ,'params.servicio' : servicioVal
-                    }
-                    ,callback : function()
-                    {
-                        var me  = _fieldByLabel('TIPO USO');
-                        var val = me.getValue();
-                        var den = false;
-                        me.getStore().each(function(record)
-                        {
-                            if(record.get('key')==val)
-                            {
-                                den = true;
-                            }
-                        });
-                        if(!den)
-                        {
-                            me.clearValue();
-                        }
-                        
-                        if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)) && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
-                        {_fieldLikeLabel('CLAVE').store.proxy.extraParams['params.uso']=me.getValue();}
-                        
-                        if(!Ext.isEmpty(micallback))
-                        {
-                            micallback(_fieldByLabel('TIPO USO'));
-                        }
-                    }
-                });
-            }
-            else
-            {
-                if(!Ext.isEmpty(micallback))
-                {
-                    micallback(_fieldByLabel('TIPO USO'));
-                }
-            }
-        };
-        
-        _fieldByLabel('NEGOCIO').on(
-        {
-            change : function(me,val)
-            {
-                if(me.findRecord('key',val)!=false)
-                {
-                    _fieldByLabel('TIPO USO').heredar(true);
-                }
-            }
-        });
-        
-        _fieldByLabel('TIPO SERVICIO').on(
-        {
-            change : function(me,val)
-            {
-                if(me.findRecord('key',val)!=false)
-                {
-                    _fieldByLabel('TIPO USO').heredar(true);
-                }
-            }
-        });
-        
-        usoCmp.on(
-        {
-            change : function(me,val)
-            {
-            	valido = false;
-            	debug('### VIL valido:',valido);
-                
-                var valido  = !Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true))
-                            &&!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true))
-                            && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1);
-               debug('### VIL valido:',valido);
-                
-                if(valido)
-                {
-                    var claveCmp = "";
-                 	if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)))
-                    {claveCmp=_fieldLikeLabel('CLAVE');}
-                    var modelo = "";
-                    if(!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true)))
-                    {modelo = _fieldByLabel('MODELO').getValue();}
-	                claveCmp.store.proxy.extraParams['params.uso']=val;
-	                if(!Ext.isEmpty(claveCmp.getValue())&&!Ext.isEmpty(modelo))
-	                 {
-	                    var fs = _fieldById('_p28_fieldsetVehiculo');
-	                    for(var i in fs.items.items)
+	        usoCmp = _fieldByLabel('TIPO USO');
+	        debug('@CUSTOM uso:',usoCmp);
+	        usoCmp.anidado = true;
+	        usoCmp.heredar = function(remoto,micallback)
+	        {
+	            var negocioCmp  = _fieldByLabel('NEGOCIO');
+	            var servicioCmp = _fieldByLabel('TIPO SERVICIO');
+	            var negocioVal  = negocioCmp.getValue();
+	            var servicioVal = servicioCmp.getValue();
+	            debug('negocioVal:'  , negocioVal);
+	            debug('servicioVal:' , servicioVal);
+	            if(!Ext.isEmpty(negocioVal)
+	                &&!Ext.isEmpty(servicioVal)
+	                )
+	            {
+	                _fieldByLabel('TIPO USO').getStore().load(
+	                {
+	                    params :
 	                    {
-	                        try
+	                        'params.cdnegocio' : negocioVal
+	                        ,'params.servicio' : servicioVal
+	                    }
+	                    ,callback : function()
+	                    {
+	                        var me  = _fieldByLabel('TIPO USO');
+	                        var val = me.getValue();
+	                        var den = false;
+	                        me.getStore().each(function(record)
 	                        {
-	                            fs.items.items[i].setValue();
-	                            fs.items.items[i].clearValue();
+	                            if(record.get('key')==val)
+	                            {
+	                                den = true;
+	                            }
+	                        });
+	                        if(!den)
+	                        {
+	                            me.clearValue();
 	                        }
-	                        catch(e)
+	                        
+	                        if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)) && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
+	                        {_fieldLikeLabel('CLAVE').store.proxy.extraParams['params.uso']=me.getValue();}
+	                        
+	                        if(!Ext.isEmpty(micallback))
 	                        {
-	                            debugError(e);
+	                            micallback(_fieldByLabel('TIPO USO'));
 	                        }
 	                    }
+	                });
+	            }
+	            else
+	            {
+	                if(!Ext.isEmpty(micallback))
+	                {
+	                    micallback(_fieldByLabel('TIPO USO'));
 	                }
-                }
-            }
-        });
-        //uso
+	            }
+	        };
+	        
+	        _fieldByLabel('TIPO SERVICIO').on(
+	                {
+	                    change : function(me,val)
+	                    {
+	                        if(me.findRecord('key',val)!=false)
+	                        {
+	                            _fieldByLabel('TIPO USO').heredar(true);
+	                        }
+	                    }
+	                });
+	        
+	        usoCmp.on(
+	                {
+	                    change : function(me,val)
+	                    {
+	                        valido = false;
+	                        debug('### VIL valido:',valido);
+	                        
+	                        var valido  = !Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true))
+	                                    &&!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true))
+	                                    && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1);
+	                       debug('### VIL valido:',valido);
+	                        
+	                        if(valido)
+	                        {
+	                            var claveCmp = "";
+	                            if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)))
+	                            {claveCmp=_fieldLikeLabel('CLAVE');}
+	                            var modelo = "";
+	                            if(!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true)))
+	                            {modelo = _fieldByLabel('MODELO').getValue();}
+	                            claveCmp.store.proxy.extraParams['params.uso']=val;
+	                            if(!Ext.isEmpty(claveCmp.getValue())&&!Ext.isEmpty(modelo))
+	                             {
+	                                var fs = _fieldById('_p28_fieldsetVehiculo');
+	                                for(var i in fs.items.items)
+	                                {
+	                                    try
+	                                    {
+	                                        fs.items.items[i].setValue();
+	                                        fs.items.items[i].clearValue();
+	                                    }
+	                                    catch(e)
+	                                    {
+	                                        debugError(e);
+	                                    }
+	                                }
+	                            }
+	                        }
+	                    }
+	                });
+	        
+	        _fieldByLabel('NEGOCIO').on(
+	                {
+	                    change : function(me,val)
+	                    {
+	                        if(me.findRecord('key',val)!=false)
+	                        {
+	                            _fieldByLabel('TIPO USO').heredar(true);
+	                        }
+	                    }
+	                });
+	                //uso
+        }
         
         //camion
         if(_p28_smap1.cdtipsit+'x'=='CRx')
@@ -2243,8 +2285,11 @@ function _p28_limpiar()
             _p28_ramo5AgenteSelect(agente,_p28_smap1.cdagente);
         }
         
-        _fieldLikeLabel('VALOR VEH').minValue=0;
-        _fieldLikeLabel('VALOR VEH').maxValue=9999999;
+        if(('|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
+       	{
+	        _fieldLikeLabel('VALOR VEH').minValue=0;
+	        _fieldLikeLabel('VALOR VEH').maxValue=9999999;
+       	}
     }
     
     debug('<_p28_limpiar');
@@ -2392,9 +2437,13 @@ function _p28_cargarSumaAseguradaRamo5(clave,modelo,callback)
                  //comentado porque rafa no quiere avisos
                  //mensajeWarning(json.respuesta);
                 }
-                var sumaseg = _fieldByName('parametros.pv_otvalor13');
-                sumaseg.setValue(json.smap1.sumaseg);
-                sumaseg.valorCargado=json.smap1.sumaseg;
+                var sumaseg;
+                if(!Ext.isEmpty( _fieldByName('parametros.pv_otvalor13',null,true)))
+                	{
+                        sumaseg= _fieldByName('parametros.pv_otvalor13');
+		                sumaseg.setValue(json.smap1.sumaseg);
+		                sumaseg.valorCargado=json.smap1.sumaseg;
+                	}
                 try
                 {
                     _fieldByLabel('RESPALDO VALOR').setValue(json.smap1.sumaseg);
@@ -2690,7 +2739,10 @@ function llenandoCampos(json)
                         {
                             try
                             {
-                                _fieldLikeLabel('VALOR VEH').valorCargado=_fieldByLabel('RESPALDO VALOR').getValue();
+                            	if(('|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
+                           		{
+                            	    _fieldLikeLabel('VALOR VEH').valorCargado=_fieldByLabel('RESPALDO VALOR').getValue();
+                           		}
                                 _p28_cargarRangoValorRamo5(function()
                                 {
                                     _p28_cotizar(!maestra&&!vencida);
@@ -2802,14 +2854,16 @@ function _p28_cargarRangoValorRamo5(callback)
 {
     debug('>_p28_cargarRangoValorRamo5');
     var tipovalor = _fieldByLabel('TIPO VALOR');
-    var valor     = _fieldLikeLabel('VALOR VEH');
     
-    var tipovalorval = tipovalor.getValue();
-    var valorval     = valor.getValue();
-    var valorCargado = valor.valorCargado;
-    
+    var valor,valorCargado,tipovalorval;
+    if(('|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
+    {
+        valor= _fieldLikeLabel('VALOR VEH');
+    valorval     = valor.getValue();
+    valorCargado = valor.valorCargado;
+    tipovalorval = tipovalor.getValue();
+    }
     var valido = !Ext.isEmpty(tipovalorval)&&!Ext.isEmpty(valorval)&&!Ext.isEmpty(valorCargado);
-    
     if(valido)
     {
         var panelpri = _fieldById('_p28_panelpri');
@@ -2838,23 +2892,30 @@ function _p28_cargarRangoValorRamo5(callback)
                         valormax = valorCargado*(1+(json.smap1.P2VALOR-0));
                         debug('valormin:',valormin);
                         debug('valormax:',valormax);
-                        var me = _fieldLikeLabel('VALOR VEH');
+
                         if(valorRecuperadoValorVehiSigs>valormax)
                         	{valorRecuperadoValorVehiSigs=valormax;}
                         if(valorRecuperadoValorVehiSigs>valormin)
                         	{valorRecuperadoValorVehiSigs=valormin;}
-
-                        if(_p28_smap1.cdsisrol =='EJECUTIVOCUENTA'){
-                            if(Number(value)>Number(me.maximoTotal)){
-                                valor.setMinValue(me.maximoTotal);
-                                valor.setMaxValue(me.maximoTotal);
-                                valor.setMinValue(false);
-                                valor.setMaxValue(false);
-                                r='Favor de acudir a Mesa de Control para realizar la cotización.';
-                            }else if((Number(valormin)>= Number(me.maximoTotal)) && (Number(valormax)>= Number(me.maximoTotal))){
-                                valor.setMinValue(me.maximoTotal);
-                                valor.setMaxValue(me.maximoTotal);
-                            }else{
+                        
+                        if(_p28_smap1.cdsisrol =='EJECUTIVOCUENTA')
+                        {
+	                        var me;
+	                        if(!Ext.isEmpty(_fieldLikeLabel('VALOR VEH',null,true)))
+	                        {
+	                            me = _fieldLikeLabel('VALOR VEH');
+	                            if(Number(value)>Number(me.maximoTotal)){
+	                                valor.setMinValue(me.maximoTotal);
+	                                valor.setMaxValue(me.maximoTotal);
+	                                valor.setMinValue(false);
+	                                valor.setMaxValue(false);
+	                                r='Favor de acudir a Mesa de Control para realizar la cotización.';
+	                            }else if((Number(valormin)>= Number(me.maximoTotal)) && (Number(valormax)>= Number(me.maximoTotal))){
+	                                valor.setMinValue(me.maximoTotal);
+	                                valor.setMaxValue(me.maximoTotal);
+	                            }
+	                        } 
+                            else{
                                 valor.setMaxValue(valormax);
                                 valor.setMinValue(valormin);
                             }
@@ -2882,11 +2943,14 @@ function _p28_cargarRangoValorRamo5(callback)
     debug('<_p28_cargarRangoValorRamo5');
 }
 
-
 function _p28_limitarCoberturasDependientesSumasegRamo5()
 {
-    var sumaAsegu = _fieldLikeLabel('VALOR VEH');
-    var suma      = sumaAsegu.getValue();
+    var sumaAsegu,suma;
+    if(!Ext.isEmpty(_fieldLikeLabel('VALOR VEH',null,true)))
+    	{
+    	   sumaAsegu = _fieldLikeLabel('VALOR VEH');
+    	   suma      = sumaAsegu.getValue();
+    	}
     
     if(!Ext.isEmpty(suma))
     {
