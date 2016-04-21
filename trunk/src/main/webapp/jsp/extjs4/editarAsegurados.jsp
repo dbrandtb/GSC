@@ -715,7 +715,7 @@ debug("validarYGuardar flag:2");
                                 {
                                     centrarVentanaInterna(Ext.Msg.show({
                                         title:'Datos incompletos',
-                                        msg: 'El nombre, apellidos y RFC son requeridos. Capture primero el contratante.',
+                                        msg: 'El nombre, apellidos y RFC son requeridos. Capture  y guarde primero el contratante.',
                                         buttons: Ext.Msg.OK,
                                         icon: Ext.Msg.WARNING
                                     }));
@@ -2540,7 +2540,7 @@ debug("validarYGuardar flag:2");
                             	{
 	                            	centrarVentanaInterna(Ext.Msg.show({
 	                                    title:'Datos incompletos',
-	                                    msg: 'El nombre, apellidos y RFC son requeridos. Capture primero el contratante.',
+	                                    msg: 'El nombre, apellidos y RFC son requeridos. Capture y guarde primero el contratante.',
 	                                    buttons: Ext.Msg.OK,
 	                                    icon: Ext.Msg.WARNING
 	                                }));
