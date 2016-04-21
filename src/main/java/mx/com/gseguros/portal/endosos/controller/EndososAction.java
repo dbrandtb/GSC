@@ -1416,7 +1416,7 @@ public class EndososAction extends PrincipalCoreAction
 			if(!(smap1.get("confirmar")!=null&&smap1.get("confirmar").equalsIgnoreCase("si"))) {
 				
 				endososManager.guardarMpolicot(smap1.get("pv_cdunieco_i"), smap1.get("pv_cdramo_i"), smap1.get("pv_estado_i"), smap1.get("pv_nmpoliza_i"), 
-						smap1.get("pv_nmsituac_i"), smap1.get("pv_cdclausu_i"), smap1.get("pv_nmsuplem_i"), smap1.get("pv_status_i"), smap1.get("pv_cdtipcla_i"), 
+						smap1.get("pv_nmsituac_i"), smap1.get("pv_cdclausu_i"), resEnd.get("pv_nmsuplem_o"), smap1.get("pv_status_i"), smap1.get("pv_cdtipcla_i"), 
 						smap1.get("pv_swmodi_i"), smap1.get("pv_dslinea_i"), smap1.get("pv_accion_i"));
 			
 			} else {
