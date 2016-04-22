@@ -1,24 +1,24 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style>
 .green {
-	border-left: 2px solid green;
-	border-right: 2px solid green;
+    border-left: 2px solid green;
+    border-right: 2px solid green;
 }
 
 .red {
-	border-left: 2px solid red;
-	border-right: 2px solid red;
+    border-left: 2px solid red;
+    border-right: 2px solid red;
 }
 
 .conTimeout>tbody>tr::after {
-	content: url('${ctx}/resources/fam3icons/icons/clock.png');
-	margin-left: 5px;
+    content: url('${ctx}/resources/fam3icons/icons/clock.png');
+    margin-left: 5px;
 }
 </style>
 <script>
@@ -534,7 +534,7 @@ Ext.onReady(function()
                          }
                    }
                   ,{
-                	     xtype   : 'button'
+                         xtype   : 'button'
                         ,itemId  : '_p28_botonCargarPoliza'
                         ,text    : 'BUSCAR'
                         ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
@@ -581,9 +581,9 @@ Ext.onReady(function()
         ,title  : '<span style="font:bold 14px Calibri;">DATOS ADICIONALES DE P&Oacute;LIZA</span>'
         ,hidden : _p28_smap1.cdramo+'x'=='5x'
                   ?(
-              		    _p28_smap1.cdtipsit+'x'!='CRx'|| 
-              		    ('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
-              		    //_p28_smap1.cdtipsit+'x'!='CRx'||_p28_smap1.cdsisrol!='SUSCRIAUTO'
+                        _p28_smap1.cdtipsit+'x'!='CRx'|| 
+                        ('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
+                        //_p28_smap1.cdtipsit+'x'!='CRx'||_p28_smap1.cdsisrol!='SUSCRIAUTO'
                    )
                   :false
         ,items  : tatripolItems
@@ -686,8 +686,8 @@ Ext.onReady(function()
     //Ramo 8
     if(_p28_smap1.cdramo+'x'=='8x')//Hoteles y Restaurantes
     {
-    	 if(_p28_smap1.cdtipsit =='8HO')//Hoteles
-    		 {    		 
+         if(_p28_smap1.cdtipsit =='8HO')//Hoteles
+             {           
              _fieldLikeLabel('TIPO DE ESTACIONAMIENTO').hide();
              _fieldLikeLabel('ACOMODADORES').hide();
              _fieldLikeLabel('NUMERO DE CAJONES').hide();
@@ -700,12 +700,12 @@ Ext.onReady(function()
              _fieldLikeLabel('SUBLIMITE POR CAJON').allowBlank=true;
              _fieldLikeLabel('L.U.C. ESTACIONAMIENTO').allowBlank=true;
              
-    		 _fieldByLabel('ESTACIONAMIENTO').on(
-    			        {
-    			            select : _p28_camposEstacionamiento
-    			        });
-    		 
-    		 }
+             _fieldByLabel('ESTACIONAMIENTO').on(
+                        {
+                            select : _p28_camposEstacionamiento
+                        });
+             
+             }
     }
     //ramo 8
     
@@ -732,51 +732,51 @@ Ext.onReady(function()
             agente    = _fieldByLabel('AGENTE');
         }
         var clave;
-        if(!Ext.isEmpty(_fieldByLabel('parametros.pv_otvalor06',null,true)))
+        if(!Ext.isEmpty(_fieldByName('parametros.pv_otvalor06',null,true)))
         {
-        	clave     = _fieldByName('parametros.pv_otvalor06');
+            clave     = _fieldByName('parametros.pv_otvalor06');
         }
         var marca;
-        if(!Ext.isEmpty(_fieldByLabel('parametros.pv_otvalor07',null,true)))
+        if(!Ext.isEmpty(_fieldByName('parametros.pv_otvalor07',null,true)))
         {
-        	marca     = _fieldByName('parametros.pv_otvalor07');
+            marca     = _fieldByName('parametros.pv_otvalor07');
         }
         var submarca;
-        if(!Ext.isEmpty(_fieldByLabel('parametros.pv_otvalor08',null,true)))
+        if(!Ext.isEmpty(_fieldByName('parametros.pv_otvalor08',null,true)))
         {
-        	submarca  = _fieldByName('parametros.pv_otvalor08');
+            submarca  = _fieldByName('parametros.pv_otvalor08');
         }
         var modelo;
-        if(!Ext.isEmpty(_fieldByLabel('parametros.pv_otvalor09',null,true)))
+        if(!Ext.isEmpty(_fieldByName('parametros.pv_otvalor09',null,true)))
         {
-        	modelo    = _fieldByName('parametros.pv_otvalor09');
+            modelo    = _fieldByName('parametros.pv_otvalor09');
         }
         var version;
-        if(!Ext.isEmpty(_fieldByLabel('parametros.pv_otvalor10',null,true)))
+        if(!Ext.isEmpty(_fieldByName('parametros.pv_otvalor10',null,true)))
         {
-        	version   = _fieldByName('parametros.pv_otvalor10');
+            version   = _fieldByName('parametros.pv_otvalor10');
         }
         var tipoValor;
         if(!Ext.isEmpty(_fieldByLabel('TIPO VALOR',null,true)))
-       	{
-       	    tipoValor = _fieldByLabel('TIPO VALOR');
-       	}
-        var sumaAsegu;
-        if(!Ext.isEmpty(_fieldByLabel('VALOR VEH',null,true)))
         {
-        	sumaAsegu = _fieldLikeLabel('VALOR VEH');
+            tipoValor = _fieldByLabel('TIPO VALOR');
+        }
+        var sumaAsegu;
+        if(!Ext.isEmpty(_fieldByLabel('VALOR VEHICULO',null,true)))
+        {
+            sumaAsegu = _fieldByLabel('VALOR VEHICULO');
         }
         
         var combcl = 'S';
         combcl    = _fieldLikeLabel('CLIENTE NUEVO');
         
         if(!Ext.isEmpty( _fieldByName('parametros.pv_otvalor13',null,true)))
-	    {
-        Ext.apply(_fieldByName('parametros.pv_otvalor13'),
-                {
-                 useThousandSeparator: true,
-                });
-	    }
+        {
+            Ext.apply(_fieldByName('parametros.pv_otvalor13'),
+                    {
+                     useThousandSeparator: true,
+                    });
+        }
         Ext.apply(_fieldByName('parametros.pv_otvalor27'),
                 {
                  useThousandSeparator: true,
@@ -793,8 +793,8 @@ Ext.onReady(function()
             agente.setReadOnly(true);
             _p28_ramo5AgenteSelect(agente,_p28_smap1.cdagente);
         }
-        else ('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1)
-        	/* if(_p28_smap1.cdsisrol=='PROMOTORAUTO'||_p28_smap1.cdsisrol=='SUSCRIAUTO') */
+        else ('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1)
+            /* if(_p28_smap1.cdsisrol=='PROMOTORAUTO'||_p28_smap1.cdsisrol=='SUSCRIAUTO') */
         {
             agente.on(
             {
@@ -817,72 +817,73 @@ Ext.onReady(function()
         combcl.setValue('S');
         //cliente nuevo
         
+        
+        
         if(('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
-        {	
-	        //version
-	        version.anidado = true;
-	        version.heredar = function()
-	        {
-	            version.getStore().load(
-	            {
-	                params :
-	                {
-	                    'params.submarca' : submarca.getValue()
-	                    ,'params.modelo'  : modelo.getValue()
-	                }
-	            });
-	        };
-	        
-	        submarca.on(
-	        {
-	            select : function(){ version.reset(); }
-	        });
-	        
-	        modelo.on(
-	        {
-	            select : function()
-	            {
-	                version.getStore().load(
-	                {
-	                    params :
-	                    {
-	                        'params.submarca' : submarca.getValue()
-	                        ,'params.modelo'  : modelo.getValue()
-	                    }
-	                });
-	            }
-	            ,change : function()
-	            {
-	                tipoValor.setValue('');
-	            }
-	        });
-	        //version
-	        
-	        //clave
-	        clave.on(
-	        {
-	            select : function(combo,records){ _p28_herenciaDescendiente(clave,marca,submarca,modelo,version,records[0]); }
-	        });
-	        
-	        modelo.on(
-	        {
-	            select : function() { _p28_herenciaAscendente(clave,marca,submarca,modelo,version); }
-	        });
-	        
-	        version.on(
-	        {
-	            select : function() { _p28_herenciaAscendente(clave,marca,submarca,modelo,version); }
-	        });
-	        //clave
+        {   
+            //version
+            version.anidado = true;
+            version.heredar = function()
+            {
+                version.getStore().load(
+                {
+                    params :
+                    {
+                        'params.submarca' : submarca.getValue()
+                        ,'params.modelo'  : modelo.getValue()
+                    }
+                });
+            };
+            
+            submarca.on(
+            {
+                select : function(){ version.reset(); }
+            });
+            
+            modelo.on(
+            {
+                select : function()
+                {
+                    version.getStore().load(
+                    {
+                        params :
+                        {
+                            'params.submarca' : submarca.getValue()
+                            ,'params.modelo'  : modelo.getValue()
+                        }
+                    });
+                }
+                ,change : function()
+                {
+                    tipoValor.setValue('');
+                }
+            });
+            //version
+            
+            //clave
+            clave.on(
+            {
+                select : function(combo,records){ _p28_herenciaDescendiente(clave,marca,submarca,modelo,version,records[0]); }
+            });
+            
+            modelo.on(
+            {
+                select : function() { _p28_herenciaAscendente(clave,marca,submarca,modelo,version); }
+            });
+            
+            version.on(
+            {
+                select : function() { _p28_herenciaAscendente(clave,marca,submarca,modelo,version); }
+            });
+            //clave
         }
-                
         //Cambia Atributos campo Fecha de nacimiento dependiendo del seguro de vida
         if(!Ext.isEmpty(_fieldByLabel('SEGURO DE VIDA',null,true)))
         {
-	        _fieldByLabel('SEGURO DE VIDA').on(
-	                        {
-	                            select : _p28_atributoNacimientoContratante
-	                        });
+            _fieldByLabel('SEGURO DE VIDA').on(
+                            {
+                                select : _p28_atributoNacimientoContratante
+                            });
         }
         //tipovalor
         if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE FACTURA',null,true)))
@@ -892,106 +893,106 @@ Ext.onReady(function()
     
         if(!Ext.isEmpty(_fieldByLabel('TIPO VALOR',null,true)))
          {
-	        tipoValor.on(
-	        {
-	            select : function()
-	            {
-	                var valor = tipoValor.getValue();
-	                if(_p28_smap1.cdramo+'x'=='5x'&&valor-0==3)
-	                {
-	                    var modelo = _fieldByLabel('MODELO').getValue()-0;
-	                    var anioAc = new Date().getFullYear()-0;
-	                    if(anioAc-modelo>1)
-	                    {
-	                        mensajeWarning('Solo se permite para modelos del a&ntilde;o actual o anterior');
-	                        tipoValor.setValue('');
-	                    }
-	                    _p28_cargarRangoValorRamo5();
-	                }
-	                else
-	                {
-	                    _p28_cargarRangoValorRamo5();
-	                }
-	 /* ------------------------------- VALOR FACTURA ------------------- */
-	             
-	               var valor = tipoValor.getValue();
-	                if(valor-0==3)/* 3 = VALOR FACTURA*/
-	                {
-	                	var numeroDiasFechaFacturacion;
-	                	
-	                	 Ext.Ajax.request(
-	                             { 
-	                                 url     : _p28_urlRecuperacion
-	                             
-	                                 ,params :
-	                                 {
-	                                     'params.consulta' :'RECUPERAR_DIAS_FECHA_FACTURACION'
-	                                    ,'params.cdtipsit' : _p28_smap1.cdtipsit
-	                    	             
-	                    	            }
-	                    	            ,success : function(response)
-	                    	            {                 	                
-	                    	                try
-	                    	                {
-	                    	                    var json = Ext.decode(response.responseText);
-	                    	                    debug('### load status:',json);
-	                    	                    if(json.success==true)
-	                    	                    {
-	                    	                    	numeroDiasFechaFacturacion = json.params.dias;
-	                    	                        var hoy = new  Date();
-	                    	                        var limite = Ext.Date.add(hoy, Ext.Date.DAY,-1*(numeroDiasFechaFacturacion));
-	                    	                        
-	                    	                        _fieldLikeLabel('FECHA DE FACTURA').setMinValue(limite);
-	                                                
-	                    	                    }
-	                    	                    else
-	                    	                    {
-	                    	                        mensajeError(json.message);
-	                    	                    }
-	                    	                }
-	                    	                catch(e)
-	                    	                {
-	                    	                    manejaException(e,ck);
-	                    	                }
-	                    	            }
-	                    	            ,failure : function()
-	                    	            {
-	                    	                errorComunicacion(null,'Error al dias de factura');
-	                    	            }
-	                    	        });
-	                		
-	                		
-	                	var hoy = new  Date();
-	                	var limite = Ext.Date.add(hoy, Ext.Date.DAY,numeroDiasFechaFacturacion);
-	                	if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE FACTURA',null,true)))
-	                    {
-	                	    _fieldLikeLabel('FECHA DE FACTURA').setMinValue(limite);
-	                	    _fieldLikeLabel('FECHA DE FACTURA').setMaxValue(hoy);
-	                	    _fieldLikeLabel('FECHA DE FACTURA').show();
-	                	    _fieldLikeLabel('FECHA DE FACTURA').allowBlank=false;
-	                	}
-	                }
-			else
-	                {
-	                    if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE FACTURA',null,true)))
-	                    {
-	                        _fieldLikeLabel('FECHA DE FACTURA').hide();
-	                        _fieldLikeLabel('FECHA DE FACTURA').allowBlank=true;
-	                    }
-	                }
-	                
-	                }
-	        });
-	        //tipovalor
+            tipoValor.on(
+            {
+                select : function()
+                {
+                    var valor = tipoValor.getValue();
+                    if(_p28_smap1.cdramo+'x'=='5x'&&valor-0==3)
+                    {
+                        var modelo = _fieldByLabel('MODELO').getValue()-0;
+                        var anioAc = new Date().getFullYear()-0;
+                        if(anioAc-modelo>1)
+                        {
+                            mensajeWarning('Solo se permite para modelos del a&ntilde;o actual o anterior');
+                            tipoValor.setValue('');
+                        }
+                        _p28_cargarRangoValorRamo5();
+                    }
+                    else
+                    {
+                        _p28_cargarRangoValorRamo5();
+                    }
+     /* ------------------------------- VALOR FACTURA ------------------- */
+                 
+                   var valor = tipoValor.getValue();
+                    if(valor-0==3)/* 3 = VALOR FACTURA*/
+                    {
+                        var numeroDiasFechaFacturacion;
+                        
+                         Ext.Ajax.request(
+                                 { 
+                                     url     : _p28_urlRecuperacion
+                                 
+                                     ,params :
+                                     {
+                                         'params.consulta' :'RECUPERAR_DIAS_FECHA_FACTURACION'
+                                        ,'params.cdtipsit' : _p28_smap1.cdtipsit
+                                         
+                                        }
+                                        ,success : function(response)
+                                        {                                   
+                                            try
+                                            {
+                                                var json = Ext.decode(response.responseText);
+                                                debug('### load status:',json);
+                                                if(json.success==true)
+                                                {
+                                                    numeroDiasFechaFacturacion = json.params.dias;
+                                                    var hoy = new  Date();
+                                                    var limite = Ext.Date.add(hoy, Ext.Date.DAY,-1*(numeroDiasFechaFacturacion));
+                                                    
+                                                    _fieldLikeLabel('FECHA DE FACTURA').setMinValue(limite);
+                                                    
+                                                }
+                                                else
+                                                {
+                                                    mensajeError(json.message);
+                                                }
+                                            }
+                                            catch(e)
+                                            {
+                                                manejaException(e,ck);
+                                            }
+                                        }
+                                        ,failure : function()
+                                        {
+                                            errorComunicacion(null,'Error al dias de factura');
+                                        }
+                                    });
+                            
+                            
+                        var hoy = new  Date();
+                        var limite = Ext.Date.add(hoy, Ext.Date.DAY,numeroDiasFechaFacturacion);
+                        if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE FACTURA',null,true)))
+                        {
+                            _fieldLikeLabel('FECHA DE FACTURA').setMinValue(limite);
+                            _fieldLikeLabel('FECHA DE FACTURA').setMaxValue(hoy);
+                            _fieldLikeLabel('FECHA DE FACTURA').show();
+                            _fieldLikeLabel('FECHA DE FACTURA').allowBlank=false;
+                        }
+                    }
+            else
+                    {
+                        if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE FACTURA',null,true)))
+                        {
+                            _fieldLikeLabel('FECHA DE FACTURA').hide();
+                            _fieldLikeLabel('FECHA DE FACTURA').allowBlank=true;
+                        }
+                    }
+                    
+                    }
+            });
+            //tipovalor
          }
         
         //sumaAsegurada
         if(('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
         {
-	        sumaAsegu.on(
-	        {
-	            change : function(){ _p28_limitarCoberturasDependientesSumasegRamo5(); }
-	        });
+            sumaAsegu.on(
+            {
+                change : function(){ _p28_limitarCoberturasDependientesSumasegRamo5(); }
+            });
         }
         //sumaAsegurada
         
@@ -1016,7 +1017,7 @@ Ext.onReady(function()
                     _p28_cargarParametrizacionCoberturas();
                     if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)) && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
                     {
-                    	var yy = _fieldLikeLabel('CLAVE');
+                        var yy = _fieldLikeLabel('CLAVE');
                         _fieldLikeLabel('CLAVE').store.proxy.extraParams['params.servicio']=val;
                     }
                 }
@@ -1026,130 +1027,132 @@ Ext.onReady(function()
         
         //uso
         var usoCmp;
-        if('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1)
+        if(!Ext.isEmpty(_fieldByLabel('TIPO USO',null,true)))
         {
-	        usoCmp = _fieldByLabel('TIPO USO');
-	        debug('@CUSTOM uso:',usoCmp);
-	        usoCmp.anidado = true;
-	        usoCmp.heredar = function(remoto,micallback)
-	        {
-	            var negocioCmp  = _fieldByLabel('NEGOCIO');
-	            var servicioCmp = _fieldByLabel('TIPO SERVICIO');
-	            var negocioVal  = negocioCmp.getValue();
-	            var servicioVal = servicioCmp.getValue();
-	            debug('negocioVal:'  , negocioVal);
-	            debug('servicioVal:' , servicioVal);
-	            if(!Ext.isEmpty(negocioVal)
-	                &&!Ext.isEmpty(servicioVal)
-	                )
-	            {
-	                _fieldByLabel('TIPO USO').getStore().load(
-	                {
-	                    params :
-	                    {
-	                        'params.cdnegocio' : negocioVal
-	                        ,'params.servicio' : servicioVal
-	                    }
-	                    ,callback : function()
-	                    {
-	                        var me  = _fieldByLabel('TIPO USO');
-	                        var val = me.getValue();
-	                        var den = false;
-	                        me.getStore().each(function(record)
-	                        {
-	                            if(record.get('key')==val)
-	                            {
-	                                den = true;
-	                            }
-	                        });
-	                        if(!den)
-	                        {
-	                            me.clearValue();
-	                        }
-	                        
-	                        if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)) && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
-	                        {_fieldLikeLabel('CLAVE').store.proxy.extraParams['params.uso']=me.getValue();}
-	                        
-	                        if(!Ext.isEmpty(micallback))
-	                        {
-	                            micallback(_fieldByLabel('TIPO USO'));
-	                        }
-	                    }
-	                });
-	            }
-	            else
-	            {
-	                if(!Ext.isEmpty(micallback))
-	                {
-	                    micallback(_fieldByLabel('TIPO USO'));
-	                }
-	            }
-	        };
-	        
-	        _fieldByLabel('TIPO SERVICIO').on(
-	                {
-	                    change : function(me,val)
-	                    {
-	                        if(me.findRecord('key',val)!=false)
-	                        {
-	                            _fieldByLabel('TIPO USO').heredar(true);
-	                        }
-	                    }
-	                });
-	        
-	        usoCmp.on(
-	                {
-	                    change : function(me,val)
-	                    {
-	                        valido = false;
-	                        debug('### VIL valido:',valido);
-	                        
-	                        var valido  = !Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true))
-	                                    &&!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true))
-	                                    && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1);
-	                       debug('### VIL valido:',valido);
-	                        
-	                        if(valido)
-	                        {
-	                            var claveCmp = "";
-	                            if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)))
-	                            {claveCmp=_fieldLikeLabel('CLAVE');}
-	                            var modelo = "";
-	                            if(!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true)))
-	                            {modelo = _fieldByLabel('MODELO').getValue();}
-	                            claveCmp.store.proxy.extraParams['params.uso']=val;
-	                            if(!Ext.isEmpty(claveCmp.getValue())&&!Ext.isEmpty(modelo))
-	                             {
-	                                var fs = _fieldById('_p28_fieldsetVehiculo');
-	                                for(var i in fs.items.items)
-	                                {
-	                                    try
-	                                    {
-	                                        fs.items.items[i].setValue();
-	                                        fs.items.items[i].clearValue();
-	                                    }
-	                                    catch(e)
-	                                    {
-	                                        debugError(e);
-	                                    }
-	                                }
-	                            }
-	                        }
-	                    }
-	                });
-	        
-	        _fieldByLabel('NEGOCIO').on(
-	                {
-	                    change : function(me,val)
-	                    {
-	                        if(me.findRecord('key',val)!=false)
-	                        {
-	                            _fieldByLabel('TIPO USO').heredar(true);
-	                        }
-	                    }
-	                });
-	                //uso
-        }
+            usoCmp = _fieldByLabel('TIPO USO');
+            debug('@CUSTOM uso:',usoCmp);
+            usoCmp.anidado = true;
+            usoCmp.heredar = function(remoto,micallback)
+            {
+                    debug('usoCmp.heredar');
+                var negocioCmp  = _fieldByLabel('NEGOCIO');
+                var servicioCmp = _fieldByLabel('TIPO SERVICIO');
+                var negocioVal  = negocioCmp.getValue();
+                var servicioVal = servicioCmp.getValue();
+                debug('negocioVal:'  , negocioVal);
+                debug('servicioVal:' , servicioVal);
+                if(!Ext.isEmpty(negocioVal)
+                    &&!Ext.isEmpty(servicioVal)
+                    )
+                {
+                    _fieldByLabel('TIPO USO').getStore().load(
+                    {
+                        params :
+                        {
+                            'params.cdnegocio' : negocioVal
+                            ,'params.servicio' : servicioVal
+                        }
+                        ,callback : function()
+                        {
+                            var me  = _fieldByLabel('TIPO USO');
+                            var val = me.getValue();
+                            var den = false;
+                            me.getStore().each(function(record)
+                            {
+                                if(record.get('key')==val)
+                                {
+                                    den = true;
+                                }
+                            });
+                            if(!den)
+                            {
+                                me.clearValue();
+                            }
+                            
+                            if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)) && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
+                            {_fieldLikeLabel('CLAVE').store.proxy.extraParams['params.uso']=me.getValue();}
+                            
+                            if(!Ext.isEmpty(micallback))
+                            {
+                                micallback(_fieldByLabel('TIPO USO'));
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    if(!Ext.isEmpty(micallback))
+                    {
+                        micallback(_fieldByLabel('TIPO USO'));
+                    }
+                }
+            };
+
+            
+        _fieldByLabel('NEGOCIO').on(
+        {
+            change : function(me,val)
+            {
+                if(me.findRecord('key',val)!=false)
+                {
+                    _fieldByLabel('TIPO USO').heredar(true);
+                }
+            }
+        });
+            _fieldByLabel('TIPO SERVICIO').on(
+                    {
+                        change : function(me,val)
+                        {
+                            if(me.findRecord('key',val)!=false)
+                            {
+                                _fieldByLabel('TIPO USO').heredar(true);
+                            }
+                        }
+                    });
+            
+            usoCmp.on(
+                    {
+                        change : function(me,val)
+                        {
+                            valido = false;
+                            debug('### VIL valido:',valido);
+                            
+                            var valido  = !Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true))
+                                        &&!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true))
+                                        && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1);
+                           debug('### VIL valido:',valido);
+                            
+                            if(valido)
+                            {
+                                var claveCmp = "";
+                                if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)))
+                                {claveCmp=_fieldLikeLabel('CLAVE');}
+                                var modelo = "";
+                                if(!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true)))
+                                {modelo = _fieldByLabel('MODELO').getValue();}
+                                claveCmp.store.proxy.extraParams['params.uso']=val;
+                                if(!Ext.isEmpty(claveCmp.getValue())&&!Ext.isEmpty(modelo))
+                                 {
+                                    var fs = _fieldById('_p28_fieldsetVehiculo');
+                                    for(var i in fs.items.items)
+                                    {
+                                        try
+                                        {
+                                            fs.items.items[i].setValue();
+                                            fs.items.items[i].clearValue();
+                                        }
+                                        catch(e)
+                                        {
+                                            debugError(e);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+    }
+                    //uso
+     
         
         //camion
         if(_p28_smap1.cdtipsit+'x'=='CRx')
@@ -1206,86 +1209,86 @@ Ext.onReady(function()
         //negocio
          if(('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
         {
-	        _fieldByLabel('NEGOCIO').on(
-	        {
-	            change : function(me,val)
-	            {
-	                if(me.findRecord('key',val)!=false)
-	                {
-	                    marca.getStore().load(
-	                    {
-	                        params :
-	                        {
-	                            'params.cdnegocio' : val
-	                        }
-	                    });
-	                    if(_p28_smap1.cdtipsit+'x'=='CRx'||_p28_smap1.cdtipsit+'x'=='PCx')
-	                    {
-	                        _fieldByLabel('CARGA').getStore().load(
-	                        {
-	                            params :
-	                            {
-	                                'params.negocio' : _fieldByLabel('NEGOCIO').getValue()
-	                            }
-	                        });
-	                    }
-	                    
-	                    var negoCmp = _fieldByLabel('NEGOCIO');
-	                    var negoVal = negoCmp.getValue();
-	                    negoCmp.setLoading(true);
-	                    Ext.Ajax.request(
-	                    {
-	                        url     : _p28_urlCargarDetalleNegocioRamo5
-	                        ,params :
-	                        {
-	                            'smap1.negocio' : negoVal,
-	                            'smap1.cdramo'  : _p28_smap1.cdramo,
-	                            'smap1.cdtipsit': _p28_smap1.cdtipsit
-	                        }
-	                        ,success : function(response)
-	                        {
-	                            negoCmp.setLoading(false);
-	                            var json = Ext.decode(response.responseText);
-	                            debug('### detalle negocio:',json);
-	                            if(Number(json.smap1.MULTIANUAL) != 0) {
-	                                _fieldByName('fefin').validator=function(val)
-	                                {
-	                                    var feiniVal = Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y');
-	                                    debug('feiniVal:',feiniVal);
-	                                    var fefinVal=[];
-	                                    for(var i=1; i <= Number(json.smap1.MULTIANUAL); i++)
-	                                    {
-	                                        debug('mas anios:',i);
-	                                        fefinVal.push(Ext.Date.format(Ext.Date.add(Ext.Date.parse(feiniVal,'d/m/Y'),Ext.Date.YEAR,i),'d/m/Y'));
-	                                    }
-	                                    debug('validar contra:',fefinVal);
-	                                    var valido = true;
-	                                    if(!Ext.Array.contains(fefinVal,val))
-	                                    {
-	                                        valido = 'Solo se permite:';
-	                                        for(var i in fefinVal)
-	                                        {
-	                                            valido = valido + ' ' + fefinVal[i];
-	                                            if(fefinVal.length>1&&i<fefinVal.length-1)
-	                                            {
-	                                                valido = valido + ',';
-	                                            }
-	                                        }
-	                                    }
-	                                    return valido;
-	                                }
-	                            }
-	                            _fieldByName('fefin').isValid();
-	                        }
-	                        ,failure : function()
-	                        {
-	                            negoCmp.setLoading(false);
-	                            errorComunicacion();
-	                        }
-	                    });
-	                }
-	            }
-	        });
+            _fieldByLabel('NEGOCIO').on(
+            {
+                change : function(me,val)
+                {
+                    if(me.findRecord('key',val)!=false)
+                    {
+                        marca.getStore().load(
+                        {
+                            params :
+                            {
+                                'params.cdnegocio' : val
+                            }
+                        });
+                        if(_p28_smap1.cdtipsit+'x'=='CRx'||_p28_smap1.cdtipsit+'x'=='PCx')
+                        {
+                            _fieldByLabel('CARGA').getStore().load(
+                            {
+                                params :
+                                {
+                                    'params.negocio' : _fieldByLabel('NEGOCIO').getValue()
+                                }
+                            });
+                        }
+                        
+                        var negoCmp = _fieldByLabel('NEGOCIO');
+                        var negoVal = negoCmp.getValue();
+                        negoCmp.setLoading(true);
+                        Ext.Ajax.request(
+                        {
+                            url     : _p28_urlCargarDetalleNegocioRamo5
+                            ,params :
+                            {
+                                'smap1.negocio' : negoVal,
+                                'smap1.cdramo'  : _p28_smap1.cdramo,
+                                'smap1.cdtipsit': _p28_smap1.cdtipsit
+                            }
+                            ,success : function(response)
+                            {
+                                negoCmp.setLoading(false);
+                                var json = Ext.decode(response.responseText);
+                                debug('### detalle negocio:',json);
+                                if(Number(json.smap1.MULTIANUAL) != 0) {
+                                    _fieldByName('fefin').validator=function(val)
+                                    {
+                                        var feiniVal = Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y');
+                                        debug('feiniVal:',feiniVal);
+                                        var fefinVal=[];
+                                        for(var i=1; i <= Number(json.smap1.MULTIANUAL); i++)
+                                        {
+                                            debug('mas anios:',i);
+                                            fefinVal.push(Ext.Date.format(Ext.Date.add(Ext.Date.parse(feiniVal,'d/m/Y'),Ext.Date.YEAR,i),'d/m/Y'));
+                                        }
+                                        debug('validar contra:',fefinVal);
+                                        var valido = true;
+                                        if(!Ext.Array.contains(fefinVal,val))
+                                        {
+                                            valido = 'Solo se permite:';
+                                            for(var i in fefinVal)
+                                            {
+                                                valido = valido + ' ' + fefinVal[i];
+                                                if(fefinVal.length>1&&i<fefinVal.length-1)
+                                                {
+                                                    valido = valido + ',';
+                                                }
+                                            }
+                                        }
+                                        return valido;
+                                    }
+                                }
+                                _fieldByName('fefin').isValid();
+                            }
+                            ,failure : function()
+                            {
+                                negoCmp.setLoading(false);
+                                errorComunicacion();
+                            }
+                        });
+                    }
+                }
+            });
         }
         //negocio
         
@@ -1424,38 +1427,38 @@ Ext.onReady(function()
 
 function _p28_camposEstacionamiento(combo)
 {
-	var val = 'N';
-	
-	if(combo != 'N')
-	{
-		val = combo.getValue();
-	}
-	
-	debug('_p28_camposEstacionamiento val:',val,'.');
-	
-	if(val == 'S')
-		{
-			_fieldLikeLabel('TIPO DE ESTACIONAMIENTO').show();
-		    _fieldLikeLabel('ACOMODADORES').show();
-		    _fieldLikeLabel('NUMERO DE CAJONES').show();
-		    _fieldLikeLabel('SUBLIMITE POR CAJON').show();
-		    _fieldLikeLabel('L.U.C. ESTACIONAMIENTO').show();
-		    
-		    _fieldLikeLabel('TIPO DE ESTACIONAMIENTO').allowBlank=false; 
+    var val = 'N';
+    
+    if(combo != 'N')
+    {
+        val = combo.getValue();
+    }
+    
+    debug('_p28_camposEstacionamiento val:',val,'.');
+    
+    if(val == 'S')
+        {
+            _fieldLikeLabel('TIPO DE ESTACIONAMIENTO').show();
+            _fieldLikeLabel('ACOMODADORES').show();
+            _fieldLikeLabel('NUMERO DE CAJONES').show();
+            _fieldLikeLabel('SUBLIMITE POR CAJON').show();
+            _fieldLikeLabel('L.U.C. ESTACIONAMIENTO').show();
+            
+            _fieldLikeLabel('TIPO DE ESTACIONAMIENTO').allowBlank=false; 
             _fieldLikeLabel('ACOMODADORES').allowBlank=false;
             _fieldLikeLabel('NUMERO DE CAJONES').allowBlank=false;
             _fieldLikeLabel('SUBLIMITE POR CAJON').allowBlank=false;
             _fieldLikeLabel('L.U.C. ESTACIONAMIENTO').allowBlank=false;
         }
-	else
-		{
-			_fieldLikeLabel('TIPO DE ESTACIONAMIENTO').hide();
-	        _fieldLikeLabel('ACOMODADORES').hide();
-	        _fieldLikeLabel('NUMERO DE CAJONES').hide();
-	        _fieldLikeLabel('SUBLIMITE POR CAJON').hide();
-	        _fieldLikeLabel('L.U.C. ESTACIONAMIENTO').hide();
-	        
-	        _fieldLikeLabel('TIPO DE ESTACIONAMIENTO').reset();
+    else
+        {
+            _fieldLikeLabel('TIPO DE ESTACIONAMIENTO').hide();
+            _fieldLikeLabel('ACOMODADORES').hide();
+            _fieldLikeLabel('NUMERO DE CAJONES').hide();
+            _fieldLikeLabel('SUBLIMITE POR CAJON').hide();
+            _fieldLikeLabel('L.U.C. ESTACIONAMIENTO').hide();
+            
+            _fieldLikeLabel('TIPO DE ESTACIONAMIENTO').reset();
             _fieldLikeLabel('ACOMODADORES').reset();
             _fieldLikeLabel('NUMERO DE CAJONES').reset();
             _fieldLikeLabel('SUBLIMITE POR CAJON').reset();
@@ -1466,7 +1469,7 @@ function _p28_camposEstacionamiento(combo)
             _fieldLikeLabel('NUMERO DE CAJONES').allowBlank=true;
             _fieldLikeLabel('SUBLIMITE POR CAJON').allowBlank=true;
             _fieldLikeLabel('L.U.C. ESTACIONAMIENTO').allowBlank=true;
-		}
+        }
 }
 
 function _p28_cotizar(sinTarificar)
@@ -1521,10 +1524,10 @@ function _p28_cotizar(sinTarificar)
         _p28_smap1['notarificar'] = !Ext.isEmpty(sinTarificar)&&sinTarificar==true?'si':'no';
         
         if(cargarXpoliza)
-        	{
-	        _p28_smap1['cdpersonCli'] = cdperson;
-	        _p28_smap1['cdideperCli'] = cdper ;
-        	}
+            {
+            _p28_smap1['cdpersonCli'] = cdperson;
+            _p28_smap1['cdideperCli'] = cdper ;
+            }
         
         var agenteCmp=_fieldByLabel('AGENTE',_fieldById('_p28_form'),true);
         if(Ext.isEmpty(agenteCmp))
@@ -1790,7 +1793,7 @@ function _p28_cotizar(sinTarificar)
                                         ,disabled : true
                                         ,handler  : _p28_detalles
                                         ,hidden   : ('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
-                                        	        //_p28_smap1.cdsisrol!='SUSCRIAUTO'
+                                                    //_p28_smap1.cdsisrol!='SUSCRIAUTO'
                                     }
                                     ,{
                                         itemId    : '_p28_botonCoberturas'
@@ -2285,11 +2288,11 @@ function _p28_limpiar()
             _p28_ramo5AgenteSelect(agente,_p28_smap1.cdagente);
         }
         
-        if(('|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
-       	{
-	        _fieldLikeLabel('VALOR VEH').minValue=0;
-	        _fieldLikeLabel('VALOR VEH').maxValue=9999999;
-       	}
+        if(!Ext.isEmpty(_fieldByLabel('VALOR VEHICULO',null,true)))
+        {
+            _fieldLikeLabel('VALOR VEH').minValue=0;
+            _fieldLikeLabel('VALOR VEH').maxValue=9999999;
+        }
     }
     
     debug('<_p28_limpiar');
@@ -2438,12 +2441,12 @@ function _p28_cargarSumaAseguradaRamo5(clave,modelo,callback)
                  //mensajeWarning(json.respuesta);
                 }
                 var sumaseg;
-                if(!Ext.isEmpty( _fieldByName('parametros.pv_otvalor13',null,true)))
-                	{
+                if(!Ext.isEmpty(_fieldByName('parametros.pv_otvalor13',null,true)))
+                    {
                         sumaseg= _fieldByName('parametros.pv_otvalor13');
-		                sumaseg.setValue(json.smap1.sumaseg);
-		                sumaseg.valorCargado=json.smap1.sumaseg;
-                	}
+                        sumaseg.setValue(json.smap1.sumaseg);
+                        sumaseg.valorCargado=json.smap1.sumaseg;
+                    }
                 try
                 {
                     _fieldByLabel('RESPALDO VALOR').setValue(json.smap1.sumaseg);
@@ -2558,7 +2561,7 @@ function _p28_cargarPoliza(boton)
 
 function llenandoCampos(json)
 {   
-	var panelpri = _fieldById('_p28_panelpri');
+    var panelpri = _fieldById('_p28_panelpri');
     var nmpoliza = _fieldByName('nmpoliza').getValue();
     
     var sucursal = _fieldByName('sucursal').getValue();
@@ -2704,7 +2707,11 @@ function llenandoCampos(json)
                     var marca    = _fieldByName('parametros.pv_otvalor07');
                     var submarca = _fieldByName('parametros.pv_otvalor08');
                     var modelo   = _fieldByName('parametros.pv_otvalor09');
-                    var version  = _fieldByName('parametros.pv_otvalor10');
+                    var version;
+                    if(!Ext.isEmpty(_fieldByName('parametros.pv_otvalor10',null,true)))
+                    {
+                        version  = _fieldByName('parametros.pv_otvalor10');
+                    }
                     
                     _p28_herenciaAscendente(clave,marca,submarca,modelo,version,function()
                     {
@@ -2739,10 +2746,10 @@ function llenandoCampos(json)
                         {
                             try
                             {
-                            	if(('|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
-                           		{
-                            	    _fieldLikeLabel('VALOR VEH').valorCargado=_fieldByLabel('RESPALDO VALOR').getValue();
-                           		}
+                                if(!Ext.isEmpty(_fieldByLabel('VALOR VEHICULO',null,true)))
+                            {
+                                    _fieldLikeLabel('VALOR VEH').valorCargado=_fieldByLabel('RESPALDO VALOR').getValue();
+                            }
                                 _p28_cargarRangoValorRamo5(function()
                                 {
                                     _p28_cotizar(!maestra&&!vencida);
@@ -2819,8 +2826,8 @@ function llenandoCampos(json)
         if(_p28_smap1.cdramo+'x'=='5x'
             &&
             (
-            	('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1)
-            	//_p28_smap1.cdsisrol=='SUSCRIAUTO'||_p28_smap1.cdsisrol=='PROMOTORAUTO'
+                ('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1)
+                //_p28_smap1.cdsisrol=='SUSCRIAUTO'||_p28_smap1.cdsisrol=='PROMOTORAUTO'
             ))
         {
             var agente  = _fieldByName('parametros.pv_otvalor01');
@@ -2847,7 +2854,7 @@ function llenandoCampos(json)
     else
     {
         mensajeError(json.error);
-    }	
+    }   
 }
 
 function _p28_cargarRangoValorRamo5(callback)
@@ -2856,12 +2863,12 @@ function _p28_cargarRangoValorRamo5(callback)
     var tipovalor = _fieldByLabel('TIPO VALOR');
     
     var valor,valorCargado,tipovalorval;
-    if(('|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
+    if(!Ext.isEmpty(_fieldByLabel('VALOR VEHICULO',null,true)))
     {
         valor= _fieldLikeLabel('VALOR VEH');
-    valorval     = valor.getValue();
-    valorCargado = valor.valorCargado;
-    tipovalorval = tipovalor.getValue();
+        valorval     = valor.getValue();
+        valorCargado = valor.valorCargado;
+        tipovalorval = tipovalor.getValue();
     }
     var valido = !Ext.isEmpty(tipovalorval)&&!Ext.isEmpty(valorval)&&!Ext.isEmpty(valorCargado);
     if(valido)
@@ -2894,27 +2901,27 @@ function _p28_cargarRangoValorRamo5(callback)
                         debug('valormax:',valormax);
 
                         if(valorRecuperadoValorVehiSigs>valormax)
-                        	{valorRecuperadoValorVehiSigs=valormax;}
+                            {valorRecuperadoValorVehiSigs=valormax;}
                         if(valorRecuperadoValorVehiSigs>valormin)
-                        	{valorRecuperadoValorVehiSigs=valormin;}
+                            {valorRecuperadoValorVehiSigs=valormin;}
                         
                         if(_p28_smap1.cdsisrol =='EJECUTIVOCUENTA')
                         {
-	                        var me;
-	                        if(!Ext.isEmpty(_fieldLikeLabel('VALOR VEH',null,true)))
-	                        {
-	                            me = _fieldLikeLabel('VALOR VEH');
-	                            if(Number(value)>Number(me.maximoTotal)){
-	                                valor.setMinValue(me.maximoTotal);
-	                                valor.setMaxValue(me.maximoTotal);
-	                                valor.setMinValue(false);
-	                                valor.setMaxValue(false);
-	                                r='Favor de acudir a Mesa de Control para realizar la cotización.';
-	                            }else if((Number(valormin)>= Number(me.maximoTotal)) && (Number(valormax)>= Number(me.maximoTotal))){
-	                                valor.setMinValue(me.maximoTotal);
-	                                valor.setMaxValue(me.maximoTotal);
-	                            }
-	                        } 
+                            var me;
+                            if(!Ext.isEmpty(_fieldByLabel('VALOR VEHICULO',null,true)))
+                            {
+                                me = _fieldLikeLabel('VALOR VEH');
+                                if(Number(value)>Number(me.maximoTotal)){
+                                    valor.setMinValue(me.maximoTotal);
+                                    valor.setMaxValue(me.maximoTotal);
+                                    valor.setMinValue(false);
+                                    valor.setMaxValue(false);
+                                    r='Favor de acudir a Mesa de Control para realizar la cotización.';
+                                }else if((Number(valormin)>= Number(me.maximoTotal)) && (Number(valormax)>= Number(me.maximoTotal))){
+                                    valor.setMinValue(me.maximoTotal);
+                                    valor.setMaxValue(me.maximoTotal);
+                                }
+                            } 
                             else{
                                 valor.setMaxValue(valormax);
                                 valor.setMinValue(valormin);
@@ -2946,11 +2953,11 @@ function _p28_cargarRangoValorRamo5(callback)
 function _p28_limitarCoberturasDependientesSumasegRamo5()
 {
     var sumaAsegu,suma;
-    if(!Ext.isEmpty(_fieldLikeLabel('VALOR VEH',null,true)))
-    	{
-    	   sumaAsegu = _fieldLikeLabel('VALOR VEH');
-    	   suma      = sumaAsegu.getValue();
-    	}
+    if(!Ext.isEmpty(_fieldByLabel('VALOR VEHICULO',null,true)))
+        {
+           sumaAsegu = _fieldLikeLabel('VALOR VEH');
+           suma      = sumaAsegu.getValue();
+        }
     
     if(!Ext.isEmpty(suma))
     {
@@ -2972,23 +2979,23 @@ function _p28_limitarCoberturasDependientesSumasegRamo5()
                 {
                     var equipoEspecial = 0;
                     if(!Ext.isEmpty(_fieldLikeLabel('SUMA ASEGURADA EQUIPO ESPECIAL',null,true)))
-	                {
-                    	equipoEspecial = _fieldByLabel('SUMA ASEGURADA EQUIPO ESPECIAL');
-	                    var min            = suma*(1+(json.smap1.P1VALOR-0));
-	                    var max            = suma*(1+(json.smap1.P2VALOR-0));
-	                    debug('min:',min,'max:',max);
-	                    equipoEspecial.setMinValue(min);
-	                    equipoEspecial.setMaxValue(max);
-	                    equipoEspecial.isValid();
+                    {
+                        equipoEspecial = _fieldByLabel('SUMA ASEGURADA EQUIPO ESPECIAL');
+                        var min            = suma*(1+(json.smap1.P1VALOR-0));
+                        var max            = suma*(1+(json.smap1.P2VALOR-0));
+                        debug('min:',min,'max:',max);
+                        equipoEspecial.setMinValue(min);
+                        equipoEspecial.setMaxValue(max);
+                        equipoEspecial.isValid();
                     
-	                    var adaptaciones = _fieldByLabel('SUMA ASEGURADA ADAPTACIONES Y CONVERSIONES');
-	                    min              = suma*(1+(json.smap1.P3VALOR-0));
-	                    max              = suma*(1+(json.smap1.P4VALOR-0));
-	                    debug('min:',min,'max:',max);
-	                    adaptaciones.setMinValue(min);
-	                    adaptaciones.setMaxValue(max);
-	                    adaptaciones.isValid();
-	                }
+                        var adaptaciones = _fieldByLabel('SUMA ASEGURADA ADAPTACIONES Y CONVERSIONES');
+                        min              = suma*(1+(json.smap1.P3VALOR-0));
+                        max              = suma*(1+(json.smap1.P4VALOR-0));
+                        debug('min:',min,'max:',max);
+                        adaptaciones.setMinValue(min);
+                        adaptaciones.setMaxValue(max);
+                        adaptaciones.isValid();
+                    }
                 }
                 else
                 {
@@ -3883,7 +3890,7 @@ function _p28_cargarParamerizacionCoberturasRol()
                             {
                                  if(_p28_smap1.cdtipsit =='8HO')//Hoteles
                                      {           
-                                	    _p28_camposEstacionamiento('N');
+                                        _p28_camposEstacionamiento('N');
                                      }
                             }
                         }
