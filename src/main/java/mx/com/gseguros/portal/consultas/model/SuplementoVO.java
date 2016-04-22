@@ -80,6 +80,10 @@ public class SuplementoVO implements Serializable{
 	 */
 	private String origen;
 	
+	/**
+	 * Campo que verifica si muestra o no el convenio (S)
+	 */
+	private String switchConvenios;
 	
 	public String getNmsuplem() {
 		return nmsuplem;
@@ -162,6 +166,12 @@ public class SuplementoVO implements Serializable{
 	}
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
+	}
+	public String getSwitchConvenios() {
+		return switchConvenios;
+	}
+	public void setSwitchConvenios(String switchConvenios) {
+		this.switchConvenios = switchConvenios;
 	}
 	
 }

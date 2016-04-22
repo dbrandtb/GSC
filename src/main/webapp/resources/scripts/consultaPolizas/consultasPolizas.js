@@ -160,7 +160,8 @@ Ext.onReady(function() {
             {name: 'feinival', dateFormat: 'd/m/Y'},            
             {name: 'nlogisus'},
             {name: 'nsuplogi', type:'int'},
-            {name: 'ptpritot', type : 'float'}
+            {name: 'ptpritot', type : 'float'},
+            {name: 'switchConvenios'}
         ]
     });
     
@@ -234,7 +235,6 @@ Ext.onReady(function() {
                     panelBusqueda.down('form').getForm().findField("params.estado").setValue(rowSelected.get('estado'));
                     panelBusqueda.down('form').getForm().findField("params.nmpoliza").setValue(rowSelected.get('nmpoliza'));
                     panelBusqueda.down('form').getForm().findField("params.suplemento").setValue(rowSelected.get('nmsuplem'));
-                    
                     //console.log('Params busqueda de datos grales poliza=');console.log(panelBusqueda.down('form').getForm().getValues());
 
                     // Consultar Datos Generales de la Poliza:
@@ -334,7 +334,8 @@ Ext.onReady(function() {
             {type:'string', name:'dsramo'},
             {type:'string', name:'dsplan'},
             {type:'string', name:'tipopol'},
-            {type:'string', name:'dstipsit'}
+            {type:'string', name:'dstipsit'}//,
+//            {type:'string', name:'switchConvenios'}
         ]
     });
 
@@ -1046,8 +1047,7 @@ Ext.onReady(function() {
                     
                     gridPolizasAsegurado.getStore().removeAll();
                     windowPolizas.close();
-                    
-                    // Recargar store con busqueda de historicos de la poliza seleccionada
+                    // Recargar store con busqueda de historicos de la poliza seleccionada                    
                     cargaStoreSuplementos(formBusqueda.getValues());
                 }else{
                     showMessage('Aviso', 'Seleccione un registro', Ext.Msg.OK, Ext.Msg.INFO);
@@ -1528,6 +1528,7 @@ Ext.onReady(function() {
                                             showMessage('', _MSG_NMPOLIEX_INVALIDO, Ext.Msg.OK, Ext.Msg.INFO);
                                             return;
                                         }
+                                        debug('busqueda2 ',formBusqueda.getValues());
                                         cargaStoreSuplementos(formBusqueda.getValues());
                                     break;
                                         
@@ -1565,7 +1566,8 @@ Ext.onReady(function() {
                                         if(!formBusqueda.findField('params.sucursal').isValid() || !formBusqueda.findField('params.producto').isValid() || !formBusqueda.findField('params.numpolizacorto').isValid()){
                                             mensajeWarning('Llene los datos requeridos.');
                                             return;
-                                        }
+                                        }                                        
+                                        //debug('storeSuplementos',storeSuplementos.getAt(0).get('switchConvenios'));
                                         cargaStoreSuplementos(formBusqueda.getValues());
                                     break;
                                 }
@@ -1629,18 +1631,19 @@ Ext.onReady(function() {
     */
     function cargaStoreSuplementos(params){
         
-        debug('Params busqueda de suplemento: ',params);
+        //debug('Params busqueda de suplemento: ',params);
         
         storeSuplementos.load({
             params: params,
             callback: function(records, operation, success) {
-                if(success) {
-                	
+                if(success) {                	
+                	//debug('storeSuplementos ',storeSuplementos.getAt(0).get('switchConvenios'));
                     gridSuplementos.setLoading(false);
                     
                     //Limpiar seleccion de la lista de opciones de consulta:
                     limpiaSeleccionTiposConsulta();
-                    
+                    params['params.switchConvenios'] = storeSuplementos.getAt(0).get('switchConvenios');
+                    //debug("switch convenios",params.switchConvenios);
                     obtieneAvisosPoliza(params);
                     
                 } else {
@@ -1662,7 +1665,7 @@ Ext.onReady(function() {
             callback  : function (options, success, response){
                 if(success){
                     var jsonResponse = Ext.decode(response.responseText);
-                    debug("avisos",panelBusqueda.down('[name=avisos]'));
+                    //debug("params",params);
                     if(!Ext.isEmpty(jsonResponse.mensajeRes || !Ext.isEmpty(jsonResponse.mensajeConv))){
                     	panelBusqueda.down('[name=avisos]').update('<span style="color:#E96707;font-size:16px;font-weight:bold;">'
                     												+jsonResponse.mensajeRes
@@ -1676,7 +1679,6 @@ Ext.onReady(function() {
                     }else {
                         panelBusqueda.down('[name=avisos]').update('<span></span>');
                     }
-                    debug("avisos",panelBusqueda.down('[name=avisos]'));
                 }else{
                     showMessage('Error', 'Error al obtener los avisos.', Ext.Msg.OK, Ext.Msg.ERROR);
                 }

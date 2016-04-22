@@ -352,6 +352,8 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     		suplemento.setPtpritot(rs.getString("ptpritot"));
     		suplemento.setNmsuplem(rs.getString("nmsuplem"));
     		suplemento.setOrigen(rs.getString("origen"));
+    		suplemento.setSwitchConvenios(rs.getString("swconvenios"));
+    		
     		return suplemento;
     	}
     }
