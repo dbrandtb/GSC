@@ -52,22 +52,14 @@ public interface MesaControlDAO
 			)throws Exception;
 	
 	/**
-	 * 
-	 * @param ntramite
-	 * @param feinicio
-	 * @param cdclausu
-	 * @param comments
-	 * @param cdusuari
-	 * @param cdmotivo
-	 * @param cdusuariDest TODO
-	 * @param cdsisrolDest TODO
-	 * @throws Exception
+	 * GUARDA UN REGISTRO DE TDMESACONTROL.
+	 * @param cerrado ¿EL REGISTRO NUEVO YA INSERTA FECHA, USUARIO y ROL FIN?
 	 */
 	public void movimientoDetalleTramite(
 			String ntramite      , Date feinicio   , String cdclausu
 			,String comments     , String cdusuari , String cdmotivo
 			,String cdsisrol     , String swagente , String cdusuariDest
-			,String cdsisrolDest , String status)
+			,String cdsisrolDest , String status   , boolean cerrado)
 			throws Exception;
 	
 	/**

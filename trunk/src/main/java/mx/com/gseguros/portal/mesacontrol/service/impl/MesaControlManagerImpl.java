@@ -51,6 +51,7 @@ public class MesaControlManagerImpl implements MesaControlManager
 			,String cdsisrol
 			,String swagente
 			,String status
+			,boolean cerrado
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -65,9 +66,12 @@ public class MesaControlManagerImpl implements MesaControlManager
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
 				,"\n@@@@@@ swagente=" , swagente
 				,"\n@@@@@@ status="   , status
+				,"\n@@@@@@ cerrado="  , cerrado
 				));
 		
-		mesaControlDAO.movimientoDetalleTramite(ntramite, feinicio, cdclausu, comments, cdusuari, cdmotivo, cdsisrol, swagente, null, null, status);
+		mesaControlDAO.movimientoDetalleTramite(ntramite, feinicio, cdclausu, comments, cdusuari
+				,cdmotivo, cdsisrol, swagente, null, null, status
+				,cerrado);
 		
 		logger.debug(Utils.log(
 				 "\n@@@@@@ movimientoDetalleTramite @@@@@@"

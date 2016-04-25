@@ -180,11 +180,13 @@ public interface CotizacionManager
 			,String nmpoliza
 			,String nmsuplem
 			,String nmsituac
+			,String cdtipsit
 			,String ocupacion
 			,String extraprimaOcupacion
 			,String peso
 			,String estatura
 			,String extraprimaSobrepeso
+			,String cdgrupo
 			)throws Exception;
 	
 	public List<Map<String,String>>cargarAseguradosGrupo(
@@ -796,6 +798,16 @@ public interface CotizacionManager
 	
 	public void guardarLayoutGenerico(
 			String nombreArchivo
+			)throws Exception;
+	
+	@Deprecated
+	public void movimientoTbloqueo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String accion
 			)throws Exception;
 	
 }

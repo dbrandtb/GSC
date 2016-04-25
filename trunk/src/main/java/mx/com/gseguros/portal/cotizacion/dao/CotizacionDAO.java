@@ -75,8 +75,19 @@ public interface CotizacionDAO {
 	public List<Map<String, String>> cargarAseguradosExtraprimas(
 			Map<String, String> params) throws Exception;
 
-	public void guardarExtraprimaAsegurado(Map<String, String> params)
-			throws Exception;
+	public void guardarExtraprimaAsegurado(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String ocupacion
+			,String extraprimaOcupacion
+			,String peso
+			,String estatura
+			,String extraprimaSobrepeso
+			)throws Exception;
 
 	public List<Map<String, String>> cargarAseguradosGrupo(
 			Map<String, String> params) throws Exception;
@@ -655,4 +666,13 @@ public interface CotizacionDAO {
 			String estado, String nmpoliza, String nmsuplem) throws Exception;
 	
 	public void guardarLayoutGenerico(String nombreArchivo) throws Exception;
+	
+	public void movimientoTbloqueo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String accion
+			)throws Exception;
 }

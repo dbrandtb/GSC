@@ -288,6 +288,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null
 						,null
 						,EstatusTramite.IMPRESION_PENDIENTE.getCodigo()
+						,false
 						);
 				
 				for(Map<String,String>movAgente:movsAgente)
@@ -493,7 +494,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			paso = "Armando juegos de impresiones";
 			sb.append("\n").append(paso);
 			
-			listaArchivos = this.armaJuegosDeImpresiones(listaArchivos, "nmcopias");
+			listaArchivos = this.armaJuegosDeImpresiones(listaArchivos);
 			
 			paso = "Imprimiendo archivos";
 			sb.append("\n").append(paso);
@@ -637,6 +638,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null
 						,null
 						,remesa.get("status")
+						,impresos
 						);
 			}
 			
@@ -920,6 +922,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					,null
 					,null
 					,status
+					,true
 					);
 		}
 		catch(Exception ex)
@@ -1089,6 +1092,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null
 						,null
 						,EstatusTramite.IMPRESION_PENDIENTE.getCodigo()
+						,true
 						);
 				
 				paso = "Registrando relaci\u00F3n de movimiento";
@@ -1305,6 +1309,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null
 						,null
 						,EstatusTramite.IMPRESO.getCodigo()
+						,true
 						);
 			}
 		}
@@ -1573,6 +1578,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null
 						,null
 						,remesa.get("status")
+						,impresos
 						);
 			}
 			
@@ -1638,18 +1644,20 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		}
 	}*/
 	
-	private List<Map<String,String>> armaJuegosDeImpresiones(List<Map<String,String>> listaOriginal, String keyConteo) throws Exception
+	private List<Map<String,String>> armaJuegosDeImpresiones(List<Map<String,String>> listaOriginal) throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ armaJuegosDeImpresiones @@@@@@"
 				,"\n@@@@@@ listaOriginal=" , listaOriginal
-				,"\n@@@@@@ keyConteo="     , keyConteo
 				));
 		
 		List<Map<String,String>> listaArmada = new ArrayList<Map<String,String>>();
 		
-		String paso = null;
+		String paso         = null
+		       ,keyConteo   = "nmcopias"
+		       ,keyNmpoliza = "nmpoliza"
+		       ,keyNumend   = "numend";
 		
 		try
 		{
@@ -1680,7 +1688,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				
 				if(conteo==0)
 				{
-					logger.debug(Utils.log("No se para elemento porque tiene 0 i=", i, " el=",el));
+					logger.debug(Utils.log("No se pasa elemento porque tiene 0 i=", i, " el=",el));
 				}
 				else if(conteo==1)
 				{
@@ -1695,13 +1703,22 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					
 					int finMultiples = -1;
 					
+					String nmpolizaEl = el.get(keyNmpoliza)
+					       ,numendEl  = el.get(keyNumend);
+					
 					for(int j=i ; j<listaOriginal.size() ; j++)
 					{
 						Map<String,String> elMultiplesCopias = listaOriginal.get(j);
 						
 						int conteoElMultiplesCopias = Integer.parseInt(elMultiplesCopias.get(keyConteo));
 						
-						if(conteoElMultiplesCopias < 2)
+						String nmpolizaElMultiplesCopias = elMultiplesCopias.get(keyNmpoliza)
+						       ,numendElMultiplesCopias  = elMultiplesCopias.get(keyNumend);
+						
+						if(conteoElMultiplesCopias < 2
+								|| !nmpolizaEl.equals(nmpolizaElMultiplesCopias)
+								|| !numendEl.equals(numendElMultiplesCopias)
+						)
 						{
 							logger.debug(Utils.log("termina el buscado de multiples con j=", j, " el=", elMultiplesCopias));
 							finMultiples = j;
