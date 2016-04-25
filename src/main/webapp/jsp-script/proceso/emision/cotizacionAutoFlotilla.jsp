@@ -950,7 +950,7 @@ Ext.onReady(function()
             ,itemId : '_p30_fieldsetTatripol'
             ,title  : '<span style="font:bold 14px Calibri;">DATOS ADICIONALES DE P&Oacute;LIZA</span>'
             ,width  : 290
-            ,hidden : _p30_smap1.cdsisrol!='SUSCRIAUTO'
+            ,hidden : ('|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|'))!=-1
             ,items  : itemsTatripol
         });
     }
@@ -1218,9 +1218,9 @@ Ext.onReady(function()
                                                                                     else
                                                                                     {
                                                                                     	var inc = (Number(json.params.indice)+1)+'';
-                                                                                    	if (marcaTemp == -1)         {var texto ='Se ha removido la descripcion de marca del inciso '+(inc.toString())+"<br/>";}
-                                                                                    	else if (submarcaTemp == -1) {var texto ='Se ha removido la descripcion de submarca del inciso '+(inc.toString())+"<br/>";}
-                                                                                    	else if (versionTemp == -1)  {var texto ='Se ha removido la descripcion de version del inciso '+(inc.toString())+"<br/>";}
+                                                                                    	if (marcaTemp == -1)         {var texto ='Favor de Introducir manualmente la descripcion de marca del inciso '+(inc.toString())+"<br/>";}
+                                                                                    	else if (submarcaTemp == -1) {var texto ='Favor de Introducir manualmente la submarca del inciso '+(inc.toString())+"<br/>";}
+                                                                                    	else if (versionTemp == -1)  {var texto ='Favor de Introducir manualmente la version del inciso '+(inc.toString())+"<br/>";}
                                                                                     	descripcion = texto + descripcion; debug('### texto descriptivo:',descripcion);
                                                                                     }
                                                                                 }
@@ -1491,8 +1491,7 @@ Ext.onReady(function()
             _fieldByLabel('AGENTE',_fieldById('_p30_form')).setReadOnly(true);
             _p30_ramo5AgenteSelect(_fieldByLabel('AGENTE',_fieldById('_p30_form')),_p30_smap1.cdagente);
         }
-        else if(_p30_smap1.cdsisrol=='PROMOTORAUTO'
-            ||_p30_smap1.cdsisrol=='SUSCRIAUTO')
+        else if('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1)
         {
             _fieldByLabel('AGENTE',_fieldById('_p30_form')).on(
             {
@@ -3307,7 +3306,8 @@ function _p30_configuracionPanelDinClic(cdtipsit,titulo)
     {
         var panel    = _p30_paneles[cdtipsit];
         var itemDesc = panel.down('[fieldLabel*=DESCUENTO]');
-        if(_p30_smap1.cdsisrol=='SUSCRIAUTO'&&!Ext.isEmpty(itemDesc))
+        if(('|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1)
+            &&!Ext.isEmpty(itemDesc))
         {
             Ext.Ajax.request(
             {
@@ -3428,7 +3428,8 @@ function _p30_gridBotonConfigClic(view,row,col,item,e,record)
         debug('cdtipsit:',cdtipsit,'cdtipsitPanel:',cdtipsitPanel);
         var panel    = _p30_paneles[cdtipsitPanel];
         var itemDesc = panel.down('[fieldLabel*=DESCUENTO]');
-        if(_p30_smap1.cdsisrol=='SUSCRIAUTO'&&!Ext.isEmpty(itemDesc))
+        if(('|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1)
+            &&!Ext.isEmpty(itemDesc))
         {
             Ext.Ajax.request(
             {
@@ -3893,7 +3894,7 @@ function _p30_cotizar(sinTarificar)
     
     if(valido)
     {
-        if(_p30_smap1.cdsisrol=='SUSCRIAUTO')
+        if(('|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|'))!=-1)
         {
             valido = _p30_store.getCount()>=1;
             if(!valido)
@@ -3952,7 +3953,8 @@ function _p30_cotizar(sinTarificar)
     
     if(valido)
     {
-    	if(_p30_smap1.tipoflot=='P' && _p30_smap1.cdsisrol!='SUSCRIAUTO'){
+    	if(_p30_smap1.tipoflot=='P' 
+    	   &&('|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)){
     		
     		var ncamiones = 0;
             var ntractocamiones = 0;
@@ -4574,7 +4576,7 @@ function _p30_cotizar(sinTarificar)
                                         ,icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
                                         ,disabled : true
                                         ,handler  : _p30_detalles
-                                        ,hidden   : _p30_smap1.cdsisrol!='SUSCRIAUTO'
+                                       ,hidden   : (('|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|'))!=-1)
                                     }
                                     ,{
                                         itemId    : '_p30_botonCoberturas'
@@ -6523,7 +6525,7 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json)
                 if(mapeo=='DIRECTO')
                 {
                     debug('directo');
-                    if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
+                    if(_p30_smap1.cdramo+'x'=='5x'&& (_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx' || _p30_smap1.cdsisrol+'x'=='TECNISUSCRIx'))
                     {
                         var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
                         var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
@@ -6546,7 +6548,8 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json)
                         tatri.setValue(json.smap1[tatri.name]);
                     }
                     
-                    if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
+                    if(_p30_smap1.cdramo+'x'=='5x'
+                       &&('|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|'))!=-1)
                     {
                         var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
                         agenteCmp.getStore().load(
@@ -6632,7 +6635,8 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json)
                     }
                     
                     debug('recordMapeado:',recordMapeado.data);
-                    if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
+                    if(_p30_smap1.cdramo+'x'=='5x'&& 
+                    ('|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|'))!=-1)
                     {
                         var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
                         var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
@@ -6656,7 +6660,8 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json)
                         tatri.setValue(json.smap1[tatri.name]);
                     }
                     
-                    if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='SUSCRIAUTOx')
+                    if(_p30_smap1.cdramo+'x'=='5x'&& 
+                       ('|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1))
                     {
                         var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
                         agenteCmp.getStore().load(
