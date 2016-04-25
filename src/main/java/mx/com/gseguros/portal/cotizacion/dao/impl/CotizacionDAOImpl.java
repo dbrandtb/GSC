@@ -954,8 +954,32 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
-	public void guardarExtraprimaAsegurado(Map<String,String>params)throws Exception
+	public void guardarExtraprimaAsegurado(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String ocupacion
+			,String extraprimaOcupacion
+			,String peso
+			,String estatura
+			,String extraprimaSobrepeso
+			)throws Exception
 	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco"            , cdunieco );
+		params.put("cdramo"              , cdramo );
+		params.put("estado"              , estado );
+		params.put("nmpoliza"            , nmpoliza );
+		params.put("nmsuplem"            , nmsuplem );
+		params.put("nmsituac"            , nmsituac );
+		params.put("ocupacion"           , ocupacion );
+		params.put("extraprimaOcupacion" , extraprimaOcupacion );
+		params.put("peso"                , peso );
+		params.put("estatura"            , estatura );
+		params.put("extraprimaSobrepeso" , extraprimaSobrepeso );
 		ejecutaSP(new GuardarExtraprimaAsegurado(getDataSource()),params);
 	}
 	
@@ -7119,4 +7143,40 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		}
 	}
 	
+	@Override
+	public void movimientoTbloqueo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String accion
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("accion"   , accion);
+		ejecutaSP(new MovimientoTbloqueoSP(getDataSource()),params);
+	}
+	
+	protected class MovimientoTbloqueoSP extends StoredProcedure
+	{
+		protected MovimientoTbloqueoSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_MOV_TBLOQUEO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

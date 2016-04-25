@@ -1158,12 +1158,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            			ntramite
 	            			,new Date()
 	            			,null//cdclausu
-	            			,"Se guard&oacute; una cotizaci&oacute;n nueva para el tr&aacute;mite"
+	            			,"Se guard\u00f3 una cotizaci\u00f3n nueva para el tr\u00e1mite"
 	            			,cdusuari
 	            			,null//cdmotivo
 	            			,cdsisrol
 	            			,"S"
 	            			,EstatusTramite.PENDIENTE.getCodigo()
+	            			,false
 	            			);
 	            }
 	    		catch(Exception ex)
@@ -1242,6 +1243,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            	parDmesCon.put("pv_cdmotivo_i"   , null);
 	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
 	            	kernelManagerSustituto.movDmesacontrol(parDmesCon);*/
+	            	
 	            	mesaControlManager.movimientoDetalleTramite(
 	            			ntramite
 	            			,new Date()
@@ -1252,6 +1254,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            			,cdsisrol
 	            			,"S"//swagente
 	            			,EstatusTramite.PENDIENTE.getCodigo()
+	            			,false
 	            			);
 	            	
 	            	try

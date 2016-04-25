@@ -382,6 +382,7 @@ public class MesaControlAction extends PrincipalCoreAction
 					,user.getRolActivo().getClave()
 					,"S"
 					,EstatusTramite.PENDIENTE.getCodigo()
+					,false
 					);
 					
 			success=true;
@@ -1053,6 +1054,7 @@ public class MesaControlAction extends PrincipalCoreAction
 					,usu.getRolActivo().getClave()
 					,"S"
 					,EstatusTramite.PENDIENTE.getCodigo()
+					,false
 					);
 			////// se guarda el detalle //////
         	//////////////////////////////////
@@ -1151,6 +1153,7 @@ public class MesaControlAction extends PrincipalCoreAction
 					,cdsisrol
 					,"N"
 					,EstatusTramite.PENDIENTE.getCodigo()
+					,false
 					);
 			
         	mensaje = "Tr&aacute;mite regresado";
@@ -1185,7 +1188,8 @@ public class MesaControlAction extends PrincipalCoreAction
 			
 			String ntramite  = smap1.get("ntramite")
 			       ,dscoment = smap1.get("dscoment")
-			       ,status   = smap1.get("status");
+			       ,status   = smap1.get("status")
+			       ,cerrado  = smap1.get("cerrado");
 			
 			Utils.validate(ntramite , "No se recibio el numero de tramite");
 			
@@ -1193,7 +1197,7 @@ public class MesaControlAction extends PrincipalCoreAction
 					ntramite, new Date(), null
 					,dscoment, user.getUser(), null
 					,user.getRolActivo().getClave(),null
-					,status
+					,status,"S".equals(cerrado)
 					);
 		}
 		catch(Exception ex)

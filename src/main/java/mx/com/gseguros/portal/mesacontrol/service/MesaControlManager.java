@@ -23,6 +23,10 @@ public interface MesaControlManager
 			,String nmsuplem
 			,String cdpos)throws Exception;
     
+   /**
+    * GUARDA UN REGISTRO DE TDMESACONTROL.
+    * @param cerrado ¿EL REGISTRO NUEVO YA INSERTA FECHA, USUARIO y ROL FIN?
+    */
     public void movimientoDetalleTramite(
 			String ntramite
 			,Date feinicio
@@ -33,6 +37,7 @@ public interface MesaControlManager
 			,String cdsisrol
 			,String swagente
 			,String status
+			,boolean cerrado
 			)throws Exception;
     
     public void validarAntesDeTurnar(

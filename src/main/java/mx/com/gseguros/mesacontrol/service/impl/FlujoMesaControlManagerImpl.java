@@ -1821,6 +1821,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,null
 					,null
 					,status
+					,false
 					);
 		}
 		catch(Exception ex)
@@ -1968,6 +1969,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,null
 					,null
 					,"-1"
+					,false
 					);
 		}
 		catch(Exception ex)
@@ -2215,6 +2217,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,usuarioDestino.get("cdusuari")
 					,usuarioDestino.get("cdsisrol")
 					,statusNew
+					,false
 					);
 			
 			if(destinoSimple)

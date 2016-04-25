@@ -520,4 +520,6 @@ public interface ConsultasDAO
 	public void insertarConvenioPoliza(String cdunieco, String cdramo, String estado, String cdtipsit, String nmpoliza, String diasgrac, String cdconven, String status, Date fecregis, String cdusureg, Date fecmodif, String cdusumod, String operacion) throws Exception;
 
 	public void insertarCancelacionesConvenioPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String status, Date fecregis, String cdusureg, Date fecmodif, String cdusumod, String operacion) throws Exception;
+	
+	public List<Map<String,String>> recuperaCoberturasExtraprima(String cdramo, String cdtipsit) throws Exception;
 }

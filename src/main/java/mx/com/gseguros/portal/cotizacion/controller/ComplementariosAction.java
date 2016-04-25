@@ -2071,6 +2071,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,cdsisrol
 							,"S"//swagente
 							,EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo()
+							,false
 							);
 					
 		        	kernelManager.mesaControlUpdateStatus(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
@@ -2188,6 +2189,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,cdsisrol
 							,"S"
 							,EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo()
+							,false
 							);
 					
 		        	kernelManager.mesaControlUpdateStatus(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
@@ -3067,6 +3069,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						,cdsisrol
 						,"S"//swagente
 						,EstatusTramite.CONFIRMADO.getCodigo()
+						,true
 						);
 			}
 			catch(Exception ex)
@@ -3496,6 +3499,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						,us.getRolActivo().getClave()
 						,swagente
 						,EstatusTramite.CONFIRMADO.getCodigo()
+						,true
 						);
 				
 				if(!procesoFlujo)
@@ -4244,6 +4248,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,cdsisrol
 							,"S"//swagente
 							,EstatusTramite.CONFIRMADO.getCodigo()
+							,true
 							);
 				}
 				catch(Exception ex)
