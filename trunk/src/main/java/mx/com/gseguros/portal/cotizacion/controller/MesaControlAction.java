@@ -918,7 +918,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			///////////////////////////////////////
 			
 			//Realizamos el llamado del proceso de pago automatico cdtiptra = 19
-			try{
+			/*try{
 				if(cdtiptra.equalsIgnoreCase("19")){
 					slist1 = siniestrosManager.procesaPagoAutomaticoSisco();
 					for(int i=0;i<slist1.size();i++){
@@ -932,7 +932,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			}catch(Exception ex)
 			{
 				log.error("error en la generacion de calculos",ex);
-			}
+			}*/
 				
 		}
 		catch(Exception ex)

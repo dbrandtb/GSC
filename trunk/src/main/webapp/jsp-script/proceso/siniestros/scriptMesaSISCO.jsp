@@ -27,6 +27,8 @@ var _STATUS_TRAMITE_EN_REVISION_MEDICA      = '<s:property value="@mx.com.gsegur
 var _STATUS_TRAMITE_CONFIRMADO              = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@CONFIRMADO.codigo" />';
 var _CAT_DESTINOPAGO                        = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@DESTINOPAGO"/>';
 var _CATALOGO_CONCEPTOPAGO					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CONCEPTOPAGO"/>';
+var _CATALOGO_PROVEEDORES  					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
+var _CATALOGO_ConfLayout					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CONFLAYOUT"/>';
 
 
 
@@ -59,6 +61,13 @@ var _URL_CONCEPTODESTINO        			= '<s:url namespace="/siniestros"   action="g
 var _UrlSolicitarPago           			= '<s:url namespace="/siniestros" 	action="solicitarPago"             />';
 var _mesasin_url_lista_reasignacion 		= '<s:url namespace="/siniestros" 	action="obtenerUsuariosPorRol" />';
 var _URL_ACTUALIZA_TURNADOMC				= '<s:url namespace="/siniestros" 	action="actualizaTurnadoMesaControl" />';
+var _URL_EXISTE_CONF_PROV 					= '<s:url namespace="/siniestros"	action="validaExisteConfiguracionProv" />';
+var _URL_SubirLayout                    	= '<s:url namespace="/emision"      action="subirCenso"                       />';
+var _URL_ValidaLayoutFormatoExcel       	= '<s:url namespace="/siniestros"   action="validaLayoutFormatoExcel"   />';
+var _URL_ValidaLayoutConfigExcel        	= '<s:url namespace="/siniestros"   action="validaLayoutConfiguracionExcel"   />';
+var _URL_ValidaLayoutConfigExcel2        	= '<s:url namespace="/siniestros"   action="validaLayoutConfiguracionExcelAranxa"   />';
+var _UrlGenerarTramiteSiniestro          	= '<s:url namespace="/siniestros" 	action="generarTramiteSiniestro"             />';
+var _UrlProcesarTramiteSiniestro          	= '<s:url namespace="/siniestros" 	action="procesarTramiteSiniestroSISCO"       />';
 
 
 
@@ -1194,7 +1203,6 @@ var msgWindow;
 	/*Generacion de calculos pagos Automaticos*/
 	function generarCalculoPagoAutomatico(button, grid,rowIndex,colIndex){
 		var form=button.up().up();
-		
 		if(mcdinGrid.getView().getSelectionModel().hasSelection()){
 			totalTramites = mcdinGrid.getView().getSelectionModel().getSelection();
 			form.setLoading(true);
@@ -1206,6 +1214,7 @@ var msgWindow;
    						'params.ntramite'  : tramite.get('ntramite')
    					}
    					,success : function (response){
+   						form.setLoading(false);
    					}
    				});
                 
@@ -1221,6 +1230,7 @@ var msgWindow;
 				}
 			});
 		}else {
+			form.setLoading(false);
 			centrarVentanaInterna(mensajeWarning("Debe seleccionar al menos un Contrarecibo."));
 		}
 	}	
@@ -1328,26 +1338,6 @@ var msgWindow;
 			}
 		});
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 	
 	function turnarAreclamacionesMedAjustador(grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);
@@ -1763,7 +1753,260 @@ var msgWindow;
 		}
 	}
 	
-
+	function subirDocumentoParaWindow(){
+        windowLoader = Ext.create('Ext.window.Window', {
+            title   : 'Cargar documento NOVA'
+            ,closeAction : 'hide'
+           	,width  : 400
+            ,modal  : true
+    		,bodyStyle:'padding:5px;'
+            ,items  :
+            [
+                Ext.create('Ext.form.Panel',
+                {
+                    url          : _URL_SubirLayout
+                    ,border 	 : 0
+                    ,bodyPadding : 5
+                    ,items       :
+                    [
+                        cmbProveedor,
+                        tipoLayout,
+                        {
+                            xtype       : 'filefield'
+                            ,fieldLabel : 'Archivo'
+                            ,buttonText : 'Examinar...'
+                            ,buttonOnly : false
+                            ,name       : 'censo'
+                            ,labelWidth : 100
+                            ,width      : 330
+                            ,allowBlank : false
+                            ,msgTarget  : 'side'
+                            ,cAccept    : ['xls','xlsx']
+                            ,listeners  :
+                            {
+                                change : function(me)
+                                {
+                                    var indexofPeriod = me.getValue().lastIndexOf("."),
+                                    uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
+                                    if (!Ext.Array.contains(this.cAccept, uploadedExtension))
+                                    {
+                                        centrarVentanaInterna(Ext.MessageBox.show(
+                                        {
+                                            title   : 'Error de tipo de archivo',
+                                            msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
+                                            buttons : Ext.Msg.OK,
+                                            icon    : Ext.Msg.WARNING
+                                        }));
+                                        me.reset();
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                    ,buttonAlign : 'center'
+                    ,buttons     :
+                    [
+                        {
+                            text     : 'Cargar archivo'
+                            ,icon    : '${ctx}/resources/fam3icons/icons/group_edit.png'
+                            ,handler : function(me){ _p21_subirArchivoParametrizadosLayout(me); } //_p21_subirArchivoParametrizadosLayout
+                        }
+                    ]
+                })
+            ]
+        });
+       	centrarVentanaInterna(windowLoader.show());
+	}
+	
+    function _p21_subirArchivoParametrizadosLayout(button,nombreCensoParaConfirmar)
+    {
+        var form=button.up().up();
+        var valido=form.isValid();
+        if(!valido){
+            datosIncompletos();
+        }
+        
+        if(valido){
+        	var cdprestador = form.down('combo[name=cmbProveedor]').getValue();
+        	var layoutConf  = form.down('combo[name=tipoLayout]').getValue();
+        	form.setLoading(true);
+            var timestamp = new Date().getTime();
+            form.submit({
+                params   : {
+                    'smap1.timestamp' : timestamp
+                    ,'smap1.ntramite' : ''
+                }
+                ,success : function() {
+                	Ext.Ajax.request({
+            			url     : _URL_EXISTE_CONF_PROV
+            			,params:{
+            				'params.cdpresta': cdprestador
+            			}
+            			,success : function (response){
+            				debug("Respuesta de configuracion ==> ",Ext.decode(response.responseText).validacionGeneral);
+            				if( Ext.decode(response.responseText).validacionGeneral =="S"){
+        							//Continuamos para la validacion del archivo, para eso tenemos que validar con el excel
+				                    var conceptos = {};
+				                    conceptos['timestamp']             = timestamp;
+				                    conceptos['nombreLayoutConfirmado'] = nombreCensoParaConfirmar;
+				                    conceptos['cdpresta']              = cdprestador;
+				                    conceptos['tipoLayout']            = layoutConf;
+				                    var grupos = [];
+				                    
+        							Ext.Ajax.request( {
+				                        url         : _URL_ValidaLayoutFormatoExcel
+				                        ,jsonData   : {
+				                            smap1   : conceptos
+				                            ,olist1 : grupos
+				                        }
+				                        ,success  : function(response) {
+				                            form.setLoading(false);
+				                            var json=Ext.decode(response.responseText);
+				                            debug('### subir censo completo response:',json);
+				                            
+				                            if(json.exito){
+				                            	form.setLoading(false); 
+				                            	//Realizamos el llamado al procedure de la validacion del
+				                            	Ext.Ajax.request( {
+													url         : _URL_ValidaLayoutConfigExcel
+													,jsonData   : {
+														smap1   : conceptos
+														,olist1 : grupos
+													}
+													,success  : function(response) {
+														form.setLoading(false);
+														var json=Ext.decode(response.responseText);
+														debug('### subir censo completo response:',json);
+														if(json.exito){
+															form.setLoading(false); 
+															//Realizamos el llamado al procedure de la validacion del
+															alert("Entra");
+														 }
+														 else{
+															form.setLoading(false);
+															centrarVentanaInterna(mensajeWarning('El archivo contiene errores de Formato.<br/>Favor de validarlo.',function(){
+																centrarVentanaInterna(Ext.create('Ext.window.Window', {
+																	modal  : true
+																	,title : 'Error'
+																	,items : [
+																		{
+																			 xtype     : 'textarea'
+																			 ,width    : 700
+																			 ,height   : 400
+																			 ,readOnly : true
+																			 ,value    : json.respuesta
+																		}
+																	]
+																}).show());
+															}));
+														 }
+													 }
+													 ,failure  : function(){
+														 form.setLoading(false);
+														 errorComunicacion();
+													 }
+												 });
+				                             }
+				                             else{
+				                             	form.setLoading(false);
+					                            centrarVentanaInterna(mensajeWarning('El archivo contiene errores de Formato.<br/>Favor de validarlo.',function(){
+													centrarVentanaInterna(Ext.create('Ext.window.Window', {
+				                                     	modal  : true
+				                                     	,title : 'Error'
+				                                     	,items : [
+				                                     		{
+					                                             xtype     : 'textarea'
+					                                             ,width    : 700
+					                                             ,height   : 400
+					                                             ,readOnly : true
+					                                             ,value    : json.respuesta
+				                                         	}
+				                                     	]
+			                                     	}).show());
+												}));
+				                             }
+				                         }
+				                         ,failure  : function(){
+				                             form.setLoading(false);
+				                             errorComunicacion();
+				                         }
+				                     });
+            				}else{
+            					form.setLoading(false);
+            					centrarVentanaInterna(mensajeWarning('El provedor seleccionado, no tiene la configuraci&oacute;n para pago.'));
+            				}
+            			},
+            			failure : function (){
+            				me.up().up().setLoading(false);
+            				centrarVentanaInterna(Ext.Msg.show({
+            					title:'Error',
+            					msg: 'Error de comunicaci&oacute;n',
+            					buttons: Ext.Msg.OK,
+            					icon: Ext.Msg.ERROR
+            				}));
+            			}
+            		});
+                 }
+                 ,failure : function()
+                 {
+                     if(!Ext.isEmpty(nombreCensoParaConfirmar)){
+                         debug('se quita allowblank');
+                         form.down('filefield').allowBlank = false;
+                     }
+                     form.setLoading(false);
+                     errorComunicacion(null,'Error complementando datos');
+                 }
+             });
+         }
+     }
+    
+	function procesarTramiteSisco(button, grid,rowIndex,colIndex){
+		var form=button.up().up();
+		form.setLoading(true);
+        Ext.Ajax.request({
+			url: _UrlProcesarTramiteSiniestro,
+			success: function(response, opts) {
+				var respuesta = Ext.decode(response.responseText);
+				debug("Valor de la respuesta ===> ",respuesta);
+				if(respuesta.success){
+					form.setLoading(false);
+					centrarVentanaInterna(mensajeCorrecto('Aviso',respuesta.mensaje));	
+				}else {
+					form.setLoading(false);
+					centrarVentanaInterna(mensajeWarning(respuesta.mensaje));
+				}
+				
+			},
+			failure: function(){
+				mcdinGrid.setLoading(false);
+				mensajeError('No se pudo solicitar el pago.');
+			}
+		});
+	}
+     
+	function subirDocumentoParaWindow2(){
+        Ext.Ajax.request({
+			url: _UrlGenerarTramiteSiniestro,
+			params: {
+	    		'params.pv_ntramite_i' : '1',
+	    		'params.pv_tipmov_i'   : '1'
+	    	},
+			success: function(response, opts) {
+				mcdinGrid.setLoading(false);
+				var respuesta = Ext.decode(response.responseText);
+				if(respuesta.success){
+					mensajeCorrecto('Aviso','El pago se ha solicitado con &eacute;xito.');	
+				}else {
+					mensajeError(respuesta.mensaje);
+				}
+				
+			},
+			failure: function(){
+				mcdinGrid.setLoading(false);
+				mensajeError('No se pudo solicitar el pago.');
+			}
+		});
+	}
 	
 	Ext.onReady(function(){
 		Ext.define('DetalleMC',{
@@ -1783,6 +2026,61 @@ var msgWindow;
 	            ,"usuario_fin"
 	        ]
 	    });
+		
+		Ext.define('modelListadoProvMedico',{
+			extend: 'Ext.data.Model',
+				fields: [
+						{type:'string',		name:'cdpresta'},	{type:'string', name:'nombre'},		{type:'string', name:'cdespeci'},
+						{type:'string',		name:'descesp'}
+			]
+		});
+	    var storeProveedor = Ext.create('Ext.data.Store', {
+	    	model:'modelListadoProvMedico',
+	    	autoLoad:false,
+	    	proxy: {
+	    		type: 'ajax',
+	    		url : _URL_CATALOGOS,
+	    		extraParams:{
+	    			catalogo         : _CATALOGO_PROVEEDORES,
+	    			catalogoGenerico : true
+	    		},
+	    		reader: {
+	    			type: 'json',
+	    			root: 'listaGenerica'
+	    		}
+	    	}
+	    });
+	    
+		var storeTipoLayout = Ext.create('Ext.data.JsonStore', {
+			model:'Generic',
+			proxy: {
+				type: 'ajax',
+				url: _URL_CATALOGOS,
+				extraParams : {catalogo:_CATALOGO_ConfLayout},
+				reader: {
+					type: 'json',
+					root: 'lista'
+				}
+			}
+		});
+		storeTipoLayout.load();
+	    
+		cmbProveedor = Ext.create('Ext.form.field.ComboBox', {
+			fieldLabel : 'Proveedor',			displayField : 'nombre',			name:'cmbProveedor',
+			valueField   : 'cdpresta',			forceSelection : true,
+			matchFieldWidth: false,				queryMode :'remote',				queryParam: 'params.cdpresta',
+			minChars  : 2,						store : storeProveedor,				triggerAction: 'all',
+			hideTrigger:true,					allowBlank:false
+			,labelWidth : 100
+            ,width      : 330
+		});
+		
+		tipoLayout= Ext.create('Ext.form.ComboBox',{
+			fieldLabel   : 'Layout',	allowBlank   : false,
+			editable   :false,			displayField : 'value',				valueField: 'key',			    		forceSelection  : true,
+			labelWidth : 100,			queryMode    :'local',				editable  :false,						name			:'tipoLayout',
+			width	   : 330,			store: storeTipoLayout,				emptyText:'Seleccione...'
+		});
 	});
 <s:if test="false">
 </script>

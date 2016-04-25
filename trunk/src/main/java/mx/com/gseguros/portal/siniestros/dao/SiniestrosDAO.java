@@ -518,15 +518,13 @@ public interface SiniestrosDAO {
 	
 	public String validaExisteConfiguracionProv(String cdpresta) throws Exception;
 	
-	public String validaExisteConfiguracionProv2() throws Exception;
-	
 	public List<Map<String, String>> obtieneConfiguracionLayoutProveedor(HashMap<String, Object> params) throws Exception;
 	
 	public List<GenericVO> obtieneListaContrareciboAutEsp(String cdramo, String ntramite) throws Exception;
 	
 	public List<GenericVO> obtieneListaFacturaTramite(String ntramite, String nfactura) throws Exception;
 
-	public List<Map<String, String>> procesaPagoAutomaticoSisco() throws Exception;
+	public List<Map<String, String>> procesaPagoAutomaticoSisco(HashMap<String, Object> params) throws Exception;
 	
 	public List<Map<String, String>> obtieneValidaconAranceleTramite(HashMap<String, Object> params) throws Exception;
 
@@ -541,4 +539,8 @@ public interface SiniestrosDAO {
 	public List<Map<String, String>> obtieneListadoFacturasxControntrol(HashMap<String, Object> datosTramite) throws Exception;
 	
 	public List<Map<String, String>> obtieneConfiguracionLayoutExcel(HashMap<String, Object> params) throws Exception;
+	
+	public List<Map<String, String>> procesaPagoAutomaticoLayout() throws Exception;
+	
+	public String existeRegistrosProcesarSISCO() throws Exception;
 }
