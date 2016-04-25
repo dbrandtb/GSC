@@ -2240,15 +2240,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	public String validaExisteConfiguracionProv2() throws Exception {
-		try {
-			return siniestrosDAO.validaExisteConfiguracionProv2();
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-	
-	@Override
 	public List<Map<String, String>> requiereConfiguracionLayoutProveedor(String cdpresta, String cveLayout) throws Exception {
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		params.put("pv_cdpresta_i", cdpresta);
@@ -2276,9 +2267,11 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 
 	@Override
-	public List<Map<String, String>> procesaPagoAutomaticoSisco() throws Exception {
-		// TODO Auto-generated method stub
-		return siniestrosDAO.procesaPagoAutomaticoSisco();
+	public List<Map<String, String>> procesaPagoAutomaticoSisco(String usuario, String tipoProceso) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdusuari_i", usuario);
+		params.put("pv_tipoproc_i", tipoProceso);
+		return siniestrosDAO.procesaPagoAutomaticoSisco(params);
 	}
 	
 	@Override
@@ -2343,5 +2336,17 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		params.put("pv_cveconfi_i", cveLayout);
 		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
 		return siniestrosDAO.obtieneConfiguracionLayoutExcel(params);
+	}
+	
+	@Override
+	public List<Map<String, String>> procesaPagoAutomaticoLayout() throws Exception {
+		// TODO Auto-generated method stub
+		return siniestrosDAO.procesaPagoAutomaticoLayout();
+	}
+	
+	@Override
+	public String existeRegistrosProcesarSISCO() throws Exception {
+		// TODO Auto-generated method stub
+		return siniestrosDAO.existeRegistrosProcesarSISCO();
 	}
 }

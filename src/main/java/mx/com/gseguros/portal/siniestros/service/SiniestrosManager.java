@@ -652,15 +652,13 @@ public interface SiniestrosManager {
 	
 	public String validaExisteConfiguracionProv(String cdpresta) throws Exception;
 	
-	public String validaExisteConfiguracionProv2() throws Exception;
-	
 	public List<Map<String, String>> requiereConfiguracionLayoutProveedor(String cdpresta, String cveLayout) throws Exception;
 	
 	public List<GenericVO> getConsultaListaContrareciboAutEsp(String cdramo, String ntramite) throws Exception;
 	
 	public List<GenericVO> getConsultaListaFacturaTramite(String ntramite, String nfactura) throws Exception;
 	
-	public List<Map<String, String>> procesaPagoAutomaticoSisco() throws Exception;
+	public List<Map<String, String>> procesaPagoAutomaticoSisco(String usuario, String tipoProceso) throws Exception;
 	
 	public List<Map<String, String>> getValidaArancelesTramitexProveedor(String ntramite) throws Exception;
 	
@@ -675,5 +673,9 @@ public interface SiniestrosManager {
 	public List<Map<String, String>> listadoFacturasxControl(String ntramite) throws Exception;
 	
 	public List<Map<String, String>> obtieneConfiguracionLayoutExcel(String cdpresta, String cveLayout, String campoExcel) throws Exception;
+	
+	public List<Map<String, String>> procesaPagoAutomaticoLayout() throws Exception;
+
+	public String existeRegistrosProcesarSISCO() throws Exception;
 	
 }
