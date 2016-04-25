@@ -559,31 +559,64 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 						,Documento.EXTERNO_CARATULA, null, null
 						);
 				
-				/**
-				 * Para Recibo 1
-				 */
-				parametros = "?9999,0,"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",0,0,,1";
-				logger.debug("URL Generada para Recibo 1: "+ urlRecibo + parametros);
-				mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlRecibo + parametros+"\">Recibo provisional de primas</a>";
 				
-				mesaControlDAO.guardarDocumento(
-						cdunieco
-						,cdramo
-						,"M"
-						,nmpolizaEmitida
-						,nmsuplemEmitida
-						,new Date()
-						,urlRecibo + parametros
-						,"Recibo 1"
-						,nmpoliza
-						,ntramite
-						,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
-						,Constantes.SI
-						,null
-						,"1"
-						,"0"
-						,Documento.RECIBO, null, null
-						);
+				/**
+				 * Para Recibos
+				 */
+				String visible = null;
+				HashMap<String,String> imprimir = new HashMap<String, String>(); 
+				
+				List<Map<String,String>> recibos = consultasPolizaDAO.obtieneRecibosPolizaAuto(cdunieco, cdramo, "M", nmpolizaEmitida, nmsuplemEmitida);
+				
+				if(recibos!= null && !recibos.isEmpty()){
+					for(Map<String,String> reciboIt : recibos){
+						
+						/**
+						 * Si el Recibo Tiene estatus 1 se guarda en tdocupol como documento de la poliza, excepto algunos endosos como el de forma de pago,
+						 * donde se generan recibos negativos para cancelar y esos no deben de guardarse, estos casos el estatus es distinto de 1
+						 */
+						if(!"1".equals(reciboIt.get("CDESTADO"))) continue;
+						
+						String llave = reciboIt.get("TIPEND") + reciboIt.get("NUMEND");
+						
+						if(!imprimir.containsKey(llave)){
+							visible = Constantes.SI;
+							imprimir.put(llave, reciboIt.get("NUMREC"));
+						}else{
+							visible = Constantes.NO;
+						}
+						
+						parametros = "?9999,0,"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",0,0,,"+reciboIt.get("NUMREC");
+						
+						logger.debug("URL Generada para Recibo "+reciboIt.get("NUMREC")+": "+ urlRecibo + parametros);
+						
+						if(Constantes.SI.equalsIgnoreCase(visible)){
+							mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlRecibo + parametros+"\">Recibo provisional de primas</a>";
+						}
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,"M"
+								,nmpolizaEmitida
+								,nmsuplemEmitida
+								,new Date()
+								,urlRecibo + parametros
+								,"Recibo "+reciboIt.get("NUMREC")
+								,nmpoliza
+								,ntramite
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								,visible
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.RECIBO
+								,null
+								,null
+								);
+					}
+				}
+				
 				
 				boolean imprimirCaic = false;
 				boolean imprimirAP = false;
