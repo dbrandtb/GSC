@@ -1,7 +1,8 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <script>
-	var _CONTEXT = '${ctx}';
+
+var _CONTEXT = '${ctx}';
 	var paramsEntrada          = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 	var guarda_Vigencia_Poliza = '<s:url namespace="/endosos" action=" guardarEndosoAmpliacionVigencia"       />';
 	
@@ -11,9 +12,11 @@
 		
 		Ext.Ajax.timeout = 1*60*60*1000; // 1 hora
 		
+		var myMask = new Ext.LoadMask('maindivAmpVig', {msg:"Cargando..."});
+		
 		var panelInicialPral = Ext.create('Ext.form.Panel', {
 		    title: 'Apliaci&oacute;n Vigencia',
-		    renderTo  : 'maindivHist',
+		    renderTo  : 'maindivAmpVig',
 		    bodyPadding: 5,
 		    defaultType: 'textfield',
 		    layout     :
@@ -58,6 +61,8 @@
 				,buttonAlign : 'center',
 				handler: function() {
 					var formPanel = this.up().up();
+					myMask.show();
+					
 					if (formPanel.form.isValid()) {
                         //1.- Verificamos la información de las fechas
 						
@@ -73,7 +78,7 @@
 	   						    url: guarda_Vigencia_Poliza,
 	   						    jsonData: Ext.encode(submitValues),
 	   						    success:function(response,opts){
-	   						    	 panelInicialPral.setLoading(false);
+	   						    	 myMask.hide();
 	   						         var jsonResp = Ext.decode(response.responseText);
 	   						         
 	   						         var callbackRemesa = function()
@@ -94,7 +99,7 @@
 	   						      	 });
 	   						    },
 	   						    failure:function(response,opts){
-	   						        panelInicialPral.setLoading(false);
+	   						        myMask.hide();
 	   						        Ext.Msg.show({
 	   						            title:'Error',
 	   						            msg: 'Error de comunicaci&oacute;n',
@@ -106,6 +111,8 @@
 						    
 						    
 						}else{
+							
+							myMask.hide();
 						    //Error
 							centrarVentanaInterna(Ext.Msg.show({
 		                        title:'Error',
@@ -115,6 +122,9 @@
 		                    }));
 						}
 					}else {
+						
+						myMask.hide();
+						
 						Ext.Msg.show({
 							title: 'Aviso',
 							msg: 'Complete la informaci&oacute;n requerida',
@@ -130,4 +140,4 @@
     });
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
-<div id="maindivHist" style="height:1000px;"></div>
+<div id="maindivAmpVig" style="height:1000px;"></div>

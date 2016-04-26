@@ -144,14 +144,18 @@ Ext.onReady(function()
 					                                            };
 					                                            mensajeCorrecto('Endoso generado','Endoso generado',function()
 					                                            {
-					                                                _generarRemesaClic(
-					                                                    true
-					                                                    ,_p43_smap1.CDUNIECO
-					                                                    ,_p43_smap1.CDRAMO
-					                                                    ,_p43_smap1.ESTADO
-					                                                    ,_p43_smap1.NMPOLIZA
-					                                                    ,callbackRemesa
-					                                                );
+					                                            	if(_p43_smap1.cdtipsup != '53'){
+																		_generarRemesaClic(
+						                                                    true
+						                                                    ,_p43_smap1.CDUNIECO
+						                                                    ,_p43_smap1.CDRAMO
+						                                                    ,_p43_smap1.ESTADO
+						                                                    ,_p43_smap1.NMPOLIZA
+						                                                    ,callbackRemesa
+						                                                );					                                            	
+					                                            	}else{
+					                                            		callbackRemesa();
+					                                            	}
 					                                            });
 					                                        }
 					                                        else

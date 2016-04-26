@@ -12,7 +12,7 @@
 		
 		Ext.Ajax.timeout = 1*60*60*1000; // 1 hora
 		
-		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando..."});
 		
 		var panelInicialPral = Ext.create('Ext.form.Panel', {
 		    title: 'Vigencia P&oacute;liza',
