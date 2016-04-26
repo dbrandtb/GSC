@@ -4241,7 +4241,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	}
 	
 	@Override
-	public List<Map<String,String>> recuperarConveniosPorPoliza(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza) throws Exception
+	public List<Map<String,String>> recuperarConveniosPorPoliza(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String cdcontra) throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -4251,6 +4251,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 				,"\n@@@@@@ cdtipsit=",cdtipsit
 				,"\n@@@@@@ estado=",estado
 				,"\n@@@@@@ nmpoliza=",nmpoliza
+				,"\n@@@@@@ cdcontra=",cdcontra
 				));	
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("pv_cdunieco_i" , cdunieco);
@@ -4258,12 +4259,8 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("pv_estado_i" , estado);
 		params.put("pv_nmpoliza_i" , nmpoliza);
 		params.put("pv_cdtipsit_i" , cdtipsit);
+		params.put("pv_cdperson_i" , cdcontra);
 		Map<String,Object>       procRes    = ejecutaSP(new RecuperarConveniosPorPoliza(getDataSource()),params);
-		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ regresa ",procRes.size()
-				,"\n@@@@@@"
-				));
 		List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -4287,6 +4284,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsit_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"CDUNIECO","DSRAMO","CDRAMO","CDTIPSIT","NMPOLIZA","CONTRATANTE","AGENTE","DIASGRAC","LEYENDA","CODIGO","STATUS"})));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

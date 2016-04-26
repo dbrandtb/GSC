@@ -131,4 +131,6 @@ public interface CatalogosDAO {
 	public List<GenericVO> obtieneCatalogoParentescoAutos() throws Exception;
 	
 	public List<GenericVO> recuperarListaConvenios() throws Exception;
+	
+	public List<GenericVO> recuperarContratantesSalud(String nombre) throws Exception;
 }

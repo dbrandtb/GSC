@@ -1685,4 +1685,15 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				);
 		return catalogosDAO.recuperarListaConvenios();
 	}
+	
+	@Override
+	public List<GenericVO> recuperaContratantesSalud(String nombre) throws Exception {
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ recuperaContratantesSalud @@@@@@")
+				.toString()
+				);
+		return catalogosDAO.recuperarContratantesSalud(nombre);
+	}
 }

@@ -1759,5 +1759,39 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+
+	public List<GenericVO> recuperarContratantesSalud(String nombre) throws Exception
+	{
+		logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+							   "\n@@@@@@ recuperaContratantesSalud @@@@@@",
+							   "\n@@@@@@ nombre ",nombre,"\n"));
+		HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
+		params.put("pv_cadena_i", nombre);
+		Map<String,Object>       procRes    = ejecutaSP(new RecuperarContratantesSalud(getDataSource()), params);
+		List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		logger.debug(Utils.log(listaMapas));
+		List<GenericVO>          lista      = new ArrayList<GenericVO>();
+		if(listaMapas!=null)
+		{
+			for(Map<String,String> mapa : listaMapas)
+			{
+				lista.add(new GenericVO(mapa.get("CDPERSON"),mapa.get("NOMBRE")));
+			}
+		}
+		return lista;
+	}
 	
+	protected class RecuperarContratantesSalud extends StoredProcedure
+	{
+		protected RecuperarContratantesSalud(DataSource dataSource)
+		{
+			super(dataSource,"Pkg_Consulta.P_GET_CONTRATANTES_SALUD");
+			declareParameter(new SqlParameter("pv_cadena_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"CDPERSON","NOMBRE"})));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
 }

@@ -846,6 +846,13 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = catalogosManager.obtieneCatalogoConvenios();
 					break;
+				case CATALOGO_CONTRATANES_SALUD:
+					if(params == null)
+					{
+						params = new HashMap<String,String>();
+					}
+					lista = catalogosManager.recuperaContratantesSalud(params.get("nombre"));
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;
