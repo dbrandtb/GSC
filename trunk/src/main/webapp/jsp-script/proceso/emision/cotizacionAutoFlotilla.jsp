@@ -1236,7 +1236,7 @@ Ext.onReady(function()
                                                                             
                                                                             debug('### descriptivo:',descripcion);
                                 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                                                                            if(descripcion.length>5)
+                                                                            if(!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv))
                                                                             { 	
                                                                             	mensajeWarning(descripcion);
                                                                             	if(msnIncInv != null)
@@ -1317,6 +1317,24 @@ Ext.onReady(function()
                                                         };
                                                         for(var i=0;i<len;i++)
                                                         {
+                                                            if(i==(len-1))
+                                                           	{
+                                                            	 if(!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv))
+                                                                 {   
+                                                                     if(msnIncInv != null && descripcion != null)
+                                                                     {
+                                                                         mensajeWarning(descripcion + msnIncInv);
+                                                                     }
+                                                                     else if(descripcion != null)
+                                                                     {
+                                                                         mensajeWarning(descripcion);
+                                                                     }
+                                                                     else if(msnIncInv != null)
+                                                                     {
+                                                                         mensajeWarning(msnIncInv);
+                                                                     }
+                                                                 }
+                                                           	}
                                                             recupera(i);
                                                         }
                                                     }
