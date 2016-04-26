@@ -16,11 +16,14 @@ import mx.com.gseguros.utils.Utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ConsultasManagerImpl implements ConsultasManager
 {
 	private static Logger logger = Logger.getLogger(ConsultasManagerImpl.class);
 	
+	@Autowired
 	private ConsultasDAO consultasDAO;
 	
 	@Autowired
@@ -381,11 +384,14 @@ public class ConsultasManagerImpl implements ConsultasManager
 		return codigo;
 	}
 	
-	///////////////////////////////
-	////// getters y setters //////
-	///////////////////////////////
-	public void setConsultasDAO(ConsultasDAO consultasDAO)
-	{
-		this.consultasDAO = consultasDAO;
+	@Override
+	public void modificaPermisosEdicionCoberturas(int cdramo, String cdtipsit, String cdplan, String cdgarant, String cdsisrol, String swmodifi, String accion) throws Exception{
+		consultasDAO.modificaPermisosEdicionCoberturas(cdramo, cdtipsit, cdplan, cdgarant, cdsisrol, swmodifi, accion);
 	}
+	
+	@Override
+	public List<Map<String,String>> consultaPermisosEdicionCoberturas(int cdramo, String cdtipsit, String cdplan, String cdgarant, String cdsisrol) throws Exception{
+		return	consultasDAO.consultaPermisosEdicionCoberturas(cdramo,cdtipsit,cdplan,cdgarant,cdsisrol);
+	}
+	
 }

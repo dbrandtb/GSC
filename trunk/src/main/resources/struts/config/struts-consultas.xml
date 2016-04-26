@@ -42,6 +42,14 @@
             </result>
         </action>
         
+        <action name="modificaPermisosEdicionCoberturas" class="consultasAction" method="modificaPermisosEdicionCoberturas">
+            <result type="json" />
+        </action>
+        
+        <action name="consultaPermisosEdicionCoberturas" class="consultasAction" method="consultaPermisosEdicionCoberturas">
+            <result type="json" />
+        </action>
+        
     </package>
 
 </struts>
