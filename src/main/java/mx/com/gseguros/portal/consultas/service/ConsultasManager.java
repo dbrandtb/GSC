@@ -129,4 +129,30 @@ public interface ConsultasManager
 	public Map<String,String> recuperarDatosFlujoEmision(String cdramo, String tipoflot) throws Exception;
 	
 	public String recuperarCodigoCustom(String cdpantalla, String cdsisrol) throws Exception;
+	
+	/**
+	 * Proceso para modificar los permisos de edicion de coberturas de acuerdo al producto y plan
+	 * @param cdramo
+	 * @param cdtipsit
+	 * @param cdplan
+	 * @param cdgarant
+	 * @param cdsisrol
+	 * @param swmodifi
+	 * @param accion
+	 * @throws Exception
+	 */
+	public void modificaPermisosEdicionCoberturas(int cdramo, String cdtipsit, String cdplan, String cdgarant, String cdsisrol, String swmodifi, String accion) throws Exception;
+
+	/**
+	 * Proceso para obtener los permisos de edicion de coberturas de acuerdo al producto y plan
+	 * @param cdramo
+	 * @param cdtipsit
+	 * @param cdplan
+	 * @param cdgarant
+	 * @param cdsisrol
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map<String,String>> consultaPermisosEdicionCoberturas(int cdramo, String cdtipsit, String cdplan, String cdgarant, String cdsisrol) throws Exception;
+	
 }

@@ -4501,4 +4501,81 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	
+	@Override
+    public void modificaPermisosEdicionCoberturas(int cdramo, String cdtipsit, String cdplan, String cdgarant, String cdsisrol, String swmodifi, String accion) throws Exception{
+        
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("PV_CDRAMO_I", cdramo);
+        params.put("PV_CDTIPSIT_I",  cdtipsit);
+        params.put("PV_CDPLAN_I",   cdplan);
+        params.put("PV_CDGARANT_I", cdgarant);
+        params.put("PV_CDSISROL_I",cdsisrol);
+        params.put("PV_SWMODIFI_I",swmodifi);
+        params.put("PV_ACCION_I",accion);
+        Map<String, Object> result = ejecutaSP(new ModificaPermisosEdicionCoberturasSP(getDataSource()), params);
+    }
+    
+    protected class ModificaPermisosEdicionCoberturasSP extends StoredProcedure {
+        protected ModificaPermisosEdicionCoberturasSP(DataSource dataSource) {
+            super(dataSource, "PKG_DESARROLLO.P_MOV_TRELROLCOB");
+            declareParameter(new SqlParameter("PV_CDRAMO_I", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("PV_CDTIPSIT_I", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("PV_CDPLAN_I", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("PV_CDGARANT_I", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("PV_CDSISROL_I",OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("PV_SWMODIFI_I",OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("PV_ACCION_I",OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public List<Map<String,String>> consultaPermisosEdicionCoberturas(int cdramo, String cdtipsit, String cdplan, String cdgarant, String cdsisrol) throws Exception {
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("PV_CDRAMO_I", cdramo);
+        params.put("PV_CDTIPSIT_I",  cdtipsit);
+        params.put("PV_CDPLAN_I",   cdplan);
+        params.put("PV_CDGARANT_I", cdgarant);
+        params.put("PV_CDSISROL_I",cdsisrol);
+        Map<String, Object> mapResult = ejecutaSP(new ConsultaPermisosEdicionCoberturasSP(getDataSource()), params);
+        logger.debug("res = "+ mapResult.get("pv_registro_o"));
+        return (List<Map<String,String>>) mapResult.get("pv_registro_o");
+    }
+
+	protected class ConsultaPermisosEdicionCoberturasSP extends StoredProcedure {
+    	protected ConsultaPermisosEdicionCoberturasSP(DataSource dataSource) {
+    		super(dataSource, "PKG_DESARROLLO.P_GET_TRELROLCOB");
+    		declareParameter(new SqlParameter("PV_CDRAMO_I", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("PV_CDTIPSIT_I", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("PV_CDPLAN_I", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("PV_CDGARANT_I", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("PV_CDSISROL_I",OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new PermisosEdicionCoberturasMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+    protected class PermisosEdicionCoberturasMapper  implements RowMapper<Map<String,String>> {
+    	public Map<String,String> mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		Map<String,String> consulta = new HashMap<String,String>();
+    		consulta.put("NMTABLA", rs.getString("NMTABLA"));
+    		consulta.put("PV_CDRAMO_I", rs.getString("OTCLAVE1"));
+    		consulta.put("PV_CDTIPSIT_I", rs.getString("OTCLAVE2"));
+    		consulta.put("PV_CDPLAN_I",   rs.getString("OTCLAVE3"));
+    		consulta.put("PV_CDGARANT_I", rs.getString("OTCLAVE4"));
+    		consulta.put("PV_CDSISROL_I",rs.getString("OTCLAVE5"));
+    		consulta.put("FEDESDE", rs.getString("FEDESDE"));
+    		consulta.put("FEHASTA", rs.getString("FEHASTA"));
+    		consulta.put("MODIFICABLE", rs.getString("OTVALOR01"));
+    		return consulta;
+    	}
+    }
+
 }

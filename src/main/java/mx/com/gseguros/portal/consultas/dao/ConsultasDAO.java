@@ -522,4 +522,32 @@ public interface ConsultasDAO
 	public void insertarCancelacionesConvenioPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String status, Date fecregis, String cdusureg, Date fecmodif, String cdusumod, String operacion) throws Exception;
 	
 	public List<Map<String,String>> recuperaCoberturasExtraprima(String cdramo, String cdtipsit) throws Exception;
+	
+	
+	/**
+	 * Proceso para modificar los permisos de edicion de coberturas de acuerdo al producto y plan
+	 * @param cdramo
+	 * @param cdtipsit
+	 * @param cdplan
+	 * @param cdgarant
+	 * @param cdsisrol
+	 * @param swmodifi
+	 * @param accion
+	 * @throws Exception
+	 */
+	public void modificaPermisosEdicionCoberturas(int cdramo, String cdtipsit, String cdplan, String cdgarant, String cdsisrol, String swmodifi, String accion) throws Exception;
+	
+	
+	/**
+	 * Proceso para obtener los permisos de edicion de coberturas de acuerdo al producto y plan
+	 * @param cdramo
+	 * @param cdtipsit
+	 * @param cdplan
+	 * @param cdgarant
+	 * @param cdsisrol
+	 * @return permisos de edicion
+	 * @throws Exception
+	 */
+	public List<Map<String,String>> consultaPermisosEdicionCoberturas(int cdramo, String cdtipsit, String cdplan, String cdgarant, String cdsisrol) throws Exception;
+	
 }

@@ -233,6 +233,56 @@ public class ConsultasAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	
+	public String modificaPermisosEdicionCoberturas()
+	{
+		int cdramo = Integer.parseInt(mapaStringEntrada.get("cdramo"));
+		logger.info(""
+				+ "\n###########################################"
+				+ "\n###### editaPermisosEdicionCobertura ######"
+				);
+		try
+		{
+			consultasManager.modificaPermisosEdicionCoberturas(cdramo,mapaStringEntrada.get("cdtipsit"),mapaStringEntrada.get("cdplan"),mapaStringEntrada.get("cdgarant"),mapaStringEntrada.get("cdsisrol"),mapaStringEntrada.get("swmodifi"),mapaStringEntrada.get("accion"));
+		}
+		catch(Exception ex)
+		{
+			success = false;
+			error = ex.getMessage();
+			logger.error("error al editar permisos",ex);
+		}
+		logger.info(""
+				+ "\n###### editaPermisosEdicionCobertura ######"
+				+ "\n###########################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String consultaPermisosEdicionCoberturas()
+	{
+		int cdramo = Integer.parseInt(mapaStringEntrada.get("cdramo"));
+		logger.info(""
+				+ "\n###############################################"
+				+ "\n###### consultaPermisosEdicionCoberturas ######"
+				);
+		try
+		{
+			listaMapasStringSalida = consultasManager.consultaPermisosEdicionCoberturas(cdramo,mapaStringEntrada.get("cdtipsit"),mapaStringEntrada.get("cdplan"),mapaStringEntrada.get("cdgarant"),mapaStringEntrada.get("cdsisrol"));
+			logger.debug("listaMapasStringSalida="+ listaMapasStringSalida);
+		}
+		catch(Exception ex)
+		{
+			success = false;
+			error = ex.getMessage();
+			logger.error("error al editar permisos",ex);
+		}
+		logger.info(""
+				+ "\n###### consultaPermisosEdicionCoberturas ######"
+				+ "\n###############################################"
+				);
+		return SUCCESS;
+	}
+	
 
 	///////////////////////////////
 	////// getters y setters //////
