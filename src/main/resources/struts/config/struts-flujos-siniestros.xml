@@ -1105,31 +1105,7 @@
 				</param>
 			</result>
 		</action>
-		
-       <action name="validaLayoutFormatoExcel" class="siniestrosAction" method="validaLayoutFormatoExcel">
-           <interceptor-ref name="json">
-               <param name="enableSMD">true</param>
-               <param name="ignoreSMDMethodInterfaces">false</param>
-           </interceptor-ref>
-           <result type="json" />
-       </action>
-       
-       <action name="validaLayoutConfiguracionExcel" class="siniestrosAction" method="validaLayoutConfiguracionExcel">
-           <interceptor-ref name="json">
-               <param name="enableSMD">true</param>
-               <param name="ignoreSMDMethodInterfaces">false</param>
-           </interceptor-ref>
-           <result type="json" />
-       </action>
-       
-       <action name="validaLayoutConfiguracionExcelAranxa" class="siniestrosAction" method="validaLayoutConfiguracionExcelAranxa">
-           <interceptor-ref name="json">
-               <param name="enableSMD">true</param>
-               <param name="ignoreSMDMethodInterfaces">false</param>
-           </interceptor-ref>
-           <result type="json" />
-       </action>
-       
+
 		<action name="consultaDatosConfiguracionProveedor" class="configuracionLayoutAction" method="consultaDatosConfiguracionProveedor">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
@@ -1167,6 +1143,25 @@
 			</result>
 		</action>
 		
+       <action name="subirLayoutGeneral" class="configuracionLayoutAction" method="subirLayoutGeneral">
+           <result type="json" />
+       </action>
+       
+       <action name="validaLayoutFormatoExcel" class="configuracionLayoutAction" method="validaLayoutFormatoExcel">
+           <interceptor-ref name="json">
+               <param name="enableSMD">true</param>
+               <param name="ignoreSMDMethodInterfaces">false</param>
+           </interceptor-ref>
+           <result type="json" />
+       </action>
+		
+       <action name="validaLayoutConfiguracionExcel" class="configuracionLayoutAction" method="validaLayoutConfiguracionExcel">
+           <interceptor-ref name="json">
+               <param name="enableSMD">true</param>
+               <param name="ignoreSMDMethodInterfaces">false</param>
+           </interceptor-ref>
+           <result type="json" />
+       </action>
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>

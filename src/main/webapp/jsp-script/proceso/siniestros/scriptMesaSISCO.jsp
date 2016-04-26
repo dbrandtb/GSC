@@ -62,10 +62,9 @@ var _UrlSolicitarPago           			= '<s:url namespace="/siniestros" 	action="so
 var _mesasin_url_lista_reasignacion 		= '<s:url namespace="/siniestros" 	action="obtenerUsuariosPorRol" />';
 var _URL_ACTUALIZA_TURNADOMC				= '<s:url namespace="/siniestros" 	action="actualizaTurnadoMesaControl" />';
 var _URL_EXISTE_CONF_PROV 					= '<s:url namespace="/siniestros"	action="validaExisteConfiguracionProv" />';
-var _URL_SubirLayout                    	= '<s:url namespace="/emision"      action="subirCenso"                       />';
+var _URL_SubirLayout                    	= '<s:url namespace="/siniestros"   action="subirLayoutGeneral" />';
 var _URL_ValidaLayoutFormatoExcel       	= '<s:url namespace="/siniestros"   action="validaLayoutFormatoExcel"   />';
 var _URL_ValidaLayoutConfigExcel        	= '<s:url namespace="/siniestros"   action="validaLayoutConfiguracionExcel"   />';
-var _URL_ValidaLayoutConfigExcel2        	= '<s:url namespace="/siniestros"   action="validaLayoutConfiguracionExcelAranxa"   />';
 var _UrlGenerarTramiteSiniestro          	= '<s:url namespace="/siniestros" 	action="generarTramiteSiniestro"             />';
 var _UrlProcesarTramiteSiniestro          	= '<s:url namespace="/siniestros" 	action="procesarTramiteSiniestroSISCO"       />';
 
