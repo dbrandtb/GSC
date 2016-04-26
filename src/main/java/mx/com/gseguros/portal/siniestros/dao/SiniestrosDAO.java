@@ -516,7 +516,7 @@ public interface SiniestrosDAO {
 	
 	public List<Map<String, String>> obtieneListaExisteCoberturaTramite(HashMap<String, Object> params) throws Exception;
 	
-	public String validaExisteConfiguracionProv(String cdpresta) throws Exception;
+	public String validaExisteConfiguracionProv(String cdpresta,String tipoLayout) throws Exception;
 	
 	public List<Map<String, String>> obtieneConfiguracionLayoutProveedor(HashMap<String, Object> params) throws Exception;
 	
@@ -540,7 +540,7 @@ public interface SiniestrosDAO {
 	
 	public List<Map<String, String>> obtieneConfiguracionLayoutExcel(HashMap<String, Object> params) throws Exception;
 	
-	public List<Map<String, String>> procesaPagoAutomaticoLayout() throws Exception;
+	public List<Map<String, String>> procesaPagoAutomaticoLayout(HashMap<String, Object> params) throws Exception;
 	
 	public String existeRegistrosProcesarSISCO() throws Exception;
 }

@@ -50,9 +50,6 @@ import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 public class ConfiguracionLayoutAction extends PrincipalCoreAction {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1637743812712245272L;
 	static final Logger logger = LoggerFactory.getLogger(ConfiguracionLayoutAction.class);
 	private DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
@@ -84,8 +81,11 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
     private String fileNameError;
     private String censoFileName;
 	private String censoContentType;
-    
-    @Autowired
+	private List<Map<String,String>> slist1;
+	private String mensaje;
+	private String validacionGeneral;
+	
+	@Autowired
 	private ValidadorFormatoContext validadorFormatoContext;
     
 	@Autowired
@@ -153,6 +153,19 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 			}
 		}catch( Exception e){
 			logger.error("Error en el guardado de alta de tramite : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	public String validaExisteConfiguracionProv(){
+		logger.debug("Entra a validaAutorizacionEspecial  Params: {}", params);
+		try {
+			validacionGeneral = siniestrosManager.validaExisteConfiguracionProv(params.get("cdpresta"), params.get("tipoLayout"));
+			logger.debug("validacionGeneral : {}", validacionGeneral);
+		}catch( Exception e){
+			logger.error("Error validaAutorizacionEspecial : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
 		success = true;
@@ -612,7 +625,9 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 							{
 								try
 								{
+									logger.debug("Entra a la opcion del guardado ===> ");
 									cotizacionManager.guardarLayoutGenerico(nombreLayout);
+									logger.debug("<=== Sale a la opcion del guardado");
 								}
 								catch(Exception ex)
 								{
@@ -631,7 +646,9 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 			
 			if(exito)
 			{
-				respuesta       = "Se han complementado los asegurados";
+				respuesta       = "Se ha complementado el guardado del layout";
+				success = true;
+				exito   = true;
 				respuestaOculta = "Todo OK";
 			}
 		} catch (Exception e) {
@@ -659,17 +676,6 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 			return "";
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/////////////////////////////////////////////////////7
 	public Map<String, String> getSmap1() {
@@ -801,5 +807,29 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 
 	public void setDatosInformacionAdicional(List<Map<String, String>> datosInformacionAdicional) {
 		this.datosInformacionAdicional = datosInformacionAdicional;
+	}
+	
+    public List<Map<String, String>> getSlist1() {
+		return slist1;
+	}
+
+	public void setSlist1(List<Map<String, String>> slist1) {
+		this.slist1 = slist1;
+	}
+	
+	public String getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
+	}
+	
+	public String getValidacionGeneral() {
+		return validacionGeneral;
+	}
+
+	public void setValidacionGeneral(String validacionGeneral) {
+		this.validacionGeneral = validacionGeneral;
 	}
 }
