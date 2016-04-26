@@ -12,7 +12,7 @@ public interface ConveniosManager {
 
 	public void guardarEnBase(String cdunieco, String cdramo, String estado, String cdtipsit, String nmpoliza, String diasgrac, String cdconven, String status, Date fecregis, String cdusureg, Date fecmodif, String cdusumod, String operacion) throws Exception;
 	
-	public List<Map<String, String>> buscarPoliza(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza) throws Exception;
+	public List<Map<String, String>> buscarPoliza(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String cdcontra) throws Exception;
 	
 	public Map<String,Item> recuperarCancelacionesElementosPantalla() throws Exception;
 

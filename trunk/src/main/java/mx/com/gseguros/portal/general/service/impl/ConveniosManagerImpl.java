@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;;
 
 @Service
-public class ConsultaConveniosManagerImpl implements ConveniosManager{
+public class ConveniosManagerImpl implements ConveniosManager{
 	
 	private Logger logger = LoggerFactory.getLogger(JaimeErickManagerImpl.class);
 	
@@ -134,14 +134,14 @@ public class ConsultaConveniosManagerImpl implements ConveniosManager{
 	}
 
 	@Override
-	public List<Map<String, String>> buscarPoliza(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza) throws Exception {
+	public List<Map<String, String>> buscarPoliza(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String cdcontra) throws Exception {
 		String paso = null;
 		List<Map<String, String>> infoGrid = null;
 		try
 		{
 			paso = "Antes de buscar poliza";
 		
-			infoGrid = consultasDAO.recuperarConveniosPorPoliza(cdunieco, cdramo, cdtipsit, estado, nmpoliza);
+			infoGrid = consultasDAO.recuperarConveniosPorPoliza(cdunieco, cdramo, cdtipsit, estado, nmpoliza, cdcontra);
 			
 			paso = "Despues de buscar poliza";
 		}

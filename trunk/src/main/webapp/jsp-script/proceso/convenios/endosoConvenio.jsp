@@ -168,6 +168,7 @@ win = Ext.create('Ext.window.Window',
                                     ,'params.cdtipsit'   : values.cdtipsit
                                     ,'params.estado' 	 : values.estatus
                                     ,'params.nmpoliza' 	 : values.nmpoliza
+                                    ,'params.cdperson' 	 : values.cdperson
                                 }
                                 ,success : function(response)
                                 {

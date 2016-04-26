@@ -980,7 +980,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 						mensajeRes = "";
 					}
 					if(null != swconvenio && swconvenio.toUpperCase().equals("S")){
-						loadList = conveniosManager.buscarPoliza(cdunieco, cdramo, null, estado, nmpoliza);
+						loadList = conveniosManager.buscarPoliza(cdunieco, cdramo, null, estado, nmpoliza, null);
 						if (loadList.size() > 0) {
 							mensajeConv = loadList.get(0).get("LEYENDA");
 						}

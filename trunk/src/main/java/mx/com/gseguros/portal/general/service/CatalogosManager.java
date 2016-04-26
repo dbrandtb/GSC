@@ -199,4 +199,6 @@ public interface CatalogosManager {
     public List<GenericVO> recuperarClientesPorNombreApellido(String cadena) throws Exception;
     
     public List<GenericVO> obtieneCatalogoConvenios() throws Exception;
+    
+    public List<GenericVO> recuperaContratantesSalud(String nombre) throws Exception;
 }

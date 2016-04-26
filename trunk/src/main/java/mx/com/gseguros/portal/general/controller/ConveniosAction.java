@@ -27,9 +27,9 @@ import mx.com.gseguros.utils.Utils;
 @Scope("prototype")
 @ParentPackage(value="default")
 @Namespace("/convenios")
-public class ConsultaConveniosAction extends PrincipalCoreAction{
+public class ConveniosAction extends PrincipalCoreAction{
 	
-	private Logger logger = LoggerFactory.getLogger(ConsultaConveniosAction.class);
+	private Logger logger = LoggerFactory.getLogger(ConveniosAction.class);
 	
 	private boolean success;
 	
@@ -200,7 +200,8 @@ public class ConsultaConveniosAction extends PrincipalCoreAction{
 			String cdtipsit  = params.get("cdtipsit");
 			String estado  = params.get("estado");
 			String nmpoliza = params.get("nmpoliza");
-			list = conveniosManager.buscarPoliza(cdunieco, cdramo, cdtipsit, estado, nmpoliza);
+			String cdcontra = params.get("cdperson");
+			list = conveniosManager.buscarPoliza(cdunieco, cdramo, cdtipsit, estado, nmpoliza, cdcontra);
 			success = true;
 		}
 		catch(Exception ex)

@@ -513,7 +513,7 @@ public interface ConsultasDAO
 
 	public List<Map<String,String>> recuperarClientesPorNombreApellido(String cadena) throws Exception;
 	
-	public List<Map<String, String>> recuperarConveniosPorPoliza(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza) throws Exception;
+	public List<Map<String, String>> recuperarConveniosPorPoliza(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String cdcontra) throws Exception;
 
 	public List<Map<String, String>> recuperarCancelacionesConveniosPorPoliza(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza) throws Exception;
 	
