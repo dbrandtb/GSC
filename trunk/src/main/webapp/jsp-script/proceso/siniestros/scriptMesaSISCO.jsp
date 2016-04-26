@@ -61,12 +61,14 @@ var _URL_CONCEPTODESTINO        			= '<s:url namespace="/siniestros"   action="g
 var _UrlSolicitarPago           			= '<s:url namespace="/siniestros" 	action="solicitarPago"             />';
 var _mesasin_url_lista_reasignacion 		= '<s:url namespace="/siniestros" 	action="obtenerUsuariosPorRol" />';
 var _URL_ACTUALIZA_TURNADOMC				= '<s:url namespace="/siniestros" 	action="actualizaTurnadoMesaControl" />';
-var _URL_EXISTE_CONF_PROV 					= '<s:url namespace="/siniestros"	action="validaExisteConfiguracionProv" />';
+var _UrlProcesarTramiteLayout            	= '<s:url namespace="/siniestros" 	action="procesarTramiteLayout"       />';
+var _UrlProcesarTramiteSiniestro          	= '<s:url namespace="/siniestros" 	action="procesarTramiteSiniestroSISCO"       />';
+
+
 var _URL_SubirLayout                    	= '<s:url namespace="/siniestros"   action="subirLayoutGeneral" />';
+var _URL_EXISTE_CONF_PROV 					= '<s:url namespace="/siniestros"	action="validaExisteConfiguracionProv" />';
 var _URL_ValidaLayoutFormatoExcel       	= '<s:url namespace="/siniestros"   action="validaLayoutFormatoExcel"   />';
 var _URL_ValidaLayoutConfigExcel        	= '<s:url namespace="/siniestros"   action="validaLayoutConfiguracionExcel"   />';
-var _UrlGenerarTramiteSiniestro          	= '<s:url namespace="/siniestros" 	action="generarTramiteSiniestro"             />';
-var _UrlProcesarTramiteSiniestro          	= '<s:url namespace="/siniestros" 	action="procesarTramiteSiniestroSISCO"       />';
 
 
 
@@ -1839,7 +1841,8 @@ var msgWindow;
                 	Ext.Ajax.request({
             			url     : _URL_EXISTE_CONF_PROV
             			,params:{
-            				'params.cdpresta': cdprestador
+            				'params.cdpresta'  : cdprestador,
+            				'params.tipoLayout': layoutConf
             			}
             			,success : function (response){
             				debug("Respuesta de configuracion ==> ",Ext.decode(response.responseText).validacionGeneral);
@@ -1873,17 +1876,54 @@ var msgWindow;
 														,olist1 : grupos
 													}
 													,success  : function(response) {
-														form.setLoading(false);
 														var json=Ext.decode(response.responseText);
 														debug('### subir censo completo response:',json);
 														if(json.exito){
-															form.setLoading(false); 
-															//Realizamos el llamado al procedure de la validacion del
-															alert("Entra");
+															//Realizamos el llamado para procesar los registros y nos respondera con los numero de tramites generados
+													        Ext.Ajax.request({
+																url: _UrlProcesarTramiteLayout,
+																params:{
+										            				'params.cdpresta'    : cdprestador,
+										            				'params.tipoproc'    : layoutConf,
+										            				'params.layoutConf'  : timestamp
+										            			},
+																success: function(response, opts) {
+																	var respuesta = Ext.decode(response.responseText);
+																	debug("Valor de la respuesta ===> ",respuesta);
+																	form.setLoading(false); 
+																	if(respuesta.success){
+																		form.setLoading(false);
+																		centrarVentanaInterna(Ext.Msg.show({
+																			title:'eeacute;xito',
+																			msg: respuesta.mensaje,
+																			buttons: Ext.Msg.OK,
+																			fn: function(){
+																				Ext.create('Ext.form.Panel').submit({
+																					url				: _URL_MESACONTROL
+																					,standardSubmit	:true
+																					,params			:
+																					{
+																						'smap1.gridTitle'		: 'Siniestros'
+																						,'smap2.pv_cdtiptra_i'	: _PAGO_AUTOMATICO
+																					}
+																				});
+																			}
+																		}));
+																	}else {
+																		form.setLoading(false);
+																		centrarVentanaInterna(mensajeWarning(respuesta.mensaje));
+																	}
+																	
+																},
+																failure: function(){
+																	mcdinGrid.setLoading(false);
+																	mensajeError('No se pudo solicitar el pago.');
+																}
+															});
 														 }
 														 else{
 															form.setLoading(false);
-															centrarVentanaInterna(mensajeWarning('El archivo contiene errores de Formato.<br/>Favor de validarlo.',function(){
+															centrarVentanaInterna(mensajeWarning('El archivo contiene errores de Datos.<br/>Favor de validarlo.',function(){
 																centrarVentanaInterna(Ext.create('Ext.window.Window', {
 																	modal  : true
 																	,title : 'Error'
@@ -1982,31 +2022,7 @@ var msgWindow;
 			}
 		});
 	}
-     
-	function subirDocumentoParaWindow2(){
-        Ext.Ajax.request({
-			url: _UrlGenerarTramiteSiniestro,
-			params: {
-	    		'params.pv_ntramite_i' : '1',
-	    		'params.pv_tipmov_i'   : '1'
-	    	},
-			success: function(response, opts) {
-				mcdinGrid.setLoading(false);
-				var respuesta = Ext.decode(response.responseText);
-				if(respuesta.success){
-					mensajeCorrecto('Aviso','El pago se ha solicitado con &eacute;xito.');	
-				}else {
-					mensajeError(respuesta.mensaje);
-				}
-				
-			},
-			failure: function(){
-				mcdinGrid.setLoading(false);
-				mensajeError('No se pudo solicitar el pago.');
-			}
-		});
-	}
-	
+
 	Ext.onReady(function(){
 		Ext.define('DetalleMC',{
 	        extend:'Ext.data.Model',

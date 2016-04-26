@@ -1028,7 +1028,7 @@
 			</result>
 		</action>
 		
-		<action name="validaExisteConfiguracionProv" class="siniestrosAction" method="validaExisteConfiguracionProv">
+		<action name="validaExisteConfiguracionProv" class="configuracionLayoutAction" method="validaExisteConfiguracionProv">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
@@ -1162,6 +1162,16 @@
            </interceptor-ref>
            <result type="json" />
        </action>
+       
+		<action name="procesarTramiteLayout" class="siniestrosAction" method="procesarTramiteLayout">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					mensaje
+				</param>
+			</result>
+		</action>
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>

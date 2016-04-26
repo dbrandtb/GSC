@@ -2231,9 +2231,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	public String validaExisteConfiguracionProv(String cdpresta) throws Exception {
+	public String validaExisteConfiguracionProv(String cdpresta, String tipoLayout) throws Exception {
 		try {
-			return siniestrosDAO.validaExisteConfiguracionProv(cdpresta);
+			return siniestrosDAO.validaExisteConfiguracionProv(cdpresta, tipoLayout);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
@@ -2339,9 +2339,17 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	public List<Map<String, String>> procesaPagoAutomaticoLayout() throws Exception {
-		// TODO Auto-generated method stub
-		return siniestrosDAO.procesaPagoAutomaticoLayout();
+	//cdpresta, nmconsult, tipoproc, usuario.getUser()
+	
+	public List<Map<String, String>> procesaPagoAutomaticoLayout(String cdpresta, String nmconsult,
+			String tipoproc, String usuario) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdpresta_i", cdpresta);
+		params.put("pv_nmconsult_i", nmconsult);
+		params.put("pv_cdusuari_i", usuario);
+		params.put("pv_tipoproc_i", tipoproc);
+		log.debug("procesaPagoAutomaticoLayout params: "+params);
+		return siniestrosDAO.procesaPagoAutomaticoLayout(params);
 	}
 	
 	@Override

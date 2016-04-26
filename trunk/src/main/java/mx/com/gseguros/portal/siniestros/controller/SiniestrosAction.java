@@ -5325,19 +5325,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
-	public String validaExisteConfiguracionProv(){
-		logger.debug("Entra a validaAutorizacionEspecial  Params: {}", params);
-		try {
-			validacionGeneral = siniestrosManager.validaExisteConfiguracionProv(params.get("cdpresta"));
-			logger.debug("validacionGeneral : {}", validacionGeneral);
-		}catch( Exception e){
-			logger.error("Error validaAutorizacionEspecial : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;
-	}
-	
     public String actualizarMultiSiniestro()
     {
     	this.session = ActionContext.getContext().getSession();
@@ -5689,21 +5676,35 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 		
-	public String generarTramiteSiniestro(){
-		logger.debug("Entra a generarTramiteSiniestro Datos de Entrada :{}",params);
+	public String procesarTramiteLayout(){
+		logger.debug("Entra a procesarTramiteLayout Datos de Entrada :{}",params);
+		success = true;
 		try {
-			slist1 = siniestrosManager.procesaPagoAutomaticoLayout();
+			String cdpresta =params.get("cdpresta");
+			String nmconsult = params.get("layoutConf");
+			String tipoproc=params.get("tipoproc");
+			UserVO usuario=(UserVO)session.get("USUARIO");
+			
+			logger.debug("cdpresta: {} nmconsult:{} tipoproc:{} usuario:{}",cdpresta,nmconsult,tipoproc,usuario.getUser());
+			slist1 = siniestrosManager.procesaPagoAutomaticoLayout(cdpresta, nmconsult, tipoproc, usuario.getUser());
 			logger.debug("VALORES DE RESPUESTA =>>>>>>>>>>>>>>>>>>"+slist1);
+			String mensajeM = "Se generaron los siguientes tr&aacute;mite : ";
 			for(int i=0;i<slist1.size();i++){
-				//SiniestrosAction mca = new SiniestrosAction();
+				if(i<slist1.size()-1){
+					mensajeM = mensajeM + slist1.get(i).get("NTRAMITE")+",";
+				}else{
+					mensajeM = mensajeM + slist1.get(i).get("NTRAMITE");
+				}
 				HashMap<String,String> params = new HashMap<String, String>();
 				params.put("ntramite",slist1.get(i).get("NTRAMITE"));
-				this.smap2 = params;
+				this.params = params;
+				//generarCalculoSiniestros();
 			}
+			mensaje = mensajeM;
 		}catch( Exception e){
-			logger.error("Error en generarTramiteSiniestro generacion de cartas finiquito : {}", e.getMessage(), e);
+			logger.error("Error en procesarTramiteLayout : {}", e.getMessage(), e);
 			success =  false;
-			mensaje = "Error al solicitar Pago, generaci&oacute;n de cartas finiquito. Consulte a Soporte T&eacute;cnico.";
+			mensaje = "Error al procesar el tr&aacute;mite al momento de procesar.";
 			return SUCCESS;
 		}
 		return SUCCESS;

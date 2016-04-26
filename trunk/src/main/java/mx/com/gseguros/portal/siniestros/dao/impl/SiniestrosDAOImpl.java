@@ -5124,9 +5124,10 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 	
 	@Override
-	public String validaExisteConfiguracionProv(String cdpresta) throws Exception {
+	public String validaExisteConfiguracionProv(String cdpresta, String tipoLayout) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdpresta_i", cdpresta);
+		params.put("pv_tiplayout_i", tipoLayout);
 		Map<String, Object> resultado = ejecutaSP(new ValidaExisteConfiguracionProv(getDataSource()), params);
 		logger.debug( resultado.get("pv_existe_o"));
 		return (String) resultado.get("pv_existe_o");
@@ -5137,6 +5138,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     	protected ValidaExisteConfiguracionProv(DataSource dataSource) {
     		super(dataSource, "PKG_SINIESTRO.P_VALIDA_CONF_PROV");
     		declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_tiplayout_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_existe_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -5393,8 +5395,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
     
 	@Override
-	public List<Map<String, String>> procesaPagoAutomaticoLayout() throws Exception {
-		Map<String, Object> params = new HashMap<String, Object>();
+	public List<Map<String, String>> procesaPagoAutomaticoLayout(HashMap<String, Object> params) throws Exception {
 		Map<String, Object> result = ejecutaSP(new ProcesaPagoAutomaticoLayout(this.getDataSource()), params);
 		return (List<Map<String,String>>)result.get("pv_registro_o");
 	}
@@ -5406,13 +5407,17 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			String[] cols = new String[]{
 					"NTRAMITE"
 			};
+			declareParameter(new SqlParameter("pv_cdpresta_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmconsult_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdusuari_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipoproc_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
-	
+    
 	@Override
 	public String existeRegistrosProcesarSISCO() throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();

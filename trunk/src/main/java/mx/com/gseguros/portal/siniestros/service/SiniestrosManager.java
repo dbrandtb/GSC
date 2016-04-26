@@ -650,7 +650,7 @@ public interface SiniestrosManager {
 	
 	public List<Map<String, String>> getConsultaExisteCoberturaTramite(String ntramite, String tipoPago)throws Exception;
 	
-	public String validaExisteConfiguracionProv(String cdpresta) throws Exception;
+	public String validaExisteConfiguracionProv(String cdpresta, String tipoLayout) throws Exception;
 	
 	public List<Map<String, String>> requiereConfiguracionLayoutProveedor(String cdpresta, String cveLayout) throws Exception;
 	
@@ -674,7 +674,7 @@ public interface SiniestrosManager {
 	
 	public List<Map<String, String>> obtieneConfiguracionLayoutExcel(String cdpresta, String cveLayout, String campoExcel) throws Exception;
 	
-	public List<Map<String, String>> procesaPagoAutomaticoLayout() throws Exception;
+	public List<Map<String, String>> procesaPagoAutomaticoLayout(String cdpresta, String nmconsult, String tipoproc, String usuario) throws Exception;
 
 	public String existeRegistrosProcesarSISCO() throws Exception;
 	
