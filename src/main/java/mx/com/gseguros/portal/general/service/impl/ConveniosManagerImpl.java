@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;;
 @Service
 public class ConveniosManagerImpl implements ConveniosManager{
 	
-	private Logger logger = LoggerFactory.getLogger(JaimeErickManagerImpl.class);
+	private Logger logger = LoggerFactory.getLogger(ConveniosManagerImpl.class);
 	
 	@Autowired
 	private PantallasDAO pantallasDAO;
