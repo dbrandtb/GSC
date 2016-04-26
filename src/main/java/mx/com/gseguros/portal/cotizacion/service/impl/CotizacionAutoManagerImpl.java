@@ -2945,14 +2945,19 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			int largo = incisosinvalidos.length();
 			incisosinvalidos =incisosinvalidos.substring(0,(largo-2));
 			noKey= AF+AFL+PU+PUL+MO+TC+RQ;
-			if(!incisosinvalidos.isEmpty())
+			if(!incisosinvalidos.isEmpty() && !noKey.isEmpty())
 			{
-				incisosinvalidos="No se agregarón los inciso(s) con clave"+ incisosinvalidos;
+				incisosinvalidos="No se agregarón los inciso(s) con clave"+ incisosinvalidos+"<br>Y los tipos:"+ noKey +"<br>por no corresponder al negocio seleccionado.";
+				logger.debug(Utils.log(incisosinvalidos));
+			}
+			else if(!incisosinvalidos.isEmpty())
+			{
+				incisosinvalidos="No se agregarón los inciso(s) con clave"+ incisosinvalidos+"<br>por no corresponder al negocio seleccionado.";
 				logger.debug(Utils.log("Incisos Invalidos: ",incisosinvalidos," \nLista de Maps: ",slistPYME));
 			}
-			if(!noKey.isEmpty())
+			else if(!noKey.isEmpty())
 			{
-				incisosinvalidos= incisosinvalidos+"<br>Y los tipos:"+ noKey +"<br>por no corresponder al negocio seleccionado.";
+				incisosinvalidos= "No se agregarón los inciso(s) tipo:"+ noKey +"<br>por no corresponder al negocio seleccionado.";
 			}			
 			Map<String, String> removidos= new HashMap<String, String>();
 			if(!incisosinvalidos.isEmpty())
