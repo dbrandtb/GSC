@@ -1112,235 +1112,242 @@ Ext.onReady(function()
                                                     
                                                     if(Ext.isEmpty(json.slist1))
                                                     {
-                                                    	mensajeWarning(msnIncInv);	
-                                                    }
-                                                    
-                                                    for(var i in json.slist1)
-                                                    {
-                                                        var record=new _p30_modelo(json.slist1[i]);
-                                                        mrecords.push(record);
-                                                        debug('record.data:',record.data);
-                                                    }
-                                                    
-                                                    _p30_store.removeAll();
-                                                    _p30_numerarIncisos(mrecords);
-                                                    
-                                                    if(_p30_smap1.cdramo+'x'=='5x')
-                                                    {
-                                                        //recuperar
-                                                        var len = json.slist1.length;
-                                                        panelpri.setLoading(true);
-                                                        var errores    = [];
-                                                        var procesados = 0;
-                                                        var recupera = function(i)
-                                                        {
-                                                            var record       = mrecords[i];
-                                                            var cdtipsit     = record.get('cdtipsit');
-                                                            debug('recuperar:',record.data);
-                                                            if(cdtipsit+'x'=='ARx'
-                                                                ||cdtipsit+'x'=='CRx'
-                                                                ||cdtipsit+'x'=='PCx'
-                                                                ||cdtipsit+'x'=='PPx'
-                                                            )
-                                                            {
-                                                                var form         = _fieldById('_p30_tatrisitAutoForm'+cdtipsit);
-                                                                var claveCmp     = form.down('[fieldLabel*=CLAVE]');
-                                                                var claveName    = claveCmp.name;
-                                                                var marcaName    = form.down('[fieldLabel=MARCA]').name;
-                                                                var submarcaName = form.down('[fieldLabel=SUBMARCA]').name;
-                                                                var modeloName   = form.down('[fieldLabel=MODELO]').name;
-                                                                var versionName  = form.down('[fieldLabel*=VERSI]').name;
-                                                                
-                                                                var llaveAuto = '@'+record.get(claveName)+','+record.get(modeloName);
-                                                                debug('llaveAuto a recuperar:',llaveAuto);
-                                                                
-                                                                if(Ext.isEmpty(_p30_bufferAutos[llaveAuto]))
-                                                                {
-                                                                    debug('llaveAuto en base de datos');
-                                                                    var params = claveCmp.getStore().proxy.extraParams;
-                                                                    params['params.cadena']       = llaveAuto;
-                                                                    params['params.cdtipsit']     = cdtipsit;
-                                                                    params['params.indice']       = i-0;
-                                                                    params['params.claveName']    = claveName;
-                                                                    params['params.marcaName']    = marcaName;
-                                                                    params['params.submarcaName'] = submarcaName;
-                                                                    params['params.modeloName']   = modeloName;
-                                                                    params['params.versionName']  = versionName;
-                                                                    Ext.Ajax.request(
-                                                                    {
-                                                                        url      : claveCmp.getStore().proxy.url
-                                                                        ,params  : params
-                                                                        ,success : function(response)
-                                                                        {
-                                                                            var json = Ext.decode(response.responseText);
-                                                                            var indice = json.params.indice-0;
-                                                                            debug('### recuperar:',indice,json);
-                                                                            var record = mrecords[indice];
-                                                                            if(json.success==true&&json.lista.length>0)
-                                                                            {
-                                                                                var indiceRecuperado = -1;
-                                                                                for(var j in json.lista)
-                                                                                {
-                                                                                    var jsplit = json.lista[j].value.split(' - ');
-                                                                                    if(jsplit[0]==record.get(json.params.claveName)
-                                                                                        &&jsplit[3]==record.get(json.params.modeloName)
-                                                                                    )
-                                                                                    {
-                                                                                        indiceRecuperado = j-0;
-                                                                                        break;
-                                                                                    }
-                                                                                }
-                                                                                if(indiceRecuperado!=-1)
-                                                                                {
-                                                                                    var encontrado = new Generic(json.lista[indiceRecuperado]);
-                                                                                    var splited    = encontrado.get('value').split(' - ');
-
-                                                                                    var marcaTemp = _p30_storeMarcasRamo5.find('value' , splited[1],0,false,false,true);
-                                                                                    var submarcaTemp = _p30_storeSubmarcasRamo5.find('aux'   , splited[1]+'@'+splited[2],0,false,false,true);
-                                                                                    var versionTemp = _p30_storeVersionesRamo5.find('value' , splited[4],0,false,false,true);
-                                                                                    if(marcaTemp != -1 && submarcaTemp != 1 && versionTemp != -1)
-                                                                                    {
-		                                                                                  var marca     = _p30_storeMarcasRamo5.getAt(marcaTemp).get('key');
-		                                                                                  var submarca  = _p30_storeSubmarcasRamo5.getAt(submarcaTemp).get('key');
-		                                                                                  var version   = _p30_storeVersionesRamo5.getAt(versionTemp).get('key');
-		                                                                                  record.set(json.params.marcaName    , marca);
-		                                                                                  record.set(json.params.submarcaName , submarca);
-		                                                                                  record.set(json.params.versionName  , version);
-		                                                                                  
-		                                                                                  if('x'+record.get('cdtipsit')=='xCR')
-		                                                                                  {
-		                                                                                      var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
-		                                                                                      record.set(tipoVehiName,json.lista[j].aux);
-		                                                                                      //alert(record.get(tipoVehiName));
-		                                                                                  }
-		                                                                                  _p30_bufferAutos[llaveAuto]=encontrado;
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                    	var inc = (Number(json.params.indice)+1)+'';
-                                                                                    	if (marcaTemp == -1)         {var texto ='Favor de Introducir manualmente la descripcion de marca del inciso '+(inc.toString())+"<br/>";}
-                                                                                    	else if (submarcaTemp == -1) {var texto ='Favor de Introducir manualmente la submarca del inciso '+(inc.toString())+"<br/>";}
-                                                                                    	else if (versionTemp == -1)  {var texto ='Favor de Introducir manualmente la version del inciso '+(inc.toString())+"<br/>";}
-                                                                                    	descripcion = texto + descripcion; debug('### texto descriptivo:',descripcion);
-                                                                                    }
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    errores.push('No se pudo encontrar el auto '+record.get(json.params.claveName)+' en modelo '+record.get(json.params.modeloName)+' (inciso '+record.get('nmsituac')+')');
-                                                                                }
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                errores.push('No se pudo recuperar el auto '+record.get(json.params.claveName)+' en modelo '+record.get(json.params.modeloName)+' (inciso '+record.get('nmsituac')+')');
-                                                                            }
-                                                                            
-                                                                            debug('### descriptivo:',descripcion);
-                                //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                                                                            if(!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv))
-                                                                            { 	
-                                                                            	mensajeWarning(descripcion);
-                                                                            	if(msnIncInv != null)
-                                                                            	{
-                                                                            		mensajeWarning(descripcion + msnIncInv);
-                                                                            	}
-                                                                            }
-                                                                            
-                                                                            if(msnIncInv != null && descripcion.length<5)
-                                                                            {
-                                                                                mensajeWarning(msnIncInv);
-                                                                            }
-                                                                            
-                                                                            procesados=procesados+1;
-                                                                            if(procesados==len)
-                                                                            {
-                                                                                panelpri.setLoading(false);
-                                                                                _p30_store.add(mrecords);
-                                                                                if(errores.length>0)
-                                                                                {
-                                                                                    mensajeWarning(errores.join('<BR/>'));
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                        ,failure : function()
-                                                                        {
-                                                                            errores.push('Error de comunicaci&oacute;n');
-                                                                            procesados=procesados+1;
-                                                                            if(procesados==len)
-                                                                            {
-                                                                                panelpri.setLoading(false);
-                                                                                _p30_store.add(mrecords);
-                                                                                if(errores.length>0)
-                                                                                {
-                                                                                    mensajeWarning(errores.join('<BR/>'));
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    });
-	                                                             }
-	                                                             else
-	                                                             {
-	                                                                 debug('llaveAuto en buffer:',_p30_bufferAutos[llaveAuto]);
-	                                                                 var encontrado = _p30_bufferAutos[llaveAuto];
-	                                                                 var splited    = encontrado.get('value').split(' - ');
-	                                                                 debug('splited:',splited);
-	                                                                 var marca      = _p30_storeMarcasRamo5   .getAt(_p30_storeMarcasRamo5   .find('value',splited[1],0,false,false,true)).get('key');
-	                                                                 var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('aux'  ,splited[1]+'@'+splited[2],0,false,false,true)).get('key');
-	                                                                 var version    = _p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('value',splited[4],0,false,false,true)).get('key');
-	                                                                 record.set(marcaName    , marca);
-	                                                                 record.set(submarcaName , submarca);
-	                                                                 record.set(versionName  , version);
-	                                                                 procesados=procesados+1;
-		                                                             if(procesados==len)
-		                                                             {
-		                                                                 panelpri.setLoading(false);
-		                                                                 _p30_store.add(mrecords);
-		                                                                 if(errores.length>0)
-		                                                                 {
-		                                                                     mensajeWarning(errores.join('<BR/>'));
-		                                                                 }
-		                                                             }
-	                                                             }
-                                                            }
-                                                            else
-                                                            {
-                                                                procesados=procesados+1;
-	                                                            if(procesados==len)
-	                                                            {
-	                                                                panelpri.setLoading(false);
-	                                                                _p30_store.add(mrecords);
-	                                                                if(errores.length>0)
-	                                                                {
-	                                                                    mensajeWarning(errores.join('<BR/>'));
-	                                                                }
-	                                                            }
-                                                            }
-                                                        };
-                                                        for(var i=0;i<len;i++)
-                                                        {
-                                                            if(i==(len-1))
-                                                           	{
-                                                            	 if(!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv))
-                                                                 {   
-                                                                     if(msnIncInv != null && descripcion != null)
-                                                                     {
-                                                                         mensajeWarning(descripcion + msnIncInv);
-                                                                     }
-                                                                     else if(descripcion != null)
-                                                                     {
-                                                                         mensajeWarning(descripcion);
-                                                                     }
-                                                                     else if(msnIncInv != null)
-                                                                     {
-                                                                         mensajeWarning(msnIncInv);
-                                                                     }
-                                                                 }
-                                                           	}
-                                                            recupera(i);
-                                                        }
+                                                    	mensajeWarning(msnIncInv);
+                                                    	panelpri.setLoading(false);
                                                     }
                                                     else
                                                     {
-                                                        _p30_store.add(mrecords);
+                                                    
+	                                                    for(var i in json.slist1)
+	                                                    {
+	                                                        var record=new _p30_modelo(json.slist1[i]);
+	                                                        mrecords.push(record);
+	                                                        debug('record.data:',record.data);
+	                                                    }
+	                                                    
+	                                                    _p30_store.removeAll();
+	                                                    _p30_numerarIncisos(mrecords);
+	                                                    
+	                                                    if(_p30_smap1.cdramo+'x'=='5x')
+	                                                    {
+	                                                        //recuperar
+	                                                        var len = json.slist1.length;
+	                                                        panelpri.setLoading(true);
+	                                                        var errores    = [];
+	                                                        var procesados = 0;
+	                                                        var recupera = function(i)
+	                                                        {
+	                                                            var record       = mrecords[i];
+	                                                            var cdtipsit     = record.get('cdtipsit');
+	                                                            debug('recuperar:',record.data);
+	                                                            if(cdtipsit+'x'=='ARx'
+	                                                                ||cdtipsit+'x'=='CRx'
+	                                                                ||cdtipsit+'x'=='PCx'
+	                                                                ||cdtipsit+'x'=='PPx'
+	                                                            )
+	                                                            {
+	                                                                var form         = _fieldById('_p30_tatrisitAutoForm'+cdtipsit);
+	                                                                var claveCmp     = form.down('[fieldLabel*=CLAVE]');
+	                                                                var claveName    = claveCmp.name;
+	                                                                var marcaName    = form.down('[fieldLabel=MARCA]').name;
+	                                                                var submarcaName = form.down('[fieldLabel=SUBMARCA]').name;
+	                                                                var modeloName   = form.down('[fieldLabel=MODELO]').name;
+	                                                                var versionName  = form.down('[fieldLabel*=VERSI]').name;
+	                                                                
+	                                                                var llaveAuto = '@'+record.get(claveName)+','+record.get(modeloName);
+	                                                                debug('llaveAuto a recuperar:',llaveAuto);
+	                                                                
+	                                                                if(Ext.isEmpty(_p30_bufferAutos[llaveAuto]))
+	                                                                {
+	                                                                    debug('llaveAuto en base de datos');
+	                                                                    var params = claveCmp.getStore().proxy.extraParams;
+	                                                                    params['params.cadena']       = llaveAuto;
+	                                                                    params['params.cdtipsit']     = cdtipsit;
+	                                                                    params['params.indice']       = i-0;
+	                                                                    params['params.claveName']    = claveName;
+	                                                                    params['params.marcaName']    = marcaName;
+	                                                                    params['params.submarcaName'] = submarcaName;
+	                                                                    params['params.modeloName']   = modeloName;
+	                                                                    params['params.versionName']  = versionName;
+	                                                                    Ext.Ajax.request(
+	                                                                    {
+	                                                                        url      : claveCmp.getStore().proxy.url
+	                                                                        ,params  : params
+	                                                                        ,success : function(response)
+	                                                                        {
+	                                                                            var json = Ext.decode(response.responseText);
+	                                                                            var indice = json.params.indice-0;
+	                                                                            debug('### recuperar:',indice,json);
+	                                                                            var record = mrecords[indice];
+	                                                                            if(json.success==true&&json.lista.length>0)
+	                                                                            {
+	                                                                                var indiceRecuperado = -1;
+	                                                                                for(var j in json.lista)
+	                                                                                {
+	                                                                                    var jsplit = json.lista[j].value.split(' - ');
+	                                                                                    if(jsplit[0]==record.get(json.params.claveName)
+	                                                                                        &&jsplit[3]==record.get(json.params.modeloName)
+	                                                                                    )
+	                                                                                    {
+	                                                                                        indiceRecuperado = j-0;
+	                                                                                        break;
+	                                                                                    }
+	                                                                                }
+	                                                                                if(indiceRecuperado!=-1)
+	                                                                                {
+	                                                                                    var encontrado = new Generic(json.lista[indiceRecuperado]);
+	                                                                                    var splited    = encontrado.get('value').split(' - ');
+	
+	                                                                                    var marcaTemp = _p30_storeMarcasRamo5.find('value' , splited[1],0,false,false,true);
+	                                                                                    var submarcaTemp = _p30_storeSubmarcasRamo5.find('aux'   , splited[1]+'@'+splited[2],0,false,false,true);
+	                                                                                    var versionTemp = _p30_storeVersionesRamo5.find('value' , splited[4],0,false,false,true);
+	                                                                                    if(marcaTemp != -1 && submarcaTemp != 1 && versionTemp != -1)
+	                                                                                    {
+			                                                                                  var marca     = _p30_storeMarcasRamo5.getAt(marcaTemp).get('key');
+			                                                                                  var submarca  = _p30_storeSubmarcasRamo5.getAt(submarcaTemp).get('key');
+			                                                                                  var version   = _p30_storeVersionesRamo5.getAt(versionTemp).get('key');
+			                                                                                  record.set(json.params.marcaName    , marca);
+			                                                                                  record.set(json.params.submarcaName , submarca);
+			                                                                                  record.set(json.params.versionName  , version);
+			                                                                                  
+			                                                                                  if('x'+record.get('cdtipsit')=='xCR')
+			                                                                                  {
+			                                                                                      var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
+			                                                                                      record.set(tipoVehiName,json.lista[j].aux);
+			                                                                                      //alert(record.get(tipoVehiName));
+			                                                                                  }
+			                                                                                  _p30_bufferAutos[llaveAuto]=encontrado;
+	                                                                                    }
+	                                                                                    else
+	                                                                                    {
+	                                                                                    	var inc = (Number(json.params.indice)+1)+'';
+	                                                                                    	if (marcaTemp == -1)         {var texto ='Favor de Introducir manualmente la descripcion de marca del inciso '+(inc.toString())+"<br/>";}
+	                                                                                    	else if (submarcaTemp == -1) {var texto ='Favor de Introducir manualmente la submarca del inciso '+(inc.toString())+"<br/>";}
+	                                                                                    	else if (versionTemp == -1)  {var texto ='Favor de Introducir manualmente la version del inciso '+(inc.toString())+"<br/>";}
+	                                                                                    	descripcion = texto + descripcion; debug('### texto descriptivo:',descripcion);
+	                                                                                    }
+	                                                                                }
+	                                                                                else
+	                                                                                {
+	                                                                                    errores.push('No se pudo encontrar el auto '+record.get(json.params.claveName)+' en modelo '+record.get(json.params.modeloName)+' (inciso '+record.get('nmsituac')+')');
+	                                                                                }
+	                                                                            }
+	                                                                            else
+	                                                                            {
+	                                                                                errores.push('No se pudo recuperar el auto '+record.get(json.params.claveName)+' en modelo '+record.get(json.params.modeloName)+' (inciso '+record.get('nmsituac')+')');
+	                                                                            }
+	                                                                            
+	                                                                            debug('### descriptivo:',descripcion);
+	                                //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	                                                                            if(!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv))
+	                                                                            { 	
+	                                                                            	mensajeWarning(descripcion);
+	                                                                            	if(msnIncInv != null)
+	                                                                            	{
+	                                                                            		mensajeWarning(descripcion + msnIncInv);
+	                                                                            	}
+	                                                                            }
+	                                                                            
+	                                                                            if(msnIncInv != null && descripcion.length<5)
+	                                                                            {
+	                                                                                mensajeWarning(msnIncInv);
+	                                                                            }
+	                                                                            
+	                                                                            procesados=procesados+1;
+	                                                                            if(procesados==len)
+	                                                                            {
+	                                                                                panelpri.setLoading(false);
+	                                                                                _p30_store.add(mrecords);
+	                                                                                if(errores.length>0)
+	                                                                                {
+	                                                                                    mensajeWarning(errores.join('<BR/>'));
+	                                                                                }
+	                                                                            }
+	                                                                        }
+	                                                                        ,failure : function()
+	                                                                        {
+	                                                                            errores.push('Error de comunicaci&oacute;n');
+	                                                                            procesados=procesados+1;
+	                                                                            if(procesados==len)
+	                                                                            {
+	                                                                                panelpri.setLoading(false);
+	                                                                                _p30_store.add(mrecords);
+	                                                                                if(errores.length>0)
+	                                                                                {
+	                                                                                    mensajeWarning(errores.join('<BR/>'));
+	                                                                                }
+	                                                                            }
+	                                                                        }
+	                                                                    });
+		                                                             }
+		                                                             else
+		                                                             {
+		                                                                 debug('llaveAuto en buffer:',_p30_bufferAutos[llaveAuto]);
+		                                                                 var encontrado = _p30_bufferAutos[llaveAuto];
+		                                                                 var splited    = encontrado.get('value').split(' - ');
+		                                                                 debug('splited:',splited);
+		                                                                 var marca      = _p30_storeMarcasRamo5   .getAt(_p30_storeMarcasRamo5   .find('value',splited[1],0,false,false,true)).get('key');
+		                                                                 var submarca   = _p30_storeSubmarcasRamo5.getAt(_p30_storeSubmarcasRamo5.find('aux'  ,splited[1]+'@'+splited[2],0,false,false,true)).get('key');
+		                                                                 var version    = _p30_storeVersionesRamo5.getAt(_p30_storeVersionesRamo5.find('value',splited[4],0,false,false,true)).get('key');
+		                                                                 record.set(marcaName    , marca);
+		                                                                 record.set(submarcaName , submarca);
+		                                                                 record.set(versionName  , version);
+		                                                                 procesados=procesados+1;
+			                                                             if(procesados==len)
+			                                                             {
+			                                                                 panelpri.setLoading(false);
+			                                                                 _p30_store.add(mrecords);
+			                                                                 if(errores.length>0)
+			                                                                 {
+			                                                                     mensajeWarning(errores.join('<BR/>'));
+			                                                                 }
+			                                                             }
+		                                                             }
+	                                                            }
+	                                                            else
+	                                                            {
+	                                                                procesados=procesados+1;
+		                                                            if(procesados==len)
+		                                                            {
+		                                                                panelpri.setLoading(false);
+		                                                                _p30_store.add(mrecords);
+		                                                                if(errores.length>0)
+		                                                                {
+		                                                                    mensajeWarning(errores.join('<BR/>'));
+		                                                                }
+		                                                            }
+	                                                            }
+	                                                        };
+	                                                        for(var i=0;i<len;i++)
+	                                                        {
+	                                                            if(i==(len-1))
+	                                                           	{
+	                                                            	 if(!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv))
+	                                                                 {   
+	                                                                     if(msnIncInv != null && descripcion != null)
+	                                                                     {
+	                                                                         mensajeWarning(descripcion + msnIncInv);
+	                                                                         panelpri.setLoading(false);
+	                                                                     }
+	                                                                     else if(descripcion != null)
+	                                                                     {
+	                                                                         mensajeWarning(descripcion);
+	                                                                         panelpri.setLoading(false);
+	                                                                     }
+	                                                                     else if(msnIncInv != null)
+	                                                                     {
+	                                                                         mensajeWarning(msnIncInv);
+	                                                                         panelpri.setLoading(false);
+	                                                                     }
+	                                                                 }
+	                                                           	}
+	                                                            recupera(i);
+	                                                        }
+	                                                    }
+	                                                    else
+	                                                    {
+	                                                        _p30_store.add(mrecords);
+	                                                    }
                                                     }
                                                 }
                                                 else
