@@ -4,6 +4,12 @@
 <script>
 </s:if>
 ////// variables //////
+var _ROL_MC_AUTOS =  'MCEMIAUT';
+var _ROL_MC_SALUD =  'MESADECONTROL';
+
+//Variable para conocer el rol activo del sistema.
+var cdSisRolActivo = '<s:property value="%{#session['USUARIO'].rolActivo.clave}" />';
+
 var _4_urlActualizarStatusRemesa = '<s:url namespace="/consultas"    action="actualizarStatusRemesa"    />';
 var mesConUrlDocu                = '<s:url namespace="/documentos"   action="ventanaDocumentosPoliza"   />';
 var mesConUrlDetMC               = '<s:url namespace="/mesacontrol"  action="obtenerDetallesTramite"    />';
@@ -45,6 +51,7 @@ Ext.onReady(function()
     ////// contenido //////
     ////// contenido //////
 });
+
 
 ////// funciones //////
 
@@ -133,52 +140,53 @@ function _4_actualizarRemesaClic(bot)
     {
         title        : 'ACTUALIZAR REMESA'
         ,modal       : true
-        ,defaults    : { style : 'margin:5px;' }
+        ,defaults    : { style : 'margin:5px;', border:0 }
         ,closeAction : 'destroy'
-        ,layout      :
-        {
-            type     : 'table'
-            ,columns : 2
-        }
-        ,items    :
-        [
-            {
+        ,items    : [{
+        	layout : 'hbox',
+        	hidden  : cdSisRolActivo == _ROL_MC_AUTOS || cdSisRolActivo == _ROL_MC_SALUD ? true : false,
+        	defaults    : { style : 'margin:5px;'},
+            items : [{
                 xtype       : 'numberfield'
                 ,fieldLabel : 'Remesa'
                 ,status     : 36
-            }
-            ,{
+          	},{
                 xtype    : 'button'
                 ,icon    : '${icons}sitemap_color.png'
                 ,text    : 'Marcar como armada'
                 ,status  : 36
                 ,handler : _4_marcarRemesaClic
-            }
-            ,{
+            }]
+		},{
+        	layout : 'hbox',
+        	defaults    : { style : 'margin:5px;'},
+            items : [{
                 xtype       : 'numberfield'
                 ,fieldLabel : 'Remesa'
                 ,status     : 37
-            }
-            ,{
+            },{
                 xtype    : 'button'
                 ,icon    : '${icons}user_comment.png'
                 ,text    : 'Marcar como entrega f\u00EDsica'
                 ,status  : 37
                 ,handler : _4_marcarRemesaClic
-            }
-            ,{
+            }]
+        },{
+        	layout : 'hbox',
+        	hidden  : cdSisRolActivo == _ROL_MC_AUTOS || cdSisRolActivo == _ROL_MC_SALUD ? true : false,
+        	defaults    : { style : 'margin:5px;'},
+            items : [{
                 xtype       : 'numberfield'
                 ,fieldLabel : 'Remesa'
                 ,status     : 38
-            }
-            ,{
+            },{
                 xtype    : 'button'
                 ,icon    : '${icons}package.png'
                 ,text    : 'Marcar como entraga paqueter\u00EDa'
                 ,status  : 38
                 ,handler : _4_marcarRemesaClic
-            }
-        ]
+            }]
+        }]
     }).show());
 }
 
