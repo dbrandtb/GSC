@@ -1091,20 +1091,20 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			
 			//Elimina incisos que no correspondan al negocio seleccionado
 			resp.setSlist(cotizacionAutoManager.validaExcelCdtipsitXNegocio(tipoflot,negocio,resp.getSlist()));
+			
+			int lugarMensaje = resp.getSlist().size();
+			Map<String, String> msn = resp.getSlist().get(lugarMensaje-1);
+			
+			if(msn.get("removidos") != null) 
+			{
+			respuestaOculta =msn.get("removidos");
+			resp.getSlist().remove(lugarMensaje-1);
+			}
+			
 			if(resp.getSlist().isEmpty())
 			{	
 				respuestaOculta="No se agregarón los incisos por no corresponder al negocio seleccionado.";
 				return SUCCESS;
-			}
-			else
-			{
-				int lugarMensaje = resp.getSlist().size();
-				Map<String, String> msn = resp.getSlist().get(lugarMensaje-1);
-				if(msn.get("removidos") != null) 
-				{
-				respuestaOculta =msn.get("removidos");
-				resp.getSlist().remove(lugarMensaje-1);
-				}
 			}
 			
 			//Para modificar solo PYMES ignorando el valor de vehiculo y haciendo consulta
