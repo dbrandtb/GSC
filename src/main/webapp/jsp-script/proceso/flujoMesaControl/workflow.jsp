@@ -3792,6 +3792,8 @@ function _p52_cargarDatosEstado(cdestadomc)
                         });
                         _p52_panelEstado.down('[name=ACCION]').setValue('U');
                         
+                        _p52_panelEstado.setTitle('Status '+cdestadomc);
+                        
                         var grid = _fieldById('_p52_gridEstRol');
                         grid.store.each(function(record)
                         {
