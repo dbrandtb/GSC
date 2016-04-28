@@ -814,7 +814,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		logger.debug("Entra a guardarCartaRechazoAutServ map1: {}", map1);
 		String ntramite    = map1.get("ntramite");
 		String comments    = map1.get("comments");
-		logger.debug("comments: {}", comments);
+		logger.debug("comments: {}", comments); 
 		String commentsM   = comments.replaceAll("\n", "%0A").
 						         replaceAll("�", "%C3%A1").
 						         replaceAll("�", "%C3%A9").

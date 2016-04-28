@@ -493,8 +493,20 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                				//logger.debug(i+" "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+":"+(
 					                		//auxCell!=null?auxCell.getStringCellValue().trim()+"|":"|"
 				                		//));
+		                				String cadenaModificada = auxCell.getStringCellValue().trim()./*replaceAll("á","a").
+		                						replaceAll("é","e").
+		                						replaceAll("í","i").
+		                						replaceAll("ó","o").
+		                						replaceAll("ú","u").
+		                						replaceAll("Á","A").
+		                						replaceAll("É","E").
+		                						replaceAll("Í","I").
+		                						replaceAll("Ó","O").
+		                						replaceAll("Ú","U").*/
+		                						replaceAll("\\*","");
+		                				logger.debug("Valor de Cadena modificada ===> {}",cadenaModificada);
 		                				bufferLinea.append(
-			                				auxCell!=null?auxCell.getStringCellValue().trim()+"|":"|"
+			                				auxCell!=null?cadenaModificada.trim()+"|":"|"
 				                		);
 		                			}
 			                	}else{
@@ -508,6 +520,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                	}
 		                	catch(Exception ex){
 		                		filaBuena = false;
+		                		logger.debug("Entra al catch ===>"+ex);
 		                		bufferErroresCenso.append(Utils.join("Error en el campo "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+" "+datosInformacionLayout.get(i).get("DESCRIPC").toString()+" de la fila ",fila," "));
 			                }
 			                finally{
