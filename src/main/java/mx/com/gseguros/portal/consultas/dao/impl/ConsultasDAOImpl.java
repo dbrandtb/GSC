@@ -3363,6 +3363,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			,Date fefin
 			,String cdusuari
 			,String cdunieco
+			,String tiporeciboimp
 			)throws Exception
 	{
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
@@ -3372,6 +3373,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("fefin"     , fefin);
 		params.put("cdusuari"  , cdusuari);
 		params.put("cdunieco"  , cdunieco);
+		params.put("tiporeciboimp", tiporeciboimp);
 		Map<String,Object>       procRes = ejecutaSP(new RecuperarRecibosLote(getDataSource()),params);
 		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		if(lista==null)
@@ -3393,6 +3395,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			declareParameter(new SqlParameter("fefin"     , OracleTypes.DATE));
 			declareParameter(new SqlParameter("cdusuari"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tiporeciboimp", OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"cdunieco"
 					,"dsunieco"

@@ -427,6 +427,7 @@ public interface ConsultasDAO
 			,Date fefin
 			,String cdusuari
 			,String cdunieco
+			,String tiporeciboimp
 			)throws Exception;
 	
 	public List<Map<String,String>> recuperarDetalleRemesa(String ntramite, String tipolote) throws Exception;

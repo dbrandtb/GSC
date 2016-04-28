@@ -162,6 +162,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TIPOS_LOTE_IMPR:
 				case ORDEN_IMPRESION:
 				case CONFLAYOUT:
+				case TIPO_RECIBOS_IMPRESION:	
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case CVECOLUMNA:

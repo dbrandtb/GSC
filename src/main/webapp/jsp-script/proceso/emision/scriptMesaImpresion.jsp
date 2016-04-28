@@ -267,7 +267,7 @@ function _4_onFolderClick(rowIndex)
         title        : 'Documentaci&oacute;n'
         ,modal       : true
         ,buttonAlign : 'center'
-        ,width       : 600
+        ,width       : 700
         ,height      : 400
         ,autoScroll  : true
         ,loader      :
@@ -299,7 +299,7 @@ function _4_onClockClick(rowIndex)
         title        : 'Detalles del tr&aacute;mite '+record.get('ntramite')
         ,modal       : true
         ,buttonAlign : 'center'
-        ,width       : 700
+        ,width       : 630
         ,items       :
         [
             Ext.create('Ext.grid.Panel',
@@ -353,13 +353,21 @@ function _4_onClockClick(rowIndex)
                         header     : 'Fecha de fin'
                         ,xtype     : 'datecolumn'
                         ,dataIndex : 'FECHAFIN'
+                        ,hidden	   : true
                         ,format    : 'd M Y H:i'
                         ,width     : 90
                     }
                     ,{
                         header     : 'Usuario fin'
                         ,dataIndex : 'usuario_fin'
+                        ,hidden		  : true
                         ,width     : 150
+                    }
+                    ,{
+                        text	: 'Preview'
+                        ,dataIndex : 'COMMENTS'
+                        ,width 	: 200
+                        
                     }
                     ,{
                         width         : 30
@@ -379,6 +387,7 @@ function _4_onClockClick(rowIndex)
                             return value;
                         }
                     }
+                    
                     /*,{
                         width         : 30
                         ,menuDisabled : true
@@ -404,7 +413,7 @@ function _4_onClockClick(rowIndex)
                             cellIndex, record, tr,
                             rowIndex, e, eOpts)
                     {
-                        debug(record);
+                        debug('record',record);
                         if(cellIndex<6)
                         {
                             Ext.getCmp('inputReadDetalleHtmlVisor').setValue((_4_smap1.cdsisrol!='EJECUTIVOCUENTA'||record.raw.SWAGENTE=='S')?record.get('COMMENTS'):'');
@@ -506,7 +515,7 @@ function _4_onClockClick(rowIndex)
             ,Ext.create('Ext.form.HtmlEditor',
             {
                 id        : 'inputReadDetalleHtmlVisor'
-                ,width    : 690
+                ,width    : 620
                 ,height   : 200
                 ,readOnly : true
             })
