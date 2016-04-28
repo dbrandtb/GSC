@@ -834,6 +834,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String cduniecos = params.get("cduniecos");
 				String feproces  = params.get("feproces");
 				String feimpres  = params.get("feimpres");
+				String tiporeciboimp = params.get("tiporeciboimp");
 				
 				lista = consultasDAO.recuperarRecibosLote(
 						cdtipram
@@ -842,6 +843,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						,Utils.parse(feimpres)
 						,cdusuari
 						,usuario.getCdUnieco()
+						,tiporeciboimp
 						);
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_DETALLE_REMESA))

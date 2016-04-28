@@ -27,12 +27,45 @@ var _p50_formBusqItems = [<s:property value="items.itemsFormBusq"     escapeHtml
 var _p50_gridRecFields = [<s:property value="items.gridRecibosFields" escapeHtml="false" />];
 var _p50_gridRecCols   = [];
 
-_fieldByName('cdtipram').rowspan = 2;
+debug('_p50_formBusqItems', _p50_formBusqItems);
+
+ 	_fieldByName('tiporeciboimp').on('change', function(cmb,  newValue, oldValue, eOpts) {
+	    debug('Seleccion de combo.');
+	    debug('newValue',newValue);
+	    if(newValue=='S'){
+	    	this,_fieldByName('mes').setValue(('00'+(new Date().getMonth()+2)).slice(-2));
+	    }else{
+	    	this,_fieldByName('mes').setValue(('00'+(new Date().getMonth()+1)).slice(-2));
+	    }
+	    	
+	});   
+
+    _fieldByName('tiporeciboimp').getStore().on(
+    {
+        load : function(me)
+        {
+        	_fieldByName('tiporeciboimp').setValue('S');
+            _fieldByName('tiporeciboimp').fireEvent('change',_fieldByName('tiporeciboimp'),'S');
+        }
+    });
+    
+    
+    
+	
+
+//	_fieldByName('mes').getStore().on(
+//    {
+//        load : function(me)
+//        {
+//            _fieldByName('mes').setValue(('00'+(new Date().getMonth()+2)).slice(-2));
+//        }
+//    });
 
 var _p50_formBusqItemsCustom = [];
 for(var i in _p50_formBusqItems)
 {
-    if(i==3)
+	
+    if(i==4)
     {
         _p50_formBusqItemsCustom.push(Ext.create('Ext.grid.Panel',
         {
@@ -56,7 +89,7 @@ for(var i in _p50_formBusqItems)
                     xtype    : 'actioncolumn'
                     ,width   : 30
                     ,icon    : '${icons}delete.png'
-                    ,handler : function(view,row,col,item,e,record){ _fieldById('_p50_gridSucursales').getStore().remove(record); }
+                    ,handler : function(view,row,col,item,e,record){ _fieldById('_p50_gridSucursales').getStore().remove(record).rowspan=2; }
                 }
             ]
         }));
@@ -120,9 +153,9 @@ Ext.onReady(function()
             {
                 itemId       : '_p50_formBusq'
                 ,title       : 'B\u00DASQUEDA DE RECIBOS'
-                ,defaults    : { style : 'margin:5px;' }
+                ,defaults    : { style : 'margin:8px;' }
                 ,items       : _p50_formBusqItemsCustom
-                ,layout      :
+                ,layout      : 
                 {
                     type     : 'table'
                     ,columns : 3
@@ -165,10 +198,11 @@ Ext.onReady(function()
                                 _setLoading(true,form);
                                 _p50_loadRecibos(
                                     {
-                                        'params.cdtipram'   : form.getValues()['cdtipram']
-                                        ,'params.cduniecos' : cduniecos
-                                        ,'params.feproces'  : form.getValues()['feproces']
-                                        ,'params.feimpres'  : form.getValues()['feimpres']
+                                        'params.cdtipram'   	: form.getValues()['cdtipram']
+                                        ,'params.cduniecos' 	: cduniecos
+                                        ,'params.feproces'  	: Ext.Date.format(new Date(), 'd/m/Y')
+                                        ,'params.feimpres'  	: Ext.Date.format(new Date((new Date().getFullYear()),form.getValues()['mes'], 0), 'd/m/Y')
+                                        ,'params.tiporeciboimp' : form.getValues()['tiporeciboimp'] 
                                     }
                                     ,function()
                                     {
@@ -284,7 +318,7 @@ Ext.onReady(function()
         }
     });
     
-    _fieldByName('feimpres').minValue=Ext.Date.add(new Date(),Ext.Date.DAY,1);
+    
     ////// custom //////
     
     ////// loaders //////
