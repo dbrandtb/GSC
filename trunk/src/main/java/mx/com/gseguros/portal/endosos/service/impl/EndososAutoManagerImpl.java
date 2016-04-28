@@ -326,7 +326,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			List<ComponenteVO>columnas=pantallasDAO.obtenerComponentes(
 					null  //cdtiptra
 					,null //cdunieco
-					,cdramo
+					,"|"+cdramo+"|"
 					,null //cdtipsit
 					,null //estado
 					,null //cdsisrol
@@ -488,7 +488,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			List<ComponenteVO>columnasEditables=pantallasDAO.obtenerComponentes(
 					cdtipsup //cdtiptra
 					,null    //cdunieco
-					,cdramo
+					,"|"+cdramo+"|"
 					,null    //cdtipsit
 					,null    //estado
 					,cdsisrol//cdsisrol
@@ -3347,7 +3347,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			List<ComponenteVO> columnasInciso = pantallasDAO.obtenerComponentes(
 					null  //cdtiptra
 					,null //cdunieco
-					,cdramo
+					,"|"+cdramo+"|"
 					,null //cdtipsit
 					,null //estado
 					,null //cdsisrol
@@ -3373,7 +3373,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			paso = "Construyendo componentes";
 			logger.info(paso);
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-			gc.generaComponentes(columnasInciso, true, false, false, true, false, false);
+			gc.generaComponentes(columnasInciso, true, false, false, true, true, false);
 			items.put("incisoColumns" , gc.getColumns());
 			
 			gc.generaComponentes(columnasCobertura, true, false, false, true, true, false);

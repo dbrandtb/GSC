@@ -163,6 +163,13 @@ public interface ConsultasDAO
 			,String nmfamili
 			,String nivel
 			)throws Exception;
+
+	public List<Map<String,String>>recuperarDatosIncisoEnNivelPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 	
 	public String recuperarValorAtributoUnico(
 			String cdtipsit
@@ -192,6 +199,8 @@ public interface ConsultasDAO
 	 */
 	public boolean esProductoSalud(String cdramo) throws Exception;
 	
+	public List<String> recuperarDescripcionAtributosProducto(String cdramo) throws Exception;
+
 	public List<String> recuperarDescripcionAtributosSituacionPorRamo(String cdramo) throws Exception;
 	
 	public Map<String,String> recuperarFechasLimiteEndoso(

@@ -2,8 +2,10 @@ package mx.com.gseguros.portal.consultas.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
@@ -14,7 +16,9 @@ import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2VO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
+import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -122,6 +126,29 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String otclave  = params.get("otclave");
 				resp.setSmap(new HashMap<String,String>());
 				resp.getSmap().put("otvalor",consultasDAO.recuperarValorAtributoUnico(cdtipsit,cdatribu,otclave));
+			}
+			else if(proc.equals(RecuperacionSimple.RECUPERAR_DSATRIBUS_TATRIPOL))
+			{
+				String        cdramo       = params.get("cdramo");
+				List<String>  listaNombres = consultasDAO.recuperarDescripcionAtributosProducto(cdramo);
+				StringBuilder sb           = new StringBuilder();
+				boolean       primero      = true;
+				for(String nombre:listaNombres)
+				{
+					if(primero)
+					{
+						sb.append(Utils.join("CVE_P_"    , nombre));
+						sb.append(Utils.join("@#@DES_P_" , nombre));
+						primero = false;
+					}
+					else
+					{
+						sb.append(Utils.join("@#@CVE_P_" , nombre));
+						sb.append(Utils.join("@#@DES_P_" , nombre));
+					}
+				}
+				resp.setSmap(new HashMap<String,String>());
+				resp.getSmap().put("listaNombres",sb.toString());
 			}
 			else if(proc.equals(RecuperacionSimple.RECUPERAR_DSATRIBUS_TATRISIT))
 			{
@@ -387,6 +414,56 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						,nmfamili
 						,nivel
 						));
+				
+				if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo) && params.containsKey("atrPol") && Constantes.SI.equalsIgnoreCase(params.get("atrPol"))){
+					
+					if(resp.getSlist() !=null && !resp.getSlist().isEmpty()){
+						
+						List<Map<String,String>> lista = consultasDAO.recuperarDatosIncisoEnNivelPoliza(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+						);
+						logger.debug("Lista de atributos a agregar" + lista);
+						
+						if(lista!= null && !lista.isEmpty()){
+							Map<String,String> atrsPol = lista.get(0);
+							
+							Iterator<Entry<String, String>> itAtrs = atrsPol.entrySet().iterator();
+							while(itAtrs.hasNext())
+							{
+								Entry<String,String> atr = (Map.Entry<String, String>) itAtrs.next();
+								String llave = atr.getKey();
+								String valor = atr.getValue();
+								
+								if(llave.startsWith("DSATRIBU")){
+									llave = llave.replace("DSATRIBU", "DSATRIBU1");
+								}else if(llave.startsWith("DSVALOR")){
+									llave = llave.replace("DSVALOR", "DSVALOR1");
+								}else if(llave.startsWith("OTVALOR")){
+									llave = llave.replace("OTVALOR", "OTVALOR1");
+								}
+								
+								
+								
+								resp.getSlist().get(0).put(llave, valor);
+//								if(resp.getSlist().get(0).containsKey(atr.getKey())){
+//									if(StringUtils.isNotBlank(atr.getValue())){
+//										resp.getSlist().get(0).put(atr.getKey(), atr.getValue());
+//									}
+//								}else{
+//									resp.getSlist().get(0).put(atr.getKey(), atr.getValue());
+//								}
+								
+							}
+						}
+						
+						logger.debug("Lista de atributos despues de agregar" + resp.getSlist());
+					}
+					
+				}
+				
 			}
 			else if(proc.equals(RecuperacionSimple.RECUPERAR_GRUPOS_POLIZA))
 			{
