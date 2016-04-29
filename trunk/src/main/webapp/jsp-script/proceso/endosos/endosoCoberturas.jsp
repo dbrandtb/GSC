@@ -35,6 +35,7 @@
     var urlRecuperacionSimpleListap3 = '<s:url namespace="/emision"    action="recuperacionSimpleLista" />';
     var endcobUrlDoc              = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
     var endcobUrlGuardar          = '<s:url namespace="/endosos" action="guardarEndosoCoberturas" />';
+    var urlPantallaBeneficiarios               = '<s:url namespace="/catalogos"  action="includes/pantallaBeneficiarios"       />';
     debug('inputCduniecop3',inputCduniecop3);
     debug('inputCdramop3',inputCdramop3);
     debug('inputEstadop3',inputEstadop3);
@@ -736,6 +737,7 @@
                                  debug('cellIndex=', cellIndex);
                                  if(cellIndex==1 && hayIncisoSeleccionado)
                                  {
+                                	 debug('cellIndex==1 && hayIncisoSeleccionado:',cellIndex,hayIncisoSeleccionado);
                                      Ext.Ajax.request(
                                      {
                                          url     : _endcob_urlObtenerComponenteSituacionCobertura
@@ -749,9 +751,48 @@
                                          ,success : function(response)
                                          {
                                              var json = Ext.decode(response.responseText);
-                                             debug('### obtener componente situacion cobertura:',json);
+                                             debug('### obtener componente situacion Vil  cobertura:',json);
                                              if(json.exito)
                                              {
+                                            	 if('040'.lastIndexOf(record.get('GARANTIA'))!=-1)
+                                                 {
+                                                   debug('BENEFICIARIOS: ',inputCduniecop3,inputCdramop3,inputEstadop3,inputNmpolizap3);
+                                                   
+                                                   centrarVentanaInterna(
+                                                         Ext.create('Ext.window.Window',
+                                                         {
+                                                              title      : 'Al agregar seguro de Vida, usted '
+                                                             ,modal      : true
+                                                             ,width      : 1000
+                                                             ,minHeight  : 300
+                                                             ,itemId     : '_p29_BeneficiarioPanel'
+                                                             ,height     : 300
+                                                             ,autoScroll : false
+                                                             ,loader:
+                                                             {
+                                                                 url : urlPantallaBeneficiarios
+                                                                 ,params   :
+                                                                 {
+                                                                     'smap1.cdunieco'      : inputCduniecop3
+                                                                     ,'smap1.cdramo'       : inputCdramop3
+                                                                     ,'smap1.estado'       : inputEstadop3
+                                                                     ,'smap1.nmpoliza'     : inputNmpolizap3
+                                                                     ,'smap1.nmsuplem'     : '1'
+                                                                     ,'smap1.nmsituac'     : '0'
+                                                                     ,'smap1.cdrolPipes'   : '3'
+                                                                     ,'smap1.cdtipsup'     : '1'
+                                                                     ,'smap1.ultimaImagen' : 'N'
+                                                                 }
+                                                                 ,autoLoad:true
+                                                                 ,scripts:true
+                                                             }
+                                                         }).show());
+                                                   
+                                                   debug('Vil inputCdpersonap3: ',incisoSelected.data.CVE_CONDUCTOR);
+                                                   mensajeCorrecto('Aviso', 'Al agregar la cobertura de: <br>Seguro de Vida,<br>El cliente '+incisoSelected.data.CVE_CONDUCTOR+' da por entendido que no padece alguna enfermedad grave o cronica.<br>O que en los ultimos 12 meses no ha estado bajo tratamiento medico.');
+                                                   
+                                                 }
+                                            	 
                                                  if(json.smap1.CONITEM=='true')
                                                  {
                                                      centrarVentanaInterna(
