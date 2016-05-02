@@ -125,6 +125,8 @@ var _p28_precioDolarDia          = null;
 var valorRecuperadoValorVehiSigs = null;
 var cdper                        = null;
 var cdperson                     = null;
+
+var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
 ////// variables //////
 
 
@@ -582,7 +584,7 @@ Ext.onReady(function()
         ,hidden : _p28_smap1.cdramo+'x'=='5x'
                   ?(
                         _p28_smap1.cdtipsit+'x'!='CRx'|| 
-                        ('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
+                        (rolesSuscriptores.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
                         //_p28_smap1.cdtipsit+'x'!='CRx'||_p28_smap1.cdsisrol!='SUSCRIAUTO'
                    )
                   :false
@@ -793,7 +795,7 @@ Ext.onReady(function()
             agente.setReadOnly(true);
             _p28_ramo5AgenteSelect(agente,_p28_smap1.cdagente);
         }
-        else ('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1)
+        else (('|PROMOTORAUTO'+rolesSuscriptores).lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1)
             /* if(_p28_smap1.cdsisrol=='PROMOTORAUTO'||_p28_smap1.cdsisrol=='SUSCRIAUTO') */
         {
             agente.on(
@@ -1792,7 +1794,7 @@ function _p28_cotizar(sinTarificar)
                                         ,icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
                                         ,disabled : true
                                         ,handler  : _p28_detalles
-                                        ,hidden   : ('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
+                                        ,hidden   : (rolesSuscriptores.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
                                                     //_p28_smap1.cdsisrol!='SUSCRIAUTO'
                                     }
                                     ,{
@@ -2826,7 +2828,7 @@ function llenandoCampos(json)
         if(_p28_smap1.cdramo+'x'=='5x'
             &&
             (
-                ('|SUSCRIAUTO|PROMOTORAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1)
+                (('|PROMOTORAUTO'+rolesSuscriptores).lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1)
                 //_p28_smap1.cdsisrol=='SUSCRIAUTO'||_p28_smap1.cdsisrol=='PROMOTORAUTO'
             ))
         {
