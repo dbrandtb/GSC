@@ -1146,7 +1146,11 @@ function llenandoCampos (json)
                 	_0_panelPri.setLoading(false);
                     if(_0_smap1.cdramo=='6')
                     {
-                        if(_0_smap1.cdtipsit=='AT')
+                    	if(_0_smap1.cdtipsit=='MC')
+                        {
+                    		 asignarAgente(primerInciso.get('parametros.pv_otvalor17'));	
+                        }
+                    	if(_0_smap1.cdtipsit=='AT')
                         {
                             _0_obtenerClaveGSPorAuto();
                             _0_obtenerSumaAseguradaRamo6(true,true);
@@ -1164,7 +1168,7 @@ function llenandoCampos (json)
                         _0_gmiPostalSelect(1,2,3,true);
                         _0_gmiCirchospSelect(1,2,3,true);
                     }
-                    if(_0_smap1.cdtipsit == 'AF' || (_0_smap1.cdtipsit == 'PU') {
+                    if(_0_smap1.cdtipsit == 'AF' || _0_smap1.cdtipsit == 'PU') {
                     	
                         asignarAgente(primerInciso.get('parametros.pv_otvalor32'));
                         _0_recuperarDescuento();
