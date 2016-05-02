@@ -444,17 +444,8 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 								}else if(llave.startsWith("OTVALOR")){
 									llave = llave.replace("OTVALOR", "OTVALOR1");
 								}
-								
-								
-								
+
 								resp.getSlist().get(0).put(llave, valor);
-//								if(resp.getSlist().get(0).containsKey(atr.getKey())){
-//									if(StringUtils.isNotBlank(atr.getValue())){
-//										resp.getSlist().get(0).put(atr.getKey(), atr.getValue());
-//									}
-//								}else{
-//									resp.getSlist().get(0).put(atr.getKey(), atr.getValue());
-//								}
 								
 							}
 						}
