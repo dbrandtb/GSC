@@ -15,8 +15,9 @@ import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConsultasAction extends PrincipalCoreAction
 {
@@ -39,7 +40,7 @@ public class ConsultasAction extends PrincipalCoreAction
 	private Map<String,String>           stringMap;
 	
 	private boolean       success;
-	private static Logger logger  = Logger.getLogger(ConsultasAction.class);
+	private static Logger logger  = LoggerFactory.getLogger(ConsultasAction.class);
 	
 	@Override
 	public String execute()
@@ -53,7 +54,7 @@ public class ConsultasAction extends PrincipalCoreAction
 				+ "\n##################################"
 				+ "\n###### consultarProveedores ######"
 				);
-		logger.info("mapaLigadoObjetoEntrada: "+mapaLigadoObjetoEntrada);
+		logger.debug("mapaLigadoObjetoEntrada: {}", mapaLigadoObjetoEntrada);
 		try
 		{
 			listaMapasStringSalida = consultasManager.consultaDinamica(ObjetoBD.OBTIENE_DATOS_PROVEEDORES, mapaLigadoObjetoEntrada);
@@ -119,7 +120,7 @@ public class ConsultasAction extends PrincipalCoreAction
 				+ "\n###############################"
 				+ "\n###### consultarFacturas ######"
 				);
-		logger.info("mapaLigadoObjetoEntrada: "+mapaLigadoObjetoEntrada);
+		logger.debug("mapaLigadoObjetoEntrada: {}", mapaLigadoObjetoEntrada);
 		try
 		{
 			listaMapasStringSalida = consultasManager.consultaDinamica(ObjetoBD.OBTIENE_DATOS_FACTURAS, mapaLigadoObjetoEntrada);
@@ -185,8 +186,8 @@ public class ConsultasAction extends PrincipalCoreAction
 				+ "\n##############################"
 				+ "\n###### consultaDinamica ######"
 				);
-		logger.info("linkedObjectMap: "+linkedObjectMap);
-		logger.info("stringMap: "+stringMap);
+		logger.debug("linkedObjectMap: {}", linkedObjectMap);
+		logger.debug("stringMap: {}", stringMap);
 		try
 		{
 			if(stringMap==null)
@@ -268,7 +269,7 @@ public class ConsultasAction extends PrincipalCoreAction
 		try
 		{
 			listaMapasStringSalida = consultasManager.consultaPermisosEdicionCoberturas(cdramo,mapaStringEntrada.get("cdtipsit"),mapaStringEntrada.get("cdplan"),mapaStringEntrada.get("cdgarant"),mapaStringEntrada.get("cdsisrol"));
-			logger.debug("listaMapasStringSalida="+ listaMapasStringSalida);
+			logger.debug("listaMapasStringSalida={}", listaMapasStringSalida);
 		}
 		catch(Exception ex)
 		{
