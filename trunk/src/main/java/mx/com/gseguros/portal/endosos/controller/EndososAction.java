@@ -4035,12 +4035,21 @@ public class EndososAction extends PrincipalCoreAction
 		        .append("\n###### pantalla de endosos de clausulas ######")
 		        .append("\n######                                  ######").toString());
 		logger.debug(new StringBuilder("smap1: ").append(smap1));
+		logger.debug(new StringBuilder("icisos slits1: ").append(slist1));
 		
 		RespuestaVO resp = null;
 		
 		try
 		{
-			transformaEntrada(smap1, slist1, true);
+			boolean validaInciso = true;
+			if(smap1.containsKey("pantallaOrigen") & "MARCO_ENDOSOS_GENERAL".equals(smap1.get("pantallaOrigen")) && (StringUtils.isBlank(smap1.get("nmsituac")))){
+				
+				logger.debug(" <<<<<<<>>>>>>> Entrando a endoso exclusion o textos NIVEL POLIZA <<<<<<<>>>>>>>");
+				validaInciso = false;
+				smap1.put("nmsituac", "0");
+			}
+			
+			transformaEntrada(smap1, slist1, validaInciso );
 			
 			// Valida si hay un endoso anterior pendiente:
 			resp = endososManager.validaEndosoAnterior(smap1.get("cdunieco"), smap1.get("cdramo"),
