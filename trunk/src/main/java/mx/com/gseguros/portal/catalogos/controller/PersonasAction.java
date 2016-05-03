@@ -119,6 +119,16 @@ public class PersonasAction extends PrincipalCoreAction
 				return SUCCESS;
 			}
 			
+			/**
+			 * UPPERCASE PARA EVITAR BUSQUEDAS CON MINUSCULA
+			 */
+			if(StringUtils.isNotBlank(smap1.get("rfc"))){
+				smap1.put("rfc", smap1.get("rfc").toUpperCase());
+			}
+			if(StringUtils.isNotBlank(smap1.get("nombre"))){
+				smap1.put("nombre", smap1.get("nombre").toUpperCase());
+			}
+			
 			Map<String,Object>managerResult=personasManager.obtenerPersonasPorRFC(
 					smap1.get("rfc"),
 					smap1.get("nombre"),
