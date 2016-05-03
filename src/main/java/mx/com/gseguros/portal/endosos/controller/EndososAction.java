@@ -4042,9 +4042,8 @@ public class EndososAction extends PrincipalCoreAction
 		try
 		{
 			boolean validaInciso = true;
-			if(smap1.containsKey("pantallaOrigen") & "MARCO_ENDOSOS_GENERAL".equals(smap1.get("pantallaOrigen")) && (StringUtils.isBlank(smap1.get("nmsituac")))){
-				
-				logger.debug(" <<<<<<<>>>>>>> Entrando a endoso exclusion o textos NIVEL POLIZA <<<<<<<>>>>>>>");
+			if( (slist1 == null || slist1.isEmpty()) && smap1.containsKey("pantallaOrigen") && "MARCO_ENDOSOS_GENERAL".equals(smap1.get("pantallaOrigen")) && StringUtils.isBlank(smap1.get("nmsituac")) ){
+				logger.debug(" <<<<<<<>>>>>>> Sin incisos... Entrando a endoso exclusion o textos NIVEL POLIZA <<<<<<<>>>>>>>");
 				validaInciso = false;
 				smap1.put("nmsituac", "0");
 			}
