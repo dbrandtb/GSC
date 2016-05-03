@@ -159,6 +159,8 @@ function _2_confirmar()
     
 Ext.onReady(function(){
     
+	Ext.Ajax.timeout = 15*60*1000; // 15 min
+	
     /////////////////////
     ////// modelos //////
     /*/////////////////*/
