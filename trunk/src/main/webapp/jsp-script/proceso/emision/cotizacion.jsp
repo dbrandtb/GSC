@@ -1154,13 +1154,11 @@ function llenandoCampos (json)
                         {
                             _0_obtenerClaveGSPorAuto();
                             _0_obtenerSumaAseguradaRamo6(true,true);
-                            _0_recuperarDescuento();
                         }
                         if(_fieldByLabel('FOLIO').getValue()==0)
                         {
                             _fieldByLabel('FOLIO').reset();
-                            //if(_0_smap1.cdsisrol=='SUSCRIAUTO')
-                            asignarAgente(primerInciso.get('parametros.pv_otvalor17'));
+                            asignarAgente(primerInciso.get('parametros.pv_otvalor17')); 
                         }
                     }
                     if(_0_smap1.cdtipsit=='GMI')
@@ -2108,7 +2106,7 @@ Ext.onReady(function()
                         ,fieldLabel : 'FIN DE VIGENCIA'
                         ,xtype      : 'datefield'
                         ,format     : 'd/m/Y'
-                        ,readOnly   : true
+                        ,readOnly   : ('|AF|PU|'.lastIndexOf('|'+_0_smap1.cdtipsit+'|')==-1)//FALSE <<< deshabilita solo lectura
                         ,allowBlank : false
                         ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
                     }
