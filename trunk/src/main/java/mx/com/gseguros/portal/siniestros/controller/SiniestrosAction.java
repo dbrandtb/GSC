@@ -5698,7 +5698,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				HashMap<String,String> params = new HashMap<String, String>();
 				params.put("ntramite",slist1.get(i).get("NTRAMITE"));
 				this.params = params;
-				//generarCalculoSiniestros();
+				generarCalculoSiniestros();
 			}
 			mensaje = mensajeM;
 		}catch( Exception e){

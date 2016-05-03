@@ -493,7 +493,8 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                				//logger.debug(i+" "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+":"+(
 					                		//auxCell!=null?auxCell.getStringCellValue().trim()+"|":"|"
 				                		//));
-		                				String cadenaModificada = auxCell.getStringCellValue().trim()./*replaceAll("á","a").
+		                				String cadenaModificada = auxCell.getStringCellValue().trim().
+		                						replaceAll("á","a").
 		                						replaceAll("é","e").
 		                						replaceAll("í","i").
 		                						replaceAll("ó","o").
@@ -502,7 +503,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                						replaceAll("É","E").
 		                						replaceAll("Í","I").
 		                						replaceAll("Ó","O").
-		                						replaceAll("Ú","U").*/
+		                						replaceAll("Ú","U").
 		                						replaceAll("\\*","");
 		                				logger.debug("Valor de Cadena modificada ===> {}",cadenaModificada);
 		                				bufferLinea.append(
