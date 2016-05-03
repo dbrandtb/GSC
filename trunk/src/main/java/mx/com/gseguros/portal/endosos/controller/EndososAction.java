@@ -4046,6 +4046,15 @@ public class EndososAction extends PrincipalCoreAction
 				logger.debug(" <<<<<<<>>>>>>> Sin incisos... Entrando a endoso exclusion o textos NIVEL POLIZA <<<<<<<>>>>>>>");
 				validaInciso = false;
 				smap1.put("nmsituac", "0");
+				
+				String cdtipsit1 = null;
+				try {
+					cdtipsit1 = endososManager.recuperarCdtipsitInciso1(smap1.get("CDUNIECO"), smap1.get("CDRAMO"),
+									smap1.get("ESTADO"), smap1.get("NMPOLIZA"));
+				} catch (Exception e) {
+					logger.error("Error al obtener el cdtipsit de la poliza para el primer inciso",e);
+				}
+				smap1.put("cdtipsit", cdtipsit1);
 			}
 			
 			transformaEntrada(smap1, slist1, validaInciso );
