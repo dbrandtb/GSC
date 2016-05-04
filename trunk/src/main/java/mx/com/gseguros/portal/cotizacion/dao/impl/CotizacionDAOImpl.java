@@ -5911,16 +5911,18 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
-	public List<Map<String,String>> obtenerCoberturasPlanColec(
+	public List<Map<String, String>> obtenerCoberturasPlanColec(
 			String cdramo
 			,String cdtipsit
 			,String cdplan
+			,String cdsisrol
 			)throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdramo"    , cdramo);
 		params.put("cdtipsit" , cdtipsit);
 		params.put("cdplan"   , cdplan);
+		params.put("cdsisrol", cdsisrol);
 		Map<String,Object>       procRes = ejecutaSP(new ObtenerCoberturasPlanColec(getDataSource()),params);
 		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		if(lista==null)
@@ -5938,8 +5940,9 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdplan"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			String[] cols=new String[]{
-					"CDGARANT" , "DSGARANT" , "SWOBLIGA"
+					"CDGARANT" , "DSGARANT" , "SWOBLIGA", "SWMODIFI"
 				};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

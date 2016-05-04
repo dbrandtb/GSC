@@ -8561,9 +8561,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 			String cdramo
 			,String cdtipsit
 			,String cdplan
+			,String cdsisrol
 			)throws Exception
 	{
-		return cotizacionDAO.obtenerCoberturasPlanColec(cdramo,cdtipsit,cdplan);
+		return cotizacionDAO.obtenerCoberturasPlanColec(cdramo,cdtipsit,cdplan,cdsisrol);
 	}
 
 	@Override

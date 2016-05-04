@@ -472,6 +472,7 @@ public interface CotizacionDAO {
 			String cdramo
 			,String cdtipsit
 			,String cdplan
+			,String cdsisrol
 			)throws Exception;
 
 	public List<Map<String,String>> obtieneDatosContratantePoliza(
