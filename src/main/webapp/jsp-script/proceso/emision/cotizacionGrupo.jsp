@@ -533,7 +533,7 @@ Ext.onReady(function()
                     ,dataIndex : 'ayudamater'
                     ,width     : 140
                     ,editor    : _p21_editorAyudaMater
-                    ,hidden    : _p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
+                    ,hidden    : true //_p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
                     ,renderer  : function(v)
                     {
                         return rendererColumnasDinamico(v,'ayudamater');
@@ -544,7 +544,7 @@ Ext.onReady(function()
                     ,dataIndex : 'asisinte'
                     ,width     : 140
                     ,editor    : _p21_editorAsisInter
-                    ,hidden    : _p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
+                    ,hidden    : true //_p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
                     ,renderer  : function(v)
                     {
                         return rendererColumnasDinamico(v,'asisinte');
@@ -555,7 +555,7 @@ Ext.onReady(function()
                     ,dataIndex : 'emerextr'
                     ,width     : 140
                     ,editor    : _p21_editorEmerextr
-                    ,hidden    : _p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
+                    ,hidden    : false//_p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA!='N'
                     ,renderer  : function(v)
                     {
                         return rendererColumnasDinamico(v,'emerextr');
@@ -2138,8 +2138,9 @@ function _p21_editarGrupoClic(grid,rowIndex)
     var record = grid.getStore().getAt(rowIndex);
     debug('>_p21_editarGrupoClic:',record);
     
-    var cdPlanParaQuitarPrim = record.get('cdplan');
-    var quitarPrim = _p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&(cdPlanParaQuitarPrim=='PR'||cdPlanParaQuitarPrim=='PA');
+// var cdPlanParaQuitarPrim = record.get('cdplan');
+// var quitarPrim =
+// _p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&(cdPlanParaQuitarPrim=='PR'||cdPlanParaQuitarPrim=='PA');
     
     var valido = true;
     
@@ -2164,6 +2165,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                 'smap1.cdramo'    : _p21_smap1.cdramo
                 ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
                 ,'smap1.cdplan'   : record.get('cdplan')
+                ,'smap1.cdsisrol' : _p21_smap1.cdsisrol
             }
             ,success : function(response)
             {
@@ -2294,8 +2296,8 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                         ,boxLabel   : 'Amparada'
                                                         ,name       : 'amparada'
                                                         ,inputValue : 'S'
-                                                        ,checked    : json.slist1[j].SWOBLIGA=='S'&&!(quitarPrim&&(json.slist1[j].CDGARANT=='4AYM'||json.slist1[j].CDGARANT=='4EE'))
-                                                        ,disabled   : quitarPrim&&(json.slist1[j].CDGARANT=='4AYM'||json.slist1[j].CDGARANT=='4EE')//_p21_smap1.cdsisrol!='COTIZADOR'&&json.slist1[j].SWOBLIGA=='S'
+                                                        ,checked    : json.slist1[j].SWOBLIGA=='S'&&!(json.slist1[j].CDGARANT=='4AYM'||json.slist1[j].CDGARANT=='4EE')
+                                                        ,disabled   : json.slist1[j].SWMODIFI=='N'
                                                         ,style      : 'color:white;'
                                                         ,listeners  :
                                                         {
@@ -4904,7 +4906,7 @@ function _p21_estiloEditores(cdplan)
                         {
                             if(!_4HOS)
                             {
-                            	_p21_editorEmerextr.setValue('0');
+                            	_p21_editorEmerextr.setValue('N');
                             	_p21_editorEmerextr.addCls('_p21_editorLectura');
                             	_p21_editorAsisInter.setValue('0');
                                 _p21_editorAsisInter.addCls('_p21_editorLectura');
@@ -4916,7 +4918,7 @@ function _p21_estiloEditores(cdplan)
                     }
                 }
                 //_p21_editorAsisInter.setReadOnly(!_4AIV);
-                if(_p21_smap1.cdsisrol!='COTIZADOR'&&false)
+                if(_p21_smap1.cdsisrol!='COTIZADOR')
                 {
                     if(!_4EE||cdplan=='PR'||!_4HOS)
                     {

@@ -611,6 +611,7 @@ public interface CotizacionManager
 			String cdramo
 			,String cdtipsit
 			,String cdplan
+			,String cdsisrol
 			)throws Exception;
 
 	public Map<String,String> obtieneDatosContratantePoliza(

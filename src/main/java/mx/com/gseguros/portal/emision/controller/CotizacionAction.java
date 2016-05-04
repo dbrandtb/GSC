@@ -11408,12 +11408,12 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			success = true;
 			exito   = true;
-			slist1 = cotizacionManager.obtenerCoberturasPlanColec(smap1.get("cdramo"),smap1.get("cdtipsit"),smap1.get("cdplan"));
+			slist1 = cotizacionManager.obtenerCoberturasPlanColec(smap1.get("cdramo"),smap1.get("cdtipsit"),smap1.get("cdplan"),smap1.get("cdsisrol"));
 		}
 		catch(Exception ex)
 		{
 			long timestamp=System.currentTimeMillis();
-			logger.error(timestamp+" error al obtener coberturas plan");
+			logger.error(timestamp+" error al obtener coberturas plan", ex);
 			respuesta       = "Error inesperado #"+timestamp;
 			respuestaOculta = ex.getMessage();
 			exito           = false;
