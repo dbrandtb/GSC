@@ -5605,6 +5605,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					
 					HashMap<String,String> params = new HashMap<String, String>();
 					params.put("pv_ntramite_i",totalTramites[i].toString());
+					params.put("pv_tipmov_i",TipoPago.DIRECTO.getCodigo());
 					this.params=params;
 					solicitarPago();
 					HashMap<String,String>map=new HashMap<String,String>();
