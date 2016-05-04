@@ -2705,6 +2705,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
                 'smap1.cdramo'    : _p25_smap1.cdramo
                 ,'smap1.cdtipsit' : _p25_smap1.cdtipsit
                 ,'smap1.cdplan'   : record.get('cdplan')
+                , 'smap1.cdsisrol': _p25_smap1.cdsisrol
             }
             ,success : function(response)
             {
@@ -2799,8 +2800,8 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                         ,boxLabel   : 'Amparada'
                                                         ,name       : 'amparada'
                                                         ,inputValue : 'S'
-                                                        ,checked    : json.slist1[j].SWOBLIGA=='S'
-                                                        ,disabled   : false//_p25_smap1.cdsisrol!='COTIZADOR'&&json.slist1[j].SWOBLIGA=='S'
+                                                        ,checked    : json.slist1[j].SWOBLIGA=='S'&&!(json.slist1[j].CDGARANT=='4AYM'||json.slist1[j].CDGARANT=='4EE')
+                                                        ,disabled   : json.slist1[j].SWMODIFI=='N'
                                                         ,style      : 'color:white;'
                                                         ,listeners  :
                                                         {
