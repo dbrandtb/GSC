@@ -413,7 +413,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	@Action(value   = "generarRemesaEmisionEndoso",
+	/*Action(value   = "generarRemesaEmisionEndoso",
 			results = { @Result(name="success", type="json") }
 	)
 	public String generarRemesaEmisionEndoso()
@@ -472,6 +472,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
+	*/
 	
 	@Action(value   = "marcarImpresionOperacion",
 			results = { @Result(name="success", type="json") }
