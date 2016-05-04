@@ -145,7 +145,7 @@ public class UsuarioAction extends PrincipalCoreAction {
 
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
-			errorMessage = "Error en el proceso de cambio de Password. Consulte a Soporte T&eacute;cnico.";
+			errorMessage = "Error en el proceso de cambio de Password. Consulte a Soporte T\u00e9cnico.";
 			return SUCCESS;
 		}
 	}
@@ -186,7 +186,7 @@ public class UsuarioAction extends PrincipalCoreAction {
     		success=true;
     	} catch(Exception e) {
     		logger.error(e.getMessage(), e);
-    		errorMessage = "Error al obtener usuarios. Intente m&aacute;s tarde";
+    		errorMessage = "Error al obtener usuarios. Intente m\u00e1s tarde";
     	}
     	
     	//logger.debug("Resultado de usuarios para la busqueda: "+ usuarios);
@@ -205,7 +205,7 @@ public class UsuarioAction extends PrincipalCoreAction {
     		success=true;
     	} catch(Exception e) {
     		logger.error(e.getMessage(), e);
-    		errorMessage = "Error al obtener roles. Intente m&aacute;s tarde";
+    		errorMessage = "Error al obtener roles. Intente m\u00e1s tarde";
     	}
     	
     	return SUCCESS;

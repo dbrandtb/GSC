@@ -1167,7 +1167,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			resp.setExito(false);
 			resp.setRespuesta(
 					new StringBuilder()
-					.append("No existe el par&aacute;metro #").append(timestamp)
+					.append("No existe el par\u00e1metro #").append(timestamp)
 					.toString()
 					);
 			resp.setRespuestaOculta(ex.getMessage());
@@ -3924,6 +3924,21 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,false
 							);
 					
+					mesaControlDAO.movimientoDetalleTramite(
+							ntramite
+							,new Date()
+							,null       //cdclausu
+							,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
+							,cdusuari
+							,null       //cdmotivo
+							,cdsisrol
+							,"S"
+							,null
+							,null
+							,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo()
+							,false
+							);
+					
 					resp.getSmap().put("nombreUsuarioDestino"
 							,mesaControlDAO.turnaPorCargaTrabajo(ntramite,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())
 					);
@@ -4098,7 +4113,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		
 		if(resp.isExito())
 		{
-			resp.setRespuesta(new StringBuilder("Se gener&oacute; el tr&aacute;mite ").append(ntramite).toString());
+			resp.setRespuesta(new StringBuilder("Se gener\u00f3 el tr\u00e1mite ").append(ntramite).toString());
 			resp.setRespuestaOculta("Todo OK");
 		}
 		
@@ -5988,7 +6003,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					}
 					catch(Exception ex)
 					{
-						throw new ApplicationException("Falta parametrizar la numeraci&oacute;n de p&oacute;liza");
+						throw new ApplicationException("Falta parametrizar la numeraci\u00f3n de p\u00f3liza");
 					}
 				}
 				////// si no hay nmpoliza //////
@@ -6921,6 +6936,10 @@ public class CotizacionManagerImpl implements CotizacionManager
             			,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
             			,cdusuari, null, cdsisrol,"S", null, null, EstatusTramite.PENDIENTE.getCodigo(),false);
             	
+            	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null
+            			,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
+            			,cdusuari, null, cdsisrol,"S", null, null, EstatusTramite.PENDIENTE.getCodigo(),false);
+            	
             	try {
 	            	cotizacionDAO.grabarEvento(new StringBuilder("\nCotizar tramite grupo"), 
 	            			"EMISION", "COMTRAMITMC", new Date(), cdusuari, cdsisrol, ntramite, 
@@ -6976,7 +6995,7 @@ public class CotizacionManagerImpl implements CotizacionManager
                 
                 mesaControlDAO.guardarDocumento(cdunieco, cdramo, "W",
             			"0", "0", new Date(), nombreArchivoCotizacion,
-            			"COTIZACI&Oacute;N", nmpoliza, ntramite, "1",
+            			"COTIZACI\u00f3N", nmpoliza, ntramite, "1",
             			null, null, "1", null, null, null, null);
             }
         	

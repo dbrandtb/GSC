@@ -1018,7 +1018,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			msgResult = siniestrosManager.validaDocumentosCargados(params);
 			logger.debug("Respuesta ValidaDocumentosCargados:{} ", msgResult);
 			if(StringUtils.isBlank(msgResult)){
-				msgResult = "Error al realizar validaci&oacute; de documentos";
+				msgResult = "Error al realizar validaci\u00f3 de documentos";
 				success = false;
 			}else if(Constantes.NO.equalsIgnoreCase(msgResult)){
 				msgResult = "No se han anexado todos los documentos, favor de subir todos los documentos marcados como entregados en el checklist.";
@@ -1185,7 +1185,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			siniestrosManager.getAltaSiniestroAutServicio(nmautser,nfactura);
 			
 			
-			mensaje = "Se ha asociado el siniestro con la autorizaci&oacute;n";
+			mensaje = "Se ha asociado el siniestro con la autorizaci\u00f3n";
 			success=true;
 			siniestrosManager.guardaAutorizacionConceptos(cdunieco,cdramo,estado,nfactura,nmautser,cdpresta,cdperson);
 		}
@@ -1227,7 +1227,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			siniestrosManager.actualizaOTValorMesaControl(otvalor);
 			
 			success = true;
-			mensaje = "Tr&aacute;mite actualizado";
+			mensaje = "Tr\u00e1mite actualizado";
 		}
 		catch(Exception ex) {
 			success=false;
@@ -1344,7 +1344,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		}catch( Exception e){
 			logger.error("Error en solicitarPago generacion de cartas finiquito : {}", e.getMessage(), e);
 			success =  false;
-			mensaje = "Error al solicitar Pago, generaci&oacute;n de cartas finiquito. Consulte a Soporte T&eacute;cnico.";
+			mensaje = "Error al solicitar Pago, generaci\u00f3n de cartas finiquito. Consulte a Soporte T\u00e9cnico.";
 			return SUCCESS;
 		}
 		return SUCCESS;
@@ -3400,7 +3400,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						feegreso,diasdedu,nombprov,null, null);
 			}
 			success = true;
-			mensaje = "Tr&aacute;mite actualizado";
+			mensaje = "Tr\u00e1mite actualizado";
 		}
 		catch(Exception ex) {
 			success=false;
@@ -3431,7 +3431,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			otvalor.put("pv_otvalor14_i"  , cdconval);
 			siniestrosManager.actualizaOTValorMesaControl(otvalor);
 			success = true;
-			mensaje = "Tr&aacute;mite actualizado";
+			mensaje = "Tr\u00e1mite actualizado";
 		}
 		catch(Exception ex){
 			success=false;
@@ -3489,7 +3489,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				mensaje = null;
 				success = true;
 			}else{
-				mensaje = "La intervenci&oacute;n quir&uacute;rgica  no cubre con el periodo de espera : "+datosAdicionales.get(0).get("PLAZOESPERA")+" d&iacute;as";
+				mensaje = "La intervenci\u00f3n quir\u00fargica  no cubre con el periodo de espera : "+datosAdicionales.get(0).get("PLAZOESPERA")+" d\u00edas";
 				success = false;
 			}
 			logger.debug("Paso 4.- Mesaje : {}", mensaje);
@@ -3549,11 +3549,11 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						mensaje = "";
 						success = true;
 					}else{
-						mensaje = "Proveedor pendiente o la clave del proveedor es 0 - Favor de configurar la informaci&oacute;n.";
+						mensaje = "Proveedor pendiente o la clave del proveedor es 0 - Favor de configurar la informaci\u00f3n.";
 						success = false;
 					}
 				}else{
-					mensaje = "Verifica los C&aacute;lculos - El importe total de las facturas es menor al total a pagar.";
+					mensaje = "Verifica los C\u00e1lculos - El importe total de las facturas es menor al total a pagar.";
 					success = false;
 				}
 			}
@@ -5611,7 +5611,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					HashMap<String,String>map=new HashMap<String,String>();
 					
 					if(success){
-						map.put("mensajeRespuesta"   , totalTramites[i].toString()+" El pago se realizo con &eacute;xito.");
+						map.put("mensajeRespuesta"   , totalTramites[i].toString()+" El pago se realizo con \u00e9xito.");
 					}else{
 						map.put("mensajeRespuesta"   , totalTramites[i].toString()+" "+mensaje);
 					}
@@ -5650,7 +5650,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			String existeRegistros = siniestrosManager.existeRegistrosProcesarSISCO();
 			logger.debug("Existe Registros ==> :{}",existeRegistros);
 			if(existeRegistros.equalsIgnoreCase("S")){
-				String mensajeM = "Se generaron los siguientes tr&aacute;mite : ";
+				String mensajeM = "Se generaron los siguientes tr\u00e1mite : ";
 				slist1 = siniestrosManager.procesaPagoAutomaticoSisco(usuario.getUser(), "0");
 				logger.debug("Valor de respuesta : {}",slist1);
 				for(int i=0;i<slist1.size();i++){
@@ -5689,7 +5689,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.debug("cdpresta: {} nmconsult:{} tipoproc:{} usuario:{}",cdpresta,nmconsult,tipoproc,usuario.getUser());
 			slist1 = siniestrosManager.procesaPagoAutomaticoLayout(cdpresta, nmconsult, tipoproc, usuario.getUser());
 			logger.debug("VALORES DE RESPUESTA =>>>>>>>>>>>>>>>>>>"+slist1);
-			String mensajeM = "Se generaron los siguientes tr&aacute;mite : ";
+			String mensajeM = "Se generaron los siguientes tr\u00e1mite : ";
 			for(int i=0;i<slist1.size();i++){
 				if(i<slist1.size()-1){
 					mensajeM = mensajeM + slist1.get(i).get("NTRAMITE")+",";
@@ -5705,7 +5705,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		}catch( Exception e){
 			logger.error("Error en procesarTramiteLayout : {}", e.getMessage(), e);
 			success =  false;
-			mensaje = "Error al procesar el tr&aacute;mite al momento de procesar.";
+			mensaje = "Error al procesar el tr\u00e1mite al momento de procesar.";
 			return SUCCESS;
 		}
 		return SUCCESS;

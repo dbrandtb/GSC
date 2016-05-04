@@ -174,7 +174,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				
 				result.put("necesitaAutorizacion" , "S");
 				
-				String msjeEnvio = "La p&oacute;liza se envi&oacute; a autorizaci&oacute;n debido a que:<br/>";
+				String msjeEnvio = "La p\u00f3liza se envi\u00f3 a autorizaci\u00f3n debido a que:<br/>";
 				for(Map<String, String> iAseguradoEdadInvalida : listaAseguradosEdadInvalida) {
 					msjeEnvio = msjeEnvio + iAseguradoEdadInvalida.get("NOMBRE");
 					if(iAseguradoEdadInvalida.get("SUPERAMINI").substring(0, 1).equals("-")) {
@@ -195,7 +195,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 						null, null, new Date(), EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo(),
 						msjeEnvio, null, cdtipsit, cdusuari, cdsisrol, null, null, null, otvalores, null);
 				
-				msjeEnvio = msjeEnvio + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
+				msjeEnvio = msjeEnvio + "<br/>Tr\u00e1mite de autorizaci\u00f3n: "+ntramiteAutorizacion;
 	        	
 	        	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null,
 	        			"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")",
@@ -214,7 +214,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				if(!cuadroNatural) {
 					necesitaAutorizacion = true;
 					result.put("necesitaAutorizacion", "S");
-					String msjeAutorizacion = "La p&oacute;liza se envi&oacute; a autorizaci&oacute;n debido a que se cambio el cuadro de comisiones";
+					String msjeAutorizacion = "La p\u00f3liza se envi\u00f3 a autorizaci\u00f3n debido a que se cambio el cuadro de comisiones";
 					
 					Map<String, String> otvalores = new HashMap<String,String>();
 					otvalores.put("otvalor01", cdusuari);
@@ -230,7 +230,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							cdusuari, cdsisrol, null,null,null,
 							otvalores, null);
 					
-					msjeAutorizacion = msjeAutorizacion + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
+					msjeAutorizacion = msjeAutorizacion + "<br/>Tr\u00e1mite de autorizaci\u00f3n: "+ntramiteAutorizacion;
 					
 		        	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null,
 		        			"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")",
@@ -394,8 +394,8 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					}
 					
 				} else {
-					logger.error("Error en el Web Service de emisi&oacute;n. No se pudo emitir la p&oacute;liza");
-					throw new ApplicationException("Error en el Web Service de emisi&oacute;n. No se pudo emitir la p&oacute;liza");
+					logger.error("Error en el Web Service de emisi\u00f3n. No se pudo emitir la p\u00f3liza");
+					throw new ApplicationException("Error en el Web Service de emisi\u00f3n. No se pudo emitir la p\u00f3liza");
 				}
 			}
 			
@@ -530,7 +530,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				
 				String mensajeEmail = "<span style=\"font-family: Verdana, Geneva, sans-serif;\">"+
 									"<br>Estimado(a) cliente,<br/><br/>"+
-									"Anexamos a este e-mail la documentaci&oacute;n de la p&oacute;liza de Autom&oacute;viles contratada con GENERAL DE SEGUROS.<br/>"+
+									"Anexamos a este e-mail la documentaci\u00f3n de la p\u00f3liza de Autom\u00f3viles contratada con GENERAL DE SEGUROS.<br/>"+
 									"Para visualizar el documento favor de dar click en el link correspondiente.<br/>";
 				
 				/**
@@ -538,7 +538,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				 */
 				parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",,0";
 				logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
-				mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car&aacute;tula de p&oacute;liza</a>";
+				mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car\u00e1tula de p\u00f3liza</a>";
 				
 				mesaControlDAO.guardarDocumento(
 						cdunieco
@@ -548,7 +548,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 						,nmsuplemEmitida
 						,new Date()
 						,urlCaratula + parametros
-						,"Car&aacute;tula de P&oacute;liza"
+						,"Car\u00e1tula de P\u00f3liza"
 						,nmpoliza
 						,ntramite
 						,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
@@ -697,7 +697,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					 */
 					parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",,0";
 					logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
-					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosFlot + parametros+"\">Relaci&oacute;n de Incisos Flotillas</a>";
+					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosFlot + parametros+"\">Relaci\u00f3n de Incisos Flotillas</a>";
 					
 					mesaControlDAO.guardarDocumento(
 							cdunieco
@@ -751,7 +751,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							
 							parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",,0,"+desdeInciso+","+hastaInciso;
 							logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
-							mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci&oacute;n. " +desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos+"</a>";
+							mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci\u00f3n. " +desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos+"</a>";
 							
 							mesaControlDAO.guardarDocumento(
 									cdunieco

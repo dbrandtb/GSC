@@ -936,6 +936,10 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				));
 	}
 	
+	/**
+	 * Se comenta porque ya no se usa, aunque está funcional
+	 */
+	/*
 	@Override
 	public Map<String,String> generarRemesaEmisionEndoso(
 			String cdusuari
@@ -1233,6 +1237,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		
 		return result;
 	}
+	*/
 	
 	@Override
 	public Map<String,String> marcarImpresionOperacion(

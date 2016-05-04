@@ -1070,7 +1070,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				if(reclamo.getNumPol() == 0){
 					logger.debug("Sin datos para ejecutaWSreclamo.");
 					res.setSuccess(false);
-					res.setMensaje("Alguno de los reclamos no tiene la informaci&oacute;n necesaria para solicitar el pago.");
+					res.setMensaje("Alguno de los reclamos no tiene la informaci\u00f3n necesaria para solicitar el pago.");
 					return res;
 				}
 				
@@ -1116,14 +1116,14 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 							}
 							
 							res.setSuccess(false);
-							res.setMensaje("Error al enviar alg&uacute;n Reclamo para la solicitud de Pago. Intente nuevamente.");
+							res.setMensaje("Error al enviar alg\u00fan Reclamo para la solicitud de Pago. Intente nuevamente.");
 						}
 					}
 					
 				}catch(WSException e){
 					logger.error("Error al enviar el Reclamo: " + reclamo.getIcodreclamo(), e);
 					res.setSuccess(false);
-					res.setMensaje("Error al enviar alg&uacute;n Reclamo para la solicitud de Pago. Intente nuevamente.");
+					res.setMensaje("Error al enviar alg\u00fan Reclamo para la solicitud de Pago. Intente nuevamente.");
 					logger.error("Imprimpriendo el xml enviado al WS: Payload: " + e.getPayload());
 					try {
 						kernelManager.movBitacobro(
@@ -1144,7 +1144,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				}catch (Exception e){
 					logger.error("Error al enviar el Reclamo: " + reclamo.getIcodreclamo(), e);
 					res.setSuccess(false);
-					res.setMensaje("Error al enviar alg&uacute;n Reclamo para la solicitud de Pago. Intente nuevamente.");
+					res.setMensaje("Error al enviar alg\u00fan Reclamo para la solicitud de Pago. Intente nuevamente.");
 				}
 			}
 		}else {

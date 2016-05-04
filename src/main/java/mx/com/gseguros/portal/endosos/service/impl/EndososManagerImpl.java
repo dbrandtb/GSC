@@ -1837,8 +1837,8 @@ public class EndososManagerImpl implements EndososManager
 			else {
 				resp.setRespuesta(
 						new StringBuilder("El endoso ").append(nsuplogi)
-						.append(" se guard&oacute; en mesa de control para autorizaci&oacute;n ")
-						.append("con n&uacute;mero de tr&aacute;mite ").append(ntramiteEndoso)
+						.append(" se guard\u00f3 en mesa de control para autorizaci\u00f3n ")
+						.append("con n\u00famero de tr\u00e1mite ").append(ntramiteEndoso)
 						.toString());
 			}
 		}
@@ -2835,8 +2835,8 @@ public class EndososManagerImpl implements EndososManager
 			{
 				String mensajeInvalido = "";
 				respuesta = Utils.join("El endoso ",nsuplogi
-						," se guard&oacute; en mesa de control para autorizaci&oacute;n"
-						," con n&uacute;mero de tr&aacute;mite ",ntramiteEndoso
+						," se guard\u00f3 en mesa de control para autorizaci\u00f3n"
+						," con n\u00famero de tr\u00e1mite ",ntramiteEndoso
 						+mensajeInvalido);
 			}
 		}
@@ -3045,8 +3045,8 @@ public class EndososManagerImpl implements EndososManager
 			{
 				String mensajeInvalido = "";
 				respuesta = Utils.join("El endoso ",nsuplogi
-						," se guard&oacute; en mesa de control para autorizaci&oacute;n"
-						," con n&uacute;mero de tr&aacute;mite ",ntramiteEndoso
+						," se guard\u00f3 en mesa de control para autorizaci\u00f3n"
+						," con n\u00famero de tr\u00e1mite ",ntramiteEndoso
 						+mensajeInvalido);
 			}
 		}
