@@ -588,8 +588,8 @@ public class EndososAction extends PrincipalCoreAction
 				
             } else {
 				mensaje = new StringBuilder().append("El endoso ").append(nsuplogi)
-						.append(" se guard&oacute; en mesa de control para autorizaci&oacute;n ")
-						.append("con n&uacute;mero de tr&aacute;mite ").append(respConfirmacionEndoso.getNumeroTramite()).toString();
+						.append(" se guard\u00f3 en mesa de control para autorizaci\u00f3n ")
+						.append("con n\u00famero de tr\u00e1mite ").append(respConfirmacionEndoso.getNumeroTramite()).toString();
 			}
 			success = true;
 
@@ -699,8 +699,8 @@ public class EndososAction extends PrincipalCoreAction
 				
             } else {
 				mensaje = new StringBuilder().append("El endoso ").append(nsuplogi)
-						.append(" se guard&oacute; en mesa de control para autorizaci&oacute;n ")
-						.append("con n&uacute;mero de tr&aacute;mite ").append(respConfirmacionEndoso.getNumeroTramite()).toString();
+						.append(" se guard\u00f3 en mesa de control para autorizaci\u00f3n ")
+						.append("con n\u00famero de tr\u00e1mite ").append(respConfirmacionEndoso.getNumeroTramite()).toString();
 			}
 			success = true;
 
@@ -1214,8 +1214,8 @@ public class EndososAction extends PrincipalCoreAction
 				mensaje="Se ha guardado el endoso "+respuestaEndosoNombres.get("pv_nsuplogi_o");
 			} else {
 				mensaje="El endoso "+respuestaEndosoNombres.get("pv_nsuplogi_o")
-						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-						+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
 			success=true;
 		} catch(Exception ex) {
@@ -1329,8 +1329,8 @@ public class EndososAction extends PrincipalCoreAction
 				
             } else {
 				mensaje = new StringBuilder().append("El endoso ").append(nsuplogi)
-						.append(" se guard&oacute; en mesa de control para autorizaci&oacute;n ")
-						.append("con n&uacute;mero de tr&aacute;mite ").append(respConfirmacionEndoso.getNumeroTramite()).toString();
+						.append(" se guard\u00f3 en mesa de control para autorizaci\u00f3n ")
+						.append("con n\u00famero de tr\u00e1mite ").append(respConfirmacionEndoso.getNumeroTramite()).toString();
 			}
 			
 			success = true;
@@ -1517,8 +1517,8 @@ public class EndososAction extends PrincipalCoreAction
 					mensaje="Se ha confirmado el endoso "+resEnd.get("pv_nsuplogi_o");
 				} else {
 					mensaje="El endoso "+resEnd.get("pv_nsuplogi_o")
-							+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-							+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+							+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+							+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 				}
 			}
 			success=true;
@@ -1828,8 +1828,8 @@ public class EndososAction extends PrincipalCoreAction
 			    
 			} else {
 				mensaje="El endoso "+resEndDomi.get("pv_nsuplogi_o")
-						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-						+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
 			success=true;
 			
@@ -2139,8 +2139,8 @@ public class EndososAction extends PrincipalCoreAction
 				
 			} else {
 				mensaje="El endoso "+resEndDomi.get("pv_nsuplogi_o")
-						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-						+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
 			success=true;
 			
@@ -2371,8 +2371,8 @@ public class EndososAction extends PrincipalCoreAction
 				mensaje = "Endoso generado";
 			} else {
 				mensaje = new StringBuilder().append("El endoso ").append(nsuplogi)
-						.append(" se guard&oacute; en mesa de control para autorizaci&oacute;n ")
-						.append("con n&uacute;mero de tr&aacute;mite ").append(respConfirmacionEndoso.getNumeroTramite()).toString();
+						.append(" se guard\u00f3 en mesa de control para autorizaci\u00f3n ")
+						.append("con n\u00famero de tr\u00e1mite ").append(respConfirmacionEndoso.getNumeroTramite()).toString();
 			}
 			success=true;
 
@@ -2820,8 +2820,8 @@ public class EndososAction extends PrincipalCoreAction
 				} else {
 					mensaje = new StringBuilder("El endoso ")
 								.append(respEndCob.get("pv_nsuplogi_o"))
-								.append(" se guard&oacute; en mesa de control para autorizaci&oacute;n ")
-								.append("con n&uacute;mero de tr&aacute;mite ")
+								.append(" se guard\u00f3 en mesa de control para autorizaci\u00f3n ")
+								.append("con n\u00famero de tr\u00e1mite ")
 								.append(respConfirmacionEndoso.getNumeroTramite()).toString();
 				}
 			} else {
@@ -3327,8 +3327,8 @@ public class EndososAction extends PrincipalCoreAction
 					
 				} else {
 					mensaje="El endoso "+respEnd.get("pv_nsuplogi_o")
-							+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-							+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+							+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+							+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 				}
 			} else {				
 				mensaje="Se ha guardado el endoso "+respEnd.get("pv_nsuplogi_o");
@@ -3578,8 +3578,8 @@ public class EndososAction extends PrincipalCoreAction
 					
 				} else {
 					mensaje="El endoso "+respEnd.get("pv_nsuplogi_o")
-					+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-					+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+					+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+					+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 				}
 			} else {				
 				mensaje="Se ha guardado el endoso "+respEnd.get("pv_nsuplogi_o");
@@ -3779,8 +3779,8 @@ public class EndososAction extends PrincipalCoreAction
 				mensaje = "Endoso generado";
 			} else {
 				mensaje = new StringBuilder().append("El endoso ").append(nsuplogi)
-						.append(" se guard&oacute; en mesa de control para autorizaci&oacute;n ")
-						.append("con n&uacute;mero de tr&aacute;mite ").append(respConfirmacionEndoso.getNumeroTramite()).toString();
+						.append(" se guard\u00f3 en mesa de control para autorizaci\u00f3n ")
+						.append("con n\u00famero de tr\u00e1mite ").append(respConfirmacionEndoso.getNumeroTramite()).toString();
 			}
 			success=true;
 			
@@ -4371,7 +4371,7 @@ public class EndososAction extends PrincipalCoreAction
 					if(StringUtils.isBlank(smap1.get("aux.otvalor49"))
 							||StringUtils.isBlank(smap1.get("aux.otvalor50")))
 					{
-						throw new Exception("Falta complementar c&oacute;digo de cliente externo y clave familiar");
+						throw new Exception("Falta complementar c\u00f3digo de cliente externo y clave familiar");
 					}
 				}
 			}
@@ -4953,7 +4953,7 @@ public class EndososAction extends PrincipalCoreAction
 					String cdtipsup = alta ? TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString()
 						     : TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString();
 					
-					String mensajeRespuesta = "El endoso se envi&oacute; a autorizaci&oacute;n debido a que:<br/>";
+					String mensajeRespuesta = "El endoso se envi\u00f3 a autorizaci\u00f3n debido a que:<br/>";
 					for(Map<String,String>iAseguradoEdadInvalida:invalidos)
 					{
 						mensajeRespuesta = mensajeRespuesta + iAseguradoEdadInvalida.get("NOMBRE");
@@ -5163,8 +5163,8 @@ public class EndososAction extends PrincipalCoreAction
 					}
 				}
 					mensaje="El endoso "+nsuplogi
-							+" se guard&oacute; en mesa de control para autorizaci&oacute;n"
-							+" con n&uacute;mero de tr&aacute;mite "+tramiteGenerado
+							+" se guard\u00f3 en mesa de control para autorizaci\u00f3n"
+							+" con n\u00famero de tr\u00e1mite "+tramiteGenerado
 							+mensajeInvalido;
 			}
 			
@@ -5589,8 +5589,8 @@ public class EndososAction extends PrincipalCoreAction
 				mensaje="Endoso confirmado "+nsuplogi;
 			} else {
 				mensaje="El endoso "+nsuplogi
-						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-						+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
 			
 			success=true;
@@ -5940,8 +5940,8 @@ public class EndososAction extends PrincipalCoreAction
 				mensaje="Endoso confirmado "+nsuplogi;
 			} else {
 				mensaje="El endoso "+nsuplogi
-						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-						+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
 			success=true;
 		} catch(Exception ex) {
@@ -6953,8 +6953,8 @@ public class EndososAction extends PrincipalCoreAction
 			    
 			} else {
 				mensaje="El endoso "+nsuplogi
-						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-						+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
 			success=true;
 		} catch(Exception ex) {
@@ -7368,8 +7368,8 @@ public class EndososAction extends PrincipalCoreAction
 				
 			} else {
 				mensaje="El endoso "+nsuplogi
-						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-						+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
 			success=true;
 		} catch(Exception ex) {
@@ -7694,8 +7694,8 @@ public class EndososAction extends PrincipalCoreAction
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			} else {
 				mensaje="El endoso "+nsuplogi
-						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-						+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
 			success=true;
 		} catch(Exception ex) {
@@ -7998,8 +7998,8 @@ public class EndososAction extends PrincipalCoreAction
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			} else {
 				mensaje="El endoso "+nsuplogi
-						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-						+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
 			
 			success=true;
@@ -8514,7 +8514,7 @@ public class EndososAction extends PrincipalCoreAction
 						usuarioTramite = " asignado a: "+(String)res.get("NOMBRE");
 					}
 					
-					usuarioTramite+=" en suscripci\u00F3n t&eacute;cnica para su recotizaci&oacute;n";
+					usuarioTramite+=" en suscripci\u00F3n t\u00e9cnica para su recotizaci\u00f3n";
 				}else{
 					Map<String, Object> res =  siniestrosManager.moverTramite(ntramiteNuevaPoliza, EstatusTramite.TRAMITE_COMPLETO.getCodigo(), "Se Reexpide Poliza del tramite original: "+ ntramite , usuario.getUser(), usuario.getRolActivo().getClave(), 
 							null, RolSistema.SUSCRIPTOR.getCdsisrol(), null, null, "N", timestamp);
@@ -8523,7 +8523,7 @@ public class EndososAction extends PrincipalCoreAction
 						usuarioTramite = " asignado a: "+(String)res.get("NOMBRE");
 					}
 					
-					usuarioTramite+=" en suscripci\u00F3n de emisi&oacute;n para su reexpedici&oacute;n";
+					usuarioTramite+=" en suscripci\u00F3n de emisi\u00f3n para su reexpedici\u00f3n";
 					
 				}
 			}
@@ -8576,8 +8576,8 @@ public class EndososAction extends PrincipalCoreAction
 							+ "");
 				}
 				
-				mensaje="Se ha generado la p&oacute;liza "+nmpolizaNuevaPoliza
-						+" con n&uacute;mero de tr&aacute;mite "+ntramiteNuevaPoliza + usuarioTramite;
+				mensaje="Se ha generado la p\u00f3liza "+nmpolizaNuevaPoliza
+						+" con n\u00famero de tr\u00e1mite "+ntramiteNuevaPoliza + usuarioTramite;
 				
 				String sucursal = cdunieco;
 				
@@ -8591,10 +8591,10 @@ public class EndososAction extends PrincipalCoreAction
 				
 			} else {
 				mensaje="El endoso "+nsuplogi
-						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-						+ "con n&uacute;mero de tr&aacute;mite "+respConfirmacionEndoso.getNumeroTramite()+". "
-						+ "La p&oacute;liza reexpedida es "+nmpolizaNuevaPoliza+" con tr&aacute;mite "
-						+ "de emisi&oacute;n "+ntramiteNuevaPoliza;
+						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+						+ "con n\u00famero de tr\u00e1mite "+respConfirmacionEndoso.getNumeroTramite()+". "
+						+ "La p\u00f3liza reexpedida es "+nmpolizaNuevaPoliza+" con tr\u00e1mite "
+						+ "de emisi\u00f3n "+ntramiteNuevaPoliza;
 			}
 			success=true;
 			
@@ -8985,8 +8985,8 @@ public class EndososAction extends PrincipalCoreAction
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			} else {
 				mensaje="El endoso "+nsuplogi
-						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-						+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
 			success=true;
 			
@@ -9258,8 +9258,8 @@ public class EndososAction extends PrincipalCoreAction
 				
 			} else {
 				mensaje="El endoso "+nsuplogi
-						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-						+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
 			success=true;
 			
@@ -9430,7 +9430,7 @@ public class EndososAction extends PrincipalCoreAction
 			{
 				if(agente.get("porredau")!=null&&((Double)Double.parseDouble(agente.get("porredau")))>(double)0)
 				{
-					throw new Exception("Esta p&oacute;liza no permite el endoso de agente por tener sesi&oacute;n de comisi&oacute;n");
+					throw new Exception("Esta p\u00f3liza no permite el endoso de agente por tener sesi\u00f3n de comisi\u00f3n");
 				}
 			}
 			
@@ -9612,8 +9612,8 @@ public class EndososAction extends PrincipalCoreAction
 	   			
 			} else {
 				mensaje="El endoso "+nsuplogi
-						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-						+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
 			success=true;
 			
@@ -10218,8 +10218,8 @@ public class EndososAction extends PrincipalCoreAction
 		
 		} else {
 		mensaje="El endoso "+nsuplogi
-			+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-			+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+			+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+			+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 		}
 		
 		success=true;
@@ -10580,8 +10580,8 @@ public class EndososAction extends PrincipalCoreAction
 			
 			} else {
 				mensaje="El endoso "+nsuplogi
-				+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-				+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+				+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+				+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
 			success=true;
 			
@@ -10841,8 +10841,8 @@ public class EndososAction extends PrincipalCoreAction
 			
 			} else {
 				mensaje="El endoso "+nsuplogi
-				+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-				+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+				+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
+				+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
 			success=true;
 		
@@ -11447,7 +11447,7 @@ public class EndososAction extends PrincipalCoreAction
 			//paramsR.put("pv_nmsuplem_i", nmsuplem);
 			//paramsR.put("pv_feinici_i",  new Date());
 			//paramsR.put("pv_cddocume_i", urlCaratula + parametros);
-			//paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
+			//paramsR.put("pv_dsdocume_i", "Car\u00e1tula de P\u00f3liza");
 			//paramsR.put("pv_nmsolici_i", nmpoliza);
 			//paramsR.put("pv_ntramite_i",  ntramite);
 			//paramsR.put("pv_tipmov_i",    cdtipsup);
@@ -11543,7 +11543,7 @@ public class EndososAction extends PrincipalCoreAction
 					//paramsR.put("pv_nmsuplem_i", nmsuplem);
 					//paramsR.put("pv_feinici_i",  new Date());
 					//paramsR.put("pv_cddocume_i", urlCaratula + parametros);
-					//paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")");
+					//paramsR.put("pv_dsdocume_i", "Car\u00e1tula de P\u00f3liza ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")");
 					//paramsR.put("pv_nmsolici_i", nmpoliza);
 					//paramsR.put("pv_ntramite_i", ntramite);
 					//paramsR.put("pv_tipmov_i",   cdtipsup);

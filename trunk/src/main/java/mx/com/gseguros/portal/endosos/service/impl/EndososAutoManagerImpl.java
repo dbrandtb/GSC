@@ -432,7 +432,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				List<Map<String,String>> lista = new ArrayList<Map<String,String>>();
 				Map<String,String>       mapa  = new HashMap<String,String>();
 				mapa.put("CDTIPSUP"        , "57");
-				mapa.put("DSTIPSUP"        , "REHABILITACI&Oacute;N DE P&Oacute;LIZA");
+				mapa.put("DSTIPSUP"        , "REHABILITACI\u00f3N DE P\u00f3LIZA");
 				mapa.put("LIGA"            , "/endosos/includes/endosoRehabilitacionPolAuto.action");
 				mapa.put("TIPO_VALIDACION" , "");
 				lista.add(mapa);
@@ -2524,7 +2524,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,nmsuplem
 					,new Date()
 					,urlImpresionCaratulaEndosoB + parametros
-					,"Car&aacute;tula Endoso B"
+					,"Car\u00e1tula Endoso B"
 					,nmpoliza
 					,nmtramite
 					,cdtipsup
@@ -3446,7 +3446,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 							,nmsuplem
 							,new Date()
 							,urlCaratula + parametros
-							,"Car&aacute;tula de P&oacute;liza ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")"
+							,"Car\u00e1tula de P\u00f3liza ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")"
 							,nmpoliza
 							,ntramite
 							,cdtipsup
@@ -5879,7 +5879,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 									,nmsuplem
 									,new Date()
 									,urlCaratula + parametros
-									,"ENDOSO CORRECCI&Oacute;N DE NOMBRE,RFC Y FECHA NACIMIENTO"
+									,"ENDOSO CORRECCI\u00f3N DE NOMBRE,RFC Y FECHA NACIMIENTO"
 									,nmpoliza
 									,ntramite
 									,cdtipsup
@@ -5932,7 +5932,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				}
 			}else{
 				//ENDOSO POLIZAS NO SICAPS
-				paso = "Obtenemos la informaci&oacute;n del cliente";
+				paso = "Obtenemos la informaci\u00f3n del cliente";
 				logger.debug(paso);
 				//Obtenemos la informacion del Cliente de SISG
 				String message =  clienteDAOSIGS.obtieneInformacionCliente(sucursalEnt,ramoEntrada,polizaEnt);
@@ -5940,7 +5940,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				logger.debug("Valor de la respuesta ====> "+message);
 				
 				//Obtenemos la informacion del Cliente de ICE
-				paso = "Recuperamos la informaci&oacute;n del cliente";
+				paso = "Recuperamos la informaci\u00f3n del cliente";
 				logger.debug(paso);
 				Map<String,String>contratante = personasDAO.recuperarEspPersona(cdpersonNew);
 				
@@ -5983,7 +5983,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					throw new ApplicationException(respu[1].toString());
 				}else{
 					endosoRecuperado = Integer.parseInt(respu[0].toString());
-					paso = "Guardamos informaci&oacute;n del cliente";
+					paso = "Guardamos informaci\u00f3n del cliente";
 					logger.debug(paso);
 					Map<String,Object>params=new HashMap<String,Object>();
 					params.put("pv_cdperson_i"    , cdpersonNew);
@@ -6087,17 +6087,17 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			}
 			
 			//ENDOSO POLIZAS NO SICAPS
-			paso = "Obtenemos la informaci&oacute;n del cliente";
+			paso = "Obtenemos la informaci\u00f3n del cliente";
 			logger.debug(paso);
 			String message =  clienteDAOSIGS.obtieneInformacionCliente(sucursalEnt,ramoEntrada,polizaEnt);
 			String respuesta[] = message.split("\\|");
 			
-			paso = "Obtenemos la informaci&oacute;n del cliente de SICAPS";
+			paso = "Obtenemos la informaci\u00f3n del cliente de SICAPS";
 			logger.debug(paso);
 			Map<String,String> managerResult=personasDAO.obtenerDomicilioPorCdperson(cdpersonNew);
 			SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 			
-			paso = "Generaci&oacute;n del mapa de guardado SIGS";
+			paso = "Generaci\u00f3n del mapa de guardado SIGS";
 			logger.debug(paso);
 			HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
 			paramsEnd.put("vNumSuc"  , sucursalEnt);

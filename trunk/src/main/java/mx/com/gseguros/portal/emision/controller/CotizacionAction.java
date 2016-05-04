@@ -628,7 +628,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	        {
 	        	long timestamp  = System.currentTimeMillis();
 	        	exito           = false;
-	        	respuesta       = "Error al obtener los atributos extras de la situaci&oacute;n #"+timestamp;
+	        	respuesta       = "Error al obtener los atributos extras de la situaci\u00f3n #"+timestamp;
 	        	respuestaOculta = ex.getMessage();
 	        	logger.error(respuesta,ex);
 	        }
@@ -747,7 +747,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			logger.debug("Vils tipo de vehiculo: "+ tipoVehiculo);
 			if(!success)
 			{
-				error="No se recibi&oacute; el n&uacute;mero de serie";
+				error="No se recibi\u00f3 el n\u00famero de serie";
 				logger.error(error);
 			}
 		}
@@ -779,7 +779,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			success   = datosAuto!=null;
 			if(!success)
 			{
-				error="No se encontr&oacute; informaci&oacute;n para el n&uacute;mero de serie";
+				error="No se encontr\u00f3 informaci\u00f3n para el n\u00famero de serie";
 				logger.error(error);
 				/*parche
 				datosAuto = new VehicleValue_Struc();
@@ -895,11 +895,11 @@ public class CotizacionAction extends PrincipalCoreAction
 				{
 					if(Ramo.SERVICIO_PUBLICO.getCdramo().equals(cdramo) || Ramo.AUTOS_FRONTERIZOS.getCdramo().equals(cdramo))
 					{
-						respuesta = "Favor de verificar y guardar correctamente la direcci&oacute;n y datos del contratante.";
+						respuesta = "Favor de verificar y guardar correctamente la direcci\u00f3n y datos del contratante.";
 					}
 					else
 					{
-						respuesta = "Favor de verificar la direcci&oacute;n de los siguientes asegurados:<br/>";
+						respuesta = "Favor de verificar la direcci\u00f3n de los siguientes asegurados:<br/>";
 						// f a v o r
 						//0 1 2 3 4 5
 						if(lisUsuSinDir.get(0).get("nombre").substring(0,5).equalsIgnoreCase("favor"))
@@ -1067,7 +1067,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						true, TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(),
 						usuario);
 				
-				respuesta = Utils.join("Se ha emitido la p&oacute;liza ",nmpolizaEmi," [",nmpoliexEmi,"]");
+				respuesta = Utils.join("Se ha emitido la p\u00f3liza ",nmpolizaEmi," [",nmpoliexEmi,"]");
 				logger.debug(Utils.log("","respuesta final=",respuesta));
 				
 				//termina correctamente
@@ -1482,7 +1482,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					}
 					catch(Exception ex)
 					{
-						throw new ApplicationException("Falta parametrizar la numeraci&oacute;n de p&oacute;liza");
+						throw new ApplicationException("Falta parametrizar la numeraci\u00f3n de p\u00f3liza");
 					}
 				}
 				////// si no hay nmpoliza //////
@@ -2162,7 +2162,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				if(tipoSituacion.get("SITUACION").equals("PERSONA")
 						&&datosParaComplementar.containsKey("NTRAMITE"))
 				{
-					throw new Exception("La cotizaci&oacute;n ya se encuentra en tr&aacute;mite de emisi&oacute;n");
+					throw new Exception("La cotizaci\u00f3n ya se encuentra en tr\u00e1mite de emisi\u00f3n");
 				}
 				/*
 				 * cuando se encuentra cdunieco y ntramite y es auto, se mandara a datos complementarios
@@ -2216,7 +2216,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				slist1 = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_TVALOSIT_COTIZACION.getNombre(), paramsObtenerTvalosit, null);
 				if(slist1==null||slist1.size()==0)
 				{
-					throw new Exception("No se puede cargar la cotizaci&oacute;n");
+					throw new Exception("No se puede cargar la cotizaci\u00f3n");
 				}
 				for(Map<String,String>iInciso:slist1)
 				{
@@ -6892,7 +6892,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				if(StringUtils.isBlank(respuesta))
 				{
-					respuesta = "Se gener&oacute; el tr&aacute;mite "+smap1.get("ntramite");
+					respuesta = "Se gener\u00f3 el tr\u00e1mite "+smap1.get("ntramite");
 				}
 			}
 			catch(Exception ex)
@@ -7429,6 +7429,19 @@ public class CotizacionAction extends PrincipalCoreAction
 							,EstatusTramite.PENDIENTE.getCodigo()
 							,false
 							);
+					
+					mesaControlManager.movimientoDetalleTramite(
+							ntramiteNew
+							,new Date()
+							,null
+							,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
+							,cdusuari
+							,null
+							,cdsisrol
+							,"S"
+							,EstatusTramite.PENDIENTE.getCodigo()
+							,false
+							);
 	            	
 	            	smap1.put("nombreUsuarioDestino"
 	            			,cotizacionManager.turnaPorCargaTrabajo(ntramiteNew,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())
@@ -7480,7 +7493,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			{
 				long timestamp       = System.currentTimeMillis();
 				resp.exito           = false;
-				resp.respuesta       = "Error al guardar tr&aacute;mite #"+timestamp;
+				resp.respuesta       = "Error al guardar tr\u00e1mite #"+timestamp;
 				resp.respuestaOculta = ex.getMessage();
 				logger.error(respuesta,ex);
 			}
@@ -8249,6 +8262,19 @@ public class CotizacionAction extends PrincipalCoreAction
 							,EstatusTramite.PENDIENTE.getCodigo()
 							,false
 							);
+					
+					mesaControlManager.movimientoDetalleTramite(
+							ntramiteNew
+							,new Date()
+							,null
+							,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
+							,cdusuari
+							,null
+							,cdsisrol
+							,"S"
+							,EstatusTramite.PENDIENTE.getCodigo()
+							,false
+							);
 	            	
 	            	smap1.put("nombreUsuarioDestino"
 	            			,cotizacionManager.turnaPorCargaTrabajo(ntramiteNew,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())
@@ -8300,7 +8326,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			{
 				long timestamp       = System.currentTimeMillis();
 				resp.exito           = false;
-				resp.respuesta       = "Error al guardar tr&aacute;mite #"+timestamp;
+				resp.respuesta       = "Error al guardar tr\u00e1mite #"+timestamp;
 				resp.respuestaOculta = ex.getMessage();
 				logger.error(respuesta,ex);
 			}
@@ -9516,7 +9542,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				//mapArchivo.put("pv_nmsuplem_i"  , "0");
 				//mapArchivo.put("pv_feinici_i"   , new Date());
 				//mapArchivo.put("pv_cddocume_i"  , nombreArchivoCotizacion);
-				//mapArchivo.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N EN RESUMEN");
+				//mapArchivo.put("pv_dsdocume_i"  , "COTIZACI\u00f3N EN RESUMEN");
 				//mapArchivo.put("pv_ntramite_i"  , ntramite);
 				//mapArchivo.put("pv_nmsolici_i"  , nmpoliza);
 				//mapArchivo.put("pv_tipmov_i"    , "1");
@@ -9581,7 +9607,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				//mapArchivo2.put("pv_nmsuplem_i"  , "0");
 				//mapArchivo2.put("pv_feinici_i"   , new Date());
 				//mapArchivo2.put("pv_cddocume_i"  , nombreArchivoCotizacion2);
-				//mapArchivo2.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N A DETALLE");
+				//mapArchivo2.put("pv_dsdocume_i"  , "COTIZACI\u00f3N A DETALLE");
 				//mapArchivo2.put("pv_ntramite_i"  , ntramite);
 				//mapArchivo2.put("pv_nmsolici_i"  , nmpoliza);
 				//mapArchivo2.put("pv_tipmov_i"    , "1");
@@ -9640,7 +9666,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					//mapaResumen.put("pv_nmsuplem_i"  , "0");
 					//mapaResumen.put("pv_feinici_i"   , new Date());
 					//mapaResumen.put("pv_cddocume_i"  , nombreResumen);
-					//mapaResumen.put("pv_dsdocume_i"  , "RESUMEN DE COTIZACI&Oacute;N (XLS)");
+					//mapaResumen.put("pv_dsdocume_i"  , "RESUMEN DE COTIZACI\u00f3N (XLS)");
 					//mapaResumen.put("pv_ntramite_i"  , ntramite);
 					//mapaResumen.put("pv_nmsolici_i"  , nmpoliza);
 					//mapaResumen.put("pv_tipmov_i"    , "1");
@@ -9704,7 +9730,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					//mapArchivoResumen.put("pv_nmsuplem_i"  , "0");
 					//mapArchivoResumen.put("pv_feinici_i"   , new Date());
 					//mapArchivoResumen.put("pv_cddocume_i"  , nombreArchivoResumenCotizacion);
-					//mapArchivoResumen.put("pv_dsdocume_i"  , "RESUMEN DE COTIZACI&Oacute;N (PDF)");
+					//mapArchivoResumen.put("pv_dsdocume_i"  , "RESUMEN DE COTIZACI\u00f3N (PDF)");
 					//mapArchivoResumen.put("pv_ntramite_i"  , ntramite);
 					//mapArchivoResumen.put("pv_nmsolici_i"  , nmpoliza);
 					//mapArchivoResumen.put("pv_tipmov_i"    , "1");
@@ -9764,7 +9790,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						//mapaGrupo.put("pv_nmsuplem_i"  , "0");
 						//mapaGrupo.put("pv_feinici_i"   , new Date());
 						//mapaGrupo.put("pv_cddocume_i"  , nombreCotGrupo);
-						//mapaGrupo.put("pv_dsdocume_i"  , Utils.join("COTIZACI&Oacute;N GRUPO ",i));
+						//mapaGrupo.put("pv_dsdocume_i"  , Utils.join("COTIZACI\u00f3N GRUPO ",i));
 						//mapaGrupo.put("pv_ntramite_i"  , ntramite);
 						//mapaGrupo.put("pv_nmsolici_i"  , nmpoliza);
 						//mapaGrupo.put("pv_tipmov_i"    , "1");
@@ -9959,7 +9985,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			{
 				long timestamp  = System.currentTimeMillis();
 				exito           = false;
-				respuesta       = "Datos incompletos para obtener par&aacute;metros #"+timestamp;
+				respuesta       = "Datos incompletos para obtener par\u00e1metros #"+timestamp;
 				respuestaOculta = ex.getMessage();
 				logger.error(respuesta,ex);
 			}
@@ -9980,7 +10006,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			{
 				long timestamp  = System.currentTimeMillis();
 				exito           = false;
-				respuesta       = new StringBuilder("Par&aacute;metro no definido #").append(timestamp).toString();
+				respuesta       = new StringBuilder("Par\u00e1metro no definido #").append(timestamp).toString();
 				respuestaOculta = ex.getMessage();
 				logger.error(respuesta,ex);
 			}
@@ -10004,7 +10030,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			{
 				long timestamp  = System.currentTimeMillis();
 				exito           = false;
-				respuesta       = "Error inesperado al obtener par&aacute;metros #"+timestamp;
+				respuesta       = "Error inesperado al obtener par\u00e1metros #"+timestamp;
 				respuestaOculta = ex.getMessage();
 				logger.error(respuesta,ex);
 			}
@@ -11128,7 +11154,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			
 			if(StringUtils.isBlank(cdpersonGuardado)){
 				exito =  false;
-				respuesta =  "No se guard&oacute; correctamente la informaci&oacute;n del contratante";
+				respuesta =  "No se guard\u00f3 correctamente la informaci\u00f3n del contratante";
 			}else{
 				exito = true;
 			}

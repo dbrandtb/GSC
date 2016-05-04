@@ -5,8 +5,8 @@ Ext.define('VentanaHistorial',
     ,itemId      : '_c21_instance'
     ,closeAction : 'destroy'
     ,modal       : true
-    ,width       : 700
-    ,height      : 400
+    ,width       : 800
+    ,height      : 430
     ,mostrar     : function()
     {
         var me = this;
@@ -42,6 +42,7 @@ Ext.define('VentanaHistorial',
                             ,"CDSISROL_INI" , "DSSISROL_INI"
                             ,"CDSISROL_FIN" , "DSSISROL_FIN"
                             ,"DSUSUARI_INI" , "DSUSUARI_FIN"
+                            ,'STATUS'       , 'DSSTATUS'
                         ]
                         ,autoLoad : true
                         ,proxy    :
@@ -65,6 +66,7 @@ Ext.define('VentanaHistorial',
                             header     : 'Tr&aacute;mite'
                             ,dataIndex : 'NTRAMITE'
                             ,width     : 60
+                            ,hidden    : true
                         }
                         ,{
                             header     : 'No.'
@@ -72,35 +74,45 @@ Ext.define('VentanaHistorial',
                             ,width     : 40
                         }
                         ,{
-                            header     : 'Fecha de inicio'
+                            header     : 'Usuario'
+                            ,dataIndex : 'usuario_fin'
+                            ,width     : 300
+                            ,renderer  : function(v,md,rec)
+                            {
+                                return _NVL(rec.get('DSUSUARI_FIN')) + ' - ' +  _NVL(rec.get('DSSISROL_FIN'));
+                            }
+                        }
+                        ,{
+                            header     : 'Usuario'
+                            ,dataIndex : 'usuario_ini'
+                            ,width     : 300
+                            ,renderer  : function(v,md,rec)
+                            {
+                                return _NVL(rec.get('DSUSUARI_INI')) + ' - ' +  _NVL(rec.get('DSSISROL_INI'));
+                            }
+                            ,hidden    : true
+                        }
+                        ,{
+                            header     : 'Inicio'
                             ,xtype     : 'datecolumn'
                             ,dataIndex : 'FECHAINI'
                             ,format    : 'd M Y H:i'
                             ,width     : 140
                         }
                         ,{
-                            header     : 'Usuario inicio'
-                            ,dataIndex : 'usuario_ini'
-                            ,width     : 250
-                            ,renderer  : function(v,md,rec)
-                            {
-                                return _NVL(rec.get('DSUSUARI_INI')) + ' - ' +  _NVL(rec.get('DSSISROL_INI'));
-                            }
-                        }
-                        ,{
-                            header     : 'Fecha de fin'
+                            header     : 'Fin'
                             ,xtype     : 'datecolumn'
                             ,dataIndex : 'FECHAFIN'
                             ,format    : 'd M Y H:i'
                             ,width     : 140
                         }
                         ,{
-                            header     : 'Usuario fin'
-                            ,dataIndex : 'usuario_fin'
-                            ,width     : 250
-                            ,renderer  : function(v,md,rec)
+                            header     : 'Status'
+                            ,dataIndex : 'DSSTATUS'
+                            ,width     : 160
+                            ,renderer  : function(v)
                             {
-                                return _NVL(rec.get('DSUSUARI_FIN')) + ' - ' +  _NVL(rec.get('DSSISROL_FIN'));
+                                return _NVL(v);
                             }
                         }
                         ,{
@@ -120,6 +132,7 @@ Ext.define('VentanaHistorial',
                                 }
                                 return value;
                             }
+                            ,hidden       : true
                         }
                         /*,{
                             width         : 30
@@ -147,11 +160,11 @@ Ext.define('VentanaHistorial',
                                 rowIndex, e, eOpts)
                         {
                             debug(record);
-                            if(cellIndex<6)
+                            if(/*cellIndex<6*/$(td).find('img').length==0)
                             {
                                 _fieldById('_c21_inputReadDetalleHtmlVisor').setValue((config.cdsisrol!='EJECUTIVOCUENTA'||record.raw.SWAGENTE=='S')?record.get('COMMENTS'):'');
                             }
-                            else if(cellIndex==6&&$(td).find('img').length>0)
+                            else if(/*cellIndex==6&&*/$(td).find('img').length>0)
                             {
                                 debug('finalizar');
                                 centrarVentanaInterna(Ext.create('Ext.window.Window',
@@ -246,11 +259,13 @@ Ext.define('VentanaHistorial',
                     }
                 })
                 ,{
-                    xtype     : 'textarea'
-                    ,itemId   : '_c21_inputReadDetalleHtmlVisor'
-                    ,width    : 690
-                    ,height   : 200
-                    ,readOnly : true
+                    xtype       : 'textarea'
+                    ,itemId     : '_c21_inputReadDetalleHtmlVisor'
+                    ,width      : 780
+                    ,height     : 180
+                    ,readOnly   : true
+                    ,labelAlign : 'top'
+                    ,fieldLabel : 'Se recibe con los siguientes comentarios:'
                 }
             ]
         });

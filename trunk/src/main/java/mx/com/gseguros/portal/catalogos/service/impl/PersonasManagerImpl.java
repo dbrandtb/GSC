@@ -511,7 +511,7 @@ public class PersonasManagerImpl implements PersonasManager
 			{
 				logger.error(timestamp+" error al obtener domicilio del contratante ",ex);
 				exito           = false;
-				respuesta       = "No se encontr&oacute; domicilio contratante #"+timestamp;
+				respuesta       = "No se encontr\u00f3 domicilio contratante #"+timestamp;
 				respuestaOculta = ex.getMessage();
 			}
 		}
@@ -560,7 +560,7 @@ public class PersonasManagerImpl implements PersonasManager
 			{
 				logger.error(timestamp+" error al obtener domicilio por cdperson",ex);
 				exito           = false;
-				respuesta       = "No se encontr&oacute; domicilio anterior #"+timestamp;
+				respuesta       = "No se encontr\u00f3 domicilio anterior #"+timestamp;
 				respuestaOculta = ex.getMessage();
 			}
 		}
@@ -608,7 +608,7 @@ public class PersonasManagerImpl implements PersonasManager
 			{
 				logger.error(timestamp+" error al obtener domicilios por cdperson",ex);
 				exito           = false;
-				respuesta       = "No se encontr&oacute; domiciliso anterior #"+timestamp;
+				respuesta       = "No se encontr\u00f3 domiciliso anterior #"+timestamp;
 				respuestaOculta = ex.getMessage();
 			}
 		}
@@ -1226,7 +1226,7 @@ public class PersonasManagerImpl implements PersonasManager
 			paramsCliente.put("pv_fefecha_i",fechaProcesamiento);
 			paramsCliente.put("pv_accion_i",accion);
 			String res= personasDAO.guardarConfiguracionClientes(paramsCliente);
-			paso = "Actualizamos la informaci&oacute;n del cliente por RFC";
+			paso = "Actualizamos la informaci\u00f3n del cliente por RFC";
 			logger2.debug("\nVoy a guardar datos de persona");
 			String activaCliente = null;
 			if(accion.equalsIgnoreCase("I")){

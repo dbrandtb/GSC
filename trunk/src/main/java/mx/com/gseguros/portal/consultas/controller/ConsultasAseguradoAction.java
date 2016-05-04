@@ -183,7 +183,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     		datosPolizaActual = consultasAseguradoManager.obtienePolizaActual(poliza);
     		
     		if(datosPolizaActual != null) {
-    			logger.debug("Póliza actual encontrada: {}", datosPolizaActual.size());
+    			logger.debug("Pï¿½liza actual encontrada: {}", datosPolizaActual.size());
     		}
     		
     		
@@ -199,7 +199,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     }
 	
     /**
-     * Obtiene los datos complementarios de la Sección Datos Generales
+     * Obtiene los datos complementarios de la Secciï¿½n Datos Generales
      * @return String result
      */
     public String consultaDatosComplementarios(){
@@ -234,7 +234,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     }
 	
     /**
-     * Obtiene los datos generales de una p&oacute;liza
+     * Obtiene los datos generales de una p\u00f3liza
      * @return String result
      */
     public String consultaDatosPoliza(){
@@ -263,7 +263,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     }
     
     /**
-     * Obtiene la información del asegurado
+     * Obtiene la informaciï¿½n del asegurado
      * @return String result
      */
     public String consultaAseguradoDetalle(){
@@ -406,7 +406,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     		logger.debug("Resultados de la consulta de endosos: {}" , datosEndosos.size());
     		success = true;
     	} catch(Exception e){
-    		logger.error("Error al obtener las cláusulas de la póliza",e);
+    		logger.error("Error al obtener las clï¿½usulas de la pï¿½liza",e);
     		return SUCCESS;
     	}
     	success = true;
@@ -414,7 +414,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     }
     
     /**
-     * Obtiene las enfermedades crónicas
+     * Obtiene las enfermedades crï¿½nicas
      * @return String result
      */    
     public String consultaDatosEnfermedades(){
@@ -434,7 +434,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     		datosEnfermedades = consultasAseguradoManager.obtieneEnfermedades(poliza, asegurado);
     		success = true;
     	} catch(Exception e){
-    		logger.error("Error al obtener las enfermedades crónicas",e);
+    		logger.error("Error al obtener las enfermedades crï¿½nicas",e);
     		return SUCCESS;
     	}
     	success = true;
@@ -535,7 +535,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     }
     
     /**
-     * Obtiene las coberturas básicas
+     * Obtiene las coberturas bï¿½sicas
      * @return String result
      */
     public String consultaCoberturasBasicas(){
@@ -566,11 +566,11 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     }
     
     /**
-     * Obtiene los datos del histórico de una póliza
+     * Obtiene los datos del histï¿½rico de una pï¿½liza
      * @return String result
      */
     public String consultaDatosHistorico(){
-    	logger.debug(" **** Entrando a consultaDatosHistórico ****");
+    	logger.debug(" **** Entrando a consultaDatosHistï¿½rico ****");
     	mensajeRes = "";
     	try {
     		    		
@@ -617,7 +617,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     }
     
     /**
-     * Obtiene el histórico de farmacia
+     * Obtiene el histï¿½rico de farmacia
      * @return String result
      */	
     public String consultaDatosHistoricoFarmacia(){
@@ -636,7 +636,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     		historicoFarmacia = consultasAseguradoManager.obtieneHistoricoFarmacia(poliza, asegurado);
     		success = true;
     	} catch(Exception e){
-    		logger.error("Error al obtener el histórico de farmacia",e);
+    		logger.error("Error al obtener el histï¿½rico de farmacia",e);
     		return SUCCESS;
     	}
     	success = true;
@@ -728,7 +728,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     		}else{
     			consultasAseguradoManager.actualizaEstatusEnvio(iCodAviso, poliza);
 			}
-    		mensajeRes = "Se registr&oacute; y envi&oacute; Aviso de Hospitalizaci&oacute;n.";
+    		mensajeRes = "Se registr\u00f3 y envi\u00f3 Aviso de Hospitalizaci\u00f3n.";
     		success = true;
     		
     	}catch(Exception e){

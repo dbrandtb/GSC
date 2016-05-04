@@ -281,7 +281,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	        	respuestaOculta = ex.getMessage();
 	        	logger.error(respuesta,ex);
 	        	
-	        	this.addActionError("No se ha parametrizado el tipo de situaci&oacute;n para el producto #"+timestamp);
+	        	this.addActionError("No se ha parametrizado el tipo de situaci\u00f3n para el producto #"+timestamp);
 	        	map1.put("SITUACION"  , "PERSONA");
 	        	map1.put("AGRUPACION" , "SOLO");
 	        }
@@ -989,7 +989,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								)
 						.add(Item.crear(null,null,Item.OBJ)
 								.add("icon","resources/fam3icons/icons/user_edit.png")
-								.add("tooltip","Datos de situaci&oacute;n asegurado")
+								.add("tooltip","Datos de situaci\u00f3n asegurado")
 								.add(Item.crear("scope","this").setQuotes(""))
 								.add(Item.crear("handler","this.onValositClick").setQuotes(""))
 //								.add(Item.crear("isDisabled ","function(view,rowIndex,colIndex,item,record){if(record.get('estomador'))return true;}").setQuotes(""))
@@ -1284,7 +1284,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					boolean validacionDomTitu = cotizacionManager.validaDomicilioCotizacionTitular(param);
 					
 					if(!validacionDomTitu){
-						mensajeRespuesta = "El C&oacute;digo Postal (Estado y Municipio) de la cotizaci&oacute;n debe coincidir con el domicilio del asegurado contratante.";
+						mensajeRespuesta = "El C\u00f3digo Postal (Estado y Municipio) de la cotizaci\u00f3n debe coincidir con el domicilio del asegurado contratante.";
 						success = false;
 						return SUCCESS;
 					}
@@ -1292,8 +1292,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 				}
 				catch(Exception ex)
 				{
-					logger.error("Error de validaci&oacute;n de C&oacute;digo Postal (Estado y Municipio) de la cotizaci&oacute;n debe coincidir con el domicilio del asegurado contratante.",ex);
-					mensajeRespuesta = "Error al validar el C&oacute;digo Postal. Consulte a Soporte.";
+					logger.error("Error de validaci\u00f3n de C\u00f3digo Postal (Estado y Municipio) de la cotizaci\u00f3n debe coincidir con el domicilio del asegurado contratante.",ex);
+					mensajeRespuesta = "Error al validar el C\u00f3digo Postal. Consulte a Soporte.";
 					success = false;
 					return SUCCESS;
 				}
@@ -1630,9 +1630,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 			if(lisUsuSinDir!=null&&lisUsuSinDir.size()>0)
 			{
 				if(Ramo.SERVICIO_PUBLICO.getCdramo().equals(cdramo) || Ramo.AUTOS_FRONTERIZOS.getCdramo().equals(cdramo)){
-					mensajeRespuesta="Favor de verificar y guardar correctamente la direcci&oacute;n y datos del contratante.";
+					mensajeRespuesta="Favor de verificar y guardar correctamente la direcci\u00f3n y datos del contratante.";
 				}else{
-					mensajeRespuesta="Favor de verificar la direcci&oacute;n de los siguientes asegurados:<br/>";
+					mensajeRespuesta="Favor de verificar la direcci\u00f3n de los siguientes asegurados:<br/>";
 					// f a v o r
 					//0 1 2 3 4 5
 					if(lisUsuSinDir.get(0).get("nombre").substring(0,5).equalsIgnoreCase("favor"))
@@ -1663,7 +1663,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				String existeMenor = kernelManager.validaTitularMenorEdad(paramValidarMenor);
 				
 				if(Constantes.SI.equalsIgnoreCase(existeMenor)){
-					this.respuestaOculta = "El Titular es Menor de Edad, se requerir&aacute; una autorizaci&oacute;n posterior.";
+					this.respuestaOculta = "El Titular es Menor de Edad, se requerir\u00e1 una autorizaci\u00f3n posterior.";
 				}
 			}
 			catch(Exception ex)
@@ -1966,7 +1966,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				{
 					necesitaAutorizacion=true;
 					panel1.put("necesitaAutorizacion" , "S");
-					mensajeRespuesta = "La p&oacute;liza se envi&oacute; a autorizaci&oacute;n debido a que:<br/>";
+					mensajeRespuesta = "La p\u00f3liza se envi\u00f3 a autorizaci\u00f3n debido a que:<br/>";
 					for(Map<String,String>iAseguradoEdadInvalida:listaAseguradosEdadInvalida)
 					{
 						mensajeRespuesta = mensajeRespuesta + iAseguradoEdadInvalida.get("NOMBRE");
@@ -2043,7 +2043,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,null //cdflujomc
 							,valores, null
 							);
-					mensajeRespuesta = mensajeRespuesta + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
+					mensajeRespuesta = mensajeRespuesta + "<br/>Tr\u00e1mite de autorizaci\u00f3n: "+ntramiteAutorizacion;
 					* jtezva: 2015-12-29 B
 					*/
 					
@@ -2051,7 +2051,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		        	parDmesCon.put("pv_ntramite_i"   , ntramite);
 		        	parDmesCon.put("pv_feinicio_i"   , new Date());
 		        	parDmesCon.put("pv_cdclausu_i"   , null);
-		        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se envi&oacute; a autorizaci&oacute;n ("+ntramiteAutorizacion+")");
+		        	parDmesCon.put("pv_comments_i"   , "El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")");
 		        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 		        	parDmesCon.put("pv_cdmotivo_i"   , null);
 		        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
@@ -2062,7 +2062,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,null//cdclausu
 							
 							// jtezva: 2015-12-29 B
-							//,"El tr&aacute;mite se envi&oacute; a autorizaci&oacute;n ("+ntramiteAutorizacion+")"
+							//,"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")"
 							,"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n"
 							// jtezva: 2015-12-29 B
 							
@@ -2096,7 +2096,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				{
 					necesitaAutorizacion=true;
 					panel1.put("necesitaAutorizacion" , "S");
-					mensajeRespuesta = "La p&oacute;liza se envi&oacute; a autorizaci&oacute;n debido a que se cambio el cuadro de comisiones";
+					mensajeRespuesta = "La p\u00f3liza se envi\u00f3 a autorizaci\u00f3n debido a que se cambio el cuadro de comisiones";
 					
 					/*Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
 					paramsMesaControl.put("pv_cdunieco_i"   , cdunieco);
@@ -2161,7 +2161,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,null //cdflujomc
 							,valores, null
 							);
-					mensajeRespuesta = mensajeRespuesta + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
+					mensajeRespuesta = mensajeRespuesta + "<br/>Tr\u00e1mite de autorizaci\u00f3n: "+ntramiteAutorizacion;
 					* jtezva: 2015-12-29 B
 					*/
 					
@@ -2169,7 +2169,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		        	parDmesCon.put("pv_ntramite_i"   , ntramite);
 		        	parDmesCon.put("pv_feinicio_i"   , new Date());
 		        	parDmesCon.put("pv_cdclausu_i"   , null);
-		        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se envi&oacute; a autorizaci&oacute;n ("+ntramiteAutorizacion+")");
+		        	parDmesCon.put("pv_comments_i"   , "El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")");
 		        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 		        	parDmesCon.put("pv_cdmotivo_i"   , null);
 		        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
@@ -2180,7 +2180,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,null
 							
 							// jtezva: 2015-12-29 B
-							//,"El tr&aacute;mite se envi&oacute; a autorizaci&oacute;n ("+ntramiteAutorizacion+")"
+							//,"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")"
 							,"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n"
 							// jtezva: 2015-12-29 B
 							
@@ -2407,7 +2407,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							}
 							
 						}else {
-							mensajeRespuesta = "Error en el Web Service de emisi&oacute;n. No se pudo emitir la p&oacute;liza";
+							mensajeRespuesta = "Error en el Web Service de emisi\u00f3n. No se pudo emitir la p\u00f3liza";
 						}
 					}
 					
@@ -2619,7 +2619,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					
 					this.mensajeEmail = "<span style=\"font-family: Verdana, Geneva, sans-serif;\">"+
 										"<br>Estimado(a) cliente,<br/><br/>"+
-										"Anexamos a este e-mail la documentaci&oacute;n de la p&oacute;liza de Autom&oacute;viles contratada con GENERAL DE SEGUROS.<br/>"+
+										"Anexamos a este e-mail la documentaci\u00f3n de la p\u00f3liza de Autom\u00f3viles contratada con GENERAL DE SEGUROS.<br/>"+
 										"Para visualizar el documento favor de dar click en el link correspondiente.<br/>";
 					
 					/**
@@ -2627,7 +2627,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					 */
 					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0";
 					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
-					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car&aacute;tula de p&oacute;liza</a>";
+					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car\u00e1tula de p\u00f3liza</a>";
 					
 					//HashMap<String, Object> paramsR =  new HashMap<String, Object>();
 					//paramsR.put("pv_cdunieco_i", cdunieco);
@@ -2637,7 +2637,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					//paramsR.put("pv_nmsuplem_i", nmsuplemEmitida);
 					//paramsR.put("pv_feinici_i",  new Date());
 					//paramsR.put("pv_cddocume_i", urlCaratula + parametros);
-					//paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
+					//paramsR.put("pv_dsdocume_i", "Car\u00e1tula de P\u00f3liza");
 					//paramsR.put("pv_nmsolici_i", nmpoliza);
 					//paramsR.put("pv_ntramite_i", ntramite);
 					//paramsR.put("pv_tipmov_i",   TipoEndoso.EMISION_POLIZA.getCdTipSup());
@@ -2816,7 +2816,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 */
 						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0";
 						logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosFlot + parametros+"\">Relaci&oacute;n de Incisos Flotillas</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosFlot + parametros+"\">Relaci\u00f3n de Incisos Flotillas</a>";
 						
 						//paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
 						//paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
@@ -2876,7 +2876,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								
 								parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,"+desdeInciso+","+hastaInciso;
 								logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
-								this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci&oacute;n. " +desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos+"</a>";
+								this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci\u00f3n. " +desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos+"</a>";
 								
 								documentosManager.guardarDocumento(
 										cdunieco
@@ -3079,7 +3079,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	        	parDmesCon.put("pv_ntramite_i"   , ntramite);
 	        	parDmesCon.put("pv_feinicio_i"   , new Date());
 	        	parDmesCon.put("pv_cdclausu_i"   , null);
-	        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se emiti&oacute;");
+	        	parDmesCon.put("pv_comments_i"   , "El tr\u00e1mite se emiti\u00f3");
 	        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 	        	parDmesCon.put("pv_cdmotivo_i"   , null);
 	        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
@@ -3509,7 +3509,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	        	parDmesCon.put("pv_ntramite_i"   , ntramite);
 	        	parDmesCon.put("pv_feinicio_i"   , fechaDia);
 	        	parDmesCon.put("pv_cdclausu_i"   , null);
-	        	parDmesCon.put("pv_comments_i"   , "La emisi&oacute;n del tr&aacute;mite se autoriz&oacute; con las siguientes observaciones:<br/>"+comentarios);
+	        	parDmesCon.put("pv_comments_i"   , "La emisi\u00f3n del tr\u00e1mite se autoriz\u00f3 con las siguientes observaciones:<br/>"+comentarios);
 	        	parDmesCon.put("pv_cdusuari_i"   , us.getUser());
 	        	parDmesCon.put("pv_cdmotivo_i"   , null);
 	        	parDmesCon.put("pv_cdsisrol_i"   , us.getRolActivo().getClave());
@@ -3518,7 +3518,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						ntramite
 						,fechaDia
 						,null//cdclausu
-						,"La emisi&oacute;n del tr&aacute;mite se autoriz&oacute; con las siguientes observaciones:<br/>"+comentarios
+						,"La emisi\u00f3n del tr\u00e1mite se autoriz\u00f3 con las siguientes observaciones:<br/>"+comentarios
 						,us.getUser()
 						,null
 						,us.getRolActivo().getClave()
@@ -3532,7 +3532,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					kernelManager.mesaControlUpdateStatus(ntramiteAut, EstatusTramite.CONFIRMADO.getCodigo());
 				}
 	        	
-	        	mensajeRespuesta = "P&oacute;liza emitida: "+nmpoliexEmitida;
+	        	mensajeRespuesta = "P\u00f3liza emitida: "+nmpoliexEmitida;
 			}
 			catch(Exception ex)
 			{
@@ -3601,7 +3601,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			logger.debug("Respuesta al reintento de envio de Recibos Autos: " + this.retryRec);
 			
 			if(this.retryRec){
-				mensajeRespuesta = "Error en el Web Service de emisi&oacute;n. No se pudo emitir la p&oacute;liza";
+				mensajeRespuesta = "Error en el Web Service de emisi\u00f3n. No se pudo emitir la p\u00f3liza";
 				success = false;
 				return SUCCESS;
 			}
@@ -3693,7 +3693,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				}
 				
 			}else {
-				mensajeRespuesta = "Error en el Web Service de emisi&oacute;n. No se pudo emitir la p&oacute;liza";
+				mensajeRespuesta = "Error en el Web Service de emisi\u00f3n. No se pudo emitir la p\u00f3liza";
 			}
 		}
 		
@@ -3822,7 +3822,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						
 						this.mensajeEmail = "<span style=\"font-family: Verdana, Geneva, sans-serif;\">"+
 								"<br>Estimado(a) cliente,<br/><br/>"+
-								"Anexamos a este e-mail la documentaci&oacute;n de la p&oacute;liza de Autom&oacute;viles contratada con GENERAL DE SEGUROS.<br/>"+
+								"Anexamos a este e-mail la documentaci\u00f3n de la p\u00f3liza de Autom\u00f3viles contratada con GENERAL DE SEGUROS.<br/>"+
 								"Para visualizar el documento favor de dar click en el link correspondiente.<br/>";
 						
 						/**
@@ -3830,7 +3830,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 */
 						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0";
 						logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car&aacute;tula de p&oacute;liza</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car\u00e1tula de p\u00f3liza</a>";
 						
 						//HashMap<String, Object> paramsR =  new HashMap<String, Object>();
 						//paramsR.put("pv_cdunieco_i", _cdunieco);
@@ -3840,7 +3840,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						//paramsR.put("pv_nmsuplem_i", _nmsuplem);
 						//paramsR.put("pv_feinici_i",  new Date());
 						//paramsR.put("pv_cddocume_i", urlCaratula + parametros);
-						//paramsR.put("pv_dsdocume_i", "Car&aacute;tula de P&oacute;liza");
+						//paramsR.put("pv_dsdocume_i", "Car\u00e1tula de P\u00f3liza");
 						//paramsR.put("pv_nmsolici_i", nmsolici);
 						//paramsR.put("pv_ntramite_i", ntramite);
 						//paramsR.put("pv_tipmov_i",   TipoEndoso.EMISION_POLIZA.getCdTipSup());
@@ -4018,7 +4018,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							 */
 							parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0";
 							logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
-							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosFlot + parametros+"\">Relaci&oacute;n de Incisos Flotillas</a>";
+							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosFlot + parametros+"\">Relaci\u00f3n de Incisos Flotillas</a>";
 							
 							//paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
 							//paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
@@ -4080,7 +4080,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									
 									parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,"+desdeInciso+","+hastaInciso;
 									logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
-									this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci&oacute;n. " +desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos+"</a>";
+									this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlTarjIdent + parametros+"\">Tarjeta de Identificaci\u00f3n. " +desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos+"</a>";
 									
 									documentosManager.guardarDocumento(
 											_cdunieco
@@ -4282,7 +4282,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		        	parDmesCon.put("pv_ntramite_i"   , ntramite);
 		        	parDmesCon.put("pv_feinicio_i"   , new Date());
 		        	parDmesCon.put("pv_cdclausu_i"   , null);
-		        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se emiti&oacute;");
+		        	parDmesCon.put("pv_comments_i"   , "El tr\u00e1mite se emiti\u00f3");
 		        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
 		        	parDmesCon.put("pv_cdmotivo_i"   , null);
 		        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);

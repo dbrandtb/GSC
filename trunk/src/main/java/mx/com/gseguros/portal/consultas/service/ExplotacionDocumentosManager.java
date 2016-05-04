@@ -56,6 +56,7 @@ public interface ExplotacionDocumentosManager
 			,String cdsisrol
 			)throws Exception;
 	
+	/*
 	public Map<String,String> generarRemesaEmisionEndoso(
 			String cdusuari
 			,String cdsisrol
@@ -65,6 +66,7 @@ public interface ExplotacionDocumentosManager
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+	*/
 	
 	public Map<String,String> marcarImpresionOperacion(
 			String cdusuari

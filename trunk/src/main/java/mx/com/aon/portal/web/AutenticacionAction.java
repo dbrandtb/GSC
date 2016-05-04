@@ -78,14 +78,14 @@ public class AutenticacionAction extends PrincipalCoreAction {
 				success = creaSesionDeUsuario(user);
 			} else {
 				logger.info("El usuario {} no existe o la clave es incorrecta.", user);
-				errorMessage = "El usuario no existe o la contraseña es incorrecta";
+				errorMessage = "El usuario no existe o la contraseï¿½a es incorrecta";
 			}
 			return SUCCESS;
 
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
-			//errorMessage = "Error en el proceso de validaci&oacute;n de usuario. Consulte a Soporte T&eacute;cnico.";
-			errorMessage = "Error en el proceso de validaci&oacute;n de usuario, detalle: " + ex.getMessage(); //Se agrega el mensaje de la Excepción en Pantalla
+			//errorMessage = "Error en el proceso de validaci\u00f3n de usuario. Consulte a Soporte T\u00e9cnico.";
+			errorMessage = "Error en el proceso de validaci\u00f3n de usuario, detalle: " + ex.getMessage(); //Se agrega el mensaje de la Excepciï¿½n en Pantalla
 			return SUCCESS;
 		}
 	}
@@ -102,7 +102,7 @@ public class AutenticacionAction extends PrincipalCoreAction {
 					if(!validPass){
 						((SessionMap) session).invalidate();
 						logger.info("Password Incorrecto!!! {}/{}", user, password);
-						errorMessage = "El usuario no existe o la contraseña es incorrecta";
+						errorMessage = "El usuario no existe o la contraseï¿½a es incorrecta";
 					}else {
 						logger.info("Password Correcto, redireccionando a menu de Roles...");
 						success = true;
@@ -119,7 +119,7 @@ public class AutenticacionAction extends PrincipalCoreAction {
 
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
-			errorMessage = "Error en el proceso de validaci&oacute;n de usuario, detalle: " + ex.getMessage();
+			errorMessage = "Error en el proceso de validaci\u00f3n de usuario, detalle: " + ex.getMessage();
 			return SUCCESS;
 		}
 	}
@@ -175,7 +175,7 @@ public class AutenticacionAction extends PrincipalCoreAction {
 	
 	
 	/**
-	 * Petici&oacute;n para mantener la sesi&oacute;n del servidor 
+	 * Petici\u00f3n para mantener la sesi\u00f3n del servidor 
 	 * @return
 	 * @throws Exception
 	 */
@@ -184,7 +184,7 @@ public class AutenticacionAction extends PrincipalCoreAction {
 	}
 	
 	/**
-	 * Petici&oacute;n para mantener una sola sesi&oacute;n 
+	 * Petici\u00f3n para mantener una sola sesi\u00f3n 
 	 * @return
 	 * @throws Exception
 	 */

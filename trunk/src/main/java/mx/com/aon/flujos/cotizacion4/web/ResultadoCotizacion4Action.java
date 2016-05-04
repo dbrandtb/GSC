@@ -881,7 +881,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     		{
     			long timestamp  = System.currentTimeMillis();
     			exito           = false;
-    			respuesta       = "Sesi&oacute;n inv&aacute;lida #"+timestamp;
+    			respuesta       = "Sesi\u00f3n inv\u00e1lida #"+timestamp;
     			respuestaOculta = ex.getMessage();
     			logger.error(respuesta,ex);
     		}
@@ -1039,7 +1039,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     		{
     			long timestamp  = System.currentTimeMillis();
     			exito           = false;
-    			respuesta       = "Error al insertar hist&oacute;rico de p&oacute;liza #"+timestamp;
+    			respuesta       = "Error al insertar hist\u00f3rico de p\u00f3liza #"+timestamp;
     			respuestaOculta = ex.getMessage();
     			logger.error(respuesta,ex);
     		}
@@ -1086,7 +1086,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     		{
     			long timestamp  = System.currentTimeMillis();
     			exito           = false;
-    			respuesta       = "Error al ligar la p&oacute;liza al agente #"+timestamp;
+    			respuesta       = "Error al ligar la p\u00f3liza al agente #"+timestamp;
     			respuestaOculta = ex.getMessage();
     			logger.error(respuesta,ex);
     		}
@@ -1127,7 +1127,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     		{
     			long timestamp  = System.currentTimeMillis();
     			exito           = false;
-    			respuesta       = "Error al generar p&oacute;liza #"+timestamp;
+    			respuesta       = "Error al generar p\u00f3liza #"+timestamp;
     			respuestaOculta = ex.getMessage();
     			logger.error(respuesta,ex);
     		}
@@ -1171,7 +1171,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	    		{
 	    			long timestamp  = System.currentTimeMillis();
 	    			exito           = false;
-	    			respuesta       = "Error al actualizar el tr&aacute;mite #"+timestamp;
+	    			respuesta       = "Error al actualizar el tr\u00e1mite #"+timestamp;
 	    			respuestaOculta = ex.getMessage();
 	    			logger.error(respuesta,ex);
 	    		}
@@ -1257,6 +1257,19 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            			,false
 	            			);
 	            	
+	            	mesaControlManager.movimientoDetalleTramite(
+	            			ntramite
+	            			,new Date()
+	            			,null//cdclausu
+	            			,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
+	            			,cdusuari
+	            			,null//cdmotivo
+	            			,cdsisrol
+	            			,"S"//swagente
+	            			,EstatusTramite.PENDIENTE.getCodigo()
+	            			,false
+	            			);
+	            	
 	            	try
 		            {
 		            	serviciosManager.grabarEvento(new StringBuilder("\nCotizar tramite grupo")
@@ -1284,7 +1297,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	    		{
 	    			long timestamp  = System.currentTimeMillis();
 	    			exito           = false;
-	    			respuesta       = "Error al generar el tr&aacute;mite #"+timestamp;
+	    			respuesta       = "Error al generar el tr\u00e1mite #"+timestamp;
 	    			respuestaOculta = ex.getMessage();
 	    			logger.error(respuesta,ex);
 	    		}
@@ -1354,7 +1367,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            //mapArchivo.put("pv_nmsuplem_i"  , "0");
 	            //mapArchivo.put("pv_feinici_i"   , new Date());
 	            //mapArchivo.put("pv_cddocume_i"  , nombreArchivoCotizacion);
-	            //mapArchivo.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N");
+	            //mapArchivo.put("pv_dsdocume_i"  , "COTIZACI\u00f3N");
 	            //mapArchivo.put("pv_ntramite_i"  , ntramite);
 	            //mapArchivo.put("pv_nmsolici_i"  , comprarNmpoliza);
 	            //mapArchivo.put("pv_tipmov_i"    , "1");
@@ -1386,7 +1399,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     		{
     			long timestamp  = System.currentTimeMillis();
     			exito           = false;
-    			respuesta       = "Error al generar la cotizaci&oacute;n #"+timestamp;
+    			respuesta       = "Error al generar la cotizaci\u00f3n #"+timestamp;
     			respuestaOculta = ex.getMessage();
     			logger.error(respuesta,ex);
     		}
@@ -1424,7 +1437,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				//mapaExcel1.put("pv_nmsuplem_i"  , "0");
 				//mapaExcel1.put("pv_feinici_i"   , new Date());
 				//mapaExcel1.put("pv_cddocume_i"  , nombreExcel1);
-				//mapaExcel1.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N (XLS)");
+				//mapaExcel1.put("pv_dsdocume_i"  , "COTIZACI\u00f3N (XLS)");
 				//mapaExcel1.put("pv_ntramite_i"  , ntramite);
 				//mapaExcel1.put("pv_nmsolici_i"  , comprarNmpoliza);
 				//mapaExcel1.put("pv_tipmov_i"    , "1");
@@ -1481,7 +1494,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				//mapaExcel2.put("pv_nmsuplem_i"  , "0");
 				//mapaExcel2.put("pv_feinici_i"   , new Date());
 				//mapaExcel2.put("pv_cddocume_i"  , nombreExcel2);
-				//mapaExcel2.put("pv_dsdocume_i"  , "RESUMEN DE COTIZACI&Oacute;N (XLS)");
+				//mapaExcel2.put("pv_dsdocume_i"  , "RESUMEN DE COTIZACI\u00f3N (XLS)");
 				//mapaExcel2.put("pv_ntramite_i"  , ntramite);
 				//mapaExcel2.put("pv_nmsolici_i"  , comprarNmpoliza);
 				//mapaExcel2.put("pv_tipmov_i"    , "1");

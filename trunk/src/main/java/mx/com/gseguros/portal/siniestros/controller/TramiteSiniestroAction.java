@@ -122,7 +122,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			// 1.- Guardar en TMESACONTROL 
 			this.session=ActionContext.getContext().getSession();
 			UserVO usuario=(UserVO) session.get("USUARIO");
-			//Si el tr&aacute;mite es nuevo
+			//Si el tr\u00e1mite es nuevo
 			if(params.get("idNumTramite").toString().length() <= 0){
 				
 				Map<String,String> valores = new LinkedHashMap<String,String>();
@@ -784,7 +784,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 		try {
 			logger.debug("generarContrarecibo Siniestros {}", paramsO);
 			if(Constantes.MSG_TITLE_ERROR.equals(siniestrosManager.generaContraRecibo(paramsO))){
-				msgResult = "Error al generar el n&uacute; de Contra Recibo";
+				msgResult = "Error al generar el n\u00fa de Contra Recibo";
 				success =  false;
 				return SUCCESS;
 			}

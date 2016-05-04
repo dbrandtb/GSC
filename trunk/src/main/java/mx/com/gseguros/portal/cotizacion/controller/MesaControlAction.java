@@ -479,17 +479,17 @@ public class MesaControlAction extends PrincipalCoreAction
 			String comentarioPrevio = "";
 	    	switch(enumEstatusTramite) {
 	    		case EN_REVISION_MEDICA:
-	    			comentarioPrevio = "<p>El tr&aacute;mite fue turnado a revisi&oacute;n m&eacute;dica con las siguientes observaciones:</p>";
+	    			comentarioPrevio = "<p>El tr\u00e1mite fue turnado a revisi\u00f3n m\u00e9dica con las siguientes observaciones:</p>";
 	    			break;
 	    		case RECHAZADO:
-	    			comentarioPrevio = "<p>La p&oacute;liza fue rechazada con los siguientes detalles:</p>";
+	    			comentarioPrevio = "<p>La p\u00f3liza fue rechazada con los siguientes detalles:</p>";
 	    			break;
 	    		case VO_BO_MEDICO:
 	    		case SOLICITUD_MEDICA:
-	    			comentarioPrevio = "<p>El m&eacute;dico revis&oacute; el tr&aacute;mite con las siguientes observaciones:</p>";
+	    			comentarioPrevio = "<p>El m\u00e9dico revis\u00f3 el tr\u00e1mite con las siguientes observaciones:</p>";
 	    			break;
 	    		case EN_ESPERA_DE_AUTORIZACION:
-	    			comentarioPrevio = "<p>El coordinador m&eacute;dico multiregional remiti&oacute; las siguientes observaciones:</p>";
+	    			comentarioPrevio = "<p>El coordinador m\u00e9dico multiregional remiti\u00f3 las siguientes observaciones:</p>";
 	    			break;
 				default:
 					break;
@@ -1119,7 +1119,7 @@ public class MesaControlAction extends PrincipalCoreAction
         	parDmesCon.put("pv_ntramite_i"   , ntramiteEmi);
         	parDmesCon.put("pv_feinicio_i"   , new Date());
         	parDmesCon.put("pv_cdclausu_i"   , null);
-        	parDmesCon.put("pv_comments_i"   , "El gerente regres&oacute; el tr&aacute;mite con las siguientes observaciones:<br/>"+comentario);
+        	parDmesCon.put("pv_comments_i"   , "El gerente regres\u00f3 el tr\u00e1mite con las siguientes observaciones:<br/>"+comentario);
         	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
         	parDmesCon.put("pv_cdmotivo_i"   , null);
         	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
@@ -1138,7 +1138,7 @@ public class MesaControlAction extends PrincipalCoreAction
 					,false
 					);
 			
-        	mensaje = "Tr&aacute;mite regresado";
+        	mensaje = "Tr\u00e1mite regresado";
         	success = true;
 		}
 		catch(Exception ex)

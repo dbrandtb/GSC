@@ -499,7 +499,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 			} else if("3".equals(progresoTexto)){
 				progresoTexto = "No existen recibos por habilitar.";
 			} else if(Constantes.MSG_TITLE_ERROR.equals(progresoTexto)){
-				progresoTexto = "Error en la Operaci&oacute;n";
+				progresoTexto = "Error en la Operaci\u00f3n";
 			} else {
 				progresoTexto="Se ha habilitado el recibo subsecuente.";
 				success=true;

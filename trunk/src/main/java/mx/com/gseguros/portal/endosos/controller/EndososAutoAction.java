@@ -2493,7 +2493,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			smap2.put("numEndosoSIGS" ,claveEndoso+"");
 			
 			
-			respuesta = "Endoso generado correctamente. N&uacute;mero de endoso : "+claveEndoso;
+			respuesta = "Endoso generado correctamente. N\u00famero de endoso : "+claveEndoso;
 			success   = true;
 		}
 		catch(Exception ex)
@@ -2572,7 +2572,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			smap2.put("numEndosoSIGS" ,claveEndoso+"");
 			
 			
-			respuesta = "Endoso generado correctamente. N&uacute;mero de endoso : "+claveEndoso;
+			respuesta = "Endoso generado correctamente. N\u00famero de endoso : "+claveEndoso;
 			success   = true;
 		}
 		catch(Exception ex)

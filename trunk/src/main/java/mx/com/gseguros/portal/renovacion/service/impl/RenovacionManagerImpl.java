@@ -237,7 +237,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 			}
 		}
 		
-		StringBuilder respBuilder = new StringBuilder("P&oacute;lizas renovadas:");
+		StringBuilder respBuilder = new StringBuilder("P\u00f3lizas renovadas:");
 		
 		//crear documentacion
 		if(resp.isExito())
@@ -395,7 +395,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 					respBuilder
 					    .append("<br/>Antes ").append(uniecoant).append(" - ").append(nmpolant)
 					    .append(", ahora ")   .append(cdunieco) .append(" - ").append(nmpoliza)
-					    .append(" con tr&aacute;mite ").append(ntramite);
+					    .append(" con tr\u00e1mite ").append(ntramite);
 				}
 			}
 			catch(ApplicationException ax)
