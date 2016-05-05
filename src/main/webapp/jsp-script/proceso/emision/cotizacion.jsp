@@ -61,6 +61,7 @@ var _0_urlRecuperacionSimple       = '<s:url namespace="/emision"         action
 var _0_urlRetroactividadDifer      = '<s:url namespace="/emision"         action="cargarRetroactividadSuplemento" />';
 var _0_urlObtieneValNumeroSerie    = '<s:url namespace="/emision" 		  action="obtieneValNumeroSerie"          />';
 var _p0_urlCargarPoliza           = '<s:url namespace="/emision"         action="cargarPoliza"                   />';
+var _p28_urlCargarDetalleNegocioRamo5= '<s:url namespace="/emision"         action="cargarDetalleNegocioRamo5"   />';
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
     <s:property value="imap.modeloExtraFields" />
@@ -2099,8 +2100,8 @@ Ext.onReady(function()
                         {
                             change : _0_funcionFechaChange
                         }
-                    },
-                    {
+                    }
+                    ,{
                         id          : 'fechaFinVigencia'
                         ,name       : 'fefin'
                         ,fieldLabel : 'FIN DE VIGENCIA'
@@ -2738,6 +2739,60 @@ Ext.onReady(function()
                 }
             });
         }
+        
+        var negoCmp = _fieldByLabel('TIPO SERVICIO');
+        var negoVal = negoCmp.getValue();
+        negoCmp.setLoading(true);
+        Ext.Ajax.request(
+                {
+                    url     : _p28_urlCargarDetalleNegocioRamo5
+                    ,params :
+                    {
+                        'smap1.negocio' : '999999',
+                        'smap1.cdramo'  : _0_smap1.cdramo,
+                        'smap1.cdtipsit': _0_smap1.cdtipsit
+                    }
+                    ,success : function(response)
+                    {
+                        negoCmp.setLoading(false);
+                        var json = Ext.decode(response.responseText);
+                        debug('### detalle negocio:',json);
+                        if(Number(json.smap1.MULTIANUAL) != 0) {
+                            _fieldByName('fefin').validator=function(val)
+                            {
+                                var feiniVal = Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y');
+                                debug('feiniVal:',feiniVal);
+                                var fefinVal=[];
+                                for(var i=1; i <= Number(json.smap1.MULTIANUAL); i++)
+                                {
+                                    debug('mas anios:',i);
+                                    fefinVal.push(Ext.Date.format(Ext.Date.add(Ext.Date.parse(feiniVal,'d/m/Y'),Ext.Date.YEAR,i),'d/m/Y'));
+                                }
+                                debug('validar contra:',fefinVal);
+                                var valido = true;
+                                if(!Ext.Array.contains(fefinVal,val))
+                                {
+                                    valido = 'Solo se permite:';
+                                    for(var i in fefinVal)
+                                    {
+                                        valido = valido + ' ' + fefinVal[i];
+                                        if(fefinVal.length>1&&i<fefinVal.length-1)
+                                        {
+                                            valido = valido + ',';
+                                        }
+                                    }
+                                }
+                                return valido;
+                            }
+                        }
+                        _fieldByName('fefin').isValid();
+                    }
+                    ,failure : function()
+                    {
+                        negoCmp.setLoading(false);
+                        errorComunicacion();
+                    }
+                });
     }
     //fin [parche]
     
@@ -3175,12 +3230,17 @@ Ext.onReady(function()
                 else
                 {
                     _fieldByName('fefin').setValue(
-                        Ext.Date.add(
-                            _fieldByName('feini').getValue()
-                            ,Ext.Date.MONTH
-                            ,_fieldByName('parametros.pv_otvalor20').getValue()
+                         Ext.Date.add(
+	                         _fieldByName('feini').getValue()
+	                         ,Ext.Date.MONTH
+	                         ,_fieldByName('parametros.pv_otvalor20').getValue()
                         )
                     );
+//                 	debug('val:',val);
+//                     var fefin = _fieldByName('fefin');
+//                     fefin.setValue(Ext.Date.add(val,Ext.Date.YEAR,1));
+//                     fefin.setMinValue(Ext.Date.add(val,Ext.Date.DAY,1));
+//                     fefin.isValid();
                 }
             }
         });

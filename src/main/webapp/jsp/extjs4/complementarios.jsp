@@ -109,9 +109,30 @@
             {
                 try
                 {
-                    Ext.getCmp('fechaRenovacion').setValue(Ext.Date.add(value, Ext.Date.YEAR, 1));
+                	if(!Ext.isEmpty(plazoEnDias))
+                		{
+                		  Ext.getCmp('fechaRenovacion').setValue(Ext.Date.add(value, Ext.Date.DAY, plazoEnDias));
+                		}
+                	else
+                		{
+                		 Ext.getCmp('fechaRenovacion').setValue(Ext.Date.add(value, Ext.Date.YEAR, 1));
+                		}
                 }catch(e)
                 {}
+            }
+            
+            var plazoEnDias;
+            function recuperaPlazoDias()
+            {
+            	if(!Ext.isEmpty(Ext.getCmp('fechaRenovacion')) && !Ext.isEmpty(Ext.getCmp('fechaEfectividad')))
+                {
+	                var milisDif = Ext.Date.getElapsed(
+	                Ext.getCmp('fechaRenovacion').getValue(),Ext.getCmp('fechaEfectividad').getValue()
+	                );
+	                debug('Valor itemVigencia:',milisDif);
+	                plazoEnDias = (milisDif/1000/60/60/24).toFixed(0);
+	                debug('plazo_dias:',plazoEnDias);
+                }
             }
             
             var pantallaValositParche = false;
@@ -382,7 +403,7 @@ function _datComTurnarSuscripcion()
                                 }*/
                                 afterrender:function(tab)
                                 {
-                                    debug('afterrender tabPanelValosit');
+                                	debug('afterrender tabPanelValosit');
                                     tab.loader.load();
                                 }
                             }
@@ -415,8 +436,8 @@ function _datComTurnarSuscripcion()
                                 }*/
                                 afterrender:function(tab)
                                 {
-                                    debug('afterrender tabPanelAsegurados');
-                                    tab.loader.load();
+                                	debug('afterrender tabPanelAsegurados');
+                                	tab.loader.load();
                                 }
                             }
                         })
@@ -2203,6 +2224,8 @@ function _datComTurnarSuscripcion()
                                   			,failure : errorComunicacion
                                   		});
                                     }
+                                    
+                                    recuperaPlazoDias();
                                 }
                             }
 		                })
