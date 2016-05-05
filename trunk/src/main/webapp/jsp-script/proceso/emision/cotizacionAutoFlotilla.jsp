@@ -3919,8 +3919,7 @@ function _p30_cotizar(sinTarificar)
     
     if(valido)
     {
-    	var lastinx = (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|'));
-        if(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
+    	if(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
         {
             valido = _p30_store.getCount()>=1;
             if(!valido)
@@ -4602,7 +4601,7 @@ function _p30_cotizar(sinTarificar)
                                         ,icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
                                         ,disabled : true
                                         ,handler  : _p30_detalles
-                                       ,hidden    : ((rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|'))==-1)
+                                       ,hidden    : (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')==-1)
                                     }
                                     ,{
                                         itemId    : '_p30_botonCoberturas'
@@ -6551,7 +6550,7 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json)
                 if(mapeo=='DIRECTO')
                 {
                     debug('directo');
-                    if(_p30_smap1.cdramo+'x'=='5x'&& (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|'))!=-1)
+                    if(_p30_smap1.cdramo+'x'=='5x'&& (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1))
                     {
                         var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
                         var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
@@ -6575,7 +6574,7 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json)
                     }
                     
                     if(_p30_smap1.cdramo+'x'=='5x'
-                       &&(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|'))!=-1)
+                       &&(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1))
                     {
                         var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
                         agenteCmp.getStore().load(
@@ -6662,7 +6661,7 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json)
                     
                     debug('recordMapeado:',recordMapeado.data);
                     if(_p30_smap1.cdramo+'x'=='5x'&& 
-                    (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|'))!=-1)
+                    (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1))
                     {
                         var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
                         var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
