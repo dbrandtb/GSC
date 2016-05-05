@@ -5755,12 +5755,15 @@ public class CotizacionManagerImpl implements CotizacionManager
 					
 				}
 				
+				/**
+				 * GURADA UN PROSPECTO PERO COMO NO SE INDICA UN TIPO DE PERSONA SE GUARDA POR DEFAULT COMO MORAL
+				 */
 				personasDAO.movimientosMpersona(
 					cdperson
 					,"1"         //cdtipide
 					,null        //cdideper
 					,nombre
-					,"1"         //cdtipper
+					,"99"        //cdtipper 99 PARA PROSPECTO TEMPORAL
 					,"M"         //otfisjur
 					,"H"         //otsexo
 					,new Date()  //fenacimi
