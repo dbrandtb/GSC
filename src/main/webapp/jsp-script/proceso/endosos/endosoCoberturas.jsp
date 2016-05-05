@@ -789,7 +789,7 @@
                                                          }).show());
                                                    
                                                    debug('Vil inputCdpersonap3: ',incisoSelected.data.CVE_CONDUCTOR);
-                                                   mensajeCorrecto('Aviso', 'Al agregar la cobertura de: <br>Seguro de Vida<br>El cliente '+incisoSelected.data.CVE_CONDUCTOR+' da por entendido que no padece alguna enfermedad grave o cr&oacute;nica o que en los &uacute;ltimos 12 meses no ha estado bajo tratamiento m&eacute;dico.');
+                                                   mensajeCorrecto('Aviso', 'En caso de que en la emisión original de la póliza se haya declarado que el contratante ha estado expuesto o padecido una enfermedad crónica o grave en los últimos 12 meses, la cobertura VIDAUTO no se amparará.');
                                                    
                                                  }
                                             	 
