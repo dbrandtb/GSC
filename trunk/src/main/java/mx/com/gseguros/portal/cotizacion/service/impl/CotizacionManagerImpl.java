@@ -5763,7 +5763,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,"1"         //cdtipide
 					,null        //cdideper
 					,nombre
-					,"99"        //cdtipper 99 PARA PROSPECTO TEMPORAL
+					,"99"        //cdtipper 99 PARA PROSPECTO TEMPORAL, se borra despues de la emision.
 					,"M"         //otfisjur
 					,"H"         //otsexo
 					,new Date()  //fenacimi

@@ -389,6 +389,7 @@ public interface EndososDAO
 			,String nmrecibo
 			,String nmimpres
 			,String cdusuari
+			,String cdsisrol
 			,String cdtipsup
 			)throws Exception;
 	
