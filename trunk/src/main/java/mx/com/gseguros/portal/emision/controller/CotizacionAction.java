@@ -6589,34 +6589,33 @@ public class CotizacionAction extends PrincipalCoreAction
 			            	}
 			            }
 			            
-			            if(!clasif.equals(LINEA)||clasif.equals(LINEA))
+			            //if(!clasif.equals(LINEA)) // Si el censo no es de linea (menor a 50 asegurados), se valida el num. de titulares 
+			            //{
+			            ManagerRespuestaSmapVO familiasMinimas = cotizacionManager.obtenerParametrosCotizacion(
+			            		ParametroCotizacion.NUMERO_FAMILIAS_COTI_COLECTIVO
+			            		,cdramo
+			            		,cdtipsit
+			            		,null
+			            		,null
+			            		);
+			            int nMin = 0;
+			            try
 			            {
-			            	logger.debug("Entro correctamente!!");
-				            ManagerRespuestaSmapVO familiasMinimas = cotizacionManager.obtenerParametrosCotizacion(
-				            		ParametroCotizacion.NUMERO_FAMILIAS_COTI_COLECTIVO
-				            		,cdramo
-				            		,cdtipsit
-				            		,null
-				            		,null
-				            		);
-				            int nMin = 0;
-				            try
-				            {
-				            	nMin = Integer.parseInt(familiasMinimas.getSmap().get("P1VALOR"));
-				            }
-				            catch(Exception ex)
-				            {
-				            	throw new ApplicationException("Error al validar el n\u00FAmero de titulares");
-				            }
-				            
-				            if(nFamilia<nMin)
-				            {
-				            	throw new ApplicationException(Utils.join("El n\u00FAmero de titulares debe ser por lo menos "
-				            			,nMin
-				            			,", se encontraron "
-				            			,nFamilia));
-				            }
+			            	nMin = Integer.parseInt(familiasMinimas.getSmap().get("P1VALOR"));
 			            }
+			            catch(Exception ex)
+			            {
+			            	throw new ApplicationException("Error al validar el n\u00FAmero de titulares");
+			            }
+			            
+			            if(nFamilia<nMin)
+			            {
+			            	throw new ApplicationException(Utils.join("El n\u00FAmero de titulares debe ser por lo menos "
+			            			,nMin
+			            			,", se encontraron "
+			            			,nFamilia));
+			            }
+			            //}
 			            
 			            input.close();
 			            output.close();

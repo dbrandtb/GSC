@@ -3134,6 +3134,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			            	logger.error(resp.getRespuesta(),ex);
 			            }
 			            
+			            //if(resp.isExito()&&!clasif.equals("1")) // Si el censo es distinto a Linea (menor a 50 asegurados), validamos el num. de titulares
 			            if(resp.isExito())
 			            {
 				            int nMin = 0;
