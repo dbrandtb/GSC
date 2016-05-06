@@ -6589,8 +6589,9 @@ public class CotizacionAction extends PrincipalCoreAction
 			            	}
 			            }
 			            
-			            if(!clasif.equals(LINEA))
+			            if(!clasif.equals(LINEA)||clasif.equals(LINEA))
 			            {
+			            	logger.debug("Entro correctamente!!");
 				            ManagerRespuestaSmapVO familiasMinimas = cotizacionManager.obtenerParametrosCotizacion(
 				            		ParametroCotizacion.NUMERO_FAMILIAS_COTI_COLECTIVO
 				            		,cdramo
