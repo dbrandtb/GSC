@@ -1719,6 +1719,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						,nmrecibo
 						,nmimpres
 						,usuarioSesion.getUser()
+						,usuarioSesion.getRolActivo().getClave()
 						,cdtipsup
 						);
 			
@@ -5664,6 +5665,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						,nmrecibo
 						,nmimpres
 						,usuarioSesion.getUser()
+						,usuarioSesion.getRolActivo().getClave()
 						,cdtipsup
 						);
 			
