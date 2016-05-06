@@ -390,6 +390,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			resp.getSmap().put("stamp" , stamp);
 			
+			/*
+			 * nunca se uso
+			 *
 			if(incisos.size()>0)
 			{
 				paso="Insertando situaciones para evaluacion";
@@ -409,6 +412,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 							);
 				}
 			}
+			*/
 			
 			paso="Recuperando lista de endosos";
 			logger.info(paso);
