@@ -3114,7 +3114,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		            	logger.error(resp.getRespuesta(),ex);
 		            }
 		            
-		            if(resp.isExito()&&!clasif.equals("1"))
+		            if(resp.isExito())
 		            {
 			            Map<String,String> familiasMinimas = null;
 			            try
