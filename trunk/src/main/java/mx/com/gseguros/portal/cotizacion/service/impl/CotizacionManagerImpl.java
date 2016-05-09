@@ -4164,29 +4164,29 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 	
 	@Override
-	public ManagerRespuestaSlistVO cargarAseguradosExtraprimas2(
+	public List<Map<String,String>> cargarAseguradosExtraprimas2(
 			String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
 			,String cdgrupo
-			)
+			)throws Exception
 	{
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ cargarAseguradosExtraprimas2 @@@@@@")
-				.append("\n@@@@@@ cdunieco=").append(cdunieco)
-				.append("\n@@@@@@ cdramo=")  .append(cdramo)
-				.append("\n@@@@@@ estado=")  .append(estado)
-				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
-				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
-				.append("\n@@@@@@ cdgrupo=") .append(cdgrupo)
-				.toString()
-				);
+		logger.info(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarAseguradosExtraprimas2 @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ nmsuplem=" , nmsuplem
+				,"\n@@@@@@ cdgrupo="  , cdgrupo
+				));
 		
-		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
+		List<Map<String,String>> lista = new ArrayList<Map<String,String>>();
+		
+		String paso = "Recuperando asegurados extraprima";
 		
 		//cargar situaciones grupo
 		try
@@ -4199,7 +4199,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,nmsuplem
 					,cdgrupo);
 			
-			List<Map<String,String>>editadas=new ArrayList<Map<String,String>>();
 			for(Map<String,String>situacion:situaciones)
 		    {
 		    	String tpl = null;
@@ -4209,19 +4208,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 		    	}
 		    	else
 		    	{
-		    		tpl = new StringBuilder()
-    	                    .append("Familia (")
-    	                    .append(situacion.get("familia"))
-    	                    .append(") de ")
-    	                    .append(situacion.get("titular"))
-    	            		.toString();
+		    		tpl = Utils.join(
+		    				"Familia (" , situacion.get("familia") , ") de " , situacion.get("titular")
+		    				);
 		    	}
 		    	situacion.put("agrupador",
-		    			new StringBuilder()
-		    	            .append(StringUtils.leftPad(situacion.get("familia"),3,"0"))
-		    	            .append("_")
-		    	            .append(tpl)
-		    	            .toString());
+		    			Utils.join(StringUtils.leftPad(situacion.get("familia"),3,"0") , "_" , tpl)
+		    			);
 		    	
 		    	Map<String,String>editada=new HashMap<String,String>();
 		    	for(Entry<String,String>en:situacion.entrySet())
@@ -4239,36 +4232,21 @@ public class CotizacionManagerImpl implements CotizacionManager
 		    			editada.put(key,en.getValue());
 		    		}
 		    	}
-		    	editadas.add(editada);
+		    	lista.add(editada);
 		    }
-			
-			resp.setSlist(editadas);
 		}
 		catch(ApplicationException ax)
 		{
-			long timestamp = System.currentTimeMillis();
-			resp.setExito(false);
-			resp.setRespuesta(new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString());
-			resp.setRespuestaOculta(ax.getMessage());
-			logger.error(resp.getRespuesta(),ax);
-		}
-		catch(Exception dx)
-		{
-			long timestamp = System.currentTimeMillis();
-			resp.setExito(false);
-			resp.setRespuesta(new StringBuilder("Error al obtener situaciones #").append(timestamp).toString());
-			resp.setRespuestaOculta(dx.getMessage());
-			logger.error(resp.getRespuesta(),dx);
+			Utils.generaExcepcion(ax, paso);
 		}
 		
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@ ").append(resp)
-				.append("\n@@@@@@ cargarAseguradosExtraprimas2 @@@@@@")
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.toString()
-				);
-		return resp;
+		logger.info(Utils.log(
+				 "\n@@@@@@ lista=" , lista
+				,"\n@@@@@@ cargarAseguradosExtraprimas2 @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		return lista;
 	}
 	
 	public ManagerRespuestaVoidVO guardarValoresSituaciones(List<Map<String,String>>situaciones)

@@ -4763,7 +4763,7 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                                     {
                                         filterFn = function(record)
                                         {
-                                            var nombre = record.get('NOMBRE').toUpperCase().replace(/ /g,'');
+                                            var nombre = record.get('nombre').toUpperCase().replace(/ /g,'');
                                             var filtro = val.toUpperCase().replace(/ /g,'');
                                             var posNombre = nombre.lastIndexOf(filtro);
                                             
@@ -4827,15 +4827,16 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                                 var extrCmp = Ext.ComponentQuery.query('[name=extrtitu][grupo='+me.grupo+']')[0];
                                 if(extrCmp.isValid())
                                 {
-                                    mensajeWarning('Falta identificar atributo de extraprima ocupacional');
-                                    /*
                                     var datos = extrCmp.up('grid').store.datos;
                                     for(var i in datos)
                                     {
                                         var record = datos[i];
-                                        record.set('EXTPRI_OCUPACION',extrCmp.getValue());
+                                        if(record.get('parentesco')=='TITULAR')
+                                        {
+                                            alert('aki c pone xtra prima: '+record.get('nmsituac'));
+                                            //record.set('EXTPRI_OCUPACION',extrCmp.getValue());
+                                        }
                                     }
-                                    */
                                 }
                             }
                             catch(e)
