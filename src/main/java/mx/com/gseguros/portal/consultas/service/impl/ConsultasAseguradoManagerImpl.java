@@ -1,7 +1,10 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.IConsultasAseguradoDAO;
@@ -230,31 +233,72 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	@Override
 	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza) throws Exception {
 		
-		List<CopagoVO> copagos = new ArrayList<CopagoVO>();
-		//Si iCodPoliza no es nulo, es información de SISA.
-		 if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){		
-			copagos = consultasAseguradoDAOSISA.obtieneCopagosPoliza(poliza);
-		 } else {
+		List<CopagoVO> copagos;
+		// Si iCodPoliza viene vacio, es información de ICE:
+		if(StringUtils.isBlank(poliza.getIcodpoliza())){
+			
 			copagos = consultasAseguradoDAOICE.obtieneCopagosPoliza(poliza);
-			/*						
+			
 			// Agregamos un campo que agrupe los resultados:
 			String agrupador = null;
 			Iterator<CopagoVO> itCopagos = copagos.iterator();
+		
+			int ordenOrig = 0;
+			String[] arrayLetras = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","x","y","z"};
+			
+			Map<String, Integer> agrupadores = new HashMap<String, Integer>();
+			
+			
 			while (itCopagos.hasNext()) {
 				CopagoVO copagoVO = itCopagos.next();
 				// Si el copago tiene Nivel Padre se asigna como agrupador:
 				if(copagoVO.getNivel() == 1) {
 					agrupador = copagoVO.getDescripcion();
+					agrupadores.put(agrupador, 0);
+					ordenOrig++;
+				} else {
+					if(agrupador != null && agrupadores.get(agrupador) != null) {
+						agrupadores.put(agrupador, agrupadores.get(agrupador)+1);
+						logger.debug("agrupadores:" + agrupadores);
+					}
 				}
+				/*
 				// Si el copago no es visible o no hay descripcion, lo eliminamos:
 				if(!copagoVO.isVisible() || StringUtils.isBlank(copagoVO.getDescripcion())) {
 					itCopagos.remove();
 				}
+				*/
 				copagoVO.setAgrupador(agrupador);
+				copagoVO.setOrdenAgrupador(arrayLetras[ordenOrig-1]+" "+agrupador);
 			}
-			*/
-		 }
-		
+			
+			// Se eliminan los agrupadores que no tienen hijos:
+			for(Iterator<Map.Entry<String, Integer>> it = agrupadores.entrySet().iterator(); it.hasNext(); ) {
+				Map.Entry<String, Integer> entry = it.next();
+				if(entry.getValue() == 0 ) {
+					it.remove();
+				}
+			}
+			
+			logger.debug("map final:"+ agrupadores);
+			
+			itCopagos = copagos.iterator();
+			while (itCopagos.hasNext()) {
+				CopagoVO copagoVO = itCopagos.next();
+				for (String keyAgrupa : agrupadores.keySet()) {
+					if(keyAgrupa.equals(copagoVO.getDescripcion())) {
+						logger.debug("se elimina " + copagoVO);
+						itCopagos.remove();
+						continue;
+					}				
+				}
+			}
+			
+			logger.debug("agrupadores final:" + agrupadores);
+			
+		} else {
+			copagos = consultasAseguradoDAOSISA.obtieneCopagosPoliza(poliza);
+		}
 		return copagos;
 	}
 	
