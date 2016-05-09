@@ -363,14 +363,14 @@ public interface CotizacionManager
 	
 	public ManagerRespuestaSlistVO obtenerTiposSituacion();
 	
-	public ManagerRespuestaSlistVO cargarAseguradosExtraprimas2(
+	public List<Map<String,String>>cargarAseguradosExtraprimas2(
 			String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
 			,String cdgrupo
-			);
+			)throws Exception;
 	
 	public ManagerRespuestaVoidVO guardarValoresSituaciones(List<Map<String,String>>situaciones);
 	

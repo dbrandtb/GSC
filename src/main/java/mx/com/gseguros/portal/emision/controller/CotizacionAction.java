@@ -9094,31 +9094,27 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarAseguradosExtraprimas2()
 	{
-		logger.debug(
-				new StringBuilder()
-				.append("\n##########################################")
-				.append("\n###### cargarAseguradosExtraprimas2 ######")
-				.append("\n######smap1=").append(smap1)
-				.toString()
-				);
+		logger.debug(Utils.log(
+				 "\n##########################################"
+				,"\n###### cargarAseguradosExtraprimas2 ######"
+				,"\n###### smap1=" , smap1
+				));
 		
-		success = true;
-		exito   = true;
-		
-		String cdunieco = null;
-		String cdramo   = null;
-		String estado   = null;
-		String nmpoliza = null;
-		String nmsuplem = null;
-		String cdgrupo  = null;
 		
 		//datos completos
 		try
 		{
-			if(smap1==null)
-			{
-				throw new ApplicationException("No se recibieron datos");
-			}
+			Utils.validateSession(session);
+			
+			Utils.validate(smap1 , "No se recibieron datos");
+			
+			String cdunieco  = null
+					,cdramo   = null
+					,estado   = null
+					,nmpoliza = null
+					,nmsuplem = null
+					,cdgrupo  = null;
+			
 			cdunieco = smap1.get("cdunieco");
 			cdramo   = smap1.get("cdramo");
 			estado   = smap1.get("estado");
@@ -9126,60 +9122,18 @@ public class CotizacionAction extends PrincipalCoreAction
 			nmsuplem = smap1.get("nmsuplem");
 			cdgrupo  = smap1.get("cdgrupo");
 			
-			if(StringUtils.isBlank(cdunieco))
-			{
-				throw new ApplicationException("No se recibio la sucursal");
-			}
-			if(StringUtils.isBlank(cdramo))
-			{
-				throw new ApplicationException("No se recibio el producto");
-			}
-			if(StringUtils.isBlank(estado))
-			{
-				throw new ApplicationException("No se recibio el estado");
-			}
-			if(StringUtils.isBlank(nmpoliza))
-			{
-				throw new ApplicationException("No se recibio el numero de cotizacion");
-			}
-			if(StringUtils.isBlank(nmpoliza))
-			{
-				throw new ApplicationException("No se recibio el numero de cotizacion");
-			}
-			if(StringUtils.isBlank(nmpoliza))
-			{
-				throw new ApplicationException("No se recibio el numero de cotizacion");
-			}
-			if(StringUtils.isBlank(nmsuplem))
-			{
-				throw new ApplicationException("No se recibio el suplemento");
-			}
-			if(StringUtils.isBlank(cdgrupo))
-			{
-				throw new ApplicationException("No se recibio la clave de grupo");
-			}
-		}
-		catch(ApplicationException ax)
-		{
-			long timestamp  = System.currentTimeMillis();
-			exito           = false;
-			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
-			respuestaOculta = ax.getMessage();
-			logger.error(respuesta,ax);
-		}
-		catch(Exception ex)
-		{
-			long timestamp  = System.currentTimeMillis();
-			exito           = false;
-			respuesta       = new StringBuilder("Error al validar datos para cargar extraprimas #").append(timestamp).toString();
-			respuestaOculta = ex.getMessage();
-			logger.error(respuesta,ex);
-		}
-		
-		//proceso
-		if(exito)
-		{
-		    ManagerRespuestaSlistVO resp = cotizacionManager.cargarAseguradosExtraprimas2(
+			Utils.validate(
+					cdunieco , "No se recibio la sucursal"
+					,cdramo  , "No se recibio el producto"
+					,estado  , "No se recibio el estado"
+					,nmpoliza , "No se recibio el numero de cotizacion"
+					,nmpoliza , "No se recibio el numero de cotizacion"
+					,nmpoliza , "No se recibio el numero de cotizacion"
+					,nmsuplem , "No se recibio el suplemento"
+					,cdgrupo  , "No se recibio la clave de grupo"
+			);
+			
+		    slist1 = cotizacionManager.cargarAseguradosExtraprimas2(
 		    		cdunieco
 		    		,cdramo
 		    		,estado
@@ -9187,23 +9141,22 @@ public class CotizacionAction extends PrincipalCoreAction
 		    		,nmsuplem
 		    		,cdgrupo
 		    		);
-		    exito           = resp.isExito();
-		    respuesta       = resp.getRespuesta();
-		    respuestaOculta = resp.getRespuestaOculta();
-		    if(exito)
-		    {
-		    	slist1 = resp.getSlist();
-		    }
+		    			
+			exito   = true;
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		success = exito;
-		
-		logger.debug(
-				new StringBuilder()
-				.append("\n###### cargarAseguradosExtraprimas2 ######")
-				.append("\n##########################################")
-				.toString()
-				);
+		logger.debug(Utils.log(
+				 "\n###### respuesta=" , respuesta
+				,"\n###### exito="     , exito
+				,"\n###### slist1="    , slist1
+				,"\n###### cargarAseguradosExtraprimas2 ######"
+				,"\n##########################################"
+				));
 		return SUCCESS;
 	}
 	
