@@ -116,7 +116,7 @@ var _0_validacion_custom;
 
 var _parentescoTitular = 'T';
 var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
-
+var plazoenanios;
 debug('_0_smap1: ',_0_smap1);
 
 var image = Ext.create('Ext.Img', {
@@ -1754,8 +1754,8 @@ function _0_recuperarDescuento()
     }
 }
 
-
-function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
+function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta)
+{
 	var panelImagen = new Ext.Panel({
 		defaults 	: {
 			style   : 'margin:5px;'
@@ -1857,24 +1857,130 @@ function asignarAgente(agente)
      }
 }
 
-// function _0_calculaVigencia(comp,val)
-// {
-//     debug('>_0_calculaVigencia');
-//     var feini = _fieldByName('feini');
-//     var fefin = _fieldByName('fefin');
+function _0_calculaVigencia(comp,val)
+{
+// 	alert('_0_calculaVigencia');
+    debug('>_0_calculaVigencia');
+    var feini = _fieldByName('feini');
+    var fefin = _fieldByName('fefin');
     
-//     var itemVigencia=_fieldByLabel('FIN DE VIGENCIA');
-// //     itemVigencia.hide();
+    var itemVigencia=_fieldByLabel('FIN DE VIGENCIA');
+    //itemVigencia.hide();
     
-//     if(feini.isValid()&&fefin.isValid())
-//     {
-//         var milisDif = Ext.Date.getElapsed(feini.getValue(),fefin.getValue());
-//         var diasDif  = (milisDif/1000/60/60/24).toFixed(0);
-//         debug('milisDif:',milisDif,'diasDif:',diasDif);
-//         itemVigencia.setValue(diasDif);
-//     }
-//     debug('<_0_calculaVigencia');
-// }
+    if(feini.isValid()&&fefin.isValid())
+    {
+        var milisDif = Ext.Date.getElapsed(feini.getValue(),fefin.getValue());
+        var diasDif  = (milisDif/1000/60/60/24).toFixed(0);
+        debug('milisDif:',milisDif,'diasDif:',diasDif);
+        itemVigencia.setValue(diasDif);
+    }
+    debug('<_0_calculaVigencia');
+}
+
+function retroactividadfechaini()
+{
+// 	alert('retroactividadfechaini');
+	  Ext.Ajax.request(
+          {
+              url      : _0_urlRetroactividadDifer
+              ,params  :
+              { 
+                  'smap1.cdunieco'  : _0_smap1.cdunieco
+                  ,'smap1.cdramo'   : _0_smap1.cdramo
+                  ,'smap1.cdtipsup' : '1'
+                  ,'smap1.cdusuari' : _0_smap1.cdusuari
+                  ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+                  ,'smap1.tipocot'  : 'I'
+              }
+              ,success : function(response)
+              {
+                  _0_panelPri.setLoading(false);
+                  var ck = 'Recuperando retroactividad';
+                  try
+                  {
+                      var json=Ext.decode(response.responseText);
+                      debug('### respuesta obtener rango vigencia:',json);
+                      if(json.exito)
+                      {
+                          _fieldByName('feini').setMinValue(Ext.Date.add(new Date(),Ext.Date.DAY,json.smap1.retroac*-1));
+                          _fieldByName('feini').setMaxValue(Ext.Date.add(new Date(),Ext.Date.DAY,json.smap1.diferi));
+                          _fieldByName('FESOLICI').setMinValue(Ext.Date.add(new Date(),Ext.Date.DAY,json.smap1.retroac*-1));
+                      }
+                      else
+                      {
+                          mensajeWarning('Falta definir rango de vigencia para el producto (RANGOVIGENCIA)');
+                      }
+                  }
+                  catch(e)
+                  {
+                      manejaException(e,ck);
+                  }
+              }
+              ,failure : function()
+              {
+                  _0_panelPri.setLoading(false);
+                  errorComunicacion();
+              }
+          });
+}
+
+function obtienefechafinplazo()
+{
+// 	alert('obtienefechafinplazo');
+    Ext.Ajax.request(
+        {
+            url     : _0_urlCargarDetalleNegocioRamo5
+            ,params :
+            {
+                'smap1.negocio' : (rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1) ? '999999' : '0', //_0_smap1.cdsisrol == 'SUSCRIAUTO',
+                'smap1.cdramo'  : _0_smap1.cdramo,
+                'smap1.cdtipsit': _0_smap1.cdtipsit
+            }
+            ,success : function(response)
+            {
+//                 negoCmp.setLoading(false);
+                var json = Ext.decode(response.responseText);
+                debug('### detalle negocio:',json);
+                if(Number(json.smap1.MULTIANUAL) != 0) {
+                	plazoenanios = Number(json.smap1.MULTIANUAL);
+                    _fieldByName('fefin').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR,plazoenanios));
+                    _fieldByName('FESOLICI').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR, Number(json.smap1.MULTIANUAL)));
+                    _fieldByName('fefin').validator=function(val)
+                    {
+                        var feiniVal = Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y');
+                        debug('feiniVal:',feiniVal);
+                        var fefinVal=[];
+                        for(var i=1; i <= Number(json.smap1.MULTIANUAL); i++)
+                        {
+                            debug('mas anios:',i);
+                            fefinVal.push(Ext.Date.format(Ext.Date.add(Ext.Date.parse(feiniVal,'d/m/Y'),Ext.Date.YEAR,i),'d/m/Y'));
+                        }
+                        debug('validar contra:',fefinVal);
+                        var valido = true;
+                        if(!Ext.Array.contains(fefinVal,val))
+                        {
+                            valido = 'Solo se permite:';
+                            for(var i in fefinVal)
+                            {
+                                valido = valido + ' ' + fefinVal[i];
+                                if(fefinVal.length>1&&i<fefinVal.length-1)
+                                {
+                                    valido = valido + ',';
+                                }
+                            }
+                        }
+                        return valido;
+                    }
+                }
+                _fieldByName('fefin').isValid();
+            }
+            ,failure : function()
+            {
+//                 negoCmp.setLoading(false);
+                errorComunicacion();
+            }
+        });
+}
 
 /*///////////////////*/
 ////// funciones //////
@@ -2131,6 +2237,7 @@ Ext.onReady(function()
                         ,readOnly   : ('|AF|PU|'.lastIndexOf('|'+_0_smap1.cdtipsit+'|')==-1)//FALSE <<< deshabilita solo lectura
                         ,allowBlank : false
                         ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
+                        ,minValue   : Ext.Date.add(new Date(),Ext.Date.DAY,1)
                     }
     			]
     		});
@@ -2764,55 +2871,44 @@ Ext.onReady(function()
         var negoCmp = _fieldByLabel('TIPO SERVICIO');
         var negoVal = negoCmp.getValue();
         negoCmp.setLoading(true);
-        Ext.Ajax.request(
+        
+     _fieldByName('feini').on
+     ({
+         change : function ()
+         { //fefin.setValue(Ext.Date.add(val,Ext.Date.YEAR,1));
+//           alert("Hello2:",plazoenanios);
+          debug('plazoanios',plazoenanios);
+          debug('antes de setMaxValue:', _fieldByName('fefin'))
+        	 _fieldByName('fefin').setMaxValue
+        	 (
+        		 Ext.Date.add(_fieldByName('feini').getValue(),
+        				      Ext.Date.YEAR,plazoenanios
+        				     )
+            );
+          _fieldByName('fefin').isValid();
+        	debug('despues de setMaxValue:', _fieldByName('fefin'))
+       }
+     });
+
+//      _fieldByName('feini').on(
+//     	        {
+//     	            change : _0_calculaVigencia
+//     	        });
+     
+//        _fieldByName('fefin').on(
+//                 {
+//                     change : _0_calculaVigencia
+//                 });
+            
+        obtienefechafinplazo();
+//        _0_calculaVigencia();
+       
+       retroactividadfechaini();
+        
+        var agente = _fieldByName('parametros.pv_otvalor17');
+        agente.on(
                 {
-                    url     : _0_urlCargarDetalleNegocioRamo5
-                    ,params :
-                    {
-                        'smap1.negocio' : (rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1) ? '999999' : '0', //_0_smap1.cdsisrol == 'SUSCRIAUTO',
-                        'smap1.cdramo'  : _0_smap1.cdramo,
-                        'smap1.cdtipsit': _0_smap1.cdtipsit
-                    }
-                    ,success : function(response)
-                    {
-                        negoCmp.setLoading(false);
-                        var json = Ext.decode(response.responseText);
-                        debug('### detalle negocio:',json);
-                        if(Number(json.smap1.MULTIANUAL) != 0) {
-                            _fieldByName('fefin').validator=function(val)
-                            {
-                                var feiniVal = Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y');
-                                debug('feiniVal:',feiniVal);
-                                var fefinVal=[];
-                                for(var i=1; i <= Number(json.smap1.MULTIANUAL); i++)
-                                {
-                                    debug('mas anios:',i);
-                                    fefinVal.push(Ext.Date.format(Ext.Date.add(Ext.Date.parse(feiniVal,'d/m/Y'),Ext.Date.YEAR,i),'d/m/Y'));
-                                }
-                                debug('validar contra:',fefinVal);
-                                var valido = true;
-                                if(!Ext.Array.contains(fefinVal,val))
-                                {
-                                    valido = 'Solo se permite:';
-                                    for(var i in fefinVal)
-                                    {
-                                        valido = valido + ' ' + fefinVal[i];
-                                        if(fefinVal.length>1&&i<fefinVal.length-1)
-                                        {
-                                            valido = valido + ',';
-                                        }
-                                    }
-                                }
-                                return valido;
-                            }
-                        }
-                        _fieldByName('fefin').isValid();
-                    }
-                    ,failure : function()
-                    {
-                        negoCmp.setLoading(false);
-                        errorComunicacion();
-                    }
+                    'select' : retroactividadfechaini
                 });
     }
     //fin [parche]
@@ -3236,9 +3332,7 @@ Ext.onReady(function()
         }
         
         _fieldByName('fefin').setValue('');
-        
         _fieldByName('feini').removeListener('change',_0_funcionFechaChange);
-        
         _fieldByName('feini').on(
         {
             change : function()
@@ -3249,18 +3343,18 @@ Ext.onReady(function()
                 }
                 else
                 {
-//                     _fieldByName('fefin').setValue(
-//                          Ext.Date.add(
-// 	                         _fieldByName('feini').getValue()
-// 	                         ,Ext.Date.MONTH
-// 	                         ,_fieldByName('parametros.pv_otvalor20').getValue()
-//                         )
-//                     );
-                    debug('val:',val);
-                    var fefin = _fieldByName('fefin');
-                    fefin.setValue(Ext.Date.add(val,Ext.Date.YEAR,1));
-                    fefin.setMinValue(Ext.Date.add(val,Ext.Date.DAY,1));
-                    fefin.isValid();
+//                     debug('val:',val);
+//                     var fefin = _fieldByName('fefin');
+//                     fefin.setValue(Ext.Date.add(val,Ext.Date.YEAR,1));
+//                     fefin.setMinValue(Ext.Date.add(val,Ext.Date.DAY,1));
+//                     fefin.isValid();
+                    _fieldByName('fefin').setValue(
+                         Ext.Date.add(
+	                         _fieldByName('feini').getValue()
+	                         ,Ext.Date.MONTH
+	                         ,_fieldByName('parametros.pv_otvalor20').getValue()
+                        )
+                    );
                 }
             }
         });
@@ -3288,7 +3382,6 @@ Ext.onReady(function()
         
         var combcl=_fieldByName('parametros.pv_otvalor24');
         var codpos=_fieldByName('parametros.pv_otvalor23');
-        
         
         combcl.on('change',function()
         {
@@ -3635,7 +3728,7 @@ Ext.onReady(function()
     */
     
     //VIGENCIA
-    if(_0_smap1.SITUACION=='PERSONA' || '|AF|PU|AT|MC|'.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1)
+    if(_0_smap1.SITUACION=='PERSONA')
     {
         Ext.Ajax.request(
         {
@@ -3679,58 +3772,6 @@ Ext.onReady(function()
         });
     }
     
-//     _fieldByName('fefin').on(
-//             {
-//                 change : _0_calculaVigencia
-//             });
-    
-    if('|AF|PU|AT|MC|'.lastIndexOf('|'+_0_smap1.cdsisrol+'|')==-1)
-    {
-
-//     	alert('AF PU MC AT');
-        Ext.Ajax.request(
-        {
-            url      : _0_urlRetroactividadDifer
-            ,params  :
-            { 
-                'smap1.cdunieco'  : _0_smap1.cdunieco
-                ,'smap1.cdramo'   : _0_smap1.cdramo
-                ,'smap1.cdtipsup' : '1'
-                ,'smap1.cdusuari' : _0_smap1.cdusuari
-                ,'smap1.cdtipsit' : _0_smap1.cdtipsit
-                ,'smap1.tipocot'  : 'I'
-            }
-            ,success : function(response)
-            {
-                _0_panelPri.setLoading(false);
-                var ck = 'Recuperando retroactividad';
-                try
-                {
-                    var json=Ext.decode(response.responseText);
-                    debug('### respuesta obtener rango vigencia:',json);
-                    if(json.exito)
-                    {
-                        _fieldByName('feini').setMinValue(Ext.Date.add(new Date(),Ext.Date.DAY,json.smap1.retroac*-1));
-                        _fieldByName('feini').setMaxValue(Ext.Date.add(new Date(),Ext.Date.DAY,json.smap1.diferi));
-                    }
-                    else
-                    {
-                        mensajeWarning('Falta definir rango de vigencia para el producto (RANGOVIGENCIA)');
-                    }
-                }
-                catch(e)
-                {
-                    manejaException(e,ck);
-                }
-            }
-            ,failure : function()
-            {
-                _0_panelPri.setLoading(false);
-                errorComunicacion();
-            }
-        });
-    }
-    //VIGENCIA
    
     //para gmi
     if(_0_smap1.cdramo=='7'&&_0_smap1.cdtipsit=='GMI')
