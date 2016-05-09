@@ -33,6 +33,7 @@ import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.SolicitudCxPVO;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -563,6 +564,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 		params.put("pv_estado_i", poliza.getEstado());
 		params.put("pv_nmpoliza_i", poliza.getNmpoliza());
 		params.put("pv_nmsuplem_i", poliza.getNmsuplem());
+		params.put("pv_nmsituac_i", poliza.getNmsituac());
 		Map<String, Object> mapResult = ejecutaSP(new ConsultaCopagosPolizaSP(getDataSource()), params);		
 		return (List<CopagoVO>) mapResult.get("pv_registro_o");
 	}
@@ -570,12 +572,13 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	public class ConsultaCopagosPolizaSP extends StoredProcedure {
 		protected ConsultaCopagosPolizaSP(DataSource dataSource) {
 			
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Copagos");
+			super(dataSource, "PKG_CONSULTA.P_GET_COPAGOS");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CopagosPolizaMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -591,7 +594,9 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
     		copago.setDescripcion(rs.getString("DESCRIPCION"));
     		copago.setValor(rs.getString("VALOR"));
     		copago.setNivel(rs.getInt("NIVEL"));
-    		
+    		copago.setVisible(
+					(rs.getString("SWVISIBLE") != null && rs.getString("SWVISIBLE").equals(Constantes.SI)) ? 
+					true: false);
     		return copago;
 		}
 	}
