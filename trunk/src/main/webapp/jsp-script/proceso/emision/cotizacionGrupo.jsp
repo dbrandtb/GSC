@@ -533,7 +533,7 @@ Ext.onReady(function()
                     ,dataIndex : 'ayudamater'
                     ,width     : 140
                     ,editor    : _p21_editorAyudaMater
-                    ,hidden    : true //_p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
+                    ,hidden    : _p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
                     ,renderer  : function(v)
                     {
                         return rendererColumnasDinamico(v,'ayudamater');
@@ -544,7 +544,7 @@ Ext.onReady(function()
                     ,dataIndex : 'asisinte'
                     ,width     : 140
                     ,editor    : _p21_editorAsisInter
-                    ,hidden    : true //_p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
+                    ,hidden    : _p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
                     ,renderer  : function(v)
                     {
                         return rendererColumnasDinamico(v,'asisinte');
@@ -555,7 +555,7 @@ Ext.onReady(function()
                     ,dataIndex : 'emerextr'
                     ,width     : 140
                     ,editor    : _p21_editorEmerextr
-                    ,hidden    : false//_p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA!='N'
+                    ,hidden    : _p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
                     ,renderer  : function(v)
                     {
                         return rendererColumnasDinamico(v,'emerextr');
@@ -2296,7 +2296,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                         ,boxLabel   : 'Amparada'
                                                         ,name       : 'amparada'
                                                         ,inputValue : 'S'
-                                                        ,checked    : json.slist1[j].SWOBLIGA=='S'&&!(json.slist1[j].CDGARANT=='4AYM'||json.slist1[j].CDGARANT=='4EE')
+                                                        ,checked    : json.slist1[j].SWOBLIGA=='S' && !(json.slist1[j].SWMODIFI=='N')
                                                         ,disabled   : json.slist1[j].SWMODIFI=='N'
                                                         ,style      : 'color:white;'
                                                         ,listeners  :
@@ -4906,7 +4906,7 @@ function _p21_estiloEditores(cdplan)
                         {
                             if(!_4HOS)
                             {
-                            	_p21_editorEmerextr.setValue('N');
+                            	_p21_editorEmerextr.setValue('0');
                             	_p21_editorEmerextr.addCls('_p21_editorLectura');
                             	_p21_editorAsisInter.setValue('0');
                                 _p21_editorAsisInter.addCls('_p21_editorLectura');
