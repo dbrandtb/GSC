@@ -1133,7 +1133,7 @@ Ext.onReady(function() {
             stripeRows: false,
             enableTextSelection: true
         },
-        //title   : 'DATOS COPAGOS',
+        title   : 'Copagos',
         store   : storeCopagosPoliza,
         autoScroll:true,
         id      : 'gridCopagosPoliza',
