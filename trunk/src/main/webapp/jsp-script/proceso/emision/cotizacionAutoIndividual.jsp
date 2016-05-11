@@ -127,6 +127,7 @@ var cdper                        = null;
 var cdperson                     = null;
 
 var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
+var plazoenanios;
 ////// variables //////
 
 
@@ -1252,6 +1253,10 @@ Ext.onReady(function()
                                 negoCmp.setLoading(false);
                                 var json = Ext.decode(response.responseText);
                                 debug('### detalle negocio:',json);
+                                
+                                plazoenanios = Number(json.smap1.LIMITE_SUPERIOR);
+//                              _fieldByName('FESOLICI').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR, Number(json.smap1.LIMITE_SUPERIOR)));
+                                _fieldByName('fefin').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR,plazoenanios));
                                 if(Number(json.smap1.MULTIANUAL) != 0) {
                                     _fieldByName('fefin').validator=function(val)
                                     {

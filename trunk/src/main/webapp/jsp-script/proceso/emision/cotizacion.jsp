@@ -117,6 +117,7 @@ var _0_validacion_custom;
 var _parentescoTitular = 'T';
 var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
 var plazoenanios;
+
 debug('_0_smap1: ',_0_smap1);
 
 var image = Ext.create('Ext.Img', {
@@ -1941,10 +1942,16 @@ function obtienefechafinplazo()
 //                 negoCmp.setLoading(false);
                 var json = Ext.decode(response.responseText);
                 debug('### detalle negocio:',json);
+                
+                plazoenanios = Number(json.smap1.LIMITE_SUPERIOR);
+                _fieldByName('FESOLICI').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR, Number(json.smap1.LIMITE_SUPERIOR)));
+                _fieldByName('fefin').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR,plazoenanios));
+                   
                 if(Number(json.smap1.MULTIANUAL) != 0) {
-                	plazoenanios = Number(json.smap1.MULTIANUAL);
-                    _fieldByName('fefin').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR,plazoenanios));
-                    _fieldByName('FESOLICI').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR, Number(json.smap1.MULTIANUAL)));
+                	
+//                 	 plazoenanios = Number(json.smap1.MULTIANUAL);
+//                     _fieldByName('FESOLICI').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR, Number(json.smap1.MULTIANUAL)));
+//                     _fieldByName('fefin').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR,plazoenanios));
                     _fieldByName('fefin').validator=function(val)
                     {
                         var feiniVal = Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y');

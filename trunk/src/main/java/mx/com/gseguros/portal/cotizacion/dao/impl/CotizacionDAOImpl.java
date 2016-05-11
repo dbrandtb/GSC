@@ -4926,6 +4926,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     				,"F2"
     				,"F3"
     				,"PORC_BONO"
+    				,"LIMITE_SUPERIOR"
     				};
     		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
