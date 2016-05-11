@@ -603,6 +603,8 @@ public interface SiniestrosManager {
 	
 	public List<Map<String, String>> getConsultaConfiguracionProveedor(String cdpresta)throws Exception;
 	
+	public List<Map<String, String>> getConsultaLayoutConfigurados(String descLayout)throws Exception;
+	
 	public String obtieneAplicaConceptoIVA(String idConcepto)throws Exception;
 	
 	public String guardaConfiguracionProveedor(String cdpresta, String tipoLayout, String aplicaIVA,String secuenciaIVA, 
@@ -677,5 +679,7 @@ public interface SiniestrosManager {
 	public List<Map<String, String>> procesaPagoAutomaticoLayout(String cdpresta, String nmconsult, String tipoproc, String usuario) throws Exception;
 
 	public String existeRegistrosProcesarSISCO() throws Exception;
+	
+	public String validaPersonaSisaSicaps(HashMap<String, Object> paramPersona) throws Exception;
 	
 }

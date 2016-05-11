@@ -1950,6 +1950,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
+	public List<Map<String, String>> getConsultaLayoutConfigurados(String descLayout) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cadena_i", descLayout);
+		log.debug("obtenerConsultaLayoutConfigurados params: "+params);
+		return siniestrosDAO.obtieneListaLayoutConfigurados(params);
+	}
+	
+	@Override
 	//String tipoConcepto, String idProveedor, String idConceptoTipo
 	public String obtieneAplicaConceptoIVA(String idConcepto) throws Exception {
 		try {
@@ -2356,5 +2364,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	public String existeRegistrosProcesarSISCO() throws Exception {
 		// TODO Auto-generated method stub
 		return siniestrosDAO.existeRegistrosProcesarSISCO();
+	}
+	
+	@Override
+	public String validaPersonaSisaSicaps(HashMap<String, Object> paramPersona) throws Exception {
+		try {
+			return siniestrosDAO.validaPersonaSisaSicaps(paramPersona);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
 	}
 }
