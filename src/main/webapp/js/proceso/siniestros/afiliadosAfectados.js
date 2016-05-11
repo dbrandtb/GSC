@@ -121,14 +121,14 @@ Ext.onReady(function() {
 			{
 				text     : 'Turnar &Aacute;rea M&eacute;dica'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/user_go.png'
-							,handler : _11_turnarAreaMedica
-				,hidden:  _CDROL == _ROL_MEDICO || _CDROL == _ROL_COORD_MEDICO || _CDROL == _ROL_MESASINIESTRO
+				,handler : _11_turnarAreaMedica
+				,hidden  : _CDROL == _ROL_MEDICO || _CDROL == _ROL_COORD_MEDICO || _CDROL == _ROL_MESASINIESTRO || _11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO
 			},
 			{
 				text     : 'Solicitar Pago'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/money_dollar.png'
 				,handler : _11_solicitarPago
-				,hidden:   _CDROL == _ROL_MEDICO || _CDROL == _ROL_COORD_MEDICO  || _CDROL == _ROL_MESASINIESTRO || _11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO
+				,hidden:   _CDROL == _ROL_MEDICO || _CDROL == _ROL_COORD_MEDICO  || _CDROL == _ROL_MESASINIESTRO
 			},
 			{
 				text     : 'Turnar Operador Reclamaci&oacute;n'
