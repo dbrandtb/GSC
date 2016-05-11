@@ -583,7 +583,7 @@ Ext.onReady(function()
         ,title  : '<span style="font:bold 14px Calibri;">DATOS ADICIONALES DE P&Oacute;LIZA</span>'
         ,hidden : _p28_smap1.cdramo+'x'=='5x'
                   ?(
-                        _p28_smap1.cdtipsit+'x'!='CRx'|| 
+                        (_p28_smap1.cdtipsit+'x'!='CRx' && _p28_smap1.cdtipsit+'x'!='TVx' ) || 
                         (rolesSuscriptores.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
                         //_p28_smap1.cdtipsit+'x'!='CRx'||_p28_smap1.cdsisrol!='SUSCRIAUTO'
                    )
