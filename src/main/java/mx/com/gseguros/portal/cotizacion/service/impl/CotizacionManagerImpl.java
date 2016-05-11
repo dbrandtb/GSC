@@ -5278,7 +5278,52 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                
 	                try
                 	{
-		                auxDate=row.getCell(24)!=null?row.getCell(24).getDateCellValue():null;
+	                	String estadoCivil = row.getCell(24).getStringCellValue();
+	                	
+	                	if("SSI".equals(cdtipsit)&&StringUtils.isBlank(estadoCivil))
+	                	{
+	                		throw new ApplicationException("El estado civil es obligatorio");
+	                	}
+	                	
+	                	if(StringUtils.isNotBlank(estadoCivil))
+	                	{
+		                	if(
+        						!estadoCivil.equals("C")
+        						&&!estadoCivil.equals("S")
+        						&&!estadoCivil.equals("D")
+        						&&!estadoCivil.equals("V")
+        						&&!estadoCivil.equals("O")
+	                		)
+	                		{
+	                			throw new ApplicationException("El estado civil no se reconoce [C, S, D, V, O]");
+	                		}
+	                	}
+	                	
+		                logger.debug(
+		                		new StringBuilder("EDO CIVIL: ")
+		                		.append(estadoCivil)
+		                		.append("|")
+		                		.toString()
+		                		);
+		                bufferLinea.append(
+		                		new StringBuilder(estadoCivil)
+		                		.append("|")
+		                		.toString()
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estado civil' (Y) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(24)),"-"));
+	                }
+	                
+	                try
+                	{
+		                auxDate=row.getCell(25)!=null?row.getCell(25).getDateCellValue():null;
 		                if(auxDate!=null)
 		                {
 		                	Calendar cal = Calendar.getInstance();
@@ -5309,16 +5354,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de ingreso empleado' (Y) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de ingreso empleado' (Z) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(25)),"-"));
 	                }
 	                
 	                try
                 	{
-		                auxCell=row.getCell(25);
+		                auxCell=row.getCell(26);
 		                logger.debug(
 		                		new StringBuilder("PLAZA: ")
 		                		.append(
@@ -5338,11 +5383,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Plaza' (Z) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Plaza' (AA) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(18)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(26)),"-"));
 	                }
 	                
 	                /* nuevos para SSI fin */
