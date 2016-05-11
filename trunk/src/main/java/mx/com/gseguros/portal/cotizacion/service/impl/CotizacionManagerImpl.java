@@ -5274,6 +5274,79 @@ public class CotizacionManagerImpl implements CotizacionManager
                     	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(11)),"-"));
                     }
 	                
+	                /* nuevos para SSI */
+	                
+	                try
+                	{
+		                auxDate=row.getCell(24)!=null?row.getCell(24).getDateCellValue():null;
+		                if(auxDate!=null)
+		                {
+		                	Calendar cal = Calendar.getInstance();
+		                	cal.setTime(auxDate);
+		                	if(cal.get(Calendar.YEAR)>2100
+		                			||cal.get(Calendar.YEAR)<1900
+		                			)
+		                	{
+		                		throw new ApplicationException("El anio de la fecha de ingreso no es valido");
+		                	}
+		                }
+		                logger.debug(
+		                		new StringBuilder("FECHA INGRESO EMPLEADO: ")
+		                		.append(
+		                				auxDate!=null?
+		                						renderFechas.format(auxDate)
+		                						:""
+		                		)
+		                		.append("|")
+		                		.toString()
+		                		);
+		                bufferLinea.append(
+		                		auxDate!=null?
+		                				new StringBuilder(renderFechas.format(auxDate)).append("|").toString()
+		                				:"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de ingreso empleado' (Y) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
+	                }
+	                
+	                try
+                	{
+		                auxCell=row.getCell(25);
+		                logger.debug(
+		                		new StringBuilder("PLAZA: ")
+		                		.append(
+		                				auxCell!=null?
+		                						auxCell.getStringCellValue()
+		                						:""
+		                		)
+		                		.append("|")
+		                		.toString()
+		                		);
+		                bufferLinea.append(
+		                		auxCell!=null?
+		                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+		                				:"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Plaza' (Z) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(18)),"-"));
+	                }
+	                
+	                /* nuevos para SSI fin */
+	                
 	                logger.debug(Utils.log("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
 	                
 	                if(filaBuena)
