@@ -543,4 +543,10 @@ public interface SiniestrosDAO {
 	public List<Map<String, String>> procesaPagoAutomaticoLayout(HashMap<String, Object> params) throws Exception;
 	
 	public String existeRegistrosProcesarSISCO() throws Exception;
+	
+	public String validaPersonaSisaSicaps(HashMap<String, Object> paramPersona) throws Exception;
+	
+	public List<Map<String, String>> obtieneListaLayoutConfigurados(HashMap<String, Object> params) throws Exception;
+	
+	
 }

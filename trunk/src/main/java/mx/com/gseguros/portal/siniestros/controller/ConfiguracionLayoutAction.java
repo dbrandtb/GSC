@@ -490,9 +490,8 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 					                		);
 		                				}
 		                			}else{
-		                				//logger.debug(i+" "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+":"+(
-					                		//auxCell!=null?auxCell.getStringCellValue().trim()+"|":"|"
-				                		//));
+		                				//logger.debug(i+" "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+":"+(				                			//auxCell!=null?auxCell.getStringCellValue().trim()+"|":"|"
+		                				//));
 		                				String cadenaModificada = auxCell.getStringCellValue().trim().
 		                						replaceAll("á","a").
 		                						replaceAll("é","e").
@@ -506,9 +505,24 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                						replaceAll("Ú","U").
 		                						replaceAll("\\*","");
 		                				logger.debug("Valor de Cadena modificada ===> {}",cadenaModificada);
-		                				bufferLinea.append(
-			                				auxCell!=null?cadenaModificada.trim()+"|":"|"
-				                		);
+		                				
+		                				if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CVE. ASEGURADO")){
+		                					HashMap<String, Object> paramPersona = new HashMap<String, Object>();
+		                					paramPersona.put("pv_cdideext_i",cadenaModificada);
+		                					
+		                					String existePersona = siniestrosManager.validaPersonaSisaSicaps(paramPersona);
+		                					if(Integer.parseInt(existePersona) > 0){
+		                						bufferLinea.append(
+					                				auxCell!=null?"G"+existePersona+"|":"|"
+						                		);
+		                					}else{
+		                						throw new Exception("El asegurado no se encuentra en SICAPS.");
+		                					}
+		                				}else{
+		                					bufferLinea.append(
+				                				auxCell!=null?cadenaModificada.trim()+"|":"|"
+					                		);
+		                				}
 		                			}
 			                	}else{
 			                		//logger.debug(i+" "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+":"+(
@@ -522,7 +536,12 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                	catch(Exception ex){
 		                		filaBuena = false;
 		                		logger.debug("Entra al catch ===>"+ex);
-		                		bufferErroresCenso.append(Utils.join("Error en el campo "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+" "+datosInformacionLayout.get(i).get("DESCRIPC").toString()+" de la fila ",fila," "));
+		                		if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CVE. ASEGURADO")){
+		                			bufferErroresCenso.append(Utils.join("La Clavel del Asegurado (CDIDEEXT) no se encuentra en SICAPS.\nError en el campo "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+" "+datosInformacionLayout.get(i).get("DESCRIPC").toString()+" de la fila ",fila," "));
+		                		}else{
+		                			bufferErroresCenso.append(Utils.join("Error en el campo "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+" "+datosInformacionLayout.get(i).get("DESCRIPC").toString()+" de la fila ",fila," "));
+		                		}
+		                		
 			                }
 			                finally{
 			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(celdaPrincipal)),"-"));
@@ -674,6 +693,19 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 				);
 		
 		
+		return SUCCESS;
+	}
+
+	public String consultaLayoutConfigurados(){
+		logger.debug("Entra a consultaDatosConfiguracionLayout params de entrada :{} ",params);
+		try {
+			datosValidacion = siniestrosManager.getConsultaLayoutConfigurados(params.get("descLayout"));
+			logger.debug("Respuesta datosValidacion : {}",datosValidacion);
+		}catch( Exception e){
+			logger.error("Error al obtener consultaDatosConfiguracionLayout : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		setSuccess(true);
 		return SUCCESS;
 	}
 	

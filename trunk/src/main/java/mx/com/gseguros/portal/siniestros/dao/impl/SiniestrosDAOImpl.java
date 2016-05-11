@@ -4520,6 +4520,27 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 	
 	@Override
+	public List<Map<String, String>> obtieneListaLayoutConfigurados(HashMap<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneListaLayoutConfigurados(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneListaLayoutConfigurados extends StoredProcedure {
+		protected ObtieneListaLayoutConfigurados(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_SINIESTRO.P_GET_CAT_LAYOUT");
+			declareParameter(new SqlParameter("pv_cadena_i",   OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDLAYOUT",	"DSLAYOUT"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
 	public String obtieneAplicaConceptoIVA(String idConcepto) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_idConcepto_i", idConcepto);
@@ -5403,7 +5424,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	protected class ProcesaPagoAutomaticoLayout extends StoredProcedure {
 		protected ProcesaPagoAutomaticoLayout(DataSource dataSource) {
 			// TODO: Terminar cuando este listo el SP
-			super(dataSource, "PKG_DESARROLLO.P_GET_TCONLAYSIN");
+			super(dataSource, "PKG_SINIESTRO.P_GET_TCONLAYSIN");
 			String[] cols = new String[]{
 					"NTRAMITE"
 			};
@@ -5430,7 +5451,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     protected class ExisteRegistrosProcesarSISCO extends StoredProcedure {
     	
     	protected ExisteRegistrosProcesarSISCO(DataSource dataSource) {
-    		super(dataSource, "PKG_DESARROLLO.P_GET_REGISTROSISCO");
+    		super(dataSource, "PKG_SINIESTRO.P_GET_REGISTROSISCO");
     		declareParameter(new SqlOutParameter("pv_procesar_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -5438,4 +5459,21 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     	}
     }
 
+    @Override
+    public String validaPersonaSisaSicaps(HashMap<String, Object> paramPersona) throws Exception {
+    	Map<String, Object> resultado = ejecutaSP(new ValidaPersonaSisaSicaps(getDataSource()), paramPersona);
+    	logger.debug( resultado.get("pv_cdperson_o"));
+    	return (String) resultado.get("pv_cdperson_o");
+    }
+
+    protected class ValidaPersonaSisaSicaps extends StoredProcedure {
+    	protected ValidaPersonaSisaSicaps(DataSource dataSource) {    		
+    		super(dataSource, "PKG_SINIESTRO.P_GET_VALIDAPERSONA");
+    		declareParameter(new SqlParameter("pv_cdideext_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_cdperson_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }
