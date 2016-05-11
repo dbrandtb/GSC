@@ -1933,7 +1933,7 @@ var msgWindow;
 																			 ,width    : 700
 																			 ,height   : 400
 																			 ,readOnly : true
-																			 ,value    : json.respuesta
+																			 ,value    : json.smap1.erroresCenso
 																		}
 																	]
 																}).show());
