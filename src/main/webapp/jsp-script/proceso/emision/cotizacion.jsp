@@ -2877,17 +2877,20 @@ Ext.onReady(function()
          change : function ()
          { //fefin.setValue(Ext.Date.add(val,Ext.Date.YEAR,1));
 //           alert("Hello2:",plazoenanios);
-          debug('plazoanios',plazoenanios);
-          debug('antes de setMaxValue:', _fieldByName('fefin'))
-        	 _fieldByName('fefin').setMaxValue
-        	 (
-        		 Ext.Date.add(_fieldByName('feini').getValue(),
-        				      Ext.Date.YEAR,plazoenanios
-        				     )
-            );
-          _fieldByName('fefin').isValid();
-        	debug('despues de setMaxValue:', _fieldByName('fefin'))
-       }
+            if(!Ext.isEmpty(plazoenanios))
+            	{
+		          debug('plazoanios',plazoenanios);
+		          debug('antes de setMaxValue:', _fieldByName('fefin'))
+		        	 _fieldByName('fefin').setMaxValue
+		        	 (
+		        		 Ext.Date.add(_fieldByName('feini').getValue(),
+		        				      Ext.Date.YEAR,plazoenanios
+		        				     )
+		            );
+		          _fieldByName('fefin').isValid();
+		        	debug('despues de setMaxValue:', _fieldByName('fefin'))
+		         }
+         }
      });
 
 //      _fieldByName('feini').on(
