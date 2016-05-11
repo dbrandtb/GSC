@@ -5280,6 +5280,7 @@ public class CotizacionManagerImpl implements CotizacionManager
                 	{
 	                	String estadoCivil = row.getCell(24).getStringCellValue();
 	                	
+	                	//TODO: quitar cdtipsit estatico y ponerlo por subramo
 	                	if("SSI".equals(cdtipsit)&&StringUtils.isBlank(estadoCivil))
 	                	{
 	                		throw new ApplicationException("El estado civil es obligatorio");
