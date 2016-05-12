@@ -133,4 +133,8 @@ public interface CatalogosDAO {
 	public List<GenericVO> recuperarListaConvenios() throws Exception;
 	
 	public List<GenericVO> recuperarContratantesSalud(String nombre) throws Exception;
+	
+	public List<GenericVO> recuperaRamosColectivoTipoRamo(String tipoRamo) throws Exception;
+	
+	public List<GenericVO> recuperarTiposRamoSituacionColectivo(String tipoRamo, String cdramo) throws Exception;
 }

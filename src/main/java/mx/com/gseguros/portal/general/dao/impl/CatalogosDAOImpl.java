@@ -1794,4 +1794,72 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		}
 	}
 
+	public List<GenericVO> recuperaRamosColectivoTipoRamo(String tipoRamo) throws Exception
+	{
+		logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+							   "\n@@@@@@ recuperaRamosColectivoTipoRamo @@@@@@"));
+		HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
+		params.put("pv_tiporamo_i", tipoRamo);
+		Map<String,Object>       procRes    = ejecutaSP(new RecuperaRamosColectivoTipoRamo(getDataSource()), params);
+		List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		logger.debug(Utils.log(listaMapas));
+		List<GenericVO>          lista      = new ArrayList<GenericVO>();
+		if(listaMapas!=null)
+		{
+			for(Map<String,String> mapa : listaMapas)
+			{
+				lista.add(new GenericVO(mapa.get("ramo"),mapa.get("descripcion")));
+			}
+		}
+		return lista;
+	}
+	
+	protected class RecuperaRamosColectivoTipoRamo extends StoredProcedure
+	{
+		protected RecuperaRamosColectivoTipoRamo(DataSource dataSource)
+		{
+			super(dataSource,"Pkg_Consulta.P_GET_PRODUCTOS_X_TIPRAM");
+			declareParameter(new SqlParameter("pv_tiporamo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"ramo","descripcion"})));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	public List<GenericVO> recuperarTiposRamoSituacionColectivo(String tipoRamo, String cdramo) throws Exception
+	{
+		logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+							   "\n@@@@@@ recuperarTiposRamoSituacionColectivo @@@@@@",
+							   "\n@@@@@@ cdramo ",cdramo,"\n"));
+		HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
+		params.put("pv_tiporamo_i", tipoRamo);
+		params.put("pv_cdramo_i", cdramo);
+		Map<String,Object>       procRes    = ejecutaSP(new RecuperarTiposRamoSituacionColectivo(getDataSource()), params);
+		List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		logger.debug(Utils.log(listaMapas));
+		List<GenericVO>          lista      = new ArrayList<GenericVO>();
+		if(listaMapas!=null)
+		{
+			for(Map<String,String> mapa : listaMapas)
+			{
+				lista.add(new GenericVO(mapa.get("tipo_inciso"),mapa.get("descripcion")));
+			}
+		}
+		return lista;
+	}
+	
+	protected class RecuperarTiposRamoSituacionColectivo extends StoredProcedure
+	{
+		protected RecuperarTiposRamoSituacionColectivo(DataSource dataSource)
+		{
+			super(dataSource,"Pkg_Consulta.P_GET_TIPOS_SIT_X_CDRAMO");
+			declareParameter(new SqlParameter("pv_tiporamo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"tipo_inciso","descripcion"})));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

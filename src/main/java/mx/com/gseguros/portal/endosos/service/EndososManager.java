@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
@@ -155,6 +156,16 @@ public interface EndososManager
 			,String cdusuario
 			,String newcdunieco) throws Exception;
 
+	public Map<String,String>        pClonarCotizacionTotal(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String fecha
+			,String cdusuario
+			,String newcdunieco
+			,String tipoClonacion) throws Exception;
+	
 	public boolean clonaGruposReexp(
 			String cdunieco
 			,String cdramo
@@ -171,6 +182,12 @@ public interface EndososManager
 			,String nmpoliza
 			,List<Map<String,String>> grupos) throws Exception;
 	
+	public boolean actualizaTodosGruposReexp(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza) throws Exception;
+	
 	public boolean valoresDefectoGruposReexp(
 			String cdunieco
 			,String cdramo
@@ -179,6 +196,14 @@ public interface EndososManager
 			,String nmsuplem
 			,String cdtipsup
 			,List<Map<String,String>> grupos) throws Exception;
+	
+	public boolean valoresDefectoGruposCotizacion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdtipsup) throws Exception;
 	
 	public List<Map<String, String>> obtenerValositUltimaImagen(
 			String cdunieco
@@ -582,4 +607,9 @@ public interface EndososManager
 			,String nmsuplem
 			,String extraprima
 			,String extraprimaOcu) throws Exception;
+	
+	public Map<String,Item> cargaInfoPantallaClonacion() throws Exception;
+	
+	public List<Map<String, String>> buscarCotizaciones(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String ntramite, String status, String fecini, String fecfin, String cdsisrol, String cdusuari) throws Exception;
+	
 }

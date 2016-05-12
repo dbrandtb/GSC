@@ -1696,4 +1696,26 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				);
 		return catalogosDAO.recuperarContratantesSalud(nombre);
 	}
+	
+	@Override
+	public List<GenericVO> recuperarTipoRamoColectivo(String tipoRamo) throws Exception {
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ recuperarTipoRamoColectivo @@@@@@")
+				.toString()
+				);
+		return catalogosDAO.recuperaRamosColectivoTipoRamo(tipoRamo);
+	}
+	
+	@Override
+	public List<GenericVO> recuperarTipoRamoSituacionColectivo(String tipoRamo, String cdramo) throws Exception {
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ recuperarTipoRamoSituacionColectivo @@@@@@")
+				.toString()
+				);
+		return catalogosDAO.recuperarTiposRamoSituacionColectivo(tipoRamo, cdramo);
+	}
 }

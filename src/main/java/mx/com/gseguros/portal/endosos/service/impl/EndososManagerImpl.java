@@ -535,7 +535,33 @@ public class EndososManagerImpl implements EndososManager
 		
 		return exito;
 	}
-
+	//P_CLONAR_POLIZA_REEXPED SIN PLAN EOT 04052016 CLONACION COTIZACIONES SALUD
+		@Override
+	public Map<String,String> pClonarCotizacionTotal(
+				String cdunieco
+				,String cdramo
+				,String estado
+				,String nmpoliza
+				,String fecha
+				,String cdusuario
+				,String newcdunieco
+				,String tipoClonacion) throws Exception
+		{
+			Map<String,String>params = new HashMap<String,String>();
+			params.put("pv_cdunieco_i", cdunieco);
+			params.put("pv_cdramo_i"  , cdramo);
+			params.put("pv_estado_i"  , estado);
+			params.put("pv_nmpoliza_i", nmpoliza);
+			params.put("pv_feinival_i", fecha);
+			params.put("pv_cduser_i"  , cdusuario);
+			params.put("pv_cdunieco_new_i", newcdunieco);
+			params.put("pv_tipo_clonacion_i", tipoClonacion);
+			logger.debug("EndososManager pClonarPolizaReexped params: "+params);
+			Map<String,String> mapa = endososDAO.pClonarCotizacionTotal(params);
+			logger.debug("EndososManager pClonarPolizaReexped response map: "+mapa);
+	        return mapa;
+		}
+	
 	@Override
 	public boolean actualizaGruposReexp(
 			String cdunieco
@@ -577,6 +603,29 @@ public class EndososManagerImpl implements EndososManager
 	}
 
 	@Override
+	public boolean actualizaTodosGruposReexp(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza) throws Exception
+	{
+		boolean exito = true;
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i"  , cdramo);
+		params.put("pv_estado_i"  , estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+			
+		StringBuilder valoresGrupo = new StringBuilder();			
+		params.put("pv_cdcadena_i", valoresGrupo.toString());
+			
+		logger.debug("EndososManager actualizar grupo params: "+params);
+		exito = endososDAO.actualizaGrupoReexp(params);
+		
+		return exito;
+	}
+	
+	@Override
 	public boolean valoresDefectoGruposReexp(
 			String cdunieco
 			,String cdramo
@@ -607,6 +656,28 @@ public class EndososManagerImpl implements EndososManager
 		
 		return exito;
 	}
+	
+	public boolean valoresDefectoGruposCotizacion(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdtipsup) throws Exception
+	{
+		boolean exito = true;
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i"  , cdramo);
+		params.put("pv_estado_i"  , estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_cdtipsup_i", cdtipsup);			
+		logger.debug("EndososManager valores defecto grupo params: "+params);
+		exito = endososDAO.valoresDefectoGruposReexp(params);		
+		return exito;
+	}
+	
 	
 	//PKG_CONSULTA.P_OBT_VALOSIT_ULTIMA_IMAGEN
 	/*
@@ -3145,4 +3216,81 @@ public class EndososManagerImpl implements EndososManager
 		logger.debug("EndososManager actualizaExtraprimaValosit end");
 	}
 	
+	public Map<String,Item> cargaInfoPantallaClonacion() throws Exception
+	{
+		String paso = null;
+		Map<String,Item> elementos = new HashMap<String,Item>();
+		
+		try
+		{
+			paso = "Probando paso";
+			
+			paso = "Recuperando elementos";
+			
+			List<ComponenteVO> itemsForm = pantallasDAO.obtenerComponentes(null //cdtiptra
+																		   ,null //cdunieco
+																		   ,null //cdramo
+																		   ,null //cdtipsit
+																		   ,null //estado
+																		   ,null //cdsisrol
+																		   ,"TRAMITE_CLONACION"
+																		   ,"FORMULARIO"
+																		   ,null //orden
+																			);
+
+			paso = "Generando elementos";
+			
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			gc.generaComponentes(itemsForm, true, false, true, false, false, false);
+			
+			elementos.put("itemsFormulario" , gc.getItems());
+			
+			List<ComponenteVO> itemsGrid = pantallasDAO.obtenerComponentes(
+					null //cdtiptra
+					,null //cdunieco
+					,null //cdramo
+					,null //cdtipsit
+					,null //estado
+					,null //cdsisrol
+					,"TRAMITE_CLONACION"
+					,"MODELO_CLONACION"
+					,null //orden
+					);
+			
+			paso = "Generando elementos";
+			
+			gc.generaComponentes(itemsGrid, true, true, true, true, true, false);
+			
+			elementos.put("itemsGrid" , gc.getColumns());
+			
+			elementos.put("itemsGridModel" , gc.getFields());			
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		return elementos;
+	}
+	
+	@Override
+	public List<Map<String, String>> buscarCotizaciones(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String ntramite, String status, String fecini, String fecfin, String cdsisrol, String cdusuari) throws Exception {
+		String paso = null;
+		List<Map<String, String>> infoGrid = null;
+		try
+		{
+			paso = "Antes de buscar cotizacion";
+		
+			infoGrid = endososDAO.recuperarCotizaciones(cdunieco, cdramo, cdtipsit, estado, nmpoliza, ntramite, status, fecini, fecfin, cdsisrol, cdusuari);
+			
+			paso = "Despues de buscar cotizacion";
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		return infoGrid;
+	}
 }
