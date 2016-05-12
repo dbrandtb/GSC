@@ -1,8 +1,14 @@
 package mx.com.gseguros.portal.endosos.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.PrintStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +23,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
+import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.model.ParametroEndoso;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
@@ -33,11 +40,16 @@ import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +60,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class EndososManagerImpl implements EndososManager
 {
-    private static final Logger logger = LoggerFactory.getLogger(EndososManagerImpl.class);
+    private static final Logger logger          = LoggerFactory.getLogger(EndososManagerImpl.class);
+    private SimpleDateFormat    renderFechas    = new SimpleDateFormat("dd/MM/yyyy");
     
     @Value("${ruta.servidor.reports}")
 	private String rutaServidorReportes;
@@ -58,6 +71,9 @@ public class EndososManagerImpl implements EndososManager
     
     @Value("${pass.servidor.reports}")
     private String passwordServidorReportes;
+    
+	@Value("${dominio.server.layouts2}")
+	private String dominioServerLayouts2;
     
     @Autowired
 	private EndososDAO      endososDAO;
@@ -3276,7 +3292,17 @@ public class EndososManagerImpl implements EndososManager
 	}
 	
 	@Override
-	public List<Map<String, String>> buscarCotizaciones(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String ntramite, String status, String fecini, String fecfin, String cdsisrol, String cdusuari) throws Exception {
+	public List<Map<String, String>> buscarCotizaciones(String cdunieco, 
+														String cdramo, 
+														String cdtipsit, 
+														String estado, 
+														String nmpoliza, 
+														String ntramite, 
+														String status, 
+														String fecini, 
+														String fecfin, 
+														String cdsisrol, 
+														String cdusuari) throws Exception {
 		String paso = null;
 		List<Map<String, String>> infoGrid = null;
 		try
@@ -3293,4 +3319,390 @@ public class EndososManagerImpl implements EndososManager
 		}
 		return infoGrid;
 	}
+	
+	@Override
+	public Map<String,Object> procesarCenso(String ntramite,
+											String cdunieco,
+											String cdramo,
+											String estado,
+											String nmpoliza,
+											String complemento,
+											File   censo,
+											String rutaDocumentosTemporal,
+											String dominioServerLayouts,
+											String userServerLayouts,
+											String passServerLayouts,
+											String rootServerLayouts,
+											String cdtipsit,
+											String cdusuari,
+											String cdsisrol,
+											String cdagente,
+											String codpostalCli,
+											String cdestadoCli,
+											String cdmuniciCli
+//											,
+//											String cdplan1,
+//											String cdplan2,
+//											String cdplan3,
+//											String cdplan4,
+//											String cdplan5
+											)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ complementoSaludGrupo @@@@@@"
+				,"\n@@@@@@ ntramite="               , ntramite
+				,"\n@@@@@@ cdunieco="               , cdunieco
+				,"\n@@@@@@ cdramo="                 , cdramo
+				,"\n@@@@@@ estado="                 , estado
+				,"\n@@@@@@ nmpoliza="               , nmpoliza
+				,"\n@@@@@@ complemento="            , complemento
+				,"\n@@@@@@ censo="                  , censo
+				,"\n@@@@@@ rutaDocumentosTemporal=" , rutaDocumentosTemporal
+				,"\n@@@@@@ dominioServerLayouts="   , dominioServerLayouts
+				,"\n@@@@@@ userServerLayouts="      , userServerLayouts
+				,"\n@@@@@@ passServerLayouts="      , passServerLayouts
+				,"\n@@@@@@ rootServerLayouts="      , rootServerLayouts
+				,"\n@@@@@@ cdtipsit="               , cdtipsit
+				,"\n@@@@@@ cdusuari="               , cdusuari
+				,"\n@@@@@@ cdsisrol="               , cdsisrol
+				,"\n@@@@@@ cdagente="               , cdagente
+				,"\n@@@@@@ codpostalCli="           , codpostalCli
+				,"\n@@@@@@ cdestadoCli="            , cdestadoCli
+				,"\n@@@@@@ cdmuniciCli="            , cdmuniciCli
+//				,"\n@@@@@@ cdplan1="                , cdplan1
+//				,"\n@@@@@@ cdplan2="                , cdplan2
+//				,"\n@@@@@@ cdplan3="                , cdplan3
+//				,"\n@@@@@@ cdplan4="                , cdplan4
+//				,"\n@@@@@@ cdplan5="                , cdplan5
+				));
+		
+		Map<String,Object> resp = new HashMap<String,Object>();
+		
+		String paso = "Complementando asegurados";
+		try
+		{
+			paso = "Recuperando configuracion de complemento";
+			logger.debug("\nPaso: {}",paso);
+			List<Map<String,String>>configs=cotizacionDAO.cargarParametrizacionExcel("COMPGRUP",cdramo,complemento);
+			logger.debug("\nConfigs: {}",configs);
+			
+			paso = "Filtrando filas con errores";
+			logger.debug("\nPaso: {}",paso);
+			
+			Workbook workbook = WorkbookFactory.create(new FileInputStream(censo));
+			if(workbook.getNumberOfSheets()!=1)
+			{
+				throw new ApplicationException("Favor de revisar el n\u00famero de hojas del censo");
+			}
+			
+			Iterator<Row>            rowIterator = workbook.getSheetAt(0).iterator();
+			List<Map<String,String>> registros   = new ArrayList<Map<String,String>>();
+			List<Map<String,String>> recordsDTO  = new ArrayList<Map<String,String>>();
+			int                      nTotal      = 0;
+			int                      nBuenas     = 0;
+			int                      nError      = 0;
+			StringBuilder            errores     = new StringBuilder();
+			
+			int fila = 0;
+			String[] columnas=new String[]{
+					  "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+					,"AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ"
+					,"BA","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP","BQ","BR","BS","BT","BU","BV","BW","BX","BY","BZ"
+			};
+			while (rowIterator.hasNext()) 
+            {
+				fila++;
+				nTotal++;
+				
+				logger.debug("\nIterando fila {}",fila);
+				
+				Row                row         = rowIterator.next();
+				boolean            filaBuena   = true;
+				StringBuilder      bufferLinea = new StringBuilder();
+				Map<String,String> registro    = new HashMap<String,String>();
+				Map<String,String> recordDTO   = new LinkedHashMap<String,String>();
+				
+				if(Utils.isRowEmpty(row))
+				{
+					break;
+				}
+				
+				for(Map<String,String>config : configs)
+				{
+					try
+					{
+						logger.debug("\nIterando config {}",config);
+						int    indice = Integer.parseInt(config.get("COLUMNA"));
+						String letra  = columnas[indice];
+						Cell   celda  = row.getCell(indice);
+						
+						String tipo   = config.get("TIPO");
+						String valor  = extraerStringDeCelda(row.getCell(indice),tipo);
+						String substr = config.get("CDTIPSIT");
+						logger.debug("\nValor {} Tipo {} Substr {}",valor,tipo,substr);
+						
+						boolean obligatorio = "S".equals(config.get("REQUERIDO"));
+						
+						//validar obligatorio
+						if(obligatorio&&StringUtils.isBlank(valor))
+						{
+							filaBuena = false;
+							errores.append(Utils.join("Se requiere ",letra,", "));
+						}
+						
+						//validar tipo
+						if(StringUtils.isNotBlank(valor))
+						{
+							if("int".equals(tipo))
+							{
+								try
+								{
+									Integer.parseInt(valor);
+								}
+								catch(Exception ex)
+								{
+									filaBuena = false;
+									errores.append(Utils.join("No es numerico ",letra,", "));
+								}
+							}
+							else if("double".equals(tipo))
+							{
+								try
+								{
+									Double.parseDouble(valor);
+								}
+								catch(Exception ex)
+								{
+									filaBuena = false;
+									errores.append(Utils.join("No es decimal ",letra,", "));
+								}
+							}
+							else if("date".equals(tipo))
+							{
+								try
+								{
+									logger.debug("\nAntes leer fecha");
+									celda.setCellType(Cell.CELL_TYPE_NUMERIC);
+									Date fecha = celda.getDateCellValue();
+									logger.debug("\nFecha leida: {}",fecha);
+									Calendar cal = Calendar.getInstance();
+				                	cal.setTime(fecha);
+				                	if(cal.get(Calendar.YEAR)>2100
+				                			||cal.get(Calendar.YEAR)<1900
+				                			)
+				                	{
+				                		throw new ApplicationException("El anio de la fecha no es valido");
+				                	}
+				                	valor = renderFechas.format(fecha);
+								}
+								catch(Exception ex)
+								{
+									logger.error("Erro al leer fecha",ex);
+									filaBuena = false;
+									errores.append(Utils.join("Fecha incorrecta ",letra,", "));
+								}
+							}
+						}
+						
+						//validar 
+						if(StringUtils.isNotBlank(valor)&&StringUtils.isNotBlank(substr))
+						{
+							if(substr.indexOf(Utils.join("|",valor,"|"))==-1)
+							{
+								filaBuena = false;
+								errores.append(Utils.join("Valor incorrecto ",letra,", "));
+							}
+						}
+
+						bufferLinea.append(Utils.join(valor,"-"));
+						recordDTO.put(config.get("PROPIEDAD"),valor);
+						registro.put(config.get("PROPIEDAD"),valor);
+						registro.put(Utils.join("_",letra,"_",config.get("PROPIEDAD")),config.get("DESCRIPCION"));
+					}
+					catch(Exception ex)
+					{
+						filaBuena = false;
+					}
+				}
+				
+				if(filaBuena)
+				{
+					nBuenas++;
+					registros.add(registro);
+					recordsDTO.add(recordDTO);
+				}
+				else
+				{
+					nError++;
+					errores.append(Utils.join("en la fila ",fila,": ",bufferLinea.toString(),"\n"));
+				}
+            }
+			
+			resp.put("erroresCenso"    , errores.toString());
+			resp.put("filasLeidas"     , Integer.toString(nTotal));
+			resp.put("filasProcesadas" , Integer.toString(nBuenas));
+			resp.put("filasErrores"    , Integer.toString(nError));
+			resp.put("registros"       , registros);
+			
+			paso = "Generando archivo de transferencia";
+			logger.debug("\nPaso: {}",paso);
+			String nombreCenso = null;
+			if(nBuenas>0)
+			{
+				nombreCenso = Utils.join("censo_",System.currentTimeMillis(),"_",nmpoliza,".txt");
+				
+				File        archivoTxt = new File(Utils.join(rutaDocumentosTemporal,"/",nombreCenso));
+				PrintStream output     = new PrintStream(archivoTxt);
+				for(Map<String,String>recordDTO:recordsDTO)
+				{
+					for(Entry<String,String>en:recordDTO.entrySet())
+					{
+						output.print(Utils.join(en.getValue(),"|"));
+					}
+					output.println();
+				}
+				output.close();
+				
+				paso = "Transfiriendo archivo";
+				logger.debug("\nPaso: {}",paso);
+				
+				boolean transferido = FTPSUtils.upload
+				(
+					dominioServerLayouts,
+					userServerLayouts,
+					passServerLayouts,
+					archivoTxt.getAbsolutePath(),
+					Utils.join(rootServerLayouts,"/",nombreCenso)
+				)
+				&&FTPSUtils.upload
+				(
+					dominioServerLayouts2,
+					userServerLayouts,
+					passServerLayouts,
+					archivoTxt.getAbsolutePath(),
+					Utils.join(rootServerLayouts,"/",nombreCenso)
+				);
+				if(!transferido)
+				{
+					throw new ApplicationException("No se pudo transferir el archivo");
+				}
+				
+				paso = "Recuperando procedimiento";
+				logger.debug("\nPaso: {}",paso);
+				Map<String,String> mapaProc = cotizacionDAO.obtenerParametrosCotizacion(
+						ParametroCotizacion.PROCEDURE_CENSO
+						,cdramo
+						,cdtipsit
+						,complemento == "C" ? "INDIVIDUAL" : "COMPLETO"
+						,null
+						);
+				String nombreProc = mapaProc.get("P1VALOR");
+				logger.debug("\ncenso: {}",nombreProc);
+				
+				paso = "Procesar censo";
+				logger.debug("\nPaso: {}",paso);
+//				if(TipoSituacion.MULTISALUD_COLECTIVO.getCdtipsit().equals(cdtipsit))
+//				{
+//					if("C".equals(complemento))
+//					{
+//						cotizacionDAO.procesaLayoutCensoMultisalud(nombreCenso,
+//																   cdunieco,
+//																   cdramo,
+//																   "W",
+//																   nmpoliza,
+//																   cdestadoCli,
+//																   cdmuniciCli,
+//																   cdplan1,
+//																   cdplan2,
+//																   cdplan3,
+//																   cdplan4,
+//																   cdplan5,
+//																   "S");
+//					}
+//					else
+//					{
+//						cotizacionDAO.guardarCensoCompletoMultisalud(nombreCenso,
+//																	 cdunieco,
+//																	 cdramo,
+//																	 "W",
+//																	 nmpoliza,
+//																	 cdestadoCli,
+//																	 cdmuniciCli,
+//																	 cdplan1,
+//																	 cdplan2,
+//																	 cdplan3,
+//																	 cdplan4,
+//																	 cdplan5,
+//																	 "S"
+//																		);
+//					}
+//				}
+//				else
+//				{
+//					cotizacionDAO.procesarCenso(
+//							nombreProc
+//							,cdusuari
+//							,cdsisrol
+//							,nombreCenso
+//							,cdunieco
+//							,cdramo
+//							,"W"
+//							,nmpoliza
+//							,cdtipsit
+//							,cdagente
+//							,codpostalCli
+//							,cdestadoCli
+//							,cdmuniciCli
+//							,"S"
+//							);
+//				}
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ complementoSaludGrupo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return resp;
+	}
+	
+	private String extraerStringDeCelda(Cell cell, String tipo)
+	{
+		try
+		{
+			if("date".equals(tipo)&&cell.getCellType()==Cell.CELL_TYPE_NUMERIC)
+			{
+				return renderFechas.format(cell.getDateCellValue());
+			}
+			else
+			{
+				cell.setCellType(Cell.CELL_TYPE_STRING);
+				return cell.getStringCellValue().toString();
+			}
+		}
+		catch(Exception ex)
+		{
+			return "";
+		}
+	}
+    
+	private String extraerStringDeCelda(Cell cell)
+	{
+		try
+		{
+			cell.setCellType(Cell.CELL_TYPE_STRING);
+			String cadena = cell.getStringCellValue();
+			return cadena==null?"":cadena;
+		}
+		catch(Exception ex)
+		{
+			return "";
+		}
+	}
+	
 }

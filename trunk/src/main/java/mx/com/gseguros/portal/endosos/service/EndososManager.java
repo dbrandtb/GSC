@@ -1,5 +1,7 @@
 package mx.com.gseguros.portal.endosos.service;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,9 +19,9 @@ public interface EndososManager
     public List<Map<String,String>>  obtenerEndosos(Map<String,String>params)                 throws Exception;
     public Map<String,String>        guardarEndosoNombres(Map<String,Object>params)           throws Exception;
     public Map<String, String>       confirmarEndosoB(Map<String, String> params)             throws Exception;
-    public Map<String,String>        guardarEndosoDomicilio(Map<String,Object>params)         throws Exception;
-    
+    public Map<String,String>        guardarEndosoDomicilio(Map<String,Object>params)         throws Exception;    
     public List<Map<String, String>> obtieneCoberturasDisponibles(Map<String, String> params) throws Exception;
+    
     
     @Deprecated
     public Map<String,String>        iniciaEndoso(Map<String,Object>params)        throws Exception;
@@ -611,5 +613,32 @@ public interface EndososManager
 	public Map<String,Item> cargaInfoPantallaClonacion() throws Exception;
 	
 	public List<Map<String, String>> buscarCotizaciones(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String ntramite, String status, String fecini, String fecfin, String cdsisrol, String cdusuari) throws Exception;
+	
+	public Map<String,Object> procesarCenso(String ntramite,
+													String cdunieco,
+													String cdramo,
+													String estado,
+													String nmpoliza,
+													String complemento,
+													File censo,
+													String rutaDocumentosTemporal,
+													String dominioServerLayouts,
+													String userServerLayouts,
+													String passServerLayouts,
+													String rootServerLayouts,
+													String cdtipsit,
+													String cdusuari,
+													String cdsisrol,
+													String cdagente,
+													String codpostalCli,
+													String cdestadoCli,
+													String cdmuniciCli
+//													,
+//													String cdplan1,
+//													String cdplan2,
+//													String cdplan3,
+//													String cdplan4,
+//													String cdplan5
+													)throws Exception;
 	
 }
