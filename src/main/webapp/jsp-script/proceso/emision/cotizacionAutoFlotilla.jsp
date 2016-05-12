@@ -1041,6 +1041,7 @@ Ext.onReady(function()
                             {
                                 change : function(me)
                                 {   var descripcion ='';
+                                    var msnIncInv='';
                                     var indexofPeriod = me.getValue().lastIndexOf("."),
                                     uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
                                     debug('uploadedExtension:',uploadedExtension);
@@ -1112,13 +1113,13 @@ Ext.onReady(function()
                                                     var mrecords = [];
                                                     var msnIncInv = json.respuestaOculta;
                                                     
-                                                    if(Ext.isEmpty(json.slist1))
-                                                    {
-                                                    	mensajeWarning(msnIncInv);
-                                                    	panelpri.setLoading(false);
-                                                    }
-                                                    else
-                                                    {
+//                                                     if(Ext.isEmpty(json.slist1))
+//                                                     {
+//                                                     	mensajeWarning(msnIncInv);
+//                                                     	panelpri.setLoading(false);
+//                                                     }
+//                                                     else
+//                                                     {
                                                     
 	                                                    for(var i in json.slist1)
 	                                                    {
@@ -1239,31 +1240,44 @@ Ext.onReady(function()
 	                                                                                errores.push('No se pudo recuperar el auto '+record.get(json.params.claveName)+' en modelo '+record.get(json.params.modeloName)+' (inciso '+record.get('nmsituac')+')');
 	                                                                            }
 	                                                                            
-	                                                                            debug('### descriptivo:',descripcion);
-	                                //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-	                                                                            if(!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv))
-	                                                                            { 	
-	                                                                            	mensajeWarning(descripcion);
-	                                                                            	if(msnIncInv != null)
-	                                                                            	{
-	                                                                            		mensajeWarning(descripcion + msnIncInv);
-	                                                                            	}
-	                                                                            }
-	                                                                            
-	                                                                            if(msnIncInv != null && descripcion.length<5)
-	                                                                            {
-	                                                                                mensajeWarning(msnIncInv);
-	                                                                            }
-	                                                                            
 	                                                                            procesados=procesados+1;
 	                                                                            if(procesados==len)
 	                                                                            {
-	                                                                                panelpri.setLoading(false);
 	                                                                                _p30_store.add(mrecords);
-	                                                                                if(errores.length>0)
+	                                                                                if(errores.length>0 && (!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv)))
 	                                                                                {
-	                                                                                    mensajeWarning(errores.join('<BR/>'));
+	                                                                                	mensajeWarning(errores.join('<BR/>'));
+	                                                                                	 if(!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv))
+	                                                                                     {   
+	                                                                                         mensajeWarning(descripcion+'<BR/>'+errores.join('<BR/>'));
+	                                                                                         if(msnIncInv != null)
+	                                                                                         {
+	                                                                                             mensajeWarning(descripcion +'<BR/>'+ msnIncInv+'<BR/>'+errores.join('<BR/>'));
+	                                                                                         }
+	                                                                                     }
+	                                                                                     if(msnIncInv != null && descripcion.length<5)
+	                                                                                     {
+	                                                                                         mensajeWarning(msnIncInv+'<BR/>'+errores.join('<BR/>'));
+	                                                                                     }
+	                                                                                     panelpri.setLoading(false);
 	                                                                                }
+	                                                                                if(errores.length<=0 && (!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv)))
+                                                                                    {
+                                                                                         if(!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv))
+                                                                                         {   
+                                                                                             mensajeWarning(descripcion);
+                                                                                             if(msnIncInv != null)
+                                                                                             {
+                                                                                                 mensajeWarning(descripcion +'<BR/>'+ msnIncInv);
+                                                                                             }
+                                                                                         }
+                                                                                         if(msnIncInv != null && descripcion.length<5)
+                                                                                         {
+                                                                                             mensajeWarning(msnIncInv);
+                                                                                         }
+                                                                                         panelpri.setLoading(false);
+                                                                                    }
+
 	                                                                            }
 	                                                                        }
 	                                                                        ,failure : function()
@@ -1350,7 +1364,7 @@ Ext.onReady(function()
 	                                                    {
 	                                                        _p30_store.add(mrecords);
 	                                                    }
-                                                    }
+//                                                     }
                                                 }
                                                 else
                                                 {

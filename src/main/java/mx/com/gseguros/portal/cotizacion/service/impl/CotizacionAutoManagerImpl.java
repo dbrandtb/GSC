@@ -2476,6 +2476,21 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							try
 							{
 								nextCellValue = nextCell.getStringCellValue();
+								if(!nextCellValue.isEmpty())
+								{
+									int firstWord = nextCellValue.indexOf(" ");
+//									System.out.println("primera palabra hasta:"+firstWord);
+									if(firstWord != -1)
+									{
+										String secondWord = nextCellValue.substring(firstWord+1);
+										if(secondWord.isEmpty())
+										{
+											nextCellValue = nextCellValue.trim();
+										}
+//										else
+//										System.out.println("Segunda palabra:"+secondWord);
+									}
+								}
 							}
 							catch(Exception ex)
 							{
