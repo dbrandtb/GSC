@@ -684,7 +684,6 @@ Ext.onReady(function()
             if(!Ext.isEmpty(plazoenanios))
             {
             	fefin.setMaxValue(Ext.Date.add(val,Ext.Date.YEAR,plazoenanios));
-            	fefin.setMaxValue(Ext.Date.add(val,Ext.Date.YEAR,plazoenanios));
             }
             fefin.isValid();
         }
