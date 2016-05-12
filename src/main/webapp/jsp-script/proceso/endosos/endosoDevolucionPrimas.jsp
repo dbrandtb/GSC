@@ -44,12 +44,29 @@ _p39_coberturaColumns.push(
         	{
             	if(btn === 'yes')
         	    {
+            		debug("Boton YES");
             		debug("Cambio me :",me);
         	        debug("Cambio checked :",checked);
         	        debug("Cambio rowIndex :",rowIndex);
         	        var record = _p39_storeCoberturas.getAt(rowIndex);
         	        _p39_guardarCambio(record);
         	    }
+            	else
+            		{
+            		debug("Boton NO");
+                    debug("Cambio checked :",checked);
+                    debug("Cambio rowIndex :",rowIndex);
+            		  if(checked)
+            			  {
+            			       var record = _p39_storeCoberturas.getAt(rowIndex);
+            			       record.set('DEVOLVER',false);
+            			  }
+            		  else
+            			  {
+	            			  var record = _p39_storeCoberturas.getAt(rowIndex);
+	                          record.set('DEVOLVER',true);
+            			  }
+            		}
         	 }));   
 	    }
     }
