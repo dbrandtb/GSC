@@ -234,6 +234,10 @@ public class EndososColectivosAction extends PrincipalCoreAction
 			if(TipoEndoso.ALTA_ASEGURADOS.getCdTipSup() == Integer.parseInt(cdtipsup))
 			{
 				List<String> incisos = new ArrayList<String>();
+				for(Map<String,String> inciso : list)
+				{
+					incisos.add(inciso.get("nmsituac"));
+				}
 				
 				message = endososManager.confirmarEndosoAltaFamilia(
 						usuario.getUser()
