@@ -17,6 +17,7 @@ import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -854,6 +855,22 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = catalogosManager.recuperaContratantesSalud(params.get("nombre"));
 					break;
+				case CATALOGO_RAMOS_COLECTIVOS_X_TIPO_RAMO:
+					if(params == null)
+					{
+						params = new HashMap<String,String>();
+					}
+					logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+							   "\n@@@@@@ recuperaRamosColectivoTipoRamo @@@@@@"));
+					lista = catalogosManager.recuperarTipoRamoColectivo(params.get("cdtipram"));
+					break;
+				case CATALOGO_TIPOS_SITUACION_COLECTIVOS_X_RAMO:
+					if(params == null)
+					{
+						params = new HashMap<String,String>();
+					}
+					lista = catalogosManager.recuperarTipoRamoSituacionColectivo(params.get("cdtipram"), params.get("idPadre"));
+					break;					
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

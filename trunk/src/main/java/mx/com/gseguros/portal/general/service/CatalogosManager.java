@@ -201,4 +201,8 @@ public interface CatalogosManager {
     public List<GenericVO> obtieneCatalogoConvenios() throws Exception;
     
     public List<GenericVO> recuperaContratantesSalud(String nombre) throws Exception;
+    
+    public List<GenericVO> recuperarTipoRamoColectivo(String nombre) throws Exception;
+    
+    public List<GenericVO> recuperarTipoRamoSituacionColectivo(String tipoRamo, String cdramo) throws Exception;
 }

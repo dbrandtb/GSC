@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.endosos.dao.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -1332,6 +1333,70 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 
 	@Override
+	public Map<String, String> pClonarCotizacionTotal(Map<String, String> params) throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n*********************************")
+				.append("\n****** P_CLONAR_COTIZACION ******")
+				.append("\n****** params=").append(params)
+				.append("\n*********************************")
+				.toString()
+				);
+		Map<String,String> map          = new LinkedHashMap<String,String>(0);
+		Map<String,Object> resultadoMap = new LinkedHashMap<String,Object>(0);
+		try{
+			logger.debug(Utils.log("antes de imprimir resultados**"));
+			logger.debug(Utils.log("antes de imprimir resultados****{}", params));
+			//Map<String,Object> 
+			//resultadoMap = this.ejecutaSP(new PClonarCotizacionTotal(this.getDataSource()), Utils.ponFechas(params));
+			Map<String, Object> m = Utils.ponFechas(params);
+			logger.debug("m {}", m);
+			resultadoMap = this.ejecutaSP(new PClonarCotizacionTotal(this.getDataSource()), m);
+			logger.debug(Utils.log("despues de imprimir resultados::"));
+			if(!resultadoMap.isEmpty()){
+				for(Entry en:resultadoMap.entrySet())
+				{
+					String col=(String) en.getKey();
+					logger.debug(Utils.log("Mapa ",en.getKey(), en.getValue()));
+					if(col!=null&&col.substring(0,5).equalsIgnoreCase("pv_fe"))
+					{
+						map.put(col,Utils.formateaFecha(en.getValue()+""));
+					}
+					else
+					{
+						map.put(col,en.getValue()+"");
+					}
+				}
+			}
+		}catch(Exception e){
+			logger.error("Error", e);
+		}
+		return map;
+	}
+	
+	protected class PClonarCotizacionTotal extends StoredProcedure
+	{
+		protected PClonarCotizacionTotal(DataSource dataSource)
+		{
+			super(dataSource, "P_CLONAR_COTIZACION");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feinival_i" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_cduser_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_new_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipo_clonacion_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmpolnew_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
 	public boolean clonaGrupoReexp(Map<String, String> params) throws Exception
 	{
 		logger.debug(
@@ -1380,7 +1445,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		
 		return true;
 	}
-	
+		
 	protected class ActualizaGrupoReexp extends StoredProcedure
 	{
 		protected ActualizaGrupoReexp(DataSource dataSource)
@@ -1400,6 +1465,40 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 
 	@Override
+	public boolean actualizaTodosGrupoReexp(Map<String, String> params) throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n*************************************")
+				.append("\n****** PKG_SATELITES2.P_CAMBIA_PLAN_VALORES_REEXP ******")
+				.append("\n****** params=").append(params)
+				.append("\n*************************************")
+				.toString()
+				);
+		this.ejecutaSP(new ActualizaGrupoReexp(this.getDataSource()), params);
+		
+		return true;
+	}
+	
+	protected class ActualizaTodosGrupoReexp extends StoredProcedure
+	{
+		protected ActualizaTodosGrupoReexp(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES2.P_CAMBIA_PLAN_VALORES_REEXP");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgrupo_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdplan_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdcadena_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o" , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
 	public boolean valoresDefectoGrupoReexp(Map<String, String> params) throws Exception
 	{
 		logger.debug(
@@ -1414,7 +1513,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		
 		return true;
 	}
-	
+		
 	protected class ValoresDefectoGrupoReexp extends StoredProcedure
 	{
 		protected ValoresDefectoGrupoReexp(DataSource dataSource)
@@ -1425,7 +1524,39 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdgrupo_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsup_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public boolean valoresDefectoGruposReexp(Map<String, String> params) throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************************")
+				.append("\n****** PKG_SATELITES2.P_INSERTA_TWORKSUP_GRUPOS ******")
+				.append("\n****** params=").append(params)
+				.append("\n*****************************************************")
+				.toString()
+				);
+		this.ejecutaSP(new ValoresDefectoGruposReexp(this.getDataSource()), params);
+		
+		return true;
+	}
+	
+	protected class ValoresDefectoGruposReexp extends StoredProcedure
+	{
+		protected ValoresDefectoGruposReexp(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES2.P_INSERTA_TWORKSUP_GRUPOS");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));			
 			declareParameter(new SqlParameter("pv_cdtipsup_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -5079,6 +5210,95 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_nmsuplem_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_extraprima_sob_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_extraprima_ocu_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> recuperarCotizaciones(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String ntramite, String status, String fecini, String fecfin, String cdsisrol, String cdusuari) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarCotizaciones @@@@@@"
+				,"\n@@@@@@ cdunieco=",cdunieco
+				,"\n@@@@@@ cdramo=",cdramo
+				,"\n@@@@@@ cdtipsit=",cdtipsit
+				,"\n@@@@@@ estado=",estado
+				,"\n@@@@@@ nmpoliza=",nmpoliza
+				,"\n@@@@@@ ntramite=",ntramite
+				,"\n@@@@@@ status=",status
+				,"\n@@@@@@ fecini=",fecini
+				,"\n@@@@@@ fecfin=",fecfin
+				,"\n@@@@@@ cdsisrol=",cdsisrol 
+				,"\n@@@@@@ cdusuari=",cdusuari
+				));	
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i" 		   , cdunieco);
+		params.put("pv_cdramo_i" 		   , cdramo);
+		params.put("pv_estado_i" 		   , estado);
+		params.put("pv_nmpoliza_i" 		   , nmpoliza);
+		params.put("pv_cdtipsit_i" 		   , cdtipsit);
+		params.put("pv_ntramite_i" 		   , ntramite);
+		params.put("pv_status_i"    	   , status);
+		params.put("pv_fedesde_i"   	   , fecini);
+		params.put("pv_fehasta_i"   	   , fecfin);                                                              
+		params.put("pv_cdagente_i"         , null);
+		params.put("pv_cdrol_i"            , cdsisrol);
+		params.put("pv_cdtiptra_i"         , "1");
+		params.put("pv_contrarecibo_i"     , null);
+		params.put("pv_tipoPago_i"         , null);
+		params.put("pv_nfactura_i"         , null);
+		params.put("pv_cdpresta_i"         , null);
+		params.put("pv_cdusuari_i"         , cdusuari);
+		params.put("pv_cdtipram_i"         , "10");
+		params.put("pv_lote_i"             , null);
+		params.put("pv_tipolote_i"         , null);
+		params.put("pv_tipoimpresion_i"    , null);
+		params.put("pv_cdusuari_busqueda_i", null);
+		Map<String,Object>       procRes    = ejecutaSP(new RecuperarCotizaciones(getDataSource()),params);
+		List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ regresa ",listaMapas
+				,"\n@@@@@@"
+				));
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ termina buscarPorPolizaDAO @@@@@@"
+				));	
+		return listaMapas;
+	}
+	
+	protected class RecuperarCotizaciones extends StoredProcedure
+	{
+		protected RecuperarCotizaciones(DataSource dataSource)
+		{
+			super(dataSource,"pkg_consulta.P_OBT_DATOS_MESA_COTIZACION");
+			declareParameter(new SqlParameter("pv_cdunieco_i"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"           , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"           , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdagente_i"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i"           , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fedesde_i"          , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fehasta_i"          , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdrol_i"            , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtiptra_i"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_contrarecibo_i"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipoPago_i"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdpresta_i"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdusuari_i"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipram_i"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_lote_i"             , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipolote_i"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipoimpresion_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdusuari_busqueda_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"ntramite","cdunieco","cdsubram","estado","ferecepc","fecstatu","nmpoliza","nmsolici","status","Nombre_agente","CONTRATANTE","cdramo","tipoflot","cdtipsit"})));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
