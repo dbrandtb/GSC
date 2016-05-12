@@ -60,9 +60,10 @@ public class EndososColectivosAction extends PrincipalCoreAction
 {
 	private final static Logger logger = LoggerFactory.getLogger(EndososColectivosAction.class);
 	
-	private SimpleDateFormat         renderFechas     = new SimpleDateFormat("dd/MM/yyyy");
+	private SimpleDateFormat         renderFechas    = new SimpleDateFormat("dd/MM/yyyy");
 	private boolean                  success;
-	private boolean                  endosoConfirmado;//Para saber si el endoso se ha enviado a la mesa de autorizacion
+	private boolean                  exito           = false;
+	private String                   respuesta;
 	private String                   message;
 	private Map<String,String>       params;
 	private List<Map<String,String>> list;
@@ -79,7 +80,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 	private String                   error;
 	private Map<String,Item>         imap1;
 	private File 					 censo;	
-
+	private File					 censoFileName;
 	@Autowired
 	private ConsultasManager         consultasManager;
 	
@@ -615,10 +616,10 @@ public class EndososColectivosAction extends PrincipalCoreAction
 			results = { @Result(name="success", type="json") }
 			)
 	public String generarCopiaCompleta() {
-		logger.debug(Utils.log("##########################\n", 
-				  			   "##########################\n",
-				  			   "###### generarCopia ######\n",
-				  			   "######              ######\n"));		
+		logger.debug(Utils.log("##################################\n", 
+				  			   "##################################\n",
+				  			   "###### generarCopiaCompleta ######\n",
+				  			   "######              		######\n"));		
 
 		this.session = ActionContext.getContext().getSession();
         ArrayList<String> rolesAsignacion = new ArrayList<String>(Arrays.asList("COTIZADOR","SUPTECSALUD","SUBDIRSALUD","DIRECSALUD"));
@@ -659,15 +660,13 @@ public class EndososColectivosAction extends PrincipalCoreAction
 
             logger.debug(Utils.log("esProductoSalud && esPolizaColectiva",esProductoSalud,"",esPolizaColectiva));
             if (esProductoSalud && esPolizaColectiva) {
-					// P_CLONAR_POLIZA_REEXPED            		
-					Map<String, String> resReexped = endososManager.pClonarCotizacionTotal(cdunieco,
-																						 	 cdramo,
-																						 	 estado,
-																						 	 nmpoliza,
-																						 	 ferecepc,
-																						 	 cdusuari,
-																						 	 cdunieco,
-																						 	 "TODO");					
+            		Map<String, String> resReexped = clonarPoliza(cdunieco, 
+            													  cdramo, 
+            													  estado, 
+            													  nmpoliza, 
+            													  ferecepc, 
+            													  cdusuari, 
+            													  "TODO");
 					String nmpolizaNuevaPoliza = resReexped.get("pv_nmpolnew_o");
 					String ntramiteNuevaPoliza = resReexped.get("pv_ntramite_o");
             		params.put("nmpoliza", nmpolizaNuevaPoliza);
@@ -741,290 +740,6 @@ public class EndososColectivosAction extends PrincipalCoreAction
 				}
 	         }
             
-
-						
-//			String cdunieco = smap1.get("CDUNIECO");
-//			String newcdunieco = smap2.get("NEWCDUNIECO");
-//			String cdramo = smap1.get("CDRAMO");
-//			String estado = smap1.get("ESTADO");
-//			String nmpoliza = smap1.get("NMPOLIZA");
-//			String sFecha = smap2.get("fecha_endoso");
-//			Date dFecha = renderFechas.parse(sFecha);
-
-			
-//			String cdtipsit = smap1.get("CDTIPSIT");
-//			String ntramite = smap1.get("NTRAMITE");
-//			String feIniVig = smap3.get("feefecto");
-//			String feFinvig = smap3.get("feproren");
-//			String cdrazonReexp = smap2.get("trazreexped");
-//			String comentaReexp = smap2.get("comment");
-//			String cdplan = smap2.get("cdplan");
-//
-//			String usuarioTramite = "";
-//
-//			boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
-//			boolean esPolizaColectiva = (StringUtils.isNotBlank(smap1.get("TIPOFLOT")) && 
-//										 "F".equalsIgnoreCase(smap1.get("TIPOFLOT")));// flotilla o Colectiva
-//
-//			boolean actualizarGrupos = (slist1 != null && !slist1.isEmpty());
-//			boolean clonarGrupos = (slist2 != null && !slist2.isEmpty());
-
-			// PKG_ENDOSOS.P_ENDOSO_INICIA
-//			Map<String, String> resIniEnd = endososManager.iniciarEndoso(cdunieco, 
-//																		 cdramo, 
-//																		 estado, 
-//																		 nmpoliza, 
-//																		 sFecha,
-//																		 cdelemento, 
-//																		 cdusuari, 
-//																		 proceso, 
-//																		 cdtipsup);
-
-//			String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
-//			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
-
-//			if (StringUtils.isBlank(newcdunieco)) {
-//				newcdunieco = cdunieco;
-//			}
-
-			// P_CLONAR_POLIZA_REEXPED
-//			Map<String, String> resReexped = endososManager.pClonarPolizaReexped(cdunieco, 
-//																				 cdramo, 
-//																				 estado, 
-//																				 nmpoliza,
-//																				 sFecha, 
-//																				 cdplan, 
-//																				 cdusuari, 
-//																				 newcdunieco);
-//			String nmpolizaNuevaPoliza = resReexped.get("pv_nmpolnew_o");
-//			String ntramiteNuevaPoliza = resReexped.get("pv_ntramite_o");
-
-			/**
-			 * Si se actializaron planes y suma asegurada de grupos
-			 */
-//			if (esProductoSalud && esPolizaColectiva && (actualizarGrupos || clonarGrupos)) {
-
-				// Se clonan tablas para tarificacion de grupos que no cambian
-				// valores
-//				if (clonarGrupos) {
-//					boolean exitoGrupos = endososManager.clonaGruposReexp(cdunieco, 
-//																		  cdramo, 
-//																		  estado, 
-//																		  nmpoliza,
-//																		  newcdunieco, 
-//																		  nmpolizaNuevaPoliza, 
-//																		  slist2);
-//
-//					if (!exitoGrupos) {
-//						long timestamp = System.currentTimeMillis();
-//
-//						error = "Error al Clonar Grupos para endoso de Reexpedicion" + timestamp;
-//						logger.error(error);
-//						success = false;
-//						return SUCCESS;
-//					}
-//				}
-
-				// Se actualizan valores de tarificacion por grupo que haya
-				// cambiado y disparan valores por defecto
-//				if (actualizarGrupos) {
-//					boolean exitoGrupos = endososManager.actualizaGruposReexp(newcdunieco, 
-//																			  cdramo, 
-//																			  "W",
-//																			  nmpolizaNuevaPoliza, 
-//																			  slist1);
-//
-//					if (exitoGrupos) {
-//						exitoGrupos = endososManager.valoresDefectoGruposReexp(newcdunieco, 
-//																			   cdramo, 
-//																			   "W",
-//																			   nmpolizaNuevaPoliza, 
-//																			   "0", 
-//																			   cdtipsup, 
-//																			   slist1);
-//
-//						if (exitoGrupos) {
-//							cotizacionManager.ejecutasigsvdefEnd(newcdunieco, 
-//																 cdramo, 
-//																 "W", 
-//																 nmpolizaNuevaPoliza, 
-//																 "0",
-//																 "0", 
-//																 "TODO", 
-//																 cdtipsup);
-//						}
-//					}
-//
-//					if (!exitoGrupos) {
-//						long timestamp = System.currentTimeMillis();
-//						error = "Error al Actualizar Grupos para endoso de Reexpedicion" + timestamp;
-//						logger.error(error);
-//						success = false;
-//						return SUCCESS;
-//					}
-//				}
-//
-//			}
-
-			// pkg_cancela.p_selecciona_poliza_unica
-//			cancelacionManager.seleccionaPolizaUnica(cdunieco, 
-//													 cdramo, 
-//													 nmpoliza, 
-//													 null, 
-//													 dFecha);
-
-			// pkg_cancela.p_cancela_poliza
-//			String nmsuplemCancela = cancelacionManager.cancelaPoliza(cdunieco, 
-//																	  cdramo, 
-//																	  null, 
-//																	  estado, 
-//																	  nmpoliza, 
-//																	  null,
-//																	  cdrazonReexp, 
-//																	  comentaReexp, 
-//																	  feIniVig, 
-//																	  feFinvig, 
-//																	  sFecha, 
-//																	  cdusuari, 
-//																	  cdtipsup,
-//																	  usuario.getRolActivo().getClave());
-
-			// Se confirma el endoso si cumple la validacion de fechas:
-//			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(cdunieco, 
-//																						cdramo, 
-//																						estado,
-//																						nmpoliza, 
-//																						nmsuplemCancela, 
-//																						nsuplogi, 
-//																						cdtipsup, 
-//																						comentaReexp, 
-//																						dFecha, 
-//																						cdtipsit);
-//
-//			consultasManager.copiarArchivosUsuarioTramite(cdunieco, 
-//														  cdramo, 
-//														  estado, 
-//														  nmpoliza, 
-//														  ntramiteNuevaPoliza,
-//														  this.getText("ruta.documentos.poliza"));
-
-			/**
-			 * Para cambiar el estatus del tramite nuevo
-			 */
-//			if (esProductoSalud && esPolizaColectiva) {
-//				long timestamp = System.currentTimeMillis();
-
-				/**
-				 * Si se hicieron cambios a los gruos se manda a estatus
-				 * cotizador, si no se realizaron cambios se manda a estatus
-				 * carga completa
-				 */
-//				if (actualizarGrupos) {
-//					Map<String, Object> res = siniestrosManager.moverTramite(ntramiteNuevaPoliza,
-//																			 EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo(),
-//																			 "Se Reexpide Poliza del tramite original: " + ntramite, 
-//																			 usuario.getUser(),
-//																			 usuario.getRolActivo().getClave(), 
-//																			 null, 
-//																			 RolSistema.SUSCRIPTOR_TECNICO.getCdsisrol(), 
-//																			 null,
-//																			 null, 
-//																			 "N", 
-//																			 timestamp);
-//
-//					if (res.containsKey("NOMBRE") && StringUtils.isNotBlank((String) res.get("NOMBRE"))) {
-//						usuarioTramite = " asignado a: " + (String) res.get("NOMBRE");
-//					}
-//
-//					usuarioTramite += " en suscripci\u00F3n t&eacute;cnica para su recotizaci&oacute;n";
-//				} else {
-//					Map<String, Object> res = siniestrosManager.moverTramite(ntramiteNuevaPoliza,
-//																			 EstatusTramite.TRAMITE_COMPLETO.getCodigo(),
-//																			 "Se Reexpide Poliza del tramite original: " + ntramite, 
-//																			 usuario.getUser(),
-//																			 usuario.getRolActivo().getClave(), 
-//																			 null, 
-//																			 RolSistema.SUSCRIPTOR.getCdsisrol(), 
-//																			 null, 
-//																			 null,
-//																			 "N", 
-//																			 timestamp);
-//
-//					if (res.containsKey("NOMBRE") && StringUtils.isNotBlank((String) res.get("NOMBRE"))) {
-//						usuarioTramite = " asignado a: " + (String) res.get("NOMBRE");
-//					}
-//
-//					usuarioTramite += " en suscripci\u00F3n de emisi&oacute;n para su reexpedici&oacute;n";
-//
-//				}
-//			}
-
-			// Si el endoso fue confirmado:
-//			if (respConfirmacionEndoso.isConfirmado()) {
-//				endosoConfirmado = true;
-//
-//				List<Map<String, String>> listaDocu = cancelacionManager.reimprimeDocumentos(cdunieco, 
-//																							 cdramo, 
-//																							 estado,
-//																							 nmpoliza, 
-//																							 cdtipsup);
-//				logger.debug("documentos que se regeneran: " + listaDocu);
-//
-//				String rutaCarpeta = this.getText("ruta.documentos.poliza") + "/" + ntramite;
-
-				// listaDocu contiene: nmsolici,nmsituac,descripc,descripl
-//				for (Map<String, String> docu : listaDocu) {
-//					logger.debug(Utils.log("docu iterado: ",docu,"\n"));
-//					String nmsolici = docu.get("nmsolici");
-//					String descripc = docu.get("descripc");
-//					String descripl = docu.get("descripl");
-//					String url = this.getText("ruta.servidor.reports") + 
-//								 "?destype=cache" + "&desformat=PDF"+ 
-//								 "&userid=" + 
-//								 this.getText("pass.servidor.reports") + 
-//								 "&report=" + 
-//								 descripl + 
-//								 "&paramform=no" + 
-//								 "&ACCESSIBLE=YES" +// parametro que habilita salida en PDF
-//								 "&p_unieco=" + cdunieco + 
-//								 "&p_ramo=" + cdramo + 
-//								 "&p_estado=" + estado + 
-//								 "&p_poliza=" + nmpoliza + 
-//								 "&p_suplem=" + nmsuplem + 
-//								 "&desname=" + rutaCarpeta + "/" + descripc;
-//					if (descripc.substring(0, 6).equalsIgnoreCase("CREDEN")) {
-						// C R E D E N C I A L _ X X X X X X . P D F
-						// 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-//						url += "&p_cdperson=" + descripc.substring(11, descripc.lastIndexOf("_"));
-//					}
-//					logger.debug(Utils.log("#################################\n",
-//								 		   "###### Se solicita reporte ######\n", 
-//								 		   url,"\n",
-//								 		   "#################################\n"));
-//					HttpUtil.generaArchivo(url, rutaCarpeta + "/" + descripc);
-//					logger.debug(Utils.log("######                    ######\n", 
-//								 		   "###### reporte solicitado ######\n",
-//								 		   url,"\n",
-//								 		   "################################\n",
-//								 		   "################################\n"));
-//				}
-
-//				setMensaje("Se ha generado la p&oacute;liza " + nmpolizaNuevaPoliza
-//						+ " con n&uacute;mero de tr&aacute;mite " + ntramiteNuevaPoliza + usuarioTramite);
-//
-//				String sucursal = cdunieco;
-
-				// Ejecutamos el Web Service de Recibos:
-//				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplemCancela, null, sucursal,
-//						"", ntramite, true, cdtipsup, (UserVO) session.get("USUARIO"));
-
-//			} else {
-//				setMensaje("El endoso " + nsuplogi + " se guard&oacute; en mesa de control para autorizaci&oacute;n "
-//						+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite() + ". "
-//						+ "La p&oacute;liza reexpedida es " + nmpolizaNuevaPoliza + " con tr&aacute;mite "
-//						+ "de emisi&oacute;n " + ntramiteNuevaPoliza);
-//			}
-			
             success = true;
 
 		} catch (Exception ex) {
@@ -1051,65 +766,62 @@ public class EndososColectivosAction extends PrincipalCoreAction
 				  			   "###### clonarPolizaCenso ######\n",
 				  			   "######                   ######\n"));
 
-//		this.session = ActionContext.getContext().getSession();
-//		ArrayList<String> rolesAsignar    = new ArrayList<String>(Arrays.asList("EJECUTIVO DE VENTAS","MESA DE CONTROL","EMISIÓN SALUD","SUSCRIPTOR EMISION SALUD"));
-//		ArrayList<String> rolesAsignacion = new ArrayList<String>(Arrays.asList("SUSCRIPTOR TÉCNICO SALUD","SUPERVISOR TÉCNICO SALUD","SUBDIRECTOR TECNICO SALUD","DIRECTOR OPERACIONES SALUD"));
-//		try {
-//			String cdunieco           = params.get("cdunieco");
-//			String cdramo	          = params.get("cdramo");
-//			String cdtipsit           = params.get("cdtipsit");
-//			String estado             = params.get("estado");
-//			String nmpoliza           = params.get("nmpoliza");
-//			String nmsolici           = params.get("nmsolici");
-//			String ntramite           = params.get("ntramite");
-//			String status             = params.get("status");
-//			String ferecepc	          = params.get("ferecepc");
-//			String fecstatus          = params.get("fecstatus");
-//			String usuarioTramite     = "";
-//			UserVO usuario            = (UserVO) session.get("USUARIO");
-//			String cdusuari           = usuario.getUser();
-//			String cdelemento         = usuario.getEmpresa().getElementoId();
-//			String proceso            = "END";
-//			String cdtipsup           = TipoEndoso.EMISION_POLIZA.getCdTipSup().toString();
-//			long timestamp            = System.currentTimeMillis();
-//			boolean esProductoSalud   = consultasManager.esProductoSalud(cdramo);
-//			boolean esPolizaColectiva = ("F".equalsIgnoreCase(params.get("TIPOFLOT")));// flotilla o Colectiva
-//			logger.debug(Utils.log("######		parametros		######\n", 
-//					  			   "##################################\n",
-//					  			   "cdunieco ", cdunieco, "\n",
-//					  	           "cdramo "  , cdramo,   "\n",
-//					  	           "cdtipsit ", cdtipsit, "\n",
-//					  	           "estado "  , estado,   "\n",
-//					  	           "nmpoliza ", nmpoliza, "\n",
-//					  	           "nmsolici ", nmsolici, "\n",
-//					  	           "ntramite ", ntramite, "\n",
-//					  	           "status "  , status,   "\n",
-//					  	           "ferecepc" , ferecepc, "\n",
-//					  	           "fecstatus", fecstatus,"\n"
-//					  	           ));
-//			if (esProductoSalud && esPolizaColectiva) {
-//					// P_CLONAR_POLIZA_REEXPED
-//					Map<String, String> resReexped = endososManager.pClonarCotizacionReexped(cdunieco, 
-//																						 	 cdramo, 
-//																						 	 estado, 
-//																						 	 nmpoliza,
-//																						 	 ferecepc, 
-//																						 	 cdusuari, 
-//																						 	 null);
-//					String nmpolizaNuevaPoliza = resReexped.get("pv_nmpolnew_o");
-//					String ntramiteNuevaPoliza = resReexped.get("pv_ntramite_o");
-//					boolean exitoGrupos = endososManager.actualizaTodosGruposReexp(cdunieco, 
-//																			  	   cdramo, 
-//																			  	   "W",
-//																			  	   nmpolizaNuevaPoliza);
-//				}
+		this.session = ActionContext.getContext().getSession();
+        ArrayList<String> rolesAsignacion = new ArrayList<String>(Arrays.asList("COTIZADOR","SUPTECSALUD","SUBDIRSALUD","DIRECSALUD"));
+        ArrayList<String> rolesAsignar    = new ArrayList<String>(Arrays.asList("EJECUTIVOCUENTA","EJECUTIVOINTERNO","MESADECONTROL","COTIZADOR"));
+		try {
+            String cdunieco           = params.get("cdunieco");
+            String cdramo	          = params.get("cdramo");
+            String cdtipsit           = params.get("cdtipsit");
+            String estado             = params.get("estado");
+            String nmpoliza           = params.get("nmpoliza");
+            String nmsolici           = params.get("nmsolici");
+            String ntramite           = params.get("ntramite");
+            String status             = params.get("status");
+            String ferecepc	          = params.get("ferecepc");
+            String fecstatus          = params.get("fecstatus");
+            String usuarioTramite     = "";
+            UserVO usuario            = (UserVO) session.get("USUARIO");
+			String cdusuari           = usuario.getUser();
+			String cdtipsup           = TipoEndoso.EMISION_POLIZA.getCdTipSup().toString();
+			long timestamp            = System.currentTimeMillis();
+			boolean esProductoSalud   = consultasManager.esProductoSalud(cdramo);
+			boolean esPolizaColectiva = ("F".equalsIgnoreCase(params.get("TIPOFLOT")));// flotilla o Colectiva
+			logger.debug(Utils.log("usuario en sesion ",usuario.getRolActivo().getClave()));
+            logger.debug(Utils.log("######		parametros		######\n", 
+					  			   "##################################\n",
+					  			   "cdunieco ", cdunieco, "\n",
+					  	           "cdramo "  , cdramo,   "\n",
+					  	           "cdtipsit ", cdtipsit, "\n",
+					  	           "estado "  , estado,   "\n",
+					  	           "nmpoliza ", nmpoliza, "\n",
+					  	           "nmsolici ", nmsolici, "\n",
+					  	           "ntramite ", ntramite, "\n",
+					  	           "status "  , status,   "\n",
+					  	           "ferecepc" , ferecepc, "\n",
+					  	           "fecstatus", fecstatus,"\n",
+					  	           "tipoflot" , params.get("TIPOFLOT")
+					  	           ));
+
+            logger.debug(Utils.log("esProductoSalud && esPolizaColectiva",esProductoSalud,"",esPolizaColectiva));
+            if (esProductoSalud && esPolizaColectiva) {
+            		Map<String, String> resReexped = clonarPoliza(cdunieco, 
+            													  cdramo, 
+            													  estado, 
+            													  nmpoliza, 
+            													  ferecepc, 
+            													  cdusuari, 
+            													  "TODO");
+					String nmpolizaNuevaPoliza = resReexped.get("pv_nmpolnew_o");
+					String ntramiteNuevaPoliza = resReexped.get("pv_ntramite_o");
+            		params.put("nmpoliza", nmpolizaNuevaPoliza);
+            		params.put("ntramite", ntramiteNuevaPoliza);
+            }
+		}catch(Exception ex){
+			mensaje = Utils.manejaExcepcion(ex);
+			logger.error("error al clonar tramite", mensaje);
+		}
 			success = true;
-//			
-//		} catch (Exception ex) {
-//			error = ex.getMessage();
-//			success = false;
-//			logger.error(Utils.log("error al clonar tramite", ex,"\n"));
-//		}
 		logger.debug(Utils.log("######                   ######\n",
 							   "###### clonarPolizaCenso ######\n",
 							   "###############################\n",
@@ -1117,146 +829,143 @@ public class EndososColectivosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	//////////////////////////////
-	////// confirmar endoso //////
-	/*//////////////////////////*/
-	/**
-	 * Confirma un endoso si no excede un maximo de dias permitidos (+-30 dias) 
-	 * //+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
-	 * @param cdunieco
-	 * @param cdramo
-	 * @param estado
-	 * @param nmpoliza
-	 * @param nmsuplem
-	 * @param nsuplogi
-	 * @param cdtipsup
-	 * @param dscoment
-	 * @param fechaEndoso
-	 * @param cdtipsit
-	 * @return Respuesta de la confirmacion del Endoso
-	 * @throws Exception
-	 */
-	private RespuestaConfirmacionEndosoVO confirmarEndoso(String cdunieco,String cdramo,String estado,String nmpoliza,
-			String nmsuplem, String nsuplogi, String cdtipsup, String dscoment, Date fechaEndoso, String cdtipsit)
-			throws Exception {
-		
-		RespuestaConfirmacionEndosoVO respuesta = new RespuestaConfirmacionEndosoVO();
-		long numMaximoDias = (long)endososManager.recuperarDiasDiferenciaEndosoValidos(cdramo,cdtipsup);
-		
-		// Se obtiene el numero de tramite de emision de una poliza:
-		String ntramiteEmision=endososManager.obtenerNtramiteEmision(cdunieco, cdramo, estado, nmpoliza);
-		
-		// Se almacena la diferencia entre la fecha actual y a fecha que tendra el endoso:
-		Date fechaHoy=new Date();
-		long diferenciaFechaActualVSEndoso = fechaHoy.getTime() - fechaEndoso.getTime();
-		diferenciaFechaActualVSEndoso = Math.abs(diferenciaFechaActualVSEndoso);
-		// Se almacena el maximo de dias permitidos para realizar un endoso (30 dias):
-		long maximoDiasPermitidos = numMaximoDias*24l*60l*60l*1000l;
-		
-		String descEndoso = endososManager.obtieneDescripcionEndoso(cdtipsup); 
-		
-		logger.debug("************* diferenciaFechaActualVSEndoso=" + diferenciaFechaActualVSEndoso);
-		logger.debug("************* maximoDiasPermitidos         =" + maximoDiasPermitidos);
-		
-		String estatusTramite = null;
-		if(diferenciaFechaActualVSEndoso > maximoDiasPermitidos) {
-			logger.debug("************* El Endoso esta en espera, confirmado false");
-			estatusTramite = EstatusTramite.ENDOSO_EN_ESPERA.getCodigo();
-			respuesta.setConfirmado(false);
-		} else {
-			// Se confirma endoso:
-			Map<String,String> paramsConfirmarEndosoB = new LinkedHashMap<String,String>(0);
-			paramsConfirmarEndosoB.put("pv_cdunieco_i" , cdunieco);
-			paramsConfirmarEndosoB.put("pv_cdramo_i"   , cdramo);
-			paramsConfirmarEndosoB.put("pv_estado_i"   , estado);
-			paramsConfirmarEndosoB.put("pv_nmpoliza_i" , nmpoliza);
-			paramsConfirmarEndosoB.put("pv_nmsuplem_i" , nmsuplem);
-			paramsConfirmarEndosoB.put("pv_nsuplogi_i" , nsuplogi);
-			paramsConfirmarEndosoB.put("pv_cdtipsup_i" , cdtipsup);
-			paramsConfirmarEndosoB.put("pv_dscoment_i" , dscoment);
+	public String subirCenso()
+	{
+		logger.debug(Utils.log(
+				 "\n###################################"
+				,"\n###### complementoSaludGrupo ######"
+				,"\n###### smap1="         , smap1
+				,"\n###### censo="         , censo
+				,"\n###### censoFileName=" , censoFileName
+				));
+		try
+		{
+			success = true;
+			exito   = false;
 			
-			endososManager.confirmarEndosoB(paramsConfirmarEndosoB);
+			UserVO user = Utils.validateSession(session);
 			
-			estatusTramite = EstatusTramite.ENDOSO_CONFIRMADO.getCodigo();
-			respuesta.setConfirmado(true);
-			logger.debug("************* El Endoso fue confirmado, confirmado true");
+			Utils.validate(smap1 , "No se recibieron datos");
+			
+			String cdunieco     = smap1.get("cdunieco");
+			String cdramo       = smap1.get("cdramo");
+			String cdtipsit     = smap1.get("cdtipsit");
+			String estado       = smap1.get("estado");
+			String nmpoliza     = smap1.get("nmpoliza");
+			String ntramite     = smap1.get("ntramite");
+			String complemento  = smap1.get("complemento");
+			String cdagente     = smap1.get("cdagente");
+			String codpostalCli = smap1.get("codpostal");
+			String cdestadoCli  = smap1.get("cdestado");
+			String cdmuniciCli  = smap1.get("cdmunici");
+//			String cdplan1      = smap1.get("cdplan1");
+//			String cdplan2      = smap1.get("cdplan2");
+//			String cdplan3      = smap1.get("cdplan3");
+//			String cdplan4      = smap1.get("cdplan4");
+//			String cdplan5      = smap1.get("cdplan5");
+			
+			Utils.validate(
+					cdunieco      , "No se recibio la sucursal"
+					,cdramo       , "No se recibio el producto"
+					,cdtipsit     , "No se recibio la modalidad"
+					,estado       , "No se recibio el estado"
+					,nmpoliza     , "No se recibio el estado"
+					,ntramite     , "No se recibio el tramite"
+					,complemento  , "No se recibio el complemento"
+					,cdagente     , "No se recibio la clave de agente"
+					,codpostalCli , "No se recibio el codigo postal"
+					,cdestadoCli  , "No se recibio el estado"
+					,cdmuniciCli  , "No se recibio el municipio"
+//					,cdplan1      , "No se recibio el plan 1"
+					);
+			
+			Map<String,Object> managerResp = endososManager.procesarCenso(ntramite,
+																		  cdunieco,
+																		  cdramo,
+																		  estado,
+																		  nmpoliza,
+																		  complemento,
+																		  censo,
+																		  getText("ruta.documentos.temporal"),
+																		  getText("dominio.server.layouts"),
+																		  getText("user.server.layouts"),
+																		  getText("pass.server.layouts"),
+																		  getText("directorio.server.layouts"),
+																		  cdtipsit,
+																		  user.getUser(),
+																		  user.getRolActivo().getClave(),
+																		  cdagente,
+																		  codpostalCli,
+																		  cdestadoCli,
+																		  cdmuniciCli
+//																			 ,
+//																			 cdplan1,
+//																			 cdplan2,
+//																			 cdplan3,
+//																			 cdplan4,
+//																			 cdplan5
+																			 );
+			
+			smap1.put("erroresCenso"    , (String)managerResp.get("erroresCenso"));
+			smap1.put("filasLeidas"     , (String)managerResp.get("filasLeidas"));
+			smap1.put("filasProcesadas" , (String)managerResp.get("filasProcesadas"));
+			smap1.put("filasErrores"    , (String)managerResp.get("filasErrores"));
+			
+			slist1 = (List<Map<String,String>>)managerResp.get("registros");
+			
+			exito = true;
+			
 		}
-		
-		// Se inserta en la Mesa de Control:
-		/*Map<String,Object>paramsMesaControl = new HashMap<String,Object>();
-		paramsMesaControl.put("pv_cdunieco_i"   , cdunieco);
-		paramsMesaControl.put("pv_cdramo_i"     , cdramo);
-		paramsMesaControl.put("pv_estado_i"     , estado);
-		paramsMesaControl.put("pv_nmpoliza_i"   , nmpoliza);
-		paramsMesaControl.put("pv_nmsuplem_i"   , nmsuplem);
-		paramsMesaControl.put("pv_cdsucadm_i"   , cdunieco);
-		paramsMesaControl.put("pv_cdsucdoc_i"   , cdunieco);
-		paramsMesaControl.put("pv_cdtiptra_i"   , TipoTramite.ENDOSO.getCdtiptra());
-		paramsMesaControl.put("pv_ferecepc_i"   , fechaEndoso);
-		paramsMesaControl.put("pv_cdagente_i"   , null);
-		paramsMesaControl.put("pv_referencia_i" , null);
-		paramsMesaControl.put("pv_nombre_i"     , null);
-		paramsMesaControl.put("pv_festatus_i"   , fechaEndoso);
-		paramsMesaControl.put("pv_status_i"     , estatusTramite);
-		paramsMesaControl.put("pv_comments_i"   , dscoment);
-		paramsMesaControl.put("pv_nmsolici_i"   , null);
-		paramsMesaControl.put("pv_cdtipsit_i"   , cdtipsit);
-		paramsMesaControl.put("pv_otvalor01"    , ntramiteEmision);
-		paramsMesaControl.put("pv_otvalor02"    , cdtipsup);
-		paramsMesaControl.put("pv_otvalor03"    , descEndoso);
-		paramsMesaControl.put("pv_otvalor04"    , nsuplogi);
-		paramsMesaControl.put("pv_otvalor05"    , ((UserVO)session.get("USUARIO")).getUser());
-		
-		paramsMesaControl.put("cdusuari" , ((UserVO)session.get("USUARIO")).getUser());
-		paramsMesaControl.put("cdsisrol" , ((UserVO)session.get("USUARIO")).getRolActivo().getClave());
-		
-		WrapperResultados wr = kernelManager.PMovMesacontrol(paramsMesaControl);*/
-		
-		Map<String,String> valores = new LinkedHashMap<String,String>();
-		valores.put("otvalor01" , ntramiteEmision);
-		valores.put("otvalor02" , cdtipsup);
-		valores.put("otvalor03" , descEndoso);
-		valores.put("otvalor04" , nsuplogi);
-		valores.put("otvalor05" , ((UserVO)session.get("USUARIO")).getUser());
-		
-		String ntramiteGenerado = mesaControlManager.movimientoTramite(cdunieco
-																		,cdramo
-																		,estado
-																		,nmpoliza
-																		,nmsuplem
-																		,cdunieco
-																		,cdunieco
-																		,TipoTramite.ENDOSO.getCdtiptra()
-																		,fechaEndoso
-																		,null
-																		,null
-																		,null
-																		,fechaEndoso
-																		,estatusTramite
-																		,dscoment
-																		,null
-																		,cdtipsit
-																		,((UserVO)session.get("USUARIO")).getUser()
-																		,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
-																		,null //swimpres
-																		,null //cdtipflu
-																		,null //cdflujomc
-																		,valores, null
-																		);
-		
-		// Si fue confirmado no asignamos numero de tramite:
-		if(respuesta.isConfirmado()) {
-			respuesta.setNumeroTramite(null);
-		} else {
-			//respuesta.setNumeroTramite( (String)wr.getItemMap().get("ntramite") );
-			respuesta.setNumeroTramite(ntramiteGenerado);
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
 		}
-	    
-	    return respuesta;
+		logger.debug(Utils.log(
+				 "\n###### complementoSaludGrupo ######"
+				,"\n###################################"
+				));
+		return SUCCESS;
 	}
-	/*//////////////////////////*/
-	////// confirmar endoso //////
-	//////////////////////////////
+
+	public Map<String, String> clonarPoliza(String cdunieco,
+											String cdramo,
+											String estado,
+											String nmpoliza,
+											String ferecepc,
+											String cdusuari,											
+											String tipo){
+		Map<String, String> clon = new HashMap<String, String>();
+		logger.debug(Utils.log("\n###### message=",message,
+							   "\n###### clonarPoliza ######",
+							   "\n##########################",
+							   "\n###### Parametros ######",
+							   "\n### cdunieco ", cdunieco,
+							   "\n### cdramo   ", cdramo,
+							   "\n### estado   ", estado,
+							   "\n### nmpoliza ", nmpoliza,
+							   "\n### ferecepc ", ferecepc,
+							   "\n### cdusuari ", cdusuari,		 								
+							   "\n### tipo     ", tipo,
+							   "\n##########################"
+								));
+		try{
+			clon = endososManager.pClonarCotizacionTotal(cdunieco,
+													     cdramo,
+													     estado,
+													     nmpoliza,
+													     ferecepc,
+													     cdusuari,
+													     cdunieco,
+													     tipo);
+		}catch(Exception ex){
+			message = Utils.manejaExcepcion(ex);
+		}
+		logger.debug(Utils.log("\n###### message=",message,
+							   "\n###### clonarPoliza ######",
+							   "\n##########################"
+								));
+		return clon;
+	}
 	
 	/**
 	 * Getters y setters
@@ -1302,14 +1011,6 @@ public class EndososColectivosAction extends PrincipalCoreAction
 		this.items = items;
 	}
 	
-	public boolean isEndosoConfirmado() {
-		return endosoConfirmado;
-	}
-
-	public void setEndosoConfirmado(boolean endosoConfirmado) {
-		this.endosoConfirmado = endosoConfirmado;
-	}
-
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
 		this.cotizacionDAO = cotizacionDAO;
 	}
