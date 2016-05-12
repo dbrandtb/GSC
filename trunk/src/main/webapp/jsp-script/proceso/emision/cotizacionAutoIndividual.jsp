@@ -681,9 +681,15 @@ Ext.onReady(function()
             var fefin = _fieldByName('fefin');
             fefin.setValue(Ext.Date.add(val,Ext.Date.YEAR,1));
             fefin.setMinValue(Ext.Date.add(val,Ext.Date.DAY,1));
+            if(!Ext.isEmpty(plazoenanios))
+            {
+            	fefin.setMaxValue(Ext.Date.add(val,Ext.Date.YEAR,plazoenanios));
+            	fefin.setMaxValue(Ext.Date.add(val,Ext.Date.YEAR,plazoenanios));
+            }
             fefin.isValid();
         }
     });
+    
     //fechas
     
     //Ramo 8
