@@ -5,10 +5,18 @@
 <head>
 <script>
 ////// urls //////
-var _p61_urlPantallaCliente = '<s:url namespace="/catalogos" action="includes/personasLoader" />';
+var _p61_urlPantallaCliente = '<s:url namespace="/catalogos" action="includes/personasLoader"  />'
+    ,_p61_urlMovimiento     = '<s:url namespace="/emision"   action="movimientoClienteTramite" />';
 ////// urls //////
 
 ////// variables //////
+var _p61_params = <s:property value="%{convertToJSON('params')}"  escapeHtml="false" />;
+debug('_p61_params:',_p61_params);
+
+var _p61_flujo = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />;
+debug('_p61_flujo:',_p61_flujo);
+
+var _p22_parentCallback;
 ////// variables //////
 
 ////// overrides //////
@@ -33,6 +41,7 @@ Ext.onReady(function()
     {
         renderTo  : '_p61_divpri'
         ,itemId   : '_p61_panelpri'
+        ,border   : 0
         ,title    : 'Cliente de tr\u00e1mite'
         ,defaults : { style : 'margin:5px;' }
         ,items    :
@@ -45,15 +54,60 @@ Ext.onReady(function()
                 ,buttons     :
                 [
                     {
-                        text  : 'Cambiar'
-                        ,icon : '${icons}control_repeat_blue.png'
+                        text     : 'CAMBIAR CLIENTE'
+                        ,icon    : '${icons}control_repeat_blue.png'
+                        ,handler : function()
+                        {
+                            _p61_movimiento(
+                                _p61_flujo.ntramite
+                                ,''
+                                ,'D'
+                                ,function()
+                                {
+                                    _p61_params.cdperson = '';
+                                    _fieldById('_p61_panelCliente').getLoader().load(
+                                    {
+                                        params :
+                                        {
+                                            'smap1.cdperson'         : _p61_params.cdperson
+                                            ,'smap1.polizaEnEmision' : 'S'
+                                            ,'smap1.esSaludDanios'   : _p61_params.esSaludDanios
+                                        }
+                                    });
+                                }
+                            );
+                        }
                     }
                 ]
+                ,listeners :
+                {
+                    afterrender : function(me)
+                    {
+                        _cargarBotonesEntidad(
+                            _p61_flujo.cdtipflu
+                            ,_p61_flujo.cdflujomc
+                            ,_p61_flujo.tipoent
+                            ,_p61_flujo.claveent
+                            ,_p61_flujo.webid
+                            ,me.itemId//callback
+                            ,_p61_flujo.ntramite
+                            ,_p61_flujo.status
+                            ,_p61_flujo.cdunieco
+                            ,_p61_flujo.cdramo
+                            ,_p61_flujo.estado
+                            ,_p61_flujo.nmpoliza
+                            ,_p61_flujo.nmsituac
+                            ,_p61_flujo.nmsuplem
+                            ,null//callbackDespuesProceso
+                        );
+                    }
+                }
             }
             ,{
                 xtype       : 'panel'
                 ,itemId     : '_p61_panelCliente'
                 ,title      : 'Cliente'
+                ,border     : 0
                 ,height     : 600
                 ,autoScroll : true
                 ,loader     :
@@ -61,6 +115,13 @@ Ext.onReady(function()
                     url       : _p61_urlPantallaCliente
                     ,scripts  : true
                     ,autoLoad : true
+                    ,border   : 0
+                    ,params   :
+                    {
+                        'smap1.cdperson'         : _p61_params.cdperson
+                        ,'smap1.polizaEnEmision' : 'S'
+                        ,'smap1.esSaludDanios'   : _p61_params.esSaludDanios
+                    }
                 }
             }
         ]
@@ -75,6 +136,78 @@ Ext.onReady(function()
 });
 
 ////// funciones //////
+function _p61_movimiento(ntramite,cdperson,accion,callback)
+{
+    var ck = 'Ejecutando movimiento cliente tr\u00e1mite';
+    try
+    {
+    
+        if(Ext.isEmpty(ntramite)
+            ||Ext.isEmpty(accion))
+        {
+            throw 'Faltan datos para ejecutar movimiento';
+        }
+    
+        _mask(ck);
+        Ext.Ajax.request(
+        {
+            url      : _p61_urlMovimiento
+            ,params  :
+            {
+                'params.ntramite'  : ntramite
+                ,'params.cdperson' : cdperson
+                ,'params.accion'   : accion
+            }
+            ,success : function(response)
+            {
+                _unmask();
+                var ck = 'Decodificando respuesta al ejecutar movimiento cliente tr\u00e1mite';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### guardar:',json);
+                    if(json.success===true)
+                    {
+                        mensajeCorrecto('Datos guardados','Datos guardados',callback);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _unmask();
+                errorComunicacion(null,'Error al ejecutar movimiento cliente tr\u00e1mite');
+            }
+        });
+    }
+    catch(e)
+    {
+        _unmask();
+        manejaException(e,ck);
+    }
+}
+
+_p22_parentCallback = function(json)
+{
+    debug('>_p22_parentCallback json:',json);
+    _p61_params.cdperson = json.smap1.CDPERSON;
+    
+    debug('_p61_params:',_p61_params);
+    
+    _p61_movimiento(
+        _p61_flujo.ntramite
+        ,json.smap1.CDPERSON
+        ,'I'
+    );
+    debug('<_p22_parentCallback');
+}
 ////// funciones //////
 </script>
 </head>

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.model.DocumentoReciboParaMostrarDTO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
@@ -14,6 +15,7 @@ import mx.com.gseguros.portal.emision.model.EmisionVO;
 import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.data.jdbc.support.oracle.SqlArrayValue;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -252,6 +254,36 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 		{
 			super(dataSource,"PKG_SATELITES2.P_MUESTRA_RECIBOS_IMPRESOS");
 			declareParameter(new SqlParameter("array" , OracleTypes.ARRAY , "LISTA_LISTAS_VARCHAR2"));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void movimientoClienteTramite(String ntramite, String cdperson, String accion) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("cdperson" , cdperson);
+		params.put("accion"   , accion);
+		Map<String,Object> procRes = ejecutaSP(new MovimientoClienteTramiteSP(getDataSource()),params);
+		String error = (String)procRes.get("pv_error_o");
+		if(StringUtils.isNotBlank(error))
+		{
+			throw new ApplicationException(error);
+		}
+	}
+	
+	protected class MovimientoClienteTramiteSP extends StoredProcedure
+	{
+		protected MovimientoClienteTramiteSP(DataSource dataSource)
+		{
+			super(dataSource,"P_MOV_CLIENTE_TRAMITE");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

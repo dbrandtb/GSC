@@ -70,4 +70,6 @@ public interface EmisionDAO {
 	public boolean sumarImpresiones(String lote, String tipolote, String peso) throws Exception;
 	
 	public void mostrarRecibosImpresosListaDeListas(List<DocumentoReciboParaMostrarDTO> lista)throws Exception;
+	
+	public void movimientoClienteTramite(String ntramite, String cdperson, String accion) throws Exception;
 }
