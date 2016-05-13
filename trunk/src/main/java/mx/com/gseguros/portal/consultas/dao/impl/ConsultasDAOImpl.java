@@ -4724,5 +4724,61 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     		return consulta;
     	}
     }
+    
+    @Override
+    public String recuperarCdpersonClienteTramite(String ntramite) throws Exception
+    {
+    	Map<String,String> params = new LinkedHashMap<String,String>();
+    	params.put("ntramite", ntramite);
+    	
+    	Map<String,Object> procRes = ejecutaSP(new RecuperarCdpersonClienteTramiteSP(getDataSource()),params);
+    	
+    	String cdperson = (String)procRes.get("pv_cdperson_o");
+    	
+    	if(StringUtils.isBlank(cdperson))
+    	{
+    		cdperson = "";
+    	}
+    	
+    	return cdperson;
+    }
+	
+	protected class RecuperarCdpersonClienteTramiteSP extends StoredProcedure
+	{
+		protected RecuperarCdpersonClienteTramiteSP(DataSource dataSource)
+		{
+			super(dataSource,"P_GET_TTRAMPER");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdperson_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 
+	public String recuperarEsSaludDaniosTramite(String ntramite) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarEsSaludDaniosTramiteSP(getDataSource()),params);
+		String esDaniosSalud = (String) procRes.get("pv_esdaniossalud_o");
+		if(StringUtils.isBlank(esDaniosSalud))
+		{
+			esDaniosSalud = "";
+		}
+		return esDaniosSalud;
+	}
+	
+	protected class RecuperarEsSaludDaniosTramiteSP extends StoredProcedure
+	{
+		protected RecuperarEsSaludDaniosTramiteSP(DataSource dataSource)
+		{
+			super(dataSource,"P_GET_ES_SALUD_DANIOS_TRAMITE");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_esdaniossalud_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"        , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"         , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

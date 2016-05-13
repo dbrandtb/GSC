@@ -559,5 +559,8 @@ public interface ConsultasDAO
 	 * @throws Exception
 	 */
 	public List<Map<String,String>> consultaPermisosEdicionCoberturas(int cdramo, String cdtipsit, String cdplan, String cdgarant, String cdsisrol) throws Exception;
+
+	public String recuperarCdpersonClienteTramite(String ntramite) throws Exception;
 	
+	public String recuperarEsSaludDaniosTramite(String ntramite) throws Exception;
 }
