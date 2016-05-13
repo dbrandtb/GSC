@@ -1432,6 +1432,58 @@ Ext.onReady(function()
             }
         });
     }
+    
+    if('|TV|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')!=-1)
+            {
+                Ext.Ajax.request(
+                {
+                    url : _p28_urlCargarParametros
+                    ,params  :
+                    {
+                         'smap1.parametro' : 'RANGO_ANIO_MODELO'
+                        ,'smap1.cdramo'   : _p28_smap1.cdramo
+                        ,'smap1.cdtipsit' : _p28_smap1.cdtipsit
+                    }
+                    ,success : function(response)
+                    {
+                        var json=Ext.decode(response.responseText);
+                        debug('### obtener rango años response:',json);
+                        if(json.exito)
+                        {
+                            var modeloCmp = _fieldByName('parametros.pv_otvalor09');
+                            modeloCmp.limiteInferior = json.smap1.P1VALOR-0;
+                            modeloCmp.limiteSuperior = json.smap1.P2VALOR-0;
+                            
+                            modeloCmp.validator=function(value)
+                            {
+                                var modeloCmp = _fieldByName('parametros.pv_otvalor09');
+                                
+                                var r = true;
+                                var anioActual = new Date().getFullYear()-0;
+                                var max = anioActual+modeloCmp.limiteSuperior;
+                                var min = anioActual+modeloCmp.limiteInferior;
+                                debug('anioActual:',anioActual);
+                                debug('max:',max);
+                                debug('min:',min);
+                                debug('value:',value);
+                                if(value<min||value>max)
+                                {
+                                    r='El modelo debe estar en el rango '+min+'-'+max;
+                                }
+                                return r;
+                           };
+                       }
+                       else
+                       {
+                           mensajeError(json.respuesta);
+                       }
+                    }
+                    ,failure : function()
+                    {                    
+                        errorComunicacion();
+                    }
+                });
+            }
     ////// loaders //////
 });
 
@@ -2089,183 +2141,325 @@ function _p28_ramo5ClienteChange(combcl)
     var codpos;
     if(!Ext.isEmpty(_fieldLikeLabel('CP CIRCULACI',null,true)))
     {codpos  = _fieldLikeLabel('CP CIRCULACI',null,true);}
+  
     
-    if(Ext.isEmpty(nombre)
-        ||Ext.isEmpty(tipoper)
-        ||Ext.isEmpty(codpos)
-    )
-    {
-        return;
-    }
+    if( _p28_smap1.cdtipsit+'x' == 'TVx' ){
+    	if(Ext.isEmpty(nombre)
+	    )
+	    {
+	        return;
+	    }
+	    
+	    //cliente nuevo
+	    if(combcl.getValue()=='S')
+	    {
+	        nombre.reset();
+	        nombre.setReadOnly(false);
+	        _p28_recordClienteRecuperado=null;
+	    }
+	    //recuperar cliente
+	    else if(combcl.getValue()=='N' && ( Ext.isEmpty(combcl.semaforo)||combcl.semaforo==false ) )
+	    {
+	        nombre.reset();
+	        nombre.setReadOnly(true);
+	        
+	        var ventana=Ext.create('Ext.window.Window',
+	        {
+	            title      : 'Recuperar cliente'
+	            ,modal     : true
+	            ,width     : 600
+	            ,height    : 400
+	            ,items     :
+	            [
+	                {
+	                    layout    : 'hbox'
+	                    ,defaults : { style : 'margin : 5px;' }
+	                    ,items    :
+	                    [
+	                        {
+	                            xtype       : 'textfield'
+	                            ,name       : '_p28_recuperaRfc'
+	                            ,fieldLabel : 'RFC'
+	                            ,minLength  : 9
+	                            ,maxLength  : 13
+	                        }
+	                        ,{
+	                            xtype    : 'button'
+	                            ,text    : 'Buscar'
+	                            ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+	                            ,handler : function(button)
+	                            {
+	                                debug('recuperar cliente buscar');
+	                                var rfc=_fieldByName('_p28_recuperaRfc').getValue();
+	                                var valido=true;
+	                                if(valido)
+	                                {
+	                                    valido = !Ext.isEmpty(rfc)
+	                                             &&rfc.length>8
+	                                             &&rfc.length<14;
+	                                    if(!valido)
+	                                    {
+	                                        mensajeWarning('Introduza un RFC v&aacute;lido');
+	                                    }
+	                                }
+	                                
+	                                if(valido)
+	                                {
+	                                    button.up('window').down('grid').getStore().load(
+	                                    {
+	                                        params :
+	                                        {
+	                                            'map1.pv_rfc_i'       : rfc
+	                                            ,'map1.cdtipsit'      : _p28_smap1.cdtipsit
+	                                            ,'map1.pv_cdtipsit_i' : _p28_smap1.cdtipsit
+	                                            ,'map1.pv_cdunieco_i' : _p28_smap1.cdunieco
+	                                            ,'map1.pv_cdramo_i'   : _p28_smap1.cdramo
+	                                            ,'map1.pv_estado_i'   : 'W'
+	                                            ,'map1.pv_nmpoliza_i' : _fieldByName('nmpoliza').getValue()
+	                                        }
+	                                    });
+	                                }
+	                            }
+	                        }
+	                    ]
+	                }
+	                ,Ext.create('Ext.grid.Panel',
+	                {
+	                    title    : 'Resultados'
+	                    ,columns :
+	                    [
+	                        {
+	                            xtype    : 'actioncolumn'
+	                            ,width   : 30
+	                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+	                            ,handler : function(view,row,col,item,e,record)
+	                            {
+	                                debug('recuperar cliente handler record:',record);
+	                                _p28_recordClienteRecuperado=record;
+	                                nombre.setValue(record.raw.NOMBRECLI);
+	                                ventana.destroy();
+	                            }
+	                        }
+	                        ,{
+	                            text       : 'Nombre'
+	                            ,dataIndex : 'NOMBRECLI'
+	                            ,width     : 200
+	                        }
+	                        ,{
+	                            text       : 'Direcci&oacute;n'
+	                            ,dataIndex : 'DIRECCIONCLI'
+	                            ,flex      : 1
+	                        }
+	                    ]
+	                    ,store : Ext.create('Ext.data.Store',
+	                    {
+	                        model     : '_p28_modeloRecuperado'
+	                        ,autoLoad : false
+	                        ,proxy    :
+	                        {
+	                            type    : 'ajax'
+	                            ,url    : _p28_urlRecuperarCliente
+	                            ,timeout: 240000
+	                            ,reader :
+	                            {
+	                                type  : 'json'
+	                                ,root : 'slist1'
+	                            }
+	                        }
+	                    })
+	                })
+	            ]
+	            ,listeners :
+	            {
+	                close : function()
+	                {
+	                    combcl.setValue('S');
+	                }
+	            }
+	        }).show();
+	        centrarVentanaInterna(ventana);
+	    }
+    }else {
+    	
+    	
+    	if(Ext.isEmpty(nombre)
+	        ||Ext.isEmpty(tipoper)
+	        ||Ext.isEmpty(codpos)
+	    )
+	    {
+	        return;
+	    }
+	    
+	    var fenacim = '';
+	    if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE',null,true)))
+	    {
+	        fenacim = _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE');
+	    }
+	    
+	    
+	    //cliente nuevo
+	    if(combcl.getValue()=='S')
+	    {
+	        nombre.reset();
+	        tipoper.reset();
+	        codpos.reset();
+	        if(!Ext.isEmpty(fenacim))
+	        {
+	            fenacim.reset();
+	        }
+	        
+	        nombre.setReadOnly(false);
+	        tipoper.setReadOnly(false);
+	        codpos.setReadOnly(false);
+	        if(!Ext.isEmpty(fenacim))
+	        {
+	            fenacim.setReadOnly(false);
+	        }
+	        _p28_recordClienteRecuperado=null;
+	    }
+	    //recuperar cliente
+	    else if(combcl.getValue()=='N' && ( Ext.isEmpty(combcl.semaforo)||combcl.semaforo==false ) )
+	    {
+	        nombre.reset();
+	        tipoper.reset();
+	        codpos.reset();
+	        if(!Ext.isEmpty(fenacim))
+	        {
+	            fenacim.reset();
+	        }
+	        
+	        nombre.setReadOnly(true);
+	        tipoper.setReadOnly(true);
+	        codpos.setReadOnly(true);
+	        if(!Ext.isEmpty(fenacim))
+	        {
+	            fenacim.setReadOnly(true);
+	        }
+	        
+	        var ventana=Ext.create('Ext.window.Window',
+	        {
+	            title      : 'Recuperar cliente'
+	            ,modal     : true
+	            ,width     : 600
+	            ,height    : 400
+	            ,items     :
+	            [
+	                {
+	                    layout    : 'hbox'
+	                    ,defaults : { style : 'margin : 5px;' }
+	                    ,items    :
+	                    [
+	                        {
+	                            xtype       : 'textfield'
+	                            ,name       : '_p28_recuperaRfc'
+	                            ,fieldLabel : 'RFC'
+	                            ,minLength  : 9
+	                            ,maxLength  : 13
+	                        }
+	                        ,{
+	                            xtype    : 'button'
+	                            ,text    : 'Buscar'
+	                            ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+	                            ,handler : function(button)
+	                            {
+	                                debug('recuperar cliente buscar');
+	                                var rfc=_fieldByName('_p28_recuperaRfc').getValue();
+	                                var valido=true;
+	                                if(valido)
+	                                {
+	                                    valido = !Ext.isEmpty(rfc)
+	                                             &&rfc.length>8
+	                                             &&rfc.length<14;
+	                                    if(!valido)
+	                                    {
+	                                        mensajeWarning('Introduza un RFC v&aacute;lido');
+	                                    }
+	                                }
+	                                
+	                                if(valido)
+	                                {
+	                                    button.up('window').down('grid').getStore().load(
+	                                    {
+	                                        params :
+	                                        {
+	                                            'map1.pv_rfc_i'       : rfc
+	                                            ,'map1.cdtipsit'      : _p28_smap1.cdtipsit
+	                                            ,'map1.pv_cdtipsit_i' : _p28_smap1.cdtipsit
+	                                            ,'map1.pv_cdunieco_i' : _p28_smap1.cdunieco
+	                                            ,'map1.pv_cdramo_i'   : _p28_smap1.cdramo
+	                                            ,'map1.pv_estado_i'   : 'W'
+	                                            ,'map1.pv_nmpoliza_i' : _fieldByName('nmpoliza').getValue()
+	                                        }
+	                                    });
+	                                }
+	                            }
+	                        }
+	                    ]
+	                }
+	                ,Ext.create('Ext.grid.Panel',
+	                {
+	                    title    : 'Resultados'
+	                    ,columns :
+	                    [
+	                        {
+	                            xtype    : 'actioncolumn'
+	                            ,width   : 30
+	                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+	                            ,handler : function(view,row,col,item,e,record)
+	                            {
+	                                debug('recuperar cliente handler record:',record);
+	                                _p28_recordClienteRecuperado=record;
+	                                nombre.setValue(record.raw.NOMBRECLI);
+	                                tipoper.setValue(record.raw.TIPOPERSONA);
+	                                codpos.setValue(record.raw.CODPOSTAL);
+	                                if(!Ext.isEmpty(fenacim))
+	                                {
+	                                    fenacim.setValue(record.raw.FENACIMICLI);
+	                                }
+	                                ventana.destroy();
+	                            }
+	                        }
+	                        ,{
+	                            text       : 'Nombre'
+	                            ,dataIndex : 'NOMBRECLI'
+	                            ,width     : 200
+	                        }
+	                        ,{
+	                            text       : 'Direcci&oacute;n'
+	                            ,dataIndex : 'DIRECCIONCLI'
+	                            ,flex      : 1
+	                        }
+	                    ]
+	                    ,store : Ext.create('Ext.data.Store',
+	                    {
+	                        model     : '_p28_modeloRecuperado'
+	                        ,autoLoad : false
+	                        ,proxy    :
+	                        {
+	                            type    : 'ajax'
+	                            ,url    : _p28_urlRecuperarCliente
+	                            ,timeout: 240000
+	                            ,reader :
+	                            {
+	                                type  : 'json'
+	                                ,root : 'slist1'
+	                            }
+	                        }
+	                    })
+	                })
+	            ]
+	            ,listeners :
+	            {
+	                close : function()
+	                {
+	                    combcl.setValue('S');
+	                }
+	            }
+	        }).show();
+	        centrarVentanaInterna(ventana);
+	    }
+    } 
     
-    var fenacim = '';
-    if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE',null,true)))
-    {
-        fenacim = _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE');
-    }
-    
-    
-    //cliente nuevo
-    if(combcl.getValue()=='S')
-    {
-        nombre.reset();
-        tipoper.reset();
-        codpos.reset();
-        if(!Ext.isEmpty(fenacim))
-        {
-            fenacim.reset();
-        }
-        
-        nombre.setReadOnly(false);
-        tipoper.setReadOnly(false);
-        codpos.setReadOnly(false);
-        if(!Ext.isEmpty(fenacim))
-        {
-            fenacim.setReadOnly(false);
-        }
-        _p28_recordClienteRecuperado=null;
-    }
-    //recuperar cliente
-    else if(combcl.getValue()=='N' && ( Ext.isEmpty(combcl.semaforo)||combcl.semaforo==false ) )
-    {
-        nombre.reset();
-        tipoper.reset();
-        codpos.reset();
-        if(!Ext.isEmpty(fenacim))
-        {
-            fenacim.reset();
-        }
-        
-        nombre.setReadOnly(true);
-        tipoper.setReadOnly(true);
-        codpos.setReadOnly(true);
-        if(!Ext.isEmpty(fenacim))
-        {
-            fenacim.setReadOnly(true);
-        }
-        
-        var ventana=Ext.create('Ext.window.Window',
-        {
-            title      : 'Recuperar cliente'
-            ,modal     : true
-            ,width     : 600
-            ,height    : 400
-            ,items     :
-            [
-                {
-                    layout    : 'hbox'
-                    ,defaults : { style : 'margin : 5px;' }
-                    ,items    :
-                    [
-                        {
-                            xtype       : 'textfield'
-                            ,name       : '_p28_recuperaRfc'
-                            ,fieldLabel : 'RFC'
-                            ,minLength  : 9
-                            ,maxLength  : 13
-                        }
-                        ,{
-                            xtype    : 'button'
-                            ,text    : 'Buscar'
-                            ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
-                            ,handler : function(button)
-                            {
-                                debug('recuperar cliente buscar');
-                                var rfc=_fieldByName('_p28_recuperaRfc').getValue();
-                                var valido=true;
-                                if(valido)
-                                {
-                                    valido = !Ext.isEmpty(rfc)
-                                             &&rfc.length>8
-                                             &&rfc.length<14;
-                                    if(!valido)
-                                    {
-                                        mensajeWarning('Introduza un RFC v&aacute;lido');
-                                    }
-                                }
-                                
-                                if(valido)
-                                {
-                                    button.up('window').down('grid').getStore().load(
-                                    {
-                                        params :
-                                        {
-                                            'map1.pv_rfc_i'       : rfc
-                                            ,'map1.cdtipsit'      : _p28_smap1.cdtipsit
-                                            ,'map1.pv_cdtipsit_i' : _p28_smap1.cdtipsit
-                                            ,'map1.pv_cdunieco_i' : _p28_smap1.cdunieco
-                                            ,'map1.pv_cdramo_i'   : _p28_smap1.cdramo
-                                            ,'map1.pv_estado_i'   : 'W'
-                                            ,'map1.pv_nmpoliza_i' : _fieldByName('nmpoliza').getValue()
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    ]
-                }
-                ,Ext.create('Ext.grid.Panel',
-                {
-                    title    : 'Resultados'
-                    ,columns :
-                    [
-                        {
-                            xtype    : 'actioncolumn'
-                            ,width   : 30
-                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                            ,handler : function(view,row,col,item,e,record)
-                            {
-                                debug('recuperar cliente handler record:',record);
-                                _p28_recordClienteRecuperado=record;
-                                nombre.setValue(record.raw.NOMBRECLI);
-                                tipoper.setValue(record.raw.TIPOPERSONA);
-                                codpos.setValue(record.raw.CODPOSTAL);
-                                if(!Ext.isEmpty(fenacim))
-                                {
-                                    fenacim.setValue(record.raw.FENACIMICLI);
-                                }
-                                ventana.destroy();
-                            }
-                        }
-                        ,{
-                            text       : 'Nombre'
-                            ,dataIndex : 'NOMBRECLI'
-                            ,width     : 200
-                        }
-                        ,{
-                            text       : 'Direcci&oacute;n'
-                            ,dataIndex : 'DIRECCIONCLI'
-                            ,flex      : 1
-                        }
-                    ]
-                    ,store : Ext.create('Ext.data.Store',
-                    {
-                        model     : '_p28_modeloRecuperado'
-                        ,autoLoad : false
-                        ,proxy    :
-                        {
-                            type    : 'ajax'
-                            ,url    : _p28_urlRecuperarCliente
-                            ,timeout: 240000
-                            ,reader :
-                            {
-                                type  : 'json'
-                                ,root : 'slist1'
-                            }
-                        }
-                    })
-                })
-            ]
-            ,listeners :
-            {
-                close : function()
-                {
-                    combcl.setValue('S');
-                }
-            }
-        }).show();
-        centrarVentanaInterna(ventana);
-    }
     debug('<_p28_ramo5ClienteChange');
 }
 
