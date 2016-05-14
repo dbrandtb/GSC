@@ -4565,6 +4565,77 @@ public class CotizacionAction extends PrincipalCoreAction
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(20)),"-"));
 	                }
+	                //ESTADO CIVIL
+	                try
+                	{
+		                auxCell=row.getCell(21);
+		                logger.debug("ESTADO CIVIL: "+(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		));
+		                bufferLinea.append(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estado Civil' (V) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(21)),"-"));
+	                }
+	                //FECHA EGRESO
+	                try
+                	{
+		                auxDate=row.getCell(20)!=null?row.getCell(22).getDateCellValue():null;
+		                if(auxDate!=null)
+		                {
+		                	Calendar cal = Calendar.getInstance();
+		                	cal.setTime(auxDate);
+		                	if(cal.get(Calendar.YEAR)>2100
+		                			||cal.get(Calendar.YEAR)<1900
+		                			)
+		                	{
+		                		throw new ApplicationException("El anio de la fecha no es valido");
+		                	}
+		                }
+		                logger.debug("FECHA DE INGRESO  ===>: "+(
+		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
+		                			));
+		                bufferLinea.append(
+		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
+		                			);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de reconocimiento antiguedad' (W) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(22)),"-"));
+	                }
+	                //UBICACION
+	                try
+                	{
+		                auxCell=row.getCell(23);
+		                logger.debug("UBICACION: "+(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		));
+		                bufferLinea.append(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Correo' (X) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(23)),"-"));
+	                }
 	                
 	                logger.debug(Utils.log("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
 	                
@@ -4752,7 +4823,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdunieco , cdramo     , nmpoliza
 					,cdtipsit , hayTramite , hayTramiteVacio
 					,user     , cdelemento , ntramiteVacio
-					,true     , null/*ntramite*/, null/*cdagente*/
+					,true     , null, null
 					,false //sincenso
 					,false //censoAtrasado
 					,false //resubirCenso
@@ -8663,6 +8734,8 @@ public class CotizacionAction extends PrincipalCoreAction
 					smap1.get("cdunieco"), smap1.get("cdramo"),
 					smap1.get("cdtipsit"), smap1.get("estado"),
 					smap1.get("nmpoliza"), smap1.get("ntramite"));
+			
+			logger.debug("Valor de los params ",params);
 		    respuesta       = "Todo OK";
 		    respuestaOculta = "Todo OK";
 		    exito           = true;
