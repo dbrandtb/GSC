@@ -4508,16 +4508,10 @@ public class CotizacionAction extends PrincipalCoreAction
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(18)),"-"));
 	                }
-	                //IDENTIDAD
+               
 	                try
                 	{
 		                auxCell=row.getCell(19);
-		                if(pideNumCliemte&&
-		                		(auxCell==null||auxCell.getStringCellValue()==null||StringUtils.isBlank(auxCell.getStringCellValue()))
-		                )
-		                {
-		                	throw new ApplicationException("Necesito el numero de empleado");
-		                }
 		                logger.debug("IDENTIDAD: "+(
 		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
 		                		));
@@ -8734,8 +8728,6 @@ public class CotizacionAction extends PrincipalCoreAction
 					smap1.get("cdunieco"), smap1.get("cdramo"),
 					smap1.get("cdtipsit"), smap1.get("estado"),
 					smap1.get("nmpoliza"), smap1.get("ntramite"));
-			
-			logger.debug("Valor de los params ",params);
 		    respuesta       = "Todo OK";
 		    respuestaOculta = "Todo OK";
 		    exito           = true;
