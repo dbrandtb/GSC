@@ -3321,42 +3321,36 @@ public class EndososManagerImpl implements EndososManager
 	}
 	
 	@Override
-	public Map<String,Object> procesarCenso(String ntramite,
-											String cdunieco,
-											String cdramo,
-											String estado,
-											String nmpoliza,
-											String complemento,
-											File   censo,
-											String rutaDocumentosTemporal,
-											String dominioServerLayouts,
-											String userServerLayouts,
-											String passServerLayouts,
-											String rootServerLayouts,
-											String cdtipsit,
-											String cdusuari,
-											String cdsisrol,
-											String cdagente,
-											String codpostalCli,
-											String cdestadoCli,
-											String cdmuniciCli
-//											,
-//											String cdplan1,
-//											String cdplan2,
-//											String cdplan3,
-//											String cdplan4,
-//											String cdplan5
-											)throws Exception
+	public Map<String,Object> procesarCensoClonacion(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String cduniecoOrig,
+			String cdramoOrig,
+			String estadoOrig,
+			String nmpolizaOrig,
+			File   censo,
+			String rutaDocumentosTemporal,
+			String dominioServerLayouts,
+			String userServerLayouts,
+			String passServerLayouts,
+			String rootServerLayouts,
+			String cdtipsit,
+			String cdusuari,
+			String cdsisrol)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ complementoSaludGrupo @@@@@@"
-				,"\n@@@@@@ ntramite="               , ntramite
+				,"\n@@@@@@ complementoSaludGrupo @@@@@@"				
 				,"\n@@@@@@ cdunieco="               , cdunieco
 				,"\n@@@@@@ cdramo="                 , cdramo
 				,"\n@@@@@@ estado="                 , estado
 				,"\n@@@@@@ nmpoliza="               , nmpoliza
-				,"\n@@@@@@ complemento="            , complemento
+				,"\n@@@@@@ cduniecoOrig="           , cduniecoOrig
+				,"\n@@@@@@ cdramoOrig="             , cdramoOrig
+				,"\n@@@@@@ estadoOrig="             , estadoOrig
+				,"\n@@@@@@ nmpolizaOrig="           , nmpolizaOrig
 				,"\n@@@@@@ censo="                  , censo
 				,"\n@@@@@@ rutaDocumentosTemporal=" , rutaDocumentosTemporal
 				,"\n@@@@@@ dominioServerLayouts="   , dominioServerLayouts
@@ -3366,15 +3360,6 @@ public class EndososManagerImpl implements EndososManager
 				,"\n@@@@@@ cdtipsit="               , cdtipsit
 				,"\n@@@@@@ cdusuari="               , cdusuari
 				,"\n@@@@@@ cdsisrol="               , cdsisrol
-				,"\n@@@@@@ cdagente="               , cdagente
-				,"\n@@@@@@ codpostalCli="           , codpostalCli
-				,"\n@@@@@@ cdestadoCli="            , cdestadoCli
-				,"\n@@@@@@ cdmuniciCli="            , cdmuniciCli
-//				,"\n@@@@@@ cdplan1="                , cdplan1
-//				,"\n@@@@@@ cdplan2="                , cdplan2
-//				,"\n@@@@@@ cdplan3="                , cdplan3
-//				,"\n@@@@@@ cdplan4="                , cdplan4
-//				,"\n@@@@@@ cdplan5="                , cdplan5
 				));
 		
 		Map<String,Object> resp = new HashMap<String,Object>();
@@ -3384,7 +3369,7 @@ public class EndososManagerImpl implements EndososManager
 		{
 			paso = "Recuperando configuracion de complemento";
 			logger.debug("\nPaso: {}",paso);
-			List<Map<String,String>>configs=cotizacionDAO.cargarParametrizacionExcel("COMPGRUP",cdramo,complemento);
+			List<Map<String,String>>configs=cotizacionDAO.cargarParametrizacionExcel("COMPGRUP",cdramo, "CLONACION");
 			logger.debug("\nConfigs: {}",configs);
 			
 			paso = "Filtrando filas con errores";
@@ -3594,7 +3579,7 @@ public class EndososManagerImpl implements EndososManager
 						ParametroCotizacion.PROCEDURE_CENSO
 						,cdramo
 						,cdtipsit
-						,complemento == "C" ? "INDIVIDUAL" : "COMPLETO"
+						,"CLONACION"
 						,null
 						);
 				String nombreProc = mapaProc.get("P1VALOR");
@@ -3602,61 +3587,17 @@ public class EndososManagerImpl implements EndososManager
 				
 				paso = "Procesar censo";
 				logger.debug("\nPaso: {}",paso);
-//				if(TipoSituacion.MULTISALUD_COLECTIVO.getCdtipsit().equals(cdtipsit))
-//				{
-//					if("C".equals(complemento))
-//					{
-//						cotizacionDAO.procesaLayoutCensoMultisalud(nombreCenso,
-//																   cdunieco,
-//																   cdramo,
-//																   "W",
-//																   nmpoliza,
-//																   cdestadoCli,
-//																   cdmuniciCli,
-//																   cdplan1,
-//																   cdplan2,
-//																   cdplan3,
-//																   cdplan4,
-//																   cdplan5,
-//																   "S");
-//					}
-//					else
-//					{
-//						cotizacionDAO.guardarCensoCompletoMultisalud(nombreCenso,
-//																	 cdunieco,
-//																	 cdramo,
-//																	 "W",
-//																	 nmpoliza,
-//																	 cdestadoCli,
-//																	 cdmuniciCli,
-//																	 cdplan1,
-//																	 cdplan2,
-//																	 cdplan3,
-//																	 cdplan4,
-//																	 cdplan5,
-//																	 "S"
-//																		);
-//					}
-//				}
-//				else
-//				{
-//					cotizacionDAO.procesarCenso(
-//							nombreProc
-//							,cdusuari
-//							,cdsisrol
-//							,nombreCenso
-//							,cdunieco
-//							,cdramo
-//							,"W"
-//							,nmpoliza
-//							,cdtipsit
-//							,cdagente
-//							,codpostalCli
-//							,cdestadoCli
-//							,cdmuniciCli
-//							,"S"
-//							);
-//				}
+				endososDAO.procesarCensoClonacion(
+						nombreProc,
+						nombreCenso,
+						cdunieco,
+						cdramo,
+						estado,
+						nmpoliza,
+						cduniecoOrig,
+						cdramoOrig,
+						estadoOrig,
+						nmpolizaOrig);
 			}
 		}
 		catch(Exception ex)
@@ -3670,6 +3611,39 @@ public class EndososManagerImpl implements EndososManager
 				));
 		return resp;
 	}
+	
+	public void confirmarClonacionCondiciones(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String cdtipsit,
+			int numSituac) throws Exception{
+		
+		String paso = null;
+		for(int i = 1; i <= numSituac; i++){			
+			List<Map<String,String>> coberturasDeExtraprimas = consultasDAO.recuperaCoberturasExtraprima(cdramo, cdtipsit);
+			for(Map<String,String> coberturaExtraprima : coberturasDeExtraprimas)
+						{
+							String cdgarant = coberturaExtraprima.get("CDGARANT");
+							
+							paso = Utils.join("Ejecutando valores por defecto para la cobertura ",cdgarant);
+							logger.debug(paso);
+							
+							cotizacionDAO.valoresPorDefecto(
+									cdunieco
+									,cdramo
+									,estado
+									,nmpoliza
+									,String.valueOf(i)
+									,String.valueOf(0)
+									,cdgarant
+									,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+									);
+						}
+		}
+	}
+	
 	
 	private String extraerStringDeCelda(Cell cell, String tipo)
 	{

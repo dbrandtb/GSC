@@ -623,7 +623,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 
 		this.session = ActionContext.getContext().getSession();
         ArrayList<String> rolesAsignacion = new ArrayList<String>(Arrays.asList("COTIZADOR","SUPTECSALUD","SUBDIRSALUD","DIRECSALUD"));
-        ArrayList<String> rolesAsignar    = new ArrayList<String>(Arrays.asList("EJECUTIVOCUENTA","EJECUTIVOINTERNO","MESADECONTROL","COTIZADOR"));
+        ArrayList<String> rolesAsignar    = new ArrayList<String>(Arrays.asList("EJECUTIVOCUENTA","EJECUTIVOINTERNO","MESADECONTROL","SUSCRIPTOR"));
 		try {
             String cdunieco           = params.get("cdunieco");
             String cdramo	          = params.get("cdramo");
@@ -697,8 +697,9 @@ public class EndososColectivosAction extends PrincipalCoreAction
 						}
 					}
 
-				
+				logger.debug(Utils.log("*****************ENTRO A ROLES ",usuario.getRolActivo().getClave()));
 				if (rolesAsignar.contains(usuario.getRolActivo().getClave())){
+					logger.debug(Utils.log("*****************ENTRO A ROLES ASIGNAR******************"));
 					Map<String, Object> res = siniestrosManager.moverTramite(ntramiteNuevaPoliza,
 																			 EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo(),
 																			 "Se Clona Cotizacion del tramite original: " + ntramiteNuevaPoliza, 
@@ -721,6 +722,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
             		params.put("redireccion", "N");
 				}
 				else if(rolesAsignacion.contains(usuario.getRolActivo().getClave())){
+					logger.debug(Utils.log("*****************ENTRO A ROLES ASIGNACION******************"));
 					Map<String, Object> res = siniestrosManager.moverTramite(ntramiteNuevaPoliza,
 																			 EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo(),
 																			 "Se Clona Cotizacion del tramite original: " + ntramiteNuevaPoliza, 
@@ -803,7 +805,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 					  	           "tipoflot" , params.get("TIPOFLOT")
 					  	           ));
 
-            logger.debug(Utils.log("esProductoSalud && esPolizaColectiva",esProductoSalud,"",esPolizaColectiva));
+            logger.debug(Utils.log("esProductoSalud && esPolizaColectiva",esProductoSalud,"|",esPolizaColectiva));
             if (esProductoSalud && esPolizaColectiva) {
             		Map<String, String> resReexped = clonarPoliza(cdunieco, 
             													  cdramo, 
@@ -811,10 +813,10 @@ public class EndososColectivosAction extends PrincipalCoreAction
             													  nmpoliza, 
             													  ferecepc, 
             													  cdusuari, 
-            													  "TODO");
+            													  null);
 					String nmpolizaNuevaPoliza = resReexped.get("pv_nmpolnew_o");
 					String ntramiteNuevaPoliza = resReexped.get("pv_ntramite_o");
-            		params.put("nmpoliza", nmpolizaNuevaPoliza);
+            		params.put("nmpolizaNueva", nmpolizaNuevaPoliza);
             		params.put("ntramite", ntramiteNuevaPoliza);
             }
 		}catch(Exception ex){
@@ -829,91 +831,72 @@ public class EndososColectivosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	public String subirCenso()
+	@Action(value   = "subirCensoClonacion",
+			results = { @Result(name="success", type="json") }
+			)
+	public String subirCensoClonacion()
 	{
 		logger.debug(Utils.log(
 				 "\n###################################"
-				,"\n###### complementoSaludGrupo ######"
-				,"\n###### smap1="         , smap1
-				,"\n###### censo="         , censo
-				,"\n###### censoFileName=" , censoFileName
+				,"\n###### subirCensoClonacion   ######"
+				,"\n###### params="         , params
+				,"\n###### censo="          , censo
+				,"\n###### censoFileName="  , censoFileName
 				));
 		try
-		{
-			success = true;
-			exito   = false;
+		{			
+			UserVO user = Utils.validateSession(session);			
+			Utils.validate(params , "No se recibieron datos");
 			
-			UserVO user = Utils.validateSession(session);
-			
-			Utils.validate(smap1 , "No se recibieron datos");
-			
-			String cdunieco     = smap1.get("cdunieco");
-			String cdramo       = smap1.get("cdramo");
-			String cdtipsit     = smap1.get("cdtipsit");
-			String estado       = smap1.get("estado");
-			String nmpoliza     = smap1.get("nmpoliza");
-			String ntramite     = smap1.get("ntramite");
-			String complemento  = smap1.get("complemento");
-			String cdagente     = smap1.get("cdagente");
-			String codpostalCli = smap1.get("codpostal");
-			String cdestadoCli  = smap1.get("cdestado");
-			String cdmuniciCli  = smap1.get("cdmunici");
-//			String cdplan1      = smap1.get("cdplan1");
-//			String cdplan2      = smap1.get("cdplan2");
-//			String cdplan3      = smap1.get("cdplan3");
-//			String cdplan4      = smap1.get("cdplan4");
-//			String cdplan5      = smap1.get("cdplan5");
+			String cdunieco     = params.get("cdunieco");
+			String cdramo       = params.get("cdramo");			
+			String estado       = params.get("estado");
+			String nmpoliza     = params.get("nmpoliza");
+			String cduniecoOrig = params.get("cduniecoOrig");
+			String cdramoOrig   = params.get("cdramoOrig");			
+			String estadoOrig   = params.get("estadoOrig");
+			String nmpolizaOrig = params.get("nmpolizaOrig");
+			String cdtipsit     = params.get("cdtipsit");
 			
 			Utils.validate(
 					cdunieco      , "No se recibio la sucursal"
 					,cdramo       , "No se recibio el producto"
 					,cdtipsit     , "No se recibio la modalidad"
 					,estado       , "No se recibio el estado"
-					,nmpoliza     , "No se recibio el estado"
-					,ntramite     , "No se recibio el tramite"
-					,complemento  , "No se recibio el complemento"
-					,cdagente     , "No se recibio la clave de agente"
-					,codpostalCli , "No se recibio el codigo postal"
-					,cdestadoCli  , "No se recibio el estado"
-					,cdmuniciCli  , "No se recibio el municipio"
-//					,cdplan1      , "No se recibio el plan 1"
+					,nmpoliza     , "No se recibio el nmpoliza"
+					,cduniecoOrig , "No se recibio el cduniecoOrig"
+					,cdramoOrig	  , "No se recibio el cdramoOrig"
+					,estadoOrig   , "No se recibio el estadoOrig"
+					,nmpolizaOrig , "No se recibio el nmpolizaOrig"					
 					);
 			
-			Map<String,Object> managerResp = endososManager.procesarCenso(ntramite,
-																		  cdunieco,
-																		  cdramo,
-																		  estado,
-																		  nmpoliza,
-																		  complemento,
-																		  censo,
-																		  getText("ruta.documentos.temporal"),
-																		  getText("dominio.server.layouts"),
-																		  getText("user.server.layouts"),
-																		  getText("pass.server.layouts"),
-																		  getText("directorio.server.layouts"),
-																		  cdtipsit,
-																		  user.getUser(),
-																		  user.getRolActivo().getClave(),
-																		  cdagente,
-																		  codpostalCli,
-																		  cdestadoCli,
-																		  cdmuniciCli
-//																			 ,
-//																			 cdplan1,
-//																			 cdplan2,
-//																			 cdplan3,
-//																			 cdplan4,
-//																			 cdplan5
-																			 );
+			Map<String,Object> managerResp = endososManager.procesarCensoClonacion(
+					cdunieco,
+				    cdramo,
+				    estado,
+				    nmpoliza,
+				    cduniecoOrig,
+				    cdramoOrig,
+				    estadoOrig,
+				    nmpolizaOrig,
+				    censo,
+				    getText("ruta.documentos.temporal"),
+				    getText("dominio.server.layouts"),
+				    getText("user.server.layouts"),
+				    getText("pass.server.layouts"),
+				    getText("directorio.server.layouts"),
+				    cdtipsit,
+				    user.getUser(),
+				    user.getRolActivo().getClave());
 			
-			smap1.put("erroresCenso"    , (String)managerResp.get("erroresCenso"));
-			smap1.put("filasLeidas"     , (String)managerResp.get("filasLeidas"));
-			smap1.put("filasProcesadas" , (String)managerResp.get("filasProcesadas"));
-			smap1.put("filasErrores"    , (String)managerResp.get("filasErrores"));
+			params.put("erroresCenso"    , (String)managerResp.get("erroresCenso"));
+			params.put("filasLeidas"     , (String)managerResp.get("filasLeidas"));
+			params.put("filasProcesadas" , (String)managerResp.get("filasProcesadas"));
+			params.put("filasErrores"    , (String)managerResp.get("filasErrores"));
 			
-			slist1 = (List<Map<String,String>>)managerResp.get("registros");
-			
-			exito = true;
+			slist1  = (List<Map<String,String>>)managerResp.get("registros");
+			success = true;
+			exito   = true;
 			
 		}
 		catch(Exception ex)
@@ -921,9 +904,86 @@ public class EndososColectivosAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		logger.debug(Utils.log(
-				 "\n###### complementoSaludGrupo ######"
+				 "\n######  subirCensoClonacion  ######"
 				,"\n###################################"
 				));
+		return SUCCESS;
+	}
+	
+	@Action(value   = "confirmarClonacionCondiciones",
+			results = { @Result(name="success", type="json") }
+			)
+	public String confirmarClonacionCondiciones(){
+		logger.debug(Utils.log(
+				 "\n#############################################"
+				,"\n###### confirmarClonacionCondiciones   ######"
+				,"\n###### params        ="  , params								
+				));
+        ArrayList<String> rolesAsignacion = new ArrayList<String>(Arrays.asList("COTIZADOR","SUPTECSALUD","SUBDIRSALUD","DIRECSALUD"));
+        ArrayList<String> rolesAsignar    = new ArrayList<String>(Arrays.asList("EJECUTIVOCUENTA","EJECUTIVOINTERNO","MESADECONTROL","COTIZADOR"));
+        long timestamp                    = System.currentTimeMillis();
+        String usuarioTramite             = "";
+		try{
+			UserVO usuario = Utils.validateSession(session);
+			Utils.validate(params,"no se recibieron params");			
+			String cdunieco = params.get("cdunieco");
+			String cdramo   = params.get("cdramo");
+			String estado   = params.get("estado");
+			String nmpoliza = params.get("nmpoliza");
+			String cdtipsit = params.get("cdtipsit");
+			String ntramite = params.get("ntramite");
+			int    listLen  = Integer.parseInt(params.get("listlen"));
+			endososManager.confirmarClonacionCondiciones(
+					cdunieco, 
+					cdramo, 
+					estado, 
+					nmpoliza, 
+					cdtipsit, 
+					listLen);
+			if (rolesAsignar.contains(usuario.getRolActivo().getClave())){
+				Map<String, Object> res = siniestrosManager.moverTramite(ntramite,
+																		 EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo(),
+																		 "Se Clona Cotizacion del tramite original: " + ntramite, 
+																		 usuario.getUser(),
+																		 usuario.getRolActivo().getClave(), 
+																		 null, 
+																		 RolSistema.SUSCRIPTOR_TECNICO.getCdsisrol(), 
+																		 null,
+																		 null, 
+																		 "N", 
+																		 timestamp);
+				if (res.containsKey("NOMBRE") && StringUtils.isNotBlank((String) res.get("NOMBRE"))) {
+					usuarioTramite = " fue asignado a: " + (String) res.get("NOMBRE");
+				}
+				logger.debug(Utils.log("*****************Resultado de asignacion******************"));
+				logger.debug(Utils.log(res));
+				setMensaje("El tr&aacute;mite "
+							+ ntramite
+							+ usuarioTramite);
+        		params.put("redireccion", "N");
+			}
+			else if(rolesAsignacion.contains(usuario.getRolActivo().getClave())){
+				Map<String, Object> res = siniestrosManager.moverTramite(ntramite,
+																		 EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo(),
+																		 "Se Clona Cotizacion del tramite original: " + ntramite, 
+																		 usuario.getUser(),
+																		 usuario.getRolActivo().getClave(), 
+																		 usuario.getUser(),
+																		 usuario.getRolActivo().getClave(),
+																		 null,
+																		 null, 
+																		 "N", 
+																		 timestamp);
+				logger.debug(Utils.log("*****************Resultado de asignacion******************"));
+				logger.debug(Utils.log(res));
+				setMensaje("Se genero el tr&aacute;mite "
+							+ ntramite);
+        		params.put("redireccion", "S");
+			}
+			success = true;
+		}catch(Exception ex){
+			mensaje = Utils.manejaExcepcion(ex);
+		}
 		return SUCCESS;
 	}
 
