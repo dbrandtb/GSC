@@ -676,4 +676,16 @@ public interface EndososDAO
 	
 	public List<Map<String,String>> recuperarCotizaciones(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String ntramite, String status, String fecini, String fecfin, String cdsisrol, String cdusuari) throws Exception;
 	
+	public void procesarCensoClonacion(
+			String nombreProcedure,			
+			String nombreCenso,
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String cduniecoOrig,
+			String cdramoOrig,
+			String estadoOrig,
+			String nmpolizaOrig)throws Exception;
+	
 }

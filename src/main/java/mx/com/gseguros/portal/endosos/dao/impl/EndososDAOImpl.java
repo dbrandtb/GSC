@@ -5305,4 +5305,59 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	public void procesarCensoClonacion(
+			String nombreProcedure,			
+			String nombreCenso,
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String cduniecoOrig,
+			String cdramoOrig,
+			String estadoOrig,
+			String nmpolizaOrig)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();		
+		params.put("nombreCenso"     , nombreCenso);
+		params.put("cduniecoOrig"    , cduniecoOrig);
+		params.put("cdramoOrig"      , cdramoOrig);
+		params.put("estadoOrig"      , estadoOrig);
+		params.put("nmpolizaOrig"    , nmpolizaOrig);
+		params.put("cdunieco"        , cdunieco);
+		params.put("cdramo"          , cdramo);
+		params.put("estado"          , estado);
+		params.put("nmpoliza"        , nmpoliza);		
+		logger.debug(
+				new StringBuilder()
+				.append("\n********************************************")
+				.append("\n****** EJECUTA PROCEDIMIENTO DE CENSO ******")
+				.append("\n****** procedimiento=").append(nombreProcedure)
+				.append("\n****** params=").append(params)
+				.append("\n********************************************")
+				.toString()
+				);
+		ejecutaSP(new ProcesarCensoClonacion(getDataSource(),nombreProcedure),params);
+	}
+	
+	protected class ProcesarCensoClonacion extends StoredProcedure
+	{
+		protected ProcesarCensoClonacion(DataSource dataSource,String nombreProcedure)
+		{
+    		super(dataSource,nombreProcedure);
+    		declareParameter(new SqlParameter("nombreCenso"    , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cduniecoOrig"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdramoOrig"     , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("estadoOrig"     , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("nmpolizaOrig"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdunieco"       , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdramo"         , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("estado"         , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("nmpoliza"       , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+	
+	
 }

@@ -614,31 +614,31 @@ public interface EndososManager
 	
 	public List<Map<String, String>> buscarCotizaciones(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String ntramite, String status, String fecini, String fecfin, String cdsisrol, String cdusuari) throws Exception;
 	
-	public Map<String,Object> procesarCenso(String ntramite,
-													String cdunieco,
-													String cdramo,
-													String estado,
-													String nmpoliza,
-													String complemento,
-													File censo,
-													String rutaDocumentosTemporal,
-													String dominioServerLayouts,
-													String userServerLayouts,
-													String passServerLayouts,
-													String rootServerLayouts,
-													String cdtipsit,
-													String cdusuari,
-													String cdsisrol,
-													String cdagente,
-													String codpostalCli,
-													String cdestadoCli,
-													String cdmuniciCli
-//													,
-//													String cdplan1,
-//													String cdplan2,
-//													String cdplan3,
-//													String cdplan4,
-//													String cdplan5
-													)throws Exception;
+	public Map<String,Object> procesarCensoClonacion(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String cduniecoOrig,
+			String cdramoOrig,
+			String estadoOrig,
+			String nmpolizaOrig,
+			File   censo,
+			String rutaDocumentosTemporal,
+			String dominioServerLayouts,
+			String userServerLayouts,
+			String passServerLayouts,
+			String rootServerLayouts,
+			String cdtipsit,
+			String cdusuari,
+			String cdsisrol)throws Exception;
+	
+	public void confirmarClonacionCondiciones(
+		String cdunieco,
+		String cdramo,
+		String estado,
+		String nmpoliza,
+		String cdtipsit,
+		int    numSituac) throws Exception;
 	
 }
