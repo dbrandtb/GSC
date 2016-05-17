@@ -180,7 +180,10 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 			
 			copagos = consultasPolizaDAOICE.obtieneCopagosPoliza(poliza,nmsituac);
 			
-			// Agregamos un campo que agrupe los resultados:
+			/**
+			 * Se comenta para desagrupar
+			 * 
+			 * // Agregamos un campo que agrupe los resultados:
 			String agrupador = null;
 			Iterator<CopagoVO> itCopagos = copagos.iterator();
 		
@@ -203,12 +206,12 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 						logger.debug("agrupadores:" + agrupadores);
 					}
 				}
-				/*
+				
 				// Si el copago no es visible o no hay descripcion, lo eliminamos:
 				if(!copagoVO.isVisible() || StringUtils.isBlank(copagoVO.getDescripcion())) {
 					itCopagos.remove();
 				}
-				*/
+				
 				copagoVO.setAgrupador(agrupador);
 				copagoVO.setOrdenAgrupador(arrayLetras[ordenOrig-1]+" "+agrupador);
 			}
@@ -233,9 +236,9 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 						continue;
 					}				
 				}
-			}
+			}*/
 			
-			logger.debug("agrupadores final:" + agrupadores);
+//			logger.debug("agrupadores final:" + agrupadores);
 			
 //		} else {
 //			copagos = consultasPolizaDAOSISA.obtieneCopagosPoliza(poliza);

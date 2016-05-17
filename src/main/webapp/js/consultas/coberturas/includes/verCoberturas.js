@@ -22,7 +22,7 @@ Ext.onReady(function() {
     // Store
     var storeCopagosPoliza = new Ext.data.Store({
         model: 'CopagosPolizaModel',
-        groupField : 'agrupador',
+//        groupField : 'agrupador',
         proxy: {
            type: 'ajax',
            url : _URL_CONSULTA_COPAGOS_POLIZA,
@@ -51,11 +51,11 @@ Ext.onReady(function() {
             {text:'Descripci\u00F3n', dataIndex:'descripcion', width:300, align:'left', sortable:false},
             {text:'Valor',            dataIndex:'valor',       width:200, align:'left', sortable:false}
         ]
-        ,features: [{
-            groupHeaderTpl: '{name}',
-            ftype:          'grouping',
-            startCollapsed: false
-        }]
+//        ,features: [{
+//            groupHeaderTpl: '{name}',
+//            ftype:          'grouping',
+//            startCollapsed: false
+//        }]
     });
     gridCopagosPoliza.store.sort([
         { 
