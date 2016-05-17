@@ -2907,7 +2907,7 @@ function llenandoCampos(json)
                     tatri.setValue(json.smap1[tatri.name]);
                 }
                 
-                if(_p28_smap1.cdramo=='5')
+                if(_p28_smap1.cdramo=='5' && 'TL'.lastIndexOf(_p28_smap1.cdtipsit)==-1)
                 {
                     var clave    = _fieldByName('parametros.pv_otvalor06');
                     var marca    = _fieldByName('parametros.pv_otvalor07');
