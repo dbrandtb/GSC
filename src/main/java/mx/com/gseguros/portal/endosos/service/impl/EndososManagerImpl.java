@@ -3661,33 +3661,62 @@ public class EndososManagerImpl implements EndososManager
 			String estado,
 			String nmpoliza,
 			String cdtipsit,
-			int numSituac) throws Exception{
-		
-		String paso = null;
-		for(int i = 1; i <= numSituac; i++){			
-			List<Map<String,String>> coberturasDeExtraprimas = consultasDAO.recuperaCoberturasExtraprima(cdramo, cdtipsit);
-			for(Map<String,String> coberturaExtraprima : coberturasDeExtraprimas)
-						{
-							String cdgarant = coberturaExtraprima.get("CDGARANT");
-							
-							paso = Utils.join("Ejecutando valores por defecto para la cobertura ",cdgarant);
-							logger.debug(paso);
-							
-							cotizacionDAO.valoresPorDefecto(
-									cdunieco
-									,cdramo
-									,estado
-									,nmpoliza
-									,String.valueOf(i)
-									,String.valueOf(0)
-									,cdgarant
-									,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-									);
-						}
-		}
+			int numSituac) throws Exception{		
+		String paso = "llamando hilos de extraprima";		
+		logger.debug(paso);
+		new ConfirmarClonacionCondiciones(cdunieco, cdramo, estado, nmpoliza, cdtipsit, numSituac).start();
 	}
 	
-	
+	private class ConfirmarClonacionCondiciones extends Thread{
+		private String cdunieco;
+		private String cdramo;
+		private String estado;
+		private String nmpoliza;
+		private String cdtipsit;
+		private int    numSituac;
+		
+		public ConfirmarClonacionCondiciones(
+				String cdunieco,
+				String cdramo,
+				String estado,
+				String nmpoliza,
+				String cdtipsit,
+				int    numSituac){
+			this.cdunieco  = cdunieco;
+			this.cdramo    = cdramo;
+			this.estado    = estado;
+			this.nmpoliza  = nmpoliza;
+			this.cdtipsit  = cdtipsit;
+			this.numSituac = numSituac;
+		}
+		
+		@Override
+		public void run(){
+			try{
+				for(int i = 1; i <= numSituac; i++)
+				{
+					List<Map<String,String>> coberturasDeExtraprimas = consultasDAO.recuperaCoberturasExtraprima(this.cdramo, this.cdtipsit);
+					for(Map<String,String> coberturaExtraprima : coberturasDeExtraprimas)
+					{
+						String cdgarant = coberturaExtraprima.get("CDGARANT");
+						cotizacionDAO.valoresPorDefecto(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,String.valueOf(i)
+								,String.valueOf(0)
+								,cdgarant
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								);
+					}
+				}			
+			}catch(Exception ex){
+				logger.error("error lanzando valores po defecto extraprima: ",ex);
+			}
+		}
+	}
+
 	private String extraerStringDeCelda(Cell cell, String tipo)
 	{
 		try
@@ -3708,6 +3737,7 @@ public class EndososManagerImpl implements EndososManager
 		}
 	}
     
+	
 	private String extraerStringDeCelda(Cell cell)
 	{
 		try
@@ -3722,4 +3752,5 @@ public class EndososManagerImpl implements EndososManager
 		}
 	}
 	
+
 }
