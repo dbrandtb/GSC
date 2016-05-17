@@ -54,10 +54,8 @@ var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/
              */
             toRawNumber: function (value) {
                 
-                debug("VIL >>> Cadena(value): " + value);
                 var cadena = String(value).replace(this.decimalSeparator,'.').replace(new RegExp(Ext.util.Format.thousandSeparator, "g"), '');
-                debug("VIL >>> Cadena: " + cadena);
-                
+
                 return cadena;
             },
             
@@ -118,7 +116,7 @@ var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/
                 value = me.fixPrecision(value);
                 value = Ext.isNumber(value) ? value : parseFloat(me.toRawNumber(value));
                 value = isNaN(value) ? '' : String(Ext.util.Format.number(value, format)).replace('.', me.decimalSeparator);
-                debug("VILS >>> Cadena(value) 1: " + value);
+
                 return value;
             },
             
@@ -1246,7 +1244,7 @@ Ext.onReady(function()
 	                                                                                _p30_store.add(mrecords);
 	                                                                                if(errores.length>0 && (!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv)))
 	                                                                                {
-	                                                                                	mensajeWarning(errores.join('<BR/>'));
+	                                                                                	 mensajeWarning(errores.join('<BR/>'));
 	                                                                                	 if(!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv))
 	                                                                                     {   
 	                                                                                         mensajeWarning(descripcion+'<BR/>'+errores.join('<BR/>'));
@@ -1530,7 +1528,7 @@ Ext.onReady(function()
             _fieldByLabel('AGENTE',_fieldById('_p30_form')).setReadOnly(true);
             _p30_ramo5AgenteSelect(_fieldByLabel('AGENTE',_fieldById('_p30_form')),_p30_smap1.cdagente);
         }
-        else if(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
+        else if('|PROMOTORAUTO'+rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
         {
             _fieldByLabel('AGENTE',_fieldById('_p30_form')).on(
             {
@@ -3073,7 +3071,29 @@ Ext.onReady(function()
                                 }
                                 else
                                 {
-                                    mensajeError(json.error);
+                                	var formaAuto = _fieldById('_p30_tatrisitAutoForm'+cdtipsit);
+
+                                	if(
+                                	    ('|AF|PU|'.lastIndexOf('|'+cdtipsit+'|')!=-1) 
+                                         && 
+                                        (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
+                                      ){
+                                		    _fieldByName('parametros.pv_otvalor04',formaAuto).setReadOnly(false);
+                                            _fieldByName('parametros.pv_otvalor05',formaAuto).setReadOnly(false);
+                                            _fieldByName('parametros.pv_otvalor06',formaAuto).setReadOnly(false);
+                                            _fieldByName('parametros.pv_otvalor07',formaAuto).setReadOnly(false);
+                                            _fieldByName('parametros.pv_otvalor26',formaAuto).setReadOnly(false);
+                                       }
+                                	else
+                                		{
+                                			_fieldByName('parametros.pv_otvalor04',formaAuto).setReadOnly(true);
+	                                        _fieldByName('parametros.pv_otvalor05',formaAuto).setReadOnly(true);
+	                                        _fieldByName('parametros.pv_otvalor06',formaAuto).setReadOnly(true);
+	                                        _fieldByName('parametros.pv_otvalor07',formaAuto).setReadOnly(true);
+	                                        _fieldByName('parametros.pv_otvalor26',formaAuto).setReadOnly(true);
+                                		}
+                                	
+                                	mensajeError(json.error);
                                 }
                             }
                             ,failure : function()
