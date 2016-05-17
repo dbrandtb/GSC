@@ -611,7 +611,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 		params.put("pv_estado_i", poliza.getEstado());
 		params.put("pv_cdramo_i", poliza.getCdramo());
 		params.put("pv_nmpoliza_i", poliza.getNmpoliza());
-		params.put("pv_nmsituac_i", 1);		//Se coloca el del titular por que no está pasando el param.
+		params.put("pv_nmsituac_i", poliza.getNmsituac());
 		params.put("pv_cdgarant_i", null);
 		
 		Map<String, Object> mapResult = ejecutaSP(new ConsultaCoberturasPolizaSP(getDataSource()), params);	
