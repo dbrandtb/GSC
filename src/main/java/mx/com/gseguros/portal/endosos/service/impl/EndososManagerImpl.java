@@ -3388,6 +3388,8 @@ public class EndososManagerImpl implements EndososManager
 			int                      nBuenas     = 0;
 			int                      nError      = 0;
 			StringBuilder            errores     = new StringBuilder();
+			//se agrega para validar que esten todos los grupos y para que tengan al menos un asegurado valido
+			Map<String,String> grupos = new HashMap<String,String>();
 			
 			int fila = 0;
 			String[] columnas=new String[]{
@@ -3504,6 +3506,15 @@ public class EndososManagerImpl implements EndososManager
 						recordDTO.put(config.get("PROPIEDAD"),valor);
 						registro.put(config.get("PROPIEDAD"),valor);
 						registro.put(Utils.join("_",letra,"_",config.get("PROPIEDAD")),config.get("DESCRIPCION"));
+						//se agrega para validar que esten todos los grupos y para que tengan al menos un asegurado valido
+						if("CDGRUPO".equals(config.get("PROPIEDAD")))
+						{
+							String cdgrupo = valor;
+							if(!grupos.containsKey(cdgrupo))
+							{
+								grupos.put(cdgrupo , "NO VALIDO");
+							}
+						}
 					}
 					catch(Exception ex)
 					{
@@ -3516,6 +3527,8 @@ public class EndososManagerImpl implements EndososManager
 					nBuenas++;
 					registros.add(registro);
 					recordsDTO.add(recordDTO);
+					//se agrega para validar que esten todos los grupos y para que tengan al menos un asegurado valido
+					grupos.put(recordDTO.get("CDGRUPO"),"VALIDO");
 				}
 				else
 				{
@@ -3529,7 +3542,37 @@ public class EndososManagerImpl implements EndososManager
 			resp.put("filasProcesadas" , Integer.toString(nBuenas));
 			resp.put("filasErrores"    , Integer.toString(nError));
 			resp.put("registros"       , registros);
+			/* se agrega para validar que esten todos los grupos y para que tengan al menos un asegurado valido INICIO */
+			logger.debug(Utils.log("Grupos de excel:",grupos));
 			
+			paso = "Recuperando numero de grupos de la poliza original";
+			int numGrupOri = endososDAO.recuperarNumeroGruposPoliza(
+					cduniecoOrig, 
+					cdramoOrig, 
+					estadoOrig, 
+					nmpolizaOrig);
+			if(numGrupOri != grupos.keySet().size())
+			{
+				throw new ApplicationException(Utils.join("La p\u00f3liza original tiene ",numGrupOri," y en el excel solo se encontraron ",grupos.keySet().size()));
+			}
+			
+			paso = "Verificando grupos v\u00e1lidos";
+			StringBuilder gruposInvalidos = new StringBuilder();
+			for(Entry<String,String> en : grupos.entrySet())
+			{
+				String cdgrupo = en.getKey()
+				       ,valido = en.getValue();
+				
+				if(!"VALIDO".equals(valido))
+				{
+					gruposInvalidos.append("No hay asegurados v\u00e1lidos para el grupo ").append(cdgrupo).append("<br/>");
+				}
+			}
+			if(gruposInvalidos.toString().length()>0)
+			{
+				throw new ApplicationException(gruposInvalidos.toString());
+			}
+			/* se agrega para validar que esten todos los grupos y para que tengan al menos un asegurado valido FIN */
 			paso = "Generando archivo de transferencia";
 			logger.debug("\nPaso: {}",paso);
 			String nombreCenso = null;
