@@ -687,5 +687,11 @@ public interface EndososDAO
 			String cdramoOrig,
 			String estadoOrig,
 			String nmpolizaOrig)throws Exception;
+
+	public int recuperarNumeroGruposPoliza(String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza
+			)throws Exception;
 	
 }

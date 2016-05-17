@@ -671,20 +671,20 @@ public class EndososColectivosAction extends PrincipalCoreAction
 					String ntramiteNuevaPoliza = resReexped.get("pv_ntramite_o");
             		params.put("nmpoliza", nmpolizaNuevaPoliza);
             		params.put("ntramite", ntramiteNuevaPoliza);
-            		boolean exitoGrupos = endososManager.actualizaTodosGruposReexp(cdunieco, 
-																				   cdramo, 
-																				   estado,
-																				   nmpolizaNuevaPoliza);
+//            		boolean exitoGrupos = endososManager.actualizaTodosGruposReexp(cdunieco, 
+//																				   cdramo, 
+//																				   estado,
+//																				   nmpolizaNuevaPoliza);
             		logger.debug(Utils.log("paso clonar grupos ",nmpolizaNuevaPoliza, "|",ntramiteNuevaPoliza));            		
-					if (exitoGrupos) {
-					exitoGrupos = endososManager.valoresDefectoGruposCotizacion(cdunieco, 
-																			    cdramo, 
-																			    "W",
-																			    nmpolizaNuevaPoliza, 
-																			    "0", 
-																			    cdtipsup);
+//					if (exitoGrupos) {
+//					exitoGrupos = endososManager.valoresDefectoGruposCotizacion(cdunieco, 
+//																			    cdramo, 
+//																			    "W",
+//																			    nmpolizaNuevaPoliza, 
+//																			    "0", 
+//																			    cdtipsup);
 					
-						if (exitoGrupos) {
+//						if (exitoGrupos) {
 							logger.debug(Utils.log("exito en grupos"));
 							cotizacionManager.ejecutasigsvdefEnd(cdunieco, 
 																 cdramo, 
@@ -694,8 +694,8 @@ public class EndososColectivosAction extends PrincipalCoreAction
 																 "0", 
 																 "TODO", 
 																 cdtipsup);
-						}
-					}
+//						}
+//					}
 
 				logger.debug(Utils.log("*****************ENTRO A ROLES ",usuario.getRolActivo().getClave()));
 				if (rolesAsignar.contains(usuario.getRolActivo().getClave())){
@@ -710,7 +710,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 																			 null,
 																			 null, 
 																			 "N", 
-																			 timestamp);
+																			 timestamp);					
 					if (res.containsKey("NOMBRE") && StringUtils.isNotBlank((String) res.get("NOMBRE"))) {
 						usuarioTramite = " fue asignado a: " + (String) res.get("NOMBRE");
 					}
@@ -733,7 +733,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 																			 null,
 																			 null, 
 																			 "N", 
-																			 timestamp);
+																			 timestamp);					
 					logger.debug(Utils.log("*****************Resultado de asignacion******************"));
 					logger.debug(Utils.log(res));
 					setMensaje("Se genero el tr&aacute;mite "
@@ -741,7 +741,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
             		params.put("redireccion", "S");
 				}
 	         }
-            
+            params.put("statusNuevo", EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
             success = true;
 
 		} catch (Exception ex) {
@@ -901,7 +901,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			respuesta = Utils.manejaExcepcion(ex);
+			message = Utils.manejaExcepcion(ex);
 		}
 		logger.debug(Utils.log(
 				 "\n######  subirCensoClonacion  ######"
@@ -919,8 +919,8 @@ public class EndososColectivosAction extends PrincipalCoreAction
 				,"\n###### confirmarClonacionCondiciones   ######"
 				,"\n###### params        ="  , params								
 				));
-        ArrayList<String> rolesAsignacion = new ArrayList<String>(Arrays.asList("COTIZADOR","SUPTECSALUD","SUBDIRSALUD","DIRECSALUD"));
-        ArrayList<String> rolesAsignar    = new ArrayList<String>(Arrays.asList("EJECUTIVOCUENTA","EJECUTIVOINTERNO","MESADECONTROL","COTIZADOR"));
+		ArrayList<String> rolesAsignacion = new ArrayList<String>(Arrays.asList("COTIZADOR","SUPTECSALUD","SUBDIRSALUD","DIRECSALUD"));
+        ArrayList<String> rolesAsignar    = new ArrayList<String>(Arrays.asList("EJECUTIVOCUENTA","EJECUTIVOINTERNO","MESADECONTROL","SUSCRIPTOR"));
         long timestamp                    = System.currentTimeMillis();
         String usuarioTramite             = "";
 		try{
@@ -980,6 +980,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 							+ ntramite);
         		params.put("redireccion", "S");
 			}
+			params.put("statusNuevo",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
 			success = true;
 		}catch(Exception ex){
 			mensaje = Utils.manejaExcepcion(ex);

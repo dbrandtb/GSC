@@ -5359,5 +5359,38 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
     	}
     }
 	
+	@Override
+	public int recuperarNumeroGruposPoliza(String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i"   , cdunieco);
+		params.put("pv_cdramo_i"     , cdramo);
+		params.put("pv_estado_i"     , estado);
+		params.put("pv_nmpoliza_i"   , nmpoliza);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_MAXIMO_GRUPO", params);
+		Map<String,Object> procResult = ejecutaSP(new RecuperarNumeroGruposPoliza(getDataSource()),params);
+		int numGrupos = Integer.parseInt((String)procResult.get("pv_maxnum_grupo_o"));
+		logger.debug(Utils.log("PKG_CONSULTA.P_GET_MAXIMO_GRUPO numGrupos=",numGrupos));
+		return numGrupos;
+	}
+	
+	protected class RecuperarNumeroGruposPoliza extends StoredProcedure
+	{
+		protected RecuperarNumeroGruposPoliza(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_MAXIMO_GRUPO");
+			declareParameter(new SqlParameter("pv_cdunieco_i"   	, OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"     	, OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"     	, OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"   	, OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_maxnum_grupo_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"      , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"       , OracleTypes.VARCHAR));
+			compile();
+		}
+	}	
 	
 }

@@ -14,8 +14,7 @@ var mesConUrlDocu                   = '<s:url namespace="/documentos"  action="v
 var mesConUrlComGrupo               = '<s:url namespace="/emision"     action="cotizacionGrupo"             />';
 var mesConUrlComGrupo2              = '<s:url namespace="/emision"     action="cotizacionGrupo2"            />';
 var _p100_urlComplementoClonacion   = '<s:url namespace="/endosos"     action="subirCensoClonacion"            />';
-var _p100_smap1 = <s:property value = '%{convertToJSON("params")}' escapeHtml="false" />;
-var _p100_urlMesaControl            = '<s:url namespace="/flujomesacontrol" action="mesaControl"                     />';
+var _p100_smap1                     = <s:property value = '%{convertToJSON("params")}' escapeHtml="false" />;
 ////// variables //////
 
 ////// overrides //////
@@ -104,7 +103,7 @@ itemsGrid.push({xtype : 'actioncolumn'
 							                                                ,'smap1.nmpoliza' : json.params.nmpoliza
 							                                                ,'smap1.ntramite' : json.params.ntramite
 							                                                ,'smap1.cdagente' : values.cdagente
-							                                                ,'smap1.status'   : values.status
+							                                                ,'smap1.status'   : json.params.statusNuevo
 							                                                ,'smap1.sincenso' : 'N'
 							                                            }
 							                                        });
@@ -124,7 +123,7 @@ itemsGrid.push({xtype : 'actioncolumn'
 							                                				,'smap1.nmpoliza' : json.params.nmpoliza
 							                                				,'smap1.ntramite' : json.params.ntramite
 							                                				,'smap1.cdagente' : values.cdagente
-							                                				,'smap1.status'   : values.status
+							                                				,'smap1.status'   : json.params.statusNuevo
 							                                				,'smap1.sincenso' : 'N'
 							                                             }
 							                                        });
@@ -140,7 +139,7 @@ itemsGrid.push({xtype : 'actioncolumn'
                                 }
                                 else
                                 {
-                                    mensajeError('Error al guardar',json.message);                                    
+                                    mensajeError('Error al guardar',json.message);
                                 }
                             }
                             ,failure : function()
@@ -159,7 +158,6 @@ itemsGrid.push(
         ,tooltip : 'clonacion de condiciones'
         ,handler : function(itemsGrid, rowIndex)
         {
-            alert(2);
             var values = store.getAt(rowIndex).getData();
             debug("rec",values);
 			Ext.Ajax.request({
@@ -190,6 +188,7 @@ itemsGrid.push(
 			                {
 			                    title        : 'Clonaci&oacute;n de tr&aacute;mites'
 			                    ,modal       : true
+								,itemId      : 'censoWin'
 			                    ,buttonAlign : 'center'
 			                    ,autoScroll  : true
 			                    ,items       : [
@@ -284,7 +283,7 @@ itemsGrid.push(
 					                                ,'params.nmpolizaOrig' : values.nmpoliza
 					                                ,'params.cdunieco'     : values.cdunieco
 					                                ,'params.cdramo'       : values.cdramo
-					                                ,'params.estado'       : json.params.estado
+					                                ,'params.estado'       : 'W'
 					                                ,'params.nmpoliza'     : json.params.nmpolizaNueva
 					                                ,'params.cdtipsit'     : values.cdtipsit
 					                            };					                            
@@ -296,11 +295,11 @@ itemsGrid.push(
 					                                {
 					                                    params   : params
 					                                    ,success : function(form2,action)
-					                                    {
+					                                    {															
  					                                        form.setLoading(false);
 					                                        var ck = 'Procesando respuesta al subir complemento';
 					                                        try
-					                                        {
+					                                        {					                                        	
 					                                            var json2 = Ext.decode(action.response.responseText);
 					                                            debug('### submit:',json2);
 					                                            if(json2.success)
@@ -371,6 +370,7 @@ itemsGrid.push(
 						                                                {
 						                                                    width     : 600
 						                                                    ,height   : 500
+																			,itemId      : 'asegWin'
 						                                                    ,title    : 'Revisar asegurados del complemento'
 						                                                    ,closable : false
 						                                                    ,items    :
@@ -443,15 +443,17 @@ itemsGrid.push(
 						                                                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
 						                                                            ,handler : function()
 						                                                            { 
-						                                                                //callback();						                                                                
+						                                                                //callback();
+						                                                                _mask('Procesando');
 						                                                                Ext.Ajax.request(
 						                                                                {
                             															    url     : '<s:url namespace="/endosos" action="confirmarClonacionCondiciones" />'
                             																,params :
                             																{
-                                														 	    'params.cdunieco'     : values.cdunieco
+                                														 	    'params.cdunieco'      : values.cdunieco
 																								,'params.cdramo'       : values.cdramo
-																								,'params.estado'       : json.params.estado
+																								//,'params.estado'     : json.params.estado
+																								,'params.estado'       : 'W'
 																								,'params.nmpoliza'     : json.params.nmpolizaNueva
 																								,'params.cdtipsit'     : values.cdtipsit
 																								,'params.ntramite'     : json.params.ntramite
@@ -477,10 +479,10 @@ itemsGrid.push(
 																												url       : mesConUrlDocu
 																												,params   :
 																												{
-																													'smap1.nmpoliza'  : '0'
+																													'smap1.nmpoliza'  : json.params.nmpolizaNueva
 																													,'smap1.cdunieco' : json3.params.cdunieco
 																													,'smap1.cdramo'   : json3.params.cdramo
-																													,'smap1.estado'   : json3.params.estado
+																													,'smap1.estado'   : 'W'
 																													,'smap1.nmsuplem' : '0'
 																													,'smap1.ntramite' : json3.params.ntramite
 																													,'smap1.nmsolici' : '0'
@@ -506,11 +508,11 @@ itemsGrid.push(
 																																		'smap1.cdunieco'  : json3.params.cdunieco
 																																		,'smap1.cdramo'   : json3.params.cdramo
 																																		,'smap1.cdtipsit' : values.cdtipsit
-																																		,'smap1.estado'   : json3.params.estado
-																																		,'smap1.nmpoliza' : 0
+																																		,'smap1.estado'   : 'W'
+																																		,'smap1.nmpoliza' : json.params.nmpolizaNueva
 																																		,'smap1.ntramite' : json3.params.ntramite
 																																		,'smap1.cdagente' : values.cdagente
-																																		,'smap1.status'   : values.status
+																																		,'smap1.status'   : json3.params.statusNuevo
 																																		,'smap1.sincenso' : 'N'
 																																	}
 																																});
@@ -526,11 +528,11 @@ itemsGrid.push(
 																																		'smap1.cdunieco'  : json3.params.cdunieco
 																																		,'smap1.cdramo'   : json3.params.cdramo
 																																		,'smap1.cdtipsit' : values.cdtipsit
-																																		,'smap1.estado'   : json3.params.estado
-																																		,'smap1.nmpoliza' : 0
+																																		,'smap1.estado'   : 'W'
+																																		,'smap1.nmpoliza' : json.params.nmpolizaNueva
 																																		,'smap1.ntramite' : json3.params.ntramite
 																																		,'smap1.cdagente' : values.cdagente
-																																		,'smap1.status'   : values.status
+																																		,'smap1.status'   : json3.params.statusNuevo
 																																		,'smap1.sincenso' : 'N'
 																																	 }
 																																});
@@ -549,6 +551,8 @@ itemsGrid.push(
 																								mensajeError('Error al guardar',json3.message);                                    
 																							}																							
 																							me.up('window').destroy();
+																							censoWin.destroy();
+																							asegWin.destroy();
 																						}
 																						,failure : function()
                             															{
@@ -565,7 +569,7 @@ itemsGrid.push(
 						                                                        }
 						                                                    ]
 						                                                }).show());
-						                                            };						                                            
+						                                            };																	
 						                                            despues();						                                            
 						                                            /*_p25_generarTramiteClic(despues,false,false,true);*/
 					                                            }
@@ -576,13 +580,25 @@ itemsGrid.push(
 					                                        }
 					                                        catch(e)
 					                                        {
+																_unmask();
 					                                            manejaException(e,ck);
-					                                        } 
+					                                        }
+															
 					                                    }
-					                                    ,failure : function()
+					                                    ,failure : function(form2,action)
 					                                    {
-					                                        form.setLoading(false);
-					                                        errorComunicacion(null,'Error al subir archivo de complemento');
+					                                        _unmask();
+															form.setLoading(false);
+															//debug('action',action);
+															var json2 = Ext.decode(action.response.responseText);
+															debug('json2',json2);
+															if (Ext.isEmpty(json2.message)){
+																errorComunicacion(null,'Error al subir archivo de complemento');
+															}
+															else{
+																mensajeError(json2.message);
+															}
+					                                        
 					                                    }
 					                                })
 					                            }
@@ -618,6 +634,10 @@ itemsGrid.push(
 
 Ext.onReady(function()
 {
+ Ext.Ajax.timeout = 1000*60*60; // 1 HORA
+ Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+ Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+ Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
     ////// modelos //////
      Ext.define('ModeloConvenio',
     {
@@ -740,19 +760,7 @@ Ext.onReady(function()
  
 });
 ////// funciones //////
-function _p25_mesacontrol(json)
-{
-    _p25_tabpanel().setLoading(true);
-    Ext.create('Ext.form.Panel').submit(
-    {
-        standardSubmit : true
-        ,url           : _p25_urlMesaControl
-        ,params        :
-        {
-            'params.AGRUPAMC' : 'PRINCIPAL'
-        }
-    });
-}
+
 ////// funciones //////
 </script>
 </head>
