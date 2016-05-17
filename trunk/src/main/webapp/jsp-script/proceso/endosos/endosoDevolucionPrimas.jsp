@@ -40,7 +40,7 @@ _p39_coberturaColumns.push(
     {
     	checkchange : function(me, rowIndex , checked)
 	    {
-            centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Se guardar\u00e1 el status de devoluci\u00f3n de la cobertura <br>¿Desea continuar?', function(btn)
+            centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Se guardar\u00e1 el estatus de devoluci\u00f3n de la cobertura <br>¿Desea continuar?', function(btn)
         	{
             	if(btn === 'yes')
         	    {
