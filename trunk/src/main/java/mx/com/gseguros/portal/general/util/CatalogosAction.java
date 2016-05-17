@@ -371,6 +371,11 @@ public class CatalogosAction extends PrincipalCoreAction {
 					logger.debug("Valor de lista==>"+lista.size());
 					logger.debug(lista);
 					break;
+				case SUBCOBERTURASINFONAVIT:
+					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("SSI");
+					logger.debug("Valor de lista==>"+lista.size());
+					logger.debug(lista);
+					break;
 				case SUBCOBERTURASRECUPERA:
 					lista = siniestrosManager.getConsultaListaSubcoberturaRecupera();
 					break;

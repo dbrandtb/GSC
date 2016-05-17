@@ -13,6 +13,7 @@
 			var _CATALOGO_SUBCOBERTURASTOTALES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASTOTALES"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALESMS 		= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURAS4MS"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALESMSC		= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURAS4MSC"/>';
+			var _CATALOGO_SUBCOBERTURASTOTALINFONAVIT	= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASINFONAVIT"/>';
 			var _CATALOGO_SUBCOBERTURASRECUPERA			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASRECUPERA"/>';
 			var _ROL_MEDICO								= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MEDICO_AJUSTADOR.cdsisrol" />';
 			var _ROL_MESASINIESTRO						= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MESA_DE_CONTROL_SINIESTROS.cdsisrol" />';
@@ -619,6 +620,29 @@
 					}
 				});
 				storeSubcoberturaAsegurado4MSCRender.load();
+				
+				storeSubcoberturaAsegurado4INFORender = Ext.create('Ext.data.JsonStore', {
+					model:'Generic',
+					//autoLoad:true,
+					cargado:false,
+					proxy: {
+						type: 'ajax',
+						url: _URL_CATALOGOS,
+						extraParams : {catalogo:_CATALOGO_SUBCOBERTURASTOTALINFONAVIT},
+						reader: {
+							type: 'json',
+							root: 'lista'
+						}
+					},listeners: {
+						load : function() {
+							this.cargado=true;
+							if(!Ext.isEmpty(gridFacturaDirecto)){
+								gridFacturaDirecto.getView().refresh();
+							}
+						}
+					}
+				});
+				storeSubcoberturaAsegurado4INFORender.load();
 				
 				storeSubcoberturaRecuperaRender = Ext.create('Ext.data.JsonStore', {
 					model:'Generic',
@@ -1459,7 +1483,22 @@
 											else{
 											    leyenda='Cargando...';
 											}
-										}else{
+										}
+										else if(_cdtipsitProducto =="SSI"){
+											if(storeSubcoberturaAsegurado4INFORender.cargado) {
+												debug("storeSubcoberturaAsegurado4INFORender");
+												debug(storeSubcoberturaAsegurado4INFORender);
+												storeSubcoberturaAsegurado4INFORender.each(function(rec) {
+													if (rec.data.key == v){
+														leyenda = rec.data.value;
+													}
+												});
+											}
+											else{
+											    leyenda='Cargando...';
+											}
+										}
+										else{
 											if(storeSubcoberturaAseguradoRender.cargado) {
 												debug("storeSubcoberturaAseguradoRender");
 												debug(storeSubcoberturaAseguradoRender);
