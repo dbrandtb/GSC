@@ -1242,40 +1242,43 @@ Ext.onReady(function()
 	                                                                            if(procesados==len)
 	                                                                            {
 	                                                                                _p30_store.add(mrecords);
+	                                                                                var errorLargo = '';
 	                                                                                if(errores.length>0 && (!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv)))
 	                                                                                {
-	                                                                                	 mensajeWarning(errores.join('<BR/>'));
+	                                                                                	 errorLargo = errores.join('<BR/>');
 	                                                                                	 if(!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv))
 	                                                                                     {   
-	                                                                                         mensajeWarning(descripcion+'<BR/>'+errores.join('<BR/>'));
+	                                                                                		 errorLargo = descripcion+'<BR/>'+errores.join('<BR/>');
 	                                                                                         if(msnIncInv != null)
 	                                                                                         {
-	                                                                                             mensajeWarning(descripcion +'<BR/>'+ msnIncInv+'<BR/>'+errores.join('<BR/>'));
+	                                                                                        	 errorLargo = descripcion +'<BR/>'+ msnIncInv+'<BR/>'+errores.join('<BR/>');
 	                                                                                         }
 	                                                                                     }
 	                                                                                     if(msnIncInv != null && descripcion.length<5)
 	                                                                                     {
-	                                                                                         mensajeWarning(msnIncInv+'<BR/>'+errores.join('<BR/>'));
+	                                                                                    	 errorLargo = msnIncInv+'<BR/>'+errores.join('<BR/>');
 	                                                                                     }
-	                                                                                     panelpri.setLoading(false);
 	                                                                                }
 	                                                                                if(errores.length<=0 && (!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv)))
                                                                                     {
                                                                                          if(!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv))
                                                                                          {   
-                                                                                             mensajeWarning(descripcion);
+                                                                                        	 errorLargo = descripcion;
                                                                                              if(msnIncInv != null)
                                                                                              {
-                                                                                                 mensajeWarning(descripcion +'<BR/>'+ msnIncInv);
+                                                                                            	 errorLargo = descripcion +'<BR/>'+ msnIncInv;
                                                                                              }
                                                                                          }
                                                                                          if(msnIncInv != null && descripcion.length<5)
                                                                                          {
-                                                                                             mensajeWarning(msnIncInv);
+                                                                                        	 errorLargo = msnIncInv;
                                                                                          }
-                                                                                         panelpri.setLoading(false);
                                                                                     }
-
+	                                                                                if(!Ext.isEmpty(errorLargo))
+                                                                                    {
+                                                                                        mensajeWarning(errorLargo);
+                                                                                    }
+                                                                                    panelpri.setLoading(false);
 	                                                                            }
 	                                                                        }
 	                                                                        ,failure : function()
@@ -1334,27 +1337,6 @@ Ext.onReady(function()
 	                                                        };
 	                                                        for(var i=0;i<len;i++)
 	                                                        {
-	                                                            if(i==(len-1))
-	                                                           	{
-	                                                            	 if(!Ext.isEmpty(descripcion)||!Ext.isEmpty(msnIncInv))
-	                                                                 {   
-	                                                                     if(msnIncInv != null && descripcion != null)
-	                                                                     {
-	                                                                         mensajeWarning(descripcion + msnIncInv);
-	                                                                         panelpri.setLoading(false);
-	                                                                     }
-	                                                                     else if(descripcion != null)
-	                                                                     {
-	                                                                         mensajeWarning(descripcion);
-	                                                                         panelpri.setLoading(false);
-	                                                                     }
-	                                                                     else if(msnIncInv != null)
-	                                                                     {
-	                                                                         mensajeWarning(msnIncInv);
-	                                                                         panelpri.setLoading(false);
-	                                                                     }
-	                                                                 }
-	                                                           	}
 	                                                            recupera(i);
 	                                                        }
 	                                                    }
