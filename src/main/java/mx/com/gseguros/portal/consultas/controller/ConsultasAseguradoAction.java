@@ -183,7 +183,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     		datosPolizaActual = consultasAseguradoManager.obtienePolizaActual(poliza);
     		
     		if(datosPolizaActual != null) {
-    			logger.debug("P�liza actual encontrada: {}", datosPolizaActual.size());
+    			logger.debug("Poliza actual encontrada: {}", datosPolizaActual.size());
     		}
     		
     		
@@ -199,7 +199,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     }
 	
     /**
-     * Obtiene los datos complementarios de la Secci�n Datos Generales
+     * Obtiene los datos complementarios de la Seccion Datos Generales
      * @return String result
      */
     public String consultaDatosComplementarios(){
@@ -263,7 +263,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     }
     
     /**
-     * Obtiene la informaci�n del asegurado
+     * Obtiene la informacion del asegurado
      * @return String result
      */
     public String consultaAseguradoDetalle(){
@@ -407,7 +407,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     		logger.debug("Resultados de la consulta de endosos: {}" , datosEndosos.size());
     		success = true;
     	} catch(Exception e){
-    		logger.error("Error al obtener las cl�usulas de la p�liza",e);
+    		logger.error("Error al obtener las clausulas de la poliza",e);
     		return SUCCESS;
     	}
     	success = true;
@@ -415,7 +415,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     }
     
     /**
-     * Obtiene las enfermedades cr�nicas
+     * Obtiene las enfermedades cronicas
      * @return String result
      */    
     public String consultaDatosEnfermedades(){
@@ -435,7 +435,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     		datosEnfermedades = consultasAseguradoManager.obtieneEnfermedades(poliza, asegurado);
     		success = true;
     	} catch(Exception e){
-    		logger.error("Error al obtener las enfermedades cr�nicas",e);
+    		logger.error("Error al obtener las enfermedades cronicas",e);
     		return SUCCESS;
     	}
     	success = true;
@@ -536,7 +536,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     }
     
     /**
-     * Obtiene las coberturas b�sicas
+     * Obtiene las coberturas basicas
      * @return String result
      */
     public String consultaCoberturasBasicas(){
@@ -567,11 +567,11 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     }
     
     /**
-     * Obtiene los datos del hist�rico de una p�liza
+     * Obtiene los datos del historico de una p�liza
      * @return String result
      */
     public String consultaDatosHistorico(){
-    	logger.debug(" **** Entrando a consultaDatosHist�rico ****");
+    	logger.debug(" **** Entrando a consultaDatosHistorico ****");
     	mensajeRes = "";
     	try {
     		    		
@@ -618,7 +618,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     }
     
     /**
-     * Obtiene el hist�rico de farmacia
+     * Obtiene el historico de farmacia
      * @return String result
      */	
     public String consultaDatosHistoricoFarmacia(){
@@ -637,7 +637,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     		historicoFarmacia = consultasAseguradoManager.obtieneHistoricoFarmacia(poliza, asegurado);
     		success = true;
     	} catch(Exception e){
-    		logger.error("Error al obtener el hist�rico de farmacia",e);
+    		logger.error("Error al obtener el historico de farmacia",e);
     		return SUCCESS;
     	}
     	success = true;
