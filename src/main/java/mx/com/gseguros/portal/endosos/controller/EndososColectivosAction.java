@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.JOptionPane;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
@@ -670,7 +672,10 @@ public class EndososColectivosAction extends PrincipalCoreAction
 					String nmpolizaNuevaPoliza = resReexped.get("pv_nmpolnew_o");
 					String ntramiteNuevaPoliza = resReexped.get("pv_ntramite_o");
             		params.put("nmpoliza", nmpolizaNuevaPoliza);
-            		params.put("ntramite", ntramiteNuevaPoliza);
+            		params.put("ntramite", ntramiteNuevaPoliza);            		
+            		int reply = JOptionPane.showConfirmDialog(null, "Desar continuar con el proceso", "Mensaje", JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION) {
+                      
 //            		boolean exitoGrupos = endososManager.actualizaTodosGruposReexp(cdunieco, 
 //																				   cdramo, 
 //																				   estado,
@@ -743,6 +748,11 @@ public class EndososColectivosAction extends PrincipalCoreAction
 	         }
             params.put("statusNuevo", EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
             success = true;
+            }
+            else {
+            	JOptionPane.showMessageDialog(null, "GOODBYE");
+            	System.exit(0);
+            }
 
 		} catch (Exception ex) {
 			error = ex.getMessage();

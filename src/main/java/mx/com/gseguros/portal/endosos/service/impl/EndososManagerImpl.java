@@ -3693,6 +3693,13 @@ public class EndososManagerImpl implements EndososManager
 		@Override
 		public void run(){
 			try{
+				cotizacionDAO.movimientoTbloqueo(
+						cdunieco, 
+						cdramo, 
+						estado, 
+						nmpoliza, 
+						"0", 
+						"I");
 				for(int i = 1; i <= numSituac; i++)
 				{
 					List<Map<String,String>> coberturasDeExtraprimas = consultasDAO.recuperaCoberturasExtraprima(this.cdramo, this.cdtipsit);
@@ -3710,7 +3717,14 @@ public class EndososManagerImpl implements EndososManager
 								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
 								);
 					}
-				}			
+				}
+				cotizacionDAO.movimientoTbloqueo(
+						cdunieco, 
+						cdramo, 
+						estado, 
+						nmpoliza, 
+						"0", 
+						"D");
 			}catch(Exception ex){
 				logger.error("error lanzando valores po defecto extraprima: ",ex);
 			}
