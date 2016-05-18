@@ -368,6 +368,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     		poliza.setEstado(params.get("estado"));
     		poliza.setNmpoliza(params.get("nmpoliza"));
     		poliza.setNmsuplem(params.get("suplemento"));
+    		poliza.setNmsituac(params.get("nmsituac"));
     		poliza.setIcodpoliza(params.get("icodpoliza"));
     		AseguradoVO asegurado = new AseguradoVO();
     		asegurado.setCdperson(params.get("cdperson"));

@@ -427,7 +427,8 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 		params.put("pv_estado_i",   poliza.getEstado());
 		params.put("pv_nmpoliza_i", poliza.getNmpoliza());
 		params.put("pv_nmsuplem_i", poliza.getNmsuplem());
-		//params.put("pv_cdperson_i", asegurado.getCdperson());
+		params.put("pv_nmsituac_i", poliza.getNmsituac());
+		params.put("pv_cdperson_i", asegurado.getCdperson());
 		Map<String, Object> mapResult = ejecutaSP(new ConsultaAseguradosSP(getDataSource()), params);
 		
 		return (List<AseguradoVO>) mapResult.get("pv_registro_o");
@@ -441,7 +442,8 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
-    		//declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new AseguradosMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
