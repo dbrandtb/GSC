@@ -2949,8 +2949,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							}
 						}
 						else
-						incisosinvalidos += slistPYME.get(e).get("parametros.pv_otvalor06")+", ";
-
+						{
+							incisosinvalidos += slistPYME.get(e).get("parametros.pv_otvalor06")+", ";
+						}
 						slistPYME.remove(e);
 						i--;
 						tamanio--;
