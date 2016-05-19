@@ -525,14 +525,19 @@
                                     debug('nmsituac seleccionado:', me.getSelection()[0].get('NMSITUAC'));
                                     
                                     //Filtramos el contenido de las coberturas de acuerdo al inciso elegido:
+                                    var nmsituacFiltro = me.getSelection()[0].get('NMSITUAC');
+                                    var funcionFiltro  = function(record)
+                                    {
+                                        return Number(record.get('nmsituac'))===Number(nmsituacFiltro);
+                                    };
                                     storeCoberturasDisponibles_p3.clearFilter();
-                                    storeCoberturasDisponibles_p3.filter("nmsituac", me.getSelection()[0].get('NMSITUAC'));
+                                    storeCoberturasDisponibles_p3.filterBy(funcionFiltro);
                                     
                                     storeCoberturasActuales_p3.clearFilter();
-                                    storeCoberturasActuales_p3.filter("nmsituac", me.getSelection()[0].get('NMSITUAC'));
+                                    storeCoberturasActuales_p3.filterBy(funcionFiltro);
                                     
                                     storeCoberturasEditadas_p3.clearFilter();
-                                    storeCoberturasEditadas_p3.filter("nmsituac", me.getSelection()[0].get('NMSITUAC'));
+                                    storeCoberturasEditadas_p3.filterBy(funcionFiltro);
                                 }
                             }
                         },
