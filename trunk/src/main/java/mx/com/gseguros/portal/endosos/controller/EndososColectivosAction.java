@@ -673,8 +673,8 @@ public class EndososColectivosAction extends PrincipalCoreAction
 					String ntramiteNuevaPoliza = resReexped.get("pv_ntramite_o");
             		params.put("nmpoliza", nmpolizaNuevaPoliza);
             		params.put("ntramite", ntramiteNuevaPoliza);            		
-            		int reply = JOptionPane.showConfirmDialog(null, "Desar continuar con el proceso", "Mensaje", JOptionPane.YES_NO_OPTION);
-                    if (reply == JOptionPane.YES_OPTION) {
+//            		int reply = JOptionPane.showConfirmDialog(null, "Desar continuar con el proceso", "Mensaje", JOptionPane.YES_NO_OPTION);
+//                    if (reply == JOptionPane.YES_OPTION) {
                       
 //            		boolean exitoGrupos = endososManager.actualizaTodosGruposReexp(cdunieco, 
 //																				   cdramo, 
@@ -748,11 +748,11 @@ public class EndososColectivosAction extends PrincipalCoreAction
 	         }
             params.put("statusNuevo", EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
             success = true;
-            }
-            else {
-            	JOptionPane.showMessageDialog(null, "GOODBYE");
-            	System.exit(0);
-            }
+//            }
+//            else {
+//            	JOptionPane.showMessageDialog(null, "GOODBYE");
+//            	System.exit(0);
+//            }
 
 		} catch (Exception ex) {
 			error = ex.getMessage();
