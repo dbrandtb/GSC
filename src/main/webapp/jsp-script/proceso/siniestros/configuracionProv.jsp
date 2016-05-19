@@ -19,6 +19,12 @@
 				
 				
 				var _VER_CONFIG_LAYOUT 		=   '<s:url namespace="/siniestros"	action="includes/configuracionLayout" />';
+				
+				//CAMBIOS
+				var _URL_CONSULTA_LAYOUT	=	'<s:url namespace="/siniestros" action="consultaLayoutConfigurados" />';
+				
+				
+				
 			</script>
 			<script type="text/javascript" src="${ctx}/js/proceso/siniestros/configuracionProv.js"></script>
 	</head>

@@ -906,7 +906,7 @@
 		</action>
 
 		<action name="includes/configuracionLayout" class="siniestrosAction" method="configuracionLayoutProveedor">
-			<result>/jsp-script/proceso/siniestros/configuracionLayout.jsp</result>
+			<result>/jsp-script/proceso/siniestros/parametrizacionLayout.jsp</result>
 		</action>
 		
 		<action name="includes/historialCPTPagados" class="detalleSiniestroAction">
@@ -1107,6 +1107,16 @@
 		</action>
 
 		<action name="consultaDatosConfiguracionProveedor" class="configuracionLayoutAction" method="consultaDatosConfiguracionProveedor">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosValidacion.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaLayoutConfigurados" class="configuracionLayoutAction" method="consultaLayoutConfigurados">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">

@@ -139,6 +139,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				valores.put("otvalor15" , params.get("idnombreBeneficiarioProv"));
 				valores.put("otvalor20" , params.get("cmbRamos"));
 				valores.put("otvalor22" , params.get("txtAutEspecial"));
+				valores.put("otvalor26" , params.get("pv_cdtipsit_i"));
 				
 				if(params.get("cmbProveedor").toString().length() > 0){
 					valores.put("otvalor13",TipoPrestadorServicio.CLINICA.getCdtipo());

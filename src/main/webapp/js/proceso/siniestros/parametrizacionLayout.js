@@ -13,14 +13,6 @@ Ext.onReady(function() {
 		fields:['claveAtributo','claveFormatoAtributo','valorMinimo','valorMaximo','columnaExcel', 'claveFormatoFecha', "atributoRequerido"]
 	});
 	
-	Ext.define('modelListadoProvMedico',{
-		extend: 'Ext.data.Model',
-			fields: [
-				{type:'string', 	name:'cdpresta'},				{type:'string',		name:'nombre'},
-				{type:'string',		name:'cdespeci'},				{type:'string',		name:'descesp'}
-			]
-	});
-	
 	var storeFormatoAtributo = Ext.create('Ext.data.JsonStore', {
 		model:'Generic',
 		proxy: {
@@ -76,73 +68,11 @@ Ext.onReady(function() {
 		}
 	});
 	storeFormFecha.load();
-	
+
 	var storeLayoutProveedor =new Ext.data.Store({
 		autoDestroy: true,
 		model: 'modeLayoutProveedor'
 	});
-	
-	var storeProveedor = Ext.create('Ext.data.Store', {
-		model:'modelListadoProvMedico',
-		autoLoad:true,
-		proxy: {
-			type: 'ajax',
-			url : _URL_CATALOGOS,
-			extraParams:{
-				catalogo         : _CATALOGO_PROVEEDORES,
-				catalogoGenerico : true
-			},
-			reader: {
-				type: 'json',
-				root: 'listaGenerica'
-			}
-		}
-	});
-
-	var storeAplicaIVA = Ext.create('Ext.data.Store', {
-		model:'Generic',
-		autoLoad:true,
-		proxy: {
-			type	: 'ajax',
-			url: _URL_CATALOGOS,
-			extraParams	: {catalogo:_SINO},
-			reader: {
-				type	:	'json',
-				root	:	'lista'
-			}
-		}
-	});
-	storeAplicaIVA.load();
-	
-	var storeSecuenciaIVA = Ext.create('Ext.data.Store', {
-		model:'Generic',
-		autoLoad:true,
-		proxy: {
-			type: 'ajax',
-			url: _URL_CATALOGOS,
-			extraParams : {catalogo:_SECUENCIA},
-			reader: {
-				type:	'json',
-				root:	'lista'
-			}
-		}
-	});
-	storeSecuenciaIVA.load();
-	
-	var storeAplicaIVARet = Ext.create('Ext.data.Store', {
-		model:'Generic',
-		autoLoad:true,
-		proxy: {
-			type: 'ajax',
-			url: _URL_CATALOGOS,
-			extraParams : {catalogo:_SINO},
-			reader: {
-				type:	'json',
-				root:	'lista'
-			}
-		}
-	});
-	storeAplicaIVARet.load();
 	
 	var storeCampoRequerido= Ext.create('Ext.data.JsonStore', {
 		model:'Generic',
@@ -158,52 +88,7 @@ Ext.onReady(function() {
 	});
 	storeCampoRequerido.load();
 	
-	var storeTipoLayout = Ext.create('Ext.data.JsonStore', {
-		model:'Generic',
-		proxy: {
-			type: 'ajax',
-			url: _URL_CATALOGOS,
-			extraParams : {catalogo:_CATALOGO_ConfLayout},
-			reader: {
-				type: 'json',
-				root: 'lista'
-			}
-		}
-	});
-	storeTipoLayout.load();
-	
-	//Informacion proveedor
-	cmbProveedor = Ext.create('Ext.form.field.ComboBox', {
-		fieldLabel : 'Proveedor',			displayField : 'nombre',			name:'cmbProveedor',			valueField : 'cdpresta',
-		forceSelection : true,				matchFieldWidth: false,				queryMode :'remote',			queryParam : 'params.cdpresta',
-		minChars	: 2,					store : storeProveedor,				triggerAction: 'all',			hideTrigger:true,
-		width		: 400,					readOnly : true
-	}); 
-	//Aplica IVA
-	aplicaIVADesc = Ext.create('Ext.form.field.ComboBox',{
-		fieldLabel   : 'Aplica IVA',		displayField : 'value',				name:'idaplicaIVA',				valueField:'key',
-		forceSelection  : true,				queryMode    :'local',				editable   : false,
-		store : storeAplicaIVA,				readOnly : true
-	});
-	//Secuencia IVA
-	secuenciaIVADesc = Ext.create('Ext.form.field.ComboBox',{
-		fieldLabel   : 'Secuencia IVA',		displayField : 'value',				name:'secuenciaIVA',			valueField:'key',
-		forceSelection  : true,				queryMode    :'local',				editable   : false,
-		store : storeSecuenciaIVA,			readOnly : true
-	});
-	//Aplica IVA Retenido
-	aplicaIVARETDesc = Ext.create('Ext.form.field.ComboBox',{
-		fieldLabel   : 'Aplica IVA Retenido',	displayField : 'value',			name:'idaplicaIVARET',			valueField:'key',
-		forceSelection  : true,				queryMode    :'local',				editable   : false,
-		store : storeAplicaIVARet,			readOnly : true,					colspan	   :2
-	});
-	
-	tipoLayout= Ext.create('Ext.form.field.ComboBox',{
-		fieldLabel   : 'Layout',			displayField : 'value',				name:'tipoLayout',				valueField: 'key',
-		forceSelection  : true,				queryMode    :'local',				editable   : false,
-		store : storeTipoLayout,			readOnly : true,					colspan	   :2
-	});
-	
+
 	//Datos informacion Grid
 	cmbAtributos = Ext.create('Ext.form.ComboBox',{
 		id:'cmbAtributos',			store: storeAtributos,			queryMode:'local',
@@ -406,13 +291,17 @@ Ext.onReady(function() {
 			style	: 'margin:5px;'
 		},
 		items		:[
-			cmbProveedor,
-			tipoLayout,
-			aplicaIVADesc,
-			secuenciaIVADesc,
-			aplicaIVARETDesc,
-			{	colspan:2
-				,border: false
+			{	xtype	: 'textfield',		fieldLabel: 'Nombre Layout',		name		: 'txtLayout',		allowBlank		: false,
+				width	: 550,				colspan:2
+			},
+			{	xtype	: 'textfield',		fieldLabel: 'Cve. Layout',			name		: 'cveLayout',		allowBlank		: false,
+				width	: 550,				colspan:2
+			},
+			{	xtype	: 'textfield',		fieldLabel: 'Accion',				name		: 'txtAccion',		allowBlank		: false,
+				width	: 550,				colspan:2
+			},
+			{	colspan:2,
+				border: false
 				,items	:
 				[
 					gridLayoutProveedor
@@ -529,58 +418,50 @@ Ext.onReady(function() {
 		]
 	});
 	
-	if(valorAction.ntramite != null){
-		storeProveedor.load();
-		storeSecuenciaIVA.load();
-		storeAplicaIVARet.load();
+	if(valorAction.tipoProceso != null){
+		debug("Valor de tipoLayout =====>",valorAction.tipoLayout);
+		panelInicialPral.down('[name=txtLayout]').setValue(valorAction.tipoLayout);
+		panelInicialPral.down('[name=cveLayout]').setValue(valorAction.claveLayout);
+		panelInicialPral.down('[name=txtAccion]').setValue(valorAction.tipoProceso);
 		
-		storeProveedor.load({
-			params:{
-				'params.cdpresta': valorAction.cdpresta
-			}
-		});
-		panelInicialPral.down('combo[name=cmbProveedor]').setValue(valorAction.cdpresta);
-		panelInicialPral.down('combo[name=tipoLayout]').setValue(valorAction.tipoLayout);
-		panelInicialPral.down('combo[name=idaplicaIVA]').setValue(valorAction.idaplicaIVA);
-		panelInicialPral.down('combo[name=secuenciaIVA]').setValue(valorAction.secuenciaIVA);
-		panelInicialPral.down('combo[name=idaplicaIVARET]').setValue(valorAction.idaplicaIVARET);
-		
-		Ext.Ajax.request({
-			url		: _URL_CONSULTA_CONF_LAYOUT
-			,params	:{
-				'params.cdpresta': valorAction.cdpresta
-			}
-			,success : function (response)
-			{
-				debug("<=== Valor de Respuesta ===> ",Ext.decode(response.responseText));
-				if(Ext.decode(response.responseText).datosInformacionAdicional != null)
-				{
-					var json=Ext.decode(response.responseText).datosInformacionAdicional;
-					for(var i = 0; i < json.length; i++){
-						var rec = new modeLayoutProveedor({
-							claveAtributo: json[i].CVEATRI,
-							claveFormatoAtributo: json[i].CVEFORMATO,
-							valorMinimo: json[i].VALORMIN,
-							valorMaximo: json[i].VALORMAX,
-							columnaExcel: json[i].CVEEXCEL,
-							atributoRequerido : json[i].SWOBLIGA,
-							claveFormatoFecha: json[i].FORMATFECH
-							
-						});
-						storeLayoutProveedor.add(rec);
-					}
+		if(+valorAction.claveLayout > 0){
+			Ext.Ajax.request({
+				url		: _URL_CONSULTA_CONF_LAYOUT
+				,params	:{
+					'params.tipoLayout': valorAction.claveLayout
 				}
-			},
-			failure : function (){
-				me.up().up().setLoading(false);
-				Ext.Msg.show({
-					title:'Error',
-					msg: 'Error de comunicaci&oacute;n',
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-				});
-			}
-		});
+				,success : function (response)
+				{
+					debug("<=== Valor de Respuesta ===> ",Ext.decode(response.responseText));
+					if(Ext.decode(response.responseText).datosInformacionAdicional != null)
+					{
+						var json=Ext.decode(response.responseText).datosInformacionAdicional;
+						for(var i = 0; i < json.length; i++){
+							var rec = new modeLayoutProveedor({
+								claveAtributo: json[i].CVEATRI,
+								claveFormatoAtributo: json[i].CVEFORMATO,
+								valorMinimo: json[i].VALORMIN,
+								valorMaximo: json[i].VALORMAX,
+								columnaExcel: json[i].CVEEXCEL,
+								atributoRequerido : json[i].SWOBLIGA,
+								claveFormatoFecha: json[i].FORMATFECH
+								
+							});
+							storeLayoutProveedor.add(rec);
+						}
+					}
+				},
+				failure : function (){
+					me.up().up().setLoading(false);
+					Ext.Msg.show({
+						title:'Error',
+						msg: 'Error de comunicaci&oacute;n',
+						buttons: Ext.Msg.OK,
+						icon: Ext.Msg.ERROR
+					});
+				}
+			});
+		}
 	}
 	function _p21_agregarGrupoClic(){
 		storeLayoutProveedor.add(new modeLayoutProveedor({claveAtributo:'1'}));

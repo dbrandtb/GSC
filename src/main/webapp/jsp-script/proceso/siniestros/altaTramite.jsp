@@ -65,6 +65,8 @@
             var _URL_ELIMINAR_FACT_ASEG					= '<s:url namespace="/siniestros" 		action="eliminarFactAsegurado" />';
             var _URL_CONSULTA_BENEFICIARIO				= '<s:url namespace="/siniestros"		action="consultaDatosBeneficiario" />';
             var _URL_LISTADO_ASEGURADO_POLIZA			= '<s:url namespace="/siniestros"       action="consultaListaAseguradoPoliza" />';
+            var _CAT_MODALIDADES 					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPSIT"/>';
+            
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             debug("valorAction ====>", valorAction);
         </script>

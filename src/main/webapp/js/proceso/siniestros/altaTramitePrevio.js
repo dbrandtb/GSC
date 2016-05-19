@@ -210,6 +210,21 @@ Ext.onReady(function() {
 	});
 	storeRamos.load();
 
+	storeModalidad = Ext.create('Ext.data.Store', {
+		model:'Generic',
+		autoLoad:false,
+		proxy: {
+			type: 'ajax',
+			url: _URL_CATALOGOS,
+			extraParams : {catalogo:_CAT_MODALIDADES},
+			reader: {
+				type: 'json',
+				root: 'lista'
+			}
+		}
+	});
+	//storeModalidad.load();
+	
     cmbRamos = Ext.create('Ext.form.field.ComboBox',{
 		colspan:2,								fieldLabel   : 'Producto',			allowBlank     : false,		editable   : false,
 		displayField: 'value',					valueField: 'key',					forceSelection : false,		queryMode :'local',
@@ -218,6 +233,7 @@ Ext.onReady(function() {
     		'select':function(e){
     			panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
     			panelInicialPral.down('combo[name=cmbTipoPago]').setValue(null);
+    			panelInicialPral.down('combo[name=pv_cdtipsit_i]').setValue(null);
     			storeTipoPago.removeAll();
     			storeTipoPago.load({
 					params:{
@@ -225,9 +241,18 @@ Ext.onReady(function() {
 					}
 				});
 				
+				storeModalidad.removeAll();
+				storeModalidad.load({
+					params:{
+						'params.idPadre':panelInicialPral.down('combo[name=cmbRamos]').getValue()
+					}
+				});
+				
+				
     			storeTipoAtencion.load({
 					params:{
 						'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+						'params.cdtipsit': panelInicialPral.down('combo[name=pv_cdtipsit_i]').getValue(),
 						'params.tipoPago':panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
 					}
 				});
@@ -236,6 +261,24 @@ Ext.onReady(function() {
     				panelInicialPral.down('combo[name=cmbTipoPago]').setValue('3');
     				panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue('9');
     			}
+    		}
+    	}
+	});
+	
+    cmbModalidad = Ext.create('Ext.form.field.ComboBox',{
+		fieldLabel   : 'Modalidad',			allowBlank     : false,		editable   : false,
+		displayField: 'value',				valueField: 'key',			forceSelection : false,				queryMode :'local',
+		width: 300,							name:'pv_cdtipsit_i',		store 		   : storeModalidad,
+    	listeners : {
+    		'change':function(e){
+    			panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
+				storeTipoAtencion.load({
+					params:{
+						'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+						'params.cdtipsit': panelInicialPral.down('combo[name=pv_cdtipsit_i]').getValue(),
+						'params.tipoPago':panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+					}
+				});
     		}
     	}
 	});
@@ -250,6 +293,7 @@ Ext.onReady(function() {
 				storeTipoAtencion.load({
 					params:{
 						'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+						'params.cdtipsit': panelInicialPral.down('combo[name=pv_cdtipsit_i]').getValue(),
 						'params.tipoPago':panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
 					}
 				});
@@ -400,6 +444,7 @@ Ext.onReady(function() {
 		fieldLabel : 'Proveedor',		displayField : 'nombre',		name:'cmbProveedor',		valueField   : 'cdpresta',
 		forceSelection : true,			matchFieldWidth: false,			queryMode :'remote',		queryParam: 'params.cdpresta',
 		minChars	: 2,				store : storeProveedor,			triggerAction: 'all',		hideTrigger:true,	allowBlank:false,
+		colspan:2,
 		width		: 300,
 		listeners : {
 			'select' : function(combo, record) {
@@ -1240,6 +1285,7 @@ Ext.onReady(function() {
 		                ,readOnly   : true,					width		 : 300,					value		:'PENDIENTE'
 		            },
 		            cmbRamos,
+		            cmbModalidad,
 	            	tipoPago,
 	            	//tipoPago2,
 	            	comboTipoAte,
@@ -1619,6 +1665,14 @@ Ext.onReady(function() {
     	panelInicialPral.down('combo[name=cmbOficReceptora]').setValue(valorAction.cdunieco);
     	/*Seleccionamos el producto Salud vital*/
     	panelInicialPral.down('combo[name=cmbRamos]').setValue(_SALUD_VITAL);
+    	/*Modalidad*/
+    	storeModalidad.removeAll();
+		storeModalidad.load({
+			params:{
+				'params.idPadre':_SALUD_VITAL
+			}
+		});
+		panelInicialPral.down('combo[name=pv_cdtipsit_i]').setValue('SL');
     	/*Tipo de pago*/
     	storeTipoPago.removeAll();
 		storeTipoPago.load({
@@ -1630,8 +1684,9 @@ Ext.onReady(function() {
     	/*Tipo de atencion*/
     	storeTipoAtencion.load({
 			params:{
-				'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue(),
-				'params.tipoPago':panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+				'params.cdramo'  : panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+				'params.cdtipsit': panelInicialPral.down('combo[name=pv_cdtipsit_i]').getValue(),
+				'params.tipoPago': panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
 			}
 		});
     	
