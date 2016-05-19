@@ -1779,9 +1779,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 
 	@Override
-	public List<GenericVO> getconsultaListaTipoAtencion(String cdramo, String tipoPago) throws Exception {
+	public List<GenericVO> getconsultaListaTipoAtencion(String cdramo, String modalidad, String tipoPago) throws Exception {
 		try {
-			return siniestrosDAO.obtieneListaTipoAtencion(cdramo,tipoPago);
+			return siniestrosDAO.obtieneListaTipoAtencion(cdramo, modalidad, tipoPago);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
@@ -1991,7 +1991,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 
 	@Override
-	public String guardaLayoutProveedor(String cdpresta, String tipoLayout, String claveAtributo,
+	public String guardaLayoutProveedor(String tipoLayout, String claveAtributo,
 			String claveFormatoAtributo, String valorMinimo,
 			String valorMaximo, String columnaExcel, String claveFormatoFecha,
 			String atributoRequerido, String nmordina, String tipoAccion) throws Exception {
@@ -2006,7 +2006,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			}
 			
 			HashMap<String,Object> paramsConfLayout=new HashMap<String,Object>();
-			paramsConfLayout.put("pv_cdpresta_i",cdpresta);
 			paramsConfLayout.put("pv_cveconfi_i",tipoLayout);
 			paramsConfLayout.put("pv_cveatri_i", claveAtributo);
 			paramsConfLayout.put("pv_nmordina_i",nmordina);
@@ -2028,9 +2027,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	public List<Map<String, String>> consultaConfiguracionLayout(String cdpresta) throws Exception {
+	public List<Map<String, String>> consultaConfiguracionLayout(String tipoLayout) throws Exception {
 		HashMap<String,Object> params = new HashMap<String,Object>();
-		params.put("pv_cdpresta_i",   cdpresta);
+		params.put("pv_tipoLayout_i",   tipoLayout);
 		log.debug("consultaConfiguracionLayout params: "+params);
 		return siniestrosDAO.obtieneConfiguracionLayout(params);
 	}

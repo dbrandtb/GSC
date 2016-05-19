@@ -4062,15 +4062,11 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 
 
-	/*@Override
-	public List<GenericVO> obtieneListaTipoAtencion(String cdramo,String tipoPago) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}*/
 	@Override
-	public List<GenericVO> obtieneListaTipoAtencion(String cdramo,String tipoPago) throws Exception {
+	public List<GenericVO> obtieneListaTipoAtencion(String cdramo, String modalidad, String tipoPago) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_producto_i"   , cdramo);
+		params.put("pv_cdtipsit_i" , modalidad);
 		params.put("pv_tipoPago_i" , tipoPago);
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerListaTipoAtencion(this.getDataSource()), params);
 		return (List<GenericVO>) resultadoMap.get("pv_registro_o");
@@ -4082,6 +4078,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		{
 			super(dataSource, "PKG_LISTAS.P_GET_TIPOATENCION");
 			declareParameter(new SqlParameter("pv_producto_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_tipoPago_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaTipoAtencion()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -4641,8 +4638,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	
 	protected class GuardaLayoutProveedor extends StoredProcedure {
 		protected GuardaLayoutProveedor(DataSource dataSource) {
-			super(dataSource, "PKG_SINIESTRO.P_MOV_CONFLAYOUT");
-			declareParameter(new SqlParameter("pv_cdpresta_i", OracleTypes.VARCHAR));
+			super(dataSource, "PKG_DESARROLLO.P_MOV_CONFLAYOUT");
 			declareParameter(new SqlParameter("pv_cveconfi_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cveatri_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmordina_i", OracleTypes.VARCHAR));
@@ -4668,8 +4664,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	protected class ObtieneConfiguracionLayout extends StoredProcedure {
 		protected ObtieneConfiguracionLayout(DataSource dataSource) {
 			// TODO: Terminar cuando este listo el SP
-			super(dataSource, "PKG_SINIESTRO.P_GET_CONFLAYOUT");
-			declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
+			super(dataSource, "PKG_DESARROLLO.P_GET_CONFLAYOUT");
+			declareParameter(new SqlParameter("pv_tipoLayout_i",   OracleTypes.VARCHAR));
     		String[] cols = new String[]{
     				"CDPRESTA",
     				"CVEATRI",

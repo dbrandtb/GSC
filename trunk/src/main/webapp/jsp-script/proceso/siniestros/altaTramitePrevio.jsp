@@ -36,6 +36,7 @@
 			var _p12_urlMesaControl                 = '<s:url namespace="/mesacontrol" 		action="mcdinamica"               />';
 			var _UR_LISTA_RAMO_SALUD				= '<s:url namespace="/siniestros"  		action="consultaRamosSalud"/>';
 			var _URL_CONSULTA_BENEFICIARIO          = '<s:url namespace="/siniestros"       action="consultaDatosBeneficiario" />';
+			var _CAT_MODALIDADES 					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPSIT"/>';
 			
 			var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
 		</script>

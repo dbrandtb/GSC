@@ -319,6 +319,20 @@ Ext.onReady(function() {
 		}
 	});
 	storeRamos.load();
+	
+	storeModalidad = Ext.create('Ext.data.Store', {
+		model:'Generic',
+		autoLoad:false,
+		proxy: {
+			type: 'ajax',
+			url: _URL_CATALOGOS,
+			extraParams : {catalogo:_CAT_MODALIDADES},
+			reader: {
+				type: 'json',
+				root: 'lista'
+			}
+		}
+	});
 
 /*******		DECLARACION DE COMBOX Y LABEL		*******/
 	cmbRamos = Ext.create('Ext.form.field.ComboBox',{
@@ -328,6 +342,24 @@ Ext.onReady(function() {
 		,store : storeRamos
 	});
 	
+    cmbModalidad = Ext.create('Ext.form.field.ComboBox',{
+		fieldLabel   : 'Modalidad',			allowBlank     : false,		editable   : false,
+		displayField: 'value',				valueField: 'key',			forceSelection : false,				queryMode :'local',
+		width: 300,							name:'pv_cdtipsit_i',		store 		   : storeModalidad,
+    	listeners : {
+    		'select':function(e){
+    			panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
+				storeTipoAtencion.load({
+					params:{
+						'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+						'params.cdtipsit': panelInicialPral.down('combo[name=pv_cdtipsit_i]').getValue(),
+						'params.tipoPago':panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+					}
+				});
+    		}
+    	}
+	})
+	
 	var tipoPago= Ext.create('Ext.form.ComboBox',{
 		name:'cmbTipoPago',					fieldLabel: 'Tipo pago',			queryMode:'local',
 		displayField: 'value',				valueField: 'key',					allowBlank:false,
@@ -336,9 +368,11 @@ Ext.onReady(function() {
 		listeners : {
 			'select':function(e){
 				panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
+				
 				storeTipoAtencion.load({
 					params:{
 						'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+						'params.cdtipsit': panelInicialPral.down('combo[name=pv_cdtipsit_i]').getValue(),
 						'params.tipoPago':panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
 					}
 				});
@@ -726,7 +760,7 @@ Ext.onReady(function() {
 		width		 : 350,					valueField   : 'cdpresta',			forceSelection : true,
 		matchFieldWidth: false,				queryMode :'remote',				queryParam: 'params.cdpresta',
 		minChars  : 2,						store : storeProveedor,				triggerAction: 'all',
-		hideTrigger:true,					allowBlank:false,
+		hideTrigger:true,					allowBlank:false,					colspan:2,
 		listeners : {
 			'select' : function(combo, record) {
 				if(this.getValue() =='0'){
@@ -1843,6 +1877,7 @@ Ext.onReady(function() {
 			{	xtype	: 'textfield',		fieldLabel : 'No.Factura',			name		: 'numIndFactura',		labelWidth: 170,	hidden:true		},
 			{	xtype	: 'textfield',		fieldLabel: 'Estado',				name		: 'txtEstado',			readOnly   : true,	width	: 350,	value:'PENDIENTE'},
 			cmbRamos,
+			cmbModalidad,
 			tipoPago,
 			comboTipoAte,
 			cmbOficinaReceptora,
@@ -2263,6 +2298,7 @@ Ext.onReady(function() {
 			{
 				if(Ext.decode(response.responseText).listaMesaControl != null){
 					var json=Ext.decode(response.responseText).listaMesaControl[0];
+					debug("VALOR DEL JSON MODIFICADO ====>>>>",json);
 					//ASIGNACION DE VALORES GENERALES PARA PAGO DIRECTO Y REEMBOLSO
 					panelInicialPral.down('[name=idNumTramite]').setValue(valorAction.ntramite);
 					panelInicialPral.down('[name=txtEstado]').setValue('PENDIENTE');
@@ -2285,6 +2321,13 @@ Ext.onReady(function() {
 						panelInicialPral.down('combo[name=cmbRamos]').setValue(json.otvalor20mc);
 					}
 					
+					storeModalidad.load({
+						params:{
+							'params.idPadre':panelInicialPral.down('combo[name=cmbRamos]').getValue()
+						}
+					});
+					panelInicialPral.down('combo[name=pv_cdtipsit_i]').setValue(json.otvalor26mc);
+					
 					storeTipoPago.load({
 						params:{
 							'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue()
@@ -2296,10 +2339,10 @@ Ext.onReady(function() {
 					storeTipoAtencion.load({ 
 						params:{
 							'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+							'params.cdtipsit': panelInicialPral.down('combo[name=pv_cdtipsit_i]').getValue(),
 							'params.tipoPago':panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
 						}
 					});
-					
 					panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(json.otvalor07mc);
 					
 					//VALORES DE PAGO DIRECTO

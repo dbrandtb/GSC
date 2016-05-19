@@ -570,7 +570,7 @@ public interface SiniestrosManager {
 
 	public String actualizaValorMC(HashMap<String, Object> modMesaControl) throws Exception;
 
-	public List<GenericVO> getconsultaListaTipoAtencion(String cdramo,String tipoPago) throws Exception;
+	public List<GenericVO> getconsultaListaTipoAtencion(String cdramo, String modalidad, String tipoPago) throws Exception;
 
 	public  List<Map<String, String>> getConsultaListaAutServicioSiniestro(String cdperson)throws Exception;
 	
@@ -612,10 +612,10 @@ public interface SiniestrosManager {
 	
 	public List<GenericVO>obtenerAtributosLayout(String descripcion) throws Exception;
 	
-	public String guardaLayoutProveedor(String cdpresta, String tipoLayout, String claveAtributo, String claveFormatoAtributo,
+	public String guardaLayoutProveedor(String tipoLayout, String claveAtributo, String claveFormatoAtributo,
 			String valorMinimo, String valorMaximo, String columnaExcel, String claveFormatoFecha,String atributoRequerido, String nmordina, String tipoAccion) throws Exception;
 
-	public List<Map<String, String>> consultaConfiguracionLayout(String cdpresta) throws Exception;
+	public List<Map<String, String>> consultaConfiguracionLayout(String tipoLayout) throws Exception;
 	
 	public List<Map<String, String>> guardaHistorialSiniestro(String ntramite, String nfactura) throws Exception;
 	

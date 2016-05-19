@@ -978,7 +978,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		logger.debug("Entra a consultaListaTipoAtencion params de entrada :{}",params);
 		try {
 			//if(params != null){
-				listaTipoAtencion= siniestrosManager.getconsultaListaTipoAtencion(params.get("cdramo"), params.get("tipoPago"));
+				listaTipoAtencion= siniestrosManager.getconsultaListaTipoAtencion(params.get("cdramo"), params.get("cdtipsit"), params.get("tipoPago"));
 				logger.debug("listaTipoAtencion : {}",listaTipoAtencion);
 			//}
 		}catch( Exception e){

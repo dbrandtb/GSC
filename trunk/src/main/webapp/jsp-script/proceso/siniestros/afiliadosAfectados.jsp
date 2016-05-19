@@ -160,6 +160,7 @@
 			var _tipoPago = _11_params.OTVALOR02;
 			var _tipoProducto = _11_params.CDRAMO;
 			var _cdtipsitProducto = _11_params.CDTIPSIT
+			var _cdtipAtencion    = _11_params.OTVALOR26
 			var banderaConcepto = "0";
 			var banderaAsegurado = "0";
 			var storeCobertura;
@@ -3715,6 +3716,7 @@
 				storeTipoAtencion.load({
 					params:{
 						'params.cdramo':_11_params.CDRAMO,
+						'params.cdtipsit':_cdtipAtencion,
 						'params.tipoPago':_tipoPago
 					}
 				});

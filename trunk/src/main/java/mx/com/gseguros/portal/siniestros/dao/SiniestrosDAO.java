@@ -438,7 +438,7 @@ public interface SiniestrosDAO {
 	
 	public String actualizaValorMC(HashMap<String, Object> modMesaControl) throws Exception;
 
-	public List<GenericVO> obtieneListaTipoAtencion(String cdramo,String tipoPago) throws Exception;
+	public List<GenericVO> obtieneListaTipoAtencion(String cdramo, String modalidad, String tipoPago) throws Exception;
 
 	public List<Map<String, String>> obtieneListaAutirizacionServicio(Map<String, Object> params) throws Exception;
 	
