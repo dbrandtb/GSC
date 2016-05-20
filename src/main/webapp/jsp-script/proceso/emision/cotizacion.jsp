@@ -152,6 +152,7 @@ var _0_rowEditing = Ext.create('Ext.grid.plugin.RowEditing',{
 });
 
 var cargarXpoliza = false;
+var cargaCotiza = false;
 
 /*///////////////////*/
 ////// variables //////
@@ -1148,23 +1149,30 @@ function llenandoCampos (json)
                     	}
                     
                 	_0_panelPri.setLoading(false);
-                    if(_0_smap1.cdramo=='6')
-                    {
-                    	if(_0_smap1.cdtipsit=='MC')
-                        {
-                    		 asignarAgente(primerInciso.get('parametros.pv_otvalor17'));	
-                        }
-                    	if(_0_smap1.cdtipsit=='AT')
-                        {
-                            _0_obtenerClaveGSPorAuto();
-                            _0_obtenerSumaAseguradaRamo6(true,true);
-                        }
-                        if(_fieldByLabel('FOLIO').getValue()==0)
-                        {
-                            _fieldByLabel('FOLIO').reset();
-                            asignarAgente(primerInciso.get('parametros.pv_otvalor17')); 
-                        }
-                    }
+                	
+                	    if(_0_smap1.cdramo=='6')
+	                    {
+	                    	if(_0_smap1.cdtipsit=='MC')
+	                        {
+	                    		 asignarAgente(primerInciso.get('parametros.pv_otvalor17'));	
+	                        }
+	                    	if(_0_smap1.cdtipsit=='AT')
+	                        {
+	                            _0_obtenerClaveGSPorAuto();
+	                            _0_obtenerSumaAseguradaRamo6(true,true);
+	                        }
+	                        if(_fieldByLabel('FOLIO').getValue()==0)
+	                        {
+	                            _fieldByLabel('FOLIO').reset();
+	                            asignarAgente(primerInciso.get('parametros.pv_otvalor17')); 
+	                        }
+	                    }
+	                    if(_0_smap1.cdtipsit == 'AF' || _0_smap1.cdtipsit == 'PU') {
+	                    	
+	                        asignarAgente(primerInciso.get('parametros.pv_otvalor32'));
+	                        _0_recuperarDescuento();
+	                    }
+	                    
                     if(_0_smap1.cdtipsit=='GMI')
                     {
                         _0_gmiPostalSelect(1,2,3,true);
@@ -1201,6 +1209,13 @@ function llenandoCampos (json)
     else
     {
         mensajeError(json.error);
+    }
+    
+    if('|AF|PU|AT|MC|'.lastIndexOf('|'+_0_smap1.cdtipsit+'|')!=-1)
+    {
+       	_0_panelPri.setLoading(true);
+    	cargaCotiza = true;
+    	_0_cotizar();
     }
 }
 
@@ -1269,8 +1284,9 @@ function _0_agregarAsegu(boton)
 
 function _0_cotizar(boton)
 {
+	_0_panelPri.setLoading(true);
 	debug('_0_cotizar');
-	if(_0_validarBase())
+	if(_0_validarBase() || cargaCotiza)//
 	{
 		var json=
 		{
@@ -1355,7 +1371,10 @@ function _0_cotizar(boton)
 					debug(Ext.decode(json.smap1.columnas));
 					debug(json.slist2);
 					
-					_0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
+					if(!cargaCotiza)
+					{
+						   _0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
+					}
 					
 					_grabarEvento('COTIZACION'
 					              ,'COTIZA'
@@ -1441,7 +1460,7 @@ function _0_validarBase()
 	debug('>_0_validarBase');
 	
 	//form validation
-	if(valido)
+	if(valido && !cargaCotiza)
 	{
 		valido=_0_formAgrupados.isValid();
 		if(!valido)
@@ -2926,9 +2945,9 @@ Ext.onReady(function()
     //parche para AUTOS FRONTERIZOS Y PICKUP Fronterizos con rol SUSCRIPTOR AUTO:
     if((_0_smap1.cdtipsit == TipoSituacion.AutosFronterizos || _0_smap1.cdtipsit == TipoSituacion.AutosPickUp) 
         && 
-        //_0_smap1.cdsisrol=='SUSCRIAUTO'
         (rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1)
-        ) {
+        ) 
+    {
         _0_formAgrupados.down('[name=parametros.pv_otvalor04]').setReadOnly(false);
         _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setReadOnly(false);
         _0_formAgrupados.down('[name=parametros.pv_otvalor06]').setReadOnly(false);
