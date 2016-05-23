@@ -674,7 +674,19 @@ public interface EndososDAO
 	
 	public void actualizaExtraprimaValosit2(Map<String, String> params)     throws Exception;
 	
-	public List<Map<String,String>> recuperarCotizaciones(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String ntramite, String status, String fecini, String fecfin, String cdsisrol, String cdusuari) throws Exception;
+	public List<Map<String,String>> recuperarCotizaciones(
+			String cdunieco, 
+			String cdramo, 
+			String cdtipsit, 
+			String estado, 
+			String nmpoliza, 
+			String ntramite, 
+			String status, 
+			String fecini, 
+			String fecfin, 
+			String cdsisrol, 
+			String cdusuari,
+			String cdagente) throws Exception;
 	
 	public void procesarCensoClonacion(
 			String nombreProcedure,			
