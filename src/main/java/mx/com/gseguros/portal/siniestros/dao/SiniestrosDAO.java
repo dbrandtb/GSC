@@ -462,7 +462,7 @@ public interface SiniestrosDAO {
 	
 	public List<GenericVO> obtieneListadoConceptoPago(String cdramo) throws Exception;
 	
-	public List<GenericVO> obtieneListadoAseguradoPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
+	public List<GenericVO> obtieneListadoAseguradoPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String cdperson) throws Exception;
 	
 	public List<Map<String, String>> obtieneDatosBeneficiario(HashMap<String, Object> params) throws Exception;
 

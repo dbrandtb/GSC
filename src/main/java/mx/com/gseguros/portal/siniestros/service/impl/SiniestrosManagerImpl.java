@@ -1908,9 +1908,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	public List<GenericVO> getConsultaListaAseguradoPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception {
+	public List<GenericVO> getConsultaListaAseguradoPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String cdperson) throws Exception {
 		try {
-			return siniestrosDAO.obtieneListadoAseguradoPoliza(cdunieco,cdramo,estado, nmpoliza);
+			return siniestrosDAO.obtieneListadoAseguradoPoliza(cdunieco,cdramo,estado, nmpoliza, cdperson);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}

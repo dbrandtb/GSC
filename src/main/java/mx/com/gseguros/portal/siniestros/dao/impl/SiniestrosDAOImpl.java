@@ -4415,12 +4415,13 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     }
     
     @SuppressWarnings("unchecked")
-	public List<GenericVO> obtieneListadoAseguradoPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception {
+	public List<GenericVO> obtieneListadoAseguradoPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String cdperson) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdunieco_i", cdunieco);
 		params.put("pv_cdramo_i", cdramo);
 		params.put("pv_estado_i", estado);
 		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_cdperson_i", cdperson);
 		
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtieneListadoAseguradoPoliza(this.getDataSource()), params);
 		return (List<GenericVO>) resultadoMap.get("pv_registro_o");
@@ -4429,11 +4430,12 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	{
 		protected ObtieneListadoAseguradoPoliza(DataSource dataSource)
 		{
-			super(dataSource, "PKG_PRESINIESTRO.P_LISTA_ASEGURADO_POLIZA");
+			super(dataSource, "PKG_SINIESTRO.P_LISTA_FILTASEG_POLIZA");
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaAsegurado()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

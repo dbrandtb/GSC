@@ -708,7 +708,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	public String consultaListaAseguradoPoliza(){
 		logger.debug("Entra a consultaListaAseguradoPoliza params de entrada :{}",params);
 		try {
-			listaAsegurado= siniestrosManager.getConsultaListaAseguradoPoliza(params.get("cdunieco"),params.get("cdramo"),params.get("estado"),params.get("nmpoliza"));
+			listaAsegurado= siniestrosManager.getConsultaListaAseguradoPoliza(params.get("cdunieco"),params.get("cdramo"),params.get("estado"),params.get("nmpoliza"),params.get("cdperson"));
 		}catch( Exception e){
 			logger.error("Error al consultar la Lista de los asegurados : {}", e.getMessage(), e);
 			return SUCCESS;
