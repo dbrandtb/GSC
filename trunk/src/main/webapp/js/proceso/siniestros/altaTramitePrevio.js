@@ -1,5 +1,12 @@
-Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
+Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]); 
 Ext.onReady(function() {
+	
+	    // Se aumenta el timeout para todas las peticiones:
+    Ext.Ajax.timeout = 1000*60*3; // 3 minutos
+    Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+    Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+    Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
+    
 	var valorIndexSeleccionado= null;
 	Ext.selection.CheckboxModel.override( {
 		mode: 'SINGLE',
@@ -146,12 +153,24 @@ Ext.onReady(function() {
         proxy: {
             type: 'ajax',
             url : _URL_LISTADO_ASEGURADO_POLIZA,
+            extraParams: {
+            	'params.cdunieco' : null,
+                'params.cdramo'   : null,
+                'params.estado'   : null,
+                'params.nmpoliza' : null,
+                'params.cdperson' : null
+            },
             reader: {
                 type: 'json',
                 root: 'listaAsegurado'
             }
+        },
+        listeners: {
+        	load: function(st, recs, succ, eOpts) {
+        		debug('en load', st);
+        	}
         }
-    });
+    });		
 	
     var storeTipoPago = Ext.create('Ext.data.JsonStore', {
 		model:'Generic',
@@ -395,12 +414,60 @@ Ext.onReady(function() {
             }
     });
     
+    
+    
 	var cmbBeneficiario= Ext.create('Ext.form.ComboBox',{
-		name:'cmbBeneficiario',			fieldLabel: 'Beneficiario',			queryMode: 'local'/*'remote'*/,			displayField: 'value',
-		valueField: 'key',				editable:true,						forceSelection : true,		matchFieldWidth: false,
-		queryParam: 'params.cdperson',	minChars  : 2, 						store : storeAsegurados2,	triggerAction: 'all',
-		width		 : 300,				allowBlank:false,
+		name:'cmbBeneficiario',			
+		fieldLabel: 'Beneficiario',			
+		queryMode: 'remote',		
+		displayField: 'value',
+		valueField: 'key',
+		store : storeAsegurados2,//	triggerAction: 'all',
+		width		 : 300,
+		allowBlank:false,
+		queryDelay: 1000,
+		/*
+		editable:true,						
+		forceSelection : true,		
+		matchFieldWidth: false,		
+		hideTrigger:true,		
+		queryCaching: false,
+		*/
+		/*queryParam: 'params.cdperson',*/	 
+		
+		//queryParam  : 'smap1.nombre',
+		//queryMode   : 'remote',
+		queryCaching: false,
+		allQuery    : 'dummyForAllQuery',
+		//minChars    : 2,
+		//minLength   : 2,
+		//name          : 'smap1.nombre',
+	    //valueField    : 'CDRFC',
+	    //displayField  : 'NOMBRE_COMPLETO',
+	    forceSelection: false,
+	    autoSelect    : false,
+	    typeAhead     : false,
+	    anyMatch      : false,
+	    hideTrigger   : true,
+	    enableKeyEvents: true,
+		
+		
 		listeners : {
+			'change' : function(e) {
+				debug('en change', e.getValue());
+				//if(e.getValue().length == 5){
+					//storeAsegurados2.removeAll();
+					storeAsegurados2.proxy.extraParams=
+                    {
+                    	'params.cdunieco': panelInicialPral.down('[name="cdunieco"]').getValue(),
+						'params.cdramo': panelInicialPral.down('[name="cdramo"]').getValue(),
+						'params.estado': panelInicialPral.down('[name="estado"]').getValue(),
+						'params.nmpoliza': panelInicialPral.down('[name="polizaAfectada"]').getValue(),
+						'params.cdperson': e.getValue()
+                    };
+                    //storeAsegurados2.load();
+				//}
+			},
 			'select' : function(e) {
 				panelInicialPral.down('[name=idnombreBeneficiarioProv]').setValue(cmbBeneficiario.rawValue);
 				// Realizamos la validacion si es menor de edad
@@ -1100,14 +1167,15 @@ Ext.onReady(function() {
 	            					panelInicialPral.down('[name="txtTelefono"]').setValue(record.get('telefono'));
 	            					panelInicialPral.down('[name="txtEmail"]').setValue(record.get('email'));
 	            					panelInicialPral.down('[name="txtAutEspecial"]').setValue("0");
-	            					storeAsegurados2.load({
+	            					//.
+	            					/*storeAsegurados2.load({
 										params:{
 											'params.cdunieco': record.get('cdunieco'),
 											'params.cdramo': record.get('cdramo'),
 											'params.estado': record.get('estado'),
 											'params.nmpoliza': record.get('nmpoliza')
 										}
-									});
+									});*/
 	            					
 	            					modPolizasAltaTramite.hide();
                 			}else{
@@ -1147,14 +1215,15 @@ Ext.onReady(function() {
     	            					panelInicialPral.down('[name="txtTelefono"]').setValue(record.get('telefono'));
     	            					panelInicialPral.down('[name="txtEmail"]').setValue(record.get('email'));
     	            					panelInicialPral.down('[name="txtAutEspecial"]').setValue("1");
-    	            					storeAsegurados2.load({
+    	            					//.
+    	            					/*storeAsegurados2.load({
     										params:{
     											'params.cdunieco': record.get('cdunieco'),
     											'params.cdramo': record.get('cdramo'),
     											'params.estado': record.get('estado'),
     											'params.nmpoliza': record.get('nmpoliza')
     										}
-    									});
+    									});*/
     	            					
     	            					modPolizasAltaTramite.hide();
                 		        	}else{

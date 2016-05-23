@@ -6515,7 +6515,11 @@
 		<script type="text/javascript" src="${ctx}/js/proceso/siniestros/afiliadosAfectados.js?${now}"></script>
 		<script>
 			Ext.onReady(function(){
-				Ext.Ajax.timeout = 15*60*1000;
+				//Ext.Ajax.timeout = 1000*60*1000;
+				Ext.Ajax.timeout = 1000*60*10; // 3 minutos
+			    Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+			    Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+			    Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
 			});
 		</script>
 	</head>
