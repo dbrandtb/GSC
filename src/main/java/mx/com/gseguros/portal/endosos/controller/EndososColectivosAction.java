@@ -691,14 +691,14 @@ public class EndososColectivosAction extends PrincipalCoreAction
 					
 //						if (exitoGrupos) {
 							logger.debug(Utils.log("exito en grupos"));
-							cotizacionManager.ejecutasigsvdefEnd(cdunieco, 
-																 cdramo, 
-																 "W", 
-																 nmpolizaNuevaPoliza, 
-																 "0",
-																 "0", 
-																 "TODO", 
-																 cdtipsup);
+//							cotizacionManager.ejecutasigsvdefEnd(cdunieco, 
+//																 cdramo, 
+//																 "W", 
+//																 nmpolizaNuevaPoliza, 
+//																 "0",
+//																 "0", 
+//																 "TODO", 
+//																 cdtipsup);
 //						}
 //					}
 
