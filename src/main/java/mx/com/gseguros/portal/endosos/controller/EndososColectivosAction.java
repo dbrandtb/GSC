@@ -741,7 +741,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 																			 timestamp);					
 					logger.debug(Utils.log("*****************Resultado de asignacion******************"));
 					logger.debug(Utils.log(res));
-					setMensaje("Se genero el tr&aacute;mite "
+					setMensaje("Se gener&aocute; el tr&aacute;mite "
 								+ ntramiteNuevaPoliza);
             		params.put("redireccion", "S");
 				}
@@ -986,7 +986,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 																		 timestamp);
 				logger.debug(Utils.log("*****************Resultado de asignacion******************"));
 				logger.debug(Utils.log(res));
-				setMensaje("Se genero el tr&aacute;mite "
+				setMensaje("Se gener&aocute; el tr&aacute;mite "
 							+ ntramite);
         		params.put("redireccion", "S");
 			}

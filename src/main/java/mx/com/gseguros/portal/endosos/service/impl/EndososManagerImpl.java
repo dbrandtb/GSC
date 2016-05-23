@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import mx.com.aon.portal.dao.UsuarioDAO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
@@ -57,6 +58,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.opensymphony.xwork2.ActionContext;
+
 @Service
 public class EndososManagerImpl implements EndososManager
 {
@@ -97,7 +100,7 @@ public class EndososManagerImpl implements EndososManager
 	
 	@Autowired
 	private DocumentosManager documentosManager;
-
+	
 	@Override
 	public List<Map<String, String>> obtenerEndosos(Map<String, String> params) throws Exception
 	{
@@ -3304,12 +3307,29 @@ public class EndososManagerImpl implements EndososManager
 														String cdsisrol, 
 														String cdusuari) throws Exception {
 		String paso = null;
-		List<Map<String, String>> infoGrid = null;
+		List<Map<String, String>> infoGrid = null;		
 		try
 		{
 			paso = "Antes de buscar cotizacion";
-		
-			infoGrid = endososDAO.recuperarCotizaciones(cdunieco, cdramo, cdtipsit, estado, nmpoliza, ntramite, status, fecini, fecfin, cdsisrol, cdusuari);
+			String cdagente = null;
+			
+			if (cdsisrol.toUpperCase().equals("EJECUTIVOCUENTA")){
+				cdagente = cdusuari;
+			}
+			
+			infoGrid = endososDAO.recuperarCotizaciones(
+					cdunieco, 
+					cdramo, 
+					cdtipsit, 
+					estado, 
+					nmpoliza, 
+					ntramite, 
+					status, 
+					fecini, 
+					fecfin, 
+					cdsisrol, 
+					cdusuari,
+					cdagente);
 			
 			paso = "Despues de buscar cotizacion";
 		}

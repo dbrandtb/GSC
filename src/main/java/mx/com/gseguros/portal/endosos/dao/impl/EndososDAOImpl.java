@@ -5217,7 +5217,19 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public List<Map<String,String>> recuperarCotizaciones(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String ntramite, String status, String fecini, String fecfin, String cdsisrol, String cdusuari) throws Exception
+	public List<Map<String,String>> recuperarCotizaciones(
+			String cdunieco, 
+			String cdramo, 
+			String cdtipsit, 
+			String estado, 
+			String nmpoliza, 
+			String ntramite, 
+			String status, 
+			String fecini, 
+			String fecfin, 
+			String cdsisrol, 
+			String cdusuari, 
+			String cdagente) throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -5233,6 +5245,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				,"\n@@@@@@ fecfin=",fecfin
 				,"\n@@@@@@ cdsisrol=",cdsisrol 
 				,"\n@@@@@@ cdusuari=",cdusuari
+				,"\n@@@@@@ cdagente=",cdagente
 				));	
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("pv_cdunieco_i" 		   , cdunieco);
@@ -5244,7 +5257,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("pv_status_i"    	   , status);
 		params.put("pv_fedesde_i"   	   , fecini);
 		params.put("pv_fehasta_i"   	   , fecfin);                                                              
-		params.put("pv_cdagente_i"         , null);
+		params.put("pv_cdagente_i"         , cdagente);
 		params.put("pv_cdrol_i"            , cdsisrol);
 		params.put("pv_cdtiptra_i"         , "1");
 		params.put("pv_contrarecibo_i"     , null);
