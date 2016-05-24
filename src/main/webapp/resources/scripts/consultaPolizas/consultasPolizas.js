@@ -84,6 +84,8 @@ Ext.onReady(function() {
                                 //Mostrar seccion de datos generales:
                                 tabDatosGeneralesPoliza.show();
                                 
+                                debug('antes de cargar storeAsegurados=', storeAsegurados);
+                                
                                 //Datos para asegurados
                                 storeAsegurados.load({
                                     params: panelBusqueda.down('form').getForm().getValues(),
@@ -682,15 +684,28 @@ Ext.onReady(function() {
     var storeAsegurados = new Ext.data.Store({
      model: 'AseguradosModel',
      groupField : 'grupo',
+     pageSize: 25,
      proxy:
      {
           type: 'ajax',
           url : _URL_CONSULTA_DATOS_ASEGURADO,
-      reader:
-      {
-           type: 'json',
-           root: 'datosAsegurados'
-      }
+	      reader:
+	      {
+	           type: 'json',
+	           root: 'datosAsegurados',
+	           totalProperty: 'totalCount',
+	           simpleSortMode: true
+	      }
+     },
+     listeners: {
+         //load: function(store, records, successful, eOpts){
+     	 beforeload: function(store) {
+        	debug("beforeload",store);
+        	if(!Ext.isEmpty(panelBusqueda)){
+				debug("Asignando Valores",panelBusqueda.down('form').getForm().getValues());
+        		store.getProxy().extraParams = panelBusqueda.down('form').getForm().getValues()
+        	}
+        }
      }
     });
     
@@ -929,7 +944,13 @@ Ext.onReady(function() {
             groupHeaderTpl: '{name}',
             ftype:          'grouping',
             startCollapsed: false
-        }]
+        }],
+        bbar: Ext.create('Ext.PagingToolbar', {
+            store: storeAsegurados,
+            displayInfo: true,
+            displayMsg: 'Displaying topics {0} - {1} of {2}',
+            emptyMsg: "No topics to display"
+        })
     });
     
     

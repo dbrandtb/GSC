@@ -414,9 +414,9 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdunieco_i", poliza.getCdunieco());
 		params.put("pv_cdramo_i",   poliza.getCdramo());
-		params.put("pv_estado_i",   poliza.getEstado());
 		params.put("pv_nmpoliza_i", poliza.getNmpoliza());
 		params.put("pv_nmsuplem_i", poliza.getNmsuplem());
+		params.put("pv_estado_i",   poliza.getEstado());
 		Map<String, Object> mapResult = ejecutaSP(new ObtieneAseguradosSP(getDataSource()), params);
 		
 		return (List<AseguradoVO>) mapResult.get("pv_registro_o");
@@ -461,6 +461,77 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     		
     		consulta.setCdplan(rs.getString("CDPLAN"));
     		consulta.setDsplan(rs.getString("DSPLAN"));
+    		
+    		return consulta;
+    	}
+    }
+    
+public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit) throws Exception {
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", poliza.getCdunieco());
+		params.put("pv_cdramo_i",   poliza.getCdramo());
+		params.put("pv_estado_i",   poliza.getEstado());
+		params.put("pv_nmpoliza_i", poliza.getNmpoliza());
+		params.put("pv_nmsuplem_i", poliza.getNmsuplem());
+		params.put("pv_cdperson_i", poliza.getCdperson());
+		params.put("pv_nmsitaux_i", poliza.getNmsitaux());
+		params.put("pv_nombre_i", poliza.getNombre());
+		params.put("pv_start_i", start);
+		params.put("pv_limit_i",limit);
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneAseguradosSP2(getDataSource()), params);
+		
+		return (List<AseguradoVO>) mapResult.get("pv_registro_o");
+	}
+	
+    protected class ObtieneAseguradosSP2 extends StoredProcedure {
+    	
+    	protected ObtieneAseguradosSP2(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_CONSULTA.P_Get_Datos_Aseg_f");
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdperson_i",OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmsitaux_i",OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nombre_i",OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_start_i",OracleTypes.NUMBER));
+    		declareParameter(new SqlParameter("pv_limit_i",OracleTypes.NUMBER));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new AseguradoMapper2()));
+    		declareParameter(new SqlOutParameter("pv_num_rec_o", OracleTypes.NUMBER));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+    protected class AseguradoMapper2  implements RowMapper<AseguradoVO> {
+    	
+    	public AseguradoVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		AseguradoVO consulta = new AseguradoVO();
+    		consulta.setCdperson(rs.getString("cdperson"));
+    		consulta.setCdrfc(rs.getString("cdrfc"));
+    		consulta.setCdrol(rs.getString("cdrol"));
+    		consulta.setDsrol(rs.getString("dsrol"));
+    		consulta.setNmsituac(rs.getString("nmsituac"));
+    		consulta.setCdtipsit(rs.getString("cdtipsit"));
+    		consulta.setNombre(rs.getString("titular"));
+    		consulta.setFenacimi(Utils.formateaFecha(rs.getString("fenacimi")));
+    		consulta.setSexo(rs.getString("Sexo"));
+    		consulta.setStatus(rs.getString("status"));
+    		consulta.setParentesco(rs.getString("parentesco"));
+    		consulta.setGrupo(rs.getString("desgrupo"));
+    		consulta.setCdgrupo(rs.getString("cvegrupo"));
+    		consulta.setFamilia(rs.getString("desfamilia"));
+    		consulta.setCdfamilia(rs.getString("cvefamilia"));
+    		
+    		consulta.setCdplan(rs.getString("CDPLAN"));
+    		consulta.setDsplan(rs.getString("DSPLAN"));
+    		
+    		consulta.setTotal(rs.getLong("total"));
+    		
     		
     		return consulta;
     	}

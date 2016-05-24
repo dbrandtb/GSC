@@ -51,6 +51,12 @@ public class PolizaVO implements Serializable {
 	 */
 	private String icodpoliza;
 	
+	private String cdperson;
+	
+	private String nmsitaux;
+	
+	private String nombre;
+	
 	
 	//Constructors:
 	
@@ -78,9 +84,24 @@ public class PolizaVO implements Serializable {
 		this.nmsituac = nmsituac;
 	}
 	
+	public PolizaVO(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsuplem, String cdtipsit, 
+			String nmsituac,String cdperson,String nmsitaux,String nombre) {
+		super();
+		this.cdunieco = cdunieco;
+		this.cdramo = cdramo;
+		this.estado = estado;
+		this.nmpoliza = nmpoliza;
+		this.nmsuplem = nmsuplem;
+		this.cdtipsit = cdtipsit;
+		this.nmsituac = nmsituac;
+		this.cdperson=cdperson;
+		this.nmsitaux=nmsitaux;
+		this.nombre=nombre;
+	}
+	
 	
 	//Getters and setters:
-	
 	public String getCdunieco() {
 		return cdunieco;
 	}
@@ -143,6 +164,30 @@ public class PolizaVO implements Serializable {
 
 	public void setIcodpoliza(String icodpoliza) {
 		this.icodpoliza = icodpoliza;
+	}
+	
+	public String getCdperson(){
+		return cdperson;
+	}
+	
+	public void setCdperson(String cdperson){
+		this.cdperson=cdperson;
+	}
+	
+	public String getNmsitaux(){
+		return nmsitaux;
+	}
+	
+	public void setNmsitaux(String nmsitaux){
+		this.nmsitaux=nmsitaux;
+	}
+	
+	public String getNombre(){
+		return nombre;
+	}
+	
+	public void setNombre(String nombre){
+		this.nombre=nombre;
 	}
 
 	@Override

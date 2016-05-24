@@ -73,6 +73,12 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	private String mensajeRes;
 	
 	private String mensajeConv;
+	
+	private long start;
+	
+	private long limit;
+	
+	private long totalCount;
 
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
@@ -637,6 +643,40 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			return SUCCESS;
 		}
 		success = true;
+		return SUCCESS;
+	}
+	
+	/**
+	 * Obtiene los datos del asegurado
+	 * 
+	 * @return String result
+	 */
+	public String consultaDatosAsegurados() {
+		logger.debug(" **** Entrando a consultaDatosAsegurados ****");
+		try {
+			PolizaVO poliza = new PolizaVO();
+			poliza.setCdunieco(params.get("cdunieco"));
+			poliza.setCdramo(params.get("cdramo"));
+			poliza.setEstado(params.get("estado"));
+			poliza.setNmpoliza(params.get("nmpoliza"));
+			poliza.setNmsuplem(params.get("suplemento"));
+			poliza.setIcodpoliza(params.get("icodpoliza"));
+			poliza.setCdperson(params.get("cdperson"));
+			poliza.setNmsitaux(params.get("nmsitaux"));
+			poliza.setNombre(params.get("nombre"));
+			datosAsegurados = consultasPolizaManager.obtieneAsegurados(poliza,start,limit);
+			if(datosAsegurados != null && datosAsegurados.size() > 0) {
+				totalCount = datosAsegurados.get(0).getTotal();
+			}
+			logger.debug("Resultado de la consultaDatosAsegurado:{}", datosAsegurados);
+			if(datosAsegurados != null) {
+				logger.debug("Asegurados obtenidos:{}", datosAsegurados.size());
+			}
+		} catch (Exception e) {
+			logger.error("Error al obtener los datos del Asegurado ", e);
+			return SUCCESS;
+		}
+		success = true;	
 		return SUCCESS;
 	}
 
@@ -1237,5 +1277,28 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	public void setMensajeConv(String mensajeConv) {
 		this.mensajeConv = mensajeConv;
 	}
-
+	
+	public long getStart(){
+		return start;
+	}
+	
+	public void setStart(long start){
+		this.start=start;
+	}
+	
+	public long getLimit(){
+		return limit;
+	}
+	
+	public void setLimit(long limit){
+		this.limit=limit;
+	}
+	
+	public long getTotalCount(){
+		return totalCount;
+	}
+	
+	public void setTotalCount(long totalcount){
+		this.totalCount=totalcount;
+	}
 }

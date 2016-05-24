@@ -149,6 +149,14 @@ public interface ConsultasPolizaManager {
      */
     public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza) throws Exception;
     
+    /**
+     * Obtiene los asegurados de la p&oacute;liza
+     * @param poliza, start,limit
+     * @return
+     * @throws Exception
+     */
+    public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza, long start,long limit) throws Exception;
+    
 
     /**
      * Obtiene las exclusiones/clausulas de la poliza
