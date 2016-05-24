@@ -488,7 +488,7 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
     	
     	protected ObtieneAseguradosSP2(DataSource dataSource) {
     		
-    		super(dataSource, "PKG_CONSULTA.P_Get_Datos_Aseg_f");
+    		super(dataSource, "PKG_CONSULTA_PRUEBA.P_Get_Datos_Aseg_f");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -530,13 +530,79 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
     		consulta.setCdplan(rs.getString("CDPLAN"));
     		consulta.setDsplan(rs.getString("DSPLAN"));
     		
-    		consulta.setTotal(rs.getLong("total"));
+    		consulta.setTotal(rs.getLong("total")); //total - pv_num_rec_o
     		
     		
     		return consulta;
     	}
     }
 
+public List<AseguradoVO> obtieneIncisos(PolizaVO poliza,long start,long limit) throws Exception {
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", poliza.getCdunieco());
+		params.put("pv_cdramo_i",   poliza.getCdramo());
+		params.put("pv_estado_i",   poliza.getEstado());
+		params.put("pv_nmpoliza_i", poliza.getNmpoliza());
+		params.put("pv_cdgrupo_i", poliza.getCdgrupo());
+		params.put("pv_nmsitaux_i", poliza.getNmsitaux());
+		params.put("pv_start_i", start);
+		params.put("pv_limit_i",limit);
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneIncisosSP(getDataSource()), params);
+		
+		return (List<AseguradoVO>) mapResult.get("pv_registro_o");
+	}
+	
+    protected class ObtieneIncisosSP extends StoredProcedure {
+    	
+    	protected ObtieneIncisosSP(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_CONSULTA.P_Get_Datos_Incisos_f");
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdgrupo_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmsitaux_i",OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_start_i",OracleTypes.NUMBER));
+    		declareParameter(new SqlParameter("pv_limit_i",OracleTypes.NUMBER));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new IncisosMapper()));
+    		declareParameter(new SqlOutParameter("pv_num_rec_o", OracleTypes.NUMBER));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+    protected class IncisosMapper  implements RowMapper<AseguradoVO> {
+    	
+    	public AseguradoVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		AseguradoVO consulta = new AseguradoVO();
+    		consulta.setCdperson(rs.getString("cdperson"));
+    		consulta.setCdrfc(rs.getString("cdrfc"));
+    		consulta.setCdrol(rs.getString("cdrol"));
+    		consulta.setDsrol(rs.getString("dsrol"));
+    		consulta.setNmsituac(rs.getString("nmsituac"));
+    		consulta.setCdtipsit(rs.getString("cdtipsit"));
+    		consulta.setNombre(rs.getString("titular"));
+    		consulta.setFenacimi(Utils.formateaFecha(rs.getString("fenacimi")));
+    		consulta.setSexo(rs.getString("Sexo"));
+    		consulta.setStatus(rs.getString("status"));
+    		consulta.setParentesco(rs.getString("parentesco"));
+    		consulta.setGrupo(rs.getString("desgrupo"));
+    		consulta.setCdgrupo(rs.getString("cvegrupo"));
+    		consulta.setFamilia(rs.getString("desfamilia"));
+    		consulta.setCdfamilia(rs.getString("cvefamilia"));
+    		
+    		consulta.setCdplan(rs.getString("CDPLAN"));
+    		consulta.setDsplan(rs.getString("DSPLAN"));
+    		
+    		consulta.setTotal(rs.getLong("pv_num_rec_o"));
+    		
+    		
+    		return consulta;
+    	}
+    }
 	
 	@SuppressWarnings("unchecked")
 	@Override
