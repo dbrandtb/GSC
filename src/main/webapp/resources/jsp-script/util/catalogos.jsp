@@ -128,4 +128,11 @@ var TipoTramite = {
     Siniestro                      : '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra" />'
 };
 
+
+// Catalogo de Roles del sistema (cdsisrol):
+var RolSistema = {
+    Agente : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@AGENTE.cdsisrol" />'
+};
+
+
 </script>
