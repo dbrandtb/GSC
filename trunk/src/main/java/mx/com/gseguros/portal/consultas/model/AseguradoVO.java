@@ -36,6 +36,8 @@ public class AseguradoVO implements Serializable{
 	private String cdplan;
 	private String dsplan;
 	
+	private long total;
+	
 	//TODO: Agregar atributos para el Afiliado en SISA o crear un AfiliadoVO con ellos
 	/*
 	edad
@@ -183,6 +185,14 @@ public class AseguradoVO implements Serializable{
 
 	public void setDsplan(String dsplan) {
 		this.dsplan = dsplan;
+	}
+
+	public long getTotal() {
+		return total;
+	}
+
+	public void setTotal(long total) {
+		this.total = total;
 	}
 
 	public String toString(){

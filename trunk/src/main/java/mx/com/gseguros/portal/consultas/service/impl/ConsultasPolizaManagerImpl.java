@@ -311,6 +311,19 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 		return asegurados;
 	}
 	
+	@Override
+	public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza, long start, long limit) throws Exception {
+		
+		List<AseguradoVO> asegurados;
+		// Si iCodPoliza viene vacio, es información de ICE:
+//		if(StringUtils.isBlank(poliza.getIcodpoliza())){
+			asegurados = consultasPolizaDAOICE.obtieneAsegurados(poliza,start,limit);
+//		} else {
+//			asegurados = consultasPolizaDAOSISA.obtieneAsegurados(poliza);
+//		}
+		return asegurados;
+	}
+	
 	
 	@Override
 	public List<ClausulaVO> obtieneEndososPoliza(PolizaVO poliza,
