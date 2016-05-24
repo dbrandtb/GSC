@@ -914,4 +914,11 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		return null;
 	}
 
+	@Override
+	public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza, long start,
+			long limit) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
