@@ -288,7 +288,27 @@ Ext.onReady(function()
             {
                 type  : 'json'
                 ,root : 'slist1'
+                ,totalProperty: 'totalCount'
+     	        ,simpleSortMode: true
             }
+        },
+        pageSize: 25,
+        listeners: {
+          	beforeload: function(store) {
+            	debug("beforeload",store);
+       			debug("Asignando Valores", panDocInputNmpoliza
+       									 , panDocInputCdunieco
+       									 , panDocInputNtramite
+       				 					 , panDocInputEstado
+       				 					 , panDocInputCdramo);
+             	store.getProxy().extraParams = {
+                    'smap1.pv_nmpoliza_i'  : panDocInputNmpoliza
+                    ,'smap1.pv_cdunieco_i' : panDocInputCdunieco
+                    ,'smap1.pv_cdramo_i'   : panDocInputCdramo
+                    ,'smap1.pv_estado_i'   : panDocInputEstado
+                    ,'smap1.pv_ntramite_i' : panDocInputNtramite
+                }
+        	}
         }
     });
     
@@ -334,6 +354,12 @@ Ext.onReady(function()
         //,height        : 300
         ,minHeight     : 150
         //,width         : 550
+        ,bbar: Ext.create('Ext.PagingToolbar', {
+            store: panDocStoreDoc,
+            displayInfo: true,
+            displayMsg: 'Documentos {0} - {1} of {2}',
+            emptyMsg: "No hay Documentos. "
+        })
         ,onContrareciboClick : function(button,e)
         {
         	var window=button.up().up();
