@@ -337,6 +337,7 @@ var msgWindow;
 									                    ,columns    : 2
 									                    ,width      : 250
 									                    ,style      : 'margin:5px;'
+									                    ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 									                    ,items      :
 									                    [
 									                        {
@@ -344,12 +345,13 @@ var msgWindow;
 									                            ,itemId     : 'SWAGENTE2'
 									                            ,name       : 'SWAGENTE2'
 									                            ,inputValue : 'S'
+									                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 									                        }
 									                        ,{
 									                            boxLabel    : 'No'
 									                            ,name       : 'SWAGENTE2'
 									                            ,inputValue : 'N'
-                                                                ,checked    : true
+                                                                ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
 									                        }
 									                    ]
 									                }],
@@ -609,6 +611,7 @@ var msgWindow;
        	                        ,columns    : 2
        	                        ,width      : 250
        	                        ,style      : 'margin:5px;'
+       	                        ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
        	                        ,items      :
        	                        [
        	                            {
@@ -616,12 +619,13 @@ var msgWindow;
        	                                ,itemId     : 'SWAGENTE3'
        	                                ,name       : 'SWAGENTE3'
        	                                ,inputValue : 'S'
+       	                                ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
        	                            }
        	                            ,{
        	                                boxLabel    : 'No'
        	                                ,name       : 'SWAGENTE3'
        	                                ,inputValue : 'N'
-                                        ,checked    : true
+                                        ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
        	                            }
        	                        ]
        	                    }],
@@ -750,6 +754,7 @@ var msgWindow;
 		        	                        ,columns    : 2
 		        	                        ,width      : 250
 		        	                        ,style      : 'margin:5px;'
+		        	                        ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 		        	                        ,items      :
 		        	                        [
 		        	                            {
@@ -757,12 +762,13 @@ var msgWindow;
 		        	                                ,itemId     : 'SWAGENTE4'
 		        	                                ,name       : 'SWAGENTE4'
 		        	                                ,inputValue : 'S'
+		        	                                ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 		        	                            }
 		        	                            ,{
 		        	                                boxLabel    : 'No'
 		        	                                ,name       : 'SWAGENTE4'
 		        	                                ,inputValue : 'N'
-                                                    ,checked    : true
+                                                    ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
 		        	                            }
 		        	                        ]
 		        	                    }],
@@ -865,6 +871,7 @@ var msgWindow;
        	                        ,columns    : 2
        	                        ,width      : 250
        	                        ,style      : 'margin:5px;'
+       	                        ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
        	                        ,items      :
        	                        [
        	                            {
@@ -872,12 +879,13 @@ var msgWindow;
        	                                ,itemId     : 'SWAGENTE5'
        	                                ,name       : 'SWAGENTE5'
        	                                ,inputValue : 'S'
+       	                                ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
        	                            }
        	                            ,{
        	                                boxLabel    : 'No'
        	                                ,name       : 'SWAGENTE5'
        	                                ,inputValue : 'N'
-                                        ,checked    : true
+                                        ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
        	                            }
        	                        ]
        	                    }],
@@ -1571,6 +1579,7 @@ function turnarDevolucionTramite(grid,rowIndex,colIndex){
                     ,columns    : 2
                     ,width      : 250
                     ,style      : 'margin:5px;'
+                    ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                     ,items      :
                     [
                         {
@@ -1578,12 +1587,13 @@ function turnarDevolucionTramite(grid,rowIndex,colIndex){
                             ,itemId     : 'SWAGENTE6'
                             ,name       : 'SWAGENTE6'
                             ,inputValue : 'S'
+                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                         }
                         ,{
                             boxLabel    : 'No'
                             ,name       : 'SWAGENTE6'
                             ,inputValue : 'N'
-                            ,checked    : true
+                            ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
                         }
                     ]
                 }],

@@ -46,4 +46,6 @@
     </s:url>
     
     var _GLOBAL_COMP_URL_MCFLUJO = '<s:property value="urlMesaFlujo" />';
+    
+    var _GLOBAL_CDSISROL = '<s:property value="%{#session['USUARIO'].rolActivo.clave}" />';
 </script>
