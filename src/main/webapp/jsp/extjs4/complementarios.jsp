@@ -222,6 +222,7 @@ function _datComTurnarSuscripcion()
                 ,columns    : 2
                 ,width      : 250
                 ,style      : 'margin:5px;'
+                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                 ,items      :
                 [
                     {
@@ -229,12 +230,13 @@ function _datComTurnarSuscripcion()
                         ,itemId     : 'SWAGENTE'
                         ,name       : 'SWAGENTE'
                         ,inputValue : 'S'
+                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                     }
                     ,{
                         boxLabel    : 'No'
                         ,name       : 'SWAGENTE'
                         ,inputValue : 'N'
-                        ,checked    : true
+                        ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
                     }
                 ]
             }
@@ -878,6 +880,7 @@ function _datComTurnarSuscripcion()
 															                ,columns    : 2
 															                ,width      : 250
 															                ,style      : 'margin:5px;'
+															                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 															                ,items      :
 															                [
 															                    {
@@ -885,12 +888,13 @@ function _datComTurnarSuscripcion()
 															                        ,itemId     : 'SWAGENTE'
 															                        ,name       : 'SWAGENTE'
 															                        ,inputValue : 'S'
+															                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 															                    }
 															                    ,{
 															                        boxLabel    : 'No'
 															                        ,name       : 'SWAGENTE'
 															                        ,inputValue : 'N'
-                                                                                    ,checked    : true
+                                                                                    ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
 															                    }
 															                ]
 															            }
@@ -1677,6 +1681,7 @@ function _datComTurnarSuscripcion()
 										                ,columns    : 2
 										                ,width      : 250
 										                ,style      : 'margin:5px;'
+										                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 										                ,items      :
 										                [
 										                    {
@@ -1684,12 +1689,13 @@ function _datComTurnarSuscripcion()
 										                        ,itemId     : 'SWAGENTE'
 										                        ,name       : 'SWAGENTE'
 										                        ,inputValue : 'S'
+										                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 										                    }
 										                    ,{
 										                        boxLabel    : 'No'
 										                        ,name       : 'SWAGENTE'
 										                        ,inputValue : 'N'
-                                                                ,checked    : true
+                                                                ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
 										                    }
 										                ]
 										            }
@@ -1827,6 +1833,7 @@ function _datComTurnarSuscripcion()
 										                ,columns    : 2
 										                ,width      : 250
 										                ,style      : 'margin:5px;'
+										                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 										                ,items      :
 										                [
 										                    {
@@ -1834,12 +1841,13 @@ function _datComTurnarSuscripcion()
 										                        ,itemId     : 'SWAGENTE'
 										                        ,name       : 'SWAGENTE'
 										                        ,inputValue : 'S'
+										                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 										                    }
 										                    ,{
 										                        boxLabel    : 'No'
 										                        ,name       : 'SWAGENTE'
 										                        ,inputValue : 'N'
-                                                                ,checked    : true
+                                                                ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
 										                    }
 										                ]
 										            }
@@ -2018,6 +2026,7 @@ function _datComTurnarSuscripcion()
 													                ,columns    : 2
 													                ,width      : 250
 													                ,style      : 'margin:5px;'
+													                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 													                ,items      :
 													                [
 													                    {
@@ -2025,12 +2034,13 @@ function _datComTurnarSuscripcion()
 													                        ,itemId     : 'SWAGENTE'
 													                        ,name       : 'SWAGENTE'
 													                        ,inputValue : 'S'
+													                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 													                    }
 													                    ,{
 													                        boxLabel    : 'No'
 													                        ,name       : 'SWAGENTE'
 													                        ,inputValue : 'N'
-                                                                            ,checked    : true
+                                                                            ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
 													                    }
 													                ]
 													            }

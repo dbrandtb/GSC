@@ -1020,7 +1020,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		try
 		{
-			paso = "Recuperando configuracio de cotizacion";
+			paso = "Recuperando configuraci\u00f3n de cotizaci\u00f3n";
 			resp.setSmap(cotizacionDAO.cargarConfiguracionCotizacion(cdramo, cdtipsit, cdusuari));
 			
 			
