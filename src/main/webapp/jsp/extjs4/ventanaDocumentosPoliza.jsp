@@ -282,6 +282,7 @@ Ext.onReady(function()
                 ,'smap1.pv_cdramo_i'   : panDocInputCdramo
                 ,'smap1.pv_estado_i'   : panDocInputEstado
                 ,'smap1.pv_ntramite_i' : panDocInputNtramite
+                ,'smap1.pv_dsdocume_i' : null
             }
             ,type        : 'ajax'
             ,reader      :
@@ -292,7 +293,8 @@ Ext.onReady(function()
      	        ,simpleSortMode: true
             }
         },
-        pageSize: 25,
+        pageSize: 25
+        /*,
         listeners: {
           	beforeload: function(store) {
             	debug("beforeload",store);
@@ -309,7 +311,7 @@ Ext.onReady(function()
                     ,'smap1.pv_ntramite_i' : panDocInputNtramite
                 }
         	}
-        }
+        }*/
     });
     
     panDocStoreConfigDocs = Ext.create('Ext.data.JsonStore',
@@ -870,7 +872,9 @@ Ext.onReady(function()
                             }
                             ,{
                                 xtype       : 'textfield'
+                                ,name       : 'txtBuscar'
                                 ,width      : 100
+                                /*
                                 ,listeners  :
                                 {
                                     change : function(comp,val)
@@ -894,6 +898,16 @@ Ext.onReady(function()
                                             }
                                         });
                                     }
+                                }
+                                */
+                            },{
+                                xtype    : 'button'
+                                ,text    : 'Buscar'
+                                //,icon  : panDocContexto+'/resources/fam3icons/icons/add.png'
+                                ,handler : function(btn) {
+                                    panDocStoreDoc.getProxy().setExtraParam('start', 0);
+                                    panDocStoreDoc.getProxy().setExtraParam('smap1.pv_dsdocume_i', btn.up('toolbar').down('textfield[name=txtBuscar]').getValue());
+                                    panDocStoreDoc.load();
                                 }
                             }
 			                <s:if test='!smap1.containsKey("readOnly")'>
