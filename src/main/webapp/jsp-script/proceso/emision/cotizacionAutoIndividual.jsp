@@ -94,6 +94,10 @@ var _p28_urlCargarParamerizacionCoberturasRol = '<s:url namespace="/emision"    
 var _p28_urlCargarTipoCambioWS                = '<s:url namespace="/emision"         action="cargarTipoCambioWS"                             />';
 var _p28_urlRecuperacion                      = '<s:url namespace="/recuperacion"    action="recuperar"                                      />';
 var _p28_urlCargarPoliza                      = '<s:url namespace="/emision"         action="cargarPoliza"                                   />';
+var _p28_urlDetalleTramite                    = '<s:url namespace="/mesacontrol"     action="movimientoDetalleTramite"                       />';
+var _p28_urlActualizarOtvalorTramiteXDsatribu = '<s:url namespace="/emision"         action="actualizarOtvalorTramitePorDsatribu"            />';
+var _p28_urlRecuperarOtvalorTramiteXDsatribu  = '<s:url namespace="/emision"         action="recuperarOtvalorTramitePorDsatribu"             />';
+
 var _p28_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p28_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 ////// urls //////
@@ -102,6 +106,9 @@ var _p28_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var cargarXpoliza = false;
 var _p28_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('_p28_smap1:',_p28_smap1);
+
+var _p28_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+debug('_p28_flujo:',_p28_flujo);
 
 var _p28_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 debug('_p28_reporteCotizacion:',_p28_reporteCotizacion);
@@ -618,12 +625,47 @@ Ext.onReady(function()
         ,defaults : { style : 'margin : 5px;' }
         ,items    :
         [
-            Ext.create('Ext.form.Panel',
+            Ext.create('Ext.panel.Panel',
+            {
+                itemId       : '_p28_panelFlujo'
+                ,title       : 'ACCIONES'
+                ,hidden      : Ext.isEmpty(_p28_flujo)
+                ,buttonAlign : 'left'
+                ,buttons     : []
+                ,listeners   :
+                {
+                    afterrender : function(me)
+                    {
+                        if(!Ext.isEmpty(_p28_flujo))
+                        {
+                            _cargarBotonesEntidad(
+                                _p28_flujo.cdtipflu
+                                ,_p28_flujo.cdflujomc
+                                ,_p28_flujo.tipoent
+                                ,_p28_flujo.claveent
+                                ,_p28_flujo.webid
+                                ,me.itemId//callback
+                                ,_p28_flujo.ntramite
+                                ,_p28_flujo.status
+                                ,_p28_flujo.cdunieco
+                                ,_p28_flujo.cdramo
+                                ,_p28_flujo.estado
+                                ,_p28_flujo.nmpoliza
+                                ,_p28_flujo.nmsituac
+                                ,_p28_flujo.nmsuplem
+                                ,null//callbackDespuesProceso
+                            );
+                        }
+                    }
+                }
+            })
+            ,Ext.create('Ext.form.Panel',
             {
                 itemId      : '_p28_form'
                 ,border     : 0
                 ,defaults   : { style : 'margin : 5px;' }
                 ,formOculto : Ext.create('Ext.form.Panel',{ items : _p28_formOcultoItems })
+                ,title      : _p28_smap1.titulo||'COTIZACI\u00d3N'
                 ,layout     :
                 {
                     type     : 'table'
@@ -1484,6 +1526,11 @@ Ext.onReady(function()
                     }
                 });
             }
+    
+    _p28_recuperarClienteTramite();
+    
+    _p28_recuperarCotizacionDeTramite();
+    
     ////// loaders //////
 });
 
@@ -1839,7 +1886,14 @@ function _p28_cotizar(sinTarificar)
                                 ,enableColumnMove : false
                                 ,listeners        :
                                 {
-                                    select : _p28_tarifaSelect
+                                    select       : _p28_tarifaSelect
+                                    ,afterrender : function(me)
+                                    {
+                                        if(!Ext.isEmpty(_p28_flujo) && !sinTarificar===true)
+                                        {
+                                            _p28_actualizarCotizacionTramite(_p28_actualizarSwexiperTramite);
+                                        }
+                                    }
                                 }
                             })
                             ,_p28_formDescuento
@@ -2046,6 +2100,9 @@ function _p28_bloquear(b)
         agente.setReadOnly(true);
         _p28_ramo5AgenteSelect(agente,_p28_smap1.cdagente);
     }
+    
+    _p28_recuperarClienteTramite();
+    
     debug('<_p28_bloquear');
 }
 
@@ -2500,6 +2557,8 @@ function _p28_limpiar()
             _fieldLikeLabel('VALOR VEH').maxValue=9999999;
         }
     }
+    
+    _p28_recuperarClienteTramite();
     
     debug('<_p28_limpiar');
 }
@@ -3322,25 +3381,44 @@ function _p28_comprar()
       cdperson   =   Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.CLAVECLI;
     }
     
+    var paramsComprar =
+    {
+        comprarNmpoliza        : _fieldByName('nmpoliza').getValue()
+        ,comprarCdplan         : _p28_selectedCdplan
+        ,comprarCdperpag       : _p28_selectedCdperpag
+        ,comprarCdramo         : _p28_smap1.cdramo
+        ,comprarCdciaaguradora : '20'
+        ,comprarCdunieco       : _p28_smap1.cdunieco
+        ,cdtipsit              : _p28_smap1.cdtipsit
+        ,'smap1.fechaInicio'   : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
+        ,'smap1.fechaFin'      : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
+        ,'smap1.ntramite'      : _p28_smap1.ntramite
+        ,'smap1.nmorddomCli'   : Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.NMORDDOM
+        ,'smap1.cdagenteExt'   : _p28_smap1.cdramo+'x'=='5x' ? _fieldByLabel('AGENTE').getValue() : ''
+        ,'smap1.cdpersonCli'   : cdperson
+        ,'smap1.cdideperCli'   : cdper
+    };
+    
+    if(!Ext.isEmpty(_p28_flujo))
+    {
+        paramsComprar['flujo.cdtipflu']  = _p28_flujo.cdtipflu;
+        paramsComprar['flujo.cdflujomc'] = _p28_flujo.cdflujomc;
+        paramsComprar['flujo.tipoent']   = _p28_flujo.tipoent;
+        paramsComprar['flujo.claveent']  = _p28_flujo.claveent;
+        paramsComprar['flujo.webid']     = _p28_flujo.webid;
+        paramsComprar['flujo.ntramite']  = _p28_flujo.ntramite;
+        paramsComprar['flujo.status']    = _p28_flujo.status;
+        paramsComprar['flujo.cdunieco']  = _p28_flujo.cdunieco;
+        paramsComprar['flujo.cdramo']    = _p28_flujo.cdramo;
+        paramsComprar['flujo.estado']    = _p28_flujo.estado;
+        paramsComprar['flujo.nmpoliza']  = _p28_flujo.nmpoliza;
+        paramsComprar['flujo.nmsituac']  = _p28_flujo.nmsituac;
+        paramsComprar['flujo.nmsuplem']  = _p28_flujo.nmsuplem;
+    }
+    
     Ext.Ajax.request(
-    {    url      : _p28_urlComprar
-        ,params  :
-        {
-            comprarNmpoliza        : _fieldByName('nmpoliza').getValue()
-            ,comprarCdplan         : _p28_selectedCdplan
-            ,comprarCdperpag       : _p28_selectedCdperpag
-            ,comprarCdramo         : _p28_smap1.cdramo
-            ,comprarCdciaaguradora : '20'
-            ,comprarCdunieco       : _p28_smap1.cdunieco
-            ,cdtipsit              : _p28_smap1.cdtipsit
-            ,'smap1.fechaInicio'   : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
-            ,'smap1.fechaFin'      : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
-            ,'smap1.ntramite'      : _p28_smap1.ntramite
-            ,'smap1.nmorddomCli'   : Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.NMORDDOM
-            ,'smap1.cdagenteExt'   : _p28_smap1.cdramo+'x'=='5x' ? _fieldByLabel('AGENTE').getValue() : ''
-            ,'smap1.cdpersonCli'   : cdperson
-            ,'smap1.cdideperCli'   : cdper
-        }
+    {    url     : _p28_urlComprar
+        ,params  : paramsComprar
         ,success : function(response,opts)
         {
             panelPri.setLoading(false);
@@ -3356,20 +3434,41 @@ function _p28_comprar()
                    ,fn      : function()
                    {
                        var swExiper = (!Ext.isEmpty(_p28_recordClienteRecuperado) && Ext.isEmpty(_p28_recordClienteRecuperado.raw.CLAVECLI) && !Ext.isEmpty(_p28_recordClienteRecuperado.raw.CDIDEPER))? 'N' : 'S' ;
+                       
+                       var paramsDatCom =
+                       {
+                           'smap1.cdunieco'  : _p28_smap1.cdunieco
+                           ,'smap1.cdramo'   : _p28_smap1.cdramo
+                           ,'smap1.cdtipsit' : _p28_smap1.cdtipsit
+                           ,'smap1.estado'   : 'W'
+                           ,'smap1.nmpoliza' : _fieldByName('nmpoliza').getValue()
+                           ,'smap1.ntramite' : json.smap1.ntramite
+                           ,'smap1.swexiper' : swExiper
+                       };
+                       
+                       if(!Ext.isEmpty(_p28_flujo))
+                       {
+                           paramsDatCom['flujo.cdtipflu']  = _p28_flujo.cdtipflu;
+                           paramsDatCom['flujo.cdflujomc'] = _p28_flujo.cdflujomc;
+                           paramsDatCom['flujo.tipoent']   = _p28_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
+                           paramsDatCom['flujo.claveent']  = _p28_flujo.claveent; //ACTUAL QUE SE RECUPERARA
+                           paramsDatCom['flujo.webid']     = _p28_flujo.webid;    //ACTUAL QUE SE RECUPERARA
+                           paramsDatCom['flujo.ntramite']  = _p28_flujo.ntramite;
+                           paramsDatCom['flujo.status']    = _p28_flujo.status;
+                           paramsDatCom['flujo.cdunieco']  = _p28_flujo.cdunieco;
+                           paramsDatCom['flujo.cdramo']    = _p28_flujo.cdramo;
+                           paramsDatCom['flujo.estado']    = _p28_flujo.estado;
+                           paramsDatCom['flujo.nmpoliza']  = _p28_flujo.nmpoliza;
+                           paramsDatCom['flujo.nmsituac']  = _p28_flujo.nmsituac;
+                           paramsDatCom['flujo.nmsuplem']  = _p28_flujo.nmsuplem;
+                           paramsDatCom['flujo.aux']       = 'RECUPERAR';
+                       }
+                       
                        Ext.create('Ext.form.Panel').submit(
                        {
                            url             : _p28_urlDatosComplementarios
                            ,standardSubmit : true
-                           ,params         :
-                           {
-                               'smap1.cdunieco'  : _p28_smap1.cdunieco
-                               ,'smap1.cdramo'   : _p28_smap1.cdramo
-                               ,'smap1.cdtipsit' : _p28_smap1.cdtipsit
-                               ,'smap1.estado'   : 'W'
-                               ,'smap1.nmpoliza' : _fieldByName('nmpoliza').getValue()
-                               ,'smap1.ntramite' : json.smap1.ntramite
-                               ,'smap1.swexiper' : swExiper
-                           }
+                           ,params         : paramsDatCom
                        });
                    }
                 }));                
@@ -3577,7 +3676,7 @@ function _p28_detalles()
             if (json.success)
             {
                 var orden = 0;
-                var parentescoAnterior = 'qwerty';
+                var parentescoAnterior = 'werty';
                 for ( var i = 0; i < json.slist1.length; i++)
                 {
                     if (json.slist1[i].parentesco != parentescoAnterior)
@@ -4244,8 +4343,327 @@ function _p28_atributoNacimientoContratante(combo)
 
         }
 }
+
+function _p28_recuperarClienteTramite()
+{
+    /*
+     * Cuando se tiene cdpercli se recupera para ramo 5 cuando exista el combo de cliente nuevo
+     * inicio
+     */
+    if(!Ext.isEmpty(_p28_smap1.cdpercli))
+    {
+        var ckCdpercli = 'Recuperando cliente de tr\u00e1mite';
+        try
+        {
+            var comboCliente = _fieldLikeLabel('CLIENTE NUEVO',null,true);
+            debug('combo cliente nuevo:',comboCliente);
+            if(!Ext.isEmpty(comboCliente))
+            {
+                debug('Entro a recuperar cliente con cdperson:',_p28_smap1.cdpercli);
+                _mask(ckCdpercli);
+                Ext.Ajax.request(
+                {
+                    url      : _p28_urlRecuperarCliente
+                    ,params  :
+                    {
+                        'map1.pv_cdperson_i'  : _p28_smap1.cdpercli
+                        ,'map1.soloBD'        : 'S'
+                        ,'map1.pv_rfc_i'      : ''//rfc
+                        ,'map1.cdtipsit'      : _p28_smap1.cdtipsit
+                        ,'map1.pv_cdtipsit_i' : _p28_smap1.cdtipsit
+                        ,'map1.pv_cdunieco_i' : _p28_smap1.cdunieco
+                        ,'map1.pv_cdramo_i'   : _p28_smap1.cdramo
+                        ,'map1.pv_estado_i'   : 'W'
+                        ,'map1.pv_nmpoliza_i' : _fieldByName('nmpoliza').getValue()
+                    }
+                    ,success : function(response)
+                    {
+                        _unmask();
+                        var ck = 'Decodificando respuesta al recuperar cliente de tr\u00e1mite';
+                        try
+                        {
+                            var json = Ext.decode(response.responseText);
+                            debug('### recuperacion cliente tramite:',json);
+                            
+                            comboCliente.semaforo = true;
+                            comboCliente.setValue('N');
+                            comboCliente.setReadOnly(true);
+                            comboCliente.semaforo = false;
+                            
+                            _p28_recordClienteRecuperado = new _p28_modeloRecuperado(json.slist1[0]);
+                            debug('_p28_recordClienteRecuperado:',_p28_recordClienteRecuperado);
+                            
+                            var nombreCliCmp    = _fieldLikeLabel('NOMBRE CLIENTE',null,true)
+                                ,tipoPerCmp     = _fieldLikeLabel('TIPO PERSONA',null,true)
+                                ,codPosCliCmp   = _fieldLikeLabel('CP CIRCULACI',null,true)
+                                ,feNacimiCliCmp = _fieldLikeLabel('FECHA DE NACIMIENTO',null,true);
+                            
+                            if(!Ext.isEmpty(nombreCliCmp))
+                            {
+                                nombreCliCmp.setValue(_p28_recordClienteRecuperado.get('NOMBRECLI'));
+                                nombreCliCmp.setReadOnly(true);
+                            }
+                            
+                            if(!Ext.isEmpty(tipoPerCmp))
+                            {
+                                tipoPerCmp.setValue(_p28_recordClienteRecuperado.raw.TIPOPERSONA);
+                                tipoPerCmp.setReadOnly(true);
+                            }
+                            
+                            if(!Ext.isEmpty(codPosCliCmp))
+                            {
+                                codPosCliCmp.setValue(_p28_recordClienteRecuperado.raw.CODPOSTAL);
+                                codPosCliCmp.setReadOnly(true);
+                            }
+                            
+                            if(!Ext.isEmpty(feNacimiCliCmp))
+                            {
+                                feNacimiCliCmp.setValue(_p28_recordClienteRecuperado.raw.FENACIMICLI);
+                                feNacimiCliCmp.setReadOnly(true);
+                            }
+                            
+                        }
+                        catch(e)
+                        {
+                            manejaException(e,ck);
+                        }
+                    }
+                    ,failure : function()
+                    {
+                        _unmask();
+                        errorComunicacion(null,'Error al recuperar cliente de tr\u00e1mite');
+                    }
+                });
+            }
+        }
+        catch(e)
+        {
+            manejaException(e,ckCdpercli);
+        }
+    }
+    /*
+     * Cuando se tiene cdpercli se recupera para ramo 5 cuando exista el combo de cliente nuevo
+     * fin
+     */
+}
+
+/*
+ * Este metodo busca en los otvalor del tramite el numero de la ultima cotizacion
+ * realizada para recuperarla automaticamente en pantalla
+ */
+function _p28_recuperarCotizacionDeTramite()
+{
+    if(!Ext.isEmpty(_p28_flujo))
+    {
+        var ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite';
+        try
+        {
+            _mask(ck);
+            Ext.Ajax.request(
+            {
+                url      : _p28_urlRecuperarOtvalorTramiteXDsatribu
+                ,params  :
+                {
+                    'params.ntramite'  : _p28_flujo.ntramite
+                    ,'params.dsatribu' : 'COTIZACI%N%TR%MITE'
+                }
+                ,success : function(response)
+                {
+                    _unmask();
+                    var ck = 'Decodificando respuesta al recuperar cotizaci\u00f3n de tr\u00e1mite';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### cotizacion de tramite:',json);
+                        if(json.success===true)
+                        {
+                            if(!Ext.isEmpty(json.params.otvalor))
+                            {
+                                _fieldByName('nmpoliza').setValue(json.params.otvalor);
+                                _p28_cargar();
+                            }
+                        }
+                        else
+                        {
+                            mensajeError(json.message);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function(response)
+                {
+                    _unmask();
+                    errorComunicacion(null,'Error al recuperar cotizaci\u00f3n de tr\u00e1mite');
+                }
+            });
+        }
+        catch(e)
+        {
+            _unmask();
+            manejaException(e,ck);
+        }
+    }
+}
+
+function _p28_actualizarCotizacionTramite(callback)
+{
+    var ck = 'Registrando cotizaci\u00f3n de tr\u00e1mite';
+	try
+	{
+	    _mask(ck);
+	    Ext.Ajax.request(
+	    {
+	        url      : _p28_urlActualizarOtvalorTramiteXDsatribu
+	        ,params  :
+	        {
+	            'params.ntramite'  : _p28_flujo.ntramite
+	            ,'params.dsatribu' : 'COTIZACI%N%TR%MITE%'
+	            ,'params.otvalor'  : _fieldByName('nmpoliza').getValue()
+	            ,'params.accion'   : 'U'
+	        }
+	        ,success : function(response)
+	        {
+	            _unmask();
+	            var ck = 'Decodificando respuesta al guardar estatus de tr\u00e1mite';
+	            try
+	            {
+	                var json = Ext.decode(response.responseText);
+	                debug('### guardar estatus de tramite:',json);
+	                if(json.success===true)
+	                {
+	                    var ck = 'Guardando detalle de cotiazci\u00f3n de tr\u00e1mite';
+	                    try
+	                    {
+	                        _mask(ck);
+	                        Ext.Ajax.request(
+	                        {
+	                            url      : _p28_urlDetalleTramite
+	                            ,params  :
+	                            {
+	                                'smap1.ntramite'  : _p28_flujo.ntramite
+	                                ,'smap1.status'   : _p28_flujo.status
+	                                ,'smap1.dscoment' : 'Se guard\u00f3 la cotizaci\u00f3n '+_fieldByName('nmpoliza').getValue()
+	                            }
+	                            ,success : function(response)
+	                            {
+	                                _unmask();
+	                                var ck = 'Decodificando respuesta al guardar detalle de cotizaci\u00f3n de tr\u00e1mite';
+	                                try
+	                                {
+	                                    var jsonDetalle = Ext.decode(response.responseText);
+	                                    debug('### guardar detalle cotizacion tramite:',jsonDetalle);
+	                                    if(!Ext.isEmpty(callback))
+	                                    {
+	                                        callback();
+	                                    }
+	                                }
+	                                catch(e)
+	                                {
+	                                    manejaException(e,ck);
+	                                }
+	                            }
+	                            ,failure : function()
+	                            {
+	                                _unmask();
+	                                errorComunicacion(null,'Error al guardar detalle de cotizaci\u00f3n de tr\u00e1mite');
+	                            }
+	                        });
+	                    }
+	                    catch(e)
+	                    {
+	                        _unmask();
+	                        manejaException(e,ck);
+	                    }
+	                }
+	                else
+	                {
+	                    mensajeError(json.message);
+	                }
+	            }
+	            catch(e)
+	            {
+	                manejaException(e,ck);
+	            }
+	        }
+	        ,failure : function()
+	        {
+	            _unmask();
+	            errorComunicacion(null,'Error al guardar estatus de tr\u00e1mite');
+	        }
+	    });
+	}
+	catch(e)
+	{
+	    _unmask();
+	    manejaException(e,ck);
+	}
+}
+
+function _p28_actualizarSwexiperTramite(callback)
+{
+    var ck = 'Registrando estado de cliente de tr\u00e1mite';
+    try
+    {
+        var swExiper = (
+            !Ext.isEmpty(_p28_recordClienteRecuperado)
+            && Ext.isEmpty(_p28_recordClienteRecuperado.raw.CLAVECLI)
+            && !Ext.isEmpty(_p28_recordClienteRecuperado.raw.CDIDEPER)
+            ) ? 'N' : 'S' ;
+    
+        _mask(ck);
+        Ext.Ajax.request(
+        {
+            url      : _p28_urlActualizarOtvalorTramiteXDsatribu
+            ,params  :
+            {
+                'params.ntramite'  : _p28_flujo.ntramite
+                ,'params.dsatribu' : 'SWEXIPER'
+                ,'params.otvalor'  : swExiper
+                ,'params.accion'   : 'U'
+            }
+            ,success : function(response)
+            {
+                _unmask();
+                var ck = 'Decodificando respuesta al guardar estado de cliente de tr\u00e1mite';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### guardar estatus de cliente de tramite:',json);
+                    if(json.success===true)
+                    {
+                        if(!Ext.isEmpty(callback))
+                        {
+                            callback();
+                        }
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _unmask();
+                errorComunicacion(null,'Error al guardar estado de cliente de tr\u00e1mite');
+            }
+        });
+    }
+    catch(e)
+    {
+        _unmask();
+        manejaException(e,ck);
+    }
+}
 ////// funciones //////
 </script>
 </head>
-<body><div id="_p28_divpri" style="height: 1500px;"></div></body>
+<body><div id="_p28_divpri" style="height: 1700px;"></div></body>
 </html>

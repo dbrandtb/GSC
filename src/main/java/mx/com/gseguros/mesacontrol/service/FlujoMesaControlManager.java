@@ -262,4 +262,14 @@ public interface FlujoMesaControlManager
 			,String swagente
 			,String comments
 			)throws Exception;
+	
+	/**
+	 * Este procedimiento se usa para salto entre pantallas o componentes
+	 * Si de pantalla A pasaste a pantalla B sin usar botones de flujo, es decir a mano, la instancia de flujo aun apunta a pantalla A
+	 * con este metodo busca una conexion fantasma sin permisos que seria B, y actualiza su tipo, id y webid
+	 * NOTA: No regresa nada, actualiza sobre el mismo objeto recibido
+	 * @param flujo
+	 * @throws Exception
+	 */
+	public void recuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisos(FlujoVO flujo) throws Exception;
 }

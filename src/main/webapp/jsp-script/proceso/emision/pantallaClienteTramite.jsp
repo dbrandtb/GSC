@@ -72,6 +72,7 @@ Ext.onReady(function()
                                             'smap1.cdperson'         : _p61_params.cdperson
                                             ,'smap1.polizaEnEmision' : 'S'
                                             ,'smap1.esSaludDanios'   : _p61_params.esSaludDanios
+                                            ,'smap1.modoSoloEdicion' : 'S'
                                         }
                                     });
                                 }
@@ -121,6 +122,7 @@ Ext.onReady(function()
                         'smap1.cdperson'         : _p61_params.cdperson
                         ,'smap1.polizaEnEmision' : 'S'
                         ,'smap1.esSaludDanios'   : _p61_params.esSaludDanios
+                        ,'smap1.modoSoloEdicion' : 'S'
                     }
                 }
             }

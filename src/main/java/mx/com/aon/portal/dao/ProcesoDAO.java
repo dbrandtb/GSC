@@ -4226,10 +4226,11 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		protected BuscarRFC(DataSource dataSource)
 		{
 			super(dataSource,"PKG_CONSULTA.P_VALIDA_RFC");
-			declareParameter(new SqlParameter("pv_rfc_i",    OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new BuscarRFCMapper()));
-			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_rfc_i"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new BuscarRFCMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 		}
 	
 		public WrapperResultados mapWrapperResultados(Map map) throws Exception

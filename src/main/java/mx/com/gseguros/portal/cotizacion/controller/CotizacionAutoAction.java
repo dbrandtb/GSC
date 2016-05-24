@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.aon.tmp.MensajesVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
@@ -23,10 +22,12 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
+import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -34,7 +35,7 @@ import com.opensymphony.xwork2.ActionContext;
 public class CotizacionAutoAction extends PrincipalCoreAction
 {
 	private static final long   serialVersionUID = -5890606583100529056L;
-	private static final Logger logger           = Logger.getLogger(CotizacionAutoAction.class);
+	private static final Logger logger           = LoggerFactory.getLogger(CotizacionAutoAction.class);
 	
 	private CotizacionAutoManager cotizacionAutoManager;
 	
@@ -59,6 +60,9 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	@Autowired
 	private FlujoMesaControlManager flujoMesaControlManager;
+	
+	@Autowired
+	private CotizacionManager cotizacionManager;
 
 	/**
 	 * Constructor que se asegura de que el action tenga sesion
@@ -123,25 +127,20 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					,cdtipsit , "No se recibi\u00f3 la modalidad"
 					);
 			
-			ManagerRespuestaImapSmapVO resp = cotizacionAutoManager.cotizacionAutoIndividual(
+			Map<String,Object> resp = cotizacionAutoManager.cotizacionAutoIndividual(
 					ntramite
 					,cdunieco
 					,cdramo
 					,cdtipsit
 					,cdusuari
 					,cdsisrol
+					,flujo
 					);
 			
-			exito     = resp.isExito();
-			respuesta = resp.getRespuesta();
+			smap1.putAll((Map<String,String>)resp.get("smap"));
+			imap = (Map<String,Item>)resp.get("items");
 			
-			if(!exito)
-			{
-				throw new ApplicationException(respuesta);
-			}
-			
-			smap1.putAll(resp.getSmap());
-			imap = resp.getImap();
+			exito = true;
 			
 			result = SUCCESS;
 		}
@@ -277,7 +276,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		{
 			UserVO usuario = Utils.validateSession(session);
 			
-			if(flujo!=null)
+			if(flujo!=null && smap1==null)
 			{
 				smap1 = new HashMap<String,String>();
 				smap1.put("cdunieco" , flujo.getCdunieco());
@@ -297,7 +296,18 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				
 				smap1.put("ntramite" , flujo.getNtramite());
 				
+				smap1.put("swexiper" , cotizacionManager.recuperarOtvalorTramitePorDsatribu(flujo.getNtramite(), "SWEXIPER"));
+				
 				logger.debug(Utils.log("", "smap1 creado=", smap1));
+				
+				if("RECUPERAR".equals(flujo.getAux()))
+				{
+					//se recibieron 3 propiedades de una pantalla anterior, hay que actualizarlas
+					logger.debug("flujo antes de actualizar sus 3 propiedades de pantalla nueva={}",flujo);
+					flujoMesaControlManager.recuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisos(flujo);
+					
+					logger.debug("flujo despues de actualizar sus 3 propiedades de pantalla nueva={}",flujo);
+				}
 			}
 			
 			Utils.validate(smap1, "No se recibieron datos");
@@ -1103,7 +1113,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			
 			if(resp.getSlist().isEmpty())
 			{	
-				respuestaOculta="No se agregarón los incisos por no corresponder al negocio seleccionado.";
+				respuestaOculta="No se agregarï¿½n los incisos por no corresponder al negocio seleccionado.";
 				return SUCCESS;
 			}
 			

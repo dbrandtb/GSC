@@ -11,6 +11,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
@@ -876,6 +877,20 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = catalogosManager.recuperarTipoRamoSituacionColectivo(params.get("cdtipram"), params.get("idPadre"));
 					break;					
+				case CATALOGO_CERRADO: //ESTE CATALOGO SOLO REGRESA SUS 5 PARES DE PARAMS COMO 5 RECORDS PARA EL STORE
+					if(params == null)
+					{
+						throw new ApplicationException("Para el catalogo CATALOGO_CERRADO se requieren parametros");
+					}
+					lista = new ArrayList<GenericVO>();
+					for(Entry<String,String> en:params.entrySet())
+					{
+						if("_".equals(en.getKey().substring(0, 1)))
+						{
+							lista.add(new GenericVO(en.getKey().substring(1),en.getValue()));
+						}
+					}
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

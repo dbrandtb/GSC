@@ -7,6 +7,7 @@ import java.util.Map;
 
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2SmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
@@ -17,13 +18,14 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 public interface CotizacionAutoManager
 {
 	
-	public ManagerRespuestaImapSmapVO cotizacionAutoIndividual(
+	public Map<String,Object> cotizacionAutoIndividual(
 			String ntramite
 			,String cdunieco
 			,String cdramo
 			,String cdtipsit
 			,String cdusuari
 			,String cdsisrol
+			,FlujoVO flujo
 			)throws Exception;
 	public ManagerRespuestaSmapVO cargarRetroactividadSuplemento(
 			String cdunieco

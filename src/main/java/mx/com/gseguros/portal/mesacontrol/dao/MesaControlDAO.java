@@ -263,4 +263,30 @@ public interface MesaControlDAO
 	 */
 	public boolean regeneraReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cddocume, String nmsituac, String nmcertif, String cdmoddoc) throws Exception;
 	
+	/**
+	 * ACTUALIZA UN OTVALOR USANDO UN LIKE %+dsatribu+%
+	 * @param ntramite
+	 * @param dsatribu
+	 * @param otvalor
+	 * @param accion (I,U,D) Insert, Update, Delete
+	 * @throws Exception
+	 */
+	public void actualizarOtvalorTramitePorDsatribu(
+			String ntramite
+			,String dsatribu
+			,String otvalor
+			,String accion
+			)throws Exception;
+	
+	/**
+	 * RECUPERA UN OTVALOR USANDO UN LIKE %+dsatribu+%
+	 * @param ntramite
+	 * @param dsatribu
+	 * @return otvalor
+	 * @throws Exception
+	 */
+	public String recuperarOtvalorTramitePorDsatribu(
+			String ntramite
+			,String dsatribu
+			)throws Exception;
 }

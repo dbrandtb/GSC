@@ -2370,4 +2370,43 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				));
 		return message;
 	}
+	
+	@Override
+	public void recuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisos(FlujoVO flujo) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisos @@@@@@"
+				,"\n@@@@@@ flujo=", flujo
+				));
+		
+		String paso = null;
+		
+		try
+		{
+			Map<String,String> conexionFantasma = flujoMesaControlDAO.recuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisos(
+					flujo.getCdtipflu()
+					,flujo.getCdflujomc()
+					,flujo.getTipoent()
+					,flujo.getClaveent()
+					,flujo.getWebid()
+					);
+			
+			logger.debug("Datos de pantalla/componente actual recuperados: {}",conexionFantasma);
+			
+			flujo.setTipoent(conexionFantasma.get("TIPOENT"));
+			flujo.setClaveent(conexionFantasma.get("CDENTIDAD"));
+			flujo.setWebid(conexionFantasma.get("WEBID"));
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ flujo=", flujo
+				,"\n@@@@@@ recuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisos @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
 }
