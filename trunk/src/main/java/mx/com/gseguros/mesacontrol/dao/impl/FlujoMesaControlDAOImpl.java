@@ -2089,4 +2089,62 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			compile();
 		}
 	}
+	
+	@Override
+	public Map<String,String> recuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisos(
+			String cdtipflu
+			,String cdflujomc
+			,String tipoent
+			,String claveent
+			,String webid
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdtipflu"  , cdtipflu);
+		params.put("cdflujomc" , cdflujomc);
+		params.put("tipoent"   , tipoent);
+		params.put("claveent"  , claveent);
+		params.put("webid"     , webid);
+		
+		Map<String,Object> procRes = ejecutaSP(new RecuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisosSP(getDataSource()),params);
+		
+		List<Map<String,String>> lista = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		
+		Map<String,String> conexionFantasma = null;
+		
+		if(lista!=null)
+		{
+			if(lista.size()>1)
+			{
+				throw new ApplicationException("Hay m\u00e1s de una conexi\u00f3n fantasma");
+			}
+			else if(lista.size()==1)
+			{
+				conexionFantasma = lista.get(0);
+			}
+		}
+		
+		return conexionFantasma;
+	}
+	
+	protected class RecuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisosSP extends StoredProcedure
+	{
+		protected RecuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisosSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_RECUPERA_CONEXION_FANTASMA");
+			
+			declareParameter(new SqlParameter("cdtipflu"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdflujomc"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipoent"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("claveent"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("webid"      , OracleTypes.VARCHAR));
+			
+			String[] cols=new String[]{ "CDENTIDAD" , "TIPOENT" , "WEBID" };
+			
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

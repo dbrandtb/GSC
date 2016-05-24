@@ -603,4 +603,22 @@ public interface FlujoMesaControlDAO {
 	public Map<String,String> recuperarUsuarioHistoricoTramitePorRol(String ntramite, String cdsisrol) throws Exception;
 	
 	public void guardarHistoricoTramite(Date fecha, String ntramite, String cdusuari, String cdsisrol, String status) throws Exception;
+	
+	/**
+	 * Se recupera una conexion a una pantalla o componente que no tenga ningun permiso
+	 * @param cdtipflu
+	 * @param cdflujomc
+	 * @param tipoent
+	 * @param claveent
+	 * @param webid
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String,String> recuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisos(
+			String cdtipflu
+			,String cdflujomc
+			,String tipoent
+			,String claveent
+			,String webid
+			)throws Exception;
 }

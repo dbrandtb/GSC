@@ -9519,8 +9519,87 @@ public class CotizacionManagerImpl implements CotizacionManager
 		cotizacionDAO.movimientoTbloqueo(cdunieco,cdramo,estado,nmpoliza,nmsituac,accion);
 	}
 	
-	///////////////////////////////
-	////// getters y setters //////
+	@Override
+	public void actualizarOtvalorTramitePorDsatribu(
+			String ntramite
+			,String dsatribu
+			,String otvalor
+			,String accion
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ actualizarOtvalorTramitePorDsatribu @@@@@@"
+				,"\n@@@@@@ ntramite=", ntramite
+				,"\n@@@@@@ dsatribu=", dsatribu
+				,"\n@@@@@@ otvalor=" , otvalor
+				,"\n@@@@@@ accion="  , accion
+				));
+		
+		String paso = "Ejecutando actualizaci\u00f3n de valor din\u00e1mico de tr\u00e1mite";
+		
+		try
+		{
+			mesaControlDAO.actualizarOtvalorTramitePorDsatribu(ntramite,dsatribu,otvalor,accion);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ actualizarOtvalorTramitePorDsatribu @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public String recuperarOtvalorTramitePorDsatribu(
+			String ntramite
+			,String dsatribu
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarOtvalorTramitePorDsatribu @@@@@@"
+				,"\n@@@@@@ ntramite=", ntramite
+				,"\n@@@@@@ dsatribu=", dsatribu
+				));
+		
+		String paso     = "Ejecutando actualizaci\u00f3n de valor din\u00e1mico de tr\u00e1mite"
+		       ,otvalor = null;
+		
+		try
+		{
+			otvalor = mesaControlDAO.recuperarOtvalorTramitePorDsatribu(ntramite,dsatribu);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ otvalor=", otvalor
+				,"\n@@@@@@ recuperarOtvalorTramitePorDsatribu @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return otvalor;
+	}
+	
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	////////////////  GETTERS Y SETTERS  ////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
 		this.cotizacionDAO = cotizacionDAO;
 	}

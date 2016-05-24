@@ -811,4 +811,31 @@ public interface CotizacionManager
 			,String accion
 			)throws Exception;
 	
+	/**
+	 * ACTUALIZA UN OTVALOR USANDO UN LIKE %+dsatribu+%
+	 * @param ntramite
+	 * @param dsatribu
+	 * @param otvalor
+	 * @param accion (I,U,D) Insert, Update, Delete
+	 * @throws Exception
+	 */
+	public void actualizarOtvalorTramitePorDsatribu(
+			String ntramite
+			,String dsatribu
+			,String otvalor
+			,String accion
+			)throws Exception;
+	
+	/**
+	 * RECUPERA UN OTVALOR USANDO UN LIKE %+dsatribu+%
+	 * @param ntramite
+	 * @param dsatribu
+	 * @return otvalor
+	 * @throws Exception
+	 */
+	public String recuperarOtvalorTramitePorDsatribu(
+			String ntramite
+			,String dsatribu
+			)throws Exception;
+	
 }

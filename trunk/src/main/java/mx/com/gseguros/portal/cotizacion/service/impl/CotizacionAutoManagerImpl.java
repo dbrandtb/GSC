@@ -17,6 +17,8 @@ import java.util.Map.Entry;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
@@ -41,7 +43,6 @@ import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
-import mx.com.gseguros.portal.general.util.CatalogosAction;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoTramite;
@@ -59,17 +60,18 @@ import mx.com.gseguros.ws.nada.service.NadaService;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 {
-	private static final Logger logger           = Logger.getLogger(CotizacionAutoManagerImpl.class);
+	private static final Logger logger           = LoggerFactory.getLogger(CotizacionAutoManagerImpl.class);
 	private static final DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	private CotizacionDAO  cotizacionDAO;
@@ -107,32 +109,38 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	@Autowired
 	private transient NadaService nadaService;
 	
+	@Autowired
+	private FlujoMesaControlDAO flujoMesaControlDAO;
+	
 	@Override
-	public ManagerRespuestaImapSmapVO cotizacionAutoIndividual(
+	public Map<String,Object> cotizacionAutoIndividual(
 			String ntramite
 			,String cdunieco
 			,String cdramo
 			,String cdtipsit
 			,String cdusuari
 			,String cdsisrol
+			,FlujoVO flujo
 			)throws Exception
 	{
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ cotizacionAutoIndividual @@@@@@")
-				.append("\n@@@@@@ ntramite=").append(ntramite)
-				.append("\n@@@@@@ cdunieco=").append(cdunieco)
-				.append("\n@@@@@@ cdramo=")  .append(cdramo)
-				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
-				.append("\n@@@@@@ cdusuari=").append(cdusuari)
-				.append("\n@@@@@@ cdsisrol=").append(cdsisrol)
-				.toString()
-				);
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cotizacionAutoIndividual @@@@@@"
+				,"\n@@@@@@ ntramite=" , ntramite
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ cdtipsit=" , cdtipsit
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ flujo="    , flujo
+				));
 		
-		ManagerRespuestaImapSmapVO resp = new ManagerRespuestaImapSmapVO(true);
-		resp.setSmap(new LinkedHashMap<String,String>());
-		resp.setImap(new LinkedHashMap<String,Item>());
+		Map<String,Object> resp  = new LinkedHashMap<String,Object>();
+		Map<String,String> smap  = new LinkedHashMap<String,String>();
+		Map<String,Item>   items = new LinkedHashMap<String,Item>();
+		
+		resp.put("smap"  , smap);
+		resp.put("items" , items);
 		
 		String paso = null;
 		
@@ -148,13 +156,13 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				{
 					DatosUsuario datUsu = cotizacionDAO.cargarInformacionUsuario(cdusuari,cdtipsit);
 					cdunieco            = datUsu.getCdunieco();
-					resp.getSmap().put("cdunieco" , cdunieco);
-					resp.getSmap().put("ntramite" , "");
+					smap.put("cdunieco" , cdunieco);
+					smap.put("ntramite" , "");
 					
 					if(cdsisrol.equals(RolSistema.AGENTE.getCdsisrol()))
 					{
 						cdagente = datUsu.getCdagente();
-						resp.getSmap().put("cdagente" , cdagente);
+						smap.put("cdagente" , cdagente);
 					}
 				}
 				catch(Exception ex)
@@ -162,12 +170,46 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					throw new ApplicationException("Usted no puede cotizar este producto");
 				}
 			}
+			else
+			{
+				String cdperson = consultasDAO.recuperarCdpersonClienteTramite(ntramite);
+				smap.put("cdpercli", cdperson);
+				
+				if(flujo!=null)
+				{
+					logger.debug("Se recuperan datos del tramite accediendo por flujo");
+					
+					Map<String,Object> datosFlujo = flujoMesaControlDAO.recuperarDatosTramiteValidacionCliente(
+							flujo.getCdtipflu()
+							,flujo.getCdflujomc()
+							,flujo.getTipoent()
+							,flujo.getClaveent()
+							,flujo.getWebid()
+							,ntramite
+							,flujo.getStatus()
+							,cdunieco
+							,cdramo
+							,flujo.getEstado()
+							,flujo.getNmpoliza()
+							,flujo.getNmsituac()
+							,flujo.getNmsuplem()
+							);
+					
+					Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
+					
+					cdagente = tramite.get("CDAGENTE");
+					logger.debug("CDAGENTE={}",cdagente);
+
+					smap.put("cdagente" , cdagente);
+				}
+				
+			}
 			
 			paso = "Recuperando tipo de situaci\u00f3n";//////
 			Map<String,String>tipoSituacion=cotizacionDAO.cargarTipoSituacion(cdramo,cdtipsit);
 			if(tipoSituacion!=null)
 			{
-				resp.getSmap().putAll(tipoSituacion);
+				smap.putAll(tipoSituacion);
 			}
 			else
 			{
@@ -235,6 +277,39 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				tatrisit = aux;
 			}
 			
+			//parchamos el campo AGENTE cuando viene por flujo
+			if(flujo!=null)
+			{
+				logger.debug("Se procede a buscar el campo agente para reemplazar");
+				for(ComponenteVO item : tatrisit)
+				{
+					if("AGENTE".equals(item.getLabel()))
+					{
+						logger.debug("Se encontro y modifico el campo agente: {}",item);
+						if(StringUtils.isNotBlank(item.getCatalogo()))
+						{
+							item.setCatalogo("CATALOGO_CERRADO");
+							item.setQueryParam(null);
+							item.setParamName1(Utils.join("'params._",cdagente,"'"));
+							item.setParamValue1(Utils.join("'",cotizacionDAO.cargarNombreAgenteTramite(ntramite),"'"));
+							item.setParamName2(null);
+							item.setParamValue2(null);
+							item.setParamName3(null);
+							item.setParamValue3(null);
+							item.setParamName4(null);
+							item.setParamValue4(null);
+							item.setParamName5(null);
+							item.setParamValue5(null);
+						}
+						else
+						{
+							item.setValue(cdagente);
+							item.setSoloLectura(true);
+						}
+					}
+				}
+			}
+			
 			//separar por panel
 			for(ComponenteVO tatri : tatrisit)
 			{
@@ -271,25 +346,25 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			gc.setCdtipsit(cdtipsit);
 			
 			gc.generaComponentes(panel1, true, false, true, false, false, false);
-			resp.getImap().put("panel1Items"  , gc.getItems());
+			items.put("panel1Items"  , gc.getItems());
 			
 			gc.generaComponentes(panel2, true, false, true, false, false, false);
-			resp.getImap().put("panel2Items"  , gc.getItems());
+			items.put("panel2Items"  , gc.getItems());
 			
 			gc.generaComponentes(panel3, true, false, true, false, false, false);
-			resp.getImap().put("panel3Items"  , gc.getItems());
+			items.put("panel3Items"  , gc.getItems());
 			
 			gc.generaComponentes(panel4, true, false, true, false, false, false);
-			resp.getImap().put("panel4Items"  , gc.getItems());
+			items.put("panel4Items"  , gc.getItems());
 			
 			gc.generaComponentes(panel5, true, false, true, false, false, false);
-			resp.getImap().put("panel5Items"  , gc.getItems());
+			items.put("panel5Items"  , gc.getItems());
 			
 			gc.generaComponentes(panel6, true, false, true, false, false, false);
-			resp.getImap().put("panel6Items"  , gc.getItems());
+			items.put("panel6Items"  , gc.getItems());
 			
 			gc.generaComponentes(tatrisit, true, true, false, false, false, false);
-			resp.getImap().put("formFields" , gc.getFields());
+			items.put("formFields" , gc.getFields());
 			
 			paso = "Recuperando atributos de poliza";
 			List<ComponenteVO>tatripol    = cotizacionDAO.cargarTatripol(cdramo, null, null);
@@ -302,24 +377,41 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 			}
 			tatripol=tatripolAux;
-			resp.getSmap().put("tatripolItemsLength",String.valueOf(tatripol.size()));
+			smap.put("tatripolItemsLength",String.valueOf(tatripol.size()));
 			GeneradorCampos gcTatripol = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gcTatripol.setAuxiliar(true);
 			gcTatripol.setCdramo(cdramo);
 			gcTatripol.generaComponentes(tatripol, true, false, true, false, false, false);
-			resp.getImap().put("tatripolItems" , gcTatripol.getItems());
+			items.put("tatripolItems" , gcTatripol.getItems());
 			
 			paso = "Recuperando codigo custom de pantalla";
 			logger.debug(paso);
 			
 			try
 			{
-				resp.getSmap().put("customCode", consultasDAO.recuperarCodigoCustom("28", cdsisrol));
+				smap.put("customCode", consultasDAO.recuperarCodigoCustom("28", cdsisrol));
 			}
 			catch(Exception ex)
 			{
-				resp.getSmap().put("customCode" , "/* error */");
+				smap.put("customCode" , "/* error */");
 				logger.error("Error sin impacto funcional");
+			}
+			
+			try
+			{
+				Map<String,String> titulo = cotizacionDAO.obtenerParametrosCotizacion(
+						ParametroCotizacion.TITULO_COTIZACION
+						,cdramo
+						,cdtipsit
+						,null //clave4
+						,null //clave5
+						);
+				
+				smap.put("titulo" , titulo.get("P1VALOR"));
+			}
+			catch(Exception ex)
+			{
+				logger.error("Error al recuperar titulo",ex);
 			}
 		}
 		catch(Exception ex)
@@ -327,13 +419,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			Utils.generaExcepcion(ex,paso);
 		}
 
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@ ").append(resp)
-				.append("\n@@@@@@ cotizacionAutoIndividual @@@@@@")
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.toString()
-				);
+		logger.debug(Utils.log(
+				 "\n@@@@@@ resp=" , resp
+				,"\n@@@@@@ cotizacionAutoIndividual @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
 		return resp;
 	}
 	
@@ -2333,7 +2423,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		{
 			paso = "Recuperando parametrizacion de excel para COTIFLOT";
 			List<Map<String,String>>config=cotizacionDAO.cargarParametrizacionExcel("COTIFLOT",cdramo,cdtipsit);
-			logger.debug(config);
+			logger.debug(Utils.log(config));
 			
 			paso = "Instanciando mapa buffer de tablas de apoyo";
 			Map<String,List<Map<String,String>>> buffer        = new HashMap<String,List<Map<String,String>>>();
@@ -2921,11 +3011,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						{
 							if(slistPYME.get(e).get("dummy").contains("71199999"))
 							{	
-								AF = "<br>Automóvil(es) Fronterizo (71199999)";
+								AF = "<br>Automï¿½vil(es) Fronterizo (71199999)";
 							}
 							else if(slistPYME.get(e).get("dummy").contains("71199996"))
 							{
-							   AFL= "<br>Automóvil(es) Legalizado (71199996)";
+							   AFL= "<br>Automï¿½vil(es) Legalizado (71199996)";
 							}
 							else if(slistPYME.get(e).get("dummy").contains("71199998"))
 							{
@@ -2963,17 +3053,17 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			noKey= AF+AFL+PU+PUL+MO+TC+RQ;
 			if(!incisosinvalidos.isEmpty() && !noKey.isEmpty())
 			{
-				incisosinvalidos="No se agregarón los inciso(s) con clave"+ incisosinvalidos+"<br>Y los tipos:"+ noKey +"<br>por no corresponder al negocio seleccionado.";
+				incisosinvalidos="No se agregarï¿½n los inciso(s) con clave"+ incisosinvalidos+"<br>Y los tipos:"+ noKey +"<br>por no corresponder al negocio seleccionado.";
 				logger.debug(Utils.log(incisosinvalidos));
 			}
 			else if(!incisosinvalidos.isEmpty())
 			{
-				incisosinvalidos="No se agregarón los inciso(s) con clave"+ incisosinvalidos+"<br>por no corresponder al negocio seleccionado.";
+				incisosinvalidos="No se agregarï¿½n los inciso(s) con clave"+ incisosinvalidos+"<br>por no corresponder al negocio seleccionado.";
 				logger.debug(Utils.log("Incisos Invalidos: ",incisosinvalidos," \nLista de Maps: ",slistPYME));
 			}
 			else if(!noKey.isEmpty())
 			{
-				incisosinvalidos= "No se agregarón los inciso(s) tipo:"+ noKey +"<br>por no corresponder al negocio seleccionado.";
+				incisosinvalidos= "No se agregarï¿½n los inciso(s) tipo:"+ noKey +"<br>por no corresponder al negocio seleccionado.";
 			}			
 			Map<String, String> removidos= new HashMap<String, String>();
 			if(!incisosinvalidos.isEmpty())

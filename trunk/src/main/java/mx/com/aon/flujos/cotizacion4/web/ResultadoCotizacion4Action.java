@@ -23,6 +23,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.web.model.IncisoSaludVO;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
@@ -179,6 +180,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	@Autowired
 	private ConsultasManager consultasManager;
     
+	private FlujoVO flujo;
+	
     public String entrar()
     {
         UserVO usuario=(UserVO) session.get("USUARIO");
@@ -828,7 +831,6 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
         return SUCCESS;
     }
     
-    public String comprarCotizacion()
     /*pv_cdunieco   input
     --pv_cdramo     input
     --pv_estado     W
@@ -839,12 +841,14 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     --pv_cdasegur   input
     --pv_cdplan     input
     --pv_cdperpag   input
-    */
+     */
+    public String comprarCotizacion()
     {
     	logger.debug(Utils.log(
     			 "\n################################"
     			,"\n###### comprar cotizacion ######"
-    			,"\n###### smap1=",smap1
+    			,"\n###### smap1=" , smap1
+    			,"\n###### flujo=" , flujo
     			));
     	
     	exito   = true;
@@ -1154,6 +1158,15 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            	parDmesCon.put("pv_cdmotivo_i"   , null);
 	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
 	            	*/
+	            	
+	            	String statusDetalle = EstatusTramite.PENDIENTE.getCodigo();
+	            	
+	            	if(flujo!=null && StringUtils.isNotBlank(flujo.getStatus()))
+	            	{
+	            		logger.debug("El status se usa del flujo y no PENDIENTE");
+	            		statusDetalle = flujo.getStatus();
+	            	}
+	            	
 	            	mesaControlManager.movimientoDetalleTramite(
 	            			ntramite
 	            			,new Date()
@@ -1163,7 +1176,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            			,null//cdmotivo
 	            			,cdsisrol
 	            			,"S"
-	            			,EstatusTramite.PENDIENTE.getCodigo()
+	            			,statusDetalle
 	            			,false
 	            			);
 	            }
@@ -1812,8 +1825,19 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
         return SUCCESS;
     }
 
-    
-    //Getters and setters:
+    /////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	////////////////  GETTERS Y SETTERS  ////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
     
     public void setKernelManagerSustituto(KernelManagerSustituto kernelManagerSustituto) {
         this.kernelManagerSustituto = kernelManagerSustituto;
@@ -2264,6 +2288,14 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 
 	public void setServiciosManager(ServiciosManager serviciosManager) {
 		this.serviciosManager = serviciosManager;
+	}
+
+	public FlujoVO getFlujo() {
+		return flujo;
+	}
+
+	public void setFlujo(FlujoVO flujo) {
+		this.flujo = flujo;
 	}
     
 }

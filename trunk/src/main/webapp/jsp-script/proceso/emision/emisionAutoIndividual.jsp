@@ -33,6 +33,9 @@ debug("claveUsuarioCaptura= ",claveUsuarioCaptura,".");
 var _p29_smap1          = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false"/>;
 debug('_p29_smap1:',_p29_smap1);
 
+var _p29_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+debug('_p29_flujo:',_p29_flujo);
+
 var _p29_polizaAdicionalesItems = null;
 var _p29_adicionalesItems       = null;
 var _p22_parentCallback         = false;
@@ -166,7 +169,41 @@ Ext.onReady(function()
 	    ,defaults : { style : 'margin:5px;' }
 	    ,items    :
 	    [
-	        Ext.create('Ext.form.Panel',
+	        Ext.create('Ext.panel.Panel',
+            {
+                itemId       : '_p29_panelFlujo'
+                ,title       : 'ACCIONES'
+                ,hidden      : Ext.isEmpty(_p29_flujo)
+                ,buttonAlign : 'left'
+                ,buttons     : []
+                ,listeners   :
+                {
+                    afterrender : function(me)
+                    {
+                        if(!Ext.isEmpty(_p29_flujo))
+                        {
+                            _cargarBotonesEntidad(
+                                _p29_flujo.cdtipflu
+                                ,_p29_flujo.cdflujomc
+                                ,_p29_flujo.tipoent
+                                ,_p29_flujo.claveent
+                                ,_p29_flujo.webid
+                                ,me.itemId//callback
+                                ,_p29_flujo.ntramite
+                                ,_p29_flujo.status
+                                ,_p29_flujo.cdunieco
+                                ,_p29_flujo.cdramo
+                                ,_p29_flujo.estado
+                                ,_p29_flujo.nmpoliza
+                                ,_p29_flujo.nmsituac
+                                ,_p29_flujo.nmsuplem
+                                ,null//callbackDespuesProceso
+                            );
+                        }
+                    }
+                }
+            })
+            ,Ext.create('Ext.form.Panel',
 	        {
 	            itemId    : '_p29_polizaForm'
 	            ,title    : 'DATOS DE P&Oacute;LIZA'

@@ -18,14 +18,15 @@ import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
 
 public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaControlDAO
 {
-	private static final Logger logger = Logger.getLogger(MesaControlDAOImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(MesaControlDAOImpl.class);
 	
 	public String cargarCdagentePorCdusuari(String cdusuari)throws Exception
 	{
@@ -1070,6 +1071,95 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("cddocume"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"        , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"         , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void actualizarOtvalorTramitePorDsatribu(
+			String ntramite
+			,String dsatribu
+			,String otvalor
+			,String accion
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("dsatribu" , dsatribu);
+		params.put("otvalor"  , otvalor);
+		params.put("accion"   , accion);
+		Map<String,Object> procRes = ejecutaSP(new ActualizarOtvalorTramitePorDsatribuSP(getDataSource()),params);
+		
+		String error = (String)procRes.get("pv_error_o");
+		
+		if(StringUtils.isNotBlank(error))
+		{
+			throw new ApplicationException(error);
+		}
+	}
+	
+	protected class ActualizarOtvalorTramitePorDsatribuSP extends StoredProcedure
+	{
+		protected ActualizarOtvalorTramitePorDsatribuSP(DataSource dataSource)
+		{
+			super(dataSource,"P_MOV_VALOR_MC_X_DSATRIBU");
+			
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("dsatribu" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion"   , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			
+			compile();
+		}
+	}
+	
+	@Override
+	public String recuperarOtvalorTramitePorDsatribu(
+			String ntramite
+			,String dsatribu
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("dsatribu" , dsatribu);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarOtvalorTramitePorDsatribuSP(getDataSource()),params);
+		
+		String error    = (String)procRes.get("pv_error_o")
+		       ,otvalor = (String)procRes.get("pv_otvalor_o");
+		
+		if(StringUtils.isNotBlank(error))
+		{
+			throw new ApplicationException(error);
+		}
+		
+		if(StringUtils.isBlank(otvalor))
+		{
+			otvalor = "";
+		}
+		
+		logger.debug("OTVALOR RECUPERADO CON DSATRIBU {} PARA TRAMITE {} = {}",dsatribu,ntramite,otvalor);
+		
+		return otvalor;
+	}
+	
+	protected class RecuperarOtvalorTramitePorDsatribuSP extends StoredProcedure
+	{
+		protected RecuperarOtvalorTramitePorDsatribuSP(DataSource dataSource)
+		{
+			super(dataSource,"P_GET_VALOR_MC_X_DSATRIBU");
+			
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("dsatribu" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_otvalor_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_error_o"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			
 			compile();
 		}
 	}
