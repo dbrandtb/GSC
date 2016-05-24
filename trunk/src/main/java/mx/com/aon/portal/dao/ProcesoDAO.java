@@ -3053,16 +3053,20 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			pv_msg_id_o
 			pv_title_o
 			 */
-			super(dataSource,"PKG_CONSULTA.P_Get_documentos");
+			
+			super(dataSource,"PKG_CONSULTA_PRUEBA.P_Get_documentos_f");
 			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ntramite_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdsisrol_i",    OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerDocumentosPolizaMapper()));
-			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_start_i", 	  OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_limit_i", 	  OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtenerDocumentosPolizaMapper()));
+			declareParameter(new SqlOutParameter("pv_num_rec_o",  OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
 		}
 	
 		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
@@ -3078,7 +3082,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 			String cols[] = new String[] { "nmsolici", "cddocume", "dsdocume",
 					"feinici", "ntramite", "tipmov", "nmsuplem", "nsuplogi",
-					"editable", "feinicio", "fefinal", "nmsituac", "nmcertif", "cdmoddoc" };
+					"editable", "feinicio", "fefinal", "nmsituac", "nmcertif", "cdmoddoc", "total" };
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
 			{

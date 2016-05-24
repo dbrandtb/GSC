@@ -62,6 +62,10 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     private String respuesta;
     private String respuestaOculta;
     
+    private long start;
+    private long limit;
+    private long totalCount;
+    
     @Autowired
     private DocumentosManager documentosManager;
     
@@ -379,6 +383,8 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 			pv_title_o
 			*/
 			Map<String,Object>paramGetDocu=new LinkedHashMap<String,Object>(0);
+			paramGetDocu.put("pv_start_i", start);
+			paramGetDocu.put("pv_limit_i", limit);
 			Iterator it=smap1.entrySet().iterator();
 			while(it.hasNext())
 			{
@@ -388,6 +394,8 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 			slist1=kernelManager.obtenerDocumentosPoliza(paramGetDocu);
 			if(slist1!=null&&slist1.size()>0)
 			{
+				totalCount = Long.parseLong(slist1.get(0).get("total"));
+				
 				for(int i=0;i<slist1.size();i++)
 				{
 					String nombre=slist1.get(i).get("cddocume");
@@ -402,8 +410,14 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 					String mezcla=nombre+"#_#"+descripcion;
 					slist1.get(i).put("liga",mezcla);
 					slist1.get(i).put("orden",nmsuplem+"#_#"+tipmov+"#_#"+nsuplogi);
+					
+					
+					
 				}
+			} else {
+				totalCount = 0;
 			}
+				
 			success=true;
 		}
 		catch(Exception ex)
@@ -749,5 +763,31 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 	public void setRespuestaOculta(String respuestaOculta) {
 		this.respuestaOculta = respuestaOculta;
 	}
+
+	public long getStart() {
+		return start;
+	}
+
+	public void setStart(long start) {
+		this.start = start;
+	}
+
+	public long getLimit() {
+		return limit;
+	}
+
+	public void setLimit(long limit) {
+		this.limit = limit;
+	}
+
+	public long getTotalCount() {
+		return totalCount;
+	}
+
+	public void setTotalCount(long totalCount) {
+		this.totalCount = totalCount;
+	}
+	
+	
     
 }
