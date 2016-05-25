@@ -91,11 +91,11 @@ Ext.onReady(function() {
                                     params: panelBusqueda.down('form').getForm().getValues(),
                                     callback: function(records, operation, success){
                                     	
-                                    	_fieldByName('filtrarFam',gridDatosAsegurado).setValue('');
-                                    	_fieldByName('filtrarAseg',gridDatosAsegurado).setValue('');
-                                    	_fieldByName('filtrarCveAseg',gridDatosAsegurado).setValue('');
-                                    	
-                                    	storeAsegurados.clearFilter();
+//                                    	_fieldByName('filtrarFam',gridDatosAsegurado).setValue('');
+//                                    	_fieldByName('filtrarAseg',gridDatosAsegurado).setValue('');
+//                                    	_fieldByName('filtrarCveAseg',gridDatosAsegurado).setValue('');
+//                                    	
+//                                    	storeAsegurados.clearFilter();
                                     	
                                         if(!success){
                                             showMessage('Error', 'Error al obtener los datos del asegurado', Ext.Msg.OK, Ext.Msg.ERROR);
@@ -689,6 +689,7 @@ Ext.onReady(function() {
      {
           type: 'ajax',
           url : _URL_CONSULTA_DATOS_ASEGURADO,
+          extraParams : null,
 	      reader:
 	      {
 	           type: 'json',
@@ -696,17 +697,24 @@ Ext.onReady(function() {
 	           totalProperty: 'totalCount',
 	           simpleSortMode: true
 	      }
-     },
+     } /*,
      listeners: {
          //load: function(store, records, successful, eOpts){
      	 beforeload: function(store) {
         	debug("beforeload",store);
-        	if(!Ext.isEmpty(panelBusqueda)){
-				debug("Asignando Valores",panelBusqueda.down('form').getForm().getValues());
-        		store.getProxy().extraParams = panelBusqueda.down('form').getForm().getValues()
+        	if( Ext.isEmpty(store.getProxy().extraParams)){
+        		debug('extraParams vacio',store.getProxy().extraParams);
+        		store.getProxy().extraParams = panelBusqueda.down('form').getForm().getValues();      	
         	}
+        	
+//        	if(!Ext.isEmpty(panelBusqueda) && store.getProxy().extraParams != null){
+//				debug("Asignando Valores",panelBusqueda.down('form').getForm().getValues());
+//        		store.getProxy().extraParams = panelBusqueda.down('form').getForm().getValues()
+//        	}
         }
+     	 
      }
+     */
     });
     
     gridDatosAsegurado = Ext.create('Ext.grid.Panel', {
@@ -864,8 +872,8 @@ Ext.onReady(function() {
                 fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Asegurado:</span>',
                 labelWidth : 100,
                 width: 260,
-                maxLength : 50,
-                listeners:{
+                maxLength : 50
+                /*listeners:{
                 	change: function(elem,newValue,oldValue){
                 		newValue = Ext.util.Format.uppercase(newValue);
                 		
@@ -884,15 +892,15 @@ Ext.onReady(function() {
 							error('Error al filtrar por asegurado',e);
 						}
                 	}
-                }
+                }*/
             },'-',{
                 xtype : 'textfield',
                 name : 'filtrarCveAseg',
                 fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Cve. Asegurado:</span>',
                 labelWidth : 120,
                 width: 220,
-                maxLength : 50,
-                listeners:{
+                maxLength : 50
+             /*   listeners:{
                 	change: function(elem,newValue,oldValue){
                 		newValue = Ext.util.Format.uppercase(newValue);
                 		
@@ -911,15 +919,15 @@ Ext.onReady(function() {
 							error('Error al filtrar por clave de asegurado',e);
 						}
                 	}
-                }
+                }*/
             },'-',{
                 xtype : 'textfield',
                 name : 'filtrarFam',
                 fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Familia:</span>',
                 labelWidth : 80,
                 width: 240,
-                maxLength : 50,
-                listeners:{
+                maxLength : 50
+               /* listeners:{
                 	change: function(elem,newValue,oldValue){
                 		newValue = Ext.util.Format.uppercase(newValue);
                 		
@@ -938,8 +946,26 @@ Ext.onReady(function() {
 							error('Error al filtrar por familia',e);
 						}
                 	}
-                }
-            }]
+                } */
+            },{
+	            xtype    : 'button',
+	            text     : 'Buscar',
+	            icon     : _CONTEXT+'/resources/fam3icons/icons/zoom.png',
+	            handler : function(btn) {
+	            	debug('antes de asignar valores', storeAsegurados.getProxy().extraParams);
+		            storeAsegurados.getProxy().extraParams = panelBusqueda.down('form').getForm().getValues();
+		            //storeAsegurados.getProxy().setExtraParam('start', 0);
+		           // storeAsegurados.getProxy().setExtraParam('page', 1);
+		            storeAsegurados.getProxy().setExtraParam('params.familia', btn.up('grid').down('textfield[name=filtrarFam]').getValue());
+		            storeAsegurados.getProxy().setExtraParam('params.nombre', btn.up('grid').down('textfield[name=filtrarAseg]').getValue());
+		            storeAsegurados.getProxy().setExtraParam('params.cdperson', btn.up('grid').down('textfield[name=filtrarCveAseg]').getValue());
+		            debug('despues de asignar valores', storeAsegurados.getProxy().extraParams);
+		            //storeAsegurados.load();
+		            storeAsegurados.loadPage(1);
+	            }
+                                
+            }	
+        ]
         ,features: [{
             groupHeaderTpl: '{name}',
             ftype:          'grouping',

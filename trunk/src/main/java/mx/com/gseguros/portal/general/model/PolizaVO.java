@@ -57,9 +57,19 @@ public class PolizaVO implements Serializable {
 	
 	private String nombre;
 	
+	private String familia;
+	
 	
 	//Constructors:
 	
+	public String getFamilia() {
+		return familia;
+	}
+
+	public void setFamilia(String familia) {
+		this.familia = familia;
+	}
+
 	public PolizaVO() {
 		super();
 	}
