@@ -1,7 +1,7 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
 
 Ext.onReady(function() {
-		
+	
 	//Se establece un timeout de 2 min.
 	//Ext.Ajax.timeout = 60000;
 	Ext.Ajax.timeout = 120000;
@@ -2388,6 +2388,7 @@ Ext.onReady(function() {
         defaults: {frame:true, width:200, height: 200, margin : '2'},
         items:[{
             title:'B&Uacute;SQUEDA DE ASEGURADOS',
+            id: 'subPanelBusqueda',
             width:990,
             height:190,
             items: [
@@ -2712,6 +2713,16 @@ Ext.onReady(function() {
         }]
     });
     
+    //Asignamos los parametros que se pasan desde la url 
+    panelBusqueda.down('form').getForm().findField("params.nmpoliex").setValue(_NMPOLIEX)
+    panelBusqueda.down('form').getForm().findField("params.icodpoliza").setValue(_ICODPOLIZA)
+    panelBusqueda.down('form').getForm().findField("params.cdperson").setValue(_CDPERSON)
+    panelBusqueda.down('form').getForm().findField("params.nmsituac").setValue(_NMSITUAC)
+    //Lanzar funcion de busqueda si se ha pasado el _CDPERSON (id del afiliado) como parametro desde la url
+    if(!(_CDPERSON==='') && !(_CDPERSON===null)){
+    	Ext.getCmp('subPanelBusqueda').hide();
+    	cargaStoreSuplementos(panelBusqueda.down('form').getForm().getValues());
+    }
     ////Hide elements
     if(tabDatosGeneralesPoliza.isVisible()) {
         tabDatosGeneralesPoliza.hide();

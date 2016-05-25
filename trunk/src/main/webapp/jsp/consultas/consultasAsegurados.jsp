@@ -47,6 +47,11 @@
             
             //Variable que determina si es usuario de CallCenter
             var _IS_USUARIO_CALL_CENTER          = <s:property value="usuarioCallCenter"/>
+          	//Variables que determinan si se preconsulta la pantalla
+            var _NMPOLIEX         = '<s:property value="params.nmpoliex"/>'
+          	var _ICODPOLIZA     = '<s:property value="params.icodpoliza"/>'
+          	var _CDPERSON         = '<s:property value="params.cdperson"/>'
+          	var _NMSITUAC         = '<s:property value="params.nmsituac"/>'
             
         </script>
         <script type="text/javascript" src="${ctx}/resources/scripts/consultaAsegurados/consultasAsegurados.js?${now}"></script>

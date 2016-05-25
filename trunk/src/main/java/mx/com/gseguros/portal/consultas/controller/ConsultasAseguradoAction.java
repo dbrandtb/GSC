@@ -132,7 +132,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 	/**
 	 * Metodo de entrada a consulta de polizas
 	 */
-	public String execute() throws Exception {
+	public String pantallaConsultasAsegurado() throws Exception {
 
 		// Obtenemos el rol de sistema del usuario en sesion:
 		UserVO usuario = (UserVO) session.get("USUARIO");
@@ -306,6 +306,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
         	polizaVO.setEstado(params.get("estado"));
         	polizaVO.setNmpoliza(params.get("nmpoliza"));
         	polizaVO.setIcodpoliza(params.get("icodpoliza"));
+        	polizaVO.setNmsituac(params.get("nmsituac"));
         	AseguradoVO aseguradoVO = new AseguradoVO();
     		aseguradoVO.setCdperson(params.get("cdperson"));
         	

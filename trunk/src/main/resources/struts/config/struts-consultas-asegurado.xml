@@ -5,7 +5,8 @@
 
     <package name="consultasAsegurado" namespace="/consultasAsegurado" extends="default">
         
-        <action name="pantallaConsultasAsegurado" class="ConsultasAseguradoAction">
+        <action name="pantallaConsultasAsegurado" class="ConsultasAseguradoAction"
+        	method="pantallaConsultasAsegurado">
             <result name="success">/jsp/consultas/consultasAsegurados.jsp</result>
         </action>
         
