@@ -286,6 +286,7 @@ Ext.onReady(function()
     {
         model     : '_p34_modeloInciso'
         ,autoLoad : false
+        ,pageSize : 25
         ,proxy    :
         {
             type         : 'ajax'
@@ -300,8 +301,48 @@ Ext.onReady(function()
                 ,root            : 'slist1'
                 ,successProperty : 'success'
                 ,messageProperty : 'respuesta'
+                ,totalProperty   : 'total'
             }
         }
+        ,listeners : {
+		  	load: function(me, records, success){
+			 	debug('### incisos load',records,success);
+	            if(success)
+	            {
+	                for(var i in records)
+	                {
+	                    var record    = records[i];
+	                    var atributos = record.get('CDTIPSIT');
+	                    for(var i=1;i<=99;i++)
+	                    {
+	                        var valor=record.get('OTVALOR'+(('x00'+i).slice(-2)));
+	                        if(valor+'x'=='nullx')
+	                        {
+	                            valor='';
+	                        }
+	                        var display=record.get('DSVALOR'+(('x00'+i).slice(-2)));
+	                        if(display+'x'=='nullx')
+	                        {
+	                            display='';
+	                        }
+	                        atributos=atributos+'|'+valor+'~'+display;
+	                    }
+	                    record.set('ATRIBUTOS',atributos);
+	                    
+	                    record.set('NOMBRECOMPLETO',
+	                        (Ext.isEmpty(record.get('DSNOMBRE'))   ?'':record.get('DSNOMBRE'))   + ' ' +
+	                        (Ext.isEmpty(record.get('DSNOMBRE1'))  ?'':record.get('DSNOMBRE1'))  + ' ' +
+	                        (Ext.isEmpty(record.get('DSAPELLIDO')) ?'':record.get('DSAPELLIDO')) + ' ' +
+	                        (Ext.isEmpty(record.get('DSAPELLIDO1'))?'':record.get('DSAPELLIDO1'))
+	                    );
+	                    
+	                    debug('record customizado:',record.data);
+	                }
+	                
+	                _p34_storeIncisos.commitChanges();
+	            }    
+		    }		        
+	     }
     });
     
     _p34_storeEndosos=Ext.create('Ext.data.Store',
@@ -842,125 +883,140 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                debug('atributos para el modelo:',arrayAtributos);
 			                Ext.ModelManager.getModel('_p34_modeloInciso').setFields(arrayAtributos);
 			                debug(new _p34_modeloInciso().data);
-			                _p34_storeIncisos.load(
+			                padre.setLoading(false);
+							_p34_storeIncisos.getProxy().setExtraParam('smap1.dsatribu', null);
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.otvalor', null);	
+			                centrarVentanaInterna(Ext.create('Ext.window.Window',
 			                {
-						        params :
-						        {
-						            'smap1.cdunieco'  : recordPoliza.get('CDUNIECO')
-						            ,'smap1.cdramo'   : recordPoliza.get('CDRAMO')
-						            ,'smap1.estado'   : recordPoliza.get('ESTADO')
-						            ,'smap1.nmpoliza' : recordPoliza.get('NMPOLIZA')
-						            ,'smap1.cdgrupo'  : recordNivel.get('CDGRUPO')
-						            ,'smap1.nmfamili' : recordNivel.get('NMSITAUX')
-						            ,'smap1.nivel'    : nivel
-						            ,'smap1.atrPol'   : (!Ext.isEmpty(recordPoliza.get('CDRAMO')) && new String(recordPoliza.get('CDRAMO')) == "6")? 'S':'N'
-						        }
-						        ,callback : function(records,operation,success)
-						        {
-						            padre.setLoading(false);
-						            debug('### incisos load',records,operation,success);
-						            if(success)
-						            {
-						                for(var i in records)
-						                {
-						                    var record    = records[i];
-						                    var atributos = record.get('CDTIPSIT');
-						                    for(var i=1;i<=99;i++)
-						                    {
-						                        var valor=record.get('OTVALOR'+(('x00'+i).slice(-2)));
-						                        if(valor+'x'=='nullx')
-						                        {
-						                            valor='';
-						                        }
-						                        var display=record.get('DSVALOR'+(('x00'+i).slice(-2)));
-						                        if(display+'x'=='nullx')
-						                        {
-						                            display='';
-						                        }
-						                        atributos=atributos+'|'+valor+'~'+display;
-						                    }
-						                    record.set('ATRIBUTOS',atributos);
-						                    
-						                    record.set('NOMBRECOMPLETO',
-						                        (Ext.isEmpty(record.get('DSNOMBRE'))   ?'':record.get('DSNOMBRE'))   + ' ' +
-						                        (Ext.isEmpty(record.get('DSNOMBRE1'))  ?'':record.get('DSNOMBRE1'))  + ' ' +
-						                        (Ext.isEmpty(record.get('DSAPELLIDO')) ?'':record.get('DSAPELLIDO')) + ' ' +
-						                        (Ext.isEmpty(record.get('DSAPELLIDO1'))?'':record.get('DSAPELLIDO1'))
-						                    );
-						                    
-						                    debug('record customizado:',record.data);
-						                }
-						                _p34_storeIncisos.commitChanges();
-						                centrarVentanaInterna(Ext.create('Ext.window.Window',
-						                {
-						                    itemId       : '_p34_windowIncisos'
-						                    ,title       : 'Incisos de la p&oacute;liza - '
-						                                   +recordPoliza.get('NMPOLIEX')
-						                                   +(nivel=='GRUPO'  ?(' - grupo ' +recordNivel.get('CDGRUPO' )):'')
-						                                   +(nivel=='FAMILIA'?(' - familia'+recordNivel.get('NMSITAUX')):'')
-						                    ,_p34_window : 'si'
-						                    ,closeAction : 'destroy'
-						                    ,modal       : true
-						                    ,width       : 950
-						                    ,maxHeight   : 400
-						                    ,autoScroll  : true
-						                    ,items       :
-						                    [
-						                        Ext.create('Ext.grid.Panel',
-						                        {
-						                            itemId      : '_p34_gridIncisos'
-						                            ,columns    : cols
-						                            ,width      : 910
-						                            ,height     : 330
-						                            ,autoScroll : true
-						                            ,selModel   :
-						                            {
-						                                selType    : 'checkboxmodel'
-						                                ,mode      : 'SIMPLE'
-						                                ,listeners :
-						                                {
-						                                    selectionchange : function(me,selected)
-						                                    {
-						                                        _fieldById('_p34_botonEndososIncisos').setDisabled(selected.length==0);
-						                                    }
-						                                }
-						                            }
-						                            ,store   : _p34_storeIncisos
-						                            ,tbar    :
-						                            [
-						                                {
-						                                    text      : 'Endosos...'
-						                                    ,itemId   : '_p34_botonEndososIncisos'
-						                                    ,icon     : '${ctx}/resources/fam3icons/icons/book_addresses.png'
-						                                    ,disabled : true
-						                                    ,handler  : function(){ _p34_botonEndososIncisosClic(); }
-						                                }
-						                                ,'->'
-						                                ,{
-						                                    xtype      : 'textfield'
-						                                    ,listeners :
-						                                    {
-						                                        afterrender : function()
-						                                        {
-						                                            _p34_filtrarStore('',_p34_storeIncisos);
-						                                        }
-						                                        ,change : function(me,val)
-						                                        {
-						                                            _p34_filtrarStore(val,_p34_storeIncisos);
-						                                        }
-						                                    }
-						                                }
-						                            ]
-						                        })
-						                    ]
-						                }).show());
-						            }
-						            else
-						            {
-						                mensajeError(operation.getError());
-						            }
-						        }
-						    });
+			                    itemId       : '_p34_windowIncisos'
+			                    ,title       : 'Incisos de la p&oacute;liza - '
+			                                   +recordPoliza.get('NMPOLIEX')
+			                                   +(nivel=='GRUPO'  ?(' - grupo ' +recordNivel.get('CDGRUPO' )):'')
+			                                   +(nivel=='FAMILIA'?(' - familia'+recordNivel.get('NMSITAUX')):'')
+			                    ,_p34_window : 'si'
+			                    ,closeAction : 'destroy'
+			                    ,modal       : true
+			                    ,width       : 950
+			                    ,maxHeight   : 400
+			                    ,autoScroll  : true
+			                    ,items       :
+			                    [
+			                        Ext.create('Ext.grid.Panel',
+			                        {
+			                            itemId      : '_p34_gridIncisos'
+			                            ,columns    : cols
+			                            ,width      : 910
+			                            ,height     : 330
+			                            ,autoScroll : true
+			                            ,selModel   :
+			                            {
+			                                selType    : 'checkboxmodel'
+			                                ,mode      : 'SIMPLE'
+			                                ,listeners :
+			                                {
+			                                    selectionchange : function(me,selected)
+			                                    {
+			                                        _fieldById('_p34_botonEndososIncisos').setDisabled(selected.length==0);
+			                                    }
+			                                }
+			                            }
+			                            ,store   : _p34_storeIncisos
+			                            ,tbar    :
+			                            [
+			                                {
+			                                    text      : 'Endosos...'
+			                                    ,itemId   : '_p34_botonEndososIncisos'
+			                                    ,icon     : '${ctx}/resources/fam3icons/icons/book_addresses.png'
+			                                    ,disabled : true
+			                                    ,handler  : function(){ _p34_botonEndososIncisosClic(); }
+			                                }
+			                                ,'->'
+			                                ,Ext.create('Ext.form.ComboBox',
+			                                {
+			                                    name        : 'dsatribu'
+			                                    ,allowBlank : false
+			                                    ,style:'margin:5px'
+			                                    ,typeAhead:true
+			                                    ,anyMatch:true
+			                                    ,displayField:'value'
+			                                    ,valueField:'key'
+			                                    ,matchFieldWidth:false
+			                                    ,listConfig:
+			                                    {
+			                                        maxHeight:150
+			                                        ,minWidth:120
+			                                    }
+			                                    ,forceSelection:true
+			                                    ,editable:true
+			                                    ,queryMode:'local'
+			                                    ,store:Ext.create('Ext.data.Store',
+			                                    {
+			                                    	model:'Generic'
+			                                    	,autoLoad:true
+			                                    	,proxy:
+			                                    	{
+			                                    	    type:'ajax'
+			                                    	    ,url:'/gseguros/catalogos/obtieneCatalogo.action?tstamp=1464133719722_5315'
+			                                    	    ,reader:
+			                                    	    {
+			                                    	        type:'json'
+			                                    	        ,root:'lista'
+			                                    	        ,rootProperty:'lista'
+			                                    	    }
+			                                    	    ,extraParams:
+			                                    	    {
+			                                    	        catalogo           : 'RECUPERAR_LISTA_FILTRO_PROPIEDADDES_INCISO'
+			                                    	        ,'params.cdunieco' : recordPoliza.get('CDUNIECO')
+			                                    	        ,'params.cdramo' : recordPoliza.get('CDRAMO')
+			                                    	        ,'params.estado' : recordPoliza.get('ESTADO')
+			                                    	        ,'params.nmpoliza' : recordPoliza.get('NMPOLIZA')
+			                                    	    }
+			                                    	}
+			                                    })
+			                                })
+			                                ,{
+			                                    xtype      : 'textfield',
+			                                    name       : 'txtBuscar'
+			                                },{
+				                                xtype    : 'button'
+				                                ,text    : 'Buscar'
+				                                //,icon  : panDocContexto+'/resources/fam3icons/icons/add.png'
+				                                ,handler : function(btn) {
+				                                	debug('Buscando...')
+				                                	
+				                                	if(Ext.isEmpty(btn.up('toolbar').down('textfield[name=txtBuscar]').getValue())){
+				                                    	debug('valor nulo...');
+				                                    	btn.up('toolbar').down('combo[name=dsatribu]').setValue(null);
+				                                    }
+				                                	
+				                                    _p34_storeIncisos.getProxy().setExtraParam('smap1.dsatribu',btn.up('toolbar').down('combo[name=dsatribu]').getValue());
+				                                    _p34_storeIncisos.getProxy().setExtraParam('smap1.otvalor', btn.up('toolbar').down('textfield[name=txtBuscar]').getValue());
+				                                    
+//				                                    _fieldById('_p34_gridIncisos').down('pagingtoolbar').moveFirst();
+				                                    
+				                                    _p34_storeIncisos.loadPage(1);
+				                                }
+                							}
+			                            ],
+					                    bbar: Ext.create('Ext.PagingToolbar', {
+								            store: _p34_storeIncisos,
+								            displayInfo: true
+								        })
+			                        })
+			                    ]
+			                }).show());
+			                
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.cdunieco',recordPoliza.get('CDUNIECO'));
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.cdramo',recordPoliza.get('CDRAMO'));
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.estado',recordPoliza.get('ESTADO'));
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nmpoliza',recordPoliza.get('NMPOLIZA'));
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.cdgrupo',recordPoliza.get('CDGRUPO'));
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nmfamili',recordPoliza.get('NMSITAUX'));
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nivel',nivel);
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.atrPol',(!Ext.isEmpty(recordPoliza.get('CDRAMO')) && new String(recordPoliza.get('CDRAMO')) == "6")? 'S':'N');
+			                
+			                _fieldById('_p34_gridIncisos').down('pagingtoolbar').moveFirst();
+			                
 					    }
 					    else
 					    {
@@ -1111,7 +1167,7 @@ function _p34_mostrarListaEndosos(nivel,stamp)
         ,_p34_window : 'si'
         ,itemId      : '_p34_windowEndosos'
         ,closeAction : 'destroy'
-        ,maxHeight   : 300
+        ,maxHeight   : 400
         ,autoScroll  : true
         ,modal       : true
         ,items       :
@@ -1119,7 +1175,7 @@ function _p34_mostrarListaEndosos(nivel,stamp)
             Ext.create('Ext.grid.Panel',
             {
                 itemId       : '_p34_gridEndosos'
-                ,width       : 500
+                ,width       : 700
                 ,store       : _p34_storeEndosos
                 ,nivel       : nivel
                 ,stamp       : stamp

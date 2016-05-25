@@ -1232,6 +1232,10 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			,String cdgrupo
 			,String nmfamili
 			,String nivel
+			,String start
+			,String limit
+			,String dsatribu
+			,String otvalor
 			)throws Exception
 	{
     	Map<String,String>params=new LinkedHashMap<String,String>();
@@ -1242,15 +1246,22 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("cdgrupo"  , cdgrupo);
     	params.put("nmfamili" , nmfamili);
     	params.put("nivel"    , nivel);
-    	Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_INCISOS", params);
+    	params.put("start", start);
+    	params.put("limit", limit);
+    	params.put("dsatribu", dsatribu);
+    	params.put("otvalor", otvalor);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA_PRUEBA.P_GET_DATOS_INCISOS_F", params);
     	Map<String,Object>procResult  = ejecutaSP(new RecuperarIncisosPolizaGrupoFamilia(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
     	{
     		lista=new ArrayList<Map<String,String>>();
     	}
+    	Map<String,String>total = new HashMap<String,String>();
+    	total.put("total", (String)procResult.get("pv_num_rec_o"));
+    	lista.add(total);
     	construirClavesAtributos(lista);
-    	Utils.debugProcedure(logger,"PKG_CONSULTA.P_GET_DATOS_INCISOS",params,lista);
+    	Utils.debugProcedure(logger,"PKG_CONSULTA_PRUEBA.P_GET_DATOS_INCISOS_F",params,lista);
     	return lista;
 	}
     
@@ -1258,13 +1269,17 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarIncisosPolizaGrupoFamilia(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CONSULTA.P_GET_DATOS_INCISOS");
+    		super(dataSource , "PKG_CONSULTA_PRUEBA.P_GET_DATOS_INCISOS_F");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdgrupo"  , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("nmfamili" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("start" , OracleTypes.NUMBER));
+            declareParameter(new SqlParameter("limit" , OracleTypes.NUMBER));
+            declareParameter(new SqlParameter("dsatribu" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor" , OracleTypes.VARCHAR));
             String[] cols=new String[]{
             		//MPOLISIT
             		"CDUNIECO"    , "CDRAMO"   , "ESTADO"     , "NMPOLIZA"
@@ -1321,6 +1336,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             		,"DSPLAN"
     	            };
     		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_num_rec_o"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
             compile();
@@ -4823,4 +4839,34 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	public List<Map<String,String>> llenaCombo(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception {
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("PV_CDUNIECO_I",  cdunieco);
+        params.put("PV_CDRAMO_I", cdramo);
+        params.put("PV_CDPLAN_I",   estado);
+        params.put("PV_NMPOLIZA_I", nmpoliza);
+        Map<String, Object> mapResult = ejecutaSP(new ConsultaListaComboSP(getDataSource()), params);
+        logger.debug("res = "+ mapResult.get("pv_registro_o"));
+        return (List<Map<String,String>>) mapResult.get("pv_registro_o");
+    }
+
+	protected class ConsultaListaComboSP extends StoredProcedure {
+    	protected ConsultaListaComboSP(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA_PRUEBA.P_Lista_Att_Inc");
+            declareParameter(new SqlParameter("PV_CDUNIECO_I", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("PV_CDRAMO_I", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("PV_ESTADO_I", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("PV_NMPOLIZA_I", OracleTypes.VARCHAR));
+            
+            //SALIDA:
+            String[] cols = new String[]{"PV_CDUNIECO_I","PV_CDRAMO_I","PV_ESTADO_I","PV_NMPOLIZA_I"};//{"dsatribu"};
+            
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+	
 }

@@ -205,4 +205,8 @@ public interface CatalogosManager {
     public List<GenericVO> recuperarTipoRamoColectivo(String nombre) throws Exception;
     
     public List<GenericVO> recuperarTipoRamoSituacionColectivo(String tipoRamo, String cdramo) throws Exception;
+    
+    public List<GenericVO> recuperarListaFiltroPropiedadesInciso(String cdunieco,String cdramo,String estado, String nmpoliza) throws Exception;
+    
+    
 }

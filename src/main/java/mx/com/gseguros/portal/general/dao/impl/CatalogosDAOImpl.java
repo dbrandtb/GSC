@@ -1862,4 +1862,45 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+	
+	public List<GenericVO> recuperarListaFiltroPropiedadesInciso(String cdunieco, String cdramo,String estado,String nmpoliza) throws Exception
+	{
+		logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+							   "\n@@@@@@ recuperarTiposRamoSituacionColectivo @@@@@@",
+							   "\n@@@@@@ cdramo ",cdramo,"\n"));
+		
+		HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		Map<String,Object>       procRes    = ejecutaSP(new RecuperarListaFiltroPropiedadesInciso(getDataSource()), params);
+		List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		logger.debug(Utils.log(listaMapas));
+		List<GenericVO>          lista      = new ArrayList<GenericVO>();
+		if(listaMapas!=null)
+		{
+			for(Map<String,String> mapa : listaMapas)
+			{
+				lista.add(new GenericVO(mapa.get("dsatribu"),mapa.get("dsatribu")));
+			}
+		}
+		return lista;
+	}
+	
+	protected class RecuperarListaFiltroPropiedadesInciso extends StoredProcedure
+	{
+		protected RecuperarListaFiltroPropiedadesInciso(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA_PRUEBA.P_Lista_Att_Inc");
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"dsatribu"})));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

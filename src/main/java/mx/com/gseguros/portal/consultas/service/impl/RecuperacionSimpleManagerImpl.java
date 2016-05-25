@@ -405,6 +405,10 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String cdgrupo  = params.get("cdgrupo");
 				String nmfamili = params.get("nmfamili");
 				String nivel    = params.get("nivel");
+				String start	= params.get("start");
+				String limit	= params.get("limit");
+				String dsatribu = params.get("dsatribu");
+				String otvalor	= params.get("otvalor");
 				resp.setSlist(consultasDAO.recuperarIncisosPolizaGrupoFamilia(
 						cdunieco
 						,cdramo
@@ -413,6 +417,10 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						,cdgrupo
 						,nmfamili
 						,nivel
+						,start
+						,limit
+						,dsatribu
+						,otvalor
 						));
 				
 				if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo) && params.containsKey("atrPol") && Constantes.SI.equalsIgnoreCase(params.get("atrPol"))){
@@ -675,6 +683,10 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String cdgrupo  = params.get("cdgrupo");
 				String nmfamili = params.get("nmfamili");
 				String nivel    = params.get("nivel");
+				String start    = params.get("start");
+				String limit    = params.get("limit");
+				String dsatribu = params.get("dsatribu");
+				String otvalor	= params.get("otvalor");
 				lista = consultasDAO.recuperarIncisosPolizaGrupoFamilia(
 						cdunieco
 						,cdramo
@@ -683,6 +695,10 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						,cdgrupo
 						,nmfamili
 						,nivel
+						,start
+						,limit
+						,dsatribu
+						,otvalor
 						);
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_MOVIMIENTOS_ENDOSO_ALTA_BAJA_ASEGURADO))
@@ -1047,7 +1063,25 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						,cdatribu , "No se recibio el parametro cdatribu"
 						);
 				lista = consultasDAO.recuperarListaTatrisitSinPadre(cdtipsit,cdatribu);
-			}	
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_LISTA_FILTRO_PROPIEDADDES_INCISO))
+			{
+				paso = "Recuperando lista para combo de Busqueda";
+				logger.debug(Utils.log(" paso: ",paso));
+				
+				String cdunieco=params.get("cdunieco");
+				String cdramo=params.get("cdramo");
+				String estado=params.get("estado");
+				String nmpoliza=params.get("nmpoliza");
+				
+				Utils.validate(
+						cdunieco , "No se recibio el parametro cdunieco",
+						cdramo ,"No se recibio el parametro cdramo",
+						estado ,"No se recibio el parametro estado",
+						nmpoliza,"No se recibio el parametro nmpoliza");
+				
+				lista = consultasDAO.llenaCombo(cdunieco, cdramo, estado, nmpoliza);
+			}
 		}
 		catch(Exception ex)
 		{
