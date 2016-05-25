@@ -922,12 +922,13 @@ Ext.onReady(function() {
                 	}
                 }*/
             },'-',{
-                xtype : 'textfield',
+                xtype : 'numberfield',
                 name : 'filtrarFam',
                 fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Familia:</span>',
                 labelWidth : 80,
                 width: 240,
-                maxLength : 50
+                maxLength : 50,
+                minValue: 0
                /* listeners:{
                 	change: function(elem,newValue,oldValue){
                 		newValue = Ext.util.Format.uppercase(newValue);
@@ -957,7 +958,7 @@ Ext.onReady(function() {
 		            storeAsegurados.getProxy().extraParams = panelBusqueda.down('form').getForm().getValues();
 		            //storeAsegurados.getProxy().setExtraParam('start', 0);
 		           // storeAsegurados.getProxy().setExtraParam('page', 1);
-		            storeAsegurados.getProxy().setExtraParam('params.familia', btn.up('grid').down('textfield[name=filtrarFam]').getValue());
+		            storeAsegurados.getProxy().setExtraParam('params.familia', btn.up('grid').down('[name=filtrarFam]').getValue());
 		            storeAsegurados.getProxy().setExtraParam('params.nombre', btn.up('grid').down('textfield[name=filtrarAseg]').getValue());
 		            storeAsegurados.getProxy().setExtraParam('params.cdperson', btn.up('grid').down('textfield[name=filtrarCveAseg]').getValue());
 		            debug('despues de asignar valores', storeAsegurados.getProxy().extraParams);
@@ -975,8 +976,8 @@ Ext.onReady(function() {
         bbar: Ext.create('Ext.PagingToolbar', {
             store: storeAsegurados,
             displayInfo: true,
-            displayMsg: 'Displaying topics {0} - {1} of {2}',
-            emptyMsg: "No topics to display"
+            displayMsg: 'Asegurados {0} - {1} of {2}',
+            emptyMsg: "No hay asegurados"
         })
     });
     
@@ -1125,6 +1126,7 @@ Ext.onReady(function() {
             }]
         },*/{
             title: 'ASEGURADOS',
+            autoScroll  : true,
             itemId: 'tabDatosAsegurados',
             items:[
                 gridDatosAsegurado
