@@ -136,6 +136,10 @@
 		    <result name="consultaAsegurados" type="redirectAction">
 		    	<param name="namespace">/consultasAsegurado</param>
 		    	<param name="actionName">pantallaConsultasAsegurado</param>
+		    	<param name="params.nmpoliex">${params.nmpoliex}</param>
+				<param name="params.icodpoliza">${params.icodpoliza}</param>
+				<param name="params.cdperson">${params.cdperson}</param>
+				<param name="params.nmsituac">${params.nmsituac}</param>
 		    </result>
 		    <result name="rolInvalido">/jsp-script/general/rolInvalido.jsp</result>
 		    <result name="clienteUnico" type="redirectAction">
