@@ -303,8 +303,7 @@ itemsGrid.push(
 					                                            var json2 = Ext.decode(action.response.responseText);
 					                                            debug('### submit:',json2);
 					                                            if(json2.success)
-					                                            {
-					                                                //form.up('window').destroy();
+					                                            {					                                                
 					                                                debug('### json2 exito:',json2);
 					                                                var despues = function()
 					                                                {
@@ -370,7 +369,7 @@ itemsGrid.push(
 						                                                {
 						                                                    width     : 600
 						                                                    ,height   : 500
-																			,itemId      : 'asegWin'
+																			,itemId   : 'asegWin'
 						                                                    ,title    : 'Revisar asegurados del complemento'
 						                                                    ,closable : false
 						                                                    ,items    :
@@ -441,9 +440,10 @@ itemsGrid.push(
 						                                                        {
 						                                                            text     : 'Aceptar y continuar'
 						                                                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-						                                                            ,handler : function()
+						                                                            ,handler : function(me)
 						                                                            { 
-						                                                                //callback();
+																						_fieldById('censoWin').close();
+																						me.up('window').close();
 						                                                                _mask('Procesando');
 						                                                                Ext.Ajax.request(
 						                                                                {
@@ -464,6 +464,7 @@ itemsGrid.push(
                             															    _unmask();
 																							var json3 = Ext.decode(response.responseText);
 																							debug("json3",json3);
+																							//me.up('asegWin').close();																							
 																							if(json3.success==true){
 																								mensajeCorrecto('Tramite',json3.mensaje,function(){                                    		
 																								Ext.create('Ext.window.Window',
@@ -495,7 +496,7 @@ itemsGrid.push(
 																												{
 																													text     : 'continuar'
 																													,icon    : '${icons}accept.png'
-																													,handler : function(){
+																													,handler : function(){																																																												
 																														if(json3.params.redireccion == 'S'){
 																															if(values.cdtipsit == 'MSC')
 																															{
@@ -549,10 +550,7 @@ itemsGrid.push(
 																							else
 																							{
 																								mensajeError('Error al guardar',json3.message);                                    
-																							}																							
-																							me.up('window').destroy();
-																							censoWin.destroy();
-																							asegWin.destroy();
+																							}	
 																						}
 																						,failure : function()
                             															{
@@ -568,9 +566,10 @@ itemsGrid.push(
 						                                                            ,handler : function(me){ me.up('window').destroy(); }
 						                                                        }
 						                                                    ]
-						                                                }).show());
+						                                                }).show());																		
 						                                            };																	
-						                                            despues();						                                            
+						                                            despues();
+						                                            //me.up('window').close();
 						                                            /*_p25_generarTramiteClic(despues,false,false,true);*/
 					                                            }
 					                                            else
