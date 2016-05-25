@@ -1528,6 +1528,54 @@ Ext.onReady(function()
                         errorComunicacion();
                     }
                 });
+                
+                Ext.Ajax.request(
+                {
+                    url : _p28_urlCargarParametros
+                    ,params  :
+                    {
+                         'smap1.parametro' : 'RANGO_DERECHO_AGENTE'
+                        ,'smap1.cdramo'   : _p28_smap1.cdramo
+                        ,'smap1.cdtipsit' : _p28_smap1.cdtipsit
+                    }
+                    ,success : function(response)
+                    {
+                        var json=Ext.decode(response.responseText);
+                        debug('### obtener rango años response:',json);
+                        if(json.exito)
+                        {
+                            var derechoAgenteCmp = _fieldByName('parametros.pv_otvalor50');
+                            derechoAgenteCmp.limiteInferior = json.smap1.P1VALOR;
+                            derechoAgenteCmp.limiteSuperior = json.smap1.P2VALOR;
+                            
+                            derechoAgenteCmp.validator=function(value)
+                            {
+                                var derechoAgenteCmp = _fieldByName('parametros.pv_otvalor50');
+                                
+                                var r = true;
+                                var max = derechoAgenteCmp.limiteSuperior;
+                                var min = derechoAgenteCmp.limiteInferior;
+                                debug('max:',max);
+                                debug('min:',min);
+                                debug('value:',value);
+                                if(value<min||value>max)
+                                {
+                                    r='El modelo debe estar en el rango '+min+'-'+max;
+                                }
+                                return r;
+                           };
+                       }
+                       else
+                       {
+                           mensajeError(json.respuesta);
+                       }
+                    }
+                    ,failure : function()
+                    {                    
+                        errorComunicacion();
+                    }
+                });
+                
             }
     
     _p28_recuperarClienteTramite();
