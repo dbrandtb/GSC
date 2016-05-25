@@ -506,6 +506,14 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				String nmpoliza = params.get("nmpoliza");
 				resp.setSlist(consultasDAO.recuperarRevisionColectivos(cdunieco, cdramo, estado, nmpoliza));
 			}
+			else if(proc.equals(RecuperacionSimple.RECUPERAR_REVISION_COLECTIVOS_FINAL))
+			{
+				String cdunieco = params.get("cdunieco");
+				String cdramo   = params.get("cdramo");
+				String estado   = params.get("estado");
+				String nmpoliza = params.get("nmpoliza");
+				resp.setSlist(consultasDAO.recuperarRevisionColectivosFinal(cdunieco, cdramo, estado, nmpoliza));
+			}
 			else if(proc.equals(RecuperacionSimple.RECUPERAR_REVISION_COLECTIVOS_ENDOSOS))
 			{
 				String cdunieco = params.get("cdunieco");
