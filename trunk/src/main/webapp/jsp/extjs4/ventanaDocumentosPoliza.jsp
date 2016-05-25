@@ -903,11 +903,11 @@ Ext.onReady(function()
                             },{
                                 xtype    : 'button'
                                 ,text    : 'Buscar'
-                                //,icon  : panDocContexto+'/resources/fam3icons/icons/add.png'
+                                ,icon  : panDocContexto+'/resources/fam3icons/icons/zoom.png'
                                 ,handler : function(btn) {
-                                    panDocStoreDoc.getProxy().setExtraParam('start', 0);
                                     panDocStoreDoc.getProxy().setExtraParam('smap1.pv_dsdocume_i', btn.up('toolbar').down('textfield[name=txtBuscar]').getValue());
-                                    panDocStoreDoc.load();
+                                    //panDocStoreDoc.load();
+                                    panDocStoreDoc.loadPage(1);
                                 }
                             }
 			                <s:if test='!smap1.containsKey("readOnly")'>
