@@ -87,8 +87,10 @@ Ext.onReady(function() {
                                 debug('antes de cargar storeAsegurados=', storeAsegurados);
                                 
                                 //Datos para asegurados
+                                storeAsegurados.getProxy().extraParams = panelBusqueda.down('form').getForm().getValues();
+                                debug('se asignaron extra params', storeAsegurados.getProxy().extraParams);
                                 storeAsegurados.load({
-                                    params: panelBusqueda.down('form').getForm().getValues(),
+                                    //params: panelBusqueda.down('form').getForm().getValues(),
                                     callback: function(records, operation, success){
                                     	
 //                                    	_fieldByName('filtrarFam',gridDatosAsegurado).setValue('');
@@ -689,7 +691,6 @@ Ext.onReady(function() {
      {
           type: 'ajax',
           url : _URL_CONSULTA_DATOS_ASEGURADO,
-          extraParams : null,
 	      reader:
 	      {
 	           type: 'json',
