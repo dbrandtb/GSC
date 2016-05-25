@@ -40,4 +40,5 @@ public interface RecuperacionSimpleManager
 			,Map<String,String> params
 			,UserVO usuario
 			)throws Exception;
+	
 }

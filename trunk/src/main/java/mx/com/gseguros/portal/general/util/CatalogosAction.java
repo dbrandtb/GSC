@@ -876,7 +876,14 @@ public class CatalogosAction extends PrincipalCoreAction {
 						params = new HashMap<String,String>();
 					}
 					lista = catalogosManager.recuperarTipoRamoSituacionColectivo(params.get("cdtipram"), params.get("idPadre"));
-					break;					
+					break;		
+				case RECUPERAR_LISTA_FILTRO_PROPIEDADDES_INCISO:
+					if(params == null)
+					{
+						params = new HashMap<String,String>();
+					}
+					lista = catalogosManager.recuperarListaFiltroPropiedadesInciso(params.get("cdunieco"),params.get("cdramo"),params.get("estado"),params.get("nmpoliza"));
+					break;				
 				case CATALOGO_CERRADO: //ESTE CATALOGO SOLO REGRESA SUS 5 PARES DE PARAMS COMO 5 RECORDS PARA EL STORE
 					if(params == null)
 					{

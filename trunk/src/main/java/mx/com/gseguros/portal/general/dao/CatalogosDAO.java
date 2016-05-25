@@ -137,4 +137,6 @@ public interface CatalogosDAO {
 	public List<GenericVO> recuperaRamosColectivoTipoRamo(String tipoRamo) throws Exception;
 	
 	public List<GenericVO> recuperarTiposRamoSituacionColectivo(String tipoRamo, String cdramo) throws Exception;
+	
+	public List<GenericVO> recuperarListaFiltroPropiedadesInciso(String cdunieco, String cdramo,String estado,String nmpoliza) throws Exception;
 }

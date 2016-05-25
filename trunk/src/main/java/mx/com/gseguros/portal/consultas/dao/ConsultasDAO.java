@@ -162,6 +162,10 @@ public interface ConsultasDAO
 			,String cdgrupo
 			,String nmfamili
 			,String nivel
+			,String start
+			,String limit
+			,String dsatribu
+			,String otvalor
 			)throws Exception;
 
 	public List<Map<String,String>>recuperarDatosIncisoEnNivelPoliza(
@@ -570,4 +574,6 @@ public interface ConsultasDAO
 	public String recuperarCdpersonClienteTramite(String ntramite) throws Exception;
 	
 	public String recuperarEsSaludDaniosTramite(String ntramite) throws Exception;
+	
+	public List<Map<String,String>> llenaCombo(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception;
 }

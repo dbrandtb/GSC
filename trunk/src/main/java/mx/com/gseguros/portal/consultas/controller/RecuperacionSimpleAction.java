@@ -28,6 +28,9 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 	private List<Map<String,String>>  slist1;
 	private List<Map<String,String>>  slist2;
 	private RecuperacionSimpleManager recuperacionSimpleManager;
+	private String start;
+	private String limit;
+	private String total;
 	
 	public RecuperacionSimpleAction()
 	{
@@ -119,6 +122,9 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 				throw new ApplicationException("El procedimiento no existe");
 			}
 			
+			smap1.put("start", start);
+			smap1.put("limit",limit);
+			
 			ManagerRespuestaSlist2VO resp = recuperacionSimpleManager.recuperacionSimpleLista(rec,smap1,cdsisrol,cdusuari);
 			exito     = resp.isExito();
 			respuesta = resp.getRespuesta();
@@ -126,6 +132,12 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 			{
 				slist1 = resp.getSlist();
 				slist2 = resp.getSlist2();
+				
+				if(rec.equals(RecuperacionSimple.RECUPERAR_INCISOS_POLIZA_GRUPO_FAMILIA)){
+					Map<String,String>total = slist1.remove(slist1.size()-1);
+					this.total=total.get("total");
+				}
+				
 			}
 		}
 		catch(Exception ex)
@@ -191,7 +203,7 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
-	
+
 	/*
 	 * Getters y setters
 	 */
@@ -246,5 +258,29 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 
 	public void setSlist2(List<Map<String, String>> slist2) {
 		this.slist2 = slist2;
+	}
+
+	public String getStart() {
+		return start;
+	}
+
+	public void setStart(String start) {
+		this.start = start;
+	}
+
+	public String getLimit() {
+		return limit;
+	}
+
+	public void setLimit(String limit) {
+		this.limit = limit;
+	}
+
+	public String getTotal() {
+		return total;
+	}
+
+	public void setTotal(String total) {
+		this.total = total;
 	}
 }

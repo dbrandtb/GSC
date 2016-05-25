@@ -1718,4 +1718,17 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				);
 		return catalogosDAO.recuperarTiposRamoSituacionColectivo(tipoRamo, cdramo);
 	}
+	
+	@Override
+	public List<GenericVO> recuperarListaFiltroPropiedadesInciso(String cdunieco, String cdramo,String estado,String nmpoliza) throws Exception {
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ recuperarListaFiltroPropiedadesInciso @@@@@@")
+				.toString()
+				);
+		return catalogosDAO.recuperarListaFiltroPropiedadesInciso(cdunieco, cdramo,estado,nmpoliza);
+	}
+	
+	
 }
