@@ -1079,7 +1079,7 @@ Ext.onReady(function() {
     
    
     var tabDatosGeneralesPoliza = Ext.create('Ext.tab.Panel', {
-        width: 950,
+        //width: 950,
         items: [{
             title : 'DATOS DE LA POLIZA',
             border:false,
@@ -1105,8 +1105,8 @@ Ext.onReady(function() {
         }, {
             itemId: 'tbDocumentos',
             title : 'DOCUMENTACION',
-            autoScroll  : true,
-            width: '350',
+            //autoScroll  : true,
+            //width: '350',
             loader : {
                 url : _URL_CONSULTA_DOCUMENTOS,
                 scripts : true,
