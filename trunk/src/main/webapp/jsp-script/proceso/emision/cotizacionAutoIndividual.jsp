@@ -818,7 +818,10 @@ Ext.onReady(function()
         }
         
         var combcl = 'S';
-        combcl    = _fieldLikeLabel('CLIENTE NUEVO');
+        if(!Ext.isEmpty(_fieldByLabel('CLIENTE NUEVO',null,true)))
+        {
+            combcl    = _fieldLikeLabel('CLIENTE NUEVO');
+        }
         
         if(!Ext.isEmpty( _fieldByName('parametros.pv_otvalor13',null,true)))
         {
