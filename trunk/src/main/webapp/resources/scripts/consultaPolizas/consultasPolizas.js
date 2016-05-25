@@ -922,13 +922,11 @@ Ext.onReady(function() {
                 	}
                 }*/
             },'-',{
-                xtype : 'numberfield',
+                xtype : 'textfield',
                 name : 'filtrarFam',
                 fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Familia:</span>',
                 labelWidth : 80,
-                width: 240,
-                maxLength : 50,
-                minValue: 0
+                width: 240
                /* listeners:{
                 	change: function(elem,newValue,oldValue){
                 		newValue = Ext.util.Format.uppercase(newValue);
